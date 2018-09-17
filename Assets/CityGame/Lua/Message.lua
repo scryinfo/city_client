@@ -88,8 +88,6 @@ function CityEngineLua.Message.clear()
 	CityEngineLua.messages["loginapp"] = {};
 	CityEngineLua.messages["baseapp"] = {};
 	CityEngineLua.clientMessages = {};
-
-	CityEngineLua.Message.bindFixedMessage();
 end
 
 function CityEngineLua.Message.n_errorProcess(stream)

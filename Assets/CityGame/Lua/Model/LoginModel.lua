@@ -182,13 +182,15 @@ function LoginModel.n_OnRoleLogin(stream)
     --message RoleLoginAck{
     --    required Role role = 1;
     --}
-    local pMsg =assert(pbl.decode("gs.RoleLoginAck",stream),"LoginModel.n_CreateNewRole : stream == nil")
-    print(pMsg.role.id)
-    print(pMsg.role.name)
-    print(pMsg.role.name)
-    print(pMsg.role.lockedMoney)
-    print(pMsg.role.offlineTs)
-    print(pMsg.role.position)
+    if(stream) then
+        local pMsg =assert(pbl.decode("gs.RoleLoginAck",stream),"LoginModel.n_CreateNewRole : stream == nil")
+        print(pMsg.role.id)
+        print(pMsg.role.name)
+        print(pMsg.role.name)
+        print(pMsg.role.lockedMoney)
+        print(pMsg.role.offlineTs)
+        print(pMsg.role.position)
+    end
 end
 
 function LoginModel.createNewRole()

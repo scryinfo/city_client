@@ -12,6 +12,8 @@ function OnInitProto()
 	assert(protoc:loadfile ("gs.proto"))
 	assert(protoc:loadfile ("gsCode.proto"))
 	assert(protoc:loadfile ("metadata.proto"))
+
+	test.runtest()
 end
 
 --主入口函数。从这里开始lua逻辑

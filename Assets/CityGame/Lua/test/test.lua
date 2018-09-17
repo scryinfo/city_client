@@ -5,7 +5,7 @@
 ---
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
-
+test = {}
 local lu = require "Framework/pbl/luaunit"
 --local eq       = lu.assertEquals
 --require("protobuf.encoder")
@@ -18,30 +18,24 @@ local lu = require "Framework/pbl/luaunit"
 require ("pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
-
-local pb = pbl
+require("metatable")
+local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
 function _G.test_pb()
-    local msglogion = pb.as.Login()
-    msglogion.account = this.username
-    local pb_login = msglogion:SerializeToString()  -- Parse Example
-    local pb_size = #pb_login
-    print("cz login create:", msglogion.account, " size = ", tostring(#pb_login))
+    ----1、 获取协议id
+    local msgId = pbl.enum("ascode.OpCode","login")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = { account = "11"}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("as.Login", lMsg))
 
-    local msglogion1 = pb.as.Login()
-    msglogion1:ParseFromString(pb_login)
-    print("cz login parser:", msglogion1.account)
+    ----反序列化，取出数据
+    local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
-    --local msg = pb.person_pb.Person();
-    --msg.id = 100;
-    --msg.name = "foo";
-    --msg.email = "bar";
-    --local pb_data = msg:SerializeToString();  -- Parse Example
-    --print("cz create:", msg.id, msg.name, msg.email, pb_data);
-    --local msg1 = pb.person_pb.Person();
+    print("[test_pb] login.account: "..msg.account)
 
 end
 
@@ -153,4 +147,6 @@ function _G.test_pbl()
     --test_map()
 end
 
-lu.LuaUnit.run()
+function test.runtest()
+    lu.LuaUnit.run()
+end

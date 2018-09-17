@@ -8,7 +8,7 @@ local slice  = pbl_slice
 local conv   = pbl_conv
 
 
--- local assert_not = lu.assertEvalToFalse
+local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
 local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
@@ -60,74 +60,74 @@ function _G.test_io.teardown()
 end
 
 function _G.test_io.test()
-   local code = "assert(io.write(require 'pb.io'.read()))"
-   assert(pbio.dump("t.lua", code))
-   local fh = assert(io.popen("lua t.lua < t.lua", "r"))
-   eq(fh:read "*a", code)
-   fh:close()
-   assert(os.remove "t.lua")
-   fail("-not-exists-", function() assert(pbio.read "-not-exists-") end)
-
-   local chunk = assert(protoc.new():compile(pbio.read "address.proto",
-                                             "address.proto"))
-   assert(pbio.dump("address.pb", chunk))
-   assert(pb.loadfile "address.pb")
-   assert(pb.type "Person")
-   eq(pb.type "-not-exists-", nil)
-   local ft = {}
-   for name in pb.fields "Person" do
-      ft[name] = true
-   end
-   table_eq(ft, { name=true, age=true,address=true,contacts=true })
-
-   eq(pb.decode("Person", "\240\255\255\255\255\255\255\255\255\1\1"), {})
-   eq(pb.decode("Person", "\240\255\255\255\255\255\255\255\255\255"), {})
-   eq(pb.decode("Person", "\240\255\255\255\255"), {})
-   eq(pb.decode("Person", "\242\255\255\255\255\1\255"), {})
-   eq(pb.decode("Person", "\x71"), {})
-   eq(pb.decode("Person", "\x33\1\2\3\4\x34"), {})
-   eq(pb.decode("Person", "\x33\1\2\3\4\x44"), {})
-   eq(pb.decode("Person", "\x33\1\2\3\4"), {})
-   eq(pb.decode("Person", "\x75"), {})
-   eq(pb.decode("Person", "\x75\1\1\1\1"), {})
-
-   fail("type 'Foo' does not exists", function() assert(pb.encode("Foo", {})) end)
-   fail("type 'Foo' does not exists", function() assert(pb.decode("Foo", "")) end)
-
-   fail("string expected for field 'name', got boolean", function()
-      assert(pb.encode("Person", { name = true }))
-   end)
-
-   fail("type mismatch at offset 2, bytes expected for type string, got varint", function()
-      assert(pb.decode("Person", "\8\1"))
-   end)
-
-   fail("invalid varint value at offset 2", function()
-      assert(pb.decode("Person", "\16\255"))
-   end)
-
-   fail("invalid bytes length: 0 (at offset 2)", function()
-      assert(pb.decode("Person", "\10\255"))
-   end)
-
-   fail("un-finished bytes (len 10 at offset 3)", function()
-      assert(pb.decode("Person", "\10\10"))
-   end)
-
-   local data = {
-      name = "ailse",
-      age  = 18,
-      contacts = {
-         { name = "alice", phonenumber = 12312341234 },
-         { name = "bob",   phonenumber = 45645674567 }
-      }
-   }
-   check_msg(".Person", data)
-
-   pb.clear()
-   protoc.reload()
-
-   fail("-not-exists-", function() assert(pb.loadfile "-not-exists-") end)
+   --local code = "assert(io.write(require 'pb.io'.read()))"
+   --assert(pbio.dump("t.lua", code))
+   --local fh = assert(io.popen("lua t.lua < t.lua", "r"))
+   --eq(fh:read "*a", code)
+   --fh:close()
+   --assert(os.remove "t.lua")
+   --fail("-not-exists-", function() assert(pbio.read "-not-exists-") end)
+   --
+   --local chunk = assert(protoc.new():compile(pbio.read "address.proto",
+   --                                          "address.proto"))
+   --assert(pbio.dump("address.pb", chunk))
+   --assert(pb.loadfile "address.pb")
+   --assert(pb.type "Person")
+   --eq(pb.type "-not-exists-", nil)
+   --local ft = {}
+   --for name in pb.fields "Person" do
+   --   ft[name] = true
+   --end
+   --table_eq(ft, { name=true, age=true,address=true,contacts=true })
+   --
+   --eq(pb.decode("Person", "\240\255\255\255\255\255\255\255\255\1\1"), {})
+   --eq(pb.decode("Person", "\240\255\255\255\255\255\255\255\255\255"), {})
+   --eq(pb.decode("Person", "\240\255\255\255\255"), {})
+   --eq(pb.decode("Person", "\242\255\255\255\255\1\255"), {})
+   --eq(pb.decode("Person", "\x71"), {})
+   --eq(pb.decode("Person", "\x33\1\2\3\4\x34"), {})
+   --eq(pb.decode("Person", "\x33\1\2\3\4\x44"), {})
+   --eq(pb.decode("Person", "\x33\1\2\3\4"), {})
+   --eq(pb.decode("Person", "\x75"), {})
+   --eq(pb.decode("Person", "\x75\1\1\1\1"), {})
+   --
+   --fail("type 'Foo' does not exists", function() assert(pb.encode("Foo", {})) end)
+   --fail("type 'Foo' does not exists", function() assert(pb.decode("Foo", "")) end)
+   --
+   --fail("string expected for field 'name', got boolean", function()
+   --   assert(pb.encode("Person", { name = true }))
+   --end)
+   --
+   --fail("type mismatch at offset 2, bytes expected for type string, got varint", function()
+   --   assert(pb.decode("Person", "\8\1"))
+   --end)
+   --
+   --fail("invalid varint value at offset 2", function()
+   --   assert(pb.decode("Person", "\16\255"))
+   --end)
+   --
+   --fail("invalid bytes length: 0 (at offset 2)", function()
+   --   assert(pb.decode("Person", "\10\255"))
+   --end)
+   --
+   --fail("un-finished bytes (len 10 at offset 3)", function()
+   --   assert(pb.decode("Person", "\10\10"))
+   --end)
+   --
+   --local data = {
+   --   name = "ailse",
+   --   age  = 18,
+   --   contacts = {
+   --      { name = "alice", phonenumber = 12312341234 },
+   --      { name = "bob",   phonenumber = 45645674567 }
+   --   }
+   --}
+   --check_msg(".Person", data)
+   --
+   --pb.clear()
+   --protoc.reload()
+   --
+   --fail("-not-exists-", function() assert(pb.loadfile "-not-exists-") end)
 end
 
 end

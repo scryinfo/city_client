@@ -1,0 +1,110 @@
+
+CtrlNames = {
+	Login = "LoginCtrl",
+	SelectAvatar = "SelectAvatarCtrl",
+	CreateAvatar = "CreateAvatarCtrl",
+	GameWorld = "GameWorldCtrl",
+	PlayerHead = "PlayerHeadCtrl",
+	TargetHead = "TargetHeadCtrl",
+	GroundAuction = "GroundAuctionCtrl",  --拍卖
+}
+
+ModelNames = {
+	Login = "LoginModel",
+	SelectAvatar = "SelectAvatarModel",
+	CreateAvatar = "CreateAvatarModel",
+	GameWorld = "GameWorldModel",
+	PlayerHead = "PlayerHeadModel",
+	TargetHead = "TargetHeadModel",
+	PieChart = "PieChart",  --饼图测试
+	GroundAuction = "GroundAuctionModel",  --拍卖
+	GameBubbleManager = "GameBubbleManager",  --游戏中的气泡
+	BuildingInfo = "BuildingInfoModel",  --建筑信息
+}
+
+PanelNames = {
+	"LoginPanel",	
+	"SelectAvatarPanel",
+	"CreateAvatarPanel",
+	"GameWorldPanel",
+	"PlayerHeadPanel",
+	"TargetHeadPanel",
+	"GroundAuctionPanel",  --拍卖
+	"BuildingInfoRightPanel",  --建筑右侧信息小界面
+	"BuildingInfoPanel",  --建筑信息界面
+	"BuildingTransferPanel",  --转让界面
+}
+
+SYSEVENT =
+{
+	SYSEVENT_DEFAULT = 0,
+	SYSEVENT_DISCONNECT =1,
+}
+
+SERVER_TYPE =
+{
+	SERVER_TYPE_AS = 0, --account server
+	SERVER_TYPE_GS =1, --game server
+}
+
+SocketError =
+{
+	SocketError = -1,
+	Success = 0,
+	OperationAborted = 995,
+	IOPending = 997,
+	Interrupted = 10004,
+	AccessDenied = 10013,
+	Fault = 10014,
+	InvalidArgument = 10022,
+	TooManyOpenSockets = 10024,
+	WouldBlock = 10035,
+	InProgress = 10036,
+	AlreadyInProgress = 10037,
+	NotSocket = 10038,
+	DestinationAddressRequired = 10039,
+	MessageSize = 10040,
+	ProtocolType = 10041,
+	ProtocolOption = 10042,
+	ProtocolNotSupported = 10043,
+	SocketNotSupported = 10044,
+	OperationNotSupported = 10045,
+	ProtocolFamilyNotSupported = 10046,
+	AddressFamilyNotSupported = 10047,
+	AddressAlreadyInUse = 10048,
+	AddressNotAvailable = 10049,
+	NetworkDown = 10050,
+	NetworkUnreachable = 10051,
+	NetworkReset = 10052,
+	ConnectionAborted = 10053,
+	ConnectionReset = 10054,
+	NoBufferSpaceAvailable = 10055,
+	IsConnected = 10056,
+	NotConnected = 10057,
+	Shutdown = 10058,
+	TimedOut = 10060,
+	ConnectionRefused = 10061,
+	HostDown = 10064,
+	HostUnreachable = 10065,
+	ProcessLimit = 10067,
+	SystemNotReady = 10091,
+	VersionNotSupported = 10092,
+	NotInitialized = 10093,
+	Disconnecting = 10101,
+	TypeNotFound = 10109,
+	HostNotFound = 11001,
+	TryAgain = 11002,
+	NoRecovery = 11003,
+	NoData = 11004
+}
+
+Util = LuaFramework.Util;
+AppConst = LuaFramework.AppConst;
+LuaHelper = LuaFramework.LuaHelper;
+
+resMgr = LuaHelper.GetResManager();
+panelMgr = LuaHelper.GetPanelManager();
+soundMgr = LuaHelper.GetSoundManager();
+
+WWW = UnityEngine.WWW;
+GameObject = UnityEngine.GameObject;

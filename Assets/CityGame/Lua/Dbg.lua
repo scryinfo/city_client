@@ -27,10 +27,10 @@ this.getHead = function()
 	return "";
 end
 
-log = function(s)
+log = function(s,...)
 	assert(s,"log nil")
 	if CityGlobal.G_LOG then
-		loginner(this.getHead() .. s);
+		loginner(this.getHead() .. s,...);
 	end
 end
 
@@ -40,9 +40,9 @@ this.INFO_MSG = function( s )
 	end
 end
 
-this.DEBUG_MSG = function( s )
+this.DEBUG_MSG = function( s ,...)
 	if (DEBUGLEVEL.DEBUG >= this.debugLevel) then
-		log(this.getHead() .. s);
+		log(this.getHead() .. s,...);
 	end
 end
 
@@ -59,9 +59,9 @@ this.ERROR_MSG = function(s)
 end
 
 --debug输出日志--
-function logDebug(str)
+function logDebug(str,...)
 	assert(str,"logdebug nil")
-    Dbg.DEBUG_MSG(str);
+    Dbg.DEBUG_MSG(str,...);
 end
 
 --错误日志--

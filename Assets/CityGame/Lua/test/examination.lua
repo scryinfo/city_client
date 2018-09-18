@@ -30,40 +30,51 @@ function _G.test_len()
     log(tostring("[examination] test_len: #tb "..#tb))
 end
 
-
+--逻辑操作符---Lua: and,or,not 对比 C++：&&，||，!
+--https://www.cnblogs.com/pixs-union/p/4852731.html
+--[[
+采用短路求值（short-circuit evaluation）的策略。
+即：逻辑与和逻辑或操作符都是先求左侧运算对象的值再求右侧运算对象的值，
+当且仅当左侧运算对象无法确定表达式的结果时才会计算右侧运算对象的值。
+]]--
 function _G.test_and()
-    logWarn("[test] test_and start:")
-    logWarn(tostring('a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f'))
-    logWarn(tostring('a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f'))
-    logWarn(tostring("[test] test_and end"))
+    logDebug("[test] test_and start:")
+    logDebug('a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
+    logDebug('a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f')
+    logDebug("[test] test_and end")
 end
 
 function _G.test_or()
-    logWarn("[test] test_or start: ")
-    local testt = 0 or 1
-    testt = 1 or 0
-    testt = 0 and 1
-    testt = 1 and 0
+    logDebug("[test] test_or start: ")
+    --[[
+    Lua中所有的逻辑运算符将false和nil视为假，其他任何东西视为真，0也视为真。
+    ]]--
+    local ret = 0 or 1
+    ret = 1 or 0
+    ret = 0 and 1
+    ret = 1 and 0
+    logDebug("0 or 1: ",0 or 1)
+    logDebug("1 or 0: ",1 or 0)
+    logDebug("0 and 1: ",0 and 1)
+    logDebug("1 and 0: ",1 and 0)
 
-    testt = true or false
-    testt = false and true
-    testt = ture and false
-
-    logDebug(tostring(nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f'))
-    logDebug(tostring('a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f'))
-    logDebug(tostring('a' or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f'))
+    logDebug(nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f')
+    logDebug('a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f')
+    logDebug('a' or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f')
     logDebug("[test] test_or end ")
 end
 
+--https://www.jianshu.com/p/7c25d5624c9e
+--Lua中还会用到 "a and b or c ",这类似于C系语言中的表达式 a ? b : c： max = (a > b) and a or b
 function _G.test_and_or()
-    logWarn("[test] test_and_or start: ")
+    logDebug("[test] test_and_or start: ")
     local a = 666
     local b = 333
     local c = true
-    logWarn(tostring(a > b) and a or b)
-    logWarn(tostring(a < b) and a or b)
-    logWarn(tostring(not c) and 'false' or 'true')
-    logWarn("[test] test_and_or end ")
+    logDebug((a > b) and a or b)
+    logDebug((a < b) and a or b)
+    logDebug((not c) and 'false' or 'true')
+    logDebug("[test] test_and_or end ")
     --output:
     --666
     --333

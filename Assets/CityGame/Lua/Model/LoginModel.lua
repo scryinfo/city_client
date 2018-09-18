@@ -13,12 +13,12 @@ local this = LoginModel;
 
 --构建函数--
 function LoginModel.New()
-    logWarn("LoginModel.New--->>");
+    logDebug("LoginModel.New--->>");
     return this;
 end
 
 function LoginModel.Awake()
-    logWarn("LoginModel.Awake--->>");
+    logDebug("LoginModel.Awake--->>");
     this:OnCreate();
 end
 

@@ -9,12 +9,12 @@ local gameObject;
 
 --构建函数--
 function LoginCtrl.New()
-	logWarn("LoginCtrl.New--->>");
+	logDebug("LoginCtrl.New--->>");
 	return this;
 end
 
 function LoginCtrl.Awake()
-	logWarn("LoginCtrl.Awake--->>");
+	logDebug("LoginCtrl.Awake--->>");
 	panelMgr:CreatePanel('Login', this.OnCreate);
 end
 
@@ -27,7 +27,7 @@ function LoginCtrl.OnCreate(obj)
 	login:AddClick(LoginPanel.btnRegister, this.OnRegister);
 	login:AddClick(LoginPanel.btnChooseGameServer, this.onClickChooseGameServer);
 
-	logWarn("Start lua--->>"..gameObject.name);
+	logDebug("Start lua--->>"..gameObject.name);
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", this.c_onLoginFailed);
 	Event.AddListener("c_LoginSuccessfully", this.c_LoginSuccessfully);

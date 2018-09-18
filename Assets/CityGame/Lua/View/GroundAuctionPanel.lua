@@ -16,7 +16,7 @@ function GroundAuctionPanel.Awake(obj)
     UpdateBeat:Add(this.Update, this);
 
     this.InitPanel();
-    logWarn("Awake lua--->>"..gameObject.name);
+    logDebug("Awake lua--->>"..gameObject.name);
 end
 
 --Update

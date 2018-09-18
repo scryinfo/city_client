@@ -8,6 +8,162 @@ local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
 local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
+testtime = require 'test/performance/testtime'
+
+function _G.test_ipairs()
+   local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
+    for k,v in ipairs(tb) do
+        print(tostring("[examination] test_ipairs  for in  ipairs: "),k, v)
+    end
+end
+
+function _G.test_pairs()
+    local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
+    for k,v in pairs(tb) do
+        print(tostring("[examination] test_pairs  for in  pairs: "),k, v)
+    end
+end
+
+function _G.test_len()
+    local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
+    --print(tostring("[examination] test_len: tb.len: "..table.getn(tb)))
+    print(tostring("[examination] test_len: #tb "..#tb))
+end
+
+-- pairs 遍历速度是 ipairs 的3倍, tb[i] 比 pairs 快30%
+local tb = {"oh", [3] = "god", "my", [5] = "hello", [4] = "world"}
+testtime(1,"ipairs performance", function()
+    for k,v in ipairs(tb) do
+        v = 1
+    end
+end)
+
+testtime(1,"pairs performance", function()
+    for k,v in pairs(tb) do
+        v = 1
+    end
+end)
+
+testtime(1,"tb[i] performance", function()
+    for i = 1, #tb do
+        tb[i] = 1
+    end
+end)
+
+--输出
+--ipairs performance    0.12999999999988
+--pairs performance    0.044999999999845
+--tb[i] performance    0.031000000000176
+
+local sin = math.sin  --local reference to math.sin
+local testValue = 0
+testtime(0,"test local performance", function()
+    for i = 1,10000 do
+        testValue = testValue + sin(i)
+    end
+ end
+)
+
+testValue = 0
+testtime(0,"test global performance", function()
+    for i = 1,10000 do
+        testValue = testValue + math.sin(i)
+    end
+end
+)
+-- test local performance    1.4550000000004
+-- test global performance    1.4470000000001
 
 
+local func1 = function(a,b,func)
+    return func(a+b)
+end
+
+testtime(1,"将函数体定义作为参数传递", function()
+    local x = func1( 1, 2, function(a) return a*2 end )
+ end
+)
+
+local func2 = function( c )
+    return c*2
+end
+
+testtime(1, "使用局部变量传递函数参数",function()
+    local x = func1( 1, 2, func2 )
+end)
+
+--将函数体定义作为参数传递    0.091000000000001
+--使用局部变量传递函数参数    0.088999999999999
+
+local a = {}
+local table_insert = table.insert
+local testcount = 1000000
+testtime(0, "使用table.insert()",function()
+    for i = 1,testcount do
+        table_insert( a, i )
+    end
+end)
+
+a = {}
+testtime(0, "使用循环的计数",function()
+    for i = 1,testcount do
+        a[i] = i
+    end
+end)
+
+a = {}
+testtime(0, "使用table的size",function()
+    for i = 1,testcount do
+        a[#a+1] = i
+    end
+end)
+
+a = {}
+local index = 1
+testtime(0, "使用计数器",function()
+    for i = 1,testcount do
+        a[index] = i
+        index = index+1
+    end
+end)
+
+--使用table.insert()   1.5890000000001
+--使用循环的计数       0.031000000000063
+--使用table的size      0.149
+--使用计数器           0.038999999999987
+
+local tb_unpack = { 100, 200, 300, 400 }
+local tb_unpackRet = {}
+testtime(1, "使用 unpack()函数",function()
+    tb_unpackRet = unpack(tb_unpack)
+end)
+
+tb_unpackRet = {}
+testtime(1, "不使用unpack()函数",function()
+    for i = 1,#tb_unpack do
+        tb_unpackRet[i] =  tb_unpack[i]
+    end
+end)
+
+--使用 unpack()函数    0.048000000000002
+--不使用unpack()函数    0.03000000000003
+a = {}
+for n = 1,1000 do
+    a[n] = {x = n}
+end
+testtime(0, "缓存table的元素",function()
+    for i = 1,1000 do
+        for n = 1,1000 do
+            local y = a[n]
+            y.x = y.x + 1
+        end
+    end
+end)
+testtime(0, "不缓存table的元素",function()
+    for i = 1,1000 do
+        for n = 1,1000 do
+            a[n].x = a[n].x + 1
+        end
+    end
+end)
 

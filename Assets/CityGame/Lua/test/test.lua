@@ -7,18 +7,16 @@ package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 local lu = require "Framework/pbl/luaunit"
---local eq       = lu.assertEquals
---require("protobuf.encoder")
---require("protobuf.decoder")
---require ("pb.as_pb")
---require ("pb.asCode_pb")
---require ("pb.person_pb")
---require ("test/pbl/pbl_test")
---require (".\\..\\test\\pbl\\pbl_test")
 require ("pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
+require("examination")
 require("metatable")
+
+require "LuaUtil"
+require("Dbg")
+require('test/performance/run')
+
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
@@ -145,6 +143,41 @@ function _G.test_pbl()
     --test_conv()
     --test_oneof()
     --test_map()
+end
+
+function _G.test_and()
+    logWarn("[test] test_and start:")
+    logWarn(tostring('a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f'))
+    logWarn(tostring('a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f'))
+    logWarn(tostring("[test] test_and end"))
+end
+
+function _G.test_or()
+    logWarn("[test] test_or start: ")
+    local testt = 0 or 1
+    testt = 1 or 0
+    testt = 0 and 1
+    testt = 1 and 0
+
+    logWarn(tostring(nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f'))
+    logWarn(tostring('a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f'))
+    logWarn(tostring('a' or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f'))
+    logWarn("[test] test_or end ")
+end
+
+function _G.test_and_or()
+    logWarn("[test] test_and_or start: ")
+    local a = 666
+    local b = 333
+    local c = true
+    logWarn(tostring(a > b) and a or b)
+    logWarn(tostring(a < b) and a or b)
+    logWarn(tostring(not c) and 'false' or 'true')
+    logWarn("[test] test_and_or end ")
+    --output:
+    --666
+    --333
+    --true
 end
 
 function test.runtest()

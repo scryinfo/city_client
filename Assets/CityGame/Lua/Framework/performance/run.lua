@@ -1,14 +1,14 @@
 local class = require 'class'
 
-time = require 'performance/time'
+testtime = require 'performance/time'
 
-time('class creation', function()
+testtime(1,'class creation', function()
   local A = class('A')
 end)
 
 local A = class('A')
 
-time('instance creation', function()
+testtime(1,'instance creation', function()
   local a = A:new()
 end)
 
@@ -18,7 +18,7 @@ end
 
 local a = A:new()
 
-time('instance method invocation', function()
+testtime(1,'instance method invocation', function()
   a:foo()
 end)
 
@@ -26,7 +26,7 @@ local B = class('B', A)
 
 local b = B:new()
 
-time('inherited method invocation', function()
+testtime(1,'inherited method invocation', function()
   b:foo()
 end)
 
@@ -34,10 +34,10 @@ function A.static:bar()
   return 2
 end
 
-time('class method invocation', function()
+testtime(1,'class method invocation', function()
   A:bar()
 end)
 
-time('inherited class method invocation', function()
+testtime(1,'inherited class method invocation', function()
   B:bar()
 end)

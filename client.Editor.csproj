@@ -335,7 +335,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\CityGame\Resources\Shaders\PieChart\GradientCanvas.shader" />
-    <None Include="Assets\CityGame\ToLua\readme.txt" />
     <None Include="Assets\CityGame\link.xml" />
     <None Include="Assets\StreamingAssets\files.txt" />
   </ItemGroup>

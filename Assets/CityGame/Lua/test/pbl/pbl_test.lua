@@ -32,7 +32,7 @@ end
 local function check_msg(name, data, r)
    local chunk2, _ = assert(pb.encode(name, data))
    local data2 = assert(pb.decode(name, chunk2))
-   --print("msg: ", name, "<"..chunk2:gsub(".", function(s)
+   --logDebug("msg: ", name, "<"..chunk2:gsub(".", function(s)
       --return ("%02X "):format(s:byte())
    --end)..">")
    eq(data2, r or data)

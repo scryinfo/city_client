@@ -80,7 +80,7 @@ end
 function LoginCtrl.c_Disconnect( errorCode )
 	--这里打印会失败, LoginPanel 已经不能访Destroy问了
 	LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
-	--print("cz login 登录失败,error code: ", errorCode)
+	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 
 function  LoginCtrl.c_onCreateAccountResult( errorCode, data )

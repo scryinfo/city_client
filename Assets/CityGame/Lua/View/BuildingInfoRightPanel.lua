@@ -12,7 +12,7 @@ function BuildingInfoRightPanel.Awake(obj)
     transform = obj.transform;
 
     this.InitPanel();
-    logDbg("右侧信息界面 Awake lua--->>"..transform.name);
+    logDebug("右侧信息界面 Awake lua--->>"..transform.name);
 end
 
 function BuildingInfoRightPanel.InitPanel()

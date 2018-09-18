@@ -3,19 +3,26 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/21 11:05
 ---
+
+if not CityGlobal.G_UNITTEST then return {} end
+
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 local lu = require "Framework/pbl/luaunit"
-require ("pbl_test")
-require ("test/test_BaseOO")
-require ("test/test_Mixins")
-require("examination")
-require("metatable")
-
 require "LuaUtil"
 require("Dbg")
 require('test/performance/run')
+
+
+require ("pbl_test")
+require ("test/test_BaseOO")
+require ("test/test_Mixins")
+require("test/performance/luaPerformance")
+require("examination")
+require("metatable")
+
+
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
@@ -33,7 +40,7 @@ function _G.test_pb()
     ----反序列化，取出数据
     local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
-    print("[test_pb] login.account: "..msg.account)
+    logDebug("[test_pb] login.account: "..msg.account)
 
 end
 
@@ -145,41 +152,9 @@ function _G.test_pbl()
     --test_map()
 end
 
-function _G.test_and()
-    logWarn("[test] test_and start:")
-    logWarn(tostring('a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f'))
-    logWarn(tostring('a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f'))
-    logWarn(tostring("[test] test_and end"))
-end
-
-function _G.test_or()
-    logWarn("[test] test_or start: ")
-    local testt = 0 or 1
-    testt = 1 or 0
-    testt = 0 and 1
-    testt = 1 and 0
-
-    logWarn(tostring(nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f'))
-    logWarn(tostring('a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f'))
-    logWarn(tostring('a' or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f'))
-    logWarn("[test] test_or end ")
-end
-
-function _G.test_and_or()
-    logWarn("[test] test_and_or start: ")
-    local a = 666
-    local b = 333
-    local c = true
-    logWarn(tostring(a > b) and a or b)
-    logWarn(tostring(a < b) and a or b)
-    logWarn(tostring(not c) and 'false' or 'true')
-    logWarn("[test] test_and_or end ")
-    --output:
-    --666
-    --333
-    --true
-end
 
 function test.runtest()
     lu.LuaUnit.run()
 end
+
+test.runtest()

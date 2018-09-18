@@ -23,7 +23,7 @@ end
 
 function GroundAuctionModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        logDbg("aaaaaaaaaaaa ")
+        logDebug("aaaaaaaaaaaa ")
         this.m_ReqRueryMetaGroundAuction()
         this.m_ReqQueryGroundAuction()
     end

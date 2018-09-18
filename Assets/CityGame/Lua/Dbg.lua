@@ -2,6 +2,12 @@
 Dbg = {}
 local this = Dbg;
 
+--输出日志--
+local loginner = print
+
+print = function(str)
+	loginner("普通日志使用 log， 调试日志使用 logdebug， 而非 print")
+end
 
 DEBUGLEVEL = {
 	DEBUG = 0,
@@ -11,23 +17,32 @@ DEBUGLEVEL = {
 	NOLOG = 4,  -- 放在最后面，使用这个时表示不输出任何日志（!!!慎用!!!）
 }
 
-
-this.debugLevel = DEBUGLEVEL.DEBUG;
-
+if CityGlobal.G_DEBUGLOG then
+	this.debugLevel = DEBUGLEVEL.DEBUG;
+else
+	this.debugLevel = DEBUGLEVEL.NOLOG
+end
 
 this.getHead = function()
 	return "";
 end
 
+log = function(s)
+	assert(s,"log nil")
+	if CityGlobal.G_LOG then
+		loginner(this.getHead() .. s);
+	end
+end
+
 this.INFO_MSG = function( s )
 	if (DEBUGLEVEL.INFO >= this.debugLevel) then
-		CityLuaUtil.Log(this.getHead() .. s);
+		log(this.getHead() .. s);
 	end
 end
 
 this.DEBUG_MSG = function( s )
 	if (DEBUGLEVEL.DEBUG >= this.debugLevel) then
-		CityLuaUtil.Log(this.getHead() .. s);
+		log(this.getHead() .. s);
 	end
 end
 
@@ -43,21 +58,20 @@ this.ERROR_MSG = function(s)
 	end
 end
 
-
 --debug输出日志--
-function logDbg(str)
+function logDebug(str)
+	assert(str,"logdebug nil")
     Dbg.DEBUG_MSG(str);
 end
 
---输出日志--
-log = print
-
 --错误日志--
-function logError(str) 
+function logError(str)
+	assert(str,"logError nil")
 	Dbg.ERROR_MSG(str);
 end
 
 --警告日志--
-function logWarn(str) 
+function logWarn(str)
+	assert(str,"logWarn nil")
 	Dbg.WARNING_MSG(str);
 end

@@ -11,7 +11,7 @@ function Person:initialize(name)
     self.name = name
 end
 function Person:speak()
-    print('Hi, I am ' .. self.name ..'.')
+    logDebug('Hi, I am ' .. self.name ..'.')
 end
 
 AgedPerson = class('AgedPerson', Person) -- or Person:subclass('AgedPerson') 派生新的类
@@ -23,8 +23,8 @@ end
 function AgedPerson:speak()
     Person.speak(self) -- prints "Hi, I am xx."
     if(self.age < AgedPerson.ADULT_AGE) then --accessing a class variable from an instance method 在实例中访问静态成员
-        print('I am underaged.')
+        logDebug('I am underaged.')
     else
-        print('I am an adult.')
+        logDebug('I am an adult.')
     end
 end

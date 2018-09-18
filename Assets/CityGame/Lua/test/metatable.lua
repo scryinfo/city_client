@@ -37,12 +37,12 @@ local child = {
 
 local returnTb = setmetatable(child, parent) --setmetatable 返回值是传入的参数中第一个表
 
-print("[metatable] setmetatable child"..tostring(child))
-print("[metatable] setmetatable parent"..tostring(parent))
-print("[metatable] setmetatable returnTb"..tostring(returnTb))
+log("[metatable] setmetatable child"..tostring(child))
+log("[metatable] setmetatable parent"..tostring(parent))
+log("[metatable] setmetatable returnTb"..tostring(returnTb))
 
-print("[metatable] __index test: child.house"..tostring(child.house))
-print("[metatable] __index test: child.wife"..tostring(child.wife))
+log("[metatable] __index test: child.house"..tostring(child.house))
+log("[metatable] __index test: child.wife"..tostring(child.wife))
 
 parent.__newindex = function ( t, k ,v )  --赋值操作，如果当前表中没有对应key，那么找原表中对应的__newindex指向的方法或者表进行赋值操作
     -- t[k] = v
@@ -57,16 +57,16 @@ function _G.testMetatable()
     child.house = 3
     child.wife = 4
 
-    print(child.house)
-    print(child.wife)
+    log(child.house)
+    log(child.wife)
 
     parent.__index = nil
 
     child.house = 5
     child.wife = 6
     --assert(child.house,"[metatable] __newindex test: child.house: nil")
-    print("[metatable] __newindex test: child.house: ".. tostring(child.house))
-    print("[metatable] __newindex test: child.wife: "..tostring(child.wife))
+    log("[metatable] __newindex test: child.house: ".. tostring(child.house))
+    log("[metatable] __newindex test: child.wife: "..tostring(child.wife))
 
     --打印结果是:
     -- 1
@@ -86,10 +86,10 @@ function Parent:new()
 end
 
 function Parent:Wife( )
-    print("mother live in the "..self.house )
+    log("mother live in the "..self.house )
 end
 function Parent:Position()
-    print("Parent live in the "..self.house)
+    log("Parent live in the "..self.house)
     self:Wife()
 end
 parent = Parent:new()
@@ -100,7 +100,7 @@ parent:Wife()
 Child = Parent:new()
 function Child:Position()
     local ChildHouse = self.house
-    print("child live in the "..ChildHouse)
+    log("child live in the "..ChildHouse)
     self:Wife()
 end
 
@@ -108,7 +108,7 @@ end
 Child1 = Parent:new()
 function Child1:Position()
     local ChildHouse = self.house
-    print("Child1 live in the "..ChildHouse)
+    log("Child1 live in the "..ChildHouse)
     self:Wife()
 end
 
@@ -134,17 +134,17 @@ test3 = { param3 = 3}
 
 -- test2.__index = test1  等价于:
 test2.__index = function(testTable , key)
-    -- print(testTable)
-    -- print(test3)
-    -- print(key)
-    -- print(test1[key])
+    -- log(testTable)
+    -- log(test3)
+    -- log(key)
+    -- log(test1[key])
     return test1[key]
 end
 setmetatable(test3 , test2)
 
-print(test3.param1)
-print(test3.param2)
-print(test3.param3)
+log("test3.param1: "..tostring(test3.param1))
+log("test3.param2: "..tostring(test3.param2))
+log("test3.param3: "..tostring(test3.param3))
 
 -- 这里的__index赋值就相当于  test2.__index = test1
 

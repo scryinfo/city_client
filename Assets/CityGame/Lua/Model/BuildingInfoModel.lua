@@ -88,7 +88,7 @@ end
 
 --右侧panel加载完毕
 function BuildingInfoModel.OnRightPanelCreated(rightPanelObj)
-    logDbg("转让界面，右侧加载完毕")
+    logDebug("转让界面，右侧加载完毕")
     BuildingInfoPanel.OnCreatRightInfo()
     this.rightFinish = true
 end
@@ -105,7 +105,7 @@ function BuildingInfoModel.SendTransferInfoToServer(transferPrice)
     --先暂定，服务器需要的是建筑ID和转让费
     --等服务器的协议定好再添加
 
-    logDbg("确认转让："..transferPrice)
+    logDebug("确认转让："..transferPrice)
     local transferBubbleInfo = this.buildingInfo
     transferBubbleInfo.area = {}
     transferBubbleInfo.area.x = 0
@@ -125,19 +125,19 @@ end
 
 --买地
 function BuildingInfoModel.SendBuyInfoToServer()
-    logDbg("---- lalala 买别人转让的地了！！！")
+    logDebug("---- lalala 买别人转让的地了！！！")
     --还需判断拥有者是不是自己才行 --目前不知道是不是直接在建筑信息里拿
 end
 
 --取消转让
 function BuildingInfoModel.SendCancelTransferToServer()
-    logDbg("---- aaaaa 取消转让 ！！！")
+    logDebug("---- aaaaa 取消转让 ！！！")
 
 end
 
 --拆除
 function BuildingInfoModel.SendDismantleToServer()
-    logDbg("---- bbbbb 拆除 ！！！")
+    logDebug("---- bbbbb 拆除 ！！！")
 
 end
 

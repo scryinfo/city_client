@@ -1,3 +1,10 @@
+--全局设置
+CityGlobal ={
+	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
+	G_DEBUGLOG = true, --是否打开调试日志
+	G_UNITTEST = true,	--是否打开单元测试
+	G_PERFORMANCETEST = false,	--是否打开性能测试
+}
 
 CtrlNames = {
 	Login = "LoginCtrl",
@@ -108,3 +115,4 @@ soundMgr = LuaHelper.GetSoundManager();
 
 WWW = UnityEngine.WWW;
 GameObject = UnityEngine.GameObject;
+

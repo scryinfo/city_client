@@ -50,9 +50,6 @@ CityEngineLua.useAliasEntityID = true;
 
 CityEngineLua.CITY_FLT_MAX = 3.402823466e+38;
 
-------debug级别
-Dbg.debugLevel = DEBUGLEVEL.DEBUG;
-
 ----- player的相关信息
 -- 当前玩家的实体id与实体类别
 CityEngineLua.entity_uuid = nil;
@@ -228,7 +225,7 @@ CityEngineLua.postInitEngine = function()
 end
 
 CityEngineLua.Destroy = function()
-	log("City::destroy()");
+	logDebug("City::destroy()");
 	this.reset();
 	this.resetMessages();
 end
@@ -1794,7 +1791,7 @@ CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userDat
 	this.currserver = "baseapp";
 	this.currstate = "";
 	
-	log("City::login_baseapp(): connect "..ip..":"..port.." is successfully!");
+	logDebug("City::login_baseapp(): connect "..ip..":"..port.." is successfully!");
 	Event.Brocast("c_GsConnected", true );
 	this.login_baseapp(false);
 end

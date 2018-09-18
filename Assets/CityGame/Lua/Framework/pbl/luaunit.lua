@@ -11,7 +11,7 @@ Version: 3.2
 
 require("math")
 local M={}
-
+local log = log
 -- private exported functions (for testing)
 M.private = {}
 

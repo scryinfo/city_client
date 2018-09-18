@@ -9,11 +9,11 @@ if not CityGlobal.G_UNITTEST then return {} end
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
+
+require("Dbg")
 local lu = require "Framework/pbl/luaunit"
 require "LuaUtil"
-require("Dbg")
 require('test/performance/run')
-
 
 require ("pbl_test")
 require ("test/test_BaseOO")

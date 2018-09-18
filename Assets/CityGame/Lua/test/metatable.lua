@@ -9,6 +9,7 @@ local notEq = lu.assertEvalToFalse
 local eq       = lu.assertEquals
 local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
+local log = log
 
 local parent = {
     house = 1

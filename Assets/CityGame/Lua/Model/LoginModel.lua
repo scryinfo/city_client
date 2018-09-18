@@ -6,6 +6,7 @@
 require "Common/define"
 require "City"
 local pbl = pbl
+local log = log
 
 LoginModel= {};
 local this = LoginModel;

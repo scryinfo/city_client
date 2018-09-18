@@ -3,6 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/21 11:12
 ---
+local log = log
 
 local class = require 'Framework/class'
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes

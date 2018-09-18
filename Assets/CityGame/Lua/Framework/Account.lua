@@ -1,4 +1,6 @@
 require "Framework/Interface/GameObject"
+local log = log
+
 CityEngineLua.Account = {
 	avatars = {},
 };

@@ -8,7 +8,7 @@ local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
 local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
-
+local log = log
 
 function _G.test_ipairs()
    local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}

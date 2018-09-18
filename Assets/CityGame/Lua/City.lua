@@ -21,6 +21,7 @@ local conv   = pbl_conv
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
+local log = log
 
 -----------------可配置信息---------------
 --CityEngineLua.ip = "127.0.0.1";

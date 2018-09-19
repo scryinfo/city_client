@@ -1,3 +1,4 @@
+require('LogId')
 
 Dbg = {}
 local this = Dbg;
@@ -26,11 +27,18 @@ end
 this.getHead = function()
 	return "";
 end
-
-log = function(s,...)
+this.getIdHead = function(id)
+	return "["..id.."]";
+end
+log = function(logid,s,...)
+	local plgid = get_LogId(logid)
+	local palgid = get_ActiveId(logid)
+	if plgid == nil or  palgid == nil then
+		return {}
+	end
 	assert(s,"log nil")
 	if CityGlobal.G_LOG then
-		loginner(this.getHead() .. s,...);
+		loginner(this.getIdHead(plgid) .. s,...);
 	end
 end
 

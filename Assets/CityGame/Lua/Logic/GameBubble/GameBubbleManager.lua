@@ -9,13 +9,8 @@ GameBubbleManager = {};
 local this = GameBubbleManager;
 local elmArray = {}
 
-BubblleType = nil
 --
 function GameBubbleManager.New()
-    if not BubblleType then
-        BubblleType = GameBubbleManager.GreatEnumTable({"Default", "GroundAuction", "BuildingTransfer"})
-    end
-
     UpdateBeat:Add(this.Update, this);
 end
 
@@ -45,16 +40,6 @@ function GameBubbleManager.Update()
         end
     end
 
-end
-
---创建枚举，支持设置初始值
-function GameBubbleManager.GreatEnumTable(tb, index)
-    index = index or 1
-    local enumTb = {}
-    for i, v in ipairs(tb) do
-        enumTb[v] = index + i
-    end
-    return enumTb
 end
 
 --创建所有未结束的气泡

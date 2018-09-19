@@ -98,6 +98,21 @@ SocketError =
 	NoData = 11004
 }
 
+--建筑气泡类型
+BubblleType =
+{
+	Default = 0,
+	GroundAuction = 1,
+	BuildingTransfer = 2,
+}
+
+--建筑首页左右侧信息小组件的状态
+BuildingInfoToggleState =
+{
+	Close = 0,
+	Open = 1.
+}
+
 Util = LuaFramework.Util;
 AppConst = LuaFramework.AppConst;
 LuaHelper = LuaFramework.LuaHelper;

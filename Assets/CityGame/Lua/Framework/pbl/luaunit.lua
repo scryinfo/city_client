@@ -10,6 +10,8 @@ Version: 3.2
 ]]--
 
 require("math")
+require ('LogId')
+
 local M={}
 local log = log
 -- private exported functions (for testing)
@@ -87,6 +89,21 @@ Options:
   testname1, testname2, ... : tests to run in the form of testFunction,
                               TestClass or TestClass.testMethod
 ]]
+
+local UnitTestGroup={}
+local ActiveUnitTestGroup={}
+
+function addToTestGropu(f,groupid)
+    UnitTestGroup[f] = groupid
+end
+
+function checkActive(f)
+    local groupid = UnitTestGroup[f]
+    if groupid == nil or get_LogId(groupid) == nil then
+        return false
+    end
+    return true
+end
 
 local is_equal -- defined here to allow calling from mismatchFormattingPureList
 
@@ -2215,7 +2232,7 @@ end
 
         local testNames = {}
         for k, _ in pairs(_G) do
-            if type(k) == "string" and M.LuaUnit.isTestName( k ) then
+            if type(k) == "string" and M.LuaUnit.isTestName( k ) and checkActive(k) then
                 table.insert( testNames , k )
             end
         end

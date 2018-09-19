@@ -12,6 +12,8 @@ test = {}
 
 require("Dbg")
 local lu = require "Framework/pbl/luaunit"
+UnitTest = require ('test/testFrameWork/UnitTest')
+
 require "LuaUtil"
 require('test/performance/run')
 
@@ -29,7 +31,14 @@ local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
-function _G.test_pb()
+active_TestGroup("abel_w5")
+active_TestGroup("abel_w4")
+
+UnitTest("abel_w5", "test_pb11111",  function ()
+    log("abel_w5","[test_pb11111]  测试完毕")
+end)
+
+UnitTest("abel_w4", "test_pb",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
     ----2、 填充 protobuf 内部协议数据
@@ -40,27 +49,28 @@ function _G.test_pb()
     ----反序列化，取出数据
     local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
-    logDebug("[test_pb] login.account: "..msg.account)
+    log("abel_w4","[test_pb] login.account: "..msg.account)
+end)
 
-end
-
-function _G.test_oo()
+UnitTest("abel_w4", "test_oo",  function ()
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
     local p2 = AgedPerson:new('Luke Skywalker', 21)
     p1:speak()
     p2:speak()
-end
+    log("abel_w4","[test_oo] 测试完毕")
+end )
 
-function _G.test_OO_Mixins()
+UnitTest("abel_w4", "test_OO_Mixins",function()
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
     bat:fly()
-end
+    log("abel_w4","[test_OO_Mixins] 测试完毕")
+end)
 
-local function check_load(chunk, name)
+UnitTest("abel_w4", "check_load",function()
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -68,9 +78,10 @@ local function check_load(chunk, name)
                 "\nproto: "..chunk..
                 "\ndata: "..buffer(pbdata):tohex())
     end
-end
+    log("abel_w4","[check_load] 测试完毕")
+end)
 
-function _G.test_pbl()
+UnitTest("abel_w4", "test_pbl",function()
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -100,15 +111,10 @@ function _G.test_pbl()
     local test =  pb.enum("ascode.Color", "Red")
 
     local val = pb.enum("ascode.OpCode", "login")
+    log("abel_w4","[test_pbl] 测试完毕")
+end)
 
-    --eq(pb.enum("ascode.OpCode", 0), "login")
-    --eq(pb.enum("ascode.OpCode", "choseGameServer"), 1)
-    --eq(pb.enum("ascode.OpCode", "getServerList"), 2)
-
-    --print(serpent.block(msg))
-    --
-end
-function _G.test_pbl()
+UnitTest("abel_w4", "test_pbl",function()
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;
@@ -135,23 +141,28 @@ function _G.test_pbl()
 
     local data2 = assert(pb.decode("Person", bytes))
     print(require "Framework/pbl/serpent".block(data2))
-end
+    log("abel_w4","[test_pbl] 测试完毕")
+end)
 
-function _G.test_pbl()
-    --pbl_protoTest()
-    --test_packed()
-    --test_default()
-    --test_extend()
-    --test_type()
-    --test_enum()
-    --test_load()
-    --test_slice()
-    --test_buffer()
-    --test_conv()
-    --test_oneof()
-    --test_map()
-end
-
+UnitTest("abel_w4", "test_log",function()
+    log("abl_w5", "[test] [test_log]  abl_w5 ")
+    log("abl_w4", "[test] [test_log]  abl_w4 ")
+    active_TestGroup("abel_w6_common")
+    log("abel_w6_common", "[test] [test_log]  开始打印分组测试")
+    log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
+    active_TestGroup("abel_w6") --激活log分组
+    active_TestGroup("allen_w6") --激活log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+    remove_LogId("abel_w6") --移除log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+    remove_LogId("allen_w6") --移除log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+end)
 
 function test.runtest()
     lu.LuaUnit.run()

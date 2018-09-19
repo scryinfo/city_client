@@ -13,8 +13,7 @@ local log = log
 function _G.test_ipairs()
    local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in ipairs(tb) do
-        log(g_LogId.abl_w5, tostring("[examination] test_ipairs  for in  ipairs: "),k, v)
-        log(g_LogId.abl_w4, tostring("[examination] test_ipairs  for in  ipairs: "),k, v)
+        log("abl_w5", tostring("[examination] test_ipairs  for in  ipairs: "),k, v)
     end
 end
 

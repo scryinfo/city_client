@@ -156,10 +156,10 @@ UnitTest("abel_w4", "test_log",function()
     active_TestGroup("allen_w6") --激活log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
-    remove_LogId("abel_w6") --移除log分组
+    remove_TestGroupId("abel_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
-    remove_LogId("allen_w6") --移除log分组
+    remove_TestGroupId("allen_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
 end)

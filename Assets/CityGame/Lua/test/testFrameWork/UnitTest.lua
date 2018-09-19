@@ -25,7 +25,7 @@ UnitTest = require ('test/testFrameWork/UnitTest')
 
 ]]--
 local UnitTest = function(unitGroupId,fName,f)
-    local plgid = get_LogId(unitGroupId)
+    local plgid = get_TestGroupId(unitGroupId)
     if plgid == nil  then
         return {}
     end

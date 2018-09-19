@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/19 9:35
 ---
-local LogId={
+local TestGroupId ={
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -15,38 +15,38 @@ local LogId={
     --finished ="finished"
 }
 
-local ActiveId={
+local ActiveTestGroupId ={
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
     --jen_w5 ="jen_w5",
 }
 
-g_LogId = LogId
-g_ActiveId=ActiveId
+g_LogId = TestGroupId
+g_ActiveId= ActiveTestGroupId
 
-function get_LogId(id)
-    return LogId[id]
+function get_TestGroupId(id)
+    return TestGroupId[id]
 end
 
-function get_ActiveId(id)
-    return ActiveId[id]
+function get_ActiveTestGroupId(id)
+    return ActiveTestGroupId[id]
 end
 
 --添加log分组
-function add_LogId(...)
-    LogId[...] = ...
+function add_TestGroupId(...)
+    TestGroupId[...] = ...
 end
 --移除log分组(一般情况下用不着，不执行active_TestGroup就不会注册相应的测试组)
-function remove_LogId(...)
-    LogId[...] = nil
-    ActiveId[...] = nil
+function remove_TestGroupId(...)
+    TestGroupId[...] = nil
+    ActiveTestGroupId[...] = nil
 end
 
 
 --激活log分组
 function active_TestGroup(...)
-    ActiveId[...] = ...
-    LogId[...] = ...
+    ActiveTestGroupId[...] = ...
+    TestGroupId[...] = ...
 end
 

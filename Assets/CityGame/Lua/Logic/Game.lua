@@ -9,13 +9,13 @@ require "Framework/Monster"
 require "Framework/NPC"
 require "Framework/DroppedItem"
 
-
 require "Common/functions"
 require "Controller/LoginCtrl"
 require "Logic/CtrlManager"
 require "Logic/World"
 
-
+require("Dbg")
+local lu = require "Framework/pbl/luaunit"
 
 --管理器--
 Game = {};
@@ -62,4 +62,5 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
+    lu.LuaUnit.run()
 end

@@ -31,8 +31,8 @@ local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
-active_TestGroup("abel_w5")
-active_TestGroup("abel_w4")
+--active_TestGroup("abel_w5")
+--active_TestGroup("abel_w4")
 
 UnitTest("abel_w5", "test_pb11111",  function ()
     log("abel_w5","[test_pb11111]  测试完毕")
@@ -163,9 +163,3 @@ UnitTest("abel_w4", "test_log",function()
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
 end)
-
-function test.runtest()
-    lu.LuaUnit.run()
-end
-
-test.runtest()

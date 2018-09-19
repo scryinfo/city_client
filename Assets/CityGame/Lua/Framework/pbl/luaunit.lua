@@ -10,7 +10,7 @@ Version: 3.2
 ]]--
 
 require("math")
-require ('LogId')
+require ('TestGroup')
 
 local M={}
 local log = log

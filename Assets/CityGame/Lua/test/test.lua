@@ -147,19 +147,19 @@ end)
 UnitTest("abel_w4", "test_log",function()
     log("abl_w5", "[test] [test_log]  abl_w5 ")
     log("abl_w4", "[test] [test_log]  abl_w4 ")
-    active_TestGroup("abel_w6_common")
+    TestGroup.active_TestGroup("abel_w6_common")
     log("abel_w6_common", "[test] [test_log]  开始打印分组测试")
     log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
-    active_TestGroup("abel_w6") --激活log分组
-    active_TestGroup("allen_w6") --激活log分组
+    TestGroup.active_TestGroup("abel_w6") --激活log分组
+    TestGroup.active_TestGroup("allen_w6") --激活log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
-    remove_TestGroupId("abel_w6") --移除log分组
+    TestGroup.remove_TestGroupId("abel_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
-    remove_TestGroupId("allen_w6") --移除log分组
+    TestGroup.remove_TestGroupId("allen_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
 end)

@@ -30,11 +30,12 @@ UnitTest = require ('test/testFrameWork/UnitTest')
 		3、 func 测试用例的方法实现
 ]]--
 local function UnitTest(unitGroupId, funcName, func)
-    if get_TestGroupId(unitGroupId) == nil  then
+    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
         return {}
     end
     addToTestGropu(funcName,unitGroupId)
     _G[funcName] = func
 end
 
+--active_TestGroup = TestGroup.active_TestGroup
 return UnitTest

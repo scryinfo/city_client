@@ -99,7 +99,7 @@ end
 
 function checkActive(f)
     local groupid = UnitTestGroup[f]
-    if groupid == nil or get_TestGroupId(groupid) == nil then
+    if groupid == nil or TestGroup.get_TestGroupId(groupid) == nil then
         return false
     end
     return true

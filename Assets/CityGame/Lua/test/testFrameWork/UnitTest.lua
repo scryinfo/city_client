@@ -18,19 +18,24 @@ UnitTest = require ('test/testFrameWork/UnitTest')
 3、 在非单元测试的代码中使用测试分组
     在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
 三、 说明：
-1、 unitGroupId 测试组Id
-    1、 命名格式： 英文名_工作周_额外信息，  比如： allen_w6_temp
-    2、 作用： 测试分组的唯一ID，一个分组ID可以被多个测试用例共享，该ID的分组通过 active_TestGroup 激活之后，
-        所用共享该ID的测试用例都会被执行
-
+	1、 测试用例的定义实际调用的是这个方法：
+		local UnitTest = function(unitGroupId,funcName,f)
+		参数中的 unitGroupId 就是测试分组的Id
+	2、 方法参数说明
+		1、 unitGroupId 测试组Id
+			1、 命名格式： 英文名_工作周_额外信息，  比如： allen_w6_temp
+			2、 作用： 测试分组的唯一ID，一个分组ID可以被多个测试用例共享，该ID的分组通过 active_TestGroup 激活之后，
+				所用共享该ID的测试用例都会被执行
+		2、 funcName 测试用例的方法名字
+		3、 func 测试用例的方法实现
 ]]--
-local UnitTest = function(unitGroupId,fName,f)
+local function UnitTest(unitGroupId, funcName, func)
     local plgid = get_TestGroupId(unitGroupId)
     if plgid == nil  then
         return {}
     end
-    addToTestGropu(fName,unitGroupId)
-    _G[fName] = f
+    addToTestGropu(funcName,unitGroupId)
+    _G[funcName] = func
 end
 
 return UnitTest

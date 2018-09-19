@@ -1,6 +1,7 @@
 require "Framework/Interface/GameObject"
 require "Logic/SkillBox"
 require "Logic/Skill"
+local log = log
 
 CityEngineLua.Avatar = {
 	itemDict = {},

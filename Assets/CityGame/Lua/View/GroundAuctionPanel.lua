@@ -16,7 +16,7 @@ function GroundAuctionPanel.Awake(obj)
     UpdateBeat:Add(this.Update, this);
 
     this.InitPanel();
-    logWarn("Awake lua--->>"..gameObject.name);
+    logDebug("Awake lua--->>"..gameObject.name);
 end
 
 --Update
@@ -85,7 +85,7 @@ function GroundAuctionPanel.ChangeToStartBidState(startBidInfo)
     end
 
     if startBidInfo.id ~= this.panelData.id then
-        logDbg("当前拍卖土地不是已经打开的土地")
+        logDebug("当前拍卖土地不是已经打开的土地")
         return
     end
 
@@ -132,7 +132,7 @@ function GroundAuctionPanel.WaitForBidTimeDown()
         this.waitBidTimeDownText.text = "开始拍卖倒计时："..timeStr
 
         if this.currentTime >= finishTime then
-            logDbg("------ 拍卖panel，开始拍卖")
+            logDebug("------ 拍卖panel，开始拍卖")
             this.StartTimeDownForStart = false
             return
         end
@@ -158,7 +158,7 @@ function GroundAuctionPanel.BidFinishTimeDown()
         this.startBidTimeDownText.text = "拍卖结束倒计时："..timeStr
 
         if this.currentTime >= finishTime then
-            logDbg("------ 拍卖panel，拍卖结束")
+            logDebug("------ 拍卖panel，拍卖结束")
             this.StartTimeDownForFinish = false
             return
         end

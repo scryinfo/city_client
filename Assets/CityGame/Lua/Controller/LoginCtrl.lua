@@ -9,12 +9,12 @@ local gameObject;
 
 --构建函数--
 function LoginCtrl.New()
-	logWarn("LoginCtrl.New--->>");
+	logDebug("LoginCtrl.New--->>");
 	return this;
 end
 
 function LoginCtrl.Awake()
-	logWarn("LoginCtrl.Awake--->>");
+	logDebug("LoginCtrl.Awake--->>");
 	panelMgr:CreatePanel('Login', this.OnCreate);
 end
 
@@ -27,7 +27,7 @@ function LoginCtrl.OnCreate(obj)
 	login:AddClick(LoginPanel.btnRegister, this.OnRegister);
 	login:AddClick(LoginPanel.btnChooseGameServer, this.onClickChooseGameServer);
 
-	logWarn("Start lua--->>"..gameObject.name);
+	logDebug("Start lua--->>"..gameObject.name);
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", this.c_onLoginFailed);
 	Event.AddListener("c_LoginSuccessfully", this.c_LoginSuccessfully);
@@ -80,7 +80,7 @@ end
 function LoginCtrl.c_Disconnect( errorCode )
 	--这里打印会失败, LoginPanel 已经不能访Destroy问了
 	LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
-	--print("cz login 登录失败,error code: ", errorCode)
+	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 
 function  LoginCtrl.c_onCreateAccountResult( errorCode, data )

@@ -1,4 +1,4 @@
-require "test/test"
+require('Common.define')
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb") --注意这种从 Assets 开始的相对路径是目前发现的唯一能支持 loadfile 的相对路径
 
@@ -12,6 +12,11 @@ function OnInitProto()
 	assert(protoc:loadfile ("gs.proto"))
 	assert(protoc:loadfile ("gsCode.proto"))
 	assert(protoc:loadfile ("metadata.proto"))
+
+	--单元测试
+	require('test.test')
+	--性能测试
+	require('test.performance.luaPerformance')
 end
 
 --主入口函数。从这里开始lua逻辑

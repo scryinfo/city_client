@@ -6,18 +6,19 @@
 require "Common/define"
 require "City"
 local pbl = pbl
+local log = log
 
 LoginModel= {};
 local this = LoginModel;
 
 --构建函数--
 function LoginModel.New()
-    logWarn("LoginModel.New--->>");
+    logDebug("LoginModel.New--->>");
     return this;
 end
 
 function LoginModel.Awake()
-    logWarn("LoginModel.Awake--->>");
+    logDebug("LoginModel.Awake--->>");
     this:OnCreate();
 end
 
@@ -182,13 +183,16 @@ function LoginModel.n_OnRoleLogin(stream)
     --message RoleLoginAck{
     --    required Role role = 1;
     --}
-    local pMsg =assert(pbl.decode("gs.RoleLoginAck",stream),"LoginModel.n_CreateNewRole : stream == nil")
-    print(pMsg.role.id)
-    print(pMsg.role.name)
-    print(pMsg.role.name)
-    print(pMsg.role.lockedMoney)
-    print(pMsg.role.offlineTs)
-    print(pMsg.role.position)
+    if(stream) then
+        local pMsg =assert(pbl.decode("gs.RoleLoginAck",stream),"LoginModel.n_CreateNewRole : stream == nil")
+        log("[LoginModel.n_OnRoleLogin] succeed!")
+        --logDebug(pMsg.role.id)
+        --logDebug(pMsg.role.name)
+        --logDebug(pMsg.role.name)
+        --logDebug(pMsg.role.lockedMoney)
+        --logDebug(pMsg.role.offlineTs)
+        --logDebug(pMsg.role.position)
+    end
 end
 
 function LoginModel.createNewRole()
@@ -218,8 +222,8 @@ function LoginModel.n_CreateNewRole(stream)
     --message Role {
     --    required bytes id = 1;
     local pMsg =assert(pbl.decode("gs.RoleInfo",stream),"LoginModel.n_CreateNewRole : stream == nil")
-    print(pMsg.id)
-    print(pMsg.name)
+    logDebug(pMsg.id)
+    logDebug(pMsg.name)
     LoginModel.loginRole({{id = pMsg.id}})
 end
 

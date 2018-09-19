@@ -21,6 +21,7 @@ local conv   = pbl_conv
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
+local log = log
 
 -----------------可配置信息---------------
 --CityEngineLua.ip = "127.0.0.1";
@@ -49,9 +50,6 @@ CityEngineLua.useAliasEntityID = true;
 
 
 CityEngineLua.CITY_FLT_MAX = 3.402823466e+38;
-
-------debug级别
-Dbg.debugLevel = DEBUGLEVEL.DEBUG;
 
 ----- player的相关信息
 -- 当前玩家的实体id与实体类别
@@ -228,7 +226,7 @@ CityEngineLua.postInitEngine = function()
 end
 
 CityEngineLua.Destroy = function()
-	log("City::destroy()");
+	logDebug("City::destroy()");
 	this.reset();
 	this.resetMessages();
 end
@@ -1794,7 +1792,7 @@ CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userDat
 	this.currserver = "baseapp";
 	this.currstate = "";
 	
-	log("City::login_baseapp(): connect "..ip..":"..port.." is successfully!");
+	logDebug("City::login_baseapp(): connect "..ip..":"..port.." is successfully!");
 	Event.Brocast("c_GsConnected", true );
 	this.login_baseapp(false);
 end

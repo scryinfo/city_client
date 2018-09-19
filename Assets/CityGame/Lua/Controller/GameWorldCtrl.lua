@@ -6,7 +6,7 @@ local this = GameWorldCtrl;
 local GameWorld;
 local transform;
 local gameObject;
-
+local log = log
 --构建函数--
 function GameWorldCtrl.New()
 	logWarn("GameWorldCtrl.New--->>");

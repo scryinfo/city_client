@@ -3,65 +3,74 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/21 11:05
 ---
+
+if not CityGlobal.G_UNITTEST then return {} end
+
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
+test = {}
 
+require("Dbg")
 local lu = require "Framework/pbl/luaunit"
---local eq       = lu.assertEquals
---require("protobuf.encoder")
---require("protobuf.decoder")
---require ("pb.as_pb")
---require ("pb.asCode_pb")
---require ("pb.person_pb")
---require ("test/pbl/pbl_test")
---require (".\\..\\test\\pbl\\pbl_test")
+UnitTest = require ('test/testFrameWork/UnitTest')
+
+require "LuaUtil"
+require('test/performance/run')
+
 require ("pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
+require("test/performance/luaPerformance")
+require("examination")
+require("metatable")
 
-local pb = pbl
+
+
+local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
-function _G.test_pb()
-    local msglogion = pb.as.Login()
-    msglogion.account = this.username
-    local pb_login = msglogion:SerializeToString()  -- Parse Example
-    local pb_size = #pb_login
-    print("cz login create:", msglogion.account, " size = ", tostring(#pb_login))
+active_TestGroup("abel_w5")
+active_TestGroup("abel_w4")
 
-    local msglogion1 = pb.as.Login()
-    msglogion1:ParseFromString(pb_login)
-    print("cz login parser:", msglogion1.account)
+UnitTest("abel_w5", "test_pb11111",  function ()
+    log("abel_w5","[test_pb11111]  测试完毕")
+end)
 
-    --local msg = pb.person_pb.Person();
-    --msg.id = 100;
-    --msg.name = "foo";
-    --msg.email = "bar";
-    --local pb_data = msg:SerializeToString();  -- Parse Example
-    --print("cz create:", msg.id, msg.name, msg.email, pb_data);
-    --local msg1 = pb.person_pb.Person();
+UnitTest("abel_w4", "test_pb",  function ()
+    ----1、 获取协议id
+    local msgId = pbl.enum("ascode.OpCode","login")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = { account = "11"}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("as.Login", lMsg))
 
-end
+    ----反序列化，取出数据
+    local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
-function _G.test_oo()
+    log("abel_w4","[test_pb] login.account: "..msg.account)
+end)
+
+UnitTest("abel_w4", "test_oo",  function ()
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
     local p2 = AgedPerson:new('Luke Skywalker', 21)
     p1:speak()
     p2:speak()
-end
+    log("abel_w4","[test_oo] 测试完毕")
+end )
 
-function _G.test_OO_Mixins()
+UnitTest("abel_w4", "test_OO_Mixins",function()
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
     bat:fly()
-end
+    log("abel_w4","[test_OO_Mixins] 测试完毕")
+end)
 
-local function check_load(chunk, name)
+UnitTest("abel_w4", "check_load",function()
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -69,9 +78,10 @@ local function check_load(chunk, name)
                 "\nproto: "..chunk..
                 "\ndata: "..buffer(pbdata):tohex())
     end
-end
+    log("abel_w4","[check_load] 测试完毕")
+end)
 
-function _G.test_pbl()
+UnitTest("abel_w4", "test_pbl",function()
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -101,15 +111,10 @@ function _G.test_pbl()
     local test =  pb.enum("ascode.Color", "Red")
 
     local val = pb.enum("ascode.OpCode", "login")
+    log("abel_w4","[test_pbl] 测试完毕")
+end)
 
-    --eq(pb.enum("ascode.OpCode", 0), "login")
-    --eq(pb.enum("ascode.OpCode", "choseGameServer"), 1)
-    --eq(pb.enum("ascode.OpCode", "getServerList"), 2)
-
-    --print(serpent.block(msg))
-    --
-end
-function _G.test_pbl()
+UnitTest("abel_w4", "test_pbl",function()
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;
@@ -136,21 +141,31 @@ function _G.test_pbl()
 
     local data2 = assert(pb.decode("Person", bytes))
     print(require "Framework/pbl/serpent".block(data2))
+    log("abel_w4","[test_pbl] 测试完毕")
+end)
+
+UnitTest("abel_w4", "test_log",function()
+    log("abl_w5", "[test] [test_log]  abl_w5 ")
+    log("abl_w4", "[test] [test_log]  abl_w4 ")
+    active_TestGroup("abel_w6_common")
+    log("abel_w6_common", "[test] [test_log]  开始打印分组测试")
+    log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
+    active_TestGroup("abel_w6") --激活log分组
+    active_TestGroup("allen_w6") --激活log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+    remove_TestGroupId("abel_w6") --移除log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+    remove_TestGroupId("allen_w6") --移除log分组
+    log("abel_w6", "[test] [test_log]  abel_w6 ")
+    log("allen_w6", "[test] [test_log]  allen_w6 ")
+end)
+
+function test.runtest()
+    lu.LuaUnit.run()
 end
 
-function _G.test_pbl()
-    --pbl_protoTest()
-    --test_packed()
-    --test_default()
-    --test_extend()
-    --test_type()
-    --test_enum()
-    --test_load()
-    --test_slice()
-    --test_buffer()
-    --test_conv()
-    --test_oneof()
-    --test_map()
-end
-
-lu.LuaUnit.run()
+test.runtest()

@@ -1,4 +1,6 @@
 require "Framework/Interface/GameObject"
+local log = log
+
 CityEngineLua.Account = {
 	avatars = {},
 };
@@ -28,7 +30,7 @@ function CityEngineLua.Account:protobuftest()
     -- Parse Example
     local msg = person_pb.Person()
     msg:ParseFromString(pb_data)
-    print(msg.id, msg.name, msg.email)
+    logDebug(msg.id, msg.name, msg.email)
     ]]--
     --mod.PERSON_EMAIL_FIELD;
     --local msg1 = pb.person_pb;

@@ -1,5 +1,6 @@
 --require "pb/common"
 require "Common/define"
+local log = log
 
 --消息
 CityEngineLua.messages = {};
@@ -88,8 +89,6 @@ function CityEngineLua.Message.clear()
 	CityEngineLua.messages["loginapp"] = {};
 	CityEngineLua.messages["baseapp"] = {};
 	CityEngineLua.clientMessages = {};
-
-	CityEngineLua.Message.bindFixedMessage();
 end
 
 function CityEngineLua.Message.n_errorProcess(stream)

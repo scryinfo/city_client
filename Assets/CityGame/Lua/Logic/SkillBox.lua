@@ -1,3 +1,4 @@
+local log = log
 
 SkillBox = {
 	skills = {},

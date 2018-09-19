@@ -119,7 +119,8 @@ function LoginCtrl.c_GsConnected( success )
 	end
 end
 
-TestGroup.active_TestGroup("abel_w7")
+--TestGroup.active_TestGroup("abel_w7") --激活测试组
+
 UnitTest("abel_w7", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试完毕")
 	LoginCtrl.c_LoginSuccessfully( false )

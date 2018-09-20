@@ -6,8 +6,8 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 
---TestGroup.active_TestGroup("abel_w5")
-TestGroup.active_TestGroup("abel_w4")
+--TestGroup.active_TestGroup("abel_w4")
+--TestGroup.active_TestGroup("abel_w3")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
@@ -29,12 +29,12 @@ local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
-UnitTest("abel_w5", "test_pb11111",  function ()
-    log("abel_w5","[test_pb11111]  测试开始:")
+UnitTest("abel_w4", "test_pb11111",  function ()
+    log("abel_w4","[test_pb11111]  测试开始:")
 end)
 
-UnitTest("abel_w4", "test_pb",  function ()
-    log("abel_w4","[test_pb]  测试开始:")
+UnitTest("abel_w3", "test_pb",  function ()
+    log("abel_w3","[test_pb]  测试开始:")
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
     ----2、 填充 protobuf 内部协议数据
@@ -45,11 +45,11 @@ UnitTest("abel_w4", "test_pb",  function ()
     ----反序列化，取出数据
     local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
-    log("abel_w4","[test_pb] login.account: "..msg.account)
+    log("abel_w3","[test_pb] login.account: "..msg.account)
 end)
 
-UnitTest("abel_w4", "test_oo",  function ()
-    log("abel_w4","[test_oo]  测试开始:")
+UnitTest("abel_w3", "test_oo",  function ()
+    log("abel_w3","[test_oo]  测试开始:")
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
@@ -58,16 +58,16 @@ UnitTest("abel_w4", "test_oo",  function ()
     p2:speak()
 end )
 
-UnitTest("abel_w4", "test_OO_Mixins",function()
-    log("abel_w4","[test_OO_Mixins]  测试开始:")
+UnitTest("abel_w3", "test_OO_Mixins",function()
+    log("abel_w3","[test_OO_Mixins]  测试开始:")
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
     bat:fly()
 end)
 
-UnitTest("abel_w4", "check_load",function()
-    log("abel_w4","[check_load]  测试开始:")
+UnitTest("abel_w3", "check_load",function()
+    log("abel_w3","[check_load]  测试开始:")
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -77,8 +77,8 @@ UnitTest("abel_w4", "check_load",function()
     end
 end)
 
-UnitTest("abel_w4", "test_pbl_load",function()
-    log("abel_w4","[test_pbl_load]  测试开始:")
+UnitTest("abel_w3", "test_pbl_load",function()
+    log("abel_w3","[test_pbl_load]  测试开始:")
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -110,8 +110,8 @@ UnitTest("abel_w4", "test_pbl_load",function()
     local val = pb.enum("ascode.OpCode", "login")
 end)
 
-UnitTest("abel_w4", "test_pbl_encode_decode",function()
-    log("abel_w4","[test_pbl_encode_decode]  测试开始:")
+UnitTest("abel_w3", "test_pbl_encode_decode",function()
+    log("abel_w3","[test_pbl_encode_decode]  测试开始:")
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;
@@ -140,7 +140,7 @@ UnitTest("abel_w4", "test_pbl_encode_decode",function()
     print(require "Framework/pbl/serpent".block(data2))
 end)
 
-UnitTest("abel_w4", "test_log",function()
+UnitTest("abel_w3", "test_log",function()
     log("abl_w5", "[test] [test_log]  abl_w5 ")
     log("abl_w4", "[test] [test_log]  abl_w4 ")
     TestGroup.active_TestGroup("abel_w6_common")

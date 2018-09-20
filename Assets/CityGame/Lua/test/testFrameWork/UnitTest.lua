@@ -9,25 +9,25 @@
 二、使用方法
 1、 激活分组
 	示例:
-    TestGroup.active_TestGroup("abel_w4")
-	* 激活 id 为 "abel_w4" 的分组，激活之后，所有使用该分组id的所有测试和日志都能正常运行
+    TestGroup.active_TestGroup("abel_w3")
+	* 激活 id 为 "abel_w3" 的分组，激活之后，所有使用该分组id的所有测试和日志都能正常运行
 2、 在具体的单元测试定义中注册分组
 	1、 require：
 		UnitTest = require ('test/testFrameWork/UnitTest')
 	2、 定义测试用例
 		示例:
-		UnitTest("abel_w5", "test_pb11111",  function ()
-			log("abel_w5","[test_pb11111]  测试完毕")
+		UnitTest("abel_w4", "test_pb11111",  function ()
+			log("abel_w4","[test_pb11111]  测试完毕")
 		end)
-		* 这里的"abel_w5"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
+		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
 		* test_pb11111 是测试用例函数的名字
 		* function 后面是测试用例的函数体
 3、 在非单元测试的代码中使用测试分组
     1、 在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
 	2、 我们项目的日志统一使用 log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
 		示例：
-			log("abel_w5","[test_pb11111]  测试完毕")
-			* 这里的 "abel_w5" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
+			log("abel_w4","[test_pb11111]  测试完毕")
+			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
 三、 说明：
 	1、 测试用例的定义实际调用的是这个方法：
 		function UnitTest(unitGroupId, funcName, func)

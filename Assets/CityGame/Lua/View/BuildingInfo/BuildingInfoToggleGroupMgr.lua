@@ -3,26 +3,73 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 10:17
 ---管理建筑首页的信息toggle mgr
+local class = require 'Framework/class'
 
-BuildingInfoToggleGroupMgr = {};
+BuildingInfoToggleGroupMgr = class('BuildingInfoToggleGroupMgr')
 
-function BuildingInfoToggleGroupMgr.New()
-    local elm = {}
+BuildingInfoToggleGroupMgr.static.LEFT_POS = Vector2.New(0, 50)
+BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
 
-    elm.viewRect = nil  --引用的对应UI组件
+BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH = "View/BuildingMainPageInfoItem/HouseOccupancyRateItem"  --住宅入住率预制路径
+BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH = "View/BuildingMainPageInfoItem/HouseRentalItem"  --住宅租金
 
-    elm.InitElm = BuildingInfoToggleItem.InitElm  --方法
-    elm.OpenBtnFunc = BuildingInfoToggleItem.OpenBtnFunc
-    setmetatable(elm, elm)
-    return elm
+--初始化
+function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour)
+
+    self.currentLeftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
+    self.currentRightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
+
+    --如果是住宅，则左侧加载turnover，staff，occupancy，右侧加载rental
+    self:creatHouseInfo()
 end
 
---初始化面板
-function BuildingInfoToggleGroupMgr.InitView()
+--每次打开一个Item，都要刷新位置
+function BuildingInfoToggleGroupMgr:clickItemFunc()
 
 end
 
---初始化信息
-function BuildingInfoToggleGroupMgr.InitData()
+--通过预制创建view
+function BuildingInfoToggleGroupMgr:creatItemObj(path, parent, pos, nextHeight)
+    local prefab = UnityEngine.Resources.Load(path)
+    local go = UnityEngine.GameObject.Instantiate(prefab)
+    local rect = go.transform:GetComponent("RectTransform")
+    go.transform:SetParent(parent.transform)
+    go.transform.localScale = Vector3.one;
+    rect.anchoredPosition = pos
 
+    local newPos = Vector2.New(pos.x, pos.y + nextHeight)
+    return rect, newPos
+end
+
+--创建住宅主页左右信息
+function BuildingInfoToggleGroupMgr:creatHouseInfo()
+    --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
+    --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
+
+    --local turnOverViewRect
+    --turnOverViewRect, self.currentLeftPos = self:creatItemObj("Prefab/GroundAuctionObj", leftRect, self.currentLeftPos, )
+
+    --入住率
+    local occupancyViewRect
+    occupancyViewRect, self.currentLeftPos = self:creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, leftRect, self.currentLeftPos, OccupancyRateItem.static.TOP_H)
+    --测试数据
+    local occData = {}
+    occData.totalCount = 60
+    occData.renter = 18
+    --end
+    local occupancyLuaItem = OccupancyRateItem:new(occData, self.clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour)
+    self.occLuaItem = occupancyLuaItem
+
+    --租金 --在右侧第一个
+    local rentalViewRect
+    rentalViewRect, self.currentRightPos = self:creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, leftRect, self.currentRightPos, RentalItem.static.TOTAL_H)
+    --测试数据
+    local rentalData = {}
+    rentalData.rent = 500.23
+    rentalData.rent = 60
+    rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    --end
+    local rentalLuaItem = RentalItem:new(rentalData, self.clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour)
+    self.rentalItem = rentalLuaItem
 end

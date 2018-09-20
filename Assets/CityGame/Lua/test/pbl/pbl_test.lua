@@ -1,17 +1,17 @@
+--单元测试
 local lu = require "Framework/pbl/luaunit"
-local protoc = require "Framework/pbl/protoc"
+local assert_not = lu.assertEvalToFalse
+local eq       = lu.assertEquals
+local table_eq = lu.assertItemsEquals
+local fail     = lu.assertErrorMsgContains
 
+--pbl
+local protoc = require "Framework/pbl/protoc"
 local pb     = pbl
 local pbio   = pbl_io
 local buffer = pbl_buffer
 local slice  = pbl_slice
 local conv   = pbl_conv
-
-
-local assert_not = lu.assertEvalToFalse
-local eq       = lu.assertEquals
-local table_eq = lu.assertItemsEquals
-local fail     = lu.assertErrorMsgContains
 
 local types = 0
 for _ in pb.types() do

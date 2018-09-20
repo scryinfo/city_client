@@ -1,7 +1,12 @@
 Event = require 'events'
+--调试信息
 require "Dbg"
-require "City"
+--单元测试
+require('test.test')
+--性能测试
+require('test.performance.luaPerformance')
 
+require "City"
 require "Framework/Account"
 require "Framework/Avatar"
 require "Framework/Gate"
@@ -62,5 +67,7 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
+
+    --单元测试入口
     lu.LuaUnit.run()
 end

@@ -6,17 +6,17 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 
+--TestGroup.active_TestGroup("abel_w5")
+TestGroup.active_TestGroup("abel_w4")
+
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
+require "LuaUtil"
 
-require("Dbg")
-local lu = require "Framework/pbl/luaunit"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
-require "LuaUtil"
 require('test/performance/run')
-
 require ("pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
@@ -24,21 +24,17 @@ require("test/performance/luaPerformance")
 require("examination")
 require("metatable")
 
-
-
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
---active_TestGroup("abel_w5")
---active_TestGroup("abel_w4")
-
 UnitTest("abel_w5", "test_pb11111",  function ()
-    log("abel_w5","[test_pb11111]  测试完毕")
+    log("abel_w5","[test_pb11111]  测试开始:")
 end)
 
 UnitTest("abel_w4", "test_pb",  function ()
+    log("abel_w4","[test_pb]  测试开始:")
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
     ----2、 填充 protobuf 内部协议数据
@@ -53,24 +49,25 @@ UnitTest("abel_w4", "test_pb",  function ()
 end)
 
 UnitTest("abel_w4", "test_oo",  function ()
+    log("abel_w4","[test_oo]  测试开始:")
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
     local p2 = AgedPerson:new('Luke Skywalker', 21)
     p1:speak()
     p2:speak()
-    log("abel_w4","[test_oo] 测试完毕")
 end )
 
 UnitTest("abel_w4", "test_OO_Mixins",function()
+    log("abel_w4","[test_OO_Mixins]  测试开始:")
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
     bat:fly()
-    log("abel_w4","[test_OO_Mixins] 测试完毕")
 end)
 
 UnitTest("abel_w4", "check_load",function()
+    log("abel_w4","[check_load]  测试开始:")
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -78,10 +75,10 @@ UnitTest("abel_w4", "check_load",function()
                 "\nproto: "..chunk..
                 "\ndata: "..buffer(pbdata):tohex())
     end
-    log("abel_w4","[check_load] 测试完毕")
 end)
 
-UnitTest("abel_w4", "test_pbl",function()
+UnitTest("abel_w4", "test_pbl_load",function()
+    log("abel_w4","[test_pbl_load]  测试开始:")
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -111,10 +108,10 @@ UnitTest("abel_w4", "test_pbl",function()
     local test =  pb.enum("ascode.Color", "Red")
 
     local val = pb.enum("ascode.OpCode", "login")
-    log("abel_w4","[test_pbl] 测试完毕")
 end)
 
-UnitTest("abel_w4", "test_pbl",function()
+UnitTest("abel_w4", "test_pbl_encode_decode",function()
+    log("abel_w4","[test_pbl_encode_decode]  测试开始:")
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;
@@ -141,7 +138,6 @@ UnitTest("abel_w4", "test_pbl",function()
 
     local data2 = assert(pb.decode("Person", bytes))
     print(require "Framework/pbl/serpent".block(data2))
-    log("abel_w4","[test_pbl] 测试完毕")
 end)
 
 UnitTest("abel_w4", "test_log",function()
@@ -151,15 +147,18 @@ UnitTest("abel_w4", "test_log",function()
     log("abel_w6_common", "[test] [test_log]  开始打印分组测试")
     log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
     log("abel_w6", "[test] [test_log]  abel_w6 ")
-    log("abel_w6_common", "[test] [test_log]  在没有激活 abel_w6 分组的情况下，使用 abel_w6 打印.......")
+    log("abel_w6_common", "[test] [test_log]  在激活 abel_w6 allen_w6 分组的情况下，使用 abel_w6 allen_w6 打印.......")
     TestGroup.active_TestGroup("abel_w6") --激活log分组
     TestGroup.active_TestGroup("allen_w6") --激活log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
+    log("abel_w6_common", "[test] [test_log]  在移除 abel_w6 分组的情况下，使用 abel_w6 打印.......")
     TestGroup.remove_TestGroupId("abel_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
+    log("abel_w6_common", "[test] [test_log]  在移除 allen_w6 分组的情况下，使用 allen_w6 打印.......")
     TestGroup.remove_TestGroupId("allen_w6") --移除log分组
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
+    TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
 end)

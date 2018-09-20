@@ -8,7 +8,10 @@ if not CityGlobal.G_PERFORMANCETEST then return {} end
 
 testtime = require 'test/performance/testTime'
 
--- pairs 遍历速度是 ipairs 的3倍, tb[i] 比 pairs 快30%
+--[[
+ 如果我们明确table中的数据全部存放在线性数组中, 调用ipairs或者pairs均可, 并无太大差异(注意ipairs时中间不要出现nil值,
+ 否则会导致遍历中断), 如果我们明确遍历hash表中的值, 则使用pairs
+]]--
 local tb = {"oh", [3] = "god", "my", [5] = "hello", [4] = "world"}
 testtime(1000000,"ipairs performance", function()
     for k,v in ipairs(tb) do
@@ -29,9 +32,9 @@ testtime(1000000,"tb[i] performance", function()
 end)
 
 --输出
---ipairs performance    0.12999999999988
---pairs performance    0.044999999999845
---tb[i] performance    0.031000000000176
+--[performance][    ipairs performance    ]     0.048999999999978
+--[performance][    pairs performance    ]     0.042000000000002
+--[performance][    tb[i] performance    ]     0.030000000000001
 
 local sin = math.sin  --local reference to math.sin
 local testValue = 0
@@ -49,9 +52,8 @@ testtime(1,"test global performance", function()
     end
 end
 )
--- test local performance    1.4550000000004
--- test global performance    1.4470000000001
-
+-- [performance][    test local performance    ]     0.037000000000006
+-- [performance][    test global performance    ]     0.036999999999978
 
 local func1 = function(a,b,func)
     return func(a+b)
@@ -70,8 +72,8 @@ testtime(100000, "使用局部变量传递函数参数",function()
     local x = func1( 1, 2, func2 )
 end)
 
---将函数体定义作为参数传递    0.091000000000001
---使用局部变量传递函数参数    0.088999999999999
+--[performance][    将函数体定义作为参数传递    ]     0.0060000000000002
+--[performance][    使用局部变量传递函数参数    ]     0.0010000000000048
 
 local a = {}
 local table_insert = table.insert
@@ -105,10 +107,10 @@ testtime(1, "使用计数器",function()
     end
 end)
 
---使用table.insert()   1.5890000000001
---使用循环的计数       0.031000000000063
---使用table的size      0.149
---使用计数器           0.038999999999987
+--[performance][    使用table.insert()    ]     0.10599999999999
+--[performance][    使用循环的计数    ]     0.0049999999999955
+--[performance][    使用table的size    ]     0.10599999999999
+--[performance][    使用计数器    ]     0.0060000000000002
 
 local tb_unpack = { 100, 200, 300, 400 }
 local tb_unpackRet = {}
@@ -144,3 +146,6 @@ testtime(1, "不缓存table的元素",function()
         end
     end
 end)
+
+--[performance][    缓存table的元素    ]     0.0020000000000095
+--[performance][    不缓存table的元素    ]     0.0020000000000095

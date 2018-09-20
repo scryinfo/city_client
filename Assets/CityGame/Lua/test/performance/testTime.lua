@@ -10,6 +10,6 @@ return function(scale,title, f) --前面加个 return ，能够让这个方法�
 
   local endTime = os.clock()
 
-  logDebug( title, endTime - startTime )
+  log("performance", "[",title,"] ",endTime - startTime)
 
 end

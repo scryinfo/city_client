@@ -7,6 +7,7 @@ TestGroup={}
 local this = TestGroup
 
 TestGroup.TestGroupId ={
+    performance="performance", --用于性能测试的分组
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -19,6 +20,7 @@ TestGroup.TestGroupId ={
 }
 
 TestGroup.ActiveTestGroupId ={
+    performance="performance",
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -44,7 +46,7 @@ function TestGroup.remove_TestGroupId(...)
 end
 
 
---激活log分组
+--激活log分组, 在调用该方法之前，需要已经 require 过 Framework/pbl/luaunit
 function TestGroup.active_TestGroup(...)
     TestGroup.ActiveTestGroupId[...] = ...
     TestGroup.TestGroupId[...] = ...

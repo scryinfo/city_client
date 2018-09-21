@@ -34,8 +34,7 @@ function HouseCtrl.OnCreate(obj)
     HousePanel.InitDate(this.houseData)
 
     this.houseData.buildingType = BuildingType.House
-    local houseToggleGroup = BuildingInfoToggleGroupMgr:New()
-    houseToggleGroup:initialize(HousePanel.leftRootTran, HousePanel.rightRootTran, houseBehaviour, this.houseData)
+    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, houseBehaviour, this.houseData)
 
     --if this.houseData.isStartBid then
     --    Event.Brocast("m_RegistGroundBidInfor");

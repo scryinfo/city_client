@@ -11,27 +11,38 @@ RentalItem.static.CONTENT_H = 47  --显示内容的高度
 RentalItem.static.TOP_H = 43  --top条的高度
 
 --初始化方法 --数据需要当前租金 & 生效日期（当前天 + 配置表读出来的时间：08:00:00）
-function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData)
+function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect
     self.rentalData = rentalData
     self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
-    self.contentRoot = self.view.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.openStateTran = self.view.transform:Find("topRoot/open");  --打开状态
-    self.closeStateTran = self.view.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.view.transform:Find("topRoot/close/openBtn");  --打开按钮
-    self.toDoBtn = self.view.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
-    self.rentalValueText = self.view.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");  -- 租金显示的值
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
+    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
+    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
+    self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");  -- 租金显示的值
 
     --具体字体大小是否从数据库读取？
-    self.rentalValueText.text = self:getPriceString(rentalData.rent, 14, 10)
+    self.rentalValueText.text = self:_getPriceString(rentalData.rent, 14, 10)
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc(toggleData));  --这个方法是mgr传来的，每次点击都会调一次
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, RentalItem.changeRentPrice);  --打开更改租金界面
+    log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
+
+    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
+        clickOpenFunc(mgrTable, self.toggleData)
+    end);
+
+    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
+        if not self.viewRect.gameObject.activeSelf then
+            return
+        end
+        --打开更改租金界面
+
+    end);
 end
 
 --获取是第几个点击了
-function OccupancyRateItem:getToggleIndex()
+function RentalItem:getToggleIndex()
     return self.toggleData.index
 end
 
@@ -39,7 +50,7 @@ end
 function RentalItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
-    self.rentalValueText = self:getPriceString(self.rentalData.rent, 14, 10)
+    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 14, 10)
     self.openStateTran.localScale = Vector3.one
     self.closeStateTran.localScale = Vector3.zero
 
@@ -70,21 +81,12 @@ function RentalItem:updateInfo(rent)
         return
     end
 
-    self.rentalValueText = self:getPriceString(self.rentalData.rent, 14, 10)
-end
-
---打开更改租金界面
-function RentalItem:changeRentPrice()
-    if not self.viewRect.gameObject.activeSelf then
-        return
-    end
-
-
+    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 14, 10)
 end
 
 --获取价格显示文本 --整数和小数部分大小不同
-function RentalItem:getPriceString(str, intSize, floatSize)
-    local index = string.find(str, ".")
+function RentalItem:_getPriceString(str, intSize, floatSize)
+    local index = string.find(str, '%.')
     local intString = string.sub(str, 1, index)
     local floatString = string.sub(str, index + 1)
     local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)

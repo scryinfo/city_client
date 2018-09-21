@@ -23,7 +23,7 @@ end
 function HouseModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Z) then
         HouseCtrl.OpenPanel({})
-        log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
+        --log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
     end
 end
 

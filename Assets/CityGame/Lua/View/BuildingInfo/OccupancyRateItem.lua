@@ -12,23 +12,27 @@ OccupancyRateItem.static.CONTENT_H = 47  --显示内容的高度
 OccupancyRateItem.static.TOP_H = 43  --top条的高度
 
 --初始化方法 --数据需要住宅容量（读配置表）以及当前入住人数
-function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData)
+function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect
     self.occupancyData = occupancyData
     self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
-    self.contentRoot = self.view.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.openStateTran = self.view.transform:Find("topRoot/open");  --打开状态
-    self.closeStateTran = self.view.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.view.transform:Find("topRoot/close/openBtn");  --打开按钮
-    self.occupancySlider = self.view.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider");  -- slider
-    self.occupancyText = self.view.transform:Find("contentRoot/Text"):GetComponent("Text");  -- slider显示的值
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
+    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
+    self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider");  -- slider
+    self.occupancyText = self.viewRect.transform:Find("contentRoot/Text"):GetComponent("Text");  -- slider显示的值
 
     self.occupancySlider.maxValue = occupancyData.totalCount  --暂时不知道这个字段叫什么，从配置表中读取
     self.occupancySlider.value = occupancyData.renter
-    self.occupancyText.text = occupancyData.renter.."/"..occupancyData.value
+    self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc(toggleData));  --这个方法是mgr传来的，每次点击都会调一次
+    log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
+
+    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
+        clickOpenFunc(mgrTable, self.toggleData)
+    end);                                                              --这个方法是mgr传来的，每次点击都会调一次
 end
 
 --获取是第几个点击了

@@ -10,21 +10,21 @@ local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
 local log = log
 
-UnitTest("abel_w4", "test_ipairs",  function ()
+UnitTest.Exec("abel_w4", "test_ipairs",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in ipairs(tb) do
         log("abl_w5", tostring("[test_ipairs] for in  ipairs: "),k, v)
     end
 end)
 
-UnitTest("abel_w4", "test_pairs",  function ()
+UnitTest.Exec("abel_w4", "test_pairs",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in pairs(tb) do
         log("abl_w5", tostring("[test_pairs] for in  pairs: "),k, v)
     end
 end)
 
-UnitTest("abel_w4", "test_len",  function ()
+UnitTest.Exec("abel_w4", "test_len",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     log("abel_w4",tostring("[examination] test_len: #tb "..#tb))
 end)
@@ -35,7 +35,7 @@ end)
     相当于用你额外写的比较函数重载了lua中自带的“<”操作符。这就有一个特别要注意的问题，
     当两个数相等的时候，比较函数一定要返回false！
 ]]--
-UnitTest("abel_w4", "test_table_sort",  function ()
+UnitTest.Exec("abel_w4", "test_table_sort",  function ()
     local a = 5
     local b = 5
     local c = 5
@@ -63,7 +63,7 @@ end)
 --[[
 and连接多个操作数时，表达式的返回值就是从左到右第一个为假的值，若所有操作数值都不为假，则表达式的返回值为最后一个操作数；
 ]]--
-UnitTest("abel_w4", "test_and",  function ()
+UnitTest.Exec("abel_w4", "test_and",  function ()
     log("abel_w4","[test_and] 'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f' = ",'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
     log("abel_w4","[test_and] 'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f' =",'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f')
     log("abel_w4","[test_and] 0 and 'b' and 'c' and nil = ",0 and 'b' and 'c' and nil)
@@ -78,7 +78,7 @@ end)
 --[[
 or连接多个操作数时，表达式的返回值就是从左到右第一个不为假的值，若所有操作数值都为假，则表达式的返回值为最后一个操作数；
 ]]--
-UnitTest("abel_w4", "test_or",  function ()
+UnitTest.Exec("abel_w4", "test_or",  function ()
     log("abel_w4","[test_or]  测试开始: ")
     --[[
     Lua中所有的逻辑运算符将false和nil视为假，其他任何东西视为真，0也视为真。
@@ -105,7 +105,7 @@ end)
 
 --https://www.jianshu.com/p/7c25d5624c9e
 --Lua中还会用到 "a and b or c ",这类似于C系语言中的表达式 a ? b : c： max = (a > b) and a or b
-UnitTest("abel_w4", "test_and_or",  function ()
+UnitTest.Exec("abel_w4", "test_and_or",  function ()
     log("abel_w4", "[test_and_or]  测试开始: ")
     local a = 666
     local b = 333

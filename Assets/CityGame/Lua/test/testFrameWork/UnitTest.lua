@@ -16,7 +16,7 @@
 		UnitTest = require ('test/testFrameWork/UnitTest')
 	2、 定义测试用例
 		示例:
-		UnitTest("abel_w4", "test_pb11111",  function ()
+		UnitTest.Exec("abel_w4", "test_pb11111",  function ()
 			log("abel_w4","[test_pb11111]  测试完毕")
 		end)
 		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
@@ -30,7 +30,7 @@
 			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
 三、 说明：
 	1、 测试用例的定义实际调用的是这个方法：
-		function UnitTest(unitGroupId, funcName, func)
+		function UnitTest.Exec(unitGroupId, funcName, func)
 		参数中的 unitGroupId 就是测试分组的Id
 	2、 方法参数说明
 		1、 unitGroupId 测试组Id
@@ -41,7 +41,8 @@
 			2、 要求全局唯一
 		3、 func 测试用例的方法实现
 ]]--
-local function UnitTest(unitGroupId, funcName, func)
+UnitTest = {}
+function UnitTest.Exec(unitGroupId, funcName, func)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
         return {}
     end
@@ -49,5 +50,12 @@ local function UnitTest(unitGroupId, funcName, func)
     _G[funcName] = func
 end
 
---active_TestGroup = TestGroup.active_TestGroup
+function UnitTest.PerformanceTest(groupid, info,func)
+    log(groupid,info)
+    local startTime = os.clock()
+    func(groupid)
+    local endTime = os.clock()
+    log(groupid,info, "执行时间: ",endTime - startTime)
+end
+
 return UnitTest

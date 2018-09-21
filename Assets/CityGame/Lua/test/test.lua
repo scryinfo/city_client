@@ -7,7 +7,7 @@
 if not CityGlobal.G_UNITTEST then return {} end
 
 --TestGroup.active_TestGroup("abel_w4")
-TestGroup.active_TestGroup("abel_w4_performance")
+TestGroup.active_TestGroup("abel_w4_performance1")
 --TestGroup.active_TestGroup("abel_w3")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -30,11 +30,11 @@ local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
-UnitTest("abel_w4", "test_pb11111",  function ()
+UnitTest.Exec("abel_w4", "test_pb11111",  function ()
     log("abel_w4","[test_pb11111]  balabalabalabala...............")
 end)
 
-UnitTest("abel_w3", "test_pb",  function ()
+UnitTest.Exec("abel_w3", "test_pb",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
     ----2、 填充 protobuf 内部协议数据
@@ -48,7 +48,7 @@ UnitTest("abel_w3", "test_pb",  function ()
     log("abel_w3","[test_pb] login.account: "..msg.account)
 end)
 
-UnitTest("abel_w3", "test_oo",  function ()
+UnitTest.Exec("abel_w3", "test_oo",  function ()
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
@@ -57,14 +57,14 @@ UnitTest("abel_w3", "test_oo",  function ()
     p2:speak()
 end )
 
-UnitTest("abel_w3", "test_OO_Mixins",function()
+UnitTest.Exec("abel_w3", "test_OO_Mixins",function()
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
     bat:fly()
 end)
 
-UnitTest("abel_w3", "check_load",function()
+UnitTest.Exec("abel_w3", "check_load",function()
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -74,7 +74,7 @@ UnitTest("abel_w3", "check_load",function()
     end
 end)
 
-UnitTest("abel_w3", "test_pbl_load",function()
+UnitTest.Exec("abel_w3", "test_pbl_load",function()
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -106,7 +106,7 @@ UnitTest("abel_w3", "test_pbl_load",function()
     local val = pb.enum("ascode.OpCode", "login")
 end)
 
-UnitTest("abel_w3", "test_pbl_encode_decode",function()
+UnitTest.Exec("abel_w3", "test_pbl_encode_decode",function()
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;
@@ -135,7 +135,7 @@ UnitTest("abel_w3", "test_pbl_encode_decode",function()
     print(require "Framework/pbl/serpent".block(data2))
 end)
 
-UnitTest("abel_w3", "test_log",function()
+UnitTest.Exec("abel_w3", "test_log",function()
     log("abl_w5", "[test] [test_log]  abl_w5 ")
     log("abl_w4", "[test] [test_log]  abl_w4 ")
     TestGroup.active_TestGroup("abel_w6_common")

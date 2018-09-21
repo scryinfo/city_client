@@ -2850,7 +2850,7 @@ end
                 local startTime = os.clock()
                 self:execOneFunction( nil, name, nil, instance )
                 local endTime = os.clock()
-                log("system","["..name.."]", "执行时间: ",endTime - startTime)
+                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
                 --log("system","["..name.."]", "------------------------------------------------------ ")
             else
                 -- expandClasses() should have already taken care of sanitizing the input
@@ -2864,6 +2864,7 @@ end
                 local startTime = os.clock()
                 self:execOneFunction( className, methodName, instance, methodInstance )
                 local endTime = os.clock()
+                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
                 --log("system","["..name.."]", "------------------------------------------------------ ")
             end
             if self.result.aborted then

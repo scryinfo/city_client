@@ -91,7 +91,7 @@ table_insert 的效率非常之低，慎用！
 [使用 table size 扩充数组]    执行时间:     0.10900000000038
 ]]--
 UnitTest.Exec("abel_w4_performance", "test_use_table_insert",  function ()
-    UnitTest.PerformanceTest("abel_w4_performance1","[使用 table insert 扩充数组]", function()
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 table insert 扩充数组]", function()
         for i = 1, testcount do
             table_insert( a, i )
         end
@@ -142,7 +142,7 @@ a = {}
 for n = 1,1000 do
     a[n] = {x = n}
 end
-UnitTest.Exec("abel_w4_performance1", "test_cache_table_element",  function ()
+UnitTest.Exec("abel_w4_performance", "test_cache_table_element",  function ()
     UnitTest.PerformanceTest("abel_w4_performance1","[缓存 table element 1]", function()
         for n = 1,1000 do
             local y = a[n]
@@ -152,7 +152,7 @@ UnitTest.Exec("abel_w4_performance1", "test_cache_table_element",  function ()
         end
     end)
 
-    UnitTest.PerformanceTest("abel_w4_performance1","[缓存 table element 2]", function()
+    UnitTest.PerformanceTest("abel_w4_performance","[缓存 table element 2]", function()
         for i = 1,1000 do
             for n = 1,1000 do
                 local y = a[n]
@@ -161,7 +161,7 @@ UnitTest.Exec("abel_w4_performance1", "test_cache_table_element",  function ()
         end
     end)
 
-    UnitTest.PerformanceTest("abel_w4_performance1","[不缓存 table element 1]", function()
+    UnitTest.PerformanceTest("abel_w4_performance","[不缓存 table element 1]", function()
         for n = 1,1000 do
             for i = 1,1000 do
                 a[n].x = a[n].x + 1
@@ -169,7 +169,7 @@ UnitTest.Exec("abel_w4_performance1", "test_cache_table_element",  function ()
         end
     end)
 
-    UnitTest.PerformanceTest("abel_w4_performance1","[不缓存 table element 2]", function()
+    UnitTest.PerformanceTest("abel_w4_performance","[不缓存 table element 2]", function()
         for i = 1,1000 do
             for n = 1,1000 do
                 a[n].x = a[n].x + 1

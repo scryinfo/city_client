@@ -7,7 +7,7 @@
 if not CityGlobal.G_UNITTEST then return {} end
 
 --TestGroup.active_TestGroup("abel_w4")
-TestGroup.active_TestGroup("abel_w4_performance1")
+TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w3")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -17,11 +17,12 @@ require "LuaUtil"
 
 UnitTest = require ('test/testFrameWork/UnitTest')
 
-require('test/performance/run')
+--require('test/performance/run')
 require ("pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
 require("test/performance/luaPerformance")
+require('test/performance/classPerformance')
 require("examination")
 require("metatable")
 

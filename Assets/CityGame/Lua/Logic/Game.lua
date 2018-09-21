@@ -62,4 +62,9 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
+    ---测试住宅
+    local HouseModel = CtrlManager.GetModel(ModelNames.House);
+    if HouseModel ~= nil then
+        HouseModel:Awake();
+    end
 end

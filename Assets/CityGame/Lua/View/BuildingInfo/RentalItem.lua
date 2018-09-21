@@ -11,9 +11,10 @@ RentalItem.static.CONTENT_H = 47  --显示内容的高度
 RentalItem.static.TOP_H = 43  --top条的高度
 
 --初始化方法 --数据需要当前租金 & 生效日期（当前天 + 配置表读出来的时间：08:00:00）
-function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLuaBehaviour)
+function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData)
     self.viewRect = viewRect
     self.rentalData = rentalData
+    self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
     self.contentRoot = self.view.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.view.transform:Find("topRoot/open");  --打开状态
@@ -25,13 +26,18 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
     --具体字体大小是否从数据库读取？
     self.rentalValueText.text = self:getPriceString(rentalData.rent, 14, 10)
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc);  --这个方法是mgr传来的，每次点击都会调一次
+    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc(toggleData));  --这个方法是mgr传来的，每次点击都会调一次
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, RentalItem.changeRentPrice);  --打开更改租金界面
+end
+
+--获取是第几个点击了
+function OccupancyRateItem:getToggleIndex()
+    return self.toggleData.index
 end
 
 --打开
 function RentalItem:openToggleItem(targetMovePos)
-    self.BuildingInfoToggleState = BuildingInfoToggleState.Open
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
     self.rentalValueText = self:getPriceString(self.rentalData.rent, 14, 10)
     self.openStateTran.localScale = Vector3.one
@@ -39,17 +45,21 @@ function RentalItem:openToggleItem(targetMovePos)
 
     self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H) --打开显示内容
     self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+
+    return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOTAL_H)
 end
 
 --关闭
 function RentalItem:closeToggleItem(targetMovePos)
-    self.BuildingInfoToggleState = BuildingInfoToggleState.Close
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close
 
     self.openStateTran.localScale = Vector3.zero
     self.closeStateTran.localScale = Vector3.one
 
     self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, 0) --关闭显示内容
     self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+
+    return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOP_H)
 end
 
 --刷新数据

@@ -12,9 +12,10 @@ OccupancyRateItem.static.CONTENT_H = 47  --显示内容的高度
 OccupancyRateItem.static.TOP_H = 43  --top条的高度
 
 --初始化方法 --数据需要住宅容量（读配置表）以及当前入住人数
-function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour)
+function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData)
     self.viewRect = viewRect
     self.occupancyData = occupancyData
+    self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
     self.contentRoot = self.view.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.view.transform:Find("topRoot/open");  --打开状态
@@ -27,12 +28,17 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = occupancyData.renter.."/"..occupancyData.value
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc);  --这个方法是mgr传来的，每次点击都会调一次
+    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, clickOpenFunc(toggleData));  --这个方法是mgr传来的，每次点击都会调一次
+end
+
+--获取是第几个点击了
+function OccupancyRateItem:getToggleIndex()
+    return self.toggleData.index
 end
 
 --打开
 function OccupancyRateItem:openToggleItem(targetMovePos)
-    self.BuildingInfoToggleState = BuildingInfoToggleState.Open
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = self.occupancyData.renter.."/"..self.occupancyData.totalCount
@@ -41,17 +47,21 @@ function OccupancyRateItem:openToggleItem(targetMovePos)
 
     self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
     self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+
+    return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOTAL_H)
 end
 
 --关闭
 function OccupancyRateItem:closeToggleItem(targetMovePos)
-    self.BuildingInfoToggleState = BuildingInfoToggleState.Close
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close
 
     self.openStateTran.localScale = Vector3.zero
     self.closeStateTran.localScale = Vector3.one
 
     self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, 0) --关闭显示内容
     self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+
+    return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOP_H)
 end
 
 --刷新数据
@@ -65,10 +75,3 @@ function OccupancyRateItem:updateInfo(data)
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = self.occupancyData.renter.."/"..self.occupancyData.totalCount
 end
-
-
-active_TestGroup("cycle_w5")
-
-UnitTest("cycle_w5", "test_loginctrl_tempTest",  function ()
-    log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
-end)

@@ -166,6 +166,7 @@ public class Packager {
         AddBuildMap("BuildingInfo" + AppConst.BundleExt, "BuildingInfoPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("BuildingInfoRight" + AppConst.BundleExt, "BuildingInfoRightPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("BuildingTransfer" + AppConst.BundleExt, "BuildingTransferPanel.prefab", "Assets/CityGame/Resources/View");
+        AddBuildMap("House" + AppConst.BundleExt, "HousePanel.prefab", "Assets/CityGame/Resources/View");
 
         AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
         AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");

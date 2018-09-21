@@ -3,96 +3,104 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/18 18:22
 ---
-
-if not CityGlobal.G_PERFORMANCETEST then return {} end
-
 testtime = require 'test/performance/testTime'
 
 --[[
  如果我们明确table中的数据全部存放在线性数组中, 调用ipairs或者pairs均可, 并无太大差异(注意ipairs时中间不要出现nil值,
  否则会导致遍历中断), 如果我们明确遍历hash表中的值, 则使用pairs
 ]]--
+
 local tb = {"oh", [3] = "god", "my", [5] = "hello", [4] = "world"}
-testtime(1000000,"ipairs performance", function()
-    for k,v in ipairs(tb) do
-        v = 1
+
+UnitTest("abel_w4_performance", "test_pairs_ipairs_ipairs",  function ()
+    --log("abel_w4_performance","[使用 ipairs 迭代器遍历")
+    for i = 1, 1000000 do
+        for k,v in ipairs(tb) do
+            v = 1
+        end
     end
 end)
 
-testtime(1000000,"pairs performance", function()
-    for k,v in pairs(tb) do
-        v = 1
+UnitTest("abel_w4_performance", "test_pairs_ipairs_pairs",  function ()
+    --log("abel_w4_performance","[使用 pairs 迭代器遍历")
+    for i = 1, 1000000 do
+        for k,v in pairs(tb) do
+            v = 1
+        end
     end
 end)
 
-testtime(1000000,"tb[i] performance", function()
-    for i = 1, #tb do
-        tb[i] = 1
+UnitTest("abel_w4_performance", "test_tb_i_performance",  function ()
+    --log("abel_w4_performance","[使用 tb[i] 迭代器遍历")
+    for i = 1, 1000000 do
+        for i = 1, #tb do
+            tb[i] = 1
+        end
     end
 end)
 
---输出
---[performance][    ipairs performance    ]     0.048999999999978
---[performance][    pairs performance    ]     0.042000000000002
---[performance][    tb[i] performance    ]     0.030000000000001
-
-local sin = math.sin  --local reference to math.sin
 local testValue = 0
-testtime(1,"test local performance", function()
+UnitTest("abel_w4_performance", "test_local_performance",  function ()
+    --log("abel_w4_performance","[使用 local 变量缓存全局数据")
+    local sin = math.sin  --local reference to math.sin
     for i = 1,1000000 do
         testValue = testValue + sin(i)
     end
-end
-)
+end)
 
 testValue = 0
-testtime(1,"test global performance", function()
+UnitTest("abel_w4_performance", "test_global_performance",  function ()
+    --log("abel_w4_performance","[使用全局数据")
     for i = 1,1000000 do
         testValue = testValue + math.sin(i)
     end
-end
-)
--- [performance][    test local performance    ]     0.037000000000006
--- [performance][    test global performance    ]     0.036999999999978
+end)
+
 
 local func1 = function(a,b,func)
     return func(a+b)
 end
 
-testtime(100000,"将函数体定义作为参数传递", function()
-    local x = func1( 1, 2, function(a) return a*2 end )
-end
-)
+UnitTest("abel_w4_performance", "test_funcAsParam",  function ()
+    --log("abel_w4_performance","[函数直接作为参数传递]")
+    for i = 1,1000000 do
+        func1( 1, 2, function(a) return a*2 end )
+    end
+end)
 
 local func2 = function( c )
     return c*2
 end
 
-testtime(100000, "使用局部变量传递函数参数",function()
-    local x = func1( 1, 2, func2 )
+UnitTest("abel_w4_performance", "test_localFuncParamAsParam",  function ()
+    --log("abel_w4_performance","[函数的local变量作为参数传递]")
+    for i = 1,1000000 do
+        func1( 1, 2, func2 )
+    end
 end)
-
---[performance][    将函数体定义作为参数传递    ]     0.0060000000000002
---[performance][    使用局部变量传递函数参数    ]     0.0010000000000048
 
 local a = {}
 local table_insert = table.insert
 local testcount = 1000000
-testtime(1, "使用table.insert()",function()
+
+UnitTest("abel_w4_performance", "test_use_table_insert",  function ()
+    --log("abel_w4_performance","[使用 table insert] 扩充数组")
     for i = 1,testcount do
         table_insert( a, i )
     end
 end)
 
 a = {}
-testtime(1, "使用循环的计数",function()
+UnitTest("abel_w4_performance", "test_use_loop_counter",  function ()
+    --log("abel_w4_performance","[使用 loop counter 扩充数组]")
     for i = 1,testcount do
         a[i] = i
     end
 end)
 
 a = {}
-testtime(1, "使用table的size",function()
+UnitTest("abel_w4_performance", "test_use_table_size",  function ()
+    --log("abel_w4_performance","[使用 table size 扩充数组]")
     for i = 1,testcount do
         a[#a+1] = i
     end
@@ -100,38 +108,40 @@ end)
 
 a = {}
 local index = 1
-testtime(1, "使用计数器",function()
+UnitTest("abel_w4_performance", "test_use_extern_counter",  function ()
+    --log("abel_w4_performance","[使用外部计数器扩充数组]")
     for i = 1,testcount do
         a[index] = i
         index = index+1
     end
 end)
 
---[performance][    使用table.insert()    ]     0.10599999999999
---[performance][    使用循环的计数    ]     0.0049999999999955
---[performance][    使用table的size    ]     0.10599999999999
---[performance][    使用计数器    ]     0.0060000000000002
-
 local tb_unpack = { 100, 200, 300, 400 }
 local tb_unpackRet = {}
-testtime(100000, "使用 unpack()函数",function()
-    tb_unpackRet = unpack(tb_unpack)
-end)
-
-tb_unpackRet = {}
-testtime(100000, "不使用unpack()函数",function()
-    for i = 1,#tb_unpack do
-        tb_unpackRet[i] =  tb_unpack[i]
+UnitTest("abel_w4_performance", "test_use_unpack",  function ()
+    --log("abel_w4_performance","[使用unpack展开table]")
+    for i = 1,100000 do
+        tb_unpackRet = unpack(tb_unpack)
     end
 end)
 
---使用 unpack()函数    0.048000000000002
---不使用unpack()函数    0.03000000000003
+tb_unpackRet = {}
+UnitTest("abel_w4_performance", "test_notUse_unpack",  function ()
+    --log("abel_w4_performance","[不使用unpack展开table]")
+    for i = 1,100000 do
+        tb_unpackRet[1] =  tb_unpack[1]
+        tb_unpackRet[2] =  tb_unpack[2]
+        tb_unpackRet[3] =  tb_unpack[3]
+        tb_unpackRet[4] =  tb_unpack[4]
+    end
+end)
+
 a = {}
 for n = 1,1000 do
     a[n] = {x = n}
 end
-testtime(1, "缓存table的元素",function()
+UnitTest("abel_w4_performance", "test_cache_table_element",  function ()
+    --log("abel_w4_performance","[缓存 table element]")
     for i = 1,1000 do
         for n = 1,1000 do
             local y = a[n]
@@ -139,13 +149,12 @@ testtime(1, "缓存table的元素",function()
         end
     end
 end)
-testtime(1, "不缓存table的元素",function()
+
+UnitTest("abel_w4_performance", "test_notCache_table_element",  function ()
+    --log("abel_w4_performance","[不缓存 table element]")
     for i = 1,1000 do
         for n = 1,1000 do
             a[n].x = a[n].x + 1
         end
     end
 end)
-
---[performance][    缓存table的元素    ]     0.0020000000000095
---[performance][    不缓存table的元素    ]     0.0020000000000095

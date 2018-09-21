@@ -11,7 +11,6 @@ local fail     = lu.assertErrorMsgContains
 local log = log
 
 UnitTest("abel_w4", "test_ipairs",  function ()
-    log("abel_w4","[test_ipairs]  测试开始:")
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in ipairs(tb) do
         log("abl_w5", tostring("[test_ipairs] for in  ipairs: "),k, v)
@@ -19,7 +18,6 @@ UnitTest("abel_w4", "test_ipairs",  function ()
 end)
 
 UnitTest("abel_w4", "test_pairs",  function ()
-    log("abel_w4","[test_pairs]  测试开始:")
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in pairs(tb) do
         log("abl_w5", tostring("[test_pairs] for in  pairs: "),k, v)
@@ -27,7 +25,6 @@ UnitTest("abel_w4", "test_pairs",  function ()
 end)
 
 UnitTest("abel_w4", "test_len",  function ()
-    log("abel_w4","[test_len]  测试开始:")
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     log("abel_w4",tostring("[examination] test_len: #tb "..#tb))
 end)
@@ -39,7 +36,6 @@ end)
     当两个数相等的时候，比较函数一定要返回false！
 ]]--
 UnitTest("abel_w4", "test_table_sort",  function ()
-    log("abel_w4","[test_table_sort]  测试开始:")
     local a = 5
     local b = 5
     local c = 5
@@ -68,7 +64,6 @@ end)
 and连接多个操作数时，表达式的返回值就是从左到右第一个为假的值，若所有操作数值都不为假，则表达式的返回值为最后一个操作数；
 ]]--
 UnitTest("abel_w4", "test_and",  function ()
-    log("abel_w4","[test_and]  测试开始:")
     log("abel_w4","[test_and] 'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f' = ",'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
     log("abel_w4","[test_and] 'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f' =",'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f')
     log("abel_w4","[test_and] 0 and 'b' and 'c' and nil = ",0 and 'b' and 'c' and nil)

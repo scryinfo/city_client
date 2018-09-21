@@ -7,6 +7,7 @@
 if not CityGlobal.G_UNITTEST then return {} end
 
 --TestGroup.active_TestGroup("abel_w4")
+TestGroup.active_TestGroup("abel_w4_performance")
 --TestGroup.active_TestGroup("abel_w3")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -30,11 +31,10 @@ local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 
 UnitTest("abel_w4", "test_pb11111",  function ()
-    log("abel_w4","[test_pb11111]  测试开始:")
+    log("abel_w4","[test_pb11111]  balabalabalabala...............")
 end)
 
 UnitTest("abel_w3", "test_pb",  function ()
-    log("abel_w3","[test_pb]  测试开始:")
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
     ----2、 填充 protobuf 内部协议数据
@@ -49,7 +49,6 @@ UnitTest("abel_w3", "test_pb",  function ()
 end)
 
 UnitTest("abel_w3", "test_oo",  function ()
-    log("abel_w3","[test_oo]  测试开始:")
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
@@ -59,7 +58,6 @@ UnitTest("abel_w3", "test_oo",  function ()
 end )
 
 UnitTest("abel_w3", "test_OO_Mixins",function()
-    log("abel_w3","[test_OO_Mixins]  测试开始:")
     local bee = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee:fly()
@@ -67,7 +65,6 @@ UnitTest("abel_w3", "test_OO_Mixins",function()
 end)
 
 UnitTest("abel_w3", "check_load",function()
-    log("abel_w3","[check_load]  测试开始:")
     local pbdata = protoc.new():compile(chunk, name)
     local ret, offset = pb.load(pbdata)
     if not ret then
@@ -78,7 +75,6 @@ UnitTest("abel_w3", "check_load",function()
 end)
 
 UnitTest("abel_w3", "test_pbl_load",function()
-    log("abel_w3","[test_pbl_load]  测试开始:")
     local Login = { -- 我们定义一个addressbook里的 Person 消息
         account = "Alice"
     }
@@ -111,7 +107,6 @@ UnitTest("abel_w3", "test_pbl_load",function()
 end)
 
 UnitTest("abel_w3", "test_pbl_encode_decode",function()
-    log("abel_w3","[test_pbl_encode_decode]  测试开始:")
     assert(protoc:load [[
     message Phone {
       optional string name        = 1;

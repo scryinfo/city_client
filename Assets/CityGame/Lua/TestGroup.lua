@@ -6,8 +6,10 @@
 TestGroup={}
 local this = TestGroup
 
+--固定分组是不需手动激活的，任何地方都可以直接使用的
 TestGroup.TestGroupId ={
-    performance="performance", --用于性能测试的分组
+    system="system",            --用于系统打印的固定分组
+    performance="performance",  --用于性能测试的固定分组
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -20,6 +22,7 @@ TestGroup.TestGroupId ={
 }
 
 TestGroup.ActiveTestGroupId ={
+    system="system",
     performance="performance",
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",

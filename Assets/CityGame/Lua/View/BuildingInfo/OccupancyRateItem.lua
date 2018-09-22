@@ -33,9 +33,11 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
         clickOpenFunc(mgrTable, self.toggleData)
     end);                                                              --这个方法是mgr传来的，每次点击都会调一次
 
-    Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
-        mgrTable:houseOccDataUpdate(data)
-    end);
+    --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
+    --    --    mgrTable:houseOccDataUpdate(data)
+    --    --end);
+
+    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self);
 end
 
 --获取是第几个点击了

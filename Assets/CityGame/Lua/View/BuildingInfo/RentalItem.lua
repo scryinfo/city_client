@@ -40,9 +40,7 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
 
     end);
 
-    Event.AddListener("c_onRentalValueChange", function (data)
-        mgrTable:houseRentalDataUpdate(data)
-    end);
+    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self);
 end
 
 --获取是第几个点击了

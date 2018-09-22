@@ -128,12 +128,4 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     self.rightData[1] = rentalLuaItem
 end
---住宅入住率改变
-function BuildingInfoToggleGroupMgr:houseOccDataUpdate(data)
-    self.leftData[1]:updateInfo(data)
-end
---住宅租房数据改变
-function BuildingInfoToggleGroupMgr:houseRentalDataUpdate(data)
-    self.rightData[1]:updateInfo(data)
-end
 

@@ -80,8 +80,9 @@ end
 TestGroup.active_TestGroup("cycle_w5")
 
 UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
-    if BuildingInfoModel ~= nil then
-        BuildingInfoModel:Awake();
+    local HouseModel = CtrlManager.GetModel(ModelNames.House);
+    if HouseModel ~= nil then
+        HouseModel:Awake();
     end
     log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
 end)

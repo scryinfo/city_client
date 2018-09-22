@@ -37,10 +37,7 @@ function LoginCtrl.OnCreate(obj)
 	Event.AddListener("c_Disconnect", this.c_Disconnect);
 
 	--启用 c_AddClick_self 单元测试
-	UnitTest.Exec_now("abel_w5", function ()
-		this.testValue = 1
-		Event.Brocast("c_AddClick_self");
-	end)
+	UnitTest.Exec_now("abel_w5", "c_AddClick_self")
 end
 
 function LoginCtrl.onClickChooseGameServer(serverId)

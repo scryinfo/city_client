@@ -31,8 +31,8 @@ this.getIdHead = function(id)
 	return "["..id.."]";
 end
 log = function(logid,s,...)
-	local plgid = get_TestGroupId(logid)
-	local palgid = get_ActiveTestGroupId(logid)
+	local plgid = TestGroup.get_TestGroupId(logid)
+	local palgid = TestGroup.get_ActiveTestGroupId(logid)
 	if plgid == nil or  palgid == nil then
 		return {}
 	end

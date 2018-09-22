@@ -3,144 +3,178 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/18 18:22
 ---
-
-if not CityGlobal.G_PERFORMANCETEST then return {} end
-
 testtime = require 'test/performance/testTime'
 
--- pairs 遍历速度是 ipairs 的3倍, tb[i] 比 pairs 快30%
-local tb = {"oh", [3] = "god", "my", [5] = "hello", [4] = "world"}
-testtime(1000000,"ipairs performance", function()
-    for k,v in ipairs(tb) do
-        v = 1
-    end
+--[[
+ 如果我们明确table中的数据全部存放在线性数组中, ipairs 比 ,pairs 快一倍； 但是 ipairs时中间不能出现nil值,
+ 否则会导致遍历中断), 如果我们明确遍历hash表中的值, 则使用pairs
+]]--
+local tb = {[1] ='oh', [2] = 'god', [3]='my', [5] = 'hello', [4] = 'world'}
+UnitTest.Exec("abel_w4_performance", "test_ipairs_pairs",  function ()
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 ipairs 迭代器遍历", function()
+        for i = 1, 1000000 do
+            for k,v in ipairs(tb) do
+                v = 1
+            end
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 pairs 迭代器遍历", function()
+        for i = 1, 1000000 do
+            for k,v in pairs(tb) do
+                v = 1
+            end
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 tb[i] 迭代器遍历", function()
+        for i = 1, 1000000 do
+            for i = 1, #tb do
+                tb[i] = 1
+            end
+        end
+    end)
 end)
 
-testtime(1000000,"pairs performance", function()
-    for k,v in pairs(tb) do
-        v = 1
-    end
-end)
-
-testtime(1000000,"tb[i] performance", function()
-    for i = 1, #tb do
-        tb[i] = 1
-    end
-end)
-
---输出
---ipairs performance    0.12999999999988
---pairs performance    0.044999999999845
---tb[i] performance    0.031000000000176
-
-local sin = math.sin  --local reference to math.sin
 local testValue = 0
-testtime(1,"test local performance", function()
-    for i = 1,1000000 do
-        testValue = testValue + sin(i)
-    end
-end
-)
+UnitTest.Exec("abel_w4_performance", "test_local_performance",  function ()
+    local sin = math.sin  --local reference to math.sin
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 local 变量缓存全局数据]", function()
+        for i = 1, 1000000 do
+            testValue = testValue + sin(i)
+        end
+    end)
 
-testValue = 0
-testtime(1,"test global performance", function()
-    for i = 1,1000000 do
-        testValue = testValue + math.sin(i)
-    end
-end
-)
--- test local performance    1.4550000000004
--- test global performance    1.4470000000001
+    testValue = 0
+    UnitTest.PerformanceTest("abel_w4_performance","[直接使用全局数据]", function()
+        for i = 1, 1000000 do
+            testValue = testValue + math.sin(i)
+        end
+    end)
 
+end)
 
 local func1 = function(a,b,func)
     return func(a+b)
 end
 
-testtime(100000,"将函数体定义作为参数传递", function()
-    local x = func1( 1, 2, function(a) return a*2 end )
-end
-)
+--[[
+    在使用 local 缓存函数，性能有巨大提升， 提升 21.70 倍！
+    执行时间:     0.49900000000002
+    执行时间:     0.0029999999999291
+]]--
+UnitTest.Exec("abel_w4_performance", "test_funcAsParam",  function ()
+    UnitTest.PerformanceTest("abel_w4_performance","[函数直接作为参数传递]", function()
+        for i = 1, 10000000 do
+            func1( 1, 2, function(a) return a*2 end )
+        end
+    end)
 
-local func2 = function( c )
-    return c*2
-end
+    local func2 = function( c )
+        return c*2
+    end
 
-testtime(100000, "使用局部变量传递函数参数",function()
-    local x = func1( 1, 2, func2 )
+    UnitTest.PerformanceTest("abel_w4_performance","[函数的local变量作为参数传递]", function()
+        for i = 1, 10000000 do
+            func1( 1, 2, func2 )
+        end
+    end)
 end)
-
---将函数体定义作为参数传递    0.091000000000001
---使用局部变量传递函数参数    0.088999999999999
 
 local a = {}
 local table_insert = table.insert
 local testcount = 1000000
-testtime(1, "使用table.insert()",function()
-    for i = 1,testcount do
-        table_insert( a, i )
-    end
-end)
+--[[
+table_insert 的效率非常之低，慎用！
+[使用 table insert 扩充数组]    执行时间:     1.5029999999988
+[使用 loop counter 扩充数组]    执行时间:     0.0059999999994034
+[使用 table size 扩充数组]    执行时间:     0.10900000000038
+]]--
+UnitTest.Exec("abel_w4_performance", "test_use_table_insert",  function ()
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 table insert 扩充数组]", function()
+        for i = 1, testcount do
+            table_insert( a, i )
+        end
+    end)
+    a = {}
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 loop counter 扩充数组]", function()
+        for i = 1, testcount do
+            a[i] = i
+        end
+    end)
 
-a = {}
-testtime(1, "使用循环的计数",function()
-    for i = 1,testcount do
-        a[i] = i
-    end
-end)
+    a = {}
+    UnitTest.PerformanceTest("abel_w4_performance","[使用 table size 扩充数组]", function()
+        for i = 1, testcount do
+            a[#a+1] = i
+        end
+    end)
 
-a = {}
-testtime(1, "使用table的size",function()
-    for i = 1,testcount do
-        a[#a+1] = i
-    end
+    a = {}
+    UnitTest.PerformanceTest("abel_w4_performance","[使用外部计数器扩充数组]", function()
+        for i = 1, testcount do
+            a[index] = i
+            index = index+1
+        end
+    end)
 end)
-
-a = {}
-local index = 1
-testtime(1, "使用计数器",function()
-    for i = 1,testcount do
-        a[index] = i
-        index = index+1
-    end
-end)
-
---使用table.insert()   1.5890000000001
---使用循环的计数       0.031000000000063
---使用table的size      0.149
---使用计数器           0.038999999999987
 
 local tb_unpack = { 100, 200, 300, 400 }
 local tb_unpackRet = {}
-testtime(100000, "使用 unpack()函数",function()
-    tb_unpackRet = unpack(tb_unpack)
+UnitTest.Exec("abel_w4_performance", "test_use_unpack",  function ()
+    UnitTest.PerformanceTest("abel_w4_performance","[使用unpack展开table]", function()
+        for i = 1, testcount do
+            tb_unpackRet = unpack(tb_unpack)
+        end
+    end)
+    tb_unpackRet = {}
+    UnitTest.PerformanceTest("abel_w4_performance","[不使用unpack展开table]", function()
+        for i = 1, testcount do
+            tb_unpackRet[1] =  tb_unpack[1]
+            tb_unpackRet[2] =  tb_unpack[2]
+            tb_unpackRet[3] =  tb_unpack[3]
+            tb_unpackRet[4] =  tb_unpack[4]
+        end
+    end)
 end)
 
-tb_unpackRet = {}
-testtime(100000, "不使用unpack()函数",function()
-    for i = 1,#tb_unpack do
-        tb_unpackRet[i] =  tb_unpack[i]
-    end
-end)
-
---使用 unpack()函数    0.048000000000002
---不使用unpack()函数    0.03000000000003
 a = {}
 for n = 1,1000 do
     a[n] = {x = n}
 end
-testtime(1, "缓存table的元素",function()
-    for i = 1,1000 do
+UnitTest.Exec("abel_w4_performance", "test_cache_table_element",  function ()
+    UnitTest.PerformanceTest("abel_w4_performance1","[缓存 table element 1]", function()
         for n = 1,1000 do
             local y = a[n]
-            y.x = y.x + 1
+            for i = 1,1000 do
+                y.x = y.x + 1
+            end
         end
-    end
-end)
-testtime(1, "不缓存table的元素",function()
-    for i = 1,1000 do
+    end)
+
+    UnitTest.PerformanceTest("abel_w4_performance","[缓存 table element 2]", function()
+        for i = 1,1000 do
+            for n = 1,1000 do
+                local y = a[n]
+                y.x = y.x + 1
+            end
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w4_performance","[不缓存 table element 1]", function()
         for n = 1,1000 do
-            a[n].x = a[n].x + 1
+            for i = 1,1000 do
+                a[n].x = a[n].x + 1
+            end
         end
-    end
+    end)
+
+    UnitTest.PerformanceTest("abel_w4_performance","[不缓存 table element 2]", function()
+        for i = 1,1000 do
+            for n = 1,1000 do
+                a[n].x = a[n].x + 1
+            end
+        end
+    end)
+
 end)

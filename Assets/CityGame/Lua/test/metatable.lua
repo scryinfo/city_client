@@ -54,29 +54,23 @@ end
 -- 等效于
 -- parent.__newindex = parent
 
-function _G.testMetatable()
+UnitTest.Exec("abel_w4", "test_metatable__newindex",  function ()
     child.house = 3
     child.wife = 4
 
-    log(child.house)
-    log(child.wife)
+    log('abel_w4','[test__newindex] parent.__newindex not nil, child.house',tostring(child.house))
+    log('abel_w4','[test__newindex] parent.__newindex not nil, child.wife', tostring(child.wife))
 
     parent.__index = nil
 
     child.house = 5
     child.wife = 6
     --assert(child.house,"[metatable] __newindex test: child.house: nil")
-    log("[metatable] __newindex test: child.house: ".. tostring(child.house))
-    log("[metatable] __newindex test: child.wife: "..tostring(child.wife))
+    log('abel_w4',"[test__newindex] __newindex test: child.house: ".. tostring(child.house))
+    log('abel_w4',"[test__newindex] __newindex test: child.wife: "..tostring(child.wife))
 
-    --打印结果是:
-    -- 1
-    -- 2
-    -- 6
-    -- 4
-    -- nil
-    -- 6
-end
+end)
+
 
 local Parent = {}
 
@@ -87,10 +81,10 @@ function Parent:new()
 end
 
 function Parent:Wife( )
-    log("mother live in the "..self.house )
+    log('abel_w4',"mother live in the "..self.house )
 end
 function Parent:Position()
-    log("Parent live in the "..self.house)
+    log('abel_w4',"Parent live in the "..self.house)
     self:Wife()
 end
 parent = Parent:new()
@@ -101,7 +95,7 @@ parent:Wife()
 Child = Parent:new()
 function Child:Position()
     local ChildHouse = self.house
-    log("child live in the "..ChildHouse)
+    log('abel_w4',"child live in the "..ChildHouse)
     self:Wife()
 end
 
@@ -109,59 +103,61 @@ end
 Child1 = Parent:new()
 function Child1:Position()
     local ChildHouse = self.house
-    log("Child1 live in the "..ChildHouse)
+    log('abel_w4',"Child1 live in the "..ChildHouse)
     self:Wife()
 end
 
-child = Child:new()
-child1 = Child1:new()
+UnitTest.Exec("abel_w4", "test_metatable_DynamicBind",  function ()
+    child = Child:new()
+    child1 = Child1:new()
 
-child:Position()
+    child:Position()
 
-local testArray = {}
-testArray[0] = child
-testArray[1] = child1
-
-for k,v in pairs(testArray)  do
-    v:Position()
-end
+    local testArray = {}
+    testArray[0] = child
+    testArray[1] = child1
+    for k,v in pairs(testArray)  do
+        v:Position()
+    end
+end)
 
 -- lua中检查某值得顺序：比如child 的house 属性。  先到Child中去检查有没有某个字段。就会去检索__index这个元方法。
 -- 即当需要访问一个字段在table中不存在的时候，解释器会去查找一个叫__index的元方法，如果没有该元方法，那么访问结果就是nil,不然就由这个元方法来提供最终结果。
+UnitTest.Exec("abel_w4", "test_metatable__index",  function ()
+    test1 = { param1 = 1}
+    test2 = { param2 = 2}
+    test3 = { param3 = 3}
 
-test1 = { param1 = 1}
-test2 = { param2 = 2}
-test3 = { param3 = 3}
+    -- test2.__index = test1  等价于:
+    test2.__index = function(testTable , key)
+        log("abel_w4",testTable)
+        log("abel_w4",test3)
+        log("abel_w4",key)
+        log("abel_w4",test1[key])
+        return test1[key]
+    end
+    setmetatable(test3 , test2)
 
--- test2.__index = test1  等价于:
-test2.__index = function(testTable , key)
-    -- log(testTable)
-    -- log(test3)
-    -- log(key)
-    -- log(test1[key])
-    return test1[key]
-end
-setmetatable(test3 , test2)
+    log("abel_w4","test3.param1: "..tostring(test3.param1))
+    log("abel_w4","test3.param2: "..tostring(test3.param2))
+    log("abel_w4","test3.param3: "..tostring(test3.param3))
 
-log("test3.param1: "..tostring(test3.param1))
-log("test3.param2: "..tostring(test3.param2))
-log("test3.param3: "..tostring(test3.param3))
+    -- 这里的__index赋值就相当于  test2.__index = test1
 
--- 这里的__index赋值就相当于  test2.__index = test1
+    --注释部分打印得出的结果是:
+    -- table: 0x7fe038c05440
+    -- table: 0x7fe038c05440
+    -- param1
+    -- 1
+    -- nil
+    -- table: 0x7fe038c05440
+    -- table: 0x7fe038c05440
+    -- param2
+    -- nil
+    -- nil
+    -- 3
+end)
 
---注释部分打印得出的结果是:
--- table: 0x7fe038c05440
--- table: 0x7fe038c05440
--- param1
--- 1
--- nil
--- table: 0x7fe038c05440
--- table: 0x7fe038c05440
--- param2
--- nil
--- nil
--- 3
-
-
---testTable的地址和test3的地址相同 ,由此可知，__index这种元方法会有一个默认形参是该表本身。而这里setmetatable只是给表设置了元表，真正查询字段的是根据元表中__index元方法所指向的表中的字段。而不是元表中的字段。
+--testTable的地址和test3的地址相同 ,由此可知，__index这种元方法会有一个默认形参是该表本身。而这里setmetatable只是给表设置了元表，
+--真正查询字段的是根据元表中__index元方法所指向的表中的字段。而不是元表中的字段。
 

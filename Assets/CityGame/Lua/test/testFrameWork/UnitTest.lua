@@ -3,38 +3,66 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/19 13:02
 --[[
-一、分组原则的作用
+一、分组的作用
     1、 测试用例分组，避免无关测试用例占用运行时间
     2、 日志/log也采用相同分组策略，避免无关日志干扰开发
 二、使用方法
-UnitTest = require ('test/testFrameWork/UnitTest')
-示例:
 1、 激活分组
-    active_TestGroup("abel_w4") --分组激活开关，激活之后，所有使用该分组id的测试和日志都能正常运行
-2、 在具体的单元测试定义中注册分组， 如果单元测试的分组没有被激活，那么该单元测试是不会执行到的
-    UnitTest("abel_w5", "test_pb11111",  function ()
-        log("abel_w5","[test_pb11111]  测试完毕")
-    end)
+	示例:
+    TestGroup.active_TestGroup("abel_w3")
+	* 激活 id 为 "abel_w3" 的分组，激活之后，所有使用该分组id的所有测试和日志都能正常运行
+2、 在具体的单元测试定义中注册分组
+	1、 require：
+		UnitTest = require ('test/testFrameWork/UnitTest')
+	2、 定义测试用例
+		示例:
+		UnitTest.Exec("abel_w4", "test_pb11111",  function ()
+			log("abel_w4","[test_pb11111]  测试完毕")
+		end)
+		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
+		* test_pb11111 是测试用例函数的名字
+		* function 后面是测试用例的函数体
 3、 在非单元测试的代码中使用测试分组
-    在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
+    1、 在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
+	2、 我们项目的日志统一使用 log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
+		示例：
+			log("abel_w4","[test_pb11111]  测试完毕")
+			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
 三、 说明：
 	1、 测试用例的定义实际调用的是这个方法：
-		local UnitTest = function(unitGroupId,funcName,f)
+		function UnitTest.Exec(unitGroupId, funcName, func)
 		参数中的 unitGroupId 就是测试分组的Id
 	2、 方法参数说明
 		1、 unitGroupId 测试组Id
 			1、 命名格式： 英文名_工作周_额外信息，  比如： allen_w6_temp
-			2、 作用： 测试分组的唯一ID，一个分组ID可以被多个测试用例共享，该ID的分组通过 active_TestGroup 激活之后，
-				所用共享该ID的测试用例都会被执行
-		2、 funcName 测试用例的方法名字
+			2、 作用： 测试分组的唯一ID，一个分组ID可以被多个测试用例和log命令共享，该ID的分组一旦通过 active_TestGroup激活之后，所用共享该ID的测试用例和Log命令都会被执行
+		2、 funcName 测试用例的函数名
+			1、 函数名必须以 test_ 开头，比如： test_login ，否则是不会被执行到的
+			2、 要求全局唯一
 		3、 func 测试用例的方法实现
 ]]--
-local function UnitTest(unitGroupId, funcName, func)
-    if get_TestGroupId(unitGroupId) == nil  then
+UnitTest = {}
+function UnitTest.Exec(unitGroupId, funcName, func)
+    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
         return {}
     end
     addToTestGropu(funcName,unitGroupId)
     _G[funcName] = func
+end
+
+function UnitTest.PerformanceTest(groupid, info,func)
+    log(groupid,info)
+    local startTime = os.clock()
+    func(groupid)
+    local endTime = os.clock()
+    log(groupid,info, "执行时间: ",endTime - startTime)
+end
+--使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
+function UnitTest.Exec_now(unitGroupId, event)
+    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
+        return {}
+    end
+    Event.Brocast(event);
 end
 
 return UnitTest

@@ -129,10 +129,6 @@ local DefaultMixin = {
 
   static = {
     allocate = function(self)
-      --[[
-      self 静态类本身
-
-      ]]--
       assert(type(self) == 'table', "Make sure that you are using 'Class:allocate' instead of 'Class.allocate'")
       return setmetatable({ class = self }, self.__instanceDict)
     end,

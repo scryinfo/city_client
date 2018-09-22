@@ -77,9 +77,9 @@ function HouseModel.n_OnReceiveQueryGroundAuctionInfo(stream)
 end
 
 
-active_TestGroup("cycle_w5")
+TestGroup.active_TestGroup("cycle_w5")
 
-UnitTest("cycle_w5", "test_loginctrl_tempTest",  function ()
+UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end

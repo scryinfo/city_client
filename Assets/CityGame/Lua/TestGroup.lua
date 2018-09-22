@@ -3,7 +3,13 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/19 9:35
 ---
-local TestGroupId ={
+TestGroup={}
+local this = TestGroup
+
+--固定分组是不需手动激活的，任何地方都可以直接使用的
+TestGroup.TestGroupId ={
+    system="system",            --用于系统打印的固定分组
+    performance="performance",  --用于性能测试的固定分组
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -15,38 +21,37 @@ local TestGroupId ={
     --finished ="finished"
 }
 
-local ActiveTestGroupId ={
+TestGroup.ActiveTestGroupId ={
+    system="system",
+    performance="performance",
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
     --jen_w5 ="jen_w5",
 }
 
-g_LogId = TestGroupId
-g_ActiveId= ActiveTestGroupId
-
-function get_TestGroupId(id)
-    return TestGroupId[id]
+function TestGroup.get_TestGroupId(id)
+    return TestGroup.TestGroupId[id]
 end
 
-function get_ActiveTestGroupId(id)
-    return ActiveTestGroupId[id]
+function TestGroup.get_ActiveTestGroupId(id)
+    return TestGroup.ActiveTestGroupId[id]
 end
 
 --添加log分组
-function add_TestGroupId(...)
-    TestGroupId[...] = ...
+function TestGroup.add_TestGroupId(...)
+    TestGroup.TestGroupId[...] = ...
 end
 --移除log分组(一般情况下用不着，不执行active_TestGroup就不会注册相应的测试组)
-function remove_TestGroupId(...)
-    TestGroupId[...] = nil
-    ActiveTestGroupId[...] = nil
+function TestGroup.remove_TestGroupId(...)
+    TestGroup.TestGroupId[...] = nil
+    TestGroup.ActiveTestGroupId[...] = nil
 end
 
 
---激活log分组
-function active_TestGroup(...)
-    ActiveTestGroupId[...] = ...
-    TestGroupId[...] = ...
+--激活log分组, 在调用该方法之前，需要已经 require 过 Framework/pbl/luaunit
+function TestGroup.active_TestGroup(...)
+    TestGroup.ActiveTestGroupId[...] = ...
+    TestGroup.TestGroupId[...] = ...
 end
 

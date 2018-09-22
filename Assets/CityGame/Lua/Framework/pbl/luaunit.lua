@@ -99,7 +99,7 @@ end
 
 function checkActive(f)
     local groupid = UnitTestGroup[f]
-    if groupid == nil or get_TestGroupId(groupid) == nil then
+    if groupid == nil or TestGroup.get_TestGroupId(groupid) == nil then
         return false
     end
     return true
@@ -2845,7 +2845,13 @@ end
         for i,v in ipairs( filteredList ) do
             local name, instance = v[1], v[2]
             if M.LuaUnit.asFunction(instance) then
+                log("system","["..name.."]", "--------------------------------------------------------------------------- ")
+                log("system","["..name.."]", "开始执行")
+                local startTime = os.clock()
                 self:execOneFunction( nil, name, nil, instance )
+                local endTime = os.clock()
+                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
+                --log("system","["..name.."]", "------------------------------------------------------ ")
             else
                 -- expandClasses() should have already taken care of sanitizing the input
                 assert( type(instance) == 'table' )
@@ -2853,7 +2859,13 @@ end
                 assert( className ~= nil )
                 local methodInstance = instance[methodName]
                 assert(methodInstance ~= nil)
+                log("system","["..name.."]", "--------------------------------------------------------------------------- ")
+                log("system","["..name.."]", "开始执行")
+                local startTime = os.clock()
                 self:execOneFunction( className, methodName, instance, methodInstance )
+                local endTime = os.clock()
+                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
+                --log("system","["..name.."]", "------------------------------------------------------ ")
             end
             if self.result.aborted then
                 break -- "--error" or "--failure" option triggered

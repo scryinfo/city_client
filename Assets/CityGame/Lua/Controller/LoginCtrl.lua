@@ -150,8 +150,6 @@ UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
 	log("abel_w5","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function ()
 		login = gameObject:GetComponent('LuaBehaviour')
-		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest" ,LoginCtrl.OnClickTest);
-		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest1" ,LoginCtrl.OnClickTest1);
 		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest);
 		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest1);
 	end)

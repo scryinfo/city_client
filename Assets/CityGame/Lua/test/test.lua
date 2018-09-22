@@ -6,7 +6,7 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 
---TestGroup.active_TestGroup("abel_w5")
+TestGroup.active_TestGroup("abel_w5")
 --TestGroup.active_TestGroup("abel_w4")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w3")
@@ -50,13 +50,14 @@ UnitTest.Exec("abel_w3", "test_pb",  function ()
     log("abel_w3","[test_pb] login.account: "..msg.account)
 end)
 
-UnitTest.Exec("abel_w3", "test_oo",  function ()
+UnitTest.Exec("abel_w5", "test_oo",  function ()
     local p0 = Person:new('Man01', 30)
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
     local p2 = AgedPerson:new('Luke Skywalker', 21)
     p1:speak()
     p2:speak()
+    Event.Brocast("class_cb", 100);
 end )
 
 UnitTest.Exec("abel_w3", "test_OO_Mixins",function()

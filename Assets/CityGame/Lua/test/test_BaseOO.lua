@@ -19,6 +19,10 @@ AgedPerson.static.ADULT_AGE = 18 --this is a class variable 支持类的静态�
 function AgedPerson:initialize(name, age)
     Person.initialize(self, name) -- this calls the parent's constructor (Person.initialize) on self 这里相当于super方法的调用 ，把自己作为参数传递给基类的方法，复用基类的 speak
     self.age = age
+    Event.AddListener("class_cb", self.class_cb,self);
+end
+function AgedPerson:class_cb(newAge)
+    self.age = age
 end
 function AgedPerson:speak()
     Person.speak(self) -- prints "Hi, I am xx."
@@ -28,3 +32,4 @@ function AgedPerson:speak()
         logDebug('I am an adult.')
     end
 end
+

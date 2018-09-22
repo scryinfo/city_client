@@ -58,4 +58,11 @@ function UnitTest.PerformanceTest(groupid, info,func)
     log(groupid,info, "执行时间: ",endTime - startTime)
 end
 
+function UnitTest.Exec_now(unitGroupId, func)
+    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
+        return {}
+    end
+    func()
+end
+
 return UnitTest

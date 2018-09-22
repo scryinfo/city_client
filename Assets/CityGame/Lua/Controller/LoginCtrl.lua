@@ -10,6 +10,7 @@ local gameObject;
 --构建函数--
 function LoginCtrl.New()
 	logDebug("LoginCtrl.New--->>");
+	testValue = 0
 	return this;
 end
 
@@ -35,6 +36,10 @@ function LoginCtrl.OnCreate(obj)
 	Event.AddListener("c_ConnectionStateChange", this.c_ConnectionStateChange);
 	Event.AddListener("c_Disconnect", this.c_Disconnect);
 
+	--启用 c_AddClick_self 单元测试
+	UnitTest.Exec_now("abel_w5", function ()
+		Event.Brocast("c_AddClick_self");
+	end)
 end
 
 function LoginCtrl.onClickChooseGameServer(serverId)
@@ -119,11 +124,39 @@ function LoginCtrl.c_GsConnected( success )
 	end
 end
 
+function LoginCtrl.gettestValue()
+	return testValue
+end
+
+function LoginCtrl.OnClickTest()
+	local xxx = this.testValue
+	local x = LoginCtrl.testValue
+	local yyy = LoginCtrl.gettestValue()
+	local xxx1  = xxx
+end
+
+function LoginCtrl.OnClickTest1()
+	local xxx = this.testValue
+	local x = LoginCtrl.testValue
+	local yyy = LoginCtrl.gettestValue()
+	local xxx1  = xxx
+end
 --TestGroup.active_TestGroup("abel_w7") --激活测试组
 
 UnitTest.Exec("abel_w7", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")
 	LoginCtrl.c_LoginSuccessfully( false )
+end)
+
+UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
+	log("abel_w5","[test_AddClick_self]  测试开始")
+	Event.AddListener("c_AddClick_self", function ()
+		login = gameObject:GetComponent('LuaBehaviour')
+		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest" ,LoginCtrl.OnClickTest);
+		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest1" ,LoginCtrl.OnClickTest1);
+		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest);
+		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest1);
+	end)
 end)
 
 

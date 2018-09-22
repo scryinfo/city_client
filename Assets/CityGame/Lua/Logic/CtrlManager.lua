@@ -21,6 +21,7 @@ function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 
 	ctrlList[CtrlNames.Login] = LoginCtrl.New();
+	ctrlList[CtrlNames.Login].testValue = 1
 	ctrlList[CtrlNames.SelectAvatar] = SelectAvatarCtrl.New();
 	ctrlList[CtrlNames.CreateAvatar] = CreateAvatarCtrl.New();
 	ctrlList[CtrlNames.GameWorld] = GameWorldCtrl.New();

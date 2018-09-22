@@ -25,6 +25,11 @@ function HouseModel.Update()
         HouseCtrl.OpenPanel({})
         --log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
     end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.X) then
+        local occValue = {renter = 30, totalCount = 80}
+        Event.Brocast("c_onOccupancyValueChange", occValue);
+    end
 end
 
 --启动事件--
@@ -34,7 +39,6 @@ function HouseModel.OnCreate()
 
     --本地的回调注册
     --Event.AddListener("m_PlayerBidGround", this.m_BidGround);
-
 end
 
 --关闭事件--

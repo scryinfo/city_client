@@ -10,6 +10,8 @@ local class = require 'Framework/class'
 
 BuildingInfoToggleGroupMgr = class('BuildingInfoToggleGroupMgr')
 
+BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME = 0.5  --item动画时间
+
 BuildingInfoToggleGroupMgr.static.LEFT_POS = Vector2.New(0, 50)
 BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
 
@@ -60,7 +62,33 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent, pos, nextHeight)
     return rect
 end
 
---创建住宅主页左右信息，左侧加载turnover，staff，occupancy，右侧加载rental
+--刷新item位置信息
+function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
+
+    if leftOpenIndex ~= nil and leftOpenIndex > 0 then
+        local leftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
+        for key, toggleItem in pairs(self.leftData) do
+            if toggleItem:getToggleIndex() == leftOpenIndex then
+                leftPos = toggleItem:openToggleItem(leftPos)
+            else
+                leftPos = toggleItem:closeToggleItem(leftPos)
+            end
+        end
+    end
+
+    if rightOpenIndex ~= nil and rightOpenIndex > 0 then
+        local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+        for key, toggleItem in pairs(self.rightData) do
+            if toggleItem:getToggleIndex() == leftOpenIndex then
+                rightPos = toggleItem:openToggleItem(rightPos)
+            else
+                rightPos = toggleItem:closeToggleItem(rightPos)
+            end
+        end
+    end
+end
+
+---创建住宅主页左右信息，左侧加载turnover，staff，occupancy，右侧加载rental
 --请按照顺序添加
 function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
@@ -100,29 +128,12 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     self.rightData[1] = rentalLuaItem
 end
-
---刷新item位置信息
-function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
-
-    if leftOpenIndex ~= nil and leftOpenIndex > 0 then
-        local leftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
-        for key, toggleItem in pairs(self.leftData) do
-            if toggleItem:getToggleIndex() == leftOpenIndex then
-                leftPos = toggleItem:openToggleItem(leftPos)
-            else
-                leftPos = toggleItem:closeToggleItem(leftPos)
-            end
-        end
-    end
-
-    if rightOpenIndex ~= nil and rightOpenIndex > 0 then
-        local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
-        for key, toggleItem in pairs(self.rightData) do
-            if toggleItem:getToggleIndex() == leftOpenIndex then
-                rightPos = toggleItem:openToggleItem(rightPos)
-            else
-                rightPos = toggleItem:closeToggleItem(rightPos)
-            end
-        end
-    end
+--住宅入住率改变
+function BuildingInfoToggleGroupMgr:houseOccDataUpdate(data)
+    self.leftData[1]:updateInfo(data)
 end
+--住宅租房数据改变
+function BuildingInfoToggleGroupMgr:houseRentalDataUpdate(data)
+    self.rightData[1]:updateInfo(data)
+end
+

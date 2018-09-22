@@ -39,6 +39,10 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
         --打开更改租金界面
 
     end);
+
+    Event.AddListener("c_onRentalValueChange", function (data)
+        mgrTable:houseRentalDataUpdate(data)
+    end);
 end
 
 --获取是第几个点击了
@@ -54,8 +58,8 @@ function RentalItem:openToggleItem(targetMovePos)
     self.openStateTran.localScale = Vector3.one
     self.closeStateTran.localScale = Vector3.zero
 
-    self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H) --打开显示内容
-    self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
     return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOTAL_H)
 end
@@ -67,15 +71,15 @@ function RentalItem:closeToggleItem(targetMovePos)
     self.openStateTran.localScale = Vector3.zero
     self.closeStateTran.localScale = Vector3.one
 
-    self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, 0) --关闭显示内容
-    self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
     return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOP_H)
 end
 
 --刷新数据
-function RentalItem:updateInfo(rent)
-    self.rentalData.rent = rent
+function RentalItem:updateInfo(data)
+    self.rentalData = data
 
     if not self.viewRect.gameObject.activeSelf then
         return

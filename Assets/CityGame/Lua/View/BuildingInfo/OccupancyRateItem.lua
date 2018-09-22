@@ -3,7 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 17:03
 ---
-
 local class = require 'Framework/class'
 
 OccupancyRateItem = class('OccupancyRateItem')
@@ -33,6 +32,10 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);                                                              --这个方法是mgr传来的，每次点击都会调一次
+
+    Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
+        mgrTable:houseOccDataUpdate(data)
+    end);
 end
 
 --获取是第几个点击了
@@ -49,8 +52,11 @@ function OccupancyRateItem:openToggleItem(targetMovePos)
     self.openStateTran.localScale = Vector3.one
     self.closeStateTran.localScale = Vector3.zero
 
-    self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
-    self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+
+    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
+    --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
 
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOTAL_H)
 end
@@ -62,15 +68,15 @@ function OccupancyRateItem:closeToggleItem(targetMovePos)
     self.openStateTran.localScale = Vector3.zero
     self.closeStateTran.localScale = Vector3.one
 
-    self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, 0) --关闭显示内容
-    self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOP_H)
 end
 
 --刷新数据
 function OccupancyRateItem:updateInfo(data)
-    self.occupancyData.renter = data
+    self.occupancyData = data
 
     if not self.viewRect.gameObject.activeSelf then
         return

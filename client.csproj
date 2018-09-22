@@ -361,10 +361,8 @@
     <Compile Include="Assets\CityGame\Source\Generate\BaseWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_CityLuaUtilWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_CityTestWrap.cs" />
-    <Compile Include="Assets\CityGame\Source\Generate\City_LuaUtilWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_MemoryStreamWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_NetworkInterfaceWrap.cs" />
-    <Compile Include="Assets\CityGame\Source\Generate\CityEngine_LuaUtilWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\DelegateFactory.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\EasyJoystickWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\EffectFlyingWrap.cs" />

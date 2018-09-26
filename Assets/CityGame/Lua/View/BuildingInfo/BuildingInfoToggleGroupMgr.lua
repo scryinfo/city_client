@@ -35,7 +35,8 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
     end
 
     --创建完之后调整item位置
-    self:_sortItems(1, 1)
+    self:_sortItems(1)
+    self:_sortRightItems()
 end
 
 --每次打开一个Item，都要刷新位置
@@ -43,11 +44,11 @@ function BuildingInfoToggleGroupMgr:_clickItemFunc(toggleData)
     local leftIndex, rightIndex = nil
     if toggleData.pos == BuildingInfoTogglePos.Left then
         leftIndex = toggleData.index
-    elseif toggleData.pos == BuildingInfoTogglePos.Right then
-        rightIndex = toggleData.index
+    --elseif toggleData.pos == BuildingInfoTogglePos.Right then
+    --    rightIndex = toggleData.index
     end
 
-    self:_sortItems(leftIndex, rightIndex)
+    self:_sortItems(leftIndex)
 end
 
 --通过预制创建view
@@ -63,7 +64,7 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent, pos, nextHeight)
 end
 
 --刷新item位置信息
-function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
+function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
 
     if leftOpenIndex ~= nil and leftOpenIndex > 0 then
         local leftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
@@ -76,15 +77,23 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
         end
     end
 
-    if rightOpenIndex ~= nil and rightOpenIndex > 0 then
-        local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
-        for key, toggleItem in pairs(self.rightData) do
-            if toggleItem:getToggleIndex() == leftOpenIndex then
-                rightPos = toggleItem:openToggleItem(rightPos)
-            else
-                rightPos = toggleItem:closeToggleItem(rightPos)
-            end
-        end
+    --if rightOpenIndex ~= nil and rightOpenIndex > 0 then
+    --    local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+    --    for key, toggleItem in pairs(self.rightData) do
+    --        if toggleItem:getToggleIndex() == leftOpenIndex then
+    --            rightPos = toggleItem:openToggleItem(rightPos)
+    --        else
+    --            rightPos = toggleItem:closeToggleItem(rightPos)
+    --        end
+    --    end
+    --end
+end
+
+--排列右侧信息，只需要排一次，一直都处于打开状态
+function BuildingInfoToggleGroupMgr:_sortRightItems()
+    local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+    for key, toggleItem in pairs(self.rightData) do
+        rightPos = toggleItem:openToggleItem(rightPos)
     end
 end
 
@@ -127,5 +136,15 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     self.rightData[1] = rentalLuaItem
+
+    ---租金 --右侧第二个
+    local rentalViewRect2
+    rentalViewRect2 = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
+    local rentalData2 = {}
+    rentalData2.rent = 1000.123
+    rentalData2.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    local rentalToggleData2 = { pos = BuildingInfoTogglePos.Right, index = 2}
+    local rentalLuaItem2 = RentalItem:new(rentalData2, self._clickItemFunc, rentalViewRect2, self.mainPanelLuaBehaviour, rentalToggleData2, self)
+    self.rightData[2] = rentalLuaItem2
 end
 

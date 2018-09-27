@@ -45,8 +45,6 @@ function LoginCtrl.onClickChooseGameServer(serverId)
 end
 --登录--
 function LoginCtrl.OnLogin(go)
-	--assert(false,"test asssert--------------")
-	assert(go == nil, "mixin must be a table")
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
 	--CityEngineLua.login(username, pw, "lxq");

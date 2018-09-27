@@ -63,15 +63,24 @@ public static class CustomSettings
                         
         _GT(typeof(Debugger)).SetNameSpace(null),          
 
-#if USING_DOTWEENING
+#if !USING_DOTWEENING
+        _GT(typeof(DG.Tweening.Core.TweenerCore<Color, Color, DG.Tweening.Plugins.Options.ColorOptions>)),
+        _GT(typeof(DG.Tweening.Core.TweenerCore<Quaternion, Vector3, DG.Tweening.Plugins.Options.QuaternionOptions>)),
+        _GT(typeof(DG.Tweening.Core.TweenerCore<float, float, DG.Tweening.Plugins.Options.FloatOptions>)),
+        _GT(typeof(DG.Tweening.Core.TweenerCore<Vector3, Vector3, DG.Tweening.Plugins.Options.VectorOptions>)),
+        _GT(typeof(DG.Tweening.Core.TweenerCore<Vector2, Vector2, DG.Tweening.Plugins.Options.VectorOptions>)),
         _GT(typeof(DG.Tweening.DOTween)),
         _GT(typeof(DG.Tweening.Tween)).SetBaseType(typeof(System.Object)).AddExtendType(typeof(DG.Tweening.TweenExtensions)),
         _GT(typeof(DG.Tweening.Sequence)).AddExtendType(typeof(DG.Tweening.TweenSettingsExtensions)),
         _GT(typeof(DG.Tweening.Tweener)).AddExtendType(typeof(DG.Tweening.TweenSettingsExtensions)),
+        _GT(typeof(DG.Tweening.Ease)),
         _GT(typeof(DG.Tweening.LoopType)),
         _GT(typeof(DG.Tweening.PathMode)),
         _GT(typeof(DG.Tweening.PathType)),
         _GT(typeof(DG.Tweening.RotateMode)),
+        _GT(typeof(Image)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions46)),
+        _GT(typeof(CanvasGroup)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions46)),
+        _GT(typeof(RectTransform)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions46)),
         _GT(typeof(Component)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         _GT(typeof(Transform)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         _GT(typeof(Light)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
@@ -154,7 +163,7 @@ public static class CustomSettings
         _GT(typeof(LuaProfiler)),
           
         //for LuaFramework
-        _GT(typeof(RectTransform)),
+        //_GT(typeof(RectTransform)),
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),

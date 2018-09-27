@@ -47,10 +47,10 @@ namespace LuaFramework {
         public void RemoveClick(GameObject go) {
             if (go == null) return;
             LuaFunction luafunc = null;
-            if (buttons.TryGetValue(go.name, out luafunc)) {
+            if (buttons.TryGetValue(go.GetInstanceID().ToString(), out luafunc)) {
                 luafunc.Dispose();
                 luafunc = null;
-                buttons.Remove(go.name);
+                buttons.Remove(go.GetInstanceID().ToString());
             }
         }
 

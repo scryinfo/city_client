@@ -14,6 +14,7 @@ CtrlNames = {
 	PlayerHead = "PlayerHeadCtrl",
 	TargetHead = "TargetHeadCtrl",
 	GroundAuction = "GroundAuctionCtrl",  --拍卖
+	House = "HouseCtrl",  --住宅
 }
 
 ModelNames = {
@@ -27,6 +28,7 @@ ModelNames = {
 	GroundAuction = "GroundAuctionModel",  --拍卖
 	GameBubbleManager = "GameBubbleManager",  --游戏中的气泡
 	BuildingInfo = "BuildingInfoModel",  --建筑信息
+	House = "HouseModel",  --住宅
 }
 
 PanelNames = {
@@ -40,6 +42,7 @@ PanelNames = {
 	"BuildingInfoRightPanel",  --建筑右侧信息小界面
 	"BuildingInfoPanel",  --建筑信息界面
 	"BuildingTransferPanel",  --转让界面
+	"HousePanel",  --住宅
 }
 
 SYSEVENT =
@@ -103,6 +106,35 @@ SocketError =
 	TryAgain = 11002,
 	NoRecovery = 11003,
 	NoData = 11004
+}
+
+--建筑气泡类型
+BubblleType =
+{
+	Default = 0,
+	GroundAuction = 1,
+	BuildingTransfer = 2,
+}
+
+--建筑首页左右侧信息小组件的状态
+BuildingInfoToggleState =
+{
+	Close = 0,
+	Open = 1.
+}
+
+--建筑首页对应toggle组件在左还是右
+BuildingInfoTogglePos =
+{
+	Left = 0,
+	Right = 1,
+}
+
+--建筑类型
+BuildingType =
+{
+	House = 0,
+	MaterialFactory = 1,
 }
 
 Util = LuaFramework.Util;

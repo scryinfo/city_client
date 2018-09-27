@@ -37,10 +37,7 @@ function LoginCtrl.OnCreate(obj)
 	Event.AddListener("c_Disconnect", this.c_Disconnect);
 
 	--启用 c_AddClick_self 单元测试
-	UnitTest.Exec_now("abel_w5", function ()
-		this.testValue = 1
-		Event.Brocast("c_AddClick_self");
-	end)
+	UnitTest.Exec_now("abel_w5", "c_AddClick_self")
 end
 
 function LoginCtrl.onClickChooseGameServer(serverId)
@@ -153,8 +150,6 @@ UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
 	log("abel_w5","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function ()
 		login = gameObject:GetComponent('LuaBehaviour')
-		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest" ,LoginCtrl.OnClickTest);
-		--login:AddClick(LoginPanel.btnLogin,"LoginCtrl.OnClickTest1" ,LoginCtrl.OnClickTest1);
 		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest);
 		login:AddClick(LoginPanel.btnLogin ,LoginCtrl.OnClickTest1);
 	end)

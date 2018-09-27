@@ -6,10 +6,6 @@ local this = Dbg;
 --输出日志--
 local loginner = print
 
-print = function(str)
-	loginner("普通日志使用 log， 调试日志使用 logdebug， 而非 print")
-end
-
 DEBUGLEVEL = {
 	DEBUG = 0,
 	INFO = 1,
@@ -36,10 +32,18 @@ log = function(logid,s,...)
 	if plgid == nil or  palgid == nil then
 		return {}
 	end
-	assert(s,"log nil")
+	assert(s)
 	if CityGlobal.G_LOG then
 		loginner(this.getIdHead(plgid) .. s,...);
 	end
+end
+
+print = function(s,...)
+	log("system",s,...)
+end
+
+error = function(s,...)
+	log("system","[error]",s,...)
 end
 
 this.INFO_MSG = function( s )

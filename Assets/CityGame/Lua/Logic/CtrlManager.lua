@@ -6,9 +6,11 @@ require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/GroundAuctionCtrl"
+require "Controller/HouseCtrl"
 require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
+require "Model/HouseModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
 
@@ -27,11 +29,13 @@ function CtrlManager.Init()
 	ctrlList[CtrlNames.PlayerHead] = PlayerHeadCtrl.New();
 	ctrlList[CtrlNames.TargetHead] = TargetHeadCtrl.New();
 	ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
+	ctrlList[CtrlNames.House] = HouseCtrl.New();
 
 	modelList[ModelNames.Login] = LoginModel.New();
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
+	modelList[ModelNames.House] = HouseModel.New();
 
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();

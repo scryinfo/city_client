@@ -9,16 +9,24 @@ local class = require 'Framework/class'
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes
     fly = function(self)
         log('flap flap flap I am a ' .. self.class.name)
+    end,
+    foo = function(self)
+     return 1
     end
 }
 
 Animal = class('Animal')
-
+function Animal:fun()
+    return 1
+end
 Insect = class('Insect', Animal) -- or Animal:subclass('Insect')
 
 Worm = class('Worm', Insect) -- worms don't have wings
 
 Bee = class('Bee', Insect)
+function Bee:bar()
+    return 1
+end
 Bee:include(HasWings) --Bees have wings. This adds fly() to Bee
 
 Mammal = class('Mammal', Animal)
@@ -28,7 +36,32 @@ Fox = class('Fox', Mammal) -- foxes don't have wings, but are mammals
 Bat = class('Bat', Mammal)
 Bat:include(HasWings) --Bats have wings, too.
 
+UnitTest.Exec("abel_w3", "test_OO_Mixins",function()
+    local bee = Bee() -- or Bee:new()
+    local bat = Bat() -- or Bat:new()
+    bee:fly()
+    bat:fly()
+end)
 
+--调用派生类自己的方法（包括混入的方法）比调用从基类继承而来的方法要快30%
+UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  function ()
+    local bee = Bee() -- or Bee:new()
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'inherited method invocation', function()
+        for i = 1, 10000000 do --10000000
+            bee:fun()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'instance method invocation', function()
+        for i = 1, 10000000 do --10000000
+            bee:bar()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'mixin method invocation', function()
+        for i = 1, 10000000 do --10000000
+            bee:foo()
+        end
+    end)
+end)
 --[[
 Output:
 flap flap flap I am a Bee

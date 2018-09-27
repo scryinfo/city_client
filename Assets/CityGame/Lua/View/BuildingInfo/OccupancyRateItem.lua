@@ -20,8 +20,10 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
     self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
+    self.breandText = self.viewRect.transform:Find("contentRoot/breandText"):GetComponent("Text");  -- 品牌值
+    self.qualityText = self.viewRect.transform:Find("contentRoot/qualityText"):GetComponent("Text");  -- 品质
     self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider");  -- slider
-    self.occupancyText = self.viewRect.transform:Find("contentRoot/Text"):GetComponent("Text");  -- slider显示的值
+    self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancySlider/Text"):GetComponent("Text");  -- slider显示的值
 
     self.occupancySlider.maxValue = occupancyData.totalCount  --暂时不知道这个字段叫什么，从配置表中读取
     self.occupancySlider.value = occupancyData.renter

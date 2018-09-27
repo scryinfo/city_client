@@ -20,11 +20,14 @@ function HousePanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
+    this.buildingNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
+    this.nameInputField = transform:Find("topRoot/titleBg/nameInputField"):GetComponent("InputField");
+    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
 
-    --this.playerProtaitImg = transform:Find("bottomRoot/playerProtaitImg").gameObject:GetComponent("Image");  --玩家头像
-    --this.groundPriceText = transform:Find("bottomRoot/groundPriceText").gameObject:GetComponent("Text");
-    --
-    --this.buyBtn = transform:Find("bottomRoot/transferIngRoot/buyBtn").gameObject:GetComponent("Button");
+    --this.nameInputField.interactable = false;
+    --this.eventSystem = UnityEngine.GameObject.Find("EventSystem"):GetComponent("EventSystem");
+    local houseBehaviour = transform:GetComponent('LuaBehaviour');
+    houseBehaviour:AddClick(this.changeNameBtn.gameObject, this.OpenInputField);
 
 end
 
@@ -32,5 +35,13 @@ end
 function HousePanel.InitDate(houseData)
     this.houseData = houseData
 
+
+end
+
+--打开input
+function HousePanel.OpenInputField()
+    --this.nameInputField.interactable = true;
+
+    this.eventSystem:SetSelectedGameObject(this.nameInputField.gameObject)
 end
 

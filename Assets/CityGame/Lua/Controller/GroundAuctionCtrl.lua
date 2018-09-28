@@ -19,7 +19,7 @@ end
 --打开界面
 function GroundAuctionCtrl.OpenPanel(elmData)
     this.elmData = elmData
-    panelMgr:CreatePanel('GroundAuction', this.OnCreate);
+    panelMgr:CreatePanel('GroundAuction', this.OnCreate, this);
 end
 
 --启动事件--

@@ -103,6 +103,7 @@ function UIPage:Show(path, callback)
         --else
         --    go = Resources.Load(uiPath)
         --end
+        --panelMgr:CreatePanel(path, callback, self);
         panelMgr:CreatePanel(path, callback, self);
     end
 end

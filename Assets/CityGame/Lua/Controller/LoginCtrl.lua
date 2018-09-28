@@ -16,11 +16,11 @@ end
 
 function LoginCtrl.Awake()
 	logDebug("LoginCtrl.Awake--->>");
-	panelMgr:CreatePanel('Login', this.OnCreate);
+	panelMgr:CreatePanel('Login', this.OnCreate, this);
 end
 
 --启动事件--
-function LoginCtrl.OnCreate(obj)
+function LoginCtrl:OnCreate(obj)
 	gameObject = obj;
 
 	login = gameObject:GetComponent('LuaBehaviour');

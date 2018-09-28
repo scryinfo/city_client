@@ -13,8 +13,13 @@ function TopBarCtrl:initialize()
     self.uiPath = "TopBar"
 end
 
-function TopBarCtrl.OnCreate(obj ,self)
-    UIPage.OnCreate(self,obj)
+--function TopBarCtrl.OnCreate(obj ,self)
+--    UIPage.OnCreate(self,obj)
+--    gameObject = obj;
+--    topBat = gameObject:GetComponent('LuaBehaviour');
+--end
+function TopBarCtrl:OnCreate(obj )
+    UIPage:OnCreate(obj)
     gameObject = obj;
     topBat = gameObject:GetComponent('LuaBehaviour');
 end

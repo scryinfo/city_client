@@ -16,7 +16,7 @@ end
 
 function SelectAvatarCtrl.Awake()
 	logWarn("SelectAvatarCtrl.Awake--->>");
-	panelMgr:CreatePanel('SelectAvatar', this.OnCreate);
+	panelMgr:CreatePanel('SelectAvatar', this.OnCreate, this);
 end
 
 --启动事件--

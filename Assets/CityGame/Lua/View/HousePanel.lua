@@ -42,6 +42,6 @@ end
 function HousePanel.OpenInputField()
     --this.nameInputField.interactable = true;
 
-    this.eventSystem:SetSelectedGameObject(this.nameInputField.gameObject)
+    --this.eventSystem:SetSelectedGameObject(this.nameInputField.gameObject)
 end
 

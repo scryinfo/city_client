@@ -103,48 +103,27 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
-    ---入住率 --左边第一个
+    ---入住率  右1
     local occupancyViewRect
-    occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
+    occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
     occupancyViewRect.gameObject.name = "Occ01"
     --测试数据
     local occData = {}
     occData.totalCount = 60
     occData.renter = 18
     --end
-    local occToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
     local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
-    self.leftData[1] = occupancyLuaItem
+    self.rightData[1] = occupancyLuaItem
 
-    ---测试 --左边第二个
-    local occupancyViewRect2
-    occupancyViewRect2 = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
-    occupancyViewRect2.gameObject.name = "Occ02"
-    local occData2 = {}
-    occData2.totalCount = 600
-    occData2.renter = 500
-    local toggleData2 = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local occupancyLuaItem2 = OccupancyRateItem:new(occData2, self._clickItemFunc, occupancyViewRect2, self.mainPanelLuaBehaviour, toggleData2, self)
-    self.leftData[2] = occupancyLuaItem2
-
-    ---租金 --右侧第一个
+    ---租金 --右2
     local rentalViewRect
     rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
     local rentalData = {}
     rentalData.rent = 500.23
     rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
-    local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+    local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
-    self.rightData[1] = rentalLuaItem
-
-    ---租金 --右侧第二个
-    local rentalViewRect2
-    rentalViewRect2 = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
-    local rentalData2 = {}
-    rentalData2.rent = 1000.123
-    rentalData2.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
-    local rentalToggleData2 = { pos = BuildingInfoTogglePos.Right, index = 2}
-    local rentalLuaItem2 = RentalItem:new(rentalData2, self._clickItemFunc, rentalViewRect2, self.mainPanelLuaBehaviour, rentalToggleData2, self)
-    self.rightData[2] = rentalLuaItem2
+    self.rightData[2] = rentalLuaItem
 end
 

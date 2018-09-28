@@ -360,6 +360,7 @@
     <Compile Include="Assets\CityGame\Scripts\Framework\PacketReceiver.cs" />
     <Compile Include="Assets\CityGame\Scripts\Framework\PacketSender.cs" />
     <Compile Include="Assets\CityGame\Scripts\Framework\Profile.cs" />
+    <Compile Include="Assets\CityGame\Scripts\Framework\UIRoot.cs" />
     <Compile Include="Assets\CityGame\Scripts\Main.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\GameManager.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\Interface\ITimerBehaviour.cs" />

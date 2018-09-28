@@ -29,11 +29,11 @@ function LoginCtrl:OnCreate(obj)
 
 	log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 	--普通消息注册
-	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed);
-	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-	Event.AddListener("c_GsConnected", self.c_GsConnected);
-	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
-	Event.AddListener("c_Disconnect", self.c_Disconnect);
+	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
+	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);
+	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
+	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
+	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)

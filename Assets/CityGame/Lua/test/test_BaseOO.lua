@@ -46,9 +46,9 @@ function AgedPerson:speak()
 end
 
 UnitTest.Exec("abel_w6_UIFrame", "test_oo",  function ()
-    print("hahaha")
+    --print("hahaha")
     local xxx = false
-    eq (xxx == true, "true")
+    --eq (xxx == true, "true")
     local p0 = Person:new('Man01', 30) --传入的参数会转发到 initialize
     p0:speak()
     local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit

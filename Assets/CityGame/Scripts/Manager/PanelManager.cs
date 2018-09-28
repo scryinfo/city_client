@@ -22,7 +22,9 @@ namespace LuaFramework {
         /// ������壬������Դ������
         /// </summary>
         /// <param name="type"></param>
-        public void CreatePanel(string name, LuaFunction func = null) {
+        //public void CreatePanel(string name, LuaFunction func = null, object obj = null) {
+        public void CreatePanel(string name, LuaFunction func = null, object obj = null)
+        {
             string assetName = name + "Panel";
             string abName = name.ToLower() + AppConst.BundleExt;
             if (Parent.Find(name) != null) return;
@@ -38,14 +40,14 @@ namespace LuaFramework {
                 go.layer = LayerMask.NameToLayer("Default");
                 go.transform.SetParent(Parent);
                 go.transform.localScale = Vector3.one;
-                go.transform.localPosition = Vector3.zero;
+                go.transform.localPosition = Vector3.zero; 
                 //
                 RectTransform rect = go.GetComponent<RectTransform>();
                 rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
 
                 go.AddComponent<LuaBehaviour>();
 
-                if (func != null) func.Call(go);
+                if (func != null) func.Call(go, obj);
                 Debug.LogWarning("CreatePanel::>> " + name + " " + prefab);
             });
 #else

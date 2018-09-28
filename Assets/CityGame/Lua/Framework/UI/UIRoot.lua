@@ -3,3 +3,26 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 10:10
 ---
+
+local class = require 'Framework/class'
+
+UIRoot = class('UIRoot')
+UIRoot.static.m_Instance=nil
+local root = nil
+--UIRoot.static.allPages={}
+--UIRoot.static.m_currentPageNodes={}
+--UIRoot.static.currentPageNodes={}
+function UIRoot.Instance()
+    if UIRoot.static.m_Instance == nil then
+        UIRoot.static.m_Instance = UIRoot.InitRoot()
+    end
+    return UIRoot.static.m_Instance
+end
+
+function UIRoot.initialize(name)
+    root = nil
+end
+
+function UIRoot.InitRoot()
+    return CityLuaUtil.GetUIRoot() --GetUIRoot 会执行 InitRoot()
+end

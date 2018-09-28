@@ -6,7 +6,7 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w6_UIFrame")
-TestGroup.active_TestGroup("abel_w5")
+--TestGroup.active_TestGroup("abel_w5")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
@@ -23,6 +23,7 @@ require("test/performance/luaPerformance")
 require('test/performance/classPerformance')
 require("examination")
 require("metatable")
+require('test/test_UIFrameWrok')
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")

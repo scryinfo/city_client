@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System;
 using System.IO;
 using System.Text;
-
+using City;
 
 namespace City
 {
@@ -29,6 +29,10 @@ namespace City
     }
     public static class CityLuaUtil
     {
+        public static UIRoot GetUIRoot()
+        {
+            return UIRoot.Instance;
+        }
         public delegate object[] CallLuaFunction(string funcName, params object[] args);
         private static CallLuaFunction callFunction = null;
         public static byte[] Utf8ToByte(object utf8)

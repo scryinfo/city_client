@@ -4,7 +4,8 @@
 --- DateTime: 2018/9/27 10:09
 ---
 local class = require 'Framework/class'
-
+require('Framework/UI/UIRoot')
+local UIRoot = UIRoot
 UIType = {
     Normal =1 ,
     Fixed =2 ,
@@ -37,12 +38,11 @@ function UIPage:initialize(name)
     self:initialize(name,UIType.Normal,UIMode.DoNothing)
 end
 
-function UIPage:initialize(name, mod, col)
-    self.name = name
+function UIPage:initialize(type, mod, col)
     self.mode = mod
     self.collider = col
+    self.type = type
     self.id = -1
-    self.type = UIType.Normal
     self.uiPath = ""
     self.gameObject = nil
     self.transform = nil
@@ -53,45 +53,332 @@ function UIPage:initialize(name, mod, col)
     self.delegateAsyncLoadUI = nil
 end
 
-function UIPage.Awake(obj)
-    gameObject = obj;
+function UIPage:Awake(obj)
+    self.gameObject = obj;
 end
 
-function UIPage.Refresh()
-
-end
-
-function UIPage.Active()
+function UIPage:Refresh()
 
 end
 
-function UIPage.Hide()
+function UIPage:Active()
+
+end
+
+function UIPage:Hide()
     self.gameObject.SetActive(false)
-    isActived = false
+    self.isActived = false
     self.m_data = nil
 end
 
-function UIPage.Active()
+function UIPage:Active()
 
 end
 
-function UIPage.OnCreate(obj)
-    gameObject = obj;
-end
-
-function UIPage.Show()
-    if self.gameObject == nil and self.uiPath == "" then
-        local go = nil
-        if delegateAsyncLoadUI ~= nil then
-            local o = delegateAsyncLoadUI(self.uiPath)
-            go = o
-        else
-            go = Resources.Load(uiPath)
-        end
-
+function UIPage:OnCreate(go)
+    if self.gameObject == nil then
+        self.gameObject = go;
         assert(go, "system","[UIPage.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
+            log("system","[UIPage.Show]", "资源加载失败: "..uiPath)
+        end
+        self:AnchorUIGameObject(go)
+        self:Awake(go)
+        self.isAsyncUI = false
+    end
 
+    self:Active()
+
+    self:Refresh()
+
+    self:PoNode(self)
+
+end
+
+function UIPage:Show(path, callback)
+    if self.gameObject == nil then
+        --if self.delegateAsyncLoadUI ~= nil then
+        --    local o = self.delegateAsyncLoadUI(self.uiPath)
+        --    go = o
+        --else
+        --    go = Resources.Load(uiPath)
+        --end
+        panelMgr:CreatePanel(path, callback, self);
+    end
+end
+
+--IEnumerator AsyncShow(Action callback)
+
+function UIPage:CheckIfNeedBack()
+    if self.type == UIType.Fixed or self.type == UIType.PopUp or self.type == UIType.None then
+        return false
+    elseif self.mode == UIMode.NoNeedBack or self.mode == UIMode.DoNothing then
+        return false
+    end
+    return true
+end
+
+function UIPage:AnchorUIGameObject(ui)
+    if UIRoot.Instance() == nil or ui == nil then return end
+    self.gameObject = ui
+    self.transform = ui.transform
+
+    local anchorPos = Vector3.zero
+    local sizeDel = Vector3.zero
+    local scale  = Vector3.one
+
+    local rect = ui:GetComponent("RectTransform")
+    if rect ~= nil then
+        anchorPos = rect.anchoredPosition
+        sizeDel= rect.sizeDelta
+        scale = rect.localScale
+    else
+        anchorPos = rect.anchoredPosition.localPosition
+        scale = rect.localScale.localScale
+    end
+
+    if self.type == UIType.Fixed then
+        ui.transform.SetParent(UIRoot.Instance.fixedRoot)
+    elseif self.type == UIType.Normal then
+        ui.transform.SetParent(UIRoot.Instance.normalRoot)
+    elseif self.type == UIType.PopUp then
+        ui.transform.SetParent(UIRoot.Instance.popupRoot)
+    end
+
+
+    if ui.GetComponent("RectTransform") ~= nil then
+        rect.anchoredPosition = anchorPos
+        rect.sizeDelta = sizeDel
+        rect.localScale = scale
+    else
+        ui.transform.localPosition = anchorPos
+        ui.transform.localScale = scale
+    end
+end
+
+function UIPage:ToString()
+    return ">Name:" .. self.name .. ",ID:" .. self.id .. ",Type:" .. self.type.ToString() .. ",ShowMode:" .. self.mode.ToString() .. ",Collider:" .. self.collider.ToString()
+end
+
+function UIPage:isActive()
+    local ret = self.gameObject ~= nil and self.gameObject.activeSelf
+    return ret or self.isActived
+end
+
+function UIPage:CheckIfNeedBack(page)
+    return page ~= nil and page:CheckIfNeedBack();
+end
+
+function UIPage:PopNode(page)
+    if UIPage.static.m_currentPageNodes == nil then
+        UIPage.static.m_currentPageNodes = {};
+
+        if page == nil then
+            --Debug.LogError("[UI] page popup is nil.");
+            log("system","page popup is nil.")
+            return
+        end
+    end
+    --sub pages should not need back.
+    if self:CheckIfNeedBack(page) == false then
+        return
+    end
+    local _isFound = false
+    for i = 1, #m_currentPageNodes do
+        if self.m_currentPageNodes[i] == (page) then
+            table.remove(self.m_currentPageNodes, i)
+            self.m_currentPageNodes.Add(page);
+            _isFound = true;
+            break;
+        end
+    end
+    --if dont found in old nodes
+    --should add in nodelist.
+    if not _isFound then
+        UIPage.static.m_currentPageNodes.Add(page);
+    end
+
+    --//after pop should hide the old node if need.
+    self:HideOldNodes();
+end
+
+function  UIPage:HideOldNodes()
+    if #UIPage.static.m_currentPageNodes < 0 then  return end
+    local topPage = UIPage.static.m_currentPageNodes[#UIPage.static.m_currentPageNodes]
+    if topPage.mode == UIMode.HideOther then
+        --form bottm to top.
+        for i = #UIPage.static.m_currentPageNodes - 1, i >= 1  do
+            if(UIPage.static.m_currentPageNodes[i].isActive()) then
+                UIPage.static.m_currentPageNodes[i].Hide();
+            end
         end
     end
 end
+
+function  UIPage:ClearNodes()
+    UIPage.static.m_currentPageNodes:Clear();
+end
+
+function  UIPage:ShowPage(pageInstance,callback)
+    ShowPage(pageInstance, callback)
+end
+
+function  UIPage:ShowPage(callback, pageData, isAsync)
+    pageName = self.uiPath
+    if pageName == "" then
+        log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
+        return
+    end
+
+    if UIPage.static.m_allPages == nil then
+        UIPage.static.m_allPages = {}
+    end
+
+    local page = nil;
+    if UIPage.m_allPages[pageName] ~= nil then
+        page = UIPage.static.m_allPages[pageName]
+    else
+        UIPage.static.m_allPages[pageName] = self
+        page = self;
+    end
+
+    --//if active before,wont active again.
+    --//if (page.isActive() == false)
+    --//before show should set this data if need. maybe.!!
+    page.m_data = pageData;
+
+    if self.isAsync then
+        page:Show(callback)
+    else
+        page:Show(self.uiPath, callback);
+    end
+end
+
+--function UIPage:ShowPage()
+--    self:ShowPage(nil, nil, false);
+--end
+--
+--function UIPage:ShowPage(pageInstance, callback)
+--    self:ShowPage("", pageInstance, callback, nil, false);
+--end
+--
+--function UIPage:ShowPage(pageName, pageInstance, pageData)
+--    ShowPage(pageName, pageInstance, nil, pageData, false);
+--end
+--
+--function UIPage:ShowPage(pageName, pageInstance, callback)
+--    ShowPage(pageName, pageInstance, callback, nil, true);
+--end
+--
+--function UIPage:ShowPage(pageName, pageInstance, callback, pageData)
+--    ShowPage(pageName, pageInstance, callback, pageData, true);
+--end
+
+function UIPage:ClosePage()
+    --//Debug.Log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);
+    if m_currentPageNodes == nil or #m_currentPageNodes <= 0 then return;    end
+
+    local closePage = m_currentPageNodes[#m_currentPageNodes];
+    UIPage.static.m_currentPageNodes.RemoveAt(#m_currentPageNodes);
+
+    --//show older page.
+    --//TODO:Sub pages.belong to root node.
+    if #UIPage.static.m_currentPageNodes > 0 then
+        local page = m_currentPageNodes[#UIPage.static.m_currentPageNodes];
+        if page.isAsyncUI == ture then
+            self:ShowPage(page.name, page, function()
+            closePage.Hide();
+            end);
+        else
+            self:ShowPage(page.name, page);
+            --//after show to hide().
+            closePage.Hide();
+        end
+    end
+end
+
+function UIPage:ClosePage(target)
+    if target == nil then return end;
+
+    if target.isActive() == false then
+        if m_currentPageNodes ~= nil then
+            for i = 0, #m_currentPageNodes do
+                if m_currentPageNodes[i] == target then
+                    table.remove(m_currentPageNodes, i)
+                    break;
+                end
+            end
+        return;
+        end
+    end
+
+    if m_currentPageNodes ~= nil and #m_currentPageNodes >= 1 and m_currentPageNodes[#m_currentPageNodes] == target then
+        m_currentPageNodes.RemoveAt(m_currentPageNodes.Count - 1);
+        table.remove(m_currentPageNodes, #m_currentPageNodes)
+        --//show older page.
+        --//TODO:Sub pages.belong to root node.
+        if #m_currentPageNodes > 0 then
+            local page = m_currentPageNodes[#m_currentPageNodes];
+            if page.isAsyncUI == true then
+                ShowPage(page.name, page, function()
+                    target.Hide();
+                 end);
+            else
+                ShowPage(page.name, page);
+                target.Hide();
+            end
+            return;
+        end
+    elseif target.CheckIfNeedBack() then
+        for i = 0, #m_currentPageNodes do
+            if m_currentPageNodes[i] == target then
+                m_currentPageNodes.RemoveAt(i);
+                target.Hide();
+                break;
+            end
+        end
+    end
+    target.Hide();
+end
+
+function UIPage:ClosePage(pageName)
+    if m_allPages ~= nil and m_allPages[pageName] then
+        ClosePage(m_allPages[pageName])
+    else
+        log("system",pageName , " havnt show yet!");
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

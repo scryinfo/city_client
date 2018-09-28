@@ -21,8 +21,10 @@ local modelList = {};	--模型列表--
 
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
-
-	ctrlList[CtrlNames.Login] = LoginCtrl.New();
+	--默认显示登录界面
+	local ctrl = LoginCtrl:new()
+	ctrl:ShowPage(ctrl.OnCreate)
+	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	ctrlList[CtrlNames.SelectAvatar] = SelectAvatarCtrl.New();
 	ctrlList[CtrlNames.CreateAvatar] = CreateAvatarCtrl.New();
 	ctrlList[CtrlNames.GameWorld] = GameWorldCtrl.New();

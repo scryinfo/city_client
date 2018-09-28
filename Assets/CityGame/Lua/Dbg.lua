@@ -27,10 +27,13 @@ this.getIdHead = function(id)
 	return "["..id.."]";
 end
 log = function(logid,s,...)
+	if s == nil then
+		return
+	end
 	local plgid = TestGroup.get_TestGroupId(logid)
 	local palgid = TestGroup.get_ActiveTestGroupId(logid)
 	if plgid == nil or  palgid == nil then
-		return {}
+		return
 	end
 	assert(s)
 	if CityGlobal.G_LOG then

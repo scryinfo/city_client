@@ -21,14 +21,13 @@ end
 function TopBarCtrl:OnCreate(obj )
     UIPage.OnCreate(self,obj)
     gameObject = obj;
-    topBat = gameObject:GetComponent('LuaBehaviour');
+    topBat = self.gameObject:GetComponent('LuaBehaviour')
+    topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice);
+    topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back);
 end
 
 function TopBarCtrl:Awake(go)
     self.gameObject = go
-    topBat = self.gameObject:GetComponent('LuaBehaviour')
-    topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice);
-    topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back);
 end
 
 function TopBarCtrl:OnClick_back()

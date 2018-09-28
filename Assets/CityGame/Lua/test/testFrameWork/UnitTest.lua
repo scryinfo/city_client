@@ -58,11 +58,11 @@ function UnitTest.PerformanceTest(groupid, info,func)
     log(groupid, info, "执行时间: ",endTime - startTime)
 end
 --使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
-function UnitTest.Exec_now(unitGroupId, event)
+function UnitTest.Exec_now(unitGroupId, event,...)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
         return {}
     end
-    Event.Brocast(event);
+    Event.Brocast(event,...);
 end
 
 return UnitTest

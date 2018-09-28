@@ -33,6 +33,22 @@ namespace City
         {
             return UIRoot.Instance;
         }
+
+        public static Transform getFixedRoot()
+        {
+            return UIRoot.getFixedRoot();
+        }
+
+        public static Transform getNormalRoot()
+        {
+            return UIRoot.getNormalRoot();
+        }
+
+        public static Transform getPopupRoot()
+        {
+            return UIRoot.getPopupRoot();
+        }
+
         public delegate object[] CallLuaFunction(string funcName, params object[] args);
         private static CallLuaFunction callFunction = null;
         public static byte[] Utf8ToByte(object utf8)

@@ -8,21 +8,25 @@ local class = require 'Framework/class'
 
 UIRoot = class('UIRoot')
 UIRoot.static.m_Instance=nil
-local root = nil
---UIRoot.static.allPages={}
---UIRoot.static.m_currentPageNodes={}
---UIRoot.static.currentPageNodes={}
 function UIRoot.Instance()
     if UIRoot.static.m_Instance == nil then
-        UIRoot.static.m_Instance = UIRoot.InitRoot()
+        UIRoot.static.m_Instance = UIRoot.InitRootInstance()
     end
     return UIRoot.static.m_Instance
 end
 
-function UIRoot.initialize(name)
-    root = nil
+function UIRoot.getFixedRoot()
+    return CityLuaUtil.getFixedRoot()
 end
 
-function UIRoot.InitRoot()
+function UIRoot.getNormalRoot()
+    return CityLuaUtil.getNormalRoot()
+end
+
+function UIRoot.getPopupRoot()
+    return CityLuaUtil.getPopupRoot()
+end
+
+function UIRoot.InitRootInstance()
     return CityLuaUtil.GetUIRoot() --GetUIRoot 会执行 InitRoot()
 end

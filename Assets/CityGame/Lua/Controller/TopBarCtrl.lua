@@ -19,16 +19,16 @@ end
 --    topBat = gameObject:GetComponent('LuaBehaviour');
 --end
 function TopBarCtrl:OnCreate(obj )
-    UIPage:OnCreate(obj)
+    UIPage.OnCreate(self,obj)
     gameObject = obj;
     topBat = gameObject:GetComponent('LuaBehaviour');
 end
 
 function TopBarCtrl:Awake(go)
     self.gameObject = go
-    topBat = gameObject:GetComponent('LuaBehaviour')
-    topBat:AddClick(TopBarCtrl.btn_notice, self.OnClick_notice);
-    topBat:AddClick(TopBarCtrl.btn_back, self.OnClick_back);
+    topBat = self.gameObject:GetComponent('LuaBehaviour')
+    topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice);
+    topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back);
 end
 
 function TopBarCtrl:OnClick_back()
@@ -42,7 +42,6 @@ end
 UnitTest.Exec("abel_w6_UIFrame", "test_UIPage_ShowPage",  function ()
     --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
     local topbar = TopBarCtrl:new()
-    topbar.type = UIType.None
     topbar:ShowPage(topbar.OnCreate)
 end)
 

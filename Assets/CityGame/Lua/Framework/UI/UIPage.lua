@@ -91,7 +91,7 @@ function UIPage:OnCreate(go)
 
     self:Refresh()
 
-    self:PoNode(self)
+    self:PopNode(self)
 
 end
 
@@ -110,7 +110,7 @@ end
 
 --IEnumerator AsyncShow(Action callback)
 
-function UIPage:CheckIfNeedBack()
+function UIPage:CheckIfNeedBackInner()
     if self.type == UIType.Fixed or self.type == UIType.PopUp or self.type == UIType.None then
         return false
     elseif self.mode == UIMode.NoNeedBack or self.mode == UIMode.DoNothing then
@@ -139,15 +139,15 @@ function UIPage:AnchorUIGameObject(ui)
     end
 
     if self.type == UIType.Fixed then
-        ui.transform.SetParent(UIRoot.Instance.fixedRoot)
+        ui.transform:SetParent(UIRoot.getFixedRoot())
     elseif self.type == UIType.Normal then
-        ui.transform.SetParent(UIRoot.Instance.normalRoot)
+        ui.transform:SetParent(UIRoot.getNormalRoot())
     elseif self.type == UIType.PopUp then
-        ui.transform.SetParent(UIRoot.Instance.popupRoot)
+        ui.transform:SetParent(UIRoot.getPopupRoot())
     end
 
 
-    if ui.GetComponent("RectTransform") ~= nil then
+    if ui:GetComponent("RectTransform") ~= nil then
         rect.anchoredPosition = anchorPos
         rect.sizeDelta = sizeDel
         rect.localScale = scale
@@ -167,7 +167,7 @@ function UIPage:isActive()
 end
 
 function UIPage:CheckIfNeedBack(page)
-    return page ~= nil and page:CheckIfNeedBack();
+    return page ~= nil and page:CheckIfNeedBackInner();
 end
 
 function UIPage:PopNode(page)

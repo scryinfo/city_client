@@ -66,13 +66,14 @@ function UIPage:Active()
 end
 
 function UIPage:Hide()
-    self.gameObject.SetActive(false)
+    self.gameObject:SetActive(false)
     self.isActived = false
     self.m_data = nil
 end
 
 function UIPage:Active()
-
+    self.gameObject:SetActive(true);
+    self.isActived = true;
 end
 
 function UIPage:OnCreate(go)
@@ -87,12 +88,14 @@ function UIPage:OnCreate(go)
         self.isAsyncUI = false
     end
 
+    self:DoShow()
+
+end
+
+function UIPage:DoShow()
     self:Active()
-
     self:Refresh()
-
     self:PopNode(self)
-
 end
 
 function UIPage:Show(path, callback)
@@ -105,6 +108,8 @@ function UIPage:Show(path, callback)
         --end
         --panelMgr:CreatePanel(path, callback, self);
         panelMgr:CreatePanel(path, callback, self);
+    else
+        self:DoShow()
     end
 end
 
@@ -185,10 +190,11 @@ function UIPage:PopNode(page)
         return
     end
     local _isFound = false
-    for i = 1, #m_currentPageNodes do
-        if self.m_currentPageNodes[i] == (page) then
-            table.remove(self.m_currentPageNodes, i)
-            self.m_currentPageNodes.Add(page);
+    local pageNodes = UIPage.static.m_currentPageNodes
+    for i = 1, #pageNodes do
+        if pageNodes[i] == (page) then
+            table.remove(pageNodes, i)
+            pageNodes[#pageNodes+1] = page;
             _isFound = true;
             break;
         end
@@ -196,7 +202,7 @@ function UIPage:PopNode(page)
     --if dont found in old nodes
     --should add in nodelist.
     if not _isFound then
-        UIPage.static.m_currentPageNodes.Add(page);
+        pageNodes[#pageNodes+1] = page;
     end
 
     --//after pop should hide the old node if need.
@@ -204,13 +210,14 @@ function UIPage:PopNode(page)
 end
 
 function  UIPage:HideOldNodes()
-    if #UIPage.static.m_currentPageNodes < 0 then  return end
-    local topPage = UIPage.static.m_currentPageNodes[#UIPage.static.m_currentPageNodes]
+    local pageNodes = UIPage.static.m_currentPageNodes
+    if #pageNodes < 0 then  return end
+    local topPage = pageNodes[#pageNodes]
     if topPage.mode == UIMode.HideOther then
         --form bottm to top.
-        for i = #UIPage.static.m_currentPageNodes - 1, i >= 1  do
-            if(UIPage.static.m_currentPageNodes[i].isActive()) then
-                UIPage.static.m_currentPageNodes[i].Hide();
+        for i = 1, #pageNodes - 1  do
+            if(pageNodes[i]:isActive()) then
+                pageNodes[i]:Hide();
             end
         end
     end

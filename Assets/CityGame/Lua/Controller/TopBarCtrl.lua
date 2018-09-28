@@ -32,17 +32,16 @@ function TopBarCtrl:Awake(go)
 end
 
 function TopBarCtrl:OnClick_back()
-    log("abel_w6_UIFrame", "UITopBar:OnClick_back")
+    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_back")
+    UIPage.ClosePage();
 end
 
 function TopBarCtrl:OnClick_notice()
-    log("abel_w6_UIFrame", "UITopBar:OnClick_notice")
+    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_notice")
+    local notice = NoticeCtrl:new()
+    notice:ShowPage(notice.OnCreate)
 end
 
-UnitTest.Exec("abel_w6_UIFrame", "test_UIPage_ShowPage",  function ()
-    --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
-    local topbar = TopBarCtrl:new()
-    topbar:ShowPage(topbar.OnCreate)
-end)
+
 
 

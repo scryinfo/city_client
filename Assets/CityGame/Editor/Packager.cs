@@ -170,6 +170,12 @@ public class Packager {
 
         AddBuildMap("UIRoot" + AppConst.BundleExt, "UIRootPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("TopBar" + AppConst.BundleExt, "TopBarPanel.prefab", "Assets/CityGame/Resources/View");
+
+        AddBuildMap("Notice" + AppConst.BundleExt, "NoticePanel.prefab", "Assets/CityGame/Resources/View");
+        AddBuildMap("Battle" + AppConst.BundleExt, "BattlePanel.prefab", "Assets/CityGame/Resources/View");
+        AddBuildMap("SkillPage" + AppConst.BundleExt, "SkillPagePanel.prefab", "Assets/CityGame/Resources/View");
+        AddBuildMap("MainPage" + AppConst.BundleExt, "MainPagePanel.prefab", "Assets/CityGame/Resources/View");
+
         AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
         AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");
         AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");

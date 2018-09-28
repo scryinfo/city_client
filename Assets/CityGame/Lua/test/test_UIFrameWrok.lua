@@ -4,4 +4,21 @@
 --- DateTime: 2018/9/27 21:55
 ---
 require('View/TopBarPanel')
+require('View/MainPagePanel')
+require('View/BattlePanel')
+require('View/SkillPagePanel')
+require('View/NoticePanel')
 require('Controller/TopBarCtrl')
+require('Controller/MainPageCtrl')
+require('Controller/BattleCtrl')
+require('Controller/SkillPageCtrl')
+require('Controller/NoticeCtrl')
+
+UnitTest.Exec("abel_w6_UIFrame", "test_TopBarCtrl_ShowPage",  function ()
+    --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
+    local topbar = TopBarCtrl:new()
+    topbar:ShowPage(topbar.OnCreate)
+
+    local ctrl = MainPageCtrl:new()
+    ctrl:ShowPage(ctrl.OnCreate)
+end)

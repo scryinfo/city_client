@@ -24,6 +24,7 @@ function TopBarCtrl:OnCreate(obj )
     topBat = self.gameObject:GetComponent('LuaBehaviour')
     topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice);
     topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back);
+    topBat:AddClick(TopBarPanel.btn_main, self.OnClick_main);
 end
 
 function TopBarCtrl:Awake(go)
@@ -39,6 +40,12 @@ function TopBarCtrl:OnClick_notice()
     log("abel_w6_UIFrame", "TopBarCtrl:OnClick_notice")
     local notice = NoticeCtrl:new()
     notice:ShowPage(notice.OnCreate)
+end
+
+function TopBarCtrl:OnClick_main()
+    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_main")
+    local ctr = MainPageCtrl:new()
+    ctr:ShowPage(ctr.OnCreate)
 end
 
 

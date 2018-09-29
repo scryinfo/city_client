@@ -285,57 +285,57 @@ function UIPage:ClosePage()
         end
     end
 end
+--
+--function UIPage:ClosePage(target)
+--    if target == nil then return end;
+--    local pageNodes = UIPage.static.m_currentPageNodes
+--    if target:isActive() == false then
+--        if pageNodes ~= nil then
+--            for i = 0, #pageNodes do
+--                if pageNodes[i] == target then
+--                    table.remove(pageNodes, i)
+--                    break;
+--                end
+--            end
+--        return;
+--        end
+--    end
+--
+--    if pageNodes ~= nil and #pageNodes >= 1 and pageNodes[#pageNodes] == target then
+--        table.remove(pageNodes, #pageNodes)
+--        --//show older page.
+--        --//TODO:Sub pages.belong to root node.
+--        if #pageNodes > 0 then
+--            local page = pageNodes[#pageNodes];
+--            if page.isAsyncUI == true then
+--                page:ShowPage(function()
+--                    target:Hide();
+--                 end);
+--            else
+--                page:ShowPage();
+--                target:Hide();
+--            end
+--            return;
+--        end
+--    elseif target.CheckIfNeedBack() then
+--        for i = 0, #pageNodes do
+--            if pageNodes[i] == target then
+--                table.remove(pageNodes, i)
+--                target:Hide();
+--                break;
+--            end
+--        end
+--    end
+--    target:Hide();
+--end
 
-function UIPage:ClosePage(target)
-    if target == nil then return end;
-    local pageNodes = UIPage.static.m_currentPageNodes
-    if target:isActive() == false then
-        if pageNodes ~= nil then
-            for i = 0, #pageNodes do
-                if pageNodes[i] == target then
-                    table.remove(pageNodes, i)
-                    break;
-                end
-            end
-        return;
-        end
-    end
-
-    if pageNodes ~= nil and #pageNodes >= 1 and pageNodes[#pageNodes] == target then
-        table.remove(pageNodes, #pageNodes)
-        --//show older page.
-        --//TODO:Sub pages.belong to root node.
-        if #pageNodes > 0 then
-            local page = pageNodes[#pageNodes];
-            if page.isAsyncUI == true then
-                page:ShowPage(function()
-                    target:Hide();
-                 end);
-            else
-                page:ShowPage();
-                target:Hide();
-            end
-            return;
-        end
-    elseif target.CheckIfNeedBack() then
-        for i = 0, #pageNodes do
-            if pageNodes[i] == target then
-                table.remove(pageNodes, i)
-                target:Hide();
-                break;
-            end
-        end
-    end
-    target:Hide();
-end
-
-function UIPage:ClosePage(pageName)
-    if UIPage.static.m_allPages ~= nil and UIPage.static.m_allPages[pageName] then
-        ClosePage(UIPage.static.m_allPages[pageName])
-    else
-        log("system",pageName , " havnt show yet!");
-    end
-end
+--function UIPage:ClosePage(pageName)
+--    if UIPage.static.m_allPages ~= nil and UIPage.static.m_allPages[pageName] then
+--        ClosePage(UIPage.static.m_allPages[pageName])
+--    else
+--        log("system",pageName , " havnt show yet!");
+--    end
+--end
 
 
 

@@ -15,7 +15,10 @@ BattleCtrl = class('BattleCtrl',UIPage)
 
 function BattleCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    self.uiPath = "Battle"
+end
+
+function BattleCtrl:getResPath()
+    return "Battle"
 end
 
 function BattleCtrl:OnCreate(obj )
@@ -33,16 +36,11 @@ end
 
 function BattleCtrl:OnClickSkillGo()
     log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
-    local ctrl = SkillPageCtrl:new()
-    ctrl:ShowPage(ctrl.OnCreate)
+    UIPage:ShowPage(SkillPageCtrl)
+
 end
 function BattleCtrl:OnClickGoBattle()
     log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
 end
-
---UnitTest.Exec("abel_w6_UIFrame", "test_BattleCtrl_ShowPage",  function ()
---    local ctrl = BattleCtrl:new()
---    ctrl:ShowPage(ctrl.OnCreate)
---end)
 
 

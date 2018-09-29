@@ -227,12 +227,22 @@ function  UIPage:ClearNodes()
     UIPage.static.m_currentPageNodes:Clear();
 end
 
-function  UIPage:ShowPage(pageInstance,callback)
-    ShowPage(pageInstance, callback)
+function  UIPage:ShowPage(inClass,pageData)
+    return UIPage:ShowPageByClass(inClass, pageData, true)
 end
 
-function  UIPage:ShowPage(callback, pageData, isAsync)
-    pageName = self.uiPath
+function  UIPage:ShowPageInstance(pageInstance,pageData)
+    pageInstance.m_data = pageData;
+    if pageInstance.isAsync then
+        pageInstance:Show(pageInstance.OnCreate)
+    else
+        pageInstance:Show(pageInstance.getResPath(), pageInstance.OnCreate);
+    end
+end
+
+function  UIPage:ShowPageByClass(inClass,pageData)
+    pageName = inClass.getResPath()
+    callback = inClass.OnCreate
     if pageName == "" then
         log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
         return
@@ -242,31 +252,22 @@ function  UIPage:ShowPage(callback, pageData, isAsync)
         UIPage.static.m_allPages = {}
     end
 
-    local page = nil;
+    local pageInstance = nil;
     if UIPage.m_allPages[pageName] ~= nil then
-        page = UIPage.static.m_allPages[pageName]
+        pageInstance = UIPage.static.m_allPages[pageName]
     else
-        UIPage.static.m_allPages[pageName] = self
-        page = self;
+        pageInstance = inClass:new()
+        UIPage.static.m_allPages[pageName] = pageInstance
     end
-
-    --//if active before,wont active again.
-    --//if (page.isActive() == false)
-    --//before show should set this data if need. maybe.!!
-    page.m_data = pageData;
-
-    if self.isAsync then
-        page:Show(callback)
-    else
-        page:Show(self.uiPath, callback);
-    end
+    self:ShowPageInstance(pageInstance, pageData)
+    return pageInstance
 end
 
 
 function UIPage:ClosePage()
     --//Debug.Log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);
     local pageNodes = UIPage.static.m_currentPageNodes
-    if pageNodes == nil or #pageNodes <= 0 then return;    end
+    if pageNodes == nil or #pageNodes <= 1 then return;    end
 
     local closePage = pageNodes[#pageNodes];
     table.remove(pageNodes, #pageNodes)
@@ -275,12 +276,11 @@ function UIPage:ClosePage()
     if #pageNodes > 0 then
         local page = pageNodes[#pageNodes];
         if page.isAsyncUI == ture then
-            page:ShowPage(function()
-            closePage:Hide();
+            UIPage:ShowPageInstance(page,function()
+                closePage:Hide();
             end);
         else
-            page:ShowPage();
-            --//after show to hide().
+            UIPage:ShowPageInstance(page)
             closePage:Hide();
         end
     end

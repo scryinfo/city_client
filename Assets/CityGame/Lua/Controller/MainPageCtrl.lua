@@ -15,7 +15,10 @@ MainPageCtrl = class('MainPageCtrl',UIPage)
 
 function MainPageCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    self.uiPath = "MainPage"
+end
+
+function MainPageCtrl:getResPath()
+    return "MainPage"
 end
 
 function MainPageCtrl:OnCreate(obj )
@@ -31,17 +34,9 @@ end
 
 function MainPageCtrl:OnClick_skill()
     log("abel_w6_UIFrame", "MainPageCtrl:OnClick_confim")
-    local ctrl = SkillPageCtrl:new()
-    ctrl:ShowPage(ctrl.OnCreate)
+    UIPage:ShowPage(SkillPageCtrl)
 end
 function MainPageCtrl:OnClick_battle(obj)
     log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
 end
-
---UnitTest.Exec("abel_w6_UIFrame", "test_MainPageCtrl_ShowPage",  function ()
---    --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
---    local ctrl = MainPageCtrl:new()
---    ctrl:ShowPage(ctrl.OnCreate)
---end)
-
 

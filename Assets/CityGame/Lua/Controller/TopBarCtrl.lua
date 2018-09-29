@@ -10,9 +10,10 @@ TopBarCtrl = class('TopBarCtrl',UIPage)
 
 function TopBarCtrl:initialize()
     UIPage.initialize(self,UIType.Fixed,UIMode.DoNothing,UICollider.None)
-    self.uiPath = "TopBar"
 end
-
+function TopBarCtrl:getResPath()
+    return "TopBar"
+end
 --function TopBarCtrl.OnCreate(obj ,self)
 --    UIPage.OnCreate(self,obj)
 --    gameObject = obj;
@@ -38,14 +39,12 @@ end
 
 function TopBarCtrl:OnClick_notice()
     log("abel_w6_UIFrame", "TopBarCtrl:OnClick_notice")
-    local notice = NoticeCtrl:new()
-    notice:ShowPage(notice.OnCreate)
+    UIPage:ShowPage(NoticeCtrl)
 end
 
 function TopBarCtrl:OnClick_main()
     log("abel_w6_UIFrame", "TopBarCtrl:OnClick_main")
-    local ctr = MainPageCtrl:new()
-    ctr:ShowPage(ctr.OnCreate)
+    UIPage:ShowPage(MainPageCtrl)
 end
 
 

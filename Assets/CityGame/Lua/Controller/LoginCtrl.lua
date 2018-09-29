@@ -11,7 +11,11 @@ local gameObject;
 --构建函数--
 function LoginCtrl:initialize()
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-	self.uiPath = "Login"
+	--self.uiPath = "Login"
+end
+
+function LoginCtrl:getResPath()
+	return "Login"
 end
 
 function LoginCtrl:Awake(go)

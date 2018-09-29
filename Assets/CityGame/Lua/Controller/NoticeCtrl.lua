@@ -15,7 +15,10 @@ NoticeCtrl = class('NoticeCtrl',UIPage)
 
 function NoticeCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
-    self.uiPath = "Notice"
+end
+
+function NoticeCtrl:getResPath()
+    return "Notice"
 end
 
 function NoticeCtrl:OnCreate(obj )
@@ -35,10 +38,5 @@ function NoticeCtrl:OnClick_confim(obj)
     obj:Hide();
 end
 
---UnitTest.Exec("abel_w6_UIFrame", "test_NoticeCtrl_ShowPage",  function ()
---    --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
---    local noticeCtrl = NoticeCtrl:new()
---    noticeCtrl:ShowPage(noticeCtrl.OnCreate)
---end)
 
 

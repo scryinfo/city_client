@@ -15,7 +15,10 @@ SkillPageCtrl = class('SkillPageCtrl',UIPage)
 
 function SkillPageCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    self.uiPath = "SkillPage"
+end
+
+function SkillPageCtrl:getResPath()
+    return "SkillPage"
 end
 
 function SkillPageCtrl:OnCreate(obj )
@@ -27,10 +30,5 @@ function SkillPageCtrl:OnClick_confim()
     self.Hide();
 end
 
---UnitTest.Exec("abel_w6_UIFrame", "test_SkillPageCtrl_ShowPage",  function ()
---    --log("abel_w6_UIFrame","[test_UIPage_ShowPage]  ")
---    local ctrl = SkillPageCtrl:new()
---    ctrl:ShowPage(ctrl.OnCreate)
---end)
 
 

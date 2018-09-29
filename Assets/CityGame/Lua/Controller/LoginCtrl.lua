@@ -140,7 +140,7 @@ function LoginCtrl:OnClickTest1(obj)
 	local yyy = LoginCtrl:gettestValue()
 	local xxx1  = xxx
 end
-TestGroup.active_TestGroup("abel_w5") --激活测试组
+--TestGroup.active_TestGroup("abel_w5") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")

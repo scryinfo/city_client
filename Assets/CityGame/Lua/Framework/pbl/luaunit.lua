@@ -2588,7 +2588,7 @@ end
                 -- Runtime error - abort test execution as requested by
                 -- "--error" option. This is done by setting a special
                 -- flag that gets handled in runSuiteByInstances().
-                log("\nERROR during LuaUnit test execution:\n" .. node.msg)
+                error("\nERROR during LuaUnit test execution:\n" .. node.msg)
                 self.result.aborted = true
             end
         elseif node:isFailure() then
@@ -2596,7 +2596,7 @@ end
                 -- Failure - abort test execution as requested by
                 -- "--failure" option. This is done by setting a special
                 -- flag that gets handled in runSuiteByInstances().
-                log("\nFailure during LuaUnit test execution:\n" .. node.msg)
+                error("\nFailure during LuaUnit test execution:\n" .. node.msg)
                 self.result.aborted = true
             end
         end

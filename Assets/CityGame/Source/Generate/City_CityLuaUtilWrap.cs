@@ -7,6 +7,10 @@ public class City_CityLuaUtilWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginStaticLibs("CityLuaUtil");
+		L.RegFunction("GetUIRoot", GetUIRoot);
+		L.RegFunction("getFixedRoot", getFixedRoot);
+		L.RegFunction("getNormalRoot", getNormalRoot);
+		L.RegFunction("getPopupRoot", getPopupRoot);
 		L.RegFunction("Utf8ToByte", Utf8ToByte);
 		L.RegFunction("ByteToUtf8", ByteToUtf8);
 		L.RegFunction("ArrayCopy", ArrayCopy);
@@ -25,6 +29,70 @@ public class City_CityLuaUtilWrap
 		L.RegFunction("stringToBytes", stringToBytes);
 		L.RegFunction("CallLuaFunction", City_CityLuaUtil_CallLuaFunction);
 		L.EndStaticLibs();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetUIRoot(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			City.UIRoot o = City.CityLuaUtil.GetUIRoot();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int getFixedRoot(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			UnityEngine.Transform o = City.CityLuaUtil.getFixedRoot();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int getNormalRoot(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			UnityEngine.Transform o = City.CityLuaUtil.getNormalRoot();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int getPopupRoot(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			UnityEngine.Transform o = City.CityLuaUtil.getPopupRoot();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

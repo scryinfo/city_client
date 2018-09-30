@@ -178,3 +178,13 @@ UnitTest.Exec("abel_w4_performance", "test_cache_table_element",  function ()
     end)
 
 end)
+
+UnitTest.Exec("abel_w6_performance", "test_UnitTest",  function ()
+    UnitTest.PerformanceTest("abel_w6_performance","[使用unpack展开table]", function()
+        for i = 1, 1000000 do
+            UnitTest.Exec("abel_w6_performance", "test_UnitTest_fun",  function ()
+
+            end)
+        end
+    end)
+end)

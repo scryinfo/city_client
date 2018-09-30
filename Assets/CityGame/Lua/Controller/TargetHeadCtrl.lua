@@ -15,7 +15,7 @@ end
 
 function TargetHeadCtrl.Awake()
 	logWarn("TargetHeadCtrl.Awake--->>");
-	panelMgr:CreatePanel('TargetHead', this.OnCreate);
+	panelMgr:CreatePanel('TargetHead', this.OnCreate, this);
 
 end
 

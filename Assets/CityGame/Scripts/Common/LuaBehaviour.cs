@@ -29,13 +29,13 @@ namespace LuaFramework {
         /// <summary>
         /// 添加单击事件
         /// </summary>
-        public void AddClick(GameObject go, LuaFunction luafunc) {
+        public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
             //buttons.Add(go.name, luafunc);
             buttons.Add(luafunc.GetHashCode().ToString(), luafunc);
             go.GetComponent<Button>().onClick.AddListener(
                 delegate() {
-                    luafunc.Call(go);
+                    luafunc.Call(go, obj);
                 }
             );
         }

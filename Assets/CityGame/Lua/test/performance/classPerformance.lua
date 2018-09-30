@@ -120,7 +120,7 @@ end)
 function A.static:bar()
   return 2
 end
-
+--调用派生类自己的方法（包括混入的方法）比调用从基类继承而来的方法要快30%
 UnitTest.Exec("abel_w4_class_performance", "test_class_method_invocation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance",'class method invocation', function()
     for i = 1, 100000 do

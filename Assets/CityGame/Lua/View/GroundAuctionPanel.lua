@@ -32,19 +32,27 @@ end
 
 --初始化面板--
 function GroundAuctionPanel.InitPanel()
-    this.startBidRoot = transform:Find("startBidRoot").gameObject;
-    this.startBidTimeDownText = transform:Find("startBidRoot/timeDownText").gameObject:GetComponent("Text");
-    this.currentPriceText = transform:Find("startBidRoot/currentPriceText").gameObject:GetComponent("Text");
-    this.bidInput = transform:Find("startBidRoot/inputRoot/bidInput").gameObject:GetComponent('InputField');
-    this.bidErrorTipText = transform:Find("startBidRoot/inputRoot/errorTipText").gameObject:GetComponent("Text");
-    this.bidBtn = transform:Find("startBidRoot/bidBtn").gameObject:GetComponent("Button");
-    this.backBtn = transform:Find("backBtn").gameObject:GetComponent("Button");
+    this.backBtn = transform:Find("backBtn").gameObject;
 
-    this.waitBidRoot = transform:Find("waitBidRoot").gameObject;
-    this.waitBidTimeDownText = transform:Find("waitBidRoot/timeDownText").gameObject:GetComponent("Text");
-    this.startBidTimeText = transform:Find("waitBidRoot/startBidText").gameObject:GetComponent("Text");
-    this.bidBasePriceText = transform:Find("waitBidRoot/basePriceText").gameObject:GetComponent("Text");
+    this.startBidRoot = transform:Find("bidRoot/startBidRoot").gameObject;
+    this.startBidTimeDownText = transform:Find("bidRoot/startBidRoot/time/timeDownText").gameObject:GetComponent("Text");
+    this.biderProtaitImg = transform:Find("bidRoot/startBidRoot/price/portait").gameObject:GetComponent("Image");
+    this.currentPriceText = transform:Find("bidRoot/startBidRoot/price/currentPriceText").gameObject:GetComponent("Text");
+    this.priceDesText = transform:Find("bidRoot/startBidRoot/price/priceDesText").gameObject:GetComponent("Text");  --开始拍卖界面，可能会只显示底价，描述改成“Floor price”
+    this.bidInput = transform:Find("bidRoot/startBidRoot/input/bidInput").gameObject:GetComponent('InputField');
+    this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText").gameObject;
+    this.bidBtn = transform:Find("bidRoot/startBidRoot/bidBtn").gameObject:GetComponent("Button");
+
+    this.waitBidRoot = transform:Find("bidRoot/waitBidRoot").gameObject;
+    this.waitBidTimeDownText = transform:Find("bidRoot/waitBidRoot/time/timeDownText").gameObject:GetComponent("Text");
+    this.startBidTimeText = transform:Find("bidRoot/waitBidRoot/time/bidTimeText").gameObject:GetComponent("Text");
+    this.waitBidBasePriceText = transform:Find("bidRoot/waitBidRoot/price/basePriceText").gameObject:GetComponent("Text");
+
+    this.personAverageText = transform:Find("personFlowRoot/Image02/averageText").gameObject:GetComponent("Text");
+
+
 end
+
 
 --初始化页面信息
 function GroundAuctionPanel.InitData(panelData)
@@ -61,9 +69,11 @@ function GroundAuctionPanel.InitData(panelData)
         this.waitBidRoot.transform.localScale = Vector3.zero
 
         if panelData.biderId ~= nil and panelData.price ~= nil then
-            this.currentPriceText.text = "当前最高价："..panelData.price
+            this.currentPriceText.text = this._getPriceString(panelData.price, 30, 24)
+            this.priceDesText.text = "Top price"
         else
-            this.currentPriceText.text = "当前最高价："..panelData.basePrice
+            this.currentPriceText.text = this._getPriceString(panelData.basePrice, 30, 24)
+            this.priceDesText.text = "Floor price"
         end
 
         this.StartTimeDownForFinish = true
@@ -71,10 +81,11 @@ function GroundAuctionPanel.InitData(panelData)
         this.startBidRoot.transform.localScale = Vector3.zero
         this.waitBidRoot.transform.localScale = Vector3.one
 
+        this.waitBidBasePriceText.text = this._getPriceString(panelData.basePrice, 30, 24)
         local timeData = GroundAuctionPanel.FormatUnixTime(panelData.beginTime)
-        this.startBidTimeText.text = "开始拍卖时间："..timeData.hour..":"..timeData.minute..":"..timeData.second
+        this.startBidTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
         this.StartTimeDownForStart = true
-        end
+    end
 
 end
 
@@ -103,12 +114,23 @@ function GroundAuctionPanel.ChangeBidInfo(newBidInfo)
         return
     end
 
+    --头像信息，暂不确定
     this.currentPriceText.text = newBidInfo.num
 end
 
 --拍卖结束--
 function GroundAuctionPanel.BidEnd()
 
+end
+
+--获取价格显示文本 --整数和小数部分大小不同
+function GroundAuctionPanel._getPriceString(str, intSize, floatSize)
+    local index = string.find(str, '%.')
+    local intString = string.sub(str, 1, index)
+    local floatString = string.sub(str, index + 1)
+    local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+    return finalStr
 end
 
 
@@ -128,8 +150,8 @@ function GroundAuctionPanel.WaitForBidTimeDown()
         end
 
         remainTime = GroundAuctionPanel.FormatUnixTime(remainTime)
-        local timeStr = remainTime.minute..":"..remainTime.second
-        this.waitBidTimeDownText.text = "开始拍卖倒计时："..timeStr
+        local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        this.waitBidTimeDownText.text = timeStr
 
         if this.currentTime >= finishTime then
             logDebug("------ 拍卖panel，开始拍卖")
@@ -154,8 +176,8 @@ function GroundAuctionPanel.BidFinishTimeDown()
         end
 
         remainTime = GroundAuctionPanel.FormatUnixTime(remainTime)
-        local timeStr = remainTime.minute..":"..remainTime.second
-        this.startBidTimeDownText.text = "拍卖结束倒计时："..timeStr
+        local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        this.startBidTimeDownText.text = timeStr
 
         if this.currentTime >= finishTime then
             logDebug("------ 拍卖panel，拍卖结束")

@@ -34,12 +34,15 @@ function GroundAuctionCtrl.OnCreate(obj)
     if this.elmData.isStartBid then
         Event.Brocast("m_RegistGroundBidInfor");
     end
-    Event.AddListener("c_BidInfoUpdate", this.BidInfoUpdate);
+    Event.AddListener("c_BidInfoUpdate", this._bidInfoUpdate);  --拍卖信息更新
+    Event.AddListener("c_BidFail", this._bidFailFunc);  --出价失败
+    Event.AddListener("c_BidSuccess", this._bidFailFunc);  --出价失败
 end
 
 --出价--
 function GroundAuctionCtrl.BidGround()
     local bidPrice = GroundAuctionPanel.bidInput.text;
+
     Event.Brocast("m_PlayerBidGround", this.elmData.id, bidPrice);
 end
 
@@ -51,8 +54,13 @@ function GroundAuctionCtrl.UnRegistGroundBid()
 end
 
 --拍卖信息更新
-function GroundAuctionCtrl.BidInfoUpdate(data)
+function GroundAuctionCtrl._bidInfoUpdate(data)
     GroundAuctionPanel.ChangeBidInfo(data)
+end
+
+--出价失败
+function GroundAuctionCtrl._bidFailFunc(data)
+    GroundAuctionPanel.bidErrorTipText.transform.localScale = Vector3.one  --显示错误提示信息
 end
 
 --关闭事件--

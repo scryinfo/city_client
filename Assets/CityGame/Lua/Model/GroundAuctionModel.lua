@@ -126,7 +126,12 @@ end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
+    local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
+    if #auctionInfo.auction == 0 then
+        return
+    end
 
+    --if
 end
 
 --收到服务器拍卖信息更新

@@ -102,8 +102,7 @@ function LoginCtrl:c_Disconnect( errorCode )
 end
 
 function LoginCtrl:c_GsLoginSuccess()
-	self:Close()
-	UIPage:ClearNodes()
+	UIPage:ClearAllPages()
 	UIPage:ShowPage(TopBarCtrl)
 	UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
 end

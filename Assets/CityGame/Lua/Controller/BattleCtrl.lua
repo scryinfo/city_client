@@ -34,6 +34,10 @@ function BattleCtrl:Awake(go)
     lbr:AddClick(BattlePanel.btn_battle, self.OnClickGoBattle);
 end
 
+function BattleCtrl:Close()
+    destroy(self.gameObject);
+end
+
 function BattleCtrl:OnClickSkillGo()
     log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
     UIPage:ShowPage(SkillPageCtrl)

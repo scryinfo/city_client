@@ -268,7 +268,7 @@ function  UIPage:ShowPageByClass(inClass,pageData)
     end
 
     local pageInstance = nil;
-    if UIPage.m_allPages[pageName] ~= nil then
+    if UIPage.static.m_allPages[pageName] ~= nil then
         pageInstance = UIPage.static.m_allPages[pageName]
     else
         pageInstance = inClass:new()

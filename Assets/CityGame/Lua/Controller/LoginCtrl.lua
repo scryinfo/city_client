@@ -21,6 +21,7 @@ end
 
 function LoginCtrl:Awake(go)
 	log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
+	self.gameObject = go
 end
 
 function LoginCtrl:Refresh()
@@ -29,7 +30,6 @@ end
 
 --启动事件--
 function LoginCtrl:OnCreate(go)
-	self.gameObject = go
 	UIPage.OnCreate(self,go)
 	login = self.gameObject:GetComponent('LuaBehaviour');
 	login:AddClick(LoginPanel.btnLogin, self.OnLogin,self);

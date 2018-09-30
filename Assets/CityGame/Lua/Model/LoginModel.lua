@@ -186,6 +186,7 @@ function LoginModel.n_OnRoleLogin(stream)
     if(stream) then
         local pMsg =assert(pbl.decode("gs.RoleLoginAck",stream),"LoginModel.n_CreateNewRole : stream == nil")
         log("[LoginModel.n_OnRoleLogin] succeed!")
+        Event.Brocast("c_GsLoginSuccess");
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

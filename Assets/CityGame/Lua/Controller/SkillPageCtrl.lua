@@ -25,6 +25,10 @@ function SkillPageCtrl:OnCreate(obj )
     UIPage.OnCreate(self,obj)
 end
 
+function SkillPageCtrl:Refresh()
+
+end
+
 function SkillPageCtrl:OnClick_confim()
     log("abel_w6_UIFrame", "SkillPageCtrl:OnClick_confim")
     self.Hide();

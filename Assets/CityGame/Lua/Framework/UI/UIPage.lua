@@ -56,10 +56,10 @@ end
 function UIPage:Awake(obj)
     self.gameObject = obj;
 end
-
 function UIPage:Refresh()
 
 end
+
 
 function UIPage:Active()
 
@@ -224,7 +224,10 @@ function  UIPage:HideOldNodes()
 end
 
 function  UIPage:ClearNodes()
-    UIPage.static.m_currentPageNodes:Clear();
+    UIPage.m_allPages = nil
+    UIPage.m_allPages = {}
+    UIPage.static.m_currentPageNodes = nil
+    UIPage.static.m_currentPageNodes = {};
 end
 
 function  UIPage:ShowPage(inClass,pageData)
@@ -329,13 +332,13 @@ end
 --    target:Hide();
 --end
 
---function UIPage:ClosePage(pageName)
---    if UIPage.static.m_allPages ~= nil and UIPage.static.m_allPages[pageName] then
---        ClosePage(UIPage.static.m_allPages[pageName])
---    else
---        log("system",pageName , " havnt show yet!");
---    end
---end
+function UIPage:ClosePageByName(pageName)
+    if UIPage.static.m_allPages ~= nil and UIPage.static.m_allPages[pageName] then
+        UIPage:ClosePage(UIPage.static.m_allPages[pageName])
+    else
+        log("system",pageName , " havnt show yet!");
+    end
+end
 
 
 

@@ -33,6 +33,10 @@ function NoticeCtrl:Awake(go)
     Notice:AddClick(NoticePanel.btn_confim, self.OnClick_confim, self);
 end
 
+function NoticeCtrl:Refresh()
+
+end
+
 function NoticeCtrl:OnClick_confim(obj)
     log("abel_w6_UIFrame", "NoticeCtrl:OnClick_confim")
     obj:Hide();

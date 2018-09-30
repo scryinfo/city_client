@@ -32,6 +32,10 @@ function MainPageCtrl:Awake(go)
     self.gameObject = go
 end
 
+function MainPageCtrl:Refresh()
+
+end
+
 function MainPageCtrl:OnClick_skill()
     log("abel_w6_UIFrame", "MainPageCtrl:OnClick_confim")
     UIPage:ShowPage(SkillPageCtrl)

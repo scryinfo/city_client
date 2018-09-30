@@ -17,8 +17,6 @@ end
 function TopBarPanel.InitPanel()
 	this.btn_notice = transform:Find("btn_notice").gameObject;
 	this.btn_back = transform:Find("btn_back").gameObject;
-	this.btn_main = transform:Find("btn_main").gameObject;
-
 end
 
 --单击事件--

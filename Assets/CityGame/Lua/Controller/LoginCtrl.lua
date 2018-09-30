@@ -10,6 +10,7 @@ local gameObject;
 
 --构建函数--
 function LoginCtrl:initialize()
+	self.logined = false
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 	--self.uiPath = "Login"
 end
@@ -23,13 +24,17 @@ function LoginCtrl:Awake(go)
 	self.gameObject = go
 end
 
+function LoginCtrl:Refresh()
+
+end
+
 --启动事件--
 function LoginCtrl:OnCreate(obj)
 	UIPage.OnCreate(self,obj)
 	login = self.gameObject:GetComponent('LuaBehaviour');
-	login:AddClick(LoginPanel.btnLogin, self.OnLogin);
-	login:AddClick(LoginPanel.btnRegister, self.OnRegister);
-	login:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer);
+	login:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
+	login:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
+	login:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
 	log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 	--普通消息注册
@@ -38,9 +43,21 @@ function LoginCtrl:OnCreate(obj)
 	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
+	Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
 
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
+end
+
+--关闭事件--
+function LoginCtrl:Close()
+	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
+	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
+	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
+	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
+	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
+	Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+	destroy(self.gameObject);
 end
 
 function LoginCtrl:onClickChooseGameServer(serverId)
@@ -50,27 +67,22 @@ end
 function LoginCtrl:OnLogin(go)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
-	--CityEngineLua.login(username, pw, "lxq");
-	Event.Brocast("m_OnAsLogin", username, pw, "lxq");
+	if username == "" then
+		log("system"," 账号不能为空")
+	else
+		--CityEngineLua.login(username, pw, "lxq");
+		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
+	end
 end
 --注册--
 function LoginCtrl:OnRegister(go)
-    --目前还没有手动注册
-    Event.Brocast("m_Gslogin");
+	if go.logined == false then
+		log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
+	else
+		--目前还没有手动注册
+		Event.Brocast("m_Gslogin");
+	end
 end
-
---关闭事件--
-function LoginCtrl:Close()
-	--panelMgr:ClosePanel(CtrlNames.Login);
-	destroy(gameObject);
-	--Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
-	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
-	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
-	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-end
-
 ------------------回调--------------
 function LoginCtrl:onReqAvatarList( avatarList )
 	-- 关闭登录界面
@@ -87,6 +99,13 @@ function LoginCtrl:c_Disconnect( errorCode )
 	--这里打印会失败, LoginPanel 已经不能访Destroy问了
 	LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
 	--logDebug("cz login 登录失败,error code: ", errorCode)
+end
+
+function LoginCtrl:c_GsLoginSuccess()
+	self:Close()
+	UIPage:ClearNodes()
+	UIPage:ShowPage(TopBarCtrl)
+	UIPage:ShowPage(MainPageCtrl)
 end
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
@@ -112,6 +131,7 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
+		self.logined = true
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";
 	end

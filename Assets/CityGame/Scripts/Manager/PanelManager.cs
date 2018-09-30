@@ -38,7 +38,9 @@ namespace LuaFramework {
                 GameObject go = Instantiate(prefab) as GameObject;
                 go.name = assetName;
                 go.layer = LayerMask.NameToLayer("Default");
+                var panelObj = Parent.Find("LoginPanel");
                 go.transform.SetParent(Parent);
+                panelObj = Parent.Find("LoginPanel");
                 go.transform.localScale = Vector3.one;
                 go.transform.localPosition = Vector3.zero; 
                 //

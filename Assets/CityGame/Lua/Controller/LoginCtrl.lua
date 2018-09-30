@@ -25,7 +25,7 @@ function LoginCtrl:Awake(go)
 end
 
 function LoginCtrl:Refresh()
-
+	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] m_data =",self.m_data);
 end
 
 --启动事件--
@@ -105,7 +105,7 @@ function LoginCtrl:c_GsLoginSuccess()
 	self:Close()
 	UIPage:ClearNodes()
 	UIPage:ShowPage(TopBarCtrl)
-	UIPage:ShowPage(MainPageCtrl)
+	UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
 end
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )

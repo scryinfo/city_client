@@ -33,7 +33,7 @@ function MainPageCtrl:Awake(go)
 end
 
 function MainPageCtrl:Refresh()
-
+    log("abel_w6_UIFrame_1","[MainPageCtrl:Refresh] UI数据更新， m_data ="..self.m_data);
 end
 
 function MainPageCtrl:OnClick_skill()

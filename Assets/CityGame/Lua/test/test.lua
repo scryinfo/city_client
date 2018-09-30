@@ -6,7 +6,9 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w6_UIFrame_1")
-TestGroup.active_TestGroup("abel_w6_UIFrame")
+TestGroup.active_TestGroup("cycle_w6_houseAndGround")
+
+--TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -141,4 +143,17 @@ UnitTest.Exec("abel_w3", "test_log",function()
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
     TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
+end)
+
+UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
+    local info = {}
+    info.titleInfo = "CONGRATULATION";
+    info.contentInfo = "Success!!!!";
+    info.tipInfo = "lalalalalalalalla";
+    info.btnCallBack = function ()
+        log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
+    end;
+    UIPage:ShowPage(BtnDialogPageCtrl, info)
+
+    log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
 end)

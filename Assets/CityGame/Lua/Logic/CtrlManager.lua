@@ -7,6 +7,7 @@ require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
+require "Controller/BtnDialogPageCtrl"
 require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
@@ -31,6 +32,7 @@ function CtrlManager.Init()
 	ctrlList[CtrlNames.TargetHead] = TargetHeadCtrl.New();
 	ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
 	ctrlList[CtrlNames.House] = HouseCtrl.New();
+	--ctrlList[CtrlNames.BtnDialogPage] = BtnDialogPageCtrl.New();
 
 	modelList[ModelNames.Login] = LoginModel.New();
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();

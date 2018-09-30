@@ -35,8 +35,6 @@ function GroundAuctionCtrl.OnCreate(obj)
         Event.Brocast("m_RegistGroundBidInfor");
     end
     Event.AddListener("c_BidInfoUpdate", this._bidInfoUpdate);  --拍卖信息更新
-    Event.AddListener("c_BidFail", this._bidFailFunc);  --出价失败
-    Event.AddListener("c_BidSuccess", this._bidFailFunc);  --出价失败
 end
 
 --出价--
@@ -56,16 +54,32 @@ end
 --拍卖信息更新
 function GroundAuctionCtrl._bidInfoUpdate(data)
     GroundAuctionPanel.ChangeBidInfo(data)
+
+    if data.id ~= this.elmData.id then
+        local info = {}
+        --self.titleInfo = titleInfo
+        --self.contentInfo = contentInfo
+        --self.tipInfo = tipInfo
+        --self.btnCallBack = btnCallBack
+
+        info.titleInfo = "CONGRATULATION";
+        info.contentInfo = "Success!!!!";
+        info.tipInfo = "lalalalalalalalla";
+        info.btnCallBack = function ()
+            log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
+        end;
+        UIPage:ShowPage(BtnDialogPageCtrl, info)
+    end
 end
 
 --出价失败
 function GroundAuctionCtrl._bidFailFunc(data)
-    GroundAuctionPanel.bidErrorTipText.transform.localScale = Vector3.one  --显示错误提示信息
+
 end
 
 --关闭事件--
 function GroundAuctionCtrl.Close()
-    Event.RemoveListener("c_BidInfoUpdate", this.m_BidGround);
+    Event.RemoveListener("c_BidInfoUpdate", this._bidInfoUpdate);
     panelMgr:ClosePanel(CtrlNames.GroundAuction);
     destroy(gameObject);
 end

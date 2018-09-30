@@ -15,6 +15,7 @@ CtrlNames = {
 	TargetHead = "TargetHeadCtrl",
 	GroundAuction = "GroundAuctionCtrl",  --拍卖
 	House = "HouseCtrl",  --住宅
+	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 }
 
 ModelNames = {

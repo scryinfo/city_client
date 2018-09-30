@@ -14,10 +14,11 @@ local class = require 'Framework/class'
 SkillPageCtrl = class('SkillPageCtrl',UIPage)
 
 function SkillPageCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
-function SkillPageCtrl:getResPath()
+function SkillPageCtrl:bundleName()
     return "SkillPage"
 end
 

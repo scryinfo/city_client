@@ -239,12 +239,12 @@ function  UIPage:ShowPageInstance(pageInstance,pageData)
     if pageInstance.isAsync then
         pageInstance:Show(pageInstance.OnCreate)
     else
-        pageInstance:Show(pageInstance.getResPath(), pageInstance.OnCreate);
+        pageInstance:Show(pageInstance.bundleName(), pageInstance.OnCreate);
     end
 end
 
 function  UIPage:ShowPageByClass(inClass,pageData)
-    pageName = inClass.getResPath()
+    pageName = inClass.bundleName()
     callback = inClass.OnCreate
     if pageName == "" then
         log("system","[UI] show page error with :" , pageName , " maybe nil instance.");

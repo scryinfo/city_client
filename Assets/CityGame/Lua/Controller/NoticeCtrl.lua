@@ -17,7 +17,7 @@ function NoticeCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
 
-function NoticeCtrl:getResPath()
+function NoticeCtrl:bundleName()
     return "Notice"
 end
 

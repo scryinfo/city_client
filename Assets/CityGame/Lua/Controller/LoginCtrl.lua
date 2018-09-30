@@ -15,22 +15,22 @@ function LoginCtrl:initialize()
 	--self.uiPath = "Login"
 end
 
-function LoginCtrl:getResPath()
+function LoginCtrl:bundleName()
 	return "Login"
 end
 
 function LoginCtrl:Awake(go)
 	log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
-	self.gameObject = go
 end
 
 function LoginCtrl:Refresh()
-	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] m_data =",self.m_data);
+	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 end
 
 --启动事件--
-function LoginCtrl:OnCreate(obj)
-	UIPage.OnCreate(self,obj)
+function LoginCtrl:OnCreate(go)
+	self.gameObject = go
+	UIPage.OnCreate(self,go)
 	login = self.gameObject:GetComponent('LuaBehaviour');
 	login:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	login:AddClick(LoginPanel.btnRegister, self.OnRegister,self);

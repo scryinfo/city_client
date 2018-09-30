@@ -17,7 +17,7 @@ function MainPageCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
-function MainPageCtrl:getResPath()
+function MainPageCtrl:bundleName()
     return "MainPage"
 end
 
@@ -33,7 +33,7 @@ function MainPageCtrl:Awake(go)
 end
 
 function MainPageCtrl:Refresh()
-    log("abel_w6_UIFrame_1","[MainPageCtrl:Refresh] UI数据更新， m_data ="..self.m_data);
+    log("abel_w6_UIFrame_1","[MainPageCtrl:Refresh] UI数据更新， m_data ="..tostring(self.m_data));
 end
 
 function MainPageCtrl:OnClick_skill()

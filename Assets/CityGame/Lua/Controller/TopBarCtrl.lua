@@ -9,9 +9,9 @@ local class = require 'Framework/class'
 TopBarCtrl = class('TopBarCtrl',UIPage)
 
 function TopBarCtrl:initialize()
-    UIPage.initialize(self,UIType.Fixed,UIMode.DoNothing,UICollider.None)
+    UIPage.initialize(self,UIType.Fixed,UIMode.HideOther,UICollider.None)
 end
-function TopBarCtrl:getResPath()
+function TopBarCtrl:bundleName()
     return "TopBar"
 end
 --function TopBarCtrl.OnCreate(obj ,self)

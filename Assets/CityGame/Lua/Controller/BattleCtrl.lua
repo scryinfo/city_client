@@ -17,7 +17,7 @@ function BattleCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
-function BattleCtrl:getResPath()
+function BattleCtrl:bundleName()
     return "Battle"
 end
 

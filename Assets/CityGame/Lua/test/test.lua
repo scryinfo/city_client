@@ -6,6 +6,7 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w6_UIFrame_1")
+TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'

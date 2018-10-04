@@ -6,40 +6,53 @@
 require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr"
 
-HouseCtrl = {};
-local this = HouseCtrl;
+require('Framework/UI/UIPage')
+local class = require 'Framework/class'
 
-local houseBehaviour;
-local gameObject;
+HouseCtrl = class('HouseCtrl',UIPage)
 
---构建函数--
-function HouseCtrl.New()
-    return this;
+function HouseCtrl:initialize()
+    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
---打开界面
-function HouseCtrl.OpenPanel(houseData)
-    this.houseData = houseData
-    panelMgr:CreatePanel('House', this.OnCreate,this);
+function HouseCtrl:bundleName()
+    return "House"
 end
 
---启动事件--
-function HouseCtrl.OnCreate(obj)
-    log("cycle_w5","[test_housepanel_oncreat]  测试完毕")
-    gameObject = obj;
-    houseBehaviour = gameObject:GetComponent('LuaBehaviour');
-    --houseBehaviour:AddClick(HousePanel.bidBtn.gameObject, this.BidGround);
-    --houseBehaviour:AddClick(HousePanel.backBtn.gameObject, this.UnRegistGroundBid);
-
-    HousePanel.InitDate(this.houseData)
-
-    this.houseData.buildingType = BuildingType.House
-    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, houseBehaviour, this.houseData)
-
-    --if this.houseData.isStartBid then
-    --    Event.Brocast("m_RegistGroundBidInfor");
-    --end
-    --Event.AddListener("c_BidInfoUpdate", this.BidInfoUpdate);
+function HouseCtrl:OnCreate(obj)
+    UIPage.OnCreate(self, obj)
 end
 
+function HouseCtrl:Awake(go)
+    self.gameObject = go
+    local houseBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self);
+    houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self);
+    houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self);
 
+    --HousePanel.InitDate(this.houseData)
+
+    self.m_data.buildingType = BuildingType.House
+    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, houseBehaviour, self.m_data)
+
+end
+
+function HouseCtrl:Refresh()
+
+end
+
+---更改名字
+function HouseCtrl:_changeName()
+    local data = {}
+    data.titleInfo = "RENAME";
+    data.tipInfo = "Modified every seven days";
+    UIPage:ShowPage(InputDialogPageCtrl, data)
+end
+---返回
+function HouseCtrl:_backBtn()
+    UIPage.ClosePage();
+end
+---打开信息界面
+function HouseCtrl:_openInfo()
+
+end

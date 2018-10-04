@@ -168,7 +168,9 @@ public class Packager {
         AddBuildMap("BuildingTransfer" + AppConst.BundleExt, "BuildingTransferPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("House" + AppConst.BundleExt, "HousePanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("BtnDialogPage" + AppConst.BundleExt, "BtnDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
-        
+        AddBuildMap("InputDialogPage" + AppConst.BundleExt, "InputDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
+        AddBuildMap("HouseChangeRent" + AppConst.BundleExt, "HouseChangeRentPanel.prefab", "Assets/CityGame/Resources/View");
+
         AddBuildMap("UIRoot" + AppConst.BundleExt, "UIRootPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("TopBar" + AppConst.BundleExt, "TopBarPanel.prefab", "Assets/CityGame/Resources/View");
 

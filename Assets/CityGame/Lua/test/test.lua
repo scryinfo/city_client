@@ -153,7 +153,7 @@ UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     info.btnCallBack = function ()
         log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
     end;
-    UIPage:ShowPage(BtnDialogPageCtrl, info)
+    UIPage:ShowPage(HouseCtrl, info)
 
     log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
 end)

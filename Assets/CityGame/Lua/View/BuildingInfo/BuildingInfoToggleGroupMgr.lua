@@ -5,6 +5,7 @@
 ---管理建筑首页的信息toggle mgr
 require 'View/BuildingInfo/OccupancyRateItem'
 require 'View/BuildingInfo/RentalItem'
+require 'View/BuildingInfo/StaffRateItem'
 
 local class = require 'Framework/class'
 
@@ -17,6 +18,7 @@ BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
 
 BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH = "View/BuildingMainPageInfoItem/HouseOccupancyRateItem"  --住宅入住率预制路径
 BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH = "View/BuildingMainPageInfoItem/HouseRentalItem"  --住宅租金
+BuildingInfoToggleGroupMgr.static.Staff_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --建筑员工
 
 --初始化
 function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
@@ -74,6 +76,8 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
             else
                 leftPos = toggleItem:closeToggleItem(leftPos)
             end
+
+            log("cycle_w6_houseAndGround", "排序排序---------------------------------")
         end
     end
 
@@ -103,6 +107,36 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
+    ---员工  左1
+    local staffViewRect
+    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+    staffViewRect.gameObject.name = "Staff"
+    --测试数据
+    local staffData = {}
+    staffData.EmployeeSatisfaction = 0.8
+    staffData.EmployeeDaywages = 18
+    staffData.noDomicileCount = 3
+    staffData.totalStaffCount = 100
+    --end
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+    self.leftData[1] = staffLuaItem
+
+    ---测试测试 入住率  左2
+    local staffViewRect2
+    staffViewRect2 = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+    staffViewRect2.gameObject.name = "Staff02"
+    --测试数据
+    local staffData2 = {}
+    staffData2.EmployeeSatisfaction = 0.8
+    staffData2.EmployeeDaywages = 18
+    staffData2.noDomicileCount = 0
+    staffData2.totalStaffCount = 100
+    --end
+    local staffToggleData2 = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    local staffLuaItem2 = StaffRateItem:new(staffData2, self._clickItemFunc, staffViewRect2, self.mainPanelLuaBehaviour, staffToggleData2, self)
+    self.leftData[2] = staffLuaItem2
+
     ---入住率  右1
     local occupancyViewRect
     occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
@@ -125,5 +159,7 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     self.rightData[2] = rentalLuaItem
+
+
 end
 

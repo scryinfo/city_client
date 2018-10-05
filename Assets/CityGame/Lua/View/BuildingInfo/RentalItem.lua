@@ -36,7 +36,7 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
         end
         --打开更改租金界面
 
-    end);
+    end, self);
 
     Event.AddListener("c_onRentalValueChange", self.updateInfo, self);
 end

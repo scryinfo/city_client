@@ -375,6 +375,11 @@
     <Compile Include="Assets\CityGame\Scripts\ObjectPool\ObjectPool.cs" />
     <Compile Include="Assets\CityGame\Scripts\ObjectPool\TestObjectClass.cs" />
     <Compile Include="Assets\CityGame\Scripts\PieChart\PieChartGraph.cs" />
+    <Compile Include="Assets\CityGame\Scripts\toolbox\LineChart\BaseLineChart.cs" />
+    <Compile Include="Assets\CityGame\Scripts\toolbox\LineChart\ILineChart.cs" />
+    <Compile Include="Assets\CityGame\Scripts\toolbox\LineChart\LineChart.cs" />
+    <Compile Include="Assets\CityGame\Scripts\toolbox\LineChart\LineChartCurve.cs" />
+    <Compile Include="Assets\CityGame\Scripts\toolbox\LineChart\LineChartGraphExample.cs" />
     <Compile Include="Assets\CityGame\Scripts\Utility\LuaHelper.cs" />
     <Compile Include="Assets\CityGame\Scripts\Utility\Util.cs" />
     <Compile Include="Assets\CityGame\Scripts\View\AppView.cs" />

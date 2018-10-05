@@ -4,10 +4,6 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 
-local login;
-local transform;
-local gameObject;
-
 --构建函数--
 function LoginCtrl:initialize()
 	self.logined = false
@@ -31,10 +27,10 @@ end
 --启动事件--
 function LoginCtrl:OnCreate(go)
 	UIPage.OnCreate(self,go)
-	login = self.gameObject:GetComponent('LuaBehaviour');
-	login:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
-	login:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
-	login:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
+	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
+	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
+	LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
 	log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 	--普通消息注册
@@ -174,9 +170,9 @@ UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
 	log("abel_w5","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function (obj)
 		obj.testValue = 666
-		login = obj.gameObject:GetComponent('LuaBehaviour')
-		login:AddClick(LoginPanel.btnLogin ,obj.OnClickTest);
-		login:AddClick(LoginPanel.btnLogin ,obj.OnClickTest1,obj);
+		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')
+		LuaBehaviour:AddClick(LoginPanel.btnLogin ,obj.OnClickTest);
+		LuaBehaviour:AddClick(LoginPanel.btnLogin ,obj.OnClickTest1,obj);
 	end)
 end)
 

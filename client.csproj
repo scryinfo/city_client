@@ -364,6 +364,7 @@
     <Compile Include="Assets\CityGame\Scripts\Main.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\GameManager.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\Interface\ITimerBehaviour.cs" />
+    <Compile Include="Assets\CityGame\Scripts\Manager\LineChartManager.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\LuaManager.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\ObjectPoolManager.cs" />
     <Compile Include="Assets\CityGame\Scripts\Manager\PanelManager.cs" />
@@ -386,6 +387,7 @@
     <Compile Include="Assets\CityGame\Source\Generate\BaseWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_CityLuaUtilWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_CityTestWrap.cs" />
+    <Compile Include="Assets\CityGame\Source\Generate\City_LineChartWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_MemoryStreamWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\City_NetworkInterfaceWrap.cs" />
     <Compile Include="Assets\CityGame\Source\Generate\DelegateFactory.cs" />

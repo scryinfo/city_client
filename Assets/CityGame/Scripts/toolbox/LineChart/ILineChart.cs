@@ -56,11 +56,8 @@ public class LineChartData
     [HideInInspector]
     public Dictionary<int, VertexStream> Lines = new Dictionary<int, VertexStream>(); //排成一行；画线于（line的三单形式）
 
-    public void AddLine(IList<Vector2> vertexs)
-    {
-        Color color = Color.black;
-        if (LineColors.Length >= Lines.Count)
-            color = LineColors[Lines.Count];
+    public void AddLine(IList<Vector2> vertexs, Color color)
+    {        
         Lines.Add(Lines.Count, new VertexStream(vertexs, color));
 
         Debug.Log("!!!!!!!Lines.Count的长度是" + vertexs.Count);

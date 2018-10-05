@@ -5,7 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w6_UIFrame_1")
+TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
@@ -25,6 +25,7 @@ require('test/performance/classPerformance')
 require("examination")
 require("metatable")
 require('test/test_UIFrameWrok')
+require('test/LineChart/testLineChart')
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")

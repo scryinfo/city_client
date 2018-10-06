@@ -1,6 +1,16 @@
 require "Common/define"
+<<<<<<< .mine
 UnitTest = require ('test/testFrameWork/UnitTest')
+
+
+
+=======
+require('Controller/TopBarCtrl')
+require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
+
+>>>>>>> .theirs
+UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 

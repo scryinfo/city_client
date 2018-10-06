@@ -182,6 +182,11 @@ public class Packager {
         AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
         AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");
         AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
+
+        //饼图
+        AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Terrain");
+        //曲线图
+        AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

@@ -31,7 +31,7 @@ function CtrlManager.Init()
 	ctrlList[CtrlNames.GameWorld] = GameWorldCtrl.New();
 	ctrlList[CtrlNames.PlayerHead] = PlayerHeadCtrl.New();
 	ctrlList[CtrlNames.TargetHead] = TargetHeadCtrl.New();
-	ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
+	--ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
 	--ctrlList[CtrlNames.House] = HouseCtrl.New();
 	--ctrlList[CtrlNames.BtnDialogPage] = BtnDialogPageCtrl.New();
 

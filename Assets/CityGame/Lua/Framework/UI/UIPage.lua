@@ -223,11 +223,23 @@ function  UIPage:HideOldNodes()
     end
 end
 
-function  UIPage:ClearNodes()
-    UIPage.m_allPages = nil
-    UIPage.m_allPages = {}
+function UIPage:Close()
+    log("system","请使用UIPage派生类自己的Close方法，尽量不要调用基类的 Close 方法")
+    destroy(self.gameObject);
+end
+
+--清空栈中所有的UI实例，销毁其对应perfab资源
+function  UIPage:ClearAllPages()
+    --清空当前page
     UIPage.static.m_currentPageNodes = nil
     UIPage.static.m_currentPageNodes = {};
+
+    --销毁栈中所有UI资源
+    for k,v in pairs(UIPage.static.m_allPages) do
+        v:Close();
+    end
+    UIPage.static.m_allPages = nil
+    UIPage.static.m_allPages = {}
 end
 
 function  UIPage:ShowPage(inClass,pageData)
@@ -256,7 +268,7 @@ function  UIPage:ShowPageByClass(inClass,pageData)
     end
 
     local pageInstance = nil;
-    if UIPage.m_allPages[pageName] ~= nil then
+    if UIPage.static.m_allPages[pageName] ~= nil then
         pageInstance = UIPage.static.m_allPages[pageName]
     else
         pageInstance = inClass:new()

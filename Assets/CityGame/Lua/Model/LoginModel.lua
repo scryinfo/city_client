@@ -222,6 +222,11 @@ end
 function LoginModel.n_CreateNewRole(stream)
     --message Role {
     --    required bytes id = 1;
+    if stream == nil then
+        log("system", "[LoginModel.n_CreateNewRole] stream = nil")
+        return
+    end
+
     local pMsg =assert(pbl.decode("gs.RoleInfo",stream),"LoginModel.n_CreateNewRole : stream == nil")
     logDebug(pMsg.id)
     logDebug(pMsg.name)

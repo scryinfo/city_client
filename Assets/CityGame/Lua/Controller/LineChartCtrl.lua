@@ -72,7 +72,6 @@ function LineChartCtrl:Close()
 end
 
 UnitTest.Exec("abel_w7_LineChart", "test_LineChart",  function ()
-    log("abel_w7_LineChart","[test_LineChart]  折线图测试")
     UIPage:ShowPage(LineChartCtrl)
     local xxx = 0
 end )

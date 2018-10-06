@@ -49,8 +49,8 @@ namespace City
             }
             //调用工厂绘制
             LineChartCreator.DrawLineChart(vh, rect, LineChartBasis);
-            Debug.Log("!!!!!!!!!!!长度是" + LineChartBasis.Lines.Count);
-            Debug.Log("!!!!!!!!!!!rect" + rect);
+            //Debug.Log("!!!!!!!!!!!长度是" + LineChartBasis.Lines.Count);
+            //Debug.Log("!!!!!!!!!!!rect" + rect);
         }
         public void Refresh()
         {

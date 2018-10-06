@@ -31,6 +31,10 @@ function LineChartPanel.InitPanel()
     --this.textStatus = transform:Find("Text_status").gameObject;
 end
 
+function LineChartPanel.Start()
+
+end
+
 --单击事件--
 function LineChartPanel.OnDestroy()
     logWarn("OnDestroy---->>>");

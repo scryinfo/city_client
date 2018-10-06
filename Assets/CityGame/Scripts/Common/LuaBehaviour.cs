@@ -32,7 +32,13 @@ namespace LuaFramework {
         public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
             //buttons.Add(go.name, luafunc);
-            buttons.Add(luafunc.GetHashCode().ToString(), luafunc);
+            string eventName = luafunc.GetHashCode().ToString();
+            if (obj != null)
+            {
+                eventName += obj.GetHashCode().ToString();
+            }
+
+            buttons.Add(eventName, luafunc);
             go.GetComponent<Button>().onClick.AddListener(
                 delegate() {
                     luafunc.Call(go, obj);

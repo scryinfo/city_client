@@ -1,6 +1,8 @@
 require "Common/define"
-
+require('Controller/TopBarCtrl')
+require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
+
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 

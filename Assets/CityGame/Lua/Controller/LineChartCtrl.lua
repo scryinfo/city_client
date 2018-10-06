@@ -63,31 +63,15 @@ function LineChartCtrl:OnCreate(go)
     }
     GameObject2:InjectDatas(verts,Color.New(1,1,1,1))
     GameObject2:InjectDatas(verts1,Color.New(0,1,0,1))
-    local xxx = 0
-    --LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
-    --LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
-    --LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
-    --
-    --log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
-    ----普通消息注册
-    --Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
-    --Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);
-    --Event.AddListener("c_GsConnected", self.c_GsConnected, self);
-    --Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
-    --Event.AddListener("c_Disconnect", self.c_Disconnect, self);
-    --Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-    --
-    ----启用 c_AddClick_self 单元测试
-    --UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
 end
 
 --关闭事件--
 function LineChartCtrl:Close()
-    --Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
-    --Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-    --Event.RemoveListener("c_GsConnected", self.c_GsConnected);
-    --Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
-    --Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-    --Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
     destroy(self.gameObject);
 end
+
+UnitTest.Exec("abel_w7_LineChart", "test_LineChart",  function ()
+    log("abel_w7_LineChart","[test_LineChart]  折线图测试")
+    UIPage:ShowPage(LineChartCtrl)
+    local xxx = 0
+end )

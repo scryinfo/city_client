@@ -114,8 +114,8 @@ SocketError =
 BubblleType =
 {
 	Default = 0,
-	GroundAuction = 1,
-	BuildingTransfer = 2,
+	GroundAuction = 1,  --土地拍卖
+	BuildingTransfer = 2,  --建筑转让
 }
 
 --建筑首页左右侧信息小组件的状态
@@ -135,8 +135,8 @@ BuildingInfoTogglePos =
 --建筑类型
 BuildingType =
 {
-	House = 0,
-	MaterialFactory = 1,
+	House = 0,  --住宅
+	MaterialFactory = 1,  --原料厂
 }
 
 Util = LuaFramework.Util;

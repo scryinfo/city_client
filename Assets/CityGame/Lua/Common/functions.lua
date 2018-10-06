@@ -56,3 +56,16 @@ function getColorByInt(r, b, g, a)
 
 	return Color.New(r1, b1, g1, a1)
 end
+
+--把时间 秒转换成xx时xx分xx秒格式
+function getFormatUnixTime(time)
+	local tb = {}
+	tb.year = tonumber(os.date("%Y", time)) or 0
+	tb.month = tonumber(os.date("%m", time)) or 0
+	tb.day = tonumber(os.date("%d", time)) or 0
+	tb.hour = tonumber(os.date("%H", time)) or 0
+	tb.minute = tonumber(os.date("%M", time)) or 0
+	tb.second = tonumber(os.date("%S", time)) or 0
+
+	return tb
+end

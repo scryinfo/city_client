@@ -76,8 +76,6 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
             else
                 leftPos = toggleItem:closeToggleItem(leftPos)
             end
-
-            log("cycle_w6_houseAndGround", "排序排序---------------------------------")
         end
     end
 

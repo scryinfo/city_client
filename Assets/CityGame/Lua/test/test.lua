@@ -6,7 +6,8 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w6_UIFrame_1")
-TestGroup.active_TestGroup("cycle_w6_houseAndGround")
+--TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
+TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
@@ -15,6 +16,7 @@ package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 require "LuaUtil"
+require "Logic/CtrlManager"
 
 UnitTest = require ('test/testFrameWork/UnitTest')
 
@@ -147,13 +149,26 @@ end)
 
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     local info = {}
-    info.titleInfo = "CONGRATULATION";
-    info.contentInfo = "Success!!!!";
-    info.tipInfo = "lalalalalalalalla";
-    info.btnCallBack = function ()
-        log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
-    end;
     UIPage:ShowPage(HouseCtrl, info)
 
     log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
+end)
+
+UnitTest.Exec("cycle_w6_GroundAuc", "test_w6_groundAuc",  function ()
+    --local info = {}
+    --info.titleInfo = "CONGRATULATION";
+    --info.contentInfo = "Success!!!!";
+    --info.tipInfo = "lalalalalalalalla";
+    --info.btnCallBack = function ()
+    --    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] 回调啊回调")
+    --end;
+    --UIPage:ShowPage(BtnDialogPageCtrl, info)
+
+    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc]  balabalabalabala...............")
+
+    ---测试拍卖
+    local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
+    if groundAucModel ~= nil then
+        groundAucModel:Awake();
+    end
 end)

@@ -60,7 +60,7 @@ public class LineChartData
     {        
         Lines.Add(Lines.Count, new VertexStream(vertexs, color));
 
-        Debug.Log("!!!!!!!Lines.Count的长度是" + vertexs.Count);
+        //Debug.Log("!!!!!!!Lines.Count的长度是" + vertexs.Count);
     }
     public IList<Vector2> GetLine(int id)
     {

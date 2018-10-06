@@ -81,7 +81,7 @@ public class LineChartDataMediator
                     y = (float)info.GetValue(vertex, null);
             }
             result.Add(new Vector2(x, y));
-            Debug.Log("!!!!!!!!画出来的顶点X" + x + "!!!!!!!!画出来的顶点Y" + y);
+            //Debug.Log("!!!!!!!!画出来的顶点X" + x + "!!!!!!!!画出来的顶点Y" + y);
         }
         return result;
     }

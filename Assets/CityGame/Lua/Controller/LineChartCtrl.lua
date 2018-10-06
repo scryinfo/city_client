@@ -32,9 +32,9 @@ end
 function LineChartCtrl:OnCreate(go)
     UIPage.OnCreate(self,go)
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    local GameObject = self.gameObject:GetComponent('Image/Scroll View/Viewport/Content/GameObject');
-    local GameObject1 = self.gameObject:GetComponent('LineChart');
-    local GameObject2 = LineChartPanel.LineChartParent:GetComponent('LineChart');
+    --获取LineChart组件
+    local GameObject = LineChartPanel.LineChartParent:GetComponent('LineChart');
+    --两条曲线的测试数据
     local verts={
         Vector2.New(0.0, 0.4),
         Vector2.New(0.1, 0.3),
@@ -61,8 +61,9 @@ function LineChartCtrl:OnCreate(go)
         Vector2.New(0.9, 0.2),
         Vector2.New(1.0, 0.3)
     }
-    GameObject2:InjectDatas(verts,Color.New(1,1,1,1))
-    GameObject2:InjectDatas(verts1,Color.New(0,1,0,1))
+    --传入曲线数据及其颜色值
+    GameObject:InjectDatas(verts,Color.New(1,1,1,1))
+    GameObject:InjectDatas(verts1,Color.New(0,1,0,1))
 end
 
 --关闭事件--

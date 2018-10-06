@@ -21,7 +21,9 @@ end
 
 --初始化面板--
 function LineChartPanel.InitPanel()
+    --获取 LineChart 组件的父物体
     this.LineChartParent = transform:Find("Image/Scroll View/Viewport/Content/GameObject").gameObject;
+    --Layer要设置为“UI”，否则显示不出来
     gameObject.layer = LayerMask.NameToLayer("UI");
     --this.btnRegister = transform:Find("Button_register").gameObject;
     --this.inputUsername = transform:Find("InputField_username").gameObject;

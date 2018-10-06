@@ -37,6 +37,10 @@ end
 --获取价格显示文本 --整数和小数部分大小不同
 function getPriceString(str, intSize, floatSize)
 	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
 	local intString = string.sub(str, 1, index)
 	local floatString = string.sub(str, index + 1)
 	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)

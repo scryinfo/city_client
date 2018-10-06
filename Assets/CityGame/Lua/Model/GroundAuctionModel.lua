@@ -22,11 +22,11 @@ function GroundAuctionModel.Awake()
 end
 
 function GroundAuctionModel.Update()
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-    --    logDebug("aaaaaaaaaaaa ")
-    --    this.m_ReqRueryMetaGroundAuction()
-    --    this.m_ReqQueryGroundAuction()
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+        logDebug("aaaaaaaaaaaa ")
+        this.m_ReqRueryMetaGroundAuction()
+        this.m_ReqQueryGroundAuction()
+    end
 end
 
 --启动事件--
@@ -45,8 +45,8 @@ function GroundAuctionModel.OnCreate()
     Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor);
     --
     ----请求正在拍卖以及即将拍卖的土地信息
-    this.m_ReqQueryGroundAuction()
-    this.m_ReqRueryMetaGroundAuction()
+    --this.m_ReqQueryGroundAuction()
+    --this.m_ReqRueryMetaGroundAuction()
 end
 
 --关闭事件--

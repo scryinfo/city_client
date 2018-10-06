@@ -44,6 +44,11 @@ function GroundAuctionCtrl:Refresh()
     self:_initPanelData()
 end
 
+function GroundAuctionCtrl:Close()
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate);
+    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState);
+end
+
 ---初始化界面
 function GroundAuctionCtrl:_initPanelData()
     if not self.m_data then

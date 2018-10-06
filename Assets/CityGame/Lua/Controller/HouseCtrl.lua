@@ -46,6 +46,7 @@ function HouseCtrl:_changeName()
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
+    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     UIPage:ShowPage(InputDialogPageCtrl, data)
 end
 ---返回

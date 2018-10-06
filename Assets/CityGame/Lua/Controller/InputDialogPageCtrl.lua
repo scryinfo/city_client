@@ -32,7 +32,11 @@ function InputDialogPageCtrl:Awake(go)
 end
 
 function InputDialogPageCtrl:Refresh()
+    self:_initData()
+end
 
+function InputDialogPageCtrl:Close()
+    self:_removeListener()
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)
@@ -46,17 +50,44 @@ end
 function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo;
     self.tipText.text = self.m_data.tipInfo;
-end
 
+    --根据传入的类型添加监听
+    if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
+        Event.AddListener("c_BuildingNameUpdate", self._changeNameCallBack);  --更改建筑名字 --目前还没有，和服务器协议有关
+    end
+end
+---移出监听
+function InputDialogPageCtrl:_removeListener()
+    --根据传入的类型添加监听
+    if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
+        Event.RemoveListener("c_BuildingNameUpdate", self._bidInfoUpdate);
+    --elseif self.m_data.inputDialogPageServerType == InputDialogPageServerType. then
+
+    end
+end
+---更改名字失败，提示信息更改
+function InputDialogPageCtrl:_changeNameCallBack(stream)
+    local info = assert(pbl.decode("gs.MetaGroundAuction", stream), "InputDialogPageCtrl:_changeNameCallBack: stream == nil")
+    if #info.auction == 0 then
+        return
+    end
+
+    --判断返回的操作是否成功balabala
+
+end
+---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(obj)
     log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
     if obj.m_data.btnCallBack then
         obj.m_data.btnCallBack()
     end
 
-    obj:Hide();
+    --如果需要和服务器交互，则不能直接关闭
+    if not obj.m_data.inputDialogPageServerType then
+        obj:Hide();
+    end
 end
-
+---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(obj)
     log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
     obj:Hide();

@@ -144,6 +144,12 @@ BuildingType =
 	MaterialFactory = 1,  --原料厂
 }
 
+--单输入框会响应的服务器协议类型
+InputDialogPageServerType =
+{
+	UpdateBuildingName = 0,  --修改建筑名称
+}
+
 Util = LuaFramework.Util;
 AppConst = LuaFramework.AppConst;
 LuaHelper = LuaFramework.LuaHelper;

@@ -22,6 +22,7 @@ end
 --初始化面板--
 function LineChartPanel.InitPanel()
     this.LineChartParent = transform:Find("Image/Scroll View/Viewport/Content/GameObject").gameObject;
+    gameObject.layer = LayerMask.NameToLayer("UI");
     --this.btnRegister = transform:Find("Button_register").gameObject;
     --this.inputUsername = transform:Find("InputField_username").gameObject;
     --this.inputPassword = transform:Find("InputField_password").gameObject;

@@ -48,7 +48,21 @@ function LineChartCtrl:OnCreate(go)
         Vector2.New(0.9, 0.7),
         Vector2.New(1.0, 0.8)
     }
+    local verts1={
+        Vector2.New(0.0, 0.1),
+        Vector2.New(0.1, 0.6),
+        Vector2.New(0.2, 0.1),
+        Vector2.New(0.3, 0.3),
+        Vector2.New(0.4, 0.2),
+        Vector2.New(0.5, 0.4),
+        Vector2.New(0.6, 0.6),
+        Vector2.New(0.7, 0.8),
+        Vector2.New(0.8, 0.4),
+        Vector2.New(0.9, 0.2),
+        Vector2.New(1.0, 0.3)
+    }
     GameObject2:InjectDatas(verts,Color.New(1,1,1,1))
+    GameObject2:InjectDatas(verts1,Color.New(0,1,0,1))
     local xxx = 0
     --LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
     --LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);

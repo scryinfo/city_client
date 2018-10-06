@@ -30,8 +30,8 @@ require("test/performance/luaPerformance")
 require('test/performance/classPerformance')
 require("examination")
 require("metatable")
-require('test/test_UIFrameWrok')
 require('Controller/LineChartCtrl')
+
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"

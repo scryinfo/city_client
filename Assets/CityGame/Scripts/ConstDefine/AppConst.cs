@@ -14,7 +14,7 @@ namespace LuaFramework {
         /// </summary>
         public const bool UpdateMode = false;                       //更新模式-默认关闭 
         public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭 
-        public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式
+        public const bool LuaBundleMode = true;                    //Lua代码AssetBundle模式
 
         public const int TimerInterval = 1;
         public const int GameFrameRate = 30;                        //游戏帧频
@@ -22,7 +22,7 @@ namespace LuaFramework {
         public const string AppName = "CityGame";               //应用程序名称
         public const string LuaTempDir = "Lua/";                    //临时目录
         public const string AppPrefix = AppName + "_";              //应用程序前缀
-        public const string BundleExt = ".bundle";                   //bundle扩展名
+        public const string BundleExt = ".unity3d";                   //bundle扩展名
         public const string AssetDir = "StreamingAssets";           //素材目录 
         public const string WebUrl = "http://localhost:6688/";      //测试更新地址
 

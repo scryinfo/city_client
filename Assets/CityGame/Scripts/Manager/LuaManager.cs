@@ -146,8 +146,7 @@ namespace LuaFramework {
 
                 loader.AddBundle("lua/lua_protobuf.unity3d");
                 loader.AddBundle("lua/lua_3rd_cjson.unity3d");
-                loader.AddBundle("lua/lua_3rd_luabitop.unity3d");
-                //loader.AddBundle("lua/lua_3rd_pbc.unity3d");
+                loader.AddBundle("lua/lua_3rd_luabitop.unity3d");                
                 loader.AddBundle("lua/lua_3rd_pb_io.unity3d");
                 loader.AddBundle("lua/lua_3rd_pb_conv.unity3d");
                 loader.AddBundle("lua/lua_3rd_buffer.unity3d");

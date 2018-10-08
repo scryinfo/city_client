@@ -1,7 +1,7 @@
 require('Common.define')
 require("Dbg")
 
-local protoc = require "Framework/pbl/protoc"
+local protoc = require ("Framework/pbl/protoc")
 protoc:addpath("./Assets/CityGame/Lua/pb") --注意这种从 Assets 开始的相对路径是目前发现的唯一能支持 loadfile 的相对路径
 
 function OnInitProto()

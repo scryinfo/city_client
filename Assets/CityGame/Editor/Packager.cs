@@ -80,7 +80,7 @@ public class Packager {
     }
 
     static void AddBuildMap(string bundleName, string pattern, string path) {
-        //string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+        //string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
         string[] files = Directory.GetFiles(path, pattern); //坑爹啊！！！
         if (files.Length == 0) return;
 

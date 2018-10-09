@@ -44,15 +44,21 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
-    self.tipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text");
+    self.rentInput.onValueChanged:AddListener(self._onInputValueChange);
+
+    self.errorTipRoot = go.transform:Find("root/tipRoot");
+    self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text");
+    self.changeNameTipText = go.transform:Find("root/changeNameTipText").gameObject:GetComponent("Text");  --改名字提示 --每七天改一次
 end
 ---初始化
 function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo;
-    self.tipText.text = self.m_data.tipInfo;
+    self.errorTipRoot.localScale = Vector3.zero;
+    self.changeNameTipText.transform.localScale = Vector3.zero
 
     --根据传入的类型添加监听
     if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
+        self.changeNameTipText.transform.localScale = Vector3.one
         Event.AddListener("c_BuildingNameUpdate", self._changeNameCallBack);  --更改建筑名字 --目前还没有，和服务器协议有关
     end
 end
@@ -65,6 +71,10 @@ function InputDialogPageCtrl:_removeListener()
 
     end
 end
+---input valuechanged
+function InputDialogPageCtrl:_onInputValueChange(value)
+
+end
 ---更改名字失败，提示信息更改
 function InputDialogPageCtrl:_changeNameCallBack(stream)
     local info = assert(pbl.decode("gs.MetaGroundAuction", stream), "InputDialogPageCtrl:_changeNameCallBack: stream == nil")
@@ -73,10 +83,17 @@ function InputDialogPageCtrl:_changeNameCallBack(stream)
     end
 
     --判断返回的操作是否成功balabala
-
+    self.errorTipRoot.localScale = Vector3.one;
+    self.errorTipText.text = "With sensitive words,Try again";  --根据不同情况选择不同提示语
 end
 ---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(obj)
+    local inputValue = self.rentInput.value;
+
+    if inputValue == "" or #inputValue < 3 then
+        return
+    end
+
     log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
     if obj.m_data.btnCallBack then
         obj.m_data.btnCallBack()

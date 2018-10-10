@@ -5,6 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+
 TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
@@ -17,13 +18,13 @@ require "LuaUtil"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
-require ("pbl_test")
+require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
 require("test/performance/luaPerformance")
 require('test/performance/classPerformance')
-require("examination")
-require("metatable")
+require("test/examination")
+require("test/metatable")
 require('Controller/LineChartCtrl')
 
 

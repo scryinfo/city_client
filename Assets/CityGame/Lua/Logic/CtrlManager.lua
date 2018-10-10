@@ -16,6 +16,11 @@ require "Model/HouseModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
 
+--测试
+require "Controller/TestExchangeCtrl"
+require "Controller/TestLoopScoreCtrl"
+require "Controller/TestExchangeScrollItemCtrl"
+
 CtrlManager = {};
 local this = CtrlManager;
 local ctrlList = {};	--控制器列表--

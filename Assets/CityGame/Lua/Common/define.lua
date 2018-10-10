@@ -17,6 +17,10 @@ CtrlNames = {
 	House = "HouseCtrl",  --住宅
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
+
+	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
+	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
+	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
 }
 
 ModelNames = {
@@ -50,6 +54,7 @@ PanelNames = {
 	"BuildingInfoPanel",  --建筑信息界面
 	"BuildingTransferPanel",  --转让界面
 	"HousePanel",  --住宅
+	"TestExchangePanel",  --交易所测试
 }
 
 SYSEVENT =

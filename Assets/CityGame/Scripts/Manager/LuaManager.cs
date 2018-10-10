@@ -129,6 +129,7 @@ namespace LuaFramework {
         /// </summary>
         void InitLuaBundle() {
             if (loader.beZip) {
+                //手动添加 client\Assets\StreamingAssets\lua 中所有.unity3d文件
                 loader.AddBundle("lua/lua.unity3d");
                 loader.AddBundle("lua/lua_math.unity3d");
                 loader.AddBundle("lua/lua_system.unity3d");

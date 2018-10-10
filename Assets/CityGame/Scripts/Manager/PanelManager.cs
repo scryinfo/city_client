@@ -42,7 +42,8 @@ namespace LuaFramework {
                 go.transform.SetParent(Parent);
                 panelObj = Parent.Find("LoginPanel");
                 go.transform.localScale = Vector3.one;
-                go.transform.localPosition = Vector3.zero; 
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 //
                 RectTransform rect = go.GetComponent<RectTransform>();
                 rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;

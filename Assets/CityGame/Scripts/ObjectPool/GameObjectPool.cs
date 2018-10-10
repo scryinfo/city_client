@@ -51,7 +51,8 @@ namespace LuaFramework {
 			if(availableObjStack.Count > 0) {
 				go = availableObjStack.Pop();
 			} else {
-				Debug.LogWarning("No object available & cannot grow pool: " + poolName);
+                AddObjectToPool(NewObjectInstance());
+                go = availableObjStack.Pop();
 			}
             go.SetActive(true);
             return go;

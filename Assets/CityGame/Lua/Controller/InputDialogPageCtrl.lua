@@ -73,7 +73,7 @@ function InputDialogPageCtrl:_removeListener()
 end
 ---input valuechanged
 function InputDialogPageCtrl:_onInputValueChange(value)
-
+    log("cycle_w6_houseAndGround", "----")
 end
 ---更改名字失败，提示信息更改
 function InputDialogPageCtrl:_changeNameCallBack(stream)

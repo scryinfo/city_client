@@ -99,6 +99,7 @@ end
 function StaffRateItem:_clickToDoBtn()
     --打开工资调整界面
     log("cycle_w6_houseAndGround", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊")
+    --UIPage:ShowPage(WagesAdjustBoxCtrl)
 end
 
 --打开

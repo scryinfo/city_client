@@ -171,6 +171,10 @@ public class Packager {
         AddBuildMap("InputDialogPage" + AppConst.BundleExt, "InputDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
         AddBuildMap("HouseChangeRent" + AppConst.BundleExt, "HouseChangeRentPanel.prefab", "Assets/CityGame/Resources/View");
 
+        //测试滑动--交易所
+        AddBuildMap("TestExchange" + AppConst.BundleExt, "TestExchangePanel.prefab", "Assets/CityGame/Resources/View/TestCycle");
+        AddBuildMap("ScorllTestPrefab" + AppConst.BundleExt, "ScorllTestPrefab.prefab", "Assets/CityGame/Resources/View/TestCycle");
+
         AddBuildMap("UIRoot" + AppConst.BundleExt, "UIRootPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("TopBar" + AppConst.BundleExt, "TopBarPanel.prefab", "Assets/CityGame/Resources/View");
 
@@ -184,7 +188,7 @@ public class Packager {
         AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
 
         //饼图
-        AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Terrain");
+        AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");
         //曲线图
         AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
     }

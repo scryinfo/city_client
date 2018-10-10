@@ -192,6 +192,8 @@ public static class CustomSettings
         _GT(typeof(PieChartGraph)),
         _GT(typeof(PieNeedData)),
         _GT(typeof(City.LineChart)),
+        _GT(typeof(ActiveLoopScrollRect)),
+        _GT(typeof(LoopScrollDataSource)),
 
     };
 

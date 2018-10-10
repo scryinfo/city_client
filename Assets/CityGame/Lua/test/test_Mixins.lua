@@ -63,7 +63,8 @@ end
     --50亿次调用  执行却时间非常接近（为什么？）
 UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  function ()
     local bee = Bee() -- or Bee:new()
-    local count = 5000000000
+    --local count = 5000000000
+    local count = 5000000
     UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'inherited base class method invocation', function()
         for i = 1, count do --10000000
             bee:fun()

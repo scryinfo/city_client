@@ -70,7 +70,9 @@ public class Packager {
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle | 
                                           BuildAssetBundleOptions.UncompressedAssetBundle;
         BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
+        //BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), BuildAssetBundleOptions.None, target);
         BuildFileIndex();
+
 
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
@@ -78,7 +80,9 @@ public class Packager {
     }
 
     static void AddBuildMap(string bundleName, string pattern, string path) {
-        string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+        //string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+        string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+        //string[] files = Directory.GetFiles(path, pattern); //坑爹啊！！！
         if (files.Length == 0) return;
 
         for (int i = 0; i < files.Length; i++) {
@@ -97,7 +101,8 @@ public class Packager {
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (!Directory.Exists(streamDir)) Directory.CreateDirectory(streamDir);
 
-        string[] srcDirs = { CustomSettings.luaDir, CustomSettings.cityLuaDir, CustomSettings.FrameworkPath + "/ToLua/Lua" };
+        //string[] srcDirs = { CustomSettings.luaDir, CustomSettings.cityLuaDir, CustomSettings.FrameworkPath + "/ToLua/Lua" };
+        string[] srcDirs = { CustomSettings.cityLuaDir, CustomSettings.FrameworkPath + "/ToLua/Lua" };
         for (int i = 0; i < srcDirs.Length; i++) {
             if (AppConst.LuaByteMode) {
                 string sourceDir = srcDirs[i];
@@ -185,7 +190,7 @@ public class Packager {
 
         AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
         AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");
-        AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
+        //AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
 
         //饼图
         AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");

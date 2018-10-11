@@ -13,6 +13,9 @@ TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动�
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
+--TestGroup.active_TestGroup("abel_w4_class_performance")
+--TestGroup.active_TestGroup("abel_w7_LineChart")
+--TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -24,13 +27,13 @@ require "Logic/CtrlManager"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
-require ("pbl_test")
+require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
 require("test/performance/luaPerformance")
 require('test/performance/classPerformance')
-require("examination")
-require("metatable")
+require("test/examination")
+require("test/metatable")
 require('Controller/LineChartCtrl')
 
 local pbl = pbl

@@ -231,6 +231,7 @@ namespace LuaFramework {
         }
 
         void OnInitialize() {
+            Debug.Log("GameManager:OnInitialize Invoked !!!");
             LuaManager.InitStart();
             LuaManager.DoFile("Logic/Game");         //加载游戏
             Util.CallMethod("Game", "OnInitOK");     //初始化完成
@@ -240,6 +241,8 @@ namespace LuaFramework {
             {
                 km.initCityEngine();
             }
+
+            Debug.Log("GameManager:OnInitialize CallMethod Game OnPostInitOK !!!");
             Util.CallMethod("Game", "OnPostInitOK");     //初始化完成
             initialize = true;
         }

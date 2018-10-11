@@ -41,10 +41,11 @@ end
 
 
 --简单类的实现---------------------------}
+local testcount = 100000
 
 UnitTest.Exec("abel_w4_class_performance", "test_class_creation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance","[class creation]", function()
-    for i = 1, 100000 do
+    for i = 1, testcount do
       local pClass = class('A')
     end
   end)
@@ -57,13 +58,13 @@ local A = class('A')
 ]]--
 UnitTest.Exec("abel_w4_class_performance", "test_instance_creation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance","[instance creation]", function()
-    for i = 1, 10000000 do
+    for i = 1, testcount do
       local a = A:new()
     end
   end)
 
   UnitTest.PerformanceTest("abel_w4_class_performance","[simple class instance creation]", function()
-    for i = 1, 10000000 do
+    for i = 1, testcount do
       local simpleClass = ClassSimple:New();
     end
   end)
@@ -77,16 +78,17 @@ function ClassSimple:foo( )
   return 1
 end
 
+local testcount1 = 1000000000
 local a = A:new()
 local sClass =  ClassSimple:New()
 UnitTest.Exec("abel_w4_class_performance", "test_instance_method_invocation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance","[instance method invocation", function()
-    for i = 1, 10000000 do
+    for i = 1, testcount1 do
       a:foo()
     end
   end)
   UnitTest.PerformanceTest("abel_w4_class_performance","[simple class instance method invocation", function()
-    for i = 1, 10000000 do
+    for i = 1, testcount1 do
       sClass:foo()
     end
   end)
@@ -106,12 +108,12 @@ simple class inherited method invocation    执行时间:     0.0019999999999989
 ]]--
 UnitTest.Exec("abel_w4_class_performance", "test_inherited_method_invocation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance",'inherited method invocation', function()
-    for i = 1, 10000000 do --10000000
+    for i = 1, testcount1 do --10000000
       b:foo()
     end
   end)
   UnitTest.PerformanceTest("abel_w4_class_performance",'simple class inherited method invocation', function()
-    for i = 1, 10000000 do
+    for i = 1, testcount1 do
       pSimpleSubClass:foo()
     end
   end)
@@ -123,7 +125,7 @@ end
 --调用派生类自己的方法（包括混入的方法）比调用从基类继承而来的方法要快30%
 UnitTest.Exec("abel_w4_class_performance", "test_class_method_invocation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance",'class method invocation', function()
-    for i = 1, 100000 do
+    for i = 1, testcount1 do
       A:bar()
     end
   end)
@@ -131,7 +133,7 @@ end)
 
 UnitTest.Exec("abel_w4_class_performance", "test_inherited_class_method_invocation",  function ()
   UnitTest.PerformanceTest("abel_w4_class_performance",'inherited class method invocation', function()
-    for i = 1, 100000 do
+    for i = 1, testcount1 do
       B:bar()
     end
   end)

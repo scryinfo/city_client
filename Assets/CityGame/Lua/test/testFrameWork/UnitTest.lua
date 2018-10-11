@@ -44,7 +44,7 @@
 UnitTest = {}
 function UnitTest.Exec(unitGroupId, funcName, func)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return {}
+        return
     end
     addToTestGropu(funcName,unitGroupId)
     _G[funcName] = func

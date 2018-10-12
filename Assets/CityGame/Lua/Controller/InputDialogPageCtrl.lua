@@ -44,7 +44,7 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
-    self.rentInput.onValueChanged:AddListener(self._onInputValueChange);
+    --self.rentInput.onValueChanged:AddListener(self._onInputValueChange)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot");
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text");
@@ -72,7 +72,7 @@ function InputDialogPageCtrl:_removeListener()
     end
 end
 ---input valuechanged
-function InputDialogPageCtrl:_onInputValueChange(value)
+function InputDialogPageCtrl:_onInputValueChange()
     log("cycle_w6_houseAndGround", "----")
 end
 ---更改名字失败，提示信息更改
@@ -88,21 +88,25 @@ function InputDialogPageCtrl:_changeNameCallBack(stream)
 end
 ---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(obj)
-    local inputValue = self.rentInput.value;
 
-    if inputValue == "" or #inputValue < 3 then
-        return
-    end
-
-    log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
-    if obj.m_data.btnCallBack then
-        obj.m_data.btnCallBack()
-    end
-
-    --如果需要和服务器交互，则不能直接关闭
-    if not obj.m_data.inputDialogPageServerType then
-        obj:Hide();
-    end
+    --local inputValue = self.rentInput.text;
+    --
+    --if inputValue == "" or #inputValue < 3 then
+    --    return
+    --end
+    --
+    --log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
+    --if obj.m_data.btnCallBack then
+    --    obj.m_data.btnCallBack()
+    --
+    --    self.errorTipRoot.localScale = Vector3.one;
+    --    self.errorTipText.text = "With sensitive words,Try again";  --根据不同情况选择不同提示语
+    --end
+    --
+    ----如果需要和服务器交互，则不能直接关闭
+    --if not obj.m_data.inputDialogPageServerType then
+    --    obj:Hide();
+    --end
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(obj)

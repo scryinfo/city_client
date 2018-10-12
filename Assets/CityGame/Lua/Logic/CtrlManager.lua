@@ -7,12 +7,19 @@ require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
+require "Controller/BtnDialogPageCtrl"
+require "Controller/InputDialogPageCtrl"
 require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
+
+--测试
+require "Controller/TestExchangeCtrl"
+require "Controller/TestLoopScoreCtrl"
+require "Controller/TestExchangeScrollItemCtrl"
 
 CtrlManager = {};
 local this = CtrlManager;
@@ -29,8 +36,9 @@ function CtrlManager.Init()
 	ctrlList[CtrlNames.GameWorld] = GameWorldCtrl.New();
 	ctrlList[CtrlNames.PlayerHead] = PlayerHeadCtrl.New();
 	ctrlList[CtrlNames.TargetHead] = TargetHeadCtrl.New();
-	ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
-	ctrlList[CtrlNames.House] = HouseCtrl.New();
+	--ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
+	--ctrlList[CtrlNames.House] = HouseCtrl.New();
+	--ctrlList[CtrlNames.BtnDialogPage] = BtnDialogPageCtrl.New();
 
 	modelList[ModelNames.Login] = LoginModel.New();
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();

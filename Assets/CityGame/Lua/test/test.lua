@@ -5,6 +5,14 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+
+--TestGroup.active_TestGroup("abel_w6_UIFrame_1")
+--TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
+TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
+--TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
+--TestGroup.active_TestGroup("abel_w7_LineChart")
+
+--TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_performance")
@@ -14,6 +22,7 @@ package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 require "LuaUtil"
+require "Logic/CtrlManager"
 
 UnitTest = require ('test/testFrameWork/UnitTest')
 
@@ -26,7 +35,6 @@ require('test/performance/classPerformance')
 require("test/examination")
 require("test/metatable")
 require('Controller/LineChartCtrl')
-
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
@@ -143,4 +151,36 @@ UnitTest.Exec("abel_w3", "test_log",function()
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
     TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
+end)
+
+UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
+    local info = {}
+    UIPage:ShowPage(HouseCtrl, info)
+
+    log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
+end)
+
+UnitTest.Exec("cycle_w6_GroundAuc", "test_w6_groundAuc",  function ()
+    --local info = {}
+    --info.titleInfo = "CONGRATULATION";
+    --info.contentInfo = "Success!!!!";
+    --info.tipInfo = "lalalalalalalalla";
+    --info.btnCallBack = function ()
+    --    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] 回调啊回调")
+    --end;
+    --UIPage:ShowPage(BtnDialogPageCtrl, info)
+
+    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc]  balabalabalabala...............")
+
+    ---测试拍卖
+    local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
+    if groundAucModel ~= nil then
+        groundAucModel:Awake();
+    end
+end)
+
+UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
+    UIPage:ShowPage(TestExchangeCtrl)
+
+    log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
 end)

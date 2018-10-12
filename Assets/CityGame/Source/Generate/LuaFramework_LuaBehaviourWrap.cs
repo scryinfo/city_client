@@ -55,29 +55,11 @@ public class LuaFramework_LuaBehaviourWrap
 	{
 		try
 		{
-			int count = LuaDLL.lua_gettop(L);
-
-			if (count == 3)
-			{
-				LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
-				LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
-				obj.RemoveClick(arg0, arg1);
-				return 0;
-			}
-			else if (count == 4)
-			{
-				LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
-				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
-				LuaFunction arg1 = ToLua.CheckLuaFunction(L, 3);
-				object arg2 = ToLua.ToVarObject(L, 4);
-				obj.RemoveClick(arg0, arg1, arg2);
-				return 0;
-			}
-			else
-			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: LuaFramework.LuaBehaviour.RemoveClick");
-			}
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.LuaBehaviour obj = (LuaFramework.LuaBehaviour)ToLua.CheckObject<LuaFramework.LuaBehaviour>(L, 1);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 2, typeof(UnityEngine.GameObject));
+			obj.RemoveClick(arg0);
+			return 0;
 		}
 		catch (Exception e)
 		{

@@ -46,14 +46,12 @@ namespace LuaFramework {
 
             LuaCfunPair pair;
             pair._LuaFunction = luafunc;
-
             pair._CsharpFun = delegate ()
             {
                 luafunc.Call(go, obj);
             };
 
-            buttons.Add(eventName, pair);
-            var ev = go.GetComponent<Button>().onClick;
+            buttons.Add(eventName, pair);            
             go.GetComponent<Button>().onClick.AddListener(pair._CsharpFun);
         }
         
@@ -65,9 +63,7 @@ namespace LuaFramework {
             {
                 eventName += obj.GetHashCode().ToString();
             }
-
             LuaCfunPair pPair;
-
             LuaFunction luafunc = null;
             buttons.TryGetValue(eventName, out pPair);
             if (pPair._LuaFunction != null && pPair._CsharpFun != null)

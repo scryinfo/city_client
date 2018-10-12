@@ -12,7 +12,7 @@ public class LuaFramework_AppConstWrap
 		L.RegConstant("DebugMode", 1);
 		L.RegConstant("UpdateMode", 0);
 		L.RegConstant("LuaByteMode", 0);
-		L.RegConstant("LuaBundleMode", 0);
+		L.RegConstant("LuaBundleMode", 1);
 		L.RegConstant("TimerInterval", 1);
 		L.RegConstant("GameFrameRate", 30);
 		L.RegVar("AppName", get_AppName, null);

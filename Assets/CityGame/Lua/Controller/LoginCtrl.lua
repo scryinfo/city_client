@@ -3,6 +3,7 @@ require('Controller/TopBarCtrl')
 require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
 
+UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 
@@ -163,7 +164,8 @@ function LoginCtrl:OnClickTest1(obj)
 	local yyy = LoginCtrl:gettestValue()
 	local xxx1  = xxx
 end
-TestGroup.active_TestGroup("abel_w5") --激活测试组
+
+TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
@@ -171,8 +173,8 @@ UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	LoginCtrl:c_LoginSuccessfully( false )
 end)
 
-UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
-	log("abel_w5","[test_AddClick_self]  测试开始")
+UnitTest.Exec("abel_w7_AddClick", "test_AddClick_self",  function ()
+	log("abel_w7_AddClick","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function (obj)
 		obj.testValue = 888
 		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')

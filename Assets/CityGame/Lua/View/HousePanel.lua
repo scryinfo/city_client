@@ -20,11 +20,11 @@ function HousePanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
-
-    --this.playerProtaitImg = transform:Find("bottomRoot/playerProtaitImg").gameObject:GetComponent("Image");  --玩家头像
-    --this.groundPriceText = transform:Find("bottomRoot/groundPriceText").gameObject:GetComponent("Text");
-    --
-    --this.buyBtn = transform:Find("bottomRoot/transferIngRoot/buyBtn").gameObject:GetComponent("Button");
+    this.buildingNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
+    this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
+    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
+    this.backBtn = transform:Find("topRoot/backBtn");
+    this.infoBtn = transform:Find("topRoot/infoBtn");
 
 end
 
@@ -32,5 +32,7 @@ end
 function HousePanel.InitDate(houseData)
     this.houseData = houseData
 
+
 end
+
 

@@ -1,6 +1,8 @@
 Event = require 'events'
 --调试信息
-require "Dbg"
+require("Dbg")
+require('TestGroup')
+local lu = require "Framework/pbl/luaunit"
 --单元测试
 require('test.test')
 --性能测试
@@ -19,8 +21,7 @@ require "Controller/LoginCtrl"
 require "Logic/CtrlManager"
 require "Logic/World"
 
-require("Dbg")
-local lu = require "Framework/pbl/luaunit"
+
 
 --管理器--
 Game = {};

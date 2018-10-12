@@ -44,7 +44,7 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
-    --self.rentInput.onValueChanged:AddListener(self._onInputValueChange)
+    self.rentInput.onValueChanged:AddListener(self._onInputValueChange)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot");
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text");
@@ -87,29 +87,30 @@ function InputDialogPageCtrl:_changeNameCallBack(stream)
     self.errorTipText.text = "With sensitive words,Try again";  --根据不同情况选择不同提示语
 end
 ---点击确认按钮
-function InputDialogPageCtrl:_onClickConfim(obj)
+function InputDialogPageCtrl:_onClickConfim(table)
+    ---在这的self 是传进来的btn组件，table才是实例
+    local inputValue = table.rentInput.text;
 
-    --local inputValue = self.rentInput.text;
-    --
-    --if inputValue == "" or #inputValue < 3 then
-    --    return
-    --end
-    --
-    --log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
-    --if obj.m_data.btnCallBack then
-    --    obj.m_data.btnCallBack()
-    --
-    --    self.errorTipRoot.localScale = Vector3.one;
-    --    self.errorTipText.text = "With sensitive words,Try again";  --根据不同情况选择不同提示语
-    --end
-    --
-    ----如果需要和服务器交互，则不能直接关闭
-    --if not obj.m_data.inputDialogPageServerType then
-    --    obj:Hide();
-    --end
+    if inputValue == "" or #inputValue < 3 then
+        return
+    end
+
+    --测试，直接接受到服务器消息
+    if table.m_data.btnCallBack then
+        table.m_data.btnCallBack()
+
+        table.errorTipRoot.localScale = Vector3.one;
+        table.errorTipText.text = "With sensitive words,Try again";  --根据不同情况选择不同提示语
+    end
+
+    --如果需要和服务器交互，则不能直接关闭
+    if not table.m_data.inputDialogPageServerType then
+        table:Hide();
+    end
+
 end
 ---点击关闭按钮
-function InputDialogPageCtrl:_onClickClose(obj)
+function InputDialogPageCtrl:_onClickClose(table)
     log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
-    obj:Hide();
+    table:Hide();
 end

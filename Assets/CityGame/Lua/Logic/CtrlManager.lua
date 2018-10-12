@@ -18,7 +18,6 @@ require "Logic/GameBubble/GameBubbleManager"
 
 --测试
 require "Controller/TestExchangeCtrl"
-require "Controller/TestLoopScoreCtrl"
 require "Controller/TestExchangeScrollItemCtrl"
 
 CtrlManager = {};

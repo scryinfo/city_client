@@ -49,3 +49,6 @@
 /client/Assets/CityGame/Lua/Framework/pbl/protoc.lua.meta
 /client/Assets/CityGame/Lua/Framework/pbl.meta
 /Assets/CityGame/Lua/pb
+/client.sln
+/client.csproj
+/client.Editor.csproj

@@ -29,6 +29,6 @@ function TestExchangeScrollItemCtrl:_initData()
 end
 
 --点击
-function TestExchangeScrollItemCtrl:_clickToDoBtn()
-    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
+function TestExchangeScrollItemCtrl:_clickToDoBtn(ins)
+    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..ins.data.text)
 end

@@ -71,6 +71,8 @@ public class DelegateFactory
 		dict.Add(typeof(EasyJoystick.JoystickTapHandler), factory.EasyJoystick_JoystickTapHandler);
 		dict.Add(typeof(EasyJoystick.JoystickDoubleTapHandler), factory.EasyJoystick_JoystickDoubleTapHandler);
 		dict.Add(typeof(EasyJoystick.JoystickTouchUpHandler), factory.EasyJoystick_JoystickTouchUpHandler);
+		dict.Add(typeof(UnityEngine.UI.LoopScrollDataSource.DlgProvideData), factory.UnityEngine_UI_LoopScrollDataSource_DlgProvideData);
+		dict.Add(typeof(UnityEngine.UI.LoopScrollDataSource.DlgClearData), factory.UnityEngine_UI_LoopScrollDataSource_DlgClearData);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -126,6 +128,8 @@ public class DelegateFactory
 		DelegateTraits<EasyJoystick.JoystickTapHandler>.Init(factory.EasyJoystick_JoystickTapHandler);
 		DelegateTraits<EasyJoystick.JoystickDoubleTapHandler>.Init(factory.EasyJoystick_JoystickDoubleTapHandler);
 		DelegateTraits<EasyJoystick.JoystickTouchUpHandler>.Init(factory.EasyJoystick_JoystickTouchUpHandler);
+		DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgProvideData>.Init(factory.UnityEngine_UI_LoopScrollDataSource_DlgProvideData);
+		DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgClearData>.Init(factory.UnityEngine_UI_LoopScrollDataSource_DlgClearData);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -181,6 +185,8 @@ public class DelegateFactory
 		TypeTraits<EasyJoystick.JoystickTapHandler>.Init(factory.Check_EasyJoystick_JoystickTapHandler);
 		TypeTraits<EasyJoystick.JoystickDoubleTapHandler>.Init(factory.Check_EasyJoystick_JoystickDoubleTapHandler);
 		TypeTraits<EasyJoystick.JoystickTouchUpHandler>.Init(factory.Check_EasyJoystick_JoystickTouchUpHandler);
+		TypeTraits<UnityEngine.UI.LoopScrollDataSource.DlgProvideData>.Init(factory.Check_UnityEngine_UI_LoopScrollDataSource_DlgProvideData);
+		TypeTraits<UnityEngine.UI.LoopScrollDataSource.DlgClearData>.Init(factory.Check_UnityEngine_UI_LoopScrollDataSource_DlgClearData);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -236,6 +242,8 @@ public class DelegateFactory
 		StackTraits<EasyJoystick.JoystickTapHandler>.Push = factory.Push_EasyJoystick_JoystickTapHandler;
 		StackTraits<EasyJoystick.JoystickDoubleTapHandler>.Push = factory.Push_EasyJoystick_JoystickDoubleTapHandler;
 		StackTraits<EasyJoystick.JoystickTouchUpHandler>.Push = factory.Push_EasyJoystick_JoystickTouchUpHandler;
+		StackTraits<UnityEngine.UI.LoopScrollDataSource.DlgProvideData>.Push = factory.Push_UnityEngine_UI_LoopScrollDataSource_DlgProvideData;
+		StackTraits<UnityEngine.UI.LoopScrollDataSource.DlgClearData>.Push = factory.Push_UnityEngine_UI_LoopScrollDataSource_DlgClearData;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -3489,6 +3497,122 @@ public class DelegateFactory
 	}
 
 	void Push_EasyJoystick_JoystickTouchUpHandler(IntPtr L, EasyJoystick.JoystickTouchUpHandler o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event : LuaDelegate
+	{
+		public UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event(LuaFunction func) : base(func) { }
+		public UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UnityEngine.Transform param0, int param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UnityEngine.Transform param0, int param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public UnityEngine.UI.LoopScrollDataSource.DlgProvideData UnityEngine_UI_LoopScrollDataSource_DlgProvideData(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UnityEngine.UI.LoopScrollDataSource.DlgProvideData fn = delegate(UnityEngine.Transform param0, int param1) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event target = new UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event(func);
+			UnityEngine.UI.LoopScrollDataSource.DlgProvideData d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event target = new UnityEngine_UI_LoopScrollDataSource_DlgProvideData_Event(func, self);
+			UnityEngine.UI.LoopScrollDataSource.DlgProvideData d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_UnityEngine_UI_LoopScrollDataSource_DlgProvideData(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(UnityEngine.UI.LoopScrollDataSource.DlgProvideData), L, pos);
+	}
+
+	void Push_UnityEngine_UI_LoopScrollDataSource_DlgProvideData(IntPtr L, UnityEngine.UI.LoopScrollDataSource.DlgProvideData o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event : LuaDelegate
+	{
+		public UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event(LuaFunction func) : base(func) { }
+		public UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UnityEngine.Transform param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UnityEngine.Transform param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public UnityEngine.UI.LoopScrollDataSource.DlgClearData UnityEngine_UI_LoopScrollDataSource_DlgClearData(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			UnityEngine.UI.LoopScrollDataSource.DlgClearData fn = delegate(UnityEngine.Transform param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event target = new UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event(func);
+			UnityEngine.UI.LoopScrollDataSource.DlgClearData d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event target = new UnityEngine_UI_LoopScrollDataSource_DlgClearData_Event(func, self);
+			UnityEngine.UI.LoopScrollDataSource.DlgClearData d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_UnityEngine_UI_LoopScrollDataSource_DlgClearData(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(UnityEngine.UI.LoopScrollDataSource.DlgClearData), L, pos);
+	}
+
+	void Push_UnityEngine_UI_LoopScrollDataSource_DlgClearData(IntPtr L, UnityEngine.UI.LoopScrollDataSource.DlgClearData o)
 	{
 		ToLua.Push(L, o);
 	}

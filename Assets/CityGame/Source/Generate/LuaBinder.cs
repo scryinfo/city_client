@@ -16,6 +16,7 @@ public static class LuaBinder
 		EffectFlyingWrap.Register(L);
 		PieChartGraphWrap.Register(L);
 		PieNeedDataWrap.Register(L);
+		ActiveLoopScrollRectWrap.Register(L);
 		ViewWrap.Register(L);
 		BaseWrap.Register(L);
 		ManagerWrap.Register(L);
@@ -117,11 +118,16 @@ public static class LuaBinder
 		UnityEngine_UI_ToggleWrap.Register(L);
 		UnityEngine_UI_ScrollbarWrap.Register(L);
 		UnityEngine_UI_SliderWrap.Register(L);
+		UnityEngine_UI_LoopScrollDataSourceWrap.Register(L);
 		UnityEngine_UI_MaskableGraphicWrap.Register(L);
 		UnityEngine_UI_GraphicWrap.Register(L);
 		UnityEngine_UI_SelectableWrap.Register(L);
 		L.BeginModule("InputField");
 		L.RegFunction("OnValidateInput", UnityEngine_UI_InputField_OnValidateInput);
+		L.EndModule();
+		L.BeginModule("LoopScrollDataSource");
+		L.RegFunction("DlgProvideData", UnityEngine_UI_LoopScrollDataSource_DlgProvideData);
+		L.RegFunction("DlgClearData", UnityEngine_UI_LoopScrollDataSource_DlgClearData);
 		L.EndModule();
 		L.EndModule();
 		L.BeginModule("EventSystems");
@@ -982,6 +988,60 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<UnityEngine.UI.InputField.OnValidateInput>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int UnityEngine_UI_LoopScrollDataSource_DlgProvideData(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgProvideData>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgProvideData>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int UnityEngine_UI_LoopScrollDataSource_DlgClearData(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgClearData>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<UnityEngine.UI.LoopScrollDataSource.DlgClearData>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

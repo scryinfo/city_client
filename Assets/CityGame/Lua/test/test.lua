@@ -9,6 +9,7 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
+--TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'

@@ -15,6 +15,8 @@ CtrlNames = {
 	TargetHead = "TargetHeadCtrl",
 	GroundAuction = "GroundAuctionCtrl",  --拍卖
 	House = "HouseCtrl",  --住宅
+	GameMainInterface = "GameMainInterfaceCtrl",--游戏主界面
+	RoleManager = "RoleManagerCtrl",--角色管理界面
 }
 
 ModelNames = {
@@ -29,6 +31,8 @@ ModelNames = {
 	GameBubbleManager = "GameBubbleManager",  --游戏中的气泡
 	BuildingInfo = "BuildingInfoModel",  --建筑信息
 	House = "HouseModel",  --住宅
+	GameMainInterface = "GameMainInterfaceModel",--游戏主界面
+	RoleManager = "RoleManagerModel",--游戏管理界面
 }
 
 PanelNames = {
@@ -48,6 +52,8 @@ PanelNames = {
 	"BuildingInfoPanel",  --建筑信息界面
 	"BuildingTransferPanel",  --转让界面
 	"HousePanel",  --住宅
+	"GameMainInterfacePanel",--游戏主界面
+	"RoleManagerPanel",--游戏管理界面
 }
 
 SYSEVENT =

@@ -2,7 +2,7 @@ require "Common/define"
 require('Controller/TopBarCtrl')
 require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
-
+require('Controller/RoleManagerCtrl')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 
@@ -101,8 +101,9 @@ end
 
 function LoginCtrl:c_GsLoginSuccess()
 	UIPage:ClearAllPages()
-	UIPage:ShowPage(TopBarCtrl)
-	UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
+	UIPage:ShowPage(RoleManagerCtrl)
+	--UIPage:ShowPage(TopBarCtrl)
+	--UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
 end
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )

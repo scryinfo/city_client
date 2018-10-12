@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client", "client.csproj", "{6439B0B6-C827-AC16-CD69-C4C5DF2BB0A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client.Editor", "client.Editor.csproj", "{E4FE8E5F-E3D1-E0DD-0B76-A28609D76C6B}"

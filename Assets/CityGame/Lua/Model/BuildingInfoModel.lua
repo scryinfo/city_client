@@ -70,9 +70,9 @@ function BuildingInfoModel.CreatBuildingInfoPanel(panelInfo)
     this.rightFinish = false
     this.bottomFinish = false
 
-    panelMgr:CreatePanel('BuildingInfo', this.OnPanelCreated);
+    panelMgr:CreatePanel('BuildingInfo', this.OnPanelCreated, this);
     --将右侧的界面加入
-    panelMgr:CreatePanel('BuildingInfoRight', this.OnRightPanelCreated);
+    panelMgr:CreatePanel('BuildingInfoRight', this.OnRightPanelCreated, this);
 end
 
 --当界面生成完毕之后，添加监听

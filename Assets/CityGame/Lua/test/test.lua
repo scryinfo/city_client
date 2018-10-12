@@ -5,11 +5,10 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-
-TestGroup.active_TestGroup("abel_w5")
---TestGroup.active_TestGroup("abel_w4")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
---TestGroup.active_TestGroup("abel_w3")
+--TestGroup.active_TestGroup("abel_w7_LineChart")
+--TestGroup.active_TestGroup("abel_w6_performance")
+--TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
@@ -19,13 +18,15 @@ require "LuaUtil"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
-require ("pbl_test")
+require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
 require("test/performance/luaPerformance")
 require('test/performance/classPerformance')
-require("examination")
-require("metatable")
+require("test/examination")
+require("test/metatable")
+require('Controller/LineChartCtrl')
+
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
@@ -48,23 +49,6 @@ UnitTest.Exec("abel_w3", "test_pb",  function ()
     local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
     log("abel_w3","[test_pb] login.account: "..msg.account)
-end)
-
-UnitTest.Exec("abel_w5", "test_oo",  function ()
-    local p0 = Person:new('Man01', 30)
-    p0:speak()
-    local p1 = AgedPerson:new('Billy the Kid', 13) -- this is equivalent to AgedPerson('Billy the Kid', 13) - the :new part is implicit
-    local p2 = AgedPerson:new('Luke Skywalker', 21)
-    p1:speak()
-    p2:speak()
-    Event.Brocast("class_cb", 100);
-end )
-
-UnitTest.Exec("abel_w3", "test_OO_Mixins",function()
-    local bee = Bee() -- or Bee:new()
-    local bat = Bat() -- or Bat:new()
-    bee:fly()
-    bat:fly()
 end)
 
 UnitTest.Exec("abel_w3", "check_load",function()

@@ -178,3 +178,37 @@ UnitTest.Exec("abel_w4_performance", "test_cache_table_element",  function ()
     end)
 
 end)
+
+UnitTest.Exec("abel_w6_performance", "test_UnitTest",  function ()
+    UnitTest.PerformanceTest("abel_w6_performance","[单元测试分组 本身执行效率 1000万次调用]", function()
+        for i = 1, 10000000 do
+            UnitTest.Exec("abel_w6_performance", "test_UnitTest_fun",  function ()
+
+            end)
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w6_performance","[单元测试分组 本身执行效率 100万次调用]", function()
+        for i = 1, 1000000 do
+            UnitTest.Exec("abel_w6_performance", "test_UnitTest_fun1",  function ()
+
+            end)
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w6_performance","[单元测试分组 本身执行效率 10万次调用]", function()
+        for i = 1, 100000 do
+            UnitTest.Exec("abel_w6_performance", "test_UnitTest_fun2",  function ()
+
+            end)
+        end
+    end)
+
+    UnitTest.PerformanceTest("abel_w6_performance","[单元测试分组 本身执行效率 1万次调用]", function()
+        for i = 1, 10000 do
+            UnitTest.Exec("abel_w6_performance", "test_UnitTest_fun3",  function ()
+
+            end)
+        end
+    end)
+end)

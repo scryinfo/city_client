@@ -164,6 +164,7 @@ public static class LuaBinder
 		City_MemoryStreamWrap.Register(L);
 		City_CityLuaUtilWrap.Register(L);
 		City_CityTestWrap.Register(L);
+		City_LineChartWrap.Register(L);
 		L.BeginModule("NetworkInterface");
 		L.RegFunction("ConnectCallback", City_NetworkInterface_ConnectCallback);
 		L.EndModule();

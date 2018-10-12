@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using LuaInterface;
 using LuaFramework;
 using City;
-
 using BindType = ToLuaMenu.BindType;
 using UnityEngine.UI;
 using System.Reflection;
@@ -101,8 +100,7 @@ public static class CustomSettings
         _GT(typeof(AudioSource)),
         //_GT(typeof(LineRenderer))
         //_GT(typeof(TrailRenderer))
-#endif
-      
+#endif        
         _GT(typeof(Behaviour)),
         _GT(typeof(MonoBehaviour)),        
         _GT(typeof(GameObject)),
@@ -193,7 +191,8 @@ public static class CustomSettings
         _GT(typeof(EffectFlying)),
         _GT(typeof(PieChartGraph)),
         _GT(typeof(PieNeedData)),
-        
+        _GT(typeof(City.LineChart)),
+
     };
 
     public static List<Type> dynamicList = new List<Type>()

@@ -20,7 +20,7 @@ end
 --打开界面
 function HouseCtrl.OpenPanel(houseData)
     this.houseData = houseData
-    panelMgr:CreatePanel('House', this.OnCreate);
+    panelMgr:CreatePanel('House', this.OnCreate,this);
 end
 
 --启动事件--

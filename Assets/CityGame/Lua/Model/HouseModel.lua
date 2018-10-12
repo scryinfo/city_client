@@ -77,7 +77,7 @@ function HouseModel.n_OnReceiveQueryGroundAuctionInfo(stream)
 end
 
 
-TestGroup.active_TestGroup("cycle_w5")
+--TestGroup.active_TestGroup("cycle_w5")
 
 UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     local HouseModel = CtrlManager.GetModel(ModelNames.House);

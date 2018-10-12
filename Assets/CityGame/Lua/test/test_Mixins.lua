@@ -9,17 +9,29 @@ local class = require 'Framework/class'
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes
     fly = function(self)
         log('flap flap flap I am a ' .. self.class.name)
+    end,
+    foo = function(self)
+     return 1
     end
 }
 
 Animal = class('Animal')
-
+function Animal:fun()
+    return 1
+end
 Insect = class('Insect', Animal) -- or Animal:subclass('Insect')
 
+function Insect:funInsect()
+    return 1
+end
 Worm = class('Worm', Insect) -- worms don't have wings
 
 Bee = class('Bee', Insect)
+function Bee:bar()
+    return 1
+end
 Bee:include(HasWings) --Bees have wings. This adds fly() to Bee
+
 
 Mammal = class('Mammal', Animal)
 
@@ -28,11 +40,75 @@ Fox = class('Fox', Mammal) -- foxes don't have wings, but are mammals
 Bat = class('Bat', Mammal)
 Bat:include(HasWings) --Bats have wings, too.
 
+UnitTest.Exec("abel_w3", "test_OO_Mixins",function()
+    local bee = Bee() -- or Bee:new()
+    local bat = Bat() -- or Bat:new()
+    bee:fly()
+    bat:fly()
+end)
 
 --[[
 Output:
 flap flap flap I am a Bee
 flap flap flap I am a Bat
 ]]--
+
+SpeakFunClass = class('SpeakFunClass')
+function SpeakFunClass.speak()
+    return 1
+end
+
+--调用派生类自己的方法比调用从基类继承而来的方法和混入的方法
+    --1千万次调用 执行时间要快30%
+    --50亿次调用  执行却时间非常接近（为什么？）
+UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  function ()
+    local bee = Bee() -- or Bee:new()
+    --local count = 5000000000
+    local count = 5000000
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'inherited base class method invocation', function()
+        for i = 1, count do --10000000
+            bee:fun()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'inherited parent class method invocation', function()
+        for i = 1, count do --10000000
+            bee:funInsect()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'Bee class method invocation', function()
+        for i = 1, count do --10000000
+            Bee:funInsect()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'instance method invocation', function()
+        for i = 1, count do --10000000
+            bee:bar()
+        end
+    end)
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'mixin method invocation', function()
+        for i = 1, count do --10000000
+            bee:foo()
+        end
+    end)
+
+    Bee:include(SpeakFunClass) --include class 的话，会导致原来的方法被抹掉
+    local bee1 = Bee() -- or Bee:new()
+    UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'include method invocation', function()
+        for i = 1, count do --10000000
+            bee1:speak()
+        end
+    end)
+
+    log("abel_w6_UIFrame_performance","[test_mixin_inherited_method]  bee2:fun")
+    local bee2 = Bee() -- or Bee:new()
+    local bat = Bat() -- or Bat:new()
+    bee2:speak()
+    --bee2.fun() --这个会失败， 原有方法在 include class 后被覆盖
+    --bee2:fun() --这个会失败， 原有方法在 include class 后被覆盖
+    local xxx = 0
+
+end)
+
+
 
 

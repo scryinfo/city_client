@@ -32,7 +32,12 @@ ModelNames = {
 }
 
 PanelNames = {
-	"LoginPanel",	
+	"LoginPanel",
+	"TopBarPanel",
+	"MainPagePanel",
+	"NoticePanel",
+	"SkillPagePanel",
+	"LineChartPanel",
 	"SelectAvatarPanel",
 	"CreateAvatarPanel",
 	"GameWorldPanel",

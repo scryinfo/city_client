@@ -129,30 +129,36 @@ namespace LuaFramework {
         /// </summary>
         void InitLuaBundle() {
             if (loader.beZip) {
+                //手动添加 client\Assets\StreamingAssets\lua 中所有.unity3d文件
                 loader.AddBundle("lua/lua.unity3d");
                 loader.AddBundle("lua/lua_math.unity3d");
                 loader.AddBundle("lua/lua_system.unity3d");
                 loader.AddBundle("lua/lua_system_reflection.unity3d");
                 loader.AddBundle("lua/lua_unityengine.unity3d");
-
                 loader.AddBundle("lua/lua_Common.unity3d");
                 loader.AddBundle("lua/lua_Logic.unity3d");
+                loader.AddBundle("lua/lua_Logic_GameBubble.unity3d");
+                loader.AddBundle("lua/lua_Logic_PieChart.unity3d");
+                loader.AddBundle("lua/lua_model.unity3d");
                 loader.AddBundle("lua/lua_View.unity3d");
+                loader.AddBundle("lua/lua_view_buildinginfo.unity3d");
                 loader.AddBundle("lua/lua_Controller.unity3d");
                 loader.AddBundle("lua/lua_Misc.unity3d");
                 loader.AddBundle("lua/lua_Framework.unity3d");
                 loader.AddBundle("lua/lua_Framework_Interface.unity3d");
                 loader.AddBundle("lua/lua_FrameworkPlugins.unity3d");
-
+                loader.AddBundle("lua/lua_Framework_ui.unity3d");
+                loader.AddBundle("lua/lua_Framework_pbl.unity3d");
+                loader.AddBundle("lua/lua_test.unity3d");
+                loader.AddBundle("lua/lua_test_pbl.unity3d");
+                loader.AddBundle("lua/lua_test_performance.unity3d");
+                loader.AddBundle("lua/lua_test_testframework.unity3d");
                 loader.AddBundle("lua/lua_protobuf.unity3d");
                 loader.AddBundle("lua/lua_3rd_cjson.unity3d");
                 loader.AddBundle("lua/lua_3rd_luabitop.unity3d");
-                //loader.AddBundle("lua/lua_3rd_pbc.unity3d");
-                loader.AddBundle("lua/lua_3rd_pb_io.unity3d");
-                loader.AddBundle("lua/lua_3rd_pb_conv.unity3d");
-                loader.AddBundle("lua/lua_3rd_buffer.unity3d");
-                loader.AddBundle("lua/lua_3rd_slice.unity3d");                
-                loader.AddBundle("lua/lua_3rd_sproto.unity3d");
+                loader.AddBundle("lua/lua_cjson.unity3d");
+
+
             }
         }
 

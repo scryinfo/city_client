@@ -16,7 +16,10 @@ end
 function createPanel(name)
 	PanelManager:CreatePanel(name);
 end
-
+--创建窗口--
+function createWindows(name,pos)
+	PanelManager:CreateWindow(name,pos);
+end
 function child(str)
 	return transform:Find(str);
 end

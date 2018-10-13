@@ -57,3 +57,4 @@ end
 function HouseCtrl:_openInfo()
 
 end
+

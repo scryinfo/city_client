@@ -71,6 +71,7 @@ function LineChartCtrl:Close()
     destroy(self.gameObject);
 end
 
+
 UnitTest.Exec("abel_w7_LineChart", "test_LineChart",  function ()
     UIPage:ShowPage(LineChartCtrl)
     local xxx = 0

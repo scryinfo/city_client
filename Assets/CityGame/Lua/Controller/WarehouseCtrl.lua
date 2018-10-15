@@ -18,6 +18,8 @@ function WarehouseCtrl:OnCreate(obj)
     local warehouse = self.gameObject:GetComponent('LuaBehaviour');
     warehouse:AddClick(WarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn);
     warehouse:AddClick(WarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting);
+    warehouse:AddClick(WarehousePanel.nameBtn.gameObject,self.OnClick_OnName);
+    warehouse:AddClick(WarehousePanel.quantityBtn.gameObject,self.OnClick_OnNumber);
 
 end
 
@@ -42,11 +44,6 @@ end
 --根据数量排序
 function WarehouseCtrl.OnClick_OnNumber(go)
     WarehousePanel.nowText.text = "By quantity";
-    WarehouseCtrl.OnClick_OpenList(not isShowList);
-end
---根据价格排序
-function WarehouseCtrl.OnClick_OnpriceBtn(go)
-    WarehousePanel.nowText.text = "By price";
     WarehouseCtrl.OnClick_OpenList(not isShowList);
 end
 

@@ -175,6 +175,7 @@ public class Packager {
         AddBuildMap("BtnDialogPage" + AppConst.BundleExt, "BtnDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
         AddBuildMap("InputDialogPage" + AppConst.BundleExt, "InputDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
         AddBuildMap("HouseChangeRent" + AppConst.BundleExt, "HouseChangeRentPanel.prefab", "Assets/CityGame/Resources/View");
+        AddBuildMap("Exchange" + AppConst.BundleExt, "ExchangePanel.prefab", "Assets/CityGame/Resources/View");
 
         //测试滑动--交易所
         AddBuildMap("TestExchange" + AppConst.BundleExt, "TestExchangePanel.prefab", "Assets/CityGame/Resources/View/TestCycle");

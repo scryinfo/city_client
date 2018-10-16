@@ -44,7 +44,9 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
-    self.rentInput.onValueChanged:AddListener(self._onInputValueChange)
+    self.rentInput.onValueChanged:AddListener(function ()
+        log("cycle_w6_houseAndGround", "----")
+    end)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot");
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text");
@@ -70,10 +72,6 @@ function InputDialogPageCtrl:_removeListener()
     --elseif self.m_data.inputDialogPageServerType == InputDialogPageServerType. then
 
     end
-end
----input valuechanged
-function InputDialogPageCtrl:_onInputValueChange()
-    log("cycle_w6_houseAndGround", "----")
 end
 ---更改名字失败，提示信息更改
 function InputDialogPageCtrl:_changeNameCallBack(stream)

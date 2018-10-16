@@ -163,6 +163,7 @@ public static class CustomSettings
         //for LuaFramework
         //_GT(typeof(RectTransform)),
         _GT(typeof(InputField.OnChangeEvent)),
+        _GT(typeof(Toggle.ToggleEvent)),
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),

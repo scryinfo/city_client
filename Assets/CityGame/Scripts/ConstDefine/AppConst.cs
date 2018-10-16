@@ -15,6 +15,7 @@ namespace LuaFramework {
         public const bool UpdateMode = false;                       //更新模式-默认关闭 
         public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭 
         public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式
+        public const bool EditorDevMode = true;                    //EditorDevMode 为true，那么不走 bundel流程，而直接采用 LoadAsset 从 client\Assets\CityGame\Resources 目录加载资源
 
         public const int TimerInterval = 1;
         public const int GameFrameRate = 30;                        //游戏帧频

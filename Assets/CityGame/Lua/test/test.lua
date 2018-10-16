@@ -14,6 +14,7 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
+TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
@@ -180,6 +181,68 @@ end)
 
 UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
     UIPage:ShowPage(TestExchangeCtrl)
-
     log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
+end)
+
+UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()
+    log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour] ...............")
+
+    require('Framework/UI/UIRoot')
+    local UIRoot = UIRoot
+    if UIRoot.Instance() == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  UIRoot.Instance() == nil ")
+        return
+    end
+    local path = 'View/TopbarPanel'
+    --加载 prefab 资源
+    local prefab = UnityEngine.Resources.Load(path);
+    if not prefab then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+    end
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local transform = go.transform
+    local rect = go.transform:GetComponent("RectTransform");
+
+    if transform == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+    --绑定脚本
+    if prefab == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+
+    --绑定脚本,使用 LuaHelper.GetType
+    UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+    local topBarBehaviour = go:GetComponent('LuaBehaviour')
+    if topBarBehaviour == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+
+    --显示相关[
+    local anchorPos = rect.anchoredPosition
+    local sizeDel= rect.sizeDelta
+    local scale = rect.localScale
+
+    go.transform:SetParent(UIRoot.getFixedRoot())
+
+    rect.anchoredPosition = anchorPos
+    rect.sizeDelta = sizeDel
+    rect.localScale = scale
+    --显示相关]
+
+    --使用绑定的脚本，注册按钮回调[
+    local btn_notice = transform:Find("btn_notice").gameObject;
+    local btn_back = transform:Find("btn_back").gameObject;
+
+    topBarBehaviour:AddClick(btn_notice, function()
+        local aaa = 0
+    end, go);
+    topBarBehaviour:AddClick(btn_back, function()
+        local aaa = 0
+    end, go);
+    --使用绑定的脚本，注册按钮回调]
+
 end)

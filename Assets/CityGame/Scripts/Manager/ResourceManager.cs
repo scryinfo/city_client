@@ -99,7 +99,14 @@ namespace LuaFramework {
                 requests = new List<LoadAssetRequest>();
                 requests.Add(request);
                 m_LoadRequests.Add(abName, requests);
-                StartCoroutine(OnLoadAsset<T>(abName));
+                if (AppConst.EditorDevMode) {
+                    StartCoroutine(OnLoadAsset<T>(abName));
+                }
+                else
+                {
+                    StartCoroutine(OnLoadAsset<T>(abName));
+                }
+                
             } else {
                 requests.Add(request);
             }

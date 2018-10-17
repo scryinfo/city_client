@@ -35,6 +35,11 @@ end
 
 function testLuaCom:OnDestroy(gameObject )
     print("OnDestroy")
+    destroy(gameObject);
+end
+
+function testLuaCom:OnDisable(gameObject )
+    print("OnDisable")
 end
 
 function testLuaCom:Update(gameObject)

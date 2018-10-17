@@ -131,11 +131,18 @@ void Update()
 
 void OnDisable()
 {
+    if (mSelfTable == null) {
+            return;
+        }
     CallLuaFunction(FuncName.OnDisable, mSelfTable, gameObject);
 }
 
 void OnDestroy()
 {
+        if (mSelfTable == null) {
+            return;
+        }
+
     CallLuaFunction(FuncName.OnDestroy, mSelfTable, gameObject);
 
     //记得释放资源

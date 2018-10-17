@@ -13,7 +13,6 @@ public class LuaFramework_AppConstWrap
 		L.RegConstant("UpdateMode", 0);
 		L.RegConstant("LuaByteMode", 0);
 		L.RegConstant("LuaBundleMode", 0);
-		L.RegConstant("EditorDevMode", 1);
 		L.RegConstant("TimerInterval", 1);
 		L.RegConstant("GameFrameRate", 30);
 		L.RegVar("AppName", get_AppName, null);
@@ -22,6 +21,7 @@ public class LuaFramework_AppConstWrap
 		L.RegVar("BundleExt", get_BundleExt, null);
 		L.RegVar("AssetDir", get_AssetDir, null);
 		L.RegVar("WebUrl", get_WebUrl, null);
+		L.RegVar("AssetDir_CloseBundleMode", get_AssetDir_CloseBundleMode, null);
 		L.RegVar("FrameworkRoot", get_FrameworkRoot, null);
 		L.EndClass();
 	}
@@ -126,6 +126,20 @@ public class LuaFramework_AppConstWrap
 		try
 		{
 			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.WebUrl);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_AssetDir_CloseBundleMode(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.AssetDir_CloseBundleMode);
 			return 1;
 		}
 		catch (Exception e)

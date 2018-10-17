@@ -17,6 +17,7 @@ public static class LuaBinder
 		PieChartGraphWrap.Register(L);
 		PieNeedDataWrap.Register(L);
 		ActiveLoopScrollRectWrap.Register(L);
+		LuaComponentWrap.Register(L);
 		ViewWrap.Register(L);
 		BaseWrap.Register(L);
 		ManagerWrap.Register(L);

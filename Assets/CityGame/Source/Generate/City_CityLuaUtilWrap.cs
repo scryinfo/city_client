@@ -11,6 +11,7 @@ public class City_CityLuaUtilWrap
 		L.RegFunction("getFixedRoot", getFixedRoot);
 		L.RegFunction("getNormalRoot", getNormalRoot);
 		L.RegFunction("getPopupRoot", getPopupRoot);
+		L.RegFunction("AddLuaComponent", AddLuaComponent);
 		L.RegFunction("Utf8ToByte", Utf8ToByte);
 		L.RegFunction("ByteToUtf8", ByteToUtf8);
 		L.RegFunction("ArrayCopy", ArrayCopy);
@@ -86,6 +87,24 @@ public class City_CityLuaUtilWrap
 		{
 			ToLua.CheckArgsCount(L, 0);
 			UnityEngine.Transform o = City.CityLuaUtil.getPopupRoot();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddLuaComponent(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckObject(L, 1, typeof(UnityEngine.GameObject));
+			string arg1 = ToLua.CheckString(L, 2);
+			UnityEngine.Component o = City.CityLuaUtil.AddLuaComponent(arg0, arg1);
 			ToLua.Push(L, o);
 			return 1;
 		}

@@ -14,7 +14,8 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
-TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
+TestGroup.active_TestGroup("abel_w9_AddLuaComponent")
+--TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 
@@ -207,7 +208,7 @@ UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_M
         log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
         return
     end
-    --绑定脚本
+
     if prefab == nil then
         log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
         return
@@ -245,4 +246,49 @@ UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_M
     end, go);
     --使用绑定的脚本，注册按钮回调]
 
+end)
+
+UnitTest.Exec("abel_w9_AddLuaComponent", "test_abel_w9_AddLuaComponent",  function ()
+    log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent] ...............")
+
+    require('Framework/UI/UIRoot')
+    local UIRoot = UIRoot
+    if UIRoot.Instance() == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  UIRoot.Instance() == nil ")
+        return
+    end
+    local path = 'View/TopbarPanel'
+    --加载 prefab 资源
+    local prefab = UnityEngine.Resources.Load(path);
+    if not prefab then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+    end
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local transform = go.transform
+    local rect = go.transform:GetComponent("RectTransform");
+
+    if transform == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+        return
+    end
+
+    if prefab == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+        return
+    end
+
+    --显示相关[
+    local anchorPos = rect.anchoredPosition
+    local sizeDel= rect.sizeDelta
+    local scale = rect.localScale
+
+    go.transform:SetParent(UIRoot.getFixedRoot())
+
+    rect.anchoredPosition = anchorPos
+    rect.sizeDelta = sizeDel
+    rect.localScale = scale
+    --显示相关]
+
+    --绑定lua脚本,传入lua相对路径, 具体测试见 test_luaComponent
+    local luaCom = CityLuaUtil.AddLuaComponent(go,'View/Logic/test_luaComponent')
 end)

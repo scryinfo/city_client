@@ -49,6 +49,14 @@ namespace City
             return UIRoot.getPopupRoot();
         }
 
+        public static Component AddLuaComponent(GameObject go, string luaPath)
+        {
+            LuaComponent com = go.AddComponent<LuaComponent>() as LuaComponent;
+            com.reAwake(luaPath);
+            return com;
+        }
+
+
         public delegate object[] CallLuaFunction(string funcName, params object[] args);
         private static CallLuaFunction callFunction = null;
         public static byte[] Utf8ToByte(object utf8)

@@ -8,17 +8,17 @@ local class = require 'Framework/class'
 TestExchangeScrollItemCtrl = class('TestExchangeScrollItemCtrl')
 
 --初始化方法
-function TestExchangeScrollItemCtrl:initialize(data, mainPanelLuaBehaviour)
-    self.viewRect = viewRect;
+function TestExchangeScrollItemCtrl:initialize(data)
     self.data = data;
 
     local viewTrans = self.data.transform;
     self.text = viewTrans:Find("Text"):GetComponent("Text");
-    self.button = viewTrans:Find("Button");
+    self.button = viewTrans:Find("Button"):GetComponent("Button");
 
-    mainPanelLuaBehaviour:AddClick(self.button.gameObject, self._clickToDoBtn, self);
-
-    --Event.AddListener("c_onStaffValueChange", self.updateInfo, self);
+    self.button.onClick:RemoveAllListeners();
+    self.button.onClick:AddListener(function ()
+        log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
+    end)
 
     self:_initData()
 end
@@ -29,6 +29,6 @@ function TestExchangeScrollItemCtrl:_initData()
 end
 
 --点击
-function TestExchangeScrollItemCtrl:_clickToDoBtn()
-    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
+function TestExchangeScrollItemCtrl:_clickToDoBtn(ins)
+    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..ins.data.text)
 end

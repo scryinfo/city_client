@@ -10,6 +10,7 @@ TestExchangeCtrl = class('TestExchangeCtrl',UIPage)
 
 function TestExchangeCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    self.itemlist = {}
 end
 
 function TestExchangeCtrl:bundleName()
@@ -75,22 +76,9 @@ TestExchangeCtrl.static.ProvideData = function(transform, idx)
 
     TestExchangeCtrl.static.sourceInfo[idx].transform = transform
     local item = TestExchangeScrollItemCtrl:new(TestExchangeCtrl.static.sourceInfo[idx], TestExchangeCtrl.static.mainPanelLuaBehaviour)
+    --self.itemlist[#self.itemlist+1] = item
 end
 
 TestExchangeCtrl.static.ClearData = function(transform)
-    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..transform.name)
+    --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end
-
---function TestExchangeCtrl:ProvideData(transform, idx)
---    if not self.sourceInfo.data[idx] then
---        return
---    end
---
---    self.data.data[idx].transform = transform
---    local item = TestExchangeScrollItemCtrl:new(self.data.data[idx], self.data.mainPanelLuaBehaviour)
---
---end
-
---function TestExchangeCtrl:ClearData(transform)
---    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..transform.name)
---end

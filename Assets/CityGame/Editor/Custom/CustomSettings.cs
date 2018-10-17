@@ -7,6 +7,7 @@ using City;
 using BindType = ToLuaMenu.BindType;
 using UnityEngine.UI;
 using System.Reflection;
+using UnityEngine.Events;
 
 public static class CustomSettings
 {
@@ -164,6 +165,9 @@ public static class CustomSettings
         //_GT(typeof(RectTransform)),
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
+        _GT(typeof(Button)),
+        _GT(typeof(Button.ButtonClickedEvent)),
+        _GT(typeof(UnityEventBase)),  //为了使用RemoveAllListener
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),

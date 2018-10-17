@@ -5,6 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+TestGroup.active_TestGroup("fisher_week9_ShelfGoodsItem") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
@@ -155,7 +156,6 @@ end)
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     local info = {}
     UIPage:ShowPage(HouseCtrl, info)
-
     log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
 end)
 

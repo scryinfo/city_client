@@ -20,12 +20,17 @@ function WarehousePanel.InitPanel()
     this.list = transform:Find("Button/Sorting/List").gameObject;
     this.nameBtn = transform:Find("Button/Sorting/List/nameBtn");
     this.quantityBtn = transform:Find("Button/Sorting/List/quantityBtn");
-    this.shelfBtn = transform:Find("Button/shelfBtn").gameObject;
-    --Button shelf
-    this.shelfCloseBtn = transform:Find("RightInformation/bg/shelf/closeBtn").gameObject;
+    this.shelfBtn = transform:Find("Button/shelfBtn");
+    this.transportBtn = transform:Find("Button/transportBtn");
+    --Button shelf  右边面板
+    this.rightInformation = transform:Find("RightInformation").gameObject;
+    this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
+    this.transport = transform:Find("RightInformation/bg/transport").gameObject;
+
+    this.shelfCloseBtn = transform:Find("RightInformation/bg/shelf/closeBtn");
     this.shelfConfirmBtn = transform:Find("RightInformation/bg/shelf/confirmBtn").gameObject;
     --Button transport
-    this.transportCloseBtn = transform:Find("RightInformation/bg/transport/closeBtn").gameObject;
+    this.transportCloseBtn = transform:Find("RightInformation/bg/transport/closeBtn");
     this.transportConfirmBtn = transform:Find("RightInformation/bg/transport/confirmBtn").gameObject;
     this.moneyText = transform:Find("RightInformation/bg/transport/moneyText").gameObject;
     this.transportopenBtn = transform:Find("RightInformation/bg/transport/warehouseName/openBtn").gameObject;
@@ -34,8 +39,8 @@ function WarehousePanel.InitPanel()
     this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider").gameObject;
     this.NumberText = transform:Find("WarehouseDetails/NumberText").gameObject;
     --Scroll View
-    this.ScrollView = transform:Find("ScrollView").gameObject;
-    this.Content = transform:Find("ScrollView/Viewport/Content").gameObject;
+    this.ScrollView = transform:Find("ScrollView"):GetComponent("RectTransform");
+    this.Content = transform:Find("ScrollView/Viewport/Content"):GetComponent("RectTransform");
 
 end
 function WarehousePanel.OnDestroy()

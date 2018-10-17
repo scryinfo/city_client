@@ -1,6 +1,6 @@
 --require "Common/define"
 require ('Framework/UI/UIPage')
-require "View/ShelfGoodsMgr"
+require "View/BuildingInfo/ShelfGoodsMgr"
 local class = require 'Framework/class'
 ShelfCtrl = class('ShelfCtrl',UIPage)
 
@@ -11,6 +11,7 @@ local listFalse = Vector3.New(0,0,0)
 ShelfCtrl.static.SHELFICON_PATH = 'View/GoodsItem/ShelfGoodsItem'
 function ShelfCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    self.ShelfGoodsMgr = ShelfGoodsMgr:new()
 end
 
 function ShelfCtrl:bundleName()
@@ -19,13 +20,15 @@ end
 
 function ShelfCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
+
     local shelf = self.gameObject:GetComponent('LuaBehaviour')
-    shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn);
-    shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting);
-    shelf:AddClick(ShelfPanel.nameBtn,self.OnClick_OnName);
-    shelf:AddClick(ShelfPanel.quantityBtn,self.OnClick_OnNumber);
-    shelf:AddClick(ShelfPanel.priceBtn,self.OnClick_OnpriceBtn);
-    shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods);
+    shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn, self);
+    shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
+    shelf:AddClick(ShelfPanel.nameBtn,self.OnClick_OnName, self);
+    shelf:AddClick(ShelfPanel.quantityBtn,self.OnClick_OnNumber, self);
+    shelf:AddClick(ShelfPanel.priceBtn,self.OnClick_OnpriceBtn, self);
+    shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods, self);
+    self.luabehaviour = shelf
 end
 
 function ShelfCtrl:Awake(go)
@@ -71,8 +74,8 @@ function ShelfCtrl.OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
-function ShelfCtrl.OnClick_createGoods(go)
-    ShelfGoodsMgr:_creatGoods(ShelfCtrl.static.SHELFICON_PATH,ShelfPanel.Content);
+function ShelfCtrl:OnClick_createGoods(ins)
+    ins.ShelfGoodsMgr:_creatItemGoods(ins.luabehaviour)
 end
 
 function ShelfCtrl.OnCloseBtn()

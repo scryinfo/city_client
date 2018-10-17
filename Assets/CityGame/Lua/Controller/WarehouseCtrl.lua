@@ -6,8 +6,6 @@ local isShowList;
 local switchIsShow;
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
-local leftTopFalse = Vector2.New(850.0);
-local rightBottomFalse = Vector2.New(-850,0);
 
 function WarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -26,6 +24,8 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.quantityBtn.gameObject,self.OnClick_OnNumber,self);
     warehouse:AddClick(WarehousePanel.shelfBtn.gameObject,self.OnClick_shelfBtn,self);
     warehouse:AddClick(WarehousePanel.shelfCloseBtn.gameObject,self.OnClick_shelfBtn,self)
+    warehouse:AddClick(WarehousePanel.transportBtn.gameObject,self.OnClick_transportBtn,self);
+    warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self)
 end
 
 function WarehouseCtrl:Awake(go)
@@ -41,10 +41,17 @@ end
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
 end
+
 --右边Shelf
 function WarehouseCtrl:OnClick_shelfBtn(ins)
-    WarehouseCtrl:OnClick_rightShelf(not switchIsShow)
+    WarehouseCtrl:OnClick_rightShelf(not switchIsShow,0)
 end
+
+--右边transport
+function WarehouseCtrl:OnClick_transportBtn(ins)
+    WarehouseCtrl:OnClick_rightShelf(not switchIsShow,1)
+end
+
 --根据名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
     WarehousePanel.nowText.text = "By name";
@@ -71,21 +78,25 @@ function WarehouseCtrl:OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
-function WarehouseCtrl:OnClick_rightShelf(isShow)
+function WarehouseCtrl:OnClick_rightShelf(isShow,number)
     local rightInformation = WarehousePanel.rightInformation:GetComponent("RectTransform")
     if isShow then
         WarehousePanel.rightInformation:SetActive(true);
-
-
-        WarehousePanel.shelf:SetActive(true);
+        if number == 0 then
+            WarehousePanel.shelf:SetActive(true);
+        else
+            WarehousePanel.transport:SetActive(true);
+        end
         rightInformation.offsetMin = Vector2.New(0,0);
         rightInformation.offsetMax = Vector2.New(0,0);
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
     else
         WarehousePanel.rightInformation:SetActive(false);
-
-
-        WarehousePanel.shelf:SetActive(false);
+        if number == 0 then
+            WarehousePanel.shelf:SetActive(false);
+        else
+            WarehousePanel.transport:SetActive(false);
+        end
         rightInformation.offsetMin = Vector2.New(850,0);
         rightInformation.offsetMax = Vector2.New(-850,0);
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);

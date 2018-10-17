@@ -49,6 +49,7 @@ namespace City
             return UIRoot.getPopupRoot();
         }
 
+        // go 是脚本要挂到的目标对象，一般是一个prefab实例； luaPath 是要挂到目标对象上的lua脚本的路径
         public static Component AddLuaComponent(GameObject go, string luaPath)
         {
             LuaComponent com = go.AddComponent<LuaComponent>() as LuaComponent;

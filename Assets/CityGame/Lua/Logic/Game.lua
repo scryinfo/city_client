@@ -70,6 +70,10 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
+    local materialModel = CtrlManager.GetModel(ModelNames.Material);
+    if materialModel ~= nil then
+        materialModel:Awake();
+    end
 
     --单元测试入口
     lu.LuaUnit.run()

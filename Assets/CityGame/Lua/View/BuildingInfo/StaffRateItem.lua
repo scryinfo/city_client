@@ -19,6 +19,7 @@ StaffRateItem.static.ROOTRECT_H = 66  --员工未找到住所的UI的高度
 function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.staffData = staffData;
+
     self.toggleData = toggleData;  --位于toggle的第二个   左边
     self.clickOpenFunc = clickOpenFunc;
 
@@ -110,6 +111,7 @@ function StaffRateItem:openToggleItem(targetMovePos)
     self.closeStateTran.localScale = Vector3.zero;
 
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, self.currentContentH), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
     return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH);

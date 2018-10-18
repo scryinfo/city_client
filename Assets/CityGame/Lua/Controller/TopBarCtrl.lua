@@ -23,7 +23,7 @@ end
 function TopBarCtrl:OnCreate(obj )
     UIPage.OnCreate(self,obj)
     gameObject = obj;
-    topBat = self.gameObject:GetComponent('LuaBehaviour')
+    local topBat = self.gameObject:GetComponent('LuaBehaviour')
     topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice, self);
     topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back, self);
 end

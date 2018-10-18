@@ -1,10 +1,19 @@
 require "Common/define"
 require "Controller/LoginCtrl"
+require "Controller/MaterialCtrl"
+require "Controller/WagesAdjustBoxCtrl"
+require "Controller/WarehouseCtrl"
+require "Controller/TransportCtrl"
+require "Controller/TransportOrderCtrl"
+require "Controller/AddTransportCtrl"
+
 require "Controller/SelectAvatarCtrl"
 require "Controller/CreateAvatarCtrl"
 require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
+require "Controller/ShelfCtrl"
+
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
 require "Controller/BtnDialogPageCtrl"
@@ -14,6 +23,7 @@ require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
+require "Model/MaterialModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
 
@@ -29,23 +39,32 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据")
+	UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据");
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
+	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();
+	--测试
+	--ctrlList[CtrlNames.Material] = MaterialCtrl.New();
+	--ctrlList[CtrlNames.Warehouse] = WarehouseCtrl.New();
+	ctrlList[CtrlNames.Transport] = TransportCtrl.New();
+	--ctrlList[CtrlNames.Shelf] = ShelfCtrl.New();
+	ctrlList[CtrlNames.TransportOrder] = TransportOrderCtrl.New();
+	ctrlList[CtrlNames.AddTransport] = AddTransportCtrl.New();
+
 	ctrlList[CtrlNames.SelectAvatar] = SelectAvatarCtrl.New();
 	ctrlList[CtrlNames.CreateAvatar] = CreateAvatarCtrl.New();
 	ctrlList[CtrlNames.GameWorld] = GameWorldCtrl.New();
 	ctrlList[CtrlNames.PlayerHead] = PlayerHeadCtrl.New();
 	ctrlList[CtrlNames.TargetHead] = TargetHeadCtrl.New();
-	--ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
-	--ctrlList[CtrlNames.House] = HouseCtrl.New();
-	--ctrlList[CtrlNames.BtnDialogPage] = BtnDialogPageCtrl.New();
 
-	modelList[ModelNames.Login] = LoginModel.New();
+    --ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
+    --ctrlList[CtrlNames.House] = HouseCtrl.New();
+
+    modelList[ModelNames.Login] = LoginModel.New();
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
 	modelList[ModelNames.House] = HouseModel.New();
-
+	modelList[ModelNames.Material] = MaterialModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	return this;

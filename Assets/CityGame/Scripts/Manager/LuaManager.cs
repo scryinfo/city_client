@@ -14,14 +14,14 @@ namespace LuaFramework {
         void Awake() {
             loader = new LuaLoader();
             lua = new LuaState();
+            LuaComponent.s_luaState = lua;
             this.OpenLibs();
             lua.LuaSetTop(0);
             CityLuaUtil.SetCallLuaFunction(this.CallFunction);
             DelegateFactory.Init();
             LuaBinder.Bind(lua);
             this.CustomBind(lua);
-            LuaCoroutine.Register(lua, this);
-
+            LuaCoroutine.Register(lua, this);            
         }
 
         public void CustomBind(LuaState L) {

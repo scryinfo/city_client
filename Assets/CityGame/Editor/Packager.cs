@@ -197,6 +197,15 @@ public class Packager {
         AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");
         //曲线图
         AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
+        //原料厂主页
+        AddBuildMap("Material" + AppConst.BundleExt, "MaterialPanel.prefab", "Assets/CityGame/Resources/View");
+        //仓库面板
+        AddBuildMap("Warehouse" + AppConst.BundleExt, "WarehousePanel.prefab", "Assets/CityGame/Resources/View");
+        //货架面板
+        AddBuildMap("Shelf" + AppConst.BundleExt,"ShelfPanel.prefab", "Assets/CityGame/Resources/View");
+        //调整生产线
+        AddBuildMap("AdjustProductionLine" + AppConst.BundleExt, "AdjustProductionLinePanel.prefab","Assets/CityGame/Resources/View");
+        
     }
 
     /// <summary>

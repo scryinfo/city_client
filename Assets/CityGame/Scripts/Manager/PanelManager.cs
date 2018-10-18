@@ -47,7 +47,9 @@ namespace LuaFramework {
                 //
                 RectTransform rect = go.GetComponent<RectTransform>();
                 rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
-
+                //go.AddComponent("LuaBehaviour");
+//                 LuaBehaviour pb = new LuaBehaviour();
+//                 go.AddComponent(pb.GetType());
                 go.AddComponent<LuaBehaviour>();
 
                 if (func != null) func.Call(obj,go);

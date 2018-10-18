@@ -90,7 +90,7 @@ namespace LuaFramework {
         //-----------------------------------------------------------------
         protected void OnDestroy() {
             ClearClick();
-#if ASYNC_MODE
+#if ASYNC_MODE && CLOSE_RES_BUNDELMODE
             string abName = name.ToLower().Replace("panel", "");
             ResManager.UnloadAssetBundle(abName + AppConst.BundleExt);
 #endif

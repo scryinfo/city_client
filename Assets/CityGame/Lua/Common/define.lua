@@ -13,8 +13,18 @@ CtrlNames = {
 	GameWorld = "GameWorldCtrl",
 	PlayerHead = "PlayerHeadCtrl",
 	TargetHead = "TargetHeadCtrl",
+
+	Wages = "WagesCtrl",
+	Warehouse = "WarehouseCtrl",
+	Transport = "TransportCtrl",
+	Shelf = "ShelfCtrl",
+	TransportOrder = "TransportOrderCtrl",
+	AddTransport = "AddTransportCtrl",
 	GroundAuction = "GroundAuctionCtrl",  --拍卖
 	House = "HouseCtrl",  --住宅
+
+	Material = "MaterialCtrl", --原料厂
+
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 	Exchange = "ExchangeCtrl",  --交易所
@@ -36,6 +46,7 @@ ModelNames = {
 	GameBubbleManager = "GameBubbleManager",  --游戏中的气泡
 	BuildingInfo = "BuildingInfoModel",  --建筑信息
 	House = "HouseModel",  --住宅
+	Material = "MaterialModel",  --原料厂
 }
 
 PanelNames = {
@@ -50,11 +61,20 @@ PanelNames = {
 	"GameWorldPanel",
 	"PlayerHeadPanel",
 	"TargetHeadPanel",
+	"WarehousePanel",
+	"TransportPanel",
+	"ShelfPanel",
+	"TransportOrderPanel",
+	"AddTransportPanel",
 	"GroundAuctionPanel",  --拍卖
 	"BuildingInfoRightPanel",  --建筑右侧信息小界面
 	"BuildingInfoPanel",  --建筑信息界面
 	"BuildingTransferPanel",  --转让界面
 	"HousePanel",  --住宅
+
+	"MaterialPanel", --原料厂
+	"WagesAdjustBoxPanle",	--员工工资调整
+	"AdjustProductionLinePanel",  --调整生产线
 	"TestExchangePanel",  --交易所测试
 	"ExchangePanel",  --交易所
 }

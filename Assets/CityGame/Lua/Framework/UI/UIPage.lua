@@ -130,7 +130,11 @@ function UIPage:AnchorUIGameObject(ui)
     self.gameObject = ui
     self.transform = ui.transform
 
-    self:setPosition(self.offset.x,self.offset.y)
+    local rect = self.transform:GetComponent("RectTransform");
+    if rect then
+        rect:DOAnchorPosX(self.offset.x, 0)
+        rect:DOAnchorPosY(self.offset.y, 0)
+    end
 
     local anchorPos = Vector3.zero
     local sizeDel = Vector3.zero
@@ -282,11 +286,8 @@ function  UIPage:ShowPageByClass(inClass,pageData)
 end
 
 function UIPage:setPosition(x,y)
-    local rect = self.transform:GetComponent("RectTransform");
-    if rect then
-        rect:DOAnchorPosX(x, 0)
-        rect:DOAnchorPosY(y, 0)
-    end
+    self.offset.x = x
+    self.offset.y = y
 end
 
 function UIPage:ClosePage()

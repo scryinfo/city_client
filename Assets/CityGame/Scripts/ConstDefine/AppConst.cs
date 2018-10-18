@@ -1,4 +1,4 @@
-﻿#define CLOSE_RES_BUNDELMODE  //关闭资源的 boundle 模式
+﻿//#define CLOSE_RES_BUNDELMODE  //关闭资源的 boundle 模式
 
 using UnityEngine;
 using System;

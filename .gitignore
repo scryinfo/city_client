@@ -58,3 +58,6 @@ Atlas
 /client.sln
 /client.csproj
 /client.Editor.csproj
+/Assets/CityGame/Scripts/toolbox/LineChart/LineChartGraph.cs.meta
+/Assets/CityGame/Scripts/toolbox.meta
+/Assets/CityGame/link.xml

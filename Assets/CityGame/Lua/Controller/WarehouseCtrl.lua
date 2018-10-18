@@ -65,7 +65,7 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
 end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
-
+    UIPage:ShowPage(ChooseWarehouseCtrl);
 end
 
 function WarehouseCtrl:OnClick_OnSorting(ins)

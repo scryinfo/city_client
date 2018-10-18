@@ -204,7 +204,8 @@ public class Packager {
         AddBuildMap("Shelf" + AppConst.BundleExt,"ShelfPanel.prefab", "Assets/CityGame/Resources/View");
         //调整生产线
         AddBuildMap("AdjustProductionLine" + AppConst.BundleExt, "AdjustProductionLinePanel.prefab","Assets/CityGame/Resources/View");
-        
+        //选择仓库
+        AddBuildMap("ChooseWarehousePanel" + AppConst.BundleExt, "ChooseWarehousePanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

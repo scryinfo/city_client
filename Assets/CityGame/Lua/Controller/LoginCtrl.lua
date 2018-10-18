@@ -9,8 +9,9 @@ LoginCtrl = class('LoginCtrl',UIPage)
 
 --构建函数--
 function LoginCtrl:initialize()
-	self.logined = false
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+	self.logined = false
+	self.offset.y = -200
 	--self.uiPath = "Login"
 end
 

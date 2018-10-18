@@ -14,7 +14,7 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
-TestGroup.active_TestGroup("abel_w9_AddLuaComponent")
+--TestGroup.active_TestGroup("abel_w9_AddLuaComponent")
 --TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")

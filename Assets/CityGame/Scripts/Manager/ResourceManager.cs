@@ -124,8 +124,9 @@ namespace LuaFramework {
                 string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
                 GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
                 if (prefab != null) {
-                    UnityEngine.Object o = UnityEngine.Object.Instantiate(prefab);
-                    result.Add(o);
+                    /*UnityEngine.Object o = UnityEngine.Object.Instantiate(prefab);
+                    result.Add(o);*/
+                    result.Add(prefab);
                 }
             }
 

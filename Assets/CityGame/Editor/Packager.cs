@@ -193,6 +193,10 @@ public class Packager {
         AddBuildMap("GameMainInterface" + AppConst.BundleExt, "GameMainInterfacePanel.prefab", "Assets/CityGame/Resources/View");
         //角色管理面板
         AddBuildMap("RoleManager" + AppConst.BundleExt, "RoleManagerPanel.prefab", "Assets/CityGame/Resources/View");
+        //选服页面
+        AddBuildMap("ServerList" + AppConst.BundleExt, "ServerListPanel.prefab", "Assets/CityGame/Resources/View");
+        //创角页面
+        AddBuildMap("CreateRole" + AppConst.BundleExt, "CreateRolePanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

@@ -77,4 +77,10 @@ function GameMainInterfaceCtrl.OnSourceMill()
     log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
     --Event.Brocast("");
 end
+UnitTest.Exec("rodger_w8_GameMainInterface", "test_RoleManagerCtrl_self",  function ()
+    Event.AddListener("OnOK_self", function ()
+    UIPage:ShowPage(RoleManagerCtrl)
+    end)
+end)
+
 

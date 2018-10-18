@@ -72,7 +72,7 @@ namespace City{
 
          CanvasScaler cs = go.AddComponent<CanvasScaler>();
          cs.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-         cs.referenceResolution = new Vector2(1136f, 640f);
+         cs.referenceResolution = new Vector2(1920, 1080f);
          cs.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
 
          ////add auto scale camera fix size.

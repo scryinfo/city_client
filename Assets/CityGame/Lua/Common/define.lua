@@ -17,6 +17,8 @@ CtrlNames = {
 	House = "HouseCtrl",  --住宅
 	GameMainInterface = "GameMainInterfaceCtrl",--游戏主界面
 	RoleManager = "RoleManagerCtrl",--角色管理界面
+	ServerList = "ServerListCtrl",--选服页面
+	CreateRole = "CreateRoleCtrl",--创角页面
 }
 
 ModelNames = {
@@ -33,6 +35,8 @@ ModelNames = {
 	House = "HouseModel",  --住宅
 	GameMainInterface = "GameMainInterfaceModel",--游戏主界面
 	RoleManager = "RoleManagerModel",--游戏管理界面
+	ServerList = "ServerListModel",--选服页面
+	CreateRole = "CreateRoleModel",--创角页面
 }
 
 PanelNames = {
@@ -54,6 +58,8 @@ PanelNames = {
 	"HousePanel",  --住宅
 	"GameMainInterfacePanel",--游戏主界面
 	"RoleManagerPanel",--游戏管理界面
+	"ServerListPanel",--选服页面
+	"CreateRolePanel",--创角页面
 }
 
 SYSEVENT =

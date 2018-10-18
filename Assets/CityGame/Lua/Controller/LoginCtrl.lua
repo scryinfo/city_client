@@ -3,6 +3,7 @@ require('Controller/TopBarCtrl')
 require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
 require('Controller/RoleManagerCtrl')
+require('Controller/ServerListCtrl')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 
@@ -41,7 +42,7 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
-	Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
 
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
@@ -54,7 +55,7 @@ function LoginCtrl:Close()
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-	Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+	--Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
 	destroy(self.gameObject);
 end
 
@@ -99,12 +100,12 @@ function LoginCtrl:c_Disconnect( errorCode )
 	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 
-function LoginCtrl:c_GsLoginSuccess()
-	UIPage:ClearAllPages()
-	UIPage:ShowPage(RoleManagerCtrl)
+--[[function LoginCtrl:c_GsLoginSuccess()
+	--UIPage:ClearAllPages()
+	--UIPage:ShowPage(RoleManagerCtrl)
 	--UIPage:ShowPage(TopBarCtrl)
 	--UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
-end
+end--]]
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
 	if errorCode ~= 0 then
@@ -129,6 +130,8 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
+		--log("rodger_w8_GameMainInterface","[test_OnOK]: 测试完毕",ServerListCtrl.serverIndex[1]);
+		UIPage:ShowPage(ServerListCtrl)
 		self.logined = true
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";

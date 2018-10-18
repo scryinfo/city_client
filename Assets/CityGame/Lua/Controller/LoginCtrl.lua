@@ -9,8 +9,9 @@ LoginCtrl = class('LoginCtrl',UIPage)
 
 --构建函数--
 function LoginCtrl:initialize()
-	self.logined = false
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+	self.logined = false
+	self.offset.y = -200
 	--self.uiPath = "Login"
 end
 
@@ -47,7 +48,7 @@ function LoginCtrl:OnCreate(go)
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
-	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 
 end
 

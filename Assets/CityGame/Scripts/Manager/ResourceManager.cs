@@ -71,6 +71,11 @@ namespace LuaFramework {
                 return abName;
             }
             //string[] paths = m_AssetBundleManifest.GetAllAssetBundles();  产生GC，需要缓存结果
+
+            if (m_AllManifest == null) {
+                return null;
+            }
+
             for (int i = 0; i < m_AllManifest.Length; i++) {
                 int index = m_AllManifest[i].LastIndexOf('/');  
                 string path = m_AllManifest[i].Remove(0, index + 1);    //字符串操作函数都会产生GC
@@ -86,6 +91,8 @@ namespace LuaFramework {
         /// 载入素材
         /// </summary>
         void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null) where T : UObject {
+
+#if CLOSE_RES_BUNDELMODE
             abName = GetRealAssetPath(abName);
 
             LoadAssetRequest request = new LoadAssetRequest();
@@ -103,6 +110,21 @@ namespace LuaFramework {
             } else {
                 requests.Add(request);
             }
+#else
+            List<UObject> result = new List<UObject>();
+            for (int i = 0; i < assetNames.Length; i++)
+            {
+                string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
+                GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
+                if (prefab != null) {
+                    /*UnityEngine.Object o = UnityEngine.Object.Instantiate(prefab);
+                    result.Add(o);*/
+                    result.Add(prefab);
+                }
+            }
+
+            action(result.ToArray());            
+#endif
         }
 
         IEnumerator OnLoadAsset<T>(string abName) where T : UObject {

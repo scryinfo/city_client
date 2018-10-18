@@ -34,8 +34,9 @@ public class ActiveLoopScrollRect : MonoBehaviour
         mLoopScrollRect.totalCount = totalCount;
     }
 
-    public void RefillCells()
+    public void RefillCells(int totalCount)
     {
+        mLoopScrollRect.totalCount = totalCount;
         mLoopScrollRect.RefreshCells();
     }
 }

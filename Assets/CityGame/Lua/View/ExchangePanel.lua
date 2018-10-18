@@ -19,6 +19,8 @@ function ExchangePanel.Awake(obj)
 end
 
 function ExchangePanel.InitPanel()
+    this.noTipText = transform:Find("noTipText"):GetComponent("Text");
+
     this.quotesToggle = transform:Find("toggleRoot/quotes"):GetComponent("Toggle");
     this.quotesOpen = transform:Find("toggleRoot/quotes/open");
     this.quotesClose = transform:Find("toggleRoot/quotes/close");

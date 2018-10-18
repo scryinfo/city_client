@@ -32,7 +32,6 @@ function ExchangeCtrl:Awake(go)
     self.gameObject = go
     ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 
-    self.titleType = ExchangeTitleType.Quotes  --默认打开行情
     self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
 
     --行情收藏记录toggle
@@ -65,35 +64,41 @@ function ExchangeCtrl:_initPanelData()
     ExchangePanel._collectToggleState(false)
     ExchangePanel._recordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.zero
+    ExchangeCtrl.titleType = ExchangeTitleType.Quotes  --默认打开行情
 
     --测试创建items
     local sourceInfo = {}
-    sourceInfo[1] = {name = 001, isCollected = false, high = 1000, low = 0.5, volume = 5.003}
-    sourceInfo[2] = {name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
-    sourceInfo[3] = {name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
-    sourceInfo[4] = {name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
-    sourceInfo[5] = {name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 5.003}
+    sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
+    sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
+    sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
+    sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
     ExchangeCtrl.sourceInfo = sourceInfo
+    ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
 
     local loopSource = UnityEngine.UI.LoopScrollDataSource.New()
-    loopSource.mProvideData = ExchangeCtrl.static.ProvideData
-    loopSource.mClearData = ExchangeCtrl.static.ClearData
+    loopSource.mProvideData = ExchangeCtrl.static.QuotesProvideData
+    loopSource.mClearData = ExchangeCtrl.static.QuotesClearData
     ExchangePanel.quotesCollectScroll:ActiveScroll(loopSource, 5);
 
 end
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
     if isOn then
-        if self.titleType ~= ExchangeTitleType.Quotes then
-            --判断是否有数据，没有的话，就显示提示 text
-            --打开详情界面
-
+        if ExchangeCtrl.titleType ~= ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
-            self.titleType = ExchangeTitleType.Quotes
+            ExchangeCtrl.titleType = ExchangeTitleType.Quotes
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+
+            if #ExchangeCtrl.sourceInfo == 0 then
+                return
+            else
+                ExchangePanel.quotesCollectScroll:RefillCells(#ExchangeCtrl.sourceInfo)
+            end
         end
     else
-        if self.titleType == ExchangeTitleType.Quotes then
+        if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.zero
         end
@@ -101,16 +106,21 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
 end
 function ExchangeCtrl:_collectToggleValueChange(isOn)
     if isOn then
-        if self.titleType ~= ExchangeTitleType.Collect then
-            --判断是否有数据，没有的话，就显示提示 text
-            --打开详情界面
-
+        if ExchangeCtrl.titleType ~= ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
-            self.titleType = ExchangeTitleType.Collect
+            ExchangeCtrl.titleType = ExchangeTitleType.Collect
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+            if #ExchangeCtrl.collectDatas == 0 then
+                ExchangePanel.noTipText.text = "Currently no collection!"
+                ExchangePanel.noTipText.transform.localScale = Vector3.one
+                return
+            else
+                ExchangePanel.noTipText.transform.localScale = Vector3.zero
+                ExchangePanel.quotesCollectScroll:RefillCells(#ExchangeCtrl.collectDatas)
+            end
         end
     else
-        if self.titleType == ExchangeTitleType.Collect then
+        if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.zero
         end
@@ -118,16 +128,16 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
 end
 function ExchangeCtrl:_recordToggleValueChange(isOn)
     if isOn then
-        if self.titleType ~= ExchangeTitleType.Record then
+        if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
             --判断是否有数据，没有的话，就显示提示 text
             --打开详情界面
 
             ExchangePanel._recordToggleState(isOn)
-            self.titleType = ExchangeTitleType.Record
+            ExchangeCtrl.titleType = ExchangeTitleType.Record
             ExchangePanel.recordPage.localScale = Vector3.one
         end
     else
-        if self.titleType == ExchangeTitleType.Record then
+        if ExchangeCtrl.titleType == ExchangeTitleType.Record then
             ExchangePanel._recordToggleState(isOn)
             ExchangePanel.recordPage.localScale = Vector3.zero
         end
@@ -136,18 +146,37 @@ end
 ---over
 
 ---滑动复用
-ExchangeCtrl.static.ProvideData = function(transform, idx)
+--行情和收藏的界面
+ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
-    if not ExchangeCtrl.sourceInfo[idx] then
-        return
-    end
-    ExchangeCtrl.sourceInfo[idx].transform = transform
-    --self.itemlist[#self.itemlist+1] = item
+    if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
+        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform, ExchangeCtrl.static.luaBehaviour)
 
-    local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
+    elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
+        --if not ExchangeCtrl.sourceInfo[idx] then
+        --    return
+        --end
+        --ExchangeCtrl.sourceInfo[idx].transform = transform
+        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
+    end
+
 end
 
-ExchangeCtrl.static.ClearData = function(transform)
+ExchangeCtrl.static.QuotesClearData = function(transform)
     --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end
+---over
+
+--获取收藏的数据
+function ExchangeCtrl:_getCollectDatas(totalDatas)
+    local collectDatas = {}
+    for i, data in ipairs(totalDatas) do
+        if data.isCollected then
+            collectDatas[#collectDatas + 1] = data
+        end
+    end
+    return collectDatas
+end
+
+
 

@@ -13,7 +13,7 @@ function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
     self.viewRect = viewRect;
     self.data = data;
 
-    local viewTrans = self.viewRect.transform;
+    local viewTrans = self.viewRect;
     self.nameText = viewTrans:Find("name/nameText"):GetComponent("Text");
     self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image");
     self.collectBtn = viewTrans:Find("name/collectRoot/btn");
@@ -36,35 +36,29 @@ end
 
 --初始化界面
 function ExchangeQuoteItem:_initData()
-    --local data = self.data
-    --self:_setCollectState(data.isCollected)
-    --self.nameText.text = data.name
-    --self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
-    --if data.change >= 0 then
-    --    self.changeText.text = string.format("<color=%s>+%d%%</color>", ExchangeQuotesItem.static.CHANGE_GREEN, data.change)
-    --    --设置箭头位置
-    --    self.lastPriceGreenTran.localScale = Vector3.one
-    --    self.lastPriceRedTran.localScale = Vector3.zero
-    --    local greenPos = self.lastPriceGreenTran.localPosition
-    --    self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, greenPos.y, greenPos.z)
-    --else
-    --    self.changeText.text = string.format("<color=%s>-%d%%</color>", ExchangeQuotesItem.static.CHANGE_RED, data.change)
-    --    --设置箭头位置
-    --    self.lastPriceGreenTran.localScale = Vector3.zero
-    --    self.lastPriceRedTran.localScale = Vector3.one
-    --    local redPos = self.lastPriceRedTran.localPosition
-    --    self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, redPos.y, redPos.z)
-    --end
-    --
-    --self.highText.text = "E"..data.high
-    --self.lowText.text = "E"..data.low
-    --self.volumeText.text = "E"..data.volume
-
-    ---测试
     local data = self.data
     self:_setCollectState(data.isCollected)
     self.nameText.text = data.name
+    self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
+    if data.change >= 0 then
+        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.change)
+        --设置箭头位置
+        self.lastPriceGreenTran.localScale = Vector3.one
+        self.lastPriceRedTran.localScale = Vector3.zero
+        local greenPos = self.lastPriceGreenTran.localPosition
+        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
+    else
+        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.change)
+        --设置箭头位置
+        self.lastPriceGreenTran.localScale = Vector3.zero
+        self.lastPriceRedTran.localScale = Vector3.one
+        local redPos = self.lastPriceRedTran.localPosition
+        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
+    end
 
+    self.highText.text = "E"..data.high
+    self.lowText.text = "E"..data.low
+    self.volumeText.text = "E"..data.volume
 end
 
 --点击打开按钮

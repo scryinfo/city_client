@@ -38,7 +38,7 @@ namespace LuaFramework {
         public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
             //buttons.Add(go.name, luafunc);
-            string eventName = luafunc.GetHashCode().ToString();
+            string eventName = go.name + luafunc.GetHashCode().ToString();
             if (obj != null)
             {
                 eventName += obj.GetHashCode().ToString();
@@ -58,7 +58,7 @@ namespace LuaFramework {
         public void RemoveClick(GameObject go, LuaFunction luafuncToDel, object obj = null)
         {
             if (go == null) return;
-            string eventName = luafuncToDel.GetHashCode().ToString();
+            string eventName = go.name + luafuncToDel.GetHashCode().ToString();
             if (obj != null)
             {
                 eventName += obj.GetHashCode().ToString();

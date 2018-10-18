@@ -16,7 +16,7 @@ function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
     local viewTrans = self.viewRect;
     self.nameText = viewTrans:Find("name/nameText"):GetComponent("Text");
     self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image");
-    self.collectBtn = viewTrans:Find("name/collectRoot/btn");
+    self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button");
     self.collectGrayTran = viewTrans:Find("name/collectRoot/gray");
     self.collectYellowTran = viewTrans:Find("name/collectRoot/yellow");
 
@@ -27,11 +27,14 @@ function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
     self.highText = viewTrans:Find("high/highText"):GetComponent("Text");
     self.lowText = viewTrans:Find("low/lowText"):GetComponent("Text");
     self.volumeText = viewTrans:Find("volume/volumeText"):GetComponent("Text");
-    self.exchangeBtn = viewTrans:Find("exchange/exchangeBtn");
-    self.detailBtn = viewTrans:Find("detailBtn");
+    self.exchangeBtn = viewTrans:Find("exchange/exchangeBtn"):GetComponent("Button");
+    self.detailBtn = viewTrans:Find("detailBtn"):GetComponent("Button");
     self:_initData()
 
-    mainPanelLuaBehaviour:AddClick(self.collectBtn.gameObject, self._clickCollectBtn, self);
+    self.collectBtn.onClick:RemoveAllListeners();
+    self.collectBtn.onClick:AddListener(function ()
+        self:_clickCollectBtn()
+    end)
 end
 
 --初始化界面
@@ -63,12 +66,16 @@ end
 
 --点击打开按钮
 function ExchangeQuoteItem:_clickCollectBtn()
+    self:_setCollectState(not self.data.isCollected)
     if self.data.isCollected then
         --向服务器发送取消收藏的信息
+        log("cycle_w9_exchange01", "取消收藏")
+        self.data.isCollected = false
     else
         --向服务器发送收藏
+        log("cycle_w9_exchange01", "添加收藏")
+        self.data.isCollected = true
     end
-    self:_setCollectState(self.data.isCollected)
 end
 
 function ExchangeQuoteItem:_setCollectState(isCollected)

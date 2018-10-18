@@ -45,7 +45,7 @@ function ExchangeCtrl:Awake(go)
         self:_recordToggleValueChange(isOn)
     end)
 
-    self:_initPanelData()
+    --self:_initPanelData()
 end
 
 function ExchangeCtrl:Refresh()
@@ -59,6 +59,12 @@ function ExchangeCtrl:Close()
 end
 
 function ExchangeCtrl:_initPanelData()
+    --Event.AddListener("c_ExchangeSort", function (sortType, isSmaller)
+    --    self:_exchangeSortByValue(sortType, isSmaller)
+    --end, self)
+    Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    log("cycle_w9_exchange01", "初始化aaaaaaaaaaaaaaaaaaaaaa")
+
     --设置默认行情打开
     ExchangePanel._quotesToggleState(true)
     ExchangePanel._collectToggleState(false)
@@ -143,7 +149,6 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
         end
     end
 end
----over
 
 ---滑动复用
 --行情和收藏的界面
@@ -153,10 +158,6 @@ ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
         local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform, ExchangeCtrl.static.luaBehaviour)
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
-        --if not ExchangeCtrl.sourceInfo[idx] then
-        --    return
-        --end
-        --ExchangeCtrl.sourceInfo[idx].transform = transform
         local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
     end
 
@@ -165,7 +166,21 @@ end
 ExchangeCtrl.static.QuotesClearData = function(transform)
     --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end
----over
+
+---排序
+function ExchangeCtrl:_exchangeSortByValue(sortData)
+    log("cycle_w9_exchange01", "排序啦啦啦")
+    local currentSortDatas = {}
+    if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
+        --ExchangeCtrl.sourceInfo = self:_getSortDatas()
+    elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
+        currentSortDatas = ExchangeCtrl.collectDatas
+    end
+
+
+
+
+end
 
 --获取收藏的数据
 function ExchangeCtrl:_getCollectDatas(totalDatas)
@@ -176,6 +191,49 @@ function ExchangeCtrl:_getCollectDatas(totalDatas)
         end
     end
     return collectDatas
+end
+--sort
+function ExchangeCtrl:_getSortDatas(datas, sortType, isSmaller)
+    local tempDatas = datas
+    if sortType == ExchangeSortItemType.Name then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.name > n.name end)
+        else
+            table.sort(tempDatas, function (m, n) return m.name < n.name end)
+        end
+    elseif sortType == ExchangeSortItemType.High then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.high > n.high end)
+        else
+            table.sort(tempDatas, function (m, n) return m.high < n.high end)
+        end
+    elseif sortType == ExchangeSortItemType.Change then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.change > n.change end)
+        else
+            table.sort(tempDatas, function (m, n) return m.change < n.change end)
+        end
+    elseif sortType == ExchangeSortItemType.LastPrice then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.lastPrice > n.lastPrice end)
+        else
+            table.sort(tempDatas, function (m, n) return m.lastPrice < n.lastPrice end)
+        end
+    elseif sortType == ExchangeSortItemType.Low then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.low > n.low end)
+        else
+            table.sort(tempDatas, function (m, n) return m.low < n.low end)
+        end
+    elseif sortType == ExchangeSortItemType.Volume then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.volume > n.volume end)
+        else
+            table.sort(tempDatas, function (m, n) return m.volume < n.volume end)
+        end
+    end
+
+    return tempDatas
 end
 
 

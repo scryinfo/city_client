@@ -35,8 +35,6 @@ function ExchangePanel.InitPanel()
     this.quotesAndCollectPage = transform:Find("togglePageRoot/quotesAndCollect");  --行情收藏page
 
     this.titleRoot = transform:Find("togglePageRoot/quotesAndCollect/titleRoot");
-    this.sortMgr = ExchangeSortMgr:new(this.titleRoot)
-
     this.quotesCollectScroll = transform:Find("togglePageRoot/quotesAndCollect/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
 end
 

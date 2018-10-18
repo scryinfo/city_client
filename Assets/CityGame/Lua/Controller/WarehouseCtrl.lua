@@ -25,7 +25,8 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.shelfBtn.gameObject,self.OnClick_shelfBtn,self);
     warehouse:AddClick(WarehousePanel.shelfCloseBtn.gameObject,self.OnClick_shelfBtn,self)
     warehouse:AddClick(WarehousePanel.transportBtn.gameObject,self.OnClick_transportBtn,self);
-    warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self)
+    warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self);
+    warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
 end
 
 function WarehouseCtrl:Awake(go)
@@ -47,7 +48,7 @@ function WarehouseCtrl:OnClick_shelfBtn(ins)
     WarehouseCtrl:OnClick_rightShelf(not switchIsShow,0)
 end
 
---右边transport
+--右边Transpor
 function WarehouseCtrl:OnClick_transportBtn(ins)
     WarehouseCtrl:OnClick_rightShelf(not switchIsShow,1)
 end
@@ -61,6 +62,10 @@ end
 function WarehouseCtrl:OnClick_OnNumber(ins)
     WarehousePanel.nowText.text = "By quantity";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
+end
+--跳转选择仓库界面
+function WarehouseCtrl:OnClick_transportopenBtn(ins)
+
 end
 
 function WarehouseCtrl:OnClick_OnSorting(ins)

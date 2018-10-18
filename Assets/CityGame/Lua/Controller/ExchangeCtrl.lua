@@ -11,6 +11,7 @@ ExchangeTitleType =
 }
 
 require('Framework/UI/UIPage')
+require('Logic/ExchangeAbout/ExchangeQuoteItem')
 local class = require 'Framework/class'
 
 ExchangeCtrl = class('ExchangeCtrl',UIPage)
@@ -29,8 +30,7 @@ end
 
 function ExchangeCtrl:Awake(go)
     self.gameObject = go
-    --local luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    --luaBehaviour:AddClick(ExchangePanel.backBtn.gameObject, self._backBtn, self);
+    ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 
     self.titleType = ExchangeTitleType.Quotes  --默认打开行情
     self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
@@ -46,7 +46,11 @@ function ExchangeCtrl:Awake(go)
         self:_recordToggleValueChange(isOn)
     end)
 
-    self:_initTitleToggle()
+    self:_initPanelData()
+end
+
+function ExchangeCtrl:Refresh()
+    self:_initPanelData()
 end
 
 function ExchangeCtrl:Close()
@@ -55,15 +59,29 @@ function ExchangeCtrl:Close()
     ExchangePanel.recordToggle.onValueChanged:RemoveAllListeners();
 end
 
-function ExchangeCtrl:_initTitleToggle()
+function ExchangeCtrl:_initPanelData()
+    --设置默认行情打开
     ExchangePanel._quotesToggleState(true)
     ExchangePanel._collectToggleState(false)
     ExchangePanel._recordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.zero
 
+    --测试创建items
+    local sourceInfo = {}
+    sourceInfo[1] = {name = 001, isCollected = false, high = 1000, low = 0.5, volume = 5.003}
+    sourceInfo[2] = {name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
+    sourceInfo[3] = {name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
+    sourceInfo[4] = {name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
+    sourceInfo[5] = {name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    ExchangeCtrl.sourceInfo = sourceInfo
+
+    local loopSource = UnityEngine.UI.LoopScrollDataSource.New()
+    loopSource.mProvideData = ExchangeCtrl.static.ProvideData
+    loopSource.mClearData = ExchangeCtrl.static.ClearData
+    ExchangePanel.quotesCollectScroll:ActiveScroll(loopSource, 5);
 
 end
-
+---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
     if isOn then
         if self.titleType ~= ExchangeTitleType.Quotes then
@@ -115,8 +133,21 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
         end
     end
 end
+---over
 
-function ExchangeCtrl:_tempDataTest()
+---滑动复用
+ExchangeCtrl.static.ProvideData = function(transform, idx)
+    idx = idx + 1
+    if not ExchangeCtrl.sourceInfo[idx] then
+        return
+    end
+    ExchangeCtrl.sourceInfo[idx].transform = transform
+    --self.itemlist[#self.itemlist+1] = item
 
+    local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
+end
+
+ExchangeCtrl.static.ClearData = function(transform)
+    --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end
 

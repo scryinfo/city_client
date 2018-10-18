@@ -4,11 +4,12 @@
 --- DateTime: 2018/10/15 17:19
 ---交易所行情item
 local class = require 'Framework/class'
-ExchangeQuotesItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
-ExchangeQuotesItem.static.CHANGE_RED = "#E42E2E"
+ExchangeQuoteItem = class('ExchangeQuoteItem')
+ExchangeQuoteItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
+ExchangeQuoteItem.static.CHANGE_RED = "#E42E2E"
 
 --初始化方法
-function ExchangeQuotesItem:initialize(data, viewRect, mainPanelLuaBehaviour)
+function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
     self.viewRect = viewRect;
     self.data = data;
 
@@ -34,35 +35,40 @@ function ExchangeQuotesItem:initialize(data, viewRect, mainPanelLuaBehaviour)
 end
 
 --初始化界面
-function ExchangeQuotesItem:_initData()
+function ExchangeQuoteItem:_initData()
+    --local data = self.data
+    --self:_setCollectState(data.isCollected)
+    --self.nameText.text = data.name
+    --self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
+    --if data.change >= 0 then
+    --    self.changeText.text = string.format("<color=%s>+%d%%</color>", ExchangeQuotesItem.static.CHANGE_GREEN, data.change)
+    --    --设置箭头位置
+    --    self.lastPriceGreenTran.localScale = Vector3.one
+    --    self.lastPriceRedTran.localScale = Vector3.zero
+    --    local greenPos = self.lastPriceGreenTran.localPosition
+    --    self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, greenPos.y, greenPos.z)
+    --else
+    --    self.changeText.text = string.format("<color=%s>-%d%%</color>", ExchangeQuotesItem.static.CHANGE_RED, data.change)
+    --    --设置箭头位置
+    --    self.lastPriceGreenTran.localScale = Vector3.zero
+    --    self.lastPriceRedTran.localScale = Vector3.one
+    --    local redPos = self.lastPriceRedTran.localPosition
+    --    self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, redPos.y, redPos.z)
+    --end
+    --
+    --self.highText.text = "E"..data.high
+    --self.lowText.text = "E"..data.low
+    --self.volumeText.text = "E"..data.volume
+
+    ---测试
     local data = self.data
     self:_setCollectState(data.isCollected)
     self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
-    if data.change >= 0 then
-        self.changeText.text = string.format("<color=%s>+%d%%</color>", ExchangeQuotesItem.static.CHANGE_GREEN, data.change)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.one
-        self.lastPriceRedTran.localScale = Vector3.zero
-        local greenPos = self.lastPriceGreenTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, greenPos.y, greenPos.z)
-    else
-        self.changeText.text = string.format("<color=%s>-%d%%</color>", ExchangeQuotesItem.static.CHANGE_RED, data.change)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.zero
-        self.lastPriceRedTran.localScale = Vector3.one
-        local redPos = self.lastPriceRedTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.new(-58 + self.changeText.preferredWidth, redPos.y, redPos.z)
-    end
-
-    self.highText.text = "E"..data.high
-    self.lowText.text = "E"..data.low
-    self.volumeText.text = "E"..data.volume
 
 end
 
 --点击打开按钮
-function ExchangeQuotesItem:_clickCollectBtn()
+function ExchangeQuoteItem:_clickCollectBtn()
     if self.data.isCollected then
         --向服务器发送取消收藏的信息
     else
@@ -71,7 +77,7 @@ function ExchangeQuotesItem:_clickCollectBtn()
     self:_setCollectState(self.data.isCollected)
 end
 
-function ExchangeQuotesItem:_setCollectState(isCollected)
+function ExchangeQuoteItem:_setCollectState(isCollected)
     if isCollected then
         self.collectYellowTran.localScale = Vector3.one;
         self.collectGrayTran.localScale = Vector3.zero;

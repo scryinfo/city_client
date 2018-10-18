@@ -48,8 +48,7 @@ end
 
 --点击确定--
 function ServerListCtrl:OnOK()
-    --UnitTest.Exec_now("rodger_w8_GameMainInterface", "OnOK_self",self)
-    Event.Brocast("m_GsOK");
+    UnitTest.Exec_now("rodger_w8_GameMainInterface", "OnOK_self",self)
 end
 
 function ServerListCtrl:c_GsCreateRole()

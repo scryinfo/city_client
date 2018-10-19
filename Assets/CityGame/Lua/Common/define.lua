@@ -72,6 +72,7 @@ PanelNames = {
 	"HousePanel",  --住宅
 
 	"MaterialPanel", --原料厂
+	"ChooseWarehousePanel",  --运输选择仓库
 	"WagesAdjustBoxPanle",	--员工工资调整
 	"AdjustProductionLinePanel",  --调整生产线
 	"TestExchangePanel",  --交易所测试

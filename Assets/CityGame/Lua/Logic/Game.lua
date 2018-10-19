@@ -77,4 +77,9 @@ function Game.OnPostInitOK()
 
     --单元测试入口
     lu.LuaUnit.run()
+
+    --延迟触发的测试分组
+    UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
+    UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
+    UnitTest.Exec_now("fisher_week9_ShelfGoodsItem", "c_MaterialModel_ShowPage",self)
 end

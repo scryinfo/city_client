@@ -13,6 +13,7 @@ require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
+require "Controller/ChooseWarehouseCtrl"
 
 require "Model/LoginModel"
 require "Controller/GroundAuctionCtrl"

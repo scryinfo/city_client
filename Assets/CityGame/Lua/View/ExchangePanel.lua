@@ -31,13 +31,25 @@ function ExchangePanel.InitPanel()
     this.recordOpen = transform:Find("toggleRoot/record/open");
     this.recordClose = transform:Find("toggleRoot/record/close");
 
-    this.recordPage = transform:Find("togglePageRoot/record");  --记录page
     this.quotesAndCollectPage = transform:Find("togglePageRoot/quotesAndCollect");  --行情收藏page
-
     this.titleRoot = transform:Find("togglePageRoot/quotesAndCollect/titleRoot");
     this.quotesCollectScroll = transform:Find("togglePageRoot/quotesAndCollect/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
-end
 
+    this.recordPage = transform:Find("togglePageRoot/record");  --记录page
+    this.entrustmentToggle = transform:Find("togglePageRoot/record/recordToggleRoot/entrustment"):GetComponent("Toggle");
+    this.entrustmentShow = transform:Find("togglePageRoot/record/recordToggleRoot/entrustment/show");
+    this.selfRecordToggle = transform:Find("togglePageRoot/record/recordToggleRoot/record"):GetComponent("Toggle");
+    this.selfRecordShow = transform:Find("togglePageRoot/record/recordToggleRoot/record/show");
+    this.cityRecordToggle = transform:Find("togglePageRoot/record/recordToggleRoot/cityRecord"):GetComponent("Toggle");
+    this.cityRecordShow = transform:Find("togglePageRoot/record/recordToggleRoot/cityRecord/show");
+
+    this.entrustmentScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/entrustment/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
+    this.selfRecordScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/record/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
+    this.cityRecordScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/cityrecord/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
+
+
+end
+---行情收藏记录toggle
 function ExchangePanel._quotesToggleState(isOn)
     if isOn then
         this.quotesOpen.localScale = Vector3.one
@@ -65,6 +77,29 @@ function ExchangePanel._recordToggleState(isOn)
         this.recordClose.localScale = Vector3.one
     end
 end
+---记录部分 --当前成交进度，成交记录，全城成交记录
+function ExchangePanel._entrustmentToggleState(isOn)
+    if isOn then
+        this.entrustmentShow.localScale = Vector3.one
+    else
+        this.entrustmentShow.localScale = Vector3.zero
+    end
+end
+function ExchangePanel._selfRecordToggleState(isOn)
+    if isOn then
+        this.selfRecordShow.localScale = Vector3.one
+    else
+        this.selfRecordShow.localScale = Vector3.zero
+    end
+end
+function ExchangePanel._cityRecordToggleState(isOn)
+    if isOn then
+        this.cityRecordShow.localScale = Vector3.one
+    else
+        this.cityRecordShow.localScale = Vector3.zero
+    end
+end
+
 
 
 

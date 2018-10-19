@@ -9,6 +9,12 @@ ExchangeTitleType =
     Collect = 2,
     Record = 3,
 }
+ExchangeRecordTitleType =
+{
+    Entrustment = 1,  --当前成交进度
+    SelfRecord = 2,
+    CityRecord = 3,
+}
 
 require('Framework/UI/UIPage')
 require('Logic/ExchangeAbout/ExchangeQuoteItem')
@@ -44,6 +50,10 @@ function ExchangeCtrl:Awake(go)
     ExchangePanel.recordToggle.onValueChanged:AddListener(function (isOn)
         self:_recordToggleValueChange(isOn)
     end)
+    --记录总toggle
+    ExchangePanel.entrustmentToggle.onValueChanged:AddListener(function (isOn)
+        self:_entrustmentToggleValueChange(isOn)
+    end)
 end
 
 function ExchangeCtrl:Refresh()
@@ -65,6 +75,7 @@ function ExchangeCtrl:_initPanelData()
     ExchangePanel._recordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.zero
     ExchangeCtrl.titleType = ExchangeTitleType.Quotes  --默认打开行情
+    ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
 
     --测试创建items
     local sourceInfo = {}
@@ -136,16 +147,71 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
             --判断是否有数据，没有的话，就显示提示 text
             --打开详情界面
-
             ExchangePanel._recordToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Record
-            ExchangePanel.recordPage.localScale = Vector3.one
+            self:_recordRootInit()
+
+            --请求服务器成交进度信息
         end
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Record then
             ExchangePanel._recordToggleState(isOn)
             ExchangePanel.recordPage.localScale = Vector3.zero
         end
+    end
+end
+---记录界面的toggle
+function ExchangeCtrl:_recordRootInit()
+    ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
+    ExchangePanel._entrustmentToggleState(true)
+    ExchangePanel._selfRecordToggleState(false)
+    ExchangePanel._cityRecordToggleState(false)
+    ExchangePanel.recordPage.localScale = Vector3.one
+
+    local entrustmentInfo = {}
+    entrustmentInfo[1] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = false,totalCount = 1000, remainCount = 110, currentValue = 0.5}
+    entrustmentInfo[2] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , totalCount = 1230, remainCount = 998, currentValue = 1.5}
+    entrustmentInfo[3] = {quantity = -0.53, unitPrice = 503, name = 003, isSell = false,totalCount = 1233, remainCount = 75, currentValue = 15}
+    entrustmentInfo[4] = {quantity = 3.68, unitPrice = 126, name = 004, isSell = false, totalCount = 1234, remainCount = 1000, currentValue = 12.5}
+    entrustmentInfo[5] = {quantity = -5.2, unitPrice = 428, name = 005, isSell = false, totalCount = 1005, remainCount = 320, currentValue = 45.5}
+    entrustmentInfo[6] = {quantity = 15.03, unitPrice = 998, name = 006, isSell = true, totalCount = 1587, remainCount = 1   , currentValue = 99}
+    ExchangeCtrl.entrustmentInfo = entrustmentInfo
+    if #ExchangeCtrl.entrustmentInfo == 0 then
+        ExchangePanel.noTipText.text = "No delegation at present!"
+        ExchangePanel.noTipText.transform.localScale = Vector3.one
+    else
+        ExchangePanel.noTipText.transform.localScale = Vector3.zero
+    end
+
+    local entrustmentSource = UnityEngine.UI.LoopScrollDataSource.New()  --滑动复用部分
+    entrustmentSource.mProvideData = ExchangeCtrl.static.EntrustmentProvideData
+    entrustmentSource.mClearData = ExchangeCtrl.static.EntrustmentClearData
+    ExchangePanel.quotesCollectScroll:ActiveScroll(entrustmentSource, 6);
+
+end
+
+function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
+    if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
+        return
+    end
+
+    if isOn then
+        --if ExchangeCtrl.titleType ~= ExchangeTitleType.Quotes then
+        --    ExchangePanel._quotesToggleState(isOn)
+        --    ExchangeCtrl.titleType = ExchangeTitleType.Quotes
+        --    ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+        --
+        --    if #ExchangeCtrl.sourceInfo == 0 then
+        --        return
+        --    else
+        --        ExchangePanel.quotesCollectScroll:RefillCells(#ExchangeCtrl.sourceInfo)
+        --    end
+        --end
+    else
+        --if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
+        --    ExchangePanel._quotesToggleState(isOn)
+        --    ExchangePanel.quotesAndCollectPage.localScale = Vector3.zero
+        --end
     end
 end
 
@@ -161,8 +227,17 @@ ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     end
 
 end
-
 ExchangeCtrl.static.QuotesClearData = function(transform)
+    --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
+end
+
+--交易委托
+ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
+    idx = idx + 1
+    --local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform, ExchangeCtrl.static.luaBehaviour)
+
+end
+ExchangeCtrl.static.EntrustmentClearData = function(transform)
     --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end
 
@@ -188,7 +263,7 @@ function ExchangeCtrl:_getCollectDatas(totalDatas)
     end
     return collectDatas
 end
---sort
+--根据属性排序table
 function ExchangeCtrl:_getSortDatas(datas, sortData)
     local tempDatas = datas
     local sortType = sortData.sortItemType

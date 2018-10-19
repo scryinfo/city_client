@@ -28,8 +28,6 @@ function MaterialCtrl:OnCreate(obj)
     local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran,MaterialPanel.rightRootTran,ctrl,self.materialData);
 end
 
-TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
-
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)

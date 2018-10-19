@@ -44,8 +44,6 @@ function ExchangeCtrl:Awake(go)
     ExchangePanel.recordToggle.onValueChanged:AddListener(function (isOn)
         self:_recordToggleValueChange(isOn)
     end)
-
-    --self:_initPanelData()
 end
 
 function ExchangeCtrl:Refresh()
@@ -59,11 +57,7 @@ function ExchangeCtrl:Close()
 end
 
 function ExchangeCtrl:_initPanelData()
-    --Event.AddListener("c_ExchangeSort", function (sortType, isSmaller)
-    --    self:_exchangeSortByValue(sortType, isSmaller)
-    --end, self)
     Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
-    log("cycle_w9_exchange01", "初始化aaaaaaaaaaaaaaaaaaaaaa")
 
     --设置默认行情打开
     ExchangePanel._quotesToggleState(true)
@@ -74,20 +68,22 @@ function ExchangeCtrl:_initPanelData()
 
     --测试创建items
     local sourceInfo = {}
-    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 5.003}
+    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
     sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
     sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
     sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
     sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
     ExchangeCtrl.sourceInfo = sourceInfo
     ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
 
-    local loopSource = UnityEngine.UI.LoopScrollDataSource.New()
+    local loopSource = UnityEngine.UI.LoopScrollDataSource.New()  --滑动复用部分
     loopSource.mProvideData = ExchangeCtrl.static.QuotesProvideData
     loopSource.mClearData = ExchangeCtrl.static.QuotesClearData
-    ExchangePanel.quotesCollectScroll:ActiveScroll(loopSource, 5);
+    ExchangePanel.quotesCollectScroll:ActiveScroll(loopSource, 6);
 
+    self.sortMgr:_reSetSortData()  --按照默认排序
 end
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
@@ -96,6 +92,7 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
             ExchangePanel._quotesToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Quotes
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+            self.sortMgr:_reSetSortData()  --按照默认排序
 
             if #ExchangeCtrl.sourceInfo == 0 then
                 return
@@ -116,6 +113,8 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
             ExchangePanel._collectToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Collect
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+            self.sortMgr:_reSetSortData()  --按照默认排序
+
             if #ExchangeCtrl.collectDatas == 0 then
                 ExchangePanel.noTipText.text = "Currently no collection!"
                 ExchangePanel.noTipText.transform.localScale = Vector3.one

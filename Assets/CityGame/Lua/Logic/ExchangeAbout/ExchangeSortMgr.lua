@@ -5,6 +5,7 @@
 ---管理行情&收藏界面的排序
 ExchangeSortItemType =
 {
+    Default = 0,
     Name = 1,
     Change = 2,
     High = 3,
@@ -54,13 +55,23 @@ function ExchangeSortMgr:initialize(transform)
     end)
 
     self.sortData = {}
-    self.sortData.isSmaller = true
-    self.sortData.sortItemType = ExchangeSortItemType.Name
-    self.nameToggleItem:BiggerShow()
 end
 --获取当前排序的数据，按什么排序以及是由大到小还是由小到大
 function ExchangeSortMgr:_getCurrentSortData()
     return self.sortData
+end
+--重置为默认排序
+function ExchangeSortMgr:_reSetSortData()
+    self.sortData.sortItemType = ExchangeSortItemType.Default
+    self.volumeToggle.isOn = false
+
+    self:_nameToggleValueChange(false)
+    self:_changeToggleValueChange(false)
+    self:_highToggleValueChange(false)
+    self:_lowToggleValueChange(false)
+    self:_lastPriceToggleValueChange(false)
+
+    self.volumeToggle.isOn = true
 end
 
 ---行情排序toggle
@@ -82,9 +93,7 @@ function ExchangeSortMgr:_nameToggleValueChange(isOn)
             Event.Brocast("c_onExchangeSort", self.sortData)
         end
     else
-        if self.sortData.sortItemType == ExchangeSortItemType.Name then
-            self.nameToggleItem:CommonShow()
-        end
+        self.nameToggleItem:CommonShow()
     end
 end
 --change
@@ -105,9 +114,7 @@ function ExchangeSortMgr:_changeToggleValueChange(isOn)
             Event.Brocast("c_onExchangeSort", self.sortData)
         end
     else
-        if self.sortData.sortItemType == ExchangeSortItemType.Change then
-            self.changeToggleItem:CommonShow()
-        end
+        self.changeToggleItem:CommonShow()
     end
 end
 --high
@@ -128,19 +135,71 @@ function ExchangeSortMgr:_highToggleValueChange(isOn)
             Event.Brocast("c_onExchangeSort", self.sortData)
         end
     else
-        if self.sortData.sortItemType == ExchangeSortItemType.High then
-            self.highToggleItem:CommonShow()
-        end
+        self.highToggleItem:CommonShow()
     end
 end
 --low
 function ExchangeSortMgr:_lowToggleValueChange(isOn)
+    if isOn then
+        if self.sortData.sortItemType ~= ExchangeSortItemType.Low then
+            self.lowToggleItem:BiggerShow()
+            self.sortData.isSmaller = true
+            self.sortData.sortItemType = ExchangeSortItemType.Low
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        else
+            if self.sortData.isSmaller then
+                self.lowToggleItem:SmallerShow()
+            else
+                self.lowToggleItem:BiggerShow()
+            end
+            self.sortData.isSmaller = not self.sortData.isSmaller
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        end
+    else
+        self.lowToggleItem:CommonShow()
+    end
 end
 --lastPrice
 function ExchangeSortMgr:_lastPriceToggleValueChange(isOn)
+    if isOn then
+        if self.sortData.sortItemType ~= ExchangeSortItemType.LastPrice then
+            self.lastPriceToggleItem:BiggerShow()
+            self.sortData.isSmaller = true
+            self.sortData.sortItemType = ExchangeSortItemType.LastPrice
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        else
+            if self.sortData.isSmaller then
+                self.lastPriceToggleItem:SmallerShow()
+            else
+                self.lastPriceToggleItem:BiggerShow()
+            end
+            self.sortData.isSmaller = not self.sortData.isSmaller
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        end
+    else
+        self.lastPriceToggleItem:CommonShow()
+    end
 end
 --volume
 function ExchangeSortMgr:_volumeToggleValueChange(isOn)
+    if isOn then
+        if self.sortData.sortItemType ~= ExchangeSortItemType.Volume then
+            self.volumeToggleItem:BiggerShow()
+            self.sortData.isSmaller = true
+            self.sortData.sortItemType = ExchangeSortItemType.Volume
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        else
+            if self.sortData.isSmaller then
+                self.volumeToggleItem:SmallerShow()
+            else
+                self.volumeToggleItem:BiggerShow()
+            end
+            self.sortData.isSmaller = not self.sortData.isSmaller
+            Event.Brocast("c_onExchangeSort", self.sortData)
+        end
+    else
+        self.volumeToggleItem:CommonShow()
+    end
 end
 
 

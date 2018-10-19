@@ -288,6 +288,13 @@ end
 function UIPage:setPosition(x,y)
     self.offset.x = x
     self.offset.y = y
+    if self.transform then
+        local rect = self.transform:GetComponent("RectTransform");
+        if rect then
+            rect:DOAnchorPosX(self.offset.x, 0)
+            rect:DOAnchorPosY(self.offset.y, 0)
+        end
+    end
 end
 
 function UIPage:ClosePage()

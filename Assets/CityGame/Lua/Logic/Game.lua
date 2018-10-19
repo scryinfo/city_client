@@ -19,7 +19,7 @@ require "Framework/NPC"
 require "Framework/DroppedItem"
 
 require "Common/functions"
-require "Controller/LoginCtrl"
+--require "Controller/LoginCtrl"
 require "Logic/CtrlManager"
 require "Logic/World"
 
@@ -46,21 +46,22 @@ function Game.InitControllers()
     --for i = 1, #CtrlNames do
     --    require ("Controller/"..tostring(CtrlNames[i]))
     --end
-    --AutoRequire.getInstance().require("Controller")
+    AutoRequire.getInstance():require("Assets/CityGame/Lua/Controller")
 end
 
 function Game.InitModels()
     --for i = 1, #ModelNames do
     --    require ("Model/"..tostring(ModelNames[i]))
     --end
-    --AutoRequire.getInstance().require("Model")
+    AutoRequire.getInstance():require("Assets/CityGame/Lua/Model")
 end
 
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     --注册LuaView--
     this.InitViewPanels();
-
+    this.InitControllers();
+    this.InitModels();
     CtrlManager.Init();
     local ctrl = CtrlManager.GetCtrl(CtrlNames.Login);
     if ctrl ~= nil then

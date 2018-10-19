@@ -1,6 +1,6 @@
 require "Common/define"
-require('Controller/TopBarCtrl')
-require('Controller/MainPageCtrl')
+--require('Controller/TopBarCtrl')
+--require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
 
 UnitTest = require ('test/testFrameWork/UnitTest')

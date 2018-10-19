@@ -5,7 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("fisher_week9_ShelfGoodsItem") --激活测试组
+TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
@@ -29,6 +29,7 @@ require "Logic/CtrlManager"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
+require ("test/test_memory")
 require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
@@ -158,6 +159,7 @@ end)
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     local info = {}
     UIPage:ShowPage(HouseCtrl, info)
+
     log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
 end)
 

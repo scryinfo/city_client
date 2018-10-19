@@ -44,6 +44,11 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+
+	--启用 c_AddClick_self 单元测试
+	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
+	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
+	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
 
 --关闭事件--
@@ -161,8 +166,8 @@ function LoginCtrl:OnClickTest1(obj)
 	local xxx1  = xxx
 end
 
-TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
---TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
+TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")

@@ -11,7 +11,6 @@ function TransportBoxPanel.Awake(obj)
     this.InitPanel();
 end
 function TransportBoxPanel.InitPanel()
-    --this.nowText = transform:Find("Button/Sorting/nowText"):GetComponent("Text");
     this.confirmBtn = transform:Find("box_bg/confirmBtn");
     this.closeBtn = transform:Find("box_bg/closeBtn");
     this.fromName = transform:Find("box_bg/from/fromName"):GetComponent("Text");   --出发

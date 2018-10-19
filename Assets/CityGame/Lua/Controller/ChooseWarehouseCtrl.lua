@@ -69,3 +69,7 @@ function ChooseWarehouseCtrl:OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
+
+function ChooseWarehouseCtrl:Refresh()
+
+end

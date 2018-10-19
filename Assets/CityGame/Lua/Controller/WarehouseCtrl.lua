@@ -27,6 +27,7 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportBtn.gameObject,self.OnClick_transportBtn,self);
     warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self);
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
+    warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
 end
 
 function WarehouseCtrl:Awake(go)
@@ -67,7 +68,10 @@ end
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
     UIPage:ShowPage(ChooseWarehouseCtrl);
 end
-
+--运输确定
+function WarehouseCtrl:OnClick_transportConfirmBtn()
+    UIPage:ShowPage(TransportBoxCtrl);
+end
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end

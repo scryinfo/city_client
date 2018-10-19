@@ -13,8 +13,9 @@ end
 
 function AdjustProductionLineCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    adjustLine = self.gameObject:GetComponent('LuaBehaviour')
-    adjustLine:AddClick(AdjustProductionLinePanel.returnBtn,self.OnClick_returnBtn);
+    local adjustLine = self.gameObject:GetComponent('LuaBehaviour')
+    adjustLine:AddClick(AdjustProductionLinePanel.returnBtn,self.OnClick_returnBtn,self);
+
 end
 
 function AdjustProductionLineCtrl:Awake(go)

@@ -169,17 +169,14 @@ end
 
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
-    log("cycle_w9_exchange01", "排序啦啦啦")
-    local currentSortDatas = {}
+    --log("cycle_w9_exchange01", "排序啦啦啦")
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
-        --ExchangeCtrl.sourceInfo = self:_getSortDatas()
+        ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
+        ExchangePanel.quotesCollectScroll:RefillCells(#ExchangeCtrl.sourceInfo)
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
-        currentSortDatas = ExchangeCtrl.collectDatas
+        ExchangeCtrl.collectDatas = self:_getSortDatas(ExchangeCtrl.collectDatas, sortData)
+        ExchangePanel.quotesCollectScroll:RefillCells(#ExchangeCtrl.collectDatas)
     end
-
-
-
-
 end
 
 --获取收藏的数据
@@ -193,8 +190,10 @@ function ExchangeCtrl:_getCollectDatas(totalDatas)
     return collectDatas
 end
 --sort
-function ExchangeCtrl:_getSortDatas(datas, sortType, isSmaller)
+function ExchangeCtrl:_getSortDatas(datas, sortData)
     local tempDatas = datas
+    local sortType = sortData.sortItemType
+    local isSmaller = sortData.isSmaller
     if sortType == ExchangeSortItemType.Name then
         if isSmaller then
             table.sort(tempDatas, function (m, n) return m.name > n.name end)

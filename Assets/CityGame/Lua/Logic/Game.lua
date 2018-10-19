@@ -1,4 +1,6 @@
 Event = require 'events'
+local AutoRequire = require "Framework/AutoRequire"
+
 --调试信息
 require("Dbg")
 require('TestGroup')
@@ -33,9 +35,25 @@ local gameObject;
 local WWW = UnityEngine.WWW;
 
 function Game.InitViewPanels()
-	for i = 1, #PanelNames do
-		require ("View/"..tostring(PanelNames[i]))
-	end
+    --AutoRequire.getInstance():require("View")
+    --for i = 1, #PanelNames do
+    --		--require ("View/"..tostring(PanelNames[i]))
+    --    --end
+    AutoRequire.getInstance():require("Assets/CityGame/Lua/View")
+end
+
+function Game.InitControllers()
+    --for i = 1, #CtrlNames do
+    --    require ("Controller/"..tostring(CtrlNames[i]))
+    --end
+    --AutoRequire.getInstance().require("Controller")
+end
+
+function Game.InitModels()
+    --for i = 1, #ModelNames do
+    --    require ("Model/"..tostring(ModelNames[i]))
+    --end
+    --AutoRequire.getInstance().require("Model")
 end
 
 --初始化完成，发送链接服务器信息--

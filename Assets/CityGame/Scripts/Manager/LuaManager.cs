@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using LuaInterface;
 using City;
+using System.Text;
 
 namespace LuaFramework {
     public class LuaManager : Manager {
@@ -28,6 +29,7 @@ namespace LuaFramework {
             L.BeginModule(null);
             L.BeginModule("CityLuaUtilExt");
             L.RegFunction("bufferToString", bufferToString);
+            L.RegFunction("charsToString", charsToString);
             L.EndModule();
             L.EndModule();
         }
@@ -42,6 +44,32 @@ namespace LuaFramework {
                 int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
                 byte[] o = obj.readBytesString(arg0);
                 LuaDLL.lua_pushlstring(L, o, o.Length);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                return LuaDLL.toluaL_exception(L, e);
+            }
+        }
+
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int charsToString(IntPtr L)
+        {
+            try
+            {
+                ToLua.CheckArgsCount(L, 2);
+                int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
+                //char[] chars = (char[])ToLua.CheckObject<char[]>(L, 1);
+                //char[] arg1 = ToLua.CheckParamsChar(L, 1, arg0 - 1);
+                //string[] arg1 = ToLua.CheckParamsString(L, 1, arg0 - 1);
+                string arg1 = ToLua.CheckString(L, 1);
+                StringBuilder sb = new StringBuilder();
+                /*foreach (char c in arg1)
+                {
+                    sb.Append(c);
+                }
+                string s = sb.ToString();
+                LuaDLL.lua_pushstring(L, s);*/
                 return 1;
             }
             catch (Exception e)
@@ -87,13 +115,16 @@ namespace LuaFramework {
         /// </summary>
         void OpenLibs()
         {
-            lua.OpenLibs(LuaDLL.luaopen_pb);
+            lua.OpenLibs(LuaDLL.luaopen_pb);            
                       
             lua.OpenLibs(LuaDLL.luaopen_lpeg);
             lua.OpenLibs(LuaDLL.luaopen_bit);
             lua.OpenLibs(LuaDLL.luaopen_socket_core);
 
             this.OpenCJson();
+
+            lua.OpenLibs(LuaDLL.luaopen_lfs);
+            lua.LuaSetGlobal("lfs");
 
             lua.OpenLibs(LuaDLL.luaopen_pbl);
             lua.LuaSetGlobal("pbl");

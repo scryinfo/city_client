@@ -76,3 +76,9 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+
+function file_exists(path)
+	local file = io.open(path, "rb")
+	if file then file:close() end
+	return file ~= nil
+end

@@ -24,7 +24,6 @@ CtrlNames = {
 	House = "HouseCtrl",  --住宅
 
 	Material = "MaterialCtrl", --原料厂
-
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 
@@ -73,6 +72,8 @@ PanelNames = {
 
 	"MaterialPanel", --原料厂
 	"ChooseWarehousePanel",  --运输选择仓库
+	"TransportBoxPanel",   --确定运输弹框
+	"DETAILSBoxPanel",   --商品详情弹框
 	"WagesAdjustBoxPanle",	--员工工资调整
 	"AdjustProductionLinePanel",  --调整生产线
 	"TestExchangePanel",  --交易所测试

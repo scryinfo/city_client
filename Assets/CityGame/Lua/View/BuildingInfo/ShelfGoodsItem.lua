@@ -15,16 +15,22 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.numberText = self.prefab.transform:Find("details/numberText"):GetComponent("Text");  --物品数量
     self.moneyText = self.prefab.transform:Find("moneyImg/moneyText"):GetComponent("Text");  --物品价格
     self.XBtn = self.prefab.transform:Find("XBtn");  --删除按钮
+    self.detailsBtn = self.prefab.transform:Find("detailsBtn");  --点击商品查看详情
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
     self.moneyText.text = goodsDataInfo.money
-    self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnXBtnClick, self);
+
+    self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
+    self._luabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self);
 
 end
 --删除
-function ShelfGoodsItem:OnXBtnClick(go)
+function ShelfGoodsItem:OnClicl_XBtn(go)
     log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
     go.manager:_deleteGoods(go)
+end
+function ShelfGoodsItem:OnClick_detailsBtn()
+    UIPage:ShowPage(DETAILSBoxCtrl);
 end
 --删除后刷新ID及刷新显示
 function ShelfGoodsItem:RefreshID(id)

@@ -61,7 +61,6 @@ function ShelfGoodsMgr:_deleteGoods(ins)
         i = i + 1
     end
 end
-
 --生成预制
 function ShelfGoodsMgr:_creatGoods(path,parent)
     local prefab = UnityEngine.Resources.Load(path);

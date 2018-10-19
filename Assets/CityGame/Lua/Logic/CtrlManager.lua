@@ -14,6 +14,8 @@ require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
 require "Controller/ChooseWarehouseCtrl"
+require "Controller/TransportBoxCtrl"
+require "Controller/DETAILSBoxCtrl"
 
 require "Model/LoginModel"
 require "Controller/GroundAuctionCtrl"

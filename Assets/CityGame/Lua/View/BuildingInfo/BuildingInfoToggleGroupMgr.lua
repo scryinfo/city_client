@@ -44,7 +44,7 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
     self.rightData = {}
 
     if buildingData.buildingType == BuildingType.House then
-        --self:_creatHouseInfo()
+        self:_creatHouseInfo()
     elseif buildingData.buildingType == BuildingType.MaterialFactory then
         self:_creatMaterialInfo()
     end

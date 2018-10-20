@@ -170,7 +170,13 @@ BuildingType =
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
 }
-
+--仓库 --货架 --运输(通用)
+BuildingInType =
+{
+	Shelf = 0,  --货架
+	Warehouse = 1,  --仓库
+	Transport = 2,  --运输
+}
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

@@ -87,12 +87,39 @@ namespace LuaFramework {
             return null;
         }
 
+        IEnumerator NoneBundleLoadRes(string resPath, Action<UObject[]> action = null )
+        {
+            List<UObject> result = new List<UObject>();
+            ResourceRequest r = Resources.LoadAsync(resPath);
+            while (!r.isDone)
+            {
+                yield return null;
+            }
+            if(r.asset != null)
+            {
+                result.Add(r.asset);                
+            }
+            action(result.ToArray());
+        }
         /// <summary>
         /// 载入素材
         /// </summary>
         void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null) where T : UObject {
 
-#if CLOSE_RES_BUNDELMODE
+#if CLOSE_RES_BUNDELMODE        
+        for (int i = 0; i < assetNames.Length; i++)
+        {
+            string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
+                //同步加载
+                /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
+                if (prefab != null) {                
+                    result.Add(prefab);
+                }*/
+                //异步加载
+                StartCoroutine(NoneBundleLoadRes(realpath, action));                
+        }
+#else
+
             abName = GetRealAssetPath(abName);
 
             LoadAssetRequest request = new LoadAssetRequest();
@@ -102,34 +129,17 @@ namespace LuaFramework {
             request.sharpFunc = action;
 
             List<LoadAssetRequest> requests = null;
-            if (!m_LoadRequests.TryGetValue(abName, out requests)) {
+            if (!m_LoadRequests.TryGetValue(abName, out requests))
+            {
                 requests = new List<LoadAssetRequest>();
                 requests.Add(request);
                 m_LoadRequests.Add(abName, requests);
-                if (AppConst.EditorDevMode) {
-                    StartCoroutine(OnLoadAsset<T>(abName));
-                }
-                else
-                {
-                    StartCoroutine(OnLoadAsset<T>(abName));
-                }
-                
-            } else {
+                StartCoroutine(OnLoadAsset<T>(abName));
+            }
+            else
+            {
                 requests.Add(request);
             }
-#else
-            List<UObject> result = new List<UObject>();
-            for (int i = 0; i < assetNames.Length; i++)
-            {
-                string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
-                GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
-                if (prefab != null) {
-                    UnityEngine.Object o = UnityEngine.Object.Instantiate(prefab);
-                    result.Add(o);
-                }
-            }
-
-            action(result.ToArray());            
 #endif
         }
 

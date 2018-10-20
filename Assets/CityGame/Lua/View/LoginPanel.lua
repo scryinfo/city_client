@@ -8,7 +8,6 @@ local this = LoginPanel;
 function LoginPanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
-
 	this.InitPanel();
 	logWarn("Awake lua--->>"..gameObject.name);
 end

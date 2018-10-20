@@ -51,6 +51,7 @@ function UIPage:initialize(type, mod, col)
     self.m_data = nil
     self.data = nil
     self.delegateAsyncLoadUI = nil
+    self.offset = Vector2.New(0, 0)
 end
 
 function UIPage:Awake(obj)
@@ -128,6 +129,12 @@ function UIPage:AnchorUIGameObject(ui)
     if UIRoot.Instance() == nil or ui == nil then return end
     self.gameObject = ui
     self.transform = ui.transform
+
+    local rect = self.transform:GetComponent("RectTransform");
+    if rect then
+        rect:DOAnchorPosX(self.offset.x, 0)
+        rect:DOAnchorPosY(self.offset.y, 0)
+    end
 
     local anchorPos = Vector3.zero
     local sizeDel = Vector3.zero
@@ -278,6 +285,17 @@ function  UIPage:ShowPageByClass(inClass,pageData)
     return pageInstance
 end
 
+function UIPage:setPosition(x,y)
+    self.offset.x = x
+    self.offset.y = y
+    if self.transform then
+        local rect = self.transform:GetComponent("RectTransform");
+        if rect then
+            rect:DOAnchorPosX(self.offset.x, 0)
+            rect:DOAnchorPosY(self.offset.y, 0)
+        end
+    end
+end
 
 function UIPage:ClosePage()
     --//Debug.Log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);

@@ -17,13 +17,14 @@ function WarehousePanel.InitPanel()
     --this.openBtn = transform:Find("Button/SortingBtn/OpenBtn").gameObject;
     this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
     this.nowText = transform:Find("Button/Sorting/nowText"):GetComponent("Text");
-    this.list = transform:Find("List").gameObject;
-    this.nameBtn = transform:Find("List/nameBtn");
-    this.quantityBtn = transform:Find("List/quantityBtn");
+    this.list = transform:Find("ListTable/List"):GetComponent("RectTransform");
+    this.nameBtn = transform:Find("ListTable/List/nameBtn");
+    this.quantityBtn = transform:Find("ListTable/List/quantityBtn");
     this.shelfBtn = transform:Find("Button/shelfBtn");
     this.transportBtn = transform:Find("Button/transportBtn");
     --Button shelf  右边面板
-    this.rightInformation = transform:Find("RightInformation").gameObject;
+    this.rightInformation = transform:Find("RightInformation"):GetComponent("RectTransform");
+    this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
     this.transport = transform:Find("RightInformation/bg/transport").gameObject;
 

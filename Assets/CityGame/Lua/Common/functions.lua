@@ -64,6 +64,18 @@ function getColorByInt(r, b, g, a)
 	return Color.New(r1, b1, g1, a1)
 end
 
+function getColorByVector3(vector3, alpha)
+	local r1 = vector3.x / 255
+	local b1 = vector3.y / 255
+	local g1 = vector3.z / 255
+	local a1 = 1
+	if alpha ~= nil then
+		a1 = alpha / 255
+	end
+
+	return Color.New(r1, b1, g1, a1)
+end
+
 --把时间 秒转换成xx时xx分xx秒格式
 function getFormatUnixTime(time)
 	local tb = {}

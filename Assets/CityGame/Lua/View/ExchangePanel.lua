@@ -43,6 +43,9 @@ function ExchangePanel.InitPanel()
     this.cityRecordToggle = transform:Find("togglePageRoot/record/recordToggleRoot/cityRecord"):GetComponent("Toggle");
     this.cityRecordShow = transform:Find("togglePageRoot/record/recordToggleRoot/cityRecord/show");
 
+    this.entrustmentPage = transform:Find("togglePageRoot/record/recordTogglePageRoot/entrustment");
+    this.selfRecordPage = transform:Find("togglePageRoot/record/recordTogglePageRoot/record");
+    this.cityRecordPage = transform:Find("togglePageRoot/record/recordTogglePageRoot/cityrecord");
     this.entrustmentScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/entrustment/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
     this.selfRecordScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/record/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
     this.cityRecordScroll = transform:Find("togglePageRoot/record/recordTogglePageRoot/cityrecord/scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
@@ -81,22 +84,28 @@ end
 function ExchangePanel._entrustmentToggleState(isOn)
     if isOn then
         this.entrustmentShow.localScale = Vector3.one
+        this.entrustmentPage.localScale = Vector3.one
     else
         this.entrustmentShow.localScale = Vector3.zero
+        this.entrustmentPage.localScale = Vector3.zero
     end
 end
 function ExchangePanel._selfRecordToggleState(isOn)
     if isOn then
         this.selfRecordShow.localScale = Vector3.one
+        this.selfRecordPage.localScale = Vector3.one
     else
         this.selfRecordShow.localScale = Vector3.zero
+        this.selfRecordPage.localScale = Vector3.zero
     end
 end
 function ExchangePanel._cityRecordToggleState(isOn)
     if isOn then
         this.cityRecordShow.localScale = Vector3.one
+        this.cityRecordPage.localScale = Vector3.one
     else
         this.cityRecordShow.localScale = Vector3.zero
+        this.cityRecordPage.localScale = Vector3.zero
     end
 end
 

@@ -46,7 +46,7 @@ namespace City
             }
             else
             {
-                return "./Assets/CityGame";
+                return "Assets/CityGame";
             }
         }
 

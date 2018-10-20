@@ -38,6 +38,17 @@ namespace City
         {
             return UIRoot.getFixedRoot();
         }
+        public static string getAssetsPath()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                return UnityEngine.Application.persistentDataPath + "/Assets";
+            }
+            else
+            {
+                return "./Assets/CityGame";
+            }
+        }
 
         public static Transform getNormalRoot()
         {

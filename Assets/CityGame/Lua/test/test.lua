@@ -31,7 +31,7 @@ require "Logic/CtrlManager"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
-require ("test/test_memory")
+--require ("test/test_memory")
 require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")

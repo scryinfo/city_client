@@ -11,7 +11,10 @@ function MaterialPanel.Awake(obj)
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
-    this.nameInputField = transform:Find("topRoot/titleBg/nameInputField").gameObject:GetComponent("InputField");
+    local inputf = transform:Find("topRoot/titleBg/nameInputField")
+    if inputf then
+        this.nameInputField = inputf.gameObject:GetComponent("InputField");
+    end
 end
 
 function MaterialPanel.InitPanel()

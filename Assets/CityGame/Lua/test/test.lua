@@ -10,6 +10,8 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
+--TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
+
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
@@ -201,6 +203,14 @@ end)
 UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
     UIPage:ShowPage(TestExchangeCtrl)
     log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
+end)
+
+
+UnitTest.Exec("cycle_w9_exchange01", "test_cycle_w9_exchange01",  function ()
+    UIPage:ShowPage(ExchangeCtrl)
+
+    log("cycle_w9_exchange01","[cycle_w9_exchange01] ...............")
+
 end)
 
 UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()

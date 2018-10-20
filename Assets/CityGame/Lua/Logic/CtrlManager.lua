@@ -14,10 +14,12 @@ require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
 
-require "Model/LoginModel"
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
 require "Controller/GameMainInterfaceCtrl"
+require "Controller/BtnDialogPageCtrl"
+require "Controller/InputDialogPageCtrl"
+require "Controller/ExchangeCtrl"
 require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
@@ -28,6 +30,10 @@ require "Model/CreateRoleModel"
 require "Model/MaterialModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
+
+--测试
+require "Controller/TestExchangeCtrl"
+require "Controller/TestExchangeScrollItemCtrl"
 
 CtrlManager = {};
 local this = CtrlManager;

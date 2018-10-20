@@ -16,8 +16,10 @@ function WarehousePanel.InitPanel()
     this.returnBtn = transform:Find("Button/ReturnBtn");
     --this.openBtn = transform:Find("Button/SortingBtn/OpenBtn").gameObject;
     this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
-    this.list = transform:Find("Button/Sorting/List").gameObject;
-    this.name_Btn = transform:Find("Button/Sorting/List/nameBtn").gameObject;
+    if transform:Find("Button/Sorting/List") then this.list = transform:Find("Button/Sorting/List").gameObject; end
+    if transform:Find("Button/Sorting/List/nameBtn") then
+        this.name_Btn = transform:Find("Button/Sorting/List/nameBtn").gameObject;
+    end
     this.quantityBtn = transform:Find("Button/Sorting/List/quantityBtn").gameObject;
     this.shelfBtn = transform:Find("Button/shelfBtn").gameObject;
     --Button shelf

@@ -11,7 +11,6 @@ local listFalse = Vector3.New(0,0,0)
 ShelfCtrl.static.SHELFICON_PATH = 'View/GoodsItem/ShelfGoodsItem'
 function ShelfCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
-    self.ShelfGoodsMgr = ShelfGoodsMgr:new()
 end
 
 function ShelfCtrl:bundleName()
@@ -29,6 +28,9 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.priceBtn,self.OnClick_OnpriceBtn, self);
     shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods, self);
     self.luabehaviour = shelf
+
+    self.m_data = {};
+    self.m_data.buildingType = BuildingInType.Shelf
 end
 
 function ShelfCtrl:Awake(go)
@@ -65,17 +67,19 @@ end
 
 function ShelfCtrl.OnClick_OpenList(isShow)
     if isShow then
-        ShelfPanel.list:SetActive(true);
+        --ShelfPanel.list:SetActive(true);
+        ShelfPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
-        ShelfPanel.list:SetActive(false);
+        --ShelfPanel.list:SetActive(false);
+        ShelfPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;
 end
 
 function ShelfCtrl:OnClick_createGoods(ins)
-    ins.ShelfGoodsMgr:_creatItemGoods(ins.luabehaviour)
+    ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
 end
 
 function ShelfCtrl.OnCloseBtn()

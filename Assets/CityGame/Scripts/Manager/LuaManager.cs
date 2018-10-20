@@ -139,9 +139,11 @@ namespace LuaFramework {
                 loader.AddBundle("lua/lua_Logic.unity3d");
                 loader.AddBundle("lua/lua_Logic_GameBubble.unity3d");
                 loader.AddBundle("lua/lua_Logic_PieChart.unity3d");
+                loader.AddBundle("lua/lua_Logic_ExchangeAbout.unity3d");
                 loader.AddBundle("lua/lua_model.unity3d");
                 loader.AddBundle("lua/lua_View.unity3d");
                 loader.AddBundle("lua/lua_view_buildinginfo.unity3d");
+                loader.AddBundle("lua/lua_view_Logic.unity3d");
                 loader.AddBundle("lua/lua_Controller.unity3d");
                 loader.AddBundle("lua/lua_Misc.unity3d");
                 loader.AddBundle("lua/lua_Framework.unity3d");

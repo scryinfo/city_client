@@ -1,7 +1,7 @@
 
 require('Framework/UI/UIPage')
 require "Common/define"
-require('Controller/HouseCtrl')
+--require('Controller/HouseCtrl')
 --require('Controller/ExchangeCtrl')
 
 local class = require 'Framework/class'
@@ -64,7 +64,8 @@ end
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
     log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
-    UIPage:ShowPage(HouseCtrl)
+    local info = {}
+    UIPage:ShowPage(HouseCtrl, info)
     --Event.Brocast("c_OnOppenHouse");
 end
 

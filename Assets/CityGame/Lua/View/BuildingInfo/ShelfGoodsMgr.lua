@@ -1,21 +1,25 @@
 --管理货架物品信息
 require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
-
+--require 'View/BuildingInfo/'  --
 
 local class = require 'Framework/class'
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"
 
-function ShelfGoodsMgr:initialize()
-    --log('fisher_week9_ShelfGoodsItem','[ShelfGoodsMgr:initialize]')
+function ShelfGoodsMgr:initialize(insluabehaviour,buildingData)
+    self.behaviour = insluabehaviour
+    if buildingData.buildingType == BuildingInType.Shelf then
+        self:_creatItemGoods();
+    elseif buildingData.buildingType ==BuildingInType.Warehouse then
+        log("这是仓库的!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    end
 end
 
---创建物品
-function ShelfGoodsMgr:_creatItemGoods(insluabehaviour)
+--货架创建物品
+function ShelfGoodsMgr:_creatItemGoods()
     --测试数据
     self.ModelDataList={}
-    self.behaviour = insluabehaviour
     --配置表数据模拟
     local configTable = {}
     for i = 1, 15 do

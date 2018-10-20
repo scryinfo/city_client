@@ -1,7 +1,8 @@
 
 require('Framework/UI/UIPage')
 require "Common/define"
-
+require('Controller/HouseCtrl')
+--require('Controller/ExchangeCtrl')
 
 local class = require 'Framework/class'
 GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
@@ -57,19 +58,20 @@ end
 --交易所--
 function GameMainInterfaceCtrl.OnExchange()
     log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
-    --Event.Brocast("");
+    UIPage:ShowPage(ExchangeCtrl)
 end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
     log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
+    UIPage:ShowPage(HouseCtrl)
     --Event.Brocast("c_OnOppenHouse");
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
     log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
-    --Event.Brocast("");
+    UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
 
 --加工厂--
@@ -77,10 +79,6 @@ function GameMainInterfaceCtrl.OnSourceMill()
     log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
     --Event.Brocast("");
 end
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_RoleManagerCtrl_self",  function ()
-    Event.AddListener("OnOK_self", function ()
-        Event.Brocast("m_GsOK");
-    end)
-end)
+
 
 

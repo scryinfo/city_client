@@ -178,5 +178,8 @@ function ServerListModel.n_CreateNewRole(stream)
     logDebug(pMsg.name)
     ServerListModel.loginRole({{id = pMsg.id}})
 end
-
-
+UnitTest.Exec("rodger_w8_GameMainInterface", "test_ServerListCtrl_self",  function ()
+    Event.AddListener("c_LoginSuccessfully_self", function ()
+        UIPage:ShowPage(ServerListCtrl)
+    end)
+end)

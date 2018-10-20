@@ -136,8 +136,8 @@ end--]]
 
 --[[function LoginModel.registerGsNetMsg()
     --清理as的网络回调
-    --CityEngineLua.Message:clear()
-    --CityEngineLua.Message:bindFixedMessage()
+    CityEngineLua.Message:clear()
+    CityEngineLua.Message:bindFixedMessage()
     --gs网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),LoginModel.n_GsLoginSuccessfully);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),LoginModel.n_CreateNewRole);

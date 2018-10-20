@@ -4,13 +4,16 @@ require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
+
+UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 
 --构建函数--
 function LoginCtrl:initialize()
-	self.logined = false
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+	self.logined = false
+	self.offset.y = -200
 	--self.uiPath = "Login"
 end
 
@@ -33,7 +36,7 @@ function LoginCtrl:OnCreate(go)
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
-	LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
+	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
 	log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 	--普通消息注册
@@ -46,6 +49,9 @@ function LoginCtrl:OnCreate(go)
 
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
+	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
+	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+
 end
 
 --关闭事件--
@@ -130,8 +136,7 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		--log("rodger_w8_GameMainInterface","[test_OnOK]: 测试完毕",ServerListCtrl.serverIndex[1]);
-		UIPage:ShowPage(ServerListCtrl)
+		UnitTest.Exec_now("rodger_w8_GameMainInterface", "c_LoginSuccessfully_self",self)
 		self.logined = true
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";
@@ -165,20 +170,32 @@ function LoginCtrl:OnClickTest1(obj)
 	local yyy = LoginCtrl:gettestValue()
 	local xxx1  = xxx
 end
---TestGroup.active_TestGroup("abel_w5") --激活测试组
+
+TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
+--TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")
 	LoginCtrl:c_LoginSuccessfully( false )
 end)
 
-UnitTest.Exec("abel_w5", "test_AddClick_self",  function ()
-	log("abel_w5","[test_AddClick_self]  测试开始")
+UnitTest.Exec("abel_w7_AddClick", "test_AddClick_self",  function ()
+	log("abel_w7_AddClick","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function (obj)
-		obj.testValue = 666
+		obj.testValue = 888
 		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')
 		LuaBehaviour:AddClick(LoginPanel.btnLogin ,obj.OnClickTest);
 		LuaBehaviour:AddClick(LoginPanel.btnLogin ,obj.OnClickTest1,obj);
+	end)
+end)
+
+UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
+	log("abel_w7_RemoveClick","[test_RemoveClick_self]  测试开始")
+	Event.AddListener("c_RemoveClick_self", function (obj)
+		obj.testValue = 666
+		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')
+		LuaBehaviour:AddClick(LoginPanel.btnLogin ,obj.OnClickTest1,obj);
+		LuaBehaviour:RemoveClick(LoginPanel.btnLogin ,obj.OnClickTest1,obj);
 	end)
 end)
 

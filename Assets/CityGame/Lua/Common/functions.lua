@@ -16,7 +16,10 @@ end
 function createPanel(name)
 	PanelManager:CreatePanel(name);
 end
-
+--创建窗口--
+function createWindows(name,pos)
+	PanelManager:CreateWindow(name,pos);
+end
 function child(str)
 	return transform:Find(str);
 end
@@ -32,4 +35,44 @@ function findPanel(str)
 		return nil;
 	end
 	return obj:GetComponent("BaseLua");
+end
+
+--获取价格显示文本 --整数和小数部分大小不同
+function getPriceString(str, intSize, floatSize)
+	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+	return finalStr
+end
+
+--通过整数255之类的得到对应的颜色
+function getColorByInt(r, b, g, a)
+	local r1 = r / 255
+	local b1 = b / 255
+	local g1 = g / 255
+	local a1 = 1
+	if a ~= nil then
+		a1 = a / 255
+	end
+
+	return Color.New(r1, b1, g1, a1)
+end
+
+--把时间 秒转换成xx时xx分xx秒格式
+function getFormatUnixTime(time)
+	local tb = {}
+	tb.year = tonumber(os.date("%Y", time)) or 0
+	tb.month = tonumber(os.date("%m", time)) or 0
+	tb.day = tonumber(os.date("%d", time)) or 0
+	tb.hour = tonumber(os.date("%H", time)) or 0
+	tb.minute = tonumber(os.date("%M", time)) or 0
+	tb.second = tonumber(os.date("%S", time)) or 0
+
+	return tb
 end

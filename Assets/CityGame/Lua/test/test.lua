@@ -5,8 +5,17 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+--TestGroup.active_TestGroup("abel_w7_LineChart")
+--TestGroup.active_TestGroup("abel_w6_UIFrame_1")
+--TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
+--TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
+--TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
+--TestGroup.active_TestGroup("abel_w7_LineChart")
+--TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
+--TestGroup.active_TestGroup("abel_w9_AddLuaComponent")
+--TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
@@ -15,6 +24,7 @@ package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 require "LuaUtil"
+require "Logic/CtrlManager"
 
 UnitTest = require ('test/testFrameWork/UnitTest')
 
@@ -27,7 +37,6 @@ require('test/performance/classPerformance')
 require("test/examination")
 require("test/metatable")
 require('Controller/LineChartCtrl')
-
 
 local pbl = pbl
 local serpent = require("Framework/pbl/serpent")
@@ -158,4 +167,144 @@ UnitTest.Exec("rodger_w8_GameMainInterface", "test_createRole",function()
     if createRoleModel ~= nil then
         createRoleModel:Awake();
     end
+
+end)
+
+UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
+    local info = {}
+    UIPage:ShowPage(HouseCtrl, info)
+
+    log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround]  balabalabalabala...............")
+end)
+
+UnitTest.Exec("cycle_w6_GroundAuc", "test_w6_groundAuc",  function ()
+    --local info = {}
+    --info.titleInfo = "CONGRATULATION";
+    --info.contentInfo = "Success!!!!";
+    --info.tipInfo = "lalalalalalalalla";
+    --info.btnCallBack = function ()
+    --    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] 回调啊回调")
+    --end;
+    --UIPage:ShowPage(BtnDialogPageCtrl, info)
+
+    log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc]  balabalabalabala...............")
+
+    ---测试拍卖
+    local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
+    if groundAucModel ~= nil then
+        groundAucModel:Awake();
+    end
+end)
+
+UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
+    UIPage:ShowPage(TestExchangeCtrl)
+    log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
+end)
+
+UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()
+    log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour] ...............")
+
+    require('Framework/UI/UIRoot')
+    local UIRoot = UIRoot
+    if UIRoot.Instance() == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  UIRoot.Instance() == nil ")
+        return
+    end
+    local path = 'View/TopbarPanel'
+    --加载 prefab 资源
+    local prefab = UnityEngine.Resources.Load(path);
+    if not prefab then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+    end
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local transform = go.transform
+    local rect = go.transform:GetComponent("RectTransform");
+
+    if transform == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+
+    if prefab == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+
+    --绑定脚本,使用 LuaHelper.GetType
+    UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+    local topBarBehaviour = go:GetComponent('LuaBehaviour')
+    if topBarBehaviour == nil then
+        log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
+        return
+    end
+
+    --显示相关[
+    local anchorPos = rect.anchoredPosition
+    local sizeDel= rect.sizeDelta
+    local scale = rect.localScale
+
+    go.transform:SetParent(UIRoot.getFixedRoot())
+
+    rect.anchoredPosition = anchorPos
+    rect.sizeDelta = sizeDel
+    rect.localScale = scale
+    --显示相关]
+
+    --使用绑定的脚本，注册按钮回调[
+    local btn_notice = transform:Find("btn_notice").gameObject;
+    local btn_back = transform:Find("btn_back").gameObject;
+
+    topBarBehaviour:AddClick(btn_notice, function()
+        local aaa = 0
+    end, go);
+    topBarBehaviour:AddClick(btn_back, function()
+        local aaa = 0
+    end, go);
+    --使用绑定的脚本，注册按钮回调]
+
+end)
+
+UnitTest.Exec("abel_w9_AddLuaComponent", "test_abel_w9_AddLuaComponent",  function ()
+    log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent] ...............")
+
+    require('Framework/UI/UIRoot')
+    local UIRoot = UIRoot
+    if UIRoot.Instance() == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  UIRoot.Instance() == nil ")
+        return
+    end
+    local path = 'View/TopbarPanel'
+    --加载 prefab 资源
+    local prefab = UnityEngine.Resources.Load(path);
+    if not prefab then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+    end
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local transform = go.transform
+    local rect = go.transform:GetComponent("RectTransform");
+
+    if transform == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+        return
+    end
+
+    if prefab == nil then
+        log("abel_w9_AddLuaComponent","[test_abel_w9_AddLuaComponent]  not find resource: "..path)
+        return
+    end
+
+    --显示相关[
+    local anchorPos = rect.anchoredPosition
+    local sizeDel= rect.sizeDelta
+    local scale = rect.localScale
+
+    go.transform:SetParent(UIRoot.getFixedRoot())
+
+    rect.anchoredPosition = anchorPos
+    rect.sizeDelta = sizeDel
+    rect.localScale = scale
+    --显示相关]
+
+    --绑定lua脚本,传入lua相对路径, 具体测试见 test_luaComponent
+    local luaCom = CityLuaUtil.AddLuaComponent(go,'View/Logic/test_luaComponent')
 end)

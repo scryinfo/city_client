@@ -21,9 +21,9 @@ function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    serverListBehaviour:AddClick(ServerListPanel.serverOneBtn,self.OnServerOne,self);
-    serverListBehaviour:AddClick(ServerListPanel.serverTwoBtn,self.OnServerTwo,self);
-    serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.OnOK,self);
+    serverListBehaviour:AddClick(ServerListPanel.serverOneBtn,self.c_OnServerOne,self);
+    serverListBehaviour:AddClick(ServerListPanel.serverTwoBtn,self.c_OnServerTwo,self);
+    serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
     --普通消息注册
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
@@ -31,7 +31,7 @@ function ServerListCtrl:OnCreate(obj)
 end
 
 --选择服务器一--
-function ServerListCtrl:OnServerOne()
+function ServerListCtrl:c_OnServerOne()
     local showTest =ServerListPanel.serverOneText:GetComponent('Text').text;
     ServerListPanel.serverText:GetComponent('Text').text = showTest;
     local Index = 1;
@@ -39,7 +39,7 @@ function ServerListCtrl:OnServerOne()
 end
 
 --选择服务器二--
-function ServerListCtrl:OnServerTwo()
+function ServerListCtrl:c_OnServerTwo()
     local showTest =ServerListPanel.serverTwoText:GetComponent('Text').text;
     ServerListPanel.serverText:GetComponent('Text').text = showTest;
     local Index = 2;
@@ -47,8 +47,8 @@ function ServerListCtrl:OnServerTwo()
 end
 
 --点击确定--
-function ServerListCtrl:OnOK()
-    UnitTest.Exec_now("rodger_w8_GameMainInterface", "OnOK_self",self)
+function ServerListCtrl:c_OnOK()
+    Event.Brocast("m_GsOK");
 end
 
 function ServerListCtrl:c_GsCreateRole()
@@ -61,4 +61,3 @@ function ServerListCtrl:c_GsLoginSuccess()
     --UIPage:ShowPage(TopBarCtrl)
     --UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
 end
-

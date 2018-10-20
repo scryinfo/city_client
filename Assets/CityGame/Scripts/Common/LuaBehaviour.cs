@@ -6,9 +6,15 @@ using System;
 using UnityEngine.UI;
 
 namespace LuaFramework {
+    struct LuaCfunPair
+    {
+        public LuaFunction _LuaFunction;
+        public UnityEngine.Events.UnityAction _CsharpFun;        
+    };
+
     public class LuaBehaviour : View {
         private string data = null;
-        private Dictionary<string, LuaFunction> buttons = new Dictionary<string, LuaFunction>();
+        private Dictionary<string, LuaCfunPair> buttons = new Dictionary<string, LuaCfunPair>();
 
         protected void Awake() {
             Util.CallMethod(name, "Awake", gameObject);
@@ -32,31 +38,40 @@ namespace LuaFramework {
         public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
             //buttons.Add(go.name, luafunc);
-            string eventName = luafunc.GetHashCode().ToString();
+            string eventName = go.name + luafunc.GetHashCode().ToString();
             if (obj != null)
             {
                 eventName += obj.GetHashCode().ToString();
             }
 
-            buttons.Add(eventName, luafunc);
-            go.GetComponent<Button>().onClick.AddListener(
-                delegate() {
-                    luafunc.Call(go, obj);
-                }
-            );
-        }
+            LuaCfunPair pair;
+            pair._LuaFunction = luafunc;
+            pair._CsharpFun = delegate ()
+            {
+                luafunc.Call(go, obj);
+            };
 
-        /// <summary>
-        /// 删除单击事件
-        /// </summary>
-        /// <param name="go"></param>
-        public void RemoveClick(GameObject go) {
+            buttons.Add(eventName, pair);            
+            go.GetComponent<Button>().onClick.AddListener(pair._CsharpFun);
+        }
+        
+        public void RemoveClick(GameObject go, LuaFunction luafuncToDel, object obj = null)
+        {
             if (go == null) return;
+            string eventName = go.name + luafuncToDel.GetHashCode().ToString();
+            if (obj != null)
+            {
+                eventName += obj.GetHashCode().ToString();
+            }
+            LuaCfunPair pPair;
             LuaFunction luafunc = null;
-            if (buttons.TryGetValue(go.GetInstanceID().ToString(), out luafunc)) {
-                luafunc.Dispose();
-                luafunc = null;
-                buttons.Remove(go.GetInstanceID().ToString());
+            buttons.TryGetValue(eventName, out pPair);
+            if (pPair._LuaFunction != null && pPair._CsharpFun != null)
+            {
+                pPair._LuaFunction.Dispose();
+                pPair._LuaFunction = null;
+                buttons.Remove(eventName);
+                go.GetComponent<Button>().onClick.RemoveListener(pPair._CsharpFun);
             }
         }
 
@@ -65,8 +80,8 @@ namespace LuaFramework {
         /// </summary>
         public void ClearClick() {
             foreach (var de in buttons) {
-                if (de.Value != null) {
-                    de.Value.Dispose();
+                if (de.Value._LuaFunction != null) {
+                    de.Value._LuaFunction.Dispose();                    
                 }
             }
             buttons.Clear();
@@ -75,7 +90,7 @@ namespace LuaFramework {
         //-----------------------------------------------------------------
         protected void OnDestroy() {
             ClearClick();
-#if ASYNC_MODE
+#if ASYNC_MODE && CLOSE_RES_BUNDELMODE
             string abName = name.ToLower().Replace("panel", "");
             ResManager.UnloadAssetBundle(abName + AppConst.BundleExt);
 #endif

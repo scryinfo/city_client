@@ -6,9 +6,9 @@
 local class = require 'Framework/class'
 
 RentalItem = class('RentalItem')
-RentalItem.static.TOTAL_H = 90  --整个Item的高度
-RentalItem.static.CONTENT_H = 47  --显示内容的高度
-RentalItem.static.TOP_H = 43  --top条的高度
+RentalItem.static.TOTAL_H = 209  --整个Item的高度
+RentalItem.static.CONTENT_H = 125  --显示内容的高度
+RentalItem.static.TOP_H = 100  --top条的高度
 
 --初始化方法 --数据需要当前租金 & 生效日期（当前天 + 配置表读出来的时间：08:00:00）
 function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
@@ -18,19 +18,17 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
-    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
     self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");  -- 租金显示的值
 
     --具体字体大小是否从数据库读取？
-    self.rentalValueText.text = self:_getPriceString(rentalData.rent, 14, 10)
+    self.rentalValueText.text = self:_getPriceString(rentalData.rent, 30, 24).."/D"
 
-    log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
+    --log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-        clickOpenFunc(mgrTable, self.toggleData)
-    end);
+    --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
+    --    clickOpenFunc(mgrTable, self.toggleData)
+    --end);
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
         if not self.viewRect.gameObject.activeSelf then
@@ -38,7 +36,7 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
         end
         --打开更改租金界面
 
-    end);
+    end, self);
 
     Event.AddListener("c_onRentalValueChange", self.updateInfo, self);
 end
@@ -52,9 +50,7 @@ end
 function RentalItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
-    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 14, 10)
-    self.openStateTran.localScale = Vector3.one
-    self.closeStateTran.localScale = Vector3.zero
+    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 30, 24)
 
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
@@ -65,9 +61,6 @@ end
 --关闭
 function RentalItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
-
-    self.openStateTran.localScale = Vector3.zero
-    self.closeStateTran.localScale = Vector3.one
 
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)

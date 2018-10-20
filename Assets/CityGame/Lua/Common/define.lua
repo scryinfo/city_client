@@ -13,12 +13,28 @@ CtrlNames = {
 	GameWorld = "GameWorldCtrl",
 	PlayerHead = "PlayerHeadCtrl",
 	TargetHead = "TargetHeadCtrl",
+
+	Wages = "WagesCtrl",
+	Warehouse = "WarehouseCtrl",
+	Transport = "TransportCtrl",
+	Shelf = "ShelfCtrl",
+	TransportOrder = "TransportOrderCtrl",
+	AddTransport = "AddTransportCtrl",
 	GroundAuction = "GroundAuctionCtrl",  --拍卖
 	House = "HouseCtrl",  --住宅
 	GameMainInterface = "GameMainInterfaceCtrl",--游戏主界面
 	RoleManager = "RoleManagerCtrl",--角色管理界面
 	ServerList = "ServerListCtrl",--选服页面
 	CreateRole = "CreateRoleCtrl",--创角页面
+
+	Material = "MaterialCtrl", --原料厂
+
+	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
+	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
+
+	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
+	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
+	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
 }
 
 ModelNames = {
@@ -37,6 +53,7 @@ ModelNames = {
 	RoleManager = "RoleManagerModel",--游戏管理界面
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
+	Material = "MaterialModel",  --原料厂
 }
 
 PanelNames = {
@@ -51,6 +68,11 @@ PanelNames = {
 	"GameWorldPanel",
 	"PlayerHeadPanel",
 	"TargetHeadPanel",
+	"WarehousePanel",
+	"TransportPanel",
+	"ShelfPanel",
+	"TransportOrderPanel",
+	"AddTransportPanel",
 	"GroundAuctionPanel",  --拍卖
 	"BuildingInfoRightPanel",  --建筑右侧信息小界面
 	"BuildingInfoPanel",  --建筑信息界面
@@ -60,6 +82,10 @@ PanelNames = {
 	"RoleManagerPanel",--游戏管理界面
 	"ServerListPanel",--选服页面
 	"CreateRolePanel",--创角页面
+	"MaterialPanel", --原料厂
+	"WagesAdjustBoxPanle",	--员工工资调整
+	"AdjustProductionLinePanel",  --调整生产线
+	"TestExchangePanel",  --交易所测试
 }
 
 SYSEVENT =
@@ -129,8 +155,8 @@ SocketError =
 BubblleType =
 {
 	Default = 0,
-	GroundAuction = 1,
-	BuildingTransfer = 2,
+	GroundAuction = 1,  --土地拍卖
+	BuildingTransfer = 2,  --建筑转让
 }
 
 --建筑首页左右侧信息小组件的状态
@@ -150,8 +176,14 @@ BuildingInfoTogglePos =
 --建筑类型
 BuildingType =
 {
-	House = 0,
-	MaterialFactory = 1,
+	House = 0,  --住宅
+	MaterialFactory = 1,  --原料厂
+}
+
+--单输入框会响应的服务器协议类型
+InputDialogPageServerType =
+{
+	UpdateBuildingName = 0,  --修改建筑名称
 }
 
 Util = LuaFramework.Util;

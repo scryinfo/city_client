@@ -6,7 +6,8 @@
 
 if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w9_autoRequire")
-TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_tableOrder")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
@@ -187,6 +188,18 @@ end)
 UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
     UIPage:ShowPage(TestExchangeCtrl)
     log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
+end)
+
+--遍历是顺序的，只不过调试时显示是乱序的
+UnitTest.Exec("abel_w9_tableOrder", "test_table_order",  function ()
+    local tb = {}
+    for i = 1, 100 do
+        tb[#tb+1] = 'tb_'..tostring(i)
+        log("abel_w9_tableOrder", "[test_table_order]  添加table的顺序: ",tb[i])
+    end
+    for i = 1, 100 do
+        log("abel_w9_tableOrder", "[test_table_order]  访问table的顺序: ",tb[i])
+    end
 end)
 
 UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()

@@ -1,14 +1,19 @@
 Event = require 'events'
-local AutoRequire = require "Framework/AutoRequire"
-
 --调试信息
 require("Dbg")
 require('TestGroup')
 local lu = require "Framework/pbl/luaunit"
+--处理包含， platform == 11 是 Android， Android 包含生成的 Require_Android.lua
+if UnityEngine.Application.platform ~= 11 then
+    require('Require_PC')
+else
+    require('Require_Android')
+end
+
 --单元测试
-require('test.test')
+require('test/test')
 --性能测试
-require('test.performance.luaPerformance')
+require('test/performance/luaPerformance')
 
 require "City"
 require "Framework/Account"
@@ -34,34 +39,9 @@ local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
 
-function Game.InitViewPanels()
-    --AutoRequire.getInstance():require("View")
-    --for i = 1, #PanelNames do
-    --		--require ("View/"..tostring(PanelNames[i]))
-    --    --end
-    AutoRequire.getInstance():require("Lua/View")
-end
-
-function Game.InitControllers()
-    --for i = 1, #CtrlNames do
-    --    require ("Controller/"..tostring(CtrlNames[i]))
-    --end
-    AutoRequire.getInstance():require("Lua/Controller")
-end
-
-function Game.InitModels()
-    --for i = 1, #ModelNames do
-    --    require ("Model/"..tostring(ModelNames[i]))
-    --end
-    AutoRequire.getInstance():require("Lua/Model")
-end
-
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     --注册LuaView--
-    this.InitViewPanels();
-    this.InitControllers();
-    this.InitModels();
     CtrlManager.Init();
     local ctrl = CtrlManager.GetCtrl(CtrlNames.Login);
     if ctrl ~= nil then

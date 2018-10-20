@@ -46,7 +46,12 @@ namespace City
             }
             else
             {
+#if CLOSE_LUA_BUNDELMODE
+                return "Assets/CityGame";                
+#else
+                //return "Assets/StreamingAssets";
                 return "Assets/CityGame";
+#endif
             }
         }
 

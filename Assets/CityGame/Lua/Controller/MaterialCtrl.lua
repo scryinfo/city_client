@@ -1,5 +1,4 @@
---require "Common/define"
-require "Common/MaterialTab";
+require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
 require('Framework/UI/UIPage')
 
@@ -15,20 +14,43 @@ function MaterialCtrl:bundleName()
     return "Material";
 end
 
-function MaterialCtrl:Awake(go)
-    self.gameObject = go;
-end
-
---启动事件
 function MaterialCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local ctrl = obj:GetComponent('LuaBehaviour');
-    self.materialData = {}
-    self.materialData.buildingType = BuildingType.MaterialFactory;
-    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran,MaterialPanel.rightRootTran,ctrl,self.materialData);
 end
 
-TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
+function MaterialCtrl:Awake(go)
+    self.gameObject = go;
+    local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+
+    self.m_data = {}
+    self.m_data.buildingType = BuildingType.MaterialFactory
+    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.m_data)
+end
+
+--更改名字
+function MaterialCtrl:OnClick_changeName()
+    local data = {}
+    data.titleInfo = "RENAME";
+    data.tipInfo = "Modified every seven days";
+    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    UIPage:ShowPage(InputDialogPageCtrl, data)
+end
+
+--返回
+function MaterialCtrl:OnClick_backBtn()
+    UIPage.ClosePage();
+end
+
+--打开信息界面
+function MaterialCtrl:OnClick_infoBtn()
+
+end
+function MaterialCtrl:Refresh()
+
+end
 
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")

@@ -129,7 +129,7 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     staffData.noDomicileCount = 3
     staffData.totalStaffCount = 100
     --end
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位
     local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
     self.leftData[1] = staffLuaItem
 

@@ -8,6 +8,7 @@ require('Controller/ServerListCtrl')
 UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
+UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
 --构建函数--
 function LoginCtrl:initialize()
@@ -51,7 +52,6 @@ function LoginCtrl:OnCreate(go)
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-
 end
 
 --关闭事件--
@@ -171,8 +171,8 @@ function LoginCtrl:OnClickTest1(obj)
 	local xxx1  = xxx
 end
 
-TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
---TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
+TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")
@@ -199,6 +199,14 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+
+--
+--function LoginCtrl:OnOpenLoginCtrl(ins)
+--	log("abel_w10_OpenCtrl","[LoginCtrl:OnOpenLoginCtrl]  OnOpenLoginCtrl invoked")
+--	UIPage:ShowPage(LoginCtrl)
+--end
+----这个是供外部调用的打开建筑的接口
+--Event.AddListener("c_OnOpenLoginCtrl", LoginCtrl.OnOpenLoginCtrl,LoginCtrl);
 
 
 

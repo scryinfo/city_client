@@ -10,6 +10,7 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 
 HouseCtrl = class('HouseCtrl',UIPage)
+UIPage:ResgisterOpen(HouseCtrl)
 
 function HouseCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -47,6 +48,9 @@ function HouseCtrl:_changeName()
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    data.btnCallBack = function()
+        log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
+    end
     UIPage:ShowPage(InputDialogPageCtrl, data)
 end
 ---返回

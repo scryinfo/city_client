@@ -17,13 +17,13 @@ public class ActiveLoopScrollRect : MonoBehaviour
             mLoopScrollRect = GetComponent<LoopScrollRect>();  //获取组件
         }
     }
-
+    
     /// <summary>
-    /// 激活滑动组件
+    /// 初始化组件
     /// </summary>
-    /// <param name="data">数据层，传入继承自LoopScrollDataSource 的lua实例</param>
-    /// <param name="totalCount">生成的总个数</param>
-    public void ActiveScroll(LoopScrollDataSource data, int totalCount)
+    /// <param name="data">委托方法</param>
+    /// <param name="totalCount">总数，默认为0</param>
+    public void InitLoopScroll(LoopScrollDataSource data, int totalCount = 0)
     {
         if (mLoopScrollRect == null)
         {
@@ -34,8 +34,13 @@ public class ActiveLoopScrollRect : MonoBehaviour
         mLoopScrollRect.totalCount = totalCount;
     }
 
-    public void RefillCells()
+    /// <summary>
+    /// 刷新item
+    /// </summary>
+    /// <param name="totalCount"></param>
+    public void RefreshItems(int totalCount)
     {
+        mLoopScrollRect.totalCount = totalCount;
         mLoopScrollRect.RefreshCells();
     }
 }

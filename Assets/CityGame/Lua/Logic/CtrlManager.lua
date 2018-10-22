@@ -1,4 +1,5 @@
 require "Common/define"
+require('Common/functions')
 require "Controller/LoginCtrl"
 require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"
@@ -13,11 +14,16 @@ require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
+require "Controller/ChooseWarehouseCtrl"
+require "Controller/TransportBoxCtrl"
+require "Controller/DETAILSBoxCtrl"
 
-require "Model/LoginModel"
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
 require "Controller/GameMainInterfaceCtrl"
+require "Controller/BtnDialogPageCtrl"
+require "Controller/InputDialogPageCtrl"
+require "Controller/ExchangeCtrl"
 require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
@@ -29,6 +35,10 @@ require "Model/MaterialModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
 
+--测试
+require "Controller/TestExchangeCtrl"
+require "Controller/TestExchangeScrollItemCtrl"
+
 CtrlManager = {};
 local this = CtrlManager;
 local ctrlList = {};	--控制器列表--
@@ -37,7 +47,8 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0,-300);
+	UIPage:OpenCtrl('LoginCtrl') --注意传入的是类名
+	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();
 	--测试

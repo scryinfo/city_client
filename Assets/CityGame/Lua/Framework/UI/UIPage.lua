@@ -288,6 +288,13 @@ end
 function UIPage:setPosition(x,y)
     self.offset.x = x
     self.offset.y = y
+    if self.transform then
+        local rect = self.transform:GetComponent("RectTransform");
+        if rect then
+            rect:DOAnchorPosX(self.offset.x, 0)
+            rect:DOAnchorPosY(self.offset.y, 0)
+        end
+    end
 end
 
 function UIPage:ClosePage()
@@ -362,6 +369,18 @@ function UIPage:ClosePageByName(pageName)
         log("system",pageName , " havnt show yet!");
     end
 end
+
+--注册 Controller 的打开的类方法，因为打开方法是在该Controller实例化之前，所以在每个 Controller 类声明后调用就可以
+function UIPage:ResgisterOpen(inClass)
+    Event.AddListener('c_OnOpen'..inClass.name, function (data)
+        UIPage:ShowPage(inClass,data)
+    end);
+end
+
+function UIPage:OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
+    Event.Brocast('c_OnOpen'..inClassName,data)
+end
+
 
 
 

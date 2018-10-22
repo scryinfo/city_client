@@ -25,5 +25,5 @@ function AdjustProductionLinePanel.InitPanel()
     this.content = transform:Find("Scroll View/Viewport/Content").gameObject;
 end
 function AdjustProductionLinePanel.OnDestroy()
-
+    logWarn("OnDestroy AdjustProductionLinePanel--->>>");
 end

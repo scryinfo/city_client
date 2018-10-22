@@ -21,8 +21,8 @@ function GroundAuctionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
     local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour');
-    groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround);
-    groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid);
+    groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self);
+    groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self);
 
     self:_initPanelData()
 
@@ -164,15 +164,15 @@ function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
 end
 
 ---出价
-function GroundAuctionCtrl:BidGround()
+function GroundAuctionCtrl:BidGround(table)
     local bidPrice = GroundAuctionPanel.bidInput.text;
 
-    Event.Brocast("m_PlayerBidGround", self.m_data.id, bidPrice);
+    Event.Brocast("m_PlayerBidGround", table.m_data.id, bidPrice);
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
-function GroundAuctionCtrl:UnRegistGroundBid()
-    if self.m_data.isStartBid then
+function GroundAuctionCtrl:UnRegistGroundBid(table)
+    if table.m_data.isStartBid then
         Event.Brocast("m_UnRegistGroundBidInfor");
     end
 end

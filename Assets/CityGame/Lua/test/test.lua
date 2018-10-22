@@ -5,10 +5,14 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+TestGroup.active_TestGroup("abel_w10_OpenCtrl")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
+--TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
+
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
@@ -19,6 +23,7 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
+TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
@@ -29,6 +34,7 @@ require "Logic/CtrlManager"
 UnitTest = require ('test/testFrameWork/UnitTest')
 
 --require('test/performance/run')
+--require ("test/test_memory")
 require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
@@ -199,6 +205,14 @@ end)
 UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()
     UIPage:ShowPage(TestExchangeCtrl)
     log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
+end)
+
+
+UnitTest.Exec("cycle_w9_exchange01", "test_cycle_w9_exchange01",  function ()
+    UIPage:ShowPage(ExchangeCtrl)
+
+    log("cycle_w9_exchange01","[cycle_w9_exchange01] ...............")
+
 end)
 
 UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()

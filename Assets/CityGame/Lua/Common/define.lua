@@ -28,9 +28,9 @@ CtrlNames = {
 	CreateRole = "CreateRoleCtrl",--创角页面
 
 	Material = "MaterialCtrl", --原料厂
-
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
+	Exchange = "ExchangeCtrl",  --交易所
 
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
@@ -83,9 +83,13 @@ PanelNames = {
 	"ServerListPanel",--选服页面
 	"CreateRolePanel",--创角页面
 	"MaterialPanel", --原料厂
+	"ChooseWarehousePanel",  --运输选择仓库
+	"TransportBoxPanel",   --确定运输弹框
+	"DETAILSBoxPanel",   --商品详情弹框
 	"WagesAdjustBoxPanle",	--员工工资调整
 	"AdjustProductionLinePanel",  --调整生产线
 	"TestExchangePanel",  --交易所测试
+	"ExchangePanel",  --交易所
 }
 
 SYSEVENT =
@@ -179,7 +183,13 @@ BuildingType =
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
 }
-
+--仓库 --货架 --运输(通用)
+BuildingInType =
+{
+	Shelf = 0,  --货架
+	Warehouse = 1,  --仓库
+	Transport = 2,  --运输
+}
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

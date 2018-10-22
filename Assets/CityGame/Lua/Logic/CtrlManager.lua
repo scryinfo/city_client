@@ -47,7 +47,7 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	g_OpenCtrl('LoginCtrl')
+	UIPage:OpenCtrl('LoginCtrl')
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();

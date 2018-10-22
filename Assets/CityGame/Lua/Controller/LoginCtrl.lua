@@ -8,7 +8,7 @@ require('Controller/ServerListCtrl')
 UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
-g_ResgisterCtrlOpen(LoginCtrl)
+UIPage:ResgisterOpen(LoginCtrl)
 
 --构建函数--
 function LoginCtrl:initialize()
@@ -17,8 +17,6 @@ function LoginCtrl:initialize()
 	self.offset.y = -200
 	--self.uiPath = "Login"
 end
-
-
 
 function LoginCtrl:bundleName()
 	return "Login"

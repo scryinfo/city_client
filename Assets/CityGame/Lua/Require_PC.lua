@@ -3,10 +3,15 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/20 16:28
 ---
+local coroutine = require("coroutine")
 
-local AutoRequire = require "Framework/AutoRequire"
+local AutoRequire = require "AutoRequire"
 AutoRequire.getInstance():require("View")
 AutoRequire.getInstance():require("Controller")
 AutoRequire.getInstance():require("Model")
 
 --最后把 AutoRequire.requirePaths 写到 Require_Android.lua
+function Genfun()
+    AutoRequire.getInstance():WriteAndroidRequire()
+end
+coroutine.start(Genfun)

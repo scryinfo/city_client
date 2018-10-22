@@ -36,8 +36,14 @@ end
 
 function AutoRequire:addPath(path)
     if WindowsEditor then
-        self.requirePaths[#self.requirePaths +1] = path
+        --self.requirePaths[#self.requirePaths +1] = path
+        self.requirePaths[#self.requirePaths +1] =  "require('"..path.."')"
     end
+end
+
+function AutoRequire:WriteAndroidRequire()
+    file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_Android.lua',self.requirePaths)
+    self.requirePaths = nil
 end
 
 function AutoRequire:require(path, data)

@@ -4,7 +4,8 @@ require("Dbg")
 require('TestGroup')
 local lu = require "Framework/pbl/luaunit"
 --处理包含， platform == 11 是 Android， Android 包含生成的 Require_Android.lua
-if UnityEngine.Application.platform ~= 11 then
+log("system","[Game] isAndroidPlatform = ",tostring(CityLuaUtil.isAndroidPlatform()))
+if CityLuaUtil.isAndroidPlatform() == false then
     require('Require_PC')
 else
     require('Require_Android')
@@ -27,7 +28,6 @@ require "Common/functions"
 --require "Controller/LoginCtrl"
 require "Logic/CtrlManager"
 require "Logic/World"
-
 
 
 --管理器--

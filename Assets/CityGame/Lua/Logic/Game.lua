@@ -1,20 +1,14 @@
-Event = require 'events'
---调试信息
-require("Dbg")
-require('TestGroup')
-local lu = require "Framework/pbl/luaunit"
---处理包含， platform == 11 是 Android， Android 包含生成的 Require_Android.lua
-log("system","[Game] isAndroidPlatform = ",tostring(CityLuaUtil.isAndroidPlatform()))
 if CityLuaUtil.isAndroidPlatform() == false then
     require('Require_PC')
 else
     require('Require_Android')
 end
 
---单元测试
-require('test/test')
---性能测试
-require('test/performance/luaPerformance')
+local lu = luaunit
+----单元测试
+--require('test/test')
+----性能测试
+--require('test/performance/luaPerformance')
 
 require "City"
 require "Framework/Account"
@@ -72,6 +66,16 @@ function Game.OnPostInitOK()
     local materialModel = CtrlManager.GetModel(ModelNames.Material);
     if materialModel ~= nil then
         materialModel:Awake();
+    end
+
+    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
+    if serverListModel ~= nil then
+        serverListModel:Awake();
+    end
+
+    local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
+    if createRoleModel ~= nil then
+        createRoleModel:Awake();
     end
 
     --单元测试入口

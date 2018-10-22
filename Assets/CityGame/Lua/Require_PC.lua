@@ -4,8 +4,8 @@
 --- DateTime: 2018/10/20 16:28
 ---
 local coroutine = require("coroutine")
-
 local AutoRequire = require "AutoRequire"
+require('__require_first__') --Lua根目录包含
 AutoRequire.getInstance():require("View")
 AutoRequire.getInstance():require("Controller")
 AutoRequire.getInstance():require("Model")

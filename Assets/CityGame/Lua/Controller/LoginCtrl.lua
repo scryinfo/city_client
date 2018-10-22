@@ -29,7 +29,9 @@ end
 
 function LoginCtrl:Refresh()
 	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
-	self:setPosition(self.m_data.x,self.m_data.y)
+	if self.m_data ~= nil then
+		self:setPosition(self.m_data.x,self.m_data.y)
+	end
 end
 
 --启动事件--

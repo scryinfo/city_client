@@ -53,15 +53,15 @@ function AutoRequire:require(path, data)
     self._tag = data
     self._require_path = path
 
-    local initfile = loadpath..'/'.."init.lua"
+    local initfile = loadpath..'/'.."__require_first__.lua"
     if file_exists(initfile) then
-        local loadf = path..'/'.."init"
+        local loadf = path..'/'.."__require_first__"
         require(loadf)
         self:addPath(loadf)
     end
 
     for file in lfs.dir(loadpath) do
-        if file ~= "." and file ~= ".." and file ~= "init.lua" and file ~= "loadend.lua" then
+        if file ~= "." and file ~= ".." and file ~= "__require_first__.lua" and file ~= "__require_last__.lua" then
             local f = loadpath ..'/'..file
             local attr = lfs.attributes(f)
             if attr ~= nil then
@@ -75,9 +75,9 @@ function AutoRequire:require(path, data)
         end
     end
 
-    local initfile = loadpath..'/'.."loadend.lua"
+    local initfile = loadpath..'/'.."__require_last__.lua"
     if file_exists(initfile) then
-        local loadf = path..'/'.."loadend"
+        local loadf = path..'/'.."__require_last__"
         require(loadf)
         self:addPath(loadf)
     end

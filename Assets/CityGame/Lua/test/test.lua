@@ -5,6 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
+TestGroup.active_TestGroup("abel_w10_OpenCtrl")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")

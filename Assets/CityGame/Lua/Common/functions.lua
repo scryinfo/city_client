@@ -88,3 +88,13 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+
+function g_ResgisterCtrlOpen(inClass) --在每个ctrl类结束时执行
+	Event.AddListener('c_OnOpen'..inClass.name, function ()
+		UIPage:ShowPage(inClass)
+	end);
+end
+
+function g_OpenCtrl(inClassName) --注意是类的名字
+	Event.Brocast('c_OnOpen'..inClassName)
+end

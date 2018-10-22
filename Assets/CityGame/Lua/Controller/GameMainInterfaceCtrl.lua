@@ -58,21 +58,25 @@ end
 --交易所--
 function GameMainInterfaceCtrl.OnExchange()
     log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
-    UIPage:ShowPage(ExchangeCtrl)
+    --UIPage:ShowPage(ExchangeCtrl)
+    g_OpenCtrl('ExchangeCtrl')
 end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
     log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
     local info = {}
-    UIPage:ShowPage(HouseCtrl, info)
+    --UIPage:ShowPage(HouseCtrl, info)
+    g_OpenCtrl('HouseCtrl')
     --Event.Brocast("c_OnOppenHouse");
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
     log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
-    UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+    --UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+    --Event.Brocast('c_OnOpenLoginCtrl')
+    g_OpenCtrl('MaterialCtrl')
 end
 
 --加工厂--

@@ -8,6 +8,7 @@ require('Controller/ServerListCtrl')
 UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
+g_ResgisterCtrlOpen(LoginCtrl)
 
 --构建函数--
 function LoginCtrl:initialize()
@@ -16,6 +17,8 @@ function LoginCtrl:initialize()
 	self.offset.y = -200
 	--self.uiPath = "Login"
 end
+
+
 
 function LoginCtrl:bundleName()
 	return "Login"
@@ -198,6 +201,14 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+
+--
+--function LoginCtrl:OnOpenLoginCtrl(ins)
+--	log("abel_w10_OpenCtrl","[LoginCtrl:OnOpenLoginCtrl]  OnOpenLoginCtrl invoked")
+--	UIPage:ShowPage(LoginCtrl)
+--end
+----这个是供外部调用的打开建筑的接口
+--Event.AddListener("c_OnOpenLoginCtrl", LoginCtrl.OnOpenLoginCtrl,LoginCtrl);
 
 
 

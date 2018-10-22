@@ -8,9 +8,9 @@ if not CityGlobal.G_UNITTEST then return {} end
 TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
---TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
+TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
-TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
+--TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
 
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")

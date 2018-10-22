@@ -119,19 +119,28 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
     ---员工  左1
-    local staffViewRect
-    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    staffViewRect.gameObject.name = "Staff"
-    --测试数据
-    local staffData = {}
-    staffData.EmployeeSatisfaction = 0.8
-    staffData.EmployeeDaywages = 18
-    staffData.noDomicileCount = 3
-    staffData.totalStaffCount = 100
-    --end
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    self.leftData[1] = staffLuaItem
+    --local staffViewRect
+    --staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+    --staffViewRect.gameObject.name = "Staff"
+    ----测试数据
+    --local staffData = {}
+    --staffData.EmployeeSatisfaction = 0.8
+    --staffData.EmployeeDaywages = 18
+    --staffData.noDomicileCount = 3
+    --staffData.totalStaffCount = 100
+    ----end
+    --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    --local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+    --self.leftData[1] = staffLuaItem
+
+    ---营业额折线图Item --左边第一个
+    local turnoverLineChart
+    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+    turnoverLineChart.gameObject.name = "LineChartRateItem"
+
+    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
+    self.leftData[1] = LineChartLuaItem
 
     ---测试测试 入住率  左2
     local staffViewRect2

@@ -4,7 +4,7 @@
 --- DateTime: 2018/10/5 21:28
 ---
 require "Common/define"
-
+UnitTest = require ('test/testFrameWork/UnitTest')
 require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 LineChartCtrl = class('LineChartCtrl',UIPage)

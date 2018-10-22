@@ -1860,9 +1860,10 @@ CityEngineLua.reset = function()
 	
 	this.bufferedCreateEntityMessage = {};
 
-	this._networkInterface:reset();
-	this._networkInterface = City.NetworkInterface.New();
-
+	if this._networkInterface then
+		this._networkInterface:reset();
+		this._networkInterface = City.NetworkInterface.New();
+	end
 	this._lastTickTime = os.clock();
 	this._lastTickCBTime = os.clock();
 	this._lastUpdateToServerTime = os.clock();

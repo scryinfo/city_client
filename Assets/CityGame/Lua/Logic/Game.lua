@@ -3,10 +3,17 @@ Event = require 'events'
 require("Dbg")
 require('TestGroup')
 local lu = require "Framework/pbl/luaunit"
+--处理包含， platform == 11 是 Android， Android 包含生成的 Require_Android.lua
+if UnityEngine.Application.platform ~= 11 then
+    require('Require_PC')
+else
+    require('Require_Android')
+end
+
 --单元测试
-require('test.test')
+require('test/test')
 --性能测试
-require('test.performance.luaPerformance')
+require('test/performance/luaPerformance')
 
 require "City"
 require "Framework/Account"
@@ -17,7 +24,7 @@ require "Framework/NPC"
 require "Framework/DroppedItem"
 
 require "Common/functions"
-require "Controller/LoginCtrl"
+--require "Controller/LoginCtrl"
 require "Logic/CtrlManager"
 require "Logic/World"
 
@@ -32,17 +39,9 @@ local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
 
-function Game.InitViewPanels()
-	for i = 1, #PanelNames do
-		require ("View/"..tostring(PanelNames[i]))
-	end
-end
-
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     --注册LuaView--
-    this.InitViewPanels();
-
     CtrlManager.Init();
     local ctrl = CtrlManager.GetCtrl(CtrlNames.Login);
     if ctrl ~= nil then

@@ -34,8 +34,7 @@ public class Packager {
     }
 
     [MenuItem("LuaFramework/Build Android Resource", false, 101)]
-    public static void BuildAndroidResource() {
-        Util.CallMethod("GenerateAndroidRequire", "Genfun");
+    public static void BuildAndroidResource() {        
         BuildAssetResource(BuildTarget.Android);
     }
 

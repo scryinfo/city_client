@@ -8,7 +8,7 @@ require('Controller/ServerListCtrl')
 UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
-UIPage:ResgisterOpen(LoginCtrl)
+UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开方法
 
 --构建函数--
 function LoginCtrl:initialize()

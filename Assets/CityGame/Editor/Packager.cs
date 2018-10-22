@@ -198,6 +198,16 @@ public class Packager {
         AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");
         //曲线图
         AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
+
+        //游戏主界面
+        AddBuildMap("GameMainInterface" + AppConst.BundleExt, "GameMainInterfacePanel.prefab", "Assets/CityGame/Resources/View");
+        //角色管理面板
+        AddBuildMap("RoleManager" + AppConst.BundleExt, "RoleManagerPanel.prefab", "Assets/CityGame/Resources/View");
+        //选服页面
+        AddBuildMap("ServerList" + AppConst.BundleExt, "ServerListPanel.prefab", "Assets/CityGame/Resources/View");
+        //创角页面
+        AddBuildMap("CreateRole" + AppConst.BundleExt, "CreateRolePanel.prefab", "Assets/CityGame/Resources/View");
+
         //原料厂主页
         AddBuildMap("Material" + AppConst.BundleExt, "MaterialPanel.prefab", "Assets/CityGame/Resources/View");
         //仓库面板
@@ -206,7 +216,8 @@ public class Packager {
         AddBuildMap("Shelf" + AppConst.BundleExt,"ShelfPanel.prefab", "Assets/CityGame/Resources/View");
         //调整生产线
         AddBuildMap("AdjustProductionLine" + AppConst.BundleExt, "AdjustProductionLinePanel.prefab","Assets/CityGame/Resources/View");
-        
+        //选择仓库
+        AddBuildMap("ChooseWarehousePanel" + AppConst.BundleExt, "ChooseWarehousePanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

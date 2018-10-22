@@ -34,6 +34,11 @@ end
 
 function ExchangeCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+    --关闭面板
+    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    LuaBehaviour:AddClick(ExchangePanel.backBtn.gameObject, function()
+        UIPage.ClosePage();
+    end );
 end
 
 function ExchangeCtrl:Awake(go)

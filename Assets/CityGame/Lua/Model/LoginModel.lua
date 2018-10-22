@@ -26,8 +26,8 @@ end
 function LoginModel.OnCreate()
     --注册本地UI事件
     Event.AddListener("m_OnAsLogin", this.m_OnAsLogin);
-    Event.AddListener("m_Gslogin", this.m_Gslogin);
-    Event.AddListener("m_chooseGameServer", this.m_chooseGameServer);
+   -- Event.AddListener("m_Gslogin", this.m_Gslogin);
+    --Event.AddListener("m_chooseGameServer", this.m_chooseGameServer);
     Event.AddListener("m_onConnectionState", this.m_onConnectionState);
     Event.AddListener("m_onDisconnect", this.m_onDisconnect);
     --注册 AccountServer 消息
@@ -37,16 +37,16 @@ end
 function LoginModel.Close()
     --清空本地UI事件
     Event.RemoveListener("m_OnAsLogin", this.OnLogin);
-    Event.RemoveListener("m_Gslogin", this.m_Gslogin);
-    Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
+   -- Event.RemoveListener("m_Gslogin", this.m_Gslogin);
+    --Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
     Event.RemoveListener("m_onConnectionState", this.m_onConnectionState);
     Event.RemoveListener("m_onDisconnect", this.m_onDisconnect);
 end
 function LoginModel.registerAsNetMsg()
     --as网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","login"),LoginModel.n_AsLogin);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),LoginModel.n_ChooseGameServer);
+   -- CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
+   -- CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),LoginModel.n_ChooseGameServer);
 end
 
 function LoginModel.m_OnAsLogin( username, password, data )
@@ -56,12 +56,12 @@ function LoginModel.m_OnAsLogin( username, password, data )
     CityEngineLua.login_loginapp(true);
 end
 
-function LoginModel.m_Gslogin( )
+--[[function LoginModel.m_Gslogin( )
     --注册gs的网络回调
     LoginModel.registerGsNetMsg()
     --连接gs
     CityEngineLua.login_baseapp(true)
-end
+end--]]
 
 function LoginModel.m_onConnectionState( isSuccess )
     Event.Brocast("c_ConnectionStateChange", isSuccess );
@@ -95,8 +95,9 @@ function LoginModel.onUIGetServerList( stream )
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
---返回服务器列表
+--[[返回服务器列表
 function LoginModel.n_AllGameServerInfo( stream )
+
     local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     local serinofs = msgAllGameServerInfo.infos
     if #msgAllGameServerInfo.infos ~= o then
@@ -119,10 +120,10 @@ function LoginModel.n_AllGameServerInfo( stream )
     end
 
     local xxx = 0 ;
-end
+end--]]
 
 --选择游戏服务器
-function LoginModel.m_chooseGameServer( obj, serverId )
+--[[function LoginModel.m_chooseGameServer( obj, serverId )
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","chooseGameServer")
     ----2、 填充 protobuf 内部协议数据
@@ -131,9 +132,9 @@ function LoginModel.m_chooseGameServer( obj, serverId )
     local  pMsg = assert(pbl.encode("as.ChoseGameServer", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-end
+end--]]
 
-function LoginModel.registerGsNetMsg()
+--[[function LoginModel.registerGsNetMsg()
     --清理as的网络回调
     CityEngineLua.Message:clear()
     CityEngineLua.Message:bindFixedMessage()
@@ -141,16 +142,16 @@ function LoginModel.registerGsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),LoginModel.n_GsLoginSuccessfully);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),LoginModel.n_CreateNewRole);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),LoginModel.n_OnRoleLogin);
-end
+end--]]
 
 --选择游戏服务器后回调, 发送登录游戏服务器的请求
-function LoginModel.n_ChooseGameServer( stream )
+--[[function LoginModel.n_ChooseGameServer( stream )
     ----反序列化，取出数据
     local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
     ----处理数据：缓存服务器返回的 token
     CityEngineLua.token = msg.code
-end
-function LoginModel.n_GsLoginSuccessfully(stream )
+end--]]
+--[[function LoginModel.n_GsLoginSuccessfully(stream )
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role
@@ -232,4 +233,4 @@ function LoginModel.n_CreateNewRole(stream)
     logDebug(pMsg.name)
     LoginModel.loginRole({{id = pMsg.id}})
 end
-
+--]]

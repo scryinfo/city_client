@@ -16,7 +16,7 @@ namespace LuaFramework {
         /// 复制到自己的Webserver上面，并修改下面的WebUrl。
         /// </summary>
         public const bool UpdateMode = false;                       //更新模式-默认关闭 
-        public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭 
+        public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭
         public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式
 
         public const int TimerInterval = 1;

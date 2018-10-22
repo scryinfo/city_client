@@ -5,7 +5,7 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
@@ -21,6 +21,8 @@ TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
+TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
+TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
@@ -156,6 +158,21 @@ UnitTest.Exec("abel_w3", "test_log",function()
     log("abel_w6", "[test] [test_log]  abel_w6 ")
     log("allen_w6", "[test] [test_log]  allen_w6 ")
     TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
+end)
+--选服测试
+UnitTest.Exec("rodger_w8_GameMainInterface", "test_serverList",function()
+    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
+    if serverListModel ~= nil then
+        serverListModel:Awake();
+    end
+end)
+--创角测试
+UnitTest.Exec("rodger_w8_GameMainInterface", "test_createRole",function()
+    local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
+    if createRoleModel ~= nil then
+        createRoleModel:Awake();
+    end
+
 end)
 
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()

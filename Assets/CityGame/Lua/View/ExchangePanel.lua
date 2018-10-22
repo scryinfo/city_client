@@ -30,6 +30,7 @@ function ExchangePanel.InitPanel()
     this.recordToggle = transform:Find("toggleRoot/record"):GetComponent("Toggle");
     this.recordOpen = transform:Find("toggleRoot/record/open");
     this.recordClose = transform:Find("toggleRoot/record/close");
+    this.backBtn = transform:Find("topRoot/backBtn");
 
     this.quotesAndCollectPage = transform:Find("togglePageRoot/quotesAndCollect");  --行情收藏page
     this.titleRoot = transform:Find("togglePageRoot/quotesAndCollect/titleRoot");

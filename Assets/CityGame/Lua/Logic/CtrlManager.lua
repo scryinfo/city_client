@@ -13,9 +13,13 @@ require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
+require "Controller/ChooseWarehouseCtrl"
+require "Controller/TransportBoxCtrl"
+require "Controller/DETAILSBoxCtrl"
 
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
+require "Controller/GameMainInterfaceCtrl"
 require "Controller/BtnDialogPageCtrl"
 require "Controller/InputDialogPageCtrl"
 require "Controller/ExchangeCtrl"
@@ -23,6 +27,9 @@ require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
+--require "Model/GameMainInterfaceModel"
+require "Model/ServerListModel"
+require "Model/CreateRoleModel"
 require "Model/MaterialModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
@@ -39,7 +46,7 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0,0);
+	UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();
 	--测试
@@ -64,6 +71,9 @@ function CtrlManager.Init()
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
 	modelList[ModelNames.House] = HouseModel.New();
+	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
+	modelList[ModelNames.ServerList] = ServerListModel.New();
+	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();

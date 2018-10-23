@@ -22,6 +22,10 @@ function AutoRequire:initialize()
     self.requirePaths[#self.requirePaths+1] = "require '__require_first__'"
 end
 
+function AutoRequire:requireLast(file)
+    self.requirePaths[#self.requirePaths+1] = 'require '.."'"..file.."'"
+end
+
 function AutoRequire:init(dir)
     instance.OriginalPath = dir
     print("instance.OriginalPath", instance.OriginalPath)
@@ -42,7 +46,7 @@ function AutoRequire:addPath(path)
     end
 end
 
-function AutoRequire:WriteAndroidRequire()
+function AutoRequire:WriteRuntimeRequire()
     file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_RunTime.lua',self.requirePaths)
     self.requirePaths = nil
 end

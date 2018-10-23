@@ -47,6 +47,8 @@ function ExchangeTransactionPanel.InitPanel()
     this.totalText = transform:Find("bodyRoot/right/bottom/bg02/totalText"):GetComponent("Text");  --总价格
     this.confirmBtn = transform:Find("bodyRoot/right/bottom/confirmBtn");
     this.confirmBtnShowTran = transform:Find("bodyRoot/right/bottom/confirmBtn/show");
+
+    this._initPanel()
 end
 --与数据无关的初始化设置
 function ExchangeTransactionPanel._initPanel()

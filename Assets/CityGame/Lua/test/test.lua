@@ -14,9 +14,10 @@ TestGroup.active_TestGroup("abel_w9_autoRequire")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
-TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
+--TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
 --TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
+TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
 
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
@@ -316,4 +317,8 @@ UnitTest.Exec("abel_w9_AddLuaComponent", "test_abel_w9_AddLuaComponent",  functi
 
     --绑定lua脚本,传入lua相对路径, 具体测试见 test_luaComponent
     local luaCom = CityLuaUtil.AddLuaComponent(go,'View/Logic/test_luaComponent')
+end)
+
+UnitTest.Exec("cycle_w10_exchange02", "test_cycle_w10_exchange02",  function ()
+    UIPage:OpenCtrl("ExchangeTransactionCtrl")
 end)

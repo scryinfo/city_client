@@ -28,6 +28,8 @@ function ExchangeTransactionCtrl:Awake(go)
     self.sellSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.sellSource.mProvideData = ExchangeTransactionCtrl.static.SellProvideData
     self.sellSource.mClearData = ExchangeTransactionCtrl.static.SellClearData
+
+    UpdateBeat:Add(self._update, self);
 end
 
 function ExchangeTransactionCtrl:Refresh()
@@ -35,7 +37,40 @@ function ExchangeTransactionCtrl:Refresh()
 end
 
 function ExchangeTransactionCtrl:Close()
-    ExchangePanel.quotesToggle.onValueChanged:RemoveAllListeners();
+    --ExchangePanel.quotesToggle.onValueChanged:RemoveAllListeners();
+end
+
+function ExchangeTransactionCtrl:_update()
+    ExchangeTransactionPanel.confirmBtn.localScale = Vector3.zero
+    if self.isSellState then
+        if ExchangeTransactionPanel.sellCountInput.text ~= "" and ExchangeTransactionPanel.sellPriceInput.text ~= "" then
+            --显示算好的数值
+            local count = ExchangeTransactionPanel.sellCountInput.text
+            local unitPrice = ExchangeTransactionPanel.sellPriceInput.text
+            ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
+            ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
+            ExchangeTransactionPanel.serviceText.text = 0
+            if not self.wareHouse then
+                return
+            else
+                ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+            end
+        end
+    else
+        if ExchangeTransactionPanel.buyCountInput.text ~= "" and ExchangeTransactionPanel.buyPriceInput.text ~= "" then
+            --显示算好的数值
+            local count = ExchangeTransactionPanel.buyCountInput.text
+            local unitPrice = ExchangeTransactionPanel.buyPriceInput.text
+            ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
+            ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
+            ExchangeTransactionPanel.serviceText.text = "E"..getPriceString(count * unitPrice * 0.1, 30, 24)
+            if not self.wareHouse then
+                return
+            else
+                ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+            end
+        end
+    end
 end
 
 function ExchangeTransactionCtrl:_initPanelData()
@@ -43,7 +78,13 @@ function ExchangeTransactionCtrl:_initPanelData()
         UIPage.ClosePage();
     end );
 
-    Event.AddListener("m_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    --ExchangeTransactionPanel.buyCountInput.onValueChanged:AddListener(function (value)
+    --    self:_buyCountInputChangeValue(value)
+    --end)
+
+    Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
 
     ---模拟数据
     local buyTemp = {}
@@ -62,11 +103,22 @@ function ExchangeTransactionCtrl:_initPanelData()
     ExchangeTransactionCtrl.static.sellDatas = sellTemp
     ExchangeTransactionCtrl.static.buyDatas = buyTemp
 
-    ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buyScroll, #ExchangeTransactionCtrl.static.buyDatas)
-    ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellScroll, #ExchangeTransactionCtrl.static.sellDatas)
+    ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
+    ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
 end
 
---buyScroll
+---按钮监听
+function ExchangeTransactionCtrl:_openBuyPart(ins)
+    ExchangeTransactionPanel._openBuy()
+
+    ins.isSellState = false
+end
+function ExchangeTransactionCtrl:_openSellPart(ins)
+    ExchangeTransactionPanel._openSell()
+    ins.isSellState = true
+end
+
+---滑动复用
 ExchangeTransactionCtrl.static.BuyProvideData = function(transform, idx)
     idx = idx + 1
     local buyItem = ExchangeTransactionItem:new(ExchangeTransactionCtrl.buyDatas[idx], transform)
@@ -90,6 +142,7 @@ function ExchangeTransactionCtrl:_updateItemTransactionData(datas)
             itemData.index = i
             itemData.isSell = false
         end
+        ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
     end
 
     if #datas.sell ~= 0 then
@@ -98,5 +151,6 @@ function ExchangeTransactionCtrl:_updateItemTransactionData(datas)
             itemData.index = i
             itemData.isSell = true
         end
+        ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
     end
 end

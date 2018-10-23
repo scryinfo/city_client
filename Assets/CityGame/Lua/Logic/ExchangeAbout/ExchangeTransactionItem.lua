@@ -17,6 +17,8 @@ function ExchangeTransactionItem:initialize(data, viewRect)
     self.numIDText = viewTrans:Find("numImg/Text"):GetComponent("Text");
     self.valueText = viewTrans:Find("valueText"):GetComponent("Text");
     self.countText = viewTrans:Find("countText"):GetComponent("Text");
+
+    self:_initData()
 end
 
 --初始化界面

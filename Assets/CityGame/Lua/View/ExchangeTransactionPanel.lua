@@ -45,16 +45,12 @@ function ExchangeTransactionPanel.InitPanel()
     this.calculateText = transform:Find("bodyRoot/right/bottom/calculateText"):GetComponent("Text");  --单价x总量得到的值
     this.serviceText = transform:Find("bodyRoot/right/bottom/serviceText"):GetComponent("Text");  --手续费
     this.totalText = transform:Find("bodyRoot/right/bottom/bg02/totalText"):GetComponent("Text");  --总价格
-    this.confirmBtn = transform:Find("bodyRoot/right/bottom/confirmBtn");
-    this.confirmBtnShowTran = transform:Find("bodyRoot/right/bottom/confirmBtn/show");
+    this.confirmBtn = transform:Find("bodyRoot/right/bottom/confirmHide/show");
 
     this._initPanel()
 end
 --与数据无关的初始化设置
 function ExchangeTransactionPanel._initPanel()
-    this.calculateText.text = "0"
-    this.serviceText.text = "0"
-    this.totalText.text = "0"
     this._openBuy()
 
     this.buyCountInput.text = ""
@@ -65,6 +61,7 @@ function ExchangeTransactionPanel._initPanel()
     this.sellPriceInput.text = ""
     this.sellChooseText.transform.localScale = Vector3.zero
     this.sellChooseTipTran.localScale = Vector3.one
+    this.confirmBtn.localScale = Vector3.zero
 end
 
 --打开关闭买卖界面
@@ -73,10 +70,18 @@ function ExchangeTransactionPanel._openBuy()
     this.buyRoot.localScale = Vector3.one
     this.sellBtnCloseTran.localScale = Vector3.one
     this.sellRoot.localScale = Vector3.zero
+
+    this.calculateText.text = "0"
+    this.serviceText.text = "0"
+    this.totalText.text = "0"
 end
 function ExchangeTransactionPanel._openSell()
     this.sellBtnCloseTran.localScale = Vector3.zero
     this.sellRoot.localScale = Vector3.one
     this.buyBtnCloseTran.localScale = Vector3.one
     this.buyRoot.localScale = Vector3.zero
+
+    this.calculateText.text = "0"
+    this.serviceText.text = "0"
+    this.totalText.text = "0"
 end

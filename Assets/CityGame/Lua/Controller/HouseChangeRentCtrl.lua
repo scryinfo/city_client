@@ -4,8 +4,8 @@
 --- DateTime: 2018/10/4 9:53
 ---住宅更改租金界面
 
-require('Framework/UI/UIPage')
-require('Common/functions')
+-----
+-----
 
 
 HouseChangeRentCtrl = class('HouseChangeRentCtrl',UIPage)

@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 local pbl = pbl
 local log = log
 

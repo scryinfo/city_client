@@ -1,5 +1,4 @@
-require('Framework/UI/UIPage')
-
+-----
 
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
 local isShowList;

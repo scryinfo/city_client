@@ -1,5 +1,3 @@
-require "Common/define"
-
 StaffCtrl = {}
 local this = StaffCtrl;
 

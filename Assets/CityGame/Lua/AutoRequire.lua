@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/19 11:07
 ---
-require('Common/functions')
+-----
 
 local lfs = lfs
 local file_exists = file_exists

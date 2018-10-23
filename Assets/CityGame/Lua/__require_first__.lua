@@ -4,6 +4,7 @@
 --- DateTime: 2018/10/19 16:24
 ---
 Event = require 'events'
+require "Common/define"
 class = require 'Framework/class'
 require "LuaUtil"
 --require "Entity"

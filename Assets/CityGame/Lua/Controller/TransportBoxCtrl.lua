@@ -1,4 +1,4 @@
-require('Framework/UI/UIPage')
+-----
 
 
 TransportBoxCtrl = class('TransportBoxCtrl',UIPage);

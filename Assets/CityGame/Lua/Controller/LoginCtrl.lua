@@ -1,7 +1,6 @@
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
 
-
 LoginCtrl = class('LoginCtrl',UIPage)
 UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 

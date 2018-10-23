@@ -1,4 +1,4 @@
-require('Framework/UI/UIPage')
+-----
 
 
 WagesAdjustBoxCtrl = class('WagesAdjustBoxCtrl',UIPage)

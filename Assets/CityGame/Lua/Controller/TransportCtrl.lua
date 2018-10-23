@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 TransportCtrl = {};
 local this = TransportCtrl;

@@ -1,4 +1,4 @@
-require ('Framework/UI/UIPage')
+-----
 
 
 ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);

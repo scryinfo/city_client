@@ -1,7 +1,3 @@
---require "Common/define"
-require ('Framework/UI/UIPage')
-require "View/BuildingInfo/ShelfGoodsMgr"
-
 ShelfCtrl = class('ShelfCtrl',UIPage)
 
 local isShowList;

@@ -1,6 +1,6 @@
 
-require('Framework/UI/UIPage')
-require "Common/define"
+-----
+-----
 require('Controller/GameMainInterfaceCtrl')
 
 

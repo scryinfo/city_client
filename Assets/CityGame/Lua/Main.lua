@@ -6,7 +6,6 @@ require('TestGroup')
 local protoc = require ("Framework/pbl/protoc")
 
 function OnInitProto()
-	--TestGroup.active_TestGroup("abel_w7_pkg")
 	log("abel_w7_pkg","[OnInitProto] protoc:addpath")
 	log("abel_w7_pkg","[OnInitProto] persistentDataPath: ",UnityEngine.Application.persistentDataPath)
 	--protoc:addpath("./Assets/CityGame/Lua/pb") --注意这种从 Assets 开始的相对路径是目前发现的PC上唯一能支持 loadfile 的相对路径

@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/10 11:12
 ---
-require('Framework/UI/UIPage')
+-----
 
 
 TestExchangeCtrl = class('TestExchangeCtrl',UIPage)

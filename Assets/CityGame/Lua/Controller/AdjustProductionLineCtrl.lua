@@ -1,4 +1,4 @@
-require('Framework/UI/UIPage')
+-----
 
 
 AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPage);

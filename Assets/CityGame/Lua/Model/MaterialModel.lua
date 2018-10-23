@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 MaterialModel = {};
 local this = MaterialModel;

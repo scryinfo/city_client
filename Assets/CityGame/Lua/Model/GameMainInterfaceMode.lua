@@ -1,5 +1,5 @@
 
-require "Common/define"
+-----
 
 GameMainInterfaceModel = {};
 local this = GameMainInterfaceModel;

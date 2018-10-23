@@ -1,5 +1,5 @@
-require "Common/define"
-require('Framework/UI/UIPage')
+-----
+-----
 require('Controller/CreateRoleCtrl')
 require('Controller/GameMainInterfaceCtrl')
 

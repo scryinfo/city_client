@@ -4,7 +4,7 @@
 --- DateTime: 2018/8/31 10:55
 ---
 
-require('Framework/UI/UIPage')
+-----
 
 
 GroundAuctionCtrl = class('GroundAuctionCtrl',UIPage)

@@ -1,4 +1,4 @@
-require('Framework/UI/UIPage')
+-----
 
 
 DETAILSBoxCtrl = class('DETAILSBoxCtrl',UIPage);

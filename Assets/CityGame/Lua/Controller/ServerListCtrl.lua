@@ -1,7 +1,5 @@
 -----
 -----
-require('Controller/CreateRoleCtrl')
-require('Controller/GameMainInterfaceCtrl')
 
 ServerListCtrl = class('ServerListCtrl',UIPage)
 UIPage:ResgisterOpen(ServerListCtrl)

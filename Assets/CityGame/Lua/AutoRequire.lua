@@ -28,7 +28,7 @@ end
 
 function AutoRequire:init(dir)
     instance.OriginalPath = dir
-    print("instance.OriginalPath", instance.OriginalPath)
+    log("abel_w9_autoRequire","instance.OriginalPath", instance.OriginalPath)
 end
 
 function AutoRequire:getTag()

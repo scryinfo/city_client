@@ -4,8 +4,6 @@
 --- DateTime: 2018/10/15 17:23
 ---
 -----
-require "Logic/ExchangeAbout/ExchangeSortItem"
-require "Logic/ExchangeAbout/ExchangeSortMgr"
 
 local transform
 

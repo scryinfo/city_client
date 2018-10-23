@@ -1,8 +1,6 @@
 
 -----
 -----
-require('Controller/GameMainInterfaceCtrl')
-
 
 RoleManagerCtrl = class('RoleManagerCtrl',UIPage)
 

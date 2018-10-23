@@ -32,10 +32,8 @@ function Game.OnInitOK()
 end
 
 function Game.OnPostInitOK()
-    log("system","[Game.OnPostInitOK]: ");
     local model = CtrlManager.GetModel(ModelNames.Login);
     if model ~= nil then
-        log("system","[Game.OnPostInitOK]: model:Awake");
         model:Awake();
     end
 

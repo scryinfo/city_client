@@ -9,8 +9,6 @@
 --- DateTime: 2018/9/27 21:15
 ---
 -----
-require('Controller/SkillPageCtrl')
-
 MainPageCtrl = class('MainPageCtrl',UIPage)
 
 function MainPageCtrl:initialize()

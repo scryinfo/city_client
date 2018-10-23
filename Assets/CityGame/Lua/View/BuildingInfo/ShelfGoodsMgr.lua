@@ -2,7 +2,6 @@
 require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
 require 'View/BuildingInfo/WarehouseItem'  --仓库Item
 
-
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制

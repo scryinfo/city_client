@@ -36,12 +36,20 @@ function ServerListModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),ServerListModel.n_AllGameServerInfo);
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),ServerListModel.n_ChooseGameServer);
 end
+
 --返回服务器列表
 function ServerListModel.n_AllGameServerInfo( stream )
-
     local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     if #msgAllGameServerInfo.infos ~= 0 then
         this.serinofs = msgAllGameServerInfo.infos
+        local serverListName = {};
+        for i = 1, #this.serinofs do
+            serverListName[i] = this.serinofs[i].name
+        end
+        UIPage:OpenCtrl("ServerListCtrl", serverListName)
+       -- log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
+        --log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
+
         return
     end
 
@@ -49,7 +57,6 @@ function ServerListModel.n_AllGameServerInfo( stream )
 end
 --选择游戏服务器
 function ServerListModel.m_chooseGameServer( Index )
-
     local serverIndex = Index --测试服务器列表索引 1 是公共服务器 2 是李宁的服务器
     local sid = this.serinofs[serverIndex].serverId
     log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverIndex)
@@ -103,7 +110,6 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     if lMsg.info == nil then
         Event.Brocast("c_GsCreateRole")
     else
-        log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] 我来了")
         ServerListModel.loginRole(lMsg.info)
     end
 
@@ -178,8 +184,3 @@ function ServerListModel.n_CreateNewRole(stream)
     logDebug(pMsg.name)
     ServerListModel.loginRole({{id = pMsg.id}})
 end
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_ServerListCtrl_self",  function ()
-    Event.AddListener("c_LoginSuccessfully_self", function ()
-        UIPage:ShowPage(ServerListCtrl)
-    end)
-end)

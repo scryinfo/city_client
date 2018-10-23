@@ -160,21 +160,6 @@ UnitTest.Exec("abel_w3", "test_log",function()
     log("allen_w6", "[test] [test_log]  allen_w6 ")
     TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
 end)
---选服测试
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_serverList",function()
-    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
-    if serverListModel ~= nil then
-        serverListModel:Awake();
-    end
-end)
---创角测试
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_createRole",function()
-    local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
-    if createRoleModel ~= nil then
-        createRoleModel:Awake();
-    end
-
-end)
 
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     local info = {}

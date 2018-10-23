@@ -75,6 +75,16 @@ function Game.OnPostInitOK()
         materialModel:Awake();
     end
 
+    --测试选服界面
+    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
+    if serverListModel ~= nil then
+        serverListModel:Awake();
+    end
+    --测试创角界面
+    local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
+    if createRoleModel ~= nil then
+        createRoleModel:Awake();
+    end
     --单元测试入口
     lu.LuaUnit.run()
 end

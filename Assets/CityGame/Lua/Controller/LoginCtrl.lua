@@ -136,7 +136,6 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		UnitTest.Exec_now("rodger_w8_GameMainInterface", "c_LoginSuccessfully_self",self)
 		self.logined = true
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";

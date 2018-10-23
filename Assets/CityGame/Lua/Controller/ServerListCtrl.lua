@@ -4,6 +4,7 @@ require('Controller/CreateRoleCtrl')
 require('Controller/GameMainInterfaceCtrl')
 local class = require 'Framework/class'
 ServerListCtrl = class('ServerListCtrl',UIPage)
+UIPage:ResgisterOpen(ServerListCtrl) --注册打开的方法
 
 local serverListBehaviour;
 local gameObject;
@@ -28,6 +29,13 @@ function ServerListCtrl:OnCreate(obj)
     --普通消息注册
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+
+end
+
+function ServerListCtrl:Refresh()
+    log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+    ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
+    ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];
 end
 
 --选择服务器一--

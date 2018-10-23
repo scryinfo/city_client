@@ -2,7 +2,7 @@ local class = require 'Framework/class'
 
 ShelfGoodsItem = class('ShelfGoodsItem')
 
---初始化方法   数据（读配置表）
+--初始化方法   数据（接受服务器）
 function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;

@@ -1048,25 +1048,25 @@ local function DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMa
 end
 
 -- Return methods.
-local cPublications = {m_cConfig = nil, m_cMethods = {}, m_cHelpers = {}, m_cBases = {}}
+MemoryRefInfo = { m_cConfig = nil, m_cMethods = {}, m_cHelpers = {}, m_cBases = {}}
 
-cPublications.m_cConfig = cConfig
+MemoryRefInfo.m_cConfig = cConfig
 
-cPublications.m_cMethods.DumpMemorySnapshot = DumpMemorySnapshot
-cPublications.m_cMethods.DumpMemorySnapshotCompared = DumpMemorySnapshotCompared
-cPublications.m_cMethods.DumpMemorySnapshotComparedFile = DumpMemorySnapshotComparedFile
-cPublications.m_cMethods.DumpMemorySnapshotSingleObject = DumpMemorySnapshotSingleObject
+MemoryRefInfo.m_cMethods.DumpMemorySnapshot = DumpMemorySnapshot
+MemoryRefInfo.m_cMethods.DumpMemorySnapshotCompared = DumpMemorySnapshotCompared
+MemoryRefInfo.m_cMethods.DumpMemorySnapshotComparedFile = DumpMemorySnapshotComparedFile
+MemoryRefInfo.m_cMethods.DumpMemorySnapshotSingleObject = DumpMemorySnapshotSingleObject
 
-cPublications.m_cHelpers.FormatDateTimeNow = FormatDateTimeNow
-cPublications.m_cHelpers.GetOriginalToStringResult = GetOriginalToStringResult
+MemoryRefInfo.m_cHelpers.FormatDateTimeNow = FormatDateTimeNow
+MemoryRefInfo.m_cHelpers.GetOriginalToStringResult = GetOriginalToStringResult
 
-cPublications.m_cBases.CreateObjectReferenceInfoContainer = CreateObjectReferenceInfoContainer
-cPublications.m_cBases.CreateObjectReferenceInfoContainerFromFile = CreateObjectReferenceInfoContainerFromFile
-cPublications.m_cBases.CreateSingleObjectReferenceInfoContainer = CreateSingleObjectReferenceInfoContainer
-cPublications.m_cBases.CollectObjectReferenceInMemory = CollectObjectReferenceInMemory
-cPublications.m_cBases.CollectSingleObjectReferenceInMemory = CollectSingleObjectReferenceInMemory
-cPublications.m_cBases.OutputMemorySnapshot = OutputMemorySnapshot
-cPublications.m_cBases.OutputMemorySnapshotSingleObject = OutputMemorySnapshotSingleObject
-cPublications.m_cBases.OutputFilteredResult = OutputFilteredResult
+MemoryRefInfo.m_cBases.CreateObjectReferenceInfoContainer = CreateObjectReferenceInfoContainer
+MemoryRefInfo.m_cBases.CreateObjectReferenceInfoContainerFromFile = CreateObjectReferenceInfoContainerFromFile
+MemoryRefInfo.m_cBases.CreateSingleObjectReferenceInfoContainer = CreateSingleObjectReferenceInfoContainer
+MemoryRefInfo.m_cBases.CollectObjectReferenceInMemory = CollectObjectReferenceInMemory
+MemoryRefInfo.m_cBases.CollectSingleObjectReferenceInMemory = CollectSingleObjectReferenceInMemory
+MemoryRefInfo.m_cBases.OutputMemorySnapshot = OutputMemorySnapshot
+MemoryRefInfo.m_cBases.OutputMemorySnapshotSingleObject = OutputMemorySnapshotSingleObject
+MemoryRefInfo.m_cBases.OutputFilteredResult = OutputFilteredResult
 
-return cPublications
+--return MemoryRefInfo

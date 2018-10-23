@@ -48,6 +48,10 @@ end
 
 function AutoRequire:WriteRuntimeRequire()
     CityGlobal.file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_RunTime.lua',self.requirePaths)
+    self.requirePaths = {}
+end
+
+function AutoRequire:FinishedRequire()
     self.requirePaths = nil
 end
 

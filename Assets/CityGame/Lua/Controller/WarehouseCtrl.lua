@@ -1,4 +1,3 @@
------
 
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
 local isShowList;
@@ -27,6 +26,11 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self);
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
+    warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
+
+    self.luabehaviour = warehouse
+    self.m_data = {};
+    self.m_data.buildingType = BuildingInType.Warehouse;
 end
 
 function WarehouseCtrl:Awake(go)
@@ -41,6 +45,10 @@ end
 
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
+end
+--搜索  暂时用来添加商品
+function WarehouseCtrl:OnClick_searchBtn(ins)
+    ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
 end
 
 --右边Shelf
@@ -77,11 +85,9 @@ end
 
 function WarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
-        --WarehousePanel.list:SetActive(true);
         WarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         WarehousePanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
-        --WarehousePanel.list:SetActive(false);
         WarehousePanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         WarehousePanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
@@ -89,32 +95,22 @@ function WarehouseCtrl:OnClick_OpenList(isShow)
 end
 
 function WarehouseCtrl:OnClick_rightShelf(isShow,number)
-    --local rightInformation = WarehousePanel.rightInformation:GetComponent("RectTransform")
     if isShow then
-        --WarehousePanel.rightInformation:SetActive(true);
-        --WarehousePanel.rightInformation:DOLocalMove(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(true);
         else
             WarehousePanel.transport:SetActive(true);
         end
-        --WarehousePanel.rightInformation.offsetMin = Vector2.New(0,0);
-        --WarehousePanel.rightInformation.offsetMax = Vector2.New(0,0);
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
     else
-        --WarehousePanel.rightInformation:SetActive(false);
-        --WarehousePanel.rightInformation:DOLocalMove(Vector3.New(840,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         WarehousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
         else
             WarehousePanel.transport:SetActive(false);
         end
-        --WarehousePanel.rightInformation.offsetMin = Vector2.New(850,0);
-        --WarehousePanel.rightInformation.offsetMax = Vector2.New(-850,0);
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);
-
     end
     switchIsShow = isShow;
 end

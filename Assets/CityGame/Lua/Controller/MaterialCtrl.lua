@@ -1,8 +1,3 @@
-require "Common/define"
-require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
-require('Framework/UI/UIPage')
-
-local class = require 'Framework/class'
 MaterialCtrl = class('MaterialCtrl',UIPage)
 UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
 

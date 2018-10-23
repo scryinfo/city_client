@@ -233,7 +233,8 @@ namespace LuaFramework {
         void OnInitialize() {
             Debug.Log("GameManager:OnInitialize Invoked !!!");
             LuaManager.InitStart();
-            LuaManager.DoFile("Logic/Game");         //加载游戏
+            //LuaManager.DoFile("Logic/Game");         //加载游戏
+            LuaManager.DoFile("Game");         //加载游戏
             Util.CallMethod("Game", "OnInitOK");     //初始化完成
 
             CityMain km = GameObject.Find("ClientApp").GetComponent<CityMain>();

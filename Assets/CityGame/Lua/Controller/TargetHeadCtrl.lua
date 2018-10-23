@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 TargetHeadCtrl = {};
 local this = TargetHeadCtrl;

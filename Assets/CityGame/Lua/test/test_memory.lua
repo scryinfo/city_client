@@ -4,7 +4,7 @@
 --- DateTime: 2018/10/18 16:03
 ---
 local ProFi = require ('test/testFrameWork/memory/ProFi')
-local class = require 'Framework/class'
+
 local classTest = class('classTest')
 local FrameTimer = FrameTimer
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()

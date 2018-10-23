@@ -3,10 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/4 14:57
 ---含有input输入框的弹窗
-
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
-
 InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
 
 function InputDialogPageCtrl:initialize()

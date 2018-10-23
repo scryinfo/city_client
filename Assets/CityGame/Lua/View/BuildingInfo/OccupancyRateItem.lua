@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 17:03
 ---
-local class = require 'Framework/class'
+
 
 OccupancyRateItem = class('OccupancyRateItem')
 OccupancyRateItem.static.TOTAL_H = 345  --整个Item的高度

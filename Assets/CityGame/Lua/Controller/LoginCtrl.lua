@@ -1,12 +1,6 @@
-require "Common/define"
---require('Controller/TopBarCtrl')
---require('Controller/MainPageCtrl')
-require('Framework/UI/UIPage')
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
 
-UnitTest = require ('test/testFrameWork/UnitTest')
-local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 

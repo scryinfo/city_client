@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 SelectAvatarCtrl = {};
 local this = SelectAvatarCtrl;

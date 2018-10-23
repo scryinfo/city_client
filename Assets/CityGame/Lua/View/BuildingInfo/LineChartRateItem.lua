@@ -1,4 +1,4 @@
-local class = require 'Framework/class'
+
 
 LineChartRateItem = class('LineChartRateItem')
 LineChartRateItem.static.TOTAL_H = 443  --整个Item的高度

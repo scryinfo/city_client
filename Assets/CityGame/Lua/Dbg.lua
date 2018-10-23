@@ -1,4 +1,3 @@
-require('TestGroup')
 
 Dbg = {}
 local this = Dbg;

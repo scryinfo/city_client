@@ -1,5 +1,5 @@
-require "Common/define"
-require('Common/functions')
+-----
+-----
 require "Controller/LoginCtrl"
 require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"

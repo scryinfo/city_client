@@ -1,8 +1,8 @@
-require "Common/define"
-require('Framework/UI/UIPage')
+-----
+-----
 require('Controller/CreateRoleCtrl')
 require('Controller/GameMainInterfaceCtrl')
-local class = require 'Framework/class'
+
 ServerListCtrl = class('ServerListCtrl',UIPage)
 UIPage:ResgisterOpen(ServerListCtrl)
 

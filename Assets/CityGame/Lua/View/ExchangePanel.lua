@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/15 17:23
 ---
-require "Common/define"
+-----
 require "Logic/ExchangeAbout/ExchangeSortItem"
 require "Logic/ExchangeAbout/ExchangeSortMgr"
 

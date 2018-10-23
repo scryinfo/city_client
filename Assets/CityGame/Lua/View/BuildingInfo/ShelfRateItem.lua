@@ -1,5 +1,5 @@
 require('Controller/ShelfCtrl')
-local class = require 'Framework/class'
+
 
 ShelfRateItem = class('ShelfRateItem')
 ShelfRateItem.static.TOTAL_H = 455  --整个Item的高度

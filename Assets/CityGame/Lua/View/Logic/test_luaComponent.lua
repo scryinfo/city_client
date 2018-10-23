@@ -4,7 +4,7 @@
 --- DateTime: 2018/10/17 10:49
 ---
 
-local class = require 'Framework/class'
+
 testLuaCom = class('testLuaCom')
 local transform = nil;
 

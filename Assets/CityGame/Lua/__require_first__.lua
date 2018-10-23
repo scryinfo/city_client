@@ -4,11 +4,26 @@
 --- DateTime: 2018/10/19 16:24
 ---
 Event = require 'events'
+require "Common/define"
+class = require 'Framework/class'
+require "LuaUtil"
+--require "Entity"
 --调试信息
-require("Dbg")
 require('TestGroup')
+require("Dbg")
 luaunit = require "Framework/pbl/luaunit"
---单元测试
-require('test/test')
---性能测试
-require('test/performance/luaPerformance')
+
+require "LuaUtil"
+
+CityEngineLua = {}
+require "DataType"
+require "EntityDef"
+require "Message"
+require "Bundle"
+require "EntityCall"
+require "Entity"
+require "PersistentInfos"
+require "City"
+require "Message"
+require "Bundle"
+require "PersistentInfos"

@@ -1,7 +1,7 @@
-if CityLuaUtil.isAndroidPlatform() == false then
-    require('Require_PC')
+if UnityEngine.Application.isEditor then
+    require('Require_Editor')
 else
-    require('Require_Android')
+    require('Require_RunTime')
 end
 
 local lu = luaunit
@@ -9,20 +9,6 @@ local lu = luaunit
 --require('test/test')
 ----性能测试
 --require('test/performance/luaPerformance')
-
-require "City"
-require "Framework/Account"
-require "Framework/Avatar"
-require "Framework/Gate"
-require "Framework/Monster"
-require "Framework/NPC"
-require "Framework/DroppedItem"
-
-require "Common/functions"
---require "Controller/LoginCtrl"
-require "Logic/CtrlManager"
-require "Logic/World"
-
 
 --管理器--
 Game = {};

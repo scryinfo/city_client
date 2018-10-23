@@ -4,7 +4,7 @@
 --- DateTime: 2018/9/4 16:38
 ---
 require "View/BuildingInfoRightPanel"
-require "Common/define"
+-----
 
 local transform
 

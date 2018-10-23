@@ -9,7 +9,7 @@ local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
 local table_eq = lu.assertItemsEquals
 local fail     = lu.assertErrorMsgContains
-local class = require 'Framework/class'
+
 
 
 Person = class('Person') --this is the same as class('Person', Object) or Object:subclass('Person') 没有基类的类，默认基类是Object，不需要写而已

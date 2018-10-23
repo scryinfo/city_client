@@ -2,7 +2,7 @@
 require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
 --require 'View/BuildingInfo/'  --
 
-local class = require 'Framework/class'
+
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"

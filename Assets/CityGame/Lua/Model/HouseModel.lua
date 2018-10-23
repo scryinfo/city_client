@@ -3,8 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/21 11:23
 ---
-require "Common/define"
-require "City"
+-----
 
 HouseModel = {};
 local this = HouseModel;

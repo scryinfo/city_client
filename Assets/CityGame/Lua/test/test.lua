@@ -5,8 +5,13 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w10_OpenCtrl")
+TestGroup.active_TestGroup("abel_w9_autoRequire")
+
+--TestGroup.active_TestGroup("abel_w10_OpenCtrl")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_tableOrder")
+--TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
@@ -22,19 +27,14 @@ TestGroup.active_TestGroup("abel_w10_OpenCtrl")
 --TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
-TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
-TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
+--TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
 require "LuaUtil"
 require "Logic/CtrlManager"
-
-UnitTest = require ('test/testFrameWork/UnitTest')
-
---require('test/performance/run')
---require ("test/test_memory")
 require ("test/pbl/pbl_test")
 require ("test/test_BaseOO")
 require ("test/test_Mixins")
@@ -160,21 +160,6 @@ UnitTest.Exec("abel_w3", "test_log",function()
     log("allen_w6", "[test] [test_log]  allen_w6 ")
     TestGroup.remove_TestGroupId("abel_w6_common") --移除log分组
 end)
---选服测试
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_serverList",function()
-    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
-    if serverListModel ~= nil then
-        serverListModel:Awake();
-    end
-end)
---创角测试
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_createRole",function()
-    local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
-    if createRoleModel ~= nil then
-        createRoleModel:Awake();
-    end
-
-end)
 
 UnitTest.Exec("cycle_w6_houseAndGround", "test_w6_house",  function ()
     local info = {}
@@ -207,12 +192,22 @@ UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopSc
     log("cycle_w8_exchange01_loopScroll","[cycle_w8_exchange01_loopScroll] ...............")
 end)
 
-
 UnitTest.Exec("cycle_w9_exchange01", "test_cycle_w9_exchange01",  function ()
     UIPage:ShowPage(ExchangeCtrl)
 
     log("cycle_w9_exchange01","[cycle_w9_exchange01] ...............")
+end)
 
+--遍历是顺序的，只不过调试时显示是乱序的
+UnitTest.Exec("abel_w9_tableOrder", "test_table_order",  function ()
+    local tb = {}
+    for i = 1, 100 do
+        tb[#tb+1] = 'tb_'..tostring(i)
+        log("abel_w9_tableOrder", "[test_table_order]  添加table的顺序: ",tb[i])
+    end
+    for i = 1, 100 do
+        log("abel_w9_tableOrder", "[test_table_order]  访问table的顺序: ",tb[i])
+    end
 end)
 
 UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_MonoBehaviour",  function ()

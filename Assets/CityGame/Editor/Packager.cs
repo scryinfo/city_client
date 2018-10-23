@@ -34,7 +34,7 @@ public class Packager {
     }
 
     [MenuItem("LuaFramework/Build Android Resource", false, 101)]
-    public static void BuildAndroidResource() {
+    public static void BuildAndroidResource() {        
         BuildAssetResource(BuildTarget.Android);
     }
 

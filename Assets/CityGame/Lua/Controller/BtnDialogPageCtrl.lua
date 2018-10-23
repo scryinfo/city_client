@@ -4,8 +4,8 @@
 --- DateTime: 2018/9/30 16:30
 ---只含有按钮的简单弹框
 
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 BtnDialogPageCtrl = class('BtnDialogPageCtrl',UIPage)
 

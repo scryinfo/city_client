@@ -8,9 +8,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:15
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
-
+-----
 SkillPageCtrl = class('SkillPageCtrl',UIPage)
 
 function SkillPageCtrl:initialize()

@@ -1,5 +1,5 @@
-require "Common/define"
-require('Common/functions')
+-----
+-----
 require "Controller/LoginCtrl"
 require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"
@@ -47,8 +47,9 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:OpenCtrl('LoginCtrl') --注意传入的是类名
+	UIPage:OpenCtrl('LoginCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
+
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();
 	--测试

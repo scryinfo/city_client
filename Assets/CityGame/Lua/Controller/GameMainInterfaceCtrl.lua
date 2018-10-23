@@ -1,10 +1,3 @@
-
-require('Framework/UI/UIPage')
-require "Common/define"
---require('Controller/HouseCtrl')
---require('Controller/ExchangeCtrl')
-
-local class = require 'Framework/class'
 GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
 
 local gameMainInterfaceBehaviour;

@@ -3,8 +3,8 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/10 11:12
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 TestExchangeCtrl = class('TestExchangeCtrl',UIPage)
 

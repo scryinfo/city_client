@@ -4,8 +4,8 @@
 --- DateTime: 2018/8/31 10:55
 ---
 
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 GroundAuctionCtrl = class('GroundAuctionCtrl',UIPage)
 

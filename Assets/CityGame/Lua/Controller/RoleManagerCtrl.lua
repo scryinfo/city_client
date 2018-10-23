@@ -1,9 +1,9 @@
 
-require('Framework/UI/UIPage')
-require "Common/define"
+-----
+-----
 require('Controller/GameMainInterfaceCtrl')
 
-local class = require 'Framework/class'
+
 RoleManagerCtrl = class('RoleManagerCtrl',UIPage)
 
 local RoleManagerBehaviour

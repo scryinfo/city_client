@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/20 15:57
 ---成交记录
-local class = require 'Framework/class'
+
 RecordTransactionItem = class('RecordTransactionItem')
 RecordTransactionItem.static.SELL_GREEN = "#0B7B16"  --卖出的绿色数值
 RecordTransactionItem.static.BUY_RED = "#E42E2E"

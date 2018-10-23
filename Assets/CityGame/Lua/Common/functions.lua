@@ -88,3 +88,28 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+
+function file_exists(path)
+	local file = io.open(path, "rb")
+	if file then file:close() end
+	return file ~= nil
+end
+
+function file_saveTable(filename, data)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wa+")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	for i = 1, #data do
+		file:write(data[i]..'\n')
+	end
+	if filename ~= nil then
+		file:close()
+	end
+end

@@ -1,5 +1,3 @@
---require "pb/common"
-require "Common/define"
 local log = log
 
 --消息

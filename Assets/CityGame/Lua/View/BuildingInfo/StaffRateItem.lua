@@ -4,7 +4,7 @@
 --- DateTime: 2018/10/05 11:00
 ---
 
-local class = require 'Framework/class'
+
 
 StaffRateItem = class('StaffRateItem')
 StaffRateItem.static.TOTAL_NotAll_H = 407  --整个Item的高度，员工有未找到住所的

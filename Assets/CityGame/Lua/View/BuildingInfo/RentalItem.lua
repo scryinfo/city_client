@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/20 11:00
 ---
-local class = require 'Framework/class'
+
 
 RentalItem = class('RentalItem')
 RentalItem.static.TOTAL_H = 209  --整个Item的高度

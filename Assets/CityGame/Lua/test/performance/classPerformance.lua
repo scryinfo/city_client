@@ -1,4 +1,4 @@
-local class = require 'Framework/class'
+
 testtime = require 'test/performance/testTime'
 
 --简单类的实现---------------------------{

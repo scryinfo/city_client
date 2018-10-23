@@ -1,6 +1,6 @@
 require "Common/define"
 require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+
 CreateRoleCtrl = class('ServerListCtrl',UIPage)
 
 local createRoleBehaviour;

@@ -4,7 +4,7 @@
 --- DateTime: 2018/8/31 10:45
 ---
 require "Common/define"
-require "City"
+
 require "Logic/GameBubble/GameBubbleManager"
 
 GroundAuctionModel= {};

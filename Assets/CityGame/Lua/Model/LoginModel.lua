@@ -3,8 +3,6 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/27 14:13
 ---
-require "Common/define"
-require "City"
 local pbl = pbl
 local log = log
 

@@ -1,16 +1,7 @@
 --require "pb.person_pb"
 
-CityEngineLua = {}
+local CityEngineLua = CityEngineLua
 local this = CityEngineLua;
-
-require "LuaUtil"
-require "DataType"
-require "EntityDef"
-require "Message"
-require "Bundle"
-require "EntityCall"
-require "Entity"
-require "PersistentInfos"
 
 local pbl = pbl
 local pbio   = pbl_io

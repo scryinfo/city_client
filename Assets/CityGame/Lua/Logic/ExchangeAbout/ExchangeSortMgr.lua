@@ -14,7 +14,7 @@ ExchangeSortItemType =
     Volume = 6,
 }
 
-local class = require 'Framework/class'
+
 
 ExchangeSortMgr = class('ExchangeSortMgr')
 

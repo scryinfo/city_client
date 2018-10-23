@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/15 17:19
 ---交易所行情item
-local class = require 'Framework/class'
+
 ExchangeQuoteItem = class('ExchangeQuoteItem')
 ExchangeQuoteItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
 ExchangeQuoteItem.static.CHANGE_RED = "#E42E2E"

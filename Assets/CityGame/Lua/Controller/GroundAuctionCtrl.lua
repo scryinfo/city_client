@@ -5,7 +5,7 @@
 ---
 
 require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+
 
 GroundAuctionCtrl = class('GroundAuctionCtrl',UIPage)
 

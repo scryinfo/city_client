@@ -1,5 +1,4 @@
 require "Common/define"
-require "City"
 local pbl = pbl
 local log = log
 

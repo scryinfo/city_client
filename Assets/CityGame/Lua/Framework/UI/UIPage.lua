@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 10:09
 ---
-local class = require 'Framework/class'
+
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
 UIType = {

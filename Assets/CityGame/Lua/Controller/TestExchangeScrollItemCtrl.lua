@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/10 11:49
 ---
-local class = require 'Framework/class'
+
 
 TestExchangeScrollItemCtrl = class('TestExchangeScrollItemCtrl')
 

@@ -1,5 +1,5 @@
 require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+
 
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
 local isShowList;

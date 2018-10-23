@@ -1,5 +1,5 @@
 require('Controller/AdjustProductionLineCtrl')
-local class = require 'Framework/class'
+
 
 HomeProductionLineItem = class('HomeProductionLineItem')
 HomeProductionLineItem.static.TOTAL_H = 775  --整个Item的高度

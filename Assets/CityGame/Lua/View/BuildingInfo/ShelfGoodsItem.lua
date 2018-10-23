@@ -1,4 +1,4 @@
-local class = require 'Framework/class'
+
 
 ShelfGoodsItem = class('ShelfGoodsItem')
 

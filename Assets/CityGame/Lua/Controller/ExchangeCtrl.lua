@@ -20,7 +20,7 @@ require('Framework/UI/UIPage')
 require('Logic/ExchangeAbout/ExchangeQuoteItem')
 require('Logic/ExchangeAbout/RecordEntrustmentItem')
 require('Logic/ExchangeAbout/RecordTransactionItem')
-local class = require 'Framework/class'
+
 
 ExchangeCtrl = class('ExchangeCtrl',UIPage)
 UIPage:ResgisterOpen(ExchangeCtrl)

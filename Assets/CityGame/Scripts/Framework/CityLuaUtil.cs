@@ -39,9 +39,9 @@ namespace City
             return UIRoot.getFixedRoot();
         }
 
-        public static bool isAndroidPlatform()
+        public static bool isWindowsEditor()
         {
-            return Application.platform == RuntimePlatform.Android;
+            return Application.platform == RuntimePlatform.WindowsEditor;
         }
 
         public static string getAssetsPath()

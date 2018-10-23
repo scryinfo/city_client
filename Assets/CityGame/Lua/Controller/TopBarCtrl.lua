@@ -5,7 +5,7 @@
 ---
 require('Framework/UI/UIPage')
 require('Controller/NoticeCtrl')
-local class = require 'Framework/class'
+
 
 TopBarCtrl = class('TopBarCtrl',UIPage)
 

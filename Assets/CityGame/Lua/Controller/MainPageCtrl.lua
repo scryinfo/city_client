@@ -10,7 +10,7 @@
 ---
 require('Framework/UI/UIPage')
 require('Controller/SkillPageCtrl')
-local class = require 'Framework/class'
+
 
 MainPageCtrl = class('MainPageCtrl',UIPage)
 

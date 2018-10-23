@@ -7,7 +7,7 @@ require('Common/functions')
 
 local lfs = lfs
 local file_exists = file_exists
-local class = require 'Framework/class'
+
 local AutoRequire = class("AutoRequire")
 local WindowsEditor = UnityEngine.Application.isEditor
 
@@ -19,6 +19,7 @@ end
 
 function AutoRequire:initialize()
     self.requirePaths = {} --这个用以Android打包时，导出到 AndroidRequire.lua
+    self.requirePaths[#self.requirePaths+1] = "require '__require_first__'"
 end
 
 function AutoRequire:init(dir)
@@ -42,7 +43,7 @@ function AutoRequire:addPath(path)
 end
 
 function AutoRequire:WriteAndroidRequire()
-    file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_Android.lua',self.requirePaths)
+    file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_RunTime.lua',self.requirePaths)
     self.requirePaths = nil
 end
 

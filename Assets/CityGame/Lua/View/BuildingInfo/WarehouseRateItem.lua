@@ -1,5 +1,5 @@
 require('Controller/WarehouseCtrl')
-local class = require 'Framework/class'
+
 
 WarehouseRateItem = class('WarehouseRateItem');
 WarehouseRateItem.static.TOTAL_H = 475  --整个Item的高度

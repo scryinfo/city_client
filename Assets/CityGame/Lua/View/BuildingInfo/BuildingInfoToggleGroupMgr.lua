@@ -12,7 +12,7 @@ require 'View/BuildingInfo/WarehouseRateItem'
 require 'View/BuildingInfo/ShelfRateItem'
 require 'View/BuildingInfo/HomeProductionLineItem'
 
-local class = require 'Framework/class'
+
 
 BuildingInfoToggleGroupMgr = class('BuildingInfoToggleGroupMgr')
 

@@ -1,5 +1,4 @@
 require "Common/define"
-require "City"
 
 MaterialModel = {};
 local this = MaterialModel;

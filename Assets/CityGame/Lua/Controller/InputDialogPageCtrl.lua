@@ -5,7 +5,7 @@
 ---含有input输入框的弹窗
 
 require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+
 
 InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
 

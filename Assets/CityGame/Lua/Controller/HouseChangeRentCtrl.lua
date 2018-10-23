@@ -6,7 +6,7 @@
 
 require('Framework/UI/UIPage')
 require('Common/functions')
-local class = require 'Framework/class'
+
 
 HouseChangeRentCtrl = class('HouseChangeRentCtrl',UIPage)
 

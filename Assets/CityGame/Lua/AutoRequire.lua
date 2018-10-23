@@ -6,7 +6,7 @@
 -----
 
 local lfs = lfs
-local CityGlobal.file_exists = CityGlobal.file_exists
+local file_exists = CityGlobal.file_exists
 
 local AutoRequire = class("AutoRequire")
 local WindowsEditor = UnityEngine.Application.isEditor
@@ -59,7 +59,7 @@ function AutoRequire:require(path, data)
     self._require_path = path
 
     local initfile = loadpath..'/'.."__require_first__.lua"
-    if CityGlobal.file_exists(initfile) then
+    if file_exists(initfile) then
         local loadf = path..'/'.."__require_first__"
         require(loadf)
         self:addPath(loadf)
@@ -81,7 +81,7 @@ function AutoRequire:require(path, data)
     end
 
     local initfile = loadpath..'/'.."__require_last__.lua"
-    if CityGlobal.file_exists(initfile) then
+    if file_exists(initfile) then
         local loadf = path..'/'.."__require_last__"
         require(loadf)
         self:addPath(loadf)

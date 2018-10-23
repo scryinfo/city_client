@@ -77,8 +77,8 @@ function LoginModel.n_AsLogin(stream )
     --msglogion:ParseFromString(stream)
     --successfully = msglogion.successed
     --end
-    Event.Brocast("c_LoginSuccessfully", successfully );
     LoginModel:onUIGetServerList()
+    --Event.Brocast("c_LoginSuccessfully", successfully );
 end
 function LoginModel.onUIGetServerList( stream )
     --1、 获取协议id

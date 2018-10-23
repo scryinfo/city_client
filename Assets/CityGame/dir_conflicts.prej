@@ -1,14 +1,6 @@
 Trying to add new property 'svn:global-ignores'
 but the property already exists.
-<<<<<<< (local property value)
 *
 EasyTouch
-||||||| (incoming 'changed from' value)
-=======
-EasyTouch
-Editor
-Lua
-Scripts
-Source
-ToLua
->>>>>>> (incoming 'changed to' value)
+
+

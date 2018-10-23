@@ -9,8 +9,8 @@ class = require 'Framework/class'
 require "LuaUtil"
 --require "Entity"
 --调试信息
-require("Dbg")
 require('TestGroup')
+require("Dbg")
 luaunit = require "Framework/pbl/luaunit"
 
 require "LuaUtil"

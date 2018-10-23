@@ -39,6 +39,28 @@ namespace City
             return UIRoot.getFixedRoot();
         }
 
+        public static bool isAndroidPlatform()
+        {
+            return Application.platform == RuntimePlatform.Android;
+        }
+
+        public static string getAssetsPath()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                return UnityEngine.Application.persistentDataPath + "/CityGame";
+            }
+            else
+            {
+#if CLOSE_LUA_BUNDELMODE
+                return "Assets/CityGame";                
+#else
+                //return "Assets/StreamingAssets";
+                return "Assets/CityGame";
+#endif
+            }
+        }
+
         public static Transform getNormalRoot()
         {
             return UIRoot.getNormalRoot();

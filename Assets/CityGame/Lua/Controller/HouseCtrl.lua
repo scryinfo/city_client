@@ -10,6 +10,7 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 
 HouseCtrl = class('HouseCtrl',UIPage)
+UIPage:ResgisterOpen(HouseCtrl)
 
 function HouseCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)

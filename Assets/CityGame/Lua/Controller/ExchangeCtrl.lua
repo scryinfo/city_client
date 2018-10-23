@@ -23,6 +23,7 @@ require('Logic/ExchangeAbout/RecordTransactionItem')
 local class = require 'Framework/class'
 
 ExchangeCtrl = class('ExchangeCtrl',UIPage)
+UIPage:ResgisterOpen(ExchangeCtrl)
 
 function ExchangeCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)

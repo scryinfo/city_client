@@ -1,6 +1,6 @@
 require "Common/define"
-require('Controller/TopBarCtrl')
-require('Controller/MainPageCtrl')
+--require('Controller/TopBarCtrl')
+--require('Controller/MainPageCtrl')
 require('Framework/UI/UIPage')
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
@@ -8,6 +8,7 @@ require('Controller/ServerListCtrl')
 UnitTest = require ('test/testFrameWork/UnitTest')
 local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
+UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
 --构建函数--
 function LoginCtrl:initialize()
@@ -28,6 +29,9 @@ end
 
 function LoginCtrl:Refresh()
 	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	if self.m_data ~= nil then
+		self:setPosition(self.m_data.x,self.m_data.y)
+	end
 end
 
 --启动事件--
@@ -50,7 +54,7 @@ function LoginCtrl:OnCreate(go)
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
-	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
 
 --关闭事件--
@@ -135,8 +139,9 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		UnitTest.Exec_now("rodger_w8_GameMainInterface", "c_LoginSuccessfully_self",self)
-		self.logined = true
+		UIPage:OpenCtrl('ServerListCtrl')
+		--UnitTest.Exec_now("rodger_w8_GameMainInterface", "c_LoginSuccessfully_self",self)
+		--self.logined = true
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";
 	end
@@ -198,6 +203,14 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+
+--
+--function LoginCtrl:OnOpenLoginCtrl(ins)
+--	log("abel_w10_OpenCtrl","[LoginCtrl:OnOpenLoginCtrl]  OnOpenLoginCtrl invoked")
+--	UIPage:ShowPage(LoginCtrl)
+--end
+----这个是供外部调用的打开建筑的接口
+--Event.AddListener("c_OnOpenLoginCtrl", LoginCtrl.OnOpenLoginCtrl,LoginCtrl);
 
 
 

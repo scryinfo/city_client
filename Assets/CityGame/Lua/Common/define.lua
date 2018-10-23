@@ -56,41 +56,6 @@ ModelNames = {
 	Material = "MaterialModel",  --原料厂
 }
 
-PanelNames = {
-	"LoginPanel",
-	"TopBarPanel",
-	"MainPagePanel",
-	"NoticePanel",
-	"SkillPagePanel",
-	"LineChartPanel",
-	"SelectAvatarPanel",
-	"CreateAvatarPanel",
-	"GameWorldPanel",
-	"PlayerHeadPanel",
-	"TargetHeadPanel",
-	"WarehousePanel",
-	"TransportPanel",
-	"ShelfPanel",
-	"TransportOrderPanel",
-	"AddTransportPanel",
-	"GroundAuctionPanel",  --拍卖
-	"BuildingInfoRightPanel",  --建筑右侧信息小界面
-	"BuildingInfoPanel",  --建筑信息界面
-	"BuildingTransferPanel",  --转让界面
-	"HousePanel",  --住宅
-	"GameMainInterfacePanel",--游戏主界面
-	"RoleManagerPanel",--游戏管理界面
-	"ServerListPanel",--选服页面
-	"CreateRolePanel",--创角页面
-	"MaterialPanel", --原料厂
-	"ChooseWarehousePanel",  --运输选择仓库
-	"TransportBoxPanel",   --确定运输弹框
-	"DETAILSBoxPanel",   --商品详情弹框
-	"WagesAdjustBoxPanle",	--员工工资调整
-	"AdjustProductionLinePanel",  --调整生产线
-	"TestExchangePanel",  --交易所测试
-	"ExchangePanel",  --交易所
-}
 
 SYSEVENT =
 {

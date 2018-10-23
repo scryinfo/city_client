@@ -4,6 +4,7 @@ require('Framework/UI/UIPage')
 
 local class = require 'Framework/class'
 MaterialCtrl = class('MaterialCtrl',UIPage)
+UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
 
 --构建函数
 function MaterialCtrl:initialize()

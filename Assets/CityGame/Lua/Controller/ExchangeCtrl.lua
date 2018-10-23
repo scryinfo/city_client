@@ -120,8 +120,7 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
 
-    ExchangePanel.quotesCollectScroll:InitLoopScroll(self.quotesSource, 6);
-    --ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo);
+    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #self.quotesSource);
 
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
@@ -137,7 +136,7 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
             if #ExchangeCtrl.sourceInfo == 0 then
                 return
             else
-                ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo)
+                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
             end
         end
     else
@@ -161,7 +160,7 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
                 return
             else
                 ExchangePanel.noTipText.transform.localScale = Vector3.zero
-                ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.collectDatas)
+                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
             end
         end
     else
@@ -217,7 +216,7 @@ function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
             if #ExchangeCtrl.entrustmentInfo == 0 then
                 return
             else
-                ExchangePanel.entrustmentScroll:RefreshItems(#ExchangeCtrl.entrustmentInfo)
+                ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
             end
         end
     else
@@ -305,10 +304,11 @@ function ExchangeCtrl:_exchangeSortByValue(sortData)
     --log("cycle_w9_exchange01", "排序啦啦啦")
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
         ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
-        ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo)
+        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
+
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
         ExchangeCtrl.collectDatas = self:_getSortDatas(ExchangeCtrl.collectDatas, sortData)
-        ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.collectDatas)
+        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
     end
 end
 
@@ -382,7 +382,7 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
     else
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
-        ExchangePanel.entrustmentScroll:InitLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+        ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
     end
 end
 --收到自己的成交记录
@@ -399,7 +399,7 @@ function ExchangeCtrl:_getTransactionRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
-        ExchangePanel.selfRecordScroll:InitLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
+        ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
 end
@@ -419,7 +419,7 @@ function ExchangeCtrl:_getCityRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
-        ExchangePanel.cityRecordScroll:InitLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
+        ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
 end

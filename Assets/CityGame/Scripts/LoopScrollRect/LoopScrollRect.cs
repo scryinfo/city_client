@@ -22,10 +22,14 @@ namespace UnityEngine.UI
         [NonSerialized]
         //-----------------------------------------------------------------------------------xyf
         //public LoopScrollDataSource dataSource = LoopScrollSendIndexSource.Instance;
-        private LoopScrollDataSource dataSource ;
+        private LoopScrollDataSource dataSource = null;
         public void SetInstance(LoopScrollDataSource inDataSource)
         {
             dataSource = inDataSource;
+        }
+        public LoopScrollDataSource GetInstance()
+        {
+            return dataSource;
         }
         ////public object[] objectsToFill
         ////{

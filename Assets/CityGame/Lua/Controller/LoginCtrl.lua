@@ -133,7 +133,7 @@ end
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
 		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		UIPage:OpenCtrl('ServerListCtrl')
+		CityGlobal.OpenCtrl('ServerListCtrl')
 		--UnitTest.Exec_now("rodger_w8_GameMainInterface", "c_LoginSuccessfully_self",self)
 		--self.logined = true
 	else

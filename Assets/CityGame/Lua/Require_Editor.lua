@@ -5,7 +5,6 @@
 ---
 local coroutine = require("coroutine")
 require('__require_first__') --前置包含
-require('Common/functions')
 local AutoRequire = require "AutoRequire"
 
 --自动包含目录

@@ -121,6 +121,7 @@ end
 ---滑动复用
 ExchangeTransactionCtrl.static.BuyProvideData = function(transform, idx)
     idx = idx + 1
+    transform.localRotation = Quaternion.Euler(0, 0, 180);
     local buyItem = ExchangeTransactionItem:new(ExchangeTransactionCtrl.buyDatas[idx], transform)
 end
 ExchangeTransactionCtrl.static.BuyClearData = function(transform)

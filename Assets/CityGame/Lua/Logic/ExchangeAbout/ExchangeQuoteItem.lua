@@ -9,7 +9,7 @@ ExchangeQuoteItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
 ExchangeQuoteItem.static.CHANGE_RED = "#E42E2E"
 
 --初始化方法
-function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
+function ExchangeQuoteItem:initialize(data, viewRect)
     self.viewRect = viewRect;
     self.data = data;
 
@@ -28,13 +28,22 @@ function ExchangeQuoteItem:initialize(data, viewRect, mainPanelLuaBehaviour)
     self.lowText = viewTrans:Find("low/lowText"):GetComponent("Text");
     self.volumeText = viewTrans:Find("volume/volumeText"):GetComponent("Text");
     self.exchangeBtn = viewTrans:Find("exchange/exchangeBtn"):GetComponent("Button");
-    self.detailBtn = viewTrans:Find("detailBtn"):GetComponent("Button");
+    self.detailBtn = viewTrans:Find("detailBtn")
+    if self.detailBtn ~= nil then
+        self.detailBtn = self.detailBtn:GetComponent("Button");
+    end
     self:_initData()
 
     self.collectBtn.onClick:RemoveAllListeners();
     self.collectBtn.onClick:AddListener(function ()
         self:_clickCollectBtn()
     end)
+    if self.detailBtn ~= nil then
+        self.detailBtn.onClick:RemoveAllListeners();
+        self.detailBtn.onClick:AddListener(function ()
+            self:_clickDetailBtn()
+        end)
+    end
 end
 
 --初始化界面
@@ -63,8 +72,11 @@ function ExchangeQuoteItem:_initData()
     self.lowText.text = "E"..data.low
     self.volumeText.text = "E"..data.volume
 end
-
---点击打开按钮
+--点击打开详情
+function ExchangeQuoteItem:_clickDetailBtn()
+    CityGlobal.OpenCtrl("ExchangeDetailCtrl", self.data)
+end
+--点击收藏按钮
 function ExchangeQuoteItem:_clickCollectBtn()
     self:_setCollectState(not self.data.isCollected)
     if self.data.isCollected then

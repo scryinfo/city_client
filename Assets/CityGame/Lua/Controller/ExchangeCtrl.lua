@@ -116,7 +116,7 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
 
-    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #self.quotesSource);
+    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
 
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
@@ -261,10 +261,10 @@ end
 ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
     if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
-        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform, ExchangeCtrl.static.luaBehaviour)
+        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform)
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
-        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
+        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform)
     end
 
 end

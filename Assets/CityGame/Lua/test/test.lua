@@ -320,5 +320,5 @@ UnitTest.Exec("abel_w9_AddLuaComponent", "test_abel_w9_AddLuaComponent",  functi
 end)
 
 UnitTest.Exec("cycle_w10_exchange02", "test_cycle_w10_exchange02",  function ()
-    UIPage:OpenCtrl("ExchangeTransactionCtrl")
+    CityGlobal.OpenCtrl("ExchangeCtrl")
 end)

@@ -80,9 +80,6 @@ function ExchangeTransactionCtrl:_initPanelData()
 
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
-    --ExchangeTransactionPanel.buyCountInput.onValueChanged:AddListener(function (value)
-    --    self:_buyCountInputChangeValue(value)
-    --end)
 
     Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
 

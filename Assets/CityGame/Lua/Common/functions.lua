@@ -1,4 +1,3 @@
-
 --查找对象--
 function find(str)
 	return GameObject.Find(str);
@@ -89,13 +88,13 @@ function getFormatUnixTime(time)
 	return tb
 end
 
-function file_exists(path)
+function CityGlobal.file_exists(path)
 	local file = io.open(path, "rb")
 	if file then file:close() end
 	return file ~= nil
 end
 
-function file_saveTable(filename, data)
+function CityGlobal.file_saveTable(filename, data)
 	local file
 	if filename == nil then
 		file = io.stdout
@@ -112,4 +111,8 @@ function file_saveTable(filename, data)
 	if filename ~= nil then
 		file:close()
 	end
+end
+
+function CityGlobal.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
+	Event.Brocast('c_OnOpen'..inClassName,data)
 end

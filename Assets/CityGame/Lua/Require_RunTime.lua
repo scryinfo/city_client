@@ -123,3 +123,4 @@ require('Model/HouseModel')
 require('Model/LoginModel')
 require('Model/MaterialModel')
 require('Model/ServerListModel')
+require '__require_last__'

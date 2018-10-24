@@ -5,7 +5,6 @@
 ---
 local coroutine = require("coroutine")
 require('__require_first__') --前置包含
-require('Common/functions')
 local AutoRequire = require "AutoRequire"
 
 --自动包含目录
@@ -23,6 +22,7 @@ AutoRequire.getInstance():require("View/BuildingInfo")
 AutoRequire.getInstance():require("View/Logic")
 AutoRequire.getInstance():require("Controller")
 AutoRequire.getInstance():require("Model")
+AutoRequire.getInstance():requireLast("__require_last__")
 --在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中
 
 --单元测试
@@ -34,6 +34,6 @@ require('__require_last__') --后置包含
 
 --最后把 AutoRequire.requirePaths 写到 Require_RunTime.lua
 function Genfun()
-    AutoRequire.getInstance():WriteAndroidRequire()
+    AutoRequire.getInstance():WriteRuntimeRequire()
 end
 coroutine.start(Genfun)

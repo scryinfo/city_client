@@ -32,10 +32,8 @@ function Game.OnInitOK()
 end
 
 function Game.OnPostInitOK()
-    log("system","[Game.OnPostInitOK]: ");
     local model = CtrlManager.GetModel(ModelNames.Login);
     if model ~= nil then
-        log("system","[Game.OnPostInitOK]: model:Awake");
         model:Awake();
     end
 
@@ -54,11 +52,13 @@ function Game.OnPostInitOK()
         materialModel:Awake();
     end
 
+    --测试选服界面
     local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
     if serverListModel ~= nil then
         serverListModel:Awake();
     end
 
+    --测试创角界面
     local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
     if createRoleModel ~= nil then
         createRoleModel:Awake();

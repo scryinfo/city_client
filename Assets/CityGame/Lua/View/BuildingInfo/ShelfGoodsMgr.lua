@@ -1,5 +1,4 @@
 --管理货架物品信息
-require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
 --require 'View/BuildingInfo/'  --
 
 

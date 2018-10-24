@@ -5,6 +5,7 @@
 ---
 Event = require 'events'
 require "Common/define"
+require('Common/functions')
 class = require 'Framework/class'
 require "LuaUtil"
 --require "Entity"

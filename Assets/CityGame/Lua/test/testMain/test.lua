@@ -5,8 +5,6 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
-log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w10_pbl_nest")
 

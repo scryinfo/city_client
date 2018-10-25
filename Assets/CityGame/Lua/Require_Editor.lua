@@ -23,9 +23,16 @@ if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么�
     AutoRequire.getInstance():addCode("function UnitTest.Exec_now(unitGroupId, event,...) return end")
     AutoRequire.getInstance():addCode("function UnitTest.Exec(unitGroupId, funcName, func) return end")
     AutoRequire.getInstance():addCode("log = function(logid,s,...) return end")
-
+else
+    --单元测试
+    AutoRequire.getInstance():require("test/testFrameWork")
+    AutoRequire.getInstance():require("test/testFrameWork/memory")
+    AutoRequire.getInstance():require("test/pbl")
+    AutoRequire.getInstance():require("test/performance")
+    --AutoRequire.getInstance():require("test/testCoroutine")
+    AutoRequire.getInstance():require("test")
+    AutoRequire.getInstance():require("test/testMain")
 end
-AutoRequire.getInstance():require("test/testFrameWork/memory")
 AutoRequire.getInstance():require("Logic/ExchangeAbout")
 AutoRequire.getInstance():require("Logic/GameBubble")
 AutoRequire.getInstance():require("Logic/PieChart")
@@ -39,11 +46,6 @@ AutoRequire.getInstance():requireLast("__require_last__")
 --在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中
 
 function PostRequire()
-    --单元测试
-    AutoRequire.getInstance():require("test/testMain")
-    AutoRequire.getInstance():require("test")
-    --性能测试
-    require('test/performance/luaPerformance')
     require('__require_last__') --后置包含
     AutoRequire.getInstance():FinishedRequire()
 end

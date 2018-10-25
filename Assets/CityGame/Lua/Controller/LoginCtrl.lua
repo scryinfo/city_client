@@ -168,7 +168,7 @@ function LoginCtrl:OnClickTest1(obj)
 	local xxx1  = xxx
 end
 
---TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
+TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 

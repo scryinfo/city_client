@@ -14,6 +14,9 @@ function classTest:initialize()
     end
 end
 
+TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
+log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
+
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
     mri.m_cConfig.m_bAllMemoryRefFitest_w9_mem_Load_leAddTime = false
     mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false

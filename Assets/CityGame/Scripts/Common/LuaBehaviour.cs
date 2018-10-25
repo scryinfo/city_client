@@ -64,7 +64,6 @@ namespace LuaFramework {
                 eventName += obj.GetHashCode().ToString();
             }
             LuaCfunPair pPair;
-            LuaFunction luafunc = null;
             buttons.TryGetValue(eventName, out pPair);
             if (pPair._LuaFunction != null && pPair._CsharpFun != null)
             {

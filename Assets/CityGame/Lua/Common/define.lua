@@ -35,6 +35,8 @@ CtrlNames = {
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
+
+	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
 }
 
 ModelNames = {
@@ -54,6 +56,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	CenterWareHouse = "CenterWareHouseModel",--中心仓库
 }
 
 PanelNames = {
@@ -90,6 +93,7 @@ PanelNames = {
 	"AdjustProductionLinePanel",  --调整生产线
 	"TestExchangePanel",  --交易所测试
 	"ExchangePanel",  --交易所
+	"CenterWareHousePanel", --中心仓库
 }
 
 SYSEVENT =

@@ -2,7 +2,7 @@
 require('Framework/UI/UIPage')
 require "Common/define"
 --require('Controller/HouseCtrl')
---require('Controller/ExchangeCtrl')
+require('Controller/CenterWareHouseCtrl')
 
 local class = require 'Framework/class'
 GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
@@ -83,6 +83,8 @@ end
 function GameMainInterfaceCtrl.OnSourceMill()
     log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
     --Event.Brocast("");
+   -- UIPage:OpenCtrl('CenterWareHouseCtrl')
+    UIPage:ShowPage(CenterWareHouseCtrl)
 end
 
 

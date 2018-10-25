@@ -9,9 +9,6 @@ require('Framework/pbl/serpent')
 require('Framework/UI/UIPage')
 require('Framework/UI/UIRoot')
 require('test/testFrameWork/UnitTest')
-function UnitTest.Exec_now(unitGroupId, event,...) return end
-function UnitTest.Exec(unitGroupId, funcName, func) return end
-log = function(logid,s,...) return end
 require('test/testFrameWork/memory/MemoryReferenceInfo')
 require('test/testFrameWork/memory/ProFi')
 require('Logic/ExchangeAbout/ExchangeQuoteItem')

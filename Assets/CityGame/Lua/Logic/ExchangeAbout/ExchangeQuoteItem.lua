@@ -38,6 +38,10 @@ function ExchangeQuoteItem:initialize(data, viewRect)
     self.collectBtn.onClick:AddListener(function ()
         self:_clickCollectBtn()
     end)
+    self.exchangeBtn.onClick:RemoveAllListeners();
+    self.exchangeBtn.onClick:AddListener(function ()
+        self:_clickExchnageBtn()
+    end)
     if self.detailBtn ~= nil then
         self.detailBtn.onClick:RemoveAllListeners();
         self.detailBtn.onClick:AddListener(function ()
@@ -71,6 +75,10 @@ function ExchangeQuoteItem:_initData()
     self.highText.text = "E"..data.high
     self.lowText.text = "E"..data.low
     self.volumeText.text = "E"..data.volume
+end
+--点击交易按钮
+function ExchangeQuoteItem:_clickExchnageBtn()
+    CityGlobal.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end
 --点击打开详情
 function ExchangeQuoteItem:_clickDetailBtn()

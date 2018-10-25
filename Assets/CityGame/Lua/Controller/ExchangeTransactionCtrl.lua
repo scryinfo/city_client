@@ -36,11 +36,11 @@ function ExchangeTransactionCtrl:Refresh()
     self:_initPanelData()
 end
 
-function ExchangeDetailCtrl:Hide()
-    UIPage.Hide(self)
+function ExchangeTransactionCtrl:Hide()
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    UIPage.Hide(self)
 end
 
 function ExchangeTransactionCtrl:Close()
@@ -105,6 +105,10 @@ function ExchangeTransactionCtrl:_initPanelData()
 
     ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
     ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
+
+    ExchangeTransactionPanel.itemNameText.text = self.m_data.name
+    ExchangeTransactionPanel.changeText.text = self.m_data.change
+    ExchangeTransactionPanel.newestPriceText.text = self.m_data.lastPrice
 end
 
 ---按钮监听

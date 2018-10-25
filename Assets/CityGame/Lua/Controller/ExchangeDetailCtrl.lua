@@ -36,6 +36,7 @@ function ExchangeDetailCtrl:Awake(go)
     ExchangeDetailPanel.toggle05.onValueChanged:AddListener(function (isOn)
         self:_chooseToggle05(isOn)
     end)
+    self.infoItem = ExchangeQuoteItem:new(self.m_data, ExchangeDetailPanel.itemInfoTran)
 end
 
 function ExchangeDetailCtrl:Refresh()
@@ -45,6 +46,9 @@ end
 function ExchangeDetailCtrl:Hide()
     UIPage.Hide(self)
     self.luaBehaviour:RemoveClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack, self)
+end
+
+function ExchangeDetailCtrl:Close()
     ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle02.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle03.onValueChanged:RemoveAllListeners()
@@ -52,20 +56,10 @@ function ExchangeDetailCtrl:Hide()
     ExchangeDetailPanel.toggle05.onValueChanged:RemoveAllListeners()
 end
 
-function ExchangeDetailCtrl:Close()
-end
-
 function ExchangeDetailCtrl:_initPanelData()
-    --[[
-    self.luaBehaviour:AddClick(ExchangeDetailPanel.backBtn.gameObject, function()
-        UIPage.ClosePage();
-    end );
-    --]]
     self.luaBehaviour:AddClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack,self)
 
     Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
-
-    self.infoItem = ExchangeQuoteItem:new(self.m_data, ExchangeDetailPanel.itemInfoTran)
     ExchangeDetailPanel.toggle01.isOn = true
 end
 

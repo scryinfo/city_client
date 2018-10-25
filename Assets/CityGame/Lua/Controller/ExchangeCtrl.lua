@@ -104,6 +104,12 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.titleType = ExchangeTitleType.Quotes  --默认打开行情
     ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
 
+    ExchangeCtrl.quoteItems = {}
+    ExchangeCtrl.collectItems = {}
+    ExchangeCtrl.entrustmentItems = {}
+    ExchangeCtrl.selfRecordItems = {}
+    ExchangeCtrl.cityRecordItems = {}
+
     --测试创建items
     local sourceInfo = {}
     sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
@@ -262,9 +268,11 @@ ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
     if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
         local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform)
+        ExchangeCtrl.collectItems[idx] = collectItem
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
         local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform)
+        ExchangeCtrl.quoteItems[idx] = item
     end
 
 end
@@ -275,6 +283,7 @@ end
 ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
     idx = idx + 1
     local entrustmentItem = RecordEntrustmentItem:new(ExchangeCtrl.entrustmentInfo[idx], transform)
+    ExchangeCtrl.entrustmentItems[idx] = entrustmentItem
 end
 ExchangeCtrl.static.EntrustmentClearData = function(transform)
 end
@@ -283,6 +292,7 @@ end
 ExchangeCtrl.static.SelfRecordProvideData = function(transform, idx)
     idx = idx + 1
     local selfRecordItem = RecordTransactionItem:new(ExchangeCtrl.selfRecordInfo[idx], transform)
+    ExchangeCtrl.selfRecordItems[idx] = selfRecordItem
 end
 ExchangeCtrl.static.SelfRecordClearData = function(transform)
 end
@@ -291,6 +301,7 @@ end
 ExchangeCtrl.static.CityRecordProvideData = function(transform, idx)
     idx = idx + 1
     local cityRecordItem = RecordTransactionItem:new(ExchangeCtrl.cityRecordInfo[idx], transform)
+    ExchangeCtrl.cityRecordItems[idx] = cityRecordItem
 end
 ExchangeCtrl.static.CityRecordClearData = function(transform)
 end

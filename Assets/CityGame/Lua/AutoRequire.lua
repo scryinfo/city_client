@@ -26,6 +26,10 @@ function AutoRequire:requireLast(file)
     self.requirePaths[#self.requirePaths+1] = 'require '.."'"..file.."'"
 end
 
+function AutoRequire:addCode(code)
+    self.requirePaths[#self.requirePaths+1] = code
+end
+
 function AutoRequire:init(dir)
     instance.OriginalPath = dir
     log("abel_w9_autoRequire","instance.OriginalPath", instance.OriginalPath)

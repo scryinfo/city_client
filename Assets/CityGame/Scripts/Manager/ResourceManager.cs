@@ -106,20 +106,7 @@ namespace LuaFramework {
         /// </summary>
         void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null) where T : UObject {
 
-#if CLOSE_RES_BUNDELMODE        
-        for (int i = 0; i < assetNames.Length; i++)
-        {
-            string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
-                //同步加载
-                /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
-                if (prefab != null) {                
-                    result.Add(prefab);
-                }*/
-                //异步加载
-                StartCoroutine(NoneBundleLoadRes(realpath, action));                
-        }
-#else
-
+#if RES_BUNDEL
             abName = GetRealAssetPath(abName);
 
             LoadAssetRequest request = new LoadAssetRequest();
@@ -139,7 +126,19 @@ namespace LuaFramework {
             else
             {
                 requests.Add(request);
-            }
+            }        
+#else
+            for (int i = 0; i < assetNames.Length; i++)
+            {
+                string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
+                //同步加载
+                /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
+                if (prefab != null) {                
+                    result.Add(prefab);
+                }*/
+                //异步加载
+                StartCoroutine(NoneBundleLoadRes(realpath, action));
+            }            
 #endif
         }
 

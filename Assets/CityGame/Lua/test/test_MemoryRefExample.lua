@@ -7,38 +7,38 @@
 
 local mri = MemoryRefInfo
 
--- Set config.
-mri.m_cConfig.m_bAllMemoryRefFileAddTime = false
---mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
---mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
+UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
+    log("abel_w10_MemRef_all","[test_MemRef_all]  balabalabalabala...............")
 
--- 打印当前 Lua 虚拟机的所有内存引用快照到文件(或者某个对象的所有引用信息快照)到本地文件。
--- strSavePath - 快照保存路径，不包括文件名。
--- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
--- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
--- strRootObjectName - 遍历的根节点对象名称，"" 或者 nil 时使用 tostring(cRootObject)
--- cRootObject - 遍历的根节点对象，默认为 nil 时使用 debug.getregistry()。
--- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords, strRootObjectName, cRootObject)
-collectgarbage("collect")
-mri.m_cMethods.DumpMemorySnapshot("./", "1-Before", -1)
+    -- Set config.
+    mri.m_cConfig.m_bAllMemoryRefFileAddTime = false
+    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
+    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
 
--- Add a global variable.
-local author = 
-{
-    Name = "yaukeywang",
-    Job = "Game Developer",
-    Hobby = "Game, Travel, Gym",
-    City = "Beijing",
-    Country = "China",
-    Ask = function (question)
-        return "My answer is for your question: " .. question .. "."
-    end
-}
+    -- 打印当前 Lua 虚拟机的所有内存引用快照到文件(或者某个对象的所有引用信息快照)到本地文件。
+    -- strSavePath - 快照保存路径，不包括文件名。
+    -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
+    -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
+    -- strRootObjectName - 遍历的根节点对象名称，"" 或者 nil 时使用 tostring(cRootObject)
+    -- cRootObject - 遍历的根节点对象，默认为 nil 时使用 debug.getregistry()。
+    -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords, strRootObjectName, cRootObject)
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshot("./", "1-Before", -1)
 
-_G.Author = author
+    -- Add a global variable.
+    local author =
+    {
+        Name = "yaukeywang",
+        Job = "Game Developer",
+        Hobby = "Game, Travel, Gym",
+        City = "Beijing",
+        Country = "China",
+        Ask = function (question)
+            return "My answer is for your question: " .. question .. "."
+        end
+    }
 
-UnitTest.Exec("abel_w10_MemorySnapshot", "test_MemorySnapshot",  function ()
-    log("abel_w10_MemorySnapshot","[test_MemorySnapshot]  balabalabalabala...............")
+    _G.Author = author
 
     -- Dump memory snapshot again.
     collectgarbage("collect")
@@ -80,6 +80,57 @@ UnitTest.Exec("abel_w10_MemorySnapshot", "test_MemorySnapshot",  function ()
     mri.m_cBases.OutputFilteredResult("./LuaMemRefInfo-All-[2-After].txt", "Author", false, true)
 
     -- All dump finished!
+    print("Dump memory snapshot information finished!")
+end)
+
+UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
+    log("abel_w10_MemRef_table","[test_MemRef_table]  balabalabalabala...............")
+    mri.m_cConfig.m_bAllMemoryRefFileAddTime = false
+    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
+    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
+    local author =
+    {
+        Name = "yaukeywang",
+        Job = "Game Developer",
+        Hobby = "Game, Travel, Gym",
+        City = "Beijing",
+        Country = "China",
+        Ask = function (question)
+            return "My answer is for your question: " .. question .. "."
+        end
+    }
+    -- 打印当前 Lua 虚拟机中某一个对象的所有相关引用。
+    -- strSavePath - 快照保存路径，不包括文件名。
+    -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
+    -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
+    -- strObjectName - 对象显示名称。
+    -- cObject - 对象实例。
+    -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMaxRescords, strObjectName, cObject)
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author before", -1, "Author", _G.Author) --因为没找到，所以没有输出到文本
+
+    -- We can also find string references.
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String before", -1, "Author Name", "yaukeywang")
+
+
+    _G.Author = author
+    local t1 = author
+    t2 = author
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author _G.Author = author", -1, "Author", _G.Author)
+
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String _G.Author = author", -1, "Author Name", "yaukeywang")
+
+    _G.Author = nil
+
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author _G.Author = nil", -1, "Author", _G.Author)
+
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String _G.Author = nil", -1, "Author Name", "yaukeywang")
+       -- All dump finished!
     print("Dump memory snapshot information finished!")
 end)
 

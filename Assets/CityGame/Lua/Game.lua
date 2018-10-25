@@ -65,5 +65,7 @@ function Game.OnPostInitOK()
     end
 
     --单元测试入口
-    lu.LuaUnit.run()
+    if CityLuaUtil.isluaLogEnable() == true then
+        lu.LuaUnit.run()
+    end
 end

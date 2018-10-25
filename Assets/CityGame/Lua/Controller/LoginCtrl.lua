@@ -46,7 +46,8 @@ function LoginCtrl:OnCreate(go)
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
 
 	--启用 c_AddClick_self 单元测试
-	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
+	log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
+	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
@@ -152,7 +153,7 @@ function LoginCtrl:gettestValue()
 end
 
 function LoginCtrl:OnClickTest(obj)
-	log("abel_w5","[test_AddClick_self]  OnClickTest obj == nil")
+	log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest obj == nil")
 	local xxx = obj
 	local x = LoginCtrl.testValue
 	local yyy = LoginCtrl:gettestValue()
@@ -160,13 +161,14 @@ function LoginCtrl:OnClickTest(obj)
 end
 
 function LoginCtrl:OnClickTest1(obj)
-	log("abel_w5","[test_AddClick_self]  OnClickTest1 obj ~= nil and obj.testValue =",obj.testValue)
+	log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest1 obj ~= nil and obj.testValue =",obj.testValue)
 	local xxx = obj.testValue
 	local x = LoginCtrl.testValue
 	local yyy = LoginCtrl:gettestValue()
 	local xxx1  = xxx
 end
 
+TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
@@ -175,6 +177,7 @@ UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	LoginCtrl:c_LoginSuccessfully( false )
 end)
 
+log("abel_w7_AddClick","[UnitTest.Exec test_AddClick_self] ")
 UnitTest.Exec("abel_w7_AddClick", "test_AddClick_self",  function ()
 	log("abel_w7_AddClick","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function (obj)

@@ -44,6 +44,15 @@ namespace City
             return Application.platform == RuntimePlatform.WindowsEditor;
         }
 
+        public static bool isluaLogEnable()
+        {
+#if LUA_LOG
+            return true;
+#else
+            return false;
+#endif
+        }
+
         public static string getAssetsPath()
         {
             if (Application.platform == RuntimePlatform.Android)

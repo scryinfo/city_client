@@ -51,14 +51,28 @@ function ExchangeDetailCtrl:Close()
 end
 
 function ExchangeDetailCtrl:_initPanelData()
+    --[[
     self.luaBehaviour:AddClick(ExchangeDetailPanel.backBtn.gameObject, function()
         UIPage.ClosePage();
     end );
+    --]]
+    self.luaBehaviour:AddClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack,self)
 
     Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
 
     self.infoItem = ExchangeQuoteItem:new(self.m_data, ExchangeDetailPanel.itemInfoTran)
     ExchangeDetailPanel.toggle01.isOn = true
+end
+
+
+
+function ExchangeDetailCtrl:OnClickBack()
+    UIPage.ClosePage()
+end
+
+function ExchangeDetailCtrl:Hide()
+    UIPage.Hide(self)
+    self.luaBehaviour:RemoveClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack, self)
 end
 
 ---toggle监听

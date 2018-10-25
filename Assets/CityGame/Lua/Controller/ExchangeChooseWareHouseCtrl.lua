@@ -20,35 +20,69 @@ end
 
 function ExchangeChooseWareHouseCtrl:Awake(go)
     self.luaBehaviour = go:GetComponent('LuaBehaviour');
+
+    self.chooseWareSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.chooseWareSource.mProvideData = ExchangeChooseWareHouseCtrl.static.ChooseWareProvideData
+    self.chooseWareSource.mClearData = ExchangeChooseWareHouseCtrl.static.ChooseWareClearData
 end
 
 function ExchangeChooseWareHouseCtrl:Refresh()
     self:_initPanelData()
 end
 
+function ExchangeChooseWareHouseCtrl:Hide()
+    UIPage.Hide(self)
+    self.luaBehaviour:RemoveClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack, self)
+end
+
 function ExchangeChooseWareHouseCtrl:Close()
-    ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
+    --ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
 end
 
 function ExchangeChooseWareHouseCtrl:_initPanelData()
-    --[[
-    self.luaBehaviour:AddClick(ExchangeDetailPanel.backBtn.gameObject, function()
-        UIPage.ClosePage();
-    end );
-    --]]
     self.luaBehaviour:AddClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack,self)
 
-    self.infoItem = ExchangeQuoteItem:new(self.m_data, ExchangeDetailPanel.itemInfoTran)
-    ExchangeDetailPanel.toggle01.isOn = true
+    --卖出时的数据
+    --local wareHouseTemp = {}
+    --wareHouseTemp[1] = {buildingType = "House", buildingName = "Buddy001", sizeType = "Medium", isSell = true, remainCount = 10, totalCount = 99, capacityCount = 15}
+    --wareHouseTemp[2] = {buildingType = "House", buildingName = "Buddy002", sizeType = "Medium", isSell = true, remainCount = 1,  totalCount = 89, capacityCount = 15}
+    --wareHouseTemp[3] = {buildingType = "House", buildingName = "Buddy003", sizeType = "Medium", isSell = true, remainCount = 74, totalCount = 78, capacityCount = 15}
+    --wareHouseTemp[4] = {buildingType = "House", buildingName = "Buddy004", sizeType = "Medium", isSell = true, remainCount = 3,  totalCount = 12, capacityCount = 15}
+    --wareHouseTemp[5] = {buildingType = "House", buildingName = "Buddy005", sizeType = "Medium", isSell = true, remainCount = 27, totalCount = 68, capacityCount = 15}
+    --ExchangeChooseWareHouseCtrl.wareHouseDatas = self:_getSortDatas(wareHouseTemp, true)
+    --买入时的数据
+    local wareHouseTemp = {}
+    wareHouseTemp[1] = {buildingType = "House",   buildingName = "Buddy001", sizeType = "Medium", isSell = false, remainCount = 10, totalCount = 99, capacityCount = 15}
+    wareHouseTemp[2] = {buildingType = "Factory", buildingName = "Buddy002", sizeType = "Medium", isSell = false, remainCount = 1,  totalCount = 89, capacityCount = 5}
+    wareHouseTemp[3] = {buildingType = "House",   buildingName = "Buddy003", sizeType = "Medium", isSell = false, remainCount = 74, totalCount = 78, capacityCount = 70}
+    wareHouseTemp[4] = {buildingType = "Factory", buildingName = "Buddy004", sizeType = "Medium", isSell = false, remainCount = 3,  totalCount = 12, capacityCount = 11}
+    wareHouseTemp[5] = {buildingType = "House",   buildingName = "Buddy005", sizeType = "Medium", isSell = false, remainCount = 27, totalCount = 68, capacityCount = 60}
+    ExchangeChooseWareHouseCtrl.wareHouseDatas = self:_getSortDatas(wareHouseTemp, false)
+
+    ExchangeChooseWareHouseCtrl.wareHouseItems = {}
+    ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, #ExchangeChooseWareHouseCtrl.wareHouseDatas)
 end
-
-
 
 function ExchangeChooseWareHouseCtrl:OnClickBack()
     UIPage.ClosePage()
 end
 
-function ExchangeChooseWareHouseCtrl:Hide()
-    UIPage.Hide(self)
-    self.luaBehaviour:RemoveClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack, self)
+---滑动复用
+ExchangeChooseWareHouseCtrl.static.ChooseWareProvideData = function(transform, idx)
+    idx = idx + 1
+    local chooseItem = ExchangeWareHouseItem:new(ExchangeChooseWareHouseCtrl.wareHouseDatas[idx], transform)
+    ExchangeChooseWareHouseCtrl.wareHouseItems[idx] = chooseItem
+end
+ExchangeChooseWareHouseCtrl.static.ChooseWareClearData = function(transform)
+end
+
+---sort
+function ExchangeChooseWareHouseCtrl:_getSortDatas(datas, isSell)
+    local tempDatas = datas
+    if isSell then
+        table.sort(tempDatas, function (m, n) return m.remainCount > n.remainCount end)
+    else
+        table.sort(tempDatas, function (m, n) return m.capacityCount > n.capacityCount end)
+    end
+    return tempDatas
 end

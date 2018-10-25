@@ -20,13 +20,3 @@ function ExchangeChooseWareHousePanel.InitPanel()
     this.wareHouseScroll = transform:Find("scrollRoot/scroll"):GetComponent("ActiveLoopScrollRect");
 
 end
----行情收藏记录toggle
-function ExchangeChooseWareHousePanel._quotesToggleState(isOn)
-    if isOn then
-        this.quotesOpen.localScale = Vector3.one
-        this.quotesClose.localScale = Vector3.zero
-    else
-        this.quotesOpen.localScale = Vector3.zero
-        this.quotesClose.localScale = Vector3.one
-    end
-end

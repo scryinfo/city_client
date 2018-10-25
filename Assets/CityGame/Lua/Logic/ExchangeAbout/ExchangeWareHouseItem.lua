@@ -14,7 +14,7 @@ function ExchangeWareHouseItem:initialize(data, viewRect)
     local viewTrans = self.viewRect;
     self.sizeText = viewTrans:Find("sizeBg/Text"):GetComponent("Text")
     self.sellTran = viewTrans:Find("sell")
-    self.sellRemainCountText = viewTrans:Find("sell/remainCountText")  --当前货物在仓库中有多少
+    self.sellRemainCountText = viewTrans:Find("sell/remainCountText"):GetComponent("Text")  --当前货物在仓库中有多少
     self.buyTran = viewTrans:Find("buy")
     self.buyCapacityText = viewTrans:Find("buy/capacityText"):GetComponent("Text")  --库存量
     self.buyCapacitySlider = viewTrans:Find("buy/capacitySlider"):GetComponent("Slider")
@@ -53,5 +53,7 @@ end
 
 --点击打开详情
 function ExchangeWareHouseItem:_clickBtn()
+    --关闭当前界面，并传输数据到买卖界面
+    --UIPage.ClosePage();
     --CityGlobal.OpenCtrl("ExchangeDetailCtrl", self.data)
 end

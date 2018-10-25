@@ -1,5 +1,3 @@
-
-
 ShelfGoodsItem = class('ShelfGoodsItem')
 
 --初始化方法   数据（接受服务器）

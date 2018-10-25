@@ -36,8 +36,14 @@ function ExchangeTransactionCtrl:Refresh()
     self:_initPanelData()
 end
 
+function ExchangeDetailCtrl:Hide()
+    UIPage.Hide(self)
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+end
+
 function ExchangeTransactionCtrl:Close()
-    --ExchangePanel.quotesToggle.onValueChanged:RemoveAllListeners();
 end
 
 function ExchangeTransactionCtrl:_update()
@@ -74,10 +80,7 @@ function ExchangeTransactionCtrl:_update()
 end
 
 function ExchangeTransactionCtrl:_initPanelData()
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.backBtn.gameObject, function()
-        UIPage.ClosePage();
-    end );
-
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
 
@@ -105,6 +108,9 @@ function ExchangeTransactionCtrl:_initPanelData()
 end
 
 ---按钮监听
+function ExchangeTransactionCtrl:_backBtn()
+    UIPage.ClosePage();
+end
 function ExchangeTransactionCtrl:_openBuyPart(ins)
     ExchangeTransactionPanel._openBuy()
 

@@ -50,6 +50,7 @@ function ExchangeWareHouseItem:_initData()
     self.buildingTypeText.text = data.buildingType  --eg: Factory
 
 end
+
 --点击打开详情
 function ExchangeWareHouseItem:_clickBtn()
     --CityGlobal.OpenCtrl("ExchangeDetailCtrl", self.data)

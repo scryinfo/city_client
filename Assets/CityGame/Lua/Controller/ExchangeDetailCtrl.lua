@@ -42,12 +42,17 @@ function ExchangeDetailCtrl:Refresh()
     self:_initPanelData()
 end
 
-function ExchangeDetailCtrl:Close()
+function ExchangeDetailCtrl:Hide()
+    UIPage.Hide(self)
+    self.luaBehaviour:RemoveClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack, self)
     ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle02.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle03.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle04.onValueChanged:RemoveAllListeners()
     ExchangeDetailPanel.toggle05.onValueChanged:RemoveAllListeners()
+end
+
+function ExchangeDetailCtrl:Close()
 end
 
 function ExchangeDetailCtrl:_initPanelData()
@@ -70,10 +75,7 @@ function ExchangeDetailCtrl:OnClickBack()
     UIPage.ClosePage()
 end
 
-function ExchangeDetailCtrl:Hide()
-    UIPage.Hide(self)
-    self.luaBehaviour:RemoveClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack, self)
-end
+
 
 ---toggle监听
 function ExchangeDetailCtrl:_chooseToggle01(isOn)

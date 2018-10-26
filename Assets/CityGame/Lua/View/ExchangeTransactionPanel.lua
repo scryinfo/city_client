@@ -7,45 +7,47 @@ require "Common/define"
 
 local transform
 
-ExchangeTransactionPanel = {};
-local this = ExchangeTransactionPanel;
+ExchangeTransactionPanel = {}
+local this = ExchangeTransactionPanel
 
 function ExchangeTransactionPanel.Awake(obj)
-    transform = obj.transform;
+    transform = obj.transform
 
-    this.InitPanel();
+    this.InitPanel()
 end
 
 function ExchangeTransactionPanel.InitPanel()
-    this.backBtn = transform:Find("topRoot/backBtn");
-    this.buyScroll = transform:Find("bodyRoot/left/buy/scroll"):GetComponent("ActiveLoopScrollRect");
-    this.sellScroll = transform:Find("bodyRoot/left/sell/scroll"):GetComponent("ActiveLoopScrollRect");
-    this.itemIconImg = transform:Find("bodyRoot/left/center/icon"):GetComponent("Image");  --item信息
-    this.itemNameText = transform:Find("bodyRoot/left/center/name"):GetComponent("Text");
-    this.changeText = transform:Find("bodyRoot/left/center/changeText"):GetComponent("Text");
-    this.newestPriceText = transform:Find("bodyRoot/left/center/priceText"):GetComponent("Text");
-    this.buyBtn = transform:Find("bodyRoot/right/top/buyBtn");  --买卖按钮
-    this.buyBtnCloseTran = transform:Find("bodyRoot/right/top/buyBtn/close");
-    this.sellBtn = transform:Find("bodyRoot/right/top/sellBtn");
-    this.sellBtnCloseTran = transform:Find("bodyRoot/right/top/sellBtn/close");
+    this.backBtn = transform:Find("topRoot/backBtn")
+    this.buyScroll = transform:Find("bodyRoot/left/buy/scroll"):GetComponent("ActiveLoopScrollRect")
+    this.sellScroll = transform:Find("bodyRoot/left/sell/scroll"):GetComponent("ActiveLoopScrollRect")
+    this.itemIconImg = transform:Find("bodyRoot/left/center/icon"):GetComponent("Image")  --item信息
+    this.itemNameText = transform:Find("bodyRoot/left/center/name"):GetComponent("Text")
+    this.changeText = transform:Find("bodyRoot/left/center/changeText"):GetComponent("Text")
+    this.newestPriceText = transform:Find("bodyRoot/left/center/priceText"):GetComponent("Text")
+    this.buyBtn = transform:Find("bodyRoot/right/top/buyBtn")  --买卖按钮
+    this.buyBtnCloseTran = transform:Find("bodyRoot/right/top/buyBtn/close")
+    this.sellBtn = transform:Find("bodyRoot/right/top/sellBtn")
+    this.sellBtnCloseTran = transform:Find("bodyRoot/right/top/sellBtn/close")
 
-    this.buyRoot = transform:Find("bodyRoot/right/top/buyRoot");
-    this.buyCountInput = transform:Find("bodyRoot/right/top/buyRoot/countInput"):GetComponent("InputField");
-    this.buyPriceInput = transform:Find("bodyRoot/right/top/buyRoot/priceInput"):GetComponent("InputField");
-    this.buyChooseBtn = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/chooseBtn");
-    this.buyChooseTipTran = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/tipText");  --提示请选择仓库
-    this.buyChooseText = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/chooseText"):GetComponent("Text");  --选择完仓库之后的显示
-    this.sellRoot = transform:Find("bodyRoot/right/top/sellRoot");
-    this.sellCountInput = transform:Find("bodyRoot/right/top/sellRoot/countInput"):GetComponent("InputField");
-    this.sellPriceInput = transform:Find("bodyRoot/right/top/sellRoot/priceInput"):GetComponent("InputField");
-    this.sellChooseBtn = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseBtn");
-    this.sellChooseTipTran = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/tipText");  --提示请选择仓库
-    this.sellChooseText = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseText");  --选择完仓库之后的显示
+    this.buyRoot = transform:Find("bodyRoot/right/top/buyRoot")
+    this.buyCountInput = transform:Find("bodyRoot/right/top/buyRoot/countInput"):GetComponent("InputField")
+    this.buyPriceInput = transform:Find("bodyRoot/right/top/buyRoot/priceInput"):GetComponent("InputField")
+    this.buyChooseBtn = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/chooseBtn")
+    this.buyChooseTipTran = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/tipText")  --提示请选择仓库
+    this.buyChooseText = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/chooseText"):GetComponent("Text")  --选择完仓库之后的显示
+    this.buyErorTipTran = transform:Find("bodyRoot/right/top/buyRoot/chooseRoot/erorTipText")
+    this.sellRoot = transform:Find("bodyRoot/right/top/sellRoot")
+    this.sellCountInput = transform:Find("bodyRoot/right/top/sellRoot/countInput"):GetComponent("InputField")
+    this.sellPriceInput = transform:Find("bodyRoot/right/top/sellRoot/priceInput"):GetComponent("InputField")
+    this.sellChooseBtn = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseBtn")
+    this.sellChooseTipTran = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/tipText")  --提示请选择仓库
+    this.sellChooseText = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseText")  --选择完仓库之后的显示
+    this.sellErorTipTran = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/erorTipText")
 
-    this.calculateText = transform:Find("bodyRoot/right/bottom/calculateText"):GetComponent("Text");  --单价x总量得到的值
-    this.serviceText = transform:Find("bodyRoot/right/bottom/serviceText"):GetComponent("Text");  --手续费
-    this.totalText = transform:Find("bodyRoot/right/bottom/bg02/totalText"):GetComponent("Text");  --总价格
-    this.confirmBtn = transform:Find("bodyRoot/right/bottom/confirmHide/show");
+    this.calculateText = transform:Find("bodyRoot/right/bottom/calculateText"):GetComponent("Text")  --单价x总量得到的值
+    this.serviceText = transform:Find("bodyRoot/right/bottom/serviceText"):GetComponent("Text")  --手续费
+    this.totalText = transform:Find("bodyRoot/right/bottom/bg02/totalText"):GetComponent("Text")  --总价格
+    this.confirmBtn = transform:Find("bodyRoot/right/bottom/confirmHide/show")
 
     this._initPanel()
 end
@@ -62,6 +64,8 @@ function ExchangeTransactionPanel._initPanel()
     this.sellChooseText.transform.localScale = Vector3.zero
     this.sellChooseTipTran.localScale = Vector3.one
     this.confirmBtn.localScale = Vector3.zero
+    this.buyErorTipTran.localScale = Vector3.zero
+    this.sellErorTipTran.localScale = Vector3.zero
 end
 
 --打开关闭买卖界面
@@ -84,4 +88,17 @@ function ExchangeTransactionPanel._openSell()
     this.calculateText.text = "0"
     this.serviceText.text = "0"
     this.totalText.text = "0"
+end
+
+function ExchangeTransactionPanel.SellChooseSuccess(warehouseName)
+    this.sellChooseText.text = warehouseName
+    this.sellChooseText.transform.localScale = Vector3.one
+    this.sellChooseTipTran.localScale = Vector3.zero
+    this.sellErorTipTran.localScale = Vector3.zero
+end
+function ExchangeTransactionPanel.BuyChooseSuccess(warehouseName)
+    this.buyChooseText.text = warehouseName
+    this.buyChooseText.transform.localScale = Vector3.one
+    this.buyChooseTipTran.localScale = Vector3.zero
+    this.buyErorTipTran.localScale = Vector3.zero
 end

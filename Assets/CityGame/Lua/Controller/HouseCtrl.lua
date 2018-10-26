@@ -47,7 +47,8 @@ function HouseCtrl:_changeName()
     data.btnCallBack = function()
         log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
     end
-    UIPage:ShowPage(InputDialogPageCtrl, data)
+    --UIPage:ShowPage(InputDialogPageCtrl, data)
+    CityGlobal.OpenCtrl("InputDialogPageCtrl", data)
 end
 ---返回
 function HouseCtrl:_backBtn()

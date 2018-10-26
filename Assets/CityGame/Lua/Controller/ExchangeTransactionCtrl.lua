@@ -16,6 +16,8 @@ end
 
 function ExchangeTransactionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+
+    self:_initPanelData()
 end
 
 function ExchangeTransactionCtrl:Awake(go)
@@ -33,13 +35,18 @@ function ExchangeTransactionCtrl:Awake(go)
 end
 
 function ExchangeTransactionCtrl:Refresh()
-    self:_initPanelData()
+    --self:_initPanelData()
 end
 
 function ExchangeTransactionCtrl:Hide()
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
+
+    --self.gameObject:SetActive(false)
+    --self.isActived = false
     UIPage.Hide(self)
 end
 
@@ -83,8 +90,11 @@ function ExchangeTransactionCtrl:_initPanelData()
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
 
     Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
+    Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
 
     ---模拟数据
     local buyTemp = {}
@@ -109,6 +119,7 @@ function ExchangeTransactionCtrl:_initPanelData()
     ExchangeTransactionPanel.itemNameText.text = self.m_data.name
     ExchangeTransactionPanel.changeText.text = self.m_data.change
     ExchangeTransactionPanel.newestPriceText.text = self.m_data.lastPrice
+    self.isSellState = false
 end
 
 ---按钮监听
@@ -123,6 +134,9 @@ end
 function ExchangeTransactionCtrl:_openSellPart(ins)
     ExchangeTransactionPanel._openSell()
     ins.isSellState = true
+end
+function ExchangeTransactionCtrl:_chooseWareHouse(ins)
+    CityGlobal.OpenCtrl("ExchangeChooseWareHouseCtrl")
 end
 
 ---滑动复用
@@ -139,6 +153,39 @@ ExchangeTransactionCtrl.static.SellProvideData = function(transform, idx)
     local sellItem = ExchangeTransactionItem:new(ExchangeTransactionCtrl.sellDatas[idx], transform)
 end
 ExchangeTransactionCtrl.static.SellClearData = function(transform)
+end
+---选择仓库事件回调
+function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
+    if wareDats.isSell ~= self.isSellState then
+        log("cycle_w10_exchange02", "仓库数据的sell状态与交易界面状态不一致")
+        return
+    end
+
+    if wareDats.isSell then
+        local sellCountValue = ExchangeTransactionPanel.sellCountInput.text
+        if sellCountValue == "" then  --如果数量还未填写，则显示当前库存量
+            ExchangeTransactionPanel.sellCountInput.text = wareDats.remainCount
+            ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
+        else
+            if sellCountValue > wareDats.remainCount then
+                ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
+            else
+                ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
+            end
+        end
+    else
+        local buyCountValue = ExchangeTransactionPanel.buyCountInput.text
+        if buyCountValue == "" then  --如果数量还未填写，则显示当前库存量
+            ExchangeTransactionPanel.buyCountInput.text = wareDats.capacityCount
+            ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
+        else
+            if sellCountValue > wareDats.capacityCount then
+                ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
+            else
+                ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
+            end
+        end
+    end
 end
 
 ---接收服务器消息

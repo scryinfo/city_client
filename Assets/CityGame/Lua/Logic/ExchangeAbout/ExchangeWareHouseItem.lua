@@ -54,6 +54,8 @@ end
 --点击打开详情
 function ExchangeWareHouseItem:_clickBtn()
     --关闭当前界面，并传输数据到买卖界面
-    --UIPage.ClosePage();
+    UIPage.ClosePage();
     --CityGlobal.OpenCtrl("ExchangeDetailCtrl", self.data)
+
+    Event.Brocast("c_onExchangeChooseWareHouseBack", self.data);
 end

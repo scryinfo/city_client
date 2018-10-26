@@ -62,6 +62,10 @@ public class LuaLooper : MonoBehaviour
 
     LuaBeatEvent GetEvent(string name)
     {
+        if (luaState == null) {
+            return null;
+        }
+
         LuaTable table = luaState.GetTable(name);
 
         if (table == null)

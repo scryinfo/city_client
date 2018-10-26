@@ -99,7 +99,9 @@ namespace LuaFramework {
             {
                 result.Add(r.asset);                
             }
-            action(result.ToArray());
+            if (action != null) {
+                action(result.ToArray());
+            }
         }
         /// <summary>
         /// 载入素材

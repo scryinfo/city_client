@@ -24,20 +24,23 @@ namespace LuaFramework {
             this.CustomBind(lua);
             LuaCoroutine.Register(lua, this);            
         }
+        void setLuaBundleMode(bool bundle) {
+            loader.beZip = bundle;
+        }
+
         public static bool generate_RequireRT()
         {
+            AppFacade.Instance.RemoveManager(ManagerName.Lua);
+            AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);            
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
-            if (luaMgr == null) {
-                AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
-            }
-                
-            luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
             if(luaMgr == null)
             {
                 return false;
             }
 
             luaMgr.Awake();
+            luaMgr.setLuaBundleMode(false);
+
             luaMgr.InitStart();
 
             luaMgr.DoFile("Require_Editor");         //加载 Require_Editor
@@ -46,7 +49,7 @@ namespace LuaFramework {
             Genfun.Dispose();
             Genfun = null;
             luaMgr = null;
-            AppFacade.Instance.RemoveManager(ManagerName.Lua);            
+            AppFacade.Instance.RemoveManager(ManagerName.Lua); //不能执行这个，否则会出问题            
             return true;
             // return  Util.CallMethod("Require_Editor", "Genfun");     //执行 Require_RunTime 生成            
         }

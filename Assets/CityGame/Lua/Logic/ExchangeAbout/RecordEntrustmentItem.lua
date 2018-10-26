@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/20 10:33
 ---交易委托记录
-local class = require 'Framework/class'
+
 RecordEntrustmentItem = class('RecordEntrustmentItem')
 RecordEntrustmentItem.static.SELL_GREEN = "#0B7B16"  --卖出的绿色数值
 RecordEntrustmentItem.static.BUY_RED = "#E42E2E"

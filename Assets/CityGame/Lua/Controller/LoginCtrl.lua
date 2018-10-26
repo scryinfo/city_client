@@ -1,12 +1,6 @@
-require "Common/define"
-require('Controller/TopBarCtrl')
-require('Controller/MainPageCtrl')
-require('Framework/UI/UIPage')
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
 
-UnitTest = require ('test/testFrameWork/UnitTest')
-local class = require 'Framework/class'
 LoginCtrl = class('LoginCtrl',UIPage)
 UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
@@ -29,6 +23,9 @@ end
 
 function LoginCtrl:Refresh()
 	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	if self.m_data ~= nil then
+		self:setPosition(self.m_data.x,self.m_data.y)
+	end
 end
 
 --启动事件--
@@ -51,7 +48,7 @@ function LoginCtrl:OnCreate(go)
 	--启用 c_AddClick_self 单元测试
 	UnitTest.Exec_now("abel_w5", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
-	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
 
 --关闭事件--
@@ -171,7 +168,7 @@ function LoginCtrl:OnClickTest1(obj)
 end
 
 --TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
-TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")

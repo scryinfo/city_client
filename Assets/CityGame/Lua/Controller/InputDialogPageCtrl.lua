@@ -3,11 +3,9 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/4 14:57
 ---含有input输入框的弹窗
-
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
-
 InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
+UIPage:ResgisterOpen(InputDialogPageCtrl) --注册打开的方法
+
 
 function InputDialogPageCtrl:initialize()
     UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)

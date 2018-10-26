@@ -4,7 +4,7 @@
 --- DateTime: 2018/9/4 16:38
 ---
 require "View/BuildingInfoRightPanel"
-require "Common/define"
+-----
 
 local transform
 
@@ -81,6 +81,6 @@ function BuildingInfoPanel.TransferSuccess(info)
 end
 
 --转让价格变化 --该情况只属于打开别人的建筑的时候，建筑转让价格的变化 -需要加上建筑ID ~= 自己的ID的判定
-function BuildingInfoModel.TransferInfoChange(info)
+function BuildingInfoPanel.TransferInfoChange(info)
     this.transferPriceText.text = info.price
 end

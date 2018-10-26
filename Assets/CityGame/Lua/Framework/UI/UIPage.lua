@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 10:09
 ---
-local class = require 'Framework/class'
+
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
 UIType = {
@@ -375,10 +375,6 @@ function UIPage:ResgisterOpen(inClass)
     Event.AddListener('c_OnOpen'..inClass.name, function (data)
         UIPage:ShowPage(inClass,data)
     end);
-end
-
-function UIPage:OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
-    Event.Brocast('c_OnOpen'..inClassName,data)
 end
 
 

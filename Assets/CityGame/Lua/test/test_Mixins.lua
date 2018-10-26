@@ -5,7 +5,7 @@
 ---
 local log = log
 
-local class = require 'Framework/class'
+
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes
     fly = function(self)
         log('flap flap flap I am a ' .. self.class.name)

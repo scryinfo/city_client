@@ -1,4 +1,3 @@
-
 --查找对象--
 function find(str)
 	return GameObject.Find(str);
@@ -87,4 +86,33 @@ function getFormatUnixTime(time)
 	tb.second = tonumber(os.date("%S", time)) or 0
 
 	return tb
+end
+
+function CityGlobal.file_exists(path)
+	local file = io.open(path, "rb")
+	if file then file:close() end
+	return file ~= nil
+end
+
+function CityGlobal.file_saveTable(filename, data)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wa+")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	for i = 1, #data do
+		file:write(data[i]..'\n')
+	end
+	if filename ~= nil then
+		file:close()
+	end
+end
+
+function CityGlobal.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
+	Event.Brocast('c_OnOpen'..inClassName,data)
 end

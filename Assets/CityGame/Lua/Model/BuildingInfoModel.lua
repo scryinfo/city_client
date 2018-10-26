@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/4 17:58
 ---
-require "Common/define"
+-----
 
 BuildingInfoModel= {};
 local this = BuildingInfoModel;

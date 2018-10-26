@@ -5,8 +5,6 @@
 ---仓库商品
 local class = require 'Framework/class'
 require('Framework/UI/UIPage')
-require "Controller/InputDialogPageCtrl"
-require "Controller/DeleteGoodsTooptipCtrl"
 WareHouseGoodsItem = class('WareHouseGoodsItem')
 
 --初始化方法   数据（读配置表）
@@ -19,21 +17,32 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.nameText = self.prefab.transform:Find("WareHouseItem/Goods/Name/NameText").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("WareHouseItem/Goods/Number/NumberText").gameObject:GetComponent("Text");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Goods/Delete/DeleteButton").gameObject;
+    self.bgItem = self.prefab.transform:Find("WareHouseItem").gameObject;
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
 
-    self._luabehaviour:AddClick(self.deleteBtn.gameObject, self.OnDelete, self);
-
+    self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
+    self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
     log("rodger_w8_GameMainInterface","[test_OnDelete]  测试完毕")
     local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
-    --UIPage:ShowPage(InputDialogPageCtrl,data);
-   UIPage:OpenCtrl('InputDialogPageCtrl')
-   -- go.manager:_deleteGoods(go)
+    data.titleInfo = "提示"
+    data.contentInfo = "确认销毁吗"
+    data.tipInfo = "物品将永久消失"
+    data.btnCallBack = function ()
+        go.manager:_deleteGoods(go)
+    end
+   CityGlobal.OpenCtrl('BtnDialogPageCtrl',data)
+
+end
+
+function WareHouseGoodsItem:OnBGItem()
+    local data = {}
+    data.madeBy = "来自Rodger公司"
+    data.playerName = " rodger"
+    CityGlobal.OpenCtrl('MessageTooltipCtrl',data)
 end
 
 --删除后刷新ID及刷新显示

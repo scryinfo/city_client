@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1800502294
+CRC: 486474775
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ea538ec655ec6fdf6dc2c12c34364cd4
+    Hash: 6ff204c3506999d5b9ba1e1d5fc7c427
   TypeTreeHash:
     serializedVersion: 2
     Hash: 14f1cc6b2613a53d4b7b24dbcdbdc4ca
@@ -34,5 +34,5 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 Assets:
-- Assets/CityGame/Resources/View/DeleteGoodsTooltipPanel.prefab
+- Assets/CityGame/Resources/View/MessageTooltipPanel.prefab
 Dependencies: []

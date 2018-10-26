@@ -1,10 +1,3 @@
-
-require('Framework/UI/UIPage')
-require "Common/define"
---require('Controller/HouseCtrl')
-require('Controller/CenterWareHouseCtrl')
-
-local class = require 'Framework/class'
 GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
 
 local gameMainInterfaceBehaviour;
@@ -59,7 +52,7 @@ end
 function GameMainInterfaceCtrl.OnExchange()
     log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
     --UIPage:ShowPage(ExchangeCtrl)
-    UIPage:OpenCtrl('ExchangeCtrl')
+    CityGlobal.OpenCtrl('ExchangeCtrl')
 end
 
 --住宅--
@@ -67,7 +60,7 @@ function GameMainInterfaceCtrl.OnHouse()
     log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
     local info = {}
     --UIPage:ShowPage(HouseCtrl, info)
-    UIPage:OpenCtrl('HouseCtrl',info)
+    CityGlobal.OpenCtrl('HouseCtrl',info)
     --Event.Brocast("c_OnOppenHouse");
 end
 
@@ -76,7 +69,7 @@ function GameMainInterfaceCtrl.OnRawMaterialFactory()
     log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
     --UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
     --Event.Brocast('c_OnOpenLoginCtrl')
-    UIPage:OpenCtrl('MaterialCtrl')
+    CityGlobal.OpenCtrl('MaterialCtrl')
 end
 
 --加工厂--
@@ -84,7 +77,8 @@ function GameMainInterfaceCtrl.OnSourceMill()
     log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
     --Event.Brocast("");
    -- UIPage:OpenCtrl('CenterWareHouseCtrl')
-    UIPage:ShowPage(CenterWareHouseCtrl)
+    --UIPage:ShowPage(CenterWareHouseCtrl)
+    CityGlobal.OpenCtrl('CenterWareHouseCtrl')
 end
 
 

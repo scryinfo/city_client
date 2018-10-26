@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 GameWorldCtrl = {};
 local this = GameWorldCtrl;

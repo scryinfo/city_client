@@ -37,7 +37,7 @@ CtrlNames = {
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
 
 	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
-	DeleteGoodsTooptip = "DeleteGoodsTooptipCtrl",--删除商品提示框
+	MessageTooltip = "MessageTooltipCtrl",--玩家信息提示框
 }
 
 ModelNames = {
@@ -58,44 +58,6 @@ ModelNames = {
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
 	CenterWareHouse = "CenterWareHouseModel",--中心仓库
-}
-
-PanelNames = {
-	"LoginPanel",
-	"TopBarPanel",
-	"MainPagePanel",
-	"NoticePanel",
-	"SkillPagePanel",
-	"LineChartPanel",
-	"SelectAvatarPanel",
-	"CreateAvatarPanel",
-	"GameWorldPanel",
-	"PlayerHeadPanel",
-	"TargetHeadPanel",
-	"WarehousePanel",
-	"TransportPanel",
-	"ShelfPanel",
-	"TransportOrderPanel",
-	"AddTransportPanel",
-	"GroundAuctionPanel",  --拍卖
-	"BuildingInfoRightPanel",  --建筑右侧信息小界面
-	"BuildingInfoPanel",  --建筑信息界面
-	"BuildingTransferPanel",  --转让界面
-	"HousePanel",  --住宅
-	"GameMainInterfacePanel",--游戏主界面
-	"RoleManagerPanel",--游戏管理界面
-	"ServerListPanel",--选服页面
-	"CreateRolePanel",--创角页面
-	"MaterialPanel", --原料厂
-	"ChooseWarehousePanel",  --运输选择仓库
-	"TransportBoxPanel",   --确定运输弹框
-	"DETAILSBoxPanel",   --商品详情弹框
-	"WagesAdjustBoxPanle",	--员工工资调整
-	"AdjustProductionLinePanel",  --调整生产线
-	"TestExchangePanel",  --交易所测试
-	"ExchangePanel",  --交易所
-	"CenterWareHousePanel", --中心仓库
-	"DeleteGoodsTooptipPanel",--删除商品提示框
 }
 
 SYSEVENT =

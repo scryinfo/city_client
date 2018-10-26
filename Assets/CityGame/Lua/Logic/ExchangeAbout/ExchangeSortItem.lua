@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/16 10:14
 ---交易所排序toggle item
-local class = require 'Framework/class'
+
 
 ExchangeSortItem = class('ExchangeSortItem')
 

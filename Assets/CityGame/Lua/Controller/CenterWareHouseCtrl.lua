@@ -3,13 +3,10 @@
 --- Created by password.
 --- DateTime: 2018/10/25 11:11
 ---中心仓库
-require "Common/define"
-require "View/BuildingInfo/WareHouseGoodsMgr"
-require('Framework/UI/UIPage')
 
 local class = require 'Framework/class'
 CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
---UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
+UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
     return "CenterWareHouse"

@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/6 15:14
 ---
-require "Common/define"
+-----
 
 local transform
 

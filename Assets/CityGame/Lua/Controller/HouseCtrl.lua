@@ -3,11 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/21 10:35
 ---
-require "Common/define"
-require "View/BuildingInfo/BuildingInfoToggleGroupMgr"
-
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
 
 HouseCtrl = class('HouseCtrl',UIPage)
 UIPage:ResgisterOpen(HouseCtrl)

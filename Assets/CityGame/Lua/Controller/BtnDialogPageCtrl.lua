@@ -4,17 +4,19 @@
 --- DateTime: 2018/9/30 16:30
 ---只含有按钮的简单弹框
 
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 BtnDialogPageCtrl = class('BtnDialogPageCtrl',UIPage)
+UIPage:ResgisterOpen(BtnDialogPageCtrl) --注册打开的方法
+
 
 function BtnDialogPageCtrl:initialize()
     UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function BtnDialogPageCtrl:bundleName()
-    return "BtnDialogPage"
+    return "Common/BtnDialogPage"
 end
 
 function BtnDialogPageCtrl:OnCreate(obj )
@@ -28,6 +30,7 @@ function BtnDialogPageCtrl:Awake(go)
 
     local dialog = self.gameObject:GetComponent('LuaBehaviour')
     dialog:AddClick(self.closeBtn, self._onClickConfim, self);
+    dialog:AddClick(self.xBtn,self._onXBtn,self);
 end
 
 function BtnDialogPageCtrl:Refresh()
@@ -39,6 +42,7 @@ function BtnDialogPageCtrl:_getComponent(go)
     self.mainContentText = go.transform:Find("root/mainContentText").gameObject:GetComponent("Text");
     self.tipText = go.transform:Find("root/tipText").gameObject:GetComponent("Text");
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
+    self.xBtn = go.transform:Find("root/XBtn").gameObject;
 end
 ---初始化
 function BtnDialogPageCtrl:_initData()
@@ -53,6 +57,10 @@ function BtnDialogPageCtrl:_onClickConfim(obj)
         obj.m_data.btnCallBack()
     end
 
+    obj:Hide();
+end
+
+function BtnDialogPageCtrl:_onXBtn(obj)
     obj:Hide();
 end
 

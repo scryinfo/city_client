@@ -1,5 +1,4 @@
-require "Common/define"
-require "City"
+-----
 local pbl = pbl
 local log = log
 
@@ -46,7 +45,7 @@ function ServerListModel.n_AllGameServerInfo( stream )
         for i = 1, #this.serinofs do
             serverListName[i] = this.serinofs[i].name
         end
-        UIPage:OpenCtrl("ServerListCtrl", serverListName)
+        CityGlobal.OpenCtrl("ServerListCtrl", serverListName)
        -- log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
         --log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
 

@@ -220,6 +220,8 @@ public class Packager {
 
         //中心仓库
         AddBuildMap("CenterWareHouse" + AppConst.BundleExt, "CenterWareHousePanel.prefab", "Assets/CityGame/Resources/View");
+        //删除商品提示框
+        AddBuildMap("DeleteGoodsTooptip" + AppConst.BundleExt, "DeleteGoodsTooltipPanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

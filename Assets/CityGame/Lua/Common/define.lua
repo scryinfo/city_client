@@ -37,6 +37,7 @@ CtrlNames = {
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
 
 	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
+	DeleteGoodsTooptip = "DeleteGoodsTooptipCtrl",--删除商品提示框
 }
 
 ModelNames = {
@@ -94,6 +95,7 @@ PanelNames = {
 	"TestExchangePanel",  --交易所测试
 	"ExchangePanel",  --交易所
 	"CenterWareHousePanel", --中心仓库
+	"DeleteGoodsTooptipPanel",--删除商品提示框
 }
 
 SYSEVENT =

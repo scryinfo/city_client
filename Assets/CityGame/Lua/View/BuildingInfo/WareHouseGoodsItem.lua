@@ -4,7 +4,9 @@
 --- DateTime: 2018/10/25 11:49
 ---仓库商品
 local class = require 'Framework/class'
-
+require('Framework/UI/UIPage')
+require "Controller/InputDialogPageCtrl"
+require "Controller/DeleteGoodsTooptipCtrl"
 WareHouseGoodsItem = class('WareHouseGoodsItem')
 
 --初始化方法   数据（读配置表）
@@ -25,7 +27,13 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
-    go.manager:_deleteGoods(go)
+    log("rodger_w8_GameMainInterface","[test_OnDelete]  测试完毕")
+    local data = {}
+    data.titleInfo = "RENAME";
+    data.tipInfo = "Modified every seven days";
+    --UIPage:ShowPage(InputDialogPageCtrl,data);
+   UIPage:OpenCtrl('InputDialogPageCtrl')
+   -- go.manager:_deleteGoods(go)
 end
 
 --删除后刷新ID及刷新显示

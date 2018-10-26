@@ -3,6 +3,8 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/23 10:20
 ---
+---存在问题，什么时候清空界面，从选择仓库界面返回时不能清除已经填写好的界面信息，但是当从单个行情item点进的时候需要清除
+---是在hide还是refresh中处理？
 ExchangeTransactionCtrl = class('ExchangeTransactionCtrl',UIPage)
 UIPage:ResgisterOpen(ExchangeTransactionCtrl)
 
@@ -42,6 +44,7 @@ function ExchangeTransactionCtrl:Hide()
     --UIPage.Hide(self)
     self.gameObject:SetActive(false)
     self.isActived = false
+    --ExchangeTransactionPanel._initPanel()
 end
 
 function ExchangeTransactionCtrl:Close()
@@ -57,7 +60,7 @@ end
 function ExchangeTransactionCtrl:_updateConfim()
     ExchangeTransactionPanel.confirmBtn.localScale = Vector3.zero
     if self.isSellState then
-        if ExchangeTransactionPanel.sellCountInput.text ~= ""then
+        if ExchangeTransactionPanel.sellCountInput.text ~= "" and tonumber(ExchangeTransactionPanel.sellCountInput.text) > 0 then
             if self.sellRemainCount ~= nil then
                 if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellRemainCount then
                     ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
@@ -68,7 +71,7 @@ function ExchangeTransactionCtrl:_updateConfim()
                 end
             end
 
-            if ExchangeTransactionPanel.sellPriceInput.text ~= "" then
+            if ExchangeTransactionPanel.sellPriceInput.text ~= "" and tonumber(ExchangeTransactionPanel.sellPriceInput.text) > 0 then
                 --显示算好的数值
                 local count = ExchangeTransactionPanel.sellCountInput.text
                 local unitPrice = ExchangeTransactionPanel.sellPriceInput.text
@@ -84,7 +87,7 @@ function ExchangeTransactionCtrl:_updateConfim()
             end
         end
     else
-        if ExchangeTransactionPanel.buyCountInput.text ~= ""then
+        if ExchangeTransactionPanel.buyCountInput.text ~= "" and tonumber(ExchangeTransactionPanel.buyCountInput.text) > 0 then
             if self.buyCapacityCount ~= nil then
                 if tonumber(ExchangeTransactionPanel.buyCountInput.text) > self.buyCapacityCount then
                     ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
@@ -95,7 +98,7 @@ function ExchangeTransactionCtrl:_updateConfim()
                 end
             end
 
-            if ExchangeTransactionPanel.buyPriceInput.text ~= "" then
+            if ExchangeTransactionPanel.buyPriceInput.text ~= "" and tonumber(ExchangeTransactionPanel.buyPriceInput.text) > 0 then
                 --显示算好的数值
                 local count = ExchangeTransactionPanel.buyCountInput.text
                 local unitPrice = ExchangeTransactionPanel.buyPriceInput.text
@@ -231,6 +234,7 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
     end
 
     if wareDats.isSell then
+        ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
         self.sellRemainCount = wareDats.remainCount
         local sellCountValue = ExchangeTransactionPanel.sellCountInput.text
         if sellCountValue == "" then  --如果数量还未填写，则显示当前库存量
@@ -242,11 +246,12 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
                 ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
-                ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
+                --ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
                 self.wareHouseChoosed = true
             end
         end
     else
+        ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
         self.buyCapacityCount = wareDats.capacityCount
         local buyCountValue = ExchangeTransactionPanel.buyCountInput.text
         if buyCountValue == "" then  --如果数量还未填写，则显示当前库存量
@@ -258,7 +263,7 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
                 ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
-                ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
+                --ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
                 self.wareHouseChoosed = true
             end
         end

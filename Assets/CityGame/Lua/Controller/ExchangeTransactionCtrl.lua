@@ -39,7 +39,9 @@ function ExchangeTransactionCtrl:Refresh()
 end
 
 function ExchangeTransactionCtrl:Hide()
-    UIPage.Hide(self)
+    --UIPage.Hide(self)
+    self.gameObject:SetActive(false)
+    self.isActived = false
 end
 
 function ExchangeTransactionCtrl:Close()
@@ -139,6 +141,10 @@ function ExchangeTransactionCtrl:_initPanelData()
     ExchangeTransactionPanel.itemNameText.text = self.m_data.name
     ExchangeTransactionPanel.changeText.text = self.m_data.change
     ExchangeTransactionPanel.newestPriceText.text = self.m_data.lastPrice
+    --hide之后m_data会被清空，暂时这么存着
+    self.name = self.m_data.name
+    self.change = self.m_data.change
+    self.lastPrice = self.m_data.lastPrice
     self.isSellState = false
 end
 ---添加移除监听
@@ -148,6 +154,7 @@ function ExchangeTransactionCtrl:_addListeners()
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.confirmBtn.gameObject, self._clickConfirm, self);
 
     Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
     Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
@@ -158,6 +165,7 @@ function ExchangeTransactionCtrl:_removeListeners()
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.confirmBtn.gameObject, self._clickConfirm, self);
 
     --Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
     --Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
@@ -169,7 +177,6 @@ function ExchangeTransactionCtrl:_backBtn()
 end
 function ExchangeTransactionCtrl:_openBuyPart(ins)
     ExchangeTransactionPanel._openBuy()
-
     ins.isSellState = false
 end
 function ExchangeTransactionCtrl:_openSellPart(ins)
@@ -178,6 +185,25 @@ function ExchangeTransactionCtrl:_openSellPart(ins)
 end
 function ExchangeTransactionCtrl:_chooseWareHouse(ins)
     CityGlobal.OpenCtrl("ExchangeChooseWareHouseCtrl")
+end
+function ExchangeTransactionCtrl:_clickConfirm(ins)
+    local showData = {}
+    local str1
+    local count
+    if ins.isSellState then
+        str1 = "sell"
+        count = ExchangeTransactionPanel.sellCountInput.text
+    else
+        str1 = "buy"
+        count = ExchangeTransactionPanel.buyCountInput.text
+    end
+    showData.titleInfo = "REMINDER"
+    showData.contentInfo = string.format("Entrust to %s <color=%s>%s</color>x%d?", str1, "#CA8A00", ins.name, count)
+    showData.tipInfo = ""
+    showData.btnCallBack = function()
+        log("cycle_w10_exchange02", "向服务器发送请求")
+    end
+    CityGlobal.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
 ---滑动复用
@@ -212,7 +238,7 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
             ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if sellCountValue > wareDats.remainCount then
+            if tonumber(sellCountValue) > wareDats.remainCount then
                 ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
@@ -228,7 +254,7 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
             ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if sellCountValue > wareDats.capacityCount then
+            if tonumber(buyCountValue) > wareDats.capacityCount then
                 ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else

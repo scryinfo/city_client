@@ -113,6 +113,13 @@ end
 	Param: [filename:string:optional] defaults to 'ProFi.txt' if not specified.
 ]]
 function ProFi:writeReport( filename )
+	local path = ""
+	if UnityEngine.Application.isEditor == false then
+		path =  UnityEngine.Application.persistentDataPath.."/CityGame/"
+	end
+
+	filename = path..filename
+
 	if #self.reports > 0 or #self.memoryReports > 0 then
 		filename = filename or 'ProFi.txt'
 		self:sortReportsWithSortMethod( self.reports, self.sortMethod )

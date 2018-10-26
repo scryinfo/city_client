@@ -24,7 +24,32 @@ namespace LuaFramework {
             this.CustomBind(lua);
             LuaCoroutine.Register(lua, this);            
         }
+        public static bool generate_RequireRT()
+        {
+            LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
+            if (luaMgr == null) {
+                AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
+            }
+                
+            luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
+            if(luaMgr == null)
+            {
+                return false;
+            }
 
+            luaMgr.Awake();
+            luaMgr.InitStart();
+
+            luaMgr.DoFile("Require_Editor");         //加载 Require_Editor
+            LuaFunction Genfun = luaMgr.lua.GetFunction("Genfun");
+            Genfun.Call();
+            Genfun.Dispose();
+            Genfun = null;
+            luaMgr = null;
+            AppFacade.Instance.RemoveManager(ManagerName.Lua);            
+            return true;
+            // return  Util.CallMethod("Require_Editor", "Genfun");     //执行 Require_RunTime 生成            
+        }
         public void CustomBind(LuaState L) {
             L.BeginModule(null);
             L.BeginModule("CityLuaUtilExt");

@@ -50,10 +50,13 @@ function PostRequire()
     AutoRequire.getInstance():FinishedRequire()
 end
 
---最后把 AutoRequire.requirePaths 写到 Require_RunTime.lua
+--打包时，把 AutoRequire.requirePaths 写到 Require_RunTime.lua
 function Genfun()
+    print("generate_RequireRT---------------------------------")
     AutoRequire.getInstance():WriteRuntimeRequire()
     PostRequire()
 end
-coroutine.start(Genfun)
+--if UnityEngine.Application.isEditor then
+--    coroutine.start(Genfun)
+--end
 

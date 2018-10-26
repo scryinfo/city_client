@@ -119,7 +119,7 @@ function ProFi:writeReport( filename )
 	end
 
 	filename = path..filename
-
+	log("system","[ProFi:writeReport] filename: "..filename)
 	if #self.reports > 0 or #self.memoryReports > 0 then
 		filename = filename or 'ProFi.txt'
 		self:sortReportsWithSortMethod( self.reports, self.sortMethod )

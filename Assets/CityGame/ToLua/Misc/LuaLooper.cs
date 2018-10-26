@@ -88,12 +88,12 @@ public class LuaLooper : MonoBehaviour
 
     void Update()
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         if (luaState == null)
         {
             return;
         }
-#endif
+//#endif
         if (luaState.LuaUpdate(Time.deltaTime, Time.unscaledDeltaTime) != 0)
         {
             ThrowException();
@@ -108,12 +108,12 @@ public class LuaLooper : MonoBehaviour
 
     void LateUpdate()
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         if (luaState == null)
         {
             return;
         }
-#endif
+//#endif
         if (luaState.LuaLateUpdate() != 0)
         {
             ThrowException();
@@ -124,12 +124,12 @@ public class LuaLooper : MonoBehaviour
 
     void FixedUpdate()
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         if (luaState == null)
         {
             return;
         }
-#endif
+//#endif
         if (luaState.LuaFixedUpdate(Time.fixedDeltaTime) != 0)
         {
             ThrowException();

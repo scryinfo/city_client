@@ -112,12 +112,7 @@ public class Facade {
         m_Managers.TryGetValue(typeName, out manager);
         Type type = manager.GetType();
         if (type.IsSubclassOf(typeof(MonoBehaviour))) {
-            if (Application.isPlaying) {
-                GameObject.Destroy((Component)manager);
-            }
-            else {
-                GameObject.DestroyImmediate((Component)manager);
-            }
+            GameObject.Destroy((Component)manager);
         }
         m_Managers.Remove(typeName);
     }

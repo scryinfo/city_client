@@ -14,7 +14,7 @@ function classTest:initialize()
     end
 end
 
-TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
+--TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
 log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
 
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()

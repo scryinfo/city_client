@@ -15,6 +15,7 @@ namespace LuaFramework {
         void Awake() {
             loader = new LuaLoader();
             lua = new LuaState();
+            Debug.Log("LuaManager:Awake new LuaState !!!");
             LuaComponent.s_luaState = lua;
             this.OpenLibs();
             lua.LuaSetTop(0);
@@ -174,6 +175,12 @@ namespace LuaFramework {
         /// 初始化Lua代码加载路径
         /// </summary>
         void InitLuaPath() {
+            Debug.Log("LuaManager:InitLuaPath Invoked !!!");
+            if(lua == null)
+            {
+                Debug.Log("LuaManager:InitLuaPath lua == null !!!");
+            }
+
             if (AppConst.DebugMode) {
                 string rootPath = AppConst.FrameworkRoot;
                 lua.AddSearchPath(rootPath + "/Lua");

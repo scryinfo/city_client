@@ -16,8 +16,6 @@ ExchangeRecordTitleType =
     CityRecord = 3,
 }
 
------
-
 ExchangeCtrl = class('ExchangeCtrl',UIPage)
 UIPage:ResgisterOpen(ExchangeCtrl)
 
@@ -93,8 +91,17 @@ function ExchangeCtrl:Close()
     ExchangePanel.cityRecordToggle.onValueChanged:RemoveAllListeners();
 end
 
-function ExchangeCtrl:_initPanelData()
+function ExchangeCtrl:_addListener()
     Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.AddListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
+end
+function ExchangeCtrl:_removeListener()
+    Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.RemoveListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
+end
+
+function ExchangeCtrl:_initPanelData()
+    self:_addListener()
 
     --设置默认行情打开
     ExchangePanel._quotesToggleState(true)
@@ -110,21 +117,23 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.selfRecordItems = {}
     ExchangeCtrl.cityRecordItems = {}
 
-    --测试创建items
-    local sourceInfo = {}
-    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
-    sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
-    sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
-    sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
-    sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
-    sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
-    ExchangeCtrl.sourceInfo = sourceInfo
-    ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
-    ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+    Event.Brocast("m_ReqExchangeItemList");
 
-    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
-
-    self.sortMgr:_reSetSortData()  --按照默认排序
+    ----测试创建items
+    --local sourceInfo = {}
+    --sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
+    --sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
+    --sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
+    --sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
+    --sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    --sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
+    --ExchangeCtrl.sourceInfo = sourceInfo
+    --ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
+    --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+    --
+    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
+    --
+    --self.sortMgr:_reSetSortData()  --按照默认排序
 end
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
@@ -376,6 +385,24 @@ function ExchangeCtrl:_getSortDatas(datas, sortData)
 end
 
 ---从modle传来的回调
+function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
+    --测试创建items
+    local sourceInfo = {}
+    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
+    sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
+    sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
+    sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
+    sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
+    ExchangeCtrl.sourceInfo = sourceInfo
+    ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+
+    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
+
+    self.sortMgr:_reSetSortData()  --按照默认排序
+end
+
 --收到成交委托信息
 function ExchangeCtrl:_getEntrustmentRecord(datas)
     local entrustmentInfo = {}

@@ -39,14 +39,6 @@ function ExchangeTransactionCtrl:Refresh()
 end
 
 function ExchangeTransactionCtrl:Hide()
-    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
-    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
-    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
-    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
-    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
-
-    --self.gameObject:SetActive(false)
-    --self.isActived = false
     UIPage.Hide(self)
 end
 
@@ -54,47 +46,74 @@ function ExchangeTransactionCtrl:Close()
 end
 
 function ExchangeTransactionCtrl:_update()
+    if not self.gameObject.activeSelf then
+        return
+    end
+    self:_updateConfim()
+end
+---检测是否能点击确认按钮
+function ExchangeTransactionCtrl:_updateConfim()
     ExchangeTransactionPanel.confirmBtn.localScale = Vector3.zero
     if self.isSellState then
-        if ExchangeTransactionPanel.sellCountInput.text ~= "" and ExchangeTransactionPanel.sellPriceInput.text ~= "" then
-            --显示算好的数值
-            local count = ExchangeTransactionPanel.sellCountInput.text
-            local unitPrice = ExchangeTransactionPanel.sellPriceInput.text
-            ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
-            ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
-            ExchangeTransactionPanel.serviceText.text = 0
-            if not self.wareHouse then
-                return
-            else
-                ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+        if ExchangeTransactionPanel.sellCountInput.text ~= ""then
+            if self.sellRemainCount ~= nil then
+                if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellRemainCount then
+                    ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
+                    self.wareHouseChoosed = false
+                else
+                    ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.zero
+                    self.wareHouseChoosed = true
+                end
+            end
+
+            if ExchangeTransactionPanel.sellPriceInput.text ~= "" then
+                --显示算好的数值
+                local count = ExchangeTransactionPanel.sellCountInput.text
+                local unitPrice = ExchangeTransactionPanel.sellPriceInput.text
+                ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
+                ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
+                ExchangeTransactionPanel.serviceText.text = 0
+
+                if not self.wareHouseChoosed then
+                    return
+                else
+                    ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+                end
             end
         end
     else
-        if ExchangeTransactionPanel.buyCountInput.text ~= "" and ExchangeTransactionPanel.buyPriceInput.text ~= "" then
-            --显示算好的数值
-            local count = ExchangeTransactionPanel.buyCountInput.text
-            local unitPrice = ExchangeTransactionPanel.buyPriceInput.text
-            ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
-            ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
-            ExchangeTransactionPanel.serviceText.text = "E"..getPriceString(count * unitPrice * 0.1, 30, 24)
-            if not self.wareHouse then
-                return
-            else
-                ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+        if ExchangeTransactionPanel.buyCountInput.text ~= ""then
+            if self.buyCapacityCount ~= nil then
+                if tonumber(ExchangeTransactionPanel.buyCountInput.text) > self.buyCapacityCount then
+                    ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
+                    self.wareHouseChoosed = false
+                else
+                    ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.zero
+                    self.wareHouseChoosed = true
+                end
+            end
+
+            if ExchangeTransactionPanel.buyPriceInput.text ~= "" then
+                --显示算好的数值
+                local count = ExchangeTransactionPanel.buyCountInput.text
+                local unitPrice = ExchangeTransactionPanel.buyPriceInput.text
+                ExchangeTransactionPanel.calculateText.text = "E"..getPriceString(count * unitPrice, 30, 24)
+                ExchangeTransactionPanel.totalText.text = "E"..getPriceString(count * unitPrice, 48, 36)
+                ExchangeTransactionPanel.serviceText.text = "E"..getPriceString(count * unitPrice * 0.1, 30, 24)
+
+                if not self.wareHouseChoosed then
+                    return
+                else
+                    ExchangeTransactionPanel.confirmBtn.localScale = Vector3.one
+                end
             end
         end
+
     end
 end
-
+---初始化
 function ExchangeTransactionCtrl:_initPanelData()
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
-    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
-
-    Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
-    Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
+    self:_addListeners()
 
     ---模拟数据
     local buyTemp = {}
@@ -112,7 +131,8 @@ function ExchangeTransactionCtrl:_initPanelData()
     sellTemp[5] = {index = 5, isSell = true, id = 245.17,    num = 68}
     ExchangeTransactionCtrl.static.sellDatas = sellTemp
     ExchangeTransactionCtrl.static.buyDatas = buyTemp
-
+    ExchangeTransactionCtrl.buyItems = {}
+    ExchangeTransactionCtrl.sellItems = {}
     ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
     ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
 
@@ -120,6 +140,27 @@ function ExchangeTransactionCtrl:_initPanelData()
     ExchangeTransactionPanel.changeText.text = self.m_data.change
     ExchangeTransactionPanel.newestPriceText.text = self.m_data.lastPrice
     self.isSellState = false
+end
+---添加移除监听
+function ExchangeTransactionCtrl:_addListeners()
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
+
+    Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
+    Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
+end
+function ExchangeTransactionCtrl:_removeListeners()
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyBtn.gameObject, self._openBuyPart, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellBtn.gameObject, self._openSellPart, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.sellChooseBtn.gameObject, self._chooseWareHouse, self);
+    self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
+
+    --Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
+    --Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
 end
 
 ---按钮监听
@@ -144,6 +185,7 @@ ExchangeTransactionCtrl.static.BuyProvideData = function(transform, idx)
     idx = idx + 1
     transform.localRotation = Quaternion.Euler(0, 0, 180);
     local buyItem = ExchangeTransactionItem:new(ExchangeTransactionCtrl.buyDatas[idx], transform)
+    ExchangeTransactionCtrl.buyItems[idx] = buyItem
 end
 ExchangeTransactionCtrl.static.BuyClearData = function(transform)
 end
@@ -151,6 +193,7 @@ end
 ExchangeTransactionCtrl.static.SellProvideData = function(transform, idx)
     idx = idx + 1
     local sellItem = ExchangeTransactionItem:new(ExchangeTransactionCtrl.sellDatas[idx], transform)
+    ExchangeTransactionCtrl.sellItems[idx] = sellItem
 end
 ExchangeTransactionCtrl.static.SellClearData = function(transform)
 end
@@ -162,27 +205,35 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
     end
 
     if wareDats.isSell then
+        self.sellRemainCount = wareDats.remainCount
         local sellCountValue = ExchangeTransactionPanel.sellCountInput.text
         if sellCountValue == "" then  --如果数量还未填写，则显示当前库存量
             ExchangeTransactionPanel.sellCountInput.text = wareDats.remainCount
             ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
+            self.wareHouseChoosed = true
         else
             if sellCountValue > wareDats.remainCount then
                 ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
+                self.wareHouseChoosed = false
             else
                 ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
+                self.wareHouseChoosed = true
             end
         end
     else
+        self.buyCapacityCount = wareDats.capacityCount
         local buyCountValue = ExchangeTransactionPanel.buyCountInput.text
         if buyCountValue == "" then  --如果数量还未填写，则显示当前库存量
             ExchangeTransactionPanel.buyCountInput.text = wareDats.capacityCount
             ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
+            self.wareHouseChoosed = true
         else
             if sellCountValue > wareDats.capacityCount then
                 ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
+                self.wareHouseChoosed = false
             else
                 ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
+                self.wareHouseChoosed = true
             end
         end
     end

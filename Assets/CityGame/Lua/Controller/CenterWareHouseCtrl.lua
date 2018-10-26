@@ -4,6 +4,10 @@
 --- DateTime: 2018/10/25 11:11
 ---中心仓库
 
+local isShowList;
+local listTrue = Vector3.New(0,0,180)
+local listFalse = Vector3.New(0,0,0)
+
 local class = require 'Framework/class'
 CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
 UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
@@ -20,9 +24,16 @@ end
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     self.gameObject = obj;
+    isShowList = false;
     local centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addItem,self.c_OnAddItem,self);
+
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.nameBtn,self.OnClick_OnName, self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.quantityBtn,self.OnClick_OnNumber, self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
     --普通消息注册
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Warehouse;
@@ -37,4 +48,41 @@ end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddItem()
 
+end
+
+function CenterWareHouseCtrl.OnClick_OnSorting(go)
+    CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+end
+
+--根据名字排序
+function CenterWareHouseCtrl.OnClick_OnName(go)
+    CenterWareHousePanel.nowText.text = "By name";
+    CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+end
+--根据数量排序
+function CenterWareHouseCtrl.OnClick_OnNumber(go)
+    CenterWareHousePanel.nowText.text = "By quantity";
+    CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+end
+--根据水平排序
+function CenterWareHouseCtrl.OnClick_OnlevelBtn(go)
+    CenterWareHousePanel.nowText.text = "By level";
+    CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+end
+--根据分数排序
+function CenterWareHouseCtrl.OnClick_OnscoreBtn(go)
+    CenterWareHousePanel.nowText.text = "By score";
+    CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+end
+function CenterWareHouseCtrl.OnClick_OpenList(isShow)
+    if isShow then
+        --ShelfPanel.list:SetActive(true);
+        CenterWareHousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        CenterWareHousePanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    else
+        --ShelfPanel.list:SetActive(false);
+        CenterWareHousePanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        CenterWareHousePanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    end
+    isShowList = isShow;
 end

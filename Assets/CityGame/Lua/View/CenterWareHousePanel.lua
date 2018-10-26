@@ -21,7 +21,17 @@ end
 --初始化面板--
 function CenterWareHousePanel.InitPanel()
     this.backBtn = transform:Find("topRoot/BackButton").gameObject;--返回按钮
+    this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn").gameObject;  --名字排序
+    this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn").gameObject;  --数量排序
+    this.levelBtn = transform:Find("topRoot/ListTable/List/levelBtn").gameObject; --水平排序
+    this.scoreBtn = transform:Find("topRoot/ListTable/List/scoreBtn").gameObject;--分数排序
+    this.nowText = transform:Find("topRoot/Sorting/bg/nowText"):GetComponent("Text");
+    this.list = transform:Find("topRoot/ListTable/List"):GetComponent("RectTransform");
+
     this.content = transform:Find("downRoot/Scroll View/Content").gameObject;
     this.addItem = transform:Find("downRoot/Scroll View/Content/AddItem").gameObject; --扩容按钮
+
     this.transportBtn = transform:Find("TransportButton").gameObject--运输按钮
+
 end

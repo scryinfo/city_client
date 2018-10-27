@@ -93,11 +93,11 @@ end
 
 function ExchangeCtrl:_addListener()
     Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.AddListener("c_onChangeCollectState", self._changeCollectState, self)
     Event.AddListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
 end
 function ExchangeCtrl:_removeListener()
-    Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
-    Event.RemoveListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
+    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
 end
 
 function ExchangeCtrl:_initPanelData()
@@ -118,22 +118,6 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.cityRecordItems = {}
 
     Event.Brocast("m_ReqExchangeItemList");
-
-    ----测试创建items
-    --local sourceInfo = {}
-    --sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
-    --sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
-    --sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
-    --sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
-    --sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
-    --sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
-    --ExchangeCtrl.sourceInfo = sourceInfo
-    --ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
-    --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    --
-    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
-    --
-    --self.sortMgr:_reSetSortData()  --按照默认排序
 end
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
@@ -317,7 +301,6 @@ end
 
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
-    --log("cycle_w9_exchange01", "排序啦啦啦")
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
         ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
         ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
@@ -327,7 +310,6 @@ function ExchangeCtrl:_exchangeSortByValue(sortData)
         ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
     end
 end
-
 --获取收藏的数据
 function ExchangeCtrl:_getCollectDatas(totalDatas)
     local collectDatas = {}
@@ -383,6 +365,28 @@ function ExchangeCtrl:_getSortDatas(datas, sortData)
 
     return tempDatas
 end
+--更改收藏状态
+function ExchangeCtrl:_changeCollectState(isCollected, itemId)
+    if isCollected then
+        --向服务器发送取消收藏的信息
+        Event.Brocast("m_ReqExchangeUnCollect", itemId)
+        self:_changeCollectData(false, itemId)
+    else
+        Event.Brocast("m_ReqExchangeCollect", itemId)
+        self:_changeCollectData(true, itemId)
+    end
+end
+function ExchangeCtrl:_changeCollectData(isCollected, itemId)
+    for i, data in ipairs(ExchangeCtrl.collectDatas) do
+        --如果之前存在于数组中，则是由收藏变为取消收藏
+        if data == itemId then
+            data.isCollected = isCollected
+            table.remove(ExchangeCtrl.collectDatas, itemId)
+            return
+        end
+    end
+    ExchangeCtrl.collectItems[#ExchangeCtrl.collectItems + 1] = ExchangeCtrl.sourceInfo[itemId]
+end
 
 ---从modle传来的回调
 function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
@@ -394,13 +398,29 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
     sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
     sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
     sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
+
     ExchangeCtrl.sourceInfo = sourceInfo
     ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-
     ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
-
     self.sortMgr:_reSetSortData()  --按照默认排序
+
+    ---正式代码
+    --local collectIndexs = {}  --从role exchangeCollectedItem中获取
+    --local collectDatas = {}
+    --for i, collectId in ipairs(collectIndexs) do
+    --    for j, quoteItem in ipairs(datas) do
+    --        if quoteItem.itemId == collectId then
+    --            quoteItem.isCollected = true
+    --            collectDatas[#collectDatas] = quoteItem
+    --        end
+    --    end
+    --end
+    --ExchangeCtrl.sourceInfo = datas
+    --ExchangeCtrl.collectDatas = collectDatas
+    --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
+    --self.sortMgr:_reSetSortData()  --按照默认排序
 end
 
 --收到成交委托信息

@@ -3,44 +3,92 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/26 17:14
 ---
-ExchangeModel = {};
-local this = ExchangeModel;
+ExchangeModel = {}
+local this = ExchangeModel
 local pbl = pbl
 
 --构建函数--
 function ExchangeModel.New()
-    return this;
+    return this
 end
 
 function ExchangeModel.Awake()
-    --UpdateBeat:Add(this.Update, this);
-    this:OnCreate();
+    --UpdateBeat:Add(this.Update, this)
+    this:OnCreate()
 end
 
 --启动事件--
 function ExchangeModel.OnCreate()
     --网络回调注册 网络回调用n开头
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeItemList"), ExchangeModel.n_OnReceiveExchangeItemList);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeItemList"), ExchangeModel.n_OnReceiveExchangeItemList)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeMyOrder"), ExchangeModel.n_OnReceiveOrder)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeMyDealLog"), ExchangeModel.n_OnReceiveMyDealLog)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeAllDealLog"), ExchangeModel.n_OnReceiveAllDealLog)
 
     --本地的回调注册
-    Event.AddListener("m_ReqExchangeItemList", this.m_ReqExchangeItemList);
+    Event.AddListener("m_ReqExchangeItemList", this.m_ReqExchangeItemList)
+    Event.AddListener("m_ReqExchangeMyOrder", this.m_ReqExchangeMyOrder)
+    Event.AddListener("m_ReqExchangeMyDealLog", this.m_ReqExchangeMyDealLog)
+    Event.AddListener("m_ReqExchangeAllDealLog", this.m_ReqExchangeAllDealLog)
+    Event.AddListener("m_ReqExchangeCollect", this.m_ReqExchangeCollect)
+    Event.AddListener("m_ReqExchangeUnCollect", this.m_ReqExchangeUnCollect)
 end
 
 --关闭事件--
 function ExchangeModel.Close()
-    --Event.RemoveListener("m_PlayerBidGround", this.m_BidGround);
+    --Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
 end
 
 --- 客户端请求 ---
 --请求行情信息
 function ExchangeModel.m_ReqExchangeItemList()
     local msgId = pbl.enum("gscode.OpCode","exchangeItemList")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, nil);
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+--挂单信息
+function ExchangeModel.m_ReqExchangeMyOrder()
+    local msgId = pbl.enum("gscode.OpCode","exchangeMyOrder")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+--成交历史
+function ExchangeModel.m_ReqExchangeMyDealLog()
+    local msgId = pbl.enum("gscode.OpCode","exchangeMyDealLog")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+--全城成交记录
+function ExchangeModel.m_ReqExchangeAllDealLog()
+    local msgId = pbl.enum("gscode.OpCode","exchangeAllDealLog")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+--收藏
+function ExchangeModel.m_ReqExchangeCollect(itemId)
+    local msgId = pbl.enum("gscode.OpCode","exchangeCollect")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+end
+--取消收藏
+function ExchangeModel.m_ReqExchangeUnCollect(itemId)
+    local msgId = pbl.enum("gscode.OpCode","exchangeUnCollect")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
 end
 
 ---网络回调
---收到拍卖中的土地信息
+--收到行情信息
 function ExchangeModel.n_OnReceiveExchangeItemList(stream)
     local quotesData = assert(pbl.decode("gs.ExchangeItemSummary", stream), "ExchangeModel.n_OnReceiveExchangeItemList: stream == nil")
-    Event.Brocast("c_onReceiveExchangeItemList", quotesData);
+    Event.Brocast("c_onReceiveExchangeItemList", quotesData)
+end
+--所有挂单信息
+function ExchangeModel.n_OnReceiveOrder(stream)
+    local orderData = assert(pbl.decode("gs.exchangeMyOrder", stream), "ExchangeModel.n_OnReceiveOrder: stream == nil")
+    Event.Brocast("c_onReceiveExchangeItemList", orderData)
+end
+--自己的成交记录
+function ExchangeModel.n_OnReceiveMyDealLog(stream)
+    local orderData = assert(pbl.decode("gs.exchangeMyDealLog", stream), "ExchangeModel.n_OnReceiveMyDealLog: stream == nil")
+    Event.Brocast("c_onReceiveExchangeItemList", orderData)
+end
+--全城成交
+function ExchangeModel.n_OnReceiveAllDealLog(stream)
+    local allOrderData = assert(pbl.decode("gs.exchangeAllDealLog", stream), "ExchangeModel.n_OnReceiveAllDealLog: stream == nil")
+    Event.Brocast("c_onReceiveExchangeItemList", allOrderData)
 end

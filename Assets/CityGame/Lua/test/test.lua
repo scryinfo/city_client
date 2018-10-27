@@ -17,8 +17,8 @@ TestGroup.active_TestGroup("abel_w9_autoRequire")
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
 --TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
---TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
-TestGroup.active_TestGroup("cycle_w10_exchangeModel")  --交易所model
+TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
+--TestGroup.active_TestGroup("test_cycle_w11_exchangeModel")  --交易所model
 
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
@@ -323,7 +323,7 @@ end)
 UnitTest.Exec("cycle_w10_exchange02", "test_cycle_w10_exchange02",  function ()
     CityGlobal.OpenCtrl("ExchangeCtrl")
 end)
-UnitTest.Exec("cycle_w10_exchangeModel", "test_cycle_w10_exchangeModel",  function ()
+UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  function ()
     local exchangeModel = CtrlManager.GetModel(ModelNames.Exchange);
     if exchangeModel ~= nil then
         exchangeModel:Awake();

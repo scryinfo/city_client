@@ -4,7 +4,6 @@ local this = Dbg;
 
 --输出日志--
 local loginner = print
-
 DEBUGLEVEL = {
 	DEBUG = 0,
 	INFO = 1,
@@ -43,6 +42,9 @@ end
 print = function(s,...)
 	log("system",s,...)
 end
+
+logWarn = print
+logDebug = print
 
 error = function(s,...)
 	log("system","[error]",s,...)

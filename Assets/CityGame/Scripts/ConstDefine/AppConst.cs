@@ -17,10 +17,10 @@ namespace LuaFramework {
         /// </summary>
         public const bool UpdateMode = false;                       //更新模式-默认关闭 
         public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭
-#if CLOSE_LUA_BUNDELMODE
-        public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式       
+#if LUA_BUNDEL
+    public const bool LuaBundleMode = true;                    //Lua代码AssetBundle模式          
 #else
-        public const bool LuaBundleMode = true;                    //Lua代码AssetBundle模式       
+    public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式            
 #endif
 
         public const int TimerInterval = 1;

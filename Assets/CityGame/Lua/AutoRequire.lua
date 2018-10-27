@@ -26,6 +26,10 @@ function AutoRequire:requireLast(file)
     self.requirePaths[#self.requirePaths+1] = 'require '.."'"..file.."'"
 end
 
+function AutoRequire:addCode(code)
+    self.requirePaths[#self.requirePaths+1] = code
+end
+
 function AutoRequire:init(dir)
     instance.OriginalPath = dir
     log("abel_w9_autoRequire","instance.OriginalPath", instance.OriginalPath)
@@ -48,6 +52,10 @@ end
 
 function AutoRequire:WriteRuntimeRequire()
     CityGlobal.file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_RunTime.lua',self.requirePaths)
+    self.requirePaths = {}
+end
+
+function AutoRequire:FinishedRequire()
     self.requirePaths = nil
 end
 

@@ -4,23 +4,104 @@
 --- DateTime: 2018/10/18 16:03
 ---
 local ProFi = require ('test/testFrameWork/memory/ProFi')
+local mri = MemoryRefInfo
 
 local classTest = class('classTest')
-local FrameTimer = FrameTimer
+function classTest:initialize()
+    self._data = {}
+    for i = 1, 100000 do
+        self._data[#self._data] = i
+    end
+end
+
+--TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
+log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
+
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
-    UnitTest.PerformanceTest("abel_w9_memory_usage","[内存用量分析测试]", function()
+    mri.m_cConfig.m_bAllMemoryRefFitest_w9_mem_Load_leAddTime = false
+    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
+    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
+
+    UnitTest.PerformanceTest("abel_w9_memory_usage","test_w9_memory_usage", function()
+        collectgarbage("collect")
+        local memory_usage = {}
+        _G.memory_usage = memory_usage
+        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:writeReport( 'test_w9_memory_usage_before.txt' )
+        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_before", -1, "memory_usage", _G.memory_usage)
+        collectgarbage("collect")
         ProFi:start()
         for i = 1, 10000 do
-            local pIns = classTest:new()
+            memory_usage[#memory_usage +1] = classTest:new()
         end
-        local xxx = 0
-        timer = Timer.New(function()
-            log("abel_w9_memory_usage","test_w9_memory_usage test")
-            ProFi:stop()
-            ProFi:checkMemory( 0.2, 'checkMemory-------------' )
-            ProFi:writeReport( 'MyProfilingReport.txt' )
-        end, 1, 1)
-        timer:Start()
+        ProFi:stop()
+        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:writeReport( 'test_w9_memory_usage_after.txt' )
+        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_after", -1, "memory_usage", _G.memory_usage)
+
+        ProFi:reset()
+        _G.memory_usage = nil
+        collectgarbage("collect")
+        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:writeReport( 'test_w9_memory_usage_nil.txt' )
+        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_nil", -1, "memory_usage", _G.memory_usage)
+
+        log("abel_w9_memory_usage","[内存用量分析测试] 结束")
     end)
+end)
+
+UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  function ()
+    UnitTest.PerformanceTest("abel_w9_mem_Load_Instantiate","[test_w9_mem_Load_Instantiate]", function()
+        local coroutine = require("coroutine")
+        local loadtb ={}
+        local Instantiatetb = {}
+        local testCount = 1000
+        local path = 'View/TopbarPanel'
+        funLoad = function(loadtb)
+            for i = 1, testCount do
+                loadtb[#loadtb+1] = UnityEngine.Resources.Load(path);
+            end
+        end
+
+        funInstantiate = function(pb)
+            for i = 1, testCount do
+                Instantiatetb[#Instantiatetb+1] = UnityEngine.GameObject.Instantiate(pb);
+            end
+        end
+
+        collectgarbage("collect")
+        ProFi:checkMemory( 0, 'test_w9_mem_Load_before-------------' )
+        ProFi:writeReport( 'test_w9_mem_Load_before.txt' )
+        ProFi:reset()
+
+        collectgarbage("collect")
+        ProFi:start()
+        funLoad(loadtb)
+        ProFi:stop()
+        ProFi:checkMemory( 0, 'test_w9_mem_Load_-------------' )
+        ProFi:writeReport( 'test_w9_mem_Load_.txt' )
+        ProFi:reset()
+
+        loadtb = nil
+        collectgarbage("collect")
+        local prefab = UnityEngine.Resources.Load(path);
+        ProFi:checkMemory( 0, 'test_w9_mem_Instantiate_before-------------' )
+        ProFi:writeReport( 'test_w9_mem_Instantiate_before.txt' )
+
+        collectgarbage("collect")
+        ProFi:start()
+        funInstantiate(prefab)
+        ProFi:stop()
+        ProFi:checkMemory( 0, 'test_w9_mem_Instantiate-------------' )
+        ProFi:writeReport( 'test_w9_mem_Instantiate.txt' )
+        ProFi:reset()
+        log("abel_w9_mem_Load_Instantiate","[test_w9_mem_Instantiate] 结束")
+    end)
+    --[[
+    测试结果：
+    1、 UnityEngine.Resources.Load 只要内存中有加载过的资源，Load方法不会重复加载该资源，而是把内存中的实例返回
+    2、 UnityEngine.GameObject.Instantiate 实例化prefab资源，从原prefab资源拷贝一份数据到内存
+    3、 unity 本身应该是有针对 prefab 资源的内存池机制，加载单独的资源，内存没有变化（没有超过预分配的内存）
+    ]]--
 end)
 

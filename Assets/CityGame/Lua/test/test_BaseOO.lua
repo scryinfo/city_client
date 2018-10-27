@@ -58,3 +58,5 @@ UnitTest.Exec("abel_w6_UIFrame", "test_oo",  function ()
     p2:speak()
     Event.Brocast("class_cb", 100);
 end )
+
+

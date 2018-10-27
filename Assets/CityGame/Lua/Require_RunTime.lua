@@ -9,6 +9,9 @@ require('Framework/pbl/serpent')
 require('Framework/UI/UIPage')
 require('Framework/UI/UIRoot')
 require('test/testFrameWork/UnitTest')
+function UnitTest.Exec_now(unitGroupId, event,...) return end
+function UnitTest.Exec(unitGroupId, funcName, func) return end
+log = function(logid,s,...) return end
 require('Logic/ExchangeAbout/ExchangeQuoteItem')
 require('Logic/ExchangeAbout/ExchangeSortItem')
 require('Logic/ExchangeAbout/ExchangeSortMgr')

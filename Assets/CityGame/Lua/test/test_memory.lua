@@ -4,7 +4,6 @@
 --- DateTime: 2018/10/18 16:03
 ---
 local ProFi = require ('test/testFrameWork/memory/ProFi')
-local mri = MemoryRefInfo
 
 local classTest = class('classTest')
 function classTest:initialize()
@@ -14,37 +13,30 @@ function classTest:initialize()
     end
 end
 
---TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
 log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
 
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
-    mri.m_cConfig.m_bAllMemoryRefFitest_w9_mem_Load_leAddTime = false
-    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
-    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
-
-    UnitTest.PerformanceTest("abel_w9_memory_usage","test_w9_memory_usage", function()
+    local testfun = function()
+        ProFi:reset()
         collectgarbage("collect")
         local memory_usage = {}
-        _G.memory_usage = memory_usage
-        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:checkMemory( 0, 'checkMemory-------------' )
         ProFi:writeReport( 'test_w9_memory_usage_before.txt' )
-        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_before", -1, "memory_usage", _G.memory_usage)
         collectgarbage("collect")
         ProFi:start()
-        for i = 1, 10000 do
+        for i = 1, 10 do
             memory_usage[#memory_usage +1] = classTest:new()
         end
         ProFi:stop()
-        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:checkMemory( 0, 'checkMemory-------------' )
         ProFi:writeReport( 'test_w9_memory_usage_after.txt' )
-        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_after", -1, "memory_usage", _G.memory_usage)
-
+    end
+    UnitTest.PerformanceTest("abel_w9_memory_usage","test_w9_memory_usage", function()
+        testfun()
         ProFi:reset()
-        _G.memory_usage = nil
         collectgarbage("collect")
-        ProFi:checkMemory( 2.2, 'checkMemory-------------' )
+        ProFi:checkMemory( 0, 'checkMemory-------------' )
         ProFi:writeReport( 'test_w9_memory_usage_nil.txt' )
-        mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "test_w9_memory_usage_ref_nil", -1, "memory_usage", _G.memory_usage)
 
         log("abel_w9_memory_usage","[内存用量分析测试] 结束")
     end)
@@ -69,25 +61,27 @@ UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  f
             end
         end
 
+        ProFi:reset()
         collectgarbage("collect")
         ProFi:checkMemory( 0, 'test_w9_mem_Load_before-------------' )
         ProFi:writeReport( 'test_w9_mem_Load_before.txt' )
-        ProFi:reset()
 
+        ProFi:reset()
         collectgarbage("collect")
         ProFi:start()
         funLoad(loadtb)
         ProFi:stop()
         ProFi:checkMemory( 0, 'test_w9_mem_Load_-------------' )
         ProFi:writeReport( 'test_w9_mem_Load_.txt' )
-        ProFi:reset()
 
         loadtb = nil
+        ProFi:reset()
         collectgarbage("collect")
         local prefab = UnityEngine.Resources.Load(path);
         ProFi:checkMemory( 0, 'test_w9_mem_Instantiate_before-------------' )
         ProFi:writeReport( 'test_w9_mem_Instantiate_before.txt' )
 
+        ProFi:reset()
         collectgarbage("collect")
         ProFi:start()
         funInstantiate(prefab)

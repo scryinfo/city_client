@@ -41,6 +41,8 @@
 			2、 要求全局唯一
 		3、 func 测试用例的方法实现
 ]]--
+local ProFi = require ('test/testFrameWork/memory/ProFi')
+local mri = MemoryRefInfo
 UnitTest = {}
 function UnitTest.Exec(unitGroupId, funcName, func)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
@@ -50,6 +52,7 @@ function UnitTest.Exec(unitGroupId, funcName, func)
     _G[funcName] = func
 end
 
+--CPU使用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.PerformanceTest(groupid, info,func)
     log(groupid..info)
     local startTime = os.clock()
@@ -57,10 +60,48 @@ function UnitTest.PerformanceTest(groupid, info,func)
     local endTime = os.clock()
     log(groupid, info, "执行时间: ",endTime - startTime)
 end
+
+--内存用量分析， 只能在 UnitTest.Exec 内部使用
+function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
+    log(groupid..funcName)
+    ProFi:reset()
+    collectgarbage("collect")
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_0_before.txt' )
+    collectgarbage("collect")
+    ProFi:start()
+    func(groupid)
+    ProFi:stop()
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_1_after.txt' )
+    ProFi:reset()
+    collectgarbage("collect")
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_2_finished.txt' )
+end
+
+--全局内存引用分析， 只能在 UnitTest.Exec 内部使用
+function UnitTest.MemoryReferenceAll(groupid, fileName)
+    log(groupid..fileName)
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshot("./", groupid.."_"..fileName.."_DumpAll", -1)
+end
+--比较
+function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
+    log(groupid..fileName)
+    mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1,  firstfile, secondfile)
+end
+
+--指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
+function UnitTest.MemoryReferenceOne(groupid, objectName,object,markid)
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", groupid.."_"..objectName.."_"..markid.."_DumpOne", -1, objectName, object)
+end
+
 --使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
 function UnitTest.Exec_now(unitGroupId, event,...)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return {}
+        return
     end
     Event.Brocast(event,...);
 end

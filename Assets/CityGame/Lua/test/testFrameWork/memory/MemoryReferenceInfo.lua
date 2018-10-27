@@ -8,9 +8,9 @@
 -- The global config of the mri.
 local cConfig = 
 {
-    m_bAllMemoryRefFileAddTime = true,
-    m_bSingleMemoryRefFileAddTime = true,
-    m_bComparedMemoryRefFileAddTime = true
+    m_bAllMemoryRefFileAddTime = false,
+    m_bSingleMemoryRefFileAddTime = false,
+    m_bComparedMemoryRefFileAddTime = false
 }
 
 -- Get the format string of date time.

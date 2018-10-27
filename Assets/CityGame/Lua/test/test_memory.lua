@@ -3,8 +3,6 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/18 16:03
 ---
-local ProFi = require ('test/testFrameWork/memory/ProFi')
-
 local classTest = class('classTest')
 function classTest:initialize()
     self._data = {}
@@ -16,80 +14,30 @@ end
 log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
 
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
-    local testfun = function()
-        ProFi:reset()
-        collectgarbage("collect")
+    UnitTest.MemoryConsumptionTest("abel_w9_memory_usage","test_w9_memory_usage",function()
         local memory_usage = {}
-        ProFi:checkMemory( 0, 'checkMemory-------------' )
-        ProFi:writeReport( 'test_w9_memory_usage_before.txt' )
-        collectgarbage("collect")
-        ProFi:start()
-        for i = 1, 10 do
+        for i = 1, 10000 do
             memory_usage[#memory_usage +1] = classTest:new()
         end
-        ProFi:stop()
-        ProFi:checkMemory( 0, 'checkMemory-------------' )
-        ProFi:writeReport( 'test_w9_memory_usage_after.txt' )
-    end
-    UnitTest.PerformanceTest("abel_w9_memory_usage","test_w9_memory_usage", function()
-        testfun()
-        ProFi:reset()
-        collectgarbage("collect")
-        ProFi:checkMemory( 0, 'checkMemory-------------' )
-        ProFi:writeReport( 'test_w9_memory_usage_nil.txt' )
-
-        log("abel_w9_memory_usage","[内存用量分析测试] 结束")
     end)
 end)
 
 UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  function ()
-    UnitTest.PerformanceTest("abel_w9_mem_Load_Instantiate","[test_w9_mem_Load_Instantiate]", function()
-        local coroutine = require("coroutine")
-        local loadtb ={}
-        local Instantiatetb = {}
-        local testCount = 1000
-        local path = 'View/TopbarPanel'
-        funLoad = function(loadtb)
-            for i = 1, testCount do
-                loadtb[#loadtb+1] = UnityEngine.Resources.Load(path);
-            end
+    local loadtb ={}
+    local Instantiatetb = {}
+    local testCount = 1000
+    local path = 'View/TopbarPanel'
+    local prefab = UnityEngine.Resources.Load(path);
+    UnitTest.MemoryConsumptionTest("abel_w9_mem_Load_Instantiate","test_w9_mem_Load",function()
+        for i = 1, testCount do
+            loadtb[#loadtb+1] = UnityEngine.Resources.Load(path);
         end
-
-        funInstantiate = function(pb)
-            for i = 1, testCount do
-                Instantiatetb[#Instantiatetb+1] = UnityEngine.GameObject.Instantiate(pb);
-            end
+    end)
+    loadtb = nil
+    UnitTest.MemoryConsumptionTest("abel_w9_mem_Load_Instantiate","test_w9_memory_Instantiate",function()
+        for i = 1, testCount do
+            Instantiatetb[#Instantiatetb+1] = UnityEngine.GameObject.Instantiate(prefab);
         end
-
-        ProFi:reset()
-        collectgarbage("collect")
-        ProFi:checkMemory( 0, 'test_w9_mem_Load_before-------------' )
-        ProFi:writeReport( 'test_w9_mem_Load_before.txt' )
-
-        ProFi:reset()
-        collectgarbage("collect")
-        ProFi:start()
-        funLoad(loadtb)
-        ProFi:stop()
-        ProFi:checkMemory( 0, 'test_w9_mem_Load_-------------' )
-        ProFi:writeReport( 'test_w9_mem_Load_.txt' )
-
-        loadtb = nil
-        ProFi:reset()
-        collectgarbage("collect")
-        local prefab = UnityEngine.Resources.Load(path);
-        ProFi:checkMemory( 0, 'test_w9_mem_Instantiate_before-------------' )
-        ProFi:writeReport( 'test_w9_mem_Instantiate_before.txt' )
-
-        ProFi:reset()
-        collectgarbage("collect")
-        ProFi:start()
-        funInstantiate(prefab)
-        ProFi:stop()
-        ProFi:checkMemory( 0, 'test_w9_mem_Instantiate-------------' )
-        ProFi:writeReport( 'test_w9_mem_Instantiate.txt' )
-        ProFi:reset()
-        log("abel_w9_mem_Load_Instantiate","[test_w9_mem_Instantiate] 结束")
     end)
     --[[
     测试结果：

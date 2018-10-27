@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/27 10:37
 ---
-TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")

@@ -123,7 +123,7 @@ function ProFi:writeReport( filename )
 			os.execute("mkdir -p \"" .. path .. "\"")
         end
     else
-		path = "Assets\\CityGame\\MemoryProfile"
+		path = "MemoryProfile"
 		os.execute("mkdir "..path)
     end
 

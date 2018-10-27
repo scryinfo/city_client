@@ -11,6 +11,8 @@ require 'View/BuildingInfo/StaffRateItem'
 require 'View/BuildingInfo/WarehouseRateItem'
 require 'View/BuildingInfo/ShelfRateItem'
 require 'View/BuildingInfo/HomeProductionLineItem'
+require 'View/BuildingInfo/AdvertisementShowItem'
+require'View/BuildingInfo/ParkInfoItem'
 
 local class = require 'Framework/class'
 
@@ -20,6 +22,7 @@ BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME = 0.5  --item动画时间
 
 BuildingInfoToggleGroupMgr.static.LEFT_POS = Vector2.New(0, 50)
 BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
+BuildingInfoToggleGroupMgr.static.MIDDLE_POS=Vector2.New(0,50)
 
 BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH = "View/BuildingMainPageInfoItem/HouseOccupancyRateItem"  --住宅入住率预制路径
 BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH = "View/BuildingMainPageInfoItem/HouseRentalItem"  --住宅租金
@@ -32,6 +35,9 @@ BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE = "View/BuildingMainPa
 
 BuildingInfoToggleGroupMgr.static.Staff_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --建筑员工
 
+BuildingInfoToggleGroupMgr.static.Advertisement_Path="View/BuildingMainPageInfoItem/AdvertisementShowItem"--广告展示
+BuildingInfoToggleGroupMgr.static.ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--广告信息
+
 
 --初始化
 function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
@@ -42,16 +48,20 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
     self.toggleData = buildingData
     self.leftData = {}
     self.rightData = {}
+     self.middleData={}
 
     if buildingData.buildingType == BuildingType.House then
         self:_creatHouseInfo()
     elseif buildingData.buildingType == BuildingType.MaterialFactory then
         self:_creatMaterialInfo()
+    elseif buildingData.buildingType == BuildingType.Municipal then
+        self:_creatMunicipalInfo()
     end
 
     --创建完之后调整item位置
     self:_sortItems(1)
     self:_sortRightItems()
+
 end
 
 --每次打开一个Item，都要刷新位置
@@ -71,7 +81,7 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent, pos, nextHeight)
     local prefab = UnityEngine.Resources.Load(path)
     local go = UnityEngine.GameObject.Instantiate(prefab)
     local rect = go.transform:GetComponent("RectTransform")
-    go.transform:SetParent(parent.transform)
+     go.transform:SetParent(parent.transform)
     go.transform.localScale = Vector3.one;
     rect.anchoredPosition = Vector3.zero;
 
@@ -111,6 +121,31 @@ function BuildingInfoToggleGroupMgr:_sortRightItems()
         rightPos = toggleItem:openToggleItem(rightPos)
     end
 end
+
+local num=1  local temp=nil
+function BuildingInfoToggleGroupMgr:_middleItem(toggleData)
+
+    for i, item in pairs(self.middleData) do
+        if(item:getToggleIndex()==toggleData.index)then
+
+            if item==temp then
+                if num%2==1 then
+                    item:openToggleItem()
+                    num=num+1
+                else
+                    item:closeToggleItem()
+                    num=num+1
+                end
+            else
+                num=1
+                item:openToggleItem()
+                num=num+1
+                temp=item
+            end
+        end
+    end
+end
+
 
 ---创建住宅主页左右信息，左侧加载turnover，staff，occupancy，右侧加载rental
 --请按照顺序添加
@@ -239,3 +274,63 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     self.rightData[1] = prodictionLuaItem
 
 end
+function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
+    --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
+    --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
+
+    ---营业额折线图Item --左1
+    local turnoverLineChart
+    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+    turnoverLineChart.gameObject.name = "LineChartRateItem"
+
+    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
+    self.leftData[1] = LineChartLuaItem
+
+    ---员工  左2
+    local staffViewRect
+    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+    staffViewRect.gameObject.name = "Staff"
+    --测试数据
+    local staffData = {}
+    staffData.EmployeeSatisfaction = 0.8
+    staffData.EmployeeDaywages = 18
+    staffData.noDomicileCount = 3
+    staffData.totalStaffCount = 100
+    --end
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+    self.leftData[2] = staffLuaItem
+
+    ---仓库Item --左3
+    local warehouseView
+    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+    warehouseView.gameObject.name = "WarehouseRateItem"
+    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    self.leftData[3] = warehouseLuaItem
+
+    ---广告展示--右1
+    local advertisementViewRect
+    advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Advertisement_Path, self.rightRect)
+    advertisementViewRect.gameObject.name="Advertisement"
+    local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+    local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+    self.rightData[1] = AdvertisementShowItem
+
+
+    ---个人公园信息--中1
+    local ParkInfoRect
+    ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.ParkInfo_Path,self.toggleData.middleRootTran )
+    ParkInfoRect.gameObject.name="ParkInfo"
+    local newData={func=self._middleItem}
+    local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
+    local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
+    self.middleData[1]=ParkInfoItem
+    ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
+
+
+
+
+end
+

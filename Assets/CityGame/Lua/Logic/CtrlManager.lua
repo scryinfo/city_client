@@ -17,6 +17,8 @@ require "Controller/ShelfCtrl"
 require "Controller/ChooseWarehouseCtrl"
 require "Controller/TransportBoxCtrl"
 require "Controller/DETAILSBoxCtrl"
+require "Controller/MunicipalCtrl"
+--require"Controller/AdvertisementPosCtrl"
 
 require "Controller/GroundAuctionCtrl"
 require "Controller/HouseCtrl"
@@ -28,6 +30,9 @@ require "Model/LoginModel"
 require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
+require "Model/MunicipalModel"
+require"Model/AdvertisementPosModel"
+require"Model/ManageAdvertisementPosModel"
 --require "Model/GameMainInterfaceModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
@@ -47,7 +52,9 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:OpenCtrl('LoginCtrl',Vector2.New(0, -300)) --注意传入的是类名
+	UIPage:OpenCtrl('MunicipalCtrl') --注意传入的是类名
+	--LoginCtrl--,Vector2.New(0, -300)
+	--MunicipalCtrl
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
@@ -78,6 +85,9 @@ function CtrlManager.Init()
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
+	modelList[ModelNames.Municipal]=MunicipalModel.New();
+	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
+	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	return this;

@@ -35,6 +35,8 @@ CtrlNames = {
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
+	MunicipalCtrl="MunicipalCtrl",--市镇设施
+	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
 }
 
 ModelNames = {
@@ -54,6 +56,9 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	Municipal="MunicipalModel",--市镇设施
+	AdvertisementPos="AdvertisementPos",
+	ManageAdvertisementPos="ManageAdvertisementPos",
 }
 
 
@@ -140,6 +145,7 @@ BuildingInfoTogglePos =
 {
 	Left = 0,
 	Right = 1,
+	Middle=2,
 }
 
 --建筑类型
@@ -147,7 +153,16 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
+	Municipal=3,--市镇设施
+	MunicipalManage=4,--市政管理
 }
+--建筑所属
+Buildingowner=
+{
+   master=1,--主人的
+   other=2,--其他人的
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {

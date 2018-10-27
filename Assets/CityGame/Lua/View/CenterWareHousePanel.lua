@@ -21,6 +21,9 @@ end
 --初始化面板--
 function CenterWareHousePanel.InitPanel()
     this.backBtn = transform:Find("topRoot/BackButton").gameObject;--返回按钮
+    this.number = transform:Find("topRoot/Capacity/Slider/Number").gameObject;--仓库商品个数
+    this.total = transform:Find("topRoot/Capacity/Slider/TotalNumber").gameObject;--仓库总容量
+    this.slider = transform:Find("topRoot/Capacity/Slider");
     this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
     this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn").gameObject;  --名字排序
     this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn").gameObject;  --数量排序
@@ -30,7 +33,9 @@ function CenterWareHousePanel.InitPanel()
     this.list = transform:Find("topRoot/ListTable/List"):GetComponent("RectTransform");
 
     this.content = transform:Find("downRoot/Scroll View/Content").gameObject;
-    this.addItem = transform:Find("downRoot/Scroll View/Content/AddItem").gameObject; --扩容按钮
+    this.addBtn = transform:Find("downRoot/Scroll View/Content/AddItem/AddButton").gameObject; --扩容按钮
+    this.addCapacity = transform:Find("downRoot/Scroll View/Content/AddItem/WareHouseBG/AddCapacity").gameObject--容量
+    this.money = transform:Find("downRoot/Scroll View/Content/AddItem/MoneyBG/Money").gameObject--所需金额
 
     this.transportBtn = transform:Find("TransportButton").gameObject--运输按钮
 

@@ -24,20 +24,32 @@ end
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     self.gameObject = obj;
+    self.totalCapacity =800;--仓库总容量
+    self.number = 500;--商品个数
+    self.money = 1000;--扩容所需金额
+    self:_initData();
     isShowList = false;
     local centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
-    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addItem,self.c_OnAddItem,self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
 
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.nameBtn,self.OnClick_OnName, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.quantityBtn,self.OnClick_OnNumber, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
-    --普通消息注册
+
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Warehouse;
     WareHouseGoodsMgr:new(centerWareHousetBehaviour,self.m_data)
+end
+
+--初始化
+function CenterWareHouseCtrl:_initData()
+    CenterWareHousePanel.number:GetComponent("Text").text = self.number;
+    CenterWareHousePanel.total:GetComponent("Text").text =self.number .. "/" .. self.totalCapacity;
+    CenterWareHousePanel.slider:GetComponent("Slider").value = self.number/self.totalCapacity;
+    CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
 --返回按钮
@@ -46,8 +58,11 @@ function CenterWareHouseCtrl:c_OnBackBtn()
 end
 
 --扩容按钮
-function CenterWareHouseCtrl:c_OnAddItem()
-
+function CenterWareHouseCtrl:c_OnAddBtn(go)
+    log("rodger_w8_GameMainInterface","[test_c_OnaddBtn]  测试完毕")
+    go.totalCapacity = go.totalCapacity+100
+    go.money = go.money*2;
+    go:_initData();
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)

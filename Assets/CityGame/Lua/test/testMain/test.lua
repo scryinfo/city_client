@@ -5,11 +5,14 @@
 ---
 
 if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w9_autoRequire")
+--TestGroup.active_TestGroup("abel_w9_memory_usage")
+--TestGroup.active_TestGroup("abel_w10_pbl_nest")
+
+--TestGroup.active_TestGroup("abel_w10_MemRef_table")
+--TestGroup.active_TestGroup("abel_w10_MemRef_all")
+--TestGroup.active_TestGroup("abel_w9_autoRequire")
 
 --TestGroup.active_TestGroup("abel_w10_OpenCtrl")
---TestGroup.active_TestGroup("abel_w9_memory_usage")
---TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w9_tableOrder")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 --TestGroup.active_TestGroup("abel_w7_LineChart")
@@ -67,6 +70,38 @@ UnitTest.Exec("abel_w3", "test_pb",  function ()
     local msg = assert(pbl.decode("as.Login",pMsg), "pbl.decode decode failed")
 
     log("abel_w3","[test_pb] login.account: "..msg.account)
+end)
+
+--[[
+message Phone {
+	optional string name        = 1;
+	optional int64  phonenumber = 2;
+}
+message Person {
+	 optional string name     = 1;
+	 optional int32  age      = 2;
+	 optional string address  = 3;
+	 repeated Phone  contacts = 4;
+}
+]]--
+
+UnitTest.Exec("abel_w10_pbl_nest", "test_pb_nest",  function ()
+    local lMsg = {
+        name = "11",
+        age = 12,
+        address = '123.321.222.333',
+        contacts={
+            name = 'hello',
+            phonenumber = 123123
+        }
+    }
+
+    local  pMsg = assert(pbl.encode("as.Person", lMsg))
+
+    ----反序列化，取出数据
+    local msg = assert(pbl.decode("as.Person",pMsg), "pbl.decode decode failed")
+
+    log("abel_w10_pbl_nest","[test_pb_nest] success")
 end)
 
 UnitTest.Exec("abel_w3", "check_load",function()

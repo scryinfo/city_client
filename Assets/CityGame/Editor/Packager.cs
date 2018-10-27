@@ -58,6 +58,11 @@ public class Packager {
         AssetDatabase.Refresh();
 
         maps.Clear();
+
+        //生成 Require_RunTime.lua        
+        if (LuaFramework.LuaManager.generate_RequireRT() == false)
+            return;
+
         if (AppConst.LuaBundleMode) {
             HandleLuaBundle();
         } else {

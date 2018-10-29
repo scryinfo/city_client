@@ -18,7 +18,7 @@ function GoodsItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
-    self.ItemList=mgr.addItemList
+    self.ItemList=mgr.goodsItemList
 
     self.addBtn=self.prefab
 

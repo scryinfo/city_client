@@ -678,13 +678,13 @@ local function OutputMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords,
 		if (not strExtraFileName) or (0 == string.len(strExtraFileName)) then
             if cDumpInfoResultsBase then
                 if cConfig.m_bComparedMemoryRefFileAddTime then
-                    strFileName = strFileName .. "-[" .. strDateTime .. "].txt"
+                    strFileName = strFileName .. "[" .. strDateTime .. "].txt"
                 else
                     strFileName = strFileName .. ".txt"
                 end
             else
                 if cConfig.m_bAllMemoryRefFileAddTime then
-                    strFileName = strFileName .. "-[" .. strDateTime .. "].txt"
+                    strFileName = strFileName .. "[" .. strDateTime .. "].txt"
                 else
                     strFileName = strFileName .. ".txt"
                 end
@@ -692,15 +692,15 @@ local function OutputMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords,
 		else
             if cDumpInfoResultsBase then
                 if cConfig.m_bComparedMemoryRefFileAddTime then
-                    strFileName = strFileName .. "-[" .. strDateTime .. "]-[" .. strExtraFileName .. "].txt"
+                    strFileName = strFileName .. strDateTime .. strExtraFileName .. ".txt"
                 else
-                    strFileName = strFileName .. "-[" .. strExtraFileName .. "].txt"
+                    strFileName = strFileName .. strExtraFileName .. ".txt"
                 end
             else
                 if cConfig.m_bAllMemoryRefFileAddTime then
-                    strFileName = strFileName .. "-[" .. strDateTime .. "]-[" .. strExtraFileName .. "].txt"
+                    strFileName = strFileName .. strDateTime .. strExtraFileName .. ".txt"
                 else
-                    strFileName = strFileName .. "-[" .. strExtraFileName .. "].txt"
+                    strFileName = strFileName ..strExtraFileName .. ".txt"
                 end
             end
 		end
@@ -817,15 +817,15 @@ local function OutputMemorySnapshotSingleObject(strSavePath, strExtraFileName, n
 		local strFileName = strSavePath .. "LuaMemRefInfo-Single"
 		if (not strExtraFileName) or (0 == string.len(strExtraFileName)) then
             if cConfig.m_bSingleMemoryRefFileAddTime then
-                strFileName = strFileName .. "-[" .. strDateTime .. "].txt"
+                strFileName = strFileName .. "[" .. strDateTime .. "].txt"
             else
                 strFileName = strFileName .. ".txt"
             end
 		else
             if cConfig.m_bSingleMemoryRefFileAddTime then
-                strFileName = strFileName .. "-[" .. strDateTime .. "]-[" .. strExtraFileName .. "].txt"
+                strFileName = strFileName .. "[" .. strDateTime .. "]-[" .. strExtraFileName .. "].txt"
             else
-                strFileName = strFileName .. "-[" .. strExtraFileName .. "].txt"
+                strFileName = strFileName .. "[" .. strExtraFileName .. "].txt"
             end
 		end
 
@@ -1007,8 +1007,8 @@ end
 -- strResultFilePathAfter - The compared dumped results file.
 local function DumpMemorySnapshotComparedFile(strSavePath, strExtraFileName, nMaxRescords, strResultFilePathBefore, strResultFilePathAfter)
 	-- Read results from file.
-	local cResultBefore = CreateObjectReferenceInfoContainerFromFile(strResultFilePathBefore)
-	local cResultAfter = CreateObjectReferenceInfoContainerFromFile(strResultFilePathAfter)
+	local cResultBefore = CreateObjectReferenceInfoContainerFromFile(strSavePath..strResultFilePathBefore)
+	local cResultAfter = CreateObjectReferenceInfoContainerFromFile(strSavePath..strResultFilePathAfter)
 
 	-- Dump the result.
 	OutputMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords, nil, nil, cResultBefore, cResultAfter)

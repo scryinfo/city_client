@@ -58,7 +58,7 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
     end
 
     --获取内存中的引用数据
-    getReffun() --暂时屏蔽，以便测试结果比对路径
+    --getReffun() --暂时屏蔽，以便测试结果比对路径
 
     -- 打印当前 Lua 虚拟机中某一个对象的所有相关引用。
     -- strSavePath - 快照保存路径，不包括文件名。

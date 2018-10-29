@@ -116,3 +116,24 @@ end
 function CityGlobal.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end
+
+CityGlobal.MemoryProfilePath=""
+
+function CityGlobal.getMemoryProfile()
+	return CityGlobal.MemoryProfilePath
+end
+
+function CityGlobal.mkMemoryProfile()
+	if UnityEngine.Application.isEditor == false then
+		CityGlobal.MemoryProfilePath =  UnityEngine.Application.persistentDataPath.."/CityGame/MemoryProfile"
+		log("system", "ProFi:writeReport path = ",CityGlobal.MemoryProfilePath)
+		if file_exists(CityGlobal.MemoryProfilePath) == false then
+			log("system","[ProFi:writeReport] path not exist ")
+			os.execute("mkdir -p \"" .. CityGlobal.MemoryProfilePath .. "\"")
+		end
+	else
+		CityGlobal.MemoryProfilePath = "MemoryProfile"
+		os.execute("mkdir "..CityGlobal.MemoryProfilePath)
+	end
+end
+

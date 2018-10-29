@@ -43,6 +43,7 @@
 ]]--
 local ProFi = require ('test/testFrameWork/memory/ProFi')
 local mri = MemoryRefInfo
+CityGlobal.mkMemoryProfile()
 UnitTest = {}
 function UnitTest.Exec(unitGroupId, funcName, func)
     if TestGroup.get_TestGroupId(unitGroupId) == nil  then
@@ -81,8 +82,13 @@ function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
 end
 
 function UnitTest.GetValidFileName(groupid, filename)
-    return groupid.."_".."_DumpAll"..filename
+    return "["..groupid.."]".."_DumpAll_"..filename
 end
+
+function UnitTest.GetValidPath(groupid, filename)
+    return UnitTest.GetValidFileName(groupid, filename)..".txt"
+end
+
 --全局内存引用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
@@ -91,13 +97,13 @@ function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
         root  = rootObj
     end
     collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshot("./", UnitTest.GetValidFileName(groupid,fileName), -1, tostring(root), root)
+    mri.m_cMethods.DumpMemorySnapshot(CityGlobal.getMemoryProfile().."/", UnitTest.GetValidFileName(groupid,fileName), -1, tostring(root), root)
 end
 
 --比较
 function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1,  UnitTest.GetValidFileName(groupid, firstfile), UnitTest.GetValidFileName(groupid, secondfile))
+    mri.m_cMethods.DumpMemorySnapshotComparedFile(CityGlobal.getMemoryProfile().."/", "Compared_"..UnitTest.GetValidFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
 end
 
 --过滤
@@ -110,7 +116,7 @@ end
 function UnitTest.MemoryReferenceOne(groupid, markid,object)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", UnitTest.GetValidFileName(groupid,markid), -1, objectName, object)
+    mri.m_cMethods.DumpMemorySnapshotSingleObject(CityGlobal.getMemoryProfile().."/", UnitTest.GetValidFileName(groupid,markid), -1, objectName, object)
 end
 
 --使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息

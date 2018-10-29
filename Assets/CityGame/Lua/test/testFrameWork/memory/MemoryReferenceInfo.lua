@@ -673,7 +673,8 @@ local function OutputMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords,
 		end
 
 		-- Combine file name.
-		local strFileName = strSavePath .. "LuaMemRefInfo-All"
+		--local strFileName = strSavePath .. "LuaMemRefInfo-All"
+		local strFileName = strSavePath
 		if (not strExtraFileName) or (0 == string.len(strExtraFileName)) then
             if cDumpInfoResultsBase then
                 if cConfig.m_bComparedMemoryRefFileAddTime then

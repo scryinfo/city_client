@@ -80,33 +80,42 @@ function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
     ProFi:writeReport( funcName..'_2_finished.txt' )
 end
 
---全局内存引用分析， 只能在 UnitTest.Exec 内部使用
-function UnitTest.MemoryReferenceAll(groupid, fileName)
-    log(groupid,fileName)
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshot("./", groupid.."_"..fileName.."_DumpAll", -1)
+function UnitTest.GetValidFileName(groupid, filename)
+    return groupid.."_".."_DumpAll"..filename
 end
+--全局内存引用分析， 只能在 UnitTest.Exec 内部使用
+function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    local root = nil
+    if rootObj ~= nil then
+        root  = rootObj
+    end
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshot("./", UnitTest.GetValidFileName(groupid,fileName), -1, tostring(root), root)
+end
+
 --比较
 function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
-    mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1,  firstfile, secondfile)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1,  UnitTest.GetValidFileName(groupid, firstfile), UnitTest.GetValidFileName(groupid, secondfile))
 end
 
 --过滤
 function UnitTest.MemoryRefResaultFiltered(groupid, strFilePath, strFilter, bIncludeFilter)
-    mri.m_cBases.OutputFilteredResult(strFilePath, strFilter, bIncludeFilter, true)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cBases.OutputFilteredResult(UnitTest.GetValidFileName(groupid,strFilePath), strFilter, bIncludeFilter, true)
 end
 
 --指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
-function UnitTest.MemoryReferenceOne(groupid, objectName,object,markid)
+function UnitTest.MemoryReferenceOne(groupid, markid,object)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
     collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", groupid.."_"..objectName.."_"..markid.."_DumpOne", -1, objectName, object)
+    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", UnitTest.GetValidFileName(groupid,markid), -1, objectName, object)
 end
 
 --使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
-function UnitTest.Exec_now(unitGroupId, event,...)
-    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return
-    end
+function UnitTest.Exec_now(groupid, event,...)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
     Event.Brocast(event,...);
 end
 

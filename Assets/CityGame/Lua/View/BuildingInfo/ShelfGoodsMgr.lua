@@ -1,17 +1,18 @@
---管理货架物品信息
+--管理物品信息
 require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
 require 'View/BuildingInfo/WarehouseItem'  --仓库Item
+require 'View/BuildingInfo/DetailsItem'  --仓库shelf Item
 
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
 --存放选中的物品   临时表
---ShelfGoodsMgr.temporaryModeList = {}
 ShelfGoodsMgr.temporaryItems = {}
 
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
 ShelfGoodsMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
+ShelfGoodsMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库Shelf Item
 
-function ShelfGoodsMgr:initialize(insluabehaviour,buildingData)
+function ShelfGoodsMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.buildingType == BuildingInType.Shelf then
         self:_creatStaffItemGoods();
@@ -26,9 +27,9 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     self.WarehouseModelData = {}
     --配置表数据模拟
     local configTable = {}
-    for i = 1, 5 do
+    for i = 1, 10 do
         local warehouseDataInfo = {}
-        warehouseDataInfo.name = "Wood"--..tostring(i)
+        warehouseDataInfo.name = "Wood"..tostring(i)
         warehouseDataInfo.number = math.random(i*5)
         configTable[i] = warehouseDataInfo
 
@@ -82,6 +83,38 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
         end
     end
 end
+
+--仓库选中后上架物品（右侧shelf）
+function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour)
+    --local ins = self.ModelDataList[id].uiData
+
+    --传过来的数据
+    --local goodsDataInfo = {}
+    --goodsDataInfo.name = ins.name
+    --goodsDataInfo.number = ins.number
+    --预制的信息
+    local prefabData = {}
+    prefabData.state = 'idel'
+    prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
+
+    --WarehouseItem:new(self.WarehouseModelData[i].uiData,prefabData._prefab,self.behaviour,self,i)
+    --local shelfLuaItem = DetailsItem:new(goodsDataInfo,prefabData._prefab,self.behaviour,self,ins.id)
+    --local shelfLuaItem = DetailsItem:new(goodsDataInfo,prefabData._prefab,luabehaviour,self,ins.id)
+    local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id)
+
+    if not self.shelfPanelItem then
+        self.shelfPanelItem = {}
+    end
+    self.shelfPanelItem[id] = shelfLuaItem
+end
+
+--点击仓库右侧shelf 删除Item
+function ShelfGoodsMgr:_deleteShelfItem(id)
+    destroy(self.shelfPanelItem[id].prefab.gameObject);
+    self.shelfPanelItem[id] = nil;
+    self.temporaryItems[id] = nil;
+
+end
 --货架删除物品
 function ShelfGoodsMgr:_deleteGoods(ins)
     log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
@@ -93,27 +126,6 @@ function ShelfGoodsMgr:_deleteGoods(ins)
     for k,v in pairs(self.items)  do
         self.items[i]:RefreshID(i)
         i = i + 1
-    end
-end
-
---仓库物品选中
-function ShelfGoodsMgr:_selectedGoods(ins)
-
-    if self.temporaryItems[ins.id]  == nil then
-        ins.circleTickImg:SetActive(true);
-        --table.insert(self.temporaryItems,self.WarehouseItems[ins.id])
-        self.temporaryItems[ins.id] = ins.id
-        --table.insert(self.temporaryItems, ins.id)
-        --table.remove(self.WarehouseItems[ins.id])
-    else
-        ins.circleTickImg:SetActive(false);
-        --table.insert(self.WarehouseItems,self.temporaryItems[ins.id])
-        self.temporaryItems[ins.id] = nil;
-        --local i = 1
-        --for k,v in pairs(self.WarehouseItems) do
-        --    self.WarehouseItems[i]:RefreshID(i)
-        --    i = i +1
-        --end
     end
 end
 

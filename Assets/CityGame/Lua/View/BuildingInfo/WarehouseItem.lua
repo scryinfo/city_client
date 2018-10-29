@@ -35,7 +35,6 @@ end
 --Item 状态 选择
 function WarehouseItem:c_GoodsItemSelected()
     self.circleTickImg:SetActive(true);
-    --self.closeBtn.gameObject:SetActive(false);
 end
 --Item 状态 可以删除
 function WarehouseItem:c_GoodsItemDelete()
@@ -44,9 +43,11 @@ function WarehouseItem:c_GoodsItemDelete()
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
 end
 --勾选物品
-function WarehouseItem:OnClick_bgBtn(go)
-    go.manager:_selectedGoods(go);
-    --Event.Brocast("c_GoodsItemSelected")
+function WarehouseItem:OnClick_bgBtn(ins)
+    --go.manager:_selectedGoods(go);
+    --WarehouseCtrl:_selectedGoods(go)
+
+    Event.Brocast("c_warehouseClick", ins.id)
 end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)

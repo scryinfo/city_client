@@ -28,6 +28,7 @@ function WarehousePanel.InitPanel()
     this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
     this.transport = transform:Find("RightInformation/bg/transport").gameObject;
+    this.shelfContent = transform:Find("RightInformation/bg/shelf/ScrollView/Viewport/Content");
 
     this.shelfCloseBtn = transform:Find("RightInformation/bg/shelf/closeBtn");
     this.shelfConfirmBtn = transform:Find("RightInformation/bg/shelf/confirmBtn");

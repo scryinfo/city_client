@@ -178,6 +178,7 @@ public static class CustomSettings
         _GT(typeof(AppConst)),
         _GT(typeof(LuaHelper)),
         _GT(typeof(LuaBehaviour)),
+        _GT(typeof(ShowFPS)),
 
         _GT(typeof(GameManager)),
         _GT(typeof(LuaManager)),

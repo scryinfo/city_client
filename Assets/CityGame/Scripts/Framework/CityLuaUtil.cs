@@ -75,6 +75,11 @@ namespace City
             return UnityEngine.Application.dataPath;
         }
 
+        public static object getUiCamera()
+        {
+            return UIRoot.getUiCamera();
+        }
+
         public static Transform getNormalRoot()
         {
             return UIRoot.getNormalRoot();

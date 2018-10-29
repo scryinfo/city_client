@@ -24,12 +24,8 @@ function ExchangeModel.OnCreate()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeMyOrder"), ExchangeModel.n_OnReceiveOrder)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeMyDealLog"), ExchangeModel.n_OnReceiveMyDealLog)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeAllDealLog"), ExchangeModel.n_OnReceiveAllDealLog)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeBuy"), ExchangeModel.n_OnReceiveExchangeBuy)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeSell"), ExchangeModel.n_OnReceiveExchangeSell)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeCancel"), ExchangeModel.n_OnReceiveExchangeCancel)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeItemDetailInform"), ExchangeModel.n_OnReceiveBuySellItemsInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeDealInform"), ExchangeModel.n_OnReceiveExchangeDeal)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeGetItemDealHistory"), ExchangeModel.n_OnReceiveItemDealHistory)
 
     --本地的回调注册
     Event.AddListener("m_ReqExchangeItemList", this.m_ReqExchangeItemList)
@@ -38,12 +34,7 @@ function ExchangeModel.OnCreate()
     Event.AddListener("m_ReqExchangeAllDealLog", this.m_ReqExchangeAllDealLog)
     Event.AddListener("m_ReqExchangeCollect", this.m_ReqExchangeCollect)
     Event.AddListener("m_ReqExchangeUnCollect", this.m_ReqExchangeUnCollect)
-    Event.AddListener("m_ReqExchangeBuy", this.m_ReqExchangeBuy)
-    Event.AddListener("m_ReqExchangeSell", this.m_ReqExchangeSell)
     Event.AddListener("m_ReqExchangeCancel", this.m_ReqExchangeCancel)
-    Event.AddListener("m_ReqExchangeWatchItemDetail", this.m_ReqExchangeWatchItemDetail)
-    Event.AddListener("m_ReqExchangeStopWatchItemDetail", this.m_ReqExchangeStopWatchItemDetail)
-    Event.AddListener("m_ReqExchangeGetItemDealHistory", this.m_ReqExchangeGetItemDealHistory)
 end
 
 --关闭事件--
@@ -82,39 +73,10 @@ function ExchangeModel.m_ReqExchangeUnCollect(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeUnCollect")
     CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
 end
---挂买单
-function ExchangeModel.m_ReqExchangeBuy(itemId, num, price, buildingId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeBuy")
-    local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
-    local  pMsg = assert(pbl.encode("gs.ExchangeBuy", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
-end
---挂卖单
-function ExchangeModel.m_ReqExchangeSell(itemId, num, price, buildingId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeSell")
-    local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
-    local  pMsg = assert(pbl.encode("gs.ExchangeSell", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
-end
 --撤单
 function ExchangeModel.m_ReqExchangeCancel(id)
     local msgId = pbl.enum("gscode.OpCode", "exchangeCancel")
     CityEngineLua.Bundle:newAndSendMsg(msgId, id)
-end
---打开买卖交易界面，开始接受更新信息
-function ExchangeModel.m_ReqExchangeWatchItemDetail(itemId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeWatchItemDetail")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
-end
---关闭交易界面
-function ExchangeModel.m_ReqExchangeStopWatchItemDetail(itemId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeStopWatchItemDetail")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
-end
---详情折线数据
-function ExchangeModel.m_ReqExchangeGetItemDealHistory(itemId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeGetItemDealHistory")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
 end
 
 ---网络回调
@@ -138,33 +100,13 @@ function ExchangeModel.n_OnReceiveAllDealLog(stream)
     local allOrderData = assert(pbl.decode("gs.exchangeAllDealLog", stream), "ExchangeModel.n_OnReceiveAllDealLog: stream == nil")
     Event.Brocast("c_onReceiveExchangeAllDealLog", allOrderData)
 end
---买单
-function ExchangeModel.n_OnReceiveExchangeBuy(stream)
-    local orderId = assert(pbl.decode("gs.Id", stream), "ExchangeModel.n_OnReceiveExchangeBuy: stream == nil")
-    Event.Brocast("c_onReceiveExchangeBuy", orderId)
-end
---卖单
-function ExchangeModel.n_OnReceiveExchangeSell(stream)
-    local orderId = assert(pbl.decode("gs.Id", stream), "ExchangeModel.n_OnReceiveExchangeSell: stream == nil")
-    Event.Brocast("c_onReceiveExchangeSell", orderId)
-end
 --撤单
 function ExchangeModel.n_OnReceiveExchangeCancel(stream)
     local isSuccess = assert(pbl.decode("gs.Bool", stream), "ExchangeModel.n_OnReceiveExchangeCancel: stream == nil")
     Event.Brocast("c_onReceiveExchangeCancel", isSuccess)
 end
---买卖界面上下成交
-function ExchangeModel.n_OnReceiveBuySellItemsInfo(stream)
-    local itemsInfo = assert(pbl.decode("gs.ExchangeItemDetail", stream), "ExchangeModel.n_OnReceiveBuySellItemsInfo: stream == nil")
-    Event.Brocast("c_onReceiveBuySellItemsInfo", itemsInfo)
-end
 --成交通知
 function ExchangeModel.n_OnReceiveExchangeDeal(stream)
     local exchangeDeal = assert(pbl.decode("gs.ExchangeDeal", stream), "ExchangeModel.n_OnReceiveExchangeDeal: stream == nil")
     Event.Brocast("c_onReceiveExchangeDeal", exchangeDeal)
-end
---详情折线数据
-function ExchangeModel.n_OnReceiveItemDealHistory(stream)
-    local exchangeDeal = assert(pbl.decode("gs.ItemDealHistory", stream), "ExchangeModel.n_OnReceiveItemDealHistory: stream == nil")
-    Event.Brocast("c_onReceiveItemDealHistory", exchangeDeal)
 end

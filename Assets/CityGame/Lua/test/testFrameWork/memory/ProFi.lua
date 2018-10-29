@@ -53,6 +53,7 @@ local FORMAT_BANNER 		   = [[
 ###############################################################################################################
 
 ]]
+local file_exists = CityGlobal.file_exists
 
 -----------------------
 -- Public Methods:
@@ -114,11 +115,19 @@ end
 ]]
 function ProFi:writeReport( filename )
 	local path = ""
-	if UnityEngine.Application.isEditor == false then
-		path =  UnityEngine.Application.persistentDataPath.."/CityGame/"
-	end
+    if UnityEngine.Application.isEditor == false then
+        path =  UnityEngine.Application.persistentDataPath.."/CityGame/MemoryProfile"
+		log("system", "ProFi:writeReport path = ",path)
+        if file_exists(path) == false then
+			log("system","[ProFi:writeReport] path not exist ")
+			os.execute("mkdir -p \"" .. path .. "\"")
+        end
+    else
+		path = "MemoryProfile"
+		os.execute("mkdir "..path)
+    end
 
-	filename = path..filename
+	filename = path.."/"..filename
 	log("system","[ProFi:writeReport] filename: "..filename)
 	if #self.reports > 0 or #self.memoryReports > 0 then
 		filename = filename or 'ProFi.txt'

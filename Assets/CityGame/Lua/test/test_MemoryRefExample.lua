@@ -9,11 +9,7 @@ local mri = MemoryRefInfo
 
 UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
     log("abel_w10_MemRef_all","[test_MemRef_all]  balabalabalabala...............")
-
-    -- Set config.
-    mri.m_cConfig.m_bAllMemoryRefFileAddTime = false
-    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
-    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
+    UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1")
 
     -- 打印当前 Lua 虚拟机的所有内存引用快照到文件(或者某个对象的所有引用信息快照)到本地文件。
     -- strSavePath - 快照保存路径，不包括文件名。
@@ -22,27 +18,37 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
     -- strRootObjectName - 遍历的根节点对象名称，"" 或者 nil 时使用 tostring(cRootObject)
     -- cRootObject - 遍历的根节点对象，默认为 nil 时使用 debug.getregistry()。
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords, strRootObjectName, cRootObject)
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshot("./", "1-Before", -1)
-
     -- Add a global variable.
-    local author =
-    {
-        Name = "yaukeywang",
-        Job = "Game Developer",
-        Hobby = "Game, Travel, Gym",
-        City = "Beijing",
-        Country = "China",
-        Ask = function (question)
-            return "My answer is for your question: " .. question .. "."
-        end
-    }
 
-    _G.Author = author
-
-    -- Dump memory snapshot again.
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshot("./", "2-After", -1)
+    function reffun()
+        local author =
+        {
+            Name = "yaukeywang",
+            Job = "Game Developer",
+            Hobby = "Game, Travel, Gym",
+            City = "Beijing",
+            Country = "China",
+            Ask = function (question)
+                return "My answer is for your question: " .. question .. "."
+            end
+        }
+        local author1 =
+        {
+            Name = "yaukeywang",
+            Job = "Game Developer",
+            Hobby = "Game, Travel, Gym",
+            City = "Beijing",
+            Country = "China",
+            Ask = function (question)
+                return "My answer is for your question: " .. question .. "."
+            end
+        }
+        _G.Author = author
+        UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2")
+        return author
+    end
+    g_testValue = reffun()
+    UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3")
 
     -- 打印当前 Lua 虚拟机中某一个对象的所有相关引用。
     -- strSavePath - 快照保存路径，不包括文件名。
@@ -51,12 +57,6 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
     -- strObjectName - 对象显示名称。
     -- cObject - 对象实例。
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMaxRescords, strObjectName, cObject)
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Object", -1, "Author", _G.Author)
-
-    -- We can also find string references.
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String", -1, "Author Name", "yaukeywang")
 
     -- 比较两份内存快照结果文件，打印文件 strResultFilePathAfter 相对于 strResultFilePathBefore 中新增的内容。
     -- strSavePath - 快照保存路径，不包括文件名。
@@ -65,7 +65,9 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
     -- strResultFilePathBefore - 第一个内存快照文件。
     -- strResultFilePathAfter - 第二个用于比较的内存快照文件。
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotComparedFile(strSavePath, strExtraFileName, nMaxRescords, strResultFilePathBefore, strResultFilePathAfter)
-    mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1, "./LuaMemRefInfo-All-[1-Before].txt", "./LuaMemRefInfo-All-[2-After].txt")
+    UnitTest.MemoryRefResaultCompared("abel_w10_MemRef_all", "abel_w10_MemRef_all_1.txt", "abel_w10_MemRef_all_2.txt")
+    UnitTest.MemoryRefResaultCompared("abel_w10_MemRef_all", "abel_w10_MemRef_all_2.txt", "abel_w10_MemRef_all_3.txt")
+    --mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1, "./LuaMemRefInfo-All-[1-Before].txt", "./LuaMemRefInfo-All-[2-After].txt")
 
     -- 按照关键字过滤一个内存快照文件然后输出到另一个文件.
     -- strFilePath - 需要被过滤输出的内存快照文件。
@@ -85,10 +87,8 @@ end)
 
 UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
     log("abel_w10_MemRef_table","[test_MemRef_table]  balabalabalabala...............")
-    mri.m_cConfig.m_bAllMemoryRefFileAddTime = false
-    mri.m_cConfig.m_bSingleMemoryRefFileAddTime = false
-    mri.m_cConfig.m_bComparedMemoryRefFileAddTime = false
-    local author =
+    UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "1","Author",_G.Author)
+    local author_2 =
     {
         Name = "yaukeywang",
         Job = "Game Developer",
@@ -106,31 +106,15 @@ UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
     -- strObjectName - 对象显示名称。
     -- cObject - 对象实例。
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMaxRescords, strObjectName, cObject)
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author before", -1, "Author", _G.Author) --因为没找到，所以没有输出到文本
-
-    -- We can also find string references.
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String before", -1, "Author Name", "yaukeywang")
-
-
-    _G.Author = author
-    local t1 = author
-    t2 = author
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author _G.Author = author", -1, "Author", _G.Author)
-
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String _G.Author = author", -1, "Author Name", "yaukeywang")
-
+    _G.Author = author_2
+    UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "2","Author",_G.Author)
+    g_Value = author_2
+    UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "3","Author",_G.Author)
+    g_Value = nil
+    UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "4","Author",_G.Author)
     _G.Author = nil
-
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-Author _G.Author = nil", -1, "Author", _G.Author)
-
-    collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject("./", "SingleObjRef-String _G.Author = nil", -1, "Author Name", "yaukeywang")
-       -- All dump finished!
+    UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "5","Author",_G.Author)
+    -- All dump finished!
     print("Dump memory snapshot information finished!")
 end)
 

@@ -70,6 +70,11 @@ namespace City
             }
         }
 
+        public static string getDataPath()
+        {
+            return UnityEngine.Application.dataPath;
+        }
+
         public static Transform getNormalRoot()
         {
             return UIRoot.getNormalRoot();

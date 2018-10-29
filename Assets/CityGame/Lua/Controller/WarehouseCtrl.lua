@@ -2,8 +2,6 @@
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
 local isShowList;
 local switchIsShow;
-local listTrue = Vector3.New(0,0,180)
-local listFalse = Vector3.New(0,0,0)
 
 function WarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -28,9 +26,13 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
 
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    Event.AddListener("c_warehouseClick",self._selectedGoods, self)
+
     self.luabehaviour = warehouse
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Warehouse;
+    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
 end
 
 function WarehouseCtrl:Awake(go)
@@ -45,17 +47,39 @@ end
 
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
+    --关闭监听
+    --vent.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods)
 end
 --搜索  暂时用来添加商品
 function WarehouseCtrl:OnClick_searchBtn(ins)
-    ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+    --self.ShelfGoodsMgr = ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+end
+
+--仓库物品选中
+function WarehouseCtrl:_selectedGoods(id)
+    if ShelfGoodsMgr.temporaryItems[id] == nil then
+        ShelfGoodsMgr.temporaryItems[id] = id
+        self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
+        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(true)
+
+    else
+        ShelfGoodsMgr.temporaryItems[id] = nil;
+        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(false)
+        self.ShelfGoodsMgr:_deleteShelfItem(id)
+    end
+end
+--监听临时表里是否有这个物品
+function WarehouseCtrl:c_temporaryifNotGoods(id)
+    ShelfGoodsMgr.temporaryItems[id] = nil
+    --self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
+    self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(false)
+    self.ShelfGoodsMgr:_deleteShelfItem(id)
 end
 
 --右边Shelf
 function WarehouseCtrl:OnClick_shelfBtn(ins)
     WarehouseCtrl:OnClick_rightShelf(not switchIsShow,0)
 end
-
 --右边Transpor
 function WarehouseCtrl:OnClick_transportBtn(ins)
     WarehouseCtrl:OnClick_rightShelf(not switchIsShow,1)
@@ -86,10 +110,10 @@ end
 function WarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
         WarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-        WarehousePanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        WarehousePanel.arrowBtn:DORotate(Vector3.New(0,0,180),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
         WarehousePanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-        WarehousePanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        WarehousePanel.arrowBtn:DORotate(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;
 end
@@ -99,16 +123,20 @@ function WarehouseCtrl:OnClick_rightShelf(isShow,number)
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(true);
+            Event.Brocast("c_GoodsItemChoose")
         else
             WarehousePanel.transport:SetActive(true);
+            Event.Brocast("c_GoodsItemChoose")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
     else
         WarehousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
+            Event.Brocast("c_GoodsItemDelete")
         else
             WarehousePanel.transport:SetActive(false);
+            Event.Brocast("c_GoodsItemDelete")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);
     end

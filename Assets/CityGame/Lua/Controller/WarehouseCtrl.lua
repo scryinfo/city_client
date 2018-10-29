@@ -131,6 +131,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")
+            ShelfGoodsMgr.temporaryItems = {};
         else
             WarehousePanel.transport:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")

@@ -23,8 +23,11 @@ function ManageAdvertisementPosPanel.InitPanel()
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
 
-    this.backBtn = transform:Find("topRoot/backBtn");--返回
-    this.infoBtn = transform:Find("topRoot/infoBtn");--信息
+    this.backBtn = transform:Find("topRoot/backBtn");--返回按钮
+    this.infoBtn = transform:Find("topRoot/infoBtn");--信息按钮
+
+    this.goodsScroll=transform:Find("rightRoot/choose/goodsScroll View");
+    this.buildingScroll=transform:Find("rightRoot/choose/buildingScroll View");
 
     this.addCon=transform:Find("leftRoot/Add/Scroll View/Viewport/Content")
     this.goodsCon=transform:Find("rightRoot/choose/goodsScroll View/Viewport/Content")
@@ -34,7 +37,8 @@ function ManageAdvertisementPosPanel.InitPanel()
     this.nowText = transform:Find("topRoot/Sorting/nowText"):GetComponent("Text");
     this.list = transform:Find("topRoot/ListTable/List"):GetComponent("RectTransform");
     this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn");
-    this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn");
+    this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn")
+
 
 end
 

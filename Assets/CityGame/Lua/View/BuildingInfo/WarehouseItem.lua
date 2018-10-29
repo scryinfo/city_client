@@ -9,15 +9,19 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.id = id;
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.icon = self.prefab.transform:Find("icon");  --物品Icon
-    self.circleGreayImg = self.prefab.transform:Find("circleGreayImg").gameObject;  --圆
-    self.circleTickImg = self.prefab.transform:Find("circleGreayImg/circleTickImg").gameObject;  --勾选
+    self.circleGreayImg = self.prefab.transform:Find("circleGreayImg"):GetComponent("RectTransform");  --圆
+    self.circleTickImg = self.prefab.transform:Find("circleGreayImg/circleTickImg"):GetComponent("RectTransform");  --勾选
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");  --名字
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");  --数量
-    self.closeBtn = self.prefab.transform:Find("closeBtn");  --删除btn  默认true
+    self.closeBtn = self.prefab.transform:Find("closeBtn"):GetComponent("RectTransform");  --删除btn  默认true
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
 
+    --初始化ItemUI状态
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
+    self.circleGreayImg.transform.localScale = Vector3.zero;
+    self.circleTickImg.transform.localScale = Vector3.zero;
+
     --普通消息注册
     Event.AddListener("c_GoodsItemChoose",self.c_GoodsItemChoose,self);
     Event.AddListener("c_GoodsItemDelete",self.c_GoodsItemDelete,self);
@@ -26,27 +30,24 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
 end
 
---Item 状态 可以选择
+--Item状态 选择
 function WarehouseItem:c_GoodsItemChoose()
-    self.circleGreayImg:SetActive(true);
-    self.closeBtn.gameObject:SetActive(false);
+    self.circleGreayImg.transform.localScale = Vector3.one;
+    self.closeBtn.transform.localScale = Vector3.zero
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = true;
 end
---Item 状态 选择
+--Item状态 选中
 function WarehouseItem:c_GoodsItemSelected()
-    self.circleTickImg:SetActive(true);
+    self.circleTickImg.transform.localScale = Vector3.zero;
 end
---Item 状态 可以删除
+--Item状态 删除
 function WarehouseItem:c_GoodsItemDelete()
-    self.circleGreayImg:SetActive(false);
-    self.closeBtn.gameObject:SetActive(true);
+    self.circleGreayImg.transform.localScale = Vector3.zero;
+    self.closeBtn.transform.localScale = Vector3.one
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
 end
 --勾选物品
 function WarehouseItem:OnClick_bgBtn(ins)
-    --go.manager:_selectedGoods(go);
-    --WarehouseCtrl:_selectedGoods(go)
-
     Event.Brocast("c_warehouseClick", ins.id)
 end
 --删除

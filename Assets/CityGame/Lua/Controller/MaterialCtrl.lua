@@ -38,6 +38,8 @@ end
 --返回
 function MaterialCtrl:OnClick_backBtn()
     UIPage.ClosePage();
+    --关闭原料厂的监听
+    --Event.RemoveListener("c_temporaryifNotGoods",WarehouseCtrl.c_temporaryifNotGoods)
 end
 
 --打开信息界面

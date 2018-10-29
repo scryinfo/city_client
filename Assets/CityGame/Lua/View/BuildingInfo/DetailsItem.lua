@@ -34,7 +34,6 @@ end
 
 function DetailsItem:OnClick_closeBtn(ins)
     Event.Brocast("c_temporaryifNotGoods", ins.id)
-    --ShelfGoodsMgr:_deleteShelfItem(go)
 end
 --刷新滑动条数据
 function DetailsItem:scrollbarInfo()

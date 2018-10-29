@@ -86,20 +86,10 @@ end
 
 --仓库选中后上架物品（右侧shelf）
 function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour)
-    --local ins = self.ModelDataList[id].uiData
-
-    --传过来的数据
-    --local goodsDataInfo = {}
-    --goodsDataInfo.name = ins.name
-    --goodsDataInfo.number = ins.number
     --预制的信息
     local prefabData = {}
     prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
-
-    --WarehouseItem:new(self.WarehouseModelData[i].uiData,prefabData._prefab,self.behaviour,self,i)
-    --local shelfLuaItem = DetailsItem:new(goodsDataInfo,prefabData._prefab,self.behaviour,self,ins.id)
-    --local shelfLuaItem = DetailsItem:new(goodsDataInfo,prefabData._prefab,luabehaviour,self,ins.id)
     local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id)
 
     if not self.shelfPanelItem then

@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/27 10:37
 ---
-TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
+--TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")

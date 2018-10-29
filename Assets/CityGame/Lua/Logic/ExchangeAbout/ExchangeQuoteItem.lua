@@ -52,45 +52,20 @@ end
 
 --初始化界面
 function ExchangeQuoteItem:_initData()
-    ---temp测试数据
-    local data = self.data
-    self:_setCollectState(data.isCollected)
-    self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
-    if data.change >= 0 then
-        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.change)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.one
-        self.lastPriceRedTran.localScale = Vector3.zero
-        local greenPos = self.lastPriceGreenTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
-    else
-        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.change)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.zero
-        self.lastPriceRedTran.localScale = Vector3.one
-        local redPos = self.lastPriceRedTran.localPosition
-        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
-    end
-
-    self.highText.text = "E"..data.high
-    self.lowText.text = "E"..data.low
-    self.volumeText.text = "E"..data.volume
-
-    ---配合pb数据
+    -----temp测试数据
     --local data = self.data
     --self:_setCollectState(data.isCollected)
     --self.nameText.text = data.name
-    --self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
-    --if data.priceChange >= 0 then
-    --    self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.priceChange)
+    --self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
+    --if data.change >= 0 then
+    --    self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.change)
     --    --设置箭头位置
     --    self.lastPriceGreenTran.localScale = Vector3.one
     --    self.lastPriceRedTran.localScale = Vector3.zero
     --    local greenPos = self.lastPriceGreenTran.localPosition
     --    self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
     --else
-    --    self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.priceChange)
+    --    self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.change)
     --    --设置箭头位置
     --    self.lastPriceGreenTran.localScale = Vector3.zero
     --    self.lastPriceRedTran.localScale = Vector3.one
@@ -98,9 +73,34 @@ function ExchangeQuoteItem:_initData()
     --    self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
     --end
     --
-    --self.highText.text = "E"..data.highPrice
-    --self.lowText.text = "E"..data.lowPrice
-    --self.volumeText.text = "E"..data.sumDealedPrice
+    --self.highText.text = "E"..data.high
+    --self.lowText.text = "E"..data.low
+    --self.volumeText.text = "E"..data.volume
+
+    ---配合pb数据
+    local data = self.data
+    self:_setCollectState(data.isCollected)
+    self.nameText.text = data.name
+    self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
+    if data.priceChange >= 0 then
+        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.priceChange)
+        --设置箭头位置
+        self.lastPriceGreenTran.localScale = Vector3.one
+        self.lastPriceRedTran.localScale = Vector3.zero
+        local greenPos = self.lastPriceGreenTran.localPosition
+        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
+    else
+        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.priceChange)
+        --设置箭头位置
+        self.lastPriceGreenTran.localScale = Vector3.zero
+        self.lastPriceRedTran.localScale = Vector3.one
+        local redPos = self.lastPriceRedTran.localPosition
+        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
+    end
+
+    self.highText.text = "E"..data.highPrice
+    self.lowText.text = "E"..data.lowPrice
+    self.volumeText.text = "E"..data.sumDealedPrice
 end
 --点击交易按钮
 function ExchangeQuoteItem:_clickExchnageBtn()
@@ -112,15 +112,6 @@ function ExchangeQuoteItem:_clickDetailBtn()
 end
 --点击收藏按钮
 function ExchangeQuoteItem:_clickCollectBtn()
-    --if self.data.isCollected then
-    --    --向服务器发送取消收藏的信息
-    --    log("cycle_w9_exchange01", "取消收藏")
-    --    self.data.isCollected = false
-    --else
-    --    --向服务器发送收藏
-    --    log("cycle_w9_exchange01", "添加收藏")
-    --    self.data.isCollected = true
-    --end
     Event.Brocast("c_onChangeCollectState", self.data.isCollected, self.data.itemId)
     self:_setCollectState(not self.data.isCollected)
 end

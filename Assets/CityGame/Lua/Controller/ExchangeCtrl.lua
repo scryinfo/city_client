@@ -94,7 +94,14 @@ end
 function ExchangeCtrl:_addListener()
     Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
     Event.AddListener("c_onChangeCollectState", self._changeCollectState, self)
+    Event.AddListener("c_onExchangeOrderCanel", self._deleteOrder, self)
+
     Event.AddListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
+    Event.AddListener("c_onReceiveExchangeMyOrder", self._getEntrustmentRecord, self)
+    Event.AddListener("c_onReceiveExchangeMyDealLog", self._getTransactionRecord, self)
+    Event.AddListener("c_onReceiveExchangeAllDealLog", self._getCityRecord, self)
+    Event.AddListener("c_onReceiveExchangeDeal", self._getCityRecord, self)
+
 end
 function ExchangeCtrl:_removeListener()
     --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
@@ -128,10 +135,10 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
             ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
             self.sortMgr:_reSetSortData()  --按照默认排序
 
-            if #ExchangeCtrl.sourceInfo == 0 then
+            if #ExchangeCtrl.quoteDatas == 0 then
                 return
             else
-                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
+                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
             end
         end
     else
@@ -191,8 +198,9 @@ function ExchangeCtrl:_recordRootInit()
     ExchangePanel._cityRecordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.one
 
+    Event.Brocast("m_ReqExchangeMyDealLog")
     ---模拟服务器消息
-    self:_getEntrustmentRecord()
+    --self:_getEntrustmentRecord()
 
 end
 
@@ -229,8 +237,10 @@ function ExchangeCtrl:_selfRecordToggleValueChange(isOn)
             ExchangePanel._cityRecordToggleState(not isOn)
             ExchangePanel._entrustmentToggleState(not isOn)
             ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.SelfRecord
+
+            Event.Brocast("m_ReqExchangeMyDealLog")
             ---请求服务器信息，当前模拟已经有数据
-            self:_getTransactionRecord()
+            --self:_getTransactionRecord()
         end
     else
         ExchangePanel._selfRecordToggleState(isOn)
@@ -247,8 +257,10 @@ function ExchangeCtrl:_cityRecordToggleValueChange(isOn)
             ExchangePanel._entrustmentToggleState(not isOn)
             ExchangePanel._selfRecordToggleState(not isOn)
             ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.CityRecord
-            ---请求服务器信息，当前模拟已经有数据
-            self:_getCityRecord()
+
+            Event.Brocast("m_ReqExchangeAllDealLog")
+            -----请求服务器信息，当前模拟已经有数据
+            --self:_getCityRecord()
         end
     else
         ExchangePanel._cityRecordToggleState(isOn)
@@ -264,7 +276,7 @@ ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
         ExchangeCtrl.collectItems[idx] = collectItem
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
-        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform)
+        local item = ExchangeQuoteItem:new(ExchangeCtrl.quoteDatas[idx], transform)
         ExchangeCtrl.quoteItems[idx] = item
     end
 
@@ -276,6 +288,7 @@ end
 ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
     idx = idx + 1
     local entrustmentItem = RecordEntrustmentItem:new(ExchangeCtrl.entrustmentInfo[idx], transform)
+    entrustmentItem.idInTable = idx
     ExchangeCtrl.entrustmentItems[idx] = entrustmentItem
 end
 ExchangeCtrl.static.EntrustmentClearData = function(transform)
@@ -302,8 +315,8 @@ end
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
-        ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
-        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
+        ExchangeCtrl.quoteDatas = self:_getSortDatas(ExchangeCtrl.quoteDatas, sortData)
+        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
         ExchangeCtrl.collectDatas = self:_getSortDatas(ExchangeCtrl.collectDatas, sortData)
@@ -381,100 +394,134 @@ function ExchangeCtrl:_changeCollectData(isCollected, itemId)
         --如果之前存在于数组中，则是由收藏变为取消收藏
         if data == itemId then
             data.isCollected = isCollected
+            ExchangeCtrl.quoteDatas[itemId].isCollected = false
             table.remove(ExchangeCtrl.collectDatas, itemId)
+            table.remove(ExchangeCtrl.collectItems, itemId)
             return
         end
     end
-    ExchangeCtrl.collectItems[#ExchangeCtrl.collectItems + 1] = ExchangeCtrl.sourceInfo[itemId]
+    ExchangeCtrl.collectItems[#ExchangeCtrl.collectItems + 1] = ExchangeCtrl.quoteDatas[itemId]
 end
+--取消挂单
+function ExchangeCtrl:_deleteOrder(idInTable)
+    table.remove(ExchangeCtrl.entrustmentInfo, idInTable)
+    table.remove(ExchangeCtrl.entrustmentItems, idInTable)
+    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+end
+
 
 ---从modle传来的回调
 function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
-    --测试创建items
-    local sourceInfo = {}
-    sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
-    sourceInfo[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
-    sourceInfo[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
-    sourceInfo[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
-    sourceInfo[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
-    sourceInfo[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
-
-    ExchangeCtrl.sourceInfo = sourceInfo
-    ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
-    ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
-    self.sortMgr:_reSetSortData()  --按照默认排序
-
-    ---正式代码
-    --local collectIndexs = {}  --从role exchangeCollectedItem中获取
-    --local collectDatas = {}
-    --for i, collectId in ipairs(collectIndexs) do
-    --    for j, quoteItem in ipairs(datas) do
-    --        if quoteItem.itemId == collectId then
-    --            quoteItem.isCollected = true
-    --            collectDatas[#collectDatas] = quoteItem
-    --        end
-    --    end
-    --end
-    --ExchangeCtrl.sourceInfo = datas
-    --ExchangeCtrl.collectDatas = collectDatas
+    ----测试创建items
+    --local quoteDatas = {}
+    --quoteDatas[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
+    --quoteDatas[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
+    --quoteDatas[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
+    --quoteDatas[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
+    --quoteDatas[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
+    --quoteDatas[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
+    --
+    --ExchangeCtrl.quoteDatas = quoteDatas
+    --ExchangeCtrl.collectDatas = self:_getCollectDatas(quoteDatas)
     --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
+    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
     --self.sortMgr:_reSetSortData()  --按照默认排序
+
+    ---正式代码 --因为服务器不保证数据顺序，所以每次数据更新时都遍历一次传来的表，获取以itemid为key的新表
+    local quoteTable = {}
+    for i, itemData in ipairs(datas) do
+        quoteTable[itemData.itemId] = itemData
+    end
+
+    local collectIndexs = {}  --从role exchangeCollectedItem中获取
+    local collectDatas = {}
+    for i, collectId in ipairs(collectIndexs) do
+        collectDatas[#collectDatas + 1] = quoteTable[collectId]
+        quoteTable[collectId].isCollected = true
+    end
+    ExchangeCtrl.quoteDatas = quoteTable
+    ExchangeCtrl.collectDatas = collectDatas
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
+    self.sortMgr:_reSetSortData()  --按照默认排序
 end
 
 --收到成交委托信息
 function ExchangeCtrl:_getEntrustmentRecord(datas)
-    local entrustmentInfo = {}
-    entrustmentInfo[1] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = false,total = 1000, totalCount = 1000, remainCount = 110, currentValue = 0.5}
-    entrustmentInfo[2] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 1230, totalCount = 1230, remainCount = 998, currentValue = 1.5}
-    entrustmentInfo[3] = {quantity = -5.2, unitPrice = 428, name = 005, isSell = false, total = 1005, totalCount = 1005, remainCount = 320, currentValue = 45.5}
-    entrustmentInfo[4] = {quantity = 15.03, unitPrice = 998, name = 006, isSell = true, total = 1587, totalCount = 1587, remainCount = 1   , currentValue = 99}
-    ExchangeCtrl.entrustmentInfo = entrustmentInfo
+    --local entrustmentInfo = {}
+    --entrustmentInfo[1] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = false,total = 1000, totalCount = 1000, remainCount = 110, currentValue = 0.5}
+    --entrustmentInfo[2] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 1230, totalCount = 1230, remainCount = 998, currentValue = 1.5}
+    --entrustmentInfo[3] = {quantity = -5.2, unitPrice = 428, name = 005, isSell = false, total = 1005, totalCount = 1005, remainCount = 320, currentValue = 45.5}
+    --entrustmentInfo[4] = {quantity = 15.03, unitPrice = 998, name = 006, isSell = true, total = 1587, totalCount = 1587, remainCount = 1   , currentValue = 99}
+    --ExchangeCtrl.entrustmentInfo = entrustmentInfo
+    --if #ExchangeCtrl.entrustmentInfo == 0 then
+    --    ExchangePanel.noTipText.text = "No delegation at present!"
+    --    ExchangePanel.noTipText.transform.localScale = Vector3.one
+    --else
+    --    ExchangePanel.noTipText.transform.localScale = Vector3.zero
+    --    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+    --end
+
+    ExchangeCtrl.entrustmentInfo = datas
     if #ExchangeCtrl.entrustmentInfo == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
     else
+        table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
         ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
     end
 end
 --收到自己的成交记录
 function ExchangeCtrl:_getTransactionRecord(datas)
-    local selfRecordInfo = {}
-    selfRecordInfo[1] = {quantity = 3.68, unitPrice = 126, name = 004, isSell = true, total = 123.4, time = "2018/10/01 12:30:05"}
-    selfRecordInfo[2] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = true,total = 10.03, time = "2018/10/01 12:30:05"}
-    selfRecordInfo[3] = {quantity = -0.53, unitPrice = 503, name = 003, isSell = false,total = 12.33, time = "2018/10/01 12:30:05"}
-    selfRecordInfo[4] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 12.30, time = "2018/10/01 12:30:05"}
-    ExchangeCtrl.selfRecordInfo = selfRecordInfo
+    --local selfRecordInfo = {}
+    --selfRecordInfo[1] = {quantity = 3.68, unitPrice = 126, name = 004, isSell = true, total = 123.4, time = "2018/10/01 12:30:05"}
+    --selfRecordInfo[2] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = true,total = 10.03, time = "2018/10/01 12:30:05"}
+    --selfRecordInfo[3] = {quantity = -0.53, unitPrice = 503, name = 003, isSell = false,total = 12.33, time = "2018/10/01 12:30:05"}
+    --selfRecordInfo[4] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 12.30, time = "2018/10/01 12:30:05"}
+    --ExchangeCtrl.selfRecordInfo = selfRecordInfo
+    --
+    --if #ExchangeCtrl.selfRecordInfo == 0 then
+    --    ExchangePanel.noTipText.text = "No record at present!"
+    --    ExchangePanel.noTipText.transform.localScale = Vector3.one
+    --    return
+    --else
+    --    ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
+    --    ExchangePanel.noTipText.transform.localScale = Vector3.zero
+    --end
 
+    ExchangeCtrl.selfRecordInfo = datas
     if #ExchangeCtrl.selfRecordInfo == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
+        table.sort(ExchangeCtrl.selfRecordInfo, function (m, n) return m.ts > n.ts end)
         ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
 end
 --收到全城的成交记录
 function ExchangeCtrl:_getCityRecord(datas)
-    local cityRecordInfo = {}
-    cityRecordInfo[1] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = true,total = 10.03, time = "2018/10/01 12:30:05"}
-    cityRecordInfo[2] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 12.30, time = "2018/10/01 12:30:05"}
-    cityRecordInfo[3] = {quantity = -0.53, unitPrice = 503, name = 003, isSell = false,total = 12.33, time = "2018/10/01 12:30:05"}
-    cityRecordInfo[4] = {quantity = 3.68, unitPrice = 126, name = 004, isSell = true, total = 123.4, time = "2018/10/01 12:30:05"}
-    --cityRecordInfo[5] = {quantity = -5.2, unitPrice = 428, name = 005, isSell = false, total = 1.005, time = "2018/10/01 12:30:05"}
-    --cityRecordInfo[6] = {quantity = 15.03, unitPrice = 998, name = 006, isSell = false, total = 158.7, time = "2018/10/01 12:30:05"}
-    ExchangeCtrl.cityRecordInfo = cityRecordInfo
-
+    ExchangeCtrl.cityRecordInfo = datas
     if #ExchangeCtrl.cityRecordInfo == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
+        table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
         ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
+    end
+end
+--收到成交信息
+function ExchangeCtrl:_exchangeDealSuccess(data)
+    for i, itemData in ipairs(ExchangeCtrl.entrustmentInfo) do
+        if itemData.id == data.buyOrderId or itemData.id == data.sellOrderId then
+            if ExchangeCtrl.entrustmentItems[i]:UpdateInfo(data) then  --如果数量为0，则删掉当前单
+                self:_deleteOrder(i)
+            end
+        end
     end
 end
 

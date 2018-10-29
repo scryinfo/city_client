@@ -47,12 +47,10 @@ end
 
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
-    --关闭监听
-    --vent.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods)
 end
---搜索  暂时用来添加商品
+--搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)
-    --self.ShelfGoodsMgr = ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+
 end
 
 --仓库物品选中
@@ -60,29 +58,28 @@ function WarehouseCtrl:_selectedGoods(id)
     if ShelfGoodsMgr.temporaryItems[id] == nil then
         ShelfGoodsMgr.temporaryItems[id] = id
         self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
-        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(true)
+        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
 
     else
         ShelfGoodsMgr.temporaryItems[id] = nil;
-        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(false)
+        self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
         self.ShelfGoodsMgr:_deleteShelfItem(id)
     end
 end
 --监听临时表里是否有这个物品
 function WarehouseCtrl:c_temporaryifNotGoods(id)
     ShelfGoodsMgr.temporaryItems[id] = nil
-    --self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-    self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.gameObject:SetActive(false)
+    self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
     self.ShelfGoodsMgr:_deleteShelfItem(id)
 end
 
 --右边Shelf
 function WarehouseCtrl:OnClick_shelfBtn(ins)
-    WarehouseCtrl:OnClick_rightShelf(not switchIsShow,0)
+    WarehouseCtrl:OnClick_rightInfo(not switchIsShow,0)
 end
 --右边Transpor
 function WarehouseCtrl:OnClick_transportBtn(ins)
-    WarehouseCtrl:OnClick_rightShelf(not switchIsShow,1)
+    WarehouseCtrl:OnClick_rightInfo(not switchIsShow,1)
 end
 
 --根据名字排序
@@ -106,7 +103,7 @@ end
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end
-
+--打开排序列表
 function WarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
         WarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -118,7 +115,7 @@ function WarehouseCtrl:OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
-function WarehouseCtrl:OnClick_rightShelf(isShow,number)
+function WarehouseCtrl:OnClick_rightInfo(isShow,number)
     if isShow then
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then

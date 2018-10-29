@@ -814,18 +814,18 @@ local function OutputMemorySnapshotSingleObject(strSavePath, strExtraFileName, n
 		end
 
 		-- Combine file name.
-		local strFileName = strSavePath .. "LuaMemRefInfo-Single"
+		local strFileName = strSavePath
 		if (not strExtraFileName) or (0 == string.len(strExtraFileName)) then
             if cConfig.m_bSingleMemoryRefFileAddTime then
-                strFileName = strFileName .. "[" .. strDateTime .. "].txt"
+                strFileName = strFileName ..strDateTime .. ".txt"
             else
                 strFileName = strFileName .. ".txt"
             end
 		else
             if cConfig.m_bSingleMemoryRefFileAddTime then
-                strFileName = strFileName .. "[" .. strDateTime .. "]-[" .. strExtraFileName .. "].txt"
+                strFileName = strFileName ..strDateTime .. strExtraFileName .. ".txt"
             else
-                strFileName = strFileName .. "[" .. strExtraFileName .. "].txt"
+                strFileName = strFileName ..strExtraFileName .. ".txt"
             end
 		end
 

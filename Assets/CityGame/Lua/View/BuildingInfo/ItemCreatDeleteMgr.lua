@@ -4,8 +4,9 @@
 --- DateTime: 2018/10/26/026 11:25
 ---
 require 'View/BuildingInfo/AdvertisementItem'
-require 'View/BuildingInfo/AddItem'
 
+require 'View/BuildingInfo/AddItem'
+require'View/BuildingInfo/GoodsItem'
 
 
 
@@ -58,14 +59,16 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         prefabData.count=i
         ---创建预制
         local itemclone=self:_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
-        self.addItemList[i]=itemclone
+                   self.addItemList[i]=itemclone
         ---给预制文本赋值
         AddItem:new(prefabData,itemclone,self.behaviour,self,i)
     end
+    -----------------------------------------------------------------------------------------------------
+
     for i = 1, count do
         if(not self.transform)then
             self.transform=nil
-
+            self.goodsItemList={}
         end
 
    ---创建商品广告
@@ -74,10 +77,9 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         goodsPrebData.count=i
         ---创建预制
         local goods=self:_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
-
-
-
-
+        self.goodsItemList[i]=goods
+        --- ---给预制赋值数据
+        GoodsItem:new(goodsPrebData,goods,self.behaviour,self,i)
     end
 
 
@@ -105,7 +107,7 @@ function ItemCreatDeleteMgr:_creatGoods(path,parent)
     local go = UnityEngine.GameObject.Instantiate(prefab);
     local rect = go.transform:GetComponent("RectTransform");
     go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
+     rect.transform.localScale = Vector3.one;
     return go
 end
 

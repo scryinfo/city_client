@@ -11,8 +11,6 @@ function classTest:initialize()
     end
 end
 
-log("abel_w9_mem_Load_Instantiate","[active_TestGroup]  balabalabalabala...............")
-
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
     UnitTest.MemoryConsumptionTest("abel_w9_memory_usage","test_w9_memory_usage",function()
         local memory_usage = {}

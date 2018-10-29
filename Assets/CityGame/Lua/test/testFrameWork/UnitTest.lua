@@ -55,6 +55,7 @@ end
 
 --CPU使用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.PerformanceTest(groupid, info,func)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
     --log(groupid,info)
     local startTime = os.clock()
     func(groupid)
@@ -62,8 +63,9 @@ function UnitTest.PerformanceTest(groupid, info,func)
     log(groupid, info, "执行时间: ",endTime - startTime)
 end
 
---内存用量分析， 只能在 UnitTest.Exec 内部使用
+--内存用量分析, 生成 func 执行前后的内存用量到文件夹 MemoryProfile 中
 function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
     log(groupid, funcName)
     ProFi:reset()
     collectgarbage("collect")
@@ -81,6 +83,7 @@ function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
     ProFi:writeReport( funcName..'_2_finished.txt' )
 end
 
+--文件命名约定
 function UnitTest.GetDumpAllFileName(groupid, filename)
     return "["..groupid.."]".."_DumpAll_"..filename
 end
@@ -93,7 +96,7 @@ function UnitTest.GetValidPath(groupid, filename)
     return UnitTest.GetDumpAllFileName(groupid, filename)..".txt"
 end
 
---全局内存引用分析， 只能在 UnitTest.Exec 内部使用
+--全局内存引用分析
 function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     local root = nil
@@ -104,23 +107,23 @@ function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
     mri.m_cMethods.DumpMemorySnapshot(CityGlobal.getMemoryProfile().."/", UnitTest.GetDumpAllFileName(groupid,fileName), -1, tostring(root), root)
 end
 
---比较
-function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
-    if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    mri.m_cMethods.DumpMemorySnapshotComparedFile(CityGlobal.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
-end
-
---过滤
-function UnitTest.MemoryRefResaultFiltered(groupid, strFilePath, strFilter, bIncludeFilter)
-    if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    mri.m_cBases.OutputFilteredResult(UnitTest.GetDumpAllFileName(groupid,strFilePath), strFilter, bIncludeFilter, true)
-end
-
 --指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.MemoryReferenceOne(groupid, markid,object)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     collectgarbage("collect")
     mri.m_cMethods.DumpMemorySnapshotSingleObject(CityGlobal.getMemoryProfile().."/", UnitTest.GetDumpOneFileName(groupid,markid), -1, objectName, object)
+end
+
+--比较两个文件的引用信息差异
+function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cMethods.DumpMemorySnapshotComparedFile(CityGlobal.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
+end
+
+--在指定文件中过滤特定对象的引用统计信息
+function UnitTest.MemoryRefResaultFiltered(groupid, strFilePath, strFilter, bIncludeFilter)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cBases.OutputFilteredResult(UnitTest.GetDumpAllFileName(groupid,strFilePath), strFilter, bIncludeFilter, true)
 end
 
 --使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息

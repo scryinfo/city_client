@@ -9,6 +9,9 @@
 require "Common/define"
 require('Framework/UI/UIPage')
 
+local isShowList;
+local listTrue = Vector3.New(0,0,180)
+local listFalse = Vector3.New(0,0,0)
 
 local class = require 'Framework/class'
 ManageAdvertisementPosCtrl = class('ManageAdvertisementPosCtrl',UIPage)
@@ -26,6 +29,7 @@ end
 
 function ManageAdvertisementPosCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
+    isShowList = false;
 end
 
 function ManageAdvertisementPosCtrl:Awake(go)
@@ -33,22 +37,16 @@ function ManageAdvertisementPosCtrl:Awake(go)
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    materialBehaviour:AddClick(ManageAdvertisementPosPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
-
+    --排序
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.nameBtn.gameObject,self.OnClick_OnName,self);
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.quantityBtn.gameObject,self.OnClick_OnNumber,self);
 
     -----创建广告管理
     local creatData={count=10,buildingType=BuildingType.MunicipalManage}
     local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
 end
 
---更改名字
-function ManageAdvertisementPosCtrl:OnClick_changeName()
-    local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    UIPage:ShowPage(InputDialogPageCtrl, data)
-end
 
 --返回
 function ManageAdvertisementPosCtrl:OnClick_backBtn()
@@ -59,10 +57,52 @@ end
 function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 
 end
-
+--刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
 
 end
+
+
+
+--根据名字排序
+function ManageAdvertisementPosCtrl:OnClick_OnName()
+    ManageAdvertisementPosPanel.nowText.text = "By name";
+    ManageAdvertisementPosCtrl:OnClick_OpenList(not isShowList);
+end
+--根据数量排序
+function ManageAdvertisementPosCtrl:OnClick_OnNumber()
+    ManageAdvertisementPosPanel.nowText.text = "By quantity";
+    ManageAdvertisementPosCtrl:OnClick_OpenList(not isShowList);
+end
+
+--展开排序列表
+function ManageAdvertisementPosCtrl:OnClick_OnSorting(ins)
+    ManageAdvertisementPosCtrl:OnClick_OpenList(not isShowList);
+end
+--排序列表动画
+function ManageAdvertisementPosCtrl:OnClick_OpenList(isShow)
+    if isShow then
+        --WarehousePanel.list:SetActive(true);
+        ManageAdvertisementPosPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        ManageAdvertisementPosPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    else
+        --WarehousePanel.list:SetActive(false);
+        ManageAdvertisementPosPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        ManageAdvertisementPosPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    end
+    isShowList = isShow;
+end
+
+
+
+
+
+
+
+
+
+
+
 
 
 

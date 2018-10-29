@@ -124,6 +124,7 @@ function CityGlobal.getMemoryProfile()
 end
 
 function CityGlobal.mkMemoryProfile()
+	local file_exists = CityGlobal.file_exists
 	if UnityEngine.Application.isEditor == false then
 		CityGlobal.MemoryProfilePath =  UnityEngine.Application.persistentDataPath.."/CityGame/MemoryProfile"
 		log("system", "ProFi:writeReport path = ",CityGlobal.MemoryProfilePath)

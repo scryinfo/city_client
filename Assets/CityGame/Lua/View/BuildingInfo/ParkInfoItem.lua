@@ -38,7 +38,7 @@ function ParkInfoItem:openToggleItem()
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
 
-    --self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    --self.itemRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, ParkInfoItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
     --return Vector2.New(targetMovePos.x, targetMovePos.y - ParkInfoItem.static.TOTAL_H)
@@ -49,7 +49,7 @@ function ParkInfoItem:closeToggleItem()
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
 
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    --self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    --self.itemRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
     --return Vector2.New(targetMovePos.x, targetMovePos.y - ParkInfoItem.static.TOP_H)
 end

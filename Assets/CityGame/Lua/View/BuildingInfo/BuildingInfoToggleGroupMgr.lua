@@ -13,6 +13,7 @@ require 'View/BuildingInfo/ShelfRateItem'
 require 'View/BuildingInfo/HomeProductionLineItem'
 require 'View/BuildingInfo/AdvertisementShowItem'
 require'View/BuildingInfo/ParkInfoItem'
+require 'View/BuildingInfo/TicketItem'
 
 local class = require 'Framework/class'
 
@@ -35,8 +36,9 @@ BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE = "View/BuildingMainPa
 
 BuildingInfoToggleGroupMgr.static.Staff_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --建筑员工
 
-BuildingInfoToggleGroupMgr.static.Advertisement_Path="View/BuildingMainPageInfoItem/AdvertisementShowItem"--广告展示
-BuildingInfoToggleGroupMgr.static.ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--广告信息
+BuildingInfoToggleGroupMgr.static.Municipal_Advertisement_Path="View/BuildingMainPageInfoItem/AdvertisementShowItem"--广告展示
+BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--公园信息
+BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
 
 
 --初始化
@@ -302,17 +304,17 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
     self.leftData[2] = staffLuaItem
 
-    ---仓库Item --左3
-    local warehouseView
-    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-    warehouseView.gameObject.name = "WarehouseRateItem"
-    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-    self.leftData[3] = warehouseLuaItem
+    ---门票 --左3
+    local ticketView
+    ticketView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path, self.leftRect)
+    ticketView.gameObject.name = "TicketItem"
+    local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+    local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
+    self.leftData[3] = TicketItem
 
     ---广告展示--右1
     local advertisementViewRect
-    advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Advertisement_Path, self.rightRect)
+    advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
     advertisementViewRect.gameObject.name="Advertisement"
     local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
@@ -321,16 +323,13 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
 
     ---个人公园信息--中1
     local ParkInfoRect
-    ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.ParkInfo_Path,self.toggleData.middleRootTran )
+    ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_ParkInfo_Path,self.toggleData.middleRootTran )
     ParkInfoRect.gameObject.name="ParkInfo"
     local newData={func=self._middleItem}
     local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
     local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
     self.middleData[1]=ParkInfoItem
     ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
-
-
-
 
 end
 

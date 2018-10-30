@@ -36,3 +36,4 @@ function GoodsItem:OnClick_Add(go)
     self.transform.localPosition=Vector3.zero
     go.manager.transform=nil
 end
+

@@ -28,6 +28,7 @@ else
     --单元测试
     AutoRequire.getInstance():require("test/testFrameWork")
     AutoRequire.getInstance():require("test/testFrameWork/memory")
+    AutoRequire.getInstance():require("test/group")
     AutoRequire.getInstance():require("test/pbl")
     AutoRequire.getInstance():require("test/performance")
     --AutoRequire.getInstance():require("test/testCoroutine")

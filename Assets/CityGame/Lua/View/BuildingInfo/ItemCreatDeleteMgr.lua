@@ -7,7 +7,7 @@ require 'View/BuildingInfo/AdvertisementItem'
 
 require 'View/BuildingInfo/AddItem'
 require'View/BuildingInfo/GoodsItem'
-
+require'View/BuildingInfo/BuildingItem'
 
 
 local class = require 'Framework/class'
@@ -66,10 +66,10 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
     -----------------------------------------------------------------------------------------------------
 
     for i = 1, count do
-        if(not self.transform)then
-            self.transform=nil
+        if(not self.goodsItemList)then
             self.goodsItemList={}
         end
+
 
    ---创建商品广告
        ---预制的信息
@@ -83,11 +83,22 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
     end
 
 
-
-
-
      ---创建建筑广告
+     for i = 1, count do
+         if not self.buildItemList then
+            self.buildItemList={}
+         end
 
+         ---预制的信息
+         local  buildingPrebData={}
+         buildingPrebData.count=i
+       ---创建预制
+         local buildings=self:_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
+          self.buildItemList[i]=buildings
+         --- ---给预制赋值数据
+       BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,i)
+
+     end
 
 
 
@@ -97,9 +108,6 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
 
 
 end
-
-
-
 
 ---生成预制
 function ItemCreatDeleteMgr:_creatGoods(path,parent)

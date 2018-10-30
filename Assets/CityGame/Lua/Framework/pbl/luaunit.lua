@@ -119,7 +119,7 @@ local function pcall_or_abort(func, ...)
     local result = {pcall(func, ...)}
     if not result[1] then
         -- an error occurred
-        log(result[2]) -- error message
+        log(result[2])
         log()
         log(M.USAGE)
         os.exit(-1)

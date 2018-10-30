@@ -200,6 +200,9 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 
 			local msg = CityEngineLua.clientMessages[reader.msgid];
 			if not msg then
+				reader.state = CityEngineLua.READ_STATE_MSGLEN;
+				reader.expectSize = 4;
+				reader.stream:clear();
 				logWarn("CityEngineLua.MessageReader.process: msg not registered, id "..reader.msgid);
 				return
 			end

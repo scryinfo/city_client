@@ -452,6 +452,77 @@ public static class ToLuaMenu
         return set;
     }
 
+    static public void CheckParentheses(ref string str, ref int countLeft, ref int countRight ) {
+        int start = 0;
+        int curPos = 0;
+        countLeft = 0;
+
+        while (true)
+        {
+            curPos = str.IndexOf("(", start) ;
+            if (curPos == -1)
+                break;
+            countLeft++;
+            start += curPos;
+        }
+
+        start = 0;
+        curPos = 0;
+        while (true)
+        {
+            curPos = str.IndexOf(")", start);
+            if (curPos == -1)
+                break;
+            countRight++;
+            start += curPos;
+        }
+    }
+    static public void RemoveLog(string sourcePath)
+    {
+        //string sourcePath = "G:\\LuaSrc\\test_fpsOrg.lua";
+        //string destPath = "G:\\LuaRemove\\test_fpsOrg.lua";
+        StreamReader orgCodeStream = File.OpenText(sourcePath);
+        String newCode = null;
+        String temp = null;
+        int logStart = 0;
+        int notMatchCount = 0;
+        int line = 0;
+        while (true)
+        {
+            temp = orgCodeStream.ReadLine();
+            line++;
+            int linecount = 0;
+            if (temp == null)
+                break;                        
+
+            if (temp.IndexOf(" log(") != -1 || temp.IndexOf(" log (") != -1)
+            {
+                temp = temp.Replace(" log(", " --log(");
+
+                //简单处理， log 必须一行处理，否则的话要考虑括号匹配，但是很难处理注释中括号匹配的问题
+                if (temp.EndsWith(")") == false && temp.EndsWith(";") == false)
+                {
+                    //提示Log必须一行处理
+                    Debug.LogError("RemoveLog Error: log must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
+                    break;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(newCode))
+                newCode = String.Concat(newCode, "\r\n", temp);
+            else
+                newCode = String.Concat(newCode, temp);
+            temp = null;
+        }
+
+        orgCodeStream.Close();
+
+        StreamWriter sw = new StreamWriter(sourcePath);
+        sw.Write(newCode);
+        sw.Flush();
+        sw.Close();
+    }
+
     [MenuItem("Lua/Gen Lua Delegates", false, 2)]
     static void GenLuaDelegates()
     {
@@ -974,6 +1045,7 @@ public static class ToLuaMenu
             string dir = Path.GetDirectoryName(dest);
             Directory.CreateDirectory(dir);
             File.Copy(files[i], dest, true);
+            RemoveLog(dest);
         }
     }
 

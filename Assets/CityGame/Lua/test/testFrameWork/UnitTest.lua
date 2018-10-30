@@ -60,7 +60,9 @@ function UnitTest.PerformanceTest(groupid, info,func)
     local startTime = os.clock()
     func(groupid)
     local endTime = os.clock()
-    log(groupid, info, "执行时间: ",endTime - startTime)
+    local outtime = endTime - startTime
+    log(groupid, info, "执行时间: ", outtime)
+    return outtime
 end
 
 --内存用量分析, 生成 func 执行前后的内存用量到文件夹 MemoryProfile 中

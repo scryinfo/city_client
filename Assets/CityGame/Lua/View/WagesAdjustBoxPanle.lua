@@ -1,18 +1,18 @@
 local transform;
 local gameObject;
 
-WagesAdjustBoxPanle = {};
-local this = WagesAdjustBoxPanle;
+WagesAdjustBoxPanel = {};
+local this = WagesAdjustBoxPanel;
 
 --启动事件
-function WagesAdjustBoxPanle.Awake()
+function WagesAdjustBoxPanel.Awake(obj)
     gameObject = obj;
-    transform = obj.gameObject;
+    transform = obj.transform;
 
     this.InitPanle();
 end
 --初始化界面
-function WagesAdjustBoxPanle.InitPanle()
+function WagesAdjustBoxPanel.InitPanle()
     this.confirmBtn = transform:Find("root/confirmBtn").gameObject;
     this.closeBtn = transform:Find("root/closeBtn").gameObject;
     this.noDomicileNumber = transform:Find("root/noDomicile/number").gameObject;
@@ -21,8 +21,8 @@ function WagesAdjustBoxPanle.InitPanle()
     this.inputWage = transform:Find("root/InputWage").gameObject;
     this.suggestWage = transform:Find("root/suggest/moneyText").gameObject;
     this.timeInForce = transform:Find("root/timeInForce/timeText").gameObject;
-    this.satisfactionSlider = transform("root/satisfactionSlider").gameObject;
+    this.satisfactionSlider = transform:Find("root/satisfactionSlider").gameObject;
 end
-function WagesAdjustBoxPanle.OnDestroy()
+function WagesAdjustBoxPanel.OnDestroy()
 
 end

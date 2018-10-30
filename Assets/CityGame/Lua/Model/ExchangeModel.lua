@@ -13,8 +13,14 @@ function ExchangeModel.New()
 end
 
 function ExchangeModel.Awake()
-    --UpdateBeat:Add(this.Update, this)
+    UpdateBeat:Add(this.Update, this)
     this:OnCreate()
+end
+
+function ExchangeModel.Update()
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+        CityGlobal.OpenCtrl("ExchangeCtrl")
+    end
 end
 
 --启动事件--

@@ -78,9 +78,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
-	--饼图测试
-	modelList[ModelNames.PieChart] = PieChart.New();
-	return this;
+	modelList[ModelNames.Exchange] = ExchangeModel.New();
+
 end
 
 --添加控制器--

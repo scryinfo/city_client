@@ -128,6 +128,7 @@ function ExchangeCtrl:_initPanelData()
 end
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero
     if isOn then
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)

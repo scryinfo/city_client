@@ -20,8 +20,8 @@ if not CityGlobal.G_UNITTEST then return {} end
 --TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
 --TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
-TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
---TestGroup.active_TestGroup("test_cycle_w11_exchangeModel")  --交易所model
+--TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
+TestGroup.active_TestGroup("cycle_w11_exchangeModel")  --交易所model
 
 --TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
@@ -361,6 +361,6 @@ end)
 UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  function ()
     local exchangeModel = CtrlManager.GetModel(ModelNames.Exchange);
     if exchangeModel ~= nil then
-        exchangeModel:Awake();
+        exchangeModel:Awake()
     end
 end)

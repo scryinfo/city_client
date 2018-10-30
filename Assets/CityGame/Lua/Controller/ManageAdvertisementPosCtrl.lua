@@ -41,8 +41,9 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.nameBtn.gameObject,self.OnClick_OnName,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.quantityBtn.gameObject,self.OnClick_OnNumber,self);
-    materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsScroll.gameObject,self.OnClick_OnGoods,self);
-    materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingScroll.gameObject,self.OnClick_OnBuild,self);
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsBtn.gameObject,self.OnClick_OnGoods,self);
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
+    self:OnClick_OnGoods();
     -----创建广告管理
     local creatData={count=10,buildingType=BuildingType.MunicipalManage}
     local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
@@ -97,12 +98,13 @@ end
 
 --设置显隐
 function ManageAdvertisementPosCtrl:OnClick_OnGoods()
-   self:SetActive(true);
+    ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.buildingScroll.gameObject:SetActive(false);
 end
 
 function ManageAdvertisementPosCtrl:OnClick_OnBuild()
-   self:SetActive(true); ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(false);
+    ManageAdvertisementPosPanel.buildingScroll.gameObject:SetActive(true);
+    ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(false);
 end
 
 

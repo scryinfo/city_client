@@ -60,7 +60,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         ---创建预制
         local itemclone=self:_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
                    self.addItemList[i]=itemclone
-        ---给预制文本赋值
+         ---给预制赋值数据
         AddItem:new(prefabData,itemclone,self.behaviour,self,i)
     end
 ----------------------------------------------------------------------------------------------------------

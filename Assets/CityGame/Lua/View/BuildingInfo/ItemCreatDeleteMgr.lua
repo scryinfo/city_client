@@ -19,8 +19,15 @@ ItemCreatDeleteMgr.goodsPreb_Path="View/GoodsItem/goodsItem"
 ItemCreatDeleteMgr.buildingPreb_Path="View/GoodsItem/buildingItem"
 
 function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
+    if not self.addedItemList then
+        self.addedItemList={}
+        self.selectItemList={}
+        self.mapItemList={}
+    end
+
     self.behaviour = luabehaviour
     self.buildingData=creatData
+
     if creatData.buildingType == BuildingType.Municipal then
         self:_creatAdvertisementItem(creatData.count);
     elseif creatData.buildingType == BuildingType.MunicipalManage then
@@ -79,6 +86,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         self.goodsItemList[i]=goods
         --- ---给预制赋值数据
         GoodsItem:new(goodsPrebData,goods,self.behaviour,self,i)
+        local t=self
     end
 -------------------------------------------------------------------------------------------------------------------
      ---创建建筑广告

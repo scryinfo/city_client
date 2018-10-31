@@ -4,10 +4,12 @@
 --- DateTime: 2018/10/27/027 17:51
 ---
 
-
+--require'View/BuildingInfo/MapAdvertisementItem'
 
 require('Framework/UI/UIPage')
 local class = require 'Framework/class'
+
+--GoodsItem.AddedItem_Path="View/GoodsItem/mapAdvertisementItem"
 
 GoodsItem = class('GoodsItem')
 
@@ -35,5 +37,12 @@ function GoodsItem:OnClick_Add(go)
     self.transform:SetParent(go.manager.transform);
     self.transform.localPosition=Vector3.zero
     go.manager.transform=nil
+    --  local item =go.manager:_cr_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
+    --  local prebData={}
+    --
+     --MapAdvertisementItem:new(prebData,item,go._luabehaviour)
+
+
+
 end
 

@@ -40,14 +40,14 @@ end
 function ExchangeTransactionModel.m_ReqExchangeBuy(itemId, num, price, buildingId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeBuy")
     local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
-    local  pMsg = assert(pbl.encode("gs.ExchangeBuy", lMsg))
+    local pMsg = assert(pbl.encode("gs.ExchangeBuy", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --挂卖单
 function ExchangeTransactionModel.m_ReqExchangeSell(itemId, num, price, buildingId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeSell")
     local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
-    local  pMsg = assert(pbl.encode("gs.ExchangeSell", lMsg))
+    local pMsg = assert(pbl.encode("gs.ExchangeSell", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --打开买卖交易界面，开始接受更新信息

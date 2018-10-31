@@ -112,8 +112,8 @@ function ExchangeQuoteItem:_clickDetailBtn()
 end
 --点击收藏按钮
 function ExchangeQuoteItem:_clickCollectBtn()
-    Event.Brocast("c_onChangeCollectState", self.data.isCollected, self.data.itemId)
     self:_setCollectState(not self.data.isCollected)
+    Event.Brocast("c_onChangeCollectState", self.data.isCollected, self.data.itemId)
 end
 
 function ExchangeQuoteItem:_setCollectState(isCollected)

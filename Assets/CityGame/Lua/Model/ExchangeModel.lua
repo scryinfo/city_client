@@ -72,12 +72,16 @@ end
 --收藏
 function ExchangeModel.m_ReqExchangeCollect(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeCollect")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+    local lMsg = {num = itemId}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --取消收藏
 function ExchangeModel.m_ReqExchangeUnCollect(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeUnCollect")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+    local lMsg = {num = itemId}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --撤单
 function ExchangeModel.m_ReqExchangeCancel(id)

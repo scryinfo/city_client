@@ -41,6 +41,7 @@ function ExchangeCtrl:Awake(go)
     ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 
     self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
+    self.collectSortMgr = ExchangeSortMgr:new(ExchangePanel.collectTitleRoot)
 
     --行情收藏记录toggle
     ExchangePanel.quotesToggle.onValueChanged:AddListener(function (isOn)
@@ -64,9 +65,12 @@ function ExchangeCtrl:Awake(go)
     end)
 
     --滑动复用部分
-    self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情以及收藏
+    self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.quotesSource.mProvideData = ExchangeCtrl.static.QuotesProvideData
     self.quotesSource.mClearData = ExchangeCtrl.static.QuotesClearData
+    self.collectSource = UnityEngine.UI.LoopScrollDataSource.New()  --收藏
+    self.collectSource.mProvideData = ExchangeCtrl.static.CollectProvideData
+    self.collectSource.mClearData = ExchangeCtrl.static.CollectClearData
     self.entrustmentSource = UnityEngine.UI.LoopScrollDataSource.New()  --记录委托
     self.entrustmentSource.mProvideData = ExchangeCtrl.static.EntrustmentProvideData
     self.entrustmentSource.mClearData = ExchangeCtrl.static.EntrustmentClearData
@@ -157,19 +161,20 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Quotes
-            ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
+            --ExchangePanel.quotesPage.localScale = Vector3.one
             self.sortMgr:_reSetSortData()  --按照默认排序
 
             if #ExchangeCtrl.quoteDatas == 0 then
                 return
             else
-                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
+                ExchangePanel.quotesPage.localScale = Vector3.one
+                ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
             end
         end
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
-            ExchangePanel.quotesAndCollectPage.localScale = Vector3.zero
+            ExchangePanel.quotesPage.localScale = Vector3.zero
         end
     end
 end
@@ -178,22 +183,23 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Collect
-            ExchangePanel.quotesAndCollectPage.localScale = Vector3.one
-            self.sortMgr:_reSetSortData()  --按照默认排序
+            --ExchangePanel.collectPage.localScale = Vector3.one
+            self.collectSortMgr:_reSetSortData()  --按照默认排序
 
             if #ExchangeCtrl.collectDatas == 0 then
                 ExchangePanel.noTipText.text = "Currently no collection!"
                 ExchangePanel.noTipText.transform.localScale = Vector3.one
                 return
             else
+                ExchangePanel.collectPage.localScale = Vector3.one
                 ExchangePanel.noTipText.transform.localScale = Vector3.zero
-                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
+                ExchangePanel.collectScroll:ActiveLoopScroll(self.collectSource, #ExchangeCtrl.collectDatas)
             end
         end
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
-            ExchangePanel.quotesAndCollectPage.localScale = Vector3.zero
+            ExchangePanel.collectPage.localScale = Vector3.zero
         end
     end
 end
@@ -291,22 +297,22 @@ function ExchangeCtrl:_cityRecordToggleValueChange(isOn)
 end
 
 ---滑动复用
---行情和收藏的界面
+--行情
 ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
-    if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
-        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform)
-        ExchangeCtrl.collectItems[idx] = collectItem
-
-    elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
-        local item = ExchangeQuoteItem:new(ExchangeCtrl.quoteDatas[idx], transform)
-        ExchangeCtrl.quoteItems[idx] = item
-    end
-
+    local item = ExchangeQuoteItem:new(ExchangeCtrl.quoteDatas[idx], transform)
+    ExchangeCtrl.quoteItems[idx] = item
 end
 ExchangeCtrl.static.QuotesClearData = function(transform)
 end
-
+--收藏
+ExchangeCtrl.static.CollectProvideData = function(transform, idx)
+    idx = idx + 1
+    local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform)
+    ExchangeCtrl.collectItems[idx] = collectItem
+end
+ExchangeCtrl.static.CollectClearData = function(transform)
+end
 --交易委托
 ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
     idx = idx + 1
@@ -340,11 +346,11 @@ function ExchangeCtrl:_exchangeSortByValue(sortData)
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
         ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteConfigDatas)
         ExchangeCtrl.quoteDatas = self:_getSortDatas(ExchangeCtrl.quoteDatas, sortData)
-        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
+        ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
         ExchangeCtrl.collectDatas = self:_getSortDatas(ExchangeCtrl.collectDatas, sortData)
-        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
+        ExchangePanel.collectScroll:ActiveLoopScroll(self.collectSource, #ExchangeCtrl.collectDatas)
     end
 end
 --获取收藏的数据
@@ -424,15 +430,25 @@ end
 function ExchangeCtrl:_changeCollectData(isCollected, itemId)
     for i, data in ipairs(ExchangeCtrl.collectDatas) do
         --如果之前存在于数组中，则是由收藏变为取消收藏
-        if data == itemId then
+        if data.itemId == itemId then
             data.isCollected = isCollected
-            ExchangeCtrl.quoteDatas[itemId].isCollected = false
-            table.remove(ExchangeCtrl.collectDatas, itemId)
-            table.remove(ExchangeCtrl.collectItems, itemId)
+            ExchangeCtrl.quoteDatas[i].isCollected = false
+            ExchangeCtrl.quoteConfigDatas[itemId].isCollected = false
+            table.remove(ExchangeCtrl.collectDatas, i)
+            table.remove(ExchangeCtrl.collectItems, i)
             return
         end
     end
-    ExchangeCtrl.collectItems[#ExchangeCtrl.collectItems + 1] = ExchangeCtrl.quoteDatas[itemId]
+    --ExchangeCtrl.collectItems[#ExchangeCtrl.collectItems + 1] = ExchangeCtrl.quoteDatas[itemId]
+
+    for i, itemData in ipairs(ExchangeCtrl.quoteDatas) do
+        if itemData.itemId == itemId then
+            ExchangeCtrl.quoteDatas[i].isCollected = true
+            ExchangeCtrl.quoteConfigDatas[itemId].isCollected = true
+            ExchangeCtrl.collectDatas[#ExchangeCtrl.collectDatas + 1] = ExchangeCtrl.quoteDatas[i]
+            return
+        end
+    end
 end
 --取消挂单
 function ExchangeCtrl:_deleteOrder(idInTable)
@@ -456,7 +472,7 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
     --ExchangeCtrl.quoteDatas = quoteDatas
     --ExchangeCtrl.collectDatas = self:_getCollectDatas(quoteDatas)
     --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
+    --ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
     --self.sortMgr:_reSetSortData()  --按照默认排序
 
     ---正式代码 --因为服务器不保证数据顺序，所以每次数据更新时都遍历一次传来的表，获取以itemid为key的新表

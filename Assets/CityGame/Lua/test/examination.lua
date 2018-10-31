@@ -110,9 +110,9 @@ UnitTest.Exec("abel_w4", "test_and_or",  function ()
     local a = 666
     local b = 333
     local c = true
-    log("abel_w4", "[test_and_or] (a > b) and a or b) = ",(a > b) and a or b)
-    log("abel_w4", "[test_and_or] (a < b) and a or b) = ",(a < b) and a or b)
-    log("abel_w4", "[test_and_or] (not c) and 'false' or 'true') =",(not c) and 'false' or 'true')
+    log("abel_w4", "[test_and_or] ((a > b) and a or b) = ",(a > b) and a or b)
+    log("abel_w4", "[test_and_or] ((a < b) and a or b) = ",(a < b) and a or b)
+    log("abel_w4", "[test_and_or] ((not c) and 'false' or 'true') =",(not c) and 'false' or 'true')
     --output:
     --666
     --333

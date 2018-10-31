@@ -452,10 +452,11 @@ public static class ToLuaMenu
         return set;
     }
 
-    static public void CheckParentheses(ref string str, ref int countLeft, ref int countRight ) {
+    static public bool CheckParentheses(string str ) {
         int start = 0;
         int curPos = 0;
-        countLeft = 0;
+        int countLeft = 0;
+        int countRight = 0;
 
         while (true)
         {
@@ -463,7 +464,7 @@ public static class ToLuaMenu
             if (curPos == -1)
                 break;
             countLeft++;
-            start += curPos;
+            start = curPos+1;
         }
 
         start = 0;
@@ -474,8 +475,9 @@ public static class ToLuaMenu
             if (curPos == -1)
                 break;
             countRight++;
-            start += curPos;
+            start = curPos+1;
         }
+        return countLeft == countRight;
     }
     static public void RemoveLog(string sourcePath)
     {
@@ -499,12 +501,12 @@ public static class ToLuaMenu
             {
                 temp = temp.Replace(" log(", " --log(");
 
-                //简单处理， log 必须一行处理，否则的话要考虑括号匹配，但是很难处理注释中括号匹配的问题
-                if (temp.EndsWith(")") == false && temp.EndsWith(";") == false)
+                //简单处理， log 必须一行处理，如果log所在行的圆括号不匹配，判定为 log 没有在一行处理完
+                if (CheckParentheses(temp) == false)
                 {
                     //提示Log必须一行处理
                     Debug.LogError("RemoveLog Error: log must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
-                    break;
+                    continue;
                 }
             }
 
@@ -1045,7 +1047,12 @@ public static class ToLuaMenu
             string dir = Path.GetDirectoryName(dest);
             Directory.CreateDirectory(dir);
             File.Copy(files[i], dest, true);
+#if LUA_LOG
+            //不注销LuaLog
+#else
+            //注销LuaLog
             RemoveLog(dest);
+#endif     
         }
     }
 

@@ -2120,7 +2120,7 @@ TextOutput.__class__ = 'TextOutput'
     end
 
     function TextOutput:displayOneFailedTest( index, fail )
-        log(index..") "..fail.testName )
+        log(index.."] "..fail.testName )
         log( fail.msg )
         log( fail.stackTrace )
         --log()

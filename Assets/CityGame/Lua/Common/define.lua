@@ -55,6 +55,8 @@ ModelNames = {
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
 	Exchange = "ExchangeModel",  --交易所
+	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
+	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
 }
 
 

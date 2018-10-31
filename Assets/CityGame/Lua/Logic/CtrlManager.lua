@@ -79,6 +79,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
+	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
+	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 
 end
 

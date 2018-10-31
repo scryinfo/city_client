@@ -4,6 +4,8 @@
 -- @filename  Example.lua
 -- @author    WangYaoqi
 -- @date      2017-05-04
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 
 local mri = MemoryRefInfo
 
@@ -134,3 +136,4 @@ UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
     -- All dump finished!
     print("Dump memory snapshot information finished!")
 end)
+UnitTest.TestBlockEnd()-----------------------------------------------------------

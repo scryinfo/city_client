@@ -3,6 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/21 11:05
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
 
 if not CityGlobal.G_UNITTEST then return {} end
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
@@ -328,3 +329,5 @@ end)
 UnitTest.Exec("cycle_w10_exchange02", "test_cycle_w10_exchange02",  function ()
     CityGlobal.OpenCtrl("ExchangeCtrl")
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -47,7 +47,8 @@ function LoginCtrl:OnCreate(go)
 
 	--启用 c_AddClick_self 单元测试
 	--log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
-	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
+	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self
+	)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end
@@ -168,6 +169,8 @@ function LoginCtrl:OnClickTest1(obj)
 	local xxx1  = xxx
 end
 
+UnitTest.TestBlockStart()-------------------------------------------------------------
+
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
 	log("abel_w7","[test_OnLogin]  测试开始")
 	LoginCtrl:c_LoginSuccessfully( false )
@@ -194,14 +197,8 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+UnitTest.TestBlockEnd()---------------------------------------------------------------
 
---
---function LoginCtrl:OnOpenLoginCtrl(ins)
---	log("abel_w10_OpenCtrl","[LoginCtrl:OnOpenLoginCtrl]  OnOpenLoginCtrl invoked")
---	UIPage:ShowPage(LoginCtrl)
---end
-----这个是供外部调用的打开建筑的接口
---Event.AddListener("c_OnOpenLoginCtrl", LoginCtrl.OnOpenLoginCtrl,LoginCtrl);
 
 
 

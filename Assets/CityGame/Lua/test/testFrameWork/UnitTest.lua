@@ -45,13 +45,39 @@ local ProFi = require ('test/testFrameWork/memory/ProFi')
 local mri = MemoryRefInfo
 CityGlobal.mkMemoryProfile()
 UnitTest = {}
+
+UnitTest.startGroup = {}
+UnitTest.endGroup = {}
+
+function UnitTest.TestBlockStart()
+    --local info = debug.getinfo(1) --当前栈区
+    local info = debug.getinfo(2) --方法被调用的地方所在的栈区
+    assert(UnitTest.startGroup[info.short_src] == nil, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    UnitTest.startGroup[info.short_src]=1
+end
+
+function UnitTest.TestBlockEnd()
+    local info = debug.getinfo(2)
+    assert(UnitTest.startGroup[info.short_src] == 1, "注意：未发现对应的 ExecStart")
+    assert(UnitTest.endGroup[info.short_src] ~= 1, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    UnitTest.endGroup[info.short_src]=1
+end
+
+function UnitTest.CheckValidExec()
+    local info = debug.getinfo(3)
+    local test =UnitTest.startGroup[info.short_src] ~= nil
+    local test1 = UnitTest.endGroup[info.short_src] == nil
+    return UnitTest.startGroup[info.short_src] ~= nil and UnitTest.endGroup[info.short_src] == nil
+end
+
 function UnitTest.Exec(unitGroupId, funcName, func)
-    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return
+    assert(UnitTest.CheckValidExec(), "测试用例必须位于测试区中，即: TestBlockStart之后，TestBlockEnd之前 ")
+    if TestGroup.get_TestGroupId(unitGroupId) == nil then
+    return
     end
     addToTestGropu(funcName,unitGroupId)
     _G[funcName] = func
-end
+    end
 
 --CPU使用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.PerformanceTest(groupid, info,func)

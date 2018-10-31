@@ -4,6 +4,8 @@
 --- DateTime: 2018/9/17 16:37
 ---
 
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 local lu = require "Framework/pbl/luaunit"
 local notEq = lu.assertEvalToFalse
 local eq       = lu.assertEquals
@@ -161,3 +163,4 @@ end)
 --testTable的地址和test3的地址相同 ,由此可知，__index这种元方法会有一个默认形参是该表本身。而这里setmetatable只是给表设置了元表，
 --真正查询字段的是根据元表中__index元方法所指向的表中的字段。而不是元表中的字段。
 
+UnitTest.TestBlockEnd()-----------------------------------------------------------

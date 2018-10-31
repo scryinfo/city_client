@@ -1,6 +1,7 @@
 
 testtime = require 'test/performance/testTime'
 
+UnitTest.TestBlockStart()
 --简单类的实现---------------------------{
 ClassSimple = {
   _VERSION     = 'class v4.1.1',
@@ -117,3 +118,4 @@ UnitTest.Exec("abel_w4_class_performance", "test_inherited_class_method_invocati
   end)
 end)
 
+UnitTest.TestBlockEnd()

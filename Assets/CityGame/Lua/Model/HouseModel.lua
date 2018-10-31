@@ -77,7 +77,7 @@ end
 
 
 --TestGroup.active_TestGroup("cycle_w5")
-
+UnitTest.TestBlockStart()---------------------------------------------------------
 UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     local HouseModel = CtrlManager.GetModel(ModelNames.House);
     if HouseModel ~= nil then
@@ -85,3 +85,4 @@ UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     end
     log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
 end)
+UnitTest.TestBlockEnd()-----------------------------------------------------------

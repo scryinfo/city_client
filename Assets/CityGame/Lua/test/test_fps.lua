@@ -4,6 +4,8 @@
 --- DateTime: 2018/10/29 15:57
 ---
 
+UnitTest.TestBlockStart()
+
 UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
     log("abel_w11_showFps","[test_abel_w11_showFps] ...............")
     require('Framework/UI/UIRoot')
@@ -25,3 +27,5 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
     end
 
 end)
+
+UnitTest.TestBlockEnd()

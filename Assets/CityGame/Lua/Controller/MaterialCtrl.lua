@@ -48,9 +48,13 @@ function MaterialCtrl:Refresh()
 
 end
 
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
         UIPage:ShowPage(MaterialCtrl);
     end)
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

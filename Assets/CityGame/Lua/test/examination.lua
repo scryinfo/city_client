@@ -3,6 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/17 11:18
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
+
+
 local lu = require "Framework/pbl/luaunit"
 local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
@@ -122,3 +125,4 @@ end)
 
 
 
+UnitTest.TestBlockEnd()-----------------------------------------------------------

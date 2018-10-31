@@ -26,3 +26,4 @@ function timeTestfun(testGroupId, fname, f)
 end
 
 local testfun = timeTestfun
+

@@ -3,6 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/18 18:22
 ---
+
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 testtime = require 'test/performance/testTime'
 
 --[[
@@ -270,3 +273,5 @@ UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
     log("abel_w11_loadstring_log","[test_w11_loadstring_log]  合并log打印时间：",timeMg, "独立打印时间：",timeSp)
     --结论： 没有什么区别，执行效率非常接近
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

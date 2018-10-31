@@ -480,33 +480,68 @@ public static class ToLuaMenu
         return countLeft == countRight;
     }
     static public void RemoveLog(string sourcePath)
-    {
-        //string sourcePath = "G:\\LuaSrc\\test_fpsOrg.lua";
-        //string destPath = "G:\\LuaRemove\\test_fpsOrg.lua";
+    {        
+        if (sourcePath.IndexOf("UnitTest.lua.bytes") != -1 
+            || sourcePath.IndexOf("Require_Editor.lua.bytes") != -1
+            || sourcePath.IndexOf("Require_RunTime.lua.bytes") != -1
+            )
+        {
+            return;
+        }
         StreamReader orgCodeStream = File.OpenText(sourcePath);
         String newCode = null;
         String temp = null;
         int logStart = 0;
         int notMatchCount = 0;
         int line = 0;
+        bool ExecStart = false;
         while (true)
         {
             temp = orgCodeStream.ReadLine();
             line++;
             int linecount = 0;
             if (temp == null)
-                break;                        
+                break;
+
+            if (temp.IndexOf("UnitTest.TestBlockStart") != -1) {
+                ExecStart = true;
+            }
+
+            if (temp.IndexOf("UnitTest.TestBlockEnd") != -1)
+            {
+                ExecStart = false;
+                continue;
+            }
+
+            if (ExecStart) //直接忽略测试用例区相关代码
+                continue;
 
             if (temp.IndexOf(" log(") != -1 || temp.IndexOf(" log (") != -1)
-            {
-                temp = temp.Replace(" log(", " --log(");
+            {                
 
                 //简单处理， log 必须一行处理，如果log所在行的圆括号不匹配，判定为 log 没有在一行处理完
                 if (CheckParentheses(temp) == false)
                 {
                     //提示Log必须一行处理
                     Debug.LogError("RemoveLog Error: log must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
-                    continue;
+                }
+                else
+                {
+                    temp = temp.Replace(" log(", " --log(");
+                }
+            }
+
+            if (temp.IndexOf(" UnitTest.Exec_now(") != -1 || temp.IndexOf(" UnitTest.Exec_now (") != -1)
+            {
+                //简单处理， UnitTest.Exec_now 必须一行处理，如果log所在行的圆括号不匹配，判定为 UnitTest.Exec_now 没有在一行处理完
+                if (CheckParentheses(temp) == false)
+                {
+                    //提示Log必须一行处理
+                    Debug.LogError("RemoveLog Error: UnitTest.Exec_now must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
+                }
+                else
+                {
+                    temp = temp.Replace(" UnitTest.Exec_now", " --UnitTest.Exec_now");
                 }
             }
 

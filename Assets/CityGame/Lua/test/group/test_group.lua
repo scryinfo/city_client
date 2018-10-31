@@ -5,6 +5,7 @@
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
 TestGroup.active_TestGroup("abel_w11_Comments")
+TestGroup.active_TestGroup("abel_w7_AddClick")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")

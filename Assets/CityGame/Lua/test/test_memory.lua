@@ -3,6 +3,8 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/18 16:03
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 local classTest = class('classTest')
 function classTest:initialize()
     self._data = {}
@@ -45,3 +47,4 @@ UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  f
     ]]--
 end)
 
+UnitTest.TestBlockEnd()-----------------------------------------------------------

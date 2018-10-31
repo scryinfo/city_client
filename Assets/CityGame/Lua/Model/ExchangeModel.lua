@@ -20,7 +20,7 @@ end
 function ExchangeModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), ExchangeModel.n_OnReceiveUnitCreate)
-        ExchangeModel.m_ReqBuildApartment(1400003)
+        ExchangeModel.m_ReqBuildApartment(1100002)
     end
 end
 
@@ -135,12 +135,12 @@ end
 --创建同步
 function ExchangeModel.n_OnReceiveUnitCreate(stream)
     local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "ExchangeModel.n_OnReceiveExchangeDeal: stream == nil")
-    --ExchangeModel.roleData. = buildingInfo
+    ExchangeCtrl.buildingsInfo[#ExchangeCtrl.buildingsInfo + 1] = buildingInfo
 end
 --add building
 function ExchangeModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 0, y = 0}}
+    local lMsg = {id = id, pos = {x = 30, y = 30}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

@@ -51,12 +51,29 @@ function ExchangeChooseWareHouseCtrl:_initPanelData()
     --wareHouseTemp[5] = {buildingType = "House", buildingName = "Buddy005", sizeType = "Medium", isSell = true, remainCount = 27, totalCount = 68, capacityCount = 15}
     --ExchangeChooseWareHouseCtrl.wareHouseDatas = self:_getSortDatas(wareHouseTemp, true)
     --买入时的数据
+    --local wareHouseTemp = {}
+    --wareHouseTemp[1] = {buildingType = "House",   buildingName = "Buddy001", sizeType = "Medium", isSell = false, remainCount = 10, totalCount = 99, capacityCount = 15}
+    --wareHouseTemp[2] = {buildingType = "Factory", buildingName = "Buddy002", sizeType = "Medium", isSell = false, remainCount = 1,  totalCount = 89, capacityCount = 5}
+    --wareHouseTemp[3] = {buildingType = "House",   buildingName = "Buddy003", sizeType = "Medium", isSell = false, remainCount = 74, totalCount = 78, capacityCount = 70}
+    --wareHouseTemp[4] = {buildingType = "Factory", buildingName = "Buddy004", sizeType = "Medium", isSell = false, remainCount = 3,  totalCount = 12, capacityCount = 11}
+    --wareHouseTemp[5] = {buildingType = "House",   buildingName = "Buddy005", sizeType = "Medium", isSell = false, remainCount = 27, totalCount = 68, capacityCount = 60}
+    --ExchangeChooseWareHouseCtrl.wareHouseDatas = self:_getSortDatas(wareHouseTemp, false)
+    --
+    --ExchangeChooseWareHouseCtrl.wareHouseItems = {}
+    --ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, #ExchangeChooseWareHouseCtrl.wareHouseDatas)
+
+    ---临时数据
     local wareHouseTemp = {}
-    wareHouseTemp[1] = {buildingType = "House",   buildingName = "Buddy001", sizeType = "Medium", isSell = false, remainCount = 10, totalCount = 99, capacityCount = 15}
-    wareHouseTemp[2] = {buildingType = "Factory", buildingName = "Buddy002", sizeType = "Medium", isSell = false, remainCount = 1,  totalCount = 89, capacityCount = 5}
-    wareHouseTemp[3] = {buildingType = "House",   buildingName = "Buddy003", sizeType = "Medium", isSell = false, remainCount = 74, totalCount = 78, capacityCount = 70}
-    wareHouseTemp[4] = {buildingType = "Factory", buildingName = "Buddy004", sizeType = "Medium", isSell = false, remainCount = 3,  totalCount = 12, capacityCount = 11}
-    wareHouseTemp[5] = {buildingType = "House",   buildingName = "Buddy005", sizeType = "Medium", isSell = false, remainCount = 27, totalCount = 68, capacityCount = 60}
+    for i, itemData in ipairs(ExchangeCtrl.buildingsInfo) do
+        wareHouseTemp[#wareHouseTemp + 1] = itemData
+        wareHouseTemp.buildingType = "House"
+        wareHouseTemp.buildingName = "XY"
+        wareHouseTemp.sizeType = "Small"
+        wareHouseTemp.isSell = false
+        wareHouseTemp.remainCount = 100
+        wareHouseTemp.totalCount = 100
+        wareHouseTemp.capacityCount = 100
+    end
     ExchangeChooseWareHouseCtrl.wareHouseDatas = self:_getSortDatas(wareHouseTemp, false)
 
     ExchangeChooseWareHouseCtrl.wareHouseItems = {}

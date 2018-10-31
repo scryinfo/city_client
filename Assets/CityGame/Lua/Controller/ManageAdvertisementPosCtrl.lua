@@ -46,14 +46,20 @@ function ManageAdvertisementPosCtrl:Awake(go)
     self:OnClick_OnGoods();
     -----创建广告管理
     local creatData={count=10,buildingType=BuildingType.MunicipalManage}
-    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    self.ItemCreatDeleteMgr =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
 end
 
 
 --返回
-function ManageAdvertisementPosCtrl:OnClick_backBtn()
+function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
     UIPage.ClosePage();
-end
+    for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
+         destroy(v)
+    end
+    for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
+        v:SetActive(true);
+    end
+   end
 
 --打开信息界面
 function ManageAdvertisementPosCtrl:OnClick_infoBtn()
@@ -61,7 +67,7 @@ function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 end
 --刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
-
+   -- ins.ItemCreatDeleteMgr.index
 end
 
 

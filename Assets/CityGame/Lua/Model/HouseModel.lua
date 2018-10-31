@@ -18,15 +18,15 @@ function HouseModel.Awake()
 end
 
 function HouseModel.Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Z) then
-        HouseCtrl.OpenPanel({})
-        --log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.X) then
-        local occValue = {renter = 30, totalCount = 80}
-        Event.Brocast("c_onOccupancyValueChange", occValue);
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Z) then
+    --    HouseCtrl.OpenPanel({})
+    --    --log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
+    --end
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.X) then
+    --    local occValue = {renter = 30, totalCount = 80}
+    --    Event.Brocast("c_onOccupancyValueChange", occValue);
+    --end
 end
 
 --启动事件--

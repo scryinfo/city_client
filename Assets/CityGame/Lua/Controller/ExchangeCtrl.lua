@@ -133,13 +133,12 @@ require("Config/Material")
 function ExchangeCtrl:_creatGoodsConfig()
     local datas = {}
     for i, itemMat in ipairs(Material) do
-        datas[itemMat._id] = itemMat
-        datas[itemMat._id].itemId = itemMat._id
-        datas[itemMat._id].lowPrice = 0.00
-        datas[itemMat._id].highPrice = 0.00
-        datas[itemMat._id].nowPrice = 0.00
-        datas[itemMat._id].sumDealedPrice = 0.00
-        datas[itemMat._id].priceChange = 0.00
+        datas[itemMat.itemId] = itemMat
+        datas[itemMat.itemId].lowPrice = 0.00
+        datas[itemMat.itemId].highPrice = 0.00
+        datas[itemMat.itemId].nowPrice = 0.00
+        datas[itemMat.itemId].sumDealedPrice = 0.00
+        datas[itemMat.itemId].priceChange = 0.00
     end
 
     datas[2151001].sumDealedPrice = 1000
@@ -148,8 +147,7 @@ function ExchangeCtrl:_creatGoodsConfig()
     datas[2154003].sumDealedPrice = 798
     datas[2154001].sumDealedPrice = 1
 
-    ExchangeCtrl.quoteDatas = datas
-    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #Material)
+    ExchangeCtrl.quoteConfigDatas = datas
 end
 
 ---行情收藏记录的toggle
@@ -207,8 +205,6 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
             ExchangePanel._recordToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Record
             self:_recordRootInit()
-
-            --请求服务器成交进度信息
         end
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Record then
@@ -342,7 +338,7 @@ end
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
-        ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteDatas)
+        ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteConfigDatas)
         ExchangeCtrl.quoteDatas = self:_getSortDatas(ExchangeCtrl.quoteDatas, sortData)
         ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
 
@@ -465,23 +461,22 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
 
     ---正式代码 --因为服务器不保证数据顺序，所以每次数据更新时都遍历一次传来的表，获取以itemid为key的新表
     for i, itemData in ipairs(datas) do
-        ExchangeCtrl.quoteDatas[itemData.itemId].itemId = itemData.itemId
-        ExchangeCtrl.quoteDatas[itemData.itemId].lowPrice = itemData.lowPrice
-        ExchangeCtrl.quoteDatas[itemData.itemId].highPrice = itemData.highPrice
-        ExchangeCtrl.quoteDatas[itemData.itemId].nowPrice = itemData.nowPrice
-        ExchangeCtrl.quoteDatas[itemData.itemId].sumDealedPrice = itemData.sumDealedPrice
-        ExchangeCtrl.quoteDatas[itemData.itemId].priceChange = itemData.priceChange
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].itemId = itemData.itemId
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].lowPrice = itemData.lowPrice
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].highPrice = itemData.highPrice
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].nowPrice = itemData.nowPrice
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].sumDealedPrice = itemData.sumDealedPrice
+        ExchangeCtrl.quoteConfigDatas[itemData.itemId].priceChange = itemData.priceChange
     end
 
     local collectIndexs = {}  --从role exchangeCollectedItem中获取
     local collectDatas = {}
     for i, collectId in ipairs(collectIndexs) do
-        collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteDatas[collectId]
-        ExchangeCtrl.quoteDatas[collectId].isCollected = true
+        collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteConfigDatas[collectId]
+        ExchangeCtrl.quoteConfigDatas[collectId].isCollected = true
     end
     ExchangeCtrl.collectDatas = collectDatas
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
 

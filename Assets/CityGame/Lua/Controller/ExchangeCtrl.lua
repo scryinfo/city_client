@@ -124,8 +124,34 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.selfRecordItems = {}
     ExchangeCtrl.cityRecordItems = {}
 
+    self:_creatGoodsConfig()
+
     Event.Brocast("m_ReqExchangeItemList");
 end
+---根据配置表创建所有item
+require("Config/Material")
+function ExchangeCtrl:_creatGoodsConfig()
+    local datas = {}
+    for i, itemMat in ipairs(Material) do
+        datas[itemMat._id] = itemMat
+        datas[itemMat._id].itemId = itemMat._id
+        datas[itemMat._id].lowPrice = 0.00
+        datas[itemMat._id].highPrice = 0.00
+        datas[itemMat._id].nowPrice = 0.00
+        datas[itemMat._id].sumDealedPrice = 0.00
+        datas[itemMat._id].priceChange = 0.00
+    end
+
+    datas[2151001].sumDealedPrice = 1000
+    datas[2152004].sumDealedPrice = 50
+    datas[2151002].sumDealedPrice = 312
+    datas[2154003].sumDealedPrice = 798
+    datas[2154001].sumDealedPrice = 1
+
+    ExchangeCtrl.quoteDatas = datas
+    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #Material)
+end
+
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero
@@ -316,6 +342,7 @@ end
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
+        ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteDatas)
         ExchangeCtrl.quoteDatas = self:_getSortDatas(ExchangeCtrl.quoteDatas, sortData)
         ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
 
@@ -347,37 +374,45 @@ function ExchangeCtrl:_getSortDatas(datas, sortData)
         end
     elseif sortType == ExchangeSortItemType.High then
         if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.high > n.high end)
+            table.sort(tempDatas, function (m, n) return m.highPrice > n.highPrice end)
         else
-            table.sort(tempDatas, function (m, n) return m.high < n.high end)
+            table.sort(tempDatas, function (m, n) return m.highPrice < n.highPrice end)
         end
     elseif sortType == ExchangeSortItemType.Change then
         if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.change > n.change end)
+            table.sort(tempDatas, function (m, n) return m.priceChange > n.priceChange end)
         else
-            table.sort(tempDatas, function (m, n) return m.change < n.change end)
+            table.sort(tempDatas, function (m, n) return m.priceChange < n.priceChange end)
         end
     elseif sortType == ExchangeSortItemType.LastPrice then
         if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.lastPrice > n.lastPrice end)
+            table.sort(tempDatas, function (m, n) return m.nowPrice > n.nowPrice end)
         else
-            table.sort(tempDatas, function (m, n) return m.lastPrice < n.lastPrice end)
+            table.sort(tempDatas, function (m, n) return m.nowPrice < n.nowPrice end)
         end
     elseif sortType == ExchangeSortItemType.Low then
         if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.low > n.low end)
+            table.sort(tempDatas, function (m, n) return m.lowPrice > n.lowPrice end)
         else
-            table.sort(tempDatas, function (m, n) return m.low < n.low end)
+            table.sort(tempDatas, function (m, n) return m.lowPrice < n.lowPrice end)
         end
     elseif sortType == ExchangeSortItemType.Volume then
         if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.volume > n.volume end)
+            table.sort(tempDatas, function (m, n) return m.sumDealedPrice > n.sumDealedPrice end)
         else
-            table.sort(tempDatas, function (m, n) return m.volume < n.volume end)
+            table.sort(tempDatas, function (m, n) return m.sumDealedPrice < n.sumDealedPrice end)
         end
     end
 
     return tempDatas
+end
+--获取顺序表
+function ExchangeCtrl:_getListTable(dicTable)
+    local tempTable = {}
+    for key, value in pairs(dicTable) do
+        tempTable[#tempTable + 1] = value
+    end
+    return tempTable
 end
 --更改收藏状态
 function ExchangeCtrl:_changeCollectState(isCollected, itemId)
@@ -429,21 +464,24 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
     --self.sortMgr:_reSetSortData()  --按照默认排序
 
     ---正式代码 --因为服务器不保证数据顺序，所以每次数据更新时都遍历一次传来的表，获取以itemid为key的新表
-    local quoteTable = {}
     for i, itemData in ipairs(datas) do
-        quoteTable[itemData.itemId] = itemData
+        ExchangeCtrl.quoteDatas[itemData.itemId].itemId = itemData.itemId
+        ExchangeCtrl.quoteDatas[itemData.itemId].lowPrice = itemData.lowPrice
+        ExchangeCtrl.quoteDatas[itemData.itemId].highPrice = itemData.highPrice
+        ExchangeCtrl.quoteDatas[itemData.itemId].nowPrice = itemData.nowPrice
+        ExchangeCtrl.quoteDatas[itemData.itemId].sumDealedPrice = itemData.sumDealedPrice
+        ExchangeCtrl.quoteDatas[itemData.itemId].priceChange = itemData.priceChange
     end
 
     local collectIndexs = {}  --从role exchangeCollectedItem中获取
     local collectDatas = {}
     for i, collectId in ipairs(collectIndexs) do
-        collectDatas[#collectDatas + 1] = quoteTable[collectId]
-        quoteTable[collectId].isCollected = true
+        collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteDatas[collectId]
+        ExchangeCtrl.quoteDatas[collectId].isCollected = true
     end
-    ExchangeCtrl.quoteDatas = quoteTable
     ExchangeCtrl.collectDatas = collectDatas
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
+    --ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
 

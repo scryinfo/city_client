@@ -41,7 +41,7 @@ function ItemCreatDeleteMgr:_creatAdvertisementItem(count)
         self.AdvertisementItemList={}
     end
 
-    for i = 1, count do
+    for i = 1, 50 do
        ---预制的信息
         local prefabData={}
         prefabData.count=i
@@ -59,7 +59,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         self.addItemList={}
     end
 
-    for i = 1, count do
+    for i = 1, 50 do
      ---创建添加按钮
         ---预制的信息
         local prefabData={}

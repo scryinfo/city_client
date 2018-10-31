@@ -1,5 +1,8 @@
 
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
+--存放选中的物品   临时表
+WarehouseCtrl.temporaryItems = {}
+
 local isShowList;
 local switchIsShow;
 
@@ -55,20 +58,20 @@ end
 
 --仓库物品选中
 function WarehouseCtrl:_selectedGoods(id)
-    if ShelfGoodsMgr.temporaryItems[id] == nil then
-        ShelfGoodsMgr.temporaryItems[id] = id
+    if self.temporaryItems[id] == nil then
+        self.temporaryItems[id] = id
         self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
 
     else
-        ShelfGoodsMgr.temporaryItems[id] = nil;
+        self.temporaryItems[id] = nil;
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
         self.ShelfGoodsMgr:_deleteShelfItem(id)
     end
 end
 --监听临时表里是否有这个物品
 function WarehouseCtrl:c_temporaryifNotGoods(id)
-    ShelfGoodsMgr.temporaryItems[id] = nil
+    self.temporaryItems[id] = nil
     self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
     self.ShelfGoodsMgr:_deleteShelfItem(id)
 end
@@ -131,7 +134,6 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")
-            ShelfGoodsMgr.temporaryItems = {};
         else
             WarehousePanel.transport:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")

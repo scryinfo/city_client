@@ -227,7 +227,7 @@ function ExchangeCtrl:_recordRootInit()
     ExchangePanel._cityRecordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.one
 
-    Event.Brocast("m_ReqExchangeMyDealLog")
+    Event.Brocast("m_ReqExchangeMyOrder")
     ---模拟服务器消息
     --self:_getEntrustmentRecord()
 

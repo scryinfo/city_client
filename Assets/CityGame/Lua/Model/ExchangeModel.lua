@@ -19,8 +19,7 @@ end
 
 function ExchangeModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), ExchangeModel.n_OnReceiveUnitCreate)
-        ExchangeModel.m_ReqBuildApartment(1100002)
+
     end
 end
 
@@ -33,9 +32,6 @@ function ExchangeModel.OnCreate()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeAllDealLog"), ExchangeModel.n_OnReceiveAllDealLog)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeCancel"), ExchangeModel.n_OnReceiveExchangeCancel)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeDealInform"), ExchangeModel.n_OnReceiveExchangeDeal)
-
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"), ExchangeModel.n_OnReceiveRoleLogin)  --temp
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), ExchangeModel.n_OnReceiveUnitCreate)
 
     --本地的回调注册
     Event.AddListener("m_ReqExchangeItemList", this.m_ReqExchangeItemList)
@@ -125,22 +121,4 @@ end
 function ExchangeModel.n_OnReceiveExchangeDeal(stream)
     local exchangeDeal = assert(pbl.decode("gs.ExchangeDeal", stream), "ExchangeModel.n_OnReceiveExchangeDeal: stream == nil")
     Event.Brocast("c_onReceiveExchangeDeal", exchangeDeal)
-end
-
----temp 记录role信息
-function ExchangeModel.n_OnReceiveRoleLogin(stream)
-    local roleData = assert(pbl.decode("gs.Role", stream), "ExchangeModel.n_OnReceiveExchangeDeal: stream == nil")
-    ExchangeModel.roleData = roleData
-end
---创建同步
-function ExchangeModel.n_OnReceiveUnitCreate(stream)
-    local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "ExchangeModel.n_OnReceiveExchangeDeal: stream == nil")
-    ExchangeCtrl.buildingsInfo[#ExchangeCtrl.buildingsInfo + 1] = buildingInfo
-end
---add building
-function ExchangeModel.m_ReqBuildApartment(id)
-    local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 30, y = 30}}
-    local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

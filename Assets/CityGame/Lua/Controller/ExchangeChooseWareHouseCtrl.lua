@@ -64,7 +64,7 @@ function ExchangeChooseWareHouseCtrl:_initPanelData()
 
     ---临时数据
     local wareHouseTemp = {}
-    for i, itemData in ipairs(ExchangeCtrl.buildingsInfo) do
+    for i, itemData in ipairs(PlayerTempModel.buildingsInfo) do
         wareHouseTemp[#wareHouseTemp + 1] = itemData
         wareHouseTemp.buildingType = "House"
         wareHouseTemp.buildingName = "XY"

@@ -137,7 +137,9 @@ function ServerListModel.n_OnRoleLogin(stream)
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
         log("[LoginModel.n_OnRoleLogin] succeed!")
-        Event.Brocast("c_GsLoginSuccess");
+        Event.Brocast("c_GsLoginSuccess")
+
+        Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

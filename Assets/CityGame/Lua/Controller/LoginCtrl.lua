@@ -47,8 +47,7 @@ function LoginCtrl:OnCreate(go)
 
 	--启用 c_AddClick_self 单元测试
 	--log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
-	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self
-	)
+	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
 end

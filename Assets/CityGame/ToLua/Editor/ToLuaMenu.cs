@@ -479,15 +479,47 @@ public static class ToLuaMenu
         }
         return countLeft == countRight;
     }
-    static public void RemoveLog(string sourcePath)
-    {        
-        if (sourcePath.IndexOf("UnitTest.lua.bytes") != -1 
+
+    private static bool RemoveLog_Ignore(ref string sourcePath)
+    {
+        if (sourcePath.IndexOf("UnitTest.lua.bytes") != -1
             || sourcePath.IndexOf("Require_Editor.lua.bytes") != -1
             || sourcePath.IndexOf("Require_RunTime.lua.bytes") != -1
             )
         {
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private static void CommentLineIfMatch(ref String temp, ref string sourcePath, ref int line, ref string[] filters)
+    {
+        for(int i = 0; i < filters.Length; ++i)
+        {
+            if (temp.IndexOf(filters[i]) != -1)
+            {
+
+                //简单处理， log 和 UnitTest.Exec_now 必须一行处理，如果所在行的圆括号不匹配，判定为没有在一行处理完
+                if (CheckParentheses(temp) == false)
+                {
+                    //提示Log必须一行处理
+                    Debug.LogError("RemoveLog Error: \""+ filters[i] + "\" Must be completed in one line ! filepath: " + sourcePath + " Line: " + line.ToString());
+                }
+                else
+                {
+                    temp = temp.Replace(filters[i], " --"+ filters[i]);
+                }
+            }
+        }
+
+       
+    }
+
+    static public void RemoveLog(ref string sourcePath)
+    {
+        if(RemoveLog_Ignore(ref sourcePath))
+            return;        
+
         StreamReader orgCodeStream = File.OpenText(sourcePath);
         String newCode = null;
         String temp = null;
@@ -495,6 +527,9 @@ public static class ToLuaMenu
         int notMatchCount = 0;
         int line = 0;
         bool ExecStart = false;
+        //要注释的关键字
+        string[] filters = { " log(", " log (", "UnitTest.Exec_now(", "UnitTest.Exec_now (" };
+
         while (true)
         {
             temp = orgCodeStream.ReadLine();
@@ -515,35 +550,8 @@ public static class ToLuaMenu
 
             if (ExecStart) //直接忽略测试用例区相关代码
                 continue;
-
-            if (temp.IndexOf(" log(") != -1 || temp.IndexOf(" log (") != -1)
-            {                
-
-                //简单处理， log 必须一行处理，如果log所在行的圆括号不匹配，判定为 log 没有在一行处理完
-                if (CheckParentheses(temp) == false)
-                {
-                    //提示Log必须一行处理
-                    Debug.LogError("RemoveLog Error: log must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
-                }
-                else
-                {
-                    temp = temp.Replace(" log(", " --log(");
-                }
-            }
-
-            if (temp.IndexOf(" UnitTest.Exec_now(") != -1 || temp.IndexOf(" UnitTest.Exec_now (") != -1)
-            {
-                //简单处理， UnitTest.Exec_now 必须一行处理，如果log所在行的圆括号不匹配，判定为 UnitTest.Exec_now 没有在一行处理完
-                if (CheckParentheses(temp) == false)
-                {
-                    //提示Log必须一行处理
-                    Debug.LogError("RemoveLog Error: UnitTest.Exec_now must be completed in one line ! filepath: " + sourcePath +"Line: "+ line.ToString());
-                }
-                else
-                {
-                    temp = temp.Replace(" UnitTest.Exec_now", " --UnitTest.Exec_now");
-                }
-            }
+            
+            CommentLineIfMatch(ref temp, ref sourcePath, ref line, ref filters);
 
             if (!String.IsNullOrEmpty(newCode))
                 newCode = String.Concat(newCode, "\r\n", temp);
@@ -1086,7 +1094,7 @@ public static class ToLuaMenu
             //不注销LuaLog
 #else
             //注销LuaLog
-            RemoveLog(dest);
+            RemoveLog(ref dest);
 #endif     
         }
     }

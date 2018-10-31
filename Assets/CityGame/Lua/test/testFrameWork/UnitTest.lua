@@ -65,8 +65,6 @@ end
 
 function UnitTest.CheckValidExec()
     local info = debug.getinfo(3)
-    local test =UnitTest.startGroup[info.short_src] ~= nil
-    local test1 = UnitTest.endGroup[info.short_src] == nil
     return UnitTest.startGroup[info.short_src] ~= nil and UnitTest.endGroup[info.short_src] == nil
 end
 

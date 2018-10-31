@@ -5,9 +5,6 @@ require 'View/BuildingInfo/DetailsItem'  --仓库shelf Item
 
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
---存放选中的物品   临时表
-ShelfGoodsMgr.temporaryItems = {}
-
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
 ShelfGoodsMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 ShelfGoodsMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库Shelf Item
@@ -102,7 +99,7 @@ end
 function ShelfGoodsMgr:_deleteShelfItem(id)
     destroy(self.shelfPanelItem[id].prefab.gameObject);
     self.shelfPanelItem[id] = nil;
-    self.temporaryItems[id] = nil;
+    WarehouseCtrl.temporaryItems[id] = nil;
 
 end
 --货架删除物品

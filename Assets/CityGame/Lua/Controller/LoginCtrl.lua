@@ -17,12 +17,12 @@ function LoginCtrl:bundleName()
 end
 
 function LoginCtrl:Awake(go)
-	log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
+	ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
 	self.gameObject = go
 end
 
 function LoginCtrl:Refresh()
-	log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	if self.m_data ~= nil then
 		self:setPosition(self.m_data.x,self.m_data.y)
 	end
@@ -36,7 +36,7 @@ function LoginCtrl:OnCreate(go)
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
-	log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
+	ct.log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
 	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);
@@ -46,7 +46,7 @@ function LoginCtrl:OnCreate(go)
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
 
 	--启用 c_AddClick_self 单元测试
-	--log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
+	--ct.log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
 	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
@@ -71,7 +71,7 @@ function LoginCtrl:OnLogin(go)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
 	if username == "" then
-		log("system"," 账号不能为空")
+		ct.log("system"," 账号不能为空")
 	else
 		--CityEngineLua.login(username, pw, "lxq");
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
@@ -80,7 +80,7 @@ end
 --注册--
 function LoginCtrl:OnRegister(go)
 	if go.logined == false then
-		log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
+		ct.log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
 	else
 		--目前还没有手动注册
 		Event.Brocast("m_Gslogin");
@@ -153,7 +153,7 @@ function LoginCtrl:gettestValue()
 end
 
 function LoginCtrl:OnClickTest(obj)
-	log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest obj == nil")
+	ct.log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest obj == nil")
 	local xxx = obj
 	local x = LoginCtrl.testValue
 	local yyy = LoginCtrl:gettestValue()
@@ -161,7 +161,7 @@ function LoginCtrl:OnClickTest(obj)
 end
 
 function LoginCtrl:OnClickTest1(obj)
-	log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest1 obj ~= nil and obj.testValue =",obj.testValue)
+	ct.log("abel_w7_AddClick","[test_AddClick_self]  OnClickTest1 obj ~= nil and obj.testValue =",obj.testValue)
 	local xxx = obj.testValue
 	local x = LoginCtrl.testValue
 	local yyy = LoginCtrl:gettestValue()
@@ -171,13 +171,13 @@ end
 UnitTest.TestBlockStart()-------------------------------------------------------------
 
 UnitTest.Exec("abel_w4", "test_OnLogin",  function ()
-	log("abel_w7","[test_OnLogin]  测试开始")
+	ct.log("abel_w7","[test_OnLogin]  测试开始")
 	LoginCtrl:c_LoginSuccessfully( false )
 end)
 
---log("abel_w7_AddClick","[UnitTest.Exec test_AddClick_self] ")
+--ct.log("abel_w7_AddClick","[UnitTest.Exec test_AddClick_self] ")
 UnitTest.Exec("abel_w7_AddClick", "test_AddClick_self",  function ()
-	log("abel_w7_AddClick","[test_AddClick_self]  测试开始")
+	ct.log("abel_w7_AddClick","[test_AddClick_self]  测试开始")
 	Event.AddListener("c_AddClick_self", function (obj)
 		obj.testValue = 888
 		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')
@@ -187,7 +187,7 @@ UnitTest.Exec("abel_w7_AddClick", "test_AddClick_self",  function ()
 end)
 
 UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
-	log("abel_w7_RemoveClick","[test_RemoveClick_self]  测试开始")
+	ct.log("abel_w7_RemoveClick","[test_RemoveClick_self]  测试开始")
 	Event.AddListener("c_RemoveClick_self", function (obj)
 		obj.testValue = 666
 		local LuaBehaviour = obj.gameObject:GetComponent('LuaBehaviour')

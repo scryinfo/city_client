@@ -187,7 +187,7 @@ function ExchangeTransactionCtrl:_openSellPart(ins)
     ins.isSellState = true
 end
 function ExchangeTransactionCtrl:_chooseWareHouse(ins)
-    CityGlobal.OpenCtrl("ExchangeChooseWareHouseCtrl")
+    ct.OpenCtrl("ExchangeChooseWareHouseCtrl")
 end
 function ExchangeTransactionCtrl:_clickConfirm(ins)
     local showData = {}
@@ -204,9 +204,9 @@ function ExchangeTransactionCtrl:_clickConfirm(ins)
     showData.contentInfo = string.format("Entrust to %s <color=%s>%s</color>x%d?", str1, "#CA8A00", ins.name, count)
     showData.tipInfo = ""
     showData.btnCallBack = function()
-        log("cycle_w10_exchange02", "向服务器发送请求")
+        ct.log("cycle_w10_exchange02", "向服务器发送请求")
     end
-    CityGlobal.OpenCtrl("BtnDialogPageCtrl", showData)
+    ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
 ---滑动复用
@@ -229,7 +229,7 @@ end
 ---选择仓库事件回调
 function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
     if wareDats.isSell ~= self.isSellState then
-        log("cycle_w10_exchange02", "仓库数据的sell状态与交易界面状态不一致")
+        ct.log("cycle_w10_exchange02", "仓库数据的sell状态与交易界面状态不一致")
         return
     end
 

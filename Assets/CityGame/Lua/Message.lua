@@ -62,7 +62,7 @@ end
 	
 function CityEngineLua.Message:handleMessage(msgstream)
 	if self.handler == nil then
-		log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
+		ct.log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
 		return;
 	end
 

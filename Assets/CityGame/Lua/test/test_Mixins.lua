@@ -12,7 +12,7 @@ local log = log
 
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes
     fly = function(self)
-        log('flap flap flap I am a ' .. self.class.name)
+        ct.log('flap flap flap I am a ' .. self.class.name)
     end,
     foo = function(self)
         return 1
@@ -103,7 +103,7 @@ UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  fun
         end
     end)
 
-    log("abel_w6_UIFrame_performance","[test_mixin_inherited_method]  bee2:fun")
+    ct.log("abel_w6_UIFrame_performance","[test_mixin_inherited_method]  bee2:fun")
     local bee2 = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee2:speak()

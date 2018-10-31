@@ -17,16 +17,16 @@
 	2、 定义测试用例
 		示例:
 		UnitTest.Exec("abel_w4", "test_pb11111",  function ()
-			log("abel_w4","[test_pb11111]  测试完毕")
+			ct.log("abel_w4","[test_pb11111]  测试完毕")
 		end)
 		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
 		* test_pb11111 是测试用例函数的名字
 		* function 后面是测试用例的函数体
 3、 在非单元测试的代码中使用测试分组
     1、 在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
-	2、 我们项目的日志统一使用 log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
+	2、 我们项目的日志统一使用 ct.log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
 		示例：
-			log("abel_w4","[test_pb11111]  测试完毕")
+			ct.log("abel_w4","[test_pb11111]  测试完毕")
 			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
 三、 说明：
 	1、 测试用例的定义实际调用的是这个方法：
@@ -43,7 +43,7 @@
 ]]--
 local ProFi = require ('test/testFrameWork/memory/ProFi')
 local mri = MemoryRefInfo
-CityGlobal.mkMemoryProfile()
+ct.mkMemoryProfile()
 UnitTest = {}
 
 UnitTest.startGroup = {}
@@ -82,19 +82,19 @@ function UnitTest.Exec(unitGroupId, funcName, func)
 --CPU使用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.PerformanceTest(groupid, info,func)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    --log(groupid,info)
+    --ct.log(groupid,info)
     local startTime = os.clock()
     func(groupid)
     local endTime = os.clock()
     local outtime = endTime - startTime
-    log(groupid, info, "执行时间: ", outtime)
+    ct.log(groupid, info, "执行时间: ", outtime)
     return outtime
 end
 
 --内存用量分析, 生成 func 执行前后的内存用量到文件夹 MemoryProfile 中
 function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    log(groupid, funcName)
+    ct.log(groupid, funcName)
     ProFi:reset()
     collectgarbage("collect")
     ProFi:checkMemory( 0, funcName..'-------------' )
@@ -132,20 +132,20 @@ function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
         root  = rootObj
     end
     collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshot(CityGlobal.getMemoryProfile().."/", UnitTest.GetDumpAllFileName(groupid,fileName), -1, tostring(root), root)
+    mri.m_cMethods.DumpMemorySnapshot(ct.getMemoryProfile().."/", UnitTest.GetDumpAllFileName(groupid,fileName), -1, tostring(root), root)
 end
 
 --指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.MemoryReferenceOne(groupid, markid,object)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     collectgarbage("collect")
-    mri.m_cMethods.DumpMemorySnapshotSingleObject(CityGlobal.getMemoryProfile().."/", UnitTest.GetDumpOneFileName(groupid,markid), -1, objectName, object)
+    mri.m_cMethods.DumpMemorySnapshotSingleObject(ct.getMemoryProfile().."/", UnitTest.GetDumpOneFileName(groupid,markid), -1, objectName, object)
 end
 
 --比较两个文件的引用信息差异
 function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    mri.m_cMethods.DumpMemorySnapshotComparedFile(CityGlobal.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
+    mri.m_cMethods.DumpMemorySnapshotComparedFile(ct.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
 end
 
 --在指定文件中过滤特定对象的引用统计信息

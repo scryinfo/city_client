@@ -11,7 +11,7 @@ function ShelfGoodsMgr:initialize(insluabehaviour,buildingData)
     if buildingData.buildingType == BuildingInType.Shelf then
         self:_creatItemGoods();
     elseif buildingData.buildingType ==BuildingInType.Warehouse then
-        log("这是仓库的!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        ct.log("这是仓库的!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     end
 end
 
@@ -53,7 +53,7 @@ end
 
 --删除物品
 function ShelfGoodsMgr:_deleteGoods(ins)
-    log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
+    ct.log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
     --清空之前的旧数据
     destroy(self.items[ins.id].prefab.gameObject);
     table.remove(self.ModelDataList, ins.id)

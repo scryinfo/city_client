@@ -1,5 +1,5 @@
---全局设置
-CityGlobal ={
+----City项目的全局数据
+ct ={
 	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
 	G_DEBUGLOG = true, --是否打开调试日志
 	G_UNITTEST = true,	--是否打开单元测试

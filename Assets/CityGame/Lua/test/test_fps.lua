@@ -7,13 +7,13 @@
 UnitTest.TestBlockStart()
 
 UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
-    log("abel_w11_showFps","[test_abel_w11_showFps] ...............")
+    ct.log("abel_w11_showFps","[test_abel_w11_showFps] ...............")
     require('Framework/UI/UIRoot')
     local UIRoot = UIRoot
     local rootIns = UIRoot.Instance()
     local camera = CityLuaUtil.getUiCamera()
     if camera == nil then
-        log("abel_w11_showFps","[test_abel_w11_showFps]  UIRoot.getUiCamera() == nil ")
+        ct.log("abel_w11_showFps","[test_abel_w11_showFps]  UIRoot.getUiCamera() == nil ")
         return
     end
 
@@ -22,7 +22,7 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
     local testFPS = camera.gameObject:GetComponent('ShowFPS')
     testFPS.fpsMeasuringDelta = 0.1
     if testFPS == nil then
-        log("abel_w11_showFps","[test_abel_w11_showFps]  not find ShowFPS")
+        ct.log("abel_w11_showFps","[test_abel_w11_showFps]  not find ShowFPS")
         return
     end
 

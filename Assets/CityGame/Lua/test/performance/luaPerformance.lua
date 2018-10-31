@@ -217,7 +217,7 @@ UnitTest.Exec("abel_w6_performance", "test_UnitTest",  function ()
 end)
 
 UnitTest.Exec("abel_w11_Comments", "test_w11_Comments",  function ()
-    log("abel_w11_Comments","[test_w11_Comments]")
+    ct.log("abel_w11_Comments","[test_w11_Comments]")
     local funNil = nil
     --funNil("testetasdtet")
     local xxxx = 0
@@ -226,7 +226,7 @@ UnitTest.Exec("abel_w11_Comments", "test_w11_Comments",  function ()
     --end
     --local logExt = function(infun, ...)
     --    local xxx = 0
-    --    local str =  "log(\"abel_w11_Comments\",\""..infun(...).."\")"
+    --    local str =  "ct.log(\"abel_w11_Comments\",\""..infun(...).."\")"
     --    local fun = loadstring( str )
     --    if fun then
     --        fun()
@@ -234,23 +234,23 @@ UnitTest.Exec("abel_w11_Comments", "test_w11_Comments",  function ()
     --end
     --logExt(function()
     --    if TestGroup.get_TestGroupId("abel_w11_loadstring_log") == nil  then return end
-    --    log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
+    --    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
     --end )
     --logExt("abel_w11_Comments","[test_w11_Comments] 哈哈哈")
 end)
 
 UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
-    log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
+    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
     local count = 1000
     local  code  = ""
-    local function addLog(msgname)
-        --log("abel_w11_Comments",msgname)
-        code = code.."\n".."log(\"abel_w11_loadstring_log\",\""..msgname.."\")"
+    local function addlog(msgname)
+        --ct.log("abel_w11_Comments",msgname)
+        code = code.."\n".."ct.log(\"abel_w11_loadstring_log\",\""..msgname.."\")"
     end
-    addLog("E_C2S_GET_SERVER_LIST")
-    addLog("E_C2S_GET_GAME_ANN")
-    addLog("count = 100000")
-    addLog("addLog(msgname)")
+    addlog("E_C2S_GET_SERVER_LIST")
+    addlog("E_C2S_GET_GAME_ANN")
+    addlog("count = 100000")
+    addlog("addct.log(msgname)")
 
     --合并log
     local timeMg = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 合并log", function()
@@ -264,13 +264,13 @@ UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
     --独立打印
     local timeSp = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 单独log", function()
         for i = 1, count do
-            log("abel_w11_loadstring_log","E_C2S_GET_SERVER_LIST")
-            log("abel_w11_loadstring_log","E_C2S_GET_GAME_ANN")
-            log("abel_w11_loadstring_log","count = 100000")
-            log("abel_w11_loadstring_log","addLog(msgname)")
+            ct.log("abel_w11_loadstring_log","E_C2S_GET_SERVER_LIST")
+            ct.log("abel_w11_loadstring_log","E_C2S_GET_GAME_ANN")
+            ct.log("abel_w11_loadstring_log","count = 100000")
+            ct.log("abel_w11_loadstring_log","addct.log(msgname)")
         end
     end)
-    log("abel_w11_loadstring_log","[test_w11_loadstring_log]  合并log打印时间：",timeMg, "独立打印时间：",timeSp)
+    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  合并log打印时间：",timeMg, "独立打印时间：",timeSp)
     --结论： 没有什么区别，执行效率非常接近
 end)
 

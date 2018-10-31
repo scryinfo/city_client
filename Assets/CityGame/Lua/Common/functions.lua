@@ -88,13 +88,13 @@ function getFormatUnixTime(time)
 	return tb
 end
 
-function CityGlobal.file_exists(path)
+function ct.file_exists(path)
 	local file = io.open(path, "rb")
 	if file then file:close() end
 	return file ~= nil
 end
 
-function CityGlobal.file_saveTable(filename, data)
+function ct.file_saveTable(filename, data)
 	local file
 	if filename == nil then
 		file = io.stdout
@@ -113,28 +113,28 @@ function CityGlobal.file_saveTable(filename, data)
 	end
 end
 
-function CityGlobal.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
+function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end
 
-CityGlobal.MemoryProfilePath=""
+ct.MemoryProfilePath=""
 
-function CityGlobal.getMemoryProfile()
-	return CityGlobal.MemoryProfilePath
+function ct.getMemoryProfile()
+	return ct.MemoryProfilePath
 end
 
-function CityGlobal.mkMemoryProfile()
-	local file_exists = CityGlobal.file_exists
+function ct.mkMemoryProfile()
+	local file_exists = ct.file_exists
 	if UnityEngine.Application.isEditor == false then
-		CityGlobal.MemoryProfilePath =  UnityEngine.Application.persistentDataPath.."/CityGame/MemoryProfile"
-		log("system", "ProFi:writeReport path = ",CityGlobal.MemoryProfilePath)
-		if file_exists(CityGlobal.MemoryProfilePath) == false then
-			log("system","[ProFi:writeReport] path not exist ")
-			os.execute("mkdir -p \"" .. CityGlobal.MemoryProfilePath .. "\"")
+		ct.MemoryProfilePath =  UnityEngine.Application.persistentDataPath.."/CityGame/MemoryProfile"
+		ct.log("system", "ProFi:writeReport path = ",ct.MemoryProfilePath)
+		if file_exists(ct.MemoryProfilePath) == false then
+			ct.log("system","[ProFi:writeReport] path not exist ")
+			os.execute("mkdir -p \"" .. ct.MemoryProfilePath .. "\"")
 		end
 	else
-		CityGlobal.MemoryProfilePath = "MemoryProfile"
-		os.execute("mkdir "..CityGlobal.MemoryProfilePath)
+		ct.MemoryProfilePath = "MemoryProfile"
+		os.execute("mkdir "..ct.MemoryProfilePath)
 	end
 end
 

@@ -492,7 +492,7 @@ public static class ToLuaMenu
         return false;
     }
 
-    private static void CommentLineIfMatch(ref String temp, ref string sourcePath, ref int line, ref string[] filters)
+    private static bool CommentLineIfMatch(ref String temp, ref string sourcePath, ref int line, ref string[] filters)
     {
         for(int i = 0; i < filters.Length; ++i)
         {
@@ -504,15 +504,17 @@ public static class ToLuaMenu
                 {
                     //提示Log必须一行处理
                     Debug.LogError("RemoveLog Error: \""+ filters[i] + "\" Must be completed in one line ! filepath: " + sourcePath + " Line: " + line.ToString());
+                    return true; //这种情况下不能注销，否则程序不能正常运行
                 }
                 else
                 {
-                    temp = temp.Replace(filters[i], " --"+ filters[i]);
+                    //temp = temp.Replace(filters[i], " --"+ filters[i]);
+                    //处理成跳过就行，不必执行 Replace 操作
+                    return false;
                 }
             }
         }
-
-       
+        return true;
     }
 
     static public void RemoveLog(ref string sourcePath)
@@ -528,7 +530,7 @@ public static class ToLuaMenu
         int line = 0;
         bool ExecStart = false;
         //要注释的关键字
-        string[] filters = { " log(", " log (", "UnitTest.Exec_now(", "UnitTest.Exec_now (" };
+        string[] filters = { "ct.log(", "ct.log (", "UnitTest.Exec_now(", "UnitTest.Exec_now (" };
 
         while (true)
         {
@@ -551,7 +553,10 @@ public static class ToLuaMenu
             if (ExecStart) //直接忽略测试用例区相关代码
                 continue;
             
-            CommentLineIfMatch(ref temp, ref sourcePath, ref line, ref filters);
+            if(CommentLineIfMatch(ref temp, ref sourcePath, ref line, ref filters) == false)
+            {
+                continue; //如果匹配，不添加到生成代码中
+            }
 
             if (!String.IsNullOrEmpty(newCode))
                 newCode = String.Concat(newCode, "\r\n", temp);

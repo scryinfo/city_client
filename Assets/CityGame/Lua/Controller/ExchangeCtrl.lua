@@ -308,7 +308,7 @@ end
 
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
-    --log("cycle_w9_exchange01", "排序啦啦啦")
+    --ct.log("cycle_w9_exchange01", "排序啦啦啦")
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
         ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
         ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)

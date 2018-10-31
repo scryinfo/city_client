@@ -26,7 +26,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
 end
 --删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
+    ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
     go.manager:_deleteGoods(go)
 end
 function ShelfGoodsItem:OnClick_detailsBtn()

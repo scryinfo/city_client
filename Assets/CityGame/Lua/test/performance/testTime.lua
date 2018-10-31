@@ -10,7 +10,7 @@
 --
 --  local endTime = os.clock()
 --
---  log("performance", "[",title,"] ",endTime - startTime)
+--  ct.log("performance", "[",title,"] ",endTime - startTime)
 --
 --end
 
@@ -22,7 +22,7 @@ function timeTestfun(testGroupId, fname, f)
     local startTime = os.clock()
     f()
     local endTime = os.clock()
-    log("performance", "[",fname,"] ",endTime - startTime)
+    ct.log("performance", "[",fname,"] ",endTime - startTime)
 end
 
 local testfun = timeTestfun

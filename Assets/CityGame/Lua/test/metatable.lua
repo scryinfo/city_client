@@ -40,12 +40,12 @@ local child = {
 
 local returnTb = setmetatable(child, parent) --setmetatable 返回值是传入的参数中第一个表
 
-log("[metatable] setmetatable child"..tostring(child))
-log("[metatable] setmetatable parent"..tostring(parent))
-log("[metatable] setmetatable returnTb"..tostring(returnTb))
+ct.log("[metatable] setmetatable child"..tostring(child))
+ct.log("[metatable] setmetatable parent"..tostring(parent))
+ct.log("[metatable] setmetatable returnTb"..tostring(returnTb))
 
-log("[metatable] __index test: child.house"..tostring(child.house))
-log("[metatable] __index test: child.wife"..tostring(child.wife))
+ct.log("[metatable] __index test: child.house"..tostring(child.house))
+ct.log("[metatable] __index test: child.wife"..tostring(child.wife))
 
 parent.__newindex = function ( t, k ,v )  --赋值操作，如果当前表中没有对应key，那么找原表中对应的__newindex指向的方法或者表进行赋值操作
     -- t[k] = v
@@ -60,16 +60,16 @@ UnitTest.Exec("abel_w4", "test_metatable__newindex",  function ()
     child.house = 3
     child.wife = 4
 
-    log('abel_w4','[test__newindex] parent.__newindex not nil, child.house',tostring(child.house))
-    log('abel_w4','[test__newindex] parent.__newindex not nil, child.wife', tostring(child.wife))
+    ct.log('abel_w4','[test__newindex] parent.__newindex not nil, child.house',tostring(child.house))
+    ct.log('abel_w4','[test__newindex] parent.__newindex not nil, child.wife', tostring(child.wife))
 
     parent.__index = nil
 
     child.house = 5
     child.wife = 6
     --assert(child.house,"[metatable] __newindex test: child.house: nil")
-    log('abel_w4',"[test__newindex] __newindex test: child.house: ".. tostring(child.house))
-    log('abel_w4',"[test__newindex] __newindex test: child.wife: "..tostring(child.wife))
+    ct.log('abel_w4',"[test__newindex] __newindex test: child.house: ".. tostring(child.house))
+    ct.log('abel_w4',"[test__newindex] __newindex test: child.wife: "..tostring(child.wife))
 
 end)
 
@@ -83,10 +83,10 @@ function Parent:new()
 end
 
 function Parent:Wife( )
-    log('abel_w4',"mother live in the "..self.house )
+    ct.log('abel_w4',"mother live in the "..self.house )
 end
 function Parent:Position()
-    log('abel_w4',"Parent live in the "..self.house)
+    ct.log('abel_w4',"Parent live in the "..self.house)
     self:Wife()
 end
 parent = Parent:new()
@@ -97,7 +97,7 @@ parent:Wife()
 Child = Parent:new()
 function Child:Position()
     local ChildHouse = self.house
-    log('abel_w4',"child live in the "..ChildHouse)
+    ct.log('abel_w4',"child live in the "..ChildHouse)
     self:Wife()
 end
 
@@ -105,7 +105,7 @@ end
 Child1 = Parent:new()
 function Child1:Position()
     local ChildHouse = self.house
-    log('abel_w4',"Child1 live in the "..ChildHouse)
+    ct.log('abel_w4',"Child1 live in the "..ChildHouse)
     self:Wife()
 end
 
@@ -132,17 +132,17 @@ UnitTest.Exec("abel_w4", "test_metatable__index",  function ()
 
     -- test2.__index = test1  等价于:
     test2.__index = function(testTable , key)
-        log("abel_w4",testTable)
-        log("abel_w4",test3)
-        log("abel_w4",key)
-        log("abel_w4",test1[key])
+        ct.log("abel_w4",testTable)
+        ct.log("abel_w4",test3)
+        ct.log("abel_w4",key)
+        ct.log("abel_w4",test1[key])
         return test1[key]
     end
     setmetatable(test3 , test2)
 
-    log("abel_w4","test3.param1: "..tostring(test3.param1))
-    log("abel_w4","test3.param2: "..tostring(test3.param2))
-    log("abel_w4","test3.param3: "..tostring(test3.param3))
+    ct.log("abel_w4","test3.param1: "..tostring(test3.param1))
+    ct.log("abel_w4","test3.param2: "..tostring(test3.param2))
+    ct.log("abel_w4","test3.param3: "..tostring(test3.param3))
 
     -- 这里的__index赋值就相当于  test2.__index = test1
 

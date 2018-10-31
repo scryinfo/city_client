@@ -24,7 +24,7 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
     --具体字体大小是否从数据库读取？
     self.rentalValueText.text = self:_getPriceString(rentalData.rent, 30, 24).."/D"
 
-    --log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
+    --ct.log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
 
     --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
     --    clickOpenFunc(mgrTable, self.toggleData)

@@ -259,19 +259,19 @@ function Parser:error(msg)
 end
 
 function Parser:addpath(path)
-   log("abel_w7_pkg","[Parser:addpath] ")
+   ct.log("abel_w7_pkg","[Parser:addpath] ")
    self.paths[#self.paths+1] = path
 end
 
 function Parser:parsefile(name)
-   log("abel_w7_pkg","[protoc.Parser:parsefile] ")
+   ct.log("abel_w7_pkg","[protoc.Parser:parsefile] ")
    local info = self.loaded[name]
    if info then return info end
    local errors = {}
    for _, path in ipairs(self.paths) do
       local fn = path ~= "" and path.."/"..name or name
       local fh, err = io.open(fn)
-      log("abel_w7_pkg","[protoc.Parser:parsefile] io.open fn =", fn,"err: ",err)
+      ct.log("abel_w7_pkg","[protoc.Parser:parsefile] io.open fn =", fn,"err: ",err)
 
       if fh then
          local content = fh:read "*a"
@@ -1045,7 +1045,7 @@ function Parser:compile(s, name)
 end
 
 function Parser:compilefile(fn)
-   log("abel_w7_pkg","[Parser:compilefile] ")
+   ct.log("abel_w7_pkg","[Parser:compilefile] ")
    local set = do_compile(self, self.parsefile, self, fn)
    return assert(pb.encode('.google.protobuf.FileDescriptorSet', set))
 end
@@ -1057,7 +1057,7 @@ function Parser:load(s, name)
 end
 
 function Parser:loadfile(fn)
-   log("abel_w7_pkg","[Parser:loadfile] ")
+   ct.log("abel_w7_pkg","[Parser:loadfile] ")
    local ret, pos = pb.load(self:compilefile(fn))
    if ret then return ret, pos end
    error("load failed at offset "..pos)

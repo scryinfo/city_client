@@ -42,7 +42,7 @@ function InputDialogPageCtrl:_getComponent(go)
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
     self.rentInput.onValueChanged:AddListener(function ()
-        log("cycle_w6_houseAndGround", "----")
+        ct.log("cycle_w6_houseAndGround", "----")
     end)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot");
@@ -106,6 +106,6 @@ function InputDialogPageCtrl:_onClickConfim(table)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(table)
-    log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
+    ct.log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
     table:Hide();
 end

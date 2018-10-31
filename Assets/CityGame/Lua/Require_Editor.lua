@@ -19,11 +19,11 @@ if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么�
 
     function UnitTest.Exec_now(unitGroupId, event,...) return end
     function UnitTest.Exec(unitGroupId, funcName, func) return end
-    log = function(logid,s,...) return end
+    ct.log = function(logid,s,...) return end
 
     AutoRequire.getInstance():addCode("function UnitTest.Exec_now(unitGroupId, event,...) return end")
     AutoRequire.getInstance():addCode("function UnitTest.Exec(unitGroupId, funcName, func) return end")
-    AutoRequire.getInstance():addCode("log = function(logid,s,...) return end")
+    AutoRequire.getInstance():addCode("ct.log = function(logid,s,...) return end")
 else
     --单元测试
     AutoRequire.getInstance():require("test/testFrameWork")

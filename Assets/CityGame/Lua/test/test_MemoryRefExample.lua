@@ -11,14 +11,14 @@ local mri = MemoryRefInfo
 
 UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
 
-    log("abel_w10_MemRef_all","[test_MemRef_all]  balabalabalabala...............")
+    ct.log("abel_w10_MemRef_all","[test_MemRef_all]  balabalabalabala...............")
     local getReffun = function()
 
         --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1")
-        log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1")
+        ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1")
         -- 打印当前 Lua 虚拟机的所有内存引用快照到文件(或者某个对象的所有引用信息快照)到本地文件。
         UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1",_G.Author) --方便测试，先只看 _G.Author
-        log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1 finished")
+        ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1 finished")
         -- strSavePath - 快照保存路径，不包括文件名。
         -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
         -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
@@ -52,16 +52,16 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
             }
             _G.Author = author
             --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2")
-            log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2")
+            ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2")
             UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2",_G.Author) --方便测试，先只看 _G.Author
-            log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2 finished")
+            ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2 finished")
             return author
         end
         g_testValue = reffun()
         --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3")
-        log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3")
+        ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3")
         UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3",_G.Author) --方便测试，先只看 _G.Author
-        log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3 finished")
+        ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3 finished")
     end
 
     --获取内存中的引用数据
@@ -105,7 +105,7 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
 end)
 
 UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
-    log("abel_w10_MemRef_table","[test_MemRef_table]  balabalabalabala...............")
+    ct.log("abel_w10_MemRef_table","[test_MemRef_table]  balabalabalabala...............")
     UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "Author_1",_G.Author)
     local author_2 =
     {

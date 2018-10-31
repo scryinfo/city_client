@@ -51,7 +51,7 @@ function LineChartRateItem:initialize(materialData, clickOpenFunc, viewRect, mai
 
     --UIPage:ShowPage(LineChartCtrl)
 
-    log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
+    ct.log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
 
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)

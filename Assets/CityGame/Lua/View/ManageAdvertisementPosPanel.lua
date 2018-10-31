@@ -22,16 +22,19 @@ function ManageAdvertisementPosPanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
-
+      ---dasdas
     this.backBtn = transform:Find("topRoot/backBtn");--返回按钮
     this.infoBtn = transform:Find("topRoot/infoBtn");--信息按钮
-
+    this.confirmBtn=transform:Find("rightRoot/choose/ok")
     this.goodsScroll=transform:Find("rightRoot/choose/goodsScroll View");
     this.buildingScroll=transform:Find("rightRoot/choose/buildingScroll View");
+    this.goodsBtn=transform:Find("rightRoot/choose/head/Button")
+    this.buildingBtn=transform:Find("rightRoot/choose/head/Button (1)")
+
 
     this.addCon=transform:Find("leftRoot/Add/Scroll View/Viewport/Content")
     this.goodsCon=transform:Find("rightRoot/choose/goodsScroll View/Viewport/Content")
-    this.buildingCon=transform:Find("rightRoot/choose/buildingScroll View /Viewport/Content")
+    this.buildingCon=transform:Find("rightRoot/choose/buildingScroll View/Viewport/Content")
 --    排序
     this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
     this.nowText = transform:Find("topRoot/Sorting/nowText"):GetComponent("Text");

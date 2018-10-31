@@ -28,7 +28,17 @@ function BuildingItem:OnClick_Add(go)
     if (not  go.manager.transform)then
         return
     end
-    self.transform:SetParent(go.manager.transform);
-    self.transform.localPosition=Vector3.zero
+    ---创建映射广告
+    local item=go.manager:c_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
+    ---给映射广告赋值数据
+    local prefabData={}
+    MapAdvertisementItem:new(prefabData,item,go._luabehaviour,go.manager,go.manager.index)
+    ---选中广告隐藏
+    self:SetActive(false);
+    ---管理器表添加
+    go.manager.addedItemList[go.manager.index]=item
+    go.manager.selectItemList[go.manager.index]=self
+    ---尾部处理
+    go.manager.index=go.manager.index+1
     go.manager.transform=nil
 end

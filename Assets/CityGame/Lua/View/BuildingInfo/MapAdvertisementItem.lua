@@ -10,21 +10,29 @@ local class = require 'Framework/class'
 MapAdvertisementItem = class('MapAdvertisementItem')
 
 ---初始化方法   数据（读配置表）
-function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
+function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,index)
 
     self.prefabData = prefabData;
     self.prefab = prefab;
     self._luabehaviour = inluabehaviour
+    self.manger=mgr
+    self.index=index
 
-    self.addBtn=self.prefab.transform:Find("Image")--添加按
+    self.deleteBtn=self.prefab.transform:Find("btndelete")--删除按钮
 
-    self._luabehaviour:AddClick(self.addBtn.gameObject, self.OnClick_Add, self);
+    self._luabehaviour:AddClick(self.deleteBtn.gameObject, self.OnClick_Delete, self);
 
 
 end
 ---添加
-function MapAdvertisementItem:OnClick_Add(go)
-    go.manager.transform=go.parent
+function MapAdvertisementItem:OnClick_Delete(go)
+    ---消除自身
+    destroy(self.transform.parent.gameObject)
+    ---选中广告还原
+    go.manger.selectItemList[go.index]:SetActive(true);
+    ---表数据清除
+    go.manger.addedItemList[go.index]=nil
+    go.manger.selectItemList[go.index]=nil
 end
 
 
@@ -54,3 +62,4 @@ end
 
 
 
+--logDebug("abel_w9_autoRequire","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")

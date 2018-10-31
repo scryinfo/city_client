@@ -19,11 +19,12 @@ ItemCreatDeleteMgr.goodsPreb_Path="View/GoodsItem/goodsItem"
 ItemCreatDeleteMgr.buildingPreb_Path="View/GoodsItem/buildingItem"
 
 function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
-    if not self.addedItemList then
+    if not  self.addedItemList then
         self.addedItemList={}
         self.selectItemList={}
-        self.mapItemList={}
-    end
+        self.index=0
+        --Event.AddListener("c_creatGoods",self.c_creatGoods,self)
+   end
 
     self.behaviour = luabehaviour
     self.buildingData=creatData
@@ -34,7 +35,6 @@ function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
         self:_creatManageItem(creatData.count);
     end
 end
-
 
 function ItemCreatDeleteMgr:_creatAdvertisementItem(count)
     if(not self.AdvertisementItemList ) then
@@ -47,7 +47,7 @@ function ItemCreatDeleteMgr:_creatAdvertisementItem(count)
         prefabData.count=i
         prefabData.owner=Buildingowner.master
         ---创建预制
-        local itemclone=self:_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
+        local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
         self.AdvertisementItemList[i]=itemclone
         ---给预制文本赋值
          AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,i)
@@ -65,7 +65,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         local prefabData={}
         prefabData.count=i
         ---创建预制
-        local itemclone=self:_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
+        local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
                    self.addItemList[i]=itemclone
          ---给预制赋值数据
         AddItem:new(prefabData,itemclone,self.behaviour,self,i)
@@ -82,7 +82,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
         local  goodsPrebData={}
         goodsPrebData.count=i
         ---创建预制
-        local goods=self:_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
+        local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
         self.goodsItemList[i]=goods
         --- ---给预制赋值数据
         GoodsItem:new(goodsPrebData,goods,self.behaviour,self,i)
@@ -99,7 +99,7 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
          local  buildingPrebData={}
          buildingPrebData.count=i
        ---创建预制
-         local buildings=self:_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
+         local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
           self.buildItemList[i]=buildings
          --- ---给预制赋值数据
        BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,i)
@@ -107,12 +107,13 @@ function ItemCreatDeleteMgr:_creatManageItem(count)
 end
 
 ---生成预制
-function ItemCreatDeleteMgr:_creatGoods(path,parent)
+function ItemCreatDeleteMgr:c_creatGoods(path,parent)
     local prefab = UnityEngine.Resources.Load(path);
     local go = UnityEngine.GameObject.Instantiate(prefab);
     local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-     rect.transform.localScale = Vector3.one;
+    go.transform:SetParent(parent);--.transform
+    rect.transform.localScale = Vector3.one;
+    rect.transform.localPosition=Vector3.zero
     return go
 end
 

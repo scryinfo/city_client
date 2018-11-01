@@ -153,8 +153,8 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
-	Municipal=3,--市镇设施
-	MunicipalManage=4,--市政管理
+	Municipal=7,--市镇设施
+	MunicipalManage=8,--市政管理
 }
 --建筑所属
 Buildingowner=

@@ -29,7 +29,7 @@ function SkillPageCtrl:Refresh()
 end
 
 function SkillPageCtrl:OnClick_confim()
-    log("abel_w6_UIFrame", "SkillPageCtrl:OnClick_confim")
+    ct.log("abel_w6_UIFrame", "SkillPageCtrl:OnClick_confim")
     self.Hide();
 end
 

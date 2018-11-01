@@ -26,7 +26,7 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
 
-    --log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
+    --ct.log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
 
     --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
     --    clickOpenFunc(mgrTable, self.toggleData)

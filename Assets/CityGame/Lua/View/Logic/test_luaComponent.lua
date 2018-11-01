@@ -22,10 +22,10 @@ function testLuaCom:Awake(gameObject)
     local btn_back = transform:Find("btn_back").gameObject;
 
     topBar:AddClick(btn_notice, function()
-        log("abel_w9_AddLuaComponent","[testLuaCom:Awake]  btn_notice clicked")
+        ct.log("abel_w9_AddLuaComponent","[testLuaCom:Awake]  btn_notice clicked")
     end, self);
     topBar:AddClick(btn_back, function()
-        log("abel_w9_AddLuaComponent","[testLuaCom:Awake]  btn_back clicked")
+        ct.log("abel_w9_AddLuaComponent","[testLuaCom:Awake]  btn_back clicked")
     end, self);
 end
 

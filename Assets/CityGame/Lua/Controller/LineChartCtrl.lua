@@ -17,12 +17,12 @@ function LineChartCtrl:bundleName()
 end
 
 function LineChartCtrl:Awake(go)
-    log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
+    ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
     self.gameObject = go
 end
 
 function LineChartCtrl:Refresh()
-    log("abel_w7_LineChart","[LineChartCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+    ct.log("abel_w7_LineChart","[LineChartCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 end
 
 --启动事件--
@@ -68,8 +68,12 @@ function LineChartCtrl:Close()
     destroy(self.gameObject);
 end
 
+UnitTest.TestBlockStart()---------------------------------------------------------
 
 UnitTest.Exec("abel_w7_LineChart", "test_LineChart",  function ()
     UIPage:ShowPage(LineChartCtrl)
     local xxx = 0
 end )
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------
+

@@ -17,16 +17,16 @@
 	2、 定义测试用例
 		示例:
 		UnitTest.Exec("abel_w4", "test_pb11111",  function ()
-			log("abel_w4","[test_pb11111]  测试完毕")
+			ct.log("abel_w4","[test_pb11111]  测试完毕")
 		end)
 		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
 		* test_pb11111 是测试用例函数的名字
 		* function 后面是测试用例的函数体
 3、 在非单元测试的代码中使用测试分组
     1、 在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
-	2、 我们项目的日志统一使用 log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
+	2、 我们项目的日志统一使用 ct.log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
 		示例：
-			log("abel_w4","[test_pb11111]  测试完毕")
+			ct.log("abel_w4","[test_pb11111]  测试完毕")
 			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
 三、 说明：
 	1、 测试用例的定义实际调用的是这个方法：
@@ -41,27 +41,120 @@
 			2、 要求全局唯一
 		3、 func 测试用例的方法实现
 ]]--
+local ProFi = require ('test/testFrameWork/memory/ProFi')
+local mri = MemoryRefInfo
+ct.mkMemoryProfile()
 UnitTest = {}
+
+UnitTest.startGroup = {}
+UnitTest.endGroup = {}
+
+function UnitTest.TestBlockStart()
+    --local info = debug.getinfo(1) --当前栈区
+    local info = debug.getinfo(2) --方法被调用的地方所在的栈区
+    assert(UnitTest.startGroup[info.short_src] == nil, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    UnitTest.startGroup[info.short_src]=1
+end
+
+function UnitTest.TestBlockEnd()
+    local info = debug.getinfo(2)
+    assert(UnitTest.startGroup[info.short_src] == 1, "注意：未发现对应的 ExecStart")
+    assert(UnitTest.endGroup[info.short_src] ~= 1, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    UnitTest.endGroup[info.short_src]=1
+end
+
+function UnitTest.CheckValidExec()
+    local info = debug.getinfo(3)
+    return UnitTest.startGroup[info.short_src] ~= nil and UnitTest.endGroup[info.short_src] == nil
+end
+
 function UnitTest.Exec(unitGroupId, funcName, func)
-    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return
+    assert(UnitTest.CheckValidExec(), "测试用例必须位于测试区中，即: TestBlockStart之后，TestBlockEnd之前 ")
+    if TestGroup.get_TestGroupId(unitGroupId) == nil then
+    return
     end
     addToTestGropu(funcName,unitGroupId)
     _G[funcName] = func
-end
+    end
 
+--CPU使用分析， 只能在 UnitTest.Exec 内部使用
 function UnitTest.PerformanceTest(groupid, info,func)
-    log(groupid..info)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    --ct.log(groupid,info)
     local startTime = os.clock()
     func(groupid)
     local endTime = os.clock()
-    log(groupid, info, "执行时间: ",endTime - startTime)
+    local outtime = endTime - startTime
+    ct.log(groupid, info, "执行时间: ", outtime)
+    return outtime
 end
---使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
-function UnitTest.Exec_now(unitGroupId, event,...)
-    if TestGroup.get_TestGroupId(unitGroupId) == nil  then
-        return {}
+
+--内存用量分析, 生成 func 执行前后的内存用量到文件夹 MemoryProfile 中
+function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    ct.log(groupid, funcName)
+    ProFi:reset()
+    collectgarbage("collect")
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_0_before.txt' )
+    collectgarbage("collect")
+    ProFi:start()
+    func(groupid)
+    ProFi:stop()
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_1_after.txt' )
+    ProFi:reset()
+    collectgarbage("collect")
+    ProFi:checkMemory( 0, funcName..'-------------' )
+    ProFi:writeReport( funcName..'_2_finished.txt' )
+end
+
+--文件命名约定
+function UnitTest.GetDumpAllFileName(groupid, filename)
+    return "["..groupid.."]".."_DumpAll_"..filename
+end
+
+function UnitTest.GetDumpOneFileName(groupid, filename)
+    return "["..groupid.."]".."_DumpOne_"..filename
+end
+
+function UnitTest.GetValidPath(groupid, filename)
+    return UnitTest.GetDumpAllFileName(groupid, filename)..".txt"
+end
+
+--全局内存引用分析
+function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    local root = nil
+    if rootObj ~= nil then
+        root  = rootObj
     end
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshot(ct.getMemoryProfile().."/", UnitTest.GetDumpAllFileName(groupid,fileName), -1, tostring(root), root)
+end
+
+--指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
+function UnitTest.MemoryReferenceOne(groupid, markid,object)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    collectgarbage("collect")
+    mri.m_cMethods.DumpMemorySnapshotSingleObject(ct.getMemoryProfile().."/", UnitTest.GetDumpOneFileName(groupid,markid), -1, objectName, object)
+end
+
+--比较两个文件的引用信息差异
+function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cMethods.DumpMemorySnapshotComparedFile(ct.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
+end
+
+--在指定文件中过滤特定对象的引用统计信息
+function UnitTest.MemoryRefResaultFiltered(groupid, strFilePath, strFilter, bIncludeFilter)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
+    mri.m_cBases.OutputFilteredResult(UnitTest.GetDumpAllFileName(groupid,strFilePath), strFilter, bIncludeFilter, true)
+end
+
+--使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
+function UnitTest.Exec_now(groupid, event,...)
+    if TestGroup.get_TestGroupId(groupid) == nil  then return end
     Event.Brocast(event,...);
 end
 

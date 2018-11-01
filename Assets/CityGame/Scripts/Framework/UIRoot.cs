@@ -137,6 +137,10 @@ namespace City{
             return m_Instance.root;
         }
 
+        public static Camera getUiCamera()
+        {
+            return m_Instance.uiCamera;
+        }
         public static Transform getNormalRoot()
         {
             return m_Instance.normalRoot;

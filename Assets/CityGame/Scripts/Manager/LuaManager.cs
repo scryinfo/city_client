@@ -15,6 +15,7 @@ namespace LuaFramework {
         void Awake() {
             loader = new LuaLoader();
             lua = new LuaState();
+            Debug.Log("LuaManager:Awake new LuaState !!!");
             LuaComponent.s_luaState = lua;
             this.OpenLibs();
             lua.LuaSetTop(0);
@@ -24,7 +25,35 @@ namespace LuaFramework {
             this.CustomBind(lua);
             LuaCoroutine.Register(lua, this);            
         }
+        void setLuaBundleMode(bool bundle) {
+            loader.beZip = bundle;
+        }
 
+        public static bool generate_RequireRT()
+        {
+            AppFacade.Instance.RemoveManager(ManagerName.Lua);
+            AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);            
+            LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
+            if(luaMgr == null)
+            {
+                return false;
+            }
+
+            luaMgr.Awake();
+            luaMgr.setLuaBundleMode(false);
+
+            luaMgr.InitStart();
+
+            luaMgr.DoFile("Require_Editor");         //加载 Require_Editor
+            LuaFunction Genfun = luaMgr.lua.GetFunction("Genfun");
+            Genfun.Call();
+            Genfun.Dispose();
+            Genfun = null;
+            luaMgr = null;
+            AppFacade.Instance.RemoveManager(ManagerName.Lua); //不能执行这个，否则会出问题            
+            return true;
+            // return  Util.CallMethod("Require_Editor", "Genfun");     //执行 Require_RunTime 生成            
+        }
         public void CustomBind(LuaState L) {
             L.BeginModule(null);
             L.BeginModule("CityLuaUtilExt");
@@ -146,6 +175,12 @@ namespace LuaFramework {
         /// 初始化Lua代码加载路径
         /// </summary>
         void InitLuaPath() {
+            Debug.Log("LuaManager:InitLuaPath Invoked !!!");
+            if(lua == null)
+            {
+                Debug.Log("LuaManager:InitLuaPath lua == null !!!");
+            }
+
             if (AppConst.DebugMode) {
                 string rootPath = AppConst.FrameworkRoot;
                 lua.AddSearchPath(rootPath + "/Lua");
@@ -183,6 +218,8 @@ namespace LuaFramework {
                 loader.AddBundle("lua/lua_Framework_ui.unity3d");
                 loader.AddBundle("lua/lua_Framework_pbl.unity3d");
                 loader.AddBundle("lua/lua_test.unity3d");
+                loader.AddBundle("lua/lua_test_group.unity3d");
+                loader.AddBundle("lua/lua_test_testmain.unity3d");
                 loader.AddBundle("lua/lua_test_pbl.unity3d");
                 loader.AddBundle("lua/lua_test_performance.unity3d");
                 loader.AddBundle("lua/lua_test_testframework.unity3d");

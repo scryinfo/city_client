@@ -3,13 +3,13 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/30 16:30
 ---只含有按钮的简单弹框
-
------
-
-
 BtnDialogPageCtrl = class('BtnDialogPageCtrl',UIPage)
+<<<<<<< HEAD
 UIPage:ResgisterOpen(BtnDialogPageCtrl) --注册打开的方法
 
+=======
+UIPage:ResgisterOpen(BtnDialogPageCtrl)
+>>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223
 
 function BtnDialogPageCtrl:initialize()
     UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
@@ -19,30 +19,45 @@ function BtnDialogPageCtrl:bundleName()
     return "Common/BtnDialogPage"
 end
 
-function BtnDialogPageCtrl:OnCreate(obj )
+function BtnDialogPageCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
 
 function BtnDialogPageCtrl:Awake(go)
-    self.gameObject = go
     self:_getComponent(go)
     self:_initData()
 
+<<<<<<< HEAD
     local dialog = self.gameObject:GetComponent('LuaBehaviour')
     dialog:AddClick(self.closeBtn, self._onClickConfim, self);
     dialog:AddClick(self.xBtn,self._onXBtn,self);
+=======
+    self.luaBehaviour = go:GetComponent('LuaBehaviour')
+    --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
+    --self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
+>>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223
 end
 
 function BtnDialogPageCtrl:Refresh()
-
+    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
 end
+
 ---寻找组件
 function BtnDialogPageCtrl:_getComponent(go)
+<<<<<<< HEAD
     self.titleText = go.transform:Find("root/titleText").gameObject:GetComponent("Text");
     self.mainContentText = go.transform:Find("root/mainContentText").gameObject:GetComponent("Text");
     self.tipText = go.transform:Find("root/tipText").gameObject:GetComponent("Text");
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject;
     self.xBtn = go.transform:Find("root/XBtn").gameObject;
+=======
+    self.titleText = go.transform:Find("root/titleText"):GetComponent("Text");
+    self.mainContentText = go.transform:Find("root/mainContentText"):GetComponent("Text");
+    self.tipText = go.transform:Find("root/tipContentText"):GetComponent("Text");
+    self.closeBtn = go.transform:Find("root/closeBtn");
+    self.confimBtn = go.transform:Find("root/confimBtn");
+>>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223
 end
 ---初始化
 function BtnDialogPageCtrl:_initData()
@@ -51,13 +66,18 @@ function BtnDialogPageCtrl:_initData()
     self.tipText.text = self.m_data.tipInfo;
 end
 
-function BtnDialogPageCtrl:_onClickConfim(obj)
-    log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
-    if obj.m_data.btnCallBack then
-        obj.m_data.btnCallBack()
+function BtnDialogPageCtrl:_onClickConfim(ins)
+    ct.log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
+    if ins.m_data.btnCallBack then
+        ins.m_data.btnCallBack()
+        ins.m_data.btnCallBack = nil
     end
-
-    obj:Hide();
+    ins:_onClickClose(ins);
+end
+function BtnDialogPageCtrl:_onClickClose(ins)
+    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins);
+    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins);
+    ins:Hide()
 end
 
 function BtnDialogPageCtrl:_onXBtn(obj)

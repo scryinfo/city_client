@@ -3,24 +3,48 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/18 16:03
 ---
-local ProFi = require ('test/testFrameWork/memory/ProFi')
+UnitTest.TestBlockStart()---------------------------------------------------------
 
 local classTest = class('classTest')
-local FrameTimer = FrameTimer
+function classTest:initialize()
+    self._data = {}
+    for i = 1, 100000 do
+        self._data[#self._data] = i
+    end
+end
+
 UnitTest.Exec("abel_w9_memory_usage", "test_w9_memory_usage",  function ()
-    UnitTest.PerformanceTest("abel_w9_memory_usage","[内存用量分析测试]", function()
-        ProFi:start()
+    UnitTest.MemoryConsumptionTest("abel_w9_memory_usage","test_w9_memory_usage",function()
+        local memory_usage = {}
         for i = 1, 10000 do
-            local pIns = classTest:new()
+            memory_usage[#memory_usage +1] = classTest:new()
         end
-        local xxx = 0
-        timer = Timer.New(function()
-            log("abel_w9_memory_usage","test_w9_memory_usage test")
-            ProFi:stop()
-            ProFi:checkMemory( 0.2, 'checkMemory-------------' )
-            ProFi:writeReport( 'MyProfilingReport.txt' )
-        end, 1, 1)
-        timer:Start()
     end)
 end)
 
+UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  function ()
+    local loadtb ={}
+    local Instantiatetb = {}
+    local testCount = 1000
+    local path = 'View/TopbarPanel'
+    local prefab = UnityEngine.Resources.Load(path);
+    UnitTest.MemoryConsumptionTest("abel_w9_mem_Load_Instantiate","test_w9_mem_Load",function()
+        for i = 1, testCount do
+            loadtb[#loadtb+1] = UnityEngine.Resources.Load(path);
+        end
+    end)
+    loadtb = nil
+    UnitTest.MemoryConsumptionTest("abel_w9_mem_Load_Instantiate","test_w9_memory_Instantiate",function()
+        for i = 1, testCount do
+            Instantiatetb[#Instantiatetb+1] = UnityEngine.GameObject.Instantiate(prefab);
+        end
+    end)
+    --[[
+    测试结果：
+    1、 UnityEngine.Resources.Load 只要内存中有加载过的资源，Load方法不会重复加载该资源，而是把内存中的实例返回
+    2、 UnityEngine.GameObject.Instantiate 实例化prefab资源，从原prefab资源拷贝一份数据到内存
+    3、 unity 本身应该是有针对 prefab 资源的内存池机制，加载单独的资源，内存没有变化（没有超过预分配的内存）
+    ]]--
+end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

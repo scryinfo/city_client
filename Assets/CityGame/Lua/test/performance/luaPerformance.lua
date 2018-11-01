@@ -3,6 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/18 18:22
 ---
+
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 testtime = require 'test/performance/testTime'
 
 --[[
@@ -212,3 +215,63 @@ UnitTest.Exec("abel_w6_performance", "test_UnitTest",  function ()
         end
     end)
 end)
+
+UnitTest.Exec("abel_w11_Comments", "test_w11_Comments",  function ()
+    ct.log("abel_w11_Comments","[test_w11_Comments]")
+    local funNil = nil
+    --funNil("testetasdtet")
+    local xxxx = 0
+    --local testfun =  function(str)
+    --    return str
+    --end
+    --local logExt = function(infun, ...)
+    --    local xxx = 0
+    --    local str =  "ct.log(\"abel_w11_Comments\",\""..infun(...).."\")"
+    --    local fun = loadstring( str )
+    --    if fun then
+    --        fun()
+    --    end
+    --end
+    --logExt(function()
+    --    if TestGroup.get_TestGroupId("abel_w11_loadstring_log") == nil  then return end
+    --    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
+    --end )
+    --logExt("abel_w11_Comments","[test_w11_Comments] 哈哈哈")
+end)
+
+UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
+    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  ")
+    local count = 1000
+    local  code  = ""
+    local function addlog(msgname)
+        --ct.log("abel_w11_Comments",msgname)
+        code = code.."\n".."ct.log(\"abel_w11_loadstring_log\",\""..msgname.."\")"
+    end
+    addlog("E_C2S_GET_SERVER_LIST")
+    addlog("E_C2S_GET_GAME_ANN")
+    addlog("count = 100000")
+    addlog("addct.log(msgname)")
+
+    --合并log
+    local timeMg = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 合并log", function()
+        local fun = loadstring(code)
+        if fun then
+            for i = 1, count do
+                loadstring(code)()
+            end
+        end
+    end)
+    --独立打印
+    local timeSp = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 单独log", function()
+        for i = 1, count do
+            ct.log("abel_w11_loadstring_log","E_C2S_GET_SERVER_LIST")
+            ct.log("abel_w11_loadstring_log","E_C2S_GET_GAME_ANN")
+            ct.log("abel_w11_loadstring_log","count = 100000")
+            ct.log("abel_w11_loadstring_log","addct.log(msgname)")
+        end
+    end)
+    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  合并log打印时间：",timeMg, "独立打印时间：",timeSp)
+    --结论： 没有什么区别，执行效率非常接近
+end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

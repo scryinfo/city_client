@@ -119,9 +119,9 @@ local function pcall_or_abort(func, ...)
     local result = {pcall(func, ...)}
     if not result[1] then
         -- an error occurred
-        log(result[2]) -- error message
-        log()
-        log(M.USAGE)
+        ct.log(result[2])
+        ct.log()
+        ct.log(M.USAGE)
         os.exit(-1)
     end
     return unpack(result, 2)
@@ -168,7 +168,7 @@ local function sortedNext(state, control)
     -- the keys) used by the iteration, to find the next one quickly.
     local key
 
-    --log("sortedNext: control = "..tostring(control) )
+    --ct.log("sortedNext: control = "..tostring(control) )
     if control == nil then
         -- start of iteration
         state.count = #state.sortedIdx
@@ -300,9 +300,9 @@ local function patternFilter(patterns, expr)
                 -- at least one include pattern specified, a match is required
                 default = false
             end
-            -- log('pattern: ',pattern)
-            -- log('exclude: ',exclude)
-            -- log('default: ',default)
+            -- ct.log('pattern: ',pattern)
+            -- ct.log('exclude: ',exclude)
+            -- ct.log('default: ',default)
 
             if string.find(expr, pattern) then
                 -- set result to false when excluding, true otherwise
@@ -401,32 +401,32 @@ local function stripLuaunitTrace( stackTrace )
         return s:find('[/\\]luaunit%.lua:%d+: ') ~= nil
     end
 
-    -- log( '<<'..stackTrace..'>>' )
+    -- ct.log( '<<'..stackTrace..'>>' )
 
     local t = strsplit( '\n', stackTrace )
-    -- log( prettystr(t) )
+    -- ct.log( prettystr(t) )
 
     local idx = 2
 
     -- remove lines that are still part of luaunit
     while t[idx] and isLuaunitInternalLine( t[idx] ) do
-        -- log('Removing : '..t[idx] )
+        -- ct.log('Removing : '..t[idx] )
         table.remove(t, idx)
     end
 
     -- keep lines until we hit luaunit again
     while t[idx] and (not isLuaunitInternalLine(t[idx])) do
-        -- log('Keeping : '..t[idx] )
+        -- ct.log('Keeping : '..t[idx] )
         idx = idx + 1
     end
 
     -- remove remaining luaunit lines
     while t[idx] do
-        -- log('Removing : '..t[idx] )
+        -- ct.log('Removing : '..t[idx] )
         table.remove(t, idx)
     end
 
-    -- log( prettystr(t) )
+    -- ct.log( prettystr(t) )
     return table.concat( t, '\n')
 
 end
@@ -1849,22 +1849,22 @@ TapOutput.__class__ = 'TapOutput'
         return setmetatable( t, TapOutput_MT)
     end
     function TapOutput:startSuite()
-        log("1.."..self.result.testCount)
-        log('# Started on '..self.result.startDate)
+        ct.log("1.."..self.result.testCount)
+        ct.log('# Started on '..self.result.startDate)
     end
     function TapOutput:startClass(className)
         if className ~= '[TestFunctions]' then
-            log('# Starting class: '..className)
+            ct.log('# Starting class: '..className)
         end
     end
 
     function TapOutput:addStatus( node )
         io.stdout:write("not ok ", self.result.currentTestNumber, "\t", node.testName, "\n")
         if self.verbosity > M.VERBOSITY_LOW then
-           log( prefixString( '#   ', node.msg ) )
+           ct.log( prefixString( '#   ', node.msg ) )
         end
         if self.verbosity > M.VERBOSITY_DEFAULT then
-           log( prefixString( '#   ', node.stackTrace ) )
+           ct.log( prefixString( '#   ', node.stackTrace ) )
         end
     end
 
@@ -1875,7 +1875,7 @@ TapOutput.__class__ = 'TapOutput'
     end
 
     function TapOutput:endSuite()
-        log( '# '..M.LuaUnit.statusLine( self.result ) )
+        ct.log( '# '..M.LuaUnit.statusLine( self.result ) )
         return self.result.notPassedCount
     end
 
@@ -1910,30 +1910,30 @@ JUnitOutput.__class__ = 'JUnitOutput'
             error("Could not open file for writing: "..self.fname)
         end
 
-        log('# XML output to '..self.fname)
-        log('# Started on '..self.result.startDate)
+        ct.log('# XML output to '..self.fname)
+        ct.log('# Started on '..self.result.startDate)
     end
     function JUnitOutput:startClass(className)
         if className ~= '[TestFunctions]' then
-            log('# Starting class: '..className)
+            ct.log('# Starting class: '..className)
         end
     end
     function JUnitOutput:startTest(testName)
-        log('# Starting test: '..testName)
+        ct.log('# Starting test: '..testName)
     end
 
     function JUnitOutput:addStatus( node )
         if node:isFailure() then
-            log( '#   Failure: ' .. prefixString( '#   ', node.msg ):sub(4, nil) )
-            -- log('# ' .. node.stackTrace)
+            ct.log( '#   Failure: ' .. prefixString( '#   ', node.msg ):sub(4, nil) )
+            -- ct.log('# ' .. node.stackTrace)
         elseif node:isError() then
-            log( '#   Error: ' .. prefixString( '#   '  , node.msg ):sub(4, nil) )
-            -- log('# ' .. node.stackTrace)
+            ct.log( '#   Error: ' .. prefixString( '#   '  , node.msg ):sub(4, nil) )
+            -- ct.log('# ' .. node.stackTrace)
         end
     end
 
     function JUnitOutput:endSuite()
-        log( '# '..M.LuaUnit.statusLine(self.result))
+        ct.log( '# '..M.LuaUnit.statusLine(self.result))
 
         -- XML file writing
         self.fd:write('<?xml version="1.0" encoding="UTF-8" ?>\n')
@@ -2085,7 +2085,7 @@ TextOutput.__class__ = 'TextOutput'
 
     function TextOutput:startSuite()
         if self.verbosity > M.VERBOSITY_DEFAULT then
-            log( 'Started on '.. self.result.startDate )
+            ct.log( 'Started on '.. self.result.startDate )
         end
     end
 
@@ -2104,12 +2104,12 @@ TextOutput.__class__ = 'TextOutput'
             end
         else
             if self.verbosity > M.VERBOSITY_DEFAULT then
-                log( node.status )
-                log( node.msg )
+                ct.log( node.status )
+                ct.log( node.msg )
                 --[[
                 -- find out when to do this:
                 if self.verbosity > M.VERBOSITY_DEFAULT then
-                    log( node.stackTrace )
+                    ct.log( node.stackTrace )
                 end
                 ]]
             else
@@ -2120,16 +2120,16 @@ TextOutput.__class__ = 'TextOutput'
     end
 
     function TextOutput:displayOneFailedTest( index, fail )
-        log(index..") "..fail.testName )
-        log( fail.msg )
-        log( fail.stackTrace )
-        --log()
+        ct.log(index.."] "..fail.testName )
+        ct.log( fail.msg )
+        ct.log( fail.stackTrace )
+        --ct.log()
     end
 
     function TextOutput:displayFailedTests()
         if self.result.notPassedCount ~= 0 then
-            log("Failed tests:")
-            log("-------------")
+            ct.log("Failed tests:")
+            ct.log("-------------")
             for i, v in ipairs(self.result.notPassed) do
                 self:displayOneFailedTest(i, v)
             end
@@ -2138,14 +2138,14 @@ TextOutput.__class__ = 'TextOutput'
 
     function TextOutput:endSuite()
         if self.verbosity > M.VERBOSITY_DEFAULT then
-            log("=========================================================")
+            ct.log("=========================================================")
         else
-            --log()
+            --ct.log()
         end
         self:displayFailedTests()
-        log( M.LuaUnit.statusLine( self.result ) )
+        ct.log( M.LuaUnit.statusLine( self.result ) )
         if self.result.notPassedCount == 0 then
-            log('OK')
+            ct.log('OK')
         end
     end
 
@@ -2157,7 +2157,7 @@ TextOutput.__class__ = 'TextOutput'
 ----------------------------------------------------------------
 
 local function nopCallable()
-    --log(42)
+    --ct.log(42)
     return nopCallable
 end
 
@@ -2378,12 +2378,12 @@ end
     end
 
     function M.LuaUnit.help()
-        log(M.USAGE)
+        ct.log(M.USAGE)
         os.exit(0)
     end
 
     function M.LuaUnit.version()
-        log('LuaUnit v'..M.VERSION..' by Philippe Fremy <phil@freehackers.org>')
+        ct.log('LuaUnit v'..M.VERSION..' by Philippe Fremy <phil@freehackers.org>')
         os.exit(0)
     end
 
@@ -2431,7 +2431,7 @@ end
     end
 
     function NodeStatus:isNotPassed()
-        -- log('hasFailure: '..prettystr(self))
+        -- ct.log('hasFailure: '..prettystr(self))
         return self.status ~= NodeStatus.PASS
     end
 
@@ -2575,8 +2575,8 @@ end
 
     function M.LuaUnit:endTest()
         local node = self.result.currentNode
-        -- log( 'endTest() '..prettystr(node))
-        -- log( 'endTest() '..prettystr(node:isNotPassed()))
+        -- ct.log( 'endTest() '..prettystr(node))
+        -- ct.log( 'endTest() '..prettystr(node:isNotPassed()))
         node.duration = os.clock() - node.startTime
         node.startTime = nil
         self.output:endTest( node )
@@ -2845,13 +2845,13 @@ end
         for i,v in ipairs( filteredList ) do
             local name, instance = v[1], v[2]
             if M.LuaUnit.asFunction(instance) then
-                log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
+                ct.log("system","["..name.."]", "开始执行")
                 local startTime = os.clock()
                 self:execOneFunction( nil, name, nil, instance )
                 local endTime = os.clock()
-                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
-                --log("system","["..name.."]", "------------------------------------------------------ ")
+                ct.log("system","["..name.."]", "总执行时间: ",endTime - startTime)
+                --ct.log("system","["..name.."]", "------------------------------------------------------ ")
             else
                 -- expandClasses() should have already taken care of sanitizing the input
                 assert( type(instance) == 'table' )
@@ -2859,13 +2859,13 @@ end
                 assert( className ~= nil )
                 local methodInstance = instance[methodName]
                 assert(methodInstance ~= nil)
-                log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
+                ct.log("system","["..name.."]", "开始执行")
                 local startTime = os.clock()
                 self:execOneFunction( className, methodName, instance, methodInstance )
                 local endTime = os.clock()
-                log("system","["..name.."]", "总执行时间: ",endTime - startTime)
-                --log("system","["..name.."]", "------------------------------------------------------ ")
+                ct.log("system","["..name.."]", "总执行时间: ",endTime - startTime)
+                --ct.log("system","["..name.."]", "------------------------------------------------------ ")
             end
             if self.result.aborted then
                 break -- "--error" or "--failure" option triggered
@@ -2879,7 +2879,7 @@ end
         self:endSuite()
 
         if self.result.aborted then
-            log("LuaUnit ABORTED (as requested by --error or --failure option)")
+            ct.log("LuaUnit ABORTED (as requested by --error or --failure option)")
             os.exit(-2)
         end
     end
@@ -2974,7 +2974,7 @@ end
 
         if options.output then
             if options.output:lower() == 'junit' and options.fname == nil then
-                log('With junit output, a filename must be supplied with -n or --name')
+                ct.log('With junit output, a filename must be supplied with -n or --name')
                 os.exit(-1)
             end
             pcall_or_abort(self.setOutputType, self, options.output)

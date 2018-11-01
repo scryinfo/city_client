@@ -22,7 +22,7 @@ end
 function SkillBox.Add( skill )
 	for i = 1, #this.skills do
 		if this.skills[i].id == skill.id then
-			log("SkillBox::add: " .. skill.id  .. " is exist!")
+			ct.log("SkillBox::add: " .. skill.id  .. " is exist!")
 		end
 	end
 	table.insert(this.skills, skill);

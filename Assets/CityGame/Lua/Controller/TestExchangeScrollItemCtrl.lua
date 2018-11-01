@@ -17,7 +17,7 @@ function TestExchangeScrollItemCtrl:initialize(data)
 
     self.button.onClick:RemoveAllListeners();
     self.button.onClick:AddListener(function ()
-        log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
+        ct.log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
     end)
 
     self:_initData()
@@ -30,5 +30,5 @@ end
 
 --点击
 function TestExchangeScrollItemCtrl:_clickToDoBtn(ins)
-    log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..ins.data.text)
+    ct.log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..ins.data.text)
 end

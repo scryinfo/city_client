@@ -184,7 +184,7 @@ function LoginModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
-        log("[LoginModel.n_OnRoleLogin] succeed!")
+        ct.log("[LoginModel.n_OnRoleLogin] succeed!")
         Event.Brocast("c_GsLoginSuccess");
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
@@ -222,7 +222,7 @@ function LoginModel.n_CreateNewRole(stream)
     --message Role {
     --    required bytes id = 1;
     if stream == nil then
-        log("system", "[LoginModel.n_CreateNewRole] stream = nil")
+        ct.log("system", "[LoginModel.n_CreateNewRole] stream = nil")
         return
     end
 

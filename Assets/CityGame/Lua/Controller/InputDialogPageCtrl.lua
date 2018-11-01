@@ -4,8 +4,12 @@
 --- DateTime: 2018/10/4 14:57
 ---含有input输入框的弹窗
 InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
+<<<<<<< HEAD
 UIPage:ResgisterOpen(InputDialogPageCtrl) --注册打开的方法
 
+=======
+UIPage:ResgisterOpen(InputDialogPageCtrl)
+>>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223
 
 function InputDialogPageCtrl:initialize()
     UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
@@ -43,7 +47,7 @@ function InputDialogPageCtrl:_getComponent(go)
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject;
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField");
     self.rentInput.onValueChanged:AddListener(function ()
-        log("cycle_w6_houseAndGround", "----")
+        ct.log("cycle_w6_houseAndGround", "----")
     end)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot");
@@ -107,6 +111,6 @@ function InputDialogPageCtrl:_onClickConfim(table)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(table)
-    log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
+    ct.log("cycle_w6_houseAndGround", "InputDialogPageCtrl:_onClickClose")
     table:Hide();
 end

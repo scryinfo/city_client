@@ -33,6 +33,10 @@ function TestCortinue()
     coroutine.start(CoFunc)
 end
 
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 UnitTest.Exec("abel_wk9_Coroutine_base", "test_wk9_Coroutine_base",  function ()
     coroutine.start(CoFunc)
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

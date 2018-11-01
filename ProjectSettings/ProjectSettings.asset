@@ -631,9 +631,13 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
+<<<<<<< HEAD
     1: ASYNC_MODE;CLOSE_RES_BUNDELMODE;CLOSE_LUA_BUNDELMODE
+=======
+    1: ASYNC_MODE
+>>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223
     4: ASYNC_MODE
-    7: ASYNC_MODE;CLOSE_LUA_BUNDELMODE;CLOSE_RES_BUNDELMODE
+    7: ASYNC_MODE;LUA_BUNDEL;RES_BUNDEL;LUA_LOG
   platformArchitecture:
     iOS: 0
   scriptingBackend:

@@ -53,6 +53,7 @@ local FORMAT_BANNER 		   = [[
 ###############################################################################################################
 
 ]]
+local file_exists = ct.file_exists
 
 -----------------------
 -- Public Methods:
@@ -113,6 +114,9 @@ end
 	Param: [filename:string:optional] defaults to 'ProFi.txt' if not specified.
 ]]
 function ProFi:writeReport( filename )
+	local path = ""
+	filename = ct.getMemoryProfile() .."/"..filename
+	ct.log("system","[ProFi:writeReport] filename: "..filename)
 	if #self.reports > 0 or #self.memoryReports > 0 then
 		filename = filename or 'ProFi.txt'
 		self:sortReportsWithSortMethod( self.reports, self.sortMethod )
@@ -233,6 +237,11 @@ end
 
 function ProFi:startHooks()
 	debug.sethook( onDebugHook, 'cr', self.hookCount )
+	--[[
+	"c": The hook is called every time Lua calls a function;  当函数被调用的时候触发，且在函数获得参数之前调用;
+    "r": The hook is called every time Lua returns from a function; 当函数返回之前触发hook,且不能在此时获得函数的返回值;
+    "l": The hook is called every time Lua enters a new line of code. 当执行到新的一行代码之前触发hook
+	]]--
 end
 
 function ProFi:stopHooks()

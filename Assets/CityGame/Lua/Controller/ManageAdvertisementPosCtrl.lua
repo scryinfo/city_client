@@ -37,6 +37,7 @@ function ManageAdvertisementPosCtrl:Awake(go)
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    materialBehaviour:AddClick( ManageAdvertisementPosPanel.confirmBtn.gameObject,self.OnClick_confirm,self)
     --排序
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.nameBtn.gameObject,self.OnClick_OnName,self);
@@ -54,7 +55,7 @@ end
 function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
     UIPage.ClosePage();
     for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
-         destroy(v)
+        destroy(v)
     end
     for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
         v:SetActive(true);
@@ -113,9 +114,26 @@ function ManageAdvertisementPosCtrl:OnClick_OnBuild()
     ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(false);
 end
 
+function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
+    local data={}
+    data=ins
+    UIPage:OpenCtrl("ConfirmPopCtrl",data)
+end
+
+function ManageAdvertisementPosCtrl:callback()
 
 
+    UIPage:ClosePage()
+    UIPage:OpenCtrl("AdvertisementPosCtrl")
+    for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
+        destroy(v);
+    end
+    for i, v in pairs(self.ItemCreatDeleteMgr.selectItemList) do
+        v:SetActive(true);
+    end
 
+
+end
 
 
 

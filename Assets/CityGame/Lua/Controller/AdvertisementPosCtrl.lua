@@ -36,6 +36,8 @@ function AdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(AdvertisementPosPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
     materialBehaviour:AddClick(AdvertisementPosPanel.manageBtn.gameObject,self.OnClick_manageBtn,self)
+    materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn.gameObject,self.OnClick_masterConfirm,self)
+    materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn1.gameObject,self.OnClick_otherConfirm,self)
 -------------------------------------------------------------------------------------------------------------------------
     AdvertisementPosPanel.numInp.onValueChanged:AddListener(function (arg)
         if AdvertisementPosPanel.numInp.text==""then
@@ -103,9 +105,16 @@ UIPage:OpenCtrl("ManageAdvertisementPosCtrl")
 end
 
 
+function AdvertisementPosCtrl:OnClick_masterConfirm()
+
+    --主人点击确认按钮
+end
+
+function AdvertisementPosCtrl:OnClick_otherConfirm()
+--他人点击
 
 
-
+end
 
 
 

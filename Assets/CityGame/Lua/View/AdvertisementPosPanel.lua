@@ -35,13 +35,15 @@ function AdvertisementPosPanel.InitPanel()
     this.resizeGO=transform:Find("rightRoot/resize")
     --他人进入
     this.buyGo=transform:Find("rightRoot/Buy")
-    this.numInp=transform:Find("rightRoot/Buy/body/numInput"):GetComponent("InputField");
-    this.numSlider=transform:Find("rightRoot/Buy/body/numSlider"):GetComponent("Slider");
-    this.maxInp=transform:Find("rightRoot/Buy/body/maxInput"):GetComponent("InputField");
-    this.maxSlider=transform:Find("rightRoot/Buy/body/maxSlider"):GetComponent("Slider");
+
+    this.numInp=transform:Find("rightRoot/Buy/body/numInput"):GetComponent("InputField")
+    this.numSlider=transform:Find("rightRoot/Buy/body/numSlider"):GetComponent("Slider")
+    this.maxInp=transform:Find("rightRoot/Buy/body/maxInput"):GetComponent("InputField")
+    this.maxSlider=transform:Find("rightRoot/Buy/body/maxSlider"):GetComponent("Slider")
 end
 --数据初始化
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)
     this.materialData = AdvertisementPosData;
 end
 
+--numSlider

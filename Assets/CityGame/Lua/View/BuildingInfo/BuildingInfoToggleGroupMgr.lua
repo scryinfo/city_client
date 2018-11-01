@@ -276,6 +276,7 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     self.rightData[1] = prodictionLuaItem
 
 end
+--创建市镇设施左右信息
 function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H

@@ -21,7 +21,7 @@ function AdvertisementShowItem:initialize(itemlData, clickOpenFunc, itemRect, ma
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,self.OntodoBtn)
 
-    Event.AddListener("c_onRentalValueChange", self.updateInfo, self);
+    Event.AddListener("c_AdvertisementShowValueChange", self.updateInfo, self);
 end
 
 --获取是第几个点击了
@@ -56,7 +56,9 @@ function AdvertisementShowItem:updateInfo(data)
 
 end
 
-function AdvertisementShowItem:OntodoBtn()
+function AdvertisementShowItem:OntodoBtn(ins)
    ---测试
-    UIPage:OpenCtrl('AdvertisementPosCtrl')
+    local data={}
+    data.Buildingowner=Buildingowner.other
+    UIPage:OpenCtrl('AdvertisementPosCtrl',Buildingowner.other)
 end

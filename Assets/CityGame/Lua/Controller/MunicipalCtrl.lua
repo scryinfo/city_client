@@ -32,10 +32,10 @@ function MunicipalCtrl:Awake(go)
     materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    self.m_data = {}
-    self.m_data.middleRootTran=MunicipalPanel.middleRootTran
-    self.m_data.buildingType = BuildingType.Municipal
-  BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, materialBehaviour, self.m_data)
+    self.data = {}
+    self.data.middleRootTran=MunicipalPanel.middleRootTran
+    self.data.buildingType = BuildingType.Municipal
+  BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, materialBehaviour, self.data)
 end
 
 --更改名字

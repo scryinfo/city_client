@@ -6,6 +6,7 @@
 
 require "Common/define"
 require('Framework/UI/UIPage')
+
 local class = require 'Framework/class'
 
 ConfirmPopCtrl = class('ConfirmPopCtrl',UIPage)
@@ -33,6 +34,9 @@ function ConfirmPopCtrl:Awake(go)
 end
 --确定
 function ConfirmPopCtrl:OnClick_confirm(obj)
+    if(obj.m_data) then
+        obj.m_data:callback()
+    end
     obj:Hide();
 end
 --关闭

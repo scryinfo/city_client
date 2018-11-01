@@ -6,7 +6,7 @@
 
 
 require "Common/define"
-require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
+--require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
 require('Framework/UI/UIPage')
 
 local class = require 'Framework/class'
@@ -43,7 +43,7 @@ end
 
 
 function AdvertisementPopCtrl:Refresh()
-AdvertisementPopPanel.testTxt.text=self.m_data.id;
+    AdvertisementPopPanel.testTxt.text=self.m_data.id;
 end
 
 

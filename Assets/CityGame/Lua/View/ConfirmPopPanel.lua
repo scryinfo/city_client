@@ -5,14 +5,14 @@
 ---
 
 local transform;
-local gameObject;
+--local gameObject;
 
 ConfirmPopPanel = {};
 local this = ConfirmPopPanel;
 
 --启动事件
 function ConfirmPopPanel.Awake(obj)
-    gameObject = obj;
+  --  gameObject = obj;
     transform = obj.transform;
 
     this.InitPanle();

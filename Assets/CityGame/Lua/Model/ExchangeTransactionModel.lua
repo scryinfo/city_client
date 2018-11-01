@@ -53,12 +53,14 @@ end
 --打开买卖交易界面，开始接受更新信息
 function ExchangeTransactionModel.m_ReqExchangeWatchItemDetail(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeWatchItemDetail")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+    local lMsg = {num = itemId}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --关闭交易界面
 function ExchangeTransactionModel.m_ReqExchangeStopWatchItemDetail(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeStopWatchItemDetail")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
 ---网络回调

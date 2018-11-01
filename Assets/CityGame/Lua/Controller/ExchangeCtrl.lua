@@ -516,9 +516,11 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
     if #ExchangeCtrl.entrustmentInfo == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
+        ExchangePanel.entrustmentPage.localScale = Vector3.zero
     else
         table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
+        ExchangePanel.entrustmentPage.localScale = Vector3.one
         ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
     end
 end
@@ -544,9 +546,11 @@ function ExchangeCtrl:_getTransactionRecord(datas)
     if #ExchangeCtrl.selfRecordInfo == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
+        ExchangePanel.selfRecordPage.localScale = Vector3.zero
         return
     else
         table.sort(ExchangeCtrl.selfRecordInfo, function (m, n) return m.ts > n.ts end)
+        ExchangePanel.selfRecordPage.localScale = Vector3.one
         ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
@@ -557,9 +561,11 @@ function ExchangeCtrl:_getCityRecord(datas)
     if #ExchangeCtrl.cityRecordInfo == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
+        ExchangePanel.cityRecordPage.localScale = Vector3.zero
         return
     else
         table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
+        ExchangePanel.cityRecordPage.localScale = Vector3.one
         ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end

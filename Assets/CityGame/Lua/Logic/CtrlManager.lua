@@ -81,6 +81,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
 	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
+	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 
 end
 

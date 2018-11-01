@@ -33,13 +33,13 @@ function ExchangeTransactionCtrl:Awake(go)
     self.sellSource.mProvideData = ExchangeTransactionCtrl.static.SellProvideData
     self.sellSource.mClearData = ExchangeTransactionCtrl.static.SellClearData
 
-    UpdateBeat:Add(self._update, self);
+    UpdateBeat:Add(self._update, self)
 end
 
 function ExchangeTransactionCtrl:Refresh()
     --self:_initPanelData()
 
-    Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
+    --Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
 end
 
 function ExchangeTransactionCtrl:Hide()
@@ -65,8 +65,8 @@ function ExchangeTransactionCtrl:_updateConfim()
     ExchangeTransactionPanel.confirmBtn.localScale = Vector3.zero
     if self.isSellState then
         if ExchangeTransactionPanel.sellCountInput.text ~= "" and tonumber(ExchangeTransactionPanel.sellCountInput.text) > 0 then
-            if self.sellRemainCount ~= nil then
-                if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellRemainCount then
+            if self.sellTotalCount ~= nil then
+                if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellTotalCount then
                     ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                     self.wareHouseChoosed = false
                 else
@@ -154,6 +154,7 @@ function ExchangeTransactionCtrl:_initPanelData()
     self.lastPrice = self.m_data.nowPrice
     self.itemId = self.m_data.itemId
     self.isSellState = false
+    Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
 end
 ---添加移除监听
 function ExchangeTransactionCtrl:_addListeners()
@@ -195,7 +196,14 @@ function ExchangeTransactionCtrl:_openSellPart(ins)
     ins.isSellState = true
 end
 function ExchangeTransactionCtrl:_chooseWareHouse(ins)
-    CityGlobal.OpenCtrl("ExchangeChooseWareHouseCtrl")
+    local wareHouseData = {}
+    if ins.isSellState then
+        wareHouseData.isSell = true
+    else
+        wareHouseData.isSell = false
+    end
+    wareHouseData.itemId = ins.itemId
+    CityGlobal.OpenCtrl("ExchangeChooseWareHouseCtrl", wareHouseData)
 end
 function ExchangeTransactionCtrl:_clickConfirm(ins)
     local showData = {}
@@ -206,13 +214,13 @@ function ExchangeTransactionCtrl:_clickConfirm(ins)
         count = ExchangeTransactionPanel.sellCountInput.text
         showData.btnCallBack = function()
             log("cycle_w11_exchange03", "挂卖单")
-            Event.Brocast("m_ReqExchangeSell", self.itemId, count, ExchangeTransactionPanel.sellPriceInput.text, self.buildingId)
+            Event.Brocast("m_ReqExchangeSell", ins.itemId, count, ExchangeTransactionPanel.sellPriceInput.text, ins.buildingId)
         end
     else
         str1 = "buy"
         count = ExchangeTransactionPanel.buyCountInput.text
         showData.btnCallBack = function()
-            Event.Brocast("m_ReqExchangeBuy", self.itemId, count, ExchangeTransactionPanel.buyPriceInput.text, self.buildingId)
+            Event.Brocast("m_ReqExchangeBuy", ins.itemId, count, ExchangeTransactionPanel.buyPriceInput.text, ins.buildingId)
             log("cycle_w11_exchange03", "挂买单")
         end
     end
@@ -242,21 +250,21 @@ end
 ---选择仓库事件回调
 function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
     if wareDats.isSell ~= self.isSellState then
-        log("cycle_w10_exchange02", "仓库数据的sell状态与交易界面状态不一致")
+        log("cycle_w11_exchange03", "仓库数据的sell状态与交易界面状态不一致")
         return
     end
 
     self.buildingId = wareDats.buildingId
     if wareDats.isSell then
         ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
-        self.sellRemainCount = wareDats.remainCount
+        self.sellTotalCount = wareDats.totalCount
         local sellCountValue = ExchangeTransactionPanel.sellCountInput.text
         if sellCountValue == "" then  --如果数量还未填写，则显示当前库存量
-            ExchangeTransactionPanel.sellCountInput.text = wareDats.remainCount
+            ExchangeTransactionPanel.sellCountInput.text = wareDats.totalCount
             ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if tonumber(sellCountValue) > wareDats.remainCount then
+            if tonumber(sellCountValue) > wareDats.totalCount then
                 ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
@@ -266,14 +274,14 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
         end
     else
         ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
-        self.buyCapacityCount = wareDats.capacityCount
+        self.buyCapacityCount = wareDats.remainCapacity
         local buyCountValue = ExchangeTransactionPanel.buyCountInput.text
         if buyCountValue == "" then  --如果数量还未填写，则显示当前库存量
-            ExchangeTransactionPanel.buyCountInput.text = wareDats.capacityCount
+            ExchangeTransactionPanel.buyCountInput.text = wareDats.remainCapacity
             ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if tonumber(buyCountValue) > wareDats.capacityCount then
+            if tonumber(buyCountValue) > wareDats.remainCapacity then
                 ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else

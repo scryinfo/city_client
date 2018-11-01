@@ -42,6 +42,7 @@ AutoRequire.getInstance():require("View/BuildingInfo")
 AutoRequire.getInstance():require("View/Logic")
 AutoRequire.getInstance():require("Controller")
 AutoRequire.getInstance():require("Model")
+AutoRequire.getInstance():require("Config")
 AutoRequire.getInstance():requireLast("__require_last__")
 --在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中
 

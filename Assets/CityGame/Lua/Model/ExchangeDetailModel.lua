@@ -34,9 +34,9 @@ end
 --请求折线数据
 function ExchangeDetailModel.m_ReqExchangeLineInfo(itemId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeGetItemDealHistory")
-    --local lMsg = { itemId = itemId}
-    --local pMsg = assert(pbl.encode("gs.exchangeGetItemDealHistory", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, itemId)
+    local lMsg = {num = itemId}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 ---网络回调
 --收到行情信息

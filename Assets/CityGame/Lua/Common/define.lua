@@ -57,6 +57,7 @@ ModelNames = {
 	Exchange = "ExchangeModel",  --交易所
 	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
 	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
+	PlayerTemp = "PlayerTempModel",  --玩家数据，临时创建
 }
 
 

@@ -82,11 +82,35 @@ function PlayerTempModel._getCollectStore(datas)
     local materialFactory = datas.materialFactory
     local produceDepartment = datas.produceDepartment
 
-    for i, value in ipairs(materialFactory) do
-        storeList[#storeList + 1] = value
+    if materialFactory then
+        for i, value in ipairs(materialFactory) do
+            --正式代码
+            --storeList[i] = value.store
+            --storeList[i].buildingId = value.info.id
+            --storeList[i].buildingTypeId = value.info.mId
+
+            --测试
+            local inHand = {
+                {id = 2151001, num = 10},
+                {id = 2151002, num = 30},
+                {id = 2151003, num = 33},
+                {id = 2151004, num = 45},
+                {id = 2152001, num =  9}
+            }
+            value.store = {}
+            value.store.inHand = inHand
+            storeList[i] = value.store
+            storeList[i].buildingId = value.info.id
+            storeList[i].buildingTypeId = value.info.mId
+        end
     end
-    for i, value in ipairs(produceDepartment) do
-        storeList[#storeList + 1] = value
+    if produceDepartment then
+        for i, value in ipairs(produceDepartment) do
+            local listCount = #storeList + i
+            storeList[listCount] = value
+            storeList[listCount].buildingId = value.info.id
+            storeList[listCount].buildingTypeId = value.info.mId
+        end
     end
     return storeList
 end

@@ -108,12 +108,14 @@ end
 function AdvertisementPosCtrl:OnClick_masterConfirm()
 
     --主人点击确认按钮
+
+
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
 --他人点击
-
-
+    --UIPage:OpenCtrl();
+   
 end
 
 

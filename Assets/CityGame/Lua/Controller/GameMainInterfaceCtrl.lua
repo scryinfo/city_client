@@ -1,4 +1,5 @@
 GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
+UIPage:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
 local gameObject;

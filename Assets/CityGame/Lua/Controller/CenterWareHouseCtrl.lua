@@ -5,6 +5,9 @@
 ---中心仓库
 
 local isShowList;
+local switchIsShow;
+local isSelect;
+local centerWareHousetBehaviour
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
@@ -29,21 +32,23 @@ function CenterWareHouseCtrl:OnCreate(obj)
     self.money = 1000;--扩容所需金额
     self:_initData();
     isShowList = false;
-    local centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    switchIsShow = false;
+    isSelect = true;
+    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportBtn,self.c_TransportBtn,self);
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportCloseBtn,self.c_transportCloseBtn,self)
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportConfirmBtn,self.c_transportConfirmBtn,self)
+    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportopenBtn,self.c_transportopenBtn,self)
 
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.nameBtn,self.OnClick_OnName, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.quantityBtn,self.OnClick_OnNumber, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
-
-    self.m_data = {};
-    self.m_data.buildingType = BuildingInType.Warehouse;
-    WareHouseGoodsMgr:new(centerWareHousetBehaviour,self.m_data)
+    WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
 end
-
 --初始化
 function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.number:GetComponent("Text").text = self.number;
@@ -54,15 +59,45 @@ end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
-
+    UIPage.ClosePage();
 end
-
+function WarehouseCtrl:Refresh()
+    log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
+    CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
+end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
     log("rodger_w8_GameMainInterface","[test_c_OnaddBtn]  测试完毕")
     go.totalCapacity = go.totalCapacity+100
     go.money = go.money*2;
     go:_initData();
+end
+
+--运输按钮
+function CenterWareHouseCtrl:c_TransportBtn(go)
+    isSelect = false;
+    WareHouseGoodsMgr:_setActiva(isSelect)
+    CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
+end
+
+--选择仓库按钮
+function CenterWareHouseCtrl:c_transportopenBtn()
+    log("rodger_w8_GameMainInterface","[test_c_transportopenBtn]  测试完毕")
+    CityGlobal.OpenCtrl('ChooseWarehouseCtrl');
+end
+
+--开始运输按钮
+function CenterWareHouseCtrl:c_transportConfirmBtn()
+    CityGlobal.OpenCtrl('TransportBoxCtrl')
+    WareHouseGoodsMgr:ClearAll()
+    WareHouseGoodsMgr:EnabledAll()
+end
+
+function CenterWareHouseCtrl:c_transportCloseBtn()
+    isSelect = true;
+    --WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
+    WareHouseGoodsMgr:_setActiva(isSelect)
+    CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)
@@ -100,4 +135,19 @@ function CenterWareHouseCtrl.OnClick_OpenList(isShow)
         CenterWareHousePanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;
+end
+
+--打开运输面板
+function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
+    if isShow then
+        CenterWareHousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        CenterWareHousePanel.transport:SetActive(true);
+        CenterWareHousePanel.content.offsetMax = Vector2.New(-820,0);
+    else
+
+        CenterWareHousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        CenterWareHousePanel.transport:SetActive(false);
+        CenterWareHousePanel.content.offsetMax = Vector2.New(0,0);
+    end
+    switchIsShow = isShow;
 end

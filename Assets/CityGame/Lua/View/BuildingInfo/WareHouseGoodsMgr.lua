@@ -6,19 +6,24 @@
 
 require "View/BuildingInfo/WareHouseGoodsItem"
 local class = require 'Framework/class'
+local allTspItem ={}
 WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 
-WareHouseGoodsMgr.static.Staff_PATH = "View/GoodsItem/CenterWareHouseItem"
+WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
+WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
+WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
+WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
 
-function WareHouseGoodsMgr:initialize(insluabehaviour,buildingData)
+--[[function WareHouseGoodsMgr:initialize(insluabehaviour,buildingData)
     self.behaviour = insluabehaviour
     if buildingData.buildingType == BuildingInType.Warehouse then
-        self:_creatItemGoods();
+        self:_creatItemGoods(insluabehaviour,isSelect);
     end
-end
+end]]
 
 --创建商品
-function WareHouseGoodsMgr:_creatItemGoods()
+function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
+    self.behaviour = insluabehaviour
     --测试数据
     self.ModelDataList={}
     --配置表数据模拟
@@ -26,23 +31,61 @@ function WareHouseGoodsMgr:_creatItemGoods()
     for i = 1, 9 do
         local WareHouseDataInfo = {}
         WareHouseDataInfo.name = "小元牌"
-        WareHouseDataInfo.number = "小土豆 x 123"
+        WareHouseDataInfo.number = 123
         configTable[i] = WareHouseDataInfo
 
-        --预制的信息
+        --预制的信息`
         local prefabData={}
         prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(WareHouseGoodsMgr.static.Staff_PATH,CenterWareHousePanel.content)
+        prefabData._prefab = self:_creatGoods(WareHouseGoodsMgr.static.Goods_PATH,CenterWareHousePanel.content)
         self.ModelDataList[i] = prefabData
 
-        local WareHouseLuaItem = WareHouseGoodsItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab, self.behaviour, self, i)
+        local WareHouseLuaItem = WareHouseGoodsItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab,self.behaviour, self, i)
         if not self.items then
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
+        self.items[i]:setActiva(isSelect)
     end
+end
+
+--创建运输商品
+function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
+     log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
+     local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
+     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id)
+     self.tspItem = TransportLuaItem;
+     allTspItem[CenterWareHousePanel.tspContent.childCount] = self.tspItem;
+    for i = 1,  #allTspItem do
+        allTspItem[i].inputText.onValueChanged:AddListener(function ()
+            allTspItem[i].scrollbar.value =  allTspItem[i].inputText.text/  allTspItem[i].totalNumber
+        end);
+    end
+    UpdateBeat:Add(self._update, self);
+end
+
+--创建通讯录
+function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
+    self.AddressListIns =insluabehaviour
+    self.lastBox =nil;
+    for i = 1, 15 do
+        local addressList_prefab = self:_creatGoods(WareHouseGoodsMgr.static.AddressList_PATH,ChooseWarehousePanel.leftcontent)
+        local AddressListLuaItem = AddressListItem:new(data,addressList_prefab,self.AddressListIns,self)
+        if not self.ipaItems then
+            self.ipaItems = {}
+        end
+        self.ipaItems[i] = AddressListLuaItem
+    end
+
+end
+
+--创建路线面板
+function WareHouseGoodsMgr:_creatLinePanel(data)
+    --local line_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+
+
 end
 
 --删除商品
@@ -57,6 +100,22 @@ function WareHouseGoodsMgr:_deleteGoods(ins)
         i = i + 1
     end
 end
+
+function WareHouseGoodsMgr:_deleteTspGoods(ins)
+    self.items[ins.id]:Enabled();
+    if UpdateBeat then
+        UpdateBeat:Remove(self._update, self);
+    end
+    destroy(ins.prefab.gameObject);
+    self.tspItem = nil;
+end
+
+function WareHouseGoodsMgr:_setActiva(isSelect)
+    for i = 1, #self.items do
+        self.items[i]:setActiva(isSelect)
+    end
+end
+
 --生成预制
 function WareHouseGoodsMgr:_creatGoods(path,parent)
     local prefab = UnityEngine.Resources.Load(path);
@@ -65,4 +124,34 @@ function WareHouseGoodsMgr:_creatGoods(path,parent)
     go.transform:SetParent(parent.transform);
     rect.transform.localScale = Vector3.one;
     return go
+end
+
+function WareHouseGoodsMgr:_update()
+    for i = 1,  #allTspItem do
+        allTspItem[i].inputText.text = math.ceil( allTspItem[i].totalNumber *   allTspItem[i].scrollbar.value);
+    end
+end
+
+--通讯录选框
+function WareHouseGoodsMgr:SelectBox(go)
+    if self.lastBox ~= nil then
+        self.lastBox:SetActive(false);
+    end
+    go.box:SetActive(true);
+    self.lastBox = go.box;
+end
+
+--清空运输数据
+function WareHouseGoodsMgr:ClearAll()
+    for i = 1, #allTspItem do
+        destroy(allTspItem[i].prefab.gameObject);
+    end
+    allTspItem = {};
+end
+
+--显示所有商品BG,使其都能点击
+function WareHouseGoodsMgr:EnabledAll()
+    for i = 1, #self.items do
+        self.items[i]:Enabled();
+    end
 end

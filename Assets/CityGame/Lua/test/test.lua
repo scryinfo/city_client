@@ -27,7 +27,7 @@ TestGroup.active_TestGroup("abel_w9_autoRequire")
 --TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
---TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
+TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
 
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'

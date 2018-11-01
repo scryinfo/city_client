@@ -14,15 +14,19 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
-    self.nameText = self.prefab.transform:Find("WareHouseItem/Goods/Name/NameText").gameObject:GetComponent("Text");
-    self.numberText = self.prefab.transform:Find("WareHouseItem/Goods/Number/NumberText").gameObject:GetComponent("Text");
-    self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Goods/Delete/DeleteButton").gameObject;
+    self.nameText = self.prefab.transform:Find("TransportItem/Goods/Name/NameText").gameObject:GetComponent("Text");
+    self.numberText = self.prefab.transform:Find("TransportItem/Goods/Number/NumberText").gameObject:GetComponent("Text");
+    self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;
+    self.select = self.prefab.transform:Find("TransportItem/Goods/Select").gameObject;
+    self.select_while = self.prefab.transform:Find("TransportItem/Goods/Select/Select-white").gameObject;
     self.bgItem = self.prefab.transform:Find("WareHouseItem").gameObject;
+    self.transportBG = self.prefab.transform:Find("TransportItem").gameObject;
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
 
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
+    self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
@@ -45,7 +49,29 @@ function WareHouseGoodsItem:OnBGItem()
     CityGlobal.OpenCtrl('MessageTooltipCtrl',data)
 end
 
+--点击运输后的BG
+function WareHouseGoodsItem:OnTransportBG(go)
+    log("rodger_w8_GameMainInterface","[test_c_OnTransportBG]  测试完毕")
+    local goodsDataInfo = {};
+    goodsDataInfo.name =  go.goodsDataInfo.name;
+    goodsDataInfo.number = go.goodsDataInfo.number;
+    goodsDataInfo.id = go.id;
+    go.manager:_creatTransportGoods(goodsDataInfo);
+    go.select_while:SetActive(false);
+    go.transportBG:GetComponent("Button").enabled = false;
+end
+
 --删除后刷新ID及刷新显示
 function WareHouseGoodsItem:RefreshID(id)
     self.id = id
+end
+
+function WareHouseGoodsItem:setActiva(isSelect)
+    self.select:SetActive(not isSelect);
+    self.bgItem:SetActive(isSelect);
+end
+
+function WareHouseGoodsItem:Enabled()
+    self.select_while:SetActive(true);
+    self.transportBG:GetComponent("Button").enabled = true
 end

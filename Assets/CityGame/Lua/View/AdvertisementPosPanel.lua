@@ -36,7 +36,7 @@ function AdvertisementPosPanel.InitPanel()
     this.confirmBtn=transform:Find("rightRoot/resize/okBtn");
     --他人进入
     this.buyGo=transform:Find("rightRoot/Buy")
-    this.confirmBtn1=transform:Find("rightRoot/Buy/body/okBtn1");
+    this.confirmBtn1=transform:Find("rightRoot/Buy/body/okBtn");
     this.numInp=transform:Find("rightRoot/Buy/body/numInput"):GetComponent("InputField")
     this.numSlider=transform:Find("rightRoot/Buy/body/numSlider"):GetComponent("Slider")
     this.maxInp=transform:Find("rightRoot/Buy/body/maxInput"):GetComponent("InputField")

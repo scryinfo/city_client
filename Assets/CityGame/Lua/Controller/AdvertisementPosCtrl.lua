@@ -36,6 +36,35 @@ function AdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(AdvertisementPosPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
     materialBehaviour:AddClick(AdvertisementPosPanel.manageBtn.gameObject,self.OnClick_manageBtn,self)
+-------------------------------------------------------------------------------------------------------------------------
+    AdvertisementPosPanel.numInp.onValueChanged:AddListener(function (arg)
+        if AdvertisementPosPanel.numInp.text==""then
+            return
+        end
+        if( AdvertisementPosPanel.numInp.text/5>=1)then
+            AdvertisementPosPanel.numInp.text=5
+        end
+        AdvertisementPosPanel.numSlider.value=arg/5 ;
+
+    end)
+
+    AdvertisementPosPanel.numSlider.onValueChanged:AddListener(function (arg)
+        AdvertisementPosPanel.numInp.text=math.floor(5*arg)
+    end)
+
+    AdvertisementPosPanel.maxInp.onValueChanged:AddListener(function (arg)
+        if AdvertisementPosPanel.maxInp.text==""then
+            return
+        end
+        if(AdvertisementPosPanel.maxInp.text/10>=1)then
+            AdvertisementPosPanel.maxInp.text=10
+        end
+        AdvertisementPosPanel.maxSlider.value=arg/10;
+    end)
+
+    AdvertisementPosPanel.maxSlider.onValueChanged:AddListener(function (arg)
+        AdvertisementPosPanel.maxInp.text=math.floor(10*arg)
+    end)
 
     -----创建广告
      local creatData={count=10,buildingType=BuildingType.Municipal}

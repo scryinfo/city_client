@@ -20,7 +20,7 @@ end
 function AdvertisementPosPanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
-      this.topRootTran = transform:Find("topRoot");
+    this.topRootTran = transform:Find("topRoot");
 
     this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
     this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
@@ -30,6 +30,15 @@ function AdvertisementPosPanel.InitPanel()
 
     this.scrollcon=transform:Find("leftRoot/manage/Scroll View/Viewport/Content")
     this.manageBtn=transform:Find("leftRoot/manage/head")
+
+    --自已进入
+    this.resizeGO=transform:Find("rightRoot/resize")
+    --他人进入
+    this.buyGo=transform:Find("rightRoot/Buy")
+    this.numInp=transform:Find("rightRoot/Buy/body/numInput"):GetComponent("InputField");
+    this.numSlider=transform:Find("rightRoot/Buy/body/numSlider"):GetComponent("Slider");
+    this.maxInp=transform:Find("rightRoot/Buy/body/maxInput"):GetComponent("InputField");
+    this.maxSlider=transform:Find("rightRoot/Buy/body/maxSlider"):GetComponent("Slider");
 end
 --数据初始化
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)

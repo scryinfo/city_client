@@ -38,7 +38,7 @@ function WareHouseGoodsItem:OnDelete(go)
     data.btnCallBack = function ()
         go.manager:_deleteGoods(go)
     end
-   CityGlobal.OpenCtrl('BtnDialogPageCtrl',data)
+   ct.OpenCtrl('BtnDialogPageCtrl',data)
 
 end
 
@@ -46,7 +46,7 @@ function WareHouseGoodsItem:OnBGItem()
     local data = {}
     data.madeBy = "来自Rodger公司"
     data.playerName = " rodger"
-    CityGlobal.OpenCtrl('MessageTooltipCtrl',data)
+    ct.OpenCtrl('MessageTooltipCtrl',data)
 end
 
 --点击运输后的BG

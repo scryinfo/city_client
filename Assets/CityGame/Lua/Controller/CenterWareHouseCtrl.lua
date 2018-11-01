@@ -83,12 +83,12 @@ end
 --选择仓库按钮
 function CenterWareHouseCtrl:c_transportopenBtn()
     log("rodger_w8_GameMainInterface","[test_c_transportopenBtn]  测试完毕")
-    CityGlobal.OpenCtrl('ChooseWarehouseCtrl');
+    ct.OpenCtrl('ChooseWarehouseCtrl');
 end
 
 --开始运输按钮
 function CenterWareHouseCtrl:c_transportConfirmBtn()
-    CityGlobal.OpenCtrl('TransportBoxCtrl')
+    ct.OpenCtrl('TransportBoxCtrl')
     WareHouseGoodsMgr:ClearAll()
     WareHouseGoodsMgr:EnabledAll()
 end

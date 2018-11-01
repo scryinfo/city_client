@@ -79,7 +79,7 @@ function GameMainInterfaceCtrl.OnSourceMill()
     --Event.Brocast("");
    -- UIPage:OpenCtrl('CenterWareHouseCtrl')
     --UIPage:ShowPage(CenterWareHouseCtrl)
-    CityGlobal.OpenCtrl('CenterWareHouseCtrl')
+    ct.OpenCtrl('CenterWareHouseCtrl')
 end
 
 

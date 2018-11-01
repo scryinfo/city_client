@@ -4,37 +4,8 @@
 --- DateTime: 2018/8/21 11:05
 ---
 UnitTest.TestBlockStart()---------------------------------------------------------
-
-<<<<<<< HEAD:Assets/CityGame/Lua/test/test.lua
-if not CityGlobal.G_UNITTEST then return {} end
-TestGroup.active_TestGroup("abel_w9_autoRequire")
-
---TestGroup.active_TestGroup("abel_w10_OpenCtrl")
---TestGroup.active_TestGroup("abel_w9_memory_usage")
---TestGroup.active_TestGroup("abel_w9_memory_usage")
---TestGroup.active_TestGroup("abel_w9_tableOrder")
---TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
---TestGroup.active_TestGroup("abel_w7_LineChart")
---TestGroup.active_TestGroup("abel_w6_UIFrame_1")
---TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
---TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
---TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
-
---TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
---TestGroup.active_TestGroup("abel_w7_LineChart")
---TestGroup.active_TestGroup("abel_w6_UIFrame")
---TestGroup.active_TestGroup("abel_w4_class_performance")
---TestGroup.active_TestGroup("abel_w7_LineChart")
---TestGroup.active_TestGroup("abel_w9_AddLuaComponent")
---TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
---TestGroup.active_TestGroup("abel_w6_performance")
---TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
-TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
---TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
-
-=======
 if not ct.G_UNITTEST then return {} end
->>>>>>> 135e12e4c595420b33c4b0181dbeeab286614223:Assets/CityGame/Lua/test/testMain/test.lua
+
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}

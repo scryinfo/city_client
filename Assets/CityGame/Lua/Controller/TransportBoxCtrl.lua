@@ -32,7 +32,7 @@ function TransportBoxCtrl:OnClick_confirmBtn(obj)
     data.titleInfo = "提示"
     data.contentInfo = "商品开始运输"
     data.tipInfo = "可在运输线查看详情"
-    CityGlobal.OpenCtrl('BtnDialogPageCtrl',data)
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
     CenterWareHousePanel.transportConfirm:SetActive(true);
     CenterWareHousePanel.nameText.text = nil;
     obj:Hide();

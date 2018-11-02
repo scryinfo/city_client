@@ -108,7 +108,7 @@ end
 function AdvertisementPosCtrl:OnClick_masterConfirm()
 
     --主人点击确认按钮
-
+    Event.Brocast("SmallPop","哈哈 终于设置好了！！！！")
 
 end
 

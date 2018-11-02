@@ -30,7 +30,6 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
-    log("rodger_w8_GameMainInterface","[test_OnDelete]  测试完毕")
     local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
@@ -51,7 +50,6 @@ end
 
 --点击运输后的BG
 function WareHouseGoodsItem:OnTransportBG(go)
-    log("rodger_w8_GameMainInterface","[test_c_OnTransportBG]  测试完毕")
     local goodsDataInfo = {};
     goodsDataInfo.name =  go.goodsDataInfo.name;
     goodsDataInfo.number = go.goodsDataInfo.number;

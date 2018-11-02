@@ -62,12 +62,11 @@ function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
 function WarehouseCtrl:Refresh()
-    log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
+    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
     CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
 end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    log("rodger_w8_GameMainInterface","[test_c_OnaddBtn]  测试完毕")
     go.totalCapacity = go.totalCapacity+100
     go.money = go.money*2;
     go:_initData();
@@ -82,7 +81,6 @@ end
 
 --选择仓库按钮
 function CenterWareHouseCtrl:c_transportopenBtn()
-    log("rodger_w8_GameMainInterface","[test_c_transportopenBtn]  测试完毕")
     ct.OpenCtrl('ChooseWarehouseCtrl');
 end
 

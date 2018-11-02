@@ -53,7 +53,7 @@ end
 
 --创建运输商品
 function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
-     log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
+     ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
      local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
      local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id)
      self.tspItem = TransportLuaItem;

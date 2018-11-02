@@ -46,7 +46,7 @@ function SignOnCtrl:OnClick_backBtn()
 end
 
 function SignOnCtrl:OnClick_confirm()
+    UIPage.ClosePage();
 
-
-
+   Event.Brocast("SmallPop","1d56as1d56as")
 end

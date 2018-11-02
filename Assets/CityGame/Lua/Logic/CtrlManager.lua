@@ -1,7 +1,7 @@
 -----
 -----
 require "Controller/LoginCtrl"
-require "Controller/MaterialCtrl"
+--require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"
 require "Controller/WarehouseCtrl"
 require "Controller/TransportCtrl"

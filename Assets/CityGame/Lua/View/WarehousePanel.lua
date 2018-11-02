@@ -39,6 +39,7 @@ function WarehousePanel.InitPanel()
     this.moneyText = transform:Find("RightInformation/bg/transport/moneyText").gameObject;
     this.transportopenBtn = transform:Find("RightInformation/bg/transport/warehouseName/openBtn");
     this.nameText = transform:Find("RightInformation/bg/transport/warehouseName/nameText").gameObject;
+    this.transportContent = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content");
     --Slider--Text
     this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider").gameObject;
     this.NumberText = transform:Find("WarehouseDetails/NumberText").gameObject;

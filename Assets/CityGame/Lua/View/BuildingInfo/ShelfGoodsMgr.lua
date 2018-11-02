@@ -7,7 +7,8 @@ ShelfGoodsMgr = class('ShelfGoodsMgr')
 
 ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
 ShelfGoodsMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
-ShelfGoodsMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库Shelf Item
+ShelfGoodsMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
+ShelfGoodsMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
 
 function ShelfGoodsMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
@@ -81,7 +82,7 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
     end
 end
 
---仓库选中后上架物品（右侧shelf）
+--仓库选中物品（右侧shelf）
 function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour)
     --预制的信息
     local prefabData = {}
@@ -95,14 +96,34 @@ function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour)
     self.shelfPanelItem[id] = shelfLuaItem
 end
 
---点击仓库右侧shelf 删除Item
+--仓库右侧shelfItem 删除
 function ShelfGoodsMgr:_deleteShelfItem(id)
     destroy(self.shelfPanelItem[id].prefab.gameObject);
     self.shelfPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
-
 end
---货架删除物品
+
+--仓库选中物品（右侧transport）
+function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour)
+    --预制的信息
+    local prefabData = {}
+    prefabData.state = 'idel'
+    prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
+    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id);
+
+    if not self.transportPanelItem then
+        self.transportPanelItem = {}
+    end
+    self.transportPanelItem[id] = transportLuaItem
+end
+
+--仓库右侧transportItem 删除
+function ShelfGoodsMgr:_deleteTransportItem(id)
+    destroy(self.transportPanelItem[id].prefab.gameObject);
+    self.transportPanelItem[id] = nil;
+    WarehouseCtrl.temporaryItems[id] = nil;
+end
+--货架删除
 function ShelfGoodsMgr:_deleteGoods(ins)
     log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
     --清空之前的旧数据
@@ -115,8 +136,7 @@ function ShelfGoodsMgr:_deleteGoods(ins)
         i = i + 1
     end
 end
-
---仓库删除物品
+--仓库删除
 function ShelfGoodsMgr:_WarehousedeleteGoods(ins)
     --清空之前的旧数据
     destroy(self.WarehouseItems[ins.id].prefab.gameObject);

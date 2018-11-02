@@ -86,7 +86,7 @@ end
 --撤单
 function ExchangeModel.m_ReqExchangeCancel(id)
     local msgId = pbl.enum("gscode.OpCode", "exchangeCancel")
-    local lMsg = {Id = id}
+    local lMsg = {id = id}
     local pMsg = assert(pbl.encode("gs.Id", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

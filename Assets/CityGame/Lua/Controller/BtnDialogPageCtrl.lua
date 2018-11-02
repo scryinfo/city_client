@@ -23,28 +23,29 @@ function BtnDialogPageCtrl:Awake(go)
     self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
-    --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
-    --self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
+    --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
+    --self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
 end
 
 function BtnDialogPageCtrl:Refresh()
-    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
+    self:_initData()
+    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
 end
 
 ---寻找组件
 function BtnDialogPageCtrl:_getComponent(go)
-    self.titleText = go.transform:Find("root/titleText"):GetComponent("Text");
-    self.mainContentText = go.transform:Find("root/mainContentText"):GetComponent("Text");
-    self.tipText = go.transform:Find("root/tipContentText"):GetComponent("Text");
-    self.closeBtn = go.transform:Find("root/closeBtn");
-    self.confimBtn = go.transform:Find("root/confimBtn");
+    self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
+    self.mainContentText = go.transform:Find("root/mainContentText"):GetComponent("Text")
+    self.tipText = go.transform:Find("root/tipContentText"):GetComponent("Text")
+    self.closeBtn = go.transform:Find("root/closeBtn")
+    self.confimBtn = go.transform:Find("root/confimBtn")
 end
 ---初始化
 function BtnDialogPageCtrl:_initData()
-    self.titleText.text = self.m_data.titleInfo;
-    self.mainContentText.text = self.m_data.contentInfo;
-    self.tipText.text = self.m_data.tipInfo;
+    self.titleText.text = self.m_data.titleInfo
+    self.mainContentText.text = self.m_data.contentInfo
+    self.tipText.text = self.m_data.tipInfo
 end
 
 function BtnDialogPageCtrl:_onClickConfim(ins)
@@ -53,11 +54,11 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil
     end
-    ins:_onClickClose(ins);
+    ins:_onClickClose(ins)
 end
 function BtnDialogPageCtrl:_onClickClose(ins)
-    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins);
-    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins);
+    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
     ins:Hide()
 end
 

@@ -30,15 +30,15 @@ end
 function ExchangeCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
     --关闭面板
-    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     LuaBehaviour:AddClick(ExchangePanel.backBtn.gameObject, function()
-        UIPage.ClosePage();
-    end );
+        UIPage.ClosePage()
+    end )
 end
 
 function ExchangeCtrl:Awake(go)
     self.gameObject = go
-    ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
     self.collectSortMgr = ExchangeSortMgr:new(ExchangePanel.collectTitleRoot)
@@ -87,12 +87,12 @@ function ExchangeCtrl:Refresh()
 end
 
 function ExchangeCtrl:Close()
-    ExchangePanel.quotesToggle.onValueChanged:RemoveAllListeners();
-    ExchangePanel.collectToggle.onValueChanged:RemoveAllListeners();
-    ExchangePanel.recordToggle.onValueChanged:RemoveAllListeners();
-    ExchangePanel.entrustmentToggle.onValueChanged:RemoveAllListeners();
-    ExchangePanel.selfRecordToggle.onValueChanged:RemoveAllListeners();
-    ExchangePanel.cityRecordToggle.onValueChanged:RemoveAllListeners();
+    ExchangePanel.quotesToggle.onValueChanged:RemoveAllListeners()
+    ExchangePanel.collectToggle.onValueChanged:RemoveAllListeners()
+    ExchangePanel.recordToggle.onValueChanged:RemoveAllListeners()
+    ExchangePanel.entrustmentToggle.onValueChanged:RemoveAllListeners()
+    ExchangePanel.selfRecordToggle.onValueChanged:RemoveAllListeners()
+    ExchangePanel.cityRecordToggle.onValueChanged:RemoveAllListeners()
 end
 
 function ExchangeCtrl:_addListener()
@@ -118,9 +118,14 @@ function ExchangeCtrl:_initPanelData()
     ExchangePanel._quotesToggleState(true)
     ExchangePanel._collectToggleState(false)
     ExchangePanel._recordToggleState(false)
+    ExchangePanel.collectPage.localScale = Vector3.zero
     ExchangePanel.recordPage.localScale = Vector3.zero
-    ExchangeCtrl.titleType = ExchangeTitleType.Quotes  --默认打开行情
-    ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
+
+    self.isStartToggle = false
+    ExchangePanel.quotesToggle.isOn = true
+    ExchangePanel.collectToggle.isOn = false
+    ExchangePanel.recordToggle.isOn = false
+    self.isStartToggle = true
 
     ExchangeCtrl.quoteItems = {}
     ExchangeCtrl.collectItems = {}
@@ -130,10 +135,10 @@ function ExchangeCtrl:_initPanelData()
 
     self:_creatGoodsConfig()
 
-    Event.Brocast("m_ReqExchangeItemList");
+    Event.Brocast("m_ReqExchangeItemList")
 end
 ---根据配置表创建所有item
-require("Config/Material")
+--require("Config/Material")
 function ExchangeCtrl:_creatGoodsConfig()
     local datas = {}
     for i, itemMat in ipairs(Material) do
@@ -156,17 +161,20 @@ end
 
 ---行情收藏记录的toggle
 function ExchangeCtrl:_quotesToggleValueChange(isOn)
+    if not self.isStartToggle then
+        return
+    end
+
     ExchangePanel.noTipText.transform.localScale = Vector3.zero
     if isOn then
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Quotes
-            --ExchangePanel.quotesPage.localScale = Vector3.one
-            self.sortMgr:_reSetSortData()  --按照默认排序
 
             if #ExchangeCtrl.quoteDatas == 0 then
                 return
             else
+                self.sortMgr:_reSetSortData()  --按照默认排序
                 ExchangePanel.quotesPage.localScale = Vector3.one
                 ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
             end
@@ -179,18 +187,22 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
     end
 end
 function ExchangeCtrl:_collectToggleValueChange(isOn)
+    if not self.isStartToggle then
+        return
+    end
+
     if isOn then
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
             ExchangeCtrl.titleType = ExchangeTitleType.Collect
-            --ExchangePanel.collectPage.localScale = Vector3.one
-            self.collectSortMgr:_reSetSortData()  --按照默认排序
 
             if #ExchangeCtrl.collectDatas == 0 then
                 ExchangePanel.noTipText.text = "Currently no collection!"
                 ExchangePanel.noTipText.transform.localScale = Vector3.one
+                ExchangePanel.collectPage.localScale = Vector3.zero
                 return
             else
+                self.collectSortMgr:_reSetSortData()  --按照默认排序
                 ExchangePanel.collectPage.localScale = Vector3.one
                 ExchangePanel.noTipText.transform.localScale = Vector3.zero
                 ExchangePanel.collectScroll:ActiveLoopScroll(self.collectSource, #ExchangeCtrl.collectDatas)
@@ -204,6 +216,10 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
     end
 end
 function ExchangeCtrl:_recordToggleValueChange(isOn)
+    if not self.isStartToggle then
+        return
+    end
+
     if isOn then
         if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
             --判断是否有数据，没有的话，就显示提示 text
@@ -221,20 +237,25 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
 end
 ---记录界面的toggle
 function ExchangeCtrl:_recordRootInit()
-    ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
+    ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.CityRecord  --默认打开成交进度
     ExchangePanel._entrustmentToggleState(true)
     ExchangePanel._selfRecordToggleState(false)
     ExchangePanel._cityRecordToggleState(false)
     ExchangePanel.recordPage.localScale = Vector3.one
 
-    Event.Brocast("m_ReqExchangeMyOrder")
-    ---模拟服务器消息
-    --self:_getEntrustmentRecord()
-
+    self.recordStartToggle = false
+    ExchangePanel.entrustmentToggle.isOn = true
+    ExchangePanel.selfRecordToggle.isOn = false
+    ExchangePanel.cityRecordToggle.isOn = false
+    self.recordStartToggle = true
+    self:_entrustmentToggleValueChange(true)
 end
 
 function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
     if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
+        return
+    end
+    if not self.recordStartToggle then
         return
     end
 
@@ -245,11 +266,7 @@ function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
             ExchangePanel._selfRecordToggleState(not isOn)
             ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment
 
-            if #ExchangeCtrl.entrustmentInfo == 0 then
-                return
-            else
-                ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
-            end
+            Event.Brocast("m_ReqExchangeMyOrder")
         end
     else
         ExchangePanel._entrustmentToggleState(isOn)
@@ -257,6 +274,9 @@ function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
 end
 function ExchangeCtrl:_selfRecordToggleValueChange(isOn)
     if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
+        return
+    end
+    if not self.recordStartToggle then
         return
     end
 
@@ -277,6 +297,9 @@ function ExchangeCtrl:_selfRecordToggleValueChange(isOn)
 end
 function ExchangeCtrl:_cityRecordToggleValueChange(isOn)
     if ExchangeCtrl.titleType ~= ExchangeTitleType.Record then
+        return
+    end
+    if not self.recordStartToggle then
         return
     end
 
@@ -316,8 +339,8 @@ end
 --交易委托
 ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
     idx = idx + 1
+    ExchangeCtrl.entrustmentInfo[idx].idInTable = idx
     local entrustmentItem = RecordEntrustmentItem:new(ExchangeCtrl.entrustmentInfo[idx], transform)
-    entrustmentItem.idInTable = idx
     ExchangeCtrl.entrustmentItems[idx] = entrustmentItem
 end
 ExchangeCtrl.static.EntrustmentClearData = function(transform)
@@ -344,7 +367,6 @@ end
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
-        ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteConfigDatas)
         ExchangeCtrl.quoteDatas = self:_getSortDatas(ExchangeCtrl.quoteDatas, sortData)
         ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas)
 
@@ -454,28 +476,18 @@ end
 function ExchangeCtrl:_deleteOrder(idInTable)
     table.remove(ExchangeCtrl.entrustmentInfo, idInTable)
     table.remove(ExchangeCtrl.entrustmentItems, idInTable)
-    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+    if #ExchangeCtrl.entrustmentInfo == 0 then
+        ExchangePanel.noTipText.text = "No delegation at present!"
+        ExchangePanel.noTipText.transform.localScale = Vector3.one
+        ExchangePanel.entrustmentPage.localScale = Vector3.zero
+    end
+
+    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
 end
 
 
 ---从modle传来的回调
 function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
-    ----测试创建items
-    --local quoteDatas = {}
-    --quoteDatas[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
-    --quoteDatas[2] = {change = 0.78, lastPrice = 223, name = 002, isCollected = true , high = 1230, low = 1.5, volume = 52.003}
-    --quoteDatas[3] = {change = -0.53, lastPrice = 503, name = 003, isCollected = false, high = 1233, low = 15, volume = 12.003}
-    --quoteDatas[4] = {change = 3.68, lastPrice = 126, name = 004, isCollected = false, high = 1234, low = 12.5, volume = 52.3}
-    --quoteDatas[5] = {change = -5.2, lastPrice = 428, name = 005, isCollected = false, high = 1005, low = 45.5, volume = 59}
-    --quoteDatas[6] = {change = 15.03, lastPrice = 998, name = 006, isCollected = true, high = 10005.002, low = 99, volume = 11000.0022}
-    --
-    --ExchangeCtrl.quoteDatas = quoteDatas
-    --ExchangeCtrl.collectDatas = self:_getCollectDatas(quoteDatas)
-    --ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
-    --ExchangePanel.quotesScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.quoteDatas);
-    --self.sortMgr:_reSetSortData()  --按照默认排序
-
-    ---正式代码 --因为服务器不保证数据顺序，所以每次数据更新时都遍历一次传来的表，获取以itemid为key的新表
     for i, itemData in ipairs(datas) do
         ExchangeCtrl.quoteConfigDatas[itemData.itemId].itemId = itemData.itemId
         ExchangeCtrl.quoteConfigDatas[itemData.itemId].lowPrice = itemData.lowPrice
@@ -492,27 +504,15 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
         ExchangeCtrl.quoteConfigDatas[collectId].isCollected = true
     end
     ExchangeCtrl.collectDatas = collectDatas
+    ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteConfigDatas)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
+    self:_quotesToggleValueChange(true)
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
 
 --收到成交委托信息
 function ExchangeCtrl:_getEntrustmentRecord(datas)
-    --local entrustmentInfo = {}
-    --entrustmentInfo[1] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = false,total = 1000, totalCount = 1000, remainCount = 110, currentValue = 0.5}
-    --entrustmentInfo[2] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 1230, totalCount = 1230, remainCount = 998, currentValue = 1.5}
-    --entrustmentInfo[3] = {quantity = -5.2, unitPrice = 428, name = 005, isSell = false, total = 1005, totalCount = 1005, remainCount = 320, currentValue = 45.5}
-    --entrustmentInfo[4] = {quantity = 15.03, unitPrice = 998, name = 006, isSell = true, total = 1587, totalCount = 1587, remainCount = 1   , currentValue = 99}
-    --ExchangeCtrl.entrustmentInfo = entrustmentInfo
-    --if #ExchangeCtrl.entrustmentInfo == 0 then
-    --    ExchangePanel.noTipText.text = "No delegation at present!"
-    --    ExchangePanel.noTipText.transform.localScale = Vector3.one
-    --else
-    --    ExchangePanel.noTipText.transform.localScale = Vector3.zero
-    --    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
-    --end
-
-    ExchangeCtrl.entrustmentInfo = datas
+    ExchangeCtrl.entrustmentInfo = datas.order
     if #ExchangeCtrl.entrustmentInfo == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
@@ -521,27 +521,11 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
         table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
         ExchangePanel.entrustmentPage.localScale = Vector3.one
-        ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+        ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
     end
 end
 --收到自己的成交记录
 function ExchangeCtrl:_getTransactionRecord(datas)
-    --local selfRecordInfo = {}
-    --selfRecordInfo[1] = {quantity = 3.68, unitPrice = 126, name = 004, isSell = true, total = 123.4, time = "2018/10/01 12:30:05"}
-    --selfRecordInfo[2] = {quantity = -0.78, unitPrice = 100, name = 001, isSell = true,total = 10.03, time = "2018/10/01 12:30:05"}
-    --selfRecordInfo[3] = {quantity = -0.53, unitPrice = 503, name = 003, isSell = false,total = 12.33, time = "2018/10/01 12:30:05"}
-    --selfRecordInfo[4] = {quantity = 0.78, unitPrice = 223, name = 002, isSell = true , total = 12.30, time = "2018/10/01 12:30:05"}
-    --ExchangeCtrl.selfRecordInfo = selfRecordInfo
-    --
-    --if #ExchangeCtrl.selfRecordInfo == 0 then
-    --    ExchangePanel.noTipText.text = "No record at present!"
-    --    ExchangePanel.noTipText.transform.localScale = Vector3.one
-    --    return
-    --else
-    --    ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
-    --    ExchangePanel.noTipText.transform.localScale = Vector3.zero
-    --end
-
     ExchangeCtrl.selfRecordInfo = datas
     if #ExchangeCtrl.selfRecordInfo == 0 then
         ExchangePanel.noTipText.text = "No record at present!"

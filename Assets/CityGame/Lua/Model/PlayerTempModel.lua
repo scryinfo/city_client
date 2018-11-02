@@ -54,7 +54,7 @@ end
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 100, y = 100}}
+    local lMsg = {id = id, pos = {x = 3, y = 3}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

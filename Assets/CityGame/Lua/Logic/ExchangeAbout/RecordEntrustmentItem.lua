@@ -60,20 +60,13 @@ end
 function RecordEntrustmentItem:_clickDeleteBtn()
     --打开弹框
     local showData = {}
-    --local str1
-    --if self.sell then
-    --    str1 = "sell"
-    --else
-    --    str1 = "buy"
-    --end
-    --showData.contentInfo = string.format("Entrust to %s <color=%s>%s</color>x%d?", str1, "#CA8A00", self.name, self.dealed)
     showData.titleInfo = "REMINDER"
     showData.contentInfo = "Confirm to cancel the delegate?"
     showData.tipInfo = ""
     showData.btnCallBack = function()
         log("cycle_w11_exchange03", "向服务器发送请求")
-        Event.Brocast("m_ReqExchangeCancel", self.id)
-        Event.Brocast("c_onExchangeOrderCanel", self.idInTable)  --不确定idInTable是否有值
+        Event.Brocast("m_ReqExchangeCancel", self.data.id)
+        Event.Brocast("c_onExchangeOrderCanel", self.data.idInTable)  --不确定idInTable是否有值
     end
     CityGlobal.OpenCtrl("BtnDialogPageCtrl", showData)
 end

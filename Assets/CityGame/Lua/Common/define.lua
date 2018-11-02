@@ -147,6 +147,7 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
+	ProcessingFactory = 2,  --加工厂
 }
 --仓库 --货架 --运输(通用)
 BuildingInType =

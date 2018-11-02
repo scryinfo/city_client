@@ -1,6 +1,3 @@
------
-
-
 AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPage);
 
 function AdjustProductionLineCtrl:initialize()
@@ -14,7 +11,8 @@ end
 function AdjustProductionLineCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
     local adjustLine = self.gameObject:GetComponent('LuaBehaviour')
-    adjustLine:AddClick(AdjustProductionLinePanel.returnBtn,self.OnClick_returnBtn,self);
+    adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
+    adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
 
 end
 
@@ -28,4 +26,8 @@ end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
+end
+
+function AdjustProductionLineCtrl:OnClick_addBtn()
+    UIPage:OpenCtrl("AddProductionLineCtrl")
 end

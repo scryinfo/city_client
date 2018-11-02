@@ -1,8 +1,14 @@
-
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
---存放选中的物品   临时表
-WarehouseCtrl.temporaryItems = {}
 
+--物品上架还是运输
+CityGlobal.GoodsState =
+{
+    shelf  = 0,  --上架
+    transport = 1,  --运输
+}
+
+--存放选中的物品,临时表
+WarehouseCtrl.temporaryItems = {}
 local isShowList;
 local switchIsShow;
 
@@ -28,6 +34,9 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
+
+    --初始化物品上架还是运输
+    self.operation = nil;
 
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
@@ -56,24 +65,35 @@ function WarehouseCtrl:OnClick_searchBtn(ins)
 
 end
 
---仓库物品选中
+--选中物品
 function WarehouseCtrl:_selectedGoods(id)
     if self.temporaryItems[id] == nil then
         self.temporaryItems[id] = id
-        self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
+        if self.operation == CityGlobal.GoodsState.shelf then
+            self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
+        elseif self.operation == CityGlobal.GoodsState.transport then
+            self.ShelfGoodsMgr:_creatTransportGoods(id,self.luabehaviour)
+        end
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
-
     else
         self.temporaryItems[id] = nil;
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-        self.ShelfGoodsMgr:_deleteShelfItem(id)
+        if self.operation == CityGlobal.GoodsState.shelf then
+            self.ShelfGoodsMgr:_deleteShelfItem(id);
+        elseif self.operation == CityGlobal.GoodsState.transport then
+            self.ShelfGoodsMgr:_deleteTransportItem(id);
+        end
     end
 end
 --监听临时表里是否有这个物品
 function WarehouseCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
     self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-    self.ShelfGoodsMgr:_deleteShelfItem(id)
+    if self.operation == CityGlobal.GoodsState.shelf then
+        self.ShelfGoodsMgr:_deleteShelfItem(id);
+    elseif self.operation == CityGlobal.GoodsState.transport then
+        self.ShelfGoodsMgr:_deleteTransportItem(id);
+    end
 end
 
 --右边Shelf
@@ -117,15 +137,17 @@ function WarehouseCtrl:OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
-
+--判断打开右侧货架还是运输
 function WarehouseCtrl:OnClick_rightInfo(isShow,number)
     if isShow then
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(true);
+            self.operation = CityGlobal.GoodsState.shelf;
             Event.Brocast("c_GoodsItemChoose")
         else
             WarehousePanel.transport:SetActive(true);
+            self.operation = CityGlobal.GoodsState.transport;
             Event.Brocast("c_GoodsItemChoose")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
@@ -134,9 +156,17 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")
+            for k in pairs(WarehouseCtrl.temporaryItems) do
+                Event.Brocast("c_temporaryifNotGoods", k)
+            end
+            self.operation = nil;
         else
             WarehousePanel.transport:SetActive(false);
             Event.Brocast("c_GoodsItemDelete")
+            for i in pairs(WarehouseCtrl.temporaryItems) do
+                Event.Brocast("c_temporaryifNotGoods", i)
+            end
+            self.operation = nil;
         end
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);
     end

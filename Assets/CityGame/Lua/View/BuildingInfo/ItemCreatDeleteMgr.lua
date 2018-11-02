@@ -9,7 +9,7 @@ require 'View/BuildingInfo/AddItem'
 require'View/BuildingInfo/GoodsItem'
 require'View/BuildingInfo/BuildingItem'
 
-require'View/BuildingInfo/SmallPopItem'
+
 
 local class = require 'Framework/class'
 ItemCreatDeleteMgr = class('ItemCreatDeleteMgr')
@@ -20,16 +20,14 @@ ItemCreatDeleteMgr.addItemPreb_Path="View/GoodsItem/addItem"
 ItemCreatDeleteMgr.goodsPreb_Path="View/GoodsItem/goodsItem"
 ItemCreatDeleteMgr.buildingPreb_Path="View/GoodsItem/buildingItem"
 
-ItemCreatDeleteMgr.SmallPop_Path="View/GoodsItem/TipsParticle"
+
 
 function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
     if not  self.addedItemList then
         self.addedItemList={}
         self.selectItemList={}
         self.index=0
-        self.root=AdvertisementPosPanel.scrollcon.root
-        Event.AddListener("SmallPop",self.SmallPop,self)
-   end
+       end
 
     self.behaviour = luabehaviour
     self.buildingData=creatData
@@ -127,13 +125,8 @@ end
 function ItemCreatDeleteMgr:_deleteGoods(ins)
     destroy(ins.ItemList[ins.id])
  end
----小弹窗
-function ItemCreatDeleteMgr:SmallPop(string)
-   local prefab=UnityEngine.GameObject.FindGameObjectWithTag("Finish")
 
-    if not prefab then
-      prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
-    end
 
-    SmallPopItem:new(string,prefab,self);
-end
+
+
+

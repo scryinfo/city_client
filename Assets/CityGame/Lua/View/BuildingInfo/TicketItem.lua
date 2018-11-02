@@ -29,10 +29,7 @@ function TicketItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanel
         clickOpenFunc(mgrTable, self.toggleData)
     end);
 
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,function()
-
-
-    end);
+    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,self.OntoDoBtn,self);
 
 
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
@@ -79,3 +76,7 @@ function TicketItem:updateInfo(data)
     end]]
 end
 
+
+function TicketItem:OntoDoBtn()
+   UIPage:OpenCtrl("ConfirmPopCtrl")
+end

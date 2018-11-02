@@ -52,7 +52,8 @@ local modelList = {};	--模型列表--
 function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
-	UIPage:OpenCtrl('MunicipalCtrl') --注意传入的是类名
+	UIPage:OpenCtrl('LoginCtrl',Vector2.New(0, -300)) --注意传入的是类名
+   --UIPage:OpenCtrl('MunicipalCtrl') --注意传入的是类名
 	--LoginCtrl--,Vector2.New(0, -300)
 	--MunicipalCtrl
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);

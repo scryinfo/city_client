@@ -19,7 +19,7 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.m_ReqBuildApartment(1100001)
+        PlayerTempModel.m_ReqBuildApartment(1400001)
     end
 end
 
@@ -42,6 +42,7 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     local roleData = assert(pbl.decode("gs.Role", stream), "PlayerTempModel.n_OnReceiveExchangeDeal: stream == nil")
     PlayerTempModel.roleData = roleData
     PlayerTempModel.storeList = this._getStore(roleData)
+    PlayerTempModel.collectList = roleData.exchangeCollectedItem
 end
 --创建同步
 function PlayerTempModel.n_OnReceiveUnitCreate(stream)
@@ -54,7 +55,7 @@ end
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 3, y = 3}}
+    local lMsg = {id = id, pos = {x = 8, y = 8}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

@@ -497,7 +497,7 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
         ExchangeCtrl.quoteConfigDatas[itemData.itemId].priceChange = itemData.priceChange
     end
 
-    local collectIndexs = {}  --从role exchangeCollectedItem中获取
+    local collectIndexs = PlayerTempModel.collectList
     local collectDatas = {}
     for i, collectId in ipairs(collectIndexs) do
         collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteConfigDatas[collectId]
@@ -512,47 +512,47 @@ end
 
 --收到成交委托信息
 function ExchangeCtrl:_getEntrustmentRecord(datas)
-    ExchangeCtrl.entrustmentInfo = datas.order
-    if #ExchangeCtrl.entrustmentInfo == 0 then
+    if not datas.order or #datas.order == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         ExchangePanel.entrustmentPage.localScale = Vector3.zero
-    else
-        table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
-        ExchangePanel.noTipText.transform.localScale = Vector3.zero
-        ExchangePanel.entrustmentPage.localScale = Vector3.one
-        ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
+        return
     end
+
+    ExchangeCtrl.entrustmentInfo = datas.log
+    table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero
+    ExchangePanel.entrustmentPage.localScale = Vector3.one
+    ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
 end
 --收到自己的成交记录
 function ExchangeCtrl:_getTransactionRecord(datas)
-    ExchangeCtrl.selfRecordInfo = datas
-    if #ExchangeCtrl.selfRecordInfo == 0 then
+    if not datas.log or #datas.log == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         ExchangePanel.selfRecordPage.localScale = Vector3.zero
         return
-    else
-        table.sort(ExchangeCtrl.selfRecordInfo, function (m, n) return m.ts > n.ts end)
-        ExchangePanel.selfRecordPage.localScale = Vector3.one
-        ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
-        ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
+
+    ExchangeCtrl.selfRecordInfo = datas.log
+    table.sort(ExchangeCtrl.selfRecordInfo, function (m, n) return m.ts > n.ts end)
+    ExchangePanel.selfRecordPage.localScale = Vector3.one
+    ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero
 end
 --收到全城的成交记录
 function ExchangeCtrl:_getCityRecord(datas)
-    ExchangeCtrl.cityRecordInfo = datas
-    if #ExchangeCtrl.cityRecordInfo == 0 then
+    if not datas.log or #datas.log == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         ExchangePanel.cityRecordPage.localScale = Vector3.zero
         return
-    else
-        table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
-        ExchangePanel.cityRecordPage.localScale = Vector3.one
-        ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
-        ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
+    ExchangeCtrl.cityRecordInfo = datas.log
+    table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
+    ExchangePanel.cityRecordPage.localScale = Vector3.one
+    ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
+    ExchangePanel.noTipText.transform.localScale = Vector3.zero
 end
 --收到成交信息
 function ExchangeCtrl:_exchangeDealSuccess(data)

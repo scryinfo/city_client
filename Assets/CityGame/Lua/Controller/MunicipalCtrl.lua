@@ -43,7 +43,7 @@ function MunicipalCtrl:Awake(go)
 ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
 
-    Event.AddListener("SmallPop",self.SmallPop,self)
+    Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
 
 --更改名字
@@ -80,7 +80,7 @@ function MunicipalCtrl:c_creatGoods(path,parent)
     return go
 end
 
-function MunicipalCtrl:SmallPop(string)
+function MunicipalCtrl:c_SmallPop(string)
     local prefab=UnityEngine.GameObject.FindGameObjectWithTag("Finish")
 
     if not prefab then

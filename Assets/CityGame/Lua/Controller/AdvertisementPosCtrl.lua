@@ -114,8 +114,7 @@ end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
 --他人点击
-    --UIPage:OpenCtrl();
-   
+    UIPage:OpenCtrl("SignOnCtrl");
 end
 
 

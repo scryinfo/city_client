@@ -20,7 +20,7 @@ end
 
 function BtnDialogPageCtrl:Awake(go)
     self:_getComponent(go)
-    self:_initData()
+   -- self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
     --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
@@ -28,6 +28,7 @@ function BtnDialogPageCtrl:Awake(go)
 end
 
 function BtnDialogPageCtrl:Refresh()
+    self:_initData()
     self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
 end
@@ -48,7 +49,7 @@ function BtnDialogPageCtrl:_initData()
 end
 
 function BtnDialogPageCtrl:_onClickConfim(ins)
-    log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
+    ct.log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil

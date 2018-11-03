@@ -9,8 +9,6 @@
 --- DateTime: 2018/9/27 21:15
 ---
 -----
-require('Controller/SkillPageCtrl')
-
 MainPageCtrl = class('MainPageCtrl',UIPage)
 
 function MainPageCtrl:initialize()
@@ -33,14 +31,14 @@ function MainPageCtrl:Awake(go)
 end
 
 function MainPageCtrl:Refresh()
-    log("abel_w6_UIFrame_1","[MainPageCtrl:Refresh] UI数据更新， m_data ="..tostring(self.m_data));
+    ct.log("abel_w6_UIFrame_1","[MainPageCtrl:Refresh] UI数据更新， m_data ="..tostring(self.m_data));
 end
 
 function MainPageCtrl:OnClick_skill()
-    log("abel_w6_UIFrame", "MainPageCtrl:OnClick_confim")
+    ct.log("abel_w6_UIFrame", "MainPageCtrl:OnClick_confim")
     UIPage:ShowPage(SkillPageCtrl)
 end
 function MainPageCtrl:OnClick_battle(obj)
-    log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
+    ct.log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
 end
 

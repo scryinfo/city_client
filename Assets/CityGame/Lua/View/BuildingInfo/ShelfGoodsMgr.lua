@@ -2,6 +2,8 @@
 require 'View/BuildingInfo/ShelfGoodsItem'  --货架Item
 require 'View/BuildingInfo/WarehouseItem'  --仓库Item
 require 'View/BuildingInfo/DetailsItem'  --仓库shelf Item
+--管理货架物品信息
+--require 'View/BuildingInfo/'  --
 
 ShelfGoodsMgr = class('ShelfGoodsMgr')
 
@@ -43,6 +45,7 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
             self.WarehouseItems = {}
         end
         self.WarehouseItems[i] = warehouseLuaItem
+        ct.log("这是仓库的!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     end
 end
 
@@ -125,7 +128,7 @@ function ShelfGoodsMgr:_deleteTransportItem(id)
 end
 --货架删除
 function ShelfGoodsMgr:_deleteGoods(ins)
-    log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
+    ct.log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
     --清空之前的旧数据
     destroy(self.items[ins.id].prefab.gameObject);
     table.remove(self.ModelDataList, ins.id)

@@ -72,7 +72,7 @@ function CityEngineLua.Avatar:ReceiveChatMessage(msg)
 end
 
 function CityEngineLua.Avatar:onAddSkill(skillID)
-    log(self.className .. "::onAddSkill(" .. skillID .. ")");
+    ct.log(self.className .. "::onAddSkill(" .. skillID .. ")");
 
     local skill = Skill:New();
     skill.id = skillID;
@@ -119,6 +119,6 @@ function CityEngineLua.Avatar:onAddSkill(skillID)
 end
 
 function CityEngineLua.Avatar:onRemoveSkill(skillID)
-    log(className .. "::onRemoveSkill(" .. skillID .. ")");
+    ct.log(className .. "::onRemoveSkill(" .. skillID .. ")");
     SkillBox.Remove(skillID);
 end

@@ -35,12 +35,20 @@ function ServerListModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),ServerListModel.n_AllGameServerInfo);
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),ServerListModel.n_ChooseGameServer);
 end
+
 --返回服务器列表
 function ServerListModel.n_AllGameServerInfo( stream )
-
     local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     if #msgAllGameServerInfo.infos ~= 0 then
         this.serinofs = msgAllGameServerInfo.infos
+        local serverListName = {};
+        for i = 1, #this.serinofs do
+            serverListName[i] = this.serinofs[i].name
+        end
+        ct.OpenCtrl("ServerListCtrl", serverListName)
+       -- ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
+        --ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
+
         return
     end
 
@@ -48,10 +56,9 @@ function ServerListModel.n_AllGameServerInfo( stream )
 end
 --选择游戏服务器
 function ServerListModel.m_chooseGameServer( Index )
-
     local serverIndex = Index --测试服务器列表索引 1 是公共服务器 2 是李宁的服务器
     local sid = this.serinofs[serverIndex].serverId
-    log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverIndex)
+    ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverIndex)
     local ip = this.serinofs[serverIndex].ip
     local port = this.serinofs[serverIndex].port --服务器返回1000，应该是 9001，不然连不上
     --local port = "9001"
@@ -69,7 +76,7 @@ function ServerListModel.m_chooseGameServer( Index )
     local lMsg = { serverId = sid}
     ----3、 序列化成二进制数据
     local  pMsg = assert(pbl.encode("as.ChoseGameServer", lMsg))
-    log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg)
+    ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg)
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
@@ -98,11 +105,10 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role
-    log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg.info)
+    ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg.info)
     if lMsg.info == nil then
         Event.Brocast("c_GsCreateRole")
     else
-        log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] 我来了")
         ServerListModel.loginRole(lMsg.info)
     end
 
@@ -130,7 +136,7 @@ function ServerListModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
-        log("[LoginModel.n_OnRoleLogin] succeed!")
+        ct.log("[LoginModel.n_OnRoleLogin] succeed!")
         Event.Brocast("c_GsLoginSuccess");
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
@@ -168,7 +174,7 @@ function ServerListModel.n_CreateNewRole(stream)
     --message Role {
     --    required bytes id = 1;
     if stream == nil then
-        log("system", "[LoginModel.n_CreateNewRole] stream = nil")
+        ct.log("system", "[LoginModel.n_CreateNewRole] stream = nil")
         return
     end
 
@@ -177,8 +183,3 @@ function ServerListModel.n_CreateNewRole(stream)
     logDebug(pMsg.name)
     ServerListModel.loginRole({{id = pMsg.id}})
 end
-UnitTest.Exec("rodger_w8_GameMainInterface", "test_ServerListCtrl_self",  function ()
-    Event.AddListener("c_LoginSuccessfully_self", function ()
-        UIPage:ShowPage(ServerListCtrl)
-    end)
-end)

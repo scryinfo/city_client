@@ -116,7 +116,7 @@ function CityEngineLua.Bundle:send()
 			networkInterface:send(self.stream);
 		end
 	else
-		log("Bundle::send: networkInterface invalid!");  
+		ct.log("Bundle::send: networkInterface invalid!");
 	end
 	
 	self.streamList = {};

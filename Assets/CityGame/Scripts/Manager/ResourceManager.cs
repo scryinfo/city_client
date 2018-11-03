@@ -99,27 +99,16 @@ namespace LuaFramework {
             {
                 result.Add(r.asset);                
             }
-            action(result.ToArray());
+            if (action != null) {
+                action(result.ToArray());
+            }
         }
         /// <summary>
         /// 载入素材
         /// </summary>
         void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null) where T : UObject {
 
-#if CLOSE_RES_BUNDELMODE        
-        for (int i = 0; i < assetNames.Length; i++)
-        {
-            string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
-                //同步加载
-                /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
-                if (prefab != null) {                
-                    result.Add(prefab);
-                }*/
-                //异步加载
-                StartCoroutine(NoneBundleLoadRes(realpath, action));                
-        }
-#else
-
+#if RES_BUNDEL
             abName = GetRealAssetPath(abName);
 
             LoadAssetRequest request = new LoadAssetRequest();
@@ -139,7 +128,19 @@ namespace LuaFramework {
             else
             {
                 requests.Add(request);
-            }
+            }        
+#else
+            for (int i = 0; i < assetNames.Length; i++)
+            {
+                string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
+                //同步加载
+                /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
+                if (prefab != null) {                
+                    result.Add(prefab);
+                }*/
+                //异步加载
+                StartCoroutine(NoneBundleLoadRes(realpath, action));
+            }            
 #endif
         }
 
@@ -307,7 +308,7 @@ namespace LuaFramework {
             uri = Util.DataPath + AppConst.AssetDir;
             if (!File.Exists(uri)) return;
             stream = File.ReadAllBytes(uri);
-            assetbundle = AssetBundle.CreateFromMemoryImmediate(stream);
+            assetbundle = AssetBundle.LoadFromMemory(stream);
             manifest = assetbundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
         }
 
@@ -336,8 +337,8 @@ namespace LuaFramework {
         /// <param name="abname"></param>
         /// <returns></returns>
         public AssetBundle LoadAssetBundle(string abname) {
-            if (!abname.EndsWith(AppConst.ExtName)) {
-                abname += AppConst.ExtName;
+            if (!abname.EndsWith(AppConst.BundleExt)) {
+                abname += AppConst.BundleExt;
             }
             AssetBundle bundle = null;
             if (!bundles.ContainsKey(abname)) {
@@ -347,7 +348,7 @@ namespace LuaFramework {
                 LoadDependencies(abname);
 
                 stream = File.ReadAllBytes(uri);
-                bundle = AssetBundle.CreateFromMemoryImmediate(stream); //关联数据的素材绑定
+                bundle = AssetBundle.LoadFromMemory(stream); //关联数据的素材绑定
                 bundles.Add(abname, bundle);
             } else {
                 bundles.TryGetValue(abname, out bundle);

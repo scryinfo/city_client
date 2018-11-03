@@ -92,14 +92,14 @@ end
 function StaffRateItem:_clickOpenBtn()
     if self.clickOpenFunc then
         self.clickOpenFunc()
-        log("cycle_w6_houseAndGround", "----------------------------------")
+        ct.log("cycle_w6_houseAndGround", "----------------------------------")
     end
 end
 
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn()
     --打开工资调整界面
-    log("cycle_w6_houseAndGround", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊")
+    ct.log("cycle_w6_houseAndGround", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊")
     --UIPage:ShowPage(WagesAdjustBoxCtrl)
 end
 

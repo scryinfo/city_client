@@ -151,7 +151,7 @@ function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
     end
 
     if startBidInfo.id ~= self.m_data.id then
-        log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] ")
+        ct.log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] ")
         return
     end
 
@@ -187,7 +187,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         info.contentInfo = "Success!!!!";
         info.tipInfo = "lalalalalalalalla";
         info.btnCallBack = function ()
-            log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
+            ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
         end;
         UIPage:ShowPage(BtnDialogPageCtrl, info)
     end

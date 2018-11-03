@@ -49,10 +49,11 @@ end
 function ProcessingCtrl:Refresh()
 
 end
+UnitTest.TestBlockStart()---------------------------------------------------------
 
-UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
-    log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
-    Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        UIPage:ShowPage(ProcessingCtrl);
-    end)
+UnitTest.Exec("fisher_w11_ProcessingCtrl", "test_ProcessingCtrl_ShowPage",  function ()
+    ct.log("fisher_w11_ProcessingCtrl","[test_ProcessingCtrl_ShowPage]  测试开始")
+    ct.OpenCtrl('ProcessingCtrl') --注意传入的是类名
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

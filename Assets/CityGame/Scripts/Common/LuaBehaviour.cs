@@ -38,7 +38,7 @@ namespace LuaFramework {
         public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
             //buttons.Add(go.name, luafunc);
-            string eventName = go.name + luafunc.GetHashCode().ToString();
+            string eventName = go.GetInstanceID() + luafunc.GetHashCode().ToString();
             if (obj != null)
             {
                 eventName += obj.GetHashCode().ToString();
@@ -58,13 +58,12 @@ namespace LuaFramework {
         public void RemoveClick(GameObject go, LuaFunction luafuncToDel, object obj = null)
         {
             if (go == null) return;
-            string eventName = go.name + luafuncToDel.GetHashCode().ToString();
+            string eventName = go.GetInstanceID() + luafuncToDel.GetHashCode().ToString();
             if (obj != null)
             {
                 eventName += obj.GetHashCode().ToString();
             }
             LuaCfunPair pPair;
-            LuaFunction luafunc = null;
             buttons.TryGetValue(eventName, out pPair);
             if (pPair._LuaFunction != null && pPair._CsharpFun != null)
             {
@@ -90,7 +89,7 @@ namespace LuaFramework {
         //-----------------------------------------------------------------
         protected void OnDestroy() {
             ClearClick();
-#if ASYNC_MODE && !CLOSE_RES_BUNDELMODE
+#if ASYNC_MODE && RES_BUNDEL
             string abName = name.ToLower().Replace("panel", "");
             ResManager.UnloadAssetBundle(abName + AppConst.BundleExt);
 #endif

@@ -4,6 +4,8 @@
 --- DateTime: 2018/8/20 18:08
 ---
 
+UnitTest.TestBlockStart()---------------------------------------------------------
+
 local lu = require "Framework/pbl/luaunit"
 local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
@@ -58,3 +60,6 @@ UnitTest.Exec("abel_w6_UIFrame", "test_oo",  function ()
     p2:speak()
     Event.Brocast("class_cb", 100);
 end )
+
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

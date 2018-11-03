@@ -21,6 +21,9 @@ function LoginPanel.InitPanel()
 	this.textStatus = transform:Find("Text_status").gameObject;
 end
 
+function LoginPanel.Start()
+
+end
 --单击事件--
 function LoginPanel.OnDestroy()
 	logWarn("OnDestroy---->>>");

@@ -1,7 +1,7 @@
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
 
 --物品上架还是运输
-CityGlobal.GoodsState =
+ct.GoodsState =
 {
     shelf  = 0,  --上架
     transport = 1,  --运输
@@ -69,18 +69,18 @@ end
 function WarehouseCtrl:_selectedGoods(id)
     if self.temporaryItems[id] == nil then
         self.temporaryItems[id] = id
-        if self.operation == CityGlobal.GoodsState.shelf then
+        if self.operation == ct.GoodsState.shelf then
             self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
-        elseif self.operation == CityGlobal.GoodsState.transport then
+        elseif self.operation == ct.GoodsState.transport then
             self.ShelfGoodsMgr:_creatTransportGoods(id,self.luabehaviour)
         end
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
     else
         self.temporaryItems[id] = nil;
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-        if self.operation == CityGlobal.GoodsState.shelf then
+        if self.operation == ct.GoodsState.shelf then
             self.ShelfGoodsMgr:_deleteShelfItem(id);
-        elseif self.operation == CityGlobal.GoodsState.transport then
+        elseif self.operation == ct.GoodsState.transport then
             self.ShelfGoodsMgr:_deleteTransportItem(id);
         end
     end
@@ -89,9 +89,9 @@ end
 function WarehouseCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
     self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-    if self.operation == CityGlobal.GoodsState.shelf then
+    if self.operation == ct.GoodsState.shelf then
         self.ShelfGoodsMgr:_deleteShelfItem(id);
-    elseif self.operation == CityGlobal.GoodsState.transport then
+    elseif self.operation == ct.GoodsState.transport then
         self.ShelfGoodsMgr:_deleteTransportItem(id);
     end
 end
@@ -143,11 +143,11 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(true);
-            self.operation = CityGlobal.GoodsState.shelf;
+            self.operation = ct.GoodsState.shelf;
             Event.Brocast("c_GoodsItemChoose")
         else
             WarehousePanel.transport:SetActive(true);
-            self.operation = CityGlobal.GoodsState.transport;
+            self.operation = ct.GoodsState.transport;
             Event.Brocast("c_GoodsItemChoose")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);

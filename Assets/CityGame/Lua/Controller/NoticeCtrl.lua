@@ -38,7 +38,7 @@ function NoticeCtrl:Refresh()
 end
 
 function NoticeCtrl:OnClick_confim(obj)
-    log("abel_w6_UIFrame", "NoticeCtrl:OnClick_confim")
+    ct.log("abel_w6_UIFrame", "NoticeCtrl:OnClick_confim")
     obj:Hide();
 end
 

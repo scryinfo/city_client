@@ -1,8 +1,6 @@
 
 -----
 -----
-require('Controller/GameMainInterfaceCtrl')
-
 
 RoleManagerCtrl = class('RoleManagerCtrl',UIPage)
 
@@ -27,7 +25,7 @@ end
 
 --开始游戏--
 function RoleManagerCtrl.OnStartGame()
-    log("rodger_w8_GameMainInterface","[test_OnStartGame]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnStartGame]  测试完毕")
     UIPage:ClearAllPages()
     UIPage:ShowPage(GameMainInterfaceCtrl)
 end

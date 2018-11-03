@@ -30,51 +30,51 @@ end
 
 --通知--
 function GameMainInterfaceCtrl.OnNotice()
-    log("rodger_w8_GameMainInterface","[test_OnNotice]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnNotice]  测试完毕")
 end
 
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
-    log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
 end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
-    log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
-    log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
 end
 
 --交易所--
 function GameMainInterfaceCtrl.OnExchange()
-    log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
     --UIPage:ShowPage(ExchangeCtrl)
-    UIPage:OpenCtrl('ExchangeCtrl')
+    ct.OpenCtrl('ExchangeCtrl')
 end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
-    log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
     local info = {}
     --UIPage:ShowPage(HouseCtrl, info)
-    UIPage:OpenCtrl('HouseCtrl',info)
+    ct.OpenCtrl('HouseCtrl',info)
     --Event.Brocast("c_OnOppenHouse");
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
     --UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
     --Event.Brocast('c_OnOpenLoginCtrl')
-    UIPage:OpenCtrl('MaterialCtrl')
+    ct.OpenCtrl('MaterialCtrl')
 end
 
 --加工厂--
 function GameMainInterfaceCtrl.OnSourceMill()
-    log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
+    ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
     --Event.Brocast("");
 end
 

@@ -44,6 +44,15 @@ namespace City
             return Application.platform == RuntimePlatform.WindowsEditor;
         }
 
+        public static bool isluaLogEnable()
+        {
+#if LUA_LOG
+            return true;
+#else
+            return false;
+#endif
+        }
+
         public static string getAssetsPath()
         {
             if (Application.platform == RuntimePlatform.Android)
@@ -59,6 +68,16 @@ namespace City
                 return "Assets/CityGame";
 #endif
             }
+        }
+
+        public static string getDataPath()
+        {
+            return UnityEngine.Application.dataPath;
+        }
+
+        public static object getUiCamera()
+        {
+            return UIRoot.getUiCamera();
         }
 
         public static Transform getNormalRoot()

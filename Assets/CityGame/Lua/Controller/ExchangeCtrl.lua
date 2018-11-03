@@ -104,6 +104,12 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.titleType = ExchangeTitleType.Quotes  --默认打开行情
     ExchangeCtrl.recordTitleType = ExchangeRecordTitleType.Entrustment  --默认打开成交进度
 
+    ExchangeCtrl.quoteItems = {}
+    ExchangeCtrl.collectItems = {}
+    ExchangeCtrl.entrustmentItems = {}
+    ExchangeCtrl.selfRecordItems = {}
+    ExchangeCtrl.cityRecordItems = {}
+
     --测试创建items
     local sourceInfo = {}
     sourceInfo[1] = {change = -0.78, lastPrice = 100, name = 001, isCollected = false, high = 1000, low = 0.5, volume = 500.003}
@@ -116,8 +122,7 @@ function ExchangeCtrl:_initPanelData()
     ExchangeCtrl.collectDatas = self:_getCollectDatas(sourceInfo)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示
 
-    ExchangePanel.quotesCollectScroll:InitLoopScroll(self.quotesSource, 6);
-    --ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo);
+    ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo);
 
     self.sortMgr:_reSetSortData()  --按照默认排序
 end
@@ -133,7 +138,7 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
             if #ExchangeCtrl.sourceInfo == 0 then
                 return
             else
-                ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo)
+                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
             end
         end
     else
@@ -157,7 +162,7 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
                 return
             else
                 ExchangePanel.noTipText.transform.localScale = Vector3.zero
-                ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.collectDatas)
+                ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
             end
         end
     else
@@ -213,7 +218,7 @@ function ExchangeCtrl:_entrustmentToggleValueChange(isOn)
             if #ExchangeCtrl.entrustmentInfo == 0 then
                 return
             else
-                ExchangePanel.entrustmentScroll:RefreshItems(#ExchangeCtrl.entrustmentInfo)
+                ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
             end
         end
     else
@@ -262,10 +267,12 @@ end
 ExchangeCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
     if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
-        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform, ExchangeCtrl.static.luaBehaviour)
+        local collectItem = ExchangeQuoteItem:new(ExchangeCtrl.collectDatas[idx], transform)
+        ExchangeCtrl.collectItems[idx] = collectItem
 
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
-        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform, ExchangeCtrl.static.luaBehaviour)
+        local item = ExchangeQuoteItem:new(ExchangeCtrl.sourceInfo[idx], transform)
+        ExchangeCtrl.quoteItems[idx] = item
     end
 
 end
@@ -276,6 +283,7 @@ end
 ExchangeCtrl.static.EntrustmentProvideData = function(transform, idx)
     idx = idx + 1
     local entrustmentItem = RecordEntrustmentItem:new(ExchangeCtrl.entrustmentInfo[idx], transform)
+    ExchangeCtrl.entrustmentItems[idx] = entrustmentItem
 end
 ExchangeCtrl.static.EntrustmentClearData = function(transform)
 end
@@ -284,6 +292,7 @@ end
 ExchangeCtrl.static.SelfRecordProvideData = function(transform, idx)
     idx = idx + 1
     local selfRecordItem = RecordTransactionItem:new(ExchangeCtrl.selfRecordInfo[idx], transform)
+    ExchangeCtrl.selfRecordItems[idx] = selfRecordItem
 end
 ExchangeCtrl.static.SelfRecordClearData = function(transform)
 end
@@ -292,19 +301,21 @@ end
 ExchangeCtrl.static.CityRecordProvideData = function(transform, idx)
     idx = idx + 1
     local cityRecordItem = RecordTransactionItem:new(ExchangeCtrl.cityRecordInfo[idx], transform)
+    ExchangeCtrl.cityRecordItems[idx] = cityRecordItem
 end
 ExchangeCtrl.static.CityRecordClearData = function(transform)
 end
 
 ---排序
 function ExchangeCtrl:_exchangeSortByValue(sortData)
-    --log("cycle_w9_exchange01", "排序啦啦啦")
+    --ct.log("cycle_w9_exchange01", "排序啦啦啦")
     if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then  --行情的排序
         ExchangeCtrl.sourceInfo = self:_getSortDatas(ExchangeCtrl.sourceInfo, sortData)
-        ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.sourceInfo)
+        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.sourceInfo)
+
     elseif ExchangeCtrl.titleType == ExchangeTitleType.Collect then
         ExchangeCtrl.collectDatas = self:_getSortDatas(ExchangeCtrl.collectDatas, sortData)
-        ExchangePanel.quotesCollectScroll:RefreshItems(#ExchangeCtrl.collectDatas)
+        ExchangePanel.quotesCollectScroll:ActiveLoopScroll(self.quotesSource, #ExchangeCtrl.collectDatas)
     end
 end
 
@@ -378,7 +389,7 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
     else
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
-        ExchangePanel.entrustmentScroll:InitLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
+        ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo);
     end
 end
 --收到自己的成交记录
@@ -395,7 +406,7 @@ function ExchangeCtrl:_getTransactionRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
-        ExchangePanel.selfRecordScroll:InitLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
+        ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
 end
@@ -415,7 +426,7 @@ function ExchangeCtrl:_getCityRecord(datas)
         ExchangePanel.noTipText.transform.localScale = Vector3.one
         return
     else
-        ExchangePanel.cityRecordScroll:InitLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
+        ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)
         ExchangePanel.noTipText.transform.localScale = Vector3.zero
     end
 end

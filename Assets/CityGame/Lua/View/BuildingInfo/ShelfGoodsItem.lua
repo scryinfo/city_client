@@ -1,8 +1,6 @@
-
-
 ShelfGoodsItem = class('ShelfGoodsItem')
 
---初始化方法   数据（读配置表）
+--初始化方法   数据（接受服务器）
 function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
@@ -26,7 +24,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
 end
 --删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
+    ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
     go.manager:_deleteGoods(go)
 end
 function ShelfGoodsItem:OnClick_detailsBtn()

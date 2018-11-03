@@ -337,8 +337,8 @@ namespace LuaFramework {
         /// <param name="abname"></param>
         /// <returns></returns>
         public AssetBundle LoadAssetBundle(string abname) {
-            if (!abname.EndsWith(AppConst.ExtName)) {
-                abname += AppConst.ExtName;
+            if (!abname.EndsWith(AppConst.BundleExt)) {
+                abname += AppConst.BundleExt;
             }
             AssetBundle bundle = null;
             if (!bundles.ContainsKey(abname)) {

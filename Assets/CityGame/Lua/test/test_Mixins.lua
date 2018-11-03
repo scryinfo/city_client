@@ -3,15 +3,19 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/21 11:12
 ---
+
+UnitTest.TestBlockStart()---------------------------------------------------------
+
+
 local log = log
 
 
 HasWings = { -- HasWings is a module, not a class. It can be "included" into classes
     fly = function(self)
-        log('flap flap flap I am a ' .. self.class.name)
+        ct.log('flap flap flap I am a ' .. self.class.name)
     end,
     foo = function(self)
-     return 1
+        return 1
     end
 }
 
@@ -59,8 +63,8 @@ function SpeakFunClass.speak()
 end
 
 --调用派生类自己的方法比调用从基类继承而来的方法和混入的方法
-    --1千万次调用 执行时间要快30%
-    --50亿次调用  执行却时间非常接近（为什么？）
+--1千万次调用 执行时间要快30%
+--50亿次调用  执行却时间非常接近（为什么？）
 UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  function ()
     local bee = Bee() -- or Bee:new()
     --local count = 5000000000
@@ -99,7 +103,7 @@ UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  fun
         end
     end)
 
-    log("abel_w6_UIFrame_performance","[test_mixin_inherited_method]  bee2:fun")
+    ct.log("abel_w6_UIFrame_performance","[test_mixin_inherited_method]  bee2:fun")
     local bee2 = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee2:speak()
@@ -112,3 +116,4 @@ end)
 
 
 
+UnitTest.TestBlockEnd()-----------------------------------------------------------

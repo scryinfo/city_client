@@ -49,7 +49,7 @@ function BtnDialogPageCtrl:_initData()
 end
 
 function BtnDialogPageCtrl:_onClickConfim(ins)
-    log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
+    ct.log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil

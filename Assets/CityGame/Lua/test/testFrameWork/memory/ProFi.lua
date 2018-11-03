@@ -53,6 +53,7 @@ local FORMAT_BANNER 		   = [[
 ###############################################################################################################
 
 ]]
+local file_exists = ct.file_exists
 
 -----------------------
 -- Public Methods:
@@ -114,12 +115,8 @@ end
 ]]
 function ProFi:writeReport( filename )
 	local path = ""
-	if UnityEngine.Application.isEditor == false then
-		path =  UnityEngine.Application.persistentDataPath.."/CityGame/"
-	end
-
-	filename = path..filename
-	log("system","[ProFi:writeReport] filename: "..filename)
+	filename = ct.getMemoryProfile() .."/"..filename
+	ct.log("system","[ProFi:writeReport] filename: "..filename)
 	if #self.reports > 0 or #self.memoryReports > 0 then
 		filename = filename or 'ProFi.txt'
 		self:sortReportsWithSortMethod( self.reports, self.sortMethod )

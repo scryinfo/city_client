@@ -15,11 +15,11 @@ function ChooseWarehousePanel.InitPanel()
     this.searchBtn = transform:Find("searchBtn");
     this.arrowBtn = transform:Find("Right/SortingBtn/arrowBtn");
     this.nowText = transform:Find("Right/SortingBtn/bg/nowText"):GetComponent("Text");
-    this.list = transform:Find("Right/SortingBtn/List").gameObject;
-    this.nameBtn = transform:Find("Right/SortingBtn/List/nameBtn");
-    this.quantityBtn = transform:Find("Right/SortingBtn/List/quantityBtn");
-    this.priceBtn = transform:Find("Right/SortingBtn/List/priceBtn");
-    this.timeBtn = transform:Find("Right/SortingBtn/List/timeBtn");
+    this.list = transform:Find("Right/SortingBtn/ListTable/List"):GetComponent("RectTransform");
+    this.nameBtn = transform:Find("Right/SortingBtn/ListTable/List/nameBtn");
+    this.quantityBtn = transform:Find("Right/SortingBtn/ListTable/List/quantityBtn");
+    this.priceBtn = transform:Find("Right/SortingBtn/ListTable/List/priceBtn");
+    this.timeBtn = transform:Find("Right/SortingBtn/ListTable/List/timeBtn");
     --Mine
     this.faceImg = transform:Find("Left/mine/FriendsLineItem/face");
     this.nameText = transform:Find("Left/mine/FriendsLineItem/name");

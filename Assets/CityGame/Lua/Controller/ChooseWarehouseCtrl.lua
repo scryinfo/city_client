@@ -61,10 +61,10 @@ end
 
 function ChooseWarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
-        ChooseWarehousePanel.list:SetActive(true);
+        ChooseWarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ChooseWarehousePanel.arrowBtn:DORotate(Vector3.New(0,0,180),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
-        ChooseWarehousePanel.list:SetActive(false);
+        ChooseWarehousePanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ChooseWarehousePanel.arrowBtn:DORotate(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;

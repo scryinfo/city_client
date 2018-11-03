@@ -39,12 +39,12 @@ function BattleCtrl:Close()
 end
 
 function BattleCtrl:OnClickSkillGo()
-    log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
+    ct.log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
     UIPage:ShowPage(SkillPageCtrl)
 
 end
 function BattleCtrl:OnClickGoBattle()
-    log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
+    ct.log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
 end
 
 

@@ -80,5 +80,5 @@ TestExchangeCtrl.static.ProvideData = function(transform, idx)
 end
 
 TestExchangeCtrl.static.ClearData = function(transform)
-    --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
+    --ct.log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end

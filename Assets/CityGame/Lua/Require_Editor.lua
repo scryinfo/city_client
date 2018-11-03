@@ -12,21 +12,23 @@ AutoRequire.getInstance():require("Common")
 AutoRequire.getInstance():require("Framework/Interface")
 AutoRequire.getInstance():require("Framework/pbl")
 AutoRequire.getInstance():require("Framework/UI")
+AutoRequire.getInstance():require("test/testFrameWork/memory")
 AutoRequire.getInstance():require("test/testFrameWork")
 
 if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么禁用整个测试分组策略
 
     function UnitTest.Exec_now(unitGroupId, event,...) return end
     function UnitTest.Exec(unitGroupId, funcName, func) return end
-    log = function(logid,s,...) return end
+    ct.log = function(logid,s,...) return end
 
     AutoRequire.getInstance():addCode("function UnitTest.Exec_now(unitGroupId, event,...) return end")
     AutoRequire.getInstance():addCode("function UnitTest.Exec(unitGroupId, funcName, func) return end")
-    AutoRequire.getInstance():addCode("log = function(logid,s,...) return end")
+    AutoRequire.getInstance():addCode("ct.log = function(logid,s,...) return end")
 else
     --单元测试
     AutoRequire.getInstance():require("test/testFrameWork")
     AutoRequire.getInstance():require("test/testFrameWork/memory")
+    AutoRequire.getInstance():require("test/group")
     AutoRequire.getInstance():require("test/pbl")
     AutoRequire.getInstance():require("test/performance")
     --AutoRequire.getInstance():require("test/testCoroutine")

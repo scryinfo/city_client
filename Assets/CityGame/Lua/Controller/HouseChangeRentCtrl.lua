@@ -69,6 +69,6 @@ function HouseChangeRentCtrl:_onClickConfim(ins)
 end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(ins)
-    --log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
+    --ct.log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
     ins:Hide()
 end

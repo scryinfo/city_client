@@ -89,14 +89,14 @@ end
 function StaffRateItem:_clickOpenBtn()
     if self.clickOpenFunc then
         self.clickOpenFunc()
-        log("cycle_w6_houseAndGround", "----------------------------------")
+        ct.log("cycle_w6_houseAndGround", "----------------------------------")
     end
 end
 
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn()
     --打开工资调整界面
-    CityGlobal.OpenCtrl("WagesAdjustBoxCtrl")
+    ct.OpenCtrl("WagesAdjustBoxCtrl")
 end
 
 --打开

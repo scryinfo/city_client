@@ -218,6 +218,7 @@ namespace LuaFramework {
                 loader.AddBundle("lua/lua_Framework_ui.unity3d");
                 loader.AddBundle("lua/lua_Framework_pbl.unity3d");
                 loader.AddBundle("lua/lua_test.unity3d");
+                loader.AddBundle("lua/lua_test_group.unity3d");
                 loader.AddBundle("lua/lua_test_testmain.unity3d");
                 loader.AddBundle("lua/lua_test_pbl.unity3d");
                 loader.AddBundle("lua/lua_test_performance.unity3d");

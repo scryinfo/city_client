@@ -1,5 +1,5 @@
---全局设置
-CityGlobal ={
+----City项目的全局数据
+ct ={
 	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
 	G_DEBUGLOG = true, --是否打开调试日志
 	G_UNITTEST = true,	--是否打开单元测试
@@ -35,6 +35,8 @@ CtrlNames = {
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
+	MunicipalCtrl="MunicipalCtrl",--市镇设施
+	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
 }
 
 ModelNames = {
@@ -58,6 +60,9 @@ ModelNames = {
 	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
 	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
 	PlayerTemp = "PlayerTempModel",  --玩家数据，临时创建
+	Municipal="MunicipalModel",--市镇设施
+	AdvertisementPos="AdvertisementPos",
+	ManageAdvertisementPos="ManageAdvertisementPos",
 }
 
 
@@ -144,6 +149,7 @@ BuildingInfoTogglePos =
 {
 	Left = 0,
 	Right = 1,
+	Middle=2,
 }
 
 --建筑类型
@@ -151,7 +157,17 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
+	Municipal=7,--市镇设施
+	MunicipalManage=8,--市政管理
+	ProcessingFactory = 2,  --加工厂
 }
+--建筑所属
+Buildingowner=
+{
+   master=1,--主人的
+   other=2,--其他人的
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {

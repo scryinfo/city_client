@@ -79,11 +79,11 @@ function ExchangeQuoteItem:_initData()
 end
 --点击交易按钮
 function ExchangeQuoteItem:_clickExchnageBtn()
-    CityGlobal.OpenCtrl("ExchangeTransactionCtrl", self.data)
+    ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end
 --点击打开详情
 function ExchangeQuoteItem:_clickDetailBtn()
-    CityGlobal.OpenCtrl("ExchangeDetailCtrl", self.data)
+    ct.OpenCtrl("ExchangeDetailCtrl", self.data)
 end
 --点击收藏按钮
 function ExchangeQuoteItem:_clickCollectBtn()

@@ -63,6 +63,7 @@ function ExchangeCtrl:Awake(go)
     ExchangePanel.cityRecordToggle.onValueChanged:AddListener(function (isOn)
         self:_cityRecordToggleValueChange(isOn)
     end)
+    ExchangePanel.cityRecordDropfresh.mOnDropfresh = self._cityRecordDropfresh
 
     --滑动复用部分
     self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -485,6 +486,10 @@ function ExchangeCtrl:_deleteOrder(idInTable)
     ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
 end
 
+---下拉刷新回调
+function ExchangeCtrl:_cityRecordDropfresh()
+    Event.Brocast("m_ReqExchangeAllDealLog")
+end
 
 ---从modle传来的回调
 function ExchangeCtrl:c_onReceiveExchangeItemList(datas)

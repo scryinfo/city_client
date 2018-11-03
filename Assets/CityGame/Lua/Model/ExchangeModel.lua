@@ -67,7 +67,9 @@ end
 --全城成交记录
 function ExchangeModel.m_ReqExchangeAllDealLog()
     local msgId = pbl.enum("gscode.OpCode", "exchangeAllDealLog")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    local lMsg = {num = 0}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --收藏
 function ExchangeModel.m_ReqExchangeCollect(itemId)
@@ -104,11 +106,19 @@ function ExchangeModel.n_OnReceiveOrder(stream)
 end
 --自己的成交记录
 function ExchangeModel.n_OnReceiveMyDealLog(stream)
+    if stream == "" then
+        Event.Brocast("c_onReceiveExchangeMyDealLog", {})
+        return
+    end
     local dealLogData = assert(pbl.decode("gs.exchangeMyDealLog", stream), "ExchangeModel.n_OnReceiveMyDealLog: stream == nil")
     Event.Brocast("c_onReceiveExchangeMyDealLog", dealLogData)
 end
 --全城成交
 function ExchangeModel.n_OnReceiveAllDealLog(stream)
+    if stream == "" then
+        Event.Brocast("c_onReceiveExchangeAllDealLog", {})
+        return
+    end
     local allOrderData = assert(pbl.decode("gs.exchangeAllDealLog", stream), "ExchangeModel.n_OnReceiveAllDealLog: stream == nil")
     Event.Brocast("c_onReceiveExchangeAllDealLog", allOrderData)
 end

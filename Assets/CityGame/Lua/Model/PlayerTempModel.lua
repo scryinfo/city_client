@@ -43,6 +43,9 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     PlayerTempModel.roleData = roleData
     PlayerTempModel.storeList = this._getStore(roleData)
     PlayerTempModel.collectList = roleData.exchangeCollectedItem
+    if not PlayerTempModel.collectList then
+        PlayerTempModel.collectList = {}
+    end
 end
 --创建同步
 function PlayerTempModel.n_OnReceiveUnitCreate(stream)
@@ -57,6 +60,20 @@ function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
     local lMsg = {id = id, pos = {x = 8, y = 8}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--add money
+function PlayerTempModel.tempTestReqAddMoney(money)
+    local msgId = pbl.enum("gscode.OpCode", "addmoney")
+    local lMsg = {num = money}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--add item
+function PlayerTempModel.tempTestReqAddItem(itemId, num)
+    local msgId = pbl.enum("gscode.OpCode", "additem")
+    local lMsg = {id = itemId, num = num}
+    local pMsg = assert(pbl.encode("gs.IntNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 

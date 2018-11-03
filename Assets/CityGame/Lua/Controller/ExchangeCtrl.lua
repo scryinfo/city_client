@@ -46,7 +46,7 @@ function ExchangeCtrl:Awake(go)
 
     --行情收藏记录toggle
     ExchangePanel.quotesToggle.onValueChanged:AddListener(function (isOn)
-        self:_quotesToggleValueChange(isOn)
+        self: _quotesToggleValueChange(isOn)
     end)
     ExchangePanel.collectToggle.onValueChanged:AddListener(function (isOn)
         self:_collectToggleValueChange(isOn)

@@ -35,9 +35,10 @@ CtrlNames = {
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
-
 	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
 	MessageTooltip = "MessageTooltipCtrl",--玩家信息提示框
+	MunicipalCtrl="MunicipalCtrl",--市镇设施
+	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
 }
 
 ModelNames = {
@@ -58,6 +59,9 @@ ModelNames = {
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
 	CenterWareHouse = "CenterWareHouseModel",--中心仓库
+	Municipal="MunicipalModel",--市镇设施
+	AdvertisementPos="AdvertisementPos",
+	ManageAdvertisementPos="ManageAdvertisementPos",
 }
 
 SYSEVENT =
@@ -143,6 +147,7 @@ BuildingInfoTogglePos =
 {
 	Left = 0,
 	Right = 1,
+	Middle=2,
 }
 
 --建筑类型
@@ -150,7 +155,17 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
+	Municipal=7,--市镇设施
+	MunicipalManage=8,--市政管理
+	ProcessingFactory = 2,  --加工厂
 }
+--建筑所属
+Buildingowner=
+{
+   master=1,--主人的
+   other=2,--其他人的
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {

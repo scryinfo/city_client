@@ -21,7 +21,6 @@ namespace UnityEngine.UI
         [HideInInspector]
         [NonSerialized]
         //-----------------------------------------------------------------------------------xyf
-        //public LoopScrollDataSource dataSource = LoopScrollSendIndexSource.Instance;
         private LoopScrollDataSource dataSource = null;
         public void SetInstance(LoopScrollDataSource inDataSource)
         {
@@ -31,19 +30,20 @@ namespace UnityEngine.UI
         {
             return dataSource;
         }
-        ////public object[] objectsToFill
-        ////{
-        ////    // wrapper for forward compatbility
-        ////    set
-        ////    {
-        ////        if (value != null)
-        ////            dataSource = new LoopScrollArraySource<object>(value);
-        ////        else
-        ////            //dataSource = LoopScrollSendIndexSource.Instance;
-        ////            //---------------------------------------------------------------------------------------xyf
-        ////            dataSource = LoopScrollItemData.Instance;
-        ////    }
-        ////}
+        private LoopDropfreshBar m_dropfresh = null;
+        protected LoopDropfreshBar dropfresh
+        {
+            get
+            {
+                if (m_dropfresh == null)
+                {
+                    m_dropfresh = GetComponent<LoopDropfreshBar>();
+                }
+                return m_dropfresh;
+            }
+        }
+
+        //-----------------------------------------------------------------------------------xyf
 
         [Tooltip("Threshold for preloading")]
         public float threshold = 100;
@@ -701,6 +701,10 @@ namespace UnityEngine.UI
                 return;
 
             m_Dragging = false;
+            if (dropfresh != null)
+            {
+                dropfresh.JudgeDropfreshOnEndDrag(m_VerticalScrollbar.value, m_VerticalScrollbar.size);
+            }
         }
 
         public virtual void OnDrag(PointerEventData eventData)
@@ -837,6 +841,10 @@ namespace UnityEngine.UI
                     m_HorizontalScrollbar.size = 1;
 
                 m_HorizontalScrollbar.value = horizontalNormalizedPosition;
+                if (dropfresh != null)
+                {
+                    dropfresh.SetBarMaxSizeValue(m_HorizontalScrollbar.size);
+                }
             }
 
             if (m_VerticalScrollbar)
@@ -851,6 +859,10 @@ namespace UnityEngine.UI
                     m_VerticalScrollbar.size = 1;
 
                 m_VerticalScrollbar.value = verticalNormalizedPosition;
+                if (dropfresh != null)
+                {
+                    dropfresh.SetBarMaxSizeValue(m_VerticalScrollbar.size);
+                }
             }
         }
 

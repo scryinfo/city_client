@@ -201,6 +201,7 @@ public static class CustomSettings
         _GT(typeof(ActiveLoopScrollRect)),
         _GT(typeof(LoopScrollDataSource)),
         _GT(typeof(LuaComponent)),
+        _GT(typeof(LoopDropfreshBar)),
 
     };
 

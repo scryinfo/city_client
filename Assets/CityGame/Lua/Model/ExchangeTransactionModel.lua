@@ -47,6 +47,7 @@ end
 function ExchangeTransactionModel.m_ReqExchangeSell(itemId, num, price, buildingId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeSell")
     local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
+    --local lMsg = { itemId = itemId, num = num, price = price, buildingId = "a33eab42-cb75-4c77-bd27-710d299f5591"}  --测试
     local pMsg = assert(pbl.encode("gs.ExchangeSell", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end

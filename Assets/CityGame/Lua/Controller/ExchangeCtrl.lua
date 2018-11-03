@@ -63,7 +63,8 @@ function ExchangeCtrl:Awake(go)
     ExchangePanel.cityRecordToggle.onValueChanged:AddListener(function (isOn)
         self:_cityRecordToggleValueChange(isOn)
     end)
-    ExchangePanel.cityRecordDropfresh.mOnDropfresh = self._cityRecordDropfresh
+    --ExchangePanel.cityRecordDropfresh.mOnDropfresh = self._cityRecordDropfresh
+    --ExchangePanel.cityRecordDropfresh.mOnDropfresh:InitDropFresh(0.75)
 
     --滑动复用部分
     self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -524,7 +525,7 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
         return
     end
 
-    ExchangeCtrl.entrustmentInfo = datas.log
+    ExchangeCtrl.entrustmentInfo = datas.order
     table.sort(ExchangeCtrl.entrustmentInfo, function (m, n) return m.ts > n.ts end)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero
     ExchangePanel.entrustmentPage.localScale = Vector3.one

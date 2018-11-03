@@ -1,0 +1,34 @@
+-----
+
+local transform;
+
+ProcessingPanel = {};
+local this = ProcessingPanel;
+
+function ProcessingPanel.Awake(obj)
+    transform = obj.transform;
+    --this.InitPanel();
+    --this.rightRootTran = transform:Find("rightRoot");
+    --this.leftRootTran = transform:Find("leftRoot");
+    --this.topRootTran = transform:Find("topRoot");
+    local inputf = transform:Find("topRoot/titleBg/nameInputField")
+    if inputf then
+        this.nameInputField = inputf.gameObject:GetComponent("InputField");
+    end
+    this.InitPanel();
+end
+
+function ProcessingPanel.InitPanel()
+    this.rightRootTran = transform:Find("rightRoot");
+    this.leftRootTran = transform:Find("leftRoot");
+    this.topRootTran = transform:Find("topRoot");
+    this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
+    this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
+    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
+    this.backBtn = transform:Find("topRoot/backBtn");
+    this.infoBtn = transform:Find("topRoot/infoBtn");
+end
+--数据初始化
+function ProcessingPanel.InitDate(processingData)
+    this.processingData = processingData;
+end

@@ -3,6 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/17 11:18
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
+
+
 local lu = require "Framework/pbl/luaunit"
 local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals
@@ -13,20 +16,20 @@ local log = log
 UnitTest.Exec("abel_w4", "test_ipairs",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in ipairs(tb) do
-        log("abl_w5", tostring("[test_ipairs] for in  ipairs: "),k, v)
+        ct.log("abl_w5", tostring("[test_ipairs] for in  ipairs: "),k, v)
     end
 end)
 
 UnitTest.Exec("abel_w4", "test_pairs",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
     for k,v in pairs(tb) do
-        log("abl_w5", tostring("[test_pairs] for in  pairs: "),k, v)
+        ct.log("abl_w5", tostring("[test_pairs] for in  pairs: "),k, v)
     end
 end)
 
 UnitTest.Exec("abel_w4", "test_len",  function ()
     local tb = {"oh", [3] = "god", "my", [5] = "hello", [6] = "world"}
-    log("abel_w4",tostring("[examination] test_len: #tb "..#tb))
+    ct.log("abel_w4",tostring("[examination] test_len: #tb "..#tb))
 end)
 
 --[[
@@ -64,11 +67,11 @@ end)
 and连接多个操作数时，表达式的返回值就是从左到右第一个为假的值，若所有操作数值都不为假，则表达式的返回值为最后一个操作数；
 ]]--
 UnitTest.Exec("abel_w4", "test_and",  function ()
-    log("abel_w4","[test_and] 'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f' = ",'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
-    log("abel_w4","[test_and] 'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f' =",'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f')
-    log("abel_w4","[test_and] 0 and 'b' and 'c' and nil = ",0 and 'b' and 'c' and nil)
-    log("abel_w4","[test_and] 'b' and 0 and 'c' = ",'b' and 0 and 'c')
-    log("abel_w4","[test_and] ","[test] test_and end")
+    ct.log("abel_w4","[test_and] 'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f' = ",'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
+    ct.log("abel_w4","[test_and] 'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f' =",'a' and 'b' and 'c' and false and 'd' and nil and 'e' and 'f')
+    ct.log("abel_w4","[test_and] 0 and 'b' and 'c' and nil = ",0 and 'b' and 'c' and nil)
+    ct.log("abel_w4","[test_and] 'b' and 0 and 'c' = ",'b' and 0 and 'c')
+    ct.log("abel_w4","[test_and] ","[test] test_and end")
     --nil
     --false
     --nil
@@ -79,7 +82,7 @@ end)
 or连接多个操作数时，表达式的返回值就是从左到右第一个不为假的值，若所有操作数值都为假，则表达式的返回值为最后一个操作数；
 ]]--
 UnitTest.Exec("abel_w4", "test_or",  function ()
-    log("abel_w4","[test_or]  测试开始: ")
+    ct.log("abel_w4","[test_or]  测试开始: ")
     --[[
     Lua中所有的逻辑运算符将false和nil视为假，其他任何东西视为真，0也视为真。
     ]]--
@@ -87,16 +90,16 @@ UnitTest.Exec("abel_w4", "test_or",  function ()
     ret = 1 or 0
     ret = 0 and 1
     ret = 1 and 0
-    log("abel_w4","[test_or] " ,"0 or 1: ",0 or 1)
-    log("abel_w4","[test_or] " ,"1 or 0: ",1 or 0)
-    log("abel_w4","[test_or] " ,"0 and 1: ",0 and 1)
-    log("abel_w4","[test_or] " ,"1 and 0: ",1 and 0)
+    ct.log("abel_w4","[test_or] " ,"0 or 1: ",0 or 1)
+    ct.log("abel_w4","[test_or] " ,"1 or 0: ",1 or 0)
+    ct.log("abel_w4","[test_or] " ,"0 and 1: ",0 and 1)
+    ct.log("abel_w4","[test_or] " ,"1 and 0: ",1 and 0)
 
-    log("abel_w4","[test_or] nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f' = " ,nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f')
-    log("abel_w4","[test_or] false or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f' =" ,false or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f')
-    log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f')
-    log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,0 or 'a' or 'b' or 'c' or false or 'd'   or 'e' or 'f')
-    log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,nil or false)
+    ct.log("abel_w4","[test_or] nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f' = " ,nil or 'a' or 'b' or 'c' or 'd'   or false or 'e' or 'f')
+    ct.log("abel_w4","[test_or] false or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f' =" ,false or 'b' or nil or 'c' or false or 'd'   or 'e' or 'f')
+    ct.log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f')
+    ct.log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,0 or 'a' or 'b' or 'c' or false or 'd'   or 'e' or 'f')
+    ct.log("abel_w4","[test_or] 'a' or nil or 'b' or 'c' or false or 'd'   or 'e' or 'f' = " ,nil or false)
     --a
     --b
     --a
@@ -106,13 +109,13 @@ end)
 --https://www.jianshu.com/p/7c25d5624c9e
 --Lua中还会用到 "a and b or c ",这类似于C系语言中的表达式 a ? b : c： max = (a > b) and a or b
 UnitTest.Exec("abel_w4", "test_and_or",  function ()
-    log("abel_w4", "[test_and_or]  测试开始: ")
+    ct.log("abel_w4", "[test_and_or]  测试开始: ")
     local a = 666
     local b = 333
     local c = true
-    log("abel_w4", "[test_and_or] (a > b) and a or b) = ",(a > b) and a or b)
-    log("abel_w4", "[test_and_or] (a < b) and a or b) = ",(a < b) and a or b)
-    log("abel_w4", "[test_and_or] (not c) and 'false' or 'true') =",(not c) and 'false' or 'true')
+    ct.log("abel_w4", "[test_and_or] ((a > b) and a or b) = ",(a > b) and a or b)
+    ct.log("abel_w4", "[test_and_or] ((a < b) and a or b) = ",(a < b) and a or b)
+    ct.log("abel_w4", "[test_and_or] ((not c) and 'false' or 'true') =",(not c) and 'false' or 'true')
     --output:
     --666
     --333
@@ -122,3 +125,4 @@ end)
 
 
 
+UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 GameWorldCtrl = {};
 local this = GameWorldCtrl;
@@ -126,15 +126,15 @@ function GameWorldCtrl.AttackSkill(skillID )
     if (player ~= nil) then        
         local errorCode = player:useTargetSkill(skillID, target);
         if (errorCode == 1) then            
-            log("目标太远");
+            ct.log("目标太远");
             --逼近目标
             --SkillControl.MoveTo(target.renderObj.transform, SkillBox.Get(skillID).canUseDistMax-1, skillID);
         end
         if (errorCode == 2) then            
-            log("技能冷却");
+            ct.log("技能冷却");
         end
         if (errorCode == 3) then            
-            log("目标已死亡");
+            ct.log("目标已死亡");
         end
     end
 end

@@ -60,5 +60,5 @@ function AdvertisementShowItem:OntodoBtn(ins)
    ---测试
     local data={}
     data.Buildingowner=Buildingowner.other
-    UIPage:OpenCtrl('AdvertisementPosCtrl',Buildingowner.other)
+    ct.OpenCtrl('AdvertisementPosCtrl',Buildingowner.other)
 end

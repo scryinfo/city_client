@@ -3,10 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/8/31 10:45
 ---
-require "Common/define"
-require "City"
-require "Logic/GameBubble/GameBubbleManager"
-
+-----
 GroundAuctionModel= {};
 local this = GroundAuctionModel;
 local pbl = pbl

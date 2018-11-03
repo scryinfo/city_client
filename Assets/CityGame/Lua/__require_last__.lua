@@ -3,3 +3,13 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/19 16:24
 ---
+
+require "Framework/Account"
+require "Framework/Avatar"
+require "Framework/Gate"
+require "Framework/Monster"
+require "Framework/NPC"
+require "Framework/DroppedItem"
+require "Common/functions"
+require "Logic/CtrlManager"
+require "Logic/World"

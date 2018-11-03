@@ -4,9 +4,9 @@
 --- DateTime: 2018/10/4 9:53
 ---住宅更改租金界面
 
-require('Framework/UI/UIPage')
-require('Common/functions')
-local class = require 'Framework/class'
+-----
+-----
+
 
 HouseChangeRentCtrl = class('HouseChangeRentCtrl',UIPage)
 
@@ -62,13 +62,13 @@ function HouseChangeRentCtrl:_initData()
 end
 
 function HouseChangeRentCtrl:_onClickConfim(obj)
-    log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickConfim")
+    ct.log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickConfim")
     --向服务器发送请求，改变租金
 
     obj:Hide();
 end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(obj)
-    log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
+    ct.log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
     obj:Hide();
 end

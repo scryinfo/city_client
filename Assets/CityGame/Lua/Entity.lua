@@ -80,12 +80,12 @@ end
 
 CityEngineLua.Entity.baseCall = function(self, arguments)
 	if(#arguments < 1) then
-		log('CityEngineLua.Entity::baseCall: not fount interfaceName~');
+		ct.log('CityEngineLua.Entity::baseCall: not fount interfaceName~');
 		return;
 	end
 
 	if(self.baseEntityCall == nil) then 
-		log('CityEngineLua.Entity::baseCall: baseEntityCall is None~');
+		ct.log('CityEngineLua.Entity::baseCall: baseEntityCall is None~');
 		return;			
 	end
 	
@@ -94,7 +94,7 @@ CityEngineLua.Entity.baseCall = function(self, arguments)
 	local args = method[4];
 	
 	if(#arguments - 1 ~= #args) then
-		log("CityEngineLua.Entity::baseCall: args(" .. (#arguments - 1) .. "~= " .. #args .. ") size is error!");
+		ct.log("CityEngineLua.Entity::baseCall: args(" .. (#arguments - 1) .. "~= " .. #args .. ") size is error!");
 		return;
 	end
 	
@@ -114,12 +114,12 @@ end
 
 CityEngineLua.Entity.cellCall = function(self, arguments)
 	if(#arguments < 1) then
-		log('CityEngineLua.Entity::cellCall: not fount interfaceName!');
+		ct.log('CityEngineLua.Entity::cellCall: not fount interfaceName!');
 		return;
 	end
 	
 	if(self.cellEntityCall == nil) then
-		log('CityEngineLua.Entity::cellCall: cellEntityCall is None!');
+		ct.log('CityEngineLua.Entity::cellCall: cellEntityCall is None!');
 		return;			
 	end
 	
@@ -128,7 +128,7 @@ CityEngineLua.Entity.cellCall = function(self, arguments)
 	local args = method[4];
 	
 	if(#arguments - 1 ~= #args) then
-		log("CityEngineLua.Entity::cellCall: args(" .. (#arguments - 1) .. "~= " .. #args .. ") size is error!");
+		ct.log("CityEngineLua.Entity::cellCall: args(" .. (#arguments - 1) .. "~= " .. #args .. ") size is error!");
 		return;
 	end
 	
@@ -146,7 +146,7 @@ CityEngineLua.Entity.cellCall = function(self, arguments)
 end
 	
 CityEngineLua.Entity.enterWorld = function(self)
-	--log(self.className .. '::enterWorld: ' .. self.id); 
+	--ct.log(self.className .. '::enterWorld: ' .. self.id);
 	self.inWorld = true;
 	self:onEnterWorld();
 	
@@ -157,7 +157,7 @@ CityEngineLua.Entity.onEnterWorld = function(self)
 end
 	
 CityEngineLua.Entity.leaveWorld = function(self)
-	--log(self.className .. '::leaveWorld: ' .. self.id); 
+	--ct.log(self.className .. '::leaveWorld: ' .. self.id);
 	self.inWorld = false;
 	self.onLeaveWorld();
 	
@@ -168,7 +168,7 @@ CityEngineLua.Entity.onLeaveWorld = function(self)
 end
 	
 CityEngineLua.Entity.enterSpace = function(self)
-	log(self.className .. '::enterSpace: ' .. self.id); 
+	ct.log(self.className .. '::enterSpace: ' .. self.id);
 	self.onEnterSpace();
 	--City.Event.fire("onEnterSpace", self);
 end
@@ -177,7 +177,7 @@ CityEngineLua.Entity.onEnterSpace = function(self)
 end
 	
 CityEngineLua.Entity.leaveSpace = function(self)
-	log(self.className .. '::leaveSpace: ' .. self.id); 
+	ct.log(self.className .. '::leaveSpace: ' .. self.id);
 	self.onLeaveSpace();
 	--City.Event.fire("onLeaveSpace", self);
 end

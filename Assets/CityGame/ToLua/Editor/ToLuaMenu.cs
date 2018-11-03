@@ -452,6 +452,127 @@ public static class ToLuaMenu
         return set;
     }
 
+    static public bool CheckParentheses(string str ) {
+        int start = 0;
+        int curPos = 0;
+        int countLeft = 0;
+        int countRight = 0;
+
+        while (true)
+        {
+            curPos = str.IndexOf("(", start) ;
+            if (curPos == -1)
+                break;
+            countLeft++;
+            start = curPos+1;
+        }
+
+        start = 0;
+        curPos = 0;
+        while (true)
+        {
+            curPos = str.IndexOf(")", start);
+            if (curPos == -1)
+                break;
+            countRight++;
+            start = curPos+1;
+        }
+        return countLeft == countRight;
+    }
+
+    private static bool RemoveLog_Ignore(ref string sourcePath)
+    {
+        if (sourcePath.IndexOf("UnitTest.lua.bytes") != -1
+            || sourcePath.IndexOf("Require_Editor.lua.bytes") != -1
+            || sourcePath.IndexOf("Require_RunTime.lua.bytes") != -1
+            )
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static bool CommentLineIfMatch(ref String temp, ref string sourcePath, ref int line, ref string[] filters)
+    {
+        for(int i = 0; i < filters.Length; ++i)
+        {
+            if (temp.IndexOf(filters[i]) != -1)
+            {
+
+                //简单处理， log 和 UnitTest.Exec_now 必须一行处理，如果所在行的圆括号不匹配，判定为没有在一行处理完
+                if (CheckParentheses(temp) == false)
+                {
+                    //提示Log必须一行处理
+                    Debug.LogError("RemoveLog Error: \""+ filters[i] + "\" Must be completed in one line ! filepath: " + sourcePath + " Line: " + line.ToString());
+                    return true; //这种情况下不能注销，否则程序不能正常运行
+                }
+                else
+                {
+                    //temp = temp.Replace(filters[i], " --"+ filters[i]);
+                    //处理成跳过就行，不必执行 Replace 操作
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static public void RemoveLog(ref string sourcePath)
+    {
+        if(RemoveLog_Ignore(ref sourcePath))
+            return;        
+
+        StreamReader orgCodeStream = File.OpenText(sourcePath);
+        String newCode = null;
+        String temp = null;
+        int logStart = 0;
+        int notMatchCount = 0;
+        int line = 0;
+        bool ExecStart = false;
+        //要注释的关键字
+        string[] filters = { "ct.log(", "ct.log (", "UnitTest.Exec_now(", "UnitTest.Exec_now (" };
+
+        while (true)
+        {
+            temp = orgCodeStream.ReadLine();
+            line++;
+            int linecount = 0;
+            if (temp == null)
+                break;
+
+            if (temp.IndexOf("UnitTest.TestBlockStart") != -1) {
+                ExecStart = true;
+            }
+
+            if (temp.IndexOf("UnitTest.TestBlockEnd") != -1)
+            {
+                ExecStart = false;
+                continue;
+            }
+
+            if (ExecStart) //直接忽略测试用例区相关代码
+                continue;
+            
+            if(CommentLineIfMatch(ref temp, ref sourcePath, ref line, ref filters) == false)
+            {
+                continue; //如果匹配，不添加到生成代码中
+            }
+
+            if (!String.IsNullOrEmpty(newCode))
+                newCode = String.Concat(newCode, "\r\n", temp);
+            else
+                newCode = String.Concat(newCode, temp);
+            temp = null;
+        }
+
+        orgCodeStream.Close();
+
+        StreamWriter sw = new StreamWriter(sourcePath);
+        sw.Write(newCode);
+        sw.Flush();
+        sw.Close();
+    }
+
     [MenuItem("Lua/Gen Lua Delegates", false, 2)]
     static void GenLuaDelegates()
     {
@@ -974,6 +1095,12 @@ public static class ToLuaMenu
             string dir = Path.GetDirectoryName(dest);
             Directory.CreateDirectory(dir);
             File.Copy(files[i], dest, true);
+#if LUA_LOG
+            //不注销LuaLog
+#else
+            //注销LuaLog
+            RemoveLog(ref dest);
+#endif     
         }
     }
 

@@ -78,5 +78,5 @@ end
 
 
 function TicketItem:OntoDoBtn()
-   UIPage:OpenCtrl("ConfirmPopCtrl")
+   ct.OpenCtrl("ConfirmPopCtrl")
 end

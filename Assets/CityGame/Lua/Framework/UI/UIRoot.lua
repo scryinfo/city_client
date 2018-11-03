@@ -4,7 +4,7 @@
 --- DateTime: 2018/9/27 10:10
 ---
 
-local class = require 'Framework/class'
+
 
 UIRoot = class('UIRoot')
 UIRoot.static.m_Instance=nil

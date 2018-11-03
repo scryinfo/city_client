@@ -8,9 +8,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:15
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
-
+-----
 SkillPageCtrl = class('SkillPageCtrl',UIPage)
 
 function SkillPageCtrl:initialize()
@@ -31,7 +29,7 @@ function SkillPageCtrl:Refresh()
 end
 
 function SkillPageCtrl:OnClick_confim()
-    log("abel_w6_UIFrame", "SkillPageCtrl:OnClick_confim")
+    ct.log("abel_w6_UIFrame", "SkillPageCtrl:OnClick_confim")
     self.Hide();
 end
 

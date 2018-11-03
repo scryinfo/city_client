@@ -23,24 +23,22 @@ public class ActiveLoopScrollRect : MonoBehaviour
     /// </summary>
     /// <param name="data">委托方法</param>
     /// <param name="totalCount">总数，默认为0</param>
-    public void InitLoopScroll(LoopScrollDataSource data, int totalCount = 0)
+    public void ActiveLoopScroll(LoopScrollDataSource data, int totalCount = 0)
     {
         if (mLoopScrollRect == null)
         {
             mLoopScrollRect = GetComponent<LoopScrollRect>();
         }
 
-        mLoopScrollRect.SetInstance(data);
-        mLoopScrollRect.totalCount = totalCount;
-    }
-
-    /// <summary>
-    /// 刷新item
-    /// </summary>
-    /// <param name="totalCount"></param>
-    public void RefreshItems(int totalCount)
-    {
-        mLoopScrollRect.totalCount = totalCount;
-        mLoopScrollRect.RefreshCells();
+        if (mLoopScrollRect.GetInstance() == null)
+        {
+            mLoopScrollRect.SetInstance(data);
+            mLoopScrollRect.totalCount = totalCount;
+        }
+        else
+        {
+            mLoopScrollRect.totalCount = totalCount;
+            mLoopScrollRect.RefreshCells();
+        }
     }
 }

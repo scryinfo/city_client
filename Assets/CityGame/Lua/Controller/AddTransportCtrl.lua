@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 AddTransportCtrl = {};
 local this = AddTransportCtrl;

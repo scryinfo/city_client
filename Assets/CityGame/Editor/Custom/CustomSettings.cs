@@ -166,6 +166,7 @@ public static class CustomSettings
         //_GT(typeof(RectTransform)),
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
+        _GT(typeof(Scrollbar.ScrollEvent)),
         _GT(typeof(Button)),
         _GT(typeof(Button.ButtonClickedEvent)),
         _GT(typeof(UnityEventBase)),  //为了使用RemoveAllListener
@@ -179,6 +180,7 @@ public static class CustomSettings
         _GT(typeof(AppConst)),
         _GT(typeof(LuaHelper)),
         _GT(typeof(LuaBehaviour)),
+        _GT(typeof(ShowFPS)),
 
         _GT(typeof(GameManager)),
         _GT(typeof(LuaManager)),

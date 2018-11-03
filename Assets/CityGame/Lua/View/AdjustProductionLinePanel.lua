@@ -14,15 +14,18 @@ end
 --初始化面板
 function AdjustProductionLinePanel.InitPanel()
     --Button
-    this.returnBtn = transform:Find("Button/ReturnBtn").gameObject;
-    this.addBtn = transform:Find("Button/AddBtn").gameObject;
+    this.returnBtn = transform:Find("Button/returnBtn");
+    this.addBtn = transform:Find("ScrollView/Viewport/Content/productionLineAdd");
     --Slider --Text
     this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider").gameObject;
     this.numberText = transform:Find("bg/Topbg01/numberText").gameObject;
     --idle
     this.idleNumberText = transform:Find("bg/Topbg01/Staffbg/numberText").gameObject;
     --Scroll View
-    this.content = transform:Find("Scroll View/Viewport/Content").gameObject;
+    this.content = transform:Find("ScrollView/Viewport/Content").gameObject;
+
+
+
 end
 function AdjustProductionLinePanel.OnDestroy()
     logWarn("OnDestroy AdjustProductionLinePanel--->>>");

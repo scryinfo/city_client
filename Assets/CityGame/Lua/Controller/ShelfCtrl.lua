@@ -1,14 +1,9 @@
---require "Common/define"
-require ('Framework/UI/UIPage')
-require "View/BuildingInfo/ShelfGoodsMgr"
-local class = require 'Framework/class'
 ShelfCtrl = class('ShelfCtrl',UIPage)
 
 local isShowList;
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
---预制体
-ShelfCtrl.static.SHELFICON_PATH = 'View/GoodsItem/ShelfGoodsItem'
+
 function ShelfCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end

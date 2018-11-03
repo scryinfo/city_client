@@ -1,16 +1,7 @@
 --require "pb.person_pb"
 
-CityEngineLua = {}
+local CityEngineLua = CityEngineLua
 local this = CityEngineLua;
-
-require "LuaUtil"
-require "DataType"
-require "EntityDef"
-require "Message"
-require "Bundle"
-require "EntityCall"
-require "Entity"
-require "PersistentInfos"
 
 local pbl = pbl
 local pbio   = pbl_io
@@ -250,7 +241,7 @@ CityEngineLua.resetMessages = function()
 	this.moduledefs = {};
 	this.entities = {};
     CityEngineLua.EntityDef.clear()
-	log("City::resetMessages()");
+	ct.log("City::resetMessages()");
 end
 
 CityEngineLua.importMessagesFromMemoryStream = function(loginapp_clientMessages, baseapp_clientMessages,  entitydefMessages, serverErrorsDescr)
@@ -284,13 +275,13 @@ CityEngineLua.importMessagesFromMemoryStream = function(loginapp_clientMessages,
 	this.isImportServerErrorsDescr_ = true;
 
 	this.currserver = "";
-	log("City::importMessagesFromMemoryStream(): is successfully!");
+	ct.log("City::importMessagesFromMemoryStream(): is successfully!");
 	return true;
 end
 
 CityEngineLua.createDataTypeFromStreams = function(stream, canprint)
 	local aliassize = stream:readUint16();
-	log("CityEngineApp::createDataTypeFromStreams: importAlias(size=" .. aliassize .. ")!");
+	ct.log("CityEngineApp::createDataTypeFromStreams: importAlias(size=" .. aliassize .. ")!");
 	
 	while(aliassize > 0)
     do  
@@ -320,7 +311,7 @@ CityEngineLua.createDataTypeFromStream = function(stream, canprint)
 	end
 		
 	if(canprint) then
-		log("CityEngineApp::Client_onImportClientEntityDef: importAlias(" .. name .. ":" .. valname .. ":" .. utype .. ")!");
+		ct.log("CityEngineApp::Client_onImportClientEntityDef: importAlias(" .. name .. ":" .. valname .. ":" .. utype .. ")!");
 	end
 	
 	if(name == "FIXED_DICT") then
@@ -373,11 +364,6 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 		local base_methodsize = stream:readUint16();
 		local cell_methodsize = stream:readUint16();
 		
-		log("CityEngineApp::Client_onImportClientEntityDef: import(" .. scriptmodule_name ..
-                "), scriptUtype(" .. scriptUtype .. "), propertys(" .. propertysize .. "), " ..
-				"clientMethods(" .. methodsize .. "), baseMethods(" .. base_methodsize ..
-                "), cellMethods(" .. cell_methodsize .. ")~");
-		
 		CityEngineLua.moduledefs[scriptmodule_name] = {};
 		local currModuleDefs = CityEngineLua.moduledefs[scriptmodule_name];
 		currModuleDefs["name"] = scriptmodule_name;
@@ -420,7 +406,7 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 				currModuleDefs["usePropertyDescrAlias"] = false;
 			end
 			
-			log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), property(" .. name .. "/" .. properUtype .. ").");
+			ct.log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), property(" .. name .. "/" .. properUtype .. ").");
 		end
 		while(methodsize > 0)
 		do
@@ -449,7 +435,7 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 				currModuleDefs["useMethodDescrAlias"] = false;
 			end
 			
-			log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), method(" .. name .. ").");
+			ct.log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), method(" .. name .. ").");
 		end
 
 		while(base_methodsize > 0)
@@ -469,7 +455,7 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 			end
 			
 			self_base_methods[name] = {methodUtype, aliasID, name, args};
-			log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), base_method(" .. name .. ").");
+			ct.log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), base_method(" .. name .. ").");
 		end
 		
 		while(cell_methodsize > 0)
@@ -489,12 +475,12 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 			end
 			
 			self_cell_methods[name] = {methodUtype, aliasID, name, args};
-			log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), cell_method(" .. name .. ").");
+			ct.log("CityEngineApp::Client_onImportClientEntityDef: add(" .. scriptmodule_name .. "), cell_method(" .. name .. ").");
 		end
 		
 		defmethod = CityEngineLua[scriptmodule_name];
 		if defmethod == nil then
-			log("CityEngineApp::Client_onImportClientEntityDef: module(" .. scriptmodule_name .. ") not found~");
+			ct.log("CityEngineApp::Client_onImportClientEntityDef: module(" .. scriptmodule_name .. ") not found~");
 		end
 		
 		for k, value in pairs(currModuleDefs.propertys) do
@@ -518,7 +504,7 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 			local args = infos[4];
 			
 			if(defmethod ~= nil and defmethod[name] == nil) then
-				log(scriptmodule_name .. ":: method(" .. name .. ") no implement~");
+				ct.log(scriptmodule_name .. ":: method(" .. name .. ") no implement~");
 			end
 		end
 	end
@@ -537,7 +523,7 @@ end
 CityEngineLua.onImportClientMessages = function( stream )
 	local msgcount = stream:readUint16();
 	
-	log("CityEngineApp::onImportClientMessages: start(" .. msgcount .. ") ...!");
+	ct.log("CityEngineApp::onImportClientMessages: start(" .. msgcount .. ") ...!");
 	
 	while(msgcount > 0)
 	do
@@ -560,18 +546,18 @@ CityEngineLua.onImportClientMessages = function( stream )
 		if isClientMethod then
 			handler = CityEngineLua[msgname];
 			if handler == nil then
-				log("CityEngineApp::onImportClientMessages[" .. CityEngineLua.currserver .. "]: interface(" .. msgname .. "/" .. msgid .. ") no implement!");
+				ct.log("CityEngineApp::onImportClientMessages[" .. CityEngineLua.currserver .. "]: interface(" .. msgname .. "/" .. msgid .. ") no implement!");
 			else
                 local txtFunc = string.format("CityEngineApp::onImportClientMessages[%s]: import(%s/%d) successfully!", CityEngineLua.currserver, msgname, msgid)
                 local txtParams = string.format("params: %s", tostring(argstypes))
                 local txtFuncInfo = string.format("%s\n%s", txtFunc, txtParams)
-				log(txtFuncInfo);
+				ct.log(txtFuncInfo);
 			end
         else
             local txtFunc = string.format("CityEngineApp::onImportClientMessages[%s]: import(%s/%d) successfully!", CityEngineLua.currserver, msgname, msgid)
             local txtParams = string.format("params: %s", tostring(argstypes))
             local txtFuncInfo = string.format("%s\n%s", txtFunc, txtParams)
-            log(txtFuncInfo);
+            ct.log(txtFuncInfo);
 		end
 	
 		if string.len(msgname) > 0 then
@@ -611,17 +597,14 @@ CityEngineLua.onImportServerErrorsDescr = function(stream)
 		e.descr = CityLuaUtil.ByteToUtf8(stream:readBlob());
 		
 		this.serverErrs[e.id] = e;
-		--log("Client_onImportServerErrorsDescr: id=" + e.id + ", name=" + e.name + ", descr=" + e.descr);
+		--ct.log("Client_onImportServerErrorsDescr: id=" + e.id + ", name=" + e.name + ", descr=" + e.descr);
 	end
 end
 	-- 从二进制流导入消息协议完毕了
 CityEngineLua.onImportClientMessagesCompleted = function()
-	log("City::onImportClientMessagesCompleted: successfully! currserver=" ..
-		this.currserver .. ", currstate=" .. this.currstate);
-
 	if(this.currserver == "loginapp") then
 		if(not this.isImportServerErrorsDescr_ and not this.loadingLocalMessages_) then
-			log("City::onImportClientMessagesCompleted(): send importServerErrorsDescr!");
+			ct.log("City::onImportClientMessagesCompleted(): send importServerErrorsDescr!");
 			this.isImportServerErrorsDescr_ = true;
 			local bundle = CityEngineLua.Bundle:new();
 			bundle:newMessage(CityEngineLua.messages["Loginapp_importServerErrorsDescr"]);
@@ -642,7 +625,7 @@ CityEngineLua.onImportClientMessagesCompleted = function()
 		this.baseappMessageImported_ = true;
 		
 		if(not this.entitydefImported_ and not this.loadingLocalMessages_) then
-			log("City::onImportClientMessagesCompleted: send importEntityDef(" .. (this.entitydefImported_ and "true" or "false")  .. ") ...");
+			ct.log("City::onImportClientMessagesCompleted: send importEntityDef(" .. (this.entitydefImported_ and "true" or "false")  .. ") ...");
 			local bundle = CityEngineLua.Bundle:new();
 			bundle:newMessage(CityEngineLua.messages["Baseapp_importClientEntityDef"]);
 			bundle:send();
@@ -653,7 +636,7 @@ CityEngineLua.onImportClientMessagesCompleted = function()
 	end
 end
 CityEngineLua.onImportEntityDefCompleted = function()
-	log("City::onImportEntityDefCompleted: successfully!");
+	ct.log("City::onImportEntityDefCompleted: successfully!");
 	this.entitydefImported_ = true;
 	
 	if(not this.loadingLocalMessages_) then
@@ -662,7 +645,7 @@ CityEngineLua.onImportEntityDefCompleted = function()
 end
 CityEngineLua.Client_onCreatedProxies = function(rndUUID, eid, entityType)
 
-	--log("CityEngineApp::Client_onCreatedProxies: eid(" .. eid .. "), entityType(" .. entityType .. ")!");
+	--ct.log("CityEngineApp::Client_onCreatedProxies: eid(" .. eid .. "), entityType(" .. entityType .. ")!");
 	
 	this.entity_uuid = rndUUID;
 	this.entity_id = eid;
@@ -673,7 +656,7 @@ CityEngineLua.Client_onCreatedProxies = function(rndUUID, eid, entityType)
 	if(entity == nil) then		
 		local runclass = CityEngineLua[entityType];
 		if(runclass == nil) then
-			log("City::Client_onCreatedProxies: not found module(" .. entityType .. ")!");
+			ct.log("City::Client_onCreatedProxies: not found module(" .. entityType .. ")!");
 			return;
 		end
 		
@@ -740,7 +723,7 @@ CityEngineLua.onUpdatePropertys_ = function(eid, stream)
 	if(entity == nil) then
 		local entityMessage = CityEngineLua.bufferedCreateEntityMessage[eid];
 		if(entityMessage ~= nil) then
-			log("CityEngineApp::Client_onUpdatePropertys: entity(" .. eid .. ") not found!");
+			ct.log("CityEngineApp::Client_onUpdatePropertys: entity(" .. eid .. ") not found!");
 			return;
 		end
 		
@@ -777,8 +760,6 @@ CityEngineLua.onUpdatePropertys_ = function(eid, stream)
 		local val = propertydata[5]:createFromStream(stream);
 		local oldval = entity[propertydata[3]];
 		
-		--log("CityEngineApp::Client_onUpdatePropertys: " .. entity.className .. "(id=" .. eid  .. " " .. propertydata[3]);
-		
 		entity[propertydata[3]] = val;
 		if(setmethod ~= nil) then
 
@@ -810,7 +791,7 @@ CityEngineLua.onRemoteMethodCall_ = function(eid, stream)
 	local entity = CityEngineLua.entities[eid];
 	
 	if(entity == nil) then
-		log("CityEngineApp::Client_onRemoteMethodCall: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onRemoteMethodCall: entity(" .. eid .. ") not found!");
 		return;
 	end
 
@@ -843,7 +824,7 @@ CityEngineLua.onRemoteMethodCall_ = function(eid, stream)
 	if(entity[methoddata[3]] ~= nil) then
 		entity[methoddata[3]](entity, unpack(args));
 	else
-		log("CityEngineApp::Client_onRemoteMethodCall: entity(" .. eid .. ") not found method(" .. methoddata[2] .. ")!");
+		ct.log("CityEngineApp::Client_onRemoteMethodCall: entity(" .. eid .. ") not found method(" .. methoddata[2] .. ")!");
 	end
 end
 
@@ -879,14 +860,14 @@ CityEngineLua.Client_onEntityEnterWorld = function(stream)
 	end
 	
 	entityType = CityEngineLua.moduledefs[entityType].name;
-	log("CityEngineApp::Client_onEntityEnterWorld: " .. entityType .. "(" .. eid .. "), spaceID(" .. CityEngineLua.spaceID .. "), isOnGround(" .. isOnGround .. ")!");
+	ct.log("CityEngineApp::Client_onEntityEnterWorld: " .. entityType .. "(" .. eid .. "), spaceID(" .. CityEngineLua.spaceID .. "), isOnGround(" .. isOnGround .. ")!");
 	
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
 		
 		entityMessage = CityEngineLua.bufferedCreateEntityMessage[eid];
 		if(entityMessage == nil) then
-			log("CityEngineApp::Client_onEntityEnterWorld: entity(" .. eid .. ") not found!");
+			ct.log("CityEngineApp::Client_onEntityEnterWorld: entity(" .. eid .. ") not found!");
 			return;
 		end
 		
@@ -965,7 +946,7 @@ end
 CityEngineLua.Client_onEntityLeaveWorld = function(eid)
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onEntityLeaveWorld: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onEntityLeaveWorld: entity(" .. eid .. ") not found!");
 		return;
 	end
 	
@@ -987,11 +968,11 @@ CityEngineLua.Client_onEntityLeaveWorld = function(eid)
 end
 
 CityEngineLua.Client_onEntityDestroyed = function(eid)
-	log("CityEngineApp::Client_onEntityDestroyed: entity(" .. eid .. ")!");
+	ct.log("CityEngineApp::Client_onEntityDestroyed: entity(" .. eid .. ")!");
 	
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onEntityDestroyed: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onEntityDestroyed: entity(" .. eid .. ") not found!");
 		return;
 	end
 
@@ -1024,7 +1005,7 @@ CityEngineLua.Client_onEntityEnterSpace = function(stream)
 	
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onEntityEnterSpace: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onEntityEnterSpace: entity(" .. eid .. ") not found!");
 		return;
 	end
 	
@@ -1038,7 +1019,7 @@ end
 CityEngineLua.Client_onEntityLeaveSpace = function(eid)
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onEntityLeaveSpace: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onEntityLeaveSpace: entity(" .. eid .. ") not found!");
 		return;
 	end
 	
@@ -1055,12 +1036,12 @@ CityEngineLua.Client_v_onCreateAccountResult = function(stream)
 	Event.Brocast("c_onCreateAccountResult", retcode, datas);
 
 	if(retcode ~= 0) then
-		log("CityEngineApp::Client_v_onCreateAccountResult: " .. CityEngineLua.username .. " create is failed! code=" .. CityEngineLua.serverErrs[retcode].name .. "!");
+		ct.log("CityEngineApp::Client_v_onCreateAccountResult: " .. CityEngineLua.username .. " create is failed! code=" .. CityEngineLua.serverErrs[retcode].name .. "!");
 		return;
 	end
 
 	
-	log("CityEngineApp::Client_v_onCreateAccountResult: " .. CityEngineLua.username .. " create is successfully!");
+	ct.log("CityEngineApp::Client_v_onCreateAccountResult: " .. CityEngineLua.username .. " create is successfully!");
 end
 
 
@@ -1070,7 +1051,7 @@ CityEngineLua.Client_onControlEntity = function(eid, isControlled)
 	local entity = this.entities[eid];
 
 	if (entity == nil) then
-		log("City::Client_onControlEntity: entity(" .. eid .. ") not found!");
+		ct.log("City::Client_onControlEntity: entity(" .. eid .. ") not found!");
 		return;
 	end
 
@@ -1112,7 +1093,7 @@ CityEngineLua.updatePlayerToServer = function()
 
     this._lastUpdateToServerTime = now - (span - 0.05);
 
-    --log(player.position.x .. " " .. player.position.y);
+    --ct.log(player.position.x .. " " .. player.position.y);
 	if(Vector3.Distance(player._entityLastLocalPos, player.position) > 0.001 or Vector3.Distance(player._entityLastLocalDir, player.direction) > 0.001) then
 	
 		-- 记录玩家最后一次上报位置时自身当前的位置
@@ -1201,7 +1182,7 @@ end
 
 CityEngineLua.addSpaceGeometryMapping = function(spaceID, respath)
 
-	log("CityEngineApp::addSpaceGeometryMapping: spaceID(" .. spaceID .. "), respath(" .. respath .. ")!");
+	ct.log("CityEngineApp::addSpaceGeometryMapping: spaceID(" .. spaceID .. "), respath(" .. respath .. ")!");
 	
 	CityEngineLua.spaceID = spaceID;
 	CityEngineLua.spaceResPath = respath;
@@ -1259,12 +1240,12 @@ CityEngineLua.Client_initSpaceData = function(stream)
 		CityEngineLua.Client_setSpaceData(CityEngineLua.spaceID, key, value);
 	end
 	
-	--log("CityEngineApp::Client_initSpaceData: spaceID(" .. CityEngineLua.spaceID .. "), datas(" .. CityEngineLua.spacedata["_mapping"] .. ")!");
+	--ct.log("CityEngineApp::Client_initSpaceData: spaceID(" .. CityEngineLua.spaceID .. "), datas(" .. CityEngineLua.spacedata["_mapping"] .. ")!");
 end
 
 CityEngineLua.Client_setSpaceData = function(spaceID, key, value)
 
-	log("CityEngineApp::Client_setSpaceData: spaceID(" .. spaceID .. "), key(" .. key .. "), value(" .. value .. ")!");
+	ct.log("CityEngineApp::Client_setSpaceData: spaceID(" .. spaceID .. "), key(" .. key .. "), value(" .. value .. ")!");
 	
 	CityEngineLua.spacedata[key] = value;
 	
@@ -1277,7 +1258,7 @@ end
 
 CityEngineLua.Client_delSpaceData = function(spaceID, key)
 
-	log("CityEngineApp::Client_delSpaceData: spaceID(" .. spaceID .. "), key(" .. key .. ")!");
+	ct.log("CityEngineApp::Client_delSpaceData: spaceID(" .. spaceID .. "), key(" .. key .. ")!");
 	
 	CityEngineLua.spacedata[key] = nil;
 	City.Event.fire("onDelSpaceData", spaceID, key);
@@ -1337,7 +1318,7 @@ CityEngineLua.Client_onUpdateData = function(stream)
 	local eid = CityEngineLua.getViewEntityIDFromStream(stream);
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onUpdateData: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onUpdateData: entity(" .. eid .. ") not found!");
 		return;
 	end
 end
@@ -1347,7 +1328,7 @@ CityEngineLua.Client_onSetEntityPosAndDir = function(stream)
 	local eid = stream:readInt32();
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
-		log("CityEngineApp::Client_onSetEntityPosAndDir: entity(" .. eid .. ") not found!");
+		ct.log("CityEngineApp::Client_onSetEntityPosAndDir: entity(" .. eid .. ") not found!");
 		return;
 	end
 	
@@ -1635,7 +1616,7 @@ CityEngineLua._updateVolatileData = function(entityID, x, y, z, yaw, pitch, roll
 		-- 如果为0且客户端上一步是重登陆或者重连操作并且服务端entity在断线期间一直处于在线状态
 		-- 则可以忽略这个错误, 因为cellapp可能一直在向baseapp发送同步消息， 当客户端重连上时未等
 		-- 服务端初始化步骤开始则收到同步信息, 此时这里就会出错。			
-		log("CityEngineApp::_updateVolatileData: entity(" .. entityID .. ") not found!");
+		ct.log("CityEngineApp::_updateVolatileData: entity(" .. entityID .. ") not found!");
 		return;
 	end
 	
@@ -1700,7 +1681,7 @@ CityEngineLua.login_loginapp = function( noconnect )
 		this.reset();
 		this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 	else
-		----log("City::login_loginapp(): send login! username=" .. this.username);
+		----ct.log("City::login_loginapp(): send login! username=" .. this.username);
 		------1、 获取协议id
 		--local msgId = pb.asCode.login
 		------2、 填充 protobuf 内部协议数据
@@ -1726,14 +1707,14 @@ end
 CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, userData)
 	this._lastTickCBTime = os.clock();
 	if not success then
-		log("City::login_loginapp(): connect ".. ip.. ":"..port.." is error!");
+		ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." is error!");
 		return;
 	end
 			
 	this.currserver = "loginapp";
 	this.currstate = "login";
 			
-	log("City::login_loginapp(): connect ".. ip.. ":"..port.." success!");
+	ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." success!");
 
 	-- this.hello(); //暂时不考虑握手的事
 	this.login_loginapp(false);
@@ -1745,7 +1726,7 @@ CityEngineLua.onLogin_loginapp = function()
 		local bundle = CityEngineLua.Bundle:new();
 		bundle:newMessage(CityEngineLua.messages["Loginapp_importClientMessages"]);
 		bundle:send();
-		log("City::onLogin_loginapp: send importClientMessages ...");
+		ct.log("City::onLogin_loginapp: send importClientMessages ...");
 	else
 		this.onImportClientMessagesCompleted();
 	end
@@ -1785,7 +1766,7 @@ end
 CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userData)
 	this._lastTickCBTime = os.clock();
 	if not success then
-		log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
+		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
 		return;
 	end
 	
@@ -1829,7 +1810,7 @@ end
 CityEngineLua.Client_v_onLoginFailed = function(stream)
 	local failedcode = stream:readUint16();
 	this._serverdatas = stream:readBlob();
-	log("City::Client_v_onLoginFailed: failedcode(" .. failedcode .. "), datas(" .. this._serverdatas.Length .. ")!");
+	ct.log("City::Client_v_onLoginFailed: failedcode(" .. failedcode .. "), datas(" .. this._serverdatas.Length .. ")!");
 	Event.Brocast("c_onLoginFailed", failedcode);
 end
 
@@ -1875,7 +1856,7 @@ end
 
 
 CityEngineLua.onOpenLoginapp_resetpassword = function()
-	log("City::onOpenLoginapp_resetpassword: successfully!");
+	ct.log("City::onOpenLoginapp_resetpassword: successfully!");
 	this.currserver = "loginapp";
 	this.currstate = "resetpassword";
 	this._lastTickCBTime = os.clock();
@@ -1884,7 +1865,7 @@ CityEngineLua.onOpenLoginapp_resetpassword = function()
 		local bundle = CityEngineLua.Bundle:new();
 		bundle:newMessage(CityEngineLua.messages["Loginapp_importClientMessages"]);
 		bundle:send();
-		log("City::onOpenLoginapp_resetpassword: send importClientMessages ...");
+		ct.log("City::onOpenLoginapp_resetpassword: send importClientMessages ...");
 	else
 		this.onImportClientMessagesCompleted();
 	end
@@ -1914,20 +1895,20 @@ CityEngineLua.onConnectTo_resetpassword_callback = function(ip, port, success, u
 	this._lastTickCBTime = os.clock();
 
 	if(not success) then
-		log("City::resetpassword_loginapp(): connect "..ip..":"..port.." is error!");
+		ct.log("City::resetpassword_loginapp(): connect "..ip..":"..port.." is error!");
 		return;
 	end
 	
-	log("City::resetpassword_loginapp(): connect "..ip..":"..port.." is success!");
+	ct.log("City::resetpassword_loginapp(): connect "..ip..":"..port.." is success!");
 	this.onOpenLoginapp_resetpassword();
 end
 
 CityEngineLua.Client_onReqAccountResetPasswordCB = function(failcode)
 	if(failcode ~= 0) then
-		log("City::Client_onReqAccountResetPasswordCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
+		ct.log("City::Client_onReqAccountResetPasswordCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
 		return;
 	end
-	log("City::Client_onReqAccountResetPasswordCB: " .. this.username .. " is successfully!");
+	ct.log("City::Client_onReqAccountResetPasswordCB: " .. this.username .. " is successfully!");
 end
 
 	--绑定Email，通过baseapp
@@ -1943,11 +1924,11 @@ end
 
 CityEngineLua.Client_onReqAccountBindEmailCB = function(failcode)
 	if(failcode ~= 0) then
-		log("City::Client_onReqAccountBindEmailCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
+		ct.log("City::Client_onReqAccountBindEmailCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
 		return;
 	end
 
-	log("City::Client_onReqAccountBindEmailCB: " .. this.username .. " is successfully!");
+	ct.log("City::Client_onReqAccountBindEmailCB: " .. this.username .. " is successfully!");
 end
 
 ----设置新密码，通过baseapp， 必须玩家登录在线操作所以是baseapp。
@@ -1963,11 +1944,11 @@ end
 
 CityEngineLua.Client_onReqAccountNewPasswordCB = function(failcode)
 	if(failcode ~= 0) then
-		log("City::Client_onReqAccountNewPasswordCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
+		ct.log("City::Client_onReqAccountNewPasswordCB: " .. this.username .. " is failed! code=" .. failcode .. "!");
 		return;
 	end
 
-	log("City::Client_onReqAccountNewPasswordCB: " .. this.username .. " is successfully!");
+	ct.log("City::Client_onReqAccountNewPasswordCB: " .. this.username .. " is successfully!");
 end
 
 CityEngineLua.createAccount = function(username, password, data)
@@ -1996,7 +1977,7 @@ CityEngineLua.createAccount_loginapp = function(noconnect)
 end
 
 CityEngineLua.onOpenLoginapp_createAccount = function()
-	log("City::onOpenLoginapp_createAccount: successfully!");
+	ct.log("City::onOpenLoginapp_createAccount: successfully!");
 	this.currserver = "loginapp";
 	this.currstate = "createAccount";
 	this._lastTickCBTime = os.clock();
@@ -2005,7 +1986,7 @@ CityEngineLua.onOpenLoginapp_createAccount = function()
 		local bundle = CityEngineLua.Bundle:new();
 		bundle:newMessage(CityEngineLua.messages["Loginapp_importClientMessages"]);
 		bundle:send();
-		log("City::onOpenLoginapp_createAccount: send importClientMessages ...");
+		ct.log("City::onOpenLoginapp_createAccount: send importClientMessages ...");
 	else
 		this.onImportClientMessagesCompleted();
 	end
@@ -2019,7 +2000,7 @@ CityEngineLua.onConnectTo_createAccount_callback = function(ip, port, success, u
 		return;
 	end
 	
-	log("City::createAccount_loginapp(): connect "..ip..":"..port.." is success!");
+	ct.log("City::createAccount_loginapp(): connect "..ip..":"..port.." is success!");
 	this.onOpenLoginapp_createAccount();
 end
 
@@ -2042,7 +2023,7 @@ end
 CityEngineLua.Client_onScriptVersionNotMatch = function(stream)
 	this.serverScriptVersion = stream:readString();
 	
-	log("Client_onScriptVersionNotMatch: verInfo=" .. this.clientScriptVersion .. "(server: " .. this.serverScriptVersion .. ")");
+	ct.log("Client_onScriptVersionNotMatch: verInfo=" .. this.clientScriptVersion .. "(server: " .. this.serverScriptVersion .. ")");
 	--Event.fireAll("onScriptVersionNotMatch", new object[]{clientScriptVersion, this.serverScriptVersion});
 	
 	if(_persistentInfos ~= nil) then
@@ -2053,7 +2034,7 @@ end
 --	被服务端踢出
 
 CityEngineLua.Client_onKicked = function(failedcode)
-	log("Client_onKicked: failedcode=" .. failedcode);
+	ct.log("Client_onKicked: failedcode=" .. failedcode);
 	--Event.fireAll("onKicked", new object[]{failedcodeend);
 end
 
@@ -2090,20 +2071,20 @@ end
 
 	--登录baseapp失败了
 CityEngineLua.Client_onLoginBaseappFailed = function(failedcode)
-	log("City::Client_onLoginBaseappFailed: failedcode(" .. failedcode .. ")!");
+	ct.log("City::Client_onLoginBaseappFailed: failedcode(" .. failedcode .. ")!");
 	--Event.fireAll("onLoginBaseappFailed", new object[]{failedcode});
 end
 
 	--重登录baseapp失败了
 CityEngineLua.Client_onReloginBaseappFailed = function(failedcode)
-	log("City::Client_onReloginBaseappFailed: failedcode(" .. failedcode .. ")!");
+	ct.log("City::Client_onReloginBaseappFailed: failedcode(" .. failedcode .. ")!");
 	--Event.fireAll("onReloginBaseappFailed", new object[]{failedcodeend);
 end
 
 	--登录baseapp成功了
 CityEngineLua.Client_onReloginBaseappSuccessfully = function(stream)
 	this.entity_uuid = stream:readUint64();
-	log("City::Client_onReloginBaseappSuccessfully: name(" .. this.username .. ")!");
+	ct.log("City::Client_onReloginBaseappSuccessfully: name(" .. this.username .. ")!");
 	--Event.fireAll("onReloginBaseappSuccessfully", new object[]{end);
 end
 
@@ -2128,7 +2109,7 @@ CityEngineLua.sendTick = function()
 		-- 如果心跳回调接收时间小于心跳发送时间，说明没有收到回调
 		-- 此时应该通知客户端掉线了
 		if(span < 0) then
-			log("sendTick: Receive appTick timeout!");
+			ct.log("sendTick: Receive appTick timeout!");
 			this._networkInterface:close();
 			return;
 		end

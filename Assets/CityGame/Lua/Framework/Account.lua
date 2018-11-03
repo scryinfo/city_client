@@ -48,12 +48,12 @@ function CityEngineLua.Account:reqCreateAvatar(name, roleType)
 end
 
 function CityEngineLua.Account:reqRemoveAvatar(name)
-    log("Account::reqRemoveAvatar: name=" .. name);
+    ct.log("Account::reqRemoveAvatar: name=" .. name);
     self:baseCall({"reqRemoveAvatar", name});
 end
 
 function CityEngineLua.Account:reqSelectAvatarGame(dbid)
-    log("Account::reqSelectAvatarGame: dbid=" .. tostring(dbid));
+    ct.log("Account::reqSelectAvatarGame: dbid=" .. tostring(dbid));
     self:baseCall({"selectAvatarGame", dbid});
 end
 
@@ -63,10 +63,10 @@ function CityEngineLua.Account:onReqAvatarList( infos )
 
     local listinfos = infos["values"];
 
-    log("Account::onReqAvatarList: avatarsize=" .. #listinfos);
+    ct.log("Account::onReqAvatarList: avatarsize=" .. #listinfos);
     
     for i, info in ipairs(listinfos) do
-        log("Account::onReqAvatarList: name" .. i .. "=" .. info["name"]);
+        ct.log("Account::onReqAvatarList: name" .. i .. "=" .. info["name"]);
         self.avatars[info["dbid"]] = info;
     end
     self:protobuftest();
@@ -76,11 +76,11 @@ end
 function CityEngineLua.Account:onCreateAvatarResult(retcode, info)
     if (retcode == 0) then
         self.avatars[info["dbid"]] = info;
-        log("Account::onCreateAvatarResult: name=" .. info["name"]);
+        ct.log("Account::onCreateAvatarResult: name=" .. info["name"]);
     else
-        log("Account::onCreateAvatarResult: retcode=" .. retcode);
+        ct.log("Account::onCreateAvatarResult: retcode=" .. retcode);
         if (retcode == 3) then
-            log("角色数量不能超过三个！");
+            ct.log("角色数量不能超过三个！");
         end
     end
 
@@ -88,7 +88,7 @@ function CityEngineLua.Account:onCreateAvatarResult(retcode, info)
 end
 
 function CityEngineLua.Account:onRemoveAvatar(dbid)
-    log("Account::onRemoveAvatar: dbid=" .. tostring(dbid));
+    ct.log("Account::onRemoveAvatar: dbid=" .. tostring(dbid));
 
 
     for k,v in pairs(self.avatars) do

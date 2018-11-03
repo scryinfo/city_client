@@ -3,9 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:15
 ---
-require('Framework/UI/UIPage')
+-----
 require('Controller/NoticeCtrl')
-local class = require 'Framework/class'
+
 
 TopBarCtrl = class('TopBarCtrl',UIPage)
 
@@ -37,17 +37,17 @@ function TopBarCtrl:Refresh()
 end
 
 function TopBarCtrl:OnClick_back()
-    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_back")
+    ct.log("abel_w6_UIFrame", "TopBarCtrl:OnClick_back")
     UIPage.ClosePage();
 end
 
 function TopBarCtrl:OnClick_notice()
-    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_notice")
+    ct.log("abel_w6_UIFrame", "TopBarCtrl:OnClick_notice")
     UIPage:ShowPage(NoticeCtrl)
 end
 
 function TopBarCtrl:OnClick_main()
-    log("abel_w6_UIFrame", "TopBarCtrl:OnClick_main")
+    ct.log("abel_w6_UIFrame", "TopBarCtrl:OnClick_main")
     --UIPage:ShowPage(MainPageCtrl)
 end
 

@@ -3,11 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/21 10:35
 ---
-require "Common/define"
-require "View/BuildingInfo/BuildingInfoToggleGroupMgr"
-
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
 
 HouseCtrl = class('HouseCtrl',UIPage)
 UIPage:ResgisterOpen(HouseCtrl)
@@ -49,9 +45,10 @@ function HouseCtrl:_changeName()
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function()
-        log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
+        ct.log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
     end
-    UIPage:ShowPage(InputDialogPageCtrl, data)
+    --UIPage:ShowPage(InputDialogPageCtrl, data)
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 ---返回
 function HouseCtrl:_backBtn()

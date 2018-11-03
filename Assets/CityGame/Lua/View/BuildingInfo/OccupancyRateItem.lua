@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 17:03
 ---
-local class = require 'Framework/class'
+
 
 OccupancyRateItem = class('OccupancyRateItem')
 OccupancyRateItem.static.TOTAL_H = 345  --整个Item的高度
@@ -26,7 +26,7 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
 
-    --log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
+    --ct.log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
 
     --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
     --    clickOpenFunc(mgrTable, self.toggleData)

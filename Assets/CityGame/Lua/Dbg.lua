@@ -1,11 +1,10 @@
-require('TestGroup')
 
 Dbg = {}
+
 local this = Dbg;
 
 --输出日志--
 local loginner = print
-
 DEBUGLEVEL = {
 	DEBUG = 0,
 	INFO = 1,
@@ -14,7 +13,7 @@ DEBUGLEVEL = {
 	NOLOG = 4,  -- 放在最后面，使用这个时表示不输出任何日志（!!!慎用!!!）
 }
 
-if CityGlobal.G_DEBUGLOG then
+if ct.G_DEBUGLOG then
 	this.debugLevel = DEBUGLEVEL.DEBUG;
 else
 	this.debugLevel = DEBUGLEVEL.NOLOG
@@ -26,7 +25,10 @@ end
 this.getIdHead = function(id)
 	return "["..id.."]";
 end
-log = function(logid,s,...)
+
+log = nil
+
+ct.log = function(logid,s,...)
 	if s == nil then
 		return
 	end
@@ -36,28 +38,29 @@ log = function(logid,s,...)
 		return
 	end
 	assert(s)
-	if CityGlobal.G_LOG then
-		loginner(this.getIdHead(plgid) .. s,...);
-	end
+	loginner(this.getIdHead(plgid) .. s,...);
 end
 
 print = function(s,...)
-	log("system",s,...)
+	ct.log("system",s,...)
 end
 
+logWarn = print
+logDebug = print
+
 error = function(s,...)
-	log("system","[error]",s,...)
+	ct.log("system","[error]",s,...)
 end
 
 this.INFO_MSG = function( s )
 	if (DEBUGLEVEL.INFO >= this.debugLevel) then
-		log(this.getHead() .. s);
+		ct.log(this.getHead() .. s);
 	end
 end
 
 this.DEBUG_MSG = function( s ,...)
 	if (DEBUGLEVEL.DEBUG >= this.debugLevel) then
-		log(this.getHead() .. s,...);
+		ct.log(this.getHead() .. s,...);
 	end
 end
 

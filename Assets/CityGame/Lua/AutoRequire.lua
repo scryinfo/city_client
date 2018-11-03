@@ -3,11 +3,11 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/19 11:07
 ---
-require('Common/functions')
+-----
 
 local lfs = lfs
-local file_exists = file_exists
-local class = require 'Framework/class'
+local file_exists = ct.file_exists
+
 local AutoRequire = class("AutoRequire")
 local WindowsEditor = UnityEngine.Application.isEditor
 
@@ -19,11 +19,20 @@ end
 
 function AutoRequire:initialize()
     self.requirePaths = {} --这个用以Android打包时，导出到 AndroidRequire.lua
+    self.requirePaths[#self.requirePaths+1] = "require '__require_first__'"
+end
+
+function AutoRequire:requireLast(file)
+    self.requirePaths[#self.requirePaths+1] = 'require '.."'"..file.."'"
+end
+
+function AutoRequire:addCode(code)
+    self.requirePaths[#self.requirePaths+1] = code
 end
 
 function AutoRequire:init(dir)
     instance.OriginalPath = dir
-    print("instance.OriginalPath", instance.OriginalPath)
+    ct.log("abel_w9_autoRequire","instance.OriginalPath", instance.OriginalPath)
 end
 
 function AutoRequire:getTag()
@@ -41,14 +50,18 @@ function AutoRequire:addPath(path)
     end
 end
 
-function AutoRequire:WriteAndroidRequire()
-    file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_Android.lua',self.requirePaths)
+function AutoRequire:WriteRuntimeRequire()
+    ct.file_saveTable(CityLuaUtil.getAssetsPath()..'/Lua/Require_RunTime.lua',self.requirePaths)
+    self.requirePaths = {}
+end
+
+function AutoRequire:FinishedRequire()
     self.requirePaths = nil
 end
 
 function AutoRequire:require(path, data)
     local loadpath = self.OriginalPath..'/'..path
-    log("abel_w9_autoRequire","AutoRequire:require: loadpath = ".. loadpath)
+    ct.log("abel_w9_autoRequire","AutoRequire:require: loadpath = ".. loadpath)
     assert(lfs.symlinkattributes(loadpath), "Error AutoRequire path not find "..loadpath)
     self._tag = data
     self._require_path = path

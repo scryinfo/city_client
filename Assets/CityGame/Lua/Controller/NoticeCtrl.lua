@@ -8,8 +8,8 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:15
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 NoticeCtrl = class('NoticeCtrl',UIPage)
 
@@ -38,7 +38,7 @@ function NoticeCtrl:Refresh()
 end
 
 function NoticeCtrl:OnClick_confim(obj)
-    log("abel_w6_UIFrame", "NoticeCtrl:OnClick_confim")
+    ct.log("abel_w6_UIFrame", "NoticeCtrl:OnClick_confim")
     obj:Hide();
 end
 

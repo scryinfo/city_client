@@ -3,6 +3,9 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:55
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
+
+
 require('View/TopBarPanel')
 require('View/MainPagePanel')
 require('View/BattlePanel')
@@ -17,3 +20,5 @@ require('Controller/NoticeCtrl')
 UnitTest.Exec("abel_w6_UIFrame", "test_TopBarCtrl_ShowPage",  function ()
     UIPage:ShowPage(TopBarCtrl)
 end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

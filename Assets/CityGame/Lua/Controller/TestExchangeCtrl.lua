@@ -3,8 +3,8 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/10 11:12
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 TestExchangeCtrl = class('TestExchangeCtrl',UIPage)
 
@@ -80,5 +80,5 @@ TestExchangeCtrl.static.ProvideData = function(transform, idx)
 end
 
 TestExchangeCtrl.static.ClearData = function(transform)
-    --log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
+    --ct.log("cycle_w8_exchange01_loopScroll", "回收"..transform.name)
 end

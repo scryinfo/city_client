@@ -37,7 +37,7 @@ end
 function AdvertisementItem:OnClick_detailsBtn(go)
     local m_data={}
     m_data.id=go.id
-  UIPage:OpenCtrl("AdvertisementPopCtrl",m_data)
+  ct.OpenCtrl("AdvertisementPopCtrl",m_data)
 end
 
 

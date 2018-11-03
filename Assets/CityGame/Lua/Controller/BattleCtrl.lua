@@ -8,8 +8,8 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 21:15
 ---
-require('Framework/UI/UIPage')
-local class = require 'Framework/class'
+-----
+
 
 BattleCtrl = class('BattleCtrl',UIPage)
 
@@ -39,12 +39,12 @@ function BattleCtrl:Close()
 end
 
 function BattleCtrl:OnClickSkillGo()
-    log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
+    ct.log("abel_w6_UIFrame", "BattleCtrl:OnClickSkillGo")
     UIPage:ShowPage(SkillPageCtrl)
 
 end
 function BattleCtrl:OnClickGoBattle()
-    log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
+    ct.log("abel_w6_UIFrame", "BattleCtrl:OnClickGoBattle")
 end
 
 

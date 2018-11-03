@@ -16,7 +16,7 @@ function LineChartPanel.Awake(obj)
     transform = obj.transform;
 
     this.InitPanel();
-    log("abel_w6_UIFrame","LineChartPanel.Awake"..gameObject.name);
+    ct.log("abel_w6_UIFrame","LineChartPanel.Awake"..gameObject.name);
 end
 
 --初始化面板--

@@ -3,7 +3,7 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/27 10:09
 ---
-local class = require 'Framework/class'
+
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
 UIType = {
@@ -82,7 +82,7 @@ function UIPage:OnCreate(go)
         self.gameObject = go;
         assert(go, "system","[UIPage.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
-            log("system","[UIPage.Show]", "资源加载失败: "..uiPath)
+            ct.log("system","[UIPage.Show]", "资源加载失败: "..uiPath)
         end
         self:AnchorUIGameObject(go)
         self:Awake(go)
@@ -188,7 +188,7 @@ function UIPage:PopNode(page)
 
         if page == nil then
             --Debug.LogError("[UI] page popup is nil.");
-            log("system","page popup is nil.")
+            ct.log("system","page popup is nil.")
             return
         end
     end
@@ -231,7 +231,7 @@ function  UIPage:HideOldNodes()
 end
 
 function UIPage:Close()
-    log("system","请使用UIPage派生类自己的Close方法，尽量不要调用基类的 Close 方法")
+    ct.log("system","请使用UIPage派生类自己的Close方法，尽量不要调用基类的 Close 方法")
     destroy(self.gameObject);
 end
 
@@ -266,7 +266,7 @@ function  UIPage:ShowPageByClass(inClass,pageData)
     pageName = inClass.bundleName()
     callback = inClass.OnCreate
     if pageName == "" then
-        log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
+        ct.log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
         return
     end
 
@@ -298,7 +298,7 @@ function UIPage:setPosition(x,y)
 end
 
 function UIPage:ClosePage()
-    --//Debug.Log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);
+    --//Debug.ct.log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);
     local pageNodes = UIPage.static.m_currentPageNodes
     if pageNodes == nil or #pageNodes <= 1 then return;    end
 
@@ -366,7 +366,7 @@ function UIPage:ClosePageByName(pageName)
     if UIPage.static.m_allPages ~= nil and UIPage.static.m_allPages[pageName] then
         UIPage:ClosePage(UIPage.static.m_allPages[pageName])
     else
-        log("system",pageName , " havnt show yet!");
+        ct.log("system",pageName , " havnt show yet!");
     end
 end
 
@@ -375,10 +375,6 @@ function UIPage:ResgisterOpen(inClass)
     Event.AddListener('c_OnOpen'..inClass.name, function (data)
         UIPage:ShowPage(inClass,data)
     end);
-end
-
-function UIPage:OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
-    Event.Brocast('c_OnOpen'..inClassName,data)
 end
 
 

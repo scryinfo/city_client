@@ -100,7 +100,7 @@ end
 ---管理广告按钮
 function AdvertisementPosCtrl:OnClick_manageBtn()
 
-UIPage:OpenCtrl("ManageAdvertisementPosCtrl")
+ct.OpenCtrl("ManageAdvertisementPosCtrl")
 
 end
 
@@ -114,7 +114,7 @@ end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
 --他人点击
-    UIPage:OpenCtrl("SignOnCtrl");
+    ct.OpenCtrl("SignOnCtrl");
 end
 
 

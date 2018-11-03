@@ -39,9 +39,18 @@ namespace City
             return UIRoot.getFixedRoot();
         }
 
-        public static bool isAndroidPlatform()
+        public static bool isWindowsEditor()
         {
-            return Application.platform == RuntimePlatform.Android;
+            return Application.platform == RuntimePlatform.WindowsEditor;
+        }
+
+        public static bool isluaLogEnable()
+        {
+#if LUA_LOG
+            return true;
+#else
+            return false;
+#endif
         }
 
         public static string getAssetsPath()
@@ -59,6 +68,16 @@ namespace City
                 return "Assets/CityGame";
 #endif
             }
+        }
+
+        public static string getDataPath()
+        {
+            return UnityEngine.Application.dataPath;
+        }
+
+        public static object getUiCamera()
+        {
+            return UIRoot.getUiCamera();
         }
 
         public static Transform getNormalRoot()

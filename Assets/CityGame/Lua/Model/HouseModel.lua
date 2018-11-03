@@ -3,8 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/21 11:23
 ---
-require "Common/define"
-require "City"
+-----
 
 HouseModel = {};
 local this = HouseModel;
@@ -23,7 +22,7 @@ end
 function HouseModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Z) then
         HouseCtrl.OpenPanel({})
-        --log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
+        --ct.log("cycle_w5","[test_houseModel_openPanel]  测试完毕")
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.X) then
@@ -78,11 +77,12 @@ end
 
 
 --TestGroup.active_TestGroup("cycle_w5")
-
+UnitTest.TestBlockStart()---------------------------------------------------------
 UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     local HouseModel = CtrlManager.GetModel(ModelNames.House);
     if HouseModel ~= nil then
         HouseModel:Awake();
     end
-    log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
+    ct.log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
 end)
+UnitTest.TestBlockEnd()-----------------------------------------------------------

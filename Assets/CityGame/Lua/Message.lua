@@ -1,5 +1,3 @@
---require "pb/common"
-require "Common/define"
 local log = log
 
 --消息
@@ -64,7 +62,7 @@ end
 	
 function CityEngineLua.Message:handleMessage(msgstream)
 	if self.handler == nil then
-		log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
+		ct.log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
 		return;
 	end
 
@@ -202,6 +200,9 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 
 			local msg = CityEngineLua.clientMessages[reader.msgid];
 			if not msg then
+				reader.state = CityEngineLua.READ_STATE_MSGLEN;
+				reader.expectSize = 4;
+				reader.stream:clear();
 				logWarn("CityEngineLua.MessageReader.process: msg not registered, id "..reader.msgid);
 				return
 			end

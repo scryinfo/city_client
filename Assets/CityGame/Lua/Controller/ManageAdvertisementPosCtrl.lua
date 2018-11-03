@@ -117,14 +117,14 @@ end
 function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
     local data={}
     data=ins
-    UIPage:OpenCtrl("ConfirmPopCtrl",data)
+    ct.OpenCtrl("ConfirmPopCtrl",data)
 end
 
 function ManageAdvertisementPosCtrl:callback()
 
 
     UIPage:ClosePage()
-    UIPage:OpenCtrl("AdvertisementPosCtrl")
+    ct.OpenCtrl("AdvertisementPosCtrl")
     for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
         destroy(v);
     end

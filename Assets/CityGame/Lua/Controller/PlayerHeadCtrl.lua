@@ -1,4 +1,4 @@
-require "Common/define"
+-----
 
 PlayerHeadCtrl = {};
 local this = PlayerHeadCtrl;

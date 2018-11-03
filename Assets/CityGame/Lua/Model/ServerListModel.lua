@@ -138,6 +138,8 @@ function ServerListModel.n_OnRoleLogin(stream)
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")
         Event.Brocast("c_GsLoginSuccess");
+        ct.log("rodger_w8_GameMainInterface","[test_n_OnRoleLogin]  测试完毕",pMsg.bagCapacity)
+        Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

@@ -26,6 +26,6 @@ end
 
 function AddressListItem:OnBG(go)
     go.manager:SelectBox(go)
-    CenterWareHousePanel.transportConfirm:SetActive(false);
+    go.manager:TransportConfirm(true)
     CenterWareHousePanel.nameText.text = go.name;
 end

@@ -14,11 +14,11 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
-    self.nameText = self.prefab.transform:Find("TransportItem/Goods/Name/NameText").gameObject:GetComponent("Text");
-    self.numberText = self.prefab.transform:Find("TransportItem/Goods/Number/NumberText").gameObject:GetComponent("Text");
+    self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
+    self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;
-    self.select = self.prefab.transform:Find("TransportItem/Goods/Select").gameObject;
-    self.select_while = self.prefab.transform:Find("TransportItem/Goods/Select/Select-white").gameObject;
+    self.select = self.prefab.transform:Find("TransportItem/Select").gameObject;
+    self.select_while = self.prefab.transform:Find("TransportItem/Select/Select-white").gameObject;
     self.bgItem = self.prefab.transform:Find("WareHouseItem").gameObject;
     self.transportBG = self.prefab.transform:Find("TransportItem").gameObject;
     self.nameText.text = goodsDataInfo.name

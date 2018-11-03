@@ -6,7 +6,6 @@
 
 require "View/BuildingInfo/WareHouseGoodsItem"
 local class = require 'Framework/class'
-local allTspItem ={}
 WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
@@ -30,7 +29,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     local configTable = {}
     for i = 1, 9 do
         local WareHouseDataInfo = {}
-        WareHouseDataInfo.name = "小元牌"
+        WareHouseDataInfo.name = "Wood"
         WareHouseDataInfo.number = 123
         configTable[i] = WareHouseDataInfo
 
@@ -56,11 +55,13 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
      ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
      local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
      local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id)
-     self.tspItem = TransportLuaItem;
-     allTspItem[CenterWareHousePanel.tspContent.childCount] = self.tspItem;
-    for i = 1,  #allTspItem do
-        allTspItem[i].inputText.onValueChanged:AddListener(function ()
-            allTspItem[i].scrollbar.value =  allTspItem[i].inputText.text/  allTspItem[i].totalNumber
+    if not self.allTspItem then
+        self.allTspItem = {}
+    end
+    self.allTspItem[CenterWareHousePanel.tspContent.childCount] = TransportLuaItem;
+    for i = 1,  #self.allTspItem do
+        self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
+            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text/  self.allTspItem[i].totalNumber
         end);
     end
     UpdateBeat:Add(self._update, self);
@@ -107,7 +108,7 @@ function WareHouseGoodsMgr:_deleteTspGoods(ins)
         UpdateBeat:Remove(self._update, self);
     end
     destroy(ins.prefab.gameObject);
-    self.tspItem = nil;
+   -- table.remove(self.allTspItem, ins.id)
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
@@ -127,8 +128,8 @@ function WareHouseGoodsMgr:_creatGoods(path,parent)
 end
 
 function WareHouseGoodsMgr:_update()
-    for i = 1,  #allTspItem do
-        allTspItem[i].inputText.text = math.ceil( allTspItem[i].totalNumber *   allTspItem[i].scrollbar.value);
+    for i = 1,  #self.allTspItem do
+        self.allTspItem[i].inputText.text = math.ceil( self.allTspItem[i].totalNumber *   self.allTspItem[i].scrollbar.value);
     end
 end
 
@@ -143,15 +144,23 @@ end
 
 --清空运输数据
 function WareHouseGoodsMgr:ClearAll()
-    for i = 1, #allTspItem do
-        destroy(allTspItem[i].prefab.gameObject);
+    for i = 1, #self.allTspItem do
+        destroy(self.allTspItem[i].prefab.gameObject);
     end
-    allTspItem = {};
+    self.allTspItem = {};
 end
 
 --显示所有商品BG,使其都能点击
 function WareHouseGoodsMgr:EnabledAll()
     for i = 1, #self.items do
         self.items[i]:Enabled();
+    end
+end
+
+--显示运输按钮使其可以点击
+
+function WareHouseGoodsMgr:TransportConfirm(isOnClick)
+    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
+        CenterWareHousePanel.transportConfirm:SetActive(false);
     end
 end

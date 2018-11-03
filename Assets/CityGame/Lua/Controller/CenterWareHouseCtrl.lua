@@ -8,6 +8,7 @@ local isShowList;
 local switchIsShow;
 local isSelect;
 local centerWareHousetBehaviour
+local newtotalCapacity
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
@@ -23,17 +24,20 @@ function CenterWareHouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
-
+function CenterWareHouseCtrl:Awake(go)
+    Event.AddListener("c_BagCapacity",self.c_BagCapacity,self);
+end
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    self.gameObject = obj;
-    self.totalCapacity =800;--仓库总容量
+    self.totalCapacity = 800;--仓库总容量
     self.number = 500;--商品个数
     self.money = 1000;--扩容所需金额
     self:_initData();
     isShowList = false;
     switchIsShow = false;
     isSelect = true;
+
+
     centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
@@ -48,13 +52,20 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
     WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
+
+    Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
 end
 --初始化
 function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.number:GetComponent("Text").text = self.number;
-    CenterWareHousePanel.total:GetComponent("Text").text =self.number .. "/" .. self.totalCapacity;
-    CenterWareHousePanel.slider:GetComponent("Slider").value = self.number/self.totalCapacity;
+    CenterWareHousePanel.total:GetComponent("Text").text =self.number .. "/" ..  self.totalCapacity;
+    CenterWareHousePanel.slider:GetComponent("Slider").value = self.number/ self.totalCapacity;
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
+end
+
+function CenterWareHouseCtrl:c_BagCapacity(bagCapacity)
+    self.totalCapacity = bagCapacity
+    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",  self.totalCapacity)
 end
 
 --返回按钮
@@ -67,9 +78,13 @@ function WarehouseCtrl:Refresh()
 end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    go.totalCapacity = go.totalCapacity+100
-    go.money = go.money*2;
-    go:_initData();
+    Event.Brocast("m_extendBag");
+end
+
+function CenterWareHouseCtrl:c_GsExtendBag()
+        self.totalCapacity = self.totalCapacity+100
+        self.money = self.money*2;
+        self:_initData();
 end
 
 --运输按钮

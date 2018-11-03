@@ -27,6 +27,8 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.houseButton.gameObject,self.OnHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rawMaterialFactory.gameObject,self.OnRawMaterialFactory,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
 end
 
 --通知--
@@ -79,8 +81,18 @@ function GameMainInterfaceCtrl.OnSourceMill()
     --Event.Brocast("");
    -- UIPage:OpenCtrl('CenterWareHouseCtrl')
     --UIPage:ShowPage(CenterWareHouseCtrl)
-    ct.OpenCtrl('CenterWareHouseCtrl')
+    --ct.OpenCtrl('CenterWareHouseCtrl')
 end
 
+--广告设施
+function GameMainInterfaceCtrl:OnAdvertisFacilitie()
+    ct.log("rodger_w8_GameMainInterface","[test_OnAdvertisFacilitie]  测试完毕")
+    ct.OpenCtrl("MunicipalCtrl")
+end
+
+--中心仓库
+function GameMainInterfaceCtrl:OncenterWareHouse()
+    ct.OpenCtrl("CenterWareHouseCtrl")
+end
 
 

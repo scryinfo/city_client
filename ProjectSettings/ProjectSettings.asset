@@ -633,7 +633,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: ASYNC_MODE
     4: ASYNC_MODE
-    7: ES_BUNDEL1;LUA_LOGDEL1;RES_BUNDEL1;LUA_LOG
+    7: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG
   platformArchitecture:
     iOS: 0
   scriptingBackend:

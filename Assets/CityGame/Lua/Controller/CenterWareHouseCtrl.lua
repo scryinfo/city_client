@@ -89,6 +89,7 @@ end
 
 --运输按钮
 function CenterWareHouseCtrl:c_TransportBtn(go)
+    CenterWareHousePanel.addItem:SetActive(false);
     isSelect = false;
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
@@ -107,8 +108,8 @@ function CenterWareHouseCtrl:c_transportConfirmBtn()
 end
 
 function CenterWareHouseCtrl:c_transportCloseBtn()
+    CenterWareHousePanel.addItem:SetActive(true);
     isSelect = true;
-    --WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
 end

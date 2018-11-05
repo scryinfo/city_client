@@ -102,13 +102,13 @@ function WareHouseGoodsMgr:_deleteGoods(ins)
     end
 end
 
+--删除运输商品
 function WareHouseGoodsMgr:_deleteTspGoods(ins)
     self.items[ins.id]:Enabled();
     if UpdateBeat then
         UpdateBeat:Remove(self._update, self);
     end
     destroy(ins.prefab.gameObject);
-   -- table.remove(self.allTspItem, ins.id)
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
@@ -144,8 +144,8 @@ end
 
 --清空运输数据
 function WareHouseGoodsMgr:ClearAll()
-    for i = 1, #self.allTspItem do
-        destroy(self.allTspItem[i].prefab.gameObject);
+    for i = 0, CenterWareHousePanel.tspContent.childCount-1 do
+      destroy(CenterWareHousePanel.tspContent:GetChild(i).gameObject)
     end
     self.allTspItem = {};
 end
@@ -158,7 +158,6 @@ function WareHouseGoodsMgr:EnabledAll()
 end
 
 --显示运输按钮使其可以点击
-
 function WareHouseGoodsMgr:TransportConfirm(isOnClick)
     if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
         CenterWareHousePanel.transportConfirm:SetActive(false);

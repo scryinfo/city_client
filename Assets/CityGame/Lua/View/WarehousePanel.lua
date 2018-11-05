@@ -28,6 +28,7 @@ function WarehousePanel.InitPanel()
     this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
     this.transport = transform:Find("RightInformation/bg/transport").gameObject;
+    this.shelfContent = transform:Find("RightInformation/bg/shelf/ScrollView/Viewport/Content");
 
     this.shelfCloseBtn = transform:Find("RightInformation/bg/shelf/closeBtn");
     this.shelfConfirmBtn = transform:Find("RightInformation/bg/shelf/confirmBtn");
@@ -38,6 +39,7 @@ function WarehousePanel.InitPanel()
     this.moneyText = transform:Find("RightInformation/bg/transport/moneyText").gameObject;
     this.transportopenBtn = transform:Find("RightInformation/bg/transport/warehouseName/openBtn");
     this.nameText = transform:Find("RightInformation/bg/transport/warehouseName/nameText").gameObject;
+    this.transportContent = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content");
     --Slider--Text
     this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider").gameObject;
     this.NumberText = transform:Find("WarehouseDetails/NumberText").gameObject;

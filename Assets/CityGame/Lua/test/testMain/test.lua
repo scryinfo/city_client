@@ -326,8 +326,27 @@ UnitTest.Exec("abel_w9_AddLuaComponent", "test_abel_w9_AddLuaComponent",  functi
     local luaCom = CityLuaUtil.AddLuaComponent(go,'View/Logic/test_luaComponent')
 end)
 
-UnitTest.Exec("cycle_w10_exchange02", "test_cycle_w10_exchange02",  function ()
-    ct.OpenCtrl("ExchangeCtrl")
+UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  function ()
+    local exchangeModel = CtrlManager.GetModel(ModelNames.Exchange);
+    if exchangeModel ~= nil then
+        exchangeModel:Awake()
+    end
+
+    local exchangeTransactionModel = CtrlManager.GetModel(ModelNames.ExchangeTransaction);
+    if exchangeTransactionModel ~= nil then
+        exchangeTransactionModel:Awake()
+    end
+
+    local exchangeDetailModel = CtrlManager.GetModel(ModelNames.ExchangeDetail);
+    if exchangeDetailModel ~= nil then
+        exchangeDetailModel:Awake()
+    end
+
+    local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    if playerTempModel ~= nil then
+        playerTempModel:Awake()
+    end
+
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

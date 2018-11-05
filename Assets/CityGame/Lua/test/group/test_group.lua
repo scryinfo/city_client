@@ -4,8 +4,12 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
-TestGroup.active_TestGroup("abel_w11_Comments")
-TestGroup.active_TestGroup("abel_w7_AddClick")
+--TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
+TestGroup.active_TestGroup("cycle_w11_exchangeModel")
+--TestGroup.active_TestGroup("fisher_w11_ProcessingCtrl")
+--TestGroup.active_TestGroup("fisher_w11_OpenMaterialCtrl")
+--TestGroup.active_TestGroup("abel_w11_Comments")
+--TestGroup.active_TestGroup("abel_w7_AddClick")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")

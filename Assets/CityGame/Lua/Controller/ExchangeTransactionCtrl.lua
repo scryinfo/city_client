@@ -33,11 +33,13 @@ function ExchangeTransactionCtrl:Awake(go)
     self.sellSource.mProvideData = ExchangeTransactionCtrl.static.SellProvideData
     self.sellSource.mClearData = ExchangeTransactionCtrl.static.SellClearData
 
-    UpdateBeat:Add(self._update, self);
+    UpdateBeat:Add(self._update, self)
 end
 
 function ExchangeTransactionCtrl:Refresh()
     --self:_initPanelData()
+
+    --Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
 end
 
 function ExchangeTransactionCtrl:Hide()
@@ -45,6 +47,8 @@ function ExchangeTransactionCtrl:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
     --ExchangeTransactionPanel._initPanel()
+
+    Event.Brocast("m_ReqExchangeStopWatchItemDetail", self.itemId)
 end
 
 function ExchangeTransactionCtrl:Close()
@@ -61,8 +65,8 @@ function ExchangeTransactionCtrl:_updateConfim()
     ExchangeTransactionPanel.confirmBtn.localScale = Vector3.zero
     if self.isSellState then
         if ExchangeTransactionPanel.sellCountInput.text ~= "" and tonumber(ExchangeTransactionPanel.sellCountInput.text) > 0 then
-            if self.sellRemainCount ~= nil then
-                if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellRemainCount then
+            if self.sellTotalCount ~= nil then
+                if tonumber(ExchangeTransactionPanel.sellCountInput.text) > self.sellTotalCount then
                     ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                     self.wareHouseChoosed = false
                 else
@@ -119,36 +123,38 @@ end
 ---初始化
 function ExchangeTransactionCtrl:_initPanelData()
     self:_addListeners()
-
-    ---模拟数据
-    local buyTemp = {}
-    buyTemp[1] = {index = 1, isSell = false, id = 12345.987, num = 999}
-    buyTemp[2] = {index = 2, isSell = false, id = 12.87,     num = 89}
-    buyTemp[3] = {index = 3, isSell = false, id = 7.4544,    num = 78}
-    buyTemp[4] = {index = 4, isSell = false, id = 345.9,     num = 12}
-    buyTemp[5] = {index = 5, isSell = false, id = 245.17,    num = 68}
-
-    local sellTemp = {}
-    sellTemp[1] = {index = 1, isSell = true, id = 12345.987, num = 999}
-    sellTemp[2] = {index = 2, isSell = true, id = 12.87,     num = 89}
-    sellTemp[3] = {index = 3, isSell = true, id = 7.4544,    num = 78}
-    sellTemp[4] = {index = 4, isSell = true, id = 345.9,     num = 12}
-    sellTemp[5] = {index = 5, isSell = true, id = 245.17,    num = 68}
-    ExchangeTransactionCtrl.static.sellDatas = sellTemp
-    ExchangeTransactionCtrl.static.buyDatas = buyTemp
     ExchangeTransactionCtrl.buyItems = {}
     ExchangeTransactionCtrl.sellItems = {}
-    ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
-    ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
+
+    -----模拟数据
+    --local buyTemp = {}
+    --buyTemp[1] = {index = 1, isSell = false, id = 12345.987, num = 999}
+    --buyTemp[2] = {index = 2, isSell = false, id = 12.87,     num = 89}
+    --buyTemp[3] = {index = 3, isSell = false, id = 7.4544,    num = 78}
+    --buyTemp[4] = {index = 4, isSell = false, id = 345.9,     num = 12}
+    --buyTemp[5] = {index = 5, isSell = false, id = 245.17,    num = 68}
+    --
+    --local sellTemp = {}
+    --sellTemp[1] = {index = 1, isSell = true, id = 12345.987, num = 999}
+    --sellTemp[2] = {index = 2, isSell = true, id = 12.87,     num = 89}
+    --sellTemp[3] = {index = 3, isSell = true, id = 7.4544,    num = 78}
+    --sellTemp[4] = {index = 4, isSell = true, id = 345.9,     num = 12}
+    --sellTemp[5] = {index = 5, isSell = true, id = 245.17,    num = 68}
+    --ExchangeTransactionCtrl.static.sellDatas = sellTemp
+    --ExchangeTransactionCtrl.static.buyDatas = buyTemp
+    --ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
+    --ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
 
     ExchangeTransactionPanel.itemNameText.text = self.m_data.name
-    ExchangeTransactionPanel.changeText.text = self.m_data.change
-    ExchangeTransactionPanel.newestPriceText.text = self.m_data.lastPrice
+    ExchangeTransactionPanel.changeText.text = self.m_data.priceChange
+    ExchangeTransactionPanel.newestPriceText.text = self.m_data.nowPrice
     --hide之后m_data会被清空，暂时这么存着
     self.name = self.m_data.name
-    self.change = self.m_data.change
-    self.lastPrice = self.m_data.lastPrice
+    self.change = self.m_data.priceChange
+    self.lastPrice = self.m_data.nowPrice
+    self.itemId = self.m_data.itemId
     self.isSellState = false
+    Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
 end
 ---添加移除监听
 function ExchangeTransactionCtrl:_addListeners()
@@ -159,8 +165,12 @@ function ExchangeTransactionCtrl:_addListeners()
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
     self.luaBehaviour:AddClick(ExchangeTransactionPanel.confirmBtn.gameObject, self._clickConfirm, self);
 
-    Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
     Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
+
+    Event.AddListener("c_onReceiveBuySellItemsInfo", self._updateItemTransactionData, self)
+    Event.AddListener("c_onReceiveExchangeBuy", self._exchangeBuy, self)
+    Event.AddListener("c_onReceiveExchangeSell", self._exchangeSell, self)
+
 end
 function ExchangeTransactionCtrl:_removeListeners()
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.backBtn.gameObject, self._backBtn, self);
@@ -170,7 +180,6 @@ function ExchangeTransactionCtrl:_removeListeners()
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.buyChooseBtn.gameObject, self._chooseWareHouse, self);
     self.luaBehaviour:RemoveClick(ExchangeTransactionPanel.confirmBtn.gameObject, self._clickConfirm, self);
 
-    --Event.AddListener("c_onUpdateSellBuyInfo", self._updateItemTransactionData, self)
     --Event.AddListener("c_onExchangeChooseWareHouseBack", self._onExchangeChooseWareHouseBack, self)  --选择仓库完成
 end
 
@@ -187,7 +196,14 @@ function ExchangeTransactionCtrl:_openSellPart(ins)
     ins.isSellState = true
 end
 function ExchangeTransactionCtrl:_chooseWareHouse(ins)
-    ct.OpenCtrl("ExchangeChooseWareHouseCtrl")
+    local wareHouseData = {}
+    if ins.isSellState then
+        wareHouseData.isSell = true
+    else
+        wareHouseData.isSell = false
+    end
+    wareHouseData.itemId = ins.itemId
+    ct.OpenCtrl("ExchangeChooseWareHouseCtrl", wareHouseData)
 end
 function ExchangeTransactionCtrl:_clickConfirm(ins)
     local showData = {}
@@ -196,16 +212,21 @@ function ExchangeTransactionCtrl:_clickConfirm(ins)
     if ins.isSellState then
         str1 = "sell"
         count = ExchangeTransactionPanel.sellCountInput.text
+        showData.btnCallBack = function()
+            ct.log("cycle_w11_exchange03", "挂卖单")
+            Event.Brocast("m_ReqExchangeSell", ins.itemId, count, ExchangeTransactionPanel.sellPriceInput.text, ins.buildingId)
+        end
     else
         str1 = "buy"
         count = ExchangeTransactionPanel.buyCountInput.text
+        showData.btnCallBack = function()
+            Event.Brocast("m_ReqExchangeBuy", ins.itemId, count, ExchangeTransactionPanel.buyPriceInput.text, ins.buildingId)
+            ct.log("cycle_w11_exchange03", "挂买单")
+        end
     end
     showData.titleInfo = "REMINDER"
     showData.contentInfo = string.format("Entrust to %s <color=%s>%s</color>x%d?", str1, "#CA8A00", ins.name, count)
     showData.tipInfo = ""
-    showData.btnCallBack = function()
-        ct.log("cycle_w10_exchange02", "向服务器发送请求")
-    end
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
@@ -229,20 +250,21 @@ end
 ---选择仓库事件回调
 function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
     if wareDats.isSell ~= self.isSellState then
-        ct.log("cycle_w10_exchange02", "仓库数据的sell状态与交易界面状态不一致")
+    ct.log("cycle_w11_exchange03", "仓库数据的sell状态与交易界面状态不一致")
         return
     end
 
+    self.buildingId = wareDats.buildingId
     if wareDats.isSell then
         ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
-        self.sellRemainCount = wareDats.remainCount
+        self.sellTotalCount = wareDats.totalCount
         local sellCountValue = ExchangeTransactionPanel.sellCountInput.text
         if sellCountValue == "" then  --如果数量还未填写，则显示当前库存量
-            ExchangeTransactionPanel.sellCountInput.text = wareDats.remainCount
+            ExchangeTransactionPanel.sellCountInput.text = wareDats.totalCount
             ExchangeTransactionPanel.SellChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if tonumber(sellCountValue) > wareDats.remainCount then
+            if tonumber(sellCountValue) > wareDats.totalCount then
                 ExchangeTransactionPanel.sellErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
@@ -252,14 +274,14 @@ function ExchangeTransactionCtrl:_onExchangeChooseWareHouseBack(wareDats)
         end
     else
         ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
-        self.buyCapacityCount = wareDats.capacityCount
+        self.buyCapacityCount = wareDats.remainCapacity
         local buyCountValue = ExchangeTransactionPanel.buyCountInput.text
         if buyCountValue == "" then  --如果数量还未填写，则显示当前库存量
-            ExchangeTransactionPanel.buyCountInput.text = wareDats.capacityCount
+            ExchangeTransactionPanel.buyCountInput.text = wareDats.remainCapacity
             ExchangeTransactionPanel.BuyChooseSuccess(wareDats.buildingName)
             self.wareHouseChoosed = true
         else
-            if tonumber(buyCountValue) > wareDats.capacityCount then
+            if tonumber(buyCountValue) > wareDats.remainCapacity then
                 ExchangeTransactionPanel.buyErorTipTran.localScale = Vector3.one
                 self.wareHouseChoosed = false
             else
@@ -290,4 +312,17 @@ function ExchangeTransactionCtrl:_updateItemTransactionData(datas)
         end
         ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
     end
+
+    ExchangeTransactionPanel.changeText.text = datas.priceChange
+    ExchangeTransactionPanel.newestPriceText.text = datas.nowPrice
+    self.change = datas.priceChange
+    self.lastPrice = datas.nowPrice
+end
+--挂买单成功
+function ExchangeTransactionCtrl:_exchangeBuy(id)
+    --挂单成功之后会返回一个单号，但是目前来说不需要其他操作
+end
+--挂卖单成功
+function ExchangeTransactionCtrl:_exchangeSell(id)
+    --挂单成功之后会返回一个单号，但是目前来说不需要其他操作
 end

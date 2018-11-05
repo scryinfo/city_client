@@ -20,9 +20,9 @@ end
 
 function GroundAuctionModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        logDebug("aaaaaaaaaaaa ")
-        this.m_ReqRueryMetaGroundAuction()
-        this.m_ReqQueryGroundAuction()
+        --logDebug("aaaaaaaaaaaa ")
+        --this.m_ReqRueryMetaGroundAuction()
+        --this.m_ReqQueryGroundAuction()
     end
 end
 

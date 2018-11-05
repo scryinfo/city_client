@@ -3,9 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/05 11:00
 ---
-
-
-
 StaffRateItem = class('StaffRateItem')
 StaffRateItem.static.TOTAL_NotAll_H = 407  --整个Item的高度，员工有未找到住所的
 StaffRateItem.static.TOTAL_ALLRIGHT_H = 347  --整个Item的高度，员工都有住所
@@ -99,8 +96,7 @@ end
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn()
     --打开工资调整界面
-    ct.log("cycle_w6_houseAndGround", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊")
-    --UIPage:ShowPage(WagesAdjustBoxCtrl)
+    ct.OpenCtrl("WagesAdjustBoxCtrl")
 end
 
 --打开

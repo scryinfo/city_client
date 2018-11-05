@@ -10,40 +10,40 @@ ExchangeQuoteItem.static.CHANGE_RED = "#E42E2E"
 
 --初始化方法
 function ExchangeQuoteItem:initialize(data, viewRect)
-    self.viewRect = viewRect;
-    self.data = data;
+    self.viewRect = viewRect
+    self.data = data
 
-    local viewTrans = self.viewRect;
-    self.nameText = viewTrans:Find("name/nameText"):GetComponent("Text");
-    self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image");
-    self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button");
-    self.collectGrayTran = viewTrans:Find("name/collectRoot/gray");
-    self.collectYellowTran = viewTrans:Find("name/collectRoot/yellow");
+    local viewTrans = self.viewRect
+    self.nameText = viewTrans:Find("name/nameText"):GetComponent("Text")
+    self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image")
+    self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button")
+    self.collectGrayTran = viewTrans:Find("name/collectRoot/gray")
+    self.collectYellowTran = viewTrans:Find("name/collectRoot/yellow")
 
-    self.lastPriceText = viewTrans:Find("lastPrice/lastPriceText"):GetComponent("Text");
-    self.lastPriceGreenTran = viewTrans:Find("lastPrice/green");
-    self.lastPriceRedTran = viewTrans:Find("lastPrice/red");
-    self.changeText = viewTrans:Find("change/changeText"):GetComponent("Text");
-    self.highText = viewTrans:Find("high/highText"):GetComponent("Text");
-    self.lowText = viewTrans:Find("low/lowText"):GetComponent("Text");
-    self.volumeText = viewTrans:Find("volume/volumeText"):GetComponent("Text");
-    self.exchangeBtn = viewTrans:Find("exchange/exchangeBtn"):GetComponent("Button");
+    self.lastPriceText = viewTrans:Find("lastPrice/lastPriceText"):GetComponent("Text")
+    self.lastPriceGreenTran = viewTrans:Find("lastPrice/green")
+    self.lastPriceRedTran = viewTrans:Find("lastPrice/red")
+    self.changeText = viewTrans:Find("change/changeText"):GetComponent("Text")
+    self.highText = viewTrans:Find("high/highText"):GetComponent("Text")
+    self.lowText = viewTrans:Find("low/lowText"):GetComponent("Text")
+    self.volumeText = viewTrans:Find("volume/volumeText"):GetComponent("Text")
+    self.exchangeBtn = viewTrans:Find("exchange/exchangeBtn"):GetComponent("Button")
     self.detailBtn = viewTrans:Find("detailBtn")
     if self.detailBtn ~= nil then
-        self.detailBtn = self.detailBtn:GetComponent("Button");
+        self.detailBtn = self.detailBtn:GetComponent("Button")
     end
     self:_initData()
 
-    self.collectBtn.onClick:RemoveAllListeners();
+    self.collectBtn.onClick:RemoveAllListeners()
     self.collectBtn.onClick:AddListener(function ()
         self:_clickCollectBtn()
     end)
-    self.exchangeBtn.onClick:RemoveAllListeners();
+    self.exchangeBtn.onClick:RemoveAllListeners()
     self.exchangeBtn.onClick:AddListener(function ()
         self:_clickExchnageBtn()
     end)
     if self.detailBtn ~= nil then
-        self.detailBtn.onClick:RemoveAllListeners();
+        self.detailBtn.onClick:RemoveAllListeners()
         self.detailBtn.onClick:AddListener(function ()
             self:_clickDetailBtn()
         end)
@@ -52,19 +52,20 @@ end
 
 --初始化界面
 function ExchangeQuoteItem:_initData()
+    ---配合pb数据
     local data = self.data
     self:_setCollectState(data.isCollected)
     self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.lastPrice, 30, 24)
-    if data.change >= 0 then
-        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.change)
+    self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
+    if data.priceChange >= 0 then
+        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_GREEN, data.priceChange)
         --设置箭头位置
         self.lastPriceGreenTran.localScale = Vector3.one
         self.lastPriceRedTran.localScale = Vector3.zero
         local greenPos = self.lastPriceGreenTran.localPosition
         self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
     else
-        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.change)
+        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", ExchangeQuoteItem.static.CHANGE_RED, data.priceChange)
         --设置箭头位置
         self.lastPriceGreenTran.localScale = Vector3.zero
         self.lastPriceRedTran.localScale = Vector3.one
@@ -72,9 +73,9 @@ function ExchangeQuoteItem:_initData()
         self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
     end
 
-    self.highText.text = "E"..data.high
-    self.lowText.text = "E"..data.low
-    self.volumeText.text = "E"..data.volume
+    self.highText.text = "E"..data.highPrice
+    self.lowText.text = "E"..data.lowPrice
+    self.volumeText.text = "E"..data.sumDealedPrice
 end
 --点击交易按钮
 function ExchangeQuoteItem:_clickExchnageBtn()
@@ -87,24 +88,16 @@ end
 --点击收藏按钮
 function ExchangeQuoteItem:_clickCollectBtn()
     self:_setCollectState(not self.data.isCollected)
-    if self.data.isCollected then
-        --向服务器发送取消收藏的信息
-        ct.log("cycle_w9_exchange01", "取消收藏")
-        self.data.isCollected = false
-    else
-        --向服务器发送收藏
-        ct.log("cycle_w9_exchange01", "添加收藏")
-        self.data.isCollected = true
-    end
+    Event.Brocast("c_onChangeCollectState", self.data.isCollected, self.data.itemId)
 end
 
 function ExchangeQuoteItem:_setCollectState(isCollected)
     if isCollected then
-        self.collectYellowTran.localScale = Vector3.one;
-        self.collectGrayTran.localScale = Vector3.zero;
+        self.collectYellowTran.localScale = Vector3.one
+        self.collectGrayTran.localScale = Vector3.zero
     else
-        self.collectYellowTran.localScale = Vector3.zero;
-        self.collectGrayTran.localScale = Vector3.one;
+        self.collectYellowTran.localScale = Vector3.zero
+        self.collectGrayTran.localScale = Vector3.one
     end
 end
 

@@ -22,6 +22,7 @@ function SelectAvatarPanel.InitPanel()
 	this.btnAvatar[1] = transform:Find('Avatars/Toggle0').gameObject;
 	this.btnAvatar[2] = transform:Find('Avatars/Toggle1').gameObject;
 	this.btnAvatar[3] = transform:Find('Avatars/Toggle2').gameObject;
+    
 end
 
 --单击事件--

@@ -99,4 +99,10 @@ StreamingAssets
 /Assets/CityGame/Lua/Require_RunTime.lua.meta
 /Assets/CityGame/Lua/Require_RunTime.lua
 /MemoryProfile
+<<<<<<< HEAD
 /Assets/CityGame/Lua.meta
+=======
+/Assets/CityGame/Anima
+/Assets/CityGame/AmplifyShaderEditor
+>>>>>>> e46c433e8909670ac4d365a0eebf530c51174032
+/Assets/CityGame/Lua/Require_RunTime.lua

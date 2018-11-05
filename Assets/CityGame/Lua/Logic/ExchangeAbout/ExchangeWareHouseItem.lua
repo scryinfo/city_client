@@ -37,17 +37,17 @@ function ExchangeWareHouseItem:_initData()
     if data.isSell then
         self.sellTran.localScale = Vector3.one
         self.buyTran.localScale = Vector3.zero
-        self.sellRemainCountText.text = data.remainCount
+        self.sellRemainCountText.text = data.totalCount
     else
         self.buyTran.localScale = Vector3.one
         self.sellTran.localScale = Vector3.zero
-        self.buyCapacityText.text = string.format("<color=%s>%d</color>/%d", ExchangeWareHouseItem.static.BUY_CAPACITYCOLOR, data.capacityCount, data.totalCount)
-        self.buyCapacitySlider.maxValue = data.totalCount
-        self.buyCapacitySlider.value = data.capacityCount
+        self.buyCapacityText.text = string.format("<color=%s>%d</color>/%d", ExchangeWareHouseItem.static.BUY_CAPACITYCOLOR, data.inUsedCount, PlayerBuildingBaseData[data.buildingTypeId].storeCapacity)
+        self.buyCapacitySlider.maxValue = PlayerBuildingBaseData[data.buildingTypeId].storeCapacity
+        self.buyCapacitySlider.value = data.inUsedCount
     end
-    self.sizeText.text = data.sizeType  --Large Medium Small
+    self.sizeText.text = PlayerBuildingBaseData[data.buildingTypeId].sizeName  --Large Medium Small
+    self.buildingTypeText.text = PlayerBuildingBaseData[data.buildingTypeId].typeName  --eg: Factory
     self.buildingNameText.text = data.buildingName  --eg: Buddy polly
-    self.buildingTypeText.text = data.buildingType  --eg: Factory
 
 end
 

@@ -41,7 +41,7 @@ function ExchangeTransactionPanel.InitPanel()
     this.sellPriceInput = transform:Find("bodyRoot/right/top/sellRoot/priceInput"):GetComponent("InputField")
     this.sellChooseBtn = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseBtn")
     this.sellChooseTipTran = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/tipText")  --提示请选择仓库
-    this.sellChooseText = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseText")  --选择完仓库之后的显示
+    this.sellChooseText = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/chooseText"):GetComponent("Text")  --选择完仓库之后的显示
     this.sellErorTipTran = transform:Find("bodyRoot/right/top/sellRoot/chooseRoot/erorTipText")
 
     this.calculateText = transform:Find("bodyRoot/right/bottom/calculateText"):GetComponent("Text")  --单价x总量得到的值

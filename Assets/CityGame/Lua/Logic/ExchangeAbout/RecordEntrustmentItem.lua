@@ -40,29 +40,54 @@ end
 function RecordEntrustmentItem:_initData()
     local data = self.data
     self.nameText.text = data.name
-    if data.isSell then
+    if data.sell then
         self.currentTextColor = RecordEntrustmentItem.static.SELL_GREEN
         self.currentBarColor = RecordEntrustmentItem.static.BAR_GREEN
     else
         self.currentTextColor = RecordEntrustmentItem.static.BUY_RED
         self.currentBarColor = RecordEntrustmentItem.static.BAR_RED
     end
-    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.quantity)
-    self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.unitPrice, 30, 24))
-    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.total, 30, 24))
-    self.currentText.text = "E"..data.currentValue
+    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.dealedAmount)
+    self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.price, 30, 24))
+    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.totalAmount, 30, 24))
+    self.currentText.text = "E"..data.dealedPrice
     self.sliderImg.color = getColorByVector3(self.currentBarColor)
-    self:_setSliderValue(data.remainCount, data.totalCount)
+    self:_setSliderValue(data.dealedAmount, data.totalAmount)
 
 end
 
 --点击删除按钮
 function RecordEntrustmentItem:_clickDeleteBtn()
     --打开弹框
+    local showData = {}
+    showData.titleInfo = "REMINDER"
+    showData.contentInfo = "Confirm to cancel the delegate?"
+    showData.tipInfo = ""
+    showData.btnCallBack = function()
+        ct.log("cycle_w11_exchange03", "向服务器发送请求")
+        Event.Brocast("m_ReqExchangeCancel", self.data.id)
+        Event.Brocast("c_onExchangeOrderCanel", self.data.idInTable)  --不确定idInTable是否有值
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
+
 --设置slider的值
 function RecordEntrustmentItem:_setSliderValue(remainCount, totalCount)
     local width = RecordEntrustmentItem.static.SliderImgMaxSizeDelta.x * (remainCount / totalCount)
     self.sliderImg.rectTransform.sizeDelta = Vector2.New(width, RecordEntrustmentItem.static.SliderImgMaxSizeDelta.y)
     self.progressText.text = string.format("%d/%d", remainCount, totalCount)
+end
+
+--刷新数据
+function RecordEntrustmentItem:UpdateInfo(data)
+    self.data.dealedPrice = self.data.dealedPrice + data.num * data.price  --累计的当前成交金额
+    self.data.dealedAmount = self.data.dealedAmount + data.num  --累计的成交数量
+    self:_setSliderValue(self.data.dealedAmount, self.data.totalAmount)
+    self.currentText.text = "E"..self.data.dealedPrice
+
+    if self.data.totalAmount <= self.data.dealedAmount then
+        return true
+    else
+        return false
+    end
 end

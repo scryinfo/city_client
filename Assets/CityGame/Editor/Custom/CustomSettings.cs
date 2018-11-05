@@ -64,6 +64,7 @@ public static class CustomSettings
         _GT(typeof(Debugger)).SetNameSpace(null),          
 
 #if !USING_DOTWEENING
+     
         _GT(typeof(DG.Tweening.Core.TweenerCore<Color, Color, DG.Tweening.Plugins.Options.ColorOptions>)),
         _GT(typeof(DG.Tweening.Core.TweenerCore<Quaternion, Vector3, DG.Tweening.Plugins.Options.QuaternionOptions>)),
         _GT(typeof(DG.Tweening.Core.TweenerCore<float, float, DG.Tweening.Plugins.Options.FloatOptions>)),
@@ -171,7 +172,7 @@ public static class CustomSettings
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),
-        _GT(typeof(Scrollbar)),
+        _GT(typeof(Scrollbar.ScrollEvent)),
         _GT(typeof(Slider)),
         
         _GT(typeof(Util)),
@@ -202,6 +203,7 @@ public static class CustomSettings
         _GT(typeof(ActiveLoopScrollRect)),
         _GT(typeof(LoopScrollDataSource)),
         _GT(typeof(LuaComponent)),
+        _GT(typeof(LoopDropfreshBar)),
 
     };
 

@@ -3,8 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/20 11:00
 ---
-
-
 RentalItem = class('RentalItem')
 RentalItem.static.TOTAL_H = 209  --整个Item的高度
 RentalItem.static.CONTENT_H = 125  --显示内容的高度
@@ -16,29 +14,24 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
     self.rentalData = rentalData
     self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
-    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
-    self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");  -- 租金显示的值
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open")  --打开状态
+    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn")  --打开之后的执行按钮
+    self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text")  -- 租金显示的值
 
     --具体字体大小是否从数据库读取？
     self.rentalValueText.text = self:_getPriceString(rentalData.rent, 30, 24).."/D"
-
-    --ct.log("cycle_w5","-------- Rental实例化"..self.openBtn.gameObject:GetInstanceID())
-
-    --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-    --    clickOpenFunc(mgrTable, self.toggleData)
-    --end);
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
         --打开更改租金界面
+        local changeRentData = {currentRental = 125.0046, suggestRental = 99.9875, effectiveDate = "2018/10/31 08:00:00"}
+        CityGlobal.OpenCtrl("HouseChangeRentCtrl", changeRentData)
+    end, self)
 
-    end, self);
-
-    Event.AddListener("c_onRentalValueChange", self.updateInfo, self);
+    Event.AddListener("c_onRentalValueChange", self.updateInfo, self)
 end
 
 --获取是第几个点击了

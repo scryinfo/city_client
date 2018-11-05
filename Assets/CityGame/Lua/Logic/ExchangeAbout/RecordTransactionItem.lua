@@ -28,7 +28,7 @@ end
 --初始化界面
 function RecordTransactionItem:_initData()
     local data = self.data
-    self.nameText.text = data.name
+    self.nameText.text = Material[data.itemId].name
     if data.isSell then
         self.currentTextColor = RecordTransactionItem.static.SELL_GREEN
         self.currentBarColor = RecordTransactionItem.static.BAR_GREEN
@@ -36,8 +36,8 @@ function RecordTransactionItem:_initData()
         self.currentTextColor = RecordTransactionItem.static.BUY_RED
         self.currentBarColor = RecordTransactionItem.static.BAR_RED
     end
-    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.quantity)
-    self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.unitPrice, 30, 24))
-    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.total, 30, 24))
-    self.timeText.text = data.time
+    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.dealed)
+    self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.price, 30, 24))
+    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.dealed * data.price, 30, 24))
+    self.timeText.text = data.ts
 end

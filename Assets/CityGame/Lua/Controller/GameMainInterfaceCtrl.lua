@@ -92,7 +92,7 @@ end
 
 --中心仓库
 function GameMainInterfaceCtrl:OncenterWareHouse()
-    ct.OpenCtrl("CenterWareHouseCtrl")
+    Event.Brocast("m_opCenterWareHouse")
 end
 
 

@@ -30,6 +30,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
+    Event.Brocast("m_DeleteItem")
     local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"

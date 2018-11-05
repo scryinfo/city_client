@@ -24,12 +24,10 @@ function CenterWareHouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
-function CenterWareHouseCtrl:Awake(go)
-    Event.AddListener("c_BagCapacity",self.c_BagCapacity,self);
-end
+
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    self.totalCapacity = 800;--仓库总容量
+    self.totalCapacity = self.m_data;--仓库总容量
     self.number = 500;--商品个数
     self.money = 1000;--扩容所需金额
     self:_initData();
@@ -63,18 +61,13 @@ function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
-function CenterWareHouseCtrl:c_BagCapacity(bagCapacity)
-    self.totalCapacity = bagCapacity
-    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",  self.totalCapacity)
-end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
-function WarehouseCtrl:Refresh()
-    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
-    CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
+function CenterWareHouseCtrl:Refresh()
+    --CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
 end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)

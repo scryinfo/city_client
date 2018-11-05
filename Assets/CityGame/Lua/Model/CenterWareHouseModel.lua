@@ -25,15 +25,21 @@ function CenterWareHouseModel.OnCreate()
     --注册本地UI事件
     Event.AddListener("m_extendBag", this.m_ExtendBag,this);
     Event.AddListener("m_bagCapacity",this.m_bagCapacity,this)
+    Event.AddListener("m_opCenterWareHouse",this.m_opCenterWareHouse,this)
+    Event.AddListener("m_DeleteItem",this.m_DeleteItem,this)
     --as网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","extendBag"),CenterWareHouseModel.n_GsExtendBag);
 end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
-    ct.log("rodger_w8_GameMainInterface","[test_m_bagCapacity]  测试完毕",bagCapacity)
-     Event.Brocast("c_BagCapacity",bagCapacity)
+   this.bagCapacity = bagCapacity
+
 end
 
+function CenterWareHouseModel:m_opCenterWareHouse()
+    
+    ct.OpenCtrl("CenterWareHouseCtrl",this.bagCapacity)
+end
 --仓库扩容发包
 function CenterWareHouseModel:m_ExtendBag()
     local msgId = pbl.enum("gscode.OpCode","extendBag")
@@ -42,4 +48,9 @@ end
 
 function CenterWareHouseModel:n_GsExtendBag(stream)
     Event.Brocast("c_GsExtendBag")
+end
+
+--删除商品发包
+function CenterWareHouseModel:m_DeleteItem()
+
 end

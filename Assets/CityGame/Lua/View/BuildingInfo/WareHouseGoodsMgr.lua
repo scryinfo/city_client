@@ -61,6 +61,9 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
     self.allTspItem[CenterWareHousePanel.tspContent.childCount] = TransportLuaItem;
     for i = 1,  #self.allTspItem do
         self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
+            if self.allTspItem[i].inputText.text =="" then
+              return
+            end
             self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text/  self.allTspItem[i].totalNumber
         end);
     end
@@ -129,6 +132,9 @@ end
 
 function WareHouseGoodsMgr:_update()
     for i = 1,  #self.allTspItem do
+        if self.allTspItem[i].inputText.text =="" then
+            return
+        end
         self.allTspItem[i].inputText.text = math.ceil( self.allTspItem[i].totalNumber *   self.allTspItem[i].scrollbar.value);
     end
 end

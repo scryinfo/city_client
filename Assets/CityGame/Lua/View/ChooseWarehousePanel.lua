@@ -15,7 +15,7 @@ function ChooseWarehousePanel.InitPanel()
     this.searchBtn = transform:Find("searchBtn");
     this.arrowBtn = transform:Find("Right/SortingBtn/arrowBtn");
     this.nowText = transform:Find("Right/SortingBtn/bg/nowText"):GetComponent("Text");
-    this.list = transform:Find("Right/SortingBtn/ListTable/List"):GetComponent("RectTransform");
+    this.list = transform:Find("Right/SortingBtn/ListTable/List").gameObject;
     this.nameBtn = transform:Find("Right/SortingBtn/ListTable/List/nameBtn");
     this.quantityBtn = transform:Find("Right/SortingBtn/ListTable/List/quantityBtn");
     this.priceBtn = transform:Find("Right/SortingBtn/ListTable/List/priceBtn");

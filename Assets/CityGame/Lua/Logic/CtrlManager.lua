@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
 
@@ -89,6 +90,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
 	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
+	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();

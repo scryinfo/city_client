@@ -2,6 +2,7 @@
 
 
 ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
+UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 local isShowList;
 function ChooseWarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -21,6 +22,7 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     chooseWarehouse:AddClick(ChooseWarehousePanel.quantityBtn.gameObject,self.OnClick_quantityBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.priceBtn.gameObject,self.OnClick_priceBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
+    WareHouseGoodsMgr:_creatAddressList(chooseWarehouse,nil)
 end
 function ChooseWarehouseCtrl:Awake(go)
     self.gameObject = go;

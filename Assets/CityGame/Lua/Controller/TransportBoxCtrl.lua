@@ -2,6 +2,8 @@
 
 
 TransportBoxCtrl = class('TransportBoxCtrl',UIPage);
+UIPage:ResgisterOpen(TransportBoxCtrl) --注册打开的方法
+
 
 function TransportBoxCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
@@ -26,7 +28,15 @@ function TransportBoxCtrl:OnClick_closeBtn(obj)
     obj:Hide();
 end
 function TransportBoxCtrl:OnClick_confirmBtn(obj)
+    local data = {}
+    data.titleInfo = "提示"
+    data.contentInfo = "商品开始运输"
+    data.tipInfo = "可在运输线查看详情"
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    CenterWareHousePanel.transportConfirm:SetActive(true);
+    CenterWareHousePanel.nameText.text = nil;
     obj:Hide();
+
 end
 
 function TransportBoxCtrl:Refresh()

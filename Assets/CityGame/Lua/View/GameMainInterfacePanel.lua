@@ -33,4 +33,6 @@ function GameMainInterfacePanel.InitPanel()
     this.houseButton = transform:Find("DownCreatePanel/HouseButton").gameObject;--住宅--
     this.rawMaterialFactory = transform:Find("DownCreatePanel/RawMaterialFactoryButton").gameObject;--原料厂--
     this.sourceMill = transform:Find("DownCreatePanel/SourceMillButton").gameObject;--加工厂--
+    this.advertisFacilitie = transform:Find("DownCreatePanel/AdvertisingFacilitie").gameObject;--广告设施--
+    this.centerWareHouse = transform:Find("DownCreatePanel/CnterWareHouseButton").gameObject; --中心仓库--
 end

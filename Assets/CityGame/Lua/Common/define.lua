@@ -35,6 +35,8 @@ CtrlNames = {
 	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
 	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
 	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
+	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
+	MessageTooltip = "MessageTooltipCtrl",--玩家信息提示框
 	MunicipalCtrl="MunicipalCtrl",--市镇设施
 	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
 }
@@ -60,11 +62,11 @@ ModelNames = {
 	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
 	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
 	PlayerTemp = "PlayerTempModel",  --玩家数据，临时创建
+	CenterWareHouse = "CenterWareHouseModel",--中心仓库
 	Municipal="MunicipalModel",--市镇设施
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
 }
-
 
 SYSEVENT =
 {

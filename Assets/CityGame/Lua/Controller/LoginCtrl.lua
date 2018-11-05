@@ -13,7 +13,7 @@ function LoginCtrl:initialize()
 end
 
 function LoginCtrl:bundleName()
-	return "Login"
+	return "LoginPanel"
 end
 
 function LoginCtrl:Awake(go)

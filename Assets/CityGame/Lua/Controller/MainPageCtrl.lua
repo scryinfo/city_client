@@ -16,7 +16,7 @@ function MainPageCtrl:initialize()
 end
 
 function MainPageCtrl:bundleName()
-    return "MainPage"
+    return "MainPagePanel"
 end
 
 function MainPageCtrl:OnCreate(obj )

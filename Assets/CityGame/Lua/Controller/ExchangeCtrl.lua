@@ -24,7 +24,7 @@ function ExchangeCtrl:initialize()
 end
 
 function ExchangeCtrl:bundleName()
-    return "Exchange"
+    return "ExchangePanel"
 end
 
 function ExchangeCtrl:OnCreate(obj)

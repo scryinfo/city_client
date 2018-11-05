@@ -197,7 +197,7 @@ namespace LuaFramework {
         void InitLuaBundle() {
             if (loader.beZip) {
                 //自动加载
-               string assertDir = CityLuaUtil.getLuaBundelPath();
+                string assertDir = CityLuaUtil.getLuaBundelPath();
                 string srcDir = assertDir + "/lua";
                 int pathLen = assertDir.Length;
                 string[] files = Directory.GetFiles(srcDir, "*.unity3d", SearchOption.AllDirectories);

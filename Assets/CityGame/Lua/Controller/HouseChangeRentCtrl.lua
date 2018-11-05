@@ -11,7 +11,7 @@ function HouseChangeRentCtrl:initialize()
 end
 
 function HouseChangeRentCtrl:bundleName()
-    return "HouseChangeRent"
+    return "HouseChangeRentPanel"
 end
 
 function HouseChangeRentCtrl:OnCreate(obj )

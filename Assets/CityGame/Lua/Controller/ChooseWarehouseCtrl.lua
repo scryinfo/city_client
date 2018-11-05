@@ -9,7 +9,7 @@ function ChooseWarehouseCtrl:initialize()
 end
 
 function ChooseWarehouseCtrl:bundleName()
-    return "ChooseWarehouse";
+    return "ChooseWarehousePanel";
 end
 
 function ChooseWarehouseCtrl:OnCreate(obj)

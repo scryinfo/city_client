@@ -17,7 +17,7 @@ CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
 UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
-    return "CenterWareHouse"
+    return "CenterWareHousePanel"
 end
 
 function CenterWareHouseCtrl:initialize()

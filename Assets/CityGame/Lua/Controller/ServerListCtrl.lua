@@ -8,7 +8,7 @@ local serverListBehaviour;
 local gameObject;
 
 function  ServerListCtrl:bundleName()
-    return "ServerList"
+    return "ServerListPanel"
 end
 
 function ServerListCtrl:initialize()

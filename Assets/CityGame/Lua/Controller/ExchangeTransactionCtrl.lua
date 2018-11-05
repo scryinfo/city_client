@@ -13,7 +13,7 @@ function ExchangeTransactionCtrl:initialize()
 end
 
 function ExchangeTransactionCtrl:bundleName()
-    return "ExchangeTransaction"
+    return "ExchangeTransactionPanel"
 end
 
 function ExchangeTransactionCtrl:OnCreate(obj)

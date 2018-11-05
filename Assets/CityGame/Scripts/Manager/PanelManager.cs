@@ -25,7 +25,7 @@ namespace LuaFramework {
         //public void CreatePanel(string name, LuaFunction func = null, object obj = null) {
         public void CreatePanel(string name, LuaFunction func = null, object obj = null)
         {
-            string assetName = name + "Panel";
+            string assetName = name ;
             string abName = name.ToLower() + AppConst.BundleExt;
 
 #if ASYNC_MODE

@@ -213,7 +213,7 @@ function ExchangeTransactionCtrl:_clickConfirm(ins)
         str1 = "sell"
         count = ExchangeTransactionPanel.sellCountInput.text
         showData.btnCallBack = function()
-            log("cycle_w11_exchange03", "挂卖单")
+            ct.log("cycle_w11_exchange03", "挂卖单")
             Event.Brocast("m_ReqExchangeSell", ins.itemId, count, ExchangeTransactionPanel.sellPriceInput.text, ins.buildingId)
         end
     else
@@ -221,7 +221,7 @@ function ExchangeTransactionCtrl:_clickConfirm(ins)
         count = ExchangeTransactionPanel.buyCountInput.text
         showData.btnCallBack = function()
             Event.Brocast("m_ReqExchangeBuy", ins.itemId, count, ExchangeTransactionPanel.buyPriceInput.text, ins.buildingId)
-            log("cycle_w11_exchange03", "挂买单")
+            ct.log("cycle_w11_exchange03", "挂买单")
         end
     end
     showData.titleInfo = "REMINDER"

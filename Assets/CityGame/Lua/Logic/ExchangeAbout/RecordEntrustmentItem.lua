@@ -64,11 +64,11 @@ function RecordEntrustmentItem:_clickDeleteBtn()
     showData.contentInfo = "Confirm to cancel the delegate?"
     showData.tipInfo = ""
     showData.btnCallBack = function()
-        log("cycle_w11_exchange03", "向服务器发送请求")
+        ct.log("cycle_w11_exchange03", "向服务器发送请求")
         Event.Brocast("m_ReqExchangeCancel", self.data.id)
         Event.Brocast("c_onExchangeOrderCanel", self.data.idInTable)  --不确定idInTable是否有值
     end
-    CityGlobal.OpenCtrl("BtnDialogPageCtrl", showData)
+    ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
 --设置slider的值

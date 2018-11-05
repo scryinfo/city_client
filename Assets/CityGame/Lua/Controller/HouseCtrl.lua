@@ -38,6 +38,16 @@ function HouseCtrl:Refresh()
 
 end
 
+--创建好建筑之后，每个建筑会存基本数据，比如id
+function HouseCtrl:_initData()
+    if self.m_data then
+        if self.m_data.buildingId then
+            --向服务器请求建筑详情
+            Event.Brocast("m_ReqHouseDetailInfo", self.m_data.buildingId)
+        end
+    end
+end
+
 ---更改名字
 function HouseCtrl:_changeName()
     local data = {}
@@ -53,9 +63,5 @@ end
 ---返回
 function HouseCtrl:_backBtn()
     UIPage.ClosePage();
-end
----打开信息界面
-function HouseCtrl:_openInfo()
-
 end
 

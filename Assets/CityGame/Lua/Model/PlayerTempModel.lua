@@ -47,6 +47,7 @@ end
 function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     local roleData = assert(pbl.decode("gs.Role", stream), "PlayerTempModel.n_OnReceiveExchangeDeal: stream == nil")
     PlayerTempModel.roleData = roleData
+    PlayerTempModel.buildingData = this._getBuildingInfo(roleData)
     PlayerTempModel.storeList = this._getStore(roleData)
     PlayerTempModel.collectList = roleData.exchangeCollectedItem
     if not PlayerTempModel.collectList then
@@ -61,6 +62,7 @@ function PlayerTempModel.n_OnReceiveUnitCreate(stream)
     end
     PlayerTempModel.buildingsInfo[#PlayerTempModel.buildingsInfo + 1] = buildingInfo
 end
+---
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
@@ -137,4 +139,44 @@ function PlayerTempModel._getCollectStore(datas)
         end
     end
     return storeList
+end
+--获取所有建筑，根据buildingId
+function PlayerTempModel._getBuildingInfo(roleData)
+    local buyBuilding = {}
+    if roleData.buys then
+        buyBuilding = this._getBuildingInfoInType(roleData.buys)
+    end
+
+    local rentBuilding = {}
+    if roleData.rents then
+        rentBuilding = this._getBuildingInfoInType(roleData.rents)
+    end
+
+    for i, data in ipairs(rentBuilding) do
+        table.insert(buyBuilding, data)
+    end
+    return buyBuilding
+end
+function PlayerTempModel._getBuildingInfoInType(buildingSet)
+    local buildingList = {}
+    local apartment = buildingSet.apartment
+    local materialFactory = buildingSet.materialFactory
+    local produceDepartment = buildingSet.produceDepartment
+
+    if apartment then
+        for i, value in ipairs(apartment) do
+            buildingList[value.info.id] = value
+        end
+    end
+    if materialFactory then
+        for i, value in ipairs(materialFactory) do
+            buildingList[value.info.id] = value
+        end
+    end
+    if produceDepartment then
+        for i, value in ipairs(produceDepartment) do
+            buildingList[value.info.id] = value
+        end
+    end
+    return buildingList
 end

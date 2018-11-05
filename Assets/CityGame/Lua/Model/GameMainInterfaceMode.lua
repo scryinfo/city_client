@@ -11,7 +11,12 @@ end
 
 function GameMainInterfaceModel.Awake()
     --UpdateBeat:Add(this.Update, this);
-   -- this:OnCreate();
+    this:OnCreate();
 end
+--启动事件--
+function GameMainInterfaceModel.OnCreate()
+    --注册本地事件
+end
+
 
 

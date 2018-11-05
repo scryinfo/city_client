@@ -64,6 +64,12 @@ function Game.OnPostInitOK()
         createRoleModel:Awake();
     end
 
+    --测试中心仓库
+    local CenterWareHouseModel = CtrlManager.GetModel(ModelNames.CenterWareHouse);
+    if CenterWareHouseModel ~= nil then
+        CenterWareHouseModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

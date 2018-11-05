@@ -20,7 +20,7 @@ end
 
 function BtnDialogPageCtrl:Awake(go)
     self:_getComponent(go)
-    self:_initData()
+   -- self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
     --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
@@ -29,8 +29,8 @@ end
 
 function BtnDialogPageCtrl:Refresh()
     self:_initData()
-    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
+    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
 end
 
 ---寻找组件

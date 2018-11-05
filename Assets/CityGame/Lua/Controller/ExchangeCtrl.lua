@@ -505,10 +505,13 @@ function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
 
     local collectIndexs = PlayerTempModel.collectList
     local collectDatas = {}
-    for i, collectId in ipairs(collectIndexs) do
-        collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteConfigDatas[collectId]
-        ExchangeCtrl.quoteConfigDatas[collectId].isCollected = true
+    if collectIndexs ~= nil then
+        for i, collectId in ipairs(collectIndexs) do
+            collectDatas[#collectDatas + 1] = ExchangeCtrl.quoteConfigDatas[collectId]
+            ExchangeCtrl.quoteConfigDatas[collectId].isCollected = true
+        end
     end
+
     ExchangeCtrl.collectDatas = collectDatas
     ExchangeCtrl.quoteDatas = self:_getListTable(ExchangeCtrl.quoteConfigDatas)
     ExchangePanel.noTipText.transform.localScale = Vector3.zero  --行情一定会有值，所以不显示提示

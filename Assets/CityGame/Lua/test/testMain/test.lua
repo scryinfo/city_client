@@ -4,8 +4,8 @@
 --- DateTime: 2018/8/21 11:05
 ---
 UnitTest.TestBlockStart()---------------------------------------------------------
-
 if not ct.G_UNITTEST then return {} end
+
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}

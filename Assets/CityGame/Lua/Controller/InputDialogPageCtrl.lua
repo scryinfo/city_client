@@ -4,7 +4,8 @@
 --- DateTime: 2018/10/4 14:57
 ---含有input输入框的弹窗
 InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(InputDialogPageCtrl)
+
+UIPage:ResgisterOpen(InputDialogPageCtrl) --注册打开的方法
 
 function InputDialogPageCtrl:initialize()
     UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)

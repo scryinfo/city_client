@@ -51,7 +51,9 @@ function ExchangeChooseWareHouseCtrl:_initPanelData()
         ExchangeChooseWareHouseCtrl.storeList = self:_getStoresData(PlayerTempModel.storeList, false)
     end
     ExchangeChooseWareHouseCtrl.wareHouseItems = {}
-    ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, #ExchangeChooseWareHouseCtrl.storeList)
+    if ExchangeChooseWareHouseCtrl.storeList ~= nil then
+        ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, #ExchangeChooseWareHouseCtrl.storeList)
+    end
 end
 
 function ExchangeChooseWareHouseCtrl:OnClickBack()
@@ -81,6 +83,9 @@ end
 --需要建筑类型，大小，icon-这三个可以通过id读配置表得到，建筑名字，
 function ExchangeChooseWareHouseCtrl:_getStoresData(datas, isSell, itemId)
     local tempDatas = datas
+
+    if tempDatas == nil then return nil end
+
     if isSell then
         for i, storeItem in ipairs(tempDatas) do
             local totalCount = 0

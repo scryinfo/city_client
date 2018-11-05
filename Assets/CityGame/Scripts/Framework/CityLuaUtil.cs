@@ -61,12 +61,24 @@ namespace City
             }
             else
             {
-#if CLOSE_LUA_BUNDELMODE
-                return "Assets/CityGame";                
+#if LUA_BUNDEL             
+            return "Assets/CityGame";
 #else
-                //return "Assets/StreamingAssets";
-                return "Assets/CityGame";
+            return "Assets/CityGame";
+                
 #endif
+            }
+        }
+
+        public static string getLuaBundelPath()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                return UnityEngine.Application.persistentDataPath ;
+            }
+            else
+            {
+                return Application.streamingAssetsPath;
             }
         }
 

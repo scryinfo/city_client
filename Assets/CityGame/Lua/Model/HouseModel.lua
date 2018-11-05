@@ -63,10 +63,10 @@ function HouseModel.m_ReqHouseSetSalary(id, price)
 end
 
 --- 回调 ---
---房租改变
+--住宅详情
 function HouseModel.n_OnReceiveHouseDetailInfo(stream)
     local houseDetailInfo = assert(pbl.decode("gs.Apartment", stream), "HouseModel.n_OnReceiveHouseDetailInfo: stream == nil")
-    Event.Brocast("n_OnReceiveHouseDetailInfo", houseDetailInfo)
+    Event.Brocast("c_onReceiveHouseDetailInfo", houseDetailInfo)
 end
 --房租改变
 function HouseModel.n_OnReceiveHouseRentChange(stream)

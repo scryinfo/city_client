@@ -22,20 +22,26 @@ end
 
 function HouseCtrl:Awake(go)
     self.gameObject = go
-    local houseBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self);
-    houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self);
-    houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self);
+    self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
+    self.houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self)
+    self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
-    --HousePanel.InitDate(this.houseData)
+    self:_addListener()
 
-    self.m_data.buildingType = BuildingType.House
-    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, houseBehaviour, self.m_data)
-
+    --测试
+    --self.m_data.buildingType = BuildingType.House
+    --local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
 end
 
 function HouseCtrl:Refresh()
-
+    self:_initData()
+end
+function HouseCtrl:_addListener()
+    Event.AddListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
+end
+function HouseCtrl:_removeListener()
+    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -48,11 +54,16 @@ function HouseCtrl:_initData()
     end
 end
 
+function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
+    self.m_data.buildingType = BuildingType.House
+    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+
+end
 ---更改名字
 function HouseCtrl:_changeName()
     local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
+    data.titleInfo = "RENAME"
+    data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function()
         ct.log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
@@ -62,6 +73,6 @@ function HouseCtrl:_changeName()
 end
 ---返回
 function HouseCtrl:_backBtn()
-    UIPage.ClosePage();
+    UIPage.ClosePage()
 end
 

@@ -172,10 +172,11 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     staffViewRect.gameObject.name = "Staff"
     --测试数据
     local staffData = {}
-    staffData.EmployeeSatisfaction = 0.8
-    staffData.EmployeeDaywages = 18
+    staffData.buildingId = self.toggleData.info.id
+    staffData.EmployeeSatisfaction = self.toggleData.info.salary
+    staffData.EmployeeDaywages = self.toggleData.info.salary
+    staffData.totalStaffCount = Material[staffData.buildingId].maxWorkerNum
     staffData.noDomicileCount = 3
-    staffData.totalStaffCount = 100
     --end
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位
     local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
@@ -187,8 +188,8 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     occupancyViewRect.gameObject.name = "Occ01"
     --测试数据
     local occData = {}
-    occData.totalCount = 60
-    occData.renter = 18
+    occData.totalCount = Material[self.toggleData.info.id].npc
+    occData.renter = self.toggleData.renter
     --end
     local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
     local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
@@ -198,12 +199,11 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalViewRect
     rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
     local rentalData = {}
-    rentalData.rent = 500.23
+    rentalData.rent = self.toggleData.rent
     rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     self.rightData[2] = rentalLuaItem
-
 
 end
 --创建原料厂主页左右信息

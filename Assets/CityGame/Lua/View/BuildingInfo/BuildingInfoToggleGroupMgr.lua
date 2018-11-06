@@ -174,8 +174,8 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local staffData = {}
     staffData.buildingId = self.toggleData.info.id
     staffData.buildingTypeId = self.toggleData.info.mId
-    staffData.EmployeeSatisfaction = self.toggleData.info.salary
-    staffData.EmployeeDaywages = self.toggleData.info.salary
+    staffData.satisfaction = self.toggleData.info.happy
+    staffData.dayWage = self.toggleData.info.salary
     staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
     staffData.noDomicileCount = 3
     --end
@@ -202,7 +202,10 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalViewRect
     rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
     local rentalData = {}
+    rentalData.buildingId = self.toggleData.info.id
+    rentalData.buildingTypeId = self.toggleData.info.mId
     rentalData.rent = self.toggleData.rent
+    rentalData.suggestRent = self.toggleData.rent
     rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)

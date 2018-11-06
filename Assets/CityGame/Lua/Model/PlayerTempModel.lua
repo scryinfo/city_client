@@ -19,7 +19,7 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.m_ReqBuildApartment(1400001)
+        PlayerTempModel.m_ReqBuildApartment(1000000)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
@@ -70,7 +70,7 @@ end
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 180, y = 180}}
+    local lMsg = {id = id, pos = {x = 190, y = 190}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

@@ -38,7 +38,7 @@ namespace LuaFramework {
                 if (prefab == null) return;
 
                 GameObject go = Instantiate(prefab) as GameObject;
-                go.name = assetName;
+                go.name = name;
                 go.layer = LayerMask.NameToLayer("UI");
                 
                 RectTransform rect = go.GetComponent<RectTransform>();

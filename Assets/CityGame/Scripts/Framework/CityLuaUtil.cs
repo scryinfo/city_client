@@ -74,7 +74,7 @@ namespace City
         {
             if (Application.platform == RuntimePlatform.Android)
             {
-                return UnityEngine.Application.persistentDataPath ;
+                return UnityEngine.Application.persistentDataPath + "/CityGame";
             }
             else
             {

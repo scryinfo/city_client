@@ -198,12 +198,15 @@ namespace LuaFramework {
             if (loader.beZip) {
                 //自动加载
                 string assertDir = CityLuaUtil.getLuaBundelPath();
+                Debug.Log("InitLuaBundle: "+ assertDir);
                 string srcDir = assertDir + "/lua";
                 int pathLen = assertDir.Length;
                 string[] files = Directory.GetFiles(srcDir, "*.unity3d", SearchOption.AllDirectories);
+                Debug.Log("Directory.GetFiles: from " + srcDir+ ", files count = "+ files.Length.ToString());
                 for (int i = 0; i < files.Length; ++i) {
 
                     string file = files[i].Remove(0, pathLen+1);
+                    Debug.Log("loader.AddBundle " + file);
                     loader.AddBundle(file);
                 }
                 //手动添加 client\Assets\StreamingAssets\lua 中所有.unity3d文件

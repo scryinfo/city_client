@@ -11,7 +11,8 @@ function BtnDialogPageCtrl:initialize()
 end
 
 function BtnDialogPageCtrl:bundleName()
-    return "Common/BtnDialogPagePanel"
+    --return "Common/BtnDialogPagePanel"
+    return "BtnDialogPagePanel"
 end
 
 function BtnDialogPageCtrl:OnCreate(obj)

@@ -11,7 +11,7 @@ function ExchangeChooseWareHouseCtrl:initialize()
 end
 
 function ExchangeChooseWareHouseCtrl:bundleName()
-    return "exchangechoosewarehousepanel"
+    return "ExchangeChooseWareHousePanel"
 end
 
 function ExchangeChooseWareHouseCtrl:OnCreate(obj)

@@ -7,7 +7,7 @@ function ProcessingCtrl:initialize()
 end
 
 function ProcessingCtrl:bundleName()
-    return "processingpanel";
+    return "ProcessingPanel";
 end
 
 function ProcessingCtrl:OnCreate(obj)

@@ -12,7 +12,7 @@ function ExchangeDetailCtrl:initialize()
 end
 
 function ExchangeDetailCtrl:bundleName()
-    return "exchangedetailpanel"
+    return "ExchangeDetailPanel"
 end
 
 function ExchangeDetailCtrl:OnCreate(obj)

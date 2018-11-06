@@ -16,7 +16,7 @@ local gameObject;
 
 
 function  SignOnCtrl:bundleName()
-    return "signonpanel"
+    return "SignOnPanel"
 end
 
 function SignOnCtrl:initialize()

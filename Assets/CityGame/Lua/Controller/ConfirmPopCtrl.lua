@@ -17,7 +17,7 @@ function ConfirmPopCtrl:initialize()
 end
 
 function ConfirmPopCtrl:bundleName()
-    return "confirmpoppanel";
+    return "ConfirmPopPanel";
 end
 
 function ConfirmPopCtrl:OnCreate(obj)

@@ -11,7 +11,7 @@ MessageTooltipCtrl = class('MessageTooltipCtrl',UIPage)
 UIPage:ResgisterOpen(MessageTooltipCtrl) --注册打开的方法
 
 function  MessageTooltipCtrl:bundleName()
-    return "messagetooltippanel"
+    return "MessageTooltipPanel"
 end
 
 function MessageTooltipCtrl:initialize()

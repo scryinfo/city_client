@@ -26,6 +26,9 @@ namespace LuaFramework {
         public void CreatePanel(string name, LuaFunction func = null, object obj = null)
         {
             string assetName = name ;
+            int pos = assetName.LastIndexOf('/');
+            assetName = assetName.Remove(0,pos+1);
+            name = name.Replace("/", "_");
             string abName = name.ToLower() + AppConst.BundleExt;
 
 #if ASYNC_MODE

@@ -47,9 +47,9 @@ end
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
     if self.m_data then
-        if self.m_data.buildingId then
+        if self.m_data.info.id then
             --向服务器请求建筑详情
-            Event.Brocast("m_ReqHouseDetailInfo", self.m_data.buildingId)
+            Event.Brocast("m_ReqHouseDetailInfo", self.m_data.info.id)
         end
     end
 end

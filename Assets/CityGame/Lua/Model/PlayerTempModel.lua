@@ -19,13 +19,17 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.m_ReqBuildApartment(1100001)
+        PlayerTempModel.m_ReqBuildApartment(1400001)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+        ct.OpenCtrl("HouseCtrl", this.tempHouseData)
     end
 end
 
@@ -66,7 +70,7 @@ end
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 18, y = 18}}
+    local lMsg = {id = id, pos = {x = 180, y = 180}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -166,6 +170,7 @@ function PlayerTempModel._getBuildingInfoInType(buildingSet)
     if apartment then
         for i, value in ipairs(apartment) do
             buildingList[value.info.id] = value
+            this.tempHouseData = value  ---测试
         end
     end
     if materialFactory then

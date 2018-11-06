@@ -173,9 +173,10 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     --测试数据
     local staffData = {}
     staffData.buildingId = self.toggleData.info.id
+    staffData.buildingTypeId = self.toggleData.info.mId
     staffData.EmployeeSatisfaction = self.toggleData.info.salary
     staffData.EmployeeDaywages = self.toggleData.info.salary
-    staffData.totalStaffCount = Material[staffData.buildingId].maxWorkerNum
+    staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
     staffData.noDomicileCount = 3
     --end
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位
@@ -188,7 +189,9 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     occupancyViewRect.gameObject.name = "Occ01"
     --测试数据
     local occData = {}
-    occData.totalCount = Material[self.toggleData.info.id].npc
+    occData.buildingId = self.toggleData.info.id
+    occData.buildingTypeId = self.toggleData.info.mId
+    occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
     occData.renter = self.toggleData.renter
     --end
     local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置

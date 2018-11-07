@@ -3,23 +3,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using LuaInterface;
+using LuaFramework;
+using UnityEngine.EventSystems;
 
 public class CameraScripts : MonoBehaviour
 {
     //要注意的是,这里的最大最小距离实际上并非摄像机父物体的Y值,而是相机本身的forward深度
     public float minDistance = -5.0f;  //相机放大，与目标最小的距离
     public float maxDistance = 30.0f;  //相机缩小，与目标最大的距离
-    
+
     public float m_smoothStopMaxSpeed = 30;  //缓冲时的最大速度
     public float m_sutoScrollDamp = 100;  //数值越大，阻碍力越大
     public float dragFactor = 1f;  //拖拽速度
     public float scaleFactor = 100;  //缩放速度
 
     public Vector2 dragRange = new Vector2(0.1f, 1f); // 从最低距离到最高距离的距离缩放因子
-    
-    public Vector2 m_camMoveLimiteLRV = new Vector2(-15, 5);
-    public Vector2 m_camMoveLimiteUDV = new Vector2(-15, 5);  //相机的移动范围
+
+    public Vector2 m_camMoveLimiteLRV = new Vector2(0, 500);
+    public Vector2 m_camMoveLimiteUDV = new Vector2(0, 500);  //相机的移动范围
 
     public Vector2 m_camMoveLimiteY = new Vector2(5, 15);  //相机Y的最高最低位置
     private Camera m_mainCamera;
@@ -34,7 +36,7 @@ public class CameraScripts : MonoBehaviour
     private void Start()
     {
         m_mainCamera = Camera.main;
-        finalPosition = transform.position;
+        finalPosition = transform.localPosition;
         m_smoothStopVelocity = Vector3.zero;
         screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
     }
@@ -85,23 +87,28 @@ public class CameraScripts : MonoBehaviour
         }
         else
         {
-            transform.position = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+            transform.localPosition = new Vector3(targetPos.x, transform.localPosition.y, targetPos.z);
             tempT = 0.0f;
             m_canHandleCam = true;
-            finalPosition = transform.position;
+            finalPosition = transform.localPosition;
             return;
         }
 
-        Vector3 moveV3 = new Vector3(transform.position.x, targetPos.y, transform.position.z);
+        Vector3 moveV3 = new Vector3(transform.localPosition.x, targetPos.y, transform.localPosition.z);
         float t = tempT / m_moveTotalTime;
         Vector3 tempV3 = Vector3.Lerp(moveV3, targetPos, t * t * t);
-        transform.position = new Vector3(tempV3.x, transform.position.y, tempV3.z);
-        finalPosition = transform.position;
+        transform.localPosition = new Vector3(tempV3.x, transform.localPosition.y, tempV3.z);
+        finalPosition = transform.localPosition;
     }
 
     //更新相机位置
     private void UpdateMove()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
 
         m_smoothStopVelocity = Vector3.zero;
@@ -109,7 +116,7 @@ public class CameraScripts : MonoBehaviour
         Vector3 v3 = new Vector3(dragDeltaPosition.x, 0, dragDeltaPosition.y);
         Vector3 newDeltaPositionV3 = (Quaternion.AngleAxis(m_mainCamera.transform.localEulerAngles.y, new Vector3(0, 1, 0)) * v3) * dragFactor * factor;
         finalPosition -= newDeltaPositionV3 * Time.deltaTime;
-        
+
         //惯性处理相关
         lastMoveVector = new Vector2(newDeltaPositionV3.x, newDeltaPositionV3.z);
         //限制最大速度,防止出现极大的惯性
@@ -119,6 +126,7 @@ public class CameraScripts : MonoBehaviour
         }
         m_smoothStopVelocity = lastMoveVector;
         m_timeRealDragStop = Time.realtimeSinceStartup;
+        Util.CallMethod("TerrainManager", "Refresh", transform.Find("CameraCenter").position);
     }
 
 
@@ -164,7 +172,7 @@ public class CameraScripts : MonoBehaviour
     //////{
     //////    SmoothStopFunc();
     //////    finalPosition = ClampPosition(finalPosition);
-    //////    transform.position = finalPosition + cameraZoomVector;
+    //////    transform.localPosition = finalPosition + cameraZoomVector;
     //////    //TestShowLog();
     //////}
 
@@ -197,7 +205,7 @@ public class CameraScripts : MonoBehaviour
             ////Debug.Log("aaaaaaaaaaaaaaaaaaa");
             return;
         }
-        
+
         cameraZoomVector = (m_mainCamera.transform.forward) * -finalDistance;
         finalPosition += hV3 * (tempDistance - finalDistance);
     }
@@ -214,16 +222,16 @@ public class CameraScripts : MonoBehaviour
         SmoothStopFunc();
         ////finalPosition = ClampPosition(finalPosition);
         ////Debug.Log("----finalpos：" + finalPosition);
-        ////transform.position = finalPosition + cameraZoomVector;
-        ////Debug.Log("---- cam pos：" + transform.position);
+        ////transform.localPosition = finalPosition + cameraZoomVector;
+        ////Debug.Log("---- cam pos：" + transform.localPosition);
 
 
         finalPosition = ClampPosition(finalPosition);
         //Debug.Log("----finalpos：" + finalPosition);
         Vector3 tempV3 = finalPosition + cameraZoomVector;
         tempV3 = ClampPosition(tempV3);
-        transform.position = tempV3;
-        //Debug.Log("---- cam pos：" + transform.position);
+        transform.localPosition = tempV3;
+        //Debug.Log("---- cam pos：" + transform.localPosition);
     }
 
     //限制相机在2维的位置
@@ -240,6 +248,6 @@ public class CameraScripts : MonoBehaviour
     private void TestShowLog()
     {
         m_showfinalDisText.text = finalDistance.ToString();
-        m_showfinalPosYText.text = transform.position.y.ToString();
+        m_showfinalPosYText.text = transform.localPosition.y.ToString();
     }
 }

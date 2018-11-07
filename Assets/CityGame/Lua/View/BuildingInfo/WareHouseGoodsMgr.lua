@@ -11,7 +11,7 @@ WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
-WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
+--WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
 
 --[[function WareHouseGoodsMgr:initialize(insluabehaviour,buildingData)
     self.behaviour = insluabehaviour
@@ -58,11 +58,11 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
     if not self.allTspItem then
         self.allTspItem = {}
     end
-    self.allTspItem[CenterWareHousePanel.tspContent.childCount] = TransportLuaItem;
-    for i = 1,  #self.allTspItem do
+    self.allTspItem[goodsData.id] = TransportLuaItem;
+    for i, v in pairs(self.allTspItem) do
         self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
             if self.allTspItem[i].inputText.text =="" then
-              return
+                return
             end
             self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text/  self.allTspItem[i].totalNumber
         end);
@@ -106,12 +106,13 @@ function WareHouseGoodsMgr:_deleteGoods(ins)
 end
 
 --删除运输商品
-function WareHouseGoodsMgr:_deleteTspGoods(ins)
-    self.items[ins.id]:Enabled();
+function WareHouseGoodsMgr:_deleteTspGoods(id)
     if UpdateBeat then
         UpdateBeat:Remove(self._update, self);
     end
-    destroy(ins.prefab.gameObject);
+    self.items[id].select_while:SetActive(true);
+    destroy(self.allTspItem[id].prefab.gameObject);
+   self.allTspItem[id] = nil;
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
@@ -131,7 +132,7 @@ function WareHouseGoodsMgr:_creatGoods(path,parent)
 end
 
 function WareHouseGoodsMgr:_update()
-    for i = 1,  #self.allTspItem do
+    for i, v in pairs(self.allTspItem) do
         if self.allTspItem[i].inputText.text =="" then
             return
         end
@@ -150,8 +151,8 @@ end
 
 --清空运输数据
 function WareHouseGoodsMgr:ClearAll()
-    for i = 0, CenterWareHousePanel.tspContent.childCount-1 do
-      destroy(CenterWareHousePanel.tspContent:GetChild(i).gameObject)
+    for i, v in pairs(self.allTspItem) do
+        destroy(self.allTspItem[i].prefab.gameObject)
     end
     self.allTspItem = {};
 end

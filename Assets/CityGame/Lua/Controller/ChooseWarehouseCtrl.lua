@@ -23,6 +23,8 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     chooseWarehouse:AddClick(ChooseWarehousePanel.priceBtn.gameObject,self.OnClick_priceBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
     WareHouseGoodsMgr:_creatAddressList(chooseWarehouse,nil)
+
+    Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
     self.gameObject = go;
@@ -36,6 +38,14 @@ end
 function ChooseWarehouseCtrl:OnClick_searchBtn()
 
 end
+
+--点击通讯录BG
+function ChooseWarehouseCtrl:c_OnAddressListBG(go)
+    go.manager:SelectBox(go)
+    go.manager:TransportConfirm(true)
+    CenterWareHousePanel.nameText.text = go.name;
+end
+
 --根据名字排序
 function ChooseWarehouseCtrl:OnClick_nameBtn()
     ChooseWarehousePanel.nowText.text = "By name";

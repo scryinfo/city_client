@@ -28,5 +28,5 @@ function TransportGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i
 end
 
 function TransportGoodsItem:OnxBtn(go)
-    go.manager:_deleteTspGoods(go);
+    Event.Brocast("c_OnxBtn",go)
 end

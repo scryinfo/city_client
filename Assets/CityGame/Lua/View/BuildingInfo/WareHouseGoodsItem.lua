@@ -30,34 +30,17 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
-    Event.Brocast("m_DeleteItem")
-    local data = {}
-    data.titleInfo = "提示"
-    data.contentInfo = "确认销毁吗"
-    data.tipInfo = "物品将永久消失"
-    data.btnCallBack = function ()
-        go.manager:_deleteGoods(go)
-    end
-   ct.OpenCtrl('BtnDialogPageCtrl',data)
-
+    Event.Brocast("c_OnDelete",go)
 end
 
+--点击BG
 function WareHouseGoodsItem:OnBGItem()
-    local data = {}
-    data.madeBy = "来自Rodger公司"
-    data.playerName = " rodger"
-    ct.OpenCtrl('MessageTooltipCtrl',data)
+    Event.Brocast("c_OnBGItem")
 end
 
 --点击运输后的BG
 function WareHouseGoodsItem:OnTransportBG(go)
-    local goodsDataInfo = {};
-    goodsDataInfo.name =  go.goodsDataInfo.name;
-    goodsDataInfo.number = go.goodsDataInfo.number;
-    goodsDataInfo.id = go.id;
-    go.manager:_creatTransportGoods(goodsDataInfo);
-    go.select_while:SetActive(false);
-    go.transportBG:GetComponent("Button").enabled = false;
+    Event.Brocast("c_OnTransportBG",go)
 end
 
 --删除后刷新ID及刷新显示

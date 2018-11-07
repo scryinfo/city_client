@@ -7,6 +7,7 @@
 local isShowList;
 local switchIsShow;
 local isSelect;
+local itemId = {}
 local centerWareHousetBehaviour
 local newtotalCapacity
 local listTrue = Vector3.New(0,0,180)
@@ -52,6 +53,10 @@ function CenterWareHouseCtrl:OnCreate(obj)
     WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
 
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
+    Event.AddListener("c_OnDelete",self.c_OnDelete,self);
+    Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
+    Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
+    Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
 end
 --初始化
 function CenterWareHouseCtrl:_initData()
@@ -61,6 +66,48 @@ function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
+--点击删除
+function CenterWareHouseCtrl:c_OnDelete(go)
+    Event.Brocast("m_DeleteItem",go)
+--[[    local data = {}
+    data.titleInfo = "提示"
+    data.contentInfo = "确认销毁吗"
+    data.tipInfo = "物品将永久消失"
+    data.btnCallBack = function ()
+        go.manager:_deleteGoods(go)
+    end
+    ct.OpenCtrl('BtnDialogPageCtrl',data)]]
+end
+
+--点击BG
+function CenterWareHouseCtrl:c_OnBGItem()
+    local data = {}
+    data.madeBy = "来自Rodger公司"
+    data.playerName = " rodger"
+    ct.OpenCtrl('MessageTooltipCtrl',data)
+end
+
+--点击运输后的BG
+function CenterWareHouseCtrl:c_OnTransportBG(go)
+    if itemId[go.id] == nil then
+        itemId[go.id] = go.id
+        local goodsDataInfo = {};
+        goodsDataInfo.name =  go.goodsDataInfo.name;
+        goodsDataInfo.number = go.goodsDataInfo.number;
+        goodsDataInfo.id = go.id;
+        go.manager:_creatTransportGoods(goodsDataInfo);
+        go.select_while:SetActive(false);
+    else
+        go.manager:_deleteTspGoods(go.id);
+        itemId[go.id] = nil
+    end
+end
+
+--点击删除运输物品
+function CenterWareHouseCtrl:c_OnxBtn(go)
+    go.manager:_deleteTspGoods(go.id);
+    itemId[go.id] = nil
+end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()

@@ -18,9 +18,9 @@ function PlayerTempModel.Awake()
 end
 
 function PlayerTempModel.Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.m_ReqBuildApartment(1000000)
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+    --    PlayerTempModel.m_ReqBuildApartment(1400001)
+    --end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
@@ -77,9 +77,9 @@ function PlayerTempModel.n_OnReceiveUnitChange(stream)
 end
 ---
 --add building
-function PlayerTempModel.m_ReqBuildApartment(id)
+function PlayerTempModel.m_ReqAddBuilding(id, posx, posy)
     local msgId = pbl.enum("gscode.OpCode", "addBuilding")
-    local lMsg = {id = id, pos = {x = 190, y = 190}}
+    local lMsg = {id = id, pos = {x = posx, y = posy}}
     local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -103,6 +103,11 @@ function PlayerTempModel._getStore(roleData)
     local buyStore = {}
     if roleData.buys then
         buyStore = this._getCollectStore(roleData.buys)
+    else
+        ---测试
+        PlayerTempModel.m_ReqAddBuilding(1400001, 1, 1)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 5, 5)
+        PlayerTempModel.m_ReqAddBuilding(1200001, 10, 10)
     end
 
     local rentStore = {}

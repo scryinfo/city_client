@@ -46,8 +46,8 @@ end
 --挂卖单
 function ExchangeTransactionModel.m_ReqExchangeSell(itemId, num, price, buildingId)
     local msgId = pbl.enum("gscode.OpCode", "exchangeSell")
-    local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
-    --local lMsg = { itemId = itemId, num = num, price = price, buildingId = "a33eab42-cb75-4c77-bd27-710d299f5591"}  --测试
+    --local lMsg = { itemId = itemId, num = num, price = price, buildingId = buildingId}
+    local lMsg = { itemId = itemId, num = num, price = price, buildingId = "a33eab42-cb75-4c77-bd27-710d299f5591"}  --测试
     local pMsg = assert(pbl.encode("gs.ExchangeSell", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
@@ -79,4 +79,11 @@ end
 function ExchangeTransactionModel.n_OnReceiveBuySellItemsInfo(stream)
     local itemsInfo = assert(pbl.decode("gs.ExchangeItemDetail", stream), "ExchangeTransactionModel.n_OnReceiveBuySellItemsInfo: stream == nil")
     Event.Brocast("c_onReceiveBuySellItemsInfo", itemsInfo)
+end
+
+------测试
+function ExchangeTransactionModel._testUUIDToByte(id)
+    for i = 1, 16 do
+
+    end
 end

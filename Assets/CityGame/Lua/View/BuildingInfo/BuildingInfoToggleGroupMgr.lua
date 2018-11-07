@@ -167,50 +167,16 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     self.leftData[1] = LineChartLuaItem
 
     ---员工  左2
-    local staffViewRect
-    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    staffViewRect.gameObject.name = "Staff"
-    --测试数据
-    local staffData = {}
-    staffData.buildingId = self.toggleData.info.id
-    staffData.buildingTypeId = self.toggleData.info.mId
-    staffData.satisfaction = self.toggleData.info.happy
-    staffData.dayWage = self.toggleData.info.salary
-    staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
-    staffData.noDomicileCount = 3
-    --end
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    self.leftData[2] = staffLuaItem
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---入住率  右1
-    local occupancyViewRect
-    occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
-    occupancyViewRect.gameObject.name = "Occ01"
-    --测试数据
-    local occData = {}
-    occData.buildingId = self.toggleData.info.id
-    occData.buildingTypeId = self.toggleData.info.mId
-    occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
-    occData.renter = self.toggleData.renter
-    --end
-    local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
-    local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
-    self.rightData[1] = occupancyLuaItem
+    local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+    self.rightData[1] = self:_creatOccupancy(occToggleData)
 
     ---租金 --右2
-    local rentalViewRect
-    rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
-    local rentalData = {}
-    rentalData.buildingId = self.toggleData.info.id
-    rentalData.buildingTypeId = self.toggleData.info.mId
-    rentalData.rent = self.toggleData.rent
-    rentalData.suggestRent = self.toggleData.rent
-    rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
-    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
-    self.rightData[2] = rentalLuaItem
-
+    self.rightData[2] = self:_creatRental(rentalToggleData)
 end
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
@@ -393,3 +359,63 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
 
 end
 
+---通用部分
+--员工
+function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
+    local staffViewRect
+    if staffToggleData.pos == BuildingInfoTogglePos.Left then
+        staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+    else
+        staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.rightRect)
+    end
+    staffViewRect.gameObject.name = "Staff"
+
+    local staffData = {}
+    staffData.buildingId = self.toggleData.info.id
+    staffData.buildingTypeId = self.toggleData.info.mId
+    staffData.satisfaction = self.toggleData.info.happy
+    staffData.dayWage = self.toggleData.info.salary
+    staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
+    staffData.noDomicileCount = 0
+    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+    return staffLuaItem
+end
+
+---住宅部分
+--入住率
+function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
+    local occupancyViewRect
+    if occToggleData.pos == BuildingInfoTogglePos.Left then
+        occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
+    else
+        occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
+    end
+    occupancyViewRect.gameObject.name = "Occ"
+
+    local occData = {}
+    occData.buildingId = self.toggleData.info.id
+    occData.buildingTypeId = self.toggleData.info.mId
+    occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
+    occData.renter = self.toggleData.renter
+    local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
+    return occupancyLuaItem
+end
+--租金
+function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
+    local rentalViewRect
+    if rentalToggleData.pos == BuildingInfoTogglePos.Left then
+        rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.leftRect)
+    else
+        rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
+    end
+    rentalViewRect.gameObject.name = "Rental"
+
+    local rentalData = {}
+    rentalData.buildingId = self.toggleData.info.id
+    rentalData.buildingTypeId = self.toggleData.info.mId
+    rentalData.rent = self.toggleData.rent
+    rentalData.suggestRent = self.toggleData.rent
+    rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
+    return rentalLuaItem
+end

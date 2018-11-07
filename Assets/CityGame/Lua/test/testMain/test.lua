@@ -352,7 +352,7 @@ end)
 UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function ()
     local HouseModel = CtrlManager.GetModel(ModelNames.House);
     if HouseModel ~= nil then
-        HouseModel:Awake();
+        HouseModel:Awake()
     end
 end)
 

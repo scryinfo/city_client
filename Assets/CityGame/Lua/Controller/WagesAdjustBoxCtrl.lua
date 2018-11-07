@@ -49,6 +49,8 @@ function WagesAdjustBoxCtrl:_getComponent(go)
     self.suggestRentalText = go.transform:Find("root/suggestRentalText"):GetComponent("Text")
     self.effectiveDateText = go.transform:Find("root/effectiveDateText"):GetComponent("Text")
     self.satisfactionSlider = go.transform:Find("root/satisfactionSlider"):GetComponent("Slider")
+    self.satisfactionText = go.transform:Find("root/satisfactionSlider/FillArea/Fill/number"):GetComponent("Text")
+    self.satisfactionStopTran = go.transform:Find("root/satisfactionSlider/stop")
 end
 ---初始化
 function WagesAdjustBoxCtrl:_initData()
@@ -73,6 +75,14 @@ function WagesAdjustBoxCtrl:_initData()
     local pos = self.suggestRect.anchoredPosition
     self.suggestRect.anchoredPosition = Vector2.New(70 + 164 - trueTextW, pos.y)
 
+    self.satisfactionText.text = self.m_data.satisfaction
+    if self.m_data.satisfaction <= 0.3 then
+        self.satisfactionStopTran.localScale = Vector3.one
+    else
+        self.satisfactionStopTran.localScale = Vector3.zero
+    end
+    self.satisfactionText.text = self.m_data.satisfaction
+    self.satisfactionSlider.value = self.m_data.satisfaction
     self.effectiveDateText.text = self.m_data.effectiveDate
 end
 

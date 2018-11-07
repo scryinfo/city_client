@@ -37,6 +37,7 @@ end
 function PlayerTempModel.OnCreate()
     --网络回调注册 网络回调用n开头
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), PlayerTempModel.n_OnReceiveUnitCreate)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), PlayerTempModel.n_OnReceiveUnitChange)
 
     --本地的回调注册
     Event.AddListener("m_RoleLoginInExchangeModel", this.n_OnReceiveRoleLogin)
@@ -58,9 +59,17 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
         PlayerTempModel.collectList = {}
     end
 end
---创建同步
+--创建建筑时的同步
 function PlayerTempModel.n_OnReceiveUnitCreate(stream)
-    local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "PlayerTempModel.n_OnReceiveExchangeDeal: stream == nil")
+    local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "PlayerTempModel.n_OnReceiveUnitCreate: stream == nil")
+    if not PlayerTempModel.buildingsInfo then
+        PlayerTempModel.buildingsInfo = {}
+    end
+    PlayerTempModel.buildingsInfo[#PlayerTempModel.buildingsInfo + 1] = buildingInfo
+end
+--建筑信息更改时同步
+function PlayerTempModel.n_OnReceiveUnitChange(stream)
+    local buildingInfo = assert(pbl.decode("gs.UnitChange", stream), "PlayerTempModel.n_OnReceiveUnitChange: stream == nil")
     if not PlayerTempModel.buildingsInfo then
         PlayerTempModel.buildingsInfo = {}
     end

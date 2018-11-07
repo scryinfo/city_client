@@ -43,6 +43,7 @@ function HouseChangeRentCtrl:_getComponent(go)
 end
 ---初始化
 function HouseChangeRentCtrl:_initData()
+    self.rentInput.text = self.m_data.rent
     local blackColor = "#4B4B4B"
     local rentalStr = string.format("%s<color=%s>%s</color>", getPriceString(self.m_data.rent, 24, 18), blackColor, "/D")
     self.currentRentalText.text = rentalStr

@@ -28,20 +28,18 @@ function HouseCtrl:Awake(go)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
     self:_addListener()
-
-    --测试
-    --self.m_data.buildingType = BuildingType.House
-    --local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
 end
 
 function HouseCtrl:Refresh()
     self:_initData()
 end
 function HouseCtrl:_addListener()
+    ---需要监听改变建筑名字的协议
+    ---等待中
     Event.AddListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
 end
 function HouseCtrl:_removeListener()
-    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.RemoveListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -55,18 +53,22 @@ function HouseCtrl:_initData()
 end
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
+    HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
+    self.m_data = houseDetailData
     self.m_data.buildingType = BuildingType.House
     local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
-
 end
 ---更改名字
-function HouseCtrl:_changeName()
+function HouseCtrl:_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    data.btnCallBack = function()
+    data.btnCallBack = function(name)
         ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
+
+        ---临时代码，直接改变名字
+        ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
@@ -74,4 +76,7 @@ end
 function HouseCtrl:_backBtn()
     UIPage.ClosePage()
 end
-
+---更改名字成功
+function HouseCtrl:_updateName(name)
+    HousePanel.nameText.text = name
+end

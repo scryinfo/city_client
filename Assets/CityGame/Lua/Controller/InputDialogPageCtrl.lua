@@ -101,6 +101,9 @@ function InputDialogPageCtrl:_onClickConfim(table)
     --end
 
     ---测试
+    if table.m_data.btnCallBack then
+        table.m_data.btnCallBack(inputValue)
+    end
     table:Hide()
 end
 ---点击关闭按钮

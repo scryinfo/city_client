@@ -66,9 +66,8 @@ function HouseCtrl:_changeName()
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function()
-        ct.log("cycle_w6_houseAndGround", "有回调，啦啦啦，提示信息")
+        ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
     end
-    --UIPage:ShowPage(InputDialogPageCtrl, data)
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 ---返回

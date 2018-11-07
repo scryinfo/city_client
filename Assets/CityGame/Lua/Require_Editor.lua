@@ -14,6 +14,7 @@ AutoRequire.getInstance():require("Framework/pbl")
 AutoRequire.getInstance():require("Framework/UI")
 AutoRequire.getInstance():require("test/testFrameWork/memory")
 AutoRequire.getInstance():require("test/testFrameWork")
+AutoRequire.getInstance():require("Items")
 
 if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么禁用整个测试分组策略
 

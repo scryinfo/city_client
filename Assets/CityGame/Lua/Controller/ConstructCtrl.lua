@@ -43,39 +43,20 @@ function ConstructCtrl:_initPanelData()
     end
     local contentTrans = self.gameObject.transform:Find("bottomScroll/Viewport/Content")
     local contentWidth = 0
-    for k, item in ipairs(ConstructConfig) do
+    self.Items  = {}
+    for key, item in ipairs(ConstructConfig) do
         local itemObj = UnityEngine.GameObject.Instantiate(prefab,contentTrans)
-        --itemObj.transform:SetParent(contentTrans)
-        --****名字******
-        local itemRect = itemObj.transform:GetComponent("RectTransform")
-        itemRect.anchoredPosition = Vector2.New(contentWidth,0)
-        contentWidth  =  contentWidth + itemRect.sizeDelta.x + 12
-        local itemNameRect = itemObj.transform:Find("namebar/NameText"):GetComponent("RectTransform")
-        local itemNameText =  itemObj.transform:Find("namebar/NameText"):GetComponent("Text")
-        --设置名字（TODO：改为多语言）
-        itemNameText.text = item.buildName
-        --设置名字宽度（设置说明按钮位置）
-        itemNameRect.sizeDelta = Vector2.New(itemNameText.preferredWidth,itemNameRect.sizeDelta.y)
-        --****按钮图片******
-        --TODO:此处应该根据种类多少动态增加长度
-        for i, tempBuildID in ipairs(item.prefabRoute) do
-            --临时根据策划需求写死为只有3种大小建筑
-            if i > 3 then
-                return
-            end
-            --根据图片地址路径，赋值按钮图片
-            --[[
-            local tempBtnIcon =  itemObj.transform:Find("Btn_".. i  .."/icon"):GetComponent("Image")
-            local www = UnityEngine.WWW(PlayerBuildingBaseData[tempBuildID]["imgPath"])
-            coroutine.www(www)
-            tempBtnIcon.sprite = www.texture
-            --]]
-        end
+        self.Items[key] = ConstructItem:new(item, itemObj.transform ,contentWidth)
+        contentWidth =  self.Items[key].sizeDeltaX
     end
     contentWidth  =  contentWidth - 12
     contentTrans:GetComponent("RectTransform").sizeDelta = Vector2.New(contentWidth,contentTrans:GetComponent("RectTransform").sizeDelta.y)
 end
 
 function ConstructCtrl:Close()
-
+    for i, v in pairs(self.Items) do
+        v:Close()
+        v = nil
+    end
+    self.Items = nil
 end

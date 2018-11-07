@@ -28,9 +28,9 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
 
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        ct.OpenCtrl("HouseCtrl", this.tempHouseData)
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+    --    ct.OpenCtrl("HouseCtrl", this.tempHouseData)
+    --end
 end
 
 --启动事件--

@@ -64,7 +64,7 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
             if self.allTspItem[i].inputText.text =="" then
                 return
             end
-            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text/  self.allTspItem[i].totalNumber
+            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text
         end);
     end
     UpdateBeat:Add(self._update, self);
@@ -136,7 +136,8 @@ function WareHouseGoodsMgr:_update()
         if self.allTspItem[i].inputText.text =="" then
             return
         end
-        self.allTspItem[i].inputText.text = math.ceil( self.allTspItem[i].totalNumber *   self.allTspItem[i].scrollbar.value);
+       -- ct.log("rodger_w8_GameMainInterface","[test__update]  测试完毕",self.allTspItem[i].scrollbar.value)
+        self.allTspItem[i].inputText.text =  self.allTspItem[i].scrollbar.value;
     end
 end
 

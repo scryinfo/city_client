@@ -57,6 +57,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
+
 end
 --初始化
 function CenterWareHouseCtrl:_initData()
@@ -68,15 +69,15 @@ end
 
 --点击删除
 function CenterWareHouseCtrl:c_OnDelete(go)
-    Event.Brocast("m_DeleteItem",go)
---[[    local data = {}
+   -- Event.Brocast("m_DeleteItem",go)
+    local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
         go.manager:_deleteGoods(go)
     end
-    ct.OpenCtrl('BtnDialogPageCtrl',data)]]
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
 --点击BG
@@ -144,6 +145,7 @@ end
 function CenterWareHouseCtrl:c_transportConfirmBtn()
     ct.OpenCtrl('TransportBoxCtrl')
     WareHouseGoodsMgr:ClearAll()
+    itemId = {}
     WareHouseGoodsMgr:EnabledAll()
 end
 
@@ -196,7 +198,7 @@ function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
     if isShow then
         CenterWareHousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         CenterWareHousePanel.transport:SetActive(true);
-        CenterWareHousePanel.content.offsetMax = Vector2.New(-820,0);
+        CenterWareHousePanel.content.offsetMax = Vector2.New(-770,0);
     else
 
         CenterWareHousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);

@@ -17,14 +17,14 @@ function TransportGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i
 
     self.name = self.prefab.transform:Find("nameText").gameObject:GetComponent("Text")
     self.inputText = self.prefab.transform:Find("InputField").gameObject:GetComponent("InputField");
-    --self.text = self.prefab.transform:Find("InputField/Text").gameObject:GetComponent("Text")
-    self.scrollbar = self.prefab.transform:Find("Scrollbar").gameObject:GetComponent("Scrollbar");
+    self.scrollbar = self.prefab.transform:Find("Scrollbar").gameObject:GetComponent("Slider");
     self.xBtn = self.prefab.transform:Find("closeBtn").gameObject;
 
     self.name.text = self.goodsDataInfo.name;
     self.totalNumber = self.goodsDataInfo.number;
 
     self._luabehaviour:AddClick(self.xBtn,self.OnxBtn,self)
+    self.scrollbar.maxValue =  self.totalNumber
 end
 
 function TransportGoodsItem:OnxBtn(go)

@@ -49,6 +49,7 @@ end
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
     ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
+    ct.OpenCtrl('ConstructCtrl')
 end
 
 --交易所--

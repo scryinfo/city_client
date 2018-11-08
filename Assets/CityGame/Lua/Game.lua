@@ -74,4 +74,5 @@ function Game.OnPostInitOK()
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()
     --end
+    UnitTest.Exec_now("Allen_w9", "c_CameraMove",self)
 end

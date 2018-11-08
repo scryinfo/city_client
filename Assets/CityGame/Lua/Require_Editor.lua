@@ -15,6 +15,7 @@ AutoRequire.getInstance():require("Framework/UI")
 AutoRequire.getInstance():require("test/testFrameWork/memory")
 AutoRequire.getInstance():require("test/testFrameWork")
 
+
 if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么禁用整个测试分组策略
 
     function UnitTest.Exec_now(unitGroupId, event,...) return end
@@ -45,6 +46,8 @@ AutoRequire.getInstance():require("View/Logic")
 AutoRequire.getInstance():require("Controller")
 AutoRequire.getInstance():require("Model")
 AutoRequire.getInstance():require("Config")
+AutoRequire.getInstance():require("Items")
+AutoRequire.getInstance():require("Terrain")
 AutoRequire.getInstance():requireLast("__require_last__")
 --在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中
 

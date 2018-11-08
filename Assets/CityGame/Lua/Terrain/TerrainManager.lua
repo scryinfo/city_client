@@ -26,8 +26,11 @@ end
 --接受基础地块数据
 local function ReceiveArchitectureDatas(datas)
     for key, value in pairs(datas) do
-        DataManager.RefreshBaseBuildData(value)
-        buildMgr:CreateBuild(BuildingConfig[value.buildId].prefabRoute,CreateSuccess,{value.buildId,TerrainManager.BlockIDTurnPosition(value.id)})
+        local isCreate = DataManager.RefreshBaseBuildData(value)
+        --判断是否需要创建建筑
+        if isCreate then
+            buildMgr:CreateBuild(BuildingConfig[value.buildId].prefabRoute,CreateSuccess,{value.buildId,TerrainManager.BlockIDTurnPosition(value.id)})
+        end
     end
 end
 

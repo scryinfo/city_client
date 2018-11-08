@@ -14,8 +14,10 @@ function  DataManager.RefreshBaseBuildData(data)
     end
     if BuildDataStack[collectionID][data.id] then
         BuildDataStack[collectionID][data.id].BaseData:Refresh(data)
+        return false
     else
         BuildDataStack[collectionID][data.id] ={ BaseData = BaseBuildModel:new(data) }
+        return true
     end
 end
 

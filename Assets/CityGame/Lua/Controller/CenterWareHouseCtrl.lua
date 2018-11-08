@@ -69,15 +69,15 @@ end
 
 --点击删除
 function CenterWareHouseCtrl:c_OnDelete(go)
-   -- Event.Brocast("m_DeleteItem",go)
-    local data = {}
+    Event.Brocast("m_DeleteItem",go)
+--[[    local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
         go.manager:_deleteGoods(go)
     end
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    ct.OpenCtrl('BtnDialogPageCtrl',data)]]
 end
 
 --点击BG
@@ -112,6 +112,7 @@ end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
+    ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",1234)
     UIPage.ClosePage();
 end
 function CenterWareHouseCtrl:Refresh()

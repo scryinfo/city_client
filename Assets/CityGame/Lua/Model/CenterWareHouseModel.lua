@@ -58,7 +58,7 @@ end
 --删除商品发包
 function CenterWareHouseModel:m_DeleteItem(go)
     local bagId = "a33eab42cb754c77bd27710d299f5591";
-    local bId = CityLuaUtil.stringToBytes(bagId)
+    local bId = CityLuaUtil.StringToByteArray(bagId)
     ct.log("rodger_w8_GameMainInterface","[test_n_GsDel]  测试完毕",bId)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","delItem")

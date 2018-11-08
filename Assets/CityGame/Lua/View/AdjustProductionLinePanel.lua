@@ -15,6 +15,7 @@ end
 function AdjustProductionLinePanel.InitPanel()
     --Button
     this.returnBtn = transform:Find("Button/returnBtn");
+    this.determineBtn = transform:Find("Button/determineBtn");
     this.addBtn = transform:Find("ScrollView/Viewport/Content/productionLineAdd");
     --Slider --Text
     this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider").gameObject;

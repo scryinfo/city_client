@@ -22,7 +22,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.circleGreayImg.transform.localScale = Vector3.zero;
     self.circleTickImg.transform.localScale = Vector3.zero;
 
-    --普通消息注册
+    --本地消息注册
     Event.AddListener("c_GoodsItemChoose",self.c_GoodsItemChoose,self);
     Event.AddListener("c_GoodsItemDelete",self.c_GoodsItemDelete,self);
 

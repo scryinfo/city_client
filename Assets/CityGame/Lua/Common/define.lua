@@ -58,6 +58,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	Exchange = "ExchangeModel",  --交易所
 	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
 	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
@@ -176,6 +177,7 @@ BuildingInType =
 	Shelf = 0,  --货架
 	Warehouse = 1,  --仓库
 	Transport = 2,  --运输
+	ProductionLine = 3,  --生产线
 }
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =

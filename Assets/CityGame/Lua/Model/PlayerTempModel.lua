@@ -27,6 +27,9 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+        PlayerTempModel.m_ReqBuildApartment(1100003)
+    end
 end
 
 --启动事件--

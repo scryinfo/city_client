@@ -34,6 +34,7 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
+    warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
     --初始化物品上架还是运输
     self.operation = nil;
@@ -119,7 +120,11 @@ end
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
     UIPage:ShowPage(ChooseWarehouseCtrl);
 end
---运输确定
+--确定上架
+function WarehouseCtrl:OnClick_shelfConfirmBtn()
+
+end
+--确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn()
     UIPage:ShowPage(TransportBoxCtrl);
 end

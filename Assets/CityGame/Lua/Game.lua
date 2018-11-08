@@ -70,6 +70,18 @@ function Game.OnPostInitOK()
         CenterWareHouseModel:Awake();
     end
 
+    --测试玩家临时数据
+    local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    if playerTempModel ~= nil then
+        playerTempModel:Awake();
+    end
+
+    --
+    local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
+    if AdjustProductionLineModel ~= nil then
+        AdjustProductionLineModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

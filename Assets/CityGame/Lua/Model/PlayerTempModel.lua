@@ -19,7 +19,7 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.tempTestReqAddGroung(200,200,300,300)
+        PlayerTempModel.tempTestReqAddGroung(500,500,550,550)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
@@ -29,9 +29,9 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        PlayerTempModel.m_ReqAddBuilding(1400001, 240, 300)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 274, 300)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 250, 300)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 501, 550)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 505, 550)
+        PlayerTempModel.m_ReqAddBuilding(1200001, 510, 550)
     end
 end
 
@@ -159,8 +159,17 @@ function PlayerTempModel._getCollectStore(datas)
     end
     if produceDepartment then
         for i, value in ipairs(produceDepartment) do
+            local inHand = {
+                {id = 2151001, num = 10},
+                {id = 2151002, num = 30},
+                {id = 2151003, num = 33},
+                {id = 2151004, num = 45},
+                {id = 2152001, num =  9}
+            }
+            value.store = {}
+            value.store.inHand = inHand
             local listCount = #storeList + i
-            storeList[listCount] = value
+            storeList[listCount] = value.store
             storeList[listCount].buildingId = value.info.id
             storeList[listCount].buildingTypeId = value.info.mId
         end

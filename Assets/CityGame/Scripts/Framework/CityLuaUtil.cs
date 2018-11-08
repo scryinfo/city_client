@@ -61,12 +61,24 @@ namespace City
             }
             else
             {
-#if CLOSE_LUA_BUNDELMODE
-                return "Assets/CityGame";                
+#if LUA_BUNDEL             
+            return "Assets/CityGame";
 #else
-                //return "Assets/StreamingAssets";
-                return "Assets/CityGame";
+            return "Assets/CityGame";
+                
 #endif
+            }
+        }
+
+        public static string getLuaBundelPath()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                return UnityEngine.Application.persistentDataPath + "/CityGame";
+            }
+            else
+            {
+                return Application.streamingAssetsPath;
             }
         }
 
@@ -211,6 +223,16 @@ namespace City
             {
                 Debug.LogError(e.ToString());
             }
+        }
+        public static byte[] StringToByteArray(string hexString)
+        {
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
         }
 
         public static string ByteArrayToString(byte[] ba)

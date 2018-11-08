@@ -11,7 +11,7 @@ function InputDialogPageCtrl:initialize()
 end
 
 function InputDialogPageCtrl:bundleName()
-    return "Common/InputDialogPage"
+    return "Common/InputDialogPagePanel"
 end
 
 function InputDialogPageCtrl:OnCreate(obj )

@@ -18,9 +18,9 @@ function PlayerTempModel.Awake()
 end
 
 function PlayerTempModel.Update()
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-    --    PlayerTempModel.m_ReqBuildApartment(1400001)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+        PlayerTempModel.tempTestReqAddGroung(0,0,100,100)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
@@ -97,6 +97,13 @@ function PlayerTempModel.tempTestReqAddItem(itemId, num)
     local pMsg = assert(pbl.encode("gs.Str", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
+--add ground
+function PlayerTempModel.tempTestReqAddGroung(x1, y1, x2, y2)
+    local msgId = pbl.enum("gscode.OpCode", "cheat")
+    local lMsg = {str = string.format("addground %s %s %s %s", x1, y1, x2, y2)}
+    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
 
 ---
 function PlayerTempModel._getStore(roleData)
@@ -105,9 +112,9 @@ function PlayerTempModel._getStore(roleData)
         buyStore = this._getCollectStore(roleData.buys)
     else
         ---测试
-        PlayerTempModel.m_ReqAddBuilding(1400001, 1, 1)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 5, 5)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 10, 10)
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 1, 1)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 5, 5)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 10, 10)
     end
 
     local rentStore = {}

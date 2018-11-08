@@ -18,7 +18,7 @@ function BattleCtrl:initialize()
 end
 
 function BattleCtrl:bundleName()
-    return "Battle"
+    return "BattlePanel"
 end
 
 function BattleCtrl:OnCreate(obj )

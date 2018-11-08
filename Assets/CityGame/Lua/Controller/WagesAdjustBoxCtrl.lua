@@ -7,8 +7,7 @@ function WagesAdjustBoxCtrl:initialize()
 end
 
 function WagesAdjustBoxCtrl:bundleName()
-    return "WagesAdjustBox"
-end
+    return "WagesAdjustBox";end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)

@@ -14,7 +14,7 @@ function TestExchangeCtrl:initialize()
 end
 
 function TestExchangeCtrl:bundleName()
-    return "TestExchange"
+    return "TestExchangePanel"
 end
 
 function TestExchangeCtrl:OnCreate(obj)

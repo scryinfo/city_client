@@ -10,7 +10,7 @@ function TransportBoxCtrl:initialize()
 end
 
 function TransportBoxCtrl:bundleName()
-    return "TransportBox";
+    return "TransportBoxPanel";
 end
 
 function TransportBoxCtrl:OnCreate(obj)

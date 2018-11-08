@@ -7,7 +7,7 @@ local createRoleBehaviour;
 local gameObject;
 
 function  CreateRoleCtrl:bundleName()
-    return "CreateRole"
+    return "CreateRolePanel"
 end
 
 function CreateRoleCtrl:initialize()

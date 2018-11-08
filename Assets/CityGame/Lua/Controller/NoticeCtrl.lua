@@ -18,7 +18,7 @@ function NoticeCtrl:initialize()
 end
 
 function NoticeCtrl:bundleName()
-    return "Notice"
+    return "NoticePanel"
 end
 
 function NoticeCtrl:OnCreate(obj )

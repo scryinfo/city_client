@@ -27,7 +27,6 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
             return
         end
         --打开更改租金界面
-        ct.OpenCtrl("HouseChangeRentCtrl", self.rentalData)
     end, self)
 
     Event.AddListener("c_onReceiveHouseRentChange", self.updateInfo, self)

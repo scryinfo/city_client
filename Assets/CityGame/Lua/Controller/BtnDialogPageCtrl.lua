@@ -54,12 +54,12 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil
     end
-    ins:_onClickClose()
+    ins:_onClickClose(ins)
 end
-function BtnDialogPageCtrl:_onClickClose()
-    self.luaBehaviour:RemoveClick(self.confimBtn.gameObject, self._onClickConfim, self)
-    self.luaBehaviour:RemoveClick(self.closeBtn.gameObject, self._onClickClose, self)
-    self:Hide()
+function BtnDialogPageCtrl:_onClickClose(ins)
+    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
+    ins:Hide()
 end
 
 

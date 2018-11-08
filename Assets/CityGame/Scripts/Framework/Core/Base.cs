@@ -8,6 +8,7 @@ public class Base : MonoBehaviour {
     private LuaManager m_LuaMgr;
     private ResourceManager m_ResMgr;
     private SoundManager m_SoundMgr;
+    private BuildManager m_BuildMgr;
     private TimerManager m_TimerMgr;
     private ThreadManager m_ThreadMgr;
     private ObjectPoolManager m_ObjectPoolMgr;
@@ -65,6 +66,18 @@ public class Base : MonoBehaviour {
                 m_SoundMgr = facade.GetManager<SoundManager>(ManagerName.Sound);
             }
             return m_SoundMgr;
+        }
+    }
+
+    protected BuildManager BuildManager
+    {
+        get
+        {
+            if (m_BuildMgr == null)
+            {
+                m_BuildMgr = facade.GetManager<BuildManager>(ManagerName.Build);
+            }
+            return m_BuildMgr;
         }
     }
 

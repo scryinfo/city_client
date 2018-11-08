@@ -23,13 +23,12 @@ function HouseChangeRentCtrl:Awake(go)
     self:_getComponent(go)
     self:_initData()
 
-    local dialog = self.gameObject:GetComponent('LuaBehaviour')
-    dialog:AddClick(self.closeBtn, self._onClickCloseBtn, self)
-    dialog:AddClick(self.confirmBtn, self._onClickConfim, self)
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 end
 
 function HouseChangeRentCtrl:Refresh()
-
+    self.luaBehaviour:AddClick(self.closeBtn, self._onClickCloseBtn, self)
+    self.luaBehaviour:AddClick(self.confirmBtn, self._onClickConfim, self)
 end
 ---寻找组件
 function HouseChangeRentCtrl:_getComponent(go)
@@ -66,10 +65,11 @@ function HouseChangeRentCtrl:_onClickConfim(ins)
 
     --向服务器发送请求，改变租金
     Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, inputValue)
-    ins:Hide()
+    ins:_onClickCloseBtn(ins)
 end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(ins)
-    --ct.log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
     ins:Hide()
+    ins.luaBehaviour:RemoveClick(ins.confirmBtn, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn, ins._onClickCloseBtn, ins)
 end

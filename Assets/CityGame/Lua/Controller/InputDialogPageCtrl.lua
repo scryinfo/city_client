@@ -105,11 +105,11 @@ function InputDialogPageCtrl:_onClickConfim(ins)
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack(inputValue)
     end
-    ins:_onClickClose()
+    ins:_onClickClose(ins)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(ins)
-    ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
+    --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
     ins:Hide()
     ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
     ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)

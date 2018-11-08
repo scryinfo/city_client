@@ -93,10 +93,10 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
     end
 
     Event.Brocast("m_ReqHouseSetSalary", ins.m_data.buildingId, inputValue)
-    ins:_onClickClose()
+    ins:_onClickClose(ins)
 end
-function WagesAdjustBoxCtrl:_onClickClose()
-    self:Hide()
-    self.luaBehaviour:RemoveClick(self.confirmBtn.gameObject, self._onClickConfim, self)
-    self.luaBehaviour:RemoveClick(self.closeBtn.gameObject, self._onClickClose, self)
+function WagesAdjustBoxCtrl:_onClickClose(ins)
+    ins:Hide()
+    ins.luaBehaviour:RemoveClick(ins.confirmBtn.gameObject, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
 end

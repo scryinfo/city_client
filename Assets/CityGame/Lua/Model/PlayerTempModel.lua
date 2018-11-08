@@ -28,9 +28,11 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
 
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-    --    ct.OpenCtrl("HouseCtrl", this.tempHouseData)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+        PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 40, 100)
+        PlayerTempModel.m_ReqAddBuilding(1200001, 74, 100)
+    end
 end
 
 --启动事件--
@@ -112,9 +114,9 @@ function PlayerTempModel._getStore(roleData)
         buyStore = this._getCollectStore(roleData.buys)
     else
         ---测试
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 1, 1)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 5, 5)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 10, 10)
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 40, 100)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 74, 100)
     end
 
     local rentStore = {}

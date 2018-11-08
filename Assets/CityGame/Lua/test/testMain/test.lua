@@ -363,4 +363,120 @@ UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     ct.log("abel_w11_uuid","uuid() = ", pstr1)
 end)
 
+UnitTest.Exec("abel_w4_proto_Role", "test_w4_proto_Role",  function ()
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","roleLogin")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = {
+        id = "111231",
+        name = "haha",
+        lockedMoney = 123123,
+        offlineTs = 123123,
+        position = {x = 100,y = 2},
+        buys ={
+            apartment = {
+                info ={
+                    id = "123",
+                    mId = 123,
+                    pos = {
+                        x = 123,
+                        y = 212,
+                    },
+                    ownerId = "asdfas",
+                    npcFlow = 12312,
+                    state = 1,
+                    constructCompleteTs = 1,
+                    salary = 123,
+                    happy = 12312,
+                },
+                rent = 11,
+                renter = 1,
+                chart = { num = 1}
+            },
+            materialFactory = {
+
+            },
+            produceDepartment ={
+
+            },
+            publicFacility={
+
+            },
+        },
+
+        rents ={
+            apartment = {
+                info ={
+                    id = "123",
+                    mId = 123,
+                    pos = {
+                        x = 123,
+                        y = 212,
+                    },
+                    ownerId = "asdfas",
+                    npcFlow = 12312,
+                    state = 1,
+                    constructCompleteTs = 1,
+                    salary = 123,
+                    happy = 12312,
+                },
+                rent = 11,
+                renter = 1,
+                chart = { num = 1}
+            },
+            materialFactory = {
+
+            },
+            produceDepartment ={
+
+            },
+            publicFacility={
+
+            },
+        },
+        bag = {
+            inHand = {
+                id = "123",
+                num = 123,
+            },
+            reserved={
+                id = "123",
+                num = 123,
+            },
+            locked = {
+                id = "123",
+                num = 123,
+            },
+        },
+        bagCapacity = 12312,
+        itemIdCanProduce = {12312,33212},
+        exchangeCollectedItem = {12312,123},
+        ground = {
+            {
+                ownerId = "asdf",
+                 x = 123,
+                 y = 2332,
+                 rent = {
+                     rentPreDay = 1,
+                     paymentCycleDays = 1,
+                     deposit = 3,
+                     rentDays = 4,
+                     renterId = "asdfs",
+                     rentBeginTs = 123123,
+                 },
+                 sell = {
+                     price = 1
+                 },
+            },
+        },
+    }
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.Role", lMsg))
+
+    ----反序列化，取出数据
+    local msg = assert(pbl.decode("gs.Role",pMsg), "pbl.decode gs.Role failed")
+
+    ct.log("abel_w4_proto_Role","[test_w4_proto_Role] msg: "..msg)
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

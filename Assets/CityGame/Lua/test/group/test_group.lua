@@ -4,6 +4,7 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
+TestGroup.active_TestGroup("abel_w4_proto_Role")
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
 TestGroup.active_TestGroup("cycle_w11_exchangeModel")
 TestGroup.active_TestGroup("abel_w11_uuid")

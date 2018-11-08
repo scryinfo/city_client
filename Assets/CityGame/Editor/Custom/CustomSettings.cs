@@ -187,7 +187,8 @@ public static class CustomSettings
         _GT(typeof(SoundManager)),
         _GT(typeof(TimerManager)),
         _GT(typeof(ThreadManager)),
-        _GT(typeof(ResourceManager)),		  
+        _GT(typeof(ResourceManager)),
+        _GT(typeof(BuildManager)),
 
         //City
         _GT(typeof(City.NetworkInterface)),

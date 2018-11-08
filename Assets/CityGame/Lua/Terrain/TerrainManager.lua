@@ -34,7 +34,7 @@ end
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
     local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(TerrainManager.PositionTurnBlockID(pos))
-    log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
+    ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         CameraCollectionID = tempCollectionID
         --TODO:向服务器发送新的所在地块ID，刷新数据model
@@ -81,11 +81,12 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
-TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --激活测试组
-TestGroup.active_TestGroup("Allen_w9") --激活测试组
+
+
+UnitTest.TestBlockStart()
 
 UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function ()
-    log("Allen_w9_SendPosToServer","[test_TerrainManager_self]  测试开始")
+    ct.log("Allen_w9_SendPosToServer","[test_TerrainManager_self] ...............")
     Event.AddListener("c_SendPosToServer_self", function (obj)
         local tempDatas = {
             [1] = {
@@ -106,8 +107,9 @@ UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function 
 end)
 
 UnitTest.Exec("Allen_w9", "test_TerrainManagerRefresh",  function ()
-    log("Allen_w9","[test_TerrainManagerRefresh]  测试开始")
     Event.AddListener("c_CameraMove", function (obj)
         TerrainManager.Refresh(Vector3.New(0,0,0))
     end)
 end)
+
+UnitTest.TestBlockEnd()

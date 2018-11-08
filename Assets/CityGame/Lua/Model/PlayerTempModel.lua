@@ -19,7 +19,7 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.tempTestReqAddGroung(0,0,100,100)
+        PlayerTempModel.tempTestReqAddGroung(200,200,300,300)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
@@ -29,9 +29,9 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        PlayerTempModel.m_ReqAddBuilding(1400001, 17, 100)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 40, 100)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 74, 100)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 240, 300)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 274, 300)
+        PlayerTempModel.m_ReqAddBuilding(1200001, 250, 300)
     end
 end
 

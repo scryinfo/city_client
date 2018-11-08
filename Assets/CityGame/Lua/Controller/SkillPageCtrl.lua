@@ -17,7 +17,7 @@ function SkillPageCtrl:initialize()
 end
 
 function SkillPageCtrl:bundleName()
-    return "SkillPage"
+    return "SkillPagePanel"
 end
 
 function SkillPageCtrl:OnCreate(obj )

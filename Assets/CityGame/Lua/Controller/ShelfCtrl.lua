@@ -9,7 +9,7 @@ function ShelfCtrl:initialize()
 end
 
 function ShelfCtrl:bundleName()
-    return "Shelf"
+    return "ShelfPanel"
 end
 
 function ShelfCtrl:OnCreate(obj)

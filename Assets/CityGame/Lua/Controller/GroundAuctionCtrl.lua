@@ -14,7 +14,7 @@ function GroundAuctionCtrl:initialize()
 end
 
 function GroundAuctionCtrl:bundleName()
-    return "GroundAuction"
+    return "GroundAuctionPanel"
 end
 
 function GroundAuctionCtrl:OnCreate(obj)

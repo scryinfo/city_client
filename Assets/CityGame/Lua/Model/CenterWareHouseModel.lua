@@ -34,7 +34,6 @@ end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
    this.bagCapacity = bagCapacity
-
 end
 
 function CenterWareHouseModel:m_opCenterWareHouse()

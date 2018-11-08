@@ -22,7 +22,7 @@ function MunicipalCtrl:initialize()
 end
 
 function MunicipalCtrl:bundleName()
-    return "Municipal";
+    return "MunicipalPanel";
 end
 
 function MunicipalCtrl:OnCreate(obj)

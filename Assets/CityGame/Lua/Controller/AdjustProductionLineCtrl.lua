@@ -5,7 +5,7 @@ function AdjustProductionLineCtrl:initialize()
 end
 
 function AdjustProductionLineCtrl:bundleName()
-    return "AdjustProductionLine"
+    return "AdjustProductionLinePanel"
 end
 
 function AdjustProductionLineCtrl:OnCreate(obj)

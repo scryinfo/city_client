@@ -7,7 +7,7 @@ function MaterialCtrl:initialize()
 end
 
 function MaterialCtrl:bundleName()
-    return "Material";
+    return "MaterialPanel";
 end
 
 function MaterialCtrl:OnCreate(obj)

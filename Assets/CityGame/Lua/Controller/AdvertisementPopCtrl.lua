@@ -19,7 +19,7 @@ function AdvertisementPopCtrl:initialize()
 end
 
 function AdvertisementPopCtrl:bundleName()
-    return "AdvertisementPop";
+    return "AdvertisementPopPanel";
 end
 
 function AdvertisementPopCtrl:OnCreate(obj)

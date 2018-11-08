@@ -6,7 +6,7 @@ local gameObject;
 
 
 function  GameMainInterfaceCtrl:bundleName()
-    return "GameMainInterface"
+    return "GameMainInterfacePanel"
 end
 
 function GameMainInterfaceCtrl:initialize()

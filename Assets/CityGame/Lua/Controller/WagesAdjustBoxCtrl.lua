@@ -7,7 +7,7 @@ function WagesAdjustBoxCtrl:initialize()
 end
 
 function WagesAdjustBoxCtrl:bundleName()
-    return "WagesAdjustBox";
+    return "WagesAdjustBoxPanel";
 end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)

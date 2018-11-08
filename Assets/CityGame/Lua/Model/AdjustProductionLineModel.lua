@@ -40,6 +40,6 @@ end
 
 --确定生产
 function AdjustProductionLineModel.n_GsDetermineBtn(stream)
-    local msgAllGameServerInfo = assert(pbl.decode("gs.AddLine", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
+    local msgAllGameServerInfo = assert(pbl.decode("gs.AddLine", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
 
 end

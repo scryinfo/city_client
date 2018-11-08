@@ -370,10 +370,11 @@ UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     package gs;
     message TestUUID {
     required bytes id = 1;
+    required string name = 2;
     } ]]
-    local lMsg = { id = pstr }
+    local lMsg = { id = pstr , name = "hohoh"}
     local  pMsg = assert(pbl.encode("gs.TestUUID", lMsg))
-    local msg = assert(pbl.decode("gs.Role",pMsg), "pbl.decode gs.TestUUID failed")
+    local msg = assert(pbl.decode("gs.TestUUID",pMsg), "pbl.decode gs.TestUUID failed")
     ct.log("abel_w11_uuid","[test_w11_uuid] msg: "..msg)
 end)
 

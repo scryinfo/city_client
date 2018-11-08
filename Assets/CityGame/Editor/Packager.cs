@@ -84,10 +84,62 @@ public class Packager {
         AssetDatabase.Refresh();
     }
 
+    static void AutoAddBuildMap(string pattern, string path, string rootPath)
+    {
+        string temp = "";
+        string subdir = path.Replace(rootPath, "");
+        subdir = subdir.Replace("\\", "");
+        if (subdir.Length > 0)
+            subdir += "_";
+        //if (bundleName.Length == 0)
+        if (true)
+        {
+            string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+            if (files.Length == 0) return;
+            int pos = -1;
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Replace('\\', '/');
+                pos = files[i].LastIndexOf('/');
+                if (pos >= 0)
+                {
+                    string bundleName = subdir + files[i].Remove(0, pos + 1);
+                    bundleName = bundleName.Replace(".prefab", "");
+                    bundleName += AppConst.BundleExt;
+                    AssetBundleBuild build = new AssetBundleBuild();
+                    build.assetBundleName = bundleName;
+                    build.assetNames = new string[] { files[i] };
+                    maps.Add(build);
+                }
+            }
+        }    
+        else {
+            /*bundleName = bundleName.Replace("\\", "");
+            string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+            if (files.Length == 0) return;
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Replace('\\', '/');
+            }
+            AssetBundleBuild build = new AssetBundleBuild();
+            build.assetBundleName = bundleName;
+            build.assetNames = files;
+            maps.Add(build);*/
+        }
+    }
+
+    static void AddBuildMapOp(string path)
+    {        
+        AutoAddBuildMap("*.prefab", path, path);
+        string[] dirs = Directory.GetDirectories(path);
+        for (int i = 0; i < dirs.Length; ++i)
+        {
+            AutoAddBuildMap("*.prefab", dirs[i], path);
+        }
+    }
+
     static void AddBuildMap(string bundleName, string pattern, string path) {
-        //string[] files = Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
         string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-        //string[] files = Directory.GetFiles(path, pattern); //坑爹啊！！！
         if (files.Length == 0) return;
 
         for (int i = 0; i < files.Length; i++) {
@@ -165,6 +217,9 @@ public class Packager {
     {
         string resPath = AppDataPath + "/" + AppConst.AssetDir + "/";
         if (!Directory.Exists(resPath)) Directory.CreateDirectory(resPath);
+        AddBuildMapOp("Assets/CityGame/Resources/View");
+
+        return;
 
         AddBuildMap("CreateAvatar" + AppConst.BundleExt, "CreateAvatarPanel.prefab", "Assets/CityGame/Resources/View");
         AddBuildMap("Login" + AppConst.BundleExt, "LoginPanel.prefab", "Assets/CityGame/Resources/View");

@@ -11,7 +11,7 @@ function AddProductionLineCtrl:initialize()
 end
 
 function AddProductionLineCtrl:bundleName()
-    return "AddProductionLine"
+    return "AddProductionLinePanel"
 end
 
 function AddProductionLineCtrl:OnCreate(obj)

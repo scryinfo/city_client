@@ -8,7 +8,7 @@ function DETAILSBoxCtrl:initialize()
 end
 
 function DETAILSBoxCtrl:bundleName()
-    return "DETAILSBox";
+    return "DETAILSBoxPanel";
 end
 
 function DETAILSBoxCtrl:OnCreate(obj)

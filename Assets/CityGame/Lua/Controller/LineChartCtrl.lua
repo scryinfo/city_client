@@ -13,7 +13,7 @@ function LineChartCtrl:initialize()
 end
 
 function LineChartCtrl:bundleName()
-    return "LineChart"
+    return "LineChartPanel"
 end
 
 function LineChartCtrl:Awake(go)

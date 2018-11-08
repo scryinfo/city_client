@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO;
 using LuaInterface;
 using City;
 using System.Text;
@@ -195,8 +196,21 @@ namespace LuaFramework {
         /// </summary>
         void InitLuaBundle() {
             if (loader.beZip) {
+                //自动加载
+                string assertDir = CityLuaUtil.getLuaBundelPath();
+                Debug.Log("InitLuaBundle: "+ assertDir);
+                string srcDir = assertDir + "/lua";
+                int pathLen = assertDir.Length;
+                string[] files = Directory.GetFiles(srcDir, "*.unity3d", SearchOption.AllDirectories);
+                Debug.Log("Directory.GetFiles: from " + srcDir+ ", files count = "+ files.Length.ToString());
+                for (int i = 0; i < files.Length; ++i) {
+
+                    string file = files[i].Remove(0, pathLen+1);
+                    Debug.Log("loader.AddBundle " + file);
+                    loader.AddBundle(file);
+                }
                 //手动添加 client\Assets\StreamingAssets\lua 中所有.unity3d文件
-                loader.AddBundle("lua/lua.unity3d");
+                /*loader.AddBundle("lua/lua.unity3d");
                 loader.AddBundle("lua/lua_math.unity3d");
                 loader.AddBundle("lua/lua_system.unity3d");
                 loader.AddBundle("lua/lua_system_reflection.unity3d");
@@ -227,8 +241,7 @@ namespace LuaFramework {
                 loader.AddBundle("lua/lua_protobuf.unity3d");
                 loader.AddBundle("lua/lua_3rd_cjson.unity3d");
                 loader.AddBundle("lua/lua_3rd_luabitop.unity3d");
-                loader.AddBundle("lua/lua_cjson.unity3d");
-
+                loader.AddBundle("lua/lua_cjson.unity3d");*/
 
             }
         }

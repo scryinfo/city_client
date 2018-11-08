@@ -8,7 +8,7 @@ local RoleManagerBehaviour
 local gameObject
 
 function  RoleManagerCtrl:bundleName()
-    return "RoleManager"
+    return "RoleManagerPanel"
 end
 
 function RoleManagerCtrl:initialize()

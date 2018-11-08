@@ -13,7 +13,7 @@ function HouseCtrl:initialize()
 end
 
 function HouseCtrl:bundleName()
-    return "House"
+    return "HousePanel"
 end
 
 function HouseCtrl:OnCreate(obj)

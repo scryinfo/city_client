@@ -31,7 +31,8 @@ end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
     ct.log("rodger_w8_GameMainInterface","[test_m_bagCapacity]  测试完毕",bagCapacity)
-     Event.Brocast("c_BagCapacity",bagCapacity)
+    --ct.OpenCtrl('CenterWareHouseCtrl',bagCapacity)
+     --Event.Brocast("c_BagCapacity",bagCapacity)
 end
 
 --仓库扩容发包

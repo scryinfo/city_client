@@ -17,7 +17,7 @@ function WarehouseCtrl:initialize()
 end
 
 function WarehouseCtrl:bundleName()
-    return "Warehouse";
+    return "WarehousePanel";
 end
 
 function WarehouseCtrl:OnCreate(obj)

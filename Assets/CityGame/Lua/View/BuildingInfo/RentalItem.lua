@@ -28,7 +28,7 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
         end
         --打开更改租金界面
         local changeRentData = {currentRental = 125.0046, suggestRental = 99.9875, effectiveDate = "2018/10/31 08:00:00"}
-        CityGlobal.OpenCtrl("HouseChangeRentCtrl", changeRentData)
+        ct.OpenCtrl("HouseChangeRentCtrl", changeRentData)
     end, self)
 
     Event.AddListener("c_onRentalValueChange", self.updateInfo, self)

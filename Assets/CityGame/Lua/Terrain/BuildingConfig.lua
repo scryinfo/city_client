@@ -53,13 +53,13 @@ BuildingConfig ={
         buildSize = 4,
         LuaRoute  = "Terrain/ArchitectureView"
     },
-    [10] = {
+    [1100001] = {
         buildName = "原料厂",
         prefabRoute = "Build/MaterialBuilding_1x1",
         buildSize = 1,
         LuaRoute  = "Terrain/ArchitectureView"
     },
-    [11] = {
+    [1100002] = {
         buildName = "原料厂",
         prefabRoute = "Build/MaterialBuilding_2x2",
         buildSize = 2,

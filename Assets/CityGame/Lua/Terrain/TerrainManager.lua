@@ -18,9 +18,14 @@ local CameraCollectionID = -1
 local function CreateSuccess(go,table)
     local buildId = table[1]
     local Vec3 = table[2]
-    CityLuaUtil.AddLuaComponent(go,BuildingConfig[buildId].LuaRoute)
-    go.transform.position = Vec3
-    ArchitectureStack[buildId] = CityLuaUtil.AddLuaComponent(go,BuildingConfig[buildId].LuaRoute)
+    go.transform.localPosition = Vec3
+    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
+    if TerrainManager.TerrainRoot == nil  then
+        TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("TerrainPlane").transform
+    end
+    go.transform:SetParent(TerrainManager.TerrainRoot)
+
+    ArchitectureStack[buildId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
 end
 
 --接受基础地块数据
@@ -29,7 +34,7 @@ local function ReceiveArchitectureDatas(datas)
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
         if isCreate then
-            buildMgr:CreateBuild(BuildingConfig[value.buildId].prefabRoute,CreateSuccess,{value.buildId,TerrainManager.BlockIDTurnPosition(value.id)})
+            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildId]["prefabRoute"],CreateSuccess,{value.buildId, Vector3.New(value.x,0,value.y)})
         end
     end
 end
@@ -91,21 +96,7 @@ UnitTest.TestBlockStart()
 UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function ()
     ct.log("Allen_w9_SendPosToServer","[test_TerrainManager_self] ...............")
     Event.AddListener("c_SendPosToServer_self", function (obj)
-        local tempDatas = {
-            [1] = {
-                id = 2,
-                buildId =2
-            },
-            [2] = {
-                id = 3007,
-                buildId =4
-            },
-            [3] = {
-                id = 8004,
-                buildId = 3
-            }
-        }
-        ReceiveArchitectureDatas(tempDatas)
+        ReceiveArchitectureDatas(tempBuilds)
     end)
 end)
 

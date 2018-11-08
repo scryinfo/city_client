@@ -157,6 +157,9 @@
 				{
 					// 更新写位置
 					Interlocked.Add(ref _wpos, bytesRead);
+                    if (bytesRead >= NetworkInterface.TCP_PACKET_MAX) {
+                        Dbg.ERROR_MSG(string.Format("[PacketReceiver::_asyncReceive]: bytesRead >= NetworkInterface.TCP_PACKET_MAX, TCP_PACKET_MAX = '{0}'", NetworkInterface.TCP_PACKET_MAX));
+                    }
 				}
 				else
 				{

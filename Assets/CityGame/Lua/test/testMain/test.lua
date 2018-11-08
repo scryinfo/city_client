@@ -378,6 +378,19 @@ UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     ct.log("abel_w11_uuid","[test_w11_uuid] msg: "..msg)
 end)
 
+UnitTest.Exec("abel_w11_UUID_FromeServer", "test_UUID_FromeServer",  function ()
+    ct.log("abel_w11_UUID_FromeServer","[test_UUID_FromeServer]  测试开始")
+    Event.AddListener("t_UUID_FromeServer", function (serinofs)
+        --服务器发过来的bytes测试
+        local id = serinofs[1].briefInfo[1].id
+        local pstr1 = CityLuaUtil.ByteArrayToString(id)
+        local pbyte1 = CityLuaUtil.StringToByteArray(pstr1)
+        local pstr2 = CityLuaUtil.ByteArrayToString(pbyte1)
+        --服务器发过来的bytes测试
+    end)
+end)
+
+
 UnitTest.Exec("abel_w4_proto_Role", "test_w4_proto_Role",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","roleLogin")

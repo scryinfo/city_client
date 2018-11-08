@@ -10,10 +10,7 @@ TestGroup.active_TestGroup("Allen_w9") --激活测试组
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")
 TestGroup.active_TestGroup("abel_w11_uuid")
-<<<<<<< HEAD
-=======
-
->>>>>>> 1c1dd5ddbcd71f4e0935837dfa33d43b3caaca93
+TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
 --TestGroup.active_TestGroup("fisher_w11_ProcessingCtrl")
 --TestGroup.active_TestGroup("fisher_w11_OpenMaterialCtrl")
 --TestGroup.active_TestGroup("abel_w11_Comments")

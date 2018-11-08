@@ -29,9 +29,9 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 40, 100)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 74, 100)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 17, 100)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 40, 100)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 74, 100)
     end
 end
 

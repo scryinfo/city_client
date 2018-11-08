@@ -7,7 +7,8 @@ function WagesAdjustBoxCtrl:initialize()
 end
 
 function WagesAdjustBoxCtrl:bundleName()
-    return "WagesAdjustBox";end
+    return "WagesAdjustBoxPanel"
+end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
@@ -92,8 +93,10 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
     end
 
     Event.Brocast("m_ReqHouseSetSalary", ins.m_data.buildingId, inputValue)
-    ins:Hide()
+    ins:_onClickClose()
 end
-function WagesAdjustBoxCtrl:_onClickClose(ins)
-    ins:Hide()
+function WagesAdjustBoxCtrl:_onClickClose()
+    self:Hide()
+    self.luaBehaviour:RemoveClick(self.confirmBtn.gameObject, self._onClickConfim, self)
+    self.luaBehaviour:RemoveClick(self.closeBtn.gameObject, self._onClickClose, self)
 end

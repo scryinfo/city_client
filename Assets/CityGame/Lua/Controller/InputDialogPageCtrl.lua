@@ -23,13 +23,17 @@ function InputDialogPageCtrl:Awake(go)
     self:_getComponent(go)
     self:_initData()
 
-    local dialog = self.gameObject:GetComponent('LuaBehaviour')
-    dialog:AddClick(self.closeBtn, self._onClickClose, self)
-    dialog:AddClick(self.confimBtn, self._onClickConfim, self)
+    self.luaBehaviour = go:GetComponent('LuaBehaviour')
 end
 
 function InputDialogPageCtrl:Refresh()
     self:_initData()
+
+    self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
+    self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
+    self.rentInput.onValueChanged:AddListener(function ()
+        ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
+    end)
 end
 
 function InputDialogPageCtrl:Close()
@@ -41,9 +45,6 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField")
-    self.rentInput.onValueChanged:AddListener(function ()
-        ct.log("cycle_w12_hosueServer", "----")
-    end)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot")
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text")
@@ -82,9 +83,9 @@ function InputDialogPageCtrl:_changeNameCallBack(stream)
     self.errorTipText.text = "With sensitive words,Try again"  --根据不同情况选择不同提示语
 end
 ---点击确认按钮
-function InputDialogPageCtrl:_onClickConfim(table)
+function InputDialogPageCtrl:_onClickConfim(ins)
     ---在这的self 是传进来的btn组件，table才是实例
-    local inputValue = table.rentInput.text
+    local inputValue = ins.rentInput.text
     if inputValue == "" or #inputValue < 3 then
         return
     end
@@ -101,13 +102,15 @@ function InputDialogPageCtrl:_onClickConfim(table)
     --end
 
     ---测试
-    if table.m_data.btnCallBack then
-        table.m_data.btnCallBack(inputValue)
+    if ins.m_data.btnCallBack then
+        ins.m_data.btnCallBack(inputValue)
     end
-    table:Hide()
+    ins:_onClickClose()
 end
 ---点击关闭按钮
-function InputDialogPageCtrl:_onClickClose(table)
+function InputDialogPageCtrl:_onClickClose(ins)
     ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
-    table:Hide()
+    ins:Hide()
+    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
 end

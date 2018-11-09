@@ -21,7 +21,7 @@ local function CreateSuccess(go,table)
     go.transform.localPosition = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
-        TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("TerrainPlane").transform
+        TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
 

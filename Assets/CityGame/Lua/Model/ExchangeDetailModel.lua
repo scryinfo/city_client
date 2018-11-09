@@ -19,10 +19,10 @@ end
 --启动事件--
 function ExchangeDetailModel.OnCreate()
     --网络回调注册 网络回调用n开头
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeGetItemDealHistory"), ExchangeDetailModel.n_OnReceiveExchangeLineInfo)
+
 
     --本地的回调注册
-    Event.AddListener("m_ReqExchangeLineInfo", this.m_ReqExchangeLineInfo)
+
 end
 
 --关闭事件--
@@ -31,16 +31,5 @@ function ExchangeDetailModel.Close()
 end
 
 --- 客户端请求 ---
---请求折线数据
-function ExchangeDetailModel.m_ReqExchangeLineInfo(itemId)
-    local msgId = pbl.enum("gscode.OpCode", "exchangeGetItemDealHistory")
-    local lMsg = {num = itemId}
-    local pMsg = assert(pbl.encode("gs.Num", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-end
+
 ---网络回调
---收到行情信息
-function ExchangeDetailModel.n_OnReceiveExchangeLineInfo(stream)
-    local lineData = assert(pbl.decode("gs.ItemDealHistory", stream), "ExchangeDetailModel.n_OnReceiveExchangeItemList: stream == nil")
-    Event.Brocast("c_onReceiveLineInfo", lineData)
-end

@@ -47,9 +47,9 @@ function RecordEntrustmentItem:_initData()
         self.currentTextColor = RecordEntrustmentItem.static.BUY_RED
         self.currentBarColor = RecordEntrustmentItem.static.BAR_RED
     end
-    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.dealedAmount)
+    self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.totalAmount)
     self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.price, 30, 24))
-    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.totalAmount, 30, 24))
+    self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.totalAmount * data.price, 30, 24))
     self.currentText.text = "E"..data.dealedPrice
     self.sliderImg.color = getColorByVector3(self.currentBarColor)
     self:_setSliderValue(data.dealedAmount, data.totalAmount)

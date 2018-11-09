@@ -16,6 +16,7 @@ public class StartUpCommand : ControllerCommand {
         AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
         AppFacade.Instance.AddManager<PanelManager>(ManagerName.Panel);
         AppFacade.Instance.AddManager<SoundManager>(ManagerName.Sound);
+        AppFacade.Instance.AddManager<BuildManager>(ManagerName.Build);
         AppFacade.Instance.AddManager<TimerManager>(ManagerName.Timer);
         AppFacade.Instance.AddManager<ResourceManager>(ManagerName.Resource);
         AppFacade.Instance.AddManager<ThreadManager>(ManagerName.Thread);

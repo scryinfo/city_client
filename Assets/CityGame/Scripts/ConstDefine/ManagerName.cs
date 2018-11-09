@@ -12,5 +12,6 @@ namespace LuaFramework {
         public const string Resource = "ResourceManager";
         public const string Thread = "ThreadManager";
         public const string ObjectPool = "ObjectPoolManager";
+        public const string Build = "BuildManager";
     }
 }

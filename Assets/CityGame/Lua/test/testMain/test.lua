@@ -21,6 +21,7 @@ require("test/metatable")
 require('Controller/LineChartCtrl')
 
 local pbl = pbl
+local buffer = pbl_buffer
 local serpent = require("Framework/pbl/serpent")
 local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
@@ -354,7 +355,46 @@ UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     local pbyte1 = CityLuaUtil.StringToByteArray(pstr)
     local pstr1 = CityLuaUtil.ByteArrayToString(pbyte1)
     ct.log("abel_w11_uuid","uuid() = ", pstr1)
+
+    local check_load = function(chunk, name)
+        local pbdata = protoc.new():compile(chunk, name)
+        local ret, offset = pbl.load(pbdata)
+        if not ret then
+            error("load error at "..offset..
+                    "\nproto: "..chunk..
+                    "\ndata: "..buffer(pbdata):tohex())
+        end
+    end
+
+    check_load [[
+    package gs;
+    message TestUUID {
+    required bytes id = 1;
+    required string name = 2;
+    } ]]
+    local lMsg = { id = pstr , name = "hohoh"}
+    local  pMsg = assert(pbl.encode("gs.TestUUID", lMsg))
+    local msg = assert(pbl.decode("gs.TestUUID",pMsg), "pbl.decode gs.TestUUID failed")
+    ct.log("abel_w11_uuid","[test_w11_uuid] msg: "..msg)
 end)
+
+UnitTest.Exec("abel_w11_UUID_FromeServer", "test_UUID_FromeServer",  function ()
+    ct.log("abel_w11_UUID_FromeServer","[test_UUID_FromeServer]  测试开始")
+    Event.AddListener("t_UUID_FromeServer", function (serinofs)
+        for i = 1, #serinofs do
+            --服务器发过来的bytes测试
+            if serinofs[i].briefInfo ~= nil then
+                local id = serinofs[i].briefInfo[1].id
+                local pstr1 = CityLuaUtil.ByteArrayToString(id)
+                local pbyte1 = CityLuaUtil.StringToByteArray(pstr1)
+                local pstr2 = CityLuaUtil.ByteArrayToString(pbyte1)
+                local ttt= 0
+            end
+            --服务器发过来的bytes测试
+        end
+    end)
+end)
+
 
 UnitTest.Exec("abel_w4_proto_Role", "test_w4_proto_Role",  function ()
     ----1、 获取协议id

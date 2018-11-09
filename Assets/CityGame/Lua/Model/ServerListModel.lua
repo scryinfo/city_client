@@ -48,7 +48,9 @@ function ServerListModel.n_AllGameServerInfo( stream )
         ct.OpenCtrl("ServerListCtrl", serverListName)
        -- ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
         --ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
-
+        --服务器发过来的bytes测试
+        UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",this.serinofs)
+        --服务器发过来的bytes测试
         return
     end
 

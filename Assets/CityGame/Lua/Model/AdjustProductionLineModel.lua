@@ -28,18 +28,20 @@ function AdjustProductionLineModel.registerAsNetMsg()
 end
 --客户端请求--
 
---确定生产
+--添加生产线
 function AdjustProductionLineModel.m_OnDetermineBtn(number,steffNumber,itemId)
     local msgId = pbl.enum("gscode.OpCode", "addLine")
-    local lMsg = {id = PlayerTempModel.roleData.id, itemId = itemId, targetNum = number, workerNum = steffNumber}
+    local id = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    local lMsg = {id = PlayerTempModel.storeList[1].buildingld, itemId = itemId, targetNum = number, workerNum = steffNumber}
+    --local lMsg = {id = PlayerTempModel.roleData.id, itemId = itemId, targetNum = number, workerNum = steffNumber}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
 --服务器回调--
 
---确定生产
+--添加生产线
 function AdjustProductionLineModel.n_GsDetermineBtn(stream)
-    local msgAllGameServerInfo = assert(pbl.decode("gs.AddLine", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
+    local msgAllGameServerInfo = assert(pbl.decode("gs.Line", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
 
 end

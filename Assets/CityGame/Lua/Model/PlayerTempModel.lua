@@ -28,7 +28,7 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.m_ReqBuildApartment(1100003)
+        PlayerTempModel.tempTestAddGroung(600,600,100,100)
     end
 end
 
@@ -52,6 +52,7 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     PlayerTempModel.roleData = roleData
     PlayerTempModel.storeList = this._getStore(roleData)
     PlayerTempModel.collectList = roleData.exchangeCollectedItem
+
     if not PlayerTempModel.collectList then
         PlayerTempModel.collectList = {}
     end
@@ -63,6 +64,13 @@ function PlayerTempModel.n_OnReceiveUnitCreate(stream)
         PlayerTempModel.buildingsInfo = {}
     end
     PlayerTempModel.buildingsInfo[#PlayerTempModel.buildingsInfo + 1] = buildingInfo
+end
+--add ground
+function PlayerTempModel.tempTestAddGroung(x1,y1,x2,y2)
+    local msgId = pbl.enum("gscode.OpCode", "cheat")
+    local lMsg = {str = string.format("addground %s %s %s %s", x1, y1, x2, y2)}
+    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --add building
 function PlayerTempModel.m_ReqBuildApartment(id)

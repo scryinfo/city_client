@@ -32,11 +32,21 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     self.WarehouseModelData = {}
     --配置表数据模拟
     local configTable = {}
-    for i = 1, 5 do
-        local warehouseDataInfo = {}
-        warehouseDataInfo.name = Material[i].name
-        warehouseDataInfo.number = math.random(i*5)
-        configTable[i] = warehouseDataInfo
+    for i,v in pairs(PlayerTempModel.storeList[1].inHand) do
+        --local warehouseDataInfo = {}
+        --warehouseDataInfo.name = Material[i].name
+        --warehouseDataInfo.number = math.random(i*5)
+        --configTable[i] = warehouseDataInfo
+
+        --uiTab.name = Material[i].name
+        --uiTab.num = PlayerTempModel.storeList[1].inHand[i].num
+        --uiTab.itemId = PlayerTempModel.storeList[1].inHand[i].id
+
+        local uiTab = {}
+        uiTab.name = Material[i].name
+        uiTab.num = v.num
+        uiTab.itemId = v.id
+        configTable[i] = uiTab
 
         --预制的信息
         local prefabData = {}
@@ -162,12 +172,12 @@ function ShelfGoodsMgr:_deleteShelfItem(id)
 end
 
 --仓库选中物品（右侧transport）
-function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour)
+function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
     prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
-    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id);
+    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
         self.transportPanelItem = {}

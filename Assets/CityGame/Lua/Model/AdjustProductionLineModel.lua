@@ -31,8 +31,7 @@ end
 --添加生产线
 function AdjustProductionLineModel.m_OnDetermineBtn(number,steffNumber,itemId)
     local msgId = pbl.enum("gscode.OpCode", "addLine")
-    local id = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    local lMsg = {id = PlayerTempModel.storeList[1].buildingld, itemId = itemId, targetNum = number, workerNum = steffNumber}
+    local lMsg = {id = PlayerTempModel.storeList[1].buildingId, itemId = itemId, targetNum = number, workerNum = steffNumber}
     --local lMsg = {id = PlayerTempModel.roleData.id, itemId = itemId, targetNum = number, workerNum = steffNumber}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)

@@ -72,7 +72,7 @@ end
 function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
-function WarehouseCtrl:Refresh()
+function CenterWareHouseCtrl:Refresh()
     ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
     CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
 end

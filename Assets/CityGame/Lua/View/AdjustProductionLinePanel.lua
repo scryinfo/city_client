@@ -18,8 +18,9 @@ function AdjustProductionLinePanel.InitPanel()
     this.determineBtn = transform:Find("Button/determineBtn");
     this.addBtn = transform:Find("ScrollView/Viewport/Content/productionLineAdd");
     --Slider --Text
-    this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider").gameObject;
-    this.numberText = transform:Find("bg/Topbg01/numberText").gameObject;
+    this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider"):GetComponent("Slider");
+    this.numberText = transform:Find("bg/Topbg01/numberText"):GetComponent("Text");
+
     --idle
     this.idleNumberText = transform:Find("bg/Topbg01/Staffbg/numberText").gameObject;
     --Scroll View

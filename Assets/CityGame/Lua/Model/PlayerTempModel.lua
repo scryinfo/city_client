@@ -28,7 +28,7 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(600,600,100,100)
+        PlayerTempModel.tempTestAddGroung(0,0,105,105)
     end
 end
 

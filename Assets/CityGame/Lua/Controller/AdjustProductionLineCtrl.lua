@@ -27,7 +27,12 @@ function AdjustProductionLineCtrl:Awake(go)
     self.gameObject = go
 end
 
-function AdjustProductionLineCtrl:Refesh()
+function AdjustProductionLineCtrl:Refresh()
+    local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    AdjustProductionLinePanel.capacity_Slider.value = 0;
+    AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
+    AdjustProductionLinePanel.numberText.text = AdjustProductionLinePanel.capacity_Slider.value.."/<color=black>"..AdjustProductionLinePanel.capacity_Slider.maxValue.."</color>"
+    --AdjustProductionLinePanel.numberText.text = AdjustProductionLinePanel.capacity_Slider.maxValue
 
 end
 
@@ -42,13 +47,17 @@ end
 --确定生产
 function AdjustProductionLineCtrl:OnClick_determineBtn()
     local number,steffNumber,itemid = ShelfGoodsMgr:testSend()
-    if number == 0 then
+    if tonumber(number) == 0 then
         ct.log("system","数量不能为0")
         return;
-    elseif steffNumber == 0 then
+    end
+    if tonumber(steffNumber) == 0 then
         ct.log("system","人数不能为0")
         return;
-    else
-        Event.Brocast("m_OnDetermineBtn",number,steffNumber,itemid);
     end
+    if tonumber(steffNumber) < 5 then
+        ct.log("system","人数不足")
+        return;
+    end
+    Event.Brocast("m_OnDetermineBtn",number,steffNumber,itemid);
 end

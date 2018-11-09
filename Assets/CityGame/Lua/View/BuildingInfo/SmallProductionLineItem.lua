@@ -38,6 +38,8 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 end
 --初始化UI信息
 function SmallProductionLineItem:RefreshUiInfo()
+    local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+
     self.nameText.text = self.goodsDataInfo.name
     self.itemId = self.goodsDataInfo.itemId
     self.timeText.text = "00:00:00"
@@ -48,7 +50,7 @@ function SmallProductionLineItem:RefreshUiInfo()
     self.pNumberScrollbar.value = 0;
     self.productionNumber.text = 0;
     self.staffNumberText.text = 0;
-    self.sNumberScrollbar.maxValue = 100;
+    self.sNumberScrollbar.maxValue = PlayerBuildingBaseData[itemId].lineMaxWorkerNum;
     self.sNumberScrollbar.value = 0;
 end
 

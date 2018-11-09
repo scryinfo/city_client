@@ -39,7 +39,7 @@ end
 --初始化界面
 function RecordEntrustmentItem:_initData()
     local data = self.data
-    self.nameText.text = data.name
+    self.nameText.text = ExchangeCtrl.quoteConfigDatas[data.itemId].name
     if data.sell then
         self.currentTextColor = RecordEntrustmentItem.static.SELL_GREEN
         self.currentBarColor = RecordEntrustmentItem.static.BAR_GREEN

@@ -28,7 +28,7 @@ end
 --初始化界面
 function RecordTransactionItem:_initData()
     local data = self.data
-    self.nameText.text = Material[data.itemId].name
+    self.nameText.text = ExchangeCtrl.quoteConfigDatas[data.itemId].name
     if data.isSell then
         self.currentTextColor = RecordTransactionItem.static.SELL_GREEN
         self.currentBarColor = RecordTransactionItem.static.BAR_GREEN

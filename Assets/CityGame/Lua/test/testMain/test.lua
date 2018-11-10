@@ -350,6 +350,13 @@ UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  functi
 
 end)
 
+UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function ()
+    local HouseModel = CtrlManager.GetModel(ModelNames.House);
+    if HouseModel ~= nil then
+        HouseModel:Awake()
+    end
+end)
+
 UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     local pstr ='8a20a7b8c1644a59b79e030c81603ed9'
 

@@ -4,15 +4,12 @@
 --- DateTime: 2018/9/21 10:25
 ---
 -----
-
 local transform
-
 HousePanel = {};
 local this = HousePanel;
 
 function HousePanel.Awake(obj)
     transform = obj.transform;
-
     this.InitPanel();
 end
 
@@ -25,14 +22,4 @@ function HousePanel.InitPanel()
     this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
     this.backBtn = transform:Find("topRoot/backBtn");
     this.infoBtn = transform:Find("topRoot/infoBtn");
-
 end
-
---数据初始化
-function HousePanel.InitDate(houseData)
-    this.houseData = houseData
-
-
-end
-
-

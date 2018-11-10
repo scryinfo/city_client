@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: 5f97c31519cd0d046878950622832189
+  productGUID: 936eea9fc6881404586d957b6dbac297
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
@@ -551,7 +551,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG
+    1: ASYNC_MODE;LUA_BUNDEL;RES_BUNDEL;LUA_LOG
     7: ASYNC_MODE;LUA_BUNDEL;RES_BUNDEL;LUA_LOG
   platformArchitecture: {}
   scriptingBackend: {}

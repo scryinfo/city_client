@@ -62,10 +62,7 @@ end
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
     ct.log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
-    local info = {}
-    --UIPage:ShowPage(HouseCtrl, info)
-    ct.OpenCtrl('HouseCtrl',info)
-    --Event.Brocast("c_OnOppenHouse");
+    ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData)
 end
 
 --原料厂--
@@ -93,7 +90,7 @@ end
 
 --中心仓库
 function GameMainInterfaceCtrl:OncenterWareHouse()
-    ct.OpenCtrl("CenterWareHouseCtrl")
+    Event.Brocast("m_opCenterWareHouse")
 end
 
 

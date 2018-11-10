@@ -20,18 +20,16 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
     self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text")  -- 租金显示的值
 
     --具体字体大小是否从数据库读取？
-    self.rentalValueText.text = self:_getPriceString(rentalData.rent, 30, 24).."/D"
+    self.rentalValueText.text = getPriceString(rentalData.rent, 30, 24).."/D"
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        --打开更改租金界面
-        local changeRentData = {currentRental = 125.0046, suggestRental = 99.9875, effectiveDate = "2018/10/31 08:00:00"}
-        ct.OpenCtrl("HouseChangeRentCtrl", changeRentData)
+        ct.OpenCtrl("HouseChangeRentCtrl", self.rentalData)
     end, self)
 
-    Event.AddListener("c_onRentalValueChange", self.updateInfo, self)
+    Event.AddListener("c_onReceiveHouseRentChange", self.updateInfo, self)
 end
 
 --获取是第几个点击了
@@ -43,7 +41,7 @@ end
 function RentalItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
-    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 30, 24)
+    self.rentalValueText.text = getPriceString(self.rentalData.rent, 30, 24).."/D"
 
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
@@ -63,22 +61,13 @@ end
 
 --刷新数据
 function RentalItem:updateInfo(data)
-    self.rentalData = data
-
-    if not self.viewRect.gameObject.activeSelf then
+    if self.rentalData.buildingId ~= data.id then
         return
     end
 
-    self.rentalValueText = self:_getPriceString(self.rentalData.rent, 14, 10)
+    self.rentalData.rent = data.num
+    if not self.viewRect.gameObject.activeSelf then
+        return
+    end
+    self.rentalValueText.text = getPriceString(self.rentalData.rent, 30, 24).."/D"
 end
-
---获取价格显示文本 --整数和小数部分大小不同
-function RentalItem:_getPriceString(str, intSize, floatSize)
-    local index = string.find(str, '%.')
-    local intString = string.sub(str, 1, index)
-    local floatString = string.sub(str, index + 1)
-    local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
-
-    return finalStr
-end
-

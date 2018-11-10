@@ -100,6 +100,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
+	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+
 	return this;
 end
 

@@ -9,6 +9,7 @@ public class Base : MonoBehaviour {
     private ResourceManager m_ResMgr;
     private SoundManager m_SoundMgr;
     private BuildManager m_BuildMgr;
+    private RayManager m_RayMgr;
     private TimerManager m_TimerMgr;
     private ThreadManager m_ThreadMgr;
     private ObjectPoolManager m_ObjectPoolMgr;
@@ -78,6 +79,18 @@ public class Base : MonoBehaviour {
                 m_BuildMgr = facade.GetManager<BuildManager>(ManagerName.Build);
             }
             return m_BuildMgr;
+        }
+    }
+
+    protected RayManager RayManager
+    {
+        get
+        {
+            if (m_RayMgr == null)
+            {
+                m_RayMgr = facade.GetManager<RayManager>(ManagerName.Ray);
+            }
+            return m_RayMgr;
         }
     }
 

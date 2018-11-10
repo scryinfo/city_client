@@ -59,7 +59,7 @@ end
 
 --启动事件--
 function BuildingInfoModel.OnCreate()
-    UpdateBeat:Add(this.Update, this);
+    --UpdateBeat:Add(this.Update, this);
     --网络回调注册
     --CityEngineLua.Message:registerNetMsg(pb.gsCode.login,BuildingInfoModel.TransferSuccess);
 end

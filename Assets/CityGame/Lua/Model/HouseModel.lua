@@ -24,10 +24,12 @@ end
 --启动事件--
 function HouseModel.OnCreate()
     --网络回调注册
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailApartment"), HouseModel.n_OnReceiveHouseDetailInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","setRent"), HouseModel.n_OnReceiveHouseRentChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","setSalary"), HouseModel.n_OnReceiveHouseSalaryChange)
 
     --本地的回调注册
+    Event.AddListener("m_ReqHouseDetailInfo", this.m_ReqHouseDetailInfo)
     Event.AddListener("m_ReqHouseChangeRent", this.m_ReqHouseChangeRent)
     Event.AddListener("m_ReqHouseSetSalary", this.m_ReqHouseSetSalary)
 end
@@ -38,6 +40,13 @@ function HouseModel.Close()
 end
 
 --- 客户端请求 ---
+--获取建筑详情
+function HouseModel.m_ReqHouseDetailInfo(buildingId)
+    local msgId = pbl.enum("gscode.OpCode", "detailApartment")
+    local lMsg = { id = buildingId}
+    local pMsg = assert(pbl.encode("gs.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
 --改变房租
 function HouseModel.m_ReqHouseChangeRent(id, price)
     local msgId = pbl.enum("gscode.OpCode", "setRent")
@@ -54,15 +63,20 @@ function HouseModel.m_ReqHouseSetSalary(id, price)
 end
 
 --- 回调 ---
+--住宅详情
+function HouseModel.n_OnReceiveHouseDetailInfo(stream)
+    local houseDetailInfo = assert(pbl.decode("gs.Apartment", stream), "HouseModel.n_OnReceiveHouseDetailInfo: stream == nil")
+    Event.Brocast("c_onReceiveHouseDetailInfo", houseDetailInfo)
+end
 --房租改变
 function HouseModel.n_OnReceiveHouseRentChange(stream)
     local rentData = assert(pbl.decode("gs.ByteNum", stream), "HouseModel.n_OnReceiveRentChange: stream == nil")
-    Event.Brocast("c_onReceiveRentChange", rentData)
+    Event.Brocast("c_onReceiveHouseRentChange", rentData)
 end
 --员工工资改变
 function HouseModel.n_OnReceiveHouseSalaryChange(stream)
-    local salaryData = assert(pbl.decode("gs.ByteNum", stream), "HouseModel.n_OnReceiveRentChange: stream == nil")
-    Event.Brocast("c_onReceiveRentChange", salaryData)
+    local salaryData = assert(pbl.decode("gs.ByteNum", stream), "HouseModel.n_OnReceiveHouseSalaryChange: stream == nil")
+    Event.Brocast("c_onReceiveHouseSalaryChange", salaryData)
 end
 
 

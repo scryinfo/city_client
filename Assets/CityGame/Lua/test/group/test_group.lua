@@ -11,7 +11,10 @@ TestGroup.active_TestGroup("Allen_w9") --激活测试组
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")
 TestGroup.active_TestGroup("abel_w11_uuid")
 TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
-
+--TestGroup.active_TestGroup("cycle_w11_exchangeModel")
+--TestGroup.active_TestGroup("cycle_w12_hosueServer")
+--TestGroup.active_TestGroup("abel_w11_uuid")
+--TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
 --TestGroup.active_TestGroup("fisher_w11_ProcessingCtrl")
 --TestGroup.active_TestGroup("fisher_w11_OpenMaterialCtrl")
 --TestGroup.active_TestGroup("abel_w11_Comments")
@@ -52,5 +55,5 @@ TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
 --TestGroup.active_TestGroup("abel_w9_AddComponent_MonoBehaviour")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
---TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
+TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组

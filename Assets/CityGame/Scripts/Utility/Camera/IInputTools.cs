@@ -10,6 +10,7 @@ using UnityEngine;
 public interface IInputTools
 {
     bool GetIsDragging { get; }
+    bool GetIsPoint { get; }
     bool GetIsZoom { get; }
     bool AnyPress { get; }
 
@@ -26,6 +27,7 @@ public class WindowsInput : IInputTools
     private Vector2 m_moveV2 = Vector2.zero;  //移动
     private float m_zoomValue = 0.0f;  //缩放
     private Vector3 m_oldMousePos;  //鼠标记录的位置
+    private Vector3 m_startMousePos;  //鼠标记录的位置
 
     #region 属性
 
@@ -34,6 +36,14 @@ public class WindowsInput : IInputTools
         get
         {
             return Input.GetMouseButton(0);
+        }
+    }
+
+    public bool GetIsPoint
+    {
+        get
+        {
+            return Input.GetMouseButtonUp(0) && m_startMousePos == Input.mousePosition; 
         }
     }
 
@@ -82,6 +92,10 @@ public class WindowsInput : IInputTools
 
     public void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            m_startMousePos = Input.mousePosition;
+        }
         m_moveV2 = Input.mousePosition - m_oldMousePos;
         m_oldMousePos = Input.mousePosition;
         m_zoomValue = Input.GetAxis("Mouse ScrollWheel");
@@ -102,6 +116,13 @@ public class MobileInput : IInputTools
         get
         {
             return Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved;
+        }
+    }
+    public bool GetIsPoint
+    {
+        get
+        {
+            return Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Stationary;
         }
     }
 

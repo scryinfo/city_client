@@ -68,6 +68,9 @@ ModelNames = {
 	Municipal="MunicipalModel",--市镇设施
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
+	tempTransport = "tempTransportModel",   --临时运输
+
+
 }
 
 SYSEVENT =
@@ -194,6 +197,7 @@ resMgr = LuaHelper.GetResManager();
 panelMgr = LuaHelper.GetPanelManager();
 soundMgr = LuaHelper.GetSoundManager();
 buildMgr = LuaHelper.GetBuildManager();
+rayMgr = LuaHelper.GetRayManager();
 
 WWW = UnityEngine.WWW;
 GameObject = UnityEngine.GameObject;

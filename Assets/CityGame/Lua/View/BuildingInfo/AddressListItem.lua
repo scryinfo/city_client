@@ -21,11 +21,9 @@ function AddressListItem:initialize(DataInfo,prefab,inluabehaviour,mgr)
     self.name = "Addy-polly"
 
     self.box:SetActive(false);
-    self._luabehaviour:AddClick(self.bg,self.OnBG,self)
+    self._luabehaviour:AddClick(self.bg,self.OnAddressListBG,self)
 end
 
-function AddressListItem:OnBG(go)
-    go.manager:SelectBox(go)
-    go.manager:TransportConfirm(true)
-    CenterWareHousePanel.nameText.text = go.name;
+function AddressListItem:OnAddressListBG(go)
+    Event.Brocast("c_OnAddressListBG",go)
 end

@@ -50,8 +50,8 @@ namespace LuaFramework
                 float numX = Mathf.Round((distX + (remainderX - 1) * (signX * _gridSize / 2)) / _gridSize);
                 float numZ = Mathf.Round((distZ + (remainderZ - 1) * (signZ * _gridSize / 2)) / _gridSize);
                 //计算出在坐标轴中的偏移量
-                float offsetX = -(remainderX - 1) * signX * _gridSize / 2;
-                float offsetZ = -(remainderZ - 1) * signZ * _gridSize / 2;
+                float offsetX = -(remainderX - 1) * signX * _gridSize;
+                float offsetZ = -(remainderZ - 1) * signZ * _gridSize;
                 //调整坐标系，
                 Vector3 p = TerrainTrans.TransformDirection(new Vector3(numX, 0, numZ) * _gridSize);
                 p += TerrainTrans.TransformDirection(new Vector3(offsetX, 0, offsetZ));

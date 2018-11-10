@@ -4,6 +4,15 @@ local BuildDataStack = {}     --建筑信息堆栈
 local PersonDataStack = {}    --个人信息堆栈
 
 
+--查询基础地形数据
+--BlockID
+function DataManager.QueryBaseBuildData(tempID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(tempID)
+    if nil ~= BuildDataStack[collectionID] and nil ~= BuildDataStack[collectionID][tempID] then
+        return BuildDataStack[collectionID][tempID]
+    end
+    return nil
+end
 
 --刷新基础地形数据
 --data:某个建筑基础数据（protobuf）

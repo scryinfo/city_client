@@ -50,8 +50,9 @@ function CenterWareHouseModel:n_GsExtendBag(stream)
 end
 
 function CenterWareHouseModel:n_GsDelItem(stream)
+   -- local pMsg =assert(pbl.decode("gs.DelItem",stream),"CenterWareHouseModel:n_GsDelItem stream = nil")
    -- ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",stream)
-    Event.Brocast("c_GsDelItem")
+   -- Event.Brocast("c_GsDelItem")
 end
 
 --删除商品发包

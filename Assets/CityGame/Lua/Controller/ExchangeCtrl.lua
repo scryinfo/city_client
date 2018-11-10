@@ -564,15 +564,14 @@ function ExchangeCtrl:_getCityRecord(datas)
     end
     ExchangeCtrl.cityRecordInfo = {}
     for i, item in ipairs(datas.log) do
-        ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
-        --if item.sellerId == PlayerTempModel.roleData.id then
-        --    item.isSell = true
-        --    ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
-        --end
-        --if item.buyerId == PlayerTempModel.roleData.id then
-        --    item.isSell = false
-        --    ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
-        --end
+        if item.dealed == item.sellTotalAmount then
+            item.isSell = true
+            ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
+        end
+        if item.dealed == item.buyTotalAmount then
+            item.isSell = false
+            ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
+        end
     end
     table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
     ExchangePanel.cityRecordPage.localScale = Vector3.one

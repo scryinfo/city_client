@@ -69,7 +69,15 @@ end
 
 --点击删除
 function CenterWareHouseCtrl:c_OnDelete(go)
-    Event.Brocast("m_DeleteItem",go)
+    local data = {}
+    data.titleInfo = "提示"
+    data.contentInfo = "确认销毁吗"
+    data.tipInfo = "物品将永久消失"
+    data.btnCallBack = function ()
+        Event.Brocast("m_DeleteItem",go)
+        go.manager:_deleteGoods(go)
+    end
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
 --点击BG
@@ -139,8 +147,8 @@ end
 function CenterWareHouseCtrl:c_transportConfirmBtn(go)
 --[[    ct.OpenCtrl('TransportBoxCtrl')]]
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
-        ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",v.inputText.text)
-        --Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,,v.itemId,v.inputText.text)
+        ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",PlayerTempModel.roleData.buys.materialFactory[1].info.id)
+        Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
     end
     WareHouseGoodsMgr:ClearAll()
     itemId = {}

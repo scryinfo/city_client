@@ -27,12 +27,20 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    for i = 1, 9 do
+--[[    for i = 1, 9 do
         local WareHouseDataInfo = {}
         WareHouseDataInfo.name = "Wood"
         WareHouseDataInfo.number = 123
-        configTable[i] = WareHouseDataInfo
-
+        configTable[i] = WareHouseDataInfo]]
+    if PlayerTempModel.roleData.bag.inHand == nil then
+        return
+    end
+    for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
+        local uiTab = {}
+        uiTab.name = Material[i].name
+        uiTab.number = v.num
+        uiTab.itemId = v.id
+        configTable[i] = uiTab
         --预制的信息`
         local prefabData={}
         prefabData.state = 'idel'
@@ -54,7 +62,7 @@ end
 function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
      ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
      local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
-     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id)
+     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id,goodsData.itemId)
     if not self.allTspItem then
         self.allTspItem = {}
     end

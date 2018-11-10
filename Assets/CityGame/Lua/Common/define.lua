@@ -66,6 +66,9 @@ ModelNames = {
 	Municipal="MunicipalModel",--市镇设施
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
+	tempTransport = "tempTransportModel",   --临时运输
+
+
 }
 
 SYSEVENT =

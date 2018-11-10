@@ -8,12 +8,13 @@ require('Framework/UI/UIPage')
 TransportGoodsItem = class('TransportGoodsItem')
 
 --初始化方法   数据（读配置表）
-function TransportGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
+function TransportGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.id = id;
+    self.itemId = itemId
 
     self.name = self.prefab.transform:Find("nameText").gameObject:GetComponent("Text")
     self.inputText = self.prefab.transform:Find("InputField").gameObject:GetComponent("InputField");

@@ -50,22 +50,18 @@ function CenterWareHouseModel:n_GsExtendBag(stream)
 end
 
 function CenterWareHouseModel:n_GsDelItem(stream)
-    local pMsg =assert(pbl.decode("gs.DelItem",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
-
-    ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",pMsg)
+   -- ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",stream)
+    Event.Brocast("c_GsDelItem")
 end
 
 --删除商品发包
 function CenterWareHouseModel:m_DeleteItem(go)
-    local bagId = "a33eab42cb754c77bd27710d299f5591";
---[[    local pbyte1 = CityLuaUtil.StringToByteArray(bagId)
-    local pstr1 = CityLuaUtil.ByteArrayToString(pbyte1)]]
-    --local bId = CityLuaUtil.StringToByteArray(bagId)
-    ct.log("rodger_w8_GameMainInterface","[test_n_GsDel]  测试完毕")
+    local buildingId = PlayerTempModel.roleData.bagId
+    ct.log("rodger_w8_GameMainInterface","[test_n_GsDel]  测试完毕",buildingId)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","delItem")
     ----2、 填充 protobuf 内部协议数据
-    local lMsg = { buildingId = bagId, itemId = go.id }
+    local lMsg = { buildingId = buildingId, itemId = go.itemId }
     local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
     ----3、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);

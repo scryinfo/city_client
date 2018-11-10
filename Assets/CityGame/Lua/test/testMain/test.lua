@@ -352,8 +352,7 @@ end)
 
 UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     local pstr ='8a20a7b8c1644a59b79e030c81603ed9'
-    local pbyte1 = CityLuaUtil.StringToByteArray(pstr)
-    local pstr1 = CityLuaUtil.ByteArrayToString(pbyte1)
+
     ct.log("abel_w11_uuid","uuid() = ", pstr1)
 
     local check_load = function(chunk, name)

@@ -14,6 +14,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
+    self.itemId = goodsDataInfo.itemId
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;
@@ -27,10 +28,23 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
     self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
+    Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
     Event.Brocast("c_OnDelete",go)
+end
+
+--点击删除回调
+function WareHouseGoodsItem:c_GsDelItem()
+    local data = {}
+    data.titleInfo = "提示"
+    data.contentInfo = "确认销毁吗"
+    data.tipInfo = "物品将永久消失"
+    data.btnCallBack = function ()
+        self.manager:_deleteGoods(self)
+    end
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
 --点击BG

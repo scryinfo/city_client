@@ -76,12 +76,17 @@ function Game.OnPostInitOK()
         playerTempModel:Awake();
     end
 
-    --
+    --调整生产线
     local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
     if AdjustProductionLineModel ~= nil then
         AdjustProductionLineModel:Awake();
     end
 
+    --临时运输测试
+    local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
+    if tempTransportModel ~= nil then
+        tempTransportModel:Awake();
+    end
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

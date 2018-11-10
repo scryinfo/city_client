@@ -135,7 +135,6 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     --UIPage:ShowPage(TransportBoxCtrl);
     for i,v in pairs(go.ShelfGoodsMgr.transportPanelItem) do
         Event.Brocast("m_ReqTransport",PlayerTempModel.storeList[1].buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
-        ct.log("system",v.itemId)
     end
 end
 function WarehouseCtrl:OnClick_OnSorting(ins)

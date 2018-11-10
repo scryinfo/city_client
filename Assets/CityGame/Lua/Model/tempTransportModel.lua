@@ -28,6 +28,7 @@ end
 --客户端请求--
 --运输物品
 function tempTransportModel.m_ReqTransport(src,dst, itemId, n)
+    ct.log("system",src,dst,itemId,n)
     local msgId = pbl.enum("gscode.OpCode","transferItem")
     local lMsg = {src = src,dst = dst,itemId = itemId,n = n}
     local pMsg = assert(pbl.encode("gs.TransferItem", lMsg))
@@ -37,6 +38,6 @@ end
 --网络回调--
 --上架物品
 function tempTransportModel.n_OnTransportInfo(stream)
-    local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
+    local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
 
 end

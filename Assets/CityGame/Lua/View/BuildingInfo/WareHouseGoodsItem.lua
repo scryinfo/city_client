@@ -14,6 +14,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
+    self.itemId = goodsDataInfo.itemId
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;
@@ -27,36 +28,27 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
     self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
+   -- Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
 end
 --删除
 function WareHouseGoodsItem:OnDelete(go)
-    local data = {}
-    data.titleInfo = "提示"
-    data.contentInfo = "确认销毁吗"
-    data.tipInfo = "物品将永久消失"
-    data.btnCallBack = function ()
-        go.manager:_deleteGoods(go)
-    end
-   ct.OpenCtrl('BtnDialogPageCtrl',data)
-
+    Event.Brocast("c_OnDelete",go)
 end
 
+--点击删除回调
+function WareHouseGoodsItem:c_GsDelItem()
+
+     self.manager:_deleteGoods(self.id)
+end
+
+--点击BG
 function WareHouseGoodsItem:OnBGItem()
-    local data = {}
-    data.madeBy = "来自Rodger公司"
-    data.playerName = " rodger"
-    ct.OpenCtrl('MessageTooltipCtrl',data)
+    Event.Brocast("c_OnBGItem")
 end
 
 --点击运输后的BG
 function WareHouseGoodsItem:OnTransportBG(go)
-    local goodsDataInfo = {};
-    goodsDataInfo.name =  go.goodsDataInfo.name;
-    goodsDataInfo.number = go.goodsDataInfo.number;
-    goodsDataInfo.id = go.id;
-    go.manager:_creatTransportGoods(goodsDataInfo);
-    go.select_while:SetActive(false);
-    go.transportBG:GetComponent("Button").enabled = false;
+    Event.Brocast("c_OnTransportBG",go)
 end
 
 --删除后刷新ID及刷新显示

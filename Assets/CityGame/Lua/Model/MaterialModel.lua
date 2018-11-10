@@ -1,4 +1,4 @@
------
+local pbl = pbl
 
 MaterialModel = {};
 local this = MaterialModel;
@@ -9,22 +9,20 @@ function MaterialModel.New()
 end
 
 function MaterialModel.Awake()
-    --UpdateBeat:Add(this.Update, this);
-    --this:OnCreate();
+    this:OnCreate();
 end
 
---function MaterialModel.Update()
---    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.T) then
---        --MaterialCtrl.OpenPanel({});
---        UIPage:ShowPage(MaterialCtrl);
---    end
---end
-
-
-function MaterialModel:OnCreate(go)
-
+function MaterialModel.OnCreate()
+    --注册本地UI事件
+    Event.AddListener("m_OnOpenShelf",this.m_OnOpenShelf)
 end
 
+function MaterialModel.Close()
+    --清空本地UI事件
+end
 
+function MaterialModel.m_OnOpenShelf()
+
+end
 
 

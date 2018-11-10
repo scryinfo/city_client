@@ -33,6 +33,7 @@ function CenterWareHousePanel.InitPanel()
     this.list = transform:Find("topRoot/ListTable/List"):GetComponent("RectTransform");
 
     this.content = transform:Find("Scroll View/Viewport/Content"):GetComponent("RectTransform");
+    this.addItem = transform:Find("Scroll View/Viewport/Content/AddItem").gameObject;--扩容
     this.addBtn = transform:Find("Scroll View/Viewport/Content/AddItem/AddButton").gameObject; --扩容按钮
     this.addCapacity = transform:Find("Scroll View/Viewport/Content/AddItem/WareHouseBG/AddCapacity").gameObject--容量
     this.money = transform:Find("Scroll View/Viewport/Content/AddItem/MoneyBG/Money").gameObject--所需金额
@@ -45,7 +46,7 @@ function CenterWareHousePanel.InitPanel()
     this.moneyText = transform:Find("rightRoot/bg/transport/moneyItem/moneyText").gameObject:GetComponent("Text");
     this.transportopenBtn = transform:Find("rightRoot/bg/transport/warehouseName/openBtn").gameObject;
     this.nameText = transform:Find("rightRoot/bg/transport/warehouseName").gameObject:GetComponent("InputField");
-    this.tspContent = transform:Find("rightRoot/bg/transport/ScrollView/Viewport/Content"):GetComponent("RectTransform");
+    this.tspContent = transform:Find("rightRoot/bg/transport/ScrollView/Viewport/Content").gameObject:GetComponent("RectTransform");
 
     this.transportBtn = transform:Find("TransportButton").gameObject--运输按钮
 

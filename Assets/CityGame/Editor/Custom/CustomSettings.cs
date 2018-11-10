@@ -189,6 +189,7 @@ public static class CustomSettings
         _GT(typeof(ThreadManager)),
         _GT(typeof(ResourceManager)),
         _GT(typeof(BuildManager)),
+        _GT(typeof(RayManager)),
 
         //City
         _GT(typeof(City.NetworkInterface)),

@@ -11,14 +11,11 @@ WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
-WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
+--WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
 
---[[function WareHouseGoodsMgr:initialize(insluabehaviour,buildingData)
-    self.behaviour = insluabehaviour
-    if buildingData.buildingType == BuildingInType.Warehouse then
-        self:_creatItemGoods(insluabehaviour,isSelect);
-    end
-end]]
+function WareHouseGoodsMgr:initialize()
+
+end
 
 --创建商品
 function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
@@ -27,12 +24,15 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    for i = 1, 9 do
-        local WareHouseDataInfo = {}
-        WareHouseDataInfo.name = "Wood"
-        WareHouseDataInfo.number = 123
-        configTable[i] = WareHouseDataInfo
-
+    if PlayerTempModel.roleData.bag.inHand == nil then
+        return
+    end
+    for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
+        local uiTab = {}
+        uiTab.name = Material[i].name
+        uiTab.number = v.num
+        uiTab.itemId = v.id
+        configTable[i] = uiTab
         --预制的信息`
         local prefabData={}
         prefabData.state = 'idel'
@@ -54,14 +54,17 @@ end
 function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
      ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
      local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
-     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id)
+     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id,goodsData.itemId)
     if not self.allTspItem then
         self.allTspItem = {}
     end
-    self.allTspItem[CenterWareHousePanel.tspContent.childCount] = TransportLuaItem;
-    for i = 1,  #self.allTspItem do
+    self.allTspItem[goodsData.id] = TransportLuaItem;
+    for i, v in pairs(self.allTspItem) do
         self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
-            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text/  self.allTspItem[i].totalNumber
+            if self.allTspItem[i].inputText.text =="" then
+                return
+            end
+            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text
         end);
     end
     UpdateBeat:Add(self._update, self);
@@ -90,11 +93,11 @@ function WareHouseGoodsMgr:_creatLinePanel(data)
 end
 
 --删除商品
-function WareHouseGoodsMgr:_deleteGoods(ins)
+function WareHouseGoodsMgr:_deleteGoods(id)
     --清空之前的旧数据
-    destroy(self.items[ins.id].prefab.gameObject);
-    table.remove(self.ModelDataList, ins.id)
-    table.remove(self.items, ins.id)
+    destroy(self.items[id].prefab.gameObject);
+    table.remove(self.ModelDataList, id)
+    table.remove(self.items, id)
     local i = 1
     for k,v in pairs(self.items)  do
         self.items[i]:RefreshID(i)
@@ -102,16 +105,20 @@ function WareHouseGoodsMgr:_deleteGoods(ins)
     end
 end
 
-function WareHouseGoodsMgr:_deleteTspGoods(ins)
-    self.items[ins.id]:Enabled();
+--删除运输商品
+function WareHouseGoodsMgr:_deleteTspGoods(id)
     if UpdateBeat then
         UpdateBeat:Remove(self._update, self);
     end
-    destroy(ins.prefab.gameObject);
-   -- table.remove(self.allTspItem, ins.id)
+    self.items[id].select_while:SetActive(true);
+    destroy(self.allTspItem[id].prefab.gameObject);
+   self.allTspItem[id] = nil;
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
+    if self.items == nil then
+       return
+    end
     for i = 1, #self.items do
         self.items[i]:setActiva(isSelect)
     end
@@ -128,8 +135,12 @@ function WareHouseGoodsMgr:_creatGoods(path,parent)
 end
 
 function WareHouseGoodsMgr:_update()
-    for i = 1,  #self.allTspItem do
-        self.allTspItem[i].inputText.text = math.ceil( self.allTspItem[i].totalNumber *   self.allTspItem[i].scrollbar.value);
+    for i, v in pairs(self.allTspItem) do
+        if self.allTspItem[i].inputText.text =="" then
+            return
+        end
+       -- ct.log("rodger_w8_GameMainInterface","[test__update]  测试完毕",self.allTspItem[i].scrollbar.value)
+        self.allTspItem[i].inputText.text =  self.allTspItem[i].scrollbar.value;
     end
 end
 
@@ -144,8 +155,8 @@ end
 
 --清空运输数据
 function WareHouseGoodsMgr:ClearAll()
-    for i = 1, #self.allTspItem do
-        destroy(self.allTspItem[i].prefab.gameObject);
+    for i, v in pairs(self.allTspItem) do
+        destroy(self.allTspItem[i].prefab.gameObject)
     end
     self.allTspItem = {};
 end
@@ -158,7 +169,6 @@ function WareHouseGoodsMgr:EnabledAll()
 end
 
 --显示运输按钮使其可以点击
-
 function WareHouseGoodsMgr:TransportConfirm(isOnClick)
     if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
         CenterWareHousePanel.transportConfirm:SetActive(false);

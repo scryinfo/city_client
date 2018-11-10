@@ -9,6 +9,7 @@ ct.GoodsState =
 
 --存放选中的物品,临时表
 WarehouseCtrl.temporaryItems = {}
+local temporaryInfo = {}  --临时储存选中goods的信息
 local isShowList;
 local switchIsShow;
 
@@ -34,6 +35,7 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
+    warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
     --初始化物品上架还是运输
     self.operation = nil;
@@ -45,6 +47,7 @@ function WarehouseCtrl:OnCreate(obj)
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Warehouse;
     self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
+
 end
 
 function WarehouseCtrl:Awake(go)
@@ -54,6 +57,10 @@ function WarehouseCtrl:Awake(go)
 end
 
 function WarehouseCtrl:Refresh()
+    local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    WarehousePanel.Warehouse_Slider.value = 0;
+    WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
+    WarehousePanel.numberText.text = WarehousePanel.Warehouse_Slider.value.."/<color=white>"..WarehousePanel.Warehouse_Slider.maxValue.."</color>"
 
 end
 
@@ -66,13 +73,13 @@ function WarehouseCtrl:OnClick_searchBtn(ins)
 end
 
 --选中物品
-function WarehouseCtrl:_selectedGoods(id)
+function WarehouseCtrl:_selectedGoods(id,itemId)
     if self.temporaryItems[id] == nil then
         self.temporaryItems[id] = id
         if self.operation == ct.GoodsState.shelf then
             self.ShelfGoodsMgr:_creatShelfGoods(id,self.luabehaviour)
         elseif self.operation == ct.GoodsState.transport then
-            self.ShelfGoodsMgr:_creatTransportGoods(id,self.luabehaviour)
+            self.ShelfGoodsMgr:_creatTransportGoods(id,self.luabehaviour,itemId)
         end
         self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
     else
@@ -119,9 +126,16 @@ end
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
     UIPage:ShowPage(ChooseWarehouseCtrl);
 end
---运输确定
-function WarehouseCtrl:OnClick_transportConfirmBtn()
-    UIPage:ShowPage(TransportBoxCtrl);
+--确定上架
+function WarehouseCtrl:OnClick_shelfConfirmBtn()
+
+end
+--确定运输
+function WarehouseCtrl:OnClick_transportConfirmBtn(go)
+    --UIPage:ShowPage(TransportBoxCtrl);
+    for i,v in pairs(go.ShelfGoodsMgr.transportPanelItem) do
+        Event.Brocast("m_ReqTransport",PlayerTempModel.storeList[1].buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
+    end
 end
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);

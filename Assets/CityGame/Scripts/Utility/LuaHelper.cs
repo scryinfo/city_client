@@ -50,11 +50,19 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 建筑
+        /// 建筑管理器
         /// </summary>
         public static BuildManager GetBuildManager()
         {
             return AppFacade.Instance.GetManager<BuildManager>(ManagerName.Build);
+        }
+
+        /// <summary>
+        /// 射线管理器
+        /// </summary>
+        public static RayManager GetRayManager()
+        {
+            return AppFacade.Instance.GetManager<RayManager>(ManagerName.Ray);
         }
 
         /// <summary>

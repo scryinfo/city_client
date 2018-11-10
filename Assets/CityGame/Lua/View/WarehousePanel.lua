@@ -41,8 +41,8 @@ function WarehousePanel.InitPanel()
     this.nameText = transform:Find("RightInformation/bg/transport/warehouseName/nameText").gameObject;
     this.transportContent = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content");
     --Slider--Text
-    this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider").gameObject;
-    this.NumberText = transform:Find("WarehouseDetails/NumberText").gameObject;
+    this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider"):GetComponent("Slider");
+    this.numberText = transform:Find("WarehouseDetails/numberText"):GetComponent("Text");
     --Scroll View
     this.ScrollView = transform:Find("ScrollView"):GetComponent("RectTransform");
     this.Content = transform:Find("ScrollView/Viewport/Content"):GetComponent("RectTransform");

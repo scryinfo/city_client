@@ -52,15 +52,21 @@ public class CameraScripts : MonoBehaviour
         {
             ScaleCamera();
         }
+        
         else if (InputModule.Instance.Dragging)
         {
             UpdateMove();
+        }
+        else if (InputModule.Instance.Stationary)
+        {
+            Debug.Log("点击");
+            Util.CallMethod("TerrainManager", "TouchBuild", InputModule.Instance.ZoomCenter);
         }
         else if (!InputModule.Instance.AnyPress)
         {
             SmoothStopFunc();
         }
-
+        
         if (Input.GetKeyDown(KeyCode.A))
         {
             TestMoveCam();

@@ -51,6 +51,10 @@ namespace LuaFramework {
                 luafunc.Call(go, obj);
             };
 
+            //重复注册直接返回
+            if (buttons.ContainsKey(eventName)) {
+                return;                    
+            }
             buttons.Add(eventName, pair);            
             go.GetComponent<Button>().onClick.AddListener(pair._CsharpFun);
         }

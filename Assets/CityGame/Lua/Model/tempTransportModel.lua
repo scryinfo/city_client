@@ -36,8 +36,8 @@ function tempTransportModel.m_ReqTransport(src,dst, itemId, n)
 end
 
 --网络回调--
---上架物品
+--运输网络回调
 function tempTransportModel.n_OnTransportInfo(stream)
     local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
-
+    Event.Brocast("c_transport",msgTransportInfo)
 end

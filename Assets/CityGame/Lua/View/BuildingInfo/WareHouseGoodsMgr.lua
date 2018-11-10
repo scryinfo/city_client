@@ -13,12 +13,9 @@ WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
 --WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
 
---[[function WareHouseGoodsMgr:initialize(insluabehaviour,buildingData)
-    self.behaviour = insluabehaviour
-    if buildingData.buildingType == BuildingInType.Warehouse then
-        self:_creatItemGoods(insluabehaviour,isSelect);
-    end
-end]]
+function WareHouseGoodsMgr:initialize()
+
+end
 
 --创建商品
 function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
@@ -96,11 +93,11 @@ function WareHouseGoodsMgr:_creatLinePanel(data)
 end
 
 --删除商品
-function WareHouseGoodsMgr:_deleteGoods(ins)
+function WareHouseGoodsMgr:_deleteGoods(id)
     --清空之前的旧数据
-    destroy(self.items[ins.id].prefab.gameObject);
-    table.remove(self.ModelDataList, ins.id)
-    table.remove(self.items, ins.id)
+    destroy(self.items[id].prefab.gameObject);
+    table.remove(self.ModelDataList, id)
+    table.remove(self.items, id)
     local i = 1
     for k,v in pairs(self.items)  do
         self.items[i]:RefreshID(i)

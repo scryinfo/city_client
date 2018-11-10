@@ -51,12 +51,13 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
     WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
-
+    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
+    Event.AddListener("c_transport",self.c_transport,self);
 
 end
 --初始化
@@ -75,7 +76,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
         Event.Brocast("m_DeleteItem",go)
-        go.manager:_deleteGoods(go)
+        go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
@@ -148,11 +149,25 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
 --[[    ct.OpenCtrl('TransportBoxCtrl')]]
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
        -- ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",PlayerTempModel.roleData.buys.materialFactory[1].info.id)
-        --Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
+        Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
     end
     WareHouseGoodsMgr:ClearAll()
     itemId = {}
     WareHouseGoodsMgr:EnabledAll()
+end
+
+--开始运输回调
+function CenterWareHouseCtrl:c_transport(msg)
+    local table = self.WareHouseGoodsMgr.items
+    for i,v in pairs(table) do
+        if v.itemId == msg.itemId then
+            if v.goodsDataInfo.number == msg.n then
+                WareHouseGoodsMgr:_deleteGoods(i)
+            else
+                v.numberText.text = v.goodsDataInfo.number - msg.n;
+            end
+        end
+    end
 end
 
 function CenterWareHouseCtrl:c_transportCloseBtn()

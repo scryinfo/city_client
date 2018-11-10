@@ -37,7 +37,8 @@ end
 
 --点击删除回调
 function WareHouseGoodsItem:c_GsDelItem()
-     self.manager:_deleteGoods(self)
+
+     self.manager:_deleteGoods(self.id)
 end
 
 --点击BG

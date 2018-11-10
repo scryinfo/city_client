@@ -81,11 +81,11 @@ function BuildingInfoToggleGroupMgr:_clickItemFunc(toggleData)
 end
 
 --通过预制创建view
-function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent, pos, nextHeight)
+function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent)
     local prefab = UnityEngine.Resources.Load(path)
     local go = UnityEngine.GameObject.Instantiate(prefab)
     local rect = go.transform:GetComponent("RectTransform")
-     go.transform:SetParent(parent.transform)
+    go.transform:SetParent(parent.transform)
     go.transform.localScale = Vector3.one;
     rect.anchoredPosition = Vector3.zero;
 
@@ -154,9 +154,6 @@ end
 ---创建住宅主页左右信息，左侧加载turnover，staff，occupancy，右侧加载rental
 --请按照顺序添加
 function BuildingInfoToggleGroupMgr:_creatHouseInfo()
-    --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
-    --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
-
     ---营业额折线图Item --左边第一个
     local turnoverLineChart
     turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
@@ -178,11 +175,9 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
     self.rightData[2] = self:_creatRental(rentalToggleData)
 end
+
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
-    --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
-    --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
-
     ---营业额折线图Item --左边第一个
     local turnoverLineChart
     turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
@@ -192,29 +187,9 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
     self.leftData[1] = LineChartLuaItem
 
---[[    ---员工管理Item --左边第二个
-    local staffRateItemView
-    staffRateItemView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_STAFF_PATH, self.leftRect)
-    staffRateItemView.gameObject.name = "StaffRateItem"
-    local stafftToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local staffLuaItem = StaffRateItem:new(nil, self._clickItemFunc, staffRateItemView, self.mainPanelLuaBehaviour, stafftToggleData, self)
-    self.leftData[2] = staffLuaItem]]
-
-    ---员工  左1
-    local staffViewRect
-    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    staffViewRect.gameObject.name = "Staff"
-    --测试数据
-    local staffData = {}
-    staffData.EmployeeSatisfaction = 0.8
-    staffData.EmployeeDaywages = 18
-    staffData.noDomicileCount = 3
-    staffData.totalStaffCount = 100
-    --end
+    ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    self.leftData[2] = staffLuaItem
-
+    self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---仓库Item --左边第三个
     local warehouseView
@@ -257,21 +232,9 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
     self.leftData[1] = LineChartLuaItem
 
-    ---员工  左1
-    local staffViewRect
-    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    staffViewRect.gameObject.name = "Staff"
-    --测试数据
-    local staffData = {}
-    staffData.EmployeeSatisfaction = 0.8
-    staffData.EmployeeDaywages = 18
-    staffData.noDomicileCount = 3
-    staffData.totalStaffCount = 100
-    --end
+    ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    self.leftData[2] = staffLuaItem
-
+    self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---仓库Item --左边第三个
     local warehouseView
@@ -316,19 +279,8 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     self.leftData[1] = LineChartLuaItem
 
     ---员工  左2
-    local staffViewRect
-    staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    staffViewRect.gameObject.name = "Staff"
-    --测试数据
-    local staffData = {}
-    staffData.EmployeeSatisfaction = 0.8
-    staffData.EmployeeDaywages = 18
-    staffData.noDomicileCount = 3
-    staffData.totalStaffCount = 100
-    --end
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    self.leftData[2] = staffLuaItem
+    self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---门票 --左3
     local ticketView
@@ -371,14 +323,25 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
     staffViewRect.gameObject.name = "Staff"
 
     local staffData = {}
-    staffData.buildingId = self.toggleData.info.id
-    staffData.buildingTypeId = self.toggleData.info.mId
-    staffData.satisfaction = self.toggleData.info.happy
-    staffData.dayWage = self.toggleData.info.salary
-    staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
-    staffData.noDomicileCount = 0
-    local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
-    return staffLuaItem
+    if not self.toggleData.info then  --匹配未和服务器联调的建筑
+        staffData.buildingId = 1
+        staffData.buildingTypeId = 1
+        staffData.satisfaction = 30
+        staffData.dayWage = 10
+        staffData.totalStaffCount = 20
+        staffData.noDomicileCount = 0
+        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+        return staffLuaItem
+    else
+        staffData.buildingId = self.toggleData.info.id
+        staffData.buildingTypeId = self.toggleData.info.mId
+        staffData.satisfaction = self.toggleData.info.happy
+        staffData.dayWage = self.toggleData.info.salary
+        staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
+        staffData.noDomicileCount = 0
+        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+        return staffLuaItem
+    end
 end
 
 ---住宅部分

@@ -8,6 +8,7 @@ local PersonDataStack = {}    --个人信息堆栈
 --刷新基础地形数据
 --data:某个建筑基础数据（protobuf）
 function  DataManager.RefreshBaseBuildData(data)
+    data.id =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(data.id)
     if nil == BuildDataStack[collectionID] then
         BuildDataStack[collectionID] = {}

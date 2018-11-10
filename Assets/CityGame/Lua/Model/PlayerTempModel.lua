@@ -27,6 +27,15 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+        PlayerTempModel.tempTestReqAddItem(2151002, 999)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+        PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    end
 end
 
 --启动事件--

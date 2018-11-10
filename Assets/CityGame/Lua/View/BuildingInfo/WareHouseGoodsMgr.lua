@@ -27,11 +27,6 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
---[[    for i = 1, 9 do
-        local WareHouseDataInfo = {}
-        WareHouseDataInfo.name = "Wood"
-        WareHouseDataInfo.number = 123
-        configTable[i] = WareHouseDataInfo]]
     if PlayerTempModel.roleData.bag.inHand == nil then
         return
     end

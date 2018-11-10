@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
 require "Logic/GameBubble/GameBubbleManager"
@@ -96,6 +97,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
+	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+
 	return this;
 end
 

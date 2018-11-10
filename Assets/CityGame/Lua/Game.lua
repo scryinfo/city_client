@@ -70,6 +70,17 @@ function Game.OnPostInitOK()
         CenterWareHouseModel:Awake();
     end
 
+    --测试临时角色信息界面
+    local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    if PlayerTempModel ~= nil then
+        PlayerTempModel:Awake();
+    end
+    --临时运输测试
+    local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
+    if tempTransportModel ~= nil then
+        tempTransportModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

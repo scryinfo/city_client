@@ -12,7 +12,7 @@ end
 
 --刷新数据
 function BaseBuildModel:Refresh(data)
-    ct.log("Allen_w9","请使用BaseModel派生类自己的Refresh方法，尽量不要调用基类的 Refresh 方法")
+    --ct.log("Allen_w9","请使用BaseModel派生类自己的Refresh方法，尽量不要调用基类的 Refresh 方法")
     --TODO:优化-->确认深拷贝data后清除data
     for key, value in pairs(data) do
         self.Data[key] = value

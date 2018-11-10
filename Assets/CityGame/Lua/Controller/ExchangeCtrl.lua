@@ -538,7 +538,17 @@ function ExchangeCtrl:_getTransactionRecord(datas)
         return
     end
 
-    ExchangeCtrl.selfRecordInfo = datas.log
+    ExchangeCtrl.selfRecordInfo = {}
+    for i, item in ipairs(datas.log) do
+        if item.sellerId == PlayerTempModel.roleData.id then
+            item.isSell = true
+            ExchangeCtrl.selfRecordInfo[#ExchangeCtrl.selfRecordInfo + 1] = item
+        end
+        if item.buyerId == PlayerTempModel.roleData.id then
+            item.isSell = false
+            ExchangeCtrl.selfRecordInfo[#ExchangeCtrl.selfRecordInfo + 1] = item
+        end
+    end
     table.sort(ExchangeCtrl.selfRecordInfo, function (m, n) return m.ts > n.ts end)
     ExchangePanel.selfRecordPage.localScale = Vector3.one
     ExchangePanel.selfRecordScroll:ActiveLoopScroll(self.selfRecordSource, #ExchangeCtrl.selfRecordInfo)
@@ -552,7 +562,18 @@ function ExchangeCtrl:_getCityRecord(datas)
         ExchangePanel.cityRecordPage.localScale = Vector3.zero
         return
     end
-    ExchangeCtrl.cityRecordInfo = datas.log
+    ExchangeCtrl.cityRecordInfo = {}
+    for i, item in ipairs(datas.log) do
+        ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
+        --if item.sellerId == PlayerTempModel.roleData.id then
+        --    item.isSell = true
+        --    ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
+        --end
+        --if item.buyerId == PlayerTempModel.roleData.id then
+        --    item.isSell = false
+        --    ExchangeCtrl.cityRecordInfo[#ExchangeCtrl.cityRecordInfo + 1] = item
+        --end
+    end
     table.sort(ExchangeCtrl.cityRecordInfo, function (m, n) return m.ts > n.ts end)
     ExchangePanel.cityRecordPage.localScale = Vector3.one
     ExchangePanel.cityRecordScroll:ActiveLoopScroll(self.cityRecordSource, #ExchangeCtrl.cityRecordInfo)

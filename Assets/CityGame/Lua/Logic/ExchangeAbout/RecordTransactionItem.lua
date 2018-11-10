@@ -39,5 +39,5 @@ function RecordTransactionItem:_initData()
     self.quantityText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.dealed)
     self.unitPriceText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.price, 30, 24))
     self.totalText.text = string.format("<color=%s>E%s</color>", self.currentTextColor, getPriceString(data.dealed * data.price, 30, 24))
-    self.timeText.text = data.ts
+    self.timeText.text = string.format("<color=%s>%s</color>", self.currentTextColor, data.ts)
 end

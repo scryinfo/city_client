@@ -143,7 +143,7 @@ end
 ---网络回调
 --收到行情信息
 function ExchangeModel.n_OnReceiveExchangeItemList(stream)
-    local quotesData = assert(pbl.decode("gs.ExchangeItemSummary", stream), "ExchangeModel.n_OnReceiveExchangeItemList: stream == nil")
+    local quotesData = assert(pbl.decode("gs.ExchangeItemList", stream), "ExchangeModel.n_OnReceiveExchangeItemList: stream == nil")
     Event.Brocast("c_onReceiveExchangeItemList", quotesData)
 end
 --所有挂单信息
@@ -157,7 +157,7 @@ function ExchangeModel.n_OnReceiveMyDealLog(stream)
         Event.Brocast("c_onReceiveExchangeMyDealLog", {})
         return
     end
-    local dealLogData = assert(pbl.decode("gs.exchangeMyDealLog", stream), "ExchangeModel.n_OnReceiveMyDealLog: stream == nil")
+    local dealLogData = assert(pbl.decode("gs.ExchangeDealLogs", stream), "ExchangeModel.n_OnReceiveMyDealLog: stream == nil")
     Event.Brocast("c_onReceiveExchangeMyDealLog", dealLogData)
 end
 --全城成交
@@ -166,7 +166,7 @@ function ExchangeModel.n_OnReceiveAllDealLog(stream)
         Event.Brocast("c_onReceiveExchangeAllDealLog", {})
         return
     end
-    local allOrderData = assert(pbl.decode("gs.exchangeAllDealLog", stream), "ExchangeModel.n_OnReceiveAllDealLog: stream == nil")
+    local allOrderData = assert(pbl.decode("gs.ExchangeDealLogs", stream), "ExchangeModel.n_OnReceiveAllDealLog: stream == nil")
     Event.Brocast("c_onReceiveExchangeAllDealLog", allOrderData)
 end
 --撤单

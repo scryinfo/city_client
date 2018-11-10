@@ -151,13 +151,6 @@ function ExchangeCtrl:_creatGoodsConfig()
         datas[itemMat.itemId].sumDealedPrice = 0.00
         datas[itemMat.itemId].priceChange = 0.00
     end
-
-    datas[2151001].sumDealedPrice = 1000
-    datas[2152004].sumDealedPrice = 50
-    datas[2151002].sumDealedPrice = 312
-    datas[2154003].sumDealedPrice = 798
-    datas[2154001].sumDealedPrice = 1
-
     ExchangeCtrl.quoteConfigDatas = datas
 end
 
@@ -494,13 +487,15 @@ end
 
 ---从modle传来的回调
 function ExchangeCtrl:c_onReceiveExchangeItemList(datas)
-    for i, itemData in ipairs(datas) do
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].itemId = itemData.itemId
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].lowPrice = itemData.lowPrice
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].highPrice = itemData.highPrice
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].nowPrice = itemData.nowPrice
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].sumDealedPrice = itemData.sumDealedPrice
-        ExchangeCtrl.quoteConfigDatas[itemData.itemId].priceChange = itemData.priceChange
+    if datas.summary then
+        for i, itemData in ipairs(datas.summary) do
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].itemId = itemData.itemId
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].lowPrice = itemData.lowPrice
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].highPrice = itemData.highPrice
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].nowPrice = itemData.nowPrice
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].sumDealedPrice = itemData.sumDealedPrice
+            ExchangeCtrl.quoteConfigDatas[itemData.itemId].priceChange = itemData.priceChange
+        end
     end
 
     local collectIndexs = PlayerTempModel.collectList

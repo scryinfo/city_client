@@ -42,6 +42,14 @@ public class InputModule : MonoBehaviour
         }
     }
 
+    public bool Stationary
+    {
+        get
+        {
+            return inputTools.GetIsPoint;
+        }
+    }
+
 
     public bool AnyPress
     {

@@ -18,10 +18,10 @@ local CameraCollectionID = -1
 local function CreateSuccess(go,table)
     local buildId = table[1]
     local Vec3 = table[2]
-    go.transform.localPosition = Vec3
+    go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
-        TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("TerrainPlane").transform
+        TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
 
@@ -42,7 +42,7 @@ end
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
     local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(TerrainManager.PositionTurnBlockID(pos))
-    ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
+    --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         CameraCollectionID = tempCollectionID
         --TODO:向服务器发送新的所在地块ID，刷新数据model
@@ -89,6 +89,28 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
+local function CreateConstructBuildSuccess(go,table)
+    local buildId = table[1]
+    local Vec3 = table[2]
+    if TerrainManager.constructObj ~= nil then
+        destroy(TerrainManager.constructObj)
+    end
+    TerrainManager.constructObj = go
+    TerrainManager.constructObj.transform.position = Vec3
+end
+
+--修建建筑
+function TerrainManager.ConstructBuild(buildId,buildPos)
+    buildMgr:CreateBuild(PlayerBuildingBaseData[buildId]["prefabRoute"],CreateConstructBuildSuccess,{buildId, buildPos})
+end
+
+function TerrainManager.TouchBuild(MousePos)
+    local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
+    local tempData =  DataManager.QueryBaseBuildData(TerrainManager.PositionTurnBlockID(tempPos))
+    if nil ~= tempData then
+        local a  = tempData.Data
+    end
+end
 
 
 UnitTest.TestBlockStart()

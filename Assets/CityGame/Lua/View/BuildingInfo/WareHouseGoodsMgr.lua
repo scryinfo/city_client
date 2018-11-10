@@ -124,6 +124,9 @@ function WareHouseGoodsMgr:_deleteTspGoods(id)
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
+    if self.items == nil then
+       return
+    end
     for i = 1, #self.items do
         self.items[i]:setActiva(isSelect)
     end

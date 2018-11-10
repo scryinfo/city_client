@@ -211,9 +211,9 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     local prodictionLineViewRect
     prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
     prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
---[[    local rentalData = {}
-    rentalData.rent = 500.23
-    rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置]]
+    --[[    local rentalData = {}
+        rentalData.rent = 500.23
+        rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置]]
     local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     local prodictionLuaItem = HomeProductionLineItem:new(nil, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
     self.rightData[1] = prodictionLuaItem

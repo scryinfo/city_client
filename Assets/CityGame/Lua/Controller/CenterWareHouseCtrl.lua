@@ -118,7 +118,8 @@ function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
 function CenterWareHouseCtrl:Refresh()
-    --CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
+    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
+    CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
 end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)

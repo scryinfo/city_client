@@ -70,6 +70,17 @@ function Game.OnPostInitOK()
         CenterWareHouseModel:Awake();
     end
 
+    --测试玩家临时数据
+    local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    if playerTempModel ~= nil then
+        playerTempModel:Awake();
+    end
+
+    --调整生产线
+    local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
+    if AdjustProductionLineModel ~= nil then
+        AdjustProductionLineModel:Awake();
+    end
     --测试临时角色信息界面
     local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
     if PlayerTempModel ~= nil then
@@ -80,7 +91,6 @@ function Game.OnPostInitOK()
     if tempTransportModel ~= nil then
         tempTransportModel:Awake();
     end
-
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

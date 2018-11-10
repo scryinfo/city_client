@@ -28,6 +28,10 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.tempTestAddGroung(200,200,250,250)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
         PlayerTempModel.tempTestReqAddItem(2151002, 999)
     end
@@ -69,6 +73,7 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     PlayerTempModel.buildingData = this._getBuildingInfo(roleData)
     PlayerTempModel.storeList = this._getStore(roleData)
     PlayerTempModel.collectList = roleData.exchangeCollectedItem
+
     if not PlayerTempModel.collectList then
         PlayerTempModel.collectList = {}
     end
@@ -80,6 +85,13 @@ function PlayerTempModel.n_OnReceiveUnitCreate(stream)
         PlayerTempModel.buildingsInfo = {}
     end
     PlayerTempModel.buildingsInfo[#PlayerTempModel.buildingsInfo + 1] = buildingInfo
+end
+--add ground
+function PlayerTempModel.tempTestAddGroung(x1,y1,x2,y2)
+    local msgId = pbl.enum("gscode.OpCode", "cheat")
+    local lMsg = {str = string.format("addground %s %s %s %s", x1, y1, x2, y2)}
+    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --建筑信息更改时同步
 function PlayerTempModel.n_OnReceiveUnitChange(stream)

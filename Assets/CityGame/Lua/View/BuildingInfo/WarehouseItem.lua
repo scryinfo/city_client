@@ -15,14 +15,15 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");  --数量
     self.closeBtn = self.prefab.transform:Find("closeBtn"):GetComponent("RectTransform");  --删除btn  默认true
     self.nameText.text = goodsDataInfo.name
-    self.numberText.text = goodsDataInfo.number
+    self.numberText.text = goodsDataInfo.num
+    self.itemId = goodsDataInfo.itemId
 
     --初始化ItemUI状态
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
     self.circleGreayImg.transform.localScale = Vector3.zero;
     self.circleTickImg.transform.localScale = Vector3.zero;
 
-    --普通消息注册
+    --本地消息注册
     Event.AddListener("c_GoodsItemChoose",self.c_GoodsItemChoose,self);
     Event.AddListener("c_GoodsItemDelete",self.c_GoodsItemDelete,self);
 
@@ -48,7 +49,7 @@ function WarehouseItem:c_GoodsItemDelete()
 end
 --勾选物品
 function WarehouseItem:OnClick_bgBtn(ins)
-    Event.Brocast("c_warehouseClick", ins.id)
+    Event.Brocast("c_warehouseClick", ins.id,ins.itemId)
 end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)

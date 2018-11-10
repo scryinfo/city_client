@@ -15,6 +15,8 @@ end
 function AddProductionLinePanel.InitPanel()
     this.returnBtn = transform:Find("Button/returnBtn");
     this.findBtn = transform:Find("Button/findBtn");
+    this.content = transform:Find("classificationbg/ScrollView/Viewport/Content");
+    this.determineBtn = transform:Find("Button/determineBtn");
 
     this.foodBtn = transform:Find("leftInfoBtn/bg/ScrollView/Viewport/Content/foodBtn"):GetComponent("Toggle");
     this.viceFoodBtn = transform:Find("leftInfoBtn/bg/ScrollView/Viewport/Content/viceFoodBtn"):GetComponent("Toggle");
@@ -23,7 +25,6 @@ function AddProductionLinePanel.InitPanel()
     this.baseMaterBtn = transform:Find("leftInfoBtn/bg/ScrollView/Viewport/Content/baseMaterBtn"):GetComponent("Toggle");
     this.advancedMaterBtn = transform:Find("leftInfoBtn/bg/ScrollView/Viewport/Content/advancedMaterBtn"):GetComponent("Toggle");
     this.otherBtn = transform:Find("leftInfoBtn/bg/ScrollView/Viewport/Content/otherBtn"):GetComponent("Toggle");
-    this.classContent = transform:Find("classificationbg/ScrollView/Viewport/Content");
 
 
     --this.leftBtnGroup = {};

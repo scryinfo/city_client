@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
@@ -93,6 +94,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
+	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
+	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试

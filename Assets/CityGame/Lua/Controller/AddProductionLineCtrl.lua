@@ -1,6 +1,11 @@
 AddProductionLineCtrl = class('AddProductionLineCtrl',UIPage);
 UIPage:ResgisterOpen(AddProductionLineCtrl)
 
+--UI信息
+AddProductionLineCtrl.productionItemTab = {};
+--用来判断这个物体是否选中
+AddProductionLineCtrl.temporaryIdTable = {}
+
 function AddProductionLineCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -12,7 +17,19 @@ end
 function AddProductionLineCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
     local addLine = self.gameObject:GetComponent('LuaBehaviour');
+
+    self.luabehaviour = addLine
+    self.m_data = {}
+    self.m_data.buildingType = BuildingInType.ProductionLine;
+    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour,self.m_data);
+
+
     addLine:AddClick(AddProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
+    addLine:AddClick(AddProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
+
+    --本地事件注册
+    Event.AddListener("_selectedProductionLine",self._selectedProductionLine,self);
+
 
     AddProductionLinePanel.foodBtn.onValueChanged:AddListener(function()
         self:OnClick_foodBtn();
@@ -51,7 +68,25 @@ function AddProductionLineCtrl:Refesh()
 
 end
 
+--选中生产的原料或商品
+function AddProductionLineCtrl:_selectedProductionLine(id,itemId,name)
+    if self.temporaryIdTable[id] == nil then
+        self.temporaryIdTable[id] = id;
+        self.itemId = itemId;
+        self.name = name;
+        self.ShelfGoodsMgr.productionItems[id].selectedImg.transform.localScale = Vector3.one
+    else
+        self.temporaryIdTable[id] = nil;
+        self.ShelfGoodsMgr.productionItems[id].selectedImg.transform.localScale = Vector3.zero
+    end
+end
+
 function AddProductionLineCtrl:OnClick_returnBtn()
+    UIPage.ClosePage();
+end
+--确定
+function AddProductionLineCtrl:OnClick_determineBtn(go)
+    go.ShelfGoodsMgr:_creatProductionLine(go.name,go.itemId);
     UIPage.ClosePage();
 end
 

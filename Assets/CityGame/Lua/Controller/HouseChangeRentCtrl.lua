@@ -23,13 +23,12 @@ function HouseChangeRentCtrl:Awake(go)
     self:_getComponent(go)
     self:_initData()
 
-    local dialog = self.gameObject:GetComponent('LuaBehaviour')
-    dialog:AddClick(self.closeBtn, self._onClickCloseBtn, self)
-    dialog:AddClick(self.confirmBtn, self._onClickConfim, self)
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 end
 
 function HouseChangeRentCtrl:Refresh()
-
+    self.luaBehaviour:AddClick(self.closeBtn, self._onClickCloseBtn, self)
+    self.luaBehaviour:AddClick(self.confirmBtn, self._onClickConfim, self)
 end
 ---寻找组件
 function HouseChangeRentCtrl:_getComponent(go)
@@ -43,11 +42,12 @@ function HouseChangeRentCtrl:_getComponent(go)
 end
 ---初始化
 function HouseChangeRentCtrl:_initData()
+    self.rentInput.text = self.m_data.rent
     local blackColor = "#4B4B4B"
-    local rentalStr = string.format("%s<color=%s>%s</color>", getPriceString(self.m_data.currentRental, 24, 18), blackColor, "/D")
+    local rentalStr = string.format("%s<color=%s>%s</color>", getPriceString(self.m_data.rent, 24, 18), blackColor, "/D")
     self.currentRentalText.text = rentalStr
 
-    local suggestStr = string.format("%sE<color=%s>%s</color>", getPriceString(self.m_data.suggestRental, 20, 18), blackColor, "/D")
+    local suggestStr = string.format("%sE<color=%s>%s</color>", getPriceString(self.m_data.suggestRent, 20, 18), blackColor, "/D")
     self.suggestRentalText.text = suggestStr
 
     local trueTextW = self.suggestRentalText.preferredWidth
@@ -64,11 +64,12 @@ function HouseChangeRentCtrl:_onClickConfim(ins)
     end
 
     --向服务器发送请求，改变租金
-    Event.Brocast("m_ReqHouseChangeRent", ins.buildingId, inputValue)
-    ins:Hide()
+    Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, inputValue)
+    ins:_onClickCloseBtn(ins)
 end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(ins)
-    --ct.log("cycle_w6_houseAndGround", "HouseChangeRentCtrl:_onClickCloseBtn")
     ins:Hide()
+    ins.luaBehaviour:RemoveClick(ins.confirmBtn, ins._onClickConfim, ins)
+    ins.luaBehaviour:RemoveClick(ins.closeBtn, ins._onClickCloseBtn, ins)
 end

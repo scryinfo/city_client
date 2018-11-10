@@ -388,12 +388,17 @@ end)
 UnitTest.Exec("abel_w11_UUID_FromeServer", "test_UUID_FromeServer",  function ()
     ct.log("abel_w11_UUID_FromeServer","[test_UUID_FromeServer]  测试开始")
     Event.AddListener("t_UUID_FromeServer", function (serinofs)
-        --服务器发过来的bytes测试
-        local id = serinofs[1].briefInfo[1].id
-        local pstr1 = CityLuaUtil.ByteArrayToString(id)
-        local pbyte1 = CityLuaUtil.StringToByteArray(pstr1)
-        local pstr2 = CityLuaUtil.ByteArrayToString(pbyte1)
-        --服务器发过来的bytes测试
+        for i = 1, #serinofs do
+            --服务器发过来的bytes测试
+            if serinofs[i].briefInfo ~= nil then
+                local id = serinofs[i].briefInfo[1].id
+                local pstr1 = CityLuaUtil.ByteArrayToString(id)
+                local pbyte1 = CityLuaUtil.StringToByteArray(pstr1)
+                local pstr2 = CityLuaUtil.ByteArrayToString(pbyte1)
+                local ttt= 0
+            end
+            --服务器发过来的bytes测试
+        end
     end)
 end)
 

@@ -19,25 +19,22 @@ function AdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.id = id
     self.ItemList=mgr.AdvertisementItemList
 
-    self.infoBtn=prefab--信息按钮
-    self.textnum = self.prefab.transform:Find("Text"):GetComponent("Text");  --文本
-    self.deleteBtn=self.prefab.transform:Find("close");--删除按钮
+    self.countText=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
+    self.nameText=prefab.transform:Find("nameImage/Text"):GetComponent("Text");
+    self.icon=prefab.transform:Find("icon"):GetComponent("Image");
 
-    self.textnum.text=id
-
-    self._luabehaviour:AddClick(self.deleteBtn.gameObject, self.OnClicl_XBtn, self);
-    self._luabehaviour:AddClick(self.infoBtn,self.OnClick_detailsBtn,self);
-
+    self.countText.text=prefabData.count;
 end
 ---删除
 function AdvertisementItem:OnClicl_XBtn(go)
-       go.manager:_deleteGoods(go)
+    go.manager:_deleteGoods(go)
 end
+
 
 function AdvertisementItem:OnClick_detailsBtn(go)
     local m_data={}
     m_data.id=go.id
-  ct.OpenCtrl("AdvertisementPopCtrl",m_data)
+    ct.OpenCtrl("AdvertisementPopCtrl",m_data)
 end
 
 

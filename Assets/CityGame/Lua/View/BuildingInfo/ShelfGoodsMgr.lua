@@ -32,7 +32,7 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     self.WarehouseModelData = {}
     --配置表数据模拟
     local configTable = {}
-    for i,v in pairs(PlayerTempModel.storeList[1].inHand) do
+    for i,v in pairs(PlayerTempModel.roleData.buys.materialFactory[1].store.inHand) do
         --local warehouseDataInfo = {}
         --warehouseDataInfo.name = Material[i].name
         --warehouseDataInfo.number = math.random(i*5)
@@ -43,7 +43,7 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
         --uiTab.itemId = PlayerTempModel.storeList[1].inHand[i].id
 
         local uiTab = {}
-        uiTab.name = Material[i].name
+        uiTab.name = Material[v.id].name
         uiTab.num = v.num
         uiTab.itemId = v.id
         configTable[i] = uiTab
@@ -205,11 +205,11 @@ function ShelfGoodsMgr:_deleteGoods(ins)
     end
 end
 --仓库删除
-function ShelfGoodsMgr:_WarehousedeleteGoods(ins)
+function ShelfGoodsMgr:_WarehousedeleteGoods(id)
     --清空之前的旧数据
-    destroy(self.WarehouseItems[ins.id].prefab.gameObject);
-    table.remove(self.WarehouseModelData,ins.id);
-    table.remove(self.WarehouseItems,ins.id);
+    destroy(self.WarehouseItems[id].prefab.gameObject);
+    table.remove(self.WarehouseModelData,id);
+    table.remove(self.WarehouseItems,id);
     local i = 1
     for k,v in pairs(self.WarehouseItems) do
         self.WarehouseItems[i]:RefreshID(i)

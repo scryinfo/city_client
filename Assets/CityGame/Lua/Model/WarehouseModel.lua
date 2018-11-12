@@ -33,9 +33,14 @@ function WarehouseModel.m_ReqShelfAdd(itemId,num, price, buildingId)
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
 
---网络回调--
---上架物品
-function WarehouseModel.n_OnShelfAddInfo(stream)
-    local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
+----网络回调--
+----上架物品
+--function WarehouseModel.n_OnShelfAddInfo(stream)
+--    local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
+--
+--end
 
-end
+----运输物品
+--function tempTransportModel.n_OnTransportInfo(stream)
+--    local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
+--end

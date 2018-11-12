@@ -42,6 +42,7 @@ function WarehouseCtrl:OnCreate(obj)
 
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
+    Event.AddListener("n_transport",self.n_transport,self)
 
     self.luabehaviour = warehouse
     self.m_data = {};
@@ -133,10 +134,26 @@ end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     --UIPage:ShowPage(TransportBoxCtrl);
+    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     for i,v in pairs(go.ShelfGoodsMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",PlayerTempModel.storeList[1].buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
+        Event.Brocast("m_ReqTransport",buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
     end
 end
+--运输回调后执行操作
+function WarehouseCtrl:n_transport(msg)
+    local table = self.ShelfGoodsMgr.WarehouseItems
+    for i,v in pairs(table) do
+        if v.itemId == msg.itemId then
+            if v.goodsDataInfo.num == msg.n then
+                self.ShelfGoodsMgr:_WarehousedeleteGoods(i)
+            else
+                v.numberText.text = v.goodsDataInfo.num - msg.n;
+            end
+        end
+    end
+end
+
+
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end

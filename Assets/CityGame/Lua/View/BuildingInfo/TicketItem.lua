@@ -8,8 +8,8 @@
 local class = require 'Framework/class'
 
 TicketItem = class('TicketItem');
-TicketItem.static.TOTAL_H = 215  --整个Item的高度
-TicketItem.static.CONTENT_H = 145  --显示内容的高度
+TicketItem.static.TOTAL_H = 193 --整个Item的高度
+TicketItem.static.CONTENT_H = 123  --显示内容的高度
 TicketItem.static.TOP_H = 100  --top条的高度
 
 --初始化方法   数据需要接受服务器发送的数据
@@ -78,5 +78,5 @@ end
 
 
 function TicketItem:OntoDoBtn()
-   ct.OpenCtrl("ConfirmPopCtrl")
+    ct.OpenCtrl("TicketAdjustPopCtrl")
 end

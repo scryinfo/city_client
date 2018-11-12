@@ -23,7 +23,7 @@ function MunicipalCtrl:initialize()
 end
 
 function MunicipalCtrl:bundleName()
-    return "Municipal";
+    return "MunicipalPanel";
 end
 
 function MunicipalCtrl:OnCreate(obj)
@@ -50,7 +50,7 @@ function MunicipalCtrl:Awake(go)
     ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
 
-    Event.Brocast("m_detailPublicFacility")
+    --Event.Brocast("m_detailPublicFacility")
 
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end

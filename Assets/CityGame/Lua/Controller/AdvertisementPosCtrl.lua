@@ -21,7 +21,7 @@ function AdvertisementPosCtrl:initialize()
 end
 
 function AdvertisementPosCtrl:bundleName()
-    return "AdvertisementPos";
+    return "AdvertisementPosPanel";
 end
 
 function AdvertisementPosCtrl:OnCreate(obj)

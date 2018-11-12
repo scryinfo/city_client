@@ -82,10 +82,10 @@ function Game.OnPostInitOK()
         AdjustProductionLineModel:Awake();
     end
     --测试临时角色信息界面
-    local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
-    if PlayerTempModel ~= nil then
-        PlayerTempModel:Awake();
-    end
+    --local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    --if PlayerTempModel ~= nil then
+    --    PlayerTempModel:Awake();
+    --end
     --临时运输测试
     local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
     if tempTransportModel ~= nil then

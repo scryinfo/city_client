@@ -343,10 +343,10 @@ UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  functi
         exchangeDetailModel:Awake()
     end
 
-    local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
-    if playerTempModel ~= nil then
-        playerTempModel:Awake()
-    end
+    --local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
+    --if playerTempModel ~= nil then
+    --    playerTempModel:Awake()
+    --end
 
 end)
 

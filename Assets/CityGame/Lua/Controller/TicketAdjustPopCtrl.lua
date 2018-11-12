@@ -48,5 +48,3 @@ end
 function TicketAdjustPopCtrl:Refresh()
 
 end
-
-

@@ -71,3 +71,7 @@ function RentalItem:updateInfo(data)
     end
     self.rentalValueText.text = getPriceString(self.rentalData.rent, 30, 24).."/D"
 end
+
+function RentalItem:destory()
+    destroy(self.viewRect.gameObject)
+end

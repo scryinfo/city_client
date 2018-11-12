@@ -145,3 +145,7 @@ function StaffRateItem:updateInfo(data)
 
     --self:_initData()
 end
+
+function StaffRateItem:destory()
+    destroy(self.viewRect.gameObject)
+end

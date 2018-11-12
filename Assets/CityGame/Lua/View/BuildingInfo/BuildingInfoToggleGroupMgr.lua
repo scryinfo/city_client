@@ -43,14 +43,17 @@ BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageIn
 
 --初始化
 function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
-
+    self:updateData(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
+end
+--
+function BuildingInfoToggleGroupMgr:updateData(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     self.leftRect = leftRect
     self.rightRect = rightRect
     self.toggleData = buildingData
     self.leftData = {}
     self.rightData = {}
-     self.middleData={}
+    self.middleData={}
 
     if buildingData.buildingType == BuildingType.House then
         self:_creatHouseInfo()
@@ -65,7 +68,18 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
     --创建完之后调整item位置
     self:_sortItems(1)
     self:_sortRightItems()
+end
 
+function BuildingInfoToggleGroupMgr:cleanItems()
+    for i, item in ipairs(self.leftData) do
+        item = nil
+    end
+    for i, item in ipairs(self.rightData) do
+        item = nil
+    end
+    for i, item in ipairs(self.middleData) do
+        item = nil
+    end
 end
 
 --每次打开一个Item，都要刷新位置
@@ -86,8 +100,8 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent)
     local go = UnityEngine.GameObject.Instantiate(prefab)
     local rect = go.transform:GetComponent("RectTransform")
     go.transform:SetParent(parent.transform)
-    go.transform.localScale = Vector3.one;
-    rect.anchoredPosition = Vector3.zero;
+    go.transform.localScale = Vector3.one
+    rect.anchoredPosition = Vector3.zero
 
     return rect
 end
@@ -154,17 +168,12 @@ end
 ---创建住宅主页左右信息，左侧加载turnover，staff，occupancy，右侧加载rental
 --请按照顺序添加
 function BuildingInfoToggleGroupMgr:_creatHouseInfo()
-    ---营业额折线图Item --左边第一个
-    local turnoverLineChart
-    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
-    turnoverLineChart.gameObject.name = "LineChartRateItem"
-
-    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
-    self.leftData[1] = LineChartLuaItem
+    ---折线图  左1
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
 
     ---员工  左2
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}
     self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---入住率  右1
@@ -312,15 +321,30 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
 end
 
 ---通用部分
+--折线图
+function BuildingInfoToggleGroupMgr:_createLineChart(lineToggleData)
+    if not self.lineViewRect then
+        if lineToggleData.pos == BuildingInfoTogglePos.Left then
+            self.lineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+        else
+            self.lineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.rightRect)
+        end
+        self.lineViewRect.gameObject.name = "LineChart"
+    end
+
+    local lineLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, self.lineViewRect, self.mainPanelLuaBehaviour, lineToggleData, self)
+    return lineLuaItem
+end
 --员工
 function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
-    local staffViewRect
-    if staffToggleData.pos == BuildingInfoTogglePos.Left then
-        staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-    else
-        staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.rightRect)
+    if not self.staffViewRect then
+        if staffToggleData.pos == BuildingInfoTogglePos.Left then
+            self.staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
+        else
+            self.staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.rightRect)
+        end
+        self.staffViewRect.gameObject.name = "Staff"
     end
-    staffViewRect.gameObject.name = "Staff"
 
     local staffData = {}
     if not self.toggleData.info then  --匹配未和服务器联调的建筑
@@ -330,7 +354,7 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         staffData.dayWage = 10
         staffData.totalStaffCount = 20
         staffData.noDomicileCount = 0
-        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, self.staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
         return staffLuaItem
     else
         staffData.buildingId = self.toggleData.info.id
@@ -339,7 +363,7 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         staffData.dayWage = self.toggleData.info.salary
         staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
         staffData.noDomicileCount = 0
-        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
+        local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, self.staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
         return staffLuaItem
     end
 end
@@ -347,31 +371,33 @@ end
 ---住宅部分
 --入住率
 function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
-    local occupancyViewRect
-    if occToggleData.pos == BuildingInfoTogglePos.Left then
-        occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
-    else
-        occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
+    if not self.occupancyViewRect then
+        if occToggleData.pos == BuildingInfoTogglePos.Left then
+            self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
+        else
+            self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
+        end
+        self.occupancyViewRect.gameObject.name = "Occ"
     end
-    occupancyViewRect.gameObject.name = "Occ"
 
     local occData = {}
     occData.buildingId = self.toggleData.info.id
     occData.buildingTypeId = self.toggleData.info.mId
     occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
     occData.renter = self.toggleData.renter
-    local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
+    local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return occupancyLuaItem
 end
 --租金
 function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
-    local rentalViewRect
-    if rentalToggleData.pos == BuildingInfoTogglePos.Left then
-        rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.leftRect)
-    else
-        rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
+    if not self.rentalViewRect then
+        if rentalToggleData.pos == BuildingInfoTogglePos.Left then
+            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.leftRect)
+        else
+            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
+        end
+        self.rentalViewRect.gameObject.name = "Rental"
     end
-    rentalViewRect.gameObject.name = "Rental"
 
     local rentalData = {}
     rentalData.buildingId = self.toggleData.info.id
@@ -379,6 +405,6 @@ function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
     rentalData.rent = self.toggleData.rent
     rentalData.suggestRent = self.toggleData.rent
     rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
-    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
+    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     return rentalLuaItem
 end

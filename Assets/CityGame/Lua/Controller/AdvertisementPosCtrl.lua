@@ -21,7 +21,7 @@ function AdvertisementPosCtrl:initialize()
 end
 
 function AdvertisementPosCtrl:bundleName()
-    return "AdvertisementPosPanel";
+    return "AdvertisementPos";
 end
 
 function AdvertisementPosCtrl:OnCreate(obj)
@@ -38,7 +38,12 @@ function AdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(AdvertisementPosPanel.manageBtn.gameObject,self.OnClick_manageBtn,self)
     materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn.gameObject,self.OnClick_masterConfirm,self)
     materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn1.gameObject,self.OnClick_otherConfirm,self)
--------------------------------------------------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------------------------------------------
+
+    AdvertisementPosPanel.qunayityInp.onValueChanged:AddListener(self.Set)
+    AdvertisementPosPanel.leaseInp.onValueChanged:AddListener(self.Set)
+    AdvertisementPosPanel.rentInp.onValueChanged:AddListener(self.Set)
+    -------------------------------------------------------------------------------------------------------------------------
     AdvertisementPosPanel.numInp.onValueChanged:AddListener(function (arg)
         if AdvertisementPosPanel.numInp.text==""then
             return
@@ -58,19 +63,19 @@ function AdvertisementPosCtrl:Awake(go)
         if AdvertisementPosPanel.maxInp.text==""then
             return
         end
-        if(AdvertisementPosPanel.maxInp.text/10>=1)then
-            AdvertisementPosPanel.maxInp.text=10
+        if(AdvertisementPosPanel.maxInp.text/15>=1)then
+            AdvertisementPosPanel.maxInp.text=15
         end
-        AdvertisementPosPanel.maxSlider.value=arg/10;
+        AdvertisementPosPanel.maxSlider.value=arg/15;
     end)
 
     AdvertisementPosPanel.maxSlider.onValueChanged:AddListener(function (arg)
-        AdvertisementPosPanel.maxInp.text=math.floor(10*arg)
+        AdvertisementPosPanel.maxInp.text=math.floor(15*arg)
     end)
 
     -----创建广告
-     local creatData={count=10,buildingType=BuildingType.Municipal}
-     local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    local creatData={count=1,buildingType=BuildingType.Municipal}
+    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
 end
 
 --更改名字
@@ -100,28 +105,28 @@ end
 ---管理广告按钮
 function AdvertisementPosCtrl:OnClick_manageBtn()
 
-ct.OpenCtrl("ManageAdvertisementPosCtrl")
+    ct.OpenCtrl("ManageAdvertisementPosCtrl")
 
 end
 
-
-function AdvertisementPosCtrl:OnClick_masterConfirm()
+function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
 
     --主人点击确认按钮
-    Event.Brocast("SmallPop","哈哈 终于设置好了！！！！")
-
+    Event.Brocast("SmallPop","Successful adjustment")
+    AdvertisementPosPanel.grey.gameObject:SetActive(true);
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
---他人点击
+    --他人点击
     ct.OpenCtrl("SignOnCtrl");
 end
 
 
 
+function AdvertisementPosCtrl:Set(toggle)
 
-
-
+    AdvertisementPosPanel.grey.gameObject:SetActive(false);
+end
 
 
 

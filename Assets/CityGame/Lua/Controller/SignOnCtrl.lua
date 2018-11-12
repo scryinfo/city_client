@@ -16,7 +16,7 @@ local gameObject;
 
 
 function  SignOnCtrl:bundleName()
-    return "SignOnPanel"
+    return "SignOn"
 end
 
 function SignOnCtrl:initialize()
@@ -48,5 +48,5 @@ end
 function SignOnCtrl:OnClick_confirm()
     UIPage.ClosePage();
 
-   Event.Brocast("SmallPop","1d56as1d56as")
+    Event.Brocast("SmallPop","Successful adjustment")
 end

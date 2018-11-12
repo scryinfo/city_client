@@ -22,10 +22,10 @@ function SignOnPanel.InitPanel()
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
 
-    this.backBtn = transform:Find("topRoot/backBtn");
-    this.infoBtn = transform:Find("topRoot/infoBtn");
+    this.backBtn = transform:Find("topRoot/bg/backBtn");
+    this.infoBtn = transform:Find("topRoot/bg/infoBtn");
 
-    this.confirmBtn=transform:Find("confirm");
+    this.confirmBtn=transform:Find("BG/Image/confirm");
 
 end
 --数据初始化

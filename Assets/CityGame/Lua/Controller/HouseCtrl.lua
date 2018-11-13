@@ -57,8 +57,10 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     self.m_data = houseDetailData
     if houseDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
+        HousePanel.changeNameBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
+        HousePanel.changeNameBtn.localScale = Vector3.one
     end
     self.m_data.buildingType = BuildingType.House
     if not self.houseToggleGroup then

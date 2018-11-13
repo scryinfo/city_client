@@ -119,7 +119,6 @@ function CenterWareHouseCtrl:c_OnBackBtn()
 end
 function CenterWareHouseCtrl:Refresh()
     ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
-    CenterWareHousePanel.transportConfirm:SetActive(self.m_data)
 end
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)

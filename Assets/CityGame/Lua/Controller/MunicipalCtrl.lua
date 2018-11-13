@@ -8,6 +8,7 @@ require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
 require('Framework/UI/UIPage')
 require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
+require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 local class = require 'Framework/class'
 MunicipalCtrl = class('MunicipalCtrl',UIPage)
@@ -39,9 +40,17 @@ function MunicipalCtrl:Awake(go)
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
     self.data.buildingType = BuildingType.Municipal
-  BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, materialBehaviour, self.data)
----小弹窗
+    BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, materialBehaviour, self.data)
+
+    MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
+    -----创建外部广告
+    local creatData={count=1,buildingType=BuildingType.ProcessingFactory}
+    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+
+    ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
+
+    --Event.Brocast("m_detailPublicFacility")
 
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end

@@ -38,7 +38,7 @@ function ConfirmPopCtrl:OnClick_confirm(obj)
         obj.m_data:callback()
     end
     obj:Hide();
-    Event.Brocast("SmallPop","确认并修改完毕")
+    Event.Brocast("SmallPop","Successful adjustment")
 end
 --关闭
 function ConfirmPopCtrl:OnClick_close(obj)

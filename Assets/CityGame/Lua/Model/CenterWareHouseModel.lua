@@ -28,7 +28,7 @@ function CenterWareHouseModel.OnCreate()
     Event.AddListener("m_opCenterWareHouse",this.m_opCenterWareHouse,this)
     Event.AddListener("m_DeleteItem",this.m_DeleteItem,this)
     --as网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","extendBag"),CenterWareHouseModel.n_GsExtendBag);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),CenterWareHouseModel.n_GsDelItem);
 end
 
@@ -46,12 +46,13 @@ function CenterWareHouseModel:m_ExtendBag()
 end
 
 function CenterWareHouseModel:n_GsExtendBag(stream)
+    --ct.log("rodger_w8_GameMainInterface","[test_n_GsExtendBag]  测试完毕",stream)
     Event.Brocast("c_GsExtendBag")
 end
 
 function CenterWareHouseModel:n_GsDelItem(stream)
    -- local pMsg =assert(pbl.decode("gs.DelItem",stream),"CenterWareHouseModel:n_GsDelItem stream = nil")
-   -- ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",stream)
+    --ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",stream)
    -- Event.Brocast("c_GsDelItem")
 end
 

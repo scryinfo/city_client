@@ -9,6 +9,7 @@ require 'View/BuildingInfo/AddItem'
 require'View/BuildingInfo/GoodsItem'
 require'View/BuildingInfo/BuildingItem'
 
+require'View/BuildingInfo/outAdvertisementItem'
 
 
 local class = require 'Framework/class'
@@ -19,7 +20,7 @@ ItemCreatDeleteMgr.advertisementItemPreb_Path="View/GoodsItem/AdvertisementItem"
 ItemCreatDeleteMgr.addItemPreb_Path="View/GoodsItem/addItem"
 ItemCreatDeleteMgr.goodsPreb_Path="View/GoodsItem/goodsItem"
 ItemCreatDeleteMgr.buildingPreb_Path="View/GoodsItem/buildingItem"
-
+ItemCreatDeleteMgr.outadvertisementItemPreb_Path="View/GoodsItem/outAdvertisementItem"
 
 
 function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
@@ -27,87 +28,102 @@ function ItemCreatDeleteMgr:initialize(luabehaviour,creatData)
         self.addedItemList={}
         self.selectItemList={}
         self.index=0
-       end
+        self.transform=ManageAdvertisementPosPanel.addCon;
+        self.AdvertisementDataList={}
+    end
 
     self.behaviour = luabehaviour
     self.buildingData=creatData
 
     if creatData.buildingType == BuildingType.Municipal then
-        self:_creatAdvertisementItem(creatData.count);
+
     elseif creatData.buildingType == BuildingType.MunicipalManage then
-        self:_creatManageItem(creatData.count);
+        self:_creataddItem();
+        self:_creatgoodsItem();
+        self:_creatgoodsItem();
+        self:_creatbuildingItem();
+    else
+        for i = 1, 4 do
+            self:_creatoutItem();
+        end
     end
 end
 
-function ItemCreatDeleteMgr:_creatAdvertisementItem(count)
+---创建外部广告
+local outAdvertisementItemID=0;
+function ItemCreatDeleteMgr:_creatoutItem(prefabData)
+    if(not self.outAdvertisementItemList ) then
+        self.outAdvertisementItemList={}
+    end
+    --    ---创建预制
+    local itemclone=self:c_creatGoods(self.outadvertisementItemPreb_Path,MunicipalPanel.scrollCon)
+
+    self.outAdvertisementItemList[outAdvertisementItemID]=itemclone
+    -----给预制赋值数据
+    outAdvertisementItem:new(prefabData,itemclone,self.behaviour,self,outAdvertisementItemID)
+    outAdvertisementItemID=outAdvertisementItemID+1;
+end
+
+
+
+---创建广告
+local AdvertisementItemID=0;
+function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
     if(not self.AdvertisementItemList ) then
         self.AdvertisementItemList={}
     end
+    ---创建预制
+    local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
 
-    for i = 1, 50 do
-       ---预制的信息
-        local prefabData={}
-        prefabData.count=i
-        prefabData.owner=Buildingowner.master
-        ---创建预制
-        local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
-        self.AdvertisementItemList[i]=itemclone
-        ---给预制文本赋值
-         AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,i)
-    end
+    self.AdvertisementItemList[AdvertisementItemID]=itemclone
+    ---给预制赋值数据
+    AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,AdvertisementItemID)
+    AdvertisementItemID=AdvertisementItemID+1;
 end
-
-function ItemCreatDeleteMgr:_creatManageItem(count)
+---创建添加按钮
+local AddItemID=0;
+function ItemCreatDeleteMgr:_creataddItem(prefabData)
     if(not self.addItemList ) then
         self.addItemList={}
     end
 
-    for i = 1, 50 do
-     ---创建添加按钮
-        ---预制的信息
-        local prefabData={}
-        prefabData.count=i
-        ---创建预制
-        local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
-                   self.addItemList[i]=itemclone
-         ---给预制赋值数据
-        AddItem:new(prefabData,itemclone,self.behaviour,self,i)
-    end
-----------------------------------------------------------------------------------------------------------
-
-    for i = 1, count do
-        if(not self.goodsItemList)then
-            self.goodsItemList={}
-        end
-
-   ---创建商品广告
-       ---预制的信息
-        local  goodsPrebData={}
-        goodsPrebData.count=i
-        ---创建预制
-        local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
-        self.goodsItemList[i]=goods
-        --- ---给预制赋值数据
-        GoodsItem:new(goodsPrebData,goods,self.behaviour,self,i)
-        local t=self
-    end
--------------------------------------------------------------------------------------------------------------------
-     ---创建建筑广告
-     for i = 1, count do
-         if not self.buildItemList then
-            self.buildItemList={}
-         end
-
-         ---预制的信息
-         local  buildingPrebData={}
-         buildingPrebData.count=i
-       ---创建预制
-         local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
-          self.buildItemList[i]=buildings
-         --- ---给预制赋值数据
-       BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,i)
-    end
+    ---创建预制
+    local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
+    self.addItemList[AddItemID]=itemclone
+    ---给预制赋值数据
+    AddItem:new(prefabData,itemclone,self.behaviour,self,AddItemID)
+    AddItemID=AddItemID+1;
+    ----------------------------------------------------------------------------------------------------------
 end
+---创建商品广告
+local goodsItemID=0
+function ItemCreatDeleteMgr:_creatgoodsItem(goodsPrebData)
+    if(not self.goodsItemList)then
+        self.goodsItemList={}
+    end
+
+    ---创建预制
+    local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
+    self.goodsItemList[goodsItemID]=goods
+    --- ---给预制赋值数据
+    GoodsItem:new(goodsPrebData,goods,self.behaviour,self,goodsItemID)
+    goodsItemID=goodsItemID+1
+end
+---创建建筑广告
+local buildItemID=0
+function ItemCreatDeleteMgr:_creatbuildingItem(buildingPrebData)
+    if not self.buildItemList then
+        self.buildItemList={}
+    end
+
+    ---创建预制
+    local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
+    self.buildItemList[buildItemID]=buildings
+    --- ---给预制赋值数据
+    BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,buildItemID)
+    buildItemID=buildItemID+1
+end
+
 
 ---生成预制
 function ItemCreatDeleteMgr:c_creatGoods(path,parent)
@@ -124,7 +140,7 @@ end
 ---删除物品
 function ItemCreatDeleteMgr:_deleteGoods(ins)
     destroy(ins.ItemList[ins.id])
- end
+end
 
 
 

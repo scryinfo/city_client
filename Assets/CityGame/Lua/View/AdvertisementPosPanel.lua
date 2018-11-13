@@ -34,13 +34,19 @@ function AdvertisementPosPanel.InitPanel()
     --自已进入
     this.resizeGO=transform:Find("rightRoot/resize")
     this.confirmBtn=transform:Find("rightRoot/resize/okBtn");
+    this.grey=transform:Find("rightRoot/resize/grey");
+
+    this.qunayityInp=transform:Find("rightRoot/resize/bg/body/quantity/InputField"):GetComponent("InputField")
+    this.leaseInp=transform:Find("rightRoot/resize/bg/body/lease/InputField"):GetComponent("InputField")
+    this.rentInp=transform:Find("rightRoot/resize/bg/body/rent/InputField"):GetComponent("InputField")
+
     --他人进入
     this.buyGo=transform:Find("rightRoot/Buy")
-    this.confirmBtn1=transform:Find("rightRoot/Buy/body/okBtn");
-    this.numInp=transform:Find("rightRoot/Buy/body/numInput"):GetComponent("InputField")
-    this.numSlider=transform:Find("rightRoot/Buy/body/numSlider"):GetComponent("Slider")
-    this.maxInp=transform:Find("rightRoot/Buy/body/maxInput"):GetComponent("InputField")
-    this.maxSlider=transform:Find("rightRoot/Buy/body/maxSlider"):GetComponent("Slider")
+    this.confirmBtn1=transform:Find("rightRoot/Buy/okBtn");
+    this.numInp=transform:Find("rightRoot/Buy/body/quantity/numInput"):GetComponent("InputField")
+    this.numSlider=transform:Find("rightRoot/Buy/body/quantity/numSlider"):GetComponent("Slider")
+    this.maxInp=transform:Find("rightRoot/Buy/body/lease/maxInput"):GetComponent("InputField")
+    this.maxSlider=transform:Find("rightRoot/Buy/body/lease/maxSlider"):GetComponent("Slider")
 end
 --数据初始化
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)

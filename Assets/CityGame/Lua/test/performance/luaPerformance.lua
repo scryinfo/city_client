@@ -276,6 +276,12 @@ end)
 
 UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
     ct.log("abel_w13_abel_sort","[test_w13_abel_sort] 排序性能比对 ")
+    local temp = 0
+    function swap(list, p1, p2)
+        temp = list[p1]
+        list[p2] = list[p1]
+        list[p1] = temp
+    end
     --[[--
     -   orderByBubbling: 冒泡排序
     -   @param: t,
@@ -286,7 +292,7 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
             for j = #t, i + 1, -1 do
                 if t[j - 1] > t[j] then
                     swap(t, j, j - 1)
-                    printT(t)
+                    --printT(t)
                 end
             end
         end
@@ -340,39 +346,115 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
 
     local orderedTable = {}
     local randTable={}
-    local count = 10000
+    local count = 50000
     local resetTable = function()
         for i = 1, count do
             orderedTable[i] = i
             randTable[i] =  math.random(i*50)
         end
     end
-    --ordered table
-    local timeMg = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort ordered table using Bubbling", function()
-        table.orderByBubbling(ct.deepCopy(orderedTable))
-    end)
 
-    local timeMg1 = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort ordered table using  QuickSort", function()
-        QuickSort(ct.deepCopy(orderedTable), 1, count)
-    end)
-
-    local timeMg2 = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort ordered table using  lua table.sort", function()
-        table.sort(ct.deepCopy(orderedTable))
-    end)
+    resetTable()
 
     --noneOrdered table
-    local timeMg = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort noneOrdered table using Bubbling", function()
-        table.orderByBubbling(ct.deepCopy(randTable))
+    tb = ct.deepCopy(randTable)
+    ct.log("abel_w13_abel_sort","sort noneOrdered table using Bubbling ")
+    UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_O_abel_sort] sort noneOrdered table using Bubbling", function()
+        table.orderByBubbling(tb)
     end)
 
-    local timeMg1 = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort noneOrdered table using  QuickSort", function()
-        QuickSort(ct.deepCopy(randTable), 1, count)
+    tb = ct.deepCopy(randTable)
+    ct.log("abel_w13_abel_sort","sort noneOrdered table using  QuickSort ")
+    UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_O_abel_sort] sort noneOrdered table using  QuickSort", function()
+        QuickSort(tb, 1, count)
     end)
 
-    local timeMg2 = UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_abel_sort] sort noneOrdered table using  lua table.sort", function()
-        table.sort(ct.deepCopy(randTable))
+    tb = ct.deepCopy(randTable)
+    ct.log("abel_w13_abel_sort","sort noneOrdered table using  lua table.sort ")
+    UnitTest.PerformanceTest("abel_w13_abel_sort","[test_w13_O_abel_sort] sort noneOrdered table using  lua table.sort", function()
+        table.sort(tb)
     end)
+    --[[
+    测试结果
+        调用 table.sort (封装的 c 中的 native 快排方法) 排序的速度远高于在 lua 中的排序, 5万个元素排序 table.sort 比 lua 中的快排快 26倍， 比 448 倍
+    --]]
 
 end)
 
+local printT = function(logid, msg, t)
+    ct.log(logid,msg,"printT ---------------")
+    for k,v in pairs(t) do
+        ct.log(logid,k, v.v)
+    end
+    ct.log(logid,msg,"---------------")
+end
+
+UnitTest.Exec("abel_w13_abel_sort_tb", "test_abel_sort_tb",  function ()
+    local count = 20
+    local tb1 = { }
+
+    local resetfun = function()
+        for i = 1, count do
+            tb1[i] = { v = math.random(i*50)}
+        end
+    end
+
+    resetfun()
+
+    --降序
+    local tb = ct.deepCopy(tb1)
+    UnitTest.PerformanceTest("abel_w13_abel_sort_tb","[test_w13_O_abel_sort] lua table.sort > ", function()
+        table.sort(tb, function (element1, element2)
+            return element1.v > element2.v
+        end)
+    end)
+    printT("abel_w13_abel_sort_tb","",tb)
+
+    --升序
+    tb = ct.deepCopy(tb1)
+    UnitTest.PerformanceTest("abel_w13_abel_sort_tb","[test_w13_O_abel_sort] lua table.sort < ", function()
+        table.sort(tb, function (element1, element2)
+            return element1.v < element2.v
+        end)
+    end)
+    printT("abel_w13_abel_sort_tb","",tb)
+
+end)
+
+UnitTest.Exec("abel_w13_abel_sort_tb_eq", "test_abel_sort_tb_eq",  function ()
+    local count = 20
+    local tb1 = { }
+
+    local resetfun = function()
+        for i = 1, count do
+            tb1[i] = { v = math.random(i*50)}
+        end
+        tb1[ct.getIntPart(count/2)] = {v = 200}
+        tb1[ct.getIntPart(count/3)] = {v = 200}
+        tb1[ct.getIntPart(count/4)] = {v = 200}
+    end
+    resetfun()
+
+    --有等于, 测试也是成功的
+    local tb = ct.deepCopy(tb1)
+
+    --排序出错
+    UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort <= ", function()
+        table.sort(tb, function (element1, element2)
+            return element1.v <=  element2.v
+        end)
+    end)
+    printT("abel_w13_abel_sort_tb_eq"," <= ",tb)
+
+    --排序出错
+    tb = ct.deepCopy(tb1)
+    UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort >= ", function()
+        table.sort(tb, function (element1, element2)
+            return element1.v >=  element2.v
+        end)
+    end)
+    printT("abel_w13_abel_sort_tb_eq",">=",tb)
+
+    --注意： <= 和 >= 的测试会失败， 排序的条件不能有等于的情况，要么大于，要么小于
+end)
 UnitTest.TestBlockEnd()-----------------------------------------------------------

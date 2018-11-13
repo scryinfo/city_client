@@ -55,6 +55,11 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     self.m_data = houseDetailData
+    if houseDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+        self.m_data.isOther = true
+    else
+        self.m_data.isOther = false
+    end
     self.m_data.buildingType = BuildingType.House
     if not self.houseToggleGroup then
         self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)

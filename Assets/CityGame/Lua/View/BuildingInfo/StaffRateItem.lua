@@ -16,7 +16,6 @@ StaffRateItem.static.ROOTRECT_H = 66  --员工未找到住所的UI的高度
 function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect
     self.staffData = staffData
-
     self.toggleData = toggleData  --位于toggle的第二个   左边
     self.clickOpenFunc = clickOpenFunc
 
@@ -42,8 +41,13 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
 
-    --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, self._clickOpenBtn, self)  --这个写法有问题
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, self._clickToDoBtn, self)
+    if self.staffData.isOther then
+        self.toDoBtn.localScale = Vector3.zero
+    else
+        self.toDoBtn.localScale = Vector3.one
+        --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, self._clickOpenBtn, self)  --这个写法有问题
+        mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, self._clickToDoBtn, self)
+    end
 
     Event.AddListener("c_onStaffValueChange", self.updateInfo, self)
 

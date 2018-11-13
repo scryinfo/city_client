@@ -340,8 +340,8 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
     if not self.staffViewRect then
         if staffToggleData.pos == BuildingInfoTogglePos.Left then
             self.staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.leftRect)
-        else
-            self.staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.rightRect)
+        --else
+            --self.staffViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Staff_PATH, self.rightRect)  --如果出现在右侧，则需要加载其他预制
         end
         self.staffViewRect.gameObject.name = "Staff"
     end
@@ -354,15 +354,22 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         staffData.dayWage = 10
         staffData.totalStaffCount = 20
         staffData.noDomicileCount = 0
+        staffData.isOther = self.toggleData.isOther  --判断是自己还是别人打开了界面
         local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, self.staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
         return staffLuaItem
     else
+        if self.toggleData.isOther then
+            staffData.isOther = true
+        else
+            staffData.isOther = false
+        end
         staffData.buildingId = self.toggleData.info.id
         staffData.buildingTypeId = self.toggleData.info.mId
         staffData.satisfaction = self.toggleData.info.happy
         staffData.dayWage = self.toggleData.info.salary
         staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
         staffData.noDomicileCount = 0
+        staffData.isOther = self.toggleData.isOther  --判断是自己还是别人打开了界面
         local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, self.staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
         return staffLuaItem
     end
@@ -373,7 +380,7 @@ end
 function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     if not self.occupancyViewRect then
         if occToggleData.pos == BuildingInfoTogglePos.Left then
-            self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
+            --self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
         else
             self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.rightRect)
         end
@@ -385,6 +392,7 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     occData.buildingTypeId = self.toggleData.info.mId
     occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
     occData.renter = self.toggleData.renter
+    occData.isOther = self.toggleData.isOther  --
     local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return occupancyLuaItem
 end
@@ -405,6 +413,7 @@ function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
     rentalData.rent = self.toggleData.rent
     rentalData.suggestRent = self.toggleData.rent
     rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    rentalData.isOther = self.toggleData.isOther  --
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     return rentalLuaItem
 end

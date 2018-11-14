@@ -77,6 +77,15 @@ function TicketItem:updateInfo(data)
 end
 
 
-function TicketItem:OntoDoBtn()
-    ct.OpenCtrl("TicketAdjustPopCtrl")
+function TicketItem:OntoDoBtn(ins)
+
+
+    ct.OpenCtrl("TicketAdjustPopCtrl",ins)
+end
+
+
+function TicketItem:callback()
+
+Event.Brocast("m_Setticket",PlayerTempModel.roleData.buys.publicFacility[1].info.id,50)
+
 end

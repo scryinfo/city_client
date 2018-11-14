@@ -21,26 +21,20 @@ end
 --关闭事件
 function WarehouseModel.Close()
     --清空本地UI事件
-    Event.RemoveListener("m_OnShelfAdd",this.m_OnShelfAdd);
 end
 
 --客户端请求--
 --上架物品
-function WarehouseModel.m_ReqShelfAdd(itemId,num, price, buildingId)
+function WarehouseModel.m_ReqShelfAdd(buildingId,itemId,num,price)
+    ct.log("system",buildingId,itemId,num,price)
     local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-    local lMsg = {itemId = itemId, num = num, price = price, buildingId = buildingId}
+    local lMsg = {buildingId = buildingId, itemId = itemId, num = num, price = price}
     local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
-
 ----网络回调--
-----上架物品
---function WarehouseModel.n_OnShelfAddInfo(stream)
---    local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
---
---end
+--上架物品
+function WarehouseModel.n_OnShelfAddInfo(stream)
+    local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
 
-----运输物品
---function tempTransportModel.n_OnTransportInfo(stream)
---    local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
---end
+end

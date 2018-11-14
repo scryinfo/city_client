@@ -69,6 +69,7 @@ ModelNames = {
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
+	Warehouse = "WarehouseModel"
 
 
 }

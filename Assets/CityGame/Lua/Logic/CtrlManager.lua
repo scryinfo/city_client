@@ -96,6 +96,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
 	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.Warehouse] = WarehouseModel.New();
+
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试

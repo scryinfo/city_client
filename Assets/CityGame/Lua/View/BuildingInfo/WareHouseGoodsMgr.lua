@@ -29,7 +29,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     end
     for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
         local uiTab = {}
-        uiTab.name = Material[i].name
+        uiTab.name = Material[v.id].name
         uiTab.number = v.num
         uiTab.itemId = v.id
         configTable[i] = uiTab

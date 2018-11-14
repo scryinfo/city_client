@@ -26,6 +26,7 @@ function ShelfCtrl:OnCreate(obj)
 
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Shelf
+    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
 end
 
 function ShelfCtrl:Awake(go)
@@ -62,11 +63,9 @@ end
 
 function ShelfCtrl.OnClick_OpenList(isShow)
     if isShow then
-        --ShelfPanel.list:SetActive(true);
         ShelfPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
-        --ShelfPanel.list:SetActive(false);
         ShelfPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end

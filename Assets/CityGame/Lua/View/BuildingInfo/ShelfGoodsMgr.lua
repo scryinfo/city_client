@@ -30,18 +30,12 @@ end
 function ShelfGoodsMgr:_creatWarehouseItemGoods()
     --测试数据
     self.WarehouseModelData = {}
-    --配置表数据模拟
+
     local configTable = {}
-    for i,v in pairs(PlayerTempModel.roleData.buys.materialFactory[1].store.inHand) do
-        --local warehouseDataInfo = {}
-        --warehouseDataInfo.name = Material[i].name
-        --warehouseDataInfo.number = math.random(i*5)
-        --configTable[i] = warehouseDataInfo
-
-        --uiTab.name = Material[i].name
-        --uiTab.num = PlayerTempModel.storeList[1].inHand[i].num
-        --uiTab.itemId = PlayerTempModel.storeList[1].inHand[i].id
-
+    if not MaterialModel.MaterialWarehouse then
+        return;
+    end
+    for i,v in pairs(MaterialModel.MaterialWarehouse) do
         local uiTab = {}
         uiTab.name = Material[v.id].name
         uiTab.num = v.num
@@ -70,11 +64,14 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    for i = 1, 15 do
+    if not MaterialModel.MaterialShelf then
+        return;
+    end
+    for i,v in pairs(MaterialModel.MaterialShelf) do
         local shelfDataInfo = {}
-        shelfDataInfo.name = "Wood"..tostring(i)
-        shelfDataInfo.number = math.random(i*5)
-        shelfDataInfo.money = "E"..math.random(i*1000)..".0000"
+        shelfDataInfo.name = Material[v.itemId].name
+        shelfDataInfo.number = v.num
+        shelfDataInfo.money = "E"..v.price..".0000"
         configTable[i] = shelfDataInfo
 
         --预制的信息
@@ -104,24 +101,27 @@ end
 function ShelfGoodsMgr:_creatProductionItem()
     --配置表数据
     local configTable = {}
-    for i = 1, 5 do
-        local productionItemInfo = {}
-        productionItemInfo.itemId = Material[i].itemId
-        productionItemInfo.name = Material[i].name
-        configTable[i] = productionItemInfo
+    for i,v in pairs(Material) do
+        local key = 2151
+        if math.floor(i / 1000) == key then
+            local productionItemInfo = {}
+            productionItemInfo.itemId = Material[i].itemId
+            productionItemInfo.name = Material[i].name
+            configTable[i] = productionItemInfo
 
-        --预制的信息
-        local prefabData = {}
-        prefabData.state = 'idel'
-        prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
-        AddProductionLineCtrl.productionItemTab[i] = prefabData
+            --预制的信息
+            local prefabData = {}
+            prefabData.state = 'idel'
+            prefabData.uiData = configTable[i]
+            prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
+            AddProductionLineCtrl.productionItemTab[i] = prefabData
 
-        local productionItem = ProductionItem:new(AddProductionLineCtrl.productionItemTab[i].uiData,prefabData._prefab,self.behaviour,self,i)
-        if not self.productionItems then
-            self.productionItems = {}
+            local productionItem = ProductionItem:new(AddProductionLineCtrl.productionItemTab[i].uiData,prefabData._prefab,self.behaviour,self,i)
+            if not self.productionItems then
+                self.productionItems = {}
+            end
+            self.productionItems[i] = productionItem
         end
-        self.productionItems[i] = productionItem
     end
 end
 
@@ -151,12 +151,12 @@ function ShelfGoodsMgr:testSend()
 end
 
 --仓库选中物品（右侧shelf）
-function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour)
+function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
     prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
-    local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id)
+    local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId)
 
     if not self.shelfPanelItem then
         self.shelfPanelItem = {}

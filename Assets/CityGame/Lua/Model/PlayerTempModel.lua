@@ -49,6 +49,18 @@ function PlayerTempModel.Update()
         PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
         PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
     end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.tempTestAddGroung(800,800,850,850)
+        ct.log("system","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.m_ReqAddBuilding(1600001,820,820)
+        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    end
 end
 
 --启动事件--

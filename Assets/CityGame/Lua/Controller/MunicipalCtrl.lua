@@ -50,8 +50,6 @@ function MunicipalCtrl:Awake(go)
     ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
 
-    --Event.Brocast("m_detailPublicFacility")
-
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
 

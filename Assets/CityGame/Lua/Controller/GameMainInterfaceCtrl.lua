@@ -86,6 +86,7 @@ end
 function GameMainInterfaceCtrl:OnAdvertisFacilitie()
     ct.log("rodger_w8_GameMainInterface","[test_OnAdvertisFacilitie]  测试完毕")
     ct.OpenCtrl("MunicipalCtrl")
+    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
 end
 
 --中心仓库

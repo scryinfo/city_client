@@ -157,6 +157,8 @@ function ManageAdvertisementPosCtrl:callback()
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
+
+
 end
 
 

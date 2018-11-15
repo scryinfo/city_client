@@ -165,6 +165,7 @@ function CenterWareHouseCtrl:c_transport(msg)
                 WareHouseGoodsMgr:_deleteGoods(i)
             else
                 v.numberText.text = v.goodsDataInfo.number - msg.n;
+                v.goodsDataInfo.number = v.numberText.text;
             end
         end
     end

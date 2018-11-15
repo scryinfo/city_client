@@ -39,6 +39,8 @@ CtrlNames = {
 	MessageTooltip = "MessageTooltipCtrl",--玩家信息提示框
 	MunicipalCtrl="MunicipalCtrl",--市镇设施
 	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
+	GameNoitce = "GameNoticeCtrl", --通知
+	NoMessage = "NoMessageCtrl" --没有信息
 }
 
 ModelNames = {

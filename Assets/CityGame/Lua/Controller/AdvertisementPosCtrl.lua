@@ -119,22 +119,21 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     -----发送网络消息
     if panel.qunayityInp.text>panel.adAllday then---添加槽位
         for i = 1, panel.qunayityInp.text-panel.adAllday do
-            Event.Brocast("m_addSlot",buildingID,1,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text),tonumber(3*tonumber(panel.rentInp.text)))
+            Event.Brocast("m_addSlot",buildingID,0,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text))
         end
         panel.adAllday=panel.qunayityInp.text
 
     elseif  panel.qunayityInp.text<panel.adAllday  then---删除槽位
-
     for i = 1, panel.adAllday-panel.qunayityInp.text do
         Event.Brocast("m_deleteSlot",buildingID,MunicipalModel.SlotList[1].id)
     end
         panel.adAllday=panel.qunayityInp.text
+
     else---设置租金和最大天数
-         --Event.Brocast("")
-        Event.Brocast("m_adPutAdToSlot","",2151002,0,buildingID)
-        --MunicipalModel.SlotList[1].id
+        for i, v in pairs(MunicipalModel.SlotList) do
+            Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),0,tonumber(panel.leaseInp.text))
+        end
     end
-    --Event.Brocast("m_addSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,1,3,50,150)
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
@@ -145,7 +144,6 @@ end
 
 
 function AdvertisementPosCtrl:Set(toggle)
-
     panel.grey.gameObject:SetActive(false);
 end
 

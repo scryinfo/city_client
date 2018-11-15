@@ -30,6 +30,8 @@ function TicketAdjustPopPanel.InitPanle()
     this.suggestWage = transform:Find("root/suggest/moneyText").gameObject;
     this.timeInForce = transform:Find("root/timeInForce/timeText").gameObject;
 
+    this.ticketInp=transform:Find("root/InputWage"):GetComponent("InputField")
+
 end
 function TicketAdjustPopPanel.OnDestroy()
 

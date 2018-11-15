@@ -24,7 +24,7 @@ function TicketItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanel
     self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
 
-
+   self.wageText=self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);
@@ -78,14 +78,18 @@ end
 
 
 function TicketItem:OntoDoBtn(ins)
-
-
     ct.OpenCtrl("TicketAdjustPopCtrl",ins)
 end
 
 
 function TicketItem:callback()
+    if TicketAdjustPopPanel. ticketInp.text=="" then
+        Event.Brocast("m_Setticket",PlayerTempModel.roleData.buys.publicFacility[1].info.id,0)
+        self.wageText.text=0;
+    else
+        Event.Brocast("m_Setticket",PlayerTempModel.roleData.buys.publicFacility[1].info.id,tonumber(TicketAdjustPopPanel. ticketInp.text))
+        self.wageText.text=getPriceString(TicketAdjustPopPanel.ticketInp.text..".0000",30,24)
+    end
 
-Event.Brocast("m_Setticket",PlayerTempModel.roleData.buys.publicFacility[1].info.id,50)
 
 end

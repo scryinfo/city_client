@@ -3,7 +3,13 @@
 --- Created by password.
 --- DateTime: 2018/10/25 11:11
 ---中心仓库
-
+--排序type
+CenterWareHouseSortItemType = {
+    Name = 1,      --名字
+    Quantity = 2,  --数量
+    Level = 3,     --评分
+    Score = 4      --等级
+}
 local isShowList;
 local switchIsShow;
 local isSelect;
@@ -229,3 +235,17 @@ function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
     end
     switchIsShow = isShow;
 end
+
+--排序
+--[[
+function CenterWareHouseCtrl:_getSortItems(datas, sortType)
+    local tempDatas = datas
+    local sortType = sortType
+    if sortType == CenterWareHouseSortItemType.Name then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.name > n.name end)
+        else
+            table.sort(tempDatas, function (m, n) return m.name < n.name end)
+        end
+    end
+end]]

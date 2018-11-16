@@ -102,33 +102,37 @@ end
 
 --创建临时修建建筑物
 local function CreateConstructBuildSuccess(go,table)
-    local buildId = table[1]
-    local Vec3 = table[2]
+    --判空
+    if #table <2 then
+        return;
+    end
+    DataManager.TempDatas.constructID  = table[1]
     ct.OpenCtrl('ConstructSwitchCtrl')
-    DataManager.constructObj = go
-    DataManager.constructObj.transform.position = Vec3
+    DataManager.TempDatas.constructObj = go
+    DataManager.TempDatas.constructObj.transform.position = table[2]
     TerrainManager.MoveTempConstructObj()
 end
 
 --取消建筑的修建
 function TerrainManager.AbolishConstructBuild()
     --干掉临时GameObject
-    if DataManager.constructObj ~= nil then
-        destroy(DataManager.constructObj)
-        DataManager.constructObj = nil
+    if DataManager.TempDatas.constructObj ~= nil then
+        destroy(DataManager.TempDatas.constructObj)
+        DataManager.TempDatas.constructObj = nil
+        DataManager.TempDatas.constructID = nil
     end
 end
 
 --移动了ConstructObj
 function TerrainManager.MoveTempConstructObj()
-    if DataManager.constructObj ~= nil then
+    if DataManager.TempDatas.constructObj ~= nil then
         Event.Brocast("m_constructBuildGameObjectMove")
     end
 end
 
 --修建建筑（临时）
 function TerrainManager.ConstructBuild(buildId,buildPos)
-    if DataManager.constructObj ~= nil then
+    if DataManager.TempDatas.constructObj ~= nil then
         Event.Brocast("m_abolishConstructBuild")
     end
     buildMgr:CreateBuild(PlayerBuildingBaseData[buildId]["prefabRoute"],CreateConstructBuildSuccess,{buildId, buildPos})

@@ -42,11 +42,16 @@ end
 --触发：1.创建时触发一次2.移动建筑物时触发一次3.移动屏幕时触发一次
 function ConstructSwitchCtrl:MoveBtnNodePosition()
     --计算最新Node位置
-    if DataManager.constructObj == nil then
+    if DataManager.TempDatas.constructObj == nil then
         return
     end
-    --TODO:3D坐标转2D坐标
-    local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(DataManager.constructObj.transform.position)
+    --计算顶部偏移量
+    local tempPos = DataManager.TempDatas.constructObj.transform.position
+    tempPos.x =  tempPos.x + PlayerBuildingBaseData[DataManager.TempDatas.constructID]["deviationPos"][1]
+    tempPos.y =  tempPos.y + PlayerBuildingBaseData[DataManager.TempDatas.constructID]["deviationPos"][2]
+    tempPos.z =  tempPos.z + PlayerBuildingBaseData[DataManager.TempDatas.constructID]["deviationPos"][3]
+    --3D坐标转2D坐标
+    local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
 end
 

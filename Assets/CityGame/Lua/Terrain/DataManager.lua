@@ -36,7 +36,7 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 
-DataManager.constructObj = nil
+DataManager.TempDatas ={ constructObj = nil, constructID = nil}
 
 --功能
 --  创建一个新的原子地块集合，并将内部所有数据置为 -1

@@ -32,20 +32,20 @@ end
 
 function MunicipalCtrl:Awake(go)
     self.gameObject = go;
-    local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self. materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.  materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+   self. materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
     self.data.buildingType = BuildingType.Municipal
-    BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, materialBehaviour, self.data)
+    BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, self.data)
 
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
     -----创建外部广告
-    local creatData={count=1,buildingType=BuildingType.ProcessingFactory}
-    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    local creatData={count=1,buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
+    local item =ItemCreatDeleteMgr:new(ServerListCtrl.serverListBehaviour,creatData)
 
     ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
@@ -53,8 +53,8 @@ function MunicipalCtrl:Awake(go)
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
 
---更改名字
-function MunicipalCtrl:OnClick_changeName()
+    --更改名字
+    function MunicipalCtrl:OnClick_changeName()
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";

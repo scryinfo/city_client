@@ -28,6 +28,7 @@ function ShelfCtrl:OnCreate(obj)
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Shelf
     self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
+
 end
 
 function ShelfCtrl:Awake(go)

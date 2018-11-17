@@ -68,6 +68,7 @@ end
 
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
+    WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
 end
 --搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)

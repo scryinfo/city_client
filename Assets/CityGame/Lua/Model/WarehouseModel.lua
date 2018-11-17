@@ -15,10 +15,14 @@ function WarehouseModel.OnCreate()
     --注册本地事件 m开头
     Event.AddListener("m_ReqShelfAdd",this.m_ReqShelfAdd);
     Event.AddListener("m_ReqModifyShelf",this.m_ReqModifyShelf)
+    WarehouseModel.registerAsNetMsg()
+
+end
+
+function WarehouseModel.registerAsNetMsg()
     --网络回调注册 n开头
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo);
-
 end
 --关闭事件
 function WarehouseModel.Close()
@@ -41,14 +45,12 @@ function WarehouseModel.m_ReqModifyShelf(buildingId,Id,num,price)
     local pMsg = assert(pbl.encode("gs.ShelfSet", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
-----网络回调--
+--网络回调--
 --上架物品
 function WarehouseModel.n_OnShelfAddInfo(stream)
     local msgShelfAddInfo = assert(pbl.decode("gs.Shelf.Content",stream),"WarehouseModel.n_OnShelfAddInfo")
-
 end
 --修改货架数量或价格
 function WarehouseModel.n_OnModifyShelfInfo(stream)
     local msgModifyShelfInfo = assert(pbl.decode("gs.ShelfSet",stream),"WarehouseModel.n_OnModifyShelfInfo")
-
 end

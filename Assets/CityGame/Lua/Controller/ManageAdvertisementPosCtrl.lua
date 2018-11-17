@@ -160,9 +160,17 @@ function ManageAdvertisementPosCtrl:callback()
     for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
         ---发送打广告请求
-        for i = 1, v.count do
+        for k = 1, v.count do
             Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
         end
+        --------------------------------------------
+        for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
+            if u==v.metaId then
+                return
+            end
+        end
+      local data={metaId=v.metaId,count=v.count}
+        self.ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(data)
     end
 
     self.ItemCreatDeleteMgr.AdvertisementDataList={}

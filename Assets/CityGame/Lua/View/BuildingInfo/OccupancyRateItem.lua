@@ -26,16 +26,6 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
 
-    --ct.log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
-
-    --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-    --    clickOpenFunc(mgrTable, self.toggleData)
-    --end);                                                              --这个方法是mgr传来的，每次点击都会调一次
-
-    --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
-    --    --    mgrTable:houseOccDataUpdate(data)
-    --    --end);
-
     Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self);
 end
 
@@ -80,4 +70,8 @@ function OccupancyRateItem:updateInfo(data)
 
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = self.occupancyData.renter.."/"..self.occupancyData.totalCount
+end
+
+function OccupancyRateItem:destory()
+    destroy(self.viewRect.gameObject)
 end

@@ -4,7 +4,7 @@
 --- DateTime: 2018/10/29/029 15:13
 ---
 
-
+require'View/BuildingInfo/MapAdvertisementItem'
 local class = require 'Framework/class'
 
 BuildingItem = class('BuildingItem')
@@ -24,21 +24,22 @@ function BuildingItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
 
 end
 
+---添加
 function BuildingItem:OnClick_Add(go)
-    if (not  go.manager.transform)then
-        return
-    end
+    ---顶部处理
+    go.manager.index=go.manager.index+1
     ---创建映射广告
     local item=go.manager:c_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
     ---给映射广告赋值数据
     local prefabData={}
     MapAdvertisementItem:new(prefabData,item,go._luabehaviour,go.manager,go.manager.index)
-    ---选中广告隐藏
-    self:SetActive(false);
+    ---选中广告不可在点击
+    self:GetComponent("Image").raycastTarget=false;
     ---管理器表添加
     go.manager.addedItemList[go.manager.index]=item
     go.manager.selectItemList[go.manager.index]=self
-    ---尾部处理
-    go.manager.index=go.manager.index+1
-    go.manager.transform=nil
+    go.manager.AdvertisementDataList[go.manager.index]={count=1,type=0,ADperson=1001}
+
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
+
 end

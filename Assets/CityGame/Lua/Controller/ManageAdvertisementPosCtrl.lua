@@ -42,11 +42,12 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.nameBtn.gameObject,self.OnClick_OnName,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.quantityBtn.gameObject,self.OnClick_OnNumber,self);
-    materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsBtn.gameObject,self.OnClick_OnGoods,self);
+
+    materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsBtn1.gameObject,self.OnClick_OnGoods,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
-    self:OnClick_OnGoods();
+    -- self:OnClick_OnGoods();
     -----创建广告管理
-    local creatData={count=10,buildingType=BuildingType.MunicipalManage}
+    local creatData={count=1,buildingType=BuildingType.MunicipalManage}
     self.ItemCreatDeleteMgr =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
 end
 
@@ -58,9 +59,12 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
         destroy(v)
     end
     for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
-        v:SetActive(true);
+        v:GetComponent("Image").raycastTarget=true;
     end
-   end
+
+    ins.ItemCreatDeleteMgr.AdvertisementDataList={}
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
+end
 
 --打开信息界面
 function ManageAdvertisementPosCtrl:OnClick_infoBtn()
@@ -68,14 +72,14 @@ function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 end
 --刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
-   -- ins.ItemCreatDeleteMgr.index
+    -- ins.ItemCreatDeleteMgr.index
 end
 
 
 
 --根据名字排序
 function ManageAdvertisementPosCtrl:OnClick_OnName()
-    ManageAdvertisementPosPanel.nowText.text = "By name";
+    ManageAdvertisementPosPanel.nowText.text = "By brand";
     ManageAdvertisementPosCtrl:OnClick_OpenList(not isShowList);
 end
 --根据数量排序
@@ -107,11 +111,25 @@ end
 function ManageAdvertisementPosCtrl:OnClick_OnGoods()
     ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.buildingScroll.gameObject:SetActive(false);
+
+    self:SetActive(false);
+    ManageAdvertisementPosPanel.goodsBtn.gameObject:SetActive(true);
+    ManageAdvertisementPosPanel.buildingBtn.gameObject:SetActive(true);
+    ManageAdvertisementPosPanel.buildingBtn1.gameObject:SetActive(false);
+
+
 end
 
 function ManageAdvertisementPosCtrl:OnClick_OnBuild()
     ManageAdvertisementPosPanel.buildingScroll.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.goodsScroll.gameObject:SetActive(false);
+
+    self:SetActive(false);
+    ManageAdvertisementPosPanel.buildingBtn1.gameObject:SetActive(true);
+    ManageAdvertisementPosPanel.goodsBtn.gameObject:SetActive(false);
+    ManageAdvertisementPosPanel.goodsBtn1.gameObject:SetActive(true);
+
+
 end
 
 function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
@@ -129,10 +147,16 @@ function ManageAdvertisementPosCtrl:callback()
         destroy(v);
     end
     for i, v in pairs(self.ItemCreatDeleteMgr.selectItemList) do
-        v:SetActive(true);
+        v:GetComponent("Image").raycastTarget=true;
     end
 
+    ---创建打的广告
+    for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
+        self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
+    end
+    self.ItemCreatDeleteMgr.AdvertisementDataList={}
 
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
 end
 
 

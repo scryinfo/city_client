@@ -17,7 +17,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1100002] ={
         ["sizeName"] ="中型",
@@ -37,7 +38,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1100003] ={
         ["sizeName"] ="大型",
@@ -57,7 +59,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.34,2.5,2.9}
     },
     [1200001] ={
         ["sizeName"] ="小型",
@@ -77,7 +80,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1200002] ={
         ["sizeName"] ="中型",
@@ -97,7 +101,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1200003] ={
         ["sizeName"] ="大型",
@@ -117,7 +122,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.34,2.5,2.9}
     },
     [1300001] ={
         ["sizeName"] ="小型",
@@ -137,7 +143,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1300002] ={
         ["sizeName"] ="中型",
@@ -157,7 +164,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1300003] ={
         ["sizeName"] ="大型",
@@ -177,7 +185,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.34,2.5,2.9}
     },
     [1400001] ={
         ["sizeName"] ="小型",
@@ -197,7 +206,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =-1,
-        ["npc"] =140
+        ["npc"] =140,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1400002] ={
         ["sizeName"] ="中型",
@@ -217,7 +227,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =-1,
-        ["npc"] =630
+        ["npc"] =630,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1400003] ={
         ["sizeName"] ="大型",
@@ -237,7 +248,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =-1,
-        ["npc"] =1580
+        ["npc"] =1580,
+        ["deviationPos"] = {0.34,2.5,2.9}
     },
     [1500001] ={
         ["sizeName"] ="小型",
@@ -257,7 +269,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1500002] ={
         ["sizeName"] ="中型",
@@ -277,7 +290,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1500003] ={
         ["sizeName"] ="大型",
@@ -297,7 +311,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =-1,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.34,2.5,2.9}
     },
     [1600001] ={
         ["sizeName"] ="小型",
@@ -317,7 +332,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =6,
         ["buildTime"] =30,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75}
     },
     [1600002] ={
         ["sizeName"] ="中型",
@@ -337,7 +353,8 @@ PlayerBuildingBaseData={
         ["effectRange"] =12,
         ["buildTime"] =60,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.42,1.7,1.9}
     },
     [1600003] ={
         ["sizeName"] ="大型",
@@ -357,6 +374,7 @@ PlayerBuildingBaseData={
         ["effectRange"] =18,
         ["buildTime"] =120,
         ["adNum"] =100,
-        ["npc"] =-1
+        ["npc"] =-1,
+        ["deviationPos"] = {0.34,2.5,2.9}
     }
 }

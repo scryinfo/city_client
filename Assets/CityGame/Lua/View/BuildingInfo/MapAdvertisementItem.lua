@@ -8,7 +8,7 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 
 MapAdvertisementItem = class('MapAdvertisementItem')
-
+local Id;
 ---初始化方法   数据（读配置表）
 function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,index)
 
@@ -17,20 +17,39 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
     self._luabehaviour = inluabehaviour
     self.manger=mgr
     self.index=index
+    Id=index
+    self.numtext=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
+    self.plusBtn=prefab.transform:Find("bg/numImage/plusBtn");
+    self.cutBtnBtn=prefab.transform:Find("bg/numImage/cutBtn");
 
-    self.deleteBtn=self.prefab.transform:Find("btndelete")--删除按钮
-
-    self._luabehaviour:AddClick(self.deleteBtn.gameObject, self.OnClick_Delete, self);
-
+    self._luabehaviour:AddClick(self.cutBtnBtn.gameObject, self.OnClick_cut, self);
+    self._luabehaviour:AddClick(self.plusBtn.gameObject, self.OnClick_Plus, self);
 
 end
+
 ---添加
-function MapAdvertisementItem:OnClick_Delete(go)
-    ---消除自身
-    destroy(self.transform.parent.gameObject)
-    ---选中广告还原
-    go.manger.selectItemList[go.index]:SetActive(true);
-    ---表数据清除
-    go.manger.addedItemList[go.index]=nil
-    go.manger.selectItemList[go.index]=nil
+function MapAdvertisementItem:OnClick_cut(go)
+
+    if go.numtext.text-1==0 then
+        ---消除自身
+        destroy(self.transform.parent.parent.parent.gameObject)
+        ---选中广告还原
+        go.manger.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
+        ---表数据清除
+        go.manger.addedItemList[go.index]=nil
+        go.manger.selectItemList[go.index]=nil
+
+        go.manger.AdvertisementDataList[Id]=nil
+
+        return
+    end
+
+    go.numtext.text=go.numtext.text-1
+
+    go.manger.AdvertisementDataList[Id]={count=go.numtext.text,type=0,ADperson=1001}
+end
+
+function MapAdvertisementItem:OnClick_Plus(ins)
+    ins.numtext.text=ins.numtext.text+1
+    ins.manger.AdvertisementDataList[Id]={ count=ins.numtext.text,type=0,ADperson=1001}
 end

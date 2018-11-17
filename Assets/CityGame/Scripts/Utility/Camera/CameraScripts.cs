@@ -73,6 +73,7 @@ public class CameraScripts : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// 测试测试测试
     /// </summary>
@@ -224,7 +225,7 @@ public class CameraScripts : MonoBehaviour
             TestMoveTarget(m_moveTargetPos);
             return;
         }
-
+        
         SmoothStopFunc();
         ////finalPosition = ClampPosition(finalPosition);
         ////Debug.Log("----finalpos：" + finalPosition);
@@ -238,6 +239,7 @@ public class CameraScripts : MonoBehaviour
         tempV3 = ClampPosition(tempV3);
         transform.localPosition = tempV3;
         //Debug.Log("---- cam pos：" + transform.localPosition);
+        Util.CallMethod("TerrainManager", "MoveTempConstructObj");
     }
 
     //限制相机在2维的位置

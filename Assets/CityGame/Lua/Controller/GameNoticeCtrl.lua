@@ -25,7 +25,7 @@ function GameNoticeCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
     self:_initData();
-    self. NoticeMgr = NoticeMgr:new()
+    self.NoticeMgr = NoticeMgr:new()
 
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
@@ -69,27 +69,23 @@ function GameNoticeCtrl:c_onBg(go)
     GameNoticePanel.time.text = go.itemTime.text
     GameNoticePanel.rightContent.text = Notice[go.id].content
     id = go.id
+    if go.id ==1 then
+        GameNoticePanel.GoodsScrollView:SetActive(true)
+    else
+        GameNoticePanel.GoodsScrollView:SetActive(false)
+    end
 end
 
 --删除通知
 function GameNoticeCtrl:OnXBtn(go)
-    if id == nil then
-       return
+    local data = {}
+    data.titleInfo = "WARNING"
+    data.contentInfo = "Delete the message?"
+    data.tipInfo = ""
+    data.btnCallBack = function ()
+        GameNoticeCtrl:_deleteNotice(id,go)
     end
-    destroy(NoticeMgr.notice[id].prefab.gameObject)
-    table.remove(NoticeMgr.notice,id)
-    local i = 1
-    for k,v in ipairs(NoticeMgr.notice)  do
-        NoticeMgr.notice[i]:RefreshID(i)
-        i = i + 1
-    end
-    id = nil
-    bg = nil
-    go:_initData();
-    if #NoticeMgr.notice == 0 then
-        UIPage.ClosePage();
-        ct.OpenCtrl("NoMessageCtrl")
-    end
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
 --跳转场景
@@ -106,4 +102,25 @@ end
 function GameNoticeCtrl:_setActiva(isShow)
     GameNoticePanel.hintItem:SetActive(isShow)
     isShowHint = isShow
+end
+
+--删除通知方法
+function GameNoticeCtrl:_deleteNotice(id,go)
+    if id == nil then
+        return
+    end
+    destroy(NoticeMgr.notice[id].prefab.gameObject)
+    table.remove(NoticeMgr.notice,id)
+    local i = 1
+    for k,v in ipairs(NoticeMgr.notice)  do
+        NoticeMgr.notice[i]:RefreshID(i)
+        i = i + 1
+    end
+    id = nil
+    if #NoticeMgr.notice == 0 then
+        UIPage.ClosePage();
+        ct.OpenCtrl("NoMessageCtrl")
+    end
+    bg = nil
+    go:_initData();
 end

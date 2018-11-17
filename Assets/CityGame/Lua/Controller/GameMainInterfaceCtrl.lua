@@ -33,12 +33,20 @@ end
 
 --通知--
 function GameMainInterfaceCtrl.OnNotice()
-    ct.log("rodger_w8_GameMainInterface","[test_OnNotice]  测试完毕")
-    if #Notice == 0 then
-        ct.OpenCtrl("NoMessageCtrl")
+    if  NoticeMgr.notice ~= nil then
+        if  #NoticeMgr.notice == 0 then
+            ct.OpenCtrl("NoMessageCtrl")
+        else
+            ct.OpenCtrl('GameNoticeCtrl')
+        end
     else
-        ct.OpenCtrl('GameNoticeCtrl')
+        if #Notice == 0  then
+            ct.OpenCtrl("NoMessageCtrl")
+        else
+            ct.OpenCtrl('GameNoticeCtrl')
+        end
     end
+
 end
 
 --聊天--

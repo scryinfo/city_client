@@ -15,16 +15,25 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.manager = mgr
     self.id = id
 
-    self.itemHedaer = self.prefab.transform:Find("hedaer").gameObject:GetComponent("Text");
-    self.from = self.prefab.transform:Find("from").gameObject:GetComponent("Text");
-    self.itemTime = self.prefab.transform:Find("time").gameObject:GetComponent("Text");
+    self.itemHedaer = self.prefab.transform:Find("bg/hedaer").gameObject:GetComponent("Text");
+    self.from = self.prefab.transform:Find("bg/from").gameObject:GetComponent("Text");
+    self.itemTime = self.prefab.transform:Find("bg/time").gameObject:GetComponent("Text");
     self.hint = self.prefab.transform:Find("hint").gameObject;
     self.onBg = self.prefab.transform:Find("bg").gameObject;
     self.newBg = self.prefab.transform:Find("newBg").gameObject;
+    self.newHedaer = self.prefab.transform:Find("newBg/newHedaer").gameObject:GetComponent("Text");
+    self.newFrom = self.prefab.transform:Find("newBg/newFrom").gameObject:GetComponent("Text");
+    self.newTime = self.prefab.transform:Find("newBg/newTime").gameObject:GetComponent("Text");
 
     self.itemHedaer.text = goodsDataInfo.header
     self.from.text = goodsDataInfo.from
     self.itemTime.text = os.date("%Y-%m-%d %H:%M:%S");
+    self.newHedaer.text = goodsDataInfo.header
+    self.newFrom.text = goodsDataInfo.from
+    self.newTime.text = self.itemTime.text
+
+    self.newBg:SetActive(false)
+    GameNoticePanel.GoodsScrollView:SetActive(false)
 
     self._luabehaviour:AddClick(self.onBg, self.OnBg, self);
 

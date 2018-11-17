@@ -34,8 +34,14 @@ end
 
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    self.totalCapacity = self.m_data;--仓库总容量
-    self.number = 500;--商品个数
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+    self.number = 0;--商品个数
+    if self.m_data.bag.inHand == nil then
+        return
+    end
+    for i, v in pairs(self.m_data.bag.inHand) do
+        self.number =  self.number + tonumber(v.n)
+    end
     self.money = 1000;--扩容所需金额
     self:_initData();
     isShowList = false;
@@ -76,12 +82,13 @@ end
 
 --点击删除
 function CenterWareHouseCtrl:c_OnDelete(go)
+    local buildingId = PlayerTempModel.roleData.bagId
     local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
-        Event.Brocast("m_DeleteItem",go)
+        Event.Brocast("m_DeleteItem",buildingId,go.itemId)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
@@ -166,11 +173,11 @@ end
 function CenterWareHouseCtrl:c_transport(msg)
     local table = self.WareHouseGoodsMgr.items
     for i,v in pairs(table) do
-        if v.itemId == msg.itemId then
-            if v.goodsDataInfo.number == msg.n then
+        if v.itemId == msg.item.key.id then
+            if v.goodsDataInfo.number == msg.item.n then
                 WareHouseGoodsMgr:_deleteGoods(i)
             else
-                v.numberText.text = v.goodsDataInfo.number - msg.n;
+                v.numberText.text = v.goodsDataInfo.number - msg.item.n;
                 v.goodsDataInfo.number = v.numberText.text;
             end
         end

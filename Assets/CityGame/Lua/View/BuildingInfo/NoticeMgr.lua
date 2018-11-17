@@ -41,6 +41,7 @@ function NoticeMgr:_createNotice(insluabehaviour)
             self.notice = {}
         end
         self.notice[i] = NoticeLuaItem
+        NoticeMgr.notice[i] = self.notice[i]
         --self.items  存的是Lua实例
     end
 end

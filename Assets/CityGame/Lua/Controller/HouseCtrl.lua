@@ -55,8 +55,19 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     self.m_data = houseDetailData
+    if houseDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+        self.m_data.isOther = true
+        HousePanel.changeNameBtn.localScale = Vector3.zero
+    else
+        self.m_data.isOther = false
+        HousePanel.changeNameBtn.localScale = Vector3.one
+    end
     self.m_data.buildingType = BuildingType.House
-    local houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+    if not self.houseToggleGroup then
+        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+    else
+        self.houseToggleGroup:updateData(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+    end
 end
 ---更改名字
 function HouseCtrl:_changeName(ins)
@@ -73,7 +84,8 @@ function HouseCtrl:_changeName(ins)
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 ---返回
-function HouseCtrl:_backBtn()
+function HouseCtrl:_backBtn(ins)
+    ins.houseToggleGroup:cleanItems()
     UIPage.ClosePage()
 end
 ---更改名字成功

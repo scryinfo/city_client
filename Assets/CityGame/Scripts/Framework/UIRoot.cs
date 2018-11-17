@@ -88,16 +88,16 @@ namespace City{
          subRoot.name = "NormalRoot";
          m_Instance.normalRoot = subRoot.transform;
          m_Instance.normalRoot.transform.localScale = Vector3.one;
+            
+         subRoot = CreateSubCanvasForRoot(go.transform, 0);
+         subRoot.name = "PopupRoot";
+         m_Instance.popupRoot = subRoot.transform;
+         m_Instance.popupRoot.transform.localScale = Vector3.one;
 
          subRoot = CreateSubCanvasForRoot(go.transform, 0);
          subRoot.name = "FixedRoot";
          m_Instance.fixedRoot = subRoot.transform;
          m_Instance.fixedRoot.transform.localScale = Vector3.one;
-
-         subRoot = CreateSubCanvasForRoot(go.transform, 0);
-         subRoot.name = "PopupRoot";
-         m_Instance.popupRoot = subRoot.transform;
-         m_Instance.popupRoot.transform.localScale = Vector3.one;
 
          //add Event System
          GameObject esObj = GameObject.Find("EventSystem");

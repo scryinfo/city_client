@@ -43,6 +43,12 @@ namespace UnityEngine.UI
             }
         }
 
+        public void SetLoopDiffPrefabSource(System.Collections.Generic.List<string> diffPrefabNameList)
+        {
+            prefabSource = new LoopScrollPrefabSource();
+            prefabSource.InitDiffPrefabData(diffPrefabNameList);
+        }
+
         //-----------------------------------------------------------------------------------xyf
 
         [Tooltip("Threshold for preloading")]
@@ -545,7 +551,7 @@ namespace UnityEngine.UI
 
         private RectTransform InstantiateNextItem(int itemIdx)
         {
-            RectTransform nextItem = prefabSource.GetObject().GetComponent<RectTransform>();
+            RectTransform nextItem = prefabSource.GetObject(itemIdx).GetComponent<RectTransform>();
             nextItem.transform.SetParent(content, false);
             nextItem.gameObject.SetActive(true);
             dataSource.mProvideData(nextItem, itemIdx);

@@ -10,8 +10,8 @@ namespace LuaFramework
     {
         private float _gridSize = 1f;
         private Transform TerrainTrans;
-
-
+        Ray ray;
+        RaycastHit hit;
         public Vector3 GetCoordinateByVector3(Vector3 RayPos)
         {
             if (null == TerrainTrans)
@@ -20,8 +20,7 @@ namespace LuaFramework
             }
             
             //从鼠标位置发射一条射线
-            Ray ray = Camera.main.ScreenPointToRay(RayPos);
-            RaycastHit hit;
+            ray = Camera.main.ScreenPointToRay(RayPos);
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 Debug.Log(TerrainTrans.name);

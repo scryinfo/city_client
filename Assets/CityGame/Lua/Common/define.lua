@@ -164,9 +164,10 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
-	Municipal=7,--市镇设施
-	MunicipalManage=8,--市政管理
-	ProcessingFactory = 2,  --加工厂
+	Municipal = 2,--市镇设施
+	MunicipalManage = 3,--市政管理
+	ProcessingFactory = 4,  --加工厂
+	Laboratory = 5,  --研究所
 }
 --建筑所属
 Buildingowner=

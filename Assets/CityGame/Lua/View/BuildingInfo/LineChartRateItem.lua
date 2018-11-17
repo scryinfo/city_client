@@ -108,3 +108,7 @@ function LineChartRateItem:updateInfo(data)
     end]]
 
 end
+
+function LineChartRateItem:destory()
+    destroy(self.viewRect.gameObject)
+end

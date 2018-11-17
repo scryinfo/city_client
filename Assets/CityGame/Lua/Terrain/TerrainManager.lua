@@ -1,8 +1,12 @@
 --Allen
 --地图管理器
---功能：
---      1、商业建筑实例类 堆栈
+--1.
+--      1、商业建筑实例类堆栈 ArchitectureStack[]
 --      2、
+
+
+
+
 UnitTest = require ('test/testFrameWork/UnitTest')
 --Framework/pbl/luaunit
 TerrainManager = {}
@@ -14,7 +18,7 @@ local blockRange = Vector2.New(20, 20)
 local CameraPosition
 local CameraCollectionID = -1
 
-
+--创建建筑成功回调
 local function CreateSuccess(go,table)
     local buildId = table[1]
     local Vec3 = table[2]
@@ -47,6 +51,7 @@ function TerrainManager.Refresh(pos)
         CameraCollectionID = tempCollectionID
         --TODO:向服务器发送新的所在地块ID，刷新数据model
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
+        UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
 end
 
@@ -89,24 +94,56 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
-local function CreateConstructBuildSuccess(go,table)
-    local buildId = table[1]
-    local Vec3 = table[2]
-    if TerrainManager.constructObj ~= nil then
-        destroy(TerrainManager.constructObj)
-    end
-    TerrainManager.constructObj = go
-    TerrainManager.constructObj.transform.position = Vec3
+--通过BlockCollectionID转化为BlcokID
+function TerrainManager.CollectionIDTurnBlockID(collectionID)
+    local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
+    local Y = (collectionID % math.ceil(TerrainRange.x /blockRange.x)) * blockRange.x
+    return X +  Y
 end
 
---修建建筑
+--创建临时修建建筑物
+local function CreateConstructBuildSuccess(go,table)
+    --判空
+    if #table <2 then
+        return;
+    end
+    DataManager.TempDatas.constructID  = table[1]
+    ct.OpenCtrl('ConstructSwitchCtrl')
+    DataManager.TempDatas.constructObj = go
+    DataManager.TempDatas.constructObj.transform.position = table[2]
+    TerrainManager.MoveTempConstructObj()
+end
+
+--取消建筑的修建
+function TerrainManager.AbolishConstructBuild()
+    --干掉临时GameObject
+    if DataManager.TempDatas.constructObj ~= nil then
+        destroy(DataManager.TempDatas.constructObj)
+        DataManager.TempDatas.constructObj = nil
+        DataManager.TempDatas.constructID = nil
+    end
+end
+
+--移动了ConstructObj
+function TerrainManager.MoveTempConstructObj()
+    if DataManager.TempDatas.constructObj ~= nil then
+        Event.Brocast("m_constructBuildGameObjectMove")
+    end
+end
+
+--修建建筑（临时）
 function TerrainManager.ConstructBuild(buildId,buildPos)
+    if DataManager.TempDatas.constructObj ~= nil then
+        Event.Brocast("m_abolishConstructBuild")
+    end
     buildMgr:CreateBuild(PlayerBuildingBaseData[buildId]["prefabRoute"],CreateConstructBuildSuccess,{buildId, buildPos})
 end
 
+--点击3D场景
+--若点击到3D建筑所占地块
 function TerrainManager.TouchBuild(MousePos)
     local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
-    local tempData =  DataManager.QueryBaseBuildData(TerrainManager.PositionTurnBlockID(tempPos))
+    local tempData = nil-- DataManager.QueryBaseBuildData(TerrainManager.PositionTurnBlockID(tempPos))
     if nil ~= tempData then
         local a  = tempData.Data
     end
@@ -119,6 +156,13 @@ UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function 
     ct.log("Allen_w9_SendPosToServer","[test_TerrainManager_self] ...............")
     Event.AddListener("c_SendPosToServer_self", function (obj)
         ReceiveArchitectureDatas(tempBuilds)
+    end)
+end)
+
+UnitTest.Exec("abel_w13_SceneOpt", "test_abel_w13_SceneOpt",  function ()
+    ct.log("abel_w13_SceneOpt","[test_abel_w13_SceneOpt] ...............")
+    Event.AddListener("c_abel_w13_SceneOpt", function (obj)
+        ReceiveArchitectureDatas(big)
     end)
 end)
 

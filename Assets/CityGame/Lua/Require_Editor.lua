@@ -32,6 +32,7 @@ else
     AutoRequire.getInstance():require("test/group")
     AutoRequire.getInstance():require("test/pbl")
     AutoRequire.getInstance():require("test/performance")
+    AutoRequire.getInstance():require("test/performanceOpt1")
     --AutoRequire.getInstance():require("test/testCoroutine")
     AutoRequire.getInstance():require("test")
     AutoRequire.getInstance():require("test/testMain")

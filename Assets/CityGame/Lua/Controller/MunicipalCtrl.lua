@@ -43,11 +43,11 @@ function MunicipalCtrl:Awake(go)
     BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, self.data)
 
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
+
     -----创建外部广告
     local creatData={count=1,buildingType=BuildingType.ProcessingFactory,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
     self.ItemCreatDeleteMgr:creat(ServerListCtrl.serverListBehaviour,creatData)
-
     ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
 
@@ -74,6 +74,7 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
+
 
 end
 

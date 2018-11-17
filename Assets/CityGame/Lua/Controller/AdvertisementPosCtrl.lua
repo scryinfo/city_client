@@ -28,10 +28,12 @@ end
 function AdvertisementPosCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
-
+local materialBehaviours
 function AdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
+
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    materialBehaviours=materialBehaviour
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(panel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     materialBehaviour:AddClick(panel.changeNameBtn.gameObject,self.OnClick_changeName,self);
@@ -77,7 +79,7 @@ function AdvertisementPosCtrl:Awake(go)
     -----创建广告
     local creatData={buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
-    self.ItemCreatDeleteMgr:creat(materialBehaviour,creatData)
+    self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
 end
 
 --更改名字

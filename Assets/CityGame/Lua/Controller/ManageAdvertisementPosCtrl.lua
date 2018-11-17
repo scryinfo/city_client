@@ -31,10 +31,11 @@ function ManageAdvertisementPosCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
     isShowList = false;
 end
-
+local materialBehaviours
 function ManageAdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    materialBehaviours=materialBehaviour
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     materialBehaviour:AddClick( ManageAdvertisementPosPanel.confirmBtn.gameObject,self.OnClick_confirm,self)
@@ -46,11 +47,11 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsBtn1.gameObject,self.OnClick_OnGoods,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
     -- self:OnClick_OnGoods();
+
     -----创建广告管理
     local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
-    self.ItemCreatDeleteMgr:creat(materialBehaviour,creatData)
-
+    self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
 end
 
 
@@ -63,10 +64,14 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
     for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
         v:GetComponent("Image").raycastTarget=true;
     end
-    ---服务器数据还原
-    for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
-        v.numtext.text=v.selfcount
+    if ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
+        ---服务器数据还原
+        for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+            v.prefab:SetActive(true)
+            v.numtext.text=v.selfcount
+        end
     end
+
 
     ins.ItemCreatDeleteMgr.AdvertisementDataList={}
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
@@ -78,7 +83,8 @@ function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 end
 --刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
-    -- ins.ItemCreatDeleteMgr.index
+
+
 end
 
 
@@ -158,6 +164,7 @@ function ManageAdvertisementPosCtrl:callback()
             Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
         end
     end
+
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
 
     ---服务器数据跟新

@@ -29,7 +29,10 @@ function ItemCreatDeleteMgr:initialize()
 
 
 end
-
+local idList={}
+local typelist={}
+local metald=0
+local adList={}
 function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     if not  self.addedItemList then
         self.addedItemList={}
@@ -42,10 +45,10 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     self.behaviour = luabehaviour
     self.buildingData=creatData
 
-    local idList={}
-    local typelist={}
-    local metald=0
-    local adList={}
+     idList={}
+  typelist={}
+   metald=0
+     adList={}
 
     if creatData.lMsg then
         if creatData.lMsg.ad then
@@ -139,7 +142,7 @@ function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.serverMapAdvertisementItemList[ServerMapAdvertisementItemID]=item
     ---给映射广告赋值数据
-   local ins  =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
+   local ins =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
     self.serverMapAdvertisementINSList[prefabData.metaId]=ins
     ServerMapAdvertisementItemID=ServerMapAdvertisementItemID+1
 end

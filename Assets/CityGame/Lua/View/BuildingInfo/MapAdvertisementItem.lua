@@ -46,16 +46,15 @@ function MapAdvertisementItem:OnClick_cut(go)
         go.manager.selectItemList[go.index]=nil
 
         go.manager.AdvertisementDataList[go.index]=nil
-
         return
     end
 
     go.numtext.text=go.numtext.text-1
 
-    go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001}
+    go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001,metaId=2151002}
 end
 
 function MapAdvertisementItem:OnClick_Plus(ins)
     ins.numtext.text=ins.numtext.text+1
-    ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001}
+    ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001,metaId=2151002}
 end

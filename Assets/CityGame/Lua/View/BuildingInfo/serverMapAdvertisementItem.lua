@@ -33,9 +33,6 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
         self.selfcount=prefabData.count
         self.updatecount=prefabData.count
     end
-
-
-
 end
 
 ---添加

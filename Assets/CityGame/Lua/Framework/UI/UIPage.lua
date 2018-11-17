@@ -61,11 +61,6 @@ function UIPage:Refresh()
 
 end
 
-
-function UIPage:Active()
-
-end
-
 function UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false

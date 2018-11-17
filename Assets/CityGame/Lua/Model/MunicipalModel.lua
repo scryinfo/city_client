@@ -20,6 +20,7 @@ function MunicipalModel.Awake()
     this:OnCreate();
     this.SlotList={}
     UpdateBeat:Add(this.Update, this)
+    this.manger=ItemCreatDeleteMgr:new()
 end
 
 
@@ -34,7 +35,7 @@ function MunicipalModel:OnCreate()
     Event.AddListener("m_adPutAdToSlot",this.m_adPutAdToSlot,self)--打广告
     Event.AddListener("m_Setticket",this.m_Setticket,self)--设置门票
     Event.AddListener("m_SetSlot",this.m_SetSlot,self)--设置槽位
-
+    Event.AddListener("m_DelAdFromSlot",this.m_DelAdFromSlot,self)--删广告
 
     ----注册 AccountServer 消息
     MunicipalModel.registerAsNetMsg()
@@ -48,6 +49,7 @@ function MunicipalModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adPutAdToSlot"),MunicipalModel.n_adPutAdToSlot);--打广告
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adSetSlot"),MunicipalModel.n_getSetSlot);--设置槽位
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adSlotTimeoutInform"),MunicipalModel.n_getadSlotTimeoutInform);--槽位过期
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adDelAdFromSlot"),MunicipalModel.n_getdeleteSlot);--删广告
 end
 
 --关闭事件--
@@ -72,16 +74,18 @@ end
 ---广告细节收包
 function MunicipalModel.n_getdetailPublicFacility(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility",stream),"广告细节收包失败")
-
+    this.SlotList={}
     if  lMsg.availableSlot then
         for i, v in ipairs(lMsg.availableSlot) do
             this.SlotList[i]=v
         end
     end
-
+    MunicipalModel.ticket=lMsg.qty;
+    MunicipalModel.lMsg=lMsg
 end
 
 ---添加槽位发包
+
 function MunicipalModel:m_addSlot(buildingID,minDayToRent,maxDayToRent,rentPreDay,deposit)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","adAddSlot")
@@ -95,7 +99,7 @@ end
 ---添加槽位收包
 function MunicipalModel.n_getaddSlot(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility.Slot", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-
+    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
 end
 
 ---删除槽位发包
@@ -113,9 +117,9 @@ end
 
 ---删除槽位收包
 function MunicipalModel.n_deleteSlot(stream)
-    table.remove(this.SlotList,1)
-    --local lMsg = assert(pbl.decode("gs.success", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
 
+    --local lMsg = assert(pbl.decode("gs.success", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
 end
 
 ---打广告发包
@@ -130,10 +134,13 @@ function MunicipalModel:m_adPutAdToSlot(Slotid,metaId,type,buildingId)
     local  pMsg = assert(pbl.encode("gs.AddAd", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    local t=self
 end
+
 ---打广告收包
 function MunicipalModel.n_adPutAdToSlot(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility.Ad", stream),"打广告收包失败")
+    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
 
 
 end
@@ -173,19 +180,46 @@ end
 ---槽位过期收包
 function MunicipalModel.n_getadSlotTimeoutInform(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility.Slot.id", stream),"槽位过期收包失败")
+end
+
+---删广告发包
+function MunicipalModel:m_DelAdFromSlot(buildingID,adid)
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","adDelAdFromSlot")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = { buildingId=buildingID,adId=adid}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.AdDelAdFromSlot", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    local t=self
+end
+---删广告收包
+function MunicipalModel.n_getdeleteSlot(stream)
+    local lMsg = assert(pbl.decode("gs.AdDelAdFromSlot", stream),"删广告收包收包失败")
+
 
 end
 
 
 
+
+
 function MunicipalModel.Update()
 
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
-    -- Event.Brocast("m_SetSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,MunicipalModel.SlotList[1].id,50,1,3) ---测试设置槽位
-        Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)--- 测试打广告
-        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    end
-
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
+    --    --    for i, v in pairs(MunicipalModel.lMsg.ad) do
+    --    --
+    --    --        Event.Brocast("m_DelAdFromSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,v.id)
+    --    --    end
+    --    --
+    --    --    num=num+1
+    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    --    --end
+    --    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
+    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    --    --end
 end
 
 

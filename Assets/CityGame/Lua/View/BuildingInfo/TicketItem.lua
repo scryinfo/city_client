@@ -31,7 +31,7 @@ function TicketItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanel
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,self.OntoDoBtn,self);
 
-
+    self.wageText.text=getPriceString(MunicipalModel.ticket..".0000",30,24)
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
 end
 
@@ -90,6 +90,4 @@ function TicketItem:callback()
         Event.Brocast("m_Setticket",PlayerTempModel.roleData.buys.publicFacility[1].info.id,tonumber(TicketAdjustPopPanel. ticketInp.text))
         self.wageText.text=getPriceString(TicketAdjustPopPanel.ticketInp.text..".0000",30,24)
     end
-
-
 end

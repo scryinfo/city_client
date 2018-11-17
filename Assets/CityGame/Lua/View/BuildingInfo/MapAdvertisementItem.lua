@@ -15,7 +15,7 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
     self.prefabData = prefabData;
     self.prefab = prefab;
     self._luabehaviour = inluabehaviour
-    self.manger=mgr
+    self.manager=mgr
     self.index=index
 
     self.numtext=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
@@ -24,6 +24,12 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
 
     self._luabehaviour:AddClick(self.cutBtnBtn.gameObject, self.OnClick_cut, self);
     self._luabehaviour:AddClick(self.plusBtn.gameObject, self.OnClick_Plus, self);
+
+    if prefabData.count then
+        self.numtext.text=prefabData.count
+    end
+
+
 
 end
 
@@ -34,22 +40,22 @@ function MapAdvertisementItem:OnClick_cut(go)
         ---消除自身
         destroy(self.transform.parent.parent.parent.gameObject)
         ---选中广告还原
-        go.manger.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
+        go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
         ---表数据清除
-        go.manger.addedItemList[go.index]=nil
-        go.manger.selectItemList[go.index]=nil
+        go.manager.addedItemList[go.index]=nil
+        go.manager.selectItemList[go.index]=nil
 
-        go.manger.AdvertisementDataList[go.index]=nil
+        go.manager.AdvertisementDataList[go.index]=nil
 
         return
     end
 
     go.numtext.text=go.numtext.text-1
 
-    go.manger.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001}
+    go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001}
 end
 
 function MapAdvertisementItem:OnClick_Plus(ins)
     ins.numtext.text=ins.numtext.text+1
-    ins.manger.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001}
+    ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001}
 end

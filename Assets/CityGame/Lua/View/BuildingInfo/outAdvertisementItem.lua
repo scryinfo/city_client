@@ -19,6 +19,8 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
     self.id = id
     self.ItemList=mgr.outAdvertisementItemList
 
+    self.peopleText=prefab.transform:Find("showPanel/peoplecount/peoplecountText"):GetComponent("Text")
+    self.peopleText.text=prefabData.metaId
 
 
 end

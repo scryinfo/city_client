@@ -110,7 +110,7 @@ function WarehouseCtrl:getNumber(table)
         return 0
     else
         for k,v in pairs(table) do
-            number = number + v.num
+            number = number + v.n
         end
     end
     return number
@@ -144,9 +144,20 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     if not go.ShelfGoodsMgr.shelfPanelItem then
         return;
-    end
-    for i,v in pairs(go.ShelfGoodsMgr.shelfPanelItem) do
-        Event.Brocast("m_ReqShelfAdd",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+    else
+        for i,v in pairs(go.ShelfGoodsMgr.shelfPanelItem) do
+            if not MaterialModel.MaterialShelf then
+                Event.Brocast("m_ReqShelfAdd",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                return;
+            else
+                for k,t in pairs(MaterialModel.MaterialShelf) do
+                    if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
+                        Event.Brocast("m_ReqModifyShelf",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                    end
+                end
+            end
+            Event.Brocast("m_ReqShelfAdd",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+        end
     end
 end
 --确定运输
@@ -163,11 +174,11 @@ end
 function WarehouseCtrl:n_transports(msg)
     local table = self.ShelfGoodsMgr.WarehouseItems
     for i,v in pairs(table) do
-        if v.itemId == msg.itemId then
-            if v.goodsDataInfo.num == msg.n then
+        if v.itemId == msg.item.key.id then
+            if v.goodsDataInfo.num == msg.item.n then
                 self.ShelfGoodsMgr:_WarehousedeleteGoods(i)
             else
-                v.numberText.text = v.goodsDataInfo.num - msg.n;
+                v.numberText.text = v.goodsDataInfo.num - msg.item.n;
                 v.goodsDataInfo.num = v.numberText.text
             end
             for i in pairs(WarehouseCtrl.temporaryItems) do

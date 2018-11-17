@@ -69,7 +69,7 @@ function MunicipalModel:m_detailPublicFacility(buildingID)
     local  pMsg = assert(pbl.encode("gs.Id", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-
+    local t=self
 end
 ---广告细节收包
 function MunicipalModel.n_getdetailPublicFacility(stream)
@@ -85,7 +85,6 @@ function MunicipalModel.n_getdetailPublicFacility(stream)
 end
 
 ---添加槽位发包
-
 function MunicipalModel:m_addSlot(buildingID,minDayToRent,maxDayToRent,rentPreDay,deposit)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","adAddSlot")
@@ -140,9 +139,13 @@ end
 ---打广告收包
 function MunicipalModel.n_adPutAdToSlot(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility.Ad", stream),"打广告收包失败")
-    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
 
-
+        if not this.manger.adList[lMsg.metaId] then
+            this.manger.adList[lMsg.metaId]={}
+            --this.manger:_creatserverMapAdvertisementItem(lMsg)
+            --this.manger.serverMapAdvertisementINSList[lMsg.metaId].numtext.text=this.manger.MapAdvertisementINSList[lMsg.metaId].numtext.text
+        end
+    table.insert(this.manger.adList[lMsg.metaId],lMsg)
 end
 
 ---设置门票发包

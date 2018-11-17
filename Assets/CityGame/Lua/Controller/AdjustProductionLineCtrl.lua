@@ -1,4 +1,5 @@
 AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPage);
+UIPage:ResgisterOpen(AdjustProductionLineCtrl) --注册打开的方法
 
 --实例
 AdjustProductionLineCtrl.productionLineTab = {};
@@ -20,7 +21,10 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
+    adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
 
+    --读取服务器发过来的信息，是否有生产线
+    ShelfGoodsMgr:_getProductionLine(self.m_data)
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -46,12 +50,13 @@ end
 
 --确定生产
 function AdjustProductionLineCtrl:OnClick_determineBtn()
+    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     local number,steffNumber,itemid = ShelfGoodsMgr:testSend()
-    if tonumber(number) == 0 then
+    if number == nil then
         ct.log("system","数量不能为0")
         return;
     end
-    if tonumber(steffNumber) == 0 then
+    if steffNumber == nil then
         ct.log("system","人数不能为0")
         return;
     end
@@ -59,5 +64,11 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
         ct.log("system","人数不足")
         return;
     end
-    Event.Brocast("m_OnDetermineBtn",number,steffNumber,itemid);
+    Event.Brocast("m_ReqDetermineBtn",buildingId,number,steffNumber,itemid);
+end
+--修改
+function AdjustProductionLineCtrl:OnClick_modifyBtn()
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    --local number
+    --Event.Brocast("m_ResModifyKLine");
 end

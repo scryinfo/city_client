@@ -45,6 +45,7 @@ function MaterialModel.n_OnOpenMaterial(stream)
     if msgMaterial then
         MaterialModel.MaterialWarehouse = msgMaterial.store.inHand;
         MaterialModel.MaterialShelf = msgMaterial.shelf.good
+        MaterialModel.MaterialProductionLine = msgMaterial.line
     end
 end
 

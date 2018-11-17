@@ -1,4 +1,5 @@
 ShelfCtrl = class('ShelfCtrl',UIPage)
+UIPage:ResgisterOpen(ShelfCtrl) --注册打开的方法
 
 local isShowList;
 local listTrue = Vector3.New(0,0,180)
@@ -72,8 +73,9 @@ function ShelfCtrl.OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
-function ShelfCtrl:OnClick_createGoods(ins)
-    ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+function ShelfCtrl:OnClick_createGoods()
+    --ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+    ct.OpenCtrl("WarehouseCtrl")
 end
 
 function ShelfCtrl.OnCloseBtn()

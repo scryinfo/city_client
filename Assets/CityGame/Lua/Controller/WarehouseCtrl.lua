@@ -1,4 +1,5 @@
 WarehouseCtrl = class('WarehouseCtrl',UIPage);
+UIPage:ResgisterOpen(WarehouseCtrl) --注册打开的方法
 
 --物品上架还是运输
 ct.GoodsState =
@@ -137,7 +138,8 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
 end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
-    UIPage:ShowPage(ChooseWarehouseCtrl);
+    --UIPage:ShowPage(ChooseWarehouseCtrl);
+    ct.OpenCtrl("ChooseWarehouseCtrl")
 end
 --确定上架
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)

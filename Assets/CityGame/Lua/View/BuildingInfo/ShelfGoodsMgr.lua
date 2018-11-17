@@ -28,18 +28,17 @@ end
 
 --仓库创建物品
 function ShelfGoodsMgr:_creatWarehouseItemGoods()
-    --测试数据
-    self.WarehouseModelData = {}
-
-    local configTable = {}
     if not MaterialModel.MaterialWarehouse then
         return;
     end
+    --测试数据
+    self.WarehouseModelData = {}
+    local configTable = {}
     for i,v in pairs(MaterialModel.MaterialWarehouse) do
         local uiTab = {}
-        uiTab.name = Material[v.id].name
-        uiTab.num = v.num
-        uiTab.itemId = v.id
+        uiTab.name = Material[v.key.id].name
+        uiTab.num = v.n
+        uiTab.itemId = v.key.id
         configTable[i] = uiTab
 
         --预制的信息
@@ -60,17 +59,17 @@ end
 
 --货架创建物品
 function ShelfGoodsMgr:_creatStaffItemGoods()
+    if not MaterialModel.MaterialShelf then
+        return;
+    end
     --测试数据
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if not MaterialModel.MaterialShelf then
-        return;
-    end
     for i,v in pairs(MaterialModel.MaterialShelf) do
         local shelfDataInfo = {}
-        shelfDataInfo.name = Material[v.itemId].name
-        shelfDataInfo.number = v.num
+        shelfDataInfo.name = Material[v.k.id].name
+        shelfDataInfo.number = v.n
         shelfDataInfo.money = "E"..v.price..".0000"
         configTable[i] = shelfDataInfo
 
@@ -127,26 +126,60 @@ end
 
 --添加生产线
 function ShelfGoodsMgr:_creatProductionLine(name,itemId)
-    local configTable = {};
-    configTable.name = name
-    configTable.itemId = itemId;
-    itemsId = itemId;
-    AdjustProductionLineCtrl.productionLineUIInfo[itemId] = configTable
+        local configTable = {};
+        configTable.name = name
+        configTable.itemId = itemId;
+        itemsId = itemId;
+        AdjustProductionLineCtrl.productionLineUIInfo[itemId] = configTable
 
-    local prefabData = {}
-    prefabData.state = 'idel'
-    prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[itemId]
-    prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-    AdjustProductionLineCtrl.productionLinePrefab[itemId] = prefabData
+        local prefabData = {}
+        prefabData.state = 'idel'
+        prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[itemId]
+        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        AdjustProductionLineCtrl.productionLinePrefab[itemId] = prefabData
 
-    local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self,itemId);
-    AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self,itemId);
+        AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
 end
+--读取服务器发过来的信息，是否有生产线
+function ShelfGoodsMgr:_getProductionLine(table)
+    if not table then
+        return;
+    end
+    local configTable = {}
+    for i,v in pairs(table) do
+        local uiTab = {}
+        uiTab.name = Material[v.itemId].name
+        uiTab.itemId = v.itemId
+        uiTab.nowCount = v.nowCount
+        uiTab.targetCount = v.targetCount
+        uiTab.workerNum = v.workerNum
+        configTable[i] = uiTab
+        AdjustProductionLineCtrl.productionLineUIInfo[i] = configTable
 
+        local prefabData = {}
+        prefabData.state = 'idel'
+        prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[i]
+        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        AdjustProductionLineCtrl.productionLinePrefab[i] = prefabData
+
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,self.behaviour,self,v.itemId);
+        AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
+    end
+end
 --Test
 function ShelfGoodsMgr:testSend()
+    if itemsId == nil then
+        return;
+    end
     local number = AdjustProductionLineCtrl.productionLineTab[itemsId].inputNumber.text;
     local steffNumber = AdjustProductionLineCtrl.productionLineTab[itemsId].staffNumberText.text;
+    if number == nil then
+        return;
+    end
+    if steffNumber == nil then
+        return;
+    end
     return number,steffNumber,itemsId;
 end
 

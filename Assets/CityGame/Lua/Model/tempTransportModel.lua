@@ -35,7 +35,7 @@ end
 function tempTransportModel.m_ReqTransport(src,dst, itemId, n)
     ct.log("system",src,dst,itemId,n)
     local msgId = pbl.enum("gscode.OpCode","transferItem")
-    local lMsg = {src = src,dst = dst,itemId = itemId,n = n}
+    local lMsg = {src = src,dst = dst,item = {key = {id = itemId},n = n}}
     local pMsg = assert(pbl.encode("gs.TransferItem", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end

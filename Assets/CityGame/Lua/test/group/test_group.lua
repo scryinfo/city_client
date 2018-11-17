@@ -6,14 +6,18 @@
 TestGroup.active_TestGroup("Allen_wk13")
 TestGroup.active_TestGroup("abel_w11_showFps")
 TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --激活测试组
+--TestGroup.active_TestGroup("abel_w13_SceneOpt") --激活测试组
 TestGroup.active_TestGroup("Allen_w9") --激活测试组
 --TestGroup.active_TestGroup("abel_w4_proto_Role")
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")
-TestGroup.active_TestGroup("abel_w11_uuid")
-TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
-TestGroup.active_TestGroup("cycle_w11_exchangeModel")
-TestGroup.active_TestGroup("cycle_w12_hosueServer")
+--TestGroup.active_TestGroup("abel_w11_uuid")
+--TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
+--TestGroup.active_TestGroup("cycle_w11_exchangeModel")
+--TestGroup.active_TestGroup("cycle_w12_hosueServer")
+--TestGroup.active_TestGroup("abel_w13_abel_sort_tb_eq")
+--TestGroup.active_TestGroup("abel_w13_abel_sort_tb")
+--TestGroup.active_TestGroup("abel_w13_abel_sort")
 --TestGroup.active_TestGroup("abel_w11_uuid")
 --TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
 --TestGroup.active_TestGroup("fisher_w11_ProcessingCtrl")

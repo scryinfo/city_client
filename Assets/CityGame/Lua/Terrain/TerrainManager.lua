@@ -47,6 +47,7 @@ function TerrainManager.Refresh(pos)
         CameraCollectionID = tempCollectionID
         --TODO:向服务器发送新的所在地块ID，刷新数据model
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
+        UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
 end
 
@@ -119,6 +120,13 @@ UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function 
     ct.log("Allen_w9_SendPosToServer","[test_TerrainManager_self] ...............")
     Event.AddListener("c_SendPosToServer_self", function (obj)
         ReceiveArchitectureDatas(tempBuilds)
+    end)
+end)
+
+UnitTest.Exec("abel_w13_SceneOpt", "test_abel_w13_SceneOpt",  function ()
+    ct.log("abel_w13_SceneOpt","[test_abel_w13_SceneOpt] ...............")
+    Event.AddListener("c_abel_w13_SceneOpt", function (obj)
+        ReceiveArchitectureDatas(big)
     end)
 end)
 

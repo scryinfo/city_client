@@ -63,13 +63,15 @@ function BuildingInfoToggleGroupMgr:updateData(leftRect, rightRect, mainPanelLua
         self:_creatMunicipalInfo()
     elseif buildingData.buildingType == BuildingType.ProcessingFactory then
         self:_creatProcessingInfo()
+    elseif buildingData.buildingType == BuildingType.Laboratory then
+        self:_creatResearchLineInfo()
     end
 
     --创建完之后调整item位置
     self:_sortItems(1)
     self:_sortRightItems()
 end
-
+--清除lua实例
 function BuildingInfoToggleGroupMgr:cleanItems()
     for i, item in ipairs(self.leftData) do
         item = nil
@@ -319,6 +321,22 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
 
 end
+---研究所
+function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
+    ---员工  左1
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
+    self.leftData[1] = self:_createStaff(staffToggleData)
+    ---仓库  左2
+    local warehouseView
+    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+    warehouseView.gameObject.name = "WarehouseRateItem"
+    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    self.leftData[2] = warehouseLuaItem
+    ---研究线 --右1
+    local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+    self.rightData[1] = self:_creatResearchLine(researchLineToggleData)
+end
 
 ---通用部分
 --折线图
@@ -416,4 +434,22 @@ function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
     rentalData.isOther = self.toggleData.isOther  --
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     return rentalLuaItem
+end
+---研究所部分
+--研究线
+function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
+    --if not self.researchLineViewRect then
+    --    self.researchLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
+    --    self.researchLineViewRect.gameObject.name = "ResearchLine"
+    --end
+
+    --local rentalData = {}
+    --rentalData.buildingId = self.toggleData.info.id
+    --rentalData.buildingTypeId = self.toggleData.info.mId
+    --rentalData.rent = self.toggleData.rent
+    --rentalData.suggestRent = self.toggleData.rent
+    --rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    --rentalData.isOther = self.toggleData.isOther  --
+    --local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
+    --return rentalLuaItem
 end

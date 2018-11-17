@@ -1741,7 +1741,7 @@ end
 CityEngineLua.login_baseapp = function(noconnect)
 	if(noconnect) then
 		--Event.fireOut("onLoginBaseapp", new object[]{});
-		this._networkInterface:reset();
+ 		this._networkInterface:reset();
 		this.currserver = "baseapp";
 		this._networkInterface = City.NetworkInterface.New();
 		this._networkInterface:connectTo(this.baseappIP, this.baseappPort, this.onConnectTo_baseapp_callback, nil);

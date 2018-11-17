@@ -41,4 +41,32 @@ public class ActiveLoopScrollRect : MonoBehaviour
             mLoopScrollRect.RefreshCells();
         }
     }
+
+    /// <summary>
+    /// 初始化 滑动中存在不同预制的item
+    /// </summary>
+    /// <param name="data">委托方法</param>
+    /// <param name="diffPrefabNameList">预制名字顺序表</param>
+    public void ActiveDiffItemLoop(LoopScrollDataSource data, List<string> diffPrefabNameList = null)
+    {
+        if (mLoopScrollRect == null)
+        {
+            mLoopScrollRect = GetComponent<LoopScrollRect>();
+        }
+        if (diffPrefabNameList != null)
+        {
+            mLoopScrollRect.SetLoopDiffPrefabSource(diffPrefabNameList);
+        }
+        if (mLoopScrollRect.GetInstance() == null)
+        {
+            mLoopScrollRect.SetInstance(data);
+            mLoopScrollRect.totalCount = diffPrefabNameList.Count;
+        }
+        else
+        {
+            mLoopScrollRect.totalCount = diffPrefabNameList.Count;
+            mLoopScrollRect.RefreshCells();
+        }
+    }
+    
 }

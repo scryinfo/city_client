@@ -75,8 +75,9 @@ function AdvertisementPosCtrl:Awake(go)
     end)
 
     -----创建广告
-    local creatData={count=1,buildingType=BuildingType.Municipal}
-    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    local creatData={buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
+    self.ItemCreatDeleteMgr=MunicipalModel.manger
+    self.ItemCreatDeleteMgr:creat(materialBehaviour,creatData)
 end
 
 --更改名字

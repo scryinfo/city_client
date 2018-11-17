@@ -47,8 +47,10 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
     -- self:OnClick_OnGoods();
     -----创建广告管理
-    local creatData={count=1,buildingType=BuildingType.MunicipalManage}
-    self.ItemCreatDeleteMgr =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
+    self.ItemCreatDeleteMgr=MunicipalModel.manger
+    self.ItemCreatDeleteMgr:creat(materialBehaviour,creatData)
+
 end
 
 
@@ -60,6 +62,10 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
     end
     for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
         v:GetComponent("Image").raycastTarget=true;
+    end
+    ---服务器数据还原
+    for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+        v.numtext.text=v.selfcount
     end
 
     ins.ItemCreatDeleteMgr.AdvertisementDataList={}
@@ -116,8 +122,6 @@ function ManageAdvertisementPosCtrl:OnClick_OnGoods()
     ManageAdvertisementPosPanel.goodsBtn.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.buildingBtn.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.buildingBtn1.gameObject:SetActive(false);
-
-
 end
 
 function ManageAdvertisementPosCtrl:OnClick_OnBuild()
@@ -128,8 +132,6 @@ function ManageAdvertisementPosCtrl:OnClick_OnBuild()
     ManageAdvertisementPosPanel.buildingBtn1.gameObject:SetActive(true);
     ManageAdvertisementPosPanel.goodsBtn.gameObject:SetActive(false);
     ManageAdvertisementPosPanel.goodsBtn1.gameObject:SetActive(true);
-
-
 end
 
 function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
@@ -139,8 +141,6 @@ function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
 end
 
 function ManageAdvertisementPosCtrl:callback()
-
-
     UIPage:ClosePage()
     ct.OpenCtrl("AdvertisementPosCtrl")
     for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
@@ -153,12 +153,35 @@ function ManageAdvertisementPosCtrl:callback()
     ---创建打的广告
     for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
+        ---发送打广告请求
+        for i = 1, v.count do
+            Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+        end
     end
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
 
+    ---服务器数据跟新
+    if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
+        for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+            if  tonumber(v.selfcount) < tonumber(v.updatecount) then---添加广告
+            for i = 1, (v.updatecount-v.selfcount) do
+                Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+                self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
+                v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+            end
+
+            else---删广告
+                for k = 1, (v.selfcount-v.updatecount)  do
+               Event.Brocast("m_DelAdFromSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,self.ItemCreatDeleteMgr.adList[v.metaId][1].id)
+                table.remove(self.ItemCreatDeleteMgr.adList[v.metaId],1)
+                    self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
+                    v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+                end
+            end
+        end
+    end
+
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
-
-
 end
 
 

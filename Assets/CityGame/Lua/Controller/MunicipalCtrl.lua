@@ -44,8 +44,9 @@ function MunicipalCtrl:Awake(go)
 
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
     -----创建外部广告
-    local creatData={count=1,buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
-    local item =ItemCreatDeleteMgr:new(ServerListCtrl.serverListBehaviour,creatData)
+    local creatData={count=1,buildingType=BuildingType.ProcessingFactory,lMsg=MunicipalModel.lMsg}
+    self.ItemCreatDeleteMgr=MunicipalModel.manger
+    self.ItemCreatDeleteMgr:creat(ServerListCtrl.serverListBehaviour,creatData)
 
     ---小弹窗
     self.root=MunicipalPanel.changeNameBtn.root;
@@ -60,7 +61,7 @@ end
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     UIPage:ShowPage(InputDialogPageCtrl, data)
-end
+    end
 
 --返回
 function MunicipalCtrl:OnClick_backBtn()

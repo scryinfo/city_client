@@ -20,6 +20,7 @@ MunicipalCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 --构建函数
 function MunicipalCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    self.prefab = nil
 end
 
 function MunicipalCtrl:bundleName()
@@ -90,13 +91,11 @@ function MunicipalCtrl:c_creatGoods(path,parent)
 end
 
 function MunicipalCtrl:c_SmallPop(string)
-    local prefab=UnityEngine.GameObject.FindGameObjectWithTag("Finish")
-
-    if not prefab then
-        prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
+    if not self.prefab  then
+        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
     end
 
-    SmallPopItem:new(string,prefab,self);
+    SmallPopItem:new(string,self.prefab ,self);
 end
 
 UnitTest.TestBlockStart()---------------------------------------------------------

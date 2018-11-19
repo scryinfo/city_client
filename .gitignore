@@ -334,3 +334,5 @@ StreamingAssets
 /Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture.meta
 /Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/ExampleWheelController.cs
 /Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/ExampleWheelController.cs.meta
+/Assets/CityGame/Lua/Require_Android.lua
+/Assets/CityGame/Lua/Require_Android.lua.meta

@@ -20,22 +20,26 @@ end
 
 function LabResearchCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
-    --关闭面板
-    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    LuaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
-        UIPage.ClosePage()
-    end)
 end
 
 function LabResearchCtrl:Awake(go)
     self.gameObject = go
-    LabResearchCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
+        UIPage.ClosePage()
+    end)
+    self.luaBehaviour:AddClick(LabResearchPanel.researchBtn.gameObject, function()
+        self:_researchLineOpen()
+    end)
+    self.luaBehaviour:AddClick(LabResearchPanel.inventionBtn.gameObject, function()
+        self:_inventionLineOpen()
+    end)
 
     --滑动复用部分
-    self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.researchSource.mProvideData = LabResearchCtrl.static.researchProvideData
     self.researchSource.mClearData = LabResearchCtrl.static.researchClearData
-    self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  --收藏
+    self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  --发明
     self.inventionSource.mProvideData = LabResearchCtrl.static.inventionProvideData
     self.inventionSource.mClearData = LabResearchCtrl.static.inventionClearData
 end
@@ -58,98 +62,125 @@ end
 
 function LabResearchCtrl:_initPanelData()
     self:_addListener()
-
-    LabResearchPanel._researchToggleState(true)
-    LabResearchPanel._inventionToggleState(false)
-    LabResearchPanel.researchScroll.transform.localScale = Vector3.one
-    LabResearchPanel.inventionScroll.transform.localScale = Vector3.zero
-
+    self:_researchLineOpen()
     LabResearchCtrl.researchItems = {}
     LabResearchCtrl.inventionItems = {}
 
-    self.researchPrefabList =
-    {
-        LaboratoryCtrl.static.EmptyBtnPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-        LaboratoryCtrl.static.LabResearchItemPath,
-    }
-    LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, self.researchPrefabList)
+    --模拟服务器发来的数据
+    self:c_onReceiveLabResearchData()
+    --LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, self.researchPrefabList)
 
     --Event.Brocast("m_ReqExchangeItemList")
 end
 
----toggle
-function LabResearchCtrl:_researchToggleValueChange(isOn)
+---按钮切页
+function LabResearchCtrl:_researchLineOpen()
+    LabResearchPanel._researchToggleState(true)
+    LabResearchPanel._inventionToggleState(false)
 
+    self:c_onReceiveLabResearchData()
+end
+function LabResearchCtrl:_inventionLineOpen()
+    LabResearchPanel._researchToggleState(false)
+    LabResearchPanel._inventionToggleState(true)
+
+    self:c_onReceiveLabInventionData()
 end
 
 ---滑动复用
 --研究
 LabResearchCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
-        --self.researchEmptyBtn = ExchangeQuoteItem:new(LabResearchCtrl.quoteDatas[idx], transform)
+        LabResearchCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
+            --打开研究选择界面
+            ct.log("cycle_w13_laboratory", "打开研究选择界面")
+        end)
         return
     end
 
-    --idx = idx + 1
-    --local item = ExchangeQuoteItem:new(LabResearchCtrl.quoteDatas[idx], transform)
-    --LabResearchCtrl.researchItems[idx] = item
+    idx = idx + 1
+    local item = LabResearchLineItem:new(LabResearchCtrl.researchInfoData[idx], transform)
+    LabResearchCtrl.researchItems[idx] = item
 end
 LabResearchCtrl.static.researchClearData = function(transform)
 end
 --发明
 LabResearchCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
-        --self.researchEmptyBtn = ExchangeQuoteItem:new(LabResearchCtrl.quoteDatas[idx], transform)
+        LabResearchCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
+            --打开研究选择界面
+            ct.log("cycle_w13_laboratory", "打开发明选择界面")
+        end)
         return
     end
 
     idx = idx + 1
-    local item = ExchangeQuoteItem:new(LabResearchCtrl.quoteDatas[idx], transform)
+    local item = LabInventionLineItem:new(LabResearchCtrl.inventionInfoData[idx], transform)
     LabResearchCtrl.inventionItems[idx] = item
 end
 LabResearchCtrl.static.inventionClearData = function(transform)
 end
 
 ---从modle传来的回调
-function LabResearchCtrl:c_onReceiveExchangeItemList(datas)
+--研究
+function LabResearchCtrl:c_onReceiveLabResearchData(datas)
+    local researchInfoData = {}
+    researchInfoData[1] = {itemId = 2151001, staffCount = 20}
+    researchInfoData[2] = {itemId = 2151002, staffCount = 22}
+    researchInfoData[3] = {itemId = 2151003, staffCount = 25}
+    researchInfoData[4] = {itemId = 2151004, staffCount = 21}
+    researchInfoData[5] = {itemId = 2152001, staffCount =  2}
+    researchInfoData[6] = {itemId = 2152002, staffCount = 32}
+    researchInfoData[7] = {itemId = 2152003, staffCount = 12}
+    researchInfoData[8] = {itemId = 2152004, staffCount =  7}
+    researchInfoData[9] = {itemId = 2153001, staffCount =  9}
+    researchInfoData[10] = {itemId = 2153002, staffCount = 11}
+    researchInfoData[11] = {itemId = 2153003, staffCount = 15}
+    researchInfoData[12] = {itemId = 2153004, staffCount = 19}
 
+    if not self.researchPrefabList then
+        self.researchPrefabList = {}
+    end
+    local researchPrefabList = {}
+    for i, item in ipairs(researchInfoData) do
+        researchPrefabList[i] = LaboratoryCtrl.static.LabResearchItemPath
+    end
+    --预留第一个数据给按钮
+    table.insert(researchInfoData, 1, {})
+    table.insert(researchPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
+
+    LabResearchCtrl.researchInfoData = researchInfoData
+    self.researchPrefabList = researchPrefabList
+    LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, self.researchPrefabList)
+end
+--发明
+function LabResearchCtrl:c_onReceiveLabInventionData(datas)
+    local inventionInfoData = {}
+    inventionInfoData[1] = {itemId = 2151004, staffCount = 20}
+    inventionInfoData[2] = {itemId = 2151003, staffCount = 22}
+    inventionInfoData[3] = {itemId = 2151002, staffCount = 25}
+    inventionInfoData[4] = {itemId = 2151001, staffCount = 21}
+    inventionInfoData[5] = {itemId = 2152001, staffCount =  2}
+    inventionInfoData[6] = {itemId = 2152002, staffCount = 32}
+    inventionInfoData[7] = {itemId = 2152003, staffCount = 12}
+    inventionInfoData[8] = {itemId = 2152004, staffCount =  7}
+    inventionInfoData[9] = {itemId = 2153001, staffCount =  9}
+    inventionInfoData[10] = {itemId = 2153002, staffCount = 11}
+    inventionInfoData[11] = {itemId = 2153003, staffCount = 15}
+    inventionInfoData[12] = {itemId = 2153004, staffCount = 19}
+
+    if not self.inventionPrefabList then
+        self.inventionPrefabList = {}
+    end
+    local inventionPrefabList = {}
+    for i, item in ipairs(inventionInfoData) do
+        inventionPrefabList[i] = LaboratoryCtrl.static.LabInventionItemPath
+    end
+    --预留第一个数据给按钮
+    table.insert(inventionInfoData, 1, {})
+    table.insert(inventionPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
+
+    LabResearchCtrl.inventionInfoData = inventionInfoData
+    self.inventionPrefabList = inventionPrefabList
+    LabResearchPanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, self.inventionPrefabList)
 end

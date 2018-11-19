@@ -31,6 +31,11 @@ end
 local materialBehaviours
 function AdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
+    ---他人进入
+    if  go then
+      --  panel.buyGo.gameObject:SetActive(true)
+        -- panel.manageBtn.gameObject:SetActive(false)
+    end
 
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviours=materialBehaviour
@@ -122,19 +127,20 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     -----发送网络消息
     if panel.qunayityInp.text>panel.adAllday then---添加槽位
         for i = 1, panel.qunayityInp.text-panel.adAllday do
-            Event.Brocast("m_addSlot",buildingID,0,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text))
+            Event.Brocast("m_addSlot",buildingID,1,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text))
         end
         panel.adAllday=panel.qunayityInp.text
 
     elseif  panel.qunayityInp.text<panel.adAllday  then---删除槽位
     for i = 1, panel.adAllday-panel.qunayityInp.text do
         Event.Brocast("m_deleteSlot",buildingID,MunicipalModel.SlotList[1].id)
+        table.remove(MunicipalModel.SlotList,1)
     end
         panel.adAllday=panel.qunayityInp.text
 
     else---设置租金和最大天数
         for i, v in pairs(MunicipalModel.SlotList) do
-            Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),0,tonumber(panel.leaseInp.text))
+            Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),1,tonumber(panel.leaseInp.text))
         end
     end
 end

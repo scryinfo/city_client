@@ -143,7 +143,7 @@ end
 --require("Config/Material")
 function ExchangeCtrl:_creatGoodsConfig()
     local datas = {}
-    for i, itemMat in ipairs(Material) do
+    for k, itemMat in pairs(Material) do
         datas[itemMat.itemId] = itemMat
         datas[itemMat.itemId].lowPrice = 0.00
         datas[itemMat.itemId].highPrice = 0.00

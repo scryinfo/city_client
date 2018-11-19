@@ -70,6 +70,12 @@ function Game.OnPostInitOK()
         CenterWareHouseModel:Awake();
     end
 
+    --测试中心仓库
+    local MunicipalModel = CtrlManager.GetModel(ModelNames.Municipal);
+    if MunicipalModel ~= nil then
+        MunicipalModel:Awake();
+    end
+
     --测试玩家临时数据
     local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
     if playerTempModel ~= nil then
@@ -81,6 +87,7 @@ function Game.OnPostInitOK()
     if AdjustProductionLineModel ~= nil then
         AdjustProductionLineModel:Awake();
     end
+
     --测试临时角色信息界面
     --local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
     --if PlayerTempModel ~= nil then

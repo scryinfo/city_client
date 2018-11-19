@@ -39,6 +39,7 @@ function AdvertisementPosPanel.InitPanel()
     this.qunayityInp=transform:Find("rightRoot/resize/bg/body/quantity/InputField"):GetComponent("InputField")
     this.leaseInp=transform:Find("rightRoot/resize/bg/body/lease/InputField"):GetComponent("InputField")
     this.rentInp=transform:Find("rightRoot/resize/bg/body/rent/InputField"):GetComponent("InputField")
+    this.adAllday="0"
 
     --他人进入
     this.buyGo=transform:Find("rightRoot/Buy")

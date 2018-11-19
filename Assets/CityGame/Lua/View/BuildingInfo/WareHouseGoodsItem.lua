@@ -15,6 +15,8 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.manager = mgr
     self.id = id
     self.itemId = goodsDataInfo.itemId
+    self.producerId = goodsDataInfo.producerId
+    self.qty = goodsDataInfo.qty
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;

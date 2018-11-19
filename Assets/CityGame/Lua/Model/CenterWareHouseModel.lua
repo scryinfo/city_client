@@ -37,7 +37,7 @@ function CenterWareHouseModel:m_bagCapacity(bagCapacity)
 end
 
 function CenterWareHouseModel:m_opCenterWareHouse()
-    ct.OpenCtrl("CenterWareHouseCtrl",this.bagCapacity)
+    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
 end
 --仓库扩容发包
 function CenterWareHouseModel:m_ExtendBag()
@@ -57,13 +57,13 @@ function CenterWareHouseModel:n_GsDelItem(stream)
 end
 
 --删除商品发包
-function CenterWareHouseModel:m_DeleteItem(go)
-    local buildingId = PlayerTempModel.roleData.bagId
+function CenterWareHouseModel:m_DeleteItem(buildingId,id)
+
     ct.log("rodger_w8_GameMainInterface","[test_n_GsDel]  测试完毕",buildingId)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","delItem")
     ----2、 填充 protobuf 内部协议数据
-    local lMsg = { buildingId = buildingId, itemId = go.itemId }
+    local lMsg = { buildingId = buildingId, item = {id = id} }
     local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
     ----3、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);

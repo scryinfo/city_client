@@ -54,7 +54,10 @@ end
 
 --点击确定--
 function ServerListCtrl:c_OnOK()
-    Event.Brocast("m_GsOK");
+    if ServerListModel.isClick then
+        Event.Brocast("m_GsOK");
+    end
+    ServerListModel.isClick = false
 end
 
 function ServerListCtrl:c_GsCreateRole()

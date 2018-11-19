@@ -27,8 +27,8 @@ function CenterWareHousePanel.InitPanel()
     this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
     this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn").gameObject;  --名字排序
     this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn").gameObject;  --数量排序
-    this.levelBtn = transform:Find("topRoot/ListTable/List/levelBtn").gameObject; --水平排序
-    this.scoreBtn = transform:Find("topRoot/ListTable/List/scoreBtn").gameObject;--分数排序
+    this.levelBtn = transform:Find("topRoot/ListTable/List/levelBtn").gameObject; --评分排序
+    this.scoreBtn = transform:Find("topRoot/ListTable/List/scoreBtn").gameObject;--等级排序
     this.nowText = transform:Find("topRoot/Sorting/bg/nowText"):GetComponent("Text");
     this.list = transform:Find("topRoot/ListTable/List"):GetComponent("RectTransform");
 

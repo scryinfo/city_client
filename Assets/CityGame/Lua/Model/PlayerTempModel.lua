@@ -42,6 +42,9 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
         PlayerTempModel.tempTestReqAddItem(2151004, 666)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+        PlayerTempModel.tempTestReqAddItem(2152001, 777)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)

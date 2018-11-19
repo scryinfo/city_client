@@ -3,7 +3,13 @@
 --- Created by password.
 --- DateTime: 2018/10/25 11:11
 ---中心仓库
-
+--排序type
+CenterWareHouseSortItemType = {
+    Name = 1,      --名字
+    Quantity = 2,  --数量
+    Level = 3,     --评分
+    Score = 4      --等级
+}
 local isShowList;
 local switchIsShow;
 local isSelect;
@@ -28,8 +34,14 @@ end
 
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    self.totalCapacity = self.m_data;--仓库总容量
-    self.number = 500;--商品个数
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+    self.number = 0;--商品个数
+    if self.m_data.bag.inHand == nil then
+        return
+    end
+    for i, v in pairs(self.m_data.bag.inHand) do
+        self.number =  self.number + tonumber(v.n)
+    end
     self.money = 1000;--扩容所需金额
     self:_initData();
     isShowList = false;
@@ -70,12 +82,13 @@ end
 
 --点击删除
 function CenterWareHouseCtrl:c_OnDelete(go)
+    local buildingId = PlayerTempModel.roleData.bagId
     local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
-        Event.Brocast("m_DeleteItem",go)
+        Event.Brocast("m_DeleteItem",buildingId,go.itemId)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
@@ -160,11 +173,12 @@ end
 function CenterWareHouseCtrl:c_transport(msg)
     local table = self.WareHouseGoodsMgr.items
     for i,v in pairs(table) do
-        if v.itemId == msg.itemId then
-            if v.goodsDataInfo.number == msg.n then
+        if v.itemId == msg.item.key.id then
+            if v.goodsDataInfo.number == msg.item.n then
                 WareHouseGoodsMgr:_deleteGoods(i)
             else
-                v.numberText.text = v.goodsDataInfo.number - msg.n;
+                v.numberText.text = v.goodsDataInfo.number - msg.item.n;
+                v.goodsDataInfo.number = v.numberText.text;
             end
         end
     end
@@ -228,3 +242,17 @@ function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
     end
     switchIsShow = isShow;
 end
+
+--排序
+--[[
+function CenterWareHouseCtrl:_getSortItems(datas, sortType)
+    local tempDatas = datas
+    local sortType = sortType
+    if sortType == CenterWareHouseSortItemType.Name then
+        if isSmaller then
+            table.sort(tempDatas, function (m, n) return m.name > n.name end)
+        else
+            table.sort(tempDatas, function (m, n) return m.name < n.name end)
+        end
+    end
+end]]

@@ -31,7 +31,6 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     if not MaterialModel.MaterialWarehouse then
         return;
     end
-    --测试数据
     self.WarehouseModelData = {}
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialWarehouse) do
@@ -62,9 +61,8 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
     if not MaterialModel.MaterialShelf then
         return;
     end
-    --数据
     self.ModelDataList={}
-    --配置表数据
+
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialShelf) do
         local shelfDataInfo = {}
@@ -98,7 +96,6 @@ end
 
 --添加生产线可以生产的原料或商品
 function ShelfGoodsMgr:_creatProductionItem()
-    --配置表数据
     local configTable = {}
     for i,v in pairs(Material) do
         local key = 2151
@@ -167,7 +164,7 @@ function ShelfGoodsMgr:_getProductionLine(table)
         AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
     end
 end
---获取我要发送实例的数量，人数，itemId
+--获取要发送的物品信息
 function ShelfGoodsMgr:getSendInfo()
     if itemsId == nil then
         return;
@@ -183,7 +180,7 @@ function ShelfGoodsMgr:getSendInfo()
     return number,steffNumber,itemsId;
 end
 
---仓库选中物品（右侧shelf）
+--仓库选中物品上架
 function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
@@ -197,14 +194,14 @@ function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     self.shelfPanelItem[id] = shelfLuaItem
 end
 
---仓库右侧shelfItem 删除
+--仓库右侧删除上架
 function ShelfGoodsMgr:_deleteShelfItem(id)
     destroy(self.shelfPanelItem[id].prefab.gameObject);
     self.shelfPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
 
---仓库选中物品（右侧transport）
+--仓库选中物品运输
 function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
@@ -218,7 +215,7 @@ function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     self.transportPanelItem[id] = transportLuaItem
 end
 
---仓库右侧transportItem 删除
+--仓库右侧删除运输
 function ShelfGoodsMgr:_deleteTransportItem(id)
     destroy(self.transportPanelItem[id].prefab.gameObject);
     self.transportPanelItem[id] = nil;
@@ -227,7 +224,7 @@ end
 --货架删除
 function ShelfGoodsMgr:_deleteGoods(ins)
     ct.log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
-    --清空之前的旧数据
+
     destroy(self.items[ins.id].prefab.gameObject);
     table.remove(self.ModelDataList, ins.id)
     table.remove(self.items, ins.id)
@@ -239,7 +236,6 @@ function ShelfGoodsMgr:_deleteGoods(ins)
 end
 --仓库删除
 function ShelfGoodsMgr:_WarehousedeleteGoods(id)
-    --清空之前的旧数据
     destroy(self.WarehouseItems[id].prefab.gameObject);
     table.remove(self.WarehouseModelData,id);
     table.remove(self.WarehouseItems,id);

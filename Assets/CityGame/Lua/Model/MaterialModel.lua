@@ -17,14 +17,12 @@ function MaterialModel.OnCreate()
     --注册本地UI事件
     Event.AddListener("m_ReqOpenMaterial",this.m_ReqOpenMaterial)
 
-
     MaterialModel.registerAsNetMsg()
 end
 
 function MaterialModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),MaterialModel.n_OnOpenMaterial);
-
 end
 
 function MaterialModel.Close()

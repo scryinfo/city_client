@@ -207,7 +207,8 @@ function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
     prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
-    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
+    local transportLuaItem = Trans
+    portItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
         self.transportPanelItem = {}

@@ -35,14 +35,14 @@ function GoodsItem:OnClick_Add(go)
     ---创建映射广告
     local item=go.manager:c_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
     ---给映射广告赋值数据
-    local prefabData={}
+    local prefabData={metaId=2151002}
     MapAdvertisementItem:new(prefabData,item,go._luabehaviour,go.manager,go.manager.index)
     ---选中广告不可在点击
     self:GetComponent("Image").raycastTarget=false;
     ---管理器表添加
     go.manager.addedItemList[go.manager.index]=item
     go.manager.selectItemList[go.manager.index]=self
-    go.manager.AdvertisementDataList[go.manager.index]={count=1,type=0,ADperson=1001}
+    go.manager.AdvertisementDataList[go.manager.index]={count=1,type=0,ADperson=1001,metaId=2151002}
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
 

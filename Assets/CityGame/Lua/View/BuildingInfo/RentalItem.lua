@@ -18,17 +18,19 @@ function RentalItem:initialize(rentalData, clickOpenFunc, viewRect, mainPanelLua
     self.openStateTran = self.viewRect.transform:Find("topRoot/open")  --打开状态
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn")  --打开之后的执行按钮
     self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text")  -- 租金显示的值
-
-    --具体字体大小是否从数据库读取？
     self.rentalValueText.text = getPriceString(rentalData.rent, 30, 24).."/D"
 
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
-        if not self.viewRect.gameObject.activeSelf then
-            return
-        end
-        ct.OpenCtrl("HouseChangeRentCtrl", self.rentalData)
-    end, self)
-
+    if self.rentalData.isOther then
+        self.toDoBtn.localScale = Vector3.zero
+    else
+        self.toDoBtn.localScale = Vector3.one
+        mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, function()
+            if not self.viewRect.gameObject.activeSelf then
+                return
+            end
+            ct.OpenCtrl("HouseChangeRentCtrl", self.rentalData)
+        end, self)
+    end
     Event.AddListener("c_onReceiveHouseRentChange", self.updateInfo, self)
 end
 
@@ -70,4 +72,8 @@ function RentalItem:updateInfo(data)
         return
     end
     self.rentalValueText.text = getPriceString(self.rentalData.rent, 30, 24).."/D"
+end
+
+function RentalItem:destory()
+    destroy(self.viewRect.gameObject)
 end

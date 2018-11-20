@@ -18,12 +18,20 @@ function AdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.manager = mgr
     self.id = id
     self.ItemList=mgr.AdvertisementItemList
+    if prefabData.metaId then
+        self.metaId=prefabData.metaId
+    end
+
 
     self.countText=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
     self.nameText=prefab.transform:Find("nameImage/Text"):GetComponent("Text");
     self.icon=prefab.transform:Find("icon"):GetComponent("Image");
 
-    self.countText.text=prefabData.count;
+    if prefabData.count then
+        self.countText.text=prefabData.count;
+    end
+
+
 end
 ---删除
 function AdvertisementItem:OnClicl_XBtn(go)

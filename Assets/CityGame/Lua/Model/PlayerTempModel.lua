@@ -19,8 +19,9 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
+        --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
         --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
+        PlayerTempModel.tempTestReqAddGroung(100,100,150,150)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
@@ -44,14 +45,34 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
         PlayerTempModel.tempTestReqAddItem(2151004, 666)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+        PlayerTempModel.tempTestReqAddItem(2152001, 777)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
         --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 105, 150)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+        PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
     end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.tempTestAddGroung(200,200,250,250)
+        ct.log("system","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.m_ReqAddBuilding(1600001,220,220)
+        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    end
+
+
 end
 
 --启动事件--

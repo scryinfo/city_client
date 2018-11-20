@@ -4,6 +4,7 @@ local log = log
 
 ServerListModel= {};
 local this = ServerListModel;
+ServerListModel.isClick = false
 
 --构建函数--
 function ServerListModel.New()
@@ -88,6 +89,7 @@ function ServerListModel.n_ChooseGameServer( stream )
     local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
     ----处理数据：缓存服务器返回的 token
     CityEngineLua.token = msg.code
+    ServerListModel.isClick = true
 end
 function ServerListModel.m_GsOK()
     --注册gs的网络回调
@@ -104,6 +106,9 @@ function ServerListModel.registerGsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
 end
 function ServerListModel.n_GsLoginSuccessfully(stream )
+    if stream == nil then
+        return
+    end
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role

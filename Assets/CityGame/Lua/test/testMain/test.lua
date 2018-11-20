@@ -518,4 +518,13 @@ UnitTest.Exec("abel_w4_proto_Role", "test_w4_proto_Role",  function ()
     ct.log("abel_w4_proto_Role","[test_w4_proto_Role] msg: "..msg)
 end)
 
+UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
+    --local HouseModel = CtrlManager.GetModel(ModelNames.House);
+    --if HouseModel ~= nil then
+    --    HouseModel:Awake()
+    --end
+    --ct.OpenCtrl("LaboratoryCtrl", {})
+    ct.OpenCtrl("LabResearchCtrl", {})
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

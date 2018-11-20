@@ -15,6 +15,7 @@ local class = require 'Framework/class'
 AdvertisementPosCtrl = class('AdvertisementPosCtrl',UIPage)
 UIPage:ResgisterOpen(AdvertisementPosCtrl) --注册打开的方法
 
+local panel=AdvertisementPosPanel
 --构建函数
 function AdvertisementPosCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -27,55 +28,58 @@ end
 function AdvertisementPosCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
-
+local materialBehaviours
 function AdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
-    local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    materialBehaviour:AddClick(AdvertisementPosPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(AdvertisementPosPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    materialBehaviour:AddClick(AdvertisementPosPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    materialBehaviour:AddClick(AdvertisementPosPanel.manageBtn.gameObject,self.OnClick_manageBtn,self)
-    materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn.gameObject,self.OnClick_masterConfirm,self)
-    materialBehaviour:AddClick(AdvertisementPosPanel.confirmBtn1.gameObject,self.OnClick_otherConfirm,self)
+    local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    materialBehaviours=materialBehaviour
+    materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
+    materialBehaviour:AddClick(panel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    materialBehaviour:AddClick(panel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+
+    materialBehaviour:AddClick(panel.manageBtn.gameObject,self.OnClick_manageBtn,self)
+    materialBehaviour:AddClick(panel.confirmBtn.gameObject,self.OnClick_masterConfirm,self)
+    materialBehaviour:AddClick(panel.confirmBtn1.gameObject,self.OnClick_otherConfirm,self)
     ----------------------------------------------------------------------------------------------------------------
 
-    AdvertisementPosPanel.qunayityInp.onValueChanged:AddListener(self.Set)
-    AdvertisementPosPanel.leaseInp.onValueChanged:AddListener(self.Set)
-    AdvertisementPosPanel.rentInp.onValueChanged:AddListener(self.Set)
+    panel.qunayityInp.onValueChanged:AddListener(self.Set)
+    panel.leaseInp.onValueChanged:AddListener(self.Set)
+    panel.rentInp.onValueChanged:AddListener(self.Set)
     -------------------------------------------------------------------------------------------------------------------------
-    AdvertisementPosPanel.numInp.onValueChanged:AddListener(function (arg)
-        if AdvertisementPosPanel.numInp.text==""then
+    panel.numInp.onValueChanged:AddListener(function (arg)
+        if panel.numInp.text==""then
             return
         end
-        if( AdvertisementPosPanel.numInp.text/5>=1)then
-            AdvertisementPosPanel.numInp.text=5
+        if( panel.numInp.text/5>=1)then
+            panel.numInp.text=5
         end
-        AdvertisementPosPanel.numSlider.value=arg/5 ;
+        panel.numSlider.value=arg/5 ;
 
     end)
 
-    AdvertisementPosPanel.numSlider.onValueChanged:AddListener(function (arg)
-        AdvertisementPosPanel.numInp.text=math.floor(5*arg)
+    panel.numSlider.onValueChanged:AddListener(function (arg)
+        panel.numInp.text=math.floor(5*arg)
     end)
 
-    AdvertisementPosPanel.maxInp.onValueChanged:AddListener(function (arg)
-        if AdvertisementPosPanel.maxInp.text==""then
+    panel.maxInp.onValueChanged:AddListener(function (arg)
+        if panel.maxInp.text==""then
             return
         end
-        if(AdvertisementPosPanel.maxInp.text/15>=1)then
-            AdvertisementPosPanel.maxInp.text=15
+        if(panel.maxInp.text/15>=1)then
+            panel.maxInp.text=15
         end
-        AdvertisementPosPanel.maxSlider.value=arg/15;
+        panel.maxSlider.value=arg/15;
     end)
 
-    AdvertisementPosPanel.maxSlider.onValueChanged:AddListener(function (arg)
-        AdvertisementPosPanel.maxInp.text=math.floor(15*arg)
+    panel.maxSlider.onValueChanged:AddListener(function (arg)
+        panel.maxInp.text=math.floor(15*arg)
     end)
 
     -----创建广告
-    local creatData={count=1,buildingType=BuildingType.Municipal}
-    local item =ItemCreatDeleteMgr:new(materialBehaviour,creatData)
+    local creatData={buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
+    self.ItemCreatDeleteMgr=MunicipalModel.manger
+    self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
 end
 
 --更改名字
@@ -109,11 +113,30 @@ function AdvertisementPosCtrl:OnClick_manageBtn()
 
 end
 
-function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
 
+function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
+    local buildingID=PlayerTempModel.roleData.buys.publicFacility[1].info.id
     --主人点击确认按钮
     Event.Brocast("SmallPop","Successful adjustment")
-    AdvertisementPosPanel.grey.gameObject:SetActive(true);
+    panel.grey.gameObject:SetActive(true);
+    -----发送网络消息
+    if panel.qunayityInp.text>panel.adAllday then---添加槽位
+        for i = 1, panel.qunayityInp.text-panel.adAllday do
+            Event.Brocast("m_addSlot",buildingID,0,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text))
+        end
+        panel.adAllday=panel.qunayityInp.text
+
+    elseif  panel.qunayityInp.text<panel.adAllday  then---删除槽位
+    for i = 1, panel.adAllday-panel.qunayityInp.text do
+        Event.Brocast("m_deleteSlot",buildingID,MunicipalModel.SlotList[1].id)
+    end
+        panel.adAllday=panel.qunayityInp.text
+
+    else---设置租金和最大天数
+        for i, v in pairs(MunicipalModel.SlotList) do
+            Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),0,tonumber(panel.leaseInp.text))
+        end
+    end
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm()
@@ -124,8 +147,7 @@ end
 
 
 function AdvertisementPosCtrl:Set(toggle)
-
-    AdvertisementPosPanel.grey.gameObject:SetActive(false);
+    panel.grey.gameObject:SetActive(false);
 end
 
 

@@ -40,6 +40,7 @@ end
 AutoRequire.getInstance():require("Logic/ExchangeAbout")
 AutoRequire.getInstance():require("Logic/GameBubble")
 AutoRequire.getInstance():require("Logic/PieChart")
+AutoRequire.getInstance():require("Logic/ToggleSort")
 AutoRequire.getInstance():require("Logic")
 AutoRequire.getInstance():require("View")
 AutoRequire.getInstance():require("View/BuildingInfo")

@@ -51,7 +51,7 @@ end
 --确定生产
 function AdjustProductionLineCtrl:OnClick_determineBtn()
     local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    local number,steffNumber,itemid = ShelfGoodsMgr:testSend()
+    local number,steffNumber,itemid = ShelfGoodsMgr:getSendInfo()
     if number == nil then
         ct.log("system","数量不能为0")
         return;

@@ -80,12 +80,17 @@ function Game.OnPostInitOK()
     if WarehouseModel ~= nil then
         WarehouseModel:Awake();
     end
-
     --调整生产线
     local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
     if AdjustProductionLineModel ~= nil then
         AdjustProductionLineModel:Awake();
     end
+    --测试货架
+    local ShelfModel = CtrlManager.GetModel(ModelNames.Shelf);
+    if ShelfModel ~= nil then
+        ShelfModel:Awake();
+    end
+
     --测试临时角色信息界面
     --local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
     --if PlayerTempModel ~= nil then

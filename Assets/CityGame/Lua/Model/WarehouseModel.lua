@@ -49,6 +49,7 @@ end
 --上架物品
 function WarehouseModel.n_OnShelfAddInfo(stream)
     local msgShelfAddInfo = assert(pbl.decode("gs.Shelf.Content",stream),"WarehouseModel.n_OnShelfAddInfo")
+    Event.Brocast("n_shelfAdd",msgShelfAddInfo)
 end
 --修改货架数量或价格
 function WarehouseModel.n_OnModifyShelfInfo(stream)

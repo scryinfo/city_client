@@ -160,11 +160,12 @@ end
 function CenterWareHouseCtrl:c_transport(msg)
     local table = self.WareHouseGoodsMgr.items
     for i,v in pairs(table) do
-        if v.itemId == msg.itemId then
-            if v.goodsDataInfo.number == msg.n then
+        if v.itemId == msg.item.key.id then
+            if v.goodsDataInfo.number == msg.item.n then
                 WareHouseGoodsMgr:_deleteGoods(i)
             else
-                v.numberText.text = v.goodsDataInfo.number - msg.n;
+                v.numberText.text = v.goodsDataInfo.number - msg.item.n;
+                v.goodsDataInfo.number = v.numberText.text;
             end
         end
     end

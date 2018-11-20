@@ -29,10 +29,10 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(300,300,350,350)
+        PlayerTempModel.tempTestAddGroung(300,300,310,310)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
-        PlayerTempModel.m_ReqAddBuilding(1100001, 305, 350)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then

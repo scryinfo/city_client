@@ -62,15 +62,16 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
     if not MaterialModel.MaterialShelf then
         return;
     end
-    --测试数据
+    --数据
     self.ModelDataList={}
-    --配置表数据模拟
+    --配置表数据
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialShelf) do
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
         shelfDataInfo.money = "E"..v.price..".0000"
+        shelfDataInfo.itemId = v.k.id
         configTable[i] = shelfDataInfo
 
         --预制的信息
@@ -85,7 +86,6 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
             self.items = {}
         end
         self.items[i] = shelfLuaItem
-        --self.items  存的是Lua实例
         for k,v in pairs(self.items) do
             if k % 5 == 0 then
                 shelfLuaItem.shelfImg:SetActive(true);
@@ -167,8 +167,8 @@ function ShelfGoodsMgr:_getProductionLine(table)
         AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
     end
 end
---Test
-function ShelfGoodsMgr:testSend()
+--获取我要发送实例的数量，人数，itemId
+function ShelfGoodsMgr:getSendInfo()
     if itemsId == nil then
         return;
     end

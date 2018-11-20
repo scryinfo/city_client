@@ -80,7 +80,7 @@ function GameMainInterfaceCtrl.OnSourceMill()
     --Event.Brocast("");
    -- UIPage:OpenCtrl('CenterWareHouseCtrl')
     --UIPage:ShowPage(CenterWareHouseCtrl)
-    --ct.OpenCtrl('CenterWareHouseCtrl')
+    ct.OpenCtrl('ProcessingCtrl')
 end
 
 --广告设施

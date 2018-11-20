@@ -1,7 +1,6 @@
-local pbl = pbl
-
 ShelfModel = {}
 local this = ShelfModel;
+local pbl = pbl
 
 --构建函数
 function ShelfModel.New()
@@ -21,7 +20,7 @@ end
 
 function ShelfModel.registerAsNetMsg()
     --网络回调注册 n开头
-    CityEngineLua.Message:registerAsNetMsg(pbl.enum("gscode.OpCode","shelfDel"),ShelfModel.n_OnShelfDelInfo);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfDel"),ShelfModel.n_OnShelfDelInfo);
 end
 
 --关闭事件
@@ -31,11 +30,11 @@ end
 
 --客户端请求--
 --下架物品
-function ShelfModel.m_ReqShelfDel(buildingId,Id,num)
-    --local msgId = pbl.enum("gscode.OpCode","shelfDel")
-    --local lMsg = {}
-    --local pMsg = assert(pbl.encode("gs.ShelfDel", lMsg))
-    --CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+function ShelfModel.m_ReqShelfDel(buildingId,itemId,num)
+    local msgId = pbl.enum("gscode.OpCode","shelfDel")
+    local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = num}}
+    local pMsg = assert(pbl.encode("gs.ShelfDel", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
 
 --网络回调--

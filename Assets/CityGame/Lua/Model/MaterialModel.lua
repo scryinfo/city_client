@@ -13,6 +13,7 @@ function MaterialModel.Awake()
 end
 
 function MaterialModel.OnCreate()
+
     --注册本地UI事件
     Event.AddListener("m_ReqOpenMaterial",this.m_ReqOpenMaterial)
 

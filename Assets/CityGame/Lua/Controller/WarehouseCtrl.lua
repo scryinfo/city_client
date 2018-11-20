@@ -44,6 +44,7 @@ function WarehouseCtrl:OnCreate(obj)
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
     Event.AddListener("n_transports",self.n_transports,self)
+    Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
 
     self.luabehaviour = warehouse
     self.m_data = {};
@@ -68,7 +69,7 @@ end
 
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
-    WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
+    --WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
 end
 --搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)
@@ -95,7 +96,7 @@ function WarehouseCtrl:_selectedGoods(id,itemId)
         end
     end
 end
---监听临时表里是否有这个物品
+--临时表里是否有这个物品
 function WarehouseCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
     self.ShelfGoodsMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
@@ -163,6 +164,15 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         end
     end
 end
+--上架回调操作
+function WarehouseCtrl:n_shelfAdd(msg)
+    if not msg then
+        return;
+    end
+    for i in pairs(WarehouseCtrl.temporaryItems) do
+        Event.Brocast("c_temporaryifNotGoods", i)
+    end
+end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
@@ -180,12 +190,15 @@ function WarehouseCtrl:n_transports(msg)
         if v.itemId == msg.item.key.id then
             if v.goodsDataInfo.num == msg.item.n then
                 self.ShelfGoodsMgr:_WarehousedeleteGoods(i)
+                for i,v in pairs(WarehouseCtrl.temporaryItems) do
+                   self.ShelfGoodsMgr:_deleteTransportItem(v)
+                end
             else
                 v.numberText.text = v.goodsDataInfo.num - msg.item.n;
                 v.goodsDataInfo.num = v.numberText.text
-            end
-            for i in pairs(WarehouseCtrl.temporaryItems) do
-                Event.Brocast("c_temporaryifNotGoods", i)
+                for i in pairs(WarehouseCtrl.temporaryItems) do
+                    Event.Brocast("c_temporaryifNotGoods", i)
+                end
             end
         end
     end

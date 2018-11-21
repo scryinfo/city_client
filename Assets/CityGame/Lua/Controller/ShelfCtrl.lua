@@ -1,4 +1,5 @@
 ShelfCtrl = class('ShelfCtrl',UIPage)
+UIPage:ResgisterOpen(ShelfCtrl) --注册打开的方法
 
 local isShowList;
 local listTrue = Vector3.New(0,0,180)
@@ -26,6 +27,8 @@ function ShelfCtrl:OnCreate(obj)
 
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Shelf
+    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
+
 end
 
 function ShelfCtrl:Awake(go)
@@ -62,19 +65,18 @@ end
 
 function ShelfCtrl.OnClick_OpenList(isShow)
     if isShow then
-        --ShelfPanel.list:SetActive(true);
         ShelfPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     else
-        --ShelfPanel.list:SetActive(false);
         ShelfPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         ShelfPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;
 end
 
-function ShelfCtrl:OnClick_createGoods(ins)
-    ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+function ShelfCtrl:OnClick_createGoods()
+    --ShelfGoodsMgr:new(ins.luabehaviour,ins.m_data)
+    ct.OpenCtrl("WarehouseCtrl")
 end
 
 function ShelfCtrl.OnCloseBtn()

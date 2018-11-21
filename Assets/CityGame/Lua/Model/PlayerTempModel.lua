@@ -23,28 +23,33 @@ function PlayerTempModel.Update()
         --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
         PlayerTempModel.tempTestReqAddGroung(100,100,105,105)
     end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
-    --    PlayerTempModel.tempTestReqAddMoney(9999999)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-    --    PlayerTempModel.tempTestReqAddItem(2151001, 9999)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-    --    --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-    --    PlayerTempModel.tempTestAddGroung(200,200,250,250)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-    --    PlayerTempModel.tempTestReqAddItem(2151002, 999)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-    --    PlayerTempModel.tempTestReqAddItem(2151003, 8888)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
-    --    PlayerTempModel.tempTestReqAddItem(2151004, 666)
-    --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-    --    PlayerTempModel.tempTestReqAddItem(2152001, 777)
-    --end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
+        PlayerTempModel.tempTestReqAddMoney(9999999)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        PlayerTempModel.tempTestReqAddItem(2151001, 9999)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+        PlayerTempModel.tempTestAddGroung(300,300,310,310)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
+        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+        PlayerTempModel.tempTestReqAddItem(2151002, 999)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+        PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+        PlayerTempModel.tempTestReqAddItem(2152001, 777)
+    end
+
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
@@ -164,7 +169,7 @@ end
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}
     if roleData.buys then
-        buyStore = this._getCollectStore(roleData.buys)
+        --buyStore = this._getCollectStore(roleData.buys)
     else
         ---测试
         --PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)

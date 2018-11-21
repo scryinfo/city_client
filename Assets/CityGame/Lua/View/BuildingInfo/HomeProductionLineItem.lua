@@ -25,7 +25,8 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        UIPage:ShowPage(AdjustProductionLineCtrl)
+        --UIPage:ShowPage(AdjustProductionLineCtrl,MaterialModel.MaterialProductionLine)
+        ct.OpenCtrl("AdjustProductionLineCtrl",MaterialModel.MaterialProductionLine)
     end);
 
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变

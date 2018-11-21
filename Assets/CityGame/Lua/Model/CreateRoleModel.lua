@@ -93,8 +93,9 @@ function CreateRoleModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
-        ct.log("[LoginModel.n_OnRoleLogin] succeed!")
-        Event.Brocast("c_GsLoginSuccess");
+        --初始化玩家个人信息
+        Event.Brocast("c_RoleLoginDataInit",pMsg);
+        --Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

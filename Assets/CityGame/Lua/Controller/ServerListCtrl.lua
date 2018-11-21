@@ -26,8 +26,7 @@ function ServerListCtrl:OnCreate(obj)
 
     --普通消息注册
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-
+    Event.AddListener("c_RoleLoginDataInit", self.c_GsLoginSuccess, self);
 end
 
 function ServerListCtrl:Refresh()
@@ -64,7 +63,7 @@ function ServerListCtrl:c_GsCreateRole()
     UIPage:ClearAllPages()
     UIPage:ShowPage(CreateRoleCtrl)
 end
-function ServerListCtrl:c_GsLoginSuccess()
+function ServerListCtrl:c_GsLoginSuccess(...)
     UIPage:ClearAllPages()
     UIPage:ShowPage(GameMainInterfaceCtrl)
     --UIPage:ShowPage(TopBarCtrl)

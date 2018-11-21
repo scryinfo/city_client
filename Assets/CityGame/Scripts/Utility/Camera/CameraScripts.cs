@@ -43,16 +43,27 @@ public class CameraScripts : MonoBehaviour
 
     private void Update()
     {
+        //检测点击UI和射线冲突
+        if (IsClickDownOverUI())
+        {
+            m_canHandleCam = false;
+            return;
+        }
+        if (CheckGuiRaycastObjects())
+        {
+            m_canHandleCam = true;
+            return;
+        }
+        //
         if (!m_canHandleCam)
         {
             return;
         }
-
+        
         if (InputModule.Instance.Zooming)
         {
             ScaleCamera();
         }
-        
         else if (InputModule.Instance.Dragging)
         {
             UpdateMove();
@@ -71,6 +82,48 @@ public class CameraScripts : MonoBehaviour
         {
             TestMoveCam();
         }
+    }
+
+    bool IsClickDownOverUI()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
+        {
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+        if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool CheckGuiRaycastObjects()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonUp(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
+#endif
+        {
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+        if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -219,12 +272,14 @@ public class CameraScripts : MonoBehaviour
 
     private void LateUpdate()
     {
+        /*
         if (!m_canHandleCam)
         {
             m_moveTargetPos = Vector3.zero;
             TestMoveTarget(m_moveTargetPos);
             return;
         }
+        */
         
         SmoothStopFunc();
         ////finalPosition = ClampPosition(finalPosition);

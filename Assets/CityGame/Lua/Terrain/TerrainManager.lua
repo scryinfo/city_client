@@ -150,9 +150,15 @@ end
 --若点击到3D建筑所占地块
 function TerrainManager.TouchBuild(MousePos)
     local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
-    local tempData = nil-- DataManager.QueryBaseBuildData(TerrainManager.PositionTurnBlockID(tempPos))
+    local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+    local tempNodeID  = DataManager.GetBlockDataByID(blockID)
+    local tempData
+    if tempNodeID ~= nil and tempNodeID ~= -1 then
+        tempData = DataManager.GetBaseBuildDataByID(tempNodeID)
+    end
     if nil ~= tempData then
         local a  = tempData.Data
+        ct.log("Allen_wk13","点击到了建筑")
     end
 end
 

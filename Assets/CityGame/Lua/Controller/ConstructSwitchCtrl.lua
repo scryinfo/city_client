@@ -23,6 +23,7 @@ function ConstructSwitchCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_confirm.gameObject, function()
         --TODO：确认建造
         ct.log("Allen_wk13","确认建造")
+        Event.Brocast("m_constructBuildConfirm")
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
         --TODO：取消建造
@@ -34,6 +35,7 @@ end
 function ConstructSwitchCtrl:Awake(go)
     self.gameObject = go
     Event.AddListener("m_abolishConstructBuild", self.Hide, self);
+    Event.AddListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self);
     Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self);
 end
 
@@ -55,6 +57,13 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
 end
 
+--确认建造建筑
+function ConstructSwitchCtrl:ConstructBuildConfirm()
+    --TODO：向服务器发送建造数据
+    if DataManager.TempDatas.constructID ~= nil then
+
+    end
+end
 
 function ConstructSwitchCtrl:Hide()
     UIPage.Hide(self)

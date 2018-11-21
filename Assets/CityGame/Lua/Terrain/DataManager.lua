@@ -68,6 +68,14 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
+function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize)
+    local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
+    for key, value in ipairs(idList) do
+        DataManager.RefreshBlockData(value,nodeID)
+    end
+end
+
+
 --功能
 --  返回一块范围内的blockID集合
 --参数
@@ -145,13 +153,6 @@ function DataManager.RefreshDetailBuildData(data,buildTypeClass)
     end
 end
 
---建筑根节点的唯一ID
-function DataManager.GetBaseBuildDataByID(blockID)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    return BuildDataStack[collectionID].BaseBuildDatas[blockID]
-end
-
-
 --功能
 --  删除整个地块集合数据
 --      相机移动时触发
@@ -166,6 +167,22 @@ function DataManager.RemoveCollectionDatas(tempCollectionID)
     BuildDataStack[tempCollectionID] = nil
 end
 
+--建筑根节点的唯一ID
+function DataManager.GetBaseBuildDataByID(blockID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
+    return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+end
+
+--获取block地块所属建筑的根节点ID
+--如果没有建筑覆盖，值为-1
+function DataManager.GetBlockDataByID(blockID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
+    if BuildDataStack[collectionID] ~= nil  then
+        return BuildDataStack[collectionID].BlockDatas[blockID]
+    else
+        return nil
+    end
+end
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 
 

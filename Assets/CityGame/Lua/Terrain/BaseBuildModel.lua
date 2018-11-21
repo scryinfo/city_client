@@ -16,7 +16,7 @@ function BaseBuildModel:Refresh(data)
     for key, value in pairs(data) do
         self.Data[key] = value
     end
-    DataManager.RefreshBlockData(data.id,PlayerBuildingBaseData[data.buildId].x)
+    DataManager.RefreshBlockDataWhenNodeChange(data.id,PlayerBuildingBaseData[data.buildId].x)
 end
 
 function BaseBuildModel:Close()

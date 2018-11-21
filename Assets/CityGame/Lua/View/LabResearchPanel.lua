@@ -24,22 +24,30 @@ function LabResearchPanel.InitPanel()
     this.researchScroll = transform:Find("togglePageRoot/research/scroll"):GetComponent("ActiveLoopScrollRect")
     this.inventionScroll = transform:Find("togglePageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
 end
----toggle状态显示
+---状态显示
 function LabResearchPanel._researchToggleState(isOn)
     if isOn then
         this.researchOpen.localScale = Vector3.one
         this.researchClose.localScale = Vector3.zero
+        this.researchScroll.transform.localScale = Vector3.one
+        --this.researchScroll.gameObject:SetActive(true)
     else
         this.researchOpen.localScale = Vector3.zero
         this.researchClose.localScale = Vector3.one
+        this.researchScroll.transform.localScale = Vector3.zero
+        --this.researchScroll.gameObject:SetActive(false)
     end
 end
 function LabResearchPanel._inventionToggleState(isOn)
     if isOn then
         this.inventionOpen.localScale = Vector3.one
         this.inventionClose.localScale = Vector3.zero
+        this.inventionScroll.transform.localScale = Vector3.one
+        --this.inventionScroll.gameObject:SetActive(true)
     else
         this.inventionOpen.localScale = Vector3.zero
         this.inventionClose.localScale = Vector3.one
+        this.inventionScroll.transform.localScale = Vector3.zero
+        --this.inventionScroll.gameObject:SetActive(false)
     end
 end

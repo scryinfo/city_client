@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/ShelfModel"
 require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
@@ -88,6 +89,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
+	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
 	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
@@ -96,6 +98,8 @@ function CtrlManager.Init()
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
 	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.Warehouse] = WarehouseModel.New();
+
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	--饼图测试

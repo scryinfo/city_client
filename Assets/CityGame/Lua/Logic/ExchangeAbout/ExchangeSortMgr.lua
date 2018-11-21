@@ -7,14 +7,12 @@ ExchangeSortItemType =
 {
     Default = 0,
     Name = 1,
-    Change = 2,
-    High = 3,
-    Low = 4,
-    LastPrice = 5,
+    LastPrice = 2,
+    Change = 3,
+    High = 4,
+    Low = 5,
     Volume = 6,
 }
-
-
 
 ExchangeSortMgr = class('ExchangeSortMgr')
 

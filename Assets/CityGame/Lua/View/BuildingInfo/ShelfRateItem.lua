@@ -27,7 +27,8 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        UIPage:ShowPage(ShelfCtrl);
+        --UIPage:ShowPage(ShelfCtrl);
+        ct.OpenCtrl("ShelfCtrl")
     end);
 
 

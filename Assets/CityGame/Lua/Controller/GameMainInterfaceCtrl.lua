@@ -82,7 +82,8 @@ end
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
     ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
     --UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-    --Event.Brocast('c_OnOpenLoginCtrl')
+    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    Event.Brocast('m_ReqOpenMaterial',buildingId)
     ct.OpenCtrl('MaterialCtrl')
 end
 
@@ -92,7 +93,7 @@ function GameMainInterfaceCtrl.OnSourceMill()
     --Event.Brocast("");
    -- UIPage:OpenCtrl('CenterWareHouseCtrl')
     --UIPage:ShowPage(CenterWareHouseCtrl)
-    --ct.OpenCtrl('CenterWareHouseCtrl')
+    ct.OpenCtrl('ProcessingCtrl')
 end
 
 --广告设施

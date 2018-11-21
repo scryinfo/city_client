@@ -15,7 +15,8 @@ end
 --启动事件
 function AdjustProductionLineModel.OnCreate()
     --注册本地事件
-    Event.AddListener("m_OnDetermineBtn",this.m_OnDetermineBtn);
+    Event.AddListener("m_ReqDetermineBtn",this.m_ReqDetermineBtn);
+    Event.AddListener("m_ResModifyKLine",this.m_ResModifyKLine);
 
     ----注册 AccountServer 消息
     AdjustProductionLineModel.registerAsNetMsg()
@@ -29,11 +30,18 @@ end
 --客户端请求--
 
 --添加生产线
-function AdjustProductionLineModel.m_OnDetermineBtn(number,steffNumber,itemId)
+function AdjustProductionLineModel.m_ReqDetermineBtn(buildingId,number,steffNumber,itemId)
     local msgId = pbl.enum("gscode.OpCode", "addLine")
-    local lMsg = {id = PlayerTempModel.storeList[1].buildingId, itemId = itemId, targetNum = number, workerNum = steffNumber}
-    --local lMsg = {id = PlayerTempModel.roleData.id, itemId = itemId, targetNum = number, workerNum = steffNumber}
+    local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = steffNumber}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+
+--修改生产线
+function AdjustProductionLineModel.m_ResModifyKLine(buildingId,lineId,workerNum,targetNum)
+    local msgId = pbl.enum("gscode.OpCode", "changeLine")
+    local lMsg = {buildingId = buildingId,lineId = lineId,workerNum = workerNum,targetNum = targetNum}
+    local pMsg = assert(pbl.encode("gs.ChangeLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
@@ -43,4 +51,8 @@ end
 function AdjustProductionLineModel.n_GsDetermineBtn(stream)
     local msgAllGameServerInfo = assert(pbl.decode("gs.Line", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
 
+end
+--修改生产线
+function AdjustProductionLineModel.n_GsModifyKLine(stream)
+    local msgModifyKLineInfo = assert(pbl.decode("gs.ChangeLine", stream), "AdjustProductionLineModel.n_GsModifyKLine: stream == nil")
 end

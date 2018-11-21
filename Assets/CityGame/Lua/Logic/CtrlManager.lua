@@ -56,8 +56,8 @@ function CtrlManager.Init()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
-	--ct.OpenCtrl('MaterialCtrl',Vector2.New(0, -300)) --注意传入的是类名
-	ct.OpenCtrl('LoginCtrl',Vector2.New(0, -100)) --注意传入的是类名
+	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
+	ct.OpenCtrl('ScienceSellHallCtrl',Vector2.New(0, -100)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
@@ -98,6 +98,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
+	modelList[ModelNames.ScienceSellHall]=ScienceSellHallModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();

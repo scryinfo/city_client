@@ -21,30 +21,30 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
         --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
-        PlayerTempModel.tempTestReqAddGroung(100,100,150,150)
+        PlayerTempModel.tempTestReqAddGroung(100,100,105,105)
     end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
-        PlayerTempModel.tempTestReqAddMoney(9999999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2151001, 9999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(200,200,250,250)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-        PlayerTempModel.tempTestReqAddItem(2151002, 999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
-        PlayerTempModel.tempTestReqAddItem(2151004, 666)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-        PlayerTempModel.tempTestReqAddItem(2152001, 777)
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
+    --    PlayerTempModel.tempTestReqAddMoney(9999999)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+    --    PlayerTempModel.tempTestReqAddItem(2151001, 9999)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+    --    --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+    --    PlayerTempModel.tempTestAddGroung(200,200,250,250)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+    --    PlayerTempModel.tempTestReqAddItem(2151002, 999)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+    --    PlayerTempModel.tempTestReqAddItem(2151003, 8888)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+    --    PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+    --    PlayerTempModel.tempTestReqAddItem(2152001, 777)
+    --end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
@@ -99,6 +99,8 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     if not PlayerTempModel.collectList then
         PlayerTempModel.collectList = {}
     end
+
+    Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
 end
 --addbuilding 回复
 function PlayerTempModel.n_OnReceiveAddBuilding(stream)

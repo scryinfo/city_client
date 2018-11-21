@@ -4,90 +4,90 @@
 --- DateTime: 2018/8/31 10:45
 ---
 -----
-GroundAuctionModel= {};
-local this = GroundAuctionModel;
+GroundAuctionModel= {}
+local this = GroundAuctionModel
 local pbl = pbl
 
 --构建函数--
 function GroundAuctionModel.New()
-    return this;
+    return this
 end
 
 function GroundAuctionModel.Awake()
-    UpdateBeat:Add(this.Update, this);
-    this:OnCreate();
+    UpdateBeat:Add(this.Update, this)
+    this:OnCreate()
 end
 
 function GroundAuctionModel.Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --logDebug("aaaaaaaaaaaa ")
-        --this.m_ReqRueryMetaGroundAuction()
-        --this.m_ReqQueryGroundAuction()
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+    --    --logDebug("aaaaaaaaaaaa ")
+    --    this.m_ReqRueryMetaGroundAuction()
+    --    this.m_ReqQueryGroundAuction()
+    --end
 end
 
 --启动事件--
 function GroundAuctionModel.OnCreate()
     --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GroundAuctionModel.n_OnReceiveBindGround);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GroundAuctionModel.n_OnReceiveBindGround)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
 
     --本地的回调注册
-    Event.AddListener("m_PlayerBidGround", this.m_BidGround);
-    Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor);
-    Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor);
-    --
-    ----请求正在拍卖以及即将拍卖的土地信息
-    --this.m_ReqQueryGroundAuction()
-    --this.m_ReqRueryMetaGroundAuction()
+    Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
+    Event.AddListener("m_PlayerBidGround", this.m_BidGround)
+    Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
+    Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
 end
 
 --关闭事件--
 function GroundAuctionModel.Close()
-    Event.RemoveListener("m_PlayerBidGround", this.m_BidGround);
-    Event.RemoveListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor);
-    Event.RemoveListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor);
+    Event.RemoveListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
+    Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
+    Event.RemoveListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
+    Event.RemoveListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
+end
+
+--角色登录成功之后请求拍卖的信息
+function GroundAuctionModel.m_RoleLoginReqGroundAuction()
+    this.m_ReqRueryMetaGroundAuction()
+    this.m_ReqQueryGroundAuction()
 end
 
 --- 客户端请求 ---
 --请求即将拍卖的土地信息
 function GroundAuctionModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --请求已经拍卖的土地信息
 function GroundAuctionModel.m_ReqRueryMetaGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryMetaGroundAuction")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --出价
 function GroundAuctionModel.m_BidGround(id, price)
-    ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","bidGround")
-    ----2、 填充 protobuf 内部协议数据
     local lMsg = { id = id, num = price}
-    ----3、 序列化成二进制数据
     local  pMsg = assert(pbl.encode("gs.IdNum", lMsg))
-    ----4、 创建包，填入数据并发包
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
 --打开UI 开始更新拍卖信息 --请判断打开界面的是否处于拍卖中
 function GroundAuctionModel.m_RegistGroundBidInfor()
     local msgId = pbl.enum("gscode.OpCode","registGroundBidInform")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --关闭UI
 function GroundAuctionModel.m_UnRegistGroundBidInfor()
     local msgId = pbl.enum("gscode.OpCode","unregistGroundBidInform")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --- 回调 ---
@@ -100,7 +100,7 @@ function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     end
 
     GameBubbleManager.StartAuc(msgGroundAuc)
-    Event.Brocast("c_NewGroundStartBid", msgGroundAuc);
+    Event.Brocast("c_NewGroundStartBid", msgGroundAuc)
 end
 
 --当收到所有拍卖的土地信息
@@ -137,7 +137,7 @@ end
 --收到服务器拍卖信息更新
 function GroundAuctionModel.n_OnReceiveBidChangeInfor(stream)
     local bidInfo = assert(pbl.decode("gs.IdNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
-    Event.Brocast("c_BidInfoUpdate", bidInfo);
+    Event.Brocast("c_BidInfoUpdate", bidInfo)
 end
 
 --拍卖结束

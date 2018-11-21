@@ -295,6 +295,7 @@ public class CameraScripts : MonoBehaviour
         transform.localPosition = tempV3;
         //Debug.Log("---- cam pos：" + transform.localPosition);
         Util.CallMethod("TerrainManager", "MoveTempConstructObj");
+        Util.CallMethod("UIBubbleCtrl", "static.RefreshLateUpdate");
     }
 
     //限制相机在2维的位置

@@ -3,11 +3,8 @@
 --- Created by xuyafang.
 --- DateTime: 2018/8/31 10:55
 ---
-
------
-
-
 GroundAuctionCtrl = class('GroundAuctionCtrl',UIPage)
+UIPage:ResgisterOpen(GroundAuctionCtrl)
 
 function GroundAuctionCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -20,24 +17,24 @@ end
 function GroundAuctionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour');
-    groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self);
-    groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self);
+    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
+    groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
 
     self:_initPanelData()
 
     --如果已经开始拍卖，则向服务器发送打开了UI界面，开始接收拍卖信息
     if self.m_data.isStartBid then
-        Event.Brocast("m_RegistGroundBidInfor");
+        Event.Brocast("m_RegistGroundBidInfor")
     end
 
-    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate);  --拍卖信息更新
-    Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState);  --土地开始拍卖
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate)  --拍卖信息更新
+    Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState)  --土地开始拍卖
 end
 
 function GroundAuctionCtrl:Awake(go)
     self.gameObject = go
-    UpdateBeat:Add(self._update, self);
+    UpdateBeat:Add(self._update, self)
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -45,8 +42,8 @@ function GroundAuctionCtrl:Refresh()
 end
 
 function GroundAuctionCtrl:Close()
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate);
-    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState);
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate)
+    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState)
 end
 
 ---初始化界面
@@ -165,15 +162,15 @@ end
 
 ---出价
 function GroundAuctionCtrl:BidGround(table)
-    local bidPrice = GroundAuctionPanel.bidInput.text;
+    local bidPrice = GroundAuctionPanel.bidInput.text
 
-    Event.Brocast("m_PlayerBidGround", table.m_data.id, bidPrice);
+    Event.Brocast("m_PlayerBidGround", table.m_data.id, bidPrice)
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
 function GroundAuctionCtrl:UnRegistGroundBid(table)
     if table.m_data.isStartBid then
-        Event.Brocast("m_UnRegistGroundBidInfor");
+        Event.Brocast("m_UnRegistGroundBidInfor")
     end
 end
 
@@ -183,12 +180,12 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
 
     if data.id == self.m_data.id then
         local info = {}
-        info.titleInfo = "CONGRATULATION";
-        info.contentInfo = "Success!!!!";
-        info.tipInfo = "lalalalalalalalla";
+        info.titleInfo = "CONGRATULATION"
+        info.contentInfo = "Success!!!!"
+        info.tipInfo = "lalalalalalalalla"
         info.btnCallBack = function ()
             ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
-        end;
+        end
         UIPage:ShowPage(BtnDialogPageCtrl, info)
     end
 end

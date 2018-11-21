@@ -14,16 +14,7 @@ function GroundAuctionModel.New()
 end
 
 function GroundAuctionModel.Awake()
-    UpdateBeat:Add(this.Update, this);
     this:OnCreate();
-end
-
-function GroundAuctionModel.Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --logDebug("aaaaaaaaaaaa ")
-        --this.m_ReqRueryMetaGroundAuction()
-        --this.m_ReqQueryGroundAuction()
-    end
 end
 
 --启动事件--
@@ -40,20 +31,25 @@ function GroundAuctionModel.OnCreate()
     Event.AddListener("m_PlayerBidGround", this.m_BidGround);
     Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor);
     Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor);
-    --
-    ----请求正在拍卖以及即将拍卖的土地信息
-    --this.m_ReqQueryGroundAuction()
-    --this.m_ReqRueryMetaGroundAuction()
+    Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
 end
+
 
 --关闭事件--
 function GroundAuctionModel.Close()
     Event.RemoveListener("m_PlayerBidGround", this.m_BidGround);
     Event.RemoveListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor);
     Event.RemoveListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor);
+    Event.RemoveListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
 end
 
 --- 客户端请求 ---
+--角色登录成功之后请求拍卖的信息
+function GroundAuctionModel.m_RoleLoginReqGroundAuction()
+    this.m_ReqRueryMetaGroundAuction()
+    this.m_ReqQueryGroundAuction()
+end
+
 --请求即将拍卖的土地信息
 function GroundAuctionModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
@@ -109,6 +105,8 @@ function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
     if #auctionInfo.auction == 0 then
         return
     end
+
+
 
     --创建气泡
     for i, v in ipairs(auctionInfo.auction) do

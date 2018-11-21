@@ -3,10 +3,6 @@
 --1.
 --      1、商业建筑实例类堆栈 ArchitectureStack[]
 --      2、
-
-
-
-
 UnitTest = require ('test/testFrameWork/UnitTest')
 --Framework/pbl/luaunit
 TerrainManager = {}
@@ -18,7 +14,7 @@ local blockRange = Vector2.New(20, 20)
 local CameraPosition
 local CameraCollectionID = -1
 
---创建建筑成功回调
+--创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
     local buildId = table[1]
     local Vec3 = table[2]
@@ -28,12 +24,20 @@ local function CreateSuccess(go,table)
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
-
-    ArchitectureStack[buildId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
+    if PlayerBuildingBaseData[buildId]["LuaRoute"] ~= nil then
+        ArchitectureStack[buildId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
+    end
+    --将建筑GameObject保存到对应Model中
+    local  tempBaseBuildModel=DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
+    if tempBaseBuildModel ~= nil then
+        tempBaseBuildModel.go = go
+    end
 end
 
---接受基础地块数据
-local function ReceiveArchitectureDatas(datas)
+--根据建筑数据生成GameObject
+--参数：
+--  datas：数据table集合( 一定包含数据有：坐标==》  x,y  ,建筑类型id==》 buildId)
+function  TerrainManager.ReceiveArchitectureDatas(datas)
     for key, value in pairs(datas) do
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
@@ -89,6 +93,9 @@ end
 --]]
 --通过BlcokID转化为BlockCollectionID
 function TerrainManager.BlockIDTurnCollectionID(blockID)
+    if blockID == nil then
+        return -1
+    end
     local X = math.floor((blockID %  blockRange.x)  / math.ceil(TerrainRange.x /blockRange.x) )
     local Y = math.ceil((blockID / TerrainRange.x) / blockRange.y)
     return X +  Y
@@ -155,14 +162,14 @@ UnitTest.TestBlockStart()
 UnitTest.Exec("Allen_w9_SendPosToServer", "test_TerrainManager_self",  function ()
     ct.log("Allen_w9_SendPosToServer","[test_TerrainManager_self] ...............")
     Event.AddListener("c_SendPosToServer_self", function (obj)
-        ReceiveArchitectureDatas(tempBuilds)
+        TerrainManager.ReceiveArchitectureDatas(tempBuilds)
     end)
 end)
 
 UnitTest.Exec("abel_w13_SceneOpt", "test_abel_w13_SceneOpt",  function ()
     ct.log("abel_w13_SceneOpt","[test_abel_w13_SceneOpt] ...............")
     Event.AddListener("c_abel_w13_SceneOpt", function (obj)
-        ReceiveArchitectureDatas(big)
+        TerrainManager.ReceiveArchitectureDatas(big)
     end)
 end)
 

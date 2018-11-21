@@ -26,10 +26,10 @@ DataManager = {}
 --          ==>> 登录时初始化（考虑与服务器同步的需求）
 --  c.设置中数据
 --          ==>> 游戏开始时读取playerprefs，改变时写入playerprefs
---
+--  e.拍卖地块信息
 
 
-
+-- 数据集合
 local BuildDataStack = { }      --建筑信息堆栈
 local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
@@ -37,6 +37,9 @@ local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil}
+
+
+---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
 
 --功能
 --  创建一个新的原子地块集合，并将内部所有数据置为 -1
@@ -93,6 +96,7 @@ function DataManager.RefreshBaseBuildData(data)
         blockID = data.id
     elseif data.x ~= nil and data.y ~= nil then
         blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
+        data.id = blockID
     else
         return
     end
@@ -141,6 +145,13 @@ function DataManager.RefreshDetailBuildData(data,buildTypeClass)
     end
 end
 
+--建筑根节点的唯一ID
+function DataManager.GetBaseBuildDataByID(blockID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
+    return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+end
+
+
 --功能
 --  删除整个地块集合数据
 --      相机移动时触发
@@ -155,6 +166,13 @@ function DataManager.RemoveCollectionDatas(tempCollectionID)
     BuildDataStack[tempCollectionID] = nil
 end
 
+---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
+
+
+function  DataManager.InitPersonDatas(tempData)
+    --网络回调注册 网络回调用n开头
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"), DataManager.n_OnReceivePersonMessage)
+end
 
 
 
@@ -168,6 +186,7 @@ end
 
 
 
+---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
 
 
 
@@ -177,18 +196,30 @@ end
 
 
 
+--注册所有消息回调
+local function InitialEvents()
+    Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas);
+end
+
+--清除所有消息回调
+local function ClearEvents()
+    
+end
 
 
+--DataManager初始化
+function DataManager.Init()
+    InitialEvents()
+    --土地拍卖Model
+    SystemDatas.GroundAuctionModel  = GroundAuctionModel.New()
+    if SystemDatas.GroundAuctionModel ~= nil then
+        SystemDatas.GroundAuctionModel:Awake()
+    end
+end
 
+function DataManager.Close()
 
-
-
-
-
-
-
-
-
+end
 
 
 

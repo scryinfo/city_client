@@ -523,7 +523,8 @@ UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
     --if HouseModel ~= nil then
     --    HouseModel:Awake()
     --end
-    ct.OpenCtrl("LaboratoryCtrl", {})
+    --ct.OpenCtrl("LaboratoryCtrl", {})
+    ct.OpenCtrl("LabResearchCtrl", {})
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

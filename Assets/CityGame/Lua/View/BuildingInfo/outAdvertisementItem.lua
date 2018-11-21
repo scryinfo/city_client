@@ -19,6 +19,8 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
     self.id = id
     self.ItemList=mgr.outAdvertisementItemList
 
+    self.peopleText=prefab.transform:Find("showPanel/peoplecount/peoplecountText"):GetComponent("Text")
+    self.peopleText.text=prefabData.metaId
 
 
 end
@@ -26,42 +28,3 @@ end
 function outAdvertisementItem:OnClicl_XBtn(go)
     go.manager:_deleteGoods(go)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

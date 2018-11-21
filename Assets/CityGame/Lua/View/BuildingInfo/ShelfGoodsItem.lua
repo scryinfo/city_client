@@ -7,6 +7,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
+    self.itemId = goodsDataInfo.itemId
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
     self.goodsicon = self.prefab.transform:Find("details/goodsicon");  --物品Icon
     self.nameText = self.prefab.transform:Find("details/nameText"):GetComponent("Text");  --物品名字
@@ -22,9 +23,11 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self);
 
 end
---删除
+--点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
     ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
+    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    Event.Brocast("m_ReqShelfDel",buildingId,go.itemId,go.numberText.text)
     go.manager:_deleteGoods(go)
 end
 function ShelfGoodsItem:OnClick_detailsBtn()

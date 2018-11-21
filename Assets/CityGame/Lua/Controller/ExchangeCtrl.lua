@@ -40,8 +40,10 @@ function ExchangeCtrl:Awake(go)
     self.gameObject = go
     ExchangeCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
-    self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
-    self.collectSortMgr = ExchangeSortMgr:new(ExchangePanel.collectTitleRoot)
+    self.sortMgr = ToggleSortMgr:new(ExchangePanel.titleRoot, SortEventType.ExchangeSort, ExchangeSortItemType.Volume)
+    self.collectSortMgr = ToggleSortMgr:new(ExchangePanel.collectTitleRoot, SortEventType.ExchangeSort, ExchangeSortItemType.Volume)
+    --self.sortMgr = ExchangeSortMgr:new(ExchangePanel.titleRoot)
+    --self.collectSortMgr = ExchangeSortMgr:new(ExchangePanel.collectTitleRoot)
 
     --行情收藏记录toggle
     ExchangePanel.quotesToggle.onValueChanged:AddListener(function (isOn)
@@ -143,7 +145,7 @@ end
 --require("Config/Material")
 function ExchangeCtrl:_creatGoodsConfig()
     local datas = {}
-    for i, itemMat in ipairs(Material) do
+    for k, itemMat in pairs(Material) do
         datas[itemMat.itemId] = itemMat
         datas[itemMat.itemId].lowPrice = 0.00
         datas[itemMat.itemId].highPrice = 0.00

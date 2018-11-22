@@ -169,6 +169,24 @@ public class CameraScripts : MonoBehaviour
             return;
         }
 
+        ////float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
+
+        ////m_smoothStopVelocity = Vector3.zero;
+        ////var dragDeltaPosition = InputModule.Instance.DragDeltaPosition;
+        ////Vector3 v3 = new Vector3(dragDeltaPosition.x, 0, dragDeltaPosition.y);
+        ////Vector3 newDeltaPositionV3 = (Quaternion.AngleAxis(m_mainCamera.transform.localEulerAngles.y, new Vector3(0, 1, 0)) * v3) * dragFactor * factor;
+        ////finalPosition -= newDeltaPositionV3 * Time.deltaTime;
+
+        //////惯性处理相关
+        ////lastMoveVector = new Vector2(newDeltaPositionV3.x, newDeltaPositionV3.z);
+        //////限制最大速度,防止出现极大的惯性
+        ////if (lastMoveVector.sqrMagnitude > m_smoothStopMaxSpeed * m_smoothStopMaxSpeed)
+        ////{
+        ////    lastMoveVector = lastMoveVector.normalized * m_smoothStopMaxSpeed;
+        ////}
+        ////m_smoothStopVelocity = lastMoveVector;
+        ////m_timeRealDragStop = Time.realtimeSinceStartup;
+
         float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
 
         m_smoothStopVelocity = Vector3.zero;
@@ -186,6 +204,7 @@ public class CameraScripts : MonoBehaviour
         }
         m_smoothStopVelocity = lastMoveVector;
         m_timeRealDragStop = Time.realtimeSinceStartup;
+
         Util.CallMethod("TerrainManager", "Refresh", transform.Find("CameraCenter").position);
     }
 

@@ -21,12 +21,7 @@ function GroundAuctionCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
 
-    self:_initPanelData()
-
-    --如果已经开始拍卖，则向服务器发送打开了UI界面，开始接收拍卖信息
-    if self.m_data.isStartBid then
-        Event.Brocast("m_RegistGroundBidInfor")
-    end
+    --self:_initPanelData()
 
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate)  --拍卖信息更新
     Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState)  --土地开始拍卖
@@ -41,6 +36,12 @@ function GroundAuctionCtrl:Refresh()
     self:_initPanelData()
 end
 
+function GroundAuctionCtrl:Hide()
+    self.startTimeDownForStart = false
+    self.startTimeDownForFinish = false
+    UIPage.Hide(self)
+end
+
 function GroundAuctionCtrl:Close()
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate)
     Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState)
@@ -52,10 +53,11 @@ function GroundAuctionCtrl:_initPanelData()
         return
     end
 
-    --如果是已经开始了的，则显示拍卖倒计时界面
+    --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
     local timeTemp = os.time()
-    if ((self.m_data.beginTime + self.m_data.durationSec) > timeTemp and (self.m_data.isStartBid)) then
-        GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
+    if self.m_data.isStartAuc then
+        Event.Brocast("m_RegistGroundBidInfor")
+         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
 
         if self.m_data.biderId ~= nil and self.m_data.price ~= nil then
@@ -169,9 +171,10 @@ end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
 function GroundAuctionCtrl:UnRegistGroundBid(table)
-    if table.m_data.isStartBid then
+    if table.m_data.isStartAuc then
         Event.Brocast("m_UnRegistGroundBidInfor")
     end
+    UIPage.ClosePage()
 end
 
 ---拍卖信息更新

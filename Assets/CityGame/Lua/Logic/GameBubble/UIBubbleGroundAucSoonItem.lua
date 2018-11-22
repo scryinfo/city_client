@@ -44,17 +44,17 @@ function UIBubbleGroundAucSoonItem:LateUpdate()
         local remainTime = finishTime - self.currentTime
         if remainTime < 0 then
             self.startTimeDown = false
-            Event.Brocast("m_GroundAucStateChange", self.data.id)
+            --Event.Brocast("m_GroundAucStateChange", self.data.id)
             return
         end
 
         local timeTable = getFormatUnixTime(remainTime)
-        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        local timeStr = timeTable.minute..":"..timeTable.second
         self.soonTimeText.text = timeStr
 
         if self.currentTime >= finishTime then
             self.startTimeDown = false
-            Event.Brocast("m_GroundAucStateChange", self.data.id)
+            --Event.Brocast("m_GroundAucStateChange", self.data.id)
             return
         end
     end

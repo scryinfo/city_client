@@ -75,7 +75,7 @@ end
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
     ct.log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
-    ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData)
+    ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData.info.id)
 end
 
 --原料厂--

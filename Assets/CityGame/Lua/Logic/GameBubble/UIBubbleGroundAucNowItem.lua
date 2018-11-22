@@ -51,7 +51,7 @@ function UIBubbleGroundAucNowItem:LateUpdate()
         end
 
         local timeTable = getFormatUnixTime(remainTime)
-        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        local timeStr = timeTable.minute..":"..timeTable.second
         self.nowTimeText.text = timeStr
 
         if self.currentTime >= finishTime then

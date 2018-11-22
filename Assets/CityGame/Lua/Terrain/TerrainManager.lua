@@ -113,8 +113,8 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if blockID == nil then
         return{ x = -1,y = -1}
     end
-    local X = math.floor((blockID %  blockRange.x))
-    local Y = math.ceil((blockID / TerrainRange.x) / blockRange.y)
+    local X = math.floor((blockID % TerrainRange.x )/ blockRange.x)
+    local Y = math.floor((blockID / TerrainRange.x) / blockRange.y)
     return{ x = X,y = Y}
 end
 

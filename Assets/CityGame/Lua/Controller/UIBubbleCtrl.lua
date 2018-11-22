@@ -127,7 +127,7 @@ function UIBubbleCtrl:_updateBubbleItemState(bubbleData)
         destroy(item.bubbleRect.gameObject)  --删除之前的item
 
         bubbleData.isStartAuc = true
-        self:_creatGroundAucBubbleItem(item)
+        self:_creatGroundAucBubbleItem(item.data)
         --
         --local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucNowObj)  --已经拍卖
         --groundObj.transform.localScale = Vector3.one
@@ -140,21 +140,6 @@ function UIBubbleCtrl:_updateBubbleItemState(bubbleData)
         --data.bubbleRect = go
         --local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
         --self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
-    end
-end
-
---刷新拍卖状态
-function UIBubbleCtrl:StartAuc(aucDatas)
-    for i, aucInfo in ipairs(aucDatas.auction) do
-        for j, elmValue in ipairs(self.elmArray) do
-            --如果开始拍卖的id == 存下来的id
-            if elmValue.data.id == aucInfo.id and elmValue.data.bubbleType == BubblleType.GroundAuction then
-                elmValue.data.biderId = aucInfo.biderId
-                elmValue.data.price = aucInfo.price
-                elmValue:StartBid()
-            end
-
-        end
     end
 end
 

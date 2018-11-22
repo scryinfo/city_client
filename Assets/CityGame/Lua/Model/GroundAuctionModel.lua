@@ -147,14 +147,14 @@ end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
-    local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
-    local count = #auctionInfo.auction
-    local staticCount = #this.groundAucDatas
-    if #auctionInfo.auction == 0 then
+    local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
+    if not auctionInfo then
         return
     end
 
-    --if
+    if this.groundAucDatas[auctionInfo.id] then
+
+    end
 end
 
 --收到服务器拍卖信息更新
@@ -167,18 +167,17 @@ end
 function GroundAuctionModel.n_OnReceiveAuctionEnd(stream)
     local endId = assert(pbl.decode("gs.Id", stream), "GroundAuctionModel.n_OnReceiveAuctionEnd: stream == nil")
     --如果拍卖结束，则需要销毁obj
-    if this.groundAucDatas[endId] then
-        destroy(this.groundAucDatas[endId].groundObj.gameObject)
-        this.groundAucDatas[endId] = nil
+    if this.groundAucDatas[endId.id] then
+        destroy(this.groundAucDatas[endId.id].groundObj.gameObject)
+        this.groundAucDatas[endId.id] = nil
     end
 end
 
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
     if stream then
-
+        --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
     end
-    --需要显示什么数据，是否是直接存储在playerInfo中
 end
 --拍卖失败
 function GroundAuctionModel.n_OnReceiveFailBid(stream)

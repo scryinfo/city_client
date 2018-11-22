@@ -28,6 +28,7 @@ function GroundAuctionModel.OnCreate()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GroundAuctionModel.n_OnReceiveWinBid)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GroundAuctionModel.n_OnReceiveFailBid)
 
     --本地的回调注册
     Event.AddListener("m_PlayerBidGround", this.m_BidGround)
@@ -174,6 +175,13 @@ end
 
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
+    if stream then
+
+    end
+    --需要显示什么数据，是否是直接存储在playerInfo中
+end
+--拍卖失败
+function GroundAuctionModel.n_OnReceiveFailBid(stream)
     if stream then
 
     end

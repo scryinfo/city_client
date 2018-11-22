@@ -21,7 +21,7 @@ function GroundAuctionCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
 
-    self:_initPanelData()
+    --self:_initPanelData()
 
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate)  --拍卖信息更新
     Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState)  --土地开始拍卖

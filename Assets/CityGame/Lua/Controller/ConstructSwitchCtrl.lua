@@ -55,13 +55,19 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
+    if DataManager.IsOwnerGround(tempPos) then
+        ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.one
+    else
+        ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.zero
+    end
 end
 
 --确认建造建筑
 function ConstructSwitchCtrl:ConstructBuildConfirm()
     --TODO：向服务器发送建造数据
     if DataManager.TempDatas.constructID ~= nil then
-
+        local tempPos = DataManager.TempDatas.constructObj.transform.position
+        PlayerTempModel.m_ReqAddBuilding(DataManager.TempDatas.constructID, math.floor(tempPos.x) ,  math.floor(tempPos.z))
     end
 end
 

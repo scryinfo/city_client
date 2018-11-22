@@ -16,16 +16,16 @@ local CameraCollectionID = -1
 
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
-    local buildId = table[1]
+    local buildingId = table[1]
     local Vec3 = table[2]
     go.transform.position = Vec3
-    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
+    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingId]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
-    if PlayerBuildingBaseData[buildId]["LuaRoute"] ~= nil then
-        ArchitectureStack[buildId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildId]["LuaRoute"])
+    if PlayerBuildingBaseData[buildingId]["LuaRoute"] ~= nil then
+        ArchitectureStack[buildingId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingId]["LuaRoute"])
     end
     --将建筑GameObject保存到对应Model中
     local  tempBaseBuildModel=DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
@@ -42,18 +42,24 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
         if isCreate then
-            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildId]["prefabRoute"],CreateSuccess,{value.buildId, Vector3.New(value.x,0,value.y)})
+            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingId]["prefabRoute"],CreateSuccess,{value.buildingId, Vector3.New(value.x,0,value.y)})
         end
     end
 end
 
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
-    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(TerrainManager.PositionTurnBlockID(pos))
+    local tempBlockID = TerrainManager.PositionTurnBlockID(pos)
+    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
     --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         CameraCollectionID = tempCollectionID
-        --TODO:向服务器发送新的所在地块ID，刷新数据model
+        --向服务器发送新的所在地块ID
+        local msgId = pbl.enum("gscode.OpCode", "move")
+        local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
+        local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
         UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
@@ -70,6 +76,7 @@ function TerrainManager.PositionTurnBlockID(pos)
         return tempZ
     end
 end
+
 
 --通过位置ID转化为位置坐标
 --注：z为列，x为行（y = 0）
@@ -101,12 +108,28 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
+--通过BlcokID转化为BlockCollection坐标
+function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
+    if blockID == nil then
+        return{ x = -1,y = -1}
+    end
+    local X = math.floor((blockID %  blockRange.x))
+    local Y = math.ceil((blockID / TerrainRange.x) / blockRange.y)
+    return{ x = X,y = Y}
+end
+
 --通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
     local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
     local Y = (collectionID % math.ceil(TerrainRange.x /blockRange.x)) * blockRange.x
     return X +  Y
 end
+function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
+
+end
+
+
+
 
 --创建临时修建建筑物
 local function CreateConstructBuildSuccess(go,table)
@@ -152,13 +175,11 @@ function TerrainManager.TouchBuild(MousePos)
     local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
     local blockID = TerrainManager.PositionTurnBlockID(tempPos)
     local tempNodeID  = DataManager.GetBlockDataByID(blockID)
-    local tempData
     if tempNodeID ~= nil and tempNodeID ~= -1 then
-        tempData = DataManager.GetBaseBuildDataByID(tempNodeID)
-    end
-    if nil ~= tempData then
-        local a  = tempData.Data
-        ct.log("Allen_wk13","点击到了建筑")
+        local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
+        if nil ~= tempModel then
+            tempModel:OpenPanel()
+        end
     end
 end
 

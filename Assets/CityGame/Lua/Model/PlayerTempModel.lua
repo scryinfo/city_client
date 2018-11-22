@@ -73,14 +73,12 @@ function PlayerTempModel.Update()
         PlayerTempModel.m_ReqAddBuilding(1600001,220,220)
         ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     end
-
-
 end
 
 --启动事件--
 function PlayerTempModel.OnCreate()
     --网络回调注册 网络回调用n开头
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), PlayerTempModel.n_OnReceiveAddBuilding)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), PlayerTempModel.n_OnReceiveAddBuilding)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), PlayerTempModel.n_OnReceiveUnitCreate)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), PlayerTempModel.n_OnReceiveUnitChange)
 

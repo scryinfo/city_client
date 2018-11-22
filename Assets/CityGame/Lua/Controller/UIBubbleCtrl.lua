@@ -25,6 +25,7 @@ end
 function UIBubbleCtrl:Awake(go)
     self.gameObject = go
     self:_addListener()
+    self:_preLoadGroundAucObj()
 end
 
 function UIBubbleCtrl:Refresh()
@@ -41,6 +42,12 @@ function UIBubbleCtrl.static.RefreshLateUpdate()
     Event.Brocast("c_RefreshLateUpdate")
 end
 
+--预先生成场景中的预制
+function UIBubbleCtrl:_preLoadGroundAucObj()
+    self.sceneAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
+    self.sceneAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
+end
+
 --生成拍卖气泡
 function UIBubbleCtrl:_initGroundAucBubbles()
     if not self.m_data then
@@ -48,11 +55,28 @@ function UIBubbleCtrl:_initGroundAucBubbles()
     end
 
     local auction = self.m_data
+    self.orderAucDatas = {}
+    for id, value in pairs(auction) do
+        self.orderAucDatas[#self.orderAucDatas + 1] = value
+    end
+    table.sort(self.orderAucDatas, function (m, n) return m.beginTime < n.beginTime end)  --获取顺序表
+
     if not self.groundAucLuaItems then
         self.groundAucLuaItems = {}
     end
-    for i, groundAucItem in pairs(auction) do
-        self:_creatGroundAucBubbleItem(groundAucItem)
+    local showFirstWait = true
+    for i, groundAucItem in pairs(self.orderAucDatas) do
+        --如果已经开始拍卖
+        if groundAucItem.beginTime <= os.time() then
+            groundAucItem.isStartAuc = true
+            self:_creatGroundAucBubbleItem(groundAucItem)
+        else
+            if showFirstWait then
+                groundAucItem.isStartAuc = false
+                self:_creatGroundAucBubbleItem(groundAucItem)
+                return
+            end
+        end
     end
 end
 
@@ -62,6 +86,11 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         if not self.groundAucNowObj then
             self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucNowObjPath)
         end
+
+        local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucNowObj)  --已经拍卖
+        groundObj.transform.localScale = Vector3.one
+        groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
+        bubbleData.groundObj = groundObj
 
         local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
         go.transform:SetParent(self.gameObject.transform)
@@ -75,6 +104,12 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         if not self.groundAucSoonObj then
             self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucSoonObjPath)
         end
+
+        local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucSoonObj)  --已经拍卖
+        groundObj.transform.localScale = Vector3.one
+        groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
+        bubbleData.groundObj = groundObj
+
         local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
         go.transform:SetParent(self.gameObject.transform)
         go.transform.localScale = Vector3.one
@@ -88,14 +123,23 @@ end
 function UIBubbleCtrl:_updateBubbleItemState(bubbleData)
     if self.groundAucLuaItems[bubbleData.id] then
         local item = self.groundAucLuaItems[bubbleData.id]
+        item.isStartAuc = true
         destroy(item.bubbleRect.gameObject)  --删除之前的item
 
-        local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
-        go.transform:SetParent(self.gameObject.transform)
-        local data = bubbleData
-        data.bubbleRect = go
-        local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
-        self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
+        bubbleData.isStartAuc = true
+        self:_creatGroundAucBubbleItem(item)
+        --
+        --local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucNowObj)  --已经拍卖
+        --groundObj.transform.localScale = Vector3.one
+        --groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
+        --bubbleData.groundObj = groundObj
+        --
+        --local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
+        --go.transform:SetParent(self.gameObject.transform)
+        --local data = bubbleData
+        --data.bubbleRect = go
+        --local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
+        --self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
     end
 end
 

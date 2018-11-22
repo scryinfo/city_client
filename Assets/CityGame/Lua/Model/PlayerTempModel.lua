@@ -57,9 +57,9 @@ function PlayerTempModel.Update()
         --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
         --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 105, 150)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
@@ -114,6 +114,9 @@ function PlayerTempModel.n_OnReceiveAddBuilding(stream)
 end
 --创建建筑时的同步
 function PlayerTempModel.n_OnReceiveUnitCreate(stream)
+    if not stream then
+        return
+    end
     local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "PlayerTempModel.n_OnReceiveUnitCreate: stream == nil")
     if not PlayerTempModel.buildingsInfo then
         PlayerTempModel.buildingsInfo = {}

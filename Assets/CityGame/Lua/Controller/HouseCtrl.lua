@@ -45,10 +45,8 @@ end
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
     if self.m_data then
-        if self.m_data.info.id then
-            --向服务器请求建筑详情
-            Event.Brocast("m_ReqHouseDetailInfo", self.m_data.info.id)
-        end
+        --向服务器请求建筑详情
+        Event.Brocast("m_ReqHouseDetailInfo", self.m_data)
     end
 end
 
@@ -85,7 +83,9 @@ function HouseCtrl:_changeName(ins)
 end
 ---返回
 function HouseCtrl:_backBtn(ins)
-    ins.houseToggleGroup:cleanItems()
+    if ins.houseToggleGroup then
+        ins.houseToggleGroup:cleanItems()
+    end
     UIPage.ClosePage()
 end
 ---更改名字成功

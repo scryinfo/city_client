@@ -61,7 +61,7 @@ function GroundAuctionModel.m_GroundAucStateChange(groundId)
         item.isStartAuc = true
         local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)  --已经拍卖
         go.transform.localScale = Vector3.one
-        go.transform.position = Vector3.New(item.area.x, 0, item.area.y)
+        go.transform.position = Vector3.New(item.area[1].x, 0, item.area[1].y)
         item.groundObj = go
         Event.Brocast("c_BubbleUpdateItemState", this.groundAucDatas[groundId])  --检查是否数据有变化 --气泡界面的显示
     else
@@ -91,7 +91,7 @@ end
 function GroundAuctionModel.m_BidGround(id, price)
     local msgId = pbl.enum("gscode.OpCode","bidGround")
     local lMsg = { id = id, num = price}
-    local  pMsg = assert(pbl.encode("gs.IdNum", lMsg))
+    local pMsg = assert(pbl.encode("gs.ByteNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
@@ -115,19 +115,14 @@ function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
 
     --如果没有正在拍卖的土地，则直接生成即将拍卖的土地
     if #msgGroundAuc.auction == 0 then
-        ct.OpenCtrl("UIBubbleCtrl", this.groundAucDatas)
         return
     end
 
-    --得到正在拍卖的土地信息
+    --得到所有拍卖土地的出价信息
     for i, item in ipairs(msgGroundAuc.auction) do
         if this.groundAucDatas[item.id] then
-            if not this.groundAucDatas[item.id].isStartAuc then
-                ct.log("cycle_w6_GroundAuc", "已经开始拍卖，但是数据不对")
-            end
             this.groundAucDatas[item.id].biderId = item.biderId
             this.groundAucDatas[item.id].price = item.price
-            this.groundAucDatas[item.id].isStartAuc = true
         end
     end
     --创建气泡
@@ -146,33 +141,17 @@ function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
         this.groundAucDatas = {}
     end
     for i, item in ipairs(auctionInfo.auction) do
-        if item.beginTime < os.time() then
-            item.isStartAuc = true  --已经开始拍卖了
-            local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)  --已经拍卖
-            go.transform.localScale = Vector3.one
-            go.transform.position = Vector3.New(item.area.x, 0, item.area.y)
-            item.groundObj = go
-        else
-            item.isStartAuc = false
-            local go = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)  --即将拍卖
-            go.transform.localScale = Vector3.one
-            --测试数据
-            item.area.x = 1
-            item.area.y = 1
-            go.transform.position = Vector3.New(item.area.x, 0, item.area.y)
-            item.groundObj = go
-        end
-
+        item.beginTime = item.beginTime / 1000
+        item.durationSec = item.durationSec / 1000
         this.groundAucDatas[item.id] = item
     end
-
-    --创建气泡
-    --ct.OpenCtrl("UIBubbleCtrl", this.groundAucDatas)
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
     local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
+    local count = #auctionInfo.auction
+    local staticCount = #this.groundAucDatas
     if #auctionInfo.auction == 0 then
         return
     end

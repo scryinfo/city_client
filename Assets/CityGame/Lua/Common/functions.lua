@@ -78,6 +78,7 @@ end
 --把时间 秒转换成xx时xx分xx秒格式
 function getFormatUnixTime(time)
 	local tb = {}
+	time = math.floor(time)
 	tb.year = tonumber(os.date("%Y", time)) or 0
 	tb.month = tonumber(os.date("%m", time)) or 0
 	tb.day = tonumber(os.date("%d", time)) or 0

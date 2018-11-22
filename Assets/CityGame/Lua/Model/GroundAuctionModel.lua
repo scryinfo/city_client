@@ -148,19 +148,20 @@ end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
     local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
-    if not auctionInfo then
-        return
-    end
-
-    if this.groundAucDatas[auctionInfo.id] then
-
+    if auctionInfo then
+        ct.log("cycle_w6_GroundAuc", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"..auctionInfo.id)
+        Event.Brocast("c_BidInfoUpdate", auctionInfo)
     end
 end
 
 --收到服务器拍卖信息更新
 function GroundAuctionModel.n_OnReceiveBidChangeInfor(stream)
+    --应该不只有id，还应该有最高价
     local bidInfo = assert(pbl.decode("gs.IdNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
-    Event.Brocast("c_BidInfoUpdate", bidInfo)
+    if bidInfo then
+        ct.log("cycle_w6_GroundAuc", "呜呜呜呜呜")
+        Event.Brocast("c_BidInfoUpdate", bidInfo)
+    end
 end
 
 --拍卖结束
@@ -176,7 +177,8 @@ end
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
     if stream then
-        --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+        local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+
     end
 end
 --拍卖失败

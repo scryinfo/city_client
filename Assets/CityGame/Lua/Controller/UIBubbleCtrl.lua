@@ -98,6 +98,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         local data = bubbleData
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
+        --self.groundAucLuaItems[bubbleData.id] = nil
         self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
     else
         --即将拍卖
@@ -124,22 +125,12 @@ function UIBubbleCtrl:_updateBubbleItemState(bubbleData)
     if self.groundAucLuaItems[bubbleData.id] then
         local item = self.groundAucLuaItems[bubbleData.id]
         item.isStartAuc = true
+        item:Close()
         destroy(item.bubbleRect.gameObject)  --删除之前的item
 
         bubbleData.isStartAuc = true
         self:_creatGroundAucBubbleItem(item.data)
-        --
-        --local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucNowObj)  --已经拍卖
-        --groundObj.transform.localScale = Vector3.one
-        --groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
-        --bubbleData.groundObj = groundObj
-        --
-        --local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
-        --go.transform:SetParent(self.gameObject.transform)
-        --local data = bubbleData
-        --data.bubbleRect = go
-        --local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
-        --self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
+        Event.Brocast("c_NewGroundStartBid", item.data)
     end
 end
 
@@ -154,17 +145,10 @@ end
 
 --隐藏所有气泡
 function UIBubbleCtrl.HideAllBubble()
-    for i, elm in pairs(self.elmArray) do
-        elm.data.elmObj.transform.localScale = Vector3.zero
-    end
+
 end
 
 --根据ID销毁对应气泡物体
 function UIBubbleCtrl.DestoryBubbleItem(bubbleID)
-    for i, v in ipairs(self.elmArray) do
-        if v.data.id == bubbleID then
-            UnityEngine.GameObject.Destroy(self.elmArray[i].elmObj)
-            self.elmArray[i] = nil
-        end
-    end
+
 end

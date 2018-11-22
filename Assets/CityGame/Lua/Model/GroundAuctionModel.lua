@@ -108,12 +108,9 @@ function GroundAuctionModel.m_UnRegistGroundBidInfor()
 end
 
 --- 回调 ---
-
 --收到拍卖中的土地信息
 function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
-
-    --如果没有正在拍卖的土地，则直接生成即将拍卖的土地
     if #msgGroundAuc.auction == 0 then
         return
     end
@@ -177,6 +174,9 @@ end
 
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
+    if stream then
+
+    end
     --需要显示什么数据，是否是直接存储在playerInfo中
 end
 

@@ -36,11 +36,10 @@ function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
     self.number = 0;--商品个数
-    if self.m_data.bag.inHand == nil then
-        return
-    end
-    for i, v in pairs(self.m_data.bag.inHand) do
-        self.number =  self.number + tonumber(v.n)
+    if self.m_data.bag.inHand ~= nil then
+        for i, v in pairs(self.m_data.bag.inHand) do
+            self.number =  self.number + tonumber(v.n)
+        end
     end
     self.money = 1000;--扩容所需金额
     self:_initData();

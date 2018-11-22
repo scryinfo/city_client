@@ -111,7 +111,6 @@ function MunicipalModel:m_deleteSlot(buildingId,slotId)
     local  pMsg = assert(pbl.encode("gs.AdDelSlot", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-
 end
 
 ---删除槽位收包
@@ -134,6 +133,7 @@ function MunicipalModel:m_adPutAdToSlot(Slotid,metaId,type,buildingId)
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     local t=self
+    
 end
 
 ---打广告收包

@@ -19,12 +19,12 @@ end
 function ScienceSellPopPanel.InitPanel()
     this.iconImage = transform:Find("bg/iconImage"):GetComponent("Image");
     this.levleInp=transform:Find("bg/body/InputField"):GetComponent("InputField")
-    this.cutBtn=this.transform:Find("bg/body/InputField/cut")
-    this.plusBtn=this.transform:Find("bg/body/InputField/plus")
+    this.cutBtn=transform:Find("bg/body/InputField/cut")
+    this.plusBtn=transform:Find("bg/body/InputField/plus")
     this.priceInp=transform:Find("bg/body/PriceInpu"):GetComponent("InputField")
 
-    this.okBtn=this.transform:Find("bg/body/okBtn")
-    this.backBtn=this.transform:Find("bg/backBtn")
+    this.okBtn=transform:Find("bg/body/okBtn")
+    this.backBtn=transform:Find("bg/backBtn")
 end
 --数据初始化
 function ScienceSellPopPanel.InitDate(AdvertisementPosData)

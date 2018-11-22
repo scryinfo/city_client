@@ -19,47 +19,59 @@ function ScienceSellPopCtrl:initialize()
 end
 
 function ScienceSellPopCtrl:bundleName()
-    return "AdvertisementPopPanel";
+    return "ScienceSellPopPanel";
 end
 
 function ScienceSellPopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
-
+local panel
+local arg
 function ScienceSellPopCtrl:Awake(go)
     self.gameObject = go;
+    panel=ScienceSellPopPanel
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    materialBehaviour:AddClick(ScienceSellPopPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(ScienceSellPopPanel.cutBtn.gameObject,self.OnClick_cut,self);
-    materialBehaviour:AddClick(ScienceSellPopPanel.plusBtn.gameObject,self.OnClick_plus,self);
-    materialBehaviour:AddClick(ScienceSellPopPanel.okBtn.gameObject,self.OnClick_confirm,self);
+    materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
+    materialBehaviour:AddClick(panel.okBtn.gameObject,self.OnClick_confirm,self);
+    materialBehaviour:AddClick(panel.plusBtn.gameObject,self.OnClick_plus,self);
+    materialBehaviour:AddClick(panel.cutBtn.gameObject,self.OnClick_cut,self);
+    --panel.priceInp.
 
 end
 
-
-local panel=ScienceSellPopPanel
 ---close
 function ScienceSellPopCtrl:OnClick_backBtn(obj)
-    obj:Hide();
+    obj:Hide()
 end
 
 ---cut
-function ScienceSellPopCtrl:OnClick_cut(obj)
+function ScienceSellPopCtrl:OnClick_cut()
+    if panel.levleInp.text=="" or tonumber(panel.levleInp.text) <0 then
+        panel.levleInp.text=0
+    end
+    if tonumber(panel.levleInp.text)- 1<0 then
+        panel.levleInp.text=0
+        return
+    end
     panel.levleInp.text=panel.levleInp.text-1
 end
 
 ---plus
-function ScienceSellPopCtrl:OnClick_plus(obj)
-    panel.levleInp.text=panel.levleInp.text+1
+function ScienceSellPopCtrl:OnClick_plus()
+    if panel.levleInp.text=="" or tonumber(panel.levleInp.text) <0 then
+        panel.levleInp.text=0
+    end
+ panel.levleInp.text=panel.levleInp.text+1
 end
 
 ---confirm
-function ScienceSellPopCtrl:OnClick_confirm(obj)
-    obj:Hide();
-
+function ScienceSellPopCtrl:OnClick_confirm(ins)
+    ins.m_data:CreatedSciencetradeItem()
+    ins:Hide();
+    Event.Brocast("SmallPop","Success")
 end
 
-function AdvertisementPopCtrl:Refresh()
+function ScienceSellPopCtrl:Refresh()
 
 end
 

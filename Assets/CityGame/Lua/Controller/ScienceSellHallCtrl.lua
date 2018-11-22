@@ -33,6 +33,7 @@ function ScienceSellHallCtrl:OnCreate(obj)
 end
 local materialBehaviour
 local panel
+local Mgr
 
 local top
 local down
@@ -41,6 +42,7 @@ local reddown
 function ScienceSellHallCtrl:Awake(go)
     self.gameObject = go;
     panel=ScienceSellHallPanel
+
     materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(panel.searchBtn.gameObject,self.OnClick_search,self);
@@ -77,10 +79,13 @@ function ScienceSellHallCtrl:Awake(go)
     materialBehaviour:AddClick(panel.scoredown.gameObject,self.OnClick_scorelsort,self)
     materialBehaviour:AddClick(panel.scoreredtop.gameObject,self.OnClick_scoreredtop,self)
     materialBehaviour:AddClick(panel.scorereddown.gameObject,self.OnClick_scorereddown,self)
+    ---Create item
+    Mgr=ScienceSellHallModel.Mgr
+    for i, data in pairs(Material) do
+        Mgr:creatSciencehallItem(materialBehaviour,data)
+    end
 
-
-
-    ---小弹窗
+    -----小弹窗
     self.root=ScienceSellHallPanel.backBtn.root;
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
@@ -309,16 +314,14 @@ end
 --返回
 function ScienceSellHallCtrl:OnClick_backBtn()
     UIPage.ClosePage();
-
 end
 
---打开信息界面
+--搜索
 function ScienceSellHallCtrl:OnClick_search()
 
 end
 --刷新
 function ScienceSellHallCtrl:Refresh()
-
 
 end
 

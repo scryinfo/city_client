@@ -57,7 +57,8 @@ function ScienceSellHallPanel.InitPanel()
     ---scroll gameObject
     this.materialScroll=transform:Find("body/botton/materialScroll")
     this.goodsScroll=transform:Find("body/botton/goodsScroll")
-
+    this.materialscrollcontent=transform:Find("body/botton/materialScroll/Viewport/Content")
+    this.goodsscrollcontent=transform:Find("body/botton/goodsScroll/Viewport/Content")
 
 end
 --数据初始化

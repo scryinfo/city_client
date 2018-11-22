@@ -185,17 +185,39 @@ function DataManager.GetBlockDataByID(blockID)
 end
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 
-
+--土地集合
+--参数： tempData  ===》    gs.Role
 function  DataManager.InitPersonDatas(tempData)
-    --网络回调注册 网络回调用n开头
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"), DataManager.n_OnReceivePersonMessage)
+    if not DataManager.PersonDataStack then
+        DataManager.PersonDataStack = {}
+    end
+    --初始化个人唯一ID
+    DataManager.PersonDataStack.m_owner = tempData.id
+    --初始化自己所拥有地块集合
+    PersonDataStack.m_GroundInfos = tempData.ground
 end
 
 
+function DataManager.AddMyGroundInfo(groundInfoData)
+    --检查自己所拥有地块集合有没有该地块
+    for key, value in pairs(PersonDataStack.m_GroundInfos) do
+        if value.x == groundInfoData.x and value.y == groundInfoData.y then
+            return;
+        end
+    end
+    table.insert(PersonDataStack.m_GroundInfos,groundInfoData)
+end
 
-
-
-
+--判断该地块是不是自己的
+function DataManager.IsOwnerGround(tempPos)
+    local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
+    for key, value in pairs(PersonDataStack.m_GroundInfos) do
+        if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
+            return true
+        end
+    end
+    return false
+end
 
 
 
@@ -215,9 +237,18 @@ end
 
 --注册所有消息回调
 local function InitialEvents()
-    Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas);
+    Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
+    Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+
 end
 
+--注册所有网络消息回调
+local function InitialNetMessages()
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), DataManager.n_OnReceiveUnitCreate)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
+end
 --清除所有消息回调
 local function ClearEvents()
     
@@ -227,6 +258,7 @@ end
 --DataManager初始化
 function DataManager.Init()
     InitialEvents()
+    InitialNetMessages()
     --土地拍卖Model
     SystemDatas.GroundAuctionModel  = GroundAuctionModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
@@ -235,98 +267,55 @@ function DataManager.Init()
 end
 
 function DataManager.Close()
+    ClearEvents()
+end
 
+----------------------------------------------------网络回调函数---------------------------------
+
+function DataManager.n_OnReceiveUnitCreate(stream)
+    local UnitCreate = assert(pbl.decode("gs.UnitCreate", stream), "DataManager.n_OnReceiveUnitCreate: stream == nil")
+    --此处因命名和层级问题，临时处理
+    for key, value in pairs(UnitCreate) do
+        value.buildingID = value.mId
+        value.x = value.pos.x
+        value.y = value.pos.y
+    end
+    TerrainManager.ReceiveArchitectureDatas(UnitCreate)
+end
+
+function DataManager.n_OnReceiveUnitChange(stream)
+    local buildingInfo = assert(pbl.decode("gs.BuildingInfo", stream), "DataManager.n_OnReceiveUnitChange: stream == nil")
+    --buildingInfo  ==》BuildingInfo
+    --此处因命名和层级问题，临时处理
+    buildingInfo.buildingID = buildingInfo.mId
+    buildingInfo.x = buildingInfo.pos.x
+    buildingInfo.y = buildingInfo.pos.y
+    TerrainManager.ReceiveArchitectureDatas({buildingInfo})
+end
+
+function DataManager.n_OnReceiveUnitRemove(stream)
+    local buildingInfo = assert(pbl.decode("gs.Bytes", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    --buildingInfo  ==》BuildingInfo
+    --此处因命名和层级问题，临时处理
+    buildingInfo.buildingID = buildingInfo.mId
+    buildingInfo.x = buildingInfo.pos.x
+    buildingInfo.y = buildingInfo.pos.y
+    TerrainManager.ReceiveArchitectureDatas({buildingInfo})
 end
 
 
-
-
-
-
---[[
------------------------------------------------------------------Old
---查询基础地形数据
---BlockID
-function DataManager.QueryBaseBuildData(tempID)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(tempID)
-    if nil ~= BuildDataStack[collectionID] and nil ~= BuildDataStack[collectionID][tempID] then
-        return BuildDataStack[collectionID][tempID]
-    end
-    return nil
-end
-
---刷新基础地形数据
---data:某个建筑基础数据（protobuf）
-function  DataManager.RefreshBaseBuildData(data)
-    data.id =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(data.id)
-    if nil == BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-    end
-    if BuildDataStack[collectionID][data.id] then
-        BuildDataStack[collectionID][data.id].BaseData:Refresh(data)
-        return false
-    else
-        --具体Model可根据建筑类型typeID重写BaseBuildModel
-        BuildDataStack[collectionID][data.id] ={ BaseData = BaseBuildModel:new(data) }
-        return true
-    end
-end
-
---刷新详细地形数据
---data:某个建筑详细数据（protobuf）
---buildTypeClass:建筑类型
-function DataManager.RefreshDetailBuildData(data,buildTypeClass)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(data.id)
-    if not BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-    end
-    if BuildDataStack[collectionID][data.id] then
-        BuildDataStack[collectionID][data.id].DetailData:Refresh(data)
-    else
-        BuildDataStack[collectionID][data.id] ={ DetailData = buildTypeClass:new(data) }
-    end
-end
-
---清除某个地块集合信息
-function DataManager.CloseBuildCollectionDataByID(collectionID)
-    if  BuildDataStack[collectionID] then
-        for key, value in pairs(BuildDataStack[collectionID]) do
-            if value.BaseData then
-                value.BaseData:Clear()
-            end
-            if value.DetailData then
-                value.DetailData:Clear()
-            end
-            value = nil
+function DataManager.n_OnReceiveGroundChange(stream)
+    local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    --如果地块所有人是自己的话
+    for key, value in pairs(GroundChange) do
+        if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
+            DataManager.AddMyGroundInfo(value)
         end
-        BuildDataStack[collectionID] = nil
     end
 end
 
---清除某个建筑基础信息
-function DataManager.CloseBaseBuildDataByID(id)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(id)
-    if  BuildDataStack[collectionID] and BuildDataStack[collectionID][id] and BuildDataStackp[collectionID][id].BaseData then
-        BuildDataStack[collectionID][id].BaseData:Clear()
-        BuildDataStack[collectionID][id].BaseData = nil
-    end
-end
+----------
 
---清除某个建筑详细信息
-function DataManager.CloseDetailBuildDataByID(id)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(id)
-    if BuildDataStack[collectionID] and BuildDataStack[collectionID][id] and BuildDataStack[collectionID][id].DetailData then
-        BuildDataStack[collectionID][id].DetailData:Clear()
-        BuildDataStack[collectionID][id].DetailData = nil
-    end
-end
 
---清除所有数据
-function  DataManager.ClearAllDatas(dataTable)
-    for key, value in pairs(dataTable) do
-        value = nil
-    end
-end
 
---]]
+

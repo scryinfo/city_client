@@ -50,6 +50,12 @@ function getPriceString(str, intSize, floatSize)
 	return finalStr
 end
 
+--获取容量显示文本，总容量和已用容量颜色不同
+function getColorString(number1,number2,col1,col2)
+	local str1 = "<color="..col1..">"..number1.."</color>"
+	local str2 = "<color="..col2..">"..number2.."</color>"
+	return str1.."/"..str2
+end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
 	local r1 = r / 255

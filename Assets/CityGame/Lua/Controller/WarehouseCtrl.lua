@@ -132,6 +132,7 @@ end
 function WarehouseCtrl:OnClick_OnName(ins)
     WarehousePanel.nowText.text = "By name";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
+
 end
 --根据数量排序
 function WarehouseCtrl:OnClick_OnNumber(ins)

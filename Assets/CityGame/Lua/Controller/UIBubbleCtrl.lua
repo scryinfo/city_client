@@ -25,27 +25,20 @@ end
 function UIBubbleCtrl:Awake(go)
     self.gameObject = go
     self:_addListener()
-    self:_preLoadGroundAucObj()
 end
 
 function UIBubbleCtrl:Refresh()
     self:_initGroundAucBubbles()  --temp
 end
 function UIBubbleCtrl:_addListener()
-    Event.AddListener("c_BubbleUpdateItemState", self._updateBubbleItemState, self)
+    Event.AddListener("c_RefreshItems", self._refreshItems, self)
 end
 function UIBubbleCtrl:_removeListener()
-    Event.RemoveListener("c_BubbleUpdateItemState", self._updateBubbleItemState, self)
+    Event.RemoveListener("c_RefreshItems", self._refreshItems, self)
 end
 
 function UIBubbleCtrl.static.RefreshLateUpdate()
     Event.Brocast("c_RefreshLateUpdate")
-end
-
---预先生成场景中的预制
-function UIBubbleCtrl:_preLoadGroundAucObj()
-    self.sceneAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
-    self.sceneAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
 end
 
 --生成拍卖气泡
@@ -54,28 +47,15 @@ function UIBubbleCtrl:_initGroundAucBubbles()
         return
     end
 
-    local auction = self.m_data
-    self.orderAucDatas = {}
-    for id, value in pairs(auction) do
-        self.orderAucDatas[#self.orderAucDatas + 1] = value
-    end
-    table.sort(self.orderAucDatas, function (m, n) return m.beginTime < n.beginTime end)  --获取顺序表
-
     if not self.groundAucLuaItems then
         self.groundAucLuaItems = {}
     end
-    local showFirstWait = true
-    for i, groundAucItem in pairs(self.orderAucDatas) do
-        --如果已经开始拍卖
-        if groundAucItem.beginTime <= os.time() then
-            groundAucItem.isStartAuc = true
-            self:_creatGroundAucBubbleItem(groundAucItem)
+    local auction = self.m_data
+    for i, data in pairs(auction) do
+        if data then
+            self:_creatGroundAucBubbleItem(data)
         else
-            if showFirstWait then
-                groundAucItem.isStartAuc = false
-                self:_creatGroundAucBubbleItem(groundAucItem)
-                return
-            end
+            ct.log("cycle_w6_GroundAuc", "-----------")
         end
     end
 end
@@ -86,31 +66,18 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         if not self.groundAucNowObj then
             self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucNowObjPath)
         end
-
-        local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucNowObj)  --已经拍卖
-        groundObj.transform.localScale = Vector3.one
-        groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
-        bubbleData.groundObj = groundObj
-
         local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
         go.transform:SetParent(self.gameObject.transform)
         go.transform.localScale = Vector3.one
         local data = bubbleData
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
-        --self.groundAucLuaItems[bubbleData.id] = nil
         self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
     else
         --即将拍卖
         if not self.groundAucSoonObj then
             self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucSoonObjPath)
         end
-
-        local groundObj = UnityEngine.GameObject.Instantiate(self.sceneAucSoonObj)  --已经拍卖
-        groundObj.transform.localScale = Vector3.one
-        groundObj.transform.position = Vector3.New(bubbleData.area[1].x, 0, bubbleData.area[1].y)  --temp 1x1
-        bubbleData.groundObj = groundObj
-
         local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
         go.transform:SetParent(self.gameObject.transform)
         go.transform.localScale = Vector3.one
@@ -120,35 +87,23 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
     end
 end
---改变状态
-function UIBubbleCtrl:_updateBubbleItemState(bubbleData)
-    if self.groundAucLuaItems[bubbleData.id] then
-        local item = self.groundAucLuaItems[bubbleData.id]
-        item.isStartAuc = true
+
+--更新数据
+function UIBubbleCtrl:_refreshItems(datas)
+    for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
+        --destroy(item.groundObj.gameObject)  --删除场景中的预制
         destroy(item.bubbleRect.gameObject)  --删除之前的item
-
-        bubbleData.isStartAuc = true
-        self:_creatGroundAucBubbleItem(item.data)
-        Event.Brocast("c_NewGroundStartBid", item.data)
+        self.groundAucLuaItems[key] = nil
     end
-end
 
---当拍卖信息更新时，对应的elm信息也要更新
-function UIBubbleCtrl.UpdateBidInfo(updateInfo)
-    for i, elm in ipairs(self.elmArray) do
-        if elm.data.id == updateInfo.id then
-            elm.data.price = updateInfo.num
+    self.groundAucLuaItems = {}
+    local auction = datas
+    for i, data in ipairs(auction) do
+        if data then
+            self:_creatGroundAucBubbleItem(data)
+        else
+            ct.log("cycle_w6_GroundAuc", "-----------")
         end
     end
-end
-
---隐藏所有气泡
-function UIBubbleCtrl.HideAllBubble()
-
-end
-
---根据ID销毁对应气泡物体
-function UIBubbleCtrl.DestoryBubbleItem(bubbleID)
-
 end

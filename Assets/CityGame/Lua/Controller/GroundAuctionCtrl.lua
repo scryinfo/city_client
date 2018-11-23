@@ -187,7 +187,7 @@ end
 
 ---拍卖信息更新
 function GroundAuctionCtrl:_bidInfoUpdate(data)
-    ct.log("cycle_w6_GroundAuc", "----------------------------------------------"..data)
+    --ct.log("cycle_w6_GroundAuc", "----------------------------------------------"..data)
 
     GroundAuctionPanel.ChangeBidInfo(data)
 

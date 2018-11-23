@@ -16,6 +16,7 @@ end
 function GroundAuctionModel.Awake()
     this:OnCreate()
     this._preLoadGroundAucObj()
+    UpdateBeat:Add(this._update, this)
 end
 
 --启动事件--
@@ -35,7 +36,7 @@ function GroundAuctionModel.OnCreate()
     Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
     Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
     Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
-    Event.AddListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
+    --Event.AddListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
 end
 
 
@@ -45,34 +46,145 @@ function GroundAuctionModel.Close()
     Event.RemoveListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
     Event.RemoveListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
     Event.RemoveListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
-    Event.RemoveListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
+    --Event.RemoveListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
 end
+---一直检测拍卖的状态信息
+function GroundAuctionModel._update()
+    if this.orderAucDatas and #this.orderAucDatas > 0 then
+        this._nowTimeDown()
+        this._soonTimeDown()
+    end
+end
+
+--拍卖中，拍卖结束倒计时
+function GroundAuctionModel._nowTimeDown()
+    if not this.nowAucGroundData then
+        return
+    end
+
+    --this.forNowCount = this.forNowCount or 0
+    --if this.forNowCount > 100000 then
+    --    this.forNowCount = this.forNowCount + 1
+    --    return
+    --end
+
+    local finishTime = this.nowAucGroundData.beginTime + this.nowAucGroundData.durationSec
+    this.tempNowCurrentTime = this.tempNowCurrentTime or os.time()
+    this.tempNowCurrentTime = this.tempNowCurrentTime + UnityEngine.Time.unscaledDeltaTime
+    local remainTime = finishTime - this.tempNowCurrentTime
+
+    if remainTime <= 0 then
+        --拍卖结束
+        --重新确认下一个即将拍卖的数据
+        if this.nowAucGroundData.beginTime <= os.time() then
+            table.remove(this.orderAucDatas, 1)
+            this._checkNowAndSoonData()
+            Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
+        end
+    end
+end
+--即将拍卖，拍卖倒计时
+function GroundAuctionModel._soonTimeDown()
+    if not this.soonAucGroundData then
+        return
+    end
+
+    --this.forSoonCount = this.forSoonCount or 0
+    --if this.forSoonCount > 100000 then
+    --    this.forSoonCount = this.forSoonCount + 1
+    --    return
+    --end
+
+    local beginTime = this.soonAucGroundData.beginTime
+    local finishTime = this.soonAucGroundData.beginTime + this.soonAucGroundData.durationSec
+    --判定，数据是否正确
+    if finishTime <= os.time() or beginTime <= os.time() then
+        this._checkNowAndSoonData()
+        Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
+        return
+    end
+    this.tempSoonCurrentTime = this.tempSoonCurrentTime or os.time()
+    this.tempSoonCurrentTime = this.tempSoonCurrentTime + UnityEngine.Time.unscaledDeltaTime
+    local remainTime = beginTime - this.tempSoonCurrentTime
+
+    ----------------------------为什么会一直都是负数_(:з」∠)_
+    if remainTime <= 0 then
+        --即将拍卖
+        --重新确认下一个拍卖的数据
+        if this.soonAucGroundData.beginTime <= os.time() then
+            --table.remove(this.orderAucDatas, 1)
+            this._checkNowAndSoonData()
+            Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
+        end
+    end
+end
+-----------------------------------------------------------------------------------
 
 --角色登录成功之后请求拍卖的信息
 function GroundAuctionModel.m_RoleLoginReqGroundAuction()
     this.m_ReqRueryMetaGroundAuction()
     this.m_ReqQueryGroundAuction()
 end
---客户端即将拍卖倒计时结束，改变状态
-function GroundAuctionModel.m_GroundAucStateChange(groundId)
-    if this.groundAucDatas[groundId] then
-        local item = this.groundAucDatas[groundId]
-        destroy(item.groundObj.gameObject)
 
-        item.isStartAuc = true
-        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)  --已经拍卖
-        go.transform.localScale = Vector3.one
-        go.transform.position = Vector3.New(item.area[1].x, 0, item.area[1].y)
-        item.groundObj = go
-        Event.Brocast("c_BubbleUpdateItemState", this.groundAucDatas[groundId])  --检查是否数据有变化 --气泡界面的显示
-    else
-        ct.log("cycle_w6_GroundAuc", "不存在该土地信息错误错误错误")
-    end
-end
 --预先加载两个预制
 function GroundAuctionModel._preLoadGroundAucObj()
     this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
     this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
+end
+
+--获取当前soon And now AucGround，生成气泡
+function GroundAuctionModel._getOrderGroundDatas(groundData)
+    local auction = groundData
+    this.orderAucDatas = {}
+    for id, value in pairs(auction) do
+        this.orderAucDatas[#this.orderAucDatas + 1] = value
+    end
+    table.sort(this.orderAucDatas, function (m, n) return m.beginTime < n.beginTime end)  --按照时间顺序排序
+
+    this._checkNowAndSoonData()
+
+    --创建气泡  --最多只有两个状态的气泡
+    ct.OpenCtrl("UIBubbleCtrl", {this.nowAucGroundData, this.soonAucGroundData})
+end
+
+--确认数据
+function GroundAuctionModel._checkNowAndSoonData()
+    local showFirstWait = true
+    this.soonAucGroundData = nil
+    this.nowAucGroundData = nil
+
+    for i, groundAucItem in pairs(this.orderAucDatas) do
+        --如果已经开始拍卖
+        if groundAucItem.beginTime <= os.time() then
+            groundAucItem.isStartAuc = true
+
+            local groundObj = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)  --已经拍卖
+            groundObj.transform.localScale = Vector3.one
+            groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --temp 1x1
+            groundObj.name = "拍卖中"
+            groundAucItem.groundObj = groundObj
+
+            this.nowAucGroundData = groundAucItem
+        else
+            if showFirstWait then
+                if groundAucItem.beginTime <= os.time() then
+                    ct.log("cycle_w6_GroundAuc", "-----------时间有问题")
+                    return
+                end
+
+                groundAucItem.isStartAuc = false
+
+                local groundObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)  --已经拍卖
+                groundObj.transform.localScale = Vector3.one
+                groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --temp 1x1
+                groundObj.name = "即将拍卖"
+                groundAucItem.groundObj = groundObj
+
+                this.soonAucGroundData = groundAucItem
+                return
+            end
+        end
+    end
 end
 
 --- 客户端请求 ---
@@ -123,8 +235,7 @@ function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
             this.groundAucDatas[item.id].price = item.price
         end
     end
-    --创建气泡
-    ct.OpenCtrl("UIBubbleCtrl", this.groundAucDatas)
+    this._getOrderGroundDatas(this.groundAucDatas)
 end
 
 --当收到所有拍卖的土地信息
@@ -147,38 +258,54 @@ end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
+    if not stream then
+        return
+    end
+
     local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
     if auctionInfo then
         ct.log("cycle_w6_GroundAuc", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"..auctionInfo.id)
-        Event.Brocast("c_BidInfoUpdate", auctionInfo)
+        GroundAuctionPanel.ChangeBidInfo(auctionInfo)
+        local info = {}
+        info.titleInfo = "CONGRATULATION"
+        info.contentInfo = "Successful participation in auction"
+        info.tipInfo = "(if there is a higher bid price we will notify you by meil.)"
+        info.btnCallBack = function ()
+            ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
+        end
+        --UIPage:ShowPage(BtnDialogPageCtrl, info)
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
     end
 end
 
 --收到服务器拍卖信息更新
 function GroundAuctionModel.n_OnReceiveBidChangeInfor(stream)
-    --应该不只有id，还应该有最高价
-    local bidInfo = assert(pbl.decode("gs.IdNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
-    if bidInfo then
-        ct.log("cycle_w6_GroundAuc", "呜呜呜呜呜")
-        Event.Brocast("c_BidInfoUpdate", bidInfo)
+    if not stream then
+        return
     end
+
+    --应该不只有id，还应该有最高价
+    --local bidInfo = assert(pbl.decode("gs.IdNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+    --if bidInfo then
+    --    ct.log("cycle_w6_GroundAuc", "呜呜呜呜呜")
+    --    Event.Brocast("c_BidInfoUpdate", bidInfo)
+    --end
 end
 
 --拍卖结束
 function GroundAuctionModel.n_OnReceiveAuctionEnd(stream)
     local endId = assert(pbl.decode("gs.Id", stream), "GroundAuctionModel.n_OnReceiveAuctionEnd: stream == nil")
     --如果拍卖结束，则需要销毁obj
-    if this.groundAucDatas[endId.id] then
-        destroy(this.groundAucDatas[endId.id].groundObj.gameObject)
-        this.groundAucDatas[endId.id] = nil
-    end
+    --if this.groundAucDatas[endId.id] then
+    --    destroy(this.groundAucDatas[endId.id].groundObj.gameObject)
+    --    this.groundAucDatas[endId.id] = nil
+    --end
 end
 
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
     if stream then
-        local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
-
+        --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
     end
 end
 --拍卖失败

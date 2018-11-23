@@ -207,6 +207,10 @@ function DataManager.AddMyGroundInfo(groundInfoData)
     table.insert(PersonDataStack.m_GroundInfos,groundInfoData)
 end
 
+function DataManager.GetMyOwnerID()
+    return DataManager.PersonDataStack.m_owner
+end
+
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
@@ -274,6 +278,9 @@ end
 function DataManager.n_OnReceiveUnitCreate(stream)
     local UnitCreate = assert(pbl.decode("gs.UnitCreate", stream), "DataManager.n_OnReceiveUnitCreate: stream == nil")
     --此处因命名和层级问题，临时处理
+    if not UnitCreate then
+        return
+    end
     for key, value in pairs(UnitCreate) do
         value.buildingID = value.mId
         value.x = value.pos.x
@@ -286,6 +293,9 @@ function DataManager.n_OnReceiveUnitChange(stream)
     local buildingInfo = assert(pbl.decode("gs.BuildingInfo", stream), "DataManager.n_OnReceiveUnitChange: stream == nil")
     --buildingInfo  ==》BuildingInfo
     --此处因命名和层级问题，临时处理
+    if not buildingInfo or not buildingInfo.mId then
+        return
+    end
     buildingInfo.buildingID = buildingInfo.mId
     buildingInfo.x = buildingInfo.pos.x
     buildingInfo.y = buildingInfo.pos.y
@@ -309,7 +319,10 @@ end
 function DataManager.n_OnReceiveGroundChange(stream)
     local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
     --如果地块所有人是自己的话
-    for key, value in pairs(GroundChange) do
+    if not GroundChange or not GroundChange.info then
+        return
+    end
+    for key, value in pairs(GroundChange.info) do
         if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
             DataManager.AddMyGroundInfo(value)
 

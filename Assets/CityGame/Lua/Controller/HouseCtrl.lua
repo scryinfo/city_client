@@ -53,7 +53,7 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     self.m_data = houseDetailData
-    if houseDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+    if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         HousePanel.changeNameBtn.localScale = Vector3.zero
     else

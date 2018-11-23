@@ -60,6 +60,7 @@ function GroundAuctionCtrl:_initPanelData()
     self.beginTime = self.m_data.beginTime
     self.durationSec = self.m_data.durationSec
     self.currentTime = os.time()
+    self.id = self.m_data.id
 
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.personAverageText.text = 0
@@ -200,7 +201,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
 end
 --拍卖结束
 function GroundAuctionCtrl:_bidEnd(id)
-    if id == self.m_data.id then
+    if id == self.id then
         UIPage.ClosePage()
     end
 end

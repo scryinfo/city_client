@@ -25,6 +25,7 @@ end
 function UIBubbleCtrl:Awake(go)
     self.gameObject = go
     self:_addListener()
+    UIRootCanvasRect = find("UIRoot").gameObject:GetComponent("RectTransform")
 end
 
 function UIBubbleCtrl:Refresh()

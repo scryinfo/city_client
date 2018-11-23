@@ -42,8 +42,11 @@ function UIBubbleGroundAucSoonItem:LateUpdate()
     end
     if self.data.groundObj and self.bubbleRect then
         --update 预制与ui item 之间的位置
-        self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position)
+        --self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position)
+        self.bubbleRect.anchoredPosition = UnityEngine.RectTransformUtility.WorldToScreenPoint(UnityEngine.Camera.main, self.data.groundObj.transform.position) - UIRootCanvasRect.anchoredPosition
         --return
+    else
+        ct.log("cycle_w6_GroundAuc", "---------------")
     end
 
     if self.startTimeDown then

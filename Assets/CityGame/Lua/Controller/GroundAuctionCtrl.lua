@@ -58,10 +58,10 @@ function GroundAuctionCtrl:_initPanelData()
 
     self.beginTime = self.m_data.beginTime
     self.durationSec = self.m_data.durationSec
+    self.currentTime = os.time()
 
     GroundAuctionPanel.bidInput.text = ""
     --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
-    local timeTemp = os.time()
     if self.m_data.isStartAuc then
         Event.Brocast("m_RegistGroundBidInfor")
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
@@ -114,7 +114,8 @@ function GroundAuctionCtrl:_waitForBidTimeDown()
         end
 
         remainTime = getFormatUnixTime(remainTime)
-        local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        --local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        local timeStr = remainTime.minute..":"..remainTime.second
         GroundAuctionPanel.waitBidTimeDownText.text = timeStr
 
         if self.currentTime >= finishTime then
@@ -139,7 +140,8 @@ function GroundAuctionCtrl:_bidFinishTimeDown()
         end
 
         remainTime = getFormatUnixTime(remainTime)
-        local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        --local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
+        local timeStr = remainTime.minute..":"..remainTime.second
         GroundAuctionPanel.startBidTimeDownText.text = timeStr
 
         if self.currentTime >= finishTime then

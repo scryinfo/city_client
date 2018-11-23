@@ -17,6 +17,7 @@ function UIBubbleGroundAucSoonItem:initialize(data)
         self:_clickBtn()
     end)
 
+    self.currentTime = os.time()
     self.startTimeDown = true
     self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
@@ -26,6 +27,7 @@ end
 
 --打开拍卖界面，即将拍卖
 function UIBubbleGroundAucSoonItem:_clickBtn()
+    --self.soonTimeText.text
     ct.OpenCtrl("GroundAuctionCtrl", self.data)
 end
 
@@ -47,7 +49,6 @@ function UIBubbleGroundAucSoonItem:LateUpdate()
     if self.startTimeDown then
         --即将拍卖倒计时
         local finishTime = self.data.beginTime
-        self.currentTime = self.currentTime or os.time()
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
 
         local remainTime = finishTime - self.currentTime

@@ -73,10 +73,10 @@ function GroundAuctionModel._nowTimeDown()
     this.tempNowCurrentTime = this.tempNowCurrentTime + UnityEngine.Time.unscaledDeltaTime
     local remainTime = finishTime - this.tempNowCurrentTime
 
-    if remainTime <= 0 then
+    if remainTime < 0 then
         --拍卖结束
         --重新确认下一个即将拍卖的数据
-        if this.nowAucGroundData.beginTime <= os.time() then
+        if this.nowAucGroundData.beginTime < os.time() then
             table.remove(this.orderAucDatas, 1)
             if #this.orderAucDatas == 0 then
                 return
@@ -110,11 +110,11 @@ function GroundAuctionModel._soonTimeDown()
     this.tempSoonCurrentTime = this.tempSoonCurrentTime + UnityEngine.Time.unscaledDeltaTime
     local remainTime = beginTime - this.tempSoonCurrentTime
 
-    ----------------------------为什么会一直都是负数_(:з」∠)_
-    if remainTime <= 0 then
+    ---------------------------
+    if remainTime < 0 then
         --即将拍卖
         --重新确认下一个拍卖的数据
-        if this.soonAucGroundData.beginTime <= os.time() then
+        if this.soonAucGroundData.beginTime < os.time() then
             --table.remove(this.orderAucDatas, 1)
             this._checkNowAndSoonData()
             Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})

@@ -17,6 +17,7 @@ function UIBubbleGroundAucNowItem:initialize(data)
         self:_clickBtn()
     end)
 
+    self.currentTime = os.time()
     self.startTimeDown = true
     self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
@@ -47,7 +48,6 @@ function UIBubbleGroundAucNowItem:LateUpdate()
     if self.startTimeDown then
         --倒计时
         local finishTime = self.data.beginTime + self.data.durationSec
-        self.currentTime = self.currentTime or os.time()
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
 
         local remainTime = finishTime - self.currentTime

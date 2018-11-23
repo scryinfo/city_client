@@ -153,7 +153,7 @@ function GroundAuctionModel._checkNowAndSoonData()
     this.soonAucGroundData = nil
     this.nowAucGroundData = nil
 
-    for i, groundAucItem in pairs(this.orderAucDatas) do
+    for i, groundAucItem in ipairs(this.orderAucDatas) do
         --如果已经开始拍卖
         if groundAucItem.beginTime <= os.time() then
             groundAucItem.isStartAuc = true

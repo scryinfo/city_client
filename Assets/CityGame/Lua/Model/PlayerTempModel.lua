@@ -73,6 +73,11 @@ function PlayerTempModel.Update()
         PlayerTempModel.m_ReqAddBuilding(1600001,220,220)
         ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.tempTestAddGroung(0,0,10,10)
+    end
 end
 
 --启动事件--

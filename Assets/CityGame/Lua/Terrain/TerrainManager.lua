@@ -16,16 +16,16 @@ local CameraCollectionID = -1
 
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
-    local buildingId = table[1]
+    local buildingID = table[1]
     local Vec3 = table[2]
     go.transform.position = Vec3
-    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingId]["LuaRoute"])
+    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
-    if PlayerBuildingBaseData[buildingId]["LuaRoute"] ~= nil then
-        ArchitectureStack[buildingId] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingId]["LuaRoute"])
+    if PlayerBuildingBaseData[buildingID]["LuaRoute"] ~= nil then
+        ArchitectureStack[buildingID] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     end
     --将建筑GameObject保存到对应Model中
     local  tempBaseBuildModel=DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
@@ -45,7 +45,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
         if isCreate then
-            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingId]["prefabRoute"],CreateSuccess,{value.buildingId, Vector3.New(value.x,0,value.y)})
+            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
     end
 end

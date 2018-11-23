@@ -89,7 +89,7 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     elseif creatData.buildingType == BuildingType.MunicipalManage then
         self:_creataddItem();
         self:_creatgoodsItem();
-        self:_creatgoodsItem();
+       
         self:_creatbuildingItem();
         ---创建自已打的广告
         for i, v in pairs(typelist) do

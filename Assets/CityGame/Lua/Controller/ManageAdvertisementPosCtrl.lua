@@ -169,7 +169,7 @@ function ManageAdvertisementPosCtrl:callback()
                 return
             end
         end
-      local data={metaId=v.metaId,count=v.count}
+        local data={metaId=v.metaId,count=v.count}
         self.ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(data)
     end
 
@@ -183,6 +183,7 @@ function ManageAdvertisementPosCtrl:callback()
                 Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
                 self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
                 v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+
             end
 
             else---删广告
@@ -191,6 +192,10 @@ function ManageAdvertisementPosCtrl:callback()
                 table.remove(self.ItemCreatDeleteMgr.adList[v.metaId],1)
                     self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
                     v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+                if tonumber(v.selfcount) ==0 then
+                    destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
+                    self.ItemCreatDeleteMgr.adList[v.metaId]=nil
+                end
                 end
             end
         end

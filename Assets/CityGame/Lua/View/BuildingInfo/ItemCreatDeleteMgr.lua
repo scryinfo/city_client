@@ -51,9 +51,9 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
      adList={}
 
     if creatData.lMsg then
-        if creatData.lMsg.ad then
+        if creatData.lMsg.ad.ad then
             ---对广告进行筛选
-            for i, v in pairs(creatData.lMsg.ad) do
+            for i, v in pairs(creatData.lMsg.ad.ad) do
                 ---已有类型
                 for k, va in pairs(idList) do
                     if va==v.metaId then
@@ -188,7 +188,7 @@ function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
     ---创建预制
     local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
 
-    self.AdvertisementItemList[AdvertisementItemID]=itemclone
+    self.AdvertisementItemList[prefabData.metaId]=itemclone
     ---给预制赋值数据
     local ins =AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,AdvertisementItemID)
     if prefabData.metaId then

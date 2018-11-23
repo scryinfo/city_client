@@ -30,15 +30,9 @@ function ScienceKindItem:initialize(prefabData,prefab,inluabehaviour,mgr, itemid
     self.infoBtn=prefab.transform:Find("leftRoot/infoBtn")
     self.buyBtn=prefab.transform:Find("rightRoot/buyBg/Button")
 
-    self.nameText.text=prefabData.name
+    self:InitData()
 
-
-    self._luabehaviour:AddClick(self.infoBtn.gameObject,self.OnClick_detailsBtn,self)
-    self._luabehaviour:AddClick(self.buyBtn.gameObject,self.OnClick_buyBtn,self)
-end
----删除
-function ScienceKindItem:OnClicl_XBtn(go)
-    go.manager:_deleteGoods(go)
+    self:AddClick()
 end
 
 ---detail
@@ -51,6 +45,15 @@ function ScienceKindItem:OnClick_buyBtn(ins)
     ct.OpenCtrl("ScienceTradeCtrl",ins)
 end
 
+function ScienceKindItem:InitData()
+    self.nameText.text=self.prefabData.name
+    self.ScoreText.text=self.itemid
+end
+
+function ScienceKindItem:AddClick()
+    self._luabehaviour:AddClick(self.infoBtn.gameObject,self.OnClick_detailsBtn,self)
+    self._luabehaviour:AddClick(self.buyBtn.gameObject,self.OnClick_buyBtn,self)
+end
 
 
 

@@ -34,7 +34,8 @@ end
 local materialBehaviour
 local panel
 local Mgr
-
+local sortList={}
+local tempList={}
 local top
 local down
 local redtop
@@ -81,26 +82,62 @@ function ScienceSellHallCtrl:Awake(go)
     materialBehaviour:AddClick(panel.scorereddown.gameObject,self.OnClick_scorereddown,self)
     ---Create item
     Mgr=ScienceSellHallModel.Mgr
-    for i, data in pairs(Material) do
-        Mgr:creatSciencehallItem(materialBehaviour,data)
+    for configID, configdata in pairs(Material) do
+        Mgr:creatSciencehallItem(materialBehaviour,configdata)
+        table.insert(sortList,Mgr.materialInsList[configID])
+        table.insert(tempList,Mgr.materialInsList[configID])
     end
 
     -----小弹窗
     self.root=ScienceSellHallPanel.backBtn.root;
     Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
+
+
+
+
 --------------------------------------------------------------------------------------------score sort
+---
 ---red mylevel down sort
+
 function ScienceSellHallCtrl:OnClick_scorereddown()
     panel.scoreredtop.gameObject:SetActive(true)
+
     self:SetActive(false)
+    ---排序
+    table.sort(tempList, function (m, n) return m.itemid >n.itemid end)
+
+    for i, materialIns in pairs(sortList) do
+        ---显示
+        materialIns.nameText.text=tempList[i].nameText.text
+        materialIns.ScoreText.text=tempList[i].ScoreText.text
+        -----数据
+        --materialIns.prefab=tempList[i].prefab
+        --        --materialIns.prefabData=tempList[i].prefabData
+        --        --materialIns._luabehaviour=tempList[i]._luabehaviour
+        --        --materialIns.itemid=tempList[i].itemid
+        --        --
+        --        --materialIns.iconImage=tempList[i].iconImage
+        --        --materialIns.nameText=tempList[i].nameText
+        --        --materialIns.classText=tempList[i].classText
+        --        --materialIns.ownerText=tempList[i].ownerText
+        --        --materialIns.leveltext=tempList[i].leveltext
+        --        --materialIns.myleveltext=tempList[i].myleveltext
+        --        --materialIns.ScoreText=tempList[i].ScoreText
+        --        --materialIns.infoBtn=tempList[i].infoBtn
+        --        --materialIns.buyBtn=tempList[i].buyBtn
+    end
+
 end
+
+
 
 ---red mylevel top  sort
 function ScienceSellHallCtrl:OnClick_scoreredtop()
     panel.scorereddown.gameObject:SetActive(true)
     self:SetActive(false)
 end
+
 
 ---grey score sort
 function ScienceSellHallCtrl:OnClick_scorelsort()
@@ -158,6 +195,8 @@ end
 function ScienceSellHallCtrl:OnClick_levelreddown()
     panel.levelredtop.gameObject:SetActive(true)
     self:SetActive(false)
+
+
 end
 
 ---red level top  sort

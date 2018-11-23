@@ -30,6 +30,7 @@ end
 function ScienceItemCreatDeleteMgr:creatSciencehallItem(luabehaviour,creatData)
     ---creat  preab
     local item=self:c_creatGoods(self.materialItemPreb_Path,ScienceSellHallPanel.materialscrollcontent)
+    item.name= item.name..creatData.itemId
     self.materialItemList[creatData.itemId]=item
     ---creat  ins
     local ins=ScienceKindItem:new(creatData,item,luabehaviour,self,creatData.itemId)

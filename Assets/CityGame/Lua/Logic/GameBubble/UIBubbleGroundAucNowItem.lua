@@ -28,8 +28,8 @@ function UIBubbleGroundAucNowItem:_clickBtn()
     ct.OpenCtrl("GroundAuctionCtrl", self.data)
 end
 
-function UIBubbleGroundAucNowItem:Update()
-
+function UIBubbleGroundAucNowItem:Close()
+    Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
 end
 
 function UIBubbleGroundAucNowItem:LateUpdate()

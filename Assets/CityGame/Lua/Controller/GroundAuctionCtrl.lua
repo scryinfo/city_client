@@ -22,9 +22,6 @@ function GroundAuctionCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
 
     --self:_initPanelData()
-
-    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate)  --拍卖信息更新
-    Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState)  --土地开始拍卖
 end
 
 function GroundAuctionCtrl:Awake(go)
@@ -33,18 +30,25 @@ function GroundAuctionCtrl:Awake(go)
 end
 
 function GroundAuctionCtrl:Refresh()
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
+    Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState, self)  --土地开始拍卖
+
     self:_initPanelData()
 end
 
 function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
+
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+
     UIPage.Hide(self)
 end
 
 function GroundAuctionCtrl:Close()
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate)
-    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState)
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
 end
 
 ---初始化界面
@@ -53,11 +57,15 @@ function GroundAuctionCtrl:_initPanelData()
         return
     end
 
+    self.beginTime = self.m_data.beginTime
+    self.durationSec = self.m_data.durationSec
+
+    GroundAuctionPanel.bidInput.text = ""
     --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
     local timeTemp = os.time()
     if self.m_data.isStartAuc then
         Event.Brocast("m_RegistGroundBidInfor")
-         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
+        GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
 
         if self.m_data.biderId ~= nil and self.m_data.price ~= nil then
@@ -179,13 +187,15 @@ end
 
 ---拍卖信息更新
 function GroundAuctionCtrl:_bidInfoUpdate(data)
+    --ct.log("cycle_w6_GroundAuc", "----------------------------------------------"..data)
+
     GroundAuctionPanel.ChangeBidInfo(data)
 
     if data.id == self.m_data.id then
         local info = {}
         info.titleInfo = "CONGRATULATION"
-        info.contentInfo = "Success!!!!"
-        info.tipInfo = "lalalalalalalalla"
+        info.contentInfo = "Successful participation in auction"
+        info.tipInfo = "(if there is a higher bid price we will notify you by meil.)"
         info.btnCallBack = function ()
             ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
         end

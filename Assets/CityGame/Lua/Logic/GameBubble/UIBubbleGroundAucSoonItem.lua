@@ -18,6 +18,7 @@ function UIBubbleGroundAucSoonItem:initialize(data)
     end)
 
     self.startTimeDown = true
+    self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     --UpdateBeat:Add(self.Update, self)
     --LateUpdateBeat:Add(self.LateUpdate, self)
@@ -29,10 +30,14 @@ function UIBubbleGroundAucSoonItem:_clickBtn()
 end
 
 function UIBubbleGroundAucSoonItem:Close()
+    self.timeDown = false
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
 end
 
 function UIBubbleGroundAucSoonItem:LateUpdate()
+    if not self.timeDown then
+        return
+    end
     self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position)
 
     if self.startTimeDown then

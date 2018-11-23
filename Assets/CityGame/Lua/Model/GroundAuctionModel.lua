@@ -329,10 +329,10 @@ function GroundAuctionModel.n_OnReceiveFailBid(stream)
         return
     end
 
-    if stream then
-
+    local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+    if bidInfo then
+        this._updateAucBidInfo(bidInfo)
     end
-    --需要显示什么数据，是否是直接存储在playerInfo中
 end
 
 --接到新的meta拍卖信息

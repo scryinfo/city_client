@@ -38,6 +38,9 @@ end
 --参数：
 --  datas：数据table集合( 一定包含数据有：坐标==》  x,y  ,建筑类型id==》 buildId)
 function  TerrainManager.ReceiveArchitectureDatas(datas)
+    if not datas then
+        return
+    end
     for key, value in pairs(datas) do
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
@@ -57,7 +60,7 @@ function TerrainManager.Refresh(pos)
         --向服务器发送新的所在地块ID
         local msgId = pbl.enum("gscode.OpCode", "move")
         local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
-        local pMsg = assert(pbl.encode("gs.AddBuilding", lMsg))
+        local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
@@ -113,8 +116,8 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if blockID == nil then
         return{ x = -1,y = -1}
     end
-    local X = math.floor((blockID %  blockRange.x))
-    local Y = math.ceil((blockID / TerrainRange.x) / blockRange.y)
+    local X = math.floor((blockID % TerrainRange.x )/ blockRange.x)
+    local Y = math.floor((blockID / TerrainRange.x) / blockRange.y)
     return{ x = X,y = Y}
 end
 

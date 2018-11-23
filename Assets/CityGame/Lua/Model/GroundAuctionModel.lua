@@ -241,7 +241,7 @@ end
 --当收到所有拍卖的土地信息
 function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
     local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
-    if #auctionInfo.auction == 0 then
+    if not auctionInfo or #auctionInfo.auction == 0 then
         return
     end
 

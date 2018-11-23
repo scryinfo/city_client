@@ -197,7 +197,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_GroundInfos = tempData.ground
 end
 
-
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
     for key, value in pairs(PersonDataStack.m_GroundInfos) do
@@ -296,6 +295,9 @@ end
 function DataManager.n_OnReceiveUnitRemove(stream)
     local buildingInfo = assert(pbl.decode("gs.Bytes", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
     --buildingInfo  ==》BuildingInfo
+    if not buildingInfo or not buildingInfo.mId then
+        return
+    end
     --此处因命名和层级问题，临时处理
     buildingInfo.buildingID = buildingInfo.mId
     buildingInfo.x = buildingInfo.pos.x
@@ -310,6 +312,7 @@ function DataManager.n_OnReceiveGroundChange(stream)
     for key, value in pairs(GroundChange) do
         if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
             DataManager.AddMyGroundInfo(value)
+
         end
     end
 end

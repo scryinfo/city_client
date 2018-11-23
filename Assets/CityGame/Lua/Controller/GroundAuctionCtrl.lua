@@ -30,8 +30,8 @@ function GroundAuctionCtrl:Awake(go)
 end
 
 function GroundAuctionCtrl:Refresh()
-    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
-    Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState, self)  --土地开始拍卖
+    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
+    --Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState, self)  --土地开始拍卖
 
     self:_initPanelData()
 end
@@ -40,15 +40,14 @@ function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
 
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
-
+    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
     UIPage.Hide(self)
 end
 
 function GroundAuctionCtrl:Close()
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
 end
 
 ---初始化界面
@@ -187,8 +186,6 @@ end
 
 ---拍卖信息更新
 function GroundAuctionCtrl:_bidInfoUpdate(data)
-    --ct.log("cycle_w6_GroundAuc", "----------------------------------------------"..data)
-
     GroundAuctionPanel.ChangeBidInfo(data)
 
     if data.id == self.m_data.id then

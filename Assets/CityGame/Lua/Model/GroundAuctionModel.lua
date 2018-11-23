@@ -78,6 +78,9 @@ function GroundAuctionModel._nowTimeDown()
         --重新确认下一个即将拍卖的数据
         if this.nowAucGroundData.beginTime <= os.time() then
             table.remove(this.orderAucDatas, 1)
+            if #this.orderAucDatas == 0 then
+                return
+            end
             this._checkNowAndSoonData()
             Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
         end
@@ -128,8 +131,11 @@ end
 
 --预先加载两个预制
 function GroundAuctionModel._preLoadGroundAucObj()
-    this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
-    this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
+    --this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
+    --this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
+
+    this.groundAucNowObj = GameObject.New()  --临时数据
+    this.groundAucSoonObj = GameObject.New()
 end
 
 --获取当前soon And now AucGround，生成气泡

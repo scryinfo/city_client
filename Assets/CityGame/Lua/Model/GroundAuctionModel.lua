@@ -61,15 +61,7 @@ function GroundAuctionModel._nowTimeDown()
     if not this.nowAucGroundData then
         return
     end
-
-    --this.forNowCount = this.forNowCount or 0
-    --if this.forNowCount > 100000 then
-    --    this.forNowCount = this.forNowCount + 1
-    --    return
-    --end
-
     local finishTime = this.nowAucGroundData.beginTime + this.nowAucGroundData.durationSec
-    this.tempNowCurrentTime = this.tempNowCurrentTime or os.time()
     this.tempNowCurrentTime = this.tempNowCurrentTime + UnityEngine.Time.unscaledDeltaTime
     local remainTime = finishTime - this.tempNowCurrentTime
 
@@ -93,13 +85,6 @@ function GroundAuctionModel._soonTimeDown()
     if not this.soonAucGroundData then
         return
     end
-
-    --this.forSoonCount = this.forSoonCount or 0
-    --if this.forSoonCount > 100000 then
-    --    this.forSoonCount = this.forSoonCount + 1
-    --    return
-    --end
-
     local beginTime = this.soonAucGroundData.beginTime
     local finishTime = this.soonAucGroundData.beginTime + this.soonAucGroundData.durationSec
     --判定，数据是否正确
@@ -109,7 +94,6 @@ function GroundAuctionModel._soonTimeDown()
         Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
         return
     end
-    this.tempSoonCurrentTime = this.tempSoonCurrentTime or os.time()
     this.tempSoonCurrentTime = this.tempSoonCurrentTime + UnityEngine.Time.unscaledDeltaTime
     local remainTime = beginTime - this.tempSoonCurrentTime
 
@@ -171,6 +155,8 @@ function GroundAuctionModel._checkNowAndSoonData()
     local showFirstWait = true
     this.soonAucGroundData = nil
     this.nowAucGroundData = nil
+    this.tempNowCurrentTime = os.time()
+    this.tempSoonCurrentTime = os.time()
 
     for i, groundAucItem in ipairs(this.orderAucDatas) do
         --如果已经开始拍卖

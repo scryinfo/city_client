@@ -42,32 +42,8 @@ end
 function MaterialModel.n_OnOpenMaterial(stream)
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
-        MaterialModel.MaterialWarehouse = msgMaterial.store.inHand;
+        MaterialModel.MaterialWarehouse = msgMaterial.store.reserved;
         MaterialModel.MaterialShelf = msgMaterial.shelf.good
         MaterialModel.MaterialProductionLine = msgMaterial.line
     end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

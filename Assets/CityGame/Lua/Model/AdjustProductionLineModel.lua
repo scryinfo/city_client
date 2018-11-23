@@ -25,6 +25,7 @@ end
 function AdjustProductionLineModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addLine"),AdjustProductionLineModel.n_GsDetermineBtn);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsDetermineBtn);
 
 end
 --客户端请求--
@@ -55,4 +56,9 @@ end
 --修改生产线
 function AdjustProductionLineModel.n_GsModifyKLine(stream)
     local msgModifyKLineInfo = assert(pbl.decode("gs.ChangeLine", stream), "AdjustProductionLineModel.n_GsModifyKLine: stream == nil")
+end
+--生产线变化推送
+function AdjustProductionLineModel.n_GsLineChangeInform(stream)
+    local msgLineChangeInfo = assert(pbl.decode("gs.LineInfo",stream),"AdjustProductionLineModel.n_GsLineChangeInform: stream == nil")
+
 end

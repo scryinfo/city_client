@@ -51,10 +51,14 @@ function getPriceString(str, intSize, floatSize)
 end
 
 --获取容量显示文本，总容量和已用容量颜色不同
-function getColorString(number1,number2,col1,col2)
-	local str1 = "<color="..col1..">"..number1.."</color>"
-	local str2 = "<color="..col2..">"..number2.."</color>"
-	return str1.."/"..str2
+function getColorString(num1,num2,col1,col2)
+    if num1 == nil and num2 == nil then
+        return
+    end
+    local str1 = table.concat({"<color=",col1,">",num1,"</color>"})
+    local str2 = table.concat({"<color=",col2,">",num2,"</color>"})
+    local str = table.concat({str1,"/",str2})
+    return str
 end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)

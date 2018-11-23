@@ -113,7 +113,7 @@ function WarehouseCtrl:getNumber(table)
         return 0
     else
         for k,v in pairs(table) do
-            number = number + v.n
+            number = number + v.num
         end
     end
     return number

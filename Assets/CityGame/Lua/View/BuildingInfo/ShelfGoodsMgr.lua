@@ -35,9 +35,9 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialWarehouse) do
         local uiTab = {}
-        uiTab.name = Material[v.key.id].name
-        uiTab.num = v.n
-        uiTab.itemId = v.key.id
+        uiTab.name = Material[v.id].name
+        uiTab.num = v.num
+        uiTab.itemId = v.id
         configTable[i] = uiTab
 
         --预制的信息

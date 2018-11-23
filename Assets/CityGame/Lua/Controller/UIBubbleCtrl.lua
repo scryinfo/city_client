@@ -92,14 +92,14 @@ end
 function UIBubbleCtrl:_refreshItems(datas)
     for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
-        --destroy(item.groundObj.gameObject)  --删除场景中的预制
-        destroy(item.bubbleRect.gameObject)  --删除之前的item
+        destroy(item.data.groundObj.gameObject)  --删除场景中的预制
+        destroy(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end
 
     self.groundAucLuaItems = {}
     local auction = datas
-    for i, data in ipairs(auction) do
+    for i, data in pairs(auction) do
         if data then
             self:_creatGroundAucBubbleItem(data)
         else

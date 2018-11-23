@@ -168,7 +168,7 @@ _event.__call = function(self, ...)
 		if not flag then			
 			_list:remove(i)			
 			self.lock = false		
-			error(msg)				
+			error(msg)
 		end
 	end	
 

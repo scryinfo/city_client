@@ -85,8 +85,8 @@ end
 --  范围内的blockID集合（table数组）
 function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     local idList= {}
-    for i = startBlockID, (startBlockID + TerrainRangeSize * rangeSize),TerrainRangeSize  do
-        for tempkey = i, (i + rangeSize) do
+    for i = startBlockID, (startBlockID + TerrainRangeSize * (rangeSize - 1)),TerrainRangeSize  do
+        for tempkey = i, (i + rangeSize - 1) do
             table.insert(idList, tempkey)
         end
     end
@@ -100,9 +100,10 @@ end
 function DataManager.RefreshBaseBuildData(data)
     --数据判空处理
     local blockID
-    if data.id ~= nil then
+   --[[ if data.id ~= nil then
         blockID = data.id
-    elseif data.x ~= nil and data.y ~= nil then
+    else--]]
+    if data.x ~= nil and data.y ~= nil then
         blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
         data.id = blockID
     else
@@ -199,10 +200,14 @@ end
 
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
-    for key, value in pairs(PersonDataStack.m_GroundInfos) do
-        if value.x == groundInfoData.x and value.y == groundInfoData.y then
-            return;
+    if PersonDataStack.m_GroundInfos then
+        for key, value in pairs(PersonDataStack.m_GroundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData.y then
+                return;
+            end
         end
+    else
+        PersonDataStack.m_GroundInfos = {}
     end
     table.insert(PersonDataStack.m_GroundInfos,groundInfoData)
 end
@@ -242,7 +247,6 @@ end
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
-
 end
 
 --注册所有网络消息回调
@@ -278,15 +282,15 @@ end
 function DataManager.n_OnReceiveUnitCreate(stream)
     local UnitCreate = assert(pbl.decode("gs.UnitCreate", stream), "DataManager.n_OnReceiveUnitCreate: stream == nil")
     --此处因命名和层级问题，临时处理
-    if not UnitCreate then
+    if not UnitCreate or not UnitCreate.info or 0 == #UnitCreate.info then
         return
     end
-    for key, value in pairs(UnitCreate) do
+    for key, value in pairs(UnitCreate.info) do
         value.buildingID = value.mId
         value.x = value.pos.x
         value.y = value.pos.y
     end
-    TerrainManager.ReceiveArchitectureDatas(UnitCreate)
+    TerrainManager.ReceiveArchitectureDatas(UnitCreate.info)
 end
 
 function DataManager.n_OnReceiveUnitChange(stream)
@@ -325,7 +329,6 @@ function DataManager.n_OnReceiveGroundChange(stream)
     for key, value in pairs(GroundChange.info) do
         if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
             DataManager.AddMyGroundInfo(value)
-
         end
     end
 end

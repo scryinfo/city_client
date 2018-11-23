@@ -92,8 +92,8 @@ end
 function UIBubbleCtrl:_refreshItems(datas)
     for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
-        destroy(item.data.groundObj.gameObject)  --删除场景中的预制
-        destroy(item.data.bubbleRect.gameObject)  --删除之前的item
+        --destroyImmediate(item.data.groundObj.gameObject)  --删除场景中的预制
+        destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end
 

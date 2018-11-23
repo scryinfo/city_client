@@ -7,6 +7,10 @@ function destroy(obj)
 	GameObject.Destroy(obj);
 end
 
+function destroyImmediate(obj)
+	GameObject.DestroyImmediate(obj);
+end
+
 function newObject(prefab)
 	return GameObject.Instantiate(prefab);
 end

@@ -38,7 +38,11 @@ function UIBubbleGroundAucSoonItem:LateUpdate()
     if not self.timeDown then
         return
     end
-    self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position)
+    if self.data.groundObj and self.bubbleRect then
+        --update 预制与ui item 之间的位置
+        self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position)
+        --return
+    end
 
     if self.startTimeDown then
         --即将拍卖倒计时

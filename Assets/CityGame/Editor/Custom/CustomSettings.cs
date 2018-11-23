@@ -163,7 +163,6 @@ public static class CustomSettings
         _GT(typeof(LuaProfiler)),
           
         //for LuaFramework
-        _GT(typeof(RectTransformUtility)),  //为了使用屏幕坐标转换
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
         _GT(typeof(Button)),

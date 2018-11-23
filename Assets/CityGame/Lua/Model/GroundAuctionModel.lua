@@ -119,11 +119,11 @@ end
 
 --预先加载两个预制
 function GroundAuctionModel._preLoadGroundAucObj()
-    --this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
-    --this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
+    this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
+    this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
 
-    this.groundAucNowObj = GameObject.New()  --临时数据
-    this.groundAucSoonObj = GameObject.New()
+    --this.groundAucNowObj = GameObject.New()  --临时数据
+    --this.groundAucSoonObj = GameObject.New()
 end
 
 --拍卖信息更新

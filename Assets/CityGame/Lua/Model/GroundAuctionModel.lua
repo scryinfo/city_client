@@ -77,6 +77,8 @@ function GroundAuctionModel._nowTimeDown()
         --拍卖结束
         --重新确认下一个即将拍卖的数据
         if this.nowAucGroundData.beginTime < os.time() then
+            Event.Brocast("c_BidEnd", this.nowAucGroundData.id)  --关闭界面
+
             table.remove(this.orderAucDatas, 1)
             if #this.orderAucDatas == 0 then
                 return
@@ -102,6 +104,7 @@ function GroundAuctionModel._soonTimeDown()
     local finishTime = this.soonAucGroundData.beginTime + this.soonAucGroundData.durationSec
     --判定，数据是否正确
     if finishTime <= os.time() or beginTime <= os.time() then
+        Event.Brocast("c_BidStart", this.soonAucGroundData)
         this._checkNowAndSoonData()
         Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
         return
@@ -116,6 +119,7 @@ function GroundAuctionModel._soonTimeDown()
         --重新确认下一个拍卖的数据
         if this.soonAucGroundData.beginTime < os.time() then
             --table.remove(this.orderAucDatas, 1)
+            Event.Brocast("c_BidStart", this.soonAucGroundData)
             this._checkNowAndSoonData()
             Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
         end
@@ -136,6 +140,15 @@ function GroundAuctionModel._preLoadGroundAucObj()
 
     this.groundAucNowObj = GameObject.New()  --临时数据
     this.groundAucSoonObj = GameObject.New()
+end
+
+--拍卖信息更新
+function GroundAuctionModel._updateAucBidInfo(data)
+    if this.groundAucDatas[data.id] then
+        this.groundAucDatas[data.id].price = data.num
+
+        Event.Brocast("c_BidInfoUpdate", data)
+    end
 end
 
 --获取当前soon And now AucGround，生成气泡
@@ -229,6 +242,9 @@ end
 --- 回调 ---
 --收到拍卖中的土地信息
 function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
+    if stream == nil or stream == "" then
+        return
+    end
     local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
     if #msgGroundAuc.auction == 0 then
         return
@@ -246,6 +262,9 @@ end
 
 --当收到所有拍卖的土地信息
 function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
+    if stream == nil or stream == "" then
+        return
+    end
     local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
     if not auctionInfo or #auctionInfo.auction == 0 then
         return
@@ -264,13 +283,15 @@ end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GroundAuctionModel.n_OnReceiveBindGround(stream)
-    if not stream then
+    if stream == nil or stream == "" then
         return
     end
 
     local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBindGround: stream == nil")
     if auctionInfo then
-        ct.log("cycle_w6_GroundAuc", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"..auctionInfo.id)
+        this._updateAucBidInfo(auctionInfo)
+
+        --ct.log("cycle_w6_GroundAuc", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"..auctionInfo.id)
         GroundAuctionPanel.ChangeBidInfo(auctionInfo)
         local info = {}
         info.titleInfo = "CONGRATULATION"
@@ -286,36 +307,42 @@ end
 
 --收到服务器拍卖信息更新
 function GroundAuctionModel.n_OnReceiveBidChangeInfor(stream)
-    if not stream then
+    if stream == nil or stream == "" then
         return
     end
 
-    --应该不只有id，还应该有最高价
-    --local bidInfo = assert(pbl.decode("gs.IdNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
-    --if bidInfo then
-    --    ct.log("cycle_w6_GroundAuc", "呜呜呜呜呜")
-    --    Event.Brocast("c_BidInfoUpdate", bidInfo)
-    --end
+    local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+    if bidInfo then
+        this._updateAucBidInfo(bidInfo)
+    end
 end
 
 --拍卖结束
 function GroundAuctionModel.n_OnReceiveAuctionEnd(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+
     local endId = assert(pbl.decode("gs.Id", stream), "GroundAuctionModel.n_OnReceiveAuctionEnd: stream == nil")
-    --如果拍卖结束，则需要销毁obj
-    --if this.groundAucDatas[endId.id] then
-    --    destroy(this.groundAucDatas[endId.id].groundObj.gameObject)
-    --    this.groundAucDatas[endId.id] = nil
-    --end
+    Event.Brocast("c_BidEnd", endId.id)
 end
 
 --拍卖成功
 function GroundAuctionModel.n_OnReceiveWinBid(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+
     if stream then
         --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
     end
 end
 --拍卖失败
 function GroundAuctionModel.n_OnReceiveFailBid(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+
     if stream then
 
     end
@@ -324,6 +351,10 @@ end
 
 --接到新的meta拍卖信息
 function GroundAuctionModel.n_OnReceiveAddInform(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+
     local addInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveAddInform: stream == nil")
     if #addInfo.auction == 0 then
         return

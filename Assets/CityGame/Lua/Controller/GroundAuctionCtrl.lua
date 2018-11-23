@@ -30,9 +30,9 @@ function GroundAuctionCtrl:Awake(go)
 end
 
 function GroundAuctionCtrl:Refresh()
-    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
-    --Event.AddListener("c_NewGroundStartBid", self._changeToStartBidState, self)  --土地开始拍卖
-
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
+    Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
+    Event.AddListener("c_BidStart", self._bidStart, self)  --拍卖开始
     self:_initPanelData()
 end
 
@@ -40,8 +40,9 @@ function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
 
-    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    Event.RemoveListener("c_BidEnd", self._bidEnd, self)
+    Event.RemoveListener("c_BidStart", self._bidStart, self)
     UIPage.Hide(self)
 end
 
@@ -61,6 +62,7 @@ function GroundAuctionCtrl:_initPanelData()
     self.currentTime = os.time()
 
     GroundAuctionPanel.bidInput.text = ""
+    GroundAuctionPanel.personAverageText.text = 0
     --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
     if self.m_data.isStartAuc then
         Event.Brocast("m_RegistGroundBidInfor")
@@ -188,21 +190,38 @@ end
 
 ---拍卖信息更新
 function GroundAuctionCtrl:_bidInfoUpdate(data)
-    GroundAuctionPanel.ChangeBidInfo(data)
+    if data.id ~= self.m_data.id then
+        return
+    end
 
-    if data.id == self.m_data.id then
-        local info = {}
-        info.titleInfo = "CONGRATULATION"
-        info.contentInfo = "Successful participation in auction"
-        info.tipInfo = "(if there is a higher bid price we will notify you by meil.)"
-        info.btnCallBack = function ()
-            ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
-        end
-        UIPage:ShowPage(BtnDialogPageCtrl, info)
+    GroundAuctionPanel.currentPriceText.text = getPriceString(data.num, 30, 24)
+    GroundAuctionPanel.priceDesText.text = "Top price"
+    GroundAuctionPanel.ChangeBidInfo(data)
+end
+--拍卖结束
+function GroundAuctionCtrl:_bidEnd(id)
+    if id == self.m_data.id then
+        UIPage.ClosePage()
     end
 end
+--开始拍卖
+function GroundAuctionCtrl:_bidStart(groundData)
+    self.beginTime = self.m_data.beginTime
+    self.durationSec = self.m_data.durationSec
+    self.currentTime = os.time()
 
----出价失败
-function GroundAuctionCtrl:_bidFailFunc(data)
+    GroundAuctionPanel.bidInput.text = ""
+    GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
+    GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
+    self.m_data = groundData
 
+    if self.m_data.biderId then
+        GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
+        GroundAuctionPanel.priceDesText.text = "Top price"
+    else
+        GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.basePrice, 30, 24)
+        GroundAuctionPanel.priceDesText.text = "Floor price"
+    end
+
+    self.startTimeDownForFinish = true  --拍卖结束倒计时
 end

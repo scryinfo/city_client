@@ -40,7 +40,7 @@ end
 
 --界面更新拍卖信息--
 function GroundAuctionPanel.ChangeBidInfo(newBidInfo)
-    if newBidInfo  then
+    if newBidInfo then
         --头像信息，暂不确定
         this.currentPriceText.text = newBidInfo.num
 

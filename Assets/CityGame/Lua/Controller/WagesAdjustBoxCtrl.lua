@@ -92,6 +92,12 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
         return
     end
 
+    ---暂时处理成不报错
+    if ins.m_data.buildingId == 1 then
+        ins:_onClickClose(ins)
+        return
+    end
+
     Event.Brocast("m_ReqHouseSetSalary", ins.m_data.buildingId, inputValue)
     ins:_onClickClose(ins)
 end

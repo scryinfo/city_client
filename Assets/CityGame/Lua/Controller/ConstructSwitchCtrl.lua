@@ -56,7 +56,8 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
-    if DataManager.IsOwnerGround(tempPos) then
+    local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
+    if DataManager.IsOwnerGround(DataManager.TempDatas.constructObj.transform.position) and DataManager.IsEnableChangeGround(blockID) then
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.one
     else
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.zero

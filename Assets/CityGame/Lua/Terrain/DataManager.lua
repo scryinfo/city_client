@@ -227,17 +227,18 @@ function DataManager.IsOwnerGround(tempPos)
     return false
 end
 
-
-
-
-
+--判断该地块允不允许改变
+function DataManager.IsEnableChangeGround(blockID)
+    local blockdata = DataManager.GetBlockDataByID(blockID)
+    if -1 ~= blockdata and nil ~= blockdata then
+        return false
+    else
+        return true
+    end
+end
 
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
-
-
-
-
 
 
 

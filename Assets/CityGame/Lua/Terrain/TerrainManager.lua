@@ -124,9 +124,10 @@ end
 --通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
     local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
-    local Y = (collectionID % math.ceil(TerrainRange.x /blockRange.x)) * blockRange.x
+    local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x
     return X +  Y
 end
+
 function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
 
 end

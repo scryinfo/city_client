@@ -60,6 +60,7 @@ function StaffRateItem:_initData()
     self.statisfactionSlider.value = self.staffData.satisfaction
     self.perCapitaWageText.text = self.staffData.dayWage
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
+    self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 
     --如果有未找到房子的员工，则显示
     if self.staffData.noDomicileCount >= 1 then

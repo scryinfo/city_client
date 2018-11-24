@@ -172,7 +172,7 @@ public class MobileInput : IInputTools
     {
         get
         {
-            return m_zoomCenter;
+            return Input.GetTouch(0).position;
         }
     }
 

@@ -45,17 +45,15 @@ end
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
     if self.m_data then
-        if self.m_data.info.id then
-            --向服务器请求建筑详情
-            Event.Brocast("m_ReqHouseDetailInfo", self.m_data.info.id)
-        end
+        --向服务器请求建筑详情
+        Event.Brocast("m_ReqHouseDetailInfo", self.m_data)
     end
 end
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     self.m_data = houseDetailData
-    if houseDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+    if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         HousePanel.changeNameBtn.localScale = Vector3.zero
     else
@@ -85,7 +83,9 @@ function HouseCtrl:_changeName(ins)
 end
 ---返回
 function HouseCtrl:_backBtn(ins)
-    ins.houseToggleGroup:cleanItems()
+    if ins.houseToggleGroup then
+        ins.houseToggleGroup:cleanItems()
+    end
     UIPage.ClosePage()
 end
 ---更改名字成功

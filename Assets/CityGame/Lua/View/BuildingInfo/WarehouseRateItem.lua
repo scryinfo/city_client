@@ -27,7 +27,8 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        UIPage:ShowPage(WarehouseCtrl)
+        --UIPage:ShowPage(WarehouseCtrl)
+        ct.OpenCtrl("WarehouseCtrl")
     end);
 
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变

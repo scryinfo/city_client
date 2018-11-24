@@ -16,8 +16,12 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self.id = id
 
     self.serverBtn = self.prefab.transform.gameObject;
+    self.bg = self.prefab.transform:Find("bg").gameObject;
+    self.tag = self.prefab.transform:Find("tag").gameObject;
     self.serverName = self.prefab.transform:Find("ServerName").gameObject:GetComponent("Text");
 
+    self.bg:SetActive(false);
+    self.tag:SetActive(false);
     self.serverName.text = goodsDataInfo
     self._luabehaviour:AddClick(self.serverBtn, self.OnServerBtn, self);
 

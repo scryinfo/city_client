@@ -47,6 +47,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
+       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end

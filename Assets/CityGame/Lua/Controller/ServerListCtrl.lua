@@ -7,6 +7,8 @@ ServerListCtrl.static.Server_PATH = "View/GoodsItem/ServerItem";
 
 local serverListBehaviour;
 local gameObject;
+local tempBg = nil;
+local tempTag = nil;
 
 function  ServerListCtrl:bundleName()
     return "ServerListPanel"
@@ -21,8 +23,6 @@ function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    serverListBehaviour:AddClick(ServerListPanel.serverOneBtn,self.c_OnServerOne,self);
-    serverListBehaviour:AddClick(ServerListPanel.serverTwoBtn,self.c_OnServerTwo,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
     self:_initData();
@@ -54,8 +54,15 @@ end
 
 --选择服务器--
 function ServerListCtrl:c_OnServer(go)
-    local showTest = go.serverName.text;
-    ServerListPanel.serverText:GetComponent('Text').text = showTest;
+    if tempBg ~= nil and tempTag ~= nil then
+        tempBg:SetActive(false);
+        tempTag:SetActive(false);
+    end
+    go.bg:SetActive(true);
+    go.tag:SetActive(true);
+    tempBg = go.bg;
+    tempTag = go.tag
+    
     local Index = go.id;
     Event.Brocast("m_chooseGameServer", Index);
 end

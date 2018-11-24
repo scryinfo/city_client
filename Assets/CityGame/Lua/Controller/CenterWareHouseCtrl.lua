@@ -47,7 +47,6 @@ function CenterWareHouseCtrl:OnCreate(obj)
     switchIsShow = false;
     isSelect = true;
 
-
     centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
@@ -198,11 +197,14 @@ end
 function CenterWareHouseCtrl.OnClick_OnName(go)
     CenterWareHousePanel.nowText.text = "By name";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+    local type = CenterWareHouseSortItemType.Name
+    CenterWareHouseCtrl:_getSortItems(type)
 end
 --根据数量排序
 function CenterWareHouseCtrl.OnClick_OnNumber(go)
     CenterWareHousePanel.nowText.text = "By quantity";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+    CenterWareHouseCtrl:_getSortItems(CenterWareHouseSortItemType.Quantity)
 end
 --根据水平排序
 function CenterWareHouseCtrl.OnClick_OnlevelBtn(go)
@@ -243,15 +245,24 @@ function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
 end
 
 --排序
---[[
-function CenterWareHouseCtrl:_getSortItems(datas, sortType)
-    local tempDatas = datas
-    local sortType = sortType
-    if sortType == CenterWareHouseSortItemType.Name then
-        if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.name > n.name end)
-        else
-            table.sort(tempDatas, function (m, n) return m.name < n.name end)
+function CenterWareHouseCtrl:_getSortItems(type)
+    if type == CenterWareHouseSortItemType.Name then
+        table.sort(WareHouseGoodsMgr.items, function (m, n) return m.name < n.name end )
+        for i, v in ipairs(WareHouseGoodsMgr.items) do
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.content.transform);
+            v.id = i
+            WareHouseGoodsItem:RefreshData(v.goodsDataInfo,i)
         end
     end
-end]]
+    if type == CenterWareHouseSortItemType.Quantity then
+        table.sort(WareHouseGoodsMgr.items, function (m, n) return m.n < n.n end )
+        for i, v in ipairs(WareHouseGoodsMgr.items) do
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.content.transform);
+            v.id = i
+            WareHouseGoodsItem:RefreshData(v.goodsDataInfo,i)
+        end
+    end
+
+end

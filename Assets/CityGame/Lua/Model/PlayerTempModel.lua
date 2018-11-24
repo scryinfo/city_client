@@ -27,23 +27,23 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2151001, 9999)
+        PlayerTempModel.tempTestReqAddItem(2151001, 999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
         --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(200,200,250,250)
+        PlayerTempModel.tempTestAddGroung(200,200,210,210)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-        PlayerTempModel.tempTestReqAddItem(2151002, 999)
+        PlayerTempModel.tempTestReqAddItem(2151002, 888)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
+        PlayerTempModel.tempTestReqAddItem(2151003, 777)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
         PlayerTempModel.tempTestReqAddItem(2151004, 666)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-        PlayerTempModel.tempTestReqAddItem(2152001, 777)
+        PlayerTempModel.tempTestReqAddItem(2152001, 555)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)

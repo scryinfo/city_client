@@ -28,8 +28,8 @@ end
 --关闭事件--
 function ServerListModel.Close()
     --清空本地UI事件
-        Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
-        Event.RemoveListener("m_GsOK", this.m_GsOK);
+    Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
+    Event.RemoveListener("m_GsOK", this.m_GsOK);
 end
 function ServerListModel.registerAsNetMsg()
     --as网络回调注册
@@ -47,7 +47,7 @@ function ServerListModel.n_AllGameServerInfo( stream )
             serverListName[i] = this.serinofs[i].name
         end
         ct.OpenCtrl("ServerListCtrl", serverListName)
-       -- ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
+        -- ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
         --ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",serverListName[1])
         --服务器发过来的bytes测试
         UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",this.serinofs)
@@ -144,10 +144,9 @@ function ServerListModel.n_OnRoleLogin(stream)
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")
-        Event.Brocast("c_RoleLoginDataInit",pMsg)
-        --Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
-
-        Event.Brocast("m_bagCapacity",pMsg.bagCapacity)
+        Event.Brocast("c_GsLoginSuccess");
+        ct.log("rodger_w8_GameMainInterface","[test_n_OnRoleLogin]  测试完毕",pMsg.bagCapacity)
+        Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)

@@ -7,6 +7,8 @@ ServerListCtrl.static.Server_PATH = "View/GoodsItem/ServerItem";
 
 local serverListBehaviour;
 local gameObject;
+local tempBg = nil;
+local tempTag = nil;
 
 function  ServerListCtrl:bundleName()
     return "ServerListPanel"
@@ -21,16 +23,15 @@ function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    serverListBehaviour:AddClick(ServerListPanel.serverOneBtn,self.c_OnServerOne,self);
-    serverListBehaviour:AddClick(ServerListPanel.serverTwoBtn,self.c_OnServerTwo,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
     self:_initData();
 
     --普通消息注册
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.AddListener("c_RoleLoginDataInit", self.c_GsLoginSuccess, self);
+    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
+
 end
 
 function ServerListCtrl:_initData()
@@ -45,16 +46,23 @@ function ServerListCtrl:_initData()
     end
 end
 function ServerListCtrl:Refresh()
---[[    ct.log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
-    ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
-    ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];]]
+    --[[    ct.log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+        ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
+        ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];]]
 
 end
 
 --选择服务器--
 function ServerListCtrl:c_OnServer(go)
-    local showTest = go.serverName.text;
-    ServerListPanel.serverText:GetComponent('Text').text = showTest;
+    if tempBg ~= nil and tempTag ~= nil then
+        tempBg:SetActive(false);
+        tempTag:SetActive(false);
+    end
+    go.bg:SetActive(true);
+    go.tag:SetActive(true);
+    tempBg = go.bg;
+    tempTag = go.tag
+
     local Index = go.id;
     Event.Brocast("m_chooseGameServer", Index);
 end
@@ -71,7 +79,7 @@ function ServerListCtrl:c_GsCreateRole()
     UIPage:ClearAllPages()
     UIPage:ShowPage(CreateRoleCtrl)
 end
-function ServerListCtrl:c_GsLoginSuccess(...)
+function ServerListCtrl:c_GsLoginSuccess()
     UIPage:ClearAllPages()
     UIPage:ShowPage(GameMainInterfaceCtrl)
     --UIPage:ShowPage(TopBarCtrl)

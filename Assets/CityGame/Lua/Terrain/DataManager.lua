@@ -251,6 +251,7 @@ end
 
 --注册所有网络消息回调
 local function InitialNetMessages()
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), DataManager.n_OnReceiveAddBuilding)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), DataManager.n_OnReceiveUnitCreate)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
@@ -278,6 +279,19 @@ function DataManager.Close()
 end
 
 ----------------------------------------------------网络回调函数---------------------------------
+
+function DataManager.n_OnReceiveAddBuilding(stream)
+    local buildingInfo = assert(pbl.decode("gs.BuildingInfo", stream), "DataManager.n_OnReceiveAddBuilding: stream == nil")
+    --buildingInfo  ==》BuildingInfo
+    --此处因命名和层级问题，临时处理
+    if not buildingInfo or not buildingInfo.mId then
+        return
+    end
+    buildingInfo.buildingID = buildingInfo.mId
+    buildingInfo.x = buildingInfo.pos.x
+    buildingInfo.y = buildingInfo.pos.y
+    TerrainManager.ReceiveArchitectureDatas({buildingInfo})
+end
 
 function DataManager.n_OnReceiveUnitCreate(stream)
     local UnitCreate = assert(pbl.decode("gs.UnitCreate", stream), "DataManager.n_OnReceiveUnitCreate: stream == nil")

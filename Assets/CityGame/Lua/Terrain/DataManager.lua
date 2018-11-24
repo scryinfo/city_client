@@ -271,7 +271,7 @@ end
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
-    Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+    --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
 end
 
 --注册所有网络消息回调

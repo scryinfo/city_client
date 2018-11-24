@@ -175,7 +175,7 @@ end
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}
     if roleData.buys then
-        --buyStore = this._getCollectStore(roleData.buys)
+        buyStore = this._getCollectStore(roleData.buys)
     else
         ---测试
         --PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)

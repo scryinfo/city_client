@@ -43,16 +43,20 @@ public class CameraScripts : MonoBehaviour
 
     private void Update()
     {
-        //检测点击UI和射线冲突
+        //检测点击UI和射线冲突 -- 临时
         if (IsClickDownOverUI())
         {
             m_canHandleCam = false;
             return;
         }
-        if (CheckGuiRaycastObjects())
+        if (IsUpInUI())
         {
             m_canHandleCam = true;
             return;
+        }
+        if(IsUpNotInUI())
+        {
+            m_canHandleCam = true;
         }
         //
         if (!m_canHandleCam)
@@ -77,11 +81,6 @@ public class CameraScripts : MonoBehaviour
         {
             SmoothStopFunc();
         }
-        
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            TestMoveCam();
-        }
     }
 
     bool IsClickDownOverUI()
@@ -101,9 +100,51 @@ public class CameraScripts : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
+
+    bool IsUpInUI()
+    { 
+    #if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
+        {
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    bool IsUpNotInUI()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
+        {
+#if UNITY_EDITOR
+            if (!EventSystem.current.IsPointerOverGameObject())
+#else
+            if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     bool CheckGuiRaycastObjects()
     {

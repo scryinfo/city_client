@@ -193,10 +193,11 @@ function  DataManager.InitPersonDatas(tempData)
         DataManager.PersonDataStack = {}
     end
     --初始化个人唯一ID
-    DataManager.PersonDataStack.m_owner = tempData.id
+    PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
 end
+
 
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
@@ -213,7 +214,11 @@ function DataManager.AddMyGroundInfo(groundInfoData)
 end
 
 function DataManager.GetMyOwnerID()
-    return DataManager.PersonDataStack.m_owner
+    return PersonDataStack.m_owner
+end
+
+function DataManager.GetMyPersonData()
+    return PersonDataStack
 end
 
 --判断该地块是不是自己的
@@ -361,7 +366,7 @@ function DataManager.n_OnReceiveGroundChange(stream)
         return
     end
     for key, value in pairs(GroundChange.info) do
-        if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
+        if nil ~= PersonDataStack.m_owner and  value.ownerId  == PersonDataStack.m_owner then
             DataManager.AddMyGroundInfo(value)
         end
     end

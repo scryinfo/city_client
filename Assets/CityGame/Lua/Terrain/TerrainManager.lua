@@ -73,11 +73,7 @@ end
 function TerrainManager.PositionTurnBlockID(pos)
     local tempX = math.floor(math.abs(pos.x))
     local tempZ = math.floor( math.abs(pos.z))
-    if tempZ >= 1 then
-        return tempZ + tempX * TerrainRange.x - 1
-    else
-        return tempZ + tempX * TerrainRange.x
-    end
+    return tempZ + tempX * TerrainRange.x + 1
 end
 
 

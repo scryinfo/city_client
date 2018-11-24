@@ -105,7 +105,7 @@ function DataManager.RefreshBaseBuildData(data)
     else--]]
     if data.x ~= nil and data.y ~= nil then
         blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
-        data.id = blockID
+        data.posID = blockID
     else
         return
     end

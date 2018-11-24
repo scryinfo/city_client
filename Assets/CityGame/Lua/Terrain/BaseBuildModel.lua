@@ -16,7 +16,7 @@ function BaseBuildModel:Refresh(data)
     for key, value in pairs(data) do
         self.Data[key] = value
     end
-    DataManager.RefreshBlockDataWhenNodeChange(data.id,PlayerBuildingBaseData[data.buildingID].x)
+    DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x)
 end
 
 --打开界面
@@ -24,7 +24,7 @@ function BaseBuildModel:OpenPanel()
     --ct.log("Allen_w9","请使用BaseModel派生类自己的OpenPanel方法，尽量不要调用基类的OpenPanel方法")
     --TODO:在具体子类中做打开操作
     local typeID = self.Data.buildingID
-    local instanceID = self.Data.ownerId
+    local instanceID = self.Data.id
     if typeID == 1100001 or typeID == 1100002 or typeID == 1100003 then         --原料厂
         Event.Brocast('m_ReqOpenMaterial',instanceID)
         ct.OpenCtrl('MaterialCtrl')

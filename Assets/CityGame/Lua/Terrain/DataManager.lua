@@ -227,6 +227,16 @@ function DataManager.IsOwnerGround(tempPos)
     return false
 end
 
+function DataManager.IsAllOwnerGround(startBlockID,tempsize)
+    local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
+    for key, value in ipairs(idList) do
+        if not DataManager.IsOwnerGround(TerrainManager.BlockIDTurnPosition(value)) then
+            return false
+        end
+    end
+    return true
+end
+
 --判断该地块允不允许改变
 function DataManager.IsEnableChangeGround(blockID)
     local blockdata = DataManager.GetBlockDataByID(blockID)

@@ -247,6 +247,15 @@ function DataManager.IsEnableChangeGround(blockID)
     end
 end
 
+function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
+    local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
+    for key, value in ipairs(idList) do
+        if not DataManager.IsEnableChangeGround(value) then
+            return false
+        end
+    end
+    return true
+end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
 

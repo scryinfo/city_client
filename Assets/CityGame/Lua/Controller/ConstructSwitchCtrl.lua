@@ -55,7 +55,8 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
     local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
-    if DataManager.IsAllOwnerGround(blockID,PlayerBuildingBaseData[DataManager.TempDatas.constructID].x) and DataManager.IsEnableChangeGround(blockID) then
+    local tempSize = PlayerBuildingBaseData[DataManager.TempDatas.constructID].x
+    if DataManager.IsAllOwnerGround(blockID,tempSize) and DataManager.IsALlEnableChangeGround(blockID,tempSize) then
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.one
     else
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.zero

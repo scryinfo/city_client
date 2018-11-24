@@ -9,7 +9,7 @@ ConstructSwitchCtrl = class('ConstructSwitchCtrl',UIPage)
 UIPage:ResgisterOpen(ConstructSwitchCtrl)
 
 function ConstructSwitchCtrl:initialize()
-    UIPage.initialize(self, UIType.Fixed, UIMode.DoNothing, UICollider.None)
+    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
 end
 
 function ConstructSwitchCtrl:bundleName()
@@ -23,8 +23,7 @@ function ConstructSwitchCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_confirm.gameObject, function()
         --TODO：确认建造
         ct.log("Allen_wk13","确认建造")
-        Event.Brocast("m_constructBuildConfirm")
-        Event.Brocast("m_abolishConstructBuild")
+        ct.OpenCtrl('ConstructDialogPageCtrl')
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
         --TODO：取消建造
@@ -36,7 +35,6 @@ end
 function ConstructSwitchCtrl:Awake(go)
     self.gameObject = go
     Event.AddListener("m_abolishConstructBuild", self.Hide, self);
-    Event.AddListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self);
     Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self);
 end
 
@@ -56,19 +54,11 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
-    if DataManager.IsOwnerGround(tempPos) then
+    local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
+    if DataManager.IsOwnerGround(DataManager.TempDatas.constructObj.transform.position) and DataManager.IsEnableChangeGround(blockID) then
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.one
     else
         ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.zero
-    end
-end
-
---确认建造建筑
-function ConstructSwitchCtrl:ConstructBuildConfirm()
-    --TODO：向服务器发送建造数据
-    if DataManager.TempDatas.constructID ~= nil then
-        local tempPos = DataManager.TempDatas.constructObj.transform.position
-        PlayerTempModel.m_ReqAddBuilding(DataManager.TempDatas.constructID, math.floor(tempPos.x) ,  math.floor(tempPos.z))
     end
 end
 

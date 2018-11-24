@@ -32,9 +32,13 @@ function UIBubbleCtrl:Refresh()
 end
 function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
+    Event.AddListener("c_HideGroundBubble", self._hideAllItems, self)
+    Event.AddListener("c_ShowGroundBubble", self._showAllItems, self)
 end
 function UIBubbleCtrl:_removeListener()
     Event.RemoveListener("c_RefreshItems", self._refreshItems, self)
+    Event.RemoveListener("c_HideGroundBubble", self._hideAllItems, self)
+    Event.RemoveListener("c_ShowGroundBubble", self._showAllItems, self)
 end
 
 function UIBubbleCtrl.static.RefreshLateUpdate()
@@ -68,7 +72,11 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
         go.transform:SetParent(self.gameObject.transform)
-        go.transform.localScale = Vector3.one
+        if self.hide then
+            go.transform.localScale = Vector3.zero
+        else
+            go.transform.localScale = Vector3.one
+        end
         local data = bubbleData
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
@@ -80,7 +88,11 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
         go.transform:SetParent(self.gameObject.transform)
-        go.transform.localScale = Vector3.one
+        if self.hide then
+            go.transform.localScale = Vector3.zero
+        else
+            go.transform.localScale = Vector3.one
+        end
         local data = bubbleData
         data.bubbleRect = go:GetComponent("RectTransform")
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
@@ -104,6 +116,25 @@ function UIBubbleCtrl:_refreshItems(datas)
             self:_creatGroundAucBubbleItem(data)
         else
             ct.log("cycle_w6_GroundAuc", "-----------")
+        end
+    end
+end
+
+--隐藏所有气泡
+function UIBubbleCtrl:_hideAllItems()
+    self.hide = true
+    for key, item in pairs(self.groundAucLuaItems) do
+        if item.data.bubbleRect then
+            item.data.bubbleRect.transform.localScale = Vector3.zero
+        end
+    end
+end
+--显示所有气泡
+function UIBubbleCtrl:_showAllItems()
+    self.hide = false
+    for key, item in pairs(self.groundAucLuaItems) do
+        if item.data.bubbleRect then
+            item.data.bubbleRect.transform.localScale = Vector3.one
         end
     end
 end

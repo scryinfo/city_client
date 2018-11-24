@@ -37,6 +37,8 @@ function GroundAuctionCtrl:Refresh()
 end
 
 function GroundAuctionCtrl:Hide()
+    Event.Brocast("c_ShowGroundBubble")
+
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
 
@@ -53,6 +55,8 @@ end
 
 ---初始化界面
 function GroundAuctionCtrl:_initPanelData()
+    Event.Brocast("c_HideGroundBubble")
+
     if not self.m_data then
         return
     end
@@ -70,7 +74,7 @@ function GroundAuctionCtrl:_initPanelData()
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
 
-        if self.m_data.biderId ~= nil and self.m_data.price ~= nil then
+        if self.m_data.price > self.m_data.basePrice then
             GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
             GroundAuctionPanel.priceDesText.text = "Top price"
         else
@@ -155,7 +159,7 @@ function GroundAuctionCtrl:_bidFinishTimeDown()
     end
 end
 
----由即将拍卖变成拍卖状态
+--由即将拍卖变成拍卖状态
 function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
     if not self.gameObject then  --如果还没打开过界面，则不进行任何操作
         return
@@ -174,11 +178,23 @@ function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
     self.startTimeDownForFinish = true
 end
 
----出价
-function GroundAuctionCtrl:BidGround(table)
+--出价
+function GroundAuctionCtrl:BidGround(ins)
     local bidPrice = GroundAuctionPanel.bidInput.text
+    if not ins.highestPrice then
+        ins.highestPrice = ins.m_data.basePrice
+    end
+    if tonumber(bidPrice) > ins.highestPrice then
+        Event.Brocast("m_PlayerBidGround", ins.m_data.id, bidPrice)
+    else
+        --打开弹框
+        local showData = {}
+        showData.titleInfo = "REMINDER"
+        showData.contentInfo = "Your price should be higher then "..ins.highestPrice
+        showData.tipInfo = ""
+        ct.OpenCtrl("BtnDialogPageCtrl", showData)
+    end
 
-    Event.Brocast("m_PlayerBidGround", table.m_data.id, bidPrice)
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
@@ -195,6 +211,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         return
     end
 
+    self.highestPrice = data.num
     GroundAuctionPanel.currentPriceText.text = getPriceString(data.num, 30, 24)
     GroundAuctionPanel.priceDesText.text = "Top price"
     GroundAuctionPanel.ChangeBidInfo(data)

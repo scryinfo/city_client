@@ -21,6 +21,7 @@ function UIBubbleGroundAucNowItem:initialize(data)
     self.startTimeDown = true
     self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     --UpdateBeat:Add(self.Update, self)
     --LateUpdateBeat:Add(self.LateUpdate, self)
 end
@@ -30,9 +31,17 @@ function UIBubbleGroundAucNowItem:_clickBtn()
     ct.OpenCtrl("GroundAuctionCtrl", self.data)
 end
 
+--信息更新
+function UIBubbleGroundAucNowItem:_bidInfoUpdate(data)
+    if data.id == self.data.id then
+        self.data.price = data.num
+    end
+end
+
 function UIBubbleGroundAucNowItem:Close()
     self.timeDown = false
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
 end
 
 function UIBubbleGroundAucNowItem:LateUpdate()

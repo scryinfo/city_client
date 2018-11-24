@@ -40,8 +40,7 @@ function AdvertisementPosCtrl:Awake(go)
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviours=materialBehaviour
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(panel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    materialBehaviour:AddClick(panel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+
 
     materialBehaviour:AddClick(panel.manageBtn.gameObject,self.OnClick_manageBtn,self)
     materialBehaviour:AddClick(panel.confirmBtn.gameObject,self.OnClick_masterConfirm,self)

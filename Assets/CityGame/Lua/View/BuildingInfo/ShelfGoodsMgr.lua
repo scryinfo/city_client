@@ -35,9 +35,9 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialWarehouse) do
         local uiTab = {}
-        uiTab.name = Material[v.id].name
-        uiTab.num = v.num
-        uiTab.itemId = v.id
+        uiTab.name = Material[v.key.id].name
+        uiTab.num = v.n
+        uiTab.itemId = v.key.id
         configTable[i] = uiTab
 
         --预制的信息
@@ -120,7 +120,6 @@ function ShelfGoodsMgr:_creatProductionItem()
         end
     end
 end
-
 --添加生产线
 function ShelfGoodsMgr:_creatProductionLine(name,itemId)
         local configTable = {};
@@ -139,7 +138,7 @@ function ShelfGoodsMgr:_creatProductionLine(name,itemId)
         AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
-function ShelfGoodsMgr:_getProductionLine(table)
+function ShelfGoodsMgr:_getProductionLine(table,behaviour)
     if not table then
         return;
     end
@@ -151,7 +150,16 @@ function ShelfGoodsMgr:_getProductionLine(table)
         uiTab.nowCount = v.nowCount
         uiTab.targetCount = v.targetCount
         uiTab.workerNum = v.workerNum
+        uiTab.lineId = v.id
         configTable[i] = uiTab
+
+        --计算时间
+        --local dataInfo = {}
+        --dataInfo.itemId = v.itemId
+        --dataInfo.workerNum = v.workerNum
+        --dataInfo.targetCount = v.targetCount
+        --Event.Brocast("calculateTime",dataInfo)
+
         AdjustProductionLineCtrl.productionLineUIInfo[i] = configTable
 
         local prefabData = {}
@@ -160,8 +168,9 @@ function ShelfGoodsMgr:_getProductionLine(table)
         prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.productionLinePrefab[i] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,self.behaviour,self,v.itemId);
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,behaviour,self,i);
         AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
+        Event.Brocast("RefreshUiInfo",AdjustProductionLineCtrl.productionLinePrefab[i].uiData)
     end
 end
 --获取要发送的物品信息
@@ -207,8 +216,7 @@ function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
     prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
-    local transportLuaItem = Trans
-    portItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
+    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
         self.transportPanelItem = {}

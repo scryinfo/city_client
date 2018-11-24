@@ -23,6 +23,8 @@ end
 function MaterialModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),MaterialModel.n_OnOpenMaterial);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),MaterialModel.n_OnLineChangeInform);
+
 end
 
 function MaterialModel.Close()
@@ -42,8 +44,12 @@ end
 function MaterialModel.n_OnOpenMaterial(stream)
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
-        MaterialModel.MaterialWarehouse = msgMaterial.store.reserved;
+        MaterialModel.MaterialWarehouse = msgMaterial.store.inHand;
         MaterialModel.MaterialShelf = msgMaterial.shelf.good
         MaterialModel.MaterialProductionLine = msgMaterial.line
     end
+end
+--生产线变化推送
+function MaterialModel.n_OnLineChangeInform(stream)
+    local msgLineChangeInfo = assert(pbl.decode("gs.LineInfo",stream),"MaterialModel.n_OnLineChangeInform")
 end

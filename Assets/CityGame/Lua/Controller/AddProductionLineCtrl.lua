@@ -27,6 +27,9 @@ function AddProductionLineCtrl:OnCreate(obj)
     addLine:AddClick(AddProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     addLine:AddClick(AddProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
 
+
+    local time = AdjustProductionLineCtrl:formattingTime(7.9)
+    ct.log("system",time)
     --本地事件注册
     Event.AddListener("_selectedProductionLine",self._selectedProductionLine,self);
 

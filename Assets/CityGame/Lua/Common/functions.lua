@@ -7,6 +7,10 @@ function destroy(obj)
 	GameObject.Destroy(obj);
 end
 
+function destroyImmediate(obj)
+	GameObject.DestroyImmediate(obj);
+end
+
 function newObject(prefab)
 	return GameObject.Instantiate(prefab);
 end
@@ -88,12 +92,32 @@ end
 --把时间 秒转换成xx时xx分xx秒格式
 function getFormatUnixTime(time)
 	local tb = {}
+	time = math.floor(time)
 	tb.year = tonumber(os.date("%Y", time)) or 0
 	tb.month = tonumber(os.date("%m", time)) or 0
 	tb.day = tonumber(os.date("%d", time)) or 0
 	tb.hour = tonumber(os.date("%H", time)) or 0
 	tb.minute = tonumber(os.date("%M", time)) or 0
 	tb.second = tonumber(os.date("%S", time)) or 0
+
+	if tb.year < 10 then
+		tb.year = "0"..tb.year
+	end
+	if tb.month < 10 then
+		tb.month = "0"..tb.month
+	end
+	if tb.day < 10 then
+		tb.day = "0"..tb.day
+	end
+	if tb.hour < 10 then
+		tb.hour = "0"..tb.hour
+	end
+	if tb.minute < 10 then
+		tb.minute = "0"..tb.minute
+	end
+	if tb.second < 10 then
+		tb.second = "0"..tb.second
+	end
 
 	return tb
 end

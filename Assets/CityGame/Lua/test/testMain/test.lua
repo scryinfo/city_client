@@ -187,13 +187,13 @@ UnitTest.Exec("cycle_w6_GroundAuc", "test_w6_groundAuc",  function ()
     --end;
     --UIPage:ShowPage(BtnDialogPageCtrl, info)
 
-    ct.log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc]  balabalabalabala...............")
+    --ct.log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc]  balabalabalabala...............")
 
     ---测试拍卖
-    local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
-    if groundAucModel ~= nil then
-        groundAucModel:Awake();
-    end
+    --local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
+    --if groundAucModel ~= nil then
+    --    groundAucModel:Awake();
+    --end
 end)
 
 UnitTest.Exec("cycle_w8_exchange01_loopScroll", "test_cycle_w8_exchange01_loopScroll",  function ()

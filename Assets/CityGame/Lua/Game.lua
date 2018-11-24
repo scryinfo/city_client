@@ -36,12 +36,13 @@ function Game.OnPostInitOK()
     if model ~= nil then
         model:Awake();
     end
-
+    --[[
     ---测试拍卖
     local groundAucModel = CtrlManager.GetModel(ModelNames.GroundAuction);
     if groundAucModel ~= nil then
         groundAucModel:Awake();
     end
+    --]]
     ---测试建筑信息
     local BuildingInfoModel = CtrlManager.GetModel(ModelNames.BuildingInfo);
     if BuildingInfoModel ~= nil then
@@ -111,5 +112,6 @@ function Game.OnPostInitOK()
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()
     --end
+    DataManager.Init()
     UnitTest.Exec_now("Allen_w9", "c_CameraMove",self)
 end

@@ -3,43 +3,46 @@
 --- Created by xuyafang.
 --- DateTime: 2018/8/31 19:19
 ---
-local transform;
-local gameObject;
+local transform
+local gameObject
 
-GroundAuctionPanel = {};
-local this = GroundAuctionPanel;
+GroundAuctionPanel = {}
+local this = GroundAuctionPanel
 
 function GroundAuctionPanel.Awake(obj)
-    gameObject = obj;
-    transform = obj.transform;
+    gameObject = obj
+    transform = obj.transform
 
-    this.InitPanel();
+    this.InitPanel()
 end
 
 --初始化面板--
 function GroundAuctionPanel.InitPanel()
-    this.backBtn = transform:Find("backBtn").gameObject;
+    this.backBtn = transform:Find("backBtn").gameObject
 
-    this.startBidRoot = transform:Find("bidRoot/startBidRoot").gameObject;
-    this.startBidTimeDownText = transform:Find("bidRoot/startBidRoot/time/timeDownText").gameObject:GetComponent("Text");
-    this.biderProtaitImg = transform:Find("bidRoot/startBidRoot/price/portait").gameObject:GetComponent("Image");
-    this.currentPriceText = transform:Find("bidRoot/startBidRoot/price/currentPriceText").gameObject:GetComponent("Text");
-    this.priceDesText = transform:Find("bidRoot/startBidRoot/price/priceDesText").gameObject:GetComponent("Text");  --开始拍卖界面，可能会只显示底价，描述改成“Floor price”
-    this.bidInput = transform:Find("bidRoot/startBidRoot/input/bidInput").gameObject:GetComponent('InputField');
-    this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText").gameObject;
-    this.bidBtn = transform:Find("bidRoot/startBidRoot/bidBtn").gameObject:GetComponent("Button");
+    this.startBidRoot = transform:Find("bidRoot/startBidRoot").gameObject
+    this.startBidTimeDownText = transform:Find("bidRoot/startBidRoot/time/timeDownText").gameObject:GetComponent("Text")
+    this.biderProtaitImg = transform:Find("bidRoot/startBidRoot/price/portait").gameObject:GetComponent("Image")
+    this.currentPriceText = transform:Find("bidRoot/startBidRoot/price/currentPriceText").gameObject:GetComponent("Text")
+    this.priceDesText = transform:Find("bidRoot/startBidRoot/price/priceDesText").gameObject:GetComponent("Text")  --开始拍卖界面，可能会只显示底价，描述改成“Floor price”
+    this.bidInput = transform:Find("bidRoot/startBidRoot/input/bidInput").gameObject:GetComponent('InputField')
+    this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText").gameObject
+    this.bidBtn = transform:Find("bidRoot/startBidRoot/bidBtn").gameObject:GetComponent("Button")
 
-    this.waitBidRoot = transform:Find("bidRoot/waitBidRoot").gameObject;
-    this.waitBidTimeDownText = transform:Find("bidRoot/waitBidRoot/time/timeDownText").gameObject:GetComponent("Text");
-    this.startBidTimeText = transform:Find("bidRoot/waitBidRoot/time/bidTimeText").gameObject:GetComponent("Text");
-    this.waitBidBasePriceText = transform:Find("bidRoot/waitBidRoot/price/basePriceText").gameObject:GetComponent("Text");
+    this.waitBidRoot = transform:Find("bidRoot/waitBidRoot").gameObject
+    this.waitBidTimeDownText = transform:Find("bidRoot/waitBidRoot/time/timeDownText").gameObject:GetComponent("Text")
+    this.startBidTimeText = transform:Find("bidRoot/waitBidRoot/time/bidTimeText").gameObject:GetComponent("Text")
+    this.waitBidBasePriceText = transform:Find("bidRoot/waitBidRoot/price/basePriceText").gameObject:GetComponent("Text")
 
-    this.personAverageText = transform:Find("personFlowRoot/Image02/averageText").gameObject:GetComponent("Text");
+    this.personAverageText = transform:Find("personFlowRoot/Image02/averageText").gameObject:GetComponent("Text")
 
 end
 
 --界面更新拍卖信息--
 function GroundAuctionPanel.ChangeBidInfo(newBidInfo)
-    --头像信息，暂不确定
-    this.currentPriceText.text = newBidInfo.num
+    if newBidInfo then
+        --头像信息，暂不确定
+        this.currentPriceText.text = newBidInfo.num
+
+    end
 end

@@ -21,8 +21,9 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
         --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
-        PlayerTempModel.tempTestReqAddGroung(100,100,150,150)
+        PlayerTempModel.tempTestReqAddGroung(100,100,105,105)
     end
+
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
@@ -56,6 +57,7 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
         PlayerTempModel.tempTestReqAddItem(2152001, 300)
     end
+
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
@@ -63,9 +65,9 @@ function PlayerTempModel.Update()
         --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
         --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
         --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 105, 150)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
-        PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
@@ -80,13 +82,16 @@ function PlayerTempModel.Update()
         ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     end
 
-
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
+        PlayerTempModel.tempTestAddGroung(0,0,10,10)
+    end
 end
 
 --启动事件--
 function PlayerTempModel.OnCreate()
     --网络回调注册 网络回调用n开头
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), PlayerTempModel.n_OnReceiveAddBuilding)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), PlayerTempModel.n_OnReceiveAddBuilding)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), PlayerTempModel.n_OnReceiveUnitCreate)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), PlayerTempModel.n_OnReceiveUnitChange)
 
@@ -110,6 +115,8 @@ function PlayerTempModel.n_OnReceiveRoleLogin(stream)
     if not PlayerTempModel.collectList then
         PlayerTempModel.collectList = {}
     end
+
+    Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
 end
 --addbuilding 回复
 function PlayerTempModel.n_OnReceiveAddBuilding(stream)
@@ -118,6 +125,9 @@ function PlayerTempModel.n_OnReceiveAddBuilding(stream)
 end
 --创建建筑时的同步
 function PlayerTempModel.n_OnReceiveUnitCreate(stream)
+    if not stream then
+        return
+    end
     local buildingInfo = assert(pbl.decode("gs.UnitCreate", stream), "PlayerTempModel.n_OnReceiveUnitCreate: stream == nil")
     if not PlayerTempModel.buildingsInfo then
         PlayerTempModel.buildingsInfo = {}

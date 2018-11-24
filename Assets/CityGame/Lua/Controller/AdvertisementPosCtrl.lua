@@ -119,7 +119,7 @@ end
 
 
 function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
-    local buildingID=PlayerTempModel.roleData.buys.publicFacility[1].info.id
+    local buildingID=MunicipalModel.lMsg.info.id
     --主人点击确认按钮
     Event.Brocast("SmallPop","Successful adjustment")
     panel.grey.gameObject:SetActive(true);

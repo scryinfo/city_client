@@ -105,7 +105,7 @@ end
 function MunicipalModel.n_getaddSlot(stream)
 
     local lMsg = assert(pbl.decode("gs.Advertisement.Slot", stream),"添加槽位收包失败")
-    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+    Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
 ---删除槽位发包
@@ -124,7 +124,7 @@ end
 function MunicipalModel.n_deleteSlot(stream)
 
     --local lMsg = assert(pbl.decode("gs.success", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    Event.Brocast("m_detailPublicFacility",PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+    Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
 ---打广告发包
@@ -219,14 +219,14 @@ function MunicipalModel.Update()
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
     --    --    for i, v in pairs(MunicipalModel.lMsg.ad) do
     --    --
-    --    --        Event.Brocast("m_DelAdFromSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,v.id)
+    --    --        Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.id)
     --    --    end
     --    --
     --    --    num=num+1
     --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     --    --end
     --    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
-    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
     --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     --    --end
 end

@@ -56,14 +56,14 @@ function ScienceSellHallModel.Update()
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
     --    --    for i, v in pairs(ScienceSellHallModel.lMsg.ad) do
     --    --
-    --    --        Event.Brocast("m_DelAdFromSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,v.id)
+    --    --        Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.id)
     --    --    end
     --    --
     --    --    num=num+1
     --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     --    --end
     --    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
-    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
     --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     --    --end
 end

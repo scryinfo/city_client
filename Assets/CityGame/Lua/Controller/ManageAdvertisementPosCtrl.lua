@@ -161,7 +161,7 @@ function ManageAdvertisementPosCtrl:callback()
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
         ---发送打广告请求
         for k = 1, v.count do
-            Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+            Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,MunicipalModel.lMsg.info.id)
         end
         --------------------------------------------
         for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
@@ -180,7 +180,7 @@ function ManageAdvertisementPosCtrl:callback()
         for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
             if  tonumber(v.selfcount) < tonumber(v.updatecount) then---添加广告
             for i = 1, (v.updatecount-v.selfcount) do
-                Event.Brocast("m_adPutAdToSlot",nil,2151002,0,PlayerTempModel.roleData.buys.publicFacility[1].info.id)
+                Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
                 self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
                 v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
 
@@ -188,7 +188,7 @@ function ManageAdvertisementPosCtrl:callback()
 
             else---删广告
                 for k = 1, (v.selfcount-v.updatecount)  do
-               Event.Brocast("m_DelAdFromSlot",PlayerTempModel.roleData.buys.publicFacility[1].info.id,self.ItemCreatDeleteMgr.adList[v.metaId][1].id)
+               Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,self.ItemCreatDeleteMgr.adList[v.metaId][1].id)
                 table.remove(self.ItemCreatDeleteMgr.adList[v.metaId],1)
                     self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
                     v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text

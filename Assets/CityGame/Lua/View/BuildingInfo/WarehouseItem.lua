@@ -7,6 +7,9 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.id = id;
+    self.name = goodsDataInfo.name;
+    self.itemId = goodsDataInfo.itemId;
+    self.n = goodsDataInfo.num
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.icon = self.prefab.transform:Find("icon");  --物品Icon
     self.circleGreayImg = self.prefab.transform:Find("circleGreayImg"):GetComponent("RectTransform");  --圆
@@ -62,4 +65,12 @@ end
 --删除后刷新ID及显示
 function WarehouseItem:RefreshID(id)
     self.id = id;
+end
+function WareHouseGoodsItem:RefreshData(data,id)
+    self.id = id
+    self.n = data.number
+    self.name = data.name
+    self.itemId = data.itemId
+    --self.producerId = data.producerId
+    --self.qty = data.qty
 end

@@ -39,7 +39,9 @@ end
 function ExchangeTransactionCtrl:Refresh()
     --self:_initPanelData()
 
-    Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
+    if self.itemId then
+        Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
+    end
 end
 
 function ExchangeTransactionCtrl:Hide()
@@ -294,23 +296,29 @@ end
 
 ---接收服务器消息
 function ExchangeTransactionCtrl:_updateItemTransactionData(datas)
-    if #datas.buy ~= 0 then
-        ExchangeTransactionCtrl.static.buyDatas = datas.buy
-        --填充数据
-        for i, itemData in ipairs(ExchangeTransactionCtrl.static.buyDatas) do
-            itemData.index = i
-            itemData.isSell = false
+    if datas.buy then
+        if #datas.buy ~= 0 then
+            ExchangeTransactionCtrl.static.buyDatas = datas.buy
+            table.sort(ExchangeTransactionCtrl.static.buyDatas, function (m, n) return m.id > n.id end)
+            --填充数据
+            for i, itemData in ipairs(ExchangeTransactionCtrl.static.buyDatas) do
+                itemData.index = i
+                itemData.isSell = false
+            end
+            ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
         end
-        ExchangeTransactionPanel.buyScroll:ActiveLoopScroll(self.buySource, #ExchangeTransactionCtrl.static.buyDatas)
     end
 
-    if #datas.sell ~= 0 then
-        ExchangeTransactionCtrl.static.sellDatas = datas.sell
-        for i, itemData in ipairs(ExchangeTransactionCtrl.static.sellDatas) do
-            itemData.index = i
-            itemData.isSell = true
+    if datas.sell then
+        if #datas.sell ~= 0 then
+            ExchangeTransactionCtrl.static.sellDatas = datas.sell
+            table.sort(ExchangeTransactionCtrl.static.sellDatas, function (m, n) return m.id > n.id end)
+            for i, itemData in ipairs(ExchangeTransactionCtrl.static.sellDatas) do
+                itemData.index = i
+                itemData.isSell = true
+            end
+            ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
         end
-        ExchangeTransactionPanel.sellScroll:ActiveLoopScroll(self.sellSource, #ExchangeTransactionCtrl.static.sellDatas)
     end
 
     ExchangeTransactionPanel.changeText.text = datas.priceChange

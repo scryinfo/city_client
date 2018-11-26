@@ -35,6 +35,7 @@ function ExchangeModel.OnCreate()
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeBuy"), ExchangeModel.n_OnReceiveExchangeBuy)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeSell"), ExchangeModel.n_OnReceiveExchangeSell)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeWatchItemDetail"), ExchangeModel.n_OnReceiveBuySellItemsInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeItemDetailInform"), ExchangeModel.n_OnReceiveBuySellItemsInfo)
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeGetItemDealHistory"), ExchangeModel.n_OnReceiveExchangeLineInfo)

@@ -21,7 +21,7 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
         --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
-        PlayerTempModel.tempTestReqAddGroung(100,100,105,105)
+        PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
@@ -29,25 +29,6 @@ function PlayerTempModel.Update()
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(300,300,310,310)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
-        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-        PlayerTempModel.tempTestReqAddItem(2151002, 999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
-        PlayerTempModel.tempTestReqAddItem(2151004, 666)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-        PlayerTempModel.tempTestReqAddItem(2152001, 777)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then

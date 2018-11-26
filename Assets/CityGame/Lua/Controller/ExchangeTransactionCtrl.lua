@@ -39,7 +39,7 @@ end
 function ExchangeTransactionCtrl:Refresh()
     --self:_initPanelData()
 
-    --Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
+    Event.Brocast("m_ReqExchangeWatchItemDetail", self.itemId)
 end
 
 function ExchangeTransactionCtrl:Hide()

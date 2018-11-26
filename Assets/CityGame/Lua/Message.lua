@@ -176,13 +176,15 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 			--reader.stream:clear();
 
 			-- 长度扩展
-			if(reader.msglen >= 65535) then
-				reader.state = CityEngineLua.READ_STATE_MSGLEN_EX;
-				reader.expectSize = 4;
-			else
-				reader.state = CityEngineLua.READ_STATE_MSGID;
-				reader.expectSize = reader.expectMsgIdSize;
-			end
+			--if(reader.msglen >= 65535) then
+			--	reader.state = CityEngineLua.READ_STATE_MSGLEN_EX;
+			--	reader.expectSize = 4;
+			--else
+			--	reader.state = CityEngineLua.READ_STATE_MSGID;
+			--	reader.expectSize = reader.expectMsgIdSize;
+			--end
+			reader.state = CityEngineLua.READ_STATE_MSGID;
+			reader.expectSize = reader.expectMsgIdSize;
 		else
 			CityLuaUtil.ArrayCopy(datas, totallen, reader.stream:data(), reader.stream.wpos, length);
 			reader.stream.wpos = reader.stream.wpos + length;

@@ -72,12 +72,8 @@ end
 --注：z为列，x为行（y = 0）
 function TerrainManager.PositionTurnBlockID(pos)
     local tempX = math.floor(math.abs(pos.x))
-    local tempZ = math.ceil( math.abs(pos.z))
-    if tempX >= 1 then
-        return tempZ + (tempX- 1) * TerrainRange.x
-    else
-        return tempZ
-    end
+    local tempZ = math.floor( math.abs(pos.z))
+    return tempZ + tempX * TerrainRange.x + 1
 end
 
 

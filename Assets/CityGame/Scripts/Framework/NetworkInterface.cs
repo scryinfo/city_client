@@ -22,8 +22,6 @@
     public class NetworkInterface
 	{
         public delegate void AsyncConnectMethod(ConnectState state);
-        //public const int TCP_PACKET_MAX = 1460;
-       // public const int TCP_PACKET_MAX = 4096;
         public const int TCP_PACKET_MAX = 1024*64;
         public delegate void ConnectCallback(string ip, int port, bool success, object userData);
 

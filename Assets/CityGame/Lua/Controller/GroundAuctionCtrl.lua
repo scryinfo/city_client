@@ -181,6 +181,16 @@ end
 --出价
 function GroundAuctionCtrl:BidGround(ins)
     local bidPrice = GroundAuctionPanel.bidInput.text
+    if bidPrice == "" then
+        --打开弹框
+        local showData = {}
+        showData.titleInfo = "REMINDER"
+        showData.contentInfo = "Please enter right price "
+        showData.tipInfo = ""
+        ct.OpenCtrl("BtnDialogPageCtrl", showData)
+        return
+    end
+
     if not ins.highestPrice then
         ins.highestPrice = ins.m_data.basePrice
     end

@@ -92,6 +92,12 @@ function Game.OnPostInitOK()
     if AdjustProductionLineModel ~= nil then
         AdjustProductionLineModel:Awake();
     end
+    --科技交易所
+    local ScienceSellHallModel = CtrlManager.GetModel(ModelNames.ScienceSellHall);
+    if ScienceSellHallModel ~= nil then
+        ScienceSellHallModel:Awake();
+    end
+
     --测试货架
     local ShelfModel = CtrlManager.GetModel(ModelNames.Shelf);
     if ShelfModel ~= nil then

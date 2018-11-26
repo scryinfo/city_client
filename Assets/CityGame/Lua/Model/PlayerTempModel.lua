@@ -72,13 +72,13 @@ function PlayerTempModel.Update()
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
         --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(200,200,250,250)
+        PlayerTempModel.tempTestAddGroung(200,200,210,210)
         ct.log("system","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
         --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.m_ReqAddBuilding(1600001,220,220)
+        PlayerTempModel.m_ReqAddBuilding(1600001,205,205)
         ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     end
 
@@ -189,7 +189,7 @@ end
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}
     if roleData.buys then
-        --buyStore = this._getCollectStore(roleData.buys)
+        buyStore = this._getCollectStore(roleData.buys)
     else
         ---测试
         --PlayerTempModel.m_ReqAddBuilding(1400001, 7, 100)

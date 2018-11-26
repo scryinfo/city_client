@@ -49,7 +49,7 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
         mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, self._clickToDoBtn, self)
     end
 
-    Event.AddListener("c_onStaffValueChange", self.updateInfo, self)
+    Event.AddListener("c_onReceiveHouseSalaryChange", self.updateInfo, self)
 
     self:_initData()
 end
@@ -60,6 +60,7 @@ function StaffRateItem:_initData()
     self.statisfactionSlider.value = self.staffData.satisfaction
     self.perCapitaWageText.text = self.staffData.dayWage
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
+    self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 
     --如果有未找到房子的员工，则显示
     if self.staffData.noDomicileCount >= 1 then
@@ -147,7 +148,8 @@ function StaffRateItem:updateInfo(data)
         return
     end
 
-    --self:_initData()
+    self.perCapitaWageText.text = self.staffData.dayWage
+    self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
 end
 
 function StaffRateItem:destory()

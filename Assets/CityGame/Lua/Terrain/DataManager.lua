@@ -193,10 +193,11 @@ function  DataManager.InitPersonDatas(tempData)
         DataManager.PersonDataStack = {}
     end
     --初始化个人唯一ID
-    DataManager.PersonDataStack.m_owner = tempData.id
+    PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
 end
+
 
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
@@ -213,7 +214,11 @@ function DataManager.AddMyGroundInfo(groundInfoData)
 end
 
 function DataManager.GetMyOwnerID()
-    return DataManager.PersonDataStack.m_owner
+    return PersonDataStack.m_owner
+end
+
+function DataManager.GetMyPersonData()
+    return PersonDataStack
 end
 
 --判断该地块是不是自己的
@@ -227,6 +232,16 @@ function DataManager.IsOwnerGround(tempPos)
     return false
 end
 
+function DataManager.IsAllOwnerGround(startBlockID,tempsize)
+    local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
+    for key, value in ipairs(idList) do
+        if not DataManager.IsOwnerGround(TerrainManager.BlockIDTurnPosition(value)) then
+            return false
+        end
+    end
+    return true
+end
+
 --判断该地块允不允许改变
 function DataManager.IsEnableChangeGround(blockID)
     local blockdata = DataManager.GetBlockDataByID(blockID)
@@ -237,6 +252,15 @@ function DataManager.IsEnableChangeGround(blockID)
     end
 end
 
+function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
+    local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
+    for key, value in ipairs(idList) do
+        if not DataManager.IsEnableChangeGround(value) then
+            return false
+        end
+    end
+    return true
+end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
 
@@ -247,7 +271,7 @@ end
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
-    Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+    --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
 end
 
 --注册所有网络消息回调
@@ -342,7 +366,7 @@ function DataManager.n_OnReceiveGroundChange(stream)
         return
     end
     for key, value in pairs(GroundChange.info) do
-        if nil ~= DataManager.PersonDataStack.m_owner and  value.ownerId  == DataManager.PersonDataStack.m_owner then
+        if nil ~= PersonDataStack.m_owner and  value.ownerId  == PersonDataStack.m_owner then
             DataManager.AddMyGroundInfo(value)
         end
     end

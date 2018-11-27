@@ -196,9 +196,15 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
+    --初始化自己所拥有商品科技等级
+    for key, value in pairs(tempData.goodLv) do
+        if value.id and value.num then
+            PersonDataStack.m_goodlv[value.id] = value.num
+        end
+    end
 end
 
-
+--修改自己所拥有土地集合
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
     if PersonDataStack.m_GroundInfos then
@@ -220,6 +226,21 @@ end
 function DataManager.GetMyPersonData()
     return PersonDataStack
 end
+
+--刷新自己所拥有商品科技等级
+function DataManager.GetMyGoodLv()
+    return PersonDataStack.m_goodlv
+end
+
+--刷新自己所拥有商品科技等级
+--参数： tempData==>  IntNum
+function DataManager.SetMyGoodLv(tempData)
+    if tempData.id and tempData.num then
+        PersonDataStack.m_goodlv[tempData.id] = tempData.num
+    end
+end
+
+
 
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)

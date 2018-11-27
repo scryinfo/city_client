@@ -128,18 +128,18 @@ end
 
 --点击城市信息左边的背景
 function CityInfoCtrl:c_cityInfoBg(go)
---[[    if temp ~= nil then
+    if temp ~= nil then
         temp:SetActive(false)
     end
     go.yellowBg:SetActive(true)
     temp = go.yellowBg
     --生成实例
     if cityInfo[go.id] ==nil then
-        --CityInfoCtrl:_createCityInfo(CityInfoPathType[go.id],CityInfoPanel.right,go.id)
+        CityInfoCtrl:_createCityInfo(go.id)
     end
     tempShow:SetActive(false);
     cityInfo[go.id].show:SetActive(true);
-    tempShow = cityInfo[go.id].show]]
+    tempShow = cityInfo[go.id].show
 
 end
 
@@ -154,8 +154,9 @@ function CityInfoCtrl:_createCityInfoPab(path,parent)
 end
 
 --生成实例
-function CityInfoCtrl:_createCityInfo(path,parent,id)
-    local cityInfo_prefab = self:_createCityInfoPab(path,parent)
+function CityInfoCtrl:_createCityInfo(id)
+    --local cityInfo_prefab = self:_createCityInfoPab(path,parent)
+    local cityInfo_prefab = CityInfoPanel.right:GetChild(id-1).gameObject;
     local cityInfoLuaItem = CityDataItem:new(CityInfoCtrlBehaviour,cityInfo_prefab,self,CityInfoData[id],id)
     cityInfo[id] = cityInfoLuaItem;
 end

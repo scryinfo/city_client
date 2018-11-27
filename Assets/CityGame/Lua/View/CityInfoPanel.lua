@@ -31,5 +31,5 @@ function CityInfoPanel.InitPanel()
     this.woMan = transform:Find("right/basicInfoItem/woMan/woManText").gameObject:GetComponent("Text"); -- 女玩家数量
     this.cityFund = transform:Find("right/basicInfoItem/cityFund/cityFundText").gameObject:GetComponent("Text"); -- 城市资金
     this.line = transform:Find("right/basicInfoItem/GameObject/LineChartPanel/Image/Scroll View/Viewport/Content/GameObject"):GetComponent("LineChart");
-    this.right =transform:Find("right").gameObject;
+    this.right =transform:Find("right").gameObject:GetComponent("RectTransform");
 end

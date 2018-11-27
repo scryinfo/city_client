@@ -21,7 +21,7 @@ function CityInfoItem:initialize(inluabehaviour, prefab, mgr, DataInfo ,id)
 
     self.name.text = DataInfo
     self.yellowBg:SetActive(false)
-    --self._luabehaviour:AddClick(self.bgBtn, self.OBgBtn, self);
+    self._luabehaviour:AddClick(self.bgBtn, self.OBgBtn, self);
 
 end
 

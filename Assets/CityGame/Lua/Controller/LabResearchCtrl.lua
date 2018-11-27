@@ -53,7 +53,7 @@ function LabResearchCtrl:Close()
 end
 
 function LabResearchCtrl:_addListener()
-    --Event.AddListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
 
 end
 function LabResearchCtrl:_removeListener()
@@ -67,10 +67,9 @@ function LabResearchCtrl:_initPanelData()
     LabResearchCtrl.inventionItems = {}
 
     --模拟服务器发来的数据
-    self:c_onReceiveLabResearchData()
-    --LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, self.researchPrefabList)
+    --self:_onReceiveLabResearchData()
 
-    --Event.Brocast("m_ReqExchangeItemList")
+    Event.Brocast("m_ReqLaboratoryDetailInfo")
 end
 
 ---按钮切页
@@ -78,7 +77,7 @@ function LabResearchCtrl:_researchLineOpen()
     LabResearchPanel._researchToggleState(true)
     LabResearchPanel._inventionToggleState(false)
 
-    self:c_onReceiveLabResearchData()
+    self:_onReceiveLabResearchData()
 end
 function LabResearchCtrl:_inventionLineOpen()
     LabResearchPanel._researchToggleState(false)
@@ -123,7 +122,7 @@ end
 
 ---从modle传来的回调
 --研究
-function LabResearchCtrl:c_onReceiveLabResearchData(datas)
+function LabResearchCtrl:_onReceiveLabResearchData(datas)
     local researchInfoData = {}
     researchInfoData[1] = {itemId = 2151001, staffCount = 20}
     researchInfoData[2] = {itemId = 2151002, staffCount = 22}

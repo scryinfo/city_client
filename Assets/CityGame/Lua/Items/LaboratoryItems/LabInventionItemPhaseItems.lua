@@ -26,7 +26,7 @@ function LabInventionItemPhaseItems:initialize(transform)
     end
 end
 ---显示
-function LabInventionItemPhaseItems:_showState(datas)
+function LabInventionItemPhaseItems:showState(datas)
     if #datas ~= #self.itemRect then
         ct.log("cycle_w13_laboratory", "场景中的item个数与期望显示的个数不一致，或者传入的不是顺序表")
         return

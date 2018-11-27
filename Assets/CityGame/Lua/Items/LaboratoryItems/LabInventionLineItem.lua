@@ -4,10 +4,9 @@
 --- DateTime: 2018/11/19 15:20
 ---
 LabInventionLineItem = class('LabInventionLineItem')
-LabInventionLineItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
-LabInventionLineItem.static.CHANGE_RED = "#E42E2E"
+LabInventionLineItem.static.BulbNullColor = Vector3.New(22, 38, 94)  --没有集齐一个灯泡的颜色
+LabInventionLineItem.static.BulbHasColor = Vector3.New(255, 255, 255)  --集齐一个灯泡的颜色
 
---初始化方法
 function LabInventionLineItem:initialize(data, viewRect)
     self.viewRect = viewRect
     self.data = data
@@ -16,14 +15,14 @@ function LabInventionLineItem:initialize(data, viewRect)
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
     self.closeBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
-    self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
     self.staffScrollbar = viewTrans:Find("mainRoot/staffRoot/staffScrollbar"):GetComponent("Scrollbar")
 
-    self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
-    self.iconImg = viewTrans:Find("mainRoot/progressRoot/iconImg"):GetComponent("Image")
+    self.progressImgRect = viewTrans:Find("mainRoot/progressRoot/progressImg")
+    self.bulbImg = viewTrans:Find("mainRoot/progressRoot/bulbImg"):GetComponent("Image")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
+    self.progressCountText = viewTrans:Find("mainRoot/progressRoot/bulbImg/progressCountText"):GetComponent("Text")
     self.phaseItems = LabInventionItemPhaseItems:new(viewTrans:Find("mainRoot/successItems"))
 
     self:_initData()
@@ -32,40 +31,57 @@ function LabInventionLineItem:initialize(data, viewRect)
     self.itemBtn.onClick:AddListener(function ()
         self:_clickCollectBtn()
     end)
-    self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    self.staffScrollbar.onValueChanged:AddListener(function()
-
+    self.closeBtn.onClick:RemoveAllListeners()
+    self.closeBtn.onClick:AddListener(function ()
+        self:_clickDeleteBtn()
     end)
+    --self.staffScrollbar.onValueChanged:RemoveAllListeners()
+    --self.staffScrollbar.onValueChanged:AddListener(function()
+    --
+    --end)
+    Event.AddListener("c_RefreshLateUpdate", self._updateInfo, self)
 end
 
 --初始化界面
 function LabInventionLineItem:_initData()
-    self.nameText.text = DataManager.GetMyGoodLv(self.data.itemId)
-
-    self:_setCollectState(data.isCollected)
-    self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
-    if data.priceChange >= 0 then
-        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", LabInventionLineItem.static.CHANGE_GREEN, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.one
-        self.lastPriceRedTran.localScale = Vector3.zero
-        local greenPos = self.lastPriceGreenTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
+    local itemInfo = {}
+    if self.isMaterial then
+        itemInfo = Material[self.data.itemId]
     else
-        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", LabInventionLineItem.static.CHANGE_RED, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.zero
-        self.lastPriceRedTran.localScale = Vector3.one
-        local redPos = self.lastPriceRedTran.localPosition
-        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
+        itemInfo = Good[self.data.itemId]
+    end
+    if not itemInfo.name then
+        ct.log("", "找不到itemId对应的数据"..self.itemId.." 是否为原料："..self.isMaterial)
+        return
     end
 
-    self.highText.text = "E"..data.highPrice
-    self.lowText.text = "E"..data.lowPrice
-    self.volumeText.text = "E"..data.sumDealedPrice
+    self.nameText.text = itemInfo.name
+    self.iconImg = itemInfo.img
+    self.phaseItems:showState(self.phaseState)  --显示5个阶段的状态
+    self.staffText.text = 0
+    self.staffScrollbar.value = 0
+    self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
+    self.progressCountText.text = ""
+    self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.BulbNullColor)
+    self.timeDownText.text = ""
+
 end
---点击交易按钮
-function LabInventionLineItem:_clickExchnageBtn()
+--消息更新
+function LabInventionLineItem:_updateInfo(updateInfo)
+
+end
+--点击删除按钮
+function LabInventionLineItem:_clickDeleteBtn()
+    local info = {}
+    info.titleInfo = "WARNING"
+    info.contentInfo = "Delete the advertisment?"
+    info.tipInfo = "(The statistical data of brand will be reset!)"
+    info.btnCallBack = function ()
+        Event.Brocast("")
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
+end
+--点击发明界面
+function LabInventionLineItem:_clickOpenInventionPanelBtn()
     ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end

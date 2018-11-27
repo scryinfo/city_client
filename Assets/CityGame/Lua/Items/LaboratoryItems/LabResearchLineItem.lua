@@ -15,18 +15,16 @@ function LabResearchLineItem:initialize(data, viewRect)
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.levelText = viewTrans:Find("topRoot/levelText"):GetComponent("Text")
+    self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
     self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
-    self.closeBtn = viewTrans:Find("topRoot/itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("topRoot/closeBtn"):GetComponent("Button")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
     self.staffScrollbar = viewTrans:Find("mainRoot/staffRoot/staffScrollbar"):GetComponent("Scrollbar")
 
     self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
-    self.iconImg = viewTrans:Find("mainRoot/progressRoot/iconImg"):GetComponent("Image")
-    self.progressCountText = viewTrans:Find("mainRoot/progressRoot/iconImg/progressCountText"):GetComponent("Text")
+    self.bottleImg = viewTrans:Find("mainRoot/progressRoot/bottleImg"):GetComponent("Image")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
-
-
 
     self:_initData()
 
@@ -34,40 +32,36 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.itemBtn.onClick:AddListener(function ()
         self:_clickCollectBtn()
     end)
-    self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    self.staffScrollbar.onValueChanged:AddListener(function()
-
+    self.closeBtn.onClick:RemoveAllListeners()
+    self.closeBtn.onClick:AddListener(function ()
+        self:_clickDeleteBtn()
     end)
+    --self.staffScrollbar.onValueChanged:RemoveAllListeners()
+    --self.staffScrollbar.onValueChanged:AddListener(function()
+    --
+    --end)
 end
 
 --初始化界面
 function LabResearchLineItem:_initData()
-    ---配合pb数据
-    local data = self.data
-    self:_setCollectState(data.isCollected)
-    self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
-    if data.priceChange >= 0 then
-        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", LabResearchLineItem.static.CHANGE_GREEN, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.one
-        self.lastPriceRedTran.localScale = Vector3.zero
-        local greenPos = self.lastPriceGreenTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
-    else
-        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", LabResearchLineItem.static.CHANGE_RED, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.zero
-        self.lastPriceRedTran.localScale = Vector3.one
-        local redPos = self.lastPriceRedTran.localPosition
-        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
-    end
 
-    self.highText.text = "E"..data.highPrice
-    self.lowText.text = "E"..data.lowPrice
-    self.volumeText.text = "E"..data.sumDealedPrice
 end
---点击交易按钮
-function LabResearchLineItem:_clickExchnageBtn()
-    ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
+--消息更新
+function LabResearchLineItem:_updateInfo(updateInfo)
+
+end
+--点击删除按钮
+function LabResearchLineItem:_clickDeleteBtn()
+    local info = {}
+    info.titleInfo = "WARNING"
+    info.contentInfo = "Delete the advertisment?"
+    info.tipInfo = "(The statistical data of brand will be reset!)"
+    info.btnCallBack = function ()
+        Event.Brocast("")
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
+end
+--点击发明界面
+function LabResearchLineItem:_clickOpenInventionPanelBtn()
+    --ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end

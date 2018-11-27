@@ -3,8 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/16 10:14
 ---交易所排序toggle item
-
-
 ExchangeSortItem = class('ExchangeSortItem')
 
 --初始化方法

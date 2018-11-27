@@ -13,27 +13,31 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.data = data
 
     local viewTrans = self.viewRect
-    self.nameText = viewTrans:Find("Text"):GetComponent("Text")
-    self.nameText.text = data.itemId
-    --self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image")
-    --self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button")
+    self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
+    self.levelText = viewTrans:Find("topRoot/levelText"):GetComponent("Text")
+    self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("topRoot/itemBtn"):GetComponent("Button")
+    self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
+    self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
+    self.staffScrollbar = viewTrans:Find("mainRoot/staffRoot/staffScrollbar"):GetComponent("Scrollbar")
 
-    --self:_initData()
+    self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
+    self.iconImg = viewTrans:Find("mainRoot/progressRoot/iconImg"):GetComponent("Image")
+    self.progressCountText = viewTrans:Find("mainRoot/progressRoot/iconImg/progressCountText"):GetComponent("Text")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
 
-    --self.collectBtn.onClick:RemoveAllListeners()
-    --self.collectBtn.onClick:AddListener(function ()
-    --    self:_clickCollectBtn()
-    --end)
-    --self.exchangeBtn.onClick:RemoveAllListeners()
-    --self.exchangeBtn.onClick:AddListener(function ()
-    --    self:_clickExchnageBtn()
-    --end)
-    --if self.detailBtn ~= nil then
-    --    self.detailBtn.onClick:RemoveAllListeners()
-    --    self.detailBtn.onClick:AddListener(function ()
-    --        self:_clickDetailBtn()
-    --    end)
-    --end
+
+
+    self:_initData()
+
+    self.itemBtn.onClick:RemoveAllListeners()
+    self.itemBtn.onClick:AddListener(function ()
+        self:_clickCollectBtn()
+    end)
+    self.staffScrollbar.onValueChanged:RemoveAllListeners()
+    self.staffScrollbar.onValueChanged:AddListener(function()
+
+    end)
 end
 
 --初始化界面

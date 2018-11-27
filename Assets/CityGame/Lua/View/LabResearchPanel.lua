@@ -13,16 +13,17 @@ function LabResearchPanel.Awake(obj)
 end
 
 function LabResearchPanel.InitPanel()
-    this.researchBtn = transform:Find("toggleRoot/research/Btn")
-    this.researchOpen = transform:Find("toggleRoot/research/open")
-    this.researchClose = transform:Find("toggleRoot/research/close")
-    this.inventionBtn = transform:Find("toggleRoot/invention/Btn")
-    this.inventionOpen = transform:Find("toggleRoot/invention/open")
-    this.inventionClose = transform:Find("toggleRoot/invention/close")
-    this.backBtn = transform:Find("topRoot/backBtn")
+    this.researchBtn = transform:Find("titleRoot/research/Btn"):GetComponent("Button")
+    this.researchOpen = transform:Find("titleRoot/research/open")
+    this.researchClose = transform:Find("titleRoot/research/close")
+    this.inventionBtn = transform:Find("titleRoot/invention/Btn"):GetComponent("Button")
+    this.inventionOpen = transform:Find("titleRoot/invention/open")
+    this.inventionClose = transform:Find("titleRoot/invention/close")
+    this.backBtn = transform:Find("topRoot/backBtn"):GetComponent("Button")
+    this.staffCountText = transform:Find("titleRoot/staffRoot/staffCountText"):GetComponent("Text")
 
-    this.researchScroll = transform:Find("togglePageRoot/research/scroll"):GetComponent("ActiveLoopScrollRect")
-    this.inventionScroll = transform:Find("togglePageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
+    this.researchScroll = transform:Find("bottomPageRoot/research/scroll"):GetComponent("ActiveLoopScrollRect")
+    this.inventionScroll = transform:Find("bottomPageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
 end
 ---状态显示
 function LabResearchPanel._researchToggleState(isOn)

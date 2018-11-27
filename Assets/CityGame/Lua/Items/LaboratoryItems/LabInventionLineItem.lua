@@ -13,33 +13,35 @@ function LabInventionLineItem:initialize(data, viewRect)
     self.data = data
 
     local viewTrans = self.viewRect
-    self.nameText = viewTrans:Find("Text"):GetComponent("Text")
-    self.nameText.text = data.itemId
-    --self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image")
-    --self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button")
+    self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
+    self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
+    self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
+    self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
+    self.staffScrollbar = viewTrans:Find("mainRoot/staffRoot/staffScrollbar"):GetComponent("Scrollbar")
 
-    --self:_initData()
-    --
-    --self.collectBtn.onClick:RemoveAllListeners()
-    --self.collectBtn.onClick:AddListener(function ()
-    --    self:_clickCollectBtn()
-    --end)
-    --self.exchangeBtn.onClick:RemoveAllListeners()
-    --self.exchangeBtn.onClick:AddListener(function ()
-    --    self:_clickExchnageBtn()
-    --end)
-    --if self.detailBtn ~= nil then
-    --    self.detailBtn.onClick:RemoveAllListeners()
-    --    self.detailBtn.onClick:AddListener(function ()
-    --        self:_clickDetailBtn()
-    --    end)
-    --end
+    self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
+    self.iconImg = viewTrans:Find("mainRoot/progressRoot/iconImg"):GetComponent("Image")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
+    self.phaseItems = LabInventionItemPhaseItems:new(viewTrans:Find("mainRoot/successItems"))
+
+    self:_initData()
+
+    self.itemBtn.onClick:RemoveAllListeners()
+    self.itemBtn.onClick:AddListener(function ()
+        self:_clickCollectBtn()
+    end)
+    self.staffScrollbar.onValueChanged:RemoveAllListeners()
+    self.staffScrollbar.onValueChanged:AddListener(function()
+
+    end)
 end
 
 --初始化界面
 function LabInventionLineItem:_initData()
-    ---配合pb数据
-    local data = self.data
+    self.nameText.text = DataManager.GetMyGoodLv(self.data.itemId)
+
     self:_setCollectState(data.isCollected)
     self.nameText.text = data.name
     self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)

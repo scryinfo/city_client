@@ -376,5 +376,22 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9}
-    }
+    },
+    [3000001] ={
+        ["prefabRoute"] = "View/Build/HomeHouse_1x1_Build",  --临时测试数据
+        ["LuaRoute"]  = "Terrain/ArchitectureView",
+        ["x"] =1,
+        ["y"] =1,
+        ["deviationPos"] = {0.5,0.5,0.05}
+    },
+    [3000002] ={
+        ["prefabRoute"] = "View/Build/Park_1x1_Build",  --临时测试数据
+        ["LuaRoute"]  = "Terrain/ArchitectureView",
+        ["x"] =1,
+        ["y"] =1,
+        ["deviationPos"] = {0.5,0.5,0.05}
+    },
+    [4000001] ={
+        ["prefabRoute"] = "View/Build/my_Ground",  --临时我的地块
+    },
 }

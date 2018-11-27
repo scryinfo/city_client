@@ -46,9 +46,9 @@ function ServerListCtrl:_initData()
     end
 end
 function ServerListCtrl:Refresh()
---[[    ct.log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
-    ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
-    ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];]]
+    --[[    ct.log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+        ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
+        ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];]]
 
 end
 
@@ -62,7 +62,6 @@ function ServerListCtrl:c_OnServer(go)
     go.tag:SetActive(true);
     tempBg = go.bg;
     tempTag = go.tag
-    
     local Index = go.id;
     Event.Brocast("m_chooseGameServer", Index);
 end

@@ -31,6 +31,9 @@ end
 
 function ConstructCtrl:Refresh()
     self:_initPanelData()
+
+    ct.log("Allen_wk14_MyGround","临时生成我的地块")
+    UnitTest.Exec_now("Allen_wk14_MyGround", "c_CreateMyGrounds",self)
 end
 
 
@@ -60,3 +63,49 @@ function ConstructCtrl:Close()
     end
     self.Items = nil
 end
+
+function ConstructCtrl:Hide()
+    UIPage.Hide(self)
+    UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
+end
+
+
+UnitTest.TestBlockStart()
+UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
+    ct.log("Allen_wk14_MyGround","[c_CreateMyGrounds] ...............")
+    Event.AddListener("c_CreateMyGrounds", function (obj)
+        if not DataManager.TempDatas then
+            DataManager.TempDatas ={}
+        end
+        DataManager.TempDatas.myGroundObj = {}
+        local myPersonData = DataManager.GetMyPersonData()
+        if myPersonData.m_GroundInfos then
+            for key, value in pairs(myPersonData.m_GroundInfos) do
+                local myGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[4000001].prefabRoute)  --已经拍卖
+                local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)  --已经拍卖
+                tempObj.transform.position =Vector3.New(value.x,0,value.y)
+                tempObj.transform.localScale = Vector3.one
+                table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+            end
+        else
+            myPersonData.m_GroundInfos = {}
+        end
+    end)
+end)
+
+
+UnitTest.Exec("Allen_wk14_MyGround", "test_c_DestoryMyGrounds_self",  function ()
+    ct.log("Allen_wk14_MyGround","[c_DestoryMyGrounds] ...............")
+    Event.AddListener("c_DestoryMyGrounds", function (obj)
+        if not DataManager.TempDatas or not DataManager.TempDatas.myGroundObj then
+            return
+        end
+        for key, value in pairs(DataManager.TempDatas.myGroundObj) do
+                destroy(value)
+        end
+        DataManager.TempDatas.myGroundObj = nil
+    end)
+end)
+
+
+UnitTest.TestBlockEnd()

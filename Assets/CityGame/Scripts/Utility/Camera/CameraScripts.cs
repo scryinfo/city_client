@@ -43,16 +43,31 @@ public class CameraScripts : MonoBehaviour
 
     private void Update()
     {
+        //检测点击UI和射线冲突 -- 临时
+        if (IsClickDownOverUI())
+        {
+            m_canHandleCam = false;
+            return;
+        }
+        if (IsUpInUI())
+        {
+            m_canHandleCam = true;
+            return;
+        }
+        if(IsUpNotInUI())
+        {
+            m_canHandleCam = true;
+        }
+        //
         if (!m_canHandleCam)
         {
             return;
         }
-
+        
         if (InputModule.Instance.Zooming)
         {
             ScaleCamera();
         }
-        
         else if (InputModule.Instance.Dragging)
         {
             UpdateMove();
@@ -66,11 +81,90 @@ public class CameraScripts : MonoBehaviour
         {
             SmoothStopFunc();
         }
-        
-        if (Input.GetKeyDown(KeyCode.A))
+    }
+
+    bool IsClickDownOverUI()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
         {
-            TestMoveCam();
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+        if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    bool IsUpInUI()
+    { 
+    #if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
+        {
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    bool IsUpNotInUI()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+#endif
+        {
+#if UNITY_EDITOR
+            if (!EventSystem.current.IsPointerOverGameObject())
+#else
+            if (!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    bool CheckGuiRaycastObjects()
+    {
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonUp(0))
+#else
+    if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
+#endif
+        {
+#if UNITY_EDITOR
+            if (EventSystem.current.IsPointerOverGameObject())
+#else
+        if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+#endif
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -116,6 +210,24 @@ public class CameraScripts : MonoBehaviour
             return;
         }
 
+        ////float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
+
+        ////m_smoothStopVelocity = Vector3.zero;
+        ////var dragDeltaPosition = InputModule.Instance.DragDeltaPosition;
+        ////Vector3 v3 = new Vector3(dragDeltaPosition.x, 0, dragDeltaPosition.y);
+        ////Vector3 newDeltaPositionV3 = (Quaternion.AngleAxis(m_mainCamera.transform.localEulerAngles.y, new Vector3(0, 1, 0)) * v3) * dragFactor * factor;
+        ////finalPosition -= newDeltaPositionV3 * Time.deltaTime;
+
+        //////惯性处理相关
+        ////lastMoveVector = new Vector2(newDeltaPositionV3.x, newDeltaPositionV3.z);
+        //////限制最大速度,防止出现极大的惯性
+        ////if (lastMoveVector.sqrMagnitude > m_smoothStopMaxSpeed * m_smoothStopMaxSpeed)
+        ////{
+        ////    lastMoveVector = lastMoveVector.normalized * m_smoothStopMaxSpeed;
+        ////}
+        ////m_smoothStopVelocity = lastMoveVector;
+        ////m_timeRealDragStop = Time.realtimeSinceStartup;
+
         float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
 
         m_smoothStopVelocity = Vector3.zero;
@@ -133,6 +245,7 @@ public class CameraScripts : MonoBehaviour
         }
         m_smoothStopVelocity = lastMoveVector;
         m_timeRealDragStop = Time.realtimeSinceStartup;
+
         Util.CallMethod("TerrainManager", "Refresh", transform.Find("CameraCenter").position);
     }
 
@@ -219,12 +332,14 @@ public class CameraScripts : MonoBehaviour
 
     private void LateUpdate()
     {
+        /*
         if (!m_canHandleCam)
         {
             m_moveTargetPos = Vector3.zero;
             TestMoveTarget(m_moveTargetPos);
             return;
         }
+        */
         
         SmoothStopFunc();
         ////finalPosition = ClampPosition(finalPosition);
@@ -240,6 +355,7 @@ public class CameraScripts : MonoBehaviour
         transform.localPosition = tempV3;
         //Debug.Log("---- cam pos：" + transform.localPosition);
         Util.CallMethod("TerrainManager", "MoveTempConstructObj");
+        Util.CallMethod("UIBubbleCtrl", "static.RefreshLateUpdate");
     }
 
     //限制相机在2维的位置

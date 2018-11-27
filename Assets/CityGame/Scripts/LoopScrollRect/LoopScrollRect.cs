@@ -45,7 +45,10 @@ namespace UnityEngine.UI
 
         public void SetLoopDiffPrefabSource(System.Collections.Generic.List<string> diffPrefabNameList)
         {
-            prefabSource = new LoopScrollPrefabSource();
+            if (prefabSource == null)
+            {
+                prefabSource = new LoopScrollPrefabSource();
+            }
             prefabSource.InitDiffPrefabData(diffPrefabNameList);
         }
 

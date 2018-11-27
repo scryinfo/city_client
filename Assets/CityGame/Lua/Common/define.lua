@@ -60,6 +60,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	tempTransport = "tempTransportModel",   --临时运输
 	Exchange = "ExchangeModel",  --交易所
@@ -71,8 +72,8 @@ ModelNames = {
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
-
-
+	ScienceSellHall="ScienceSellHallModel",--科技交易所
+	Warehouse = "WarehouseModel"
 }
 
 SYSEVENT =

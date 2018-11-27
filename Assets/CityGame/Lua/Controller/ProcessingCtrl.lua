@@ -38,7 +38,7 @@ end
 --返回
 function ProcessingCtrl:OnClick_backBtn()
     UIPage.ClosePage();
-    --关闭原料厂的监听
+    --关闭加工厂的监听
     --Event.RemoveListener("c_temporaryifNotGoods",WarehouseCtrl.c_temporaryifNotGoods)
 end
 

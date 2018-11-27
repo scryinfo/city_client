@@ -56,7 +56,7 @@ function WarehouseItem:OnClick_closeBtn(go)
     --关闭消息事件
     Event.RemoveListener("c_GoodsItemChoose",go.c_GoodsItemChoose, go);
     Event.RemoveListener("c_GoodsItemDelete",go.c_GoodsItemDelete, go);
-    go.manager:_WarehousedeleteGoods(go);
+    go.manager:_WarehousedeleteGoods(go.id);
 
 end
 --删除后刷新ID及显示

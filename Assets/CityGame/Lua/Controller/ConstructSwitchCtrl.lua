@@ -9,7 +9,7 @@ ConstructSwitchCtrl = class('ConstructSwitchCtrl',UIPage)
 UIPage:ResgisterOpen(ConstructSwitchCtrl)
 
 function ConstructSwitchCtrl:initialize()
-    UIPage.initialize(self, UIType.Fixed, UIMode.DoNothing, UICollider.None)
+    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
 end
 
 function ConstructSwitchCtrl:bundleName()
@@ -23,6 +23,7 @@ function ConstructSwitchCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_confirm.gameObject, function()
         --TODO：确认建造
         ct.log("Allen_wk13","确认建造")
+        ct.OpenCtrl('ConstructDialogPageCtrl')
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
         --TODO：取消建造
@@ -53,8 +54,14 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
     ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
+    local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
+    local tempSize = PlayerBuildingBaseData[DataManager.TempDatas.constructID].x
+    if DataManager.IsAllOwnerGround(blockID,tempSize) and DataManager.IsALlEnableChangeGround(blockID,tempSize) then
+        ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.one
+    else
+        ConstructSwitchPanel.confirmEnableIconTransform.localScale = Vector3.zero
+    end
 end
-
 
 function ConstructSwitchCtrl:Hide()
     UIPage.Hide(self)

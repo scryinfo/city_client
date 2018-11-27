@@ -3,14 +3,6 @@
 --- Created by password.
 --- DateTime: 2018/11/22 17:10
 ---临时城市信息表
-CityInfo = {
-    ["cityName"] = "成都",
-    ["cityScale"] = "12345".."x".."12345",
-    ["citizenNum"] = 123154656,
-    ["man"] = 1564165,
-    ["woMan"] = 123415,.02
-    ["cityFund"] = 1234567890.12,
-}
 --模拟服务器发来的数据
 CityInfoInHand = {
     [1] = "总览",

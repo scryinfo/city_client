@@ -22,7 +22,10 @@ namespace UnityEngine.UI
             if(!inited)
             {
                 GameObject obj = Resources.Load<GameObject>(prefabName);
-                AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(prefabName, poolSize, poolSize, obj);
+                if (AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).GetPool(prefabName) == null)
+                {
+                    AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(prefabName, poolSize, poolSize, obj);
+                }
                 inited = true;
             }
             return AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).Get(prefabName);
@@ -61,8 +64,12 @@ namespace UnityEngine.UI
                 {
                     if (!tempList.Contains(name))
                     {
-                        GameObject obj = Resources.Load<GameObject>(name);
-                        AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(name, poolSize, 20, obj);
+                        if (AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).GetPool(name) == null)
+                        {
+                            GameObject obj = Resources.Load<GameObject>(name);
+                            AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(name, poolSize, poolSize, obj);
+                        }
+                        ////AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(name, poolSize, 20, obj);
                         tempList.Add(name);
                     }
                 }

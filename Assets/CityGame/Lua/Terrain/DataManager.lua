@@ -197,6 +197,9 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
     --初始化自己所拥有商品科技等级
+    if not PersonDataStack.m_goodlv then
+        PersonDataStack.m_goodlv = {}
+    end
     for key, value in pairs(tempData.goodLv) do
         if value.id and value.num then
             PersonDataStack.m_goodlv[value.id] = value.num
@@ -317,6 +320,11 @@ function DataManager.Init()
     SystemDatas.GroundAuctionModel  = GroundAuctionModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
+    end
+    --研究所Model
+    SystemDatas.LaboratoryModel  = LaboratoryModel.New()
+    if SystemDatas.LaboratoryModel ~= nil then
+        SystemDatas.LaboratoryModel:Awake()
     end
 end
 

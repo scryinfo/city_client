@@ -53,7 +53,7 @@ function LabResearchCtrl:Close()
 end
 
 function LabResearchCtrl:_addListener()
-    Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
+    --Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
 
 end
 function LabResearchCtrl:_removeListener()
@@ -62,14 +62,23 @@ end
 
 function LabResearchCtrl:_initPanelData()
     self:_addListener()
-    self:_researchLineOpen()
     LabResearchCtrl.researchItems = {}
     LabResearchCtrl.inventionItems = {}
+    self.researchDatas = {}
+    self.inventionDatas = {}
 
-    --模拟服务器发来的数据
-    --self:_onReceiveLabResearchData()
-
-    Event.Brocast("m_ReqLaboratoryDetailInfo")
+    --这个界面的数据是从主界面拿到的，然后数据有变化的时候才会更新，所以不需要请求服务器数据
+    --将数据分开
+    if self.m_data.line then
+        for key, itemData in pairs(self.m_data.line) do
+            if itemData.type == 0 then
+                self.researchDatas[#self.researchDatas] = itemData
+            elseif itemData.type == 1 then
+                self.inventionDatas[#self.inventionDatas] = itemData
+            end
+        end
+    end
+    self:_researchLineOpen()
 end
 
 ---按钮切页
@@ -77,13 +86,13 @@ function LabResearchCtrl:_researchLineOpen()
     LabResearchPanel._researchToggleState(true)
     LabResearchPanel._inventionToggleState(false)
 
-    self:_onReceiveLabResearchData()
+    self:_onReceiveLabResearchData(self.researchDatas)
 end
 function LabResearchCtrl:_inventionLineOpen()
     LabResearchPanel._researchToggleState(false)
     LabResearchPanel._inventionToggleState(true)
 
-    self:c_onReceiveLabInventionData()
+    self:c_onReceiveLabInventionData(self.inventionDatas)
 end
 
 ---滑动复用
@@ -92,7 +101,7 @@ LabResearchCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabResearchCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
             --打开研究选择界面
-            ct.log("cycle_w13_laboratory", "打开研究选择界面")
+            ct.log("cycle_w15_laboratory03", "打开研究选择界面")
         end)
         return
     end
@@ -120,28 +129,12 @@ end
 LabResearchCtrl.static.inventionClearData = function(transform)
 end
 
----从modle传来的回调
+---刷新数据
 --研究
 function LabResearchCtrl:_onReceiveLabResearchData(datas)
-    local researchInfoData = {}
-    researchInfoData[1] = {itemId = 2151001, staffCount = 20}
-    researchInfoData[2] = {itemId = 2151002, staffCount = 22}
-    researchInfoData[3] = {itemId = 2151003, staffCount = 25}
-    researchInfoData[4] = {itemId = 2151004, staffCount = 21}
-    researchInfoData[5] = {itemId = 2152001, staffCount =  2}
-    researchInfoData[6] = {itemId = 2152002, staffCount = 32}
-    researchInfoData[7] = {itemId = 2152003, staffCount = 12}
-    researchInfoData[8] = {itemId = 2152004, staffCount =  7}
-    researchInfoData[9] = {itemId = 2153001, staffCount =  9}
-    researchInfoData[10] = {itemId = 2153002, staffCount = 11}
-    researchInfoData[11] = {itemId = 2153003, staffCount = 15}
-    researchInfoData[12] = {itemId = 2153004, staffCount = 19}
-
-    if not self.researchPrefabList then
-        self.researchPrefabList = {}
-    end
+    local researchInfoData = datas
     local researchPrefabList = {}
-    for i, item in ipairs(researchInfoData) do
+    for i, item in pairs(researchInfoData) do
         researchPrefabList[i] = LaboratoryCtrl.static.LabResearchItemPath
     end
     --预留第一个数据给按钮
@@ -149,30 +142,13 @@ function LabResearchCtrl:_onReceiveLabResearchData(datas)
     table.insert(researchPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
 
     LabResearchCtrl.researchInfoData = researchInfoData
-    self.researchPrefabList = researchPrefabList
-    LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, self.researchPrefabList)
+    LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 end
 --发明
 function LabResearchCtrl:c_onReceiveLabInventionData(datas)
-    local inventionInfoData = {}
-    inventionInfoData[1] = {itemId = 2151004, staffCount = 20}
-    inventionInfoData[2] = {itemId = 2151003, staffCount = 22}
-    inventionInfoData[3] = {itemId = 2151002, staffCount = 25}
-    inventionInfoData[4] = {itemId = 2151001, staffCount = 21}
-    inventionInfoData[5] = {itemId = 2152001, staffCount =  2}
-    inventionInfoData[6] = {itemId = 2152002, staffCount = 32}
-    inventionInfoData[7] = {itemId = 2152003, staffCount = 12}
-    inventionInfoData[8] = {itemId = 2152004, staffCount =  7}
-    inventionInfoData[9] = {itemId = 2153001, staffCount =  9}
-    inventionInfoData[10] = {itemId = 2153002, staffCount = 11}
-    inventionInfoData[11] = {itemId = 2153003, staffCount = 15}
-    inventionInfoData[12] = {itemId = 2153004, staffCount = 19}
-
-    if not self.inventionPrefabList then
-        self.inventionPrefabList = {}
-    end
+    local inventionInfoData = datas
     local inventionPrefabList = {}
-    for i, item in ipairs(inventionInfoData) do
+    for i, item in pairs(inventionInfoData) do
         inventionPrefabList[i] = LaboratoryCtrl.static.LabInventionItemPath
     end
     --预留第一个数据给按钮
@@ -180,6 +156,5 @@ function LabResearchCtrl:c_onReceiveLabInventionData(datas)
     table.insert(inventionPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
 
     LabResearchCtrl.inventionInfoData = inventionInfoData
-    self.inventionPrefabList = inventionPrefabList
-    LabResearchPanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, self.inventionPrefabList)
+    LabResearchPanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
 end

@@ -34,7 +34,7 @@ end
 function LaboratoryCtrl:_addListener()
     ---需要监听改变建筑名字的协议
     ---等待中
-    --Event.AddListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
+    Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._receiveLaboratoryDetailInfo, self)
 end
 function LaboratoryCtrl:_removeListener()
     --Event.RemoveListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
@@ -42,33 +42,33 @@ end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function LaboratoryCtrl:_initData()
-    --if self.m_data then
-    --    if self.m_data.info.id then
-    --        --向服务器请求建筑详情
-    --        --Event.Brocast("m_ReqHouseDetailInfo", self.m_data.info.id)
-    --    end
-    --end
+    if self.m_data then
+        --向服务器请求建筑详情
+        Event.Brocast("m_ReqLaboratoryDetailInfo", self.m_data)
+    end
 
     --测试
-    self:_receiveLaboratoryDetailInfo()
+    --self:_receiveLaboratoryDetailInfo()
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
-    --LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[laboratoryDetailData.info.mId].sizeName..PlayerBuildingBaseData[laboratoryDetailData.info.mId].typeName
-    --self.m_data = laboratoryDetailData
-    --if laboratoryDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
-    --    self.m_data.isOther = true
-    --    LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
-    --else
-    --    self.m_data.isOther = false
-    --    LaboratoryPanel.changeNameBtn.localScale = Vector3.one
-    --end
+    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[laboratoryDetailData.info.mId].sizeName..PlayerBuildingBaseData[laboratoryDetailData.info.mId].typeName
+    self.m_data = laboratoryDetailData
+    if laboratoryDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+        self.m_data.isOther = true
+        LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
+    else
+        self.m_data.isOther = false
+        LaboratoryPanel.changeNameBtn.localScale = Vector3.one
+    end
     self.m_data.buildingType = BuildingType.Laboratory
     if not self.laboratoryToggleGroup then
         self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     else
         self.laboratoryToggleGroup:updateData(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     end
+
+    ct.OpenCtrl("LabResearchCtrl", self.m_data)
 end
 ---更改名字
 function LaboratoryCtrl:_changeName(ins)

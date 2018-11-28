@@ -3,34 +3,34 @@
 --- Created by xuyafang.
 --- DateTime: 2018/11/27 17:10
 ---
-LabResearchModel = {}
-local this = LabResearchModel
+LaboratoryModel = {}
+local this = LaboratoryModel
 local pbl = pbl
 
 --构建函数--
-function LabResearchModel.New()
+function LaboratoryModel.New()
     return this
 end
 
-function LabResearchModel.Awake()
+function LaboratoryModel.Awake()
     UpdateBeat:Add(this.Update, this)
     this:OnCreate()
 end
 
-function LabResearchModel.Update()
+function LaboratoryModel.Update()
 
 end
 
 --启动事件--
-function LabResearchModel.OnCreate()
+function LaboratoryModel.OnCreate()
     --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailLaboratory"), LabResearchModel.n_OnReceiveLaboratoryDetailInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineAdd"), LabResearchModel.n_OnReceiveLabLineAdd)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLaunchLine"), LabResearchModel.n_OnReceiveLaunchLine)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineDel"), LabResearchModel.n_OnReceiveDelLine)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineChange"), LabResearchModel.n_OnReceiveLineChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), LabResearchModel.n_OnReceiveNewItem)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), LabResearchModel.n_OnReceiveLabRoll)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailLaboratory"), LaboratoryModel.n_OnReceiveLaboratoryDetailInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineAdd"), LaboratoryModel.n_OnReceiveLabLineAdd)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLaunchLine"), LaboratoryModel.n_OnReceiveLaunchLine)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineDel"), LaboratoryModel.n_OnReceiveDelLine)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labLineChange"), LaboratoryModel.n_OnReceiveLineChange)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), LaboratoryModel.n_OnReceiveNewItem)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), LaboratoryModel.n_OnReceiveLabRoll)
 
     --本地的回调注册
     Event.AddListener("m_ReqLaboratoryDetailInfo", this.m_ReqLaboratoryDetailInfo)
@@ -42,48 +42,48 @@ function LabResearchModel.OnCreate()
 end
 
 --关闭事件--
-function LabResearchModel.Close()
+function LaboratoryModel.Close()
     --Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
 end
 
 --- 客户端请求 ---
 --获取建筑详情
-function LabResearchModel.m_ReqLaboratoryDetailInfo(buildingId)
+function LaboratoryModel.m_ReqLaboratoryDetailInfo(buildingId)
     local msgId = pbl.enum("gscode.OpCode", "detailLaboratory")
     local lMsg = { id = buildingId }
     local pMsg = assert(pbl.encode("gs.Id", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --添加线
-function LabResearchModel.m_ReqAddLine(buildingId, itemId, type, workerNum)
+function LaboratoryModel.m_ReqAddLine(buildingId, itemId, type, workerNum)
     local msgId = pbl.enum("gscode.OpCode", "labLineAdd")
     local lMsg = { buildingId = buildingId, itemId = itemId, type = type, workerNum = workerNum }
     local pMsg = assert(pbl.encode("gs.LabAddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --开工
-function LabResearchModel.m_ReqLabLaunchLine(buildingId, lineId, phase)
+function LaboratoryModel.m_ReqLabLaunchLine(buildingId, lineId, phase)
     local msgId = pbl.enum("gscode.OpCode", "labLaunchLine")
     local lMsg = { buildingId = buildingId, lineId = lineId, phase = phase }
     local  pMsg = assert(pbl.encode("gs.LabLaunchLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --删除线
-function LabResearchModel.m_ReqDeleteLine(buildingId, lineId)
+function LaboratoryModel.m_ReqDeleteLine(buildingId, lineId)
     local msgId = pbl.enum("gscode.OpCode", "labLineDel")
     local lMsg = { buildingId = buildingId, lineId = lineId }
     local  pMsg = assert(pbl.encode("gs.LabDelLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --改变员工数
-function LabResearchModel.m_ReqSetWorkerNum(buildingId, lineId, staffCount)
+function LaboratoryModel.m_ReqSetWorkerNum(buildingId, lineId, staffCount)
     local msgId = pbl.enum("gscode.OpCode", "labLineSetWorkerNum")
     local lMsg = { buildingId = buildingId, lineId = lineId, n = staffCount }
     local  pMsg = assert(pbl.encode("gs.LabSetLineWorkerNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --roll
-function LabResearchModel.m_ReqLabRoll(buildingId, lineId)
+function LaboratoryModel.m_ReqLabRoll(buildingId, lineId)
     local msgId = pbl.enum("gscode.OpCode", "labRoll")
     local lMsg = { buildingId = buildingId, lineId = lineId }
     local  pMsg = assert(pbl.encode("gs.LabRoll", lMsg))
@@ -92,37 +92,37 @@ end
 
 --- 回调 ---
 --研究所详情
-function LabResearchModel.n_OnReceiveLaboratoryDetailInfo(stream)
-    local data = assert(pbl.decode("gs.Laboratory", stream), "LabResearchModel.n_OnReceiveLaboratoryDetailInfo: stream == nil")
+function LaboratoryModel.n_OnReceiveLaboratoryDetailInfo(stream)
+    local data = assert(pbl.decode("gs.Laboratory", stream), "LaboratoryModel.n_OnReceiveLaboratoryDetailInfo: stream == nil")
     Event.Brocast("c_OnReceiveLaboratoryDetailInfo", data)
 end
 --添加研究发明线
-function LabResearchModel.n_OnReceiveLabLineAdd(stream)
-    local data = assert(pbl.decode("gs.Laboratory.Line", stream), "LabResearchModel.n_OnReceiveRentChange: stream == nil")
+function LaboratoryModel.n_OnReceiveLabLineAdd(stream)
+    local data = assert(pbl.decode("gs.Laboratory.Line", stream), "LaboratoryModel.n_OnReceiveRentChange: stream == nil")
     Event.Brocast("c_OnReceiveLabLineAdd", data)
 end
 --开工
-function LabResearchModel.n_OnReceiveLaunchLine(stream)
-    local data = assert(pbl.decode("gs.LabLaunchLine", stream), "LabResearchModel.n_OnReceiveRentChange: stream == nil")
+function LaboratoryModel.n_OnReceiveLaunchLine(stream)
+    local data = assert(pbl.decode("gs.LabLaunchLine", stream), "LaboratoryModel.n_OnReceiveRentChange: stream == nil")
     Event.Brocast("c_OnReceiveLabLineAdd", data)
 end
 --删除line
-function LabResearchModel.n_OnReceiveDelLine(stream)
-    local data = assert(pbl.decode("gs.LabDelLine", stream), "LabResearchModel.n_OnReceiveHouseSalaryChange: stream == nil")
+function LaboratoryModel.n_OnReceiveDelLine(stream)
+    local data = assert(pbl.decode("gs.LabDelLine", stream), "LaboratoryModel.n_OnReceiveHouseSalaryChange: stream == nil")
     Event.Brocast("c_OnReceiveDelLine", data)
 end
 --信息更新
-function LabResearchModel.n_OnReceiveLineChange(stream)
-    local data = assert(pbl.decode("gs.Laboratory.Line", stream), "LabResearchModel.n_OnReceiveHouseSalaryChange: stream == nil")
+function LaboratoryModel.n_OnReceiveLineChange(stream)
+    local data = assert(pbl.decode("gs.Laboratory.Line", stream), "LaboratoryModel.n_OnReceiveHouseSalaryChange: stream == nil")
     Event.Brocast("c_OnReceiveLineChange", data)
 end
 --发明成功  --用来更新玩家数据
-function LabResearchModel.n_OnReceiveNewItem(stream)
-    local data = assert(pbl.decode("gs.IdNum", stream), "LabResearchModel.n_OnReceiveHouseSalaryChange: stream == nil")
+function LaboratoryModel.n_OnReceiveNewItem(stream)
+    local data = assert(pbl.decode("gs.IdNum", stream), "LaboratoryModel.n_OnReceiveHouseSalaryChange: stream == nil")
     Event.Brocast("c_OnReceiveNewItem", data)
 end
 --roll 失败
-function LabResearchModel.n_OnReceiveLabRoll(stream)
-    --local data = assert(pbl.decode("gs.LabRoll", stream), "LabResearchModel.n_OnReceiveHouseSalaryChange: stream == nil")
+function LaboratoryModel.n_OnReceiveLabRoll(stream)
+    --local data = assert(pbl.decode("gs.LabRoll", stream), "LaboratoryModel.n_OnReceiveHouseSalaryChange: stream == nil")
     Event.Brocast("c_OnReceiveLabRollFail", false)
 end

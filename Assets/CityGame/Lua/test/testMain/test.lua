@@ -527,4 +527,9 @@ UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
     ct.OpenCtrl("LabResearchCtrl", {})
 end)
 
+UnitTest.Exec("cycle_w15_laboratory03", "test_cycle_w15_laboratory03",  function ()
+    --ct.OpenCtrl("LaboratoryCtrl", {})
+end)
+
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

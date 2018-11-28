@@ -19,8 +19,6 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
-        --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
         PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
 
@@ -32,32 +30,7 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(200,200,210,210)
-        ct.log("system","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.m_ReqAddBuilding(1600001,205,205)
-        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(0,0,10,10)
+        PlayerTempModel.m_ReqAddBuilding(1500001, 12, 12)
     end
 end
 

@@ -8,6 +8,9 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.manager = mgr
     self.id = id
     self.itemId = goodsDataInfo.itemId
+    self.num = goodsDataInfo.number
+    self.name = goodsDataInfo.name
+    self.price = goodsDataInfo.price
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
     self.goodsicon = self.prefab.transform:Find("details/goodsicon");  --物品Icon
     self.nameText = self.prefab.transform:Find("details/nameText"):GetComponent("Text");  --物品名字
@@ -41,4 +44,13 @@ function ShelfGoodsItem:RefreshID(id)
     else
         self.shelfImg:SetActive(false);
     end
+end
+function ShelfGoodsItem:RefreshData(data,id)
+    self.id = id
+    self.num = data.num
+    self.name = data.name
+    self.itemId = data.itemId
+    self.price = data.price
+    --self.producerId = data.producerId
+    --self.qty = data.qty
 end

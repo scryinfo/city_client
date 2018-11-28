@@ -7,11 +7,12 @@ ct.GoodsState =
     shelf  = 0,  --上架
     transport = 1,  --运输
 }
-WarehouseItemType = {
+ct.sortingItemType = {
     Name = 1,      --名字
     Quantity = 2,  --数量
     Level = 3,     --评分
-    Score = 4      --等级
+    Score = 4,     --等级
+    Price = 5      --价格
 }
 --存放选中的物品,临时表
 WarehouseCtrl.temporaryItems = {}
@@ -137,15 +138,15 @@ end
 function WarehouseCtrl:OnClick_OnName(ins)
     WarehousePanel.nowText.text = "By name";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
-    --local nameType = WarehouseItemType.Name
-    --WarehouseCtrl:_getSortItems(nameType)
+    local nameType = ct.sortingItemType.Name
+    WarehouseCtrl:_getSortItems(nameType,ins.ShelfGoodsMgr.WarehouseItems)
 end
 --根据数量排序
 function WarehouseCtrl:OnClick_OnNumber(ins)
     WarehousePanel.nowText.text = "By quantity";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
-    --local numberType = WarehouseItemType.Quantity
-    --WarehouseCtrl:_getSortItems(numberType)
+    local quantityType = ct.sortingItemType.Quantity
+    WarehouseCtrl:_getSortItems(quantityType,ins.ShelfGoodsMgr.WarehouseItems)
 end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
@@ -264,21 +265,21 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
     switchIsShow = isShow;
 end
 --排序
-function WarehouseCtrl:_getSortItems(type)
-    if type == WarehouseItemType.Name then
-        table.sort(self.ShelfGoodsMgr.WarehouseItems, function (m, n) return m.name < n.name end )
-        for i, v in ipairs(self.ShelfGoodsMgr.WarehouseItems) do
-            v.prefab.gameObject.transform:SetParent(WarehousePanel.scrollView.transform);
-            v.prefab.gameObject.transform:SetParent(WarehousePanel.content.transform);
+function WarehouseCtrl:_getSortItems(type,sortingTable)
+    if type == ct.sortingItemType.Name then
+        table.sort(sortingTable, function (m, n) return m.name < n.name end )
+        for i, v in ipairs(sortingTable) do
+            v.prefab.gameObject.transform:SetParent(WarehousePanel.ScrollView.transform);
+            v.prefab.gameObject.transform:SetParent(WarehousePanel.Content.transform);
             v.id = i
             WarehouseItem:RefreshData(v.goodsDataInfo,i)
         end
     end
-    if type == WarehouseItemType.Quantity then
-        table.sort(self.ShelfGoodsMgr.WarehouseItems, function (m, n) return m.n < n.n end )
-        for i, v in ipairs(self.ShelfGoodsMgr.WarehouseItems) do
-            v.prefab.gameObject.transform:SetParent(WarehousePanel.scrollView.transform);
-            v.prefab.gameObject.transform:SetParent(WarehousePanel.content.transform);
+    if type == ct.sortingItemType.Quantity then
+        table.sort(sortingTable, function (m, n) return m.n < n.n end )
+        for i, v in ipairs(sortingTable) do
+            v.prefab.gameObject.transform:SetParent(WarehousePanel.ScrollView.transform);
+            v.prefab.gameObject.transform:SetParent(WarehousePanel.Content.transform);
             v.id = i
             WarehouseItem:RefreshData(v.goodsDataInfo,i)
         end

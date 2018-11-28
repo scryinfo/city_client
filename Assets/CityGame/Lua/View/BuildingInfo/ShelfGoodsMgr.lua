@@ -68,7 +68,9 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
-        shelfDataInfo.money = "E"..v.price..".0000"
+        --shelfDataInfo.money = "E"..v.price..".0000"
+        shelfDataInfo.money = getPriceString("E"..v.price..".0000",35,25)
+        shelfDataInfo.price = v.price
         shelfDataInfo.itemId = v.k.id
         configTable[i] = shelfDataInfo
 
@@ -134,7 +136,7 @@ function ShelfGoodsMgr:_creatProductionLine(name,itemId)
         prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.productionLinePrefab[itemId] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self,itemId);
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
         AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
@@ -153,13 +155,6 @@ function ShelfGoodsMgr:_getProductionLine(table,behaviour)
         uiTab.lineId = v.id
         configTable[i] = uiTab
 
-        --计算时间
-        --local dataInfo = {}
-        --dataInfo.itemId = v.itemId
-        --dataInfo.workerNum = v.workerNum
-        --dataInfo.targetCount = v.targetCount
-        --Event.Brocast("calculateTime",dataInfo)
-
         AdjustProductionLineCtrl.productionLineUIInfo[i] = configTable
 
         local prefabData = {}
@@ -170,7 +165,6 @@ function ShelfGoodsMgr:_getProductionLine(table,behaviour)
 
         local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,behaviour,self,i);
         AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
-        Event.Brocast("RefreshUiInfo",AdjustProductionLineCtrl.productionLinePrefab[i].uiData)
     end
 end
 --获取要发送的物品信息

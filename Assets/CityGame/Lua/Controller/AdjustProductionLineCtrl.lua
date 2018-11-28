@@ -7,6 +7,7 @@ AdjustProductionLineCtrl.productionLineTab = {};
 AdjustProductionLineCtrl.productionLineUIInfo = {};
 --预制
 AdjustProductionLineCtrl.productionLinePrefab = {};
+AdjustProductionLineCtrl.idleWorkerNums = 0
 function AdjustProductionLineCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -24,10 +25,17 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
 
 
+
+    Event.AddListener("calculateTime",self.calculateTime,self)
+    Event.AddListener("refreshIdleWorkerNum",self.refreshIdleWorkerNum,self)
+    Event.AddListener("refreshTime",self.refreshTime,self)
+    self.buildingMaxWorkerNum = PlayerBuildingBaseData[MaterialModel.buildingCode].maxWorkerNum
+    self.idleWorkerNum = self:getWorkerNum()
+    AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     --读取服务器发过来的信息，是否有生产线
     ShelfGoodsMgr:_getProductionLine(self.m_data,adjustLine)
-    Event.AddListener("calculateTime",self.calculateTime,self)
-
+    Event.Brocast("refreshTime",self.m_data)
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -36,10 +44,11 @@ end
 
 function AdjustProductionLineCtrl:Refresh()
     local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    self:refreshWorkerNum()
     AdjustProductionLinePanel.capacity_Slider.value = 0;
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
     AdjustProductionLinePanel.numberText.text = AdjustProductionLinePanel.capacity_Slider.value.."/<color=black>"..AdjustProductionLinePanel.capacity_Slider.maxValue.."</color>"
-    --AdjustProductionLinePanel.numberText.text = AdjustProductionLinePanel.capacity_Slider.maxValue
+
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn()
@@ -87,11 +96,11 @@ end
 --格式化时分秒  00:00:00
 function AdjustProductionLineCtrl:formattingTime(time)
     local hour,minute,second = 0,0,0
-    second = time%60
-    minute = time/60
+    second = time % 60
+    minute = time / 60
     if minute > 60 then
-        hour = minute/60
-        minute = minute%60
+        hour = minute / 60
+        minute = minute % 60
     end
     hour,minute,second = math.floor(hour),math.floor(minute),math.ceil(second)
     if #tostring(hour) == 1 then
@@ -104,4 +113,46 @@ function AdjustProductionLineCtrl:formattingTime(time)
         second = "0"..second
     end
     return hour..":"..minute..":"..second
+end
+--获取剩余员工人数
+function AdjustProductionLineCtrl:getWorkerNum()
+    local workerNum = 0  --剩余员工数量
+    local workNum = 0    --工作的员工数量
+    if not MaterialModel.MaterialProductionLine then
+        workerNum = self.buildingMaxWorkerNum
+        return workerNum
+    else
+        for i,v in pairs(MaterialModel.MaterialProductionLine) do
+            workNum = workNum + v.workerNum
+        end
+        workerNum = self.buildingMaxWorkerNum - workNum
+        return workerNum
+    end
+end
+--刷新一条线可用的员工数量
+function AdjustProductionLineCtrl:refreshWorkerNum()
+    for i,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
+        v.sNumberScrollbar.maxValue = self.idleWorkerNum
+    end
+end
+--添加生产线成功后回调刷新剩余人数
+function AdjustProductionLineCtrl:refreshIdleWorkerNum(msg)
+    self.idleWorkerNum = self.idleWorkerNum - msg.workerNum
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+end
+--读取生产线，初始化时间
+function AdjustProductionLineCtrl:refreshTime(infoTab)
+    if not infoTab then
+        return
+    end
+    for i,v in pairs(infoTab) do
+        local remainingNum = v.targetCount - v.nowCount
+        local time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
+        local timeTab = AdjustProductionLineCtrl:formattingTime(time)
+        if remainingNum > 0 then
+            AdjustProductionLineCtrl.productionLineTab[i].timeText.text = timeTab
+        elseif remainingNum < 0 or remainingNum == 0 then
+            AdjustProductionLineCtrl.productionLineTab[i].timeText.text = "00:00:00"
+        end
+    end
 end

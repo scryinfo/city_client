@@ -23,7 +23,7 @@ function AdjustProductionLinePanel.InitPanel()
     this.numberText = transform:Find("bg/Topbg01/numberText"):GetComponent("Text");
 
     --idle
-    this.idleNumberText = transform:Find("bg/Topbg01/Staffbg/numberText").gameObject;
+    this.idleNumberText = transform:Find("bg/Topbg01/Staffbg/numberText"):GetComponent("Text");
     --Scroll View
     this.content = transform:Find("ScrollView/Viewport/Content").gameObject;
 

@@ -89,6 +89,9 @@ function AddProductionLineCtrl:OnClick_returnBtn()
 end
 --确定
 function AddProductionLineCtrl:OnClick_determineBtn(go)
+    --if  then
+    --
+    --end
     go.ShelfGoodsMgr:_creatProductionLine(go.name,go.itemId);
     UIPage.ClosePage();
 end

@@ -25,7 +25,8 @@ end
 function AdjustProductionLineModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addLine"),AdjustProductionLineModel.n_GsDetermineBtn);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsDetermineBtn);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","changeLine"),AdjustProductionLineModel.n_GsModifyKLine);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
 
 end
 --客户端请求--
@@ -33,7 +34,7 @@ end
 --添加生产线
 function AdjustProductionLineModel.m_ReqDetermineBtn(buildingId,number,steffNumber,itemId)
     local msgId = pbl.enum("gscode.OpCode", "addLine")
-    local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = steffNumber}
+    local lMsg = {id = buildingId, itemId = itemId, targetNum = tonumber(number), workerNum = tonumber(steffNumber)}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -41,7 +42,7 @@ end
 --修改生产线
 function AdjustProductionLineModel.m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
     local msgId = pbl.enum("gscode.OpCode", "changeLine")
-    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = steffNumber,lineId = lineId}
+    local lMsg = {buildingId = buildingId,targetNum = tonumber(targetNum),workerNum = tonumber(steffNumber),lineId = lineId}
     local pMsg = assert(pbl.encode("gs.ChangeLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -52,6 +53,7 @@ end
 function AdjustProductionLineModel.n_GsDetermineBtn(stream)
     local msgAllGameServerInfo = assert(pbl.decode("gs.Line", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
     Event.Brocast("calculateTime",msgAllGameServerInfo)
+    Event.Brocast("refreshIdleWorkerNum",msgAllGameServerInfo)
 end
 --修改生产线
 function AdjustProductionLineModel.n_GsModifyKLine(stream)

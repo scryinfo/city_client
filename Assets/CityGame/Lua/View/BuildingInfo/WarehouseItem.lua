@@ -66,9 +66,9 @@ end
 function WarehouseItem:RefreshID(id)
     self.id = id;
 end
-function WareHouseGoodsItem:RefreshData(data,id)
+function WarehouseItem:RefreshData(data,id)
     self.id = id
-    self.n = data.number
+    self.n = data.num
     self.name = data.name
     self.itemId = data.itemId
     --self.producerId = data.producerId

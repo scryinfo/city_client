@@ -31,20 +31,20 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddItem(2151001, 9999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(300,300,310,310)
+        PlayerTempModel.tempTestAddGroung(150,150,160  ,160)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
-        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 150, 160)
     end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.V) then
-        PlayerTempModel.tempTestInvent(2151001, 0)
-        PlayerTempModel.tempTestInvent(2151002, 0)
-        PlayerTempModel.tempTestInvent(2151003, 0)
-        PlayerTempModel.tempTestInvent(2151004, 0)
-        PlayerTempModel.tempTestInvent(2152001, 0)
-        PlayerTempModel.tempTestInvent(2152002, 0)
-
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.V) then
+    --    PlayerTempModel.tempTestInvent(2151001, 0)
+    --    PlayerTempModel.tempTestInvent(2151002, 0)
+    --    PlayerTempModel.tempTestInvent(2151003, 0)
+    --    PlayerTempModel.tempTestInvent(2151004, 0)
+    --    PlayerTempModel.tempTestInvent(2152001, 0)
+    --    PlayerTempModel.tempTestInvent(2152002, 0)
+    --    --增加科技作弊码，可能没用了
+    --end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
         PlayerTempModel.tempTestReqAddItem(2151002, 2000)
     end
@@ -179,12 +179,12 @@ function PlayerTempModel.tempTestReqAddGroung(x1, y1, x2, y2)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --add invent
-function PlayerTempModel.tempTestInvent(itmeId,level)
-    local msgId = pbl.enum("gscode.OpCode", "cheat")
-    local lMsg = {str = string.format("addinvent %s %s",itmeId,level)}
-    local pMsg = assert(pbl.encode("gs.Str", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-end
+--function PlayerTempModel.tempTestInvent(itmeId,level)
+--    local msgId = pbl.enum("gscode.OpCode", "cheat")
+--    local lMsg = {str = string.format("addinvent %s %s",itmeId,level)}
+--    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+--    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+--end
 ---
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}

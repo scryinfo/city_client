@@ -47,6 +47,7 @@ end
 function SciencePopCtrl:Refresh()
     if self.m_data.price then
         SciencePopPanel.moneyText.gameObject:SetActive(true)
+        SciencePopPanel.moneyText.text=getPriceString("E"..self.m_data.price..".0000",48,36)
         SciencePopPanel.mainText.text="Buy the technology?"
     else
         SciencePopPanel.moneyText.gameObject:SetActive(false)

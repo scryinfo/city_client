@@ -43,6 +43,7 @@ end
 ---buy
 function ScienceKindItem:OnClick_buyBtn(ins)
     ct.OpenCtrl("ScienceTradeCtrl",ins)
+    --Event.Brocast("m_techTradeGetDetail",ins.itemid)
 end
 
 function ScienceKindItem:InitData()

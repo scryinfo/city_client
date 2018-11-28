@@ -53,9 +53,11 @@ function ScienceItemCreatDeleteMgr:creatSciencetradeItem(luabehaviour,creatData)
     local item=self:c_creatGoods(self.scienceItemPreb_Path,ScienceTradePanel.scrollContent)
     self.scienceItemList[creatData.itemId]=item
     item.transform:SetAsFirstSibling()
+
     ---creat  ins
     local ins=ScienceItem:new(creatData,item,luabehaviour,self,creatData.itemId)
     self. scienceInsList[creatData.itemId]=ins
+    return item
 end
 
 --- creat scienceItem2
@@ -85,7 +87,10 @@ function ScienceItemCreatDeleteMgr:_deleteGoods(ins)
     destroy(ins.ItemList[ins.id])
 end
 
-
+---删除物品
+function ScienceItemCreatDeleteMgr:_deleteGood(ins)
+    ins.ItemList[ins.id]:SetActive(false)
+end
 
 
 

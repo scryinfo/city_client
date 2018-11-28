@@ -3,6 +3,7 @@
 --- Created by password.
 --- DateTime: 2018/11/22 17:10
 ---临时城市信息表
+--服务器数据顺序左右应保持一致
 --模拟服务器发来的数据
 CityInfoInHand = {
     [1] = "总览",
@@ -68,7 +69,7 @@ CityInfoData = {
         ["companyNum"] =1000,
         ["staffNum"] =1564651,
         ["allProfit"] =1234567.1234567,
-        ["allProfittAdd"] ="+50%",
+        ["allProfitAdd"] ="+50%",
     },
     [8] = {
         ["companyNum"] =1000,
@@ -76,13 +77,13 @@ CityInfoData = {
         ["processProfit"] =123456.12345,
         ["retailProfit"] =123456.12345,
         ["allProfit"] =123456.12345,
-        ["allProfittAdd"] ="+50%",
+        ["allProfitAdd"] ="+50%",
     },
     [9] = {
         ["companyNum"] =1000,
         ["staffNum"] =122,
         ["exchangeProfit"] =1234567.123,
-        ["exchangeProfittAdd"] ="+50%",
+        ["exchangeProfitAdd"] ="+50%",
     },
     [10] = {
         ["companyNum"] =100,

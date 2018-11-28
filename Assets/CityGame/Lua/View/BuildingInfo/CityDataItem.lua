@@ -62,7 +62,7 @@ function CityDataItem:initialize(inluabehaviour, prefab, mgr, DataInfo ,id)
     }
     self.line :InjectDatas(verts,Color.New(1,1,1,1))
     self.line:InjectDatas(verts1,Color.New(0,1,0,1))
-    self._initData(self.id)
+    self:_initData(self.id)
 end
 
 --[[
@@ -211,12 +211,12 @@ function CityDataItem:_initData(id)
         self.companyNum =  self.prefab.transform:Find("buildingText/companyNum/companyNumText").gameObject:GetComponent("Text");
         self.staffNum =  self.prefab.transform:Find("buildingText/staffNum/staffNumText").gameObject:GetComponent("Text");
         self.exchangeProfit =  self.prefab.transform:Find("buildingText/exchangeProfit/exchangeProfitText").gameObject:GetComponent("Text");
-        self.exchangeProfittAdd =  self.prefab.transform:Find("buildingText/exchangeProfittAdd/exchangeProfittAddText").gameObject:GetComponent("Text");
+        self.exchangeProfitAdd =  self.prefab.transform:Find("buildingText/exchangeProfittAdd/exchangeProfittAddText").gameObject:GetComponent("Text");
 
         self.companyNum.text = CityInfoData[id].companyNum;
         self.staffNum.text = CityInfoData[id].staffNum;
         self.exchangeProfit.text = CityInfoData[id].exchangeProfit;
-        self.exchangeProfittAdd.text = CityInfoData[id].exchangeProfittAdd;
+        self.exchangeProfitAdd.text = CityInfoData[id].exchangeProfitAdd;
     elseif id == 10 then
         self.companyNum =  self.prefab.transform:Find("buildingText/companyNum/companyNumText").gameObject:GetComponent("Text");
         self.staffNum =  self.prefab.transform:Find("buildingText/staffNum/staffNumText").gameObject:GetComponent("Text");

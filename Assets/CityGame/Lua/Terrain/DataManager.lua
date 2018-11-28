@@ -201,18 +201,27 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
     --初始化自己所拥有建筑品牌值
+    if  PersonDataStack.m_buildingBrands == nil then
+        PersonDataStack.m_buildingBrands = {}
+    end
     for key, value in pairs(tempData.buildingBrands) do
         if value.id and value.num then
             PersonDataStack.m_buildingBrands[value.id] = value.num
         end
     end
     --初始化自己所拥有商品科技等级
+    if  PersonDataStack.m_goodBrands == nil then
+        PersonDataStack.m_goodBrands = {}
+    end
     for key, value in pairs(tempData.goodBrands) do
         if value.id and value.num then
             PersonDataStack.m_goodBrands[value.id] = value.num
         end
     end
     --初始化自己所拥有商品科技等级
+    if  PersonDataStack.m_goodLv == nil then
+        PersonDataStack.m_goodLv = {}
+    end
     for key, value in pairs(tempData.goodLv) do
         if value.id and value.num then
             PersonDataStack.m_goodLv[value.id] = value.num

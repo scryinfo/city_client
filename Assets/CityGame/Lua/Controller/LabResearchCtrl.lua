@@ -132,7 +132,7 @@ end
 ---刷新数据
 --研究
 function LabResearchCtrl:_onReceiveLabResearchData(datas)
-    local researchInfoData = datas
+    local researchInfoData = BaseTools.TableCopy(datas)
     local researchPrefabList = {}
     for i, item in pairs(researchInfoData) do
         researchPrefabList[i] = LaboratoryCtrl.static.LabResearchItemPath
@@ -146,7 +146,7 @@ function LabResearchCtrl:_onReceiveLabResearchData(datas)
 end
 --发明
 function LabResearchCtrl:c_onReceiveLabInventionData(datas)
-    local inventionInfoData = datas
+    local inventionInfoData = BaseTools.TableCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do
         inventionPrefabList[i] = LaboratoryCtrl.static.LabInventionItemPath

@@ -38,6 +38,12 @@ local Mgr
 local orderList={}
 local sortList={}
 
+local materialOrderList={}
+local materialSortList={}
+
+local goodOrderList={}
+local goodSortList={}
+
 local top
 local down
 local redtop
@@ -96,7 +102,7 @@ function ScienceSellHallCtrl:Awake(go)
     Mgr=ScienceSellHallModel.Mgr
     for configID, configdata in pairs(Material) do
         Mgr:creatSciencehallItem(materialBehaviour,configdata)
-        table.insert(orderList,Mgr.materialInsList[configID])
+        table.insert(materialOrderList,Mgr.materialInsList[configID])
         local data={}
         data.icon=Mgr.materialInsList[configID].iconImage.sprite
         data.name=Mgr.materialInsList[configID].nameText.text
@@ -107,13 +113,30 @@ function ScienceSellHallCtrl:Awake(go)
         data.level=Mgr.materialInsList[configID].leveltext.text
         data.mylevel=Mgr.materialInsList[configID].myleveltext.text
         data.score=Mgr.materialInsList[configID].ScoreText.text
-        sortList[#sortList+1]=data
+        materialSortList[#materialSortList+1]=data
+    end
+
+    for configID, configdata in pairs(Good) do
+        Mgr:creatSciencehallItem1(materialBehaviour,configdata)
+        table.insert(goodOrderList,Mgr.goodInsList[configID])
+        local data={}
+        data.icon=Mgr.goodInsList[configID].iconImage.sprite
+        data.name=Mgr.goodInsList[configID].nameText.text
+        data.itemid=Mgr.goodInsList[configID].itemid
+        data.class=Mgr.goodInsList[configID].classText.text
+        data.kind=Mgr.goodInsList[configID].kindText.text
+        data.owner=Mgr.goodInsList[configID].ownerText.text
+        data.level=Mgr.goodInsList[configID].leveltext.text
+        data.mylevel=Mgr.goodInsList[configID].myleveltext.text
+        data.score=Mgr.goodInsList[configID].ScoreText.text
+        goodSortList[#goodSortList+1]=data
     end
 
 end
 ---刷新排序数组数据
 function ScienceSellHallCtrl:c_RefreshSortList()
-        sortList={}
+        materialSortList={}
+        goodSortList={}
     for metaId, materialIns in pairs(Mgr.materialInsList) do
         local data={}
         data.icon=materialIns.iconImage.sprite
@@ -125,8 +148,22 @@ function ScienceSellHallCtrl:c_RefreshSortList()
         data.level=materialIns.leveltext.text
         data.mylevel=materialIns.myleveltext.text
         data.score=materialIns.ScoreText.text
-        sortList[#sortList+1]=data
+        materialSortList[#materialSortList+1]=data
     end
+    for i, goodIns in pairs(Mgr.goodInsList) do
+        local data={}
+        data.icon=goodIns.iconImage.sprite
+        data.name=goodIns.nameText.text
+        data.itemid=goodIns.itemid
+        data.class=goodIns.classText.text
+        data.kind=goodIns.kindText.text
+        data.owner=goodIns.ownerText.text
+        data.level=goodIns.leveltext.text
+        data.mylevel=goodIns.myleveltext.text
+        data.score=goodIns.ScoreText.text
+        goodSortList[#goodSortList+1]=data
+    end
+
 end
 ---刷新大厅数据
 function ScienceSellHallCtrl:c_RefreshHallItem(hallItemDataList)
@@ -138,6 +175,15 @@ function ScienceSellHallCtrl:c_RefreshHallItem(hallItemDataList)
             if materialIns.itemid==hallData.metaId then
                 Mgr.materialInsList[k].leveltext.text=hallData.topLv
                 Mgr.materialInsList[k].ownerText.text=hallData.ownerNum
+                break
+            end
+        end
+
+        for k, goodInsList in pairs(Mgr.goodInsList) do
+            if goodInsList.itemid==hallData.metaId then
+                Mgr.goodInsList[k].leveltext.text=hallData.topLv
+                Mgr.goodInsList[k].ownerText.text=hallData.ownerNum
+                break
             end
         end
     end
@@ -425,6 +471,9 @@ function ScienceSellHallCtrl:OnClick_material()
     ---scroll gameObject
     panel.goodsScroll.gameObject:SetActive(false)
     panel.materialScroll.gameObject:SetActive(true)
+
+    orderList=materialOrderList
+    sortList=materialSortList
 end
 
 ---goods
@@ -437,6 +486,10 @@ function ScienceSellHallCtrl:OnClick_goods()
     ---scroll gameObject
     panel.goodsScroll.gameObject:SetActive(true)
     panel.materialScroll.gameObject:SetActive(false)
+
+    orderList=goodOrderList
+    sortList=goodSortList
+
 end
 
 ------------------------------------------------------------------------------------------------
@@ -455,8 +508,7 @@ function ScienceSellHallCtrl:Refresh()
     ---服务器请求大厅数据
     Event.Brocast("m_techTradeGetSummary")
     ScienceSellHallModel.ownerId=PlayerTempModel.roleData.id
-
-
+    self:OnClick_material()
 end
 
 ---生成预制

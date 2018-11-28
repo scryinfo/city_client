@@ -508,6 +508,7 @@ function ScienceSellHallCtrl:Refresh()
     ---服务器请求大厅数据
     Event.Brocast("m_techTradeGetSummary")
     ScienceSellHallModel.ownerId=PlayerTempModel.roleData.id
+    ScienceSellHallModel.money=PlayerTempModel.roleData.money
     self:OnClick_material()
 end
 

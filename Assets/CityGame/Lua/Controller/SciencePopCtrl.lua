@@ -37,11 +37,14 @@ function SciencePopCtrl:OnClick_confirm(obj)
         obj.m_data:func()
     end
     obj:Hide();
-    Event.Brocast("SmallPop","Success")
+    SciencePopPanel.tips.localScale=Vector3.zero
+  --  SciencePopPanel.grey.localScale=Vector3.zero
 end
 --关闭
 function SciencePopCtrl:OnClick_close(obj)
     obj:Hide();
+    SciencePopPanel.tips.localScale=Vector3.zero
+    --SciencePopPanel.grey.localScale=Vector3.zero
 end
 --刷新
 function SciencePopCtrl:Refresh()
@@ -49,8 +52,12 @@ function SciencePopCtrl:Refresh()
         SciencePopPanel.moneyText.gameObject:SetActive(true)
         SciencePopPanel.moneyText.text=getPriceString("E"..self.m_data.price..".0000",48,36)
         SciencePopPanel.mainText.text="Buy the technology?"
+        if ScienceSellHallModel.money<tonumber(self.m_data.price) then
+            SciencePopPanel.tips.localScale=Vector3.one
+        end
     else
         SciencePopPanel.moneyText.gameObject:SetActive(false)
+        SciencePopPanel.tips.localScale=Vector3.zero
         SciencePopPanel.mainText.text="Cancel the order?"
     end
 end

@@ -21,10 +21,12 @@ end
 function SciencePopPanel.InitPanle()
     this.confirmBtn = transform:Find("root/confimBtn")
     this.closeBtn = transform:Find("root/closeBtn")
-
+    this.grey=transform:Find("root/confimBtn/grey")
 
     this.mainText=transform:Find("root/mainContentText"):GetComponent("Text");
     this.moneyText=transform:Find("root/moneyText"):GetComponent("Text");
+
+    this.tips=transform:Find("root/tipsCon")
 
 end
 function SciencePopPanel.OnDestroy()

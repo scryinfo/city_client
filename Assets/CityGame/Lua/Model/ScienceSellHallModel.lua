@@ -127,7 +127,7 @@ end
 
 ---下架收包
 function ScienceSellHallModel.n_techTradeDel(stream)
-  return
+
 end
 
 

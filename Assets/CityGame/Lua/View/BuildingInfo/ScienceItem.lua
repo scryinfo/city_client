@@ -75,11 +75,12 @@ function ScienceItem:callback1()
     if ScienceSellHallModel.money>=tonumber(self.prefabData.price) then
         Event.Brocast("SmallPop","Succsee")
         Event.Brocast("m_techTradeBuy",self.id)
-
     end
 end
 
 function ScienceItem:callback()
     self.manager:_deleteGood(self)
     Event.Brocast("m_techTradeDel",ScienceSellHallModel.sellitemId)
+    Event.Brocast("SmallPop","Succsee")
+
 end

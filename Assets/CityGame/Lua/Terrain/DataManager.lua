@@ -223,8 +223,8 @@ function  DataManager.InitPersonDatas(tempData)
         end
     end
     --初始化自己所拥有商品科技等级
-    if  PersonDataStack.m_goodlv == nil then
-        PersonDataStack.m_goodlv = {}
+    if  PersonDataStack.m_goodLv == nil then
+        PersonDataStack.m_goodLv = {}
     end
     if tempData.goodLv then
         for key, value in pairs(tempData.goodLv) do

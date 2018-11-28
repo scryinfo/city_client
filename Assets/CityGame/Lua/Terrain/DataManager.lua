@@ -192,14 +192,30 @@ function  DataManager.InitPersonDatas(tempData)
     if not DataManager.PersonDataStack then
         DataManager.PersonDataStack = {}
     end
+    if not tempData then
+        ct.log("System","登录成功RoleLogin返回信息为空")
+        return
+    end
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
+    --初始化自己所拥有建筑品牌值
+    for key, value in pairs(tempData.buildingBrands) do
+        if value.id and value.num then
+            PersonDataStack.m_buildingBrands[value.id] = value.num
+        end
+    end
+    --初始化自己所拥有商品科技等级
+    for key, value in pairs(tempData.goodBrands) do
+        if value.id and value.num then
+            PersonDataStack.m_goodBrands[value.id] = value.num
+        end
+    end
     --初始化自己所拥有商品科技等级
     for key, value in pairs(tempData.goodLv) do
         if value.id and value.num then
-            PersonDataStack.m_goodlv[value.id] = value.num
+            PersonDataStack.m_goodLv[value.id] = value.num
         end
     end
 end
@@ -209,7 +225,7 @@ function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
     if PersonDataStack.m_GroundInfos then
         for key, value in pairs(PersonDataStack.m_GroundInfos) do
-            if value.x == groundInfoData.x and value.y == groundInfoData.y then
+            if value.x == groundInfoData.x and value.y == groundInfoData .y then
                 return;
             end
         end
@@ -227,16 +243,42 @@ function DataManager.GetMyPersonData()
     return PersonDataStack
 end
 
+--刷新自己所拥有建筑品牌值
+function DataManager.GetMyBuildingBrands()
+    return PersonDataStack.m_buildingBrands
+end
+
+--刷新自己所拥有建筑品牌值
+--参数： tempData==>  IntNum
+function DataManager.SetMyBuildingBrands(tempData)
+    if tempData.id and tempData.num then
+        PersonDataStack.m_buildingBrands[tempData.id] = tempData.num
+    end
+end
+
+--刷新自己所拥有商品品牌值
+function DataManager.GetMyGoodBrands()
+    return PersonDataStack.m_goodBrands
+end
+
+--刷新自己所拥有商品品牌值
+--参数： tempData==>  IntNum
+function DataManager.SetMyGoodBrands(tempData)
+    if tempData.id and tempData.num then
+        PersonDataStack.m_goodBrands[tempData.id] = tempData.num
+    end
+end
+
 --刷新自己所拥有商品科技等级
 function DataManager.GetMyGoodLv()
-    return PersonDataStack.m_goodlv
+    return PersonDataStack.m_goodLv
 end
 
 --刷新自己所拥有商品科技等级
 --参数： tempData==>  IntNum
 function DataManager.SetMyGoodLv(tempData)
     if tempData.id and tempData.num then
-        PersonDataStack.m_goodlv[tempData.id] = tempData.num
+        PersonDataStack.m_goodLv[tempData.id] = tempData.num
     end
 end
 

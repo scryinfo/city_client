@@ -45,9 +45,9 @@ end
 function AdjustProductionLineCtrl:Refresh()
     local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
     self:refreshWorkerNum()
-    AdjustProductionLinePanel.capacity_Slider.value = 0;
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
-    AdjustProductionLinePanel.numberText.text = AdjustProductionLinePanel.capacity_Slider.value.."/<color=black>"..AdjustProductionLinePanel.capacity_Slider.maxValue.."</color>"
+    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
+    AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
 
 end
 
@@ -85,7 +85,7 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
         ct.log("system","人数不足")
         return;
     end
-    Event.Brocast("m_ReqDetermineBtn",buildingId,number,steffNumber,itemid);
+    Event.Brocast("m_ReqAddLine",buildingId,number,steffNumber,itemid);
 end
 --修改生产线
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
@@ -95,6 +95,9 @@ end
 
 --格式化时分秒  00:00:00
 function AdjustProductionLineCtrl:formattingTime(time)
+    if time < 0 then
+        return;
+    end
     local hour,minute,second = 0,0,0
     second = time % 60
     minute = time / 60

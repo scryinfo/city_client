@@ -227,14 +227,24 @@ end
 --货架删除
 function ShelfGoodsMgr:_deleteGoods(ins)
     ct.log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
-
     destroy(self.items[ins.id].prefab.gameObject);
     table.remove(self.ModelDataList, ins.id)
     table.remove(self.items, ins.id)
     local i = 1
-    for k,v in pairs(self.items)  do
+    for k,v in pairs(self.items) do
         self.items[i]:RefreshID(i)
         i = i + 1
+    end
+end
+--删除生产线
+function ShelfGoodsMgr:_deleteProductionLine(ins)
+    destroy(AdjustProductionLineCtrl.productionLineTab[ins.id].prefab.gameObject);
+    table.remove(AdjustProductionLineCtrl.productionLinePrefab,ins.id)
+    table.remove(AdjustProductionLineCtrl.productionLineTab,ins.id)
+    local i = 1
+    for k,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
+        AdjustProductionLineCtrl.productionLineTab[i]:RefreshID(i)
+        i = i +1
     end
 end
 --仓库删除

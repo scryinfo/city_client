@@ -47,16 +47,15 @@ function WarehouseCtrl:OnCreate(obj)
     --初始化物品上架还是运输
     self.operation = nil;
 
-    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
-    Event.AddListener("c_warehouseClick",self._selectedGoods, self)
-    Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
+    Event.AddListener("n_transports",self.n_transports,self)
+    Event.AddListener("c_warehouseClick",self._selectedGoods, self)
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
 
     self.luabehaviour = warehouse
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Warehouse;
     self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
-
 end
 
 function WarehouseCtrl:Awake(go)
@@ -67,10 +66,10 @@ end
 
 function WarehouseCtrl:Refresh()
     local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
-    WarehousePanel.Warehouse_Slider.value = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
+    local numText = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
-    WarehousePanel.numberText.text = WarehousePanel.Warehouse_Slider.value.."/<color=white>"..WarehousePanel.Warehouse_Slider.maxValue.."</color>"
-
+    WarehousePanel.Warehouse_Slider.value = numText;
+    WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
 end
 
 function WarehouseCtrl:OnClick_returnBtn()
@@ -116,13 +115,14 @@ end
 function WarehouseCtrl:getNumber(table)
     local number = 0
     if not table then
-        return 0
+        number = 0
+        return number;
     else
         for k,v in pairs(table) do
             number = number + v.n
         end
+        return number
     end
-    return number
 end
 
 --右边Shelf

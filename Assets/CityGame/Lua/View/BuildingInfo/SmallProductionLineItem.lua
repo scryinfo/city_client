@@ -30,11 +30,13 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
         self.pNumberScrollbar.maxValue = 5000; --先设置5000，每条生产线的最大生产数量是根据仓库容量算的
         self.staffNumberText.text = 0;
         self.timeText.text = "00:00:00"
+        self.time_Slider.value = 0;
         self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums;
     else
         self:RefreshUiInfo(self.goodsDataInfo,i)
     end
     --self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self)
+
     self.pNumberScrollbar.onValueChanged:AddListener(function()
         self:pNumberScrollbarInfo();
     end)
@@ -44,9 +46,12 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.inputNumber.onValueChanged:AddListener(function()
         self:inputInfo();
     end)
+
+    self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
 end
 --初始化UI信息
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
+    self.id = i
     self.nameText.text = infoTab[i].name
     self.itemId = infoTab[i].itemId
     self.lineId = infoTab[i].lineId
@@ -61,7 +66,12 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.sNumberScrollbar.maxValue = infoTab[i].workerNum + AdjustProductionLineCtrl.idleWorkerNums;
     self.sNumberScrollbar.value = infoTab[i].workerNum;
 end
-
+--点击删除
+function SmallProductionLineItem:OnClicl_XBtn(go)
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    Event.Brocast("m_ReqDeleteLine",MaterialModel.buildingId,go.lineId)
+    go.manager:_deleteProductionLine(go)
+end
 --刷新滑动条
 function SmallProductionLineItem:pNumberScrollbarInfo()
     self.inputNumber.text = self.pNumberScrollbar.value;
@@ -77,6 +87,10 @@ function SmallProductionLineItem:inputInfo()
     else
         self.pNumberScrollbar.value = 0;
     end
+end
+--删除后刷新ID及刷新显示
+function SmallProductionLineItem:RefreshID(id)
+    self.id = id
 end
 --打开组件
 function SmallProductionLineItem:OnClick_bgBtn(go)

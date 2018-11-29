@@ -69,7 +69,7 @@ function ScienceSellPopCtrl:OnClick_confirm(ins)
    Mgr.scienceInsList[1].priceText.text = getPriceString(panel.priceInp.text..".0000",30,24)
     Mgr.scienceItemList[1]:SetActive(true)
 
-    Event.Brocast("SmallPop","Success")
+    Event.Brocast("SmallPop","Success",257)
     Event.Brocast("m_techTradeAdd",ins.m_data.itemId,tonumber(panel.levleInp.text),tonumber(panel.priceInp.text))
     ---clear
     panel.levleInp.text=0

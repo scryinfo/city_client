@@ -8,7 +8,7 @@ require "Common/define"
 
 require('Framework/UI/UIPage')
 
-require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
+
 
 
 local class = require 'Framework/class'
@@ -55,9 +55,6 @@ function ScienceSellHallCtrl:Awake(go)
     Event.AddListener("c_RefreshHallItem",ScienceSellHallCtrl.c_RefreshHallItem,self)
     Event.AddListener("c_RefreshSortList",ScienceSellHallCtrl.c_RefreshSortList,self)
     Event.AddListener("c_IsSell",ScienceSellHallCtrl.c_IsSell,self)
-    -----小弹窗
-    self.root=ScienceSellHallPanel.backBtn.root;
-    Event.AddListener("SmallPop",self.c_SmallPop,self)
 
     materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
@@ -512,23 +509,23 @@ function ScienceSellHallCtrl:Refresh()
     self:OnClick_material()
 end
 
----生成预制
-function ScienceSellHallCtrl:c_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent);--.transform
-    rect.transform.localScale = Vector3.one;
-    rect.transform.localPosition=Vector3.zero
-    return go
-end
----小弹窗
-function ScienceSellHallCtrl:c_SmallPop(string)
-    if not self.prefab  then
-        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
-    end
-    SmallPopItem:new(string,self.prefab ,self);
-end
+-----生成预制
+--function ScienceSellHallCtrl:c_creatGoods(path,parent)
+--    local prefab = UnityEngine.Resources.Load(path);
+--    local go = UnityEngine.GameObject.Instantiate(prefab);
+--    local rect = go.transform:GetComponent("RectTransform");
+--    go.transform:SetParent(parent);--.transform
+--    rect.transform.localScale = Vector3.one;
+--    rect.transform.localPosition=Vector3.zero
+--    return go
+--end
+-----小弹窗
+--function ScienceSellHallCtrl:c_SmallPop(string,spacing)
+--    if not self.prefab  then
+--        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
+--    end
+--    SmallPopItem:new(string,spacing,self.prefab ,self);
+--end
 
 
 function ScienceSellHallCtrl:c_IsSell(sellDataList)

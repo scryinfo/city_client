@@ -106,6 +106,13 @@ function AdvertisementPosCtrl:OnClick_infoBtn()
 end
 
 function AdvertisementPosCtrl:Refresh()
+    if MunicipalModel.SlotList then
+        panel.qunayityInp.text=#MunicipalModel.SlotList
+        panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
+        panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
+        panel.adAllday=panel.qunayityInp.text
+        panel.grey.gameObject:SetActive(true);
+    end
 
 end
 
@@ -121,7 +128,7 @@ end
 function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     local buildingID=MunicipalModel.lMsg.info.id
     --主人点击确认按钮
-    Event.Brocast("SmallPop","Successful adjustment")
+    Event.Brocast("SmallPop","Successful adjustment",57)
     panel.grey.gameObject:SetActive(true);
     -----发送网络消息
     if panel.qunayityInp.text>panel.adAllday then---添加槽位

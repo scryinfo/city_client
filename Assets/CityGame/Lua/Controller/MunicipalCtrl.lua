@@ -49,10 +49,7 @@ function MunicipalCtrl:Awake(go)
     local creatData={count=1,buildingType=BuildingType.ProcessingFactory,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
     self.ItemCreatDeleteMgr:creat(ServerListCtrl.serverListBehaviour,creatData)
-    ---小弹窗
-    self.root=MunicipalPanel.changeNameBtn.root;
 
-    Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
 
     --更改名字
@@ -79,24 +76,7 @@ function MunicipalCtrl:Refresh()
 
 end
 
----生成预制
-function MunicipalCtrl:c_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent);--.transform
-    rect.transform.localScale = Vector3.one;
-    rect.transform.localPosition=Vector3.zero
-    return go
-end
 
-function MunicipalCtrl:c_SmallPop(string)
-    if not self.prefab  then
-        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
-    end
-
-    SmallPopItem:new(string,self.prefab ,self);
-end
 
 UnitTest.TestBlockStart()---------------------------------------------------------
 

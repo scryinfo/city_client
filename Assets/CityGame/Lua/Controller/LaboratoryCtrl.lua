@@ -37,18 +37,14 @@ function LaboratoryCtrl:_addListener()
     Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._receiveLaboratoryDetailInfo, self)
 end
 function LaboratoryCtrl:_removeListener()
-    --Event.RemoveListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
+    Event.RemoveListener("c_OnReceiveLaboratoryDetailInfo", self._receiveLaboratoryDetailInfo, self)
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function LaboratoryCtrl:_initData()
     if self.m_data then
-        --向服务器请求建筑详情
         Event.Brocast("m_ReqLaboratoryDetailInfo", self.m_data)
     end
-
-    --测试
-    --self:_receiveLaboratoryDetailInfo()
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
@@ -68,7 +64,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
         self.laboratoryToggleGroup:updateData(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     end
 
-    ct.OpenCtrl("LabResearchCtrl", self.m_data)
+    --ct.OpenCtrl("LabResearchCtrl", self.m_data)
 end
 ---更改名字
 function LaboratoryCtrl:_changeName(ins)

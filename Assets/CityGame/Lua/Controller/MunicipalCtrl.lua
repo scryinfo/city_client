@@ -78,12 +78,3 @@ end
 
 
 
-UnitTest.TestBlockStart()---------------------------------------------------------
-
-UnitTest.Exec("fisher_w11_MunicipalCtrl", "test_MunicipalCtrl_ShowPage",  function ()
-    ct.log("fisher_w11_MunicipalCtrl","[test_MunicipalCtrl_ShowPage]  测试开始")
-    ct.OpenCtrl('MunicipalCtrl') --注意传入的是类名
-end)
-
-UnitTest.TestBlockEnd()-----------------------------------------------------------
-

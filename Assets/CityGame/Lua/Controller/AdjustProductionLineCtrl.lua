@@ -71,7 +71,7 @@ end
 
 --添加生产线
 function AdjustProductionLineCtrl:OnClick_determineBtn()
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     local number,steffNumber,itemid = ShelfGoodsMgr:getSendInfo()
     if number == nil then
         ct.log("system","数量不能为0")
@@ -85,12 +85,12 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
         ct.log("system","人数不足")
         return;
     end
-    Event.Brocast("m_ReqAddLine",buildingId,number,steffNumber,itemid);
+    Event.Brocast("m_ReqAddLine",MaterialModel.buildingId,number,steffNumber,itemid);
 end
 --修改生产线
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    Event.Brocast("m_ResModifyKLine",buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    Event.Brocast("m_ResModifyKLine",MaterialModel.buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
 
 --格式化时分秒  00:00:00

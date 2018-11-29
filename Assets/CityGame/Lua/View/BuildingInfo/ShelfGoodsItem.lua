@@ -29,8 +29,8 @@ end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
     ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    Event.Brocast("m_ReqShelfDel",buildingId,go.itemId,go.numberText.text)
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
     go.manager:_deleteGoods(go)
 end
 function ShelfGoodsItem:OnClick_detailsBtn()

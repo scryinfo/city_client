@@ -155,22 +155,22 @@ function WarehouseCtrl:OnClick_transportopenBtn(ins)
 end
 --确定上架
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     if not go.ShelfGoodsMgr.shelfPanelItem then
         return;
     else
         for i,v in pairs(go.ShelfGoodsMgr.shelfPanelItem) do
             if not MaterialModel.MaterialShelf then
-                Event.Brocast("m_ReqShelfAdd",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                Event.Brocast("m_ReqShelfAdd",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
                 return;
             else
                 for k,t in pairs(MaterialModel.MaterialShelf) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
-                        Event.Brocast("m_ReqModifyShelf",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
                     end
                 end
             end
-            Event.Brocast("m_ReqShelfAdd",buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+            Event.Brocast("m_ReqShelfAdd",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
         end
     end
 end
@@ -185,12 +185,12 @@ function WarehouseCtrl:n_shelfAdd(msg)
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     if not go.ShelfGoodsMgr.transportPanelItem then
         return;
     end
     for i,v in pairs(go.ShelfGoodsMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
+        Event.Brocast("m_ReqTransport",MaterialModel.buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
     end
 end
 --运输回调后执行操作

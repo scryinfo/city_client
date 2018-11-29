@@ -63,8 +63,6 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
     else
         self.laboratoryToggleGroup:updateData(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     end
-
-    --ct.OpenCtrl("LabResearchCtrl", self.m_data)
 end
 ---更改名字
 function LaboratoryCtrl:_changeName(ins)

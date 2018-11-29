@@ -446,7 +446,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
     local data = {}
     data.buildingId = self.toggleData.info.id
     data.buildingTypeId = self.toggleData.info.mId
-    --data.rent = self.toggleData.rent
+    data.lines = self.toggleData.line
     local item = LabBuildingLineItem:new(data, self.researchLineViewRect, self.mainPanelLuaBehaviour, researchLineToggleData, self)
     return item
 end

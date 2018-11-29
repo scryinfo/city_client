@@ -3,67 +3,67 @@
 --- Created by xuyafang.
 --- DateTime: 2018/11/16 15:48
 ---
-LabResearchCtrl = class('LabResearchCtrl',UIPage)
-UIPage:ResgisterOpen(LabResearchCtrl)
+LabScientificLineCtrl = class('LabScientificLineCtrl',UIPage)
+UIPage:ResgisterOpen(LabScientificLineCtrl)
 
-LaboratoryCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
-LaboratoryCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
-LaboratoryCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --发明
+LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
+LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
+LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --发明
 
-function LabResearchCtrl:initialize()
+function LabScientificLineCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
-function LabResearchCtrl:bundleName()
-    return "LabResearchPanel"
+function LabScientificLineCtrl:bundleName()
+    return "LabScientificLinePanel"
 end
 
-function LabResearchCtrl:OnCreate(obj)
+function LabScientificLineCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
 
-function LabResearchCtrl:Awake(go)
+function LabScientificLineCtrl:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
+    self.luaBehaviour:AddClick(LabScientificLinePanel.backBtn.gameObject, function()
         UIPage.ClosePage()
     end)
-    self.luaBehaviour:AddClick(LabResearchPanel.researchBtn.gameObject, function()
+    self.luaBehaviour:AddClick(LabScientificLinePanel.researchBtn.gameObject, function()
         self:_researchLineOpen()
     end)
-    self.luaBehaviour:AddClick(LabResearchPanel.inventionBtn.gameObject, function()
+    self.luaBehaviour:AddClick(LabScientificLinePanel.inventionBtn.gameObject, function()
         self:_inventionLineOpen()
     end)
 
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
-    self.researchSource.mProvideData = LabResearchCtrl.static.researchProvideData
-    self.researchSource.mClearData = LabResearchCtrl.static.researchClearData
+    self.researchSource.mProvideData = LabScientificLineCtrl.static.researchProvideData
+    self.researchSource.mClearData = LabScientificLineCtrl.static.researchClearData
     self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  --发明
-    self.inventionSource.mProvideData = LabResearchCtrl.static.inventionProvideData
-    self.inventionSource.mClearData = LabResearchCtrl.static.inventionClearData
+    self.inventionSource.mProvideData = LabScientificLineCtrl.static.inventionProvideData
+    self.inventionSource.mClearData = LabScientificLineCtrl.static.inventionClearData
 end
 
-function LabResearchCtrl:Refresh()
+function LabScientificLineCtrl:Refresh()
     self:_initPanelData()
 end
 
-function LabResearchCtrl:Close()
+function LabScientificLineCtrl:Close()
     self:_removeListener()
 end
 
-function LabResearchCtrl:_addListener()
+function LabScientificLineCtrl:_addListener()
     --Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
 
 end
-function LabResearchCtrl:_removeListener()
+function LabScientificLineCtrl:_removeListener()
     --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
 end
 
-function LabResearchCtrl:_initPanelData()
+function LabScientificLineCtrl:_initPanelData()
     self:_addListener()
-    LabResearchCtrl.researchItems = {}
-    LabResearchCtrl.inventionItems = {}
+    LabScientificLineCtrl.researchItems = {}
+    LabScientificLineCtrl.inventionItems = {}
     self.researchDatas = {}
     self.inventionDatas = {}
 
@@ -82,24 +82,24 @@ function LabResearchCtrl:_initPanelData()
 end
 
 ---按钮切页
-function LabResearchCtrl:_researchLineOpen()
-    LabResearchPanel._researchToggleState(true)
-    LabResearchPanel._inventionToggleState(false)
+function LabScientificLineCtrl:_researchLineOpen()
+    LabScientificLinePanel._researchToggleState(true)
+    LabScientificLinePanel._inventionToggleState(false)
 
     self:_onReceiveLabResearchData(self.researchDatas)
 end
-function LabResearchCtrl:_inventionLineOpen()
-    LabResearchPanel._researchToggleState(false)
-    LabResearchPanel._inventionToggleState(true)
+function LabScientificLineCtrl:_inventionLineOpen()
+    LabScientificLinePanel._researchToggleState(false)
+    LabScientificLinePanel._inventionToggleState(true)
 
     self:c_onReceiveLabInventionData(self.inventionDatas)
 end
 
 ---滑动复用
 --研究
-LabResearchCtrl.static.researchProvideData = function(transform, idx)
+LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
-        LabResearchCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
+        LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
             --打开研究选择界面
             ct.log("cycle_w15_laboratory03", "打开研究选择界面")
         end)
@@ -107,15 +107,15 @@ LabResearchCtrl.static.researchProvideData = function(transform, idx)
     end
 
     idx = idx + 1
-    local item = LabResearchLineItem:new(LabResearchCtrl.researchInfoData[idx], transform)
-    LabResearchCtrl.researchItems[idx] = item
+    local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
+    LabScientificLineCtrl.researchItems[idx] = item
 end
-LabResearchCtrl.static.researchClearData = function(transform)
+LabScientificLineCtrl.static.researchClearData = function(transform)
 end
 --发明
-LabResearchCtrl.static.inventionProvideData = function(transform, idx)
+LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
-        LabResearchCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
+        LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
             --打开研究选择界面
             ct.log("cycle_w13_laboratory", "打开发明选择界面")
         end)
@@ -123,38 +123,38 @@ LabResearchCtrl.static.inventionProvideData = function(transform, idx)
     end
 
     idx = idx + 1
-    local item = LabInventionLineItem:new(LabResearchCtrl.inventionInfoData[idx], transform)
-    LabResearchCtrl.inventionItems[idx] = item
+    local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)
+    LabScientificLineCtrl.inventionItems[idx] = item
 end
-LabResearchCtrl.static.inventionClearData = function(transform)
+LabScientificLineCtrl.static.inventionClearData = function(transform)
 end
 
 ---刷新数据
 --研究
-function LabResearchCtrl:_onReceiveLabResearchData(datas)
+function LabScientificLineCtrl:_onReceiveLabResearchData(datas)
     local researchInfoData = BaseTools.TableCopy(datas)
     local researchPrefabList = {}
     for i, item in pairs(researchInfoData) do
-        researchPrefabList[i] = LaboratoryCtrl.static.LabResearchItemPath
+        researchPrefabList[i] = LabScientificLineCtrl.static.LabResearchItemPath
     end
     --预留第一个数据给按钮
     table.insert(researchInfoData, 1, {})
-    table.insert(researchPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
+    table.insert(researchPrefabList, 1, LabScientificLineCtrl.static.EmptyBtnPath)
 
-    LabResearchCtrl.researchInfoData = researchInfoData
-    LabResearchPanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
+    LabScientificLineCtrl.researchInfoData = researchInfoData
+    LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 end
 --发明
-function LabResearchCtrl:c_onReceiveLabInventionData(datas)
+function LabScientificLineCtrl:c_onReceiveLabInventionData(datas)
     local inventionInfoData = BaseTools.TableCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do
-        inventionPrefabList[i] = LaboratoryCtrl.static.LabInventionItemPath
+        inventionPrefabList[i] = LabScientificLineCtrl.static.LabInventionItemPath
     end
     --预留第一个数据给按钮
     table.insert(inventionInfoData, 1, {})
-    table.insert(inventionPrefabList, 1, LaboratoryCtrl.static.EmptyBtnPath)
+    table.insert(inventionPrefabList, 1, LabScientificLineCtrl.static.EmptyBtnPath)
 
-    LabResearchCtrl.inventionInfoData = inventionInfoData
-    LabResearchPanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
+    LabScientificLineCtrl.inventionInfoData = inventionInfoData
+    LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
 end

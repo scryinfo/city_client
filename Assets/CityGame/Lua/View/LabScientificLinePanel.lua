@@ -4,15 +4,15 @@
 --- DateTime: 2018/11/17 16:36
 ---
 local transform
-LabResearchPanel = {}
-local this = LabResearchPanel
+LabScientificLinePanel = {}
+local this = LabScientificLinePanel
 
-function LabResearchPanel.Awake(obj)
+function LabScientificLinePanel.Awake(obj)
     transform = obj.transform
     this.InitPanel()
 end
 
-function LabResearchPanel.InitPanel()
+function LabScientificLinePanel.InitPanel()
     this.researchBtn = transform:Find("titleRoot/research/Btn"):GetComponent("Button")
     this.researchOpen = transform:Find("titleRoot/research/open")
     this.researchClose = transform:Find("titleRoot/research/close")
@@ -26,7 +26,7 @@ function LabResearchPanel.InitPanel()
     this.inventionScroll = transform:Find("bottomPageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
 end
 ---状态显示
-function LabResearchPanel._researchToggleState(isOn)
+function LabScientificLinePanel._researchToggleState(isOn)
     if isOn then
         this.researchOpen.localScale = Vector3.one
         this.researchClose.localScale = Vector3.zero
@@ -39,7 +39,7 @@ function LabResearchPanel._researchToggleState(isOn)
         --this.researchScroll.gameObject:SetActive(false)
     end
 end
-function LabResearchPanel._inventionToggleState(isOn)
+function LabScientificLinePanel._inventionToggleState(isOn)
     if isOn then
         this.inventionOpen.localScale = Vector3.one
         this.inventionClose.localScale = Vector3.zero

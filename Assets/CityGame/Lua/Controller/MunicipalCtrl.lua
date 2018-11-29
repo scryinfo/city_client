@@ -7,15 +7,13 @@
 require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
 require('Framework/UI/UIPage')
-require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
+
 require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 local class = require 'Framework/class'
 MunicipalCtrl = class('MunicipalCtrl',UIPage)
 UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 
-
-MunicipalCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 
 --构建函数
 function MunicipalCtrl:initialize()

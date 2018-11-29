@@ -9,14 +9,9 @@ require "Common/define"
 require('Framework/UI/UIPage')
 
 
-
-
 local class = require 'Framework/class'
 ScienceSellHallCtrl = class('ScienceSellHallCtrl',UIPage)
 UIPage:ResgisterOpen(ScienceSellHallCtrl) --注册打开的方法
-
-
-ScienceSellHallCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 
 --构建函数
 function ScienceSellHallCtrl:initialize()
@@ -508,25 +503,6 @@ function ScienceSellHallCtrl:Refresh()
     ScienceSellHallModel.money=PlayerTempModel.roleData.money
     self:OnClick_material()
 end
-
------生成预制
---function ScienceSellHallCtrl:c_creatGoods(path,parent)
---    local prefab = UnityEngine.Resources.Load(path);
---    local go = UnityEngine.GameObject.Instantiate(prefab);
---    local rect = go.transform:GetComponent("RectTransform");
---    go.transform:SetParent(parent);--.transform
---    rect.transform.localScale = Vector3.one;
---    rect.transform.localPosition=Vector3.zero
---    return go
---end
------小弹窗
---function ScienceSellHallCtrl:c_SmallPop(string,spacing)
---    if not self.prefab  then
---        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
---    end
---    SmallPopItem:new(string,spacing,self.prefab ,self);
---end
-
 
 function ScienceSellHallCtrl:c_IsSell(sellDataList)
     if sellDataList then

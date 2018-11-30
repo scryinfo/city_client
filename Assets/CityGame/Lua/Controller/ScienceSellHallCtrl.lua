@@ -59,32 +59,26 @@ function ScienceSellHallCtrl:Awake(go)
 
     ---kind sort
     materialBehaviour:AddClick(panel.kindtop.gameObject,self.OnClick_kindsort,self)
-    materialBehaviour:AddClick(panel.kinddown.gameObject,self.OnClick_kindsort,self)
     materialBehaviour:AddClick(panel.kindredtop.gameObject,self.OnClick_kindredtop,self)
     materialBehaviour:AddClick(panel.kindreddown.gameObject,self.OnClick_kindreddown,self)
     ---class sort
     materialBehaviour:AddClick(panel.classtop.gameObject,self.OnClick_classsort,self)
-    materialBehaviour:AddClick(panel.classdown.gameObject,self.OnClick_classsort,self)
     materialBehaviour:AddClick(panel.classredtop.gameObject,self.OnClick_classredtop,self)
     materialBehaviour:AddClick(panel.classreddown.gameObject,self.OnClick_classreddown,self)
     ---owner sort
     materialBehaviour:AddClick(panel.ownertop.gameObject,self.OnClick_ownersort,self)
-    materialBehaviour:AddClick(panel.ownerdown.gameObject,self.OnClick_ownersort,self)
     materialBehaviour:AddClick(panel.ownerredtop.gameObject,self.OnClick_ownerredtop,self)
     materialBehaviour:AddClick(panel.ownerreddown.gameObject,self.OnClick_ownerreddown,self)
     ---level sort
     materialBehaviour:AddClick(panel.leveltop.gameObject,self.OnClick_levelsort,self)
-    materialBehaviour:AddClick(panel.leveldown.gameObject,self.OnClick_levelsort,self)
     materialBehaviour:AddClick(panel.levelredtop.gameObject,self.OnClick_levelredtop,self)
     materialBehaviour:AddClick(panel.levelreddown.gameObject,self.OnClick_levelreddown,self)
     ---mylevel sort
     materialBehaviour:AddClick(panel.myleveltop.gameObject,self.OnClick_mylevelsort,self)
-    materialBehaviour:AddClick(panel.myleveldown.gameObject,self.OnClick_mylevelsort,self)
     materialBehaviour:AddClick(panel.mylevelredtop.gameObject,self.OnClick_mylevelredtop,self)
     materialBehaviour:AddClick(panel.mylevelreddown.gameObject,self.OnClick_mylevelreddown,self)
     ---score sort
     materialBehaviour:AddClick(panel.scoretop.gameObject,self.OnClick_scorelsort,self)
-    materialBehaviour:AddClick(panel.scoredown.gameObject,self.OnClick_scorelsort,self)
     materialBehaviour:AddClick(panel.scoreredtop.gameObject,self.OnClick_scoreredtop,self)
     materialBehaviour:AddClick(panel.scorereddown.gameObject,self.OnClick_scorereddown,self)
 
@@ -226,17 +220,14 @@ end
 function ScienceSellHallCtrl:OnClick_scorelsort(this)
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
     top=panel.scoretop.gameObject
-    down=panel.scoredown.gameObject
     reddown= panel.scorereddown.gameObject
     redtop=panel.scoreredtop.gameObject
     ---grey set false ,red down set true
     panel.scoretop.gameObject:SetActive(false)
-    panel.scoredown.gameObject:SetActive(false)
     panel.scorereddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.score<n.score end)
@@ -269,17 +260,14 @@ end
 function ScienceSellHallCtrl:OnClick_mylevelsort(this)
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
     top=panel.myleveltop.gameObject
-    down=panel.myleveldown.gameObject
     reddown= panel.mylevelreddown.gameObject
     redtop=panel.mylevelredtop.gameObject
     ---grey set false ,red down set true
     panel.myleveltop.gameObject:SetActive(false)
-    panel.myleveldown.gameObject:SetActive(false)
     panel.mylevelreddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.mylevel <n.mylevel end)
@@ -309,18 +297,15 @@ function ScienceSellHallCtrl:OnClick_levelsort(this)
     ---exchange
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
 
     top=panel.leveltop.gameObject
-    down=panel.leveldown.gameObject
     reddown= panel.levelreddown.gameObject
     redtop=panel.levelredtop.gameObject
     ---grey set false ,red down set true
     panel.leveltop.gameObject:SetActive(false)
-    panel.leveldown.gameObject:SetActive(false)
     panel.levelreddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.level <n.level end)
@@ -352,18 +337,15 @@ function ScienceSellHallCtrl:OnClick_ownersort(this)
     ---exchange
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
 
     top=panel.ownertop.gameObject
-    down=panel.ownerdown.gameObject
     reddown= panel.ownerreddown.gameObject
     redtop=panel.ownerredtop.gameObject
     ---grey set false ,red down set true
     panel.ownertop.gameObject:SetActive(false)
-    panel.ownerdown.gameObject:SetActive(false)
     panel.ownerreddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.owner <n.owner end)
@@ -394,18 +376,15 @@ function ScienceSellHallCtrl:OnClick_classsort(this)
     ---exchange
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
 
     top=panel.classtop.gameObject
-    down=panel.classdown.gameObject
     reddown= panel.classreddown.gameObject
     redtop=panel.classredtop.gameObject
     ---grey set false ,red down set true
     panel.classtop.gameObject:SetActive(false)
-    panel.classdown.gameObject:SetActive(false)
     panel.classreddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.class <n.class end)
@@ -435,18 +414,15 @@ function ScienceSellHallCtrl:OnClick_kindsort(this)
     ---exchange
     if top then
         top:SetActive(true)
-        down:SetActive(true)
         redtop:SetActive(false)
         reddown:SetActive(false)
     end
 
     top=panel.kindtop.gameObject
-    down=panel.kinddown.gameObject
     reddown= panel.kindreddown.gameObject
     redtop=panel.kindredtop.gameObject
    ---grey set false ,red down set true
     panel.kindtop.gameObject:SetActive(false)
-    panel.kinddown.gameObject:SetActive(false)
     panel.kindreddown.gameObject:SetActive(true)
     ---排序
     table.sort(sortList, function (m, n) return m.kind <n.kind end)

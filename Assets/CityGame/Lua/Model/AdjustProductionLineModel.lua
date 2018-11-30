@@ -67,7 +67,7 @@ function AdjustProductionLineModel.n_GsModifyKLine(stream)
 end
 --删除生产线
 function AdjustProductionLineModel.nGsDeleteLine(stream)
-    local msgProductionLine = assert(pbl.decode("gs.DelLine"),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
+    --local msgProductionLine = assert(pbl.decode("gs.DelLine"),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
 end
 --生产线变化推送
 function AdjustProductionLineModel.n_GsLineChangeInform(stream)

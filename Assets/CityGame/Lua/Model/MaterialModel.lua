@@ -23,7 +23,6 @@ end
 function MaterialModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),MaterialModel.n_OnOpenMaterial);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),MaterialModel.n_OnLineChangeInform);
 
 end
 
@@ -42,6 +41,9 @@ end
 --网络回调--
 --打开原料厂
 function MaterialModel.n_OnOpenMaterial(stream)
+    if stream ==nil or stream == "" then
+        return;
+    end
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
         MaterialModel.buildingId = msgMaterial.info.id

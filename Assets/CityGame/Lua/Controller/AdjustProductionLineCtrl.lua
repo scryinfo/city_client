@@ -62,11 +62,8 @@ end
 function AdjustProductionLineCtrl:calculateTime(msg)
     local time = 1 / Material[msg.itemId].numOneSec / msg.workerNum * msg.targetCount
     local timeTab = AdjustProductionLineCtrl:formattingTime(time)
-    for i,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
-        if v.itemId == msg.itemId then
-            v.timeText.text = timeTab
-        end
-    end
+    ShelfGoodsMgr.sendInfoTempTab[msg.itemId].timeText.text = timeTab
+    ShelfGoodsMgr.sendInfoTempTab = nil
 end
 
 --添加生产线

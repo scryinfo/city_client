@@ -174,6 +174,8 @@ function ShelfGoodsMgr:getSendInfo()
     end
     local number = AdjustProductionLineCtrl.productionLineTab[itemsId].inputNumber.text;
     local steffNumber = AdjustProductionLineCtrl.productionLineTab[itemsId].staffNumberText.text;
+    ShelfGoodsMgr.sendInfoTempTab = {}
+    ShelfGoodsMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.productionLineTab[itemsId]
     if number == nil then
         return;
     end

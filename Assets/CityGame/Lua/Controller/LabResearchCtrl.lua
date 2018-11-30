@@ -94,7 +94,7 @@ function LabResearchCtrl:_initPanelData()
         LabResearchPanel.levelText.text = "Lv."..goodLv[self.m_data.itemId]
     end
 
-    Event.Brocast("c_ReqLabStoreInfo", self.m_data.buildingId)  --本地，向DBMgr请求仓库信息
+    Event.Brocast("m_ReqLabStoreInfo", self.m_data.buildingId)  --本地，向DBMgr请求仓库信息
 end
 --拿到仓库信息
 function LabResearchCtrl:_getStoreData(data)

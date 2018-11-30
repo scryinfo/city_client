@@ -86,7 +86,6 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
 end
 --修改生产线
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
-    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     Event.Brocast("m_ResModifyKLine",MaterialModel.buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
 

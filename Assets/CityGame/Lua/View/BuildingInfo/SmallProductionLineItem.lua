@@ -36,6 +36,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
         self:RefreshUiInfo(self.goodsDataInfo,i)
     end
     --self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self)
+    Event.AddListener("refreshTimeText",self.refreshTimeText,self)
 
     self.pNumberScrollbar.onValueChanged:AddListener(function()
         self:pNumberScrollbarInfo();
@@ -101,5 +102,29 @@ function SmallProductionLineItem:OnClick_bgBtn(go)
     SmallProductionLineItem.number = go.inputNumber.text
     SmallProductionLineItem.staffNum = go.sNumberScrollbar.value
 end
+--生产线变化推送
+function SmallProductionLineItem:refreshTimeText(msg)
+    if not msg then
+        return;
+    end
+    for i,n in pairs(msg) do
+        local remainingNum = tonumber(self.time_Slider.maxValue) - msg.nowCount
+        local time = 1 / Material[self.itemId].numOneSec / tonumber(self.staffNumberText.text) * remainingNum
+        local timeTab = AdjustProductionLineCtrl:formattingTime(time)
 
+        for k,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
+            if AdjustProductionLineCtrl.productionLineTab[k].lineId == msg.lineId then
+                AdjustProductionLineCtrl.productionLineTab[k].timeText.text = timeTab
+                --AdjustProductionLineCtrl.productionLineTab[k].time_Slider.value = msg.nowCount
+            end
+        end
+
+        if remainingNum > 0 then
+            self.timeText.text = timeTab
+            self.time_Slider.value = msg.nowCount
+        elseif remainingNum < 0 or remainingNum == 0 then
+            self.timeText.text = "00:00:00"
+        end
+    end
+end
 

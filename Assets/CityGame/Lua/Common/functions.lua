@@ -111,6 +111,15 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--将秒转换成小时分秒的格式，非时间戳
+function getTimeBySec(secTime)
+	local tb = {}
+	secTime = math.floor(secTime)
+	tb.hour = math.floor(secTime / 3600) or 0
+	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
+	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+	return tb
+end
 
 function ct.file_exists(path)
 	local file = io.open(path, "rb")

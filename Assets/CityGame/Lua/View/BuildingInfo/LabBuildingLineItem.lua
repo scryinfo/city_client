@@ -60,7 +60,7 @@ function LabBuildingLineItem:_initData()
         self.otherOpenImg.localScale = Vector3.zero
     end
     self.mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-        ct.OpenCtrl("LabResearchCtrl", self.data)  --按照时间排好的顺序表
+        ct.OpenCtrl("LabScientificLineCtrl", self.data)  --按照时间排好的顺序表
     end, self)
 
 end

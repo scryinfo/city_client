@@ -11,78 +11,110 @@ LabResearchCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --�
 function LabResearchCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
-
 function LabResearchCtrl:bundleName()
-    return "LabScientificLinePanel"
+    return "LabResearchPanel"
 end
-
 function LabResearchCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
-
 function LabResearchCtrl:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(LabScientificLinePanel.backBtn.gameObject, function()
+    self.luaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
         UIPage.ClosePage()
     end)
-    self.luaBehaviour:AddClick(LabScientificLinePanel.researchBtn.gameObject, function()
-        self:_researchLineOpen()
+    self.luaBehaviour:AddClick(LabResearchPanel.researchBtn.gameObject, function()
+        self:_researchBtnFunc()
     end)
-    self.luaBehaviour:AddClick(LabScientificLinePanel.inventionBtn.gameObject, function()
-        self:_inventionLineOpen()
+    self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
+        if self.m_data.buildingId and self.m_data.lineId then
+            Event.Brocast("m_ReqLabRoll", self.m_data.buildingId, self.m_data.lineId)
+        end
     end)
-
-    --滑动复用部分
-    self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
-    self.researchSource.mProvideData = LabResearchCtrl.static.researchProvideData
-    self.researchSource.mClearData = LabResearchCtrl.static.researchClearData
-    self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  --发明
-    self.inventionSource.mProvideData = LabResearchCtrl.static.inventionProvideData
-    self.inventionSource.mClearData = LabResearchCtrl.static.inventionClearData
+    UpdateBeat:Add(self._update, self)
 end
-
 function LabResearchCtrl:Refresh()
+    self:_addListener()
     self:_initPanelData()
 end
-
+function LabResearchCtrl:Hide()
+    UIPage.Hide(self)
+    self._removeListener()
+end
 function LabResearchCtrl:Close()
     self:_removeListener()
 end
 
 function LabResearchCtrl:_addListener()
-    --Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
-
+    Event.AddListener("c_OnReceiveLaboratoryStoreInfo", self._getStoreData, self)  --DBMgr发送过来的store数据
 end
 function LabResearchCtrl:_removeListener()
-    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.AddListener("c_OnReceiveLaboratoryStoreInfo", self._getStoreData, self)
 end
 
+function LabResearchCtrl:_update()
+    if self.m_data.bulbState and self.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
+        if self.remainTime then
+            self.remainTime = self.m_data.leftSec
+        else
+            self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
+        end
+        LabResearchPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
+
+        if self.remainTime < 0 then
+            self.bulbState = LabInventionBulbItemState.Finish
+            LabResearchPanel:setBulbState(self.bulbState)
+            return
+        end
+
+        local timeTable = getTimeBySec(self.remainTime)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        LabResearchPanel.timeDownText.text = timeStr
+    end
+end
+--初始化数据
 function LabResearchCtrl:_initPanelData()
     self:_addListener()
-    LabResearchCtrl.researchItems = {}
-    LabResearchCtrl.inventionItems = {}
-    self.researchDatas = {}
-    self.inventionDatas = {}
-
-    --这个界面的数据是从主界面拿到的，然后数据有变化的时候才会更新，所以不需要请求服务器数据
-    --将数据分开
-    if self.m_data.line then
-        for key, itemData in pairs(self.m_data.line) do
-            if itemData.type == 0 then
-                self.researchDatas[#self.researchDatas] = itemData
-            elseif itemData.type == 1 then
-                self.inventionDatas[#self.inventionDatas] = itemData
-            end
-        end
+    self.bulbState = self.m_data.bulbState
+    if not self.bulbState then
+        self.bulbState = LabInventionBulbItemState.Empty
     end
-    self:_researchLineOpen()
+    LabResearchPanel:setBulbState(self.bulbState)
+
+    local formularItem = FormularConfig[self.m_data.itemId]
+    if formularItem.phase ~= 1 then
+        ct.log("cycle_w15_laboratory03", "阶段数不为1")
+        return
+    end
+    --获取商品等级
+    local goodLv = DataManager.GetMyGoodLv()
+    if not goodLv[self.m_data.itemId] then
+        LabResearchPanel.levelText.text = "Lv."..0
+    else
+        LabResearchPanel.levelText.text = "Lv."..goodLv[self.m_data.itemId]
+    end
+
+    Event.Brocast("c_ReqLabStoreInfo", self.m_data.buildingId)  --本地，向DBMgr请求仓库信息
+end
+--拿到仓库信息
+function LabResearchCtrl:_getStoreData(data)
+    --获取基础数据
+    local itemInfo
+    if self.m_data.isMaterial then
+        itemInfo = Material[self.data.itemId]
+    else
+        itemInfo = Good[self.data.itemId]
+    end
+    LabResearchPanel.itemNameText.text = itemInfo.name
+    --LabResearchPanel.iconImg.mainTexture = itemInfo.img
+    LabResearchPanel:showLine(formularItem.materials)
 end
 
----按钮切页
-function LabResearchCtrl:_researchLineOpen()
-    LabScientificLinePanel._researchToggleState(true)
-    LabScientificLinePanel._inventionToggleState(false)
+--显示
+function LabResearchCtrl:_researchBtnFunc()
+    self.bulbState = LabInventionBulbItemState.Locked
+    LabResearchPanel:setBulbState(self.bulbState)  --只是显示出来，并没有开始倒计时
+    LabResearchPanel.researchBtn.localScale = Vector3.zero
 
-    self:_onReceiveLabResearchData(self.researchDatas)
+    UIPage.ClosePage()
 end

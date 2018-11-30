@@ -15,7 +15,8 @@ end
 function LabResearchPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.levelText = transform:Find("bottomRoot/left/levelRoot/levelText"):GetComponent("Text")
-    this.progressSuccessTran = transform:Find("bottomRoot/left/progressRoot/successImg")  --完成时显示的图片
+    this.progressSuccessBtn = transform:Find("bottomRoot/left/progressRoot/successImg")  --完成时显示的按钮
+    this.workingImgRootTran = transform:Find("bottomRoot/left/progressRoot/workingImg")
     this.progressWorkingImg = transform:Find("bottomRoot/left/progressRoot/workingImg/progressImg"):GetComponent("Image")  --正在发明中，设置fill amount
     this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
     this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")  --还未点击研究时的显示
@@ -23,9 +24,56 @@ function LabResearchPanel.InitPanel()
     this.itemNameText = transform:Find("bottomRoot/right/titleBg/itemNameText"):GetComponent("Text")
     this.iconImg = transform:Find("bottomRoot/right/iconImg"):GetComponent("Image")
 
+    this.singleLineTran = transform:Find("bottomRoot/right/singleLine")
+    this.singleLineItem = LabFormulaItem:new(this.singleLineTran)
     this.twoLineTran = transform:Find("bottomRoot/right/twoLine")
     this.twoLineItem = LabFormulaItem:new(this.twoLine)
     this.threeLineTran = transform:Find("bottomRoot/right/threeLine")
     this.threeLineItem = LabFormulaItem:new(this.threeLineTran)
     this.researchBtn = transform:Find("bottomRoot/workingImg/researchBtn")
+end
+--设置
+function LabResearchPanel:setBulbState(state)
+    if state == LabInventionBulbItemState.Empty then
+        this.emptyTextTran.localScale = Vector3.one
+        this.workingImgRootTran.localScale = Vector3.zero
+        this.progressSuccessBtn.localScale = Vector3.zero
+    elseif state == LabInventionBulbItemState.Locked then
+        this.emptyTextTran.localScale = Vector3.zero
+        this.workingImgRootTran.localScale = Vector3.one
+        this.progressSuccessBtn.localScale = Vector3.zero
+
+        this.progressWorkingImg.fillAmount = 0
+        this.timeDownText.text = ""
+    elseif state == LabInventionBulbItemState.Working then
+        this.emptyTextTran.localScale = Vector3.zero
+        this.workingImgRootTran.localScale = Vector3.zero
+        this.progressSuccessBtn.localScale = Vector3.one
+    elseif state == LabInventionBulbItemState.Finish then
+        this.emptyTextTran.localScale = Vector3.zero
+        this.workingImgRootTran.localScale = Vector3.one
+        this.progressSuccessBtn.localScale = Vector3.zero
+    end
+end
+--显示填充线的信息
+function LabResearchPanel:showLine(datas)
+    local count = #datas
+    if count == 1 then
+        this.singleLineTran.localScale = Vector3.one
+        this.twoLineTran.localScale = Vector3.zero
+        this.threeLineTran.localScale = Vector3.zero
+        this.singleLineItem:showState(datas)
+    elseif count == 2 then
+        this.singleLineTran.localScale = Vector3.zero
+        this.twoLineTran.localScale = Vector3.one
+        this.threeLineTran.localScale = Vector3.zero
+        this.twoLineItem:showState(datas)
+    elseif count == 3 then
+        this.singleLineTran.localScale = Vector3.zero
+        this.twoLineTran.localScale = Vector3.zero
+        this.threeLineTran.localScale = Vector3.one
+        this.threeLineItem:showState(datas)
+    else
+        ct.log("", "传入的table不是顺序表或者大小为0")
+    end
 end

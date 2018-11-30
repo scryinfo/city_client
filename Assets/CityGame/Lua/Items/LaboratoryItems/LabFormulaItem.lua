@@ -4,6 +4,8 @@
 --- DateTime: 2018/11/29 18:02
 ---
 LabFormulaItem = class('LabFormulaItem')
+LabFormulaItem.static.Red_Color = "#D81F1F"  --红色
+
 function LabFormulaItem:initialize(transform)
     self.transform = transform
 
@@ -25,7 +27,15 @@ function LabFormulaItem:showState(datas)
     end
 
     for i, itemData in pairs(datas) do
-        self.itemRects[i].matCountText.text = itemData.matCount
+        ---测试 默认设置为0
+        local haveCount = 0  --通过itemId获取仓库中自己含有的个数
+        local showStr
+        if haveCount < itemData.matCount then
+            showStr = string.format("<color=%s>%d/%d</color>", LabFormulaItem.static.Red_Color, haveCount, itemData.matCount)
+        else
+            showStr = string.format("%d/%d", haveCount, itemData.matCount)
+        end
+        self.itemRects[i].matCountText.text = showStr
         --self.itemRects[i].matImg = itemData.matId  --根据id读取图片
     end
 end

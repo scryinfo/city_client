@@ -23,6 +23,9 @@ end
 function createWindows(name,pos)
 	PanelManager:CreateWindow(name,pos);
 end
+function ResourcesImage(path)
+	PanelManager:ResourcesImage(path)
+end
 function child(str)
 	return transform:Find(str);
 end
@@ -110,6 +113,10 @@ function getFormatUnixTime(time)
 	end
 
 	return tb
+end
+--表格排序
+function tableSort(table,gameObject)
+	TableSort.tableSort(table,gameObject)
 end
 
 function ct.file_exists(path)

@@ -9,6 +9,7 @@ UIPage:ResgisterOpen(LabScientificLineCtrl)
 LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
 LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
 LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --发明
+LabScientificLineCtrl.static.LabRemainStaffColor = "4a7ff6"  --员工颜色
 
 function LabScientificLineCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -94,8 +95,9 @@ function LabScientificLineCtrl:_initPanelData()
             end
         end
     end
-    self.remainStaffCount = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
-    LabScientificLinePanel.staffCountText.text = string.format("", )
+    local totalCount = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+    self.remainStaffCount = totalCount - workingStaffCount
+    LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, self.remainStaffCount, totalCount)
     self.storeItemData = {}  --获取所有的库存
     if self.m_data.store then
         if self.m_data.store.inHand then

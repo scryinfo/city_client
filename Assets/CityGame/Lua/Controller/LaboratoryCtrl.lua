@@ -64,6 +64,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
         self.laboratoryToggleGroup:updateData(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     end
 end
+
 ---更改名字
 function LaboratoryCtrl:_changeName(ins)
     local data = {}

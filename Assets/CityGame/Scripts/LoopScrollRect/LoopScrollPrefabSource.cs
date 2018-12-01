@@ -100,13 +100,5 @@ namespace UnityEngine.UI
 
             AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).Release(tempPrefabName, go.gameObject);
         }
-
-        public void addObjDic(string objName)
-        {
-            if (!mObjNameDic.ContainsKey(objName))
-            {
-                ////mObjNameDic.Add(go.name, tempPrefabName);  //obj名字为key，对应的预制对象为value
-            }
-        }
     }
 }

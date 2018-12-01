@@ -158,3 +158,21 @@ function LabScientificLineCtrl:c_onReceiveLabInventionData(datas)
     LabScientificLineCtrl.inventionInfoData = inventionInfoData
     LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
 end
+
+--客户端创建一个新的line，还未开工
+function LabScientificLineCtrl:_addScientificLineCilent(lineData)
+    --记录一个当前正在处理的item，self.tempLine
+    --判断，如果self。tempLine不为空，则激活小弹窗
+    if lineData.type == 0 then
+        --在最前面插入一个数据，包含buildingId，itemId，以及phase
+        --然后在UI上根据type选择是哪个界面，研究还是发明，然后刷新Scroll
+    elseif lineData.type == 1 then
+
+    end
+end
+--收到LabLineAdd回调
+function LabScientificLineCtrl:_onReceiveLabAddLine(lineData)
+    if lineData.itemId == self.tempLine.itemId then
+        Event.Brocast("", lineData.buildingId, lineData.lineId, self.tempLine.phase)
+    end
+end

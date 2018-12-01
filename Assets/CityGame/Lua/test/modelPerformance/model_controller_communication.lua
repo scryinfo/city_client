@@ -103,7 +103,7 @@ UnitTest.Exec("wk16_abel_controller_model", "test_wk16_abel_controller_model",  
     pCrtl_1:reqDatafun(1,2)
     pCrtl_2:reqDatafun('hello')
 
-    --不存在的方法
+    --不存在的方法,会有 Error 日志输出
     ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello',function (retvalue)
         ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
     end)

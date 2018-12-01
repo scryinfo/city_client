@@ -52,6 +52,15 @@ namespace UnityEngine.UI
             prefabSource.InitDiffPrefabData(diffPrefabNameList);
         }
 
+        public void SetLoopNomalPrefabSource(string prefabName)
+        {
+            if (prefabSource == null)
+            {
+                prefabSource = new LoopScrollPrefabSource();
+            }
+            prefabSource.InitPrefabData(prefabName);
+        }
+
         //-----------------------------------------------------------------------------------xyf
 
         [Tooltip("Threshold for preloading")]

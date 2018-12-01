@@ -67,9 +67,9 @@ function Crtl_1:initialize(name, newInsId)
     ControllerBase.initialize(self, name,newInsId)
 end
 function Crtl_1:reqDatafun(arg_int1, arg_int2)
-    ct.model_rpc(self.insId, 'testfun',function (retvalue)
+    ct.model_rpc(self.insId, 'testfun', arg_int1, arg_int2,function (retvalue)
         ct.log('wk16_abel_controller_model', '[Crtl_1:reqDatafun] return: '..retvalue)
-    end,  arg_int1,arg_int2)
+    end)
 end
 
 Crtl_2 = class('Crtl_2',ControllerBase)
@@ -77,9 +77,9 @@ function Crtl_2:initialize(name, newInsId)
     ControllerBase.initialize(self, name,newInsId)
 end
 function Crtl_2:reqDatafun(arg_str)
-    ct.model_rpc(self.insId, 'testfun',function (retvalue)
+    ct.model_rpc(self.insId, 'testfun', arg_str,function (retvalue)
         ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
-    end, arg_str)
+    end)
 end
 --controller类}
 
@@ -104,9 +104,9 @@ UnitTest.Exec("wk16_abel_controller_model", "test_wk16_abel_controller_model",  
     pCrtl_2:reqDatafun('hello')
 
     --不存在的方法
-    ct.model_rpc(pCrtl_2.insId, 'testfun1',function (retvalue)
+    ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello',function (retvalue)
         ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
-    end, 'hello')
+    end)
     --测试}
 end)
 

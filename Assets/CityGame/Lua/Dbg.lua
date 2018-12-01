@@ -48,9 +48,9 @@ log = nil
 logWarn = print
 logDebug = print
 
---error = function(s,...)
---    ct.log("system","[error]",s,...)
---end
+error = function(s,...)
+    ct.log("system","[error]",s,...)
+end
 
 this.INFO_MSG = function( s )
     if (DEBUGLEVEL.INFO >= this.debugLevel) then

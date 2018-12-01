@@ -26,7 +26,7 @@ function ShelfGoodsMgr:initialize(insluabehaviour, buildingData)
     end
 end
 
---仓库创建物品
+--仓库
 function ShelfGoodsMgr:_creatWarehouseItemGoods()
     if not MaterialModel.MaterialWarehouse then
         return;
@@ -56,7 +56,7 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
     end
 end
 
---货架创建物品
+--货架
 function ShelfGoodsMgr:_creatStaffItemGoods()
     if not MaterialModel.MaterialShelf then
         return;
@@ -68,7 +68,6 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
-        --shelfDataInfo.money = "E"..v.price..".0000"
         shelfDataInfo.money = getPriceString("E"..v.price..".0000",35,25)
         shelfDataInfo.price = v.price
         shelfDataInfo.itemId = v.k.id
@@ -172,10 +171,10 @@ function ShelfGoodsMgr:getSendInfo()
     if itemsId == nil then
         return;
     end
-    local number = AdjustProductionLineCtrl.productionLineTab[itemsId].inputNumber.text;
-    local steffNumber = AdjustProductionLineCtrl.productionLineTab[itemsId].staffNumberText.text;
     ShelfGoodsMgr.sendInfoTempTab = {}
     ShelfGoodsMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.productionLineTab[itemsId]
+    local number = ShelfGoodsMgr.sendInfoTempTab[itemsId].inputNumber.text;
+    local steffNumber = ShelfGoodsMgr.sendInfoTempTab[itemsId].staffNumberText.text;
     if number == nil then
         return;
     end

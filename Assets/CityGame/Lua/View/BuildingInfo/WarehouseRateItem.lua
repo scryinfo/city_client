@@ -18,19 +18,20 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
     self.sizeSlider = self.viewRect.transform:Find("contentRoot/sizeSlider"):GetComponent("Slider");  -- slider
+    self.numberText = self.viewRect.transform:Find("contentRoot/number"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);
-
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        --UIPage:ShowPage(WarehouseCtrl)
         ct.OpenCtrl("WarehouseCtrl")
     end);
-
+    self.sizeSlider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+    self.sizeSlider.value = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
+    self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);

@@ -70,12 +70,36 @@ function ShelfRateItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - ShelfRateItem.static.TOP_H);
 end
+--初始化信息
+function ShelfRateItem:InitializeInfo(data)
+    if not data then
+        return;
+    end
+    --local configTable = {}
+    for i,v in pairs(data) do
+        --local uiTab = {}
+        --uiTab.name = v.name
+        --uiTab.number = v.n
+        --uiTab.price = getPriceString("E"..v.price..".0000",15,10)
+        --configTable[i] = uiTab
+        local prefabData={}
+        prefabData.prefab = self:_creatGoods()
 
+    end
+end
 --刷新数据
 function ShelfRateItem:updateInfo(data)
-    --[[    self.occupancyData = data
-
-if not self.viewRect.gameObject.activeSelf then
-    return
-end]]
+    --self.occupancyData = data
+    --if not self.viewRect.gameObject.activeSelf then
+    --    return
+    --end
+end
+--生成预制
+function ShelfRateItem:_creatGoods(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
 end

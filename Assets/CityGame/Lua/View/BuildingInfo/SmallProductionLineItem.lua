@@ -115,13 +115,10 @@ function SmallProductionLineItem:refreshTimeText(msg)
         for k,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
             if AdjustProductionLineCtrl.productionLineTab[k].lineId == msg.lineId then
                 AdjustProductionLineCtrl.productionLineTab[k].timeText.text = timeTab
-                --AdjustProductionLineCtrl.productionLineTab[k].time_Slider.value = msg.nowCount
             end
         end
-
         if remainingNum > 0 then
             self.timeText.text = timeTab
-            self.time_Slider.value = msg.nowCount
         elseif remainingNum < 0 or remainingNum == 0 then
             self.timeText.text = "00:00:00"
         end

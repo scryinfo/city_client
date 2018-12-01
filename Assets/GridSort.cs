@@ -8,7 +8,7 @@ namespace UnityEngine
     [Serializable]
     public class GridSort : MonoBehaviour
     {
-        [Header("设置宽度,默认自适应")]
+        [HideInInspector]
         public float[] cellWidth;   //设置宽度
         private Transform[] childObj;
         private int widthCount;
@@ -17,12 +17,14 @@ namespace UnityEngine
         [Header("宽度间隙")]
         public float spaceWidth; //宽度间隙
 
-        public void _initData(float[] width)
+        public void _initData(float[] width, float spaceWidths )
         {
+            cellWidth = new float[width.Length];
             for (int i = 0; i < width.Length; i++)
             {
                 cellWidth[i] = width[i];
             }
+            spaceWidth = spaceWidths;
         }
         private void Start()
         {

@@ -15,6 +15,7 @@ function CityMaterialItem:initialize(data, viewRect,id)
     self.transform = viewTrans:GetComponent("RectTransform")
     self.name = viewTrans:Find("cityinfoData/name/Text"):GetComponent("Text")
     self.companyNum = viewTrans:Find("cityinfoData/companyNum/Text"):GetComponent("Text")
+    self.cityinfoData = viewTrans:Find("cityinfoData"):GetComponent("RectTransform")
     self.staffNum = viewTrans:Find("cityinfoData/staffNum/Text"):GetComponent("Text")
     self.stocks = viewTrans:Find("cityinfoData/stocks/Text"):GetComponent("Text")
     self.dayProduction = viewTrans:Find("cityinfoData/dayProduction/Text"):GetComponent("Text")
@@ -23,7 +24,11 @@ function CityMaterialItem:initialize(data, viewRect,id)
     self.totalProfitAdd = viewTrans:Find("cityinfoData/totalProfitAdd/Text"):GetComponent("Text")
     self.line = viewTrans:Find("GameObject").gameObject
     self.btn = viewTrans:Find("cityinfoData"):GetComponent("Button")
-    self.line:SetActive(false)
+--[[    self.line:SetActive(false)
+  --  self.transform.sizeDelta.height = 130
+    self.transform.sizeDelta = Vector2.New( self.transform.sizeDelta.x,130)
+    --self.cityinfoData.sizeDelta.height = 0
+    self.cityinfoData.offsetMin = Vector2.New(0,0)]]
 
     self:_initData()
     self.btn.onClick:AddListener(function ()
@@ -35,6 +40,7 @@ end
 --初始化界面
 function CityMaterialItem:_initData()
     local data = self.data
+    self.name.text = data.name
     self.companyNum.text = data.companyNum
     self.staffNum.text = data.staffNum
     self.stocks.text = data.stocks

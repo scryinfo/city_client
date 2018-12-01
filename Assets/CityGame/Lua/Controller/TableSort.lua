@@ -8,7 +8,7 @@ function tableSort(table,gameObject)
     local cellWidth = {}
     for i, v in ipairs(table) do
         cellWidth[i] = v.width
-        gameObject:_initData(cellWidth)
+        gameObject:_initData(cellWidth,v.space)
         local parfabs = TableSort:_createCityInfoPab(v.path,gameObject.transform)
         parfabs:GetComponent("Image").color =getColorByInt(v.color.r,v.color.b,v.color.g,v.color.a)
         if parfabs.childCount >0 then

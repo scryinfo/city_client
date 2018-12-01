@@ -110,7 +110,7 @@ CityInfoData = {
 }
 CityMaterial = {
     [1] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦1",
         ["companyNum"] =1000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -120,7 +120,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [2] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦2",
         ["companyNum"] =2000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -130,7 +130,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [3] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦3",
         ["companyNum"] =10000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -140,7 +140,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [4] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦4",
         ["companyNum"] =3000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -150,7 +150,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [5] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦5",
         ["companyNum"] =4000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -160,7 +160,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [6] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦6",
         ["companyNum"] =500,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -170,7 +170,7 @@ CityMaterial = {
         ["totalProfitAdd"] ="+50%",
     },
     [7] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦7",
         ["companyNum"] =7000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -179,7 +179,7 @@ CityMaterial = {
         ["totalProfit"] =123456,
         ["totalProfitAdd"] ="+50%",
     }, [8] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦8",
         ["companyNum"] =6000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -188,7 +188,7 @@ CityMaterial = {
         ["totalProfit"] =123456,
         ["totalProfitAdd"] ="+50%",
     }, [9] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦9",
         ["companyNum"] =8000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -197,7 +197,7 @@ CityMaterial = {
         ["totalProfit"] =123456,
         ["totalProfitAdd"] ="+50%",
     }, [10] = {
-        ["name"] ="小麦",
+        ["name"] ="小麦10",
         ["companyNum"] =9000,
         ["staffNum"] =1564651,
         ["stocks"] =12345678,
@@ -209,16 +209,18 @@ CityMaterial = {
 }
 test = {
     [1] = {
-        ["data"] = "rodger",
-        ["size"] = 30,
-        ["width"] = 500,
-        ["path"] = "View/GoodsItem/Image",
-        ["color"] = {r = 255, b = 255, g = 255, a = 255},
-        ["itemPath"] = "0001",
-        ["itemColor"] = {r = 255, b = 255, g = 255, a = 0},
+        ["data"] = "rodger",--数据
+        ["space"] = 2,--间隙
+        ["size"] = 30,--字体大小
+        ["width"] = 500,--表格宽度
+        ["path"] = "View/GoodsItem/Image",--表格里的预制路径
+        ["color"] = {r = 255, b = 255, g = 255, a = 255},--预制颜色
+        ["itemPath"] = "0001",--预制里的图片路径
+        ["itemColor"] = {r = 255, b = 255, g = 255, a = 0},--预制里图片颜色
     },
     [2] = {
         ["data"] = "chengdu",
+        ["space"] = 2,
         ["size"] = 40,
         ["width"] = 0,
         ["path"] = "View/GoodsItem/Image",
@@ -228,6 +230,7 @@ test = {
     },
     [3] = {
         ["data"] = "china",
+        ["space"] = 2,
         ["size"] = 20,
         ["width"] = 0,
         ["path"] = "View/GoodsItem/Image",
@@ -237,6 +240,7 @@ test = {
     },
     [4] = {
         ["data"] = "123",
+        ["space"] = 2,
         ["size"] = 10,
         ["width"] = 0,
         ["path"] = "View/GoodsItem/Image 1",
@@ -246,6 +250,7 @@ test = {
     },
     [5] = {
         ["data"] = "123",
+        ["space"] = 2,
         ["size"] = 50,
         ["width"] = 0,
         ["path"] = "View/GoodsItem/Image",
@@ -255,6 +260,7 @@ test = {
     },
     [6] = {
         ["data"] = "789",
+        ["space"] = 2,
         ["size"] = 30,
         ["width"] = 0,
         ["path"] = "View/GoodsItem/Image",

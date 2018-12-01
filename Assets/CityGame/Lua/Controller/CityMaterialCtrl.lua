@@ -8,6 +8,8 @@ UIPage:ResgisterOpen(CityMaterialCtrl) --注册打开的方法
 local CityInfoCtrlBehaviour;
 local gameObject;
 local materialItems
+local prafabItem = {}
+local Items = {}
 
 function  CityMaterialCtrl:bundleName()
     return "CityMaterialPanel"
@@ -38,9 +40,9 @@ function CityMaterialCtrl:Awake(go)
     self.material = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.material.mProvideData = CityMaterialCtrl.static.MaterialProvideData
     self.material.mClearData = CityMaterialCtrl.static.MaterialClearData
-    --CityMaterialPanel.materialScroll:ActiveLoopScroll(self.material, #self.CityMaterial)
+    CityMaterialPanel.materialScroll:ActiveLoopScroll(self.material, #self.CityMaterial)
 
-    tableSort(test,CityMaterialPanel.cityName)
+    --tableSort(test,CityMaterialPanel.cityName)
 
 end
 
@@ -51,9 +53,25 @@ end
 
 --滑动互用
 CityMaterialCtrl.static.MaterialProvideData = function(transform, idx)
+
     idx = idx + 1
+   -- local id = CityMaterialPanel.content.transform.childCount
     local item = CityMaterialItem:new(CityMaterialCtrl.CityMaterial[idx], transform,idx)
     materialItems[idx] = item
+--[[    for i = 1,  CityMaterialPanel.content.transform.childCount do
+        prafabItem[i] = CityMaterialPanel.content.transform:GetChild(i-1);
+    end
+    for k, v in pairs(materialItems) do
+        for i, j in pairs(prafabItem) do
+            if v.data.name == prafabItem[i]:Find("cityinfoData/name/Text"):GetComponent("Text").text then
+                v.id = i
+                Items[k] = i
+            end
+        end
+    end
+    ct.log("system","人数不能为1111111111")]]
+   -- materialItems[idx].line:SetActive(false)
+
 end
 CityMaterialCtrl.static.MaterialClearData = function(transform)
 end
@@ -65,15 +83,25 @@ function CityMaterialCtrl:OnCompanyNumBtn(go)
 end
 
 function CityMaterialCtrl:c_OnBtn(go)
-    ct.log("system","人数不能为1111111111")
-    CityMaterialPanel.content.enabled = false
-    --CityMaterialPanel.materialLoop.enabled = false
-    go.line:SetActive( true)
-    for i = go.id+1, (#CityMaterialCtrl.CityMaterial) - go.id-1 do
-        local temp = materialItems[i].transform.anchoredPosition
-        temp = temp + Vector2.New(0,-300);
-        materialItems[i].transform.anchoredPosition = temp
-    end
+
+    --  self.transform.sizeDelta.height = 130
+    go.transform.sizeDelta = Vector2.New(1920,560)
+    go.line:SetActive(true)
+    --self.cityinfoData.sizeDelta.height = 0
+    go.cityinfoData.offsetMin = Vector2.New(0,430)
+
+    --[[    ct.log("system","人数不能为1111111111")
+        CityMaterialPanel.content.enabled = false
+        CityMaterialPanel.materialLoop.enabled = false
+        go.line:SetActive( true)
+        local b = Items[go.id ]
+        for i =b+1, CityMaterialPanel.content.transform.childCount do
+            local a = go.id
+            a = a+1
+            local temp = prafabItem[i].transform.anchoredPosition
+            temp = temp + Vector2.New(0,-300);
+            prafabItem[i].transform.anchoredPosition = temp
+        end]]
 end
 
 --排序方法

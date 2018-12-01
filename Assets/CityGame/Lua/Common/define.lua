@@ -1,11 +1,26 @@
 ----City项目的全局数据
+local loginner = print
+local getIdHead = function(id)
+	return "["..id.."]";
+end
 ct ={
 	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
 	G_DEBUGLOG = true, --是否打开调试日志
 	G_UNITTEST = true,	--是否打开单元测试
 	G_PERFORMANCETEST = false,	--是否打开性能测试
+	log = function(logid,s,...)
+		if s == nil then
+			return
+		end
+		local plgid = TestGroup.get_TestGroupId(logid)
+		local palgid = TestGroup.get_ActiveTestGroupId(logid)
+		if plgid == nil or  palgid == nil then
+			return
+		end
+		assert(s)
+		loginner(getIdHead(plgid) .. s,...);
+	end
 }
-
 CtrlNames = {
 	Login = "LoginCtrl",
 	SelectAvatar = "SelectAvatarCtrl",

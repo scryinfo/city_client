@@ -3,3 +3,46 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/11/13 16:52
 ---
+UnitTest.TestBlockStart()---------------------------------------------------------
+--icon 上限测试相关测试(一)
+UnitTest.Exec("abel_w16_Icon_load", "test_abel_w16_Icon_load",  function ()
+    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次加载30个]", function()
+
+    end)
+
+    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载60个]", function()
+
+    end)
+
+    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载120个]", function()
+
+    end)
+    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载1000个]", function()
+
+    end)
+end)
+
+UnitTest.Exec("abel_w16_Icon_unload", "test_abel_w16_Icon_load",  function ()
+    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载30个]", function()
+
+    end)
+
+    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载60个]", function()
+
+    end)
+
+    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载120个]", function()
+
+    end)
+    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载1000个]", function()
+
+    end)
+end)
+
+UnitTest.Exec("abel_w16_Icon_memory", "test_abel_w16_Icon_memory",  function ()
+    UnitTest.PerformanceTest("abel_w16_Icon_memory","[一次加载和卸载30个]", function()
+
+    end)
+end)
+
+UnitTest.TestBlockEnd()-----------------------------------------------------------

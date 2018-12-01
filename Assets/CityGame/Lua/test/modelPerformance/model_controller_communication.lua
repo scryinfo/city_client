@@ -20,13 +20,13 @@ end
 --model类{
 Model_1 = class('Model_1',ModelBase)
 function Model_1:testfun(arg_int1, arg_int2)
-    ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
+    --ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
     return #self.name+arg_int1+arg_int2
 end
 
 Model_2 = class('Model_2',ModelBase)
 function Model_2:testfun(arg_str)
-    ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
+    --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
     return self.name..arg_str
 end
 --model类}
@@ -40,18 +40,36 @@ end
 function ModelManager:addModel(model)
     modelList[#modelList+1] = model
 end
+
+function ModelManager:getModel(pos)
+    return modelList[pos]
+end
 --最后一个参数必须是函数或者nil
 function ModelManager.modelRpc(insId, modelMethord, ...)
     local arg = {...}
+    --优化版本
     local md = modelList[insId]
-    if md ~= nil then
-        assert(md, 'model not exist which instance id = ',insId)
-        assert(md[modelMethord], 'Methord: '..modelMethord..' not exist,model instance id = '..insId)
-        local ret = md[modelMethord](md,...)
-        if arg[#arg] ~= nil then
-            arg[#arg](ret)
-        end
-    end
+    arg[#arg](md[modelMethord](md,...))
+
+    --严格版本
+    --local md = modelList[insId]
+    --if md ~= nil then
+    --    assert(md, 'model not exist which instance id = ',insId)
+    --    assert(md[modelMethord], 'Methord: '..modelMethord..' not exist,model instance id = '..insId)
+    --    --if not md then
+    --    --    ct.log( 'system','model not exist which instance id = ',insId)
+    --    --    return
+    --    --end
+    --    --if not md[modelMethord] then
+    --    --    ct.log( 'system','Methord: '..modelMethord..' not exist,model instance id = '..insId)
+    --    --    return
+    --    --end
+    --
+    --    local ret = md[modelMethord](md,...)
+    --    if arg[#arg] ~= nil then
+    --        arg[#arg](ret)
+    --    end
+    --end
 end
 
 --全局方法
@@ -62,52 +80,94 @@ end
 --model管理器类}
 
 --controller类{
-Crtl_1 = class('Crtl_1',ControllerBase)
-function Crtl_1:initialize(name, newInsId)
+Ctrl_1 = class('Crtl_1',ControllerBase)
+function Ctrl_1:initialize(name, newInsId)
     ControllerBase.initialize(self, name,newInsId)
 end
-function Crtl_1:reqDatafun(arg_int1, arg_int2)
+function Ctrl_1:reqDatafun(arg_int1, arg_int2)
+    local pRetvalue = nil
     ct.model_rpc(self.insId, 'testfun', arg_int1, arg_int2,function (retvalue)
-        ct.log('wk16_abel_controller_model', '[Crtl_1:reqDatafun] return: '..retvalue)
+        --ct.log('wk16_abel_controller_model', '[Crtl_1:reqDatafun] return: '..retvalue)
+        pRetvalue = retvalue
     end)
 end
 
-Crtl_2 = class('Crtl_2',ControllerBase)
-function Crtl_2:initialize(name, newInsId)
+Ctrl_2 = class('Crtl_2',ControllerBase)
+function Ctrl_2:initialize(name, newInsId)
     ControllerBase.initialize(self, name,newInsId)
 end
-function Crtl_2:reqDatafun(arg_str)
+function Ctrl_2:reqDatafun(arg_str)
+    local pRetvalue = nil
     ct.model_rpc(self.insId, 'testfun', arg_str,function (retvalue)
-        ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
+        pRetvalue = retvalue
+        --ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
     end)
 end
 --controller类}
 
+--数据准备{
+local ModelManager = ModelManager
+ModelManager.initialize()
+local tempCtrlList = {}
+local test_count = 100000
+for i = 1, test_count do
+    ModelManager.addModel(nil,Model_1:new('Model_1'..i))
+    tempCtrlList[i] = Ctrl_1:new('Ctrl_1_ins_'..i, i)
+end
+for i = test_count+1, test_count *2 do
+    ModelManager.addModel(nil,Model_2:new('Model_2'..i))
+    tempCtrlList[i] = Ctrl_1:new('Ctrl_1_ins_'..i, i)
+end
+--数据准备}
 
 UnitTest.Exec("wk16_abel_controller_model", "test_wk16_abel_controller_model",  function ()
-    --数据准备{
-    local ModelManager = ModelManager
-    ModelManager.initialize()
-    local test_count = 100
-    for i = 1, test_count do
-        ModelManager.addModel(nil,Model_1:new('Model_1'..i))
-    end
-    for i = test_count, test_count *2 do
-        ModelManager.addModel(nil,Model_2:new('Model_2'..i))
-    end
-
-    local pCrtl_1 = Crtl_1:new('Crtl_1_ins', ct.getIntPart(test_count*0.5) )
-    local pCrtl_2 = Crtl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
-    --数据准备}
+    local pCrtl_1 = Ctrl_1:new('Crtl_1_ins', ct.getIntPart(test_count*0.5) )
+    local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
     --测试{
     pCrtl_1:reqDatafun(1,2)
     pCrtl_2:reqDatafun('hello')
 
     --不存在的方法,会有 Error 日志输出
-    ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello',function (retvalue)
-        ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
-    end)
+    --ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello',function (retvalue)
+    --    ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
+    --end)
     --测试}
+end)
+UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  function ()
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model","model_rpc 性能测试1：直接调用 model 方法", function()
+        local retvalue = nil
+        for i = 1, test_count do
+            retvalue = ModelManager.getModel(nil,i):testfun(1,2)
+        end
+        for i = test_count+1, test_count*2 do
+            retvalue = ModelManager.getModel(nil,i):testfun('hello_'..i)
+        end
+    end)
+
+    UnitTest.PerformanceTest("wk16_abel_controller_model","model_rpc 性能测试2：model_rpc 调用", function()
+        local pRetvalue = nil
+        for i = 1, test_count do
+            --tempCtrlList[i]:reqDatafun(1,2)
+            ct.model_rpc(tempCtrlList[i].insId, 'testfun', 1,2,function (retvalue)
+                pRetvalue = retvalue
+            end)
+        end
+        for i = test_count+1, test_count*2 do
+            --tempCtrlList[i]:reqDatafun('hello_'..i)
+            ct.model_rpc(tempCtrlList[i].insId, 'testfun', 'hello',function (retvalue)
+                pRetvalue = retvalue
+            end)
+        end
+    end)
+    --[[
+    100万次调用
+        model_rpc 性能测试1：直接调用 model 方法    执行时间:      4.038
+        model_rpc 性能测试2：model_rpc 调用    执行时间:           7.239
+    10万次调用
+        model_rpc 性能测试1：直接调用 model 方法    执行时间:      0.44599999999991
+        model_rpc 性能测试2：model_rpc 调用    执行时间:           0.51700000000005
+    性能比较接近
+    --]]
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -40,21 +40,24 @@ end
 function ModelManager:addModel(model)
     modelList[#modelList+1] = model
 end
-function ModelManager.modelRpc(insId, modelMethord, callback,...)
+--最后一个参数必须是函数或者nil
+function ModelManager.modelRpc(insId, modelMethord, ...)
+    local arg = {...}
+    local md = modelList[insId]
     if md ~= nil then
-        local md = modelList[insId]
         assert(md, 'model not exist which instance id = ',insId)
         assert(md[modelMethord], 'Methord: '..modelMethord..' not exist,model instance id = '..insId)
         local ret = md[modelMethord](md,...)
-        if callback ~= nil then
-            callback(ret)
+        if arg[#arg] ~= nil then
+            arg[#arg](ret)
         end
     end
 end
 
 --全局方法
-function ct.model_rpc(insId, modelMethord, callback, ...)
-    ModelManager.modelRpc(insId, modelMethord, callback,...)
+--function ct.model_rpc(insId, modelMethord, callback, ...)
+function ct.model_rpc(insId, modelMethord, ...)
+    ModelManager.modelRpc(insId, modelMethord, ...)
 end
 --model管理器类}
 
@@ -104,11 +107,6 @@ UnitTest.Exec("wk16_abel_controller_model", "test_wk16_abel_controller_model",  
     ct.model_rpc(pCrtl_2.insId, 'testfun1',function (retvalue)
         ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
     end, 'hello')
-
-    ModelManager.modelRpc(ctr2_IdCache,'testfun', 1,2,function()
-
-    end)
-
     --测试}
 end)
 

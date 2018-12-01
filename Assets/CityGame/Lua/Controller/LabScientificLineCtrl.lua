@@ -35,6 +35,19 @@ function LabScientificLineCtrl:Awake(go)
         self:_inventionLineOpen()
     end)
 
+    self.luaBehaviour:AddClick(LabScientificLinePanel.changeStaffCountBtn.gameObject, function()
+        self:_cancelChangeStaffCount()
+    end)
+    self.luaBehaviour:AddClick(LabScientificLinePanel.delBtn.gameObject, function()
+        self:_cancelChangeStaffCount()
+    end)
+    self.luaBehaviour:AddClick(LabScientificLinePanel.okBtn.gameObject, function()
+        self:_sureChangeStaffCount()
+    end)
+    LabScientificLinePanel.staffSlider.onValueChanged:AddListener(function(value)
+        self:_onStaffSliderValueChange(value)
+    end)
+
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.researchSource.mProvideData = LabScientificLineCtrl.static.researchProvideData
@@ -53,7 +66,8 @@ function LabScientificLineCtrl:Close()
 end
 
 function LabScientificLineCtrl:_addListener()
-    --Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._onReceiveLabResearchData, self)
+    Event.AddListener("c_OnReceiveLabLineAdd", self._onReceiveLabAddLine, self)
+    --Event.AddListener("c_OnReceiveLabLineAdd", self._onReceiveLabAddLine, self)
 
 end
 function LabScientificLineCtrl:_removeListener()
@@ -69,12 +83,24 @@ function LabScientificLineCtrl:_initPanelData()
 
     --这个界面的数据是从主界面拿到的，然后数据有变化的时候才会更新，所以不需要请求服务器数据
     --将数据分开
+    local workingStaffCount = 0
     if self.m_data.line then
         for key, itemData in pairs(self.m_data.line) do
+            workingStaffCount = workingStaffCount + itemData.workerNum
             if itemData.type == 0 then
                 self.researchDatas[#self.researchDatas] = itemData
             elseif itemData.type == 1 then
                 self.inventionDatas[#self.inventionDatas] = itemData
+            end
+        end
+    end
+    self.remainStaffCount = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+    LabScientificLinePanel.staffCountText.text = string.format("", )
+    self.storeItemData = {}  --获取所有的库存
+    if self.m_data.store then
+        if self.m_data.store.inHand then
+            for i, item in pairs(self.m_data.store.inHand) do
+                self.storeItemData[item.key.id] = item.n
             end
         end
     end
@@ -160,19 +186,54 @@ function LabScientificLineCtrl:c_onReceiveLabInventionData(datas)
 end
 
 --客户端创建一个新的line，还未开工
-function LabScientificLineCtrl:_addScientificLineCilent(lineData)
+function LabScientificLineCtrl:_addScientificLineCilent(lineItem)
+    self.tempLine = lineItem
     --记录一个当前正在处理的item，self.tempLine
     --判断，如果self。tempLine不为空，则激活小弹窗
-    if lineData.type == 0 then
+    if lineItem.type == 0 then
         --在最前面插入一个数据，包含buildingId，itemId，以及phase
         --然后在UI上根据type选择是哪个界面，研究还是发明，然后刷新Scroll
-    elseif lineData.type == 1 then
+    elseif lineItem.type == 1 then
 
     end
+    self.isNewLine = true
+    self:_startSetStaffCount(lineItem)
 end
 --收到LabLineAdd回调
 function LabScientificLineCtrl:_onReceiveLabAddLine(lineData)
     if lineData.itemId == self.tempLine.itemId then
-        Event.Brocast("", lineData.buildingId, lineData.lineId, self.tempLine.phase)
+        Event.Brocast("m_ReqLabLaunchLine", lineData.buildingId, lineData.lineId, self.tempLine.phase)
+        self.isNewLine = false
     end
+end
+
+---提示框部分
+--打开弹框
+function LabScientificLineCtrl:_showSetStaffTip(lineItem)
+    self.tempLine = lineItem
+
+    LabScientificLinePanel.showNewLineStaffTip(lineItem.viewRect)
+end
+--点击弹窗以外的地方，关闭弹窗，不改变员工数量
+function LabScientificLineCtrl:_cancelChangeStaffCount()
+    LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
+end
+--点击确认按钮，向服务器发送消息
+function LabScientificLineCtrl:_sureChangeStaffCount()
+    local staffCount = tonumber(LabScientificLinePanel.staffText.text)
+    if staffCount <= 0 then
+        return
+    end
+
+    if self.isNewLine then
+        Event.Brocast("m_ReqAddLine", self.buildingId, self.tempLine.itemId, self.tempLine.type, staffCount)  --如果是新添加的线，则发送addLine
+    else
+        Event.Brocast("m_ReqSetWorkerNum", self.buildingId, self.tempLine.lineId, staffCount)  --一般的改变员工，则需要发送setWorkerNum
+    end
+
+    LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
+end
+--slider 值改变时的监听
+function LabScientificLineCtrl:_onStaffSliderValueChange(value)
+    LabScientificLinePanel.staffText.text = value
 end

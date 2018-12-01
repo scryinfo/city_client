@@ -23,6 +23,7 @@ function GameMainInterfacePanel.InitPanel()
     this.noticeButton = transform:Find("LeftDownPanel/NoticeButton").gameObject;
     this.noticeItem = transform:Find("LeftDownPanel/NoticeButton/noticeItem").gameObject;
     this.chatButton = transform:Find("LeftDownPanel/ChatButton").gameObject;
+    this.friendsButton = transform:Find("LeftDownPanel/FriendsButton").gameObject --好友
     this.setButton = transform:Find("LeftDownPanel/SetButton").gameObject;
 
     this.buildButton = transform:Find("RightDownPanel/BuildButton").gameObject;--建筑--

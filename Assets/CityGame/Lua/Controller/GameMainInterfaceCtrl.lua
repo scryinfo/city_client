@@ -21,6 +21,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.chatButton.gameObject,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.exchangeButton.gameObject,self.OnExchange,self);
@@ -52,6 +53,11 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+end
+
+--好友--
+function GameMainInterfaceCtrl.OnFriends()
+    ct.OpenCtrl("FriendsCtrl")
 end
 
 --设置--

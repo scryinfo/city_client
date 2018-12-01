@@ -5,7 +5,13 @@ ShelfRateItem = class('ShelfRateItem')
 ShelfRateItem.static.TOTAL_H = 455  --整个Item的高度
 ShelfRateItem.static.CONTENT_H = 412  --显示内容的高度
 ShelfRateItem.static.TOP_H = 100  --top条的高度
-
+ShelfRateItem.static.Goods_PATH = "View/GoodsItem/SmallShelfRateItem"
+--主页信息货架，生产线，只做显示，没实际用处
+ct.homePage =
+{
+    shelf  = 0,  --货架
+    productionLine = 1,  --生产线
+}
 --初始化方法  数据需要接受服务器发送的数据
 function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
@@ -17,6 +23,7 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
     self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
+    self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
 
 
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
@@ -30,7 +37,7 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
         ct.OpenCtrl("ShelfCtrl")
     end);
 
-
+    self:initializeInfo(MaterialModel.MaterialShelf);
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
@@ -71,20 +78,19 @@ function ShelfRateItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x,targetMovePos.y - ShelfRateItem.static.TOP_H);
 end
 --初始化信息
-function ShelfRateItem:InitializeInfo(data)
+function ShelfRateItem:initializeInfo(data)
     if not data then
         return;
     end
-    --local configTable = {}
     for i,v in pairs(data) do
-        --local uiTab = {}
-        --uiTab.name = v.name
-        --uiTab.number = v.n
-        --uiTab.price = getPriceString("E"..v.price..".0000",15,10)
-        --configTable[i] = uiTab
+        local homePageType = ct.homePage.shelf
         local prefabData={}
-        prefabData.prefab = self:_creatGoods()
-
+        prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
+        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
 --刷新数据

@@ -40,7 +40,6 @@ local goodOrderList={}
 local goodSortList={}
 
 local top
-local down
 local redtop
 local reddown
 function ScienceSellHallCtrl:Awake(go)

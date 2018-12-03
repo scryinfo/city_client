@@ -65,7 +65,8 @@ function WarehouseCtrl:Awake(go)
 end
 
 function WarehouseCtrl:Refresh()
-    local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    --local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    local itemId = MaterialModel.buildingCode
     local numText = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
     WarehousePanel.Warehouse_Slider.value = numText;

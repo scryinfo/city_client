@@ -88,7 +88,7 @@ ModelNames = {
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	Warehouse = "WarehouseModel"
+	Warehouse = "WarehouseModel"  --仓库
 }
 
 SYSEVENT =

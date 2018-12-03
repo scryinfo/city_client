@@ -43,7 +43,8 @@ function AdjustProductionLineCtrl:Awake(go)
 end
 
 function AdjustProductionLineCtrl:Refresh()
-    local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    --local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
+    local itemId = MaterialModel.buildingCode
     self:refreshWorkerNum()
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);

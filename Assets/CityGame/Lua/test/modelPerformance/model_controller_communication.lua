@@ -9,7 +9,7 @@ local ModelBase = class('ModelBase')
 local ControllerBase = class('ControllerBase')
 
 local tempCtrlList = {}
-local test_count = 500000
+local test_count = 10000
 
 function ModelBase:initialize(name)
     self.name = name
@@ -160,6 +160,7 @@ ModelManager.initialize()
 
 --数据准备{
 UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_initTestData",  function ()
+    ct.log("wk16_abel_ctrl_model_initTestData", '\n[test_wk16_abel_ctrl_model_initTestData] 数据准备, 创建'..test_count..'个Model及对应Ctrl')
     for i = 1, test_count do
         --使用相同的实例id实例化对应的 Model 和 Ctrl, 这里的 i 就是实例id: insId
         --Model类型要和Crtl的类型匹配，就像加工厂的Model和Ctrl类型是对应的，Ctrl要调用对应的Model的Rpc方法，
@@ -194,7 +195,7 @@ UnitTest.Exec("wk16_abel_model_rpc_noCb", "test_wk16_abel_model_rpc_noCb",  func
     --测试}
 end)
 
-UnitTest.Exec("wk16_abel_model_rpcNoRet", "test_wk16_abel_model_rpc_noCb",  function ()
+UnitTest.Exec("wk16_abel_model_rpcNoRet", "wk16_abel_model_rpcNoRet",  function ()
     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
     --测试{
     --不需要返回值的情况下,调用 model_rpcNoRet

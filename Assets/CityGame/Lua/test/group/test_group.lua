@@ -4,18 +4,24 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
-TestGroup.active_TestGroup("Allen_wk13")
-TestGroup.active_TestGroup("Allen_wk14_MyGround")
+--TestGroup.active_TestGroup("abel_w16_Icon_CPU")
+--TestGroup.active_TestGroup("abel_w16_Icon_memory")
+--TestGroup.active_TestGroup("wk16_abel_ceil")
+--TestGroup.active_TestGroup("wk16_abel_controller_model")
+--TestGroup.active_TestGroup("wk16_abel_ctrl_model")
+
+--TestGroup.active_TestGroup("Allen_wk13")
+--TestGroup.active_TestGroup("Allen_wk14_MyGround")
+--TestGroup.active_TestGroup("cycle_w12_hosueServer")
 --TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --激活测试组
 --TestGroup.active_TestGroup("Allen_w9") --激活测试组
 --TestGroup.active_TestGroup("abel_w13_SceneOpt") --激活测试组
 --TestGroup.active_TestGroup("abel_w4_proto_Role")
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
-TestGroup.active_TestGroup("cycle_w11_exchangeModel")
+--TestGroup.active_TestGroup("cycle_w11_exchangeModel")
 --TestGroup.active_TestGroup("abel_w11_uuid")
 --TestGroup.active_TestGroup("abel_w11_UUID_FromeServer")
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")
-TestGroup.active_TestGroup("cycle_w12_hosueServer")
 --TestGroup.active_TestGroup("cycle_w13_laboratory")
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")
 --TestGroup.active_TestGroup("cycle_w12_hosueServer")
@@ -55,7 +61,7 @@ TestGroup.active_TestGroup("cycle_w12_hosueServer")
 --TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
 --TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
 
-TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
+--TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")

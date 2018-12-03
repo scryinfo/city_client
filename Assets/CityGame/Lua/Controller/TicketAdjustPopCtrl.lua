@@ -38,7 +38,7 @@ function TicketAdjustPopCtrl:OnClick_confirm(obj)
         obj.m_data:callback()
     end
     obj:Hide();
-    Event.Brocast("SmallPop","Successful adjustment")
+    Event.Brocast("SmallPop","Successful adjustment",57)
 end
 --关闭
 function TicketAdjustPopCtrl:OnClick_close(obj)

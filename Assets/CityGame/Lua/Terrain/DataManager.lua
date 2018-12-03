@@ -375,11 +375,11 @@ function DataManager.Init()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
-    --研究所Model
-    SystemDatas.LaboratoryModel  = LaboratoryModel.New()
-    if SystemDatas.LaboratoryModel ~= nil then
-        SystemDatas.LaboratoryModel:Awake()
-    end
+    ----研究所Model
+    --SystemDatas.LaboratoryModel  = LaboratoryModel.New()
+    --if SystemDatas.LaboratoryModel ~= nil then
+    --    SystemDatas.LaboratoryModel:Awake()
+    --end
 end
 
 function DataManager.Close()

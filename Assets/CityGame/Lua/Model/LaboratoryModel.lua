@@ -36,42 +36,42 @@ end
 
 --- 客户端请求 ---
 --获取建筑详情
-function self:m_ReqLaboratoryDetailInfo(buildingId)
+function LaboratoryModel:m_ReqLaboratoryDetailInfo(buildingId)
     local msgId = pbl.enum("gscode.OpCode", "detailLaboratory")
     local lMsg = { id = buildingId }
     local pMsg = assert(pbl.encode("gs.Id", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --添加线
-function self:m_ReqAddLine(buildingId, itemId, type, workerNum)
+function LaboratoryModel:m_ReqAddLine(buildingId, itemId, type, workerNum)
     local msgId = pbl.enum("gscode.OpCode", "labLineAdd")
     local lMsg = { buildingId = buildingId, itemId = itemId, type = type, workerNum = workerNum }
     local pMsg = assert(pbl.encode("gs.LabAddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --开工
-function self:m_ReqLabLaunchLine(buildingId, lineId, phase)
+function LaboratoryModel:m_ReqLabLaunchLine(buildingId, lineId, phase)
     local msgId = pbl.enum("gscode.OpCode", "labLaunchLine")
     local lMsg = { buildingId = buildingId, lineId = lineId, phase = phase }
     local  pMsg = assert(pbl.encode("gs.LabLaunchLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --删除线
-function self:m_ReqDeleteLine(buildingId, lineId)
+function LaboratoryModel:m_ReqDeleteLine(buildingId, lineId)
     local msgId = pbl.enum("gscode.OpCode", "labLineDel")
     local lMsg = { buildingId = buildingId, lineId = lineId }
     local  pMsg = assert(pbl.encode("gs.LabDelLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --改变员工数
-function self:m_ReqSetWorkerNum(buildingId, lineId, staffCount)
+function LaboratoryModel:m_ReqSetWorkerNum(buildingId, lineId, staffCount)
     local msgId = pbl.enum("gscode.OpCode", "labLineSetWorkerNum")
     local lMsg = { buildingId = buildingId, lineId = lineId, n = staffCount }
     local  pMsg = assert(pbl.encode("gs.LabSetLineWorkerNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --roll
-function self:m_ReqLabRoll(buildingId, lineId)
+function LaboratoryModel:m_ReqLabRoll(buildingId, lineId)
     local msgId = pbl.enum("gscode.OpCode", "labRoll")
     local lMsg = { buildingId = buildingId, lineId = lineId }
     local  pMsg = assert(pbl.encode("gs.LabRoll", lMsg))

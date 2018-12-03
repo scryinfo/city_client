@@ -200,6 +200,11 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+function LoginCtrl:rpcTest(a,b)
+	ct.log("abel_w17_ctrlRpcTest","[rpcTest] invoked")
+	return a+b
+end
+
 UnitTest.TestBlockEnd()---------------------------------------------------------------
 
 ---生成预制

@@ -260,7 +260,8 @@ function  UIPage:ShowPageInstance(pageInstance,pageData)
 end
 
 function  UIPage:ShowPageByClass(inClass,pageData)
-    pageName = inClass.bundleName()
+    --pageName = inClass.bundleName()
+    pageName = inClass.name
     callback = inClass.OnCreate
     if pageName == "" then
         ct.log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
@@ -372,6 +373,13 @@ function UIPage:ResgisterOpen(inClass)
     Event.AddListener('c_OnOpen'..inClass.name, function (data)
         UIPage:ShowPage(inClass,data)
     end);
+end
+
+function ct.ctrlRpc(ctrlName, modelMethord, ...)
+    local arg = {...}
+    --优化版本
+    local ctrl = UIPage.static.m_allPages[ctrlName]
+    arg[#arg](ctrl[modelMethord](ctrl,...))
 end
 
 

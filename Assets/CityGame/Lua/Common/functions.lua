@@ -179,15 +179,17 @@ end
 
 ct.deepCopy = deepCopy
 
+--取整函数
 function ct.getIntPart(x)
+	local resault = math.ceil(x)
 	if x <= 0 then
-		return math.ceil(x);
+		return resault
 	end
 
-	if math.ceil(x) == x then
-		x = math.ceil(x);
+	if resault == x then
+		x = resault
 	else
-		x = math.ceil(x) - 1;
+		x = resault - 1;
 	end
 	return x;
 end

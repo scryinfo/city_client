@@ -45,6 +45,11 @@ function AdvertisementPosPanel.InitPanel()
     this.numSlider=transform:Find("rightRoot/Buy/body/quantity/numSlider"):GetComponent("Slider")
     this.maxInp=transform:Find("rightRoot/Buy/body/lease/maxInput"):GetComponent("InputField")
     this.maxSlider=transform:Find("rightRoot/Buy/body/lease/maxSlider"):GetComponent("Slider")
+    this.rentText=transform:Find("rightRoot/Buy/body/dotRent/NUMBER"):GetComponent("Text")
+    this.dotText=transform:Find("rightRoot/Buy/body/dot/NUMBER"):GetComponent("Text")
+    this.totalText=transform:Find("rightRoot/Buy/body/total/NUMBER"):GetComponent("Text")
+
+
 end
 --数据初始化
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)

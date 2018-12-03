@@ -24,11 +24,11 @@ end
 
 function ScienceTradeCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
+
 end
 
 local panel
 local Mgr
-local data={itemId=0}
 local materialBehaviour
 function ScienceTradeCtrl:Awake(go)
     self.gameObject = go;
@@ -37,27 +37,30 @@ function ScienceTradeCtrl:Awake(go)
     materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(panel.plusBtn.gameObject,self.OnClick_search,self);
-
-    for i = 1, 2 do
-     self:CreatedSciencetradeItem()
-    end
-
-    local data1={itemId=50}
-    for i = 1, 2 do
-        Mgr:creatSciencetradeItem2(materialBehaviour,data1)
-        data1.itemId=data1.itemId+1
-    end
+    local data={}
+    data.itemId=1
+    local item =Mgr:creatSciencetradeItem(materialBehaviour,data)
+   item:SetActive(false)
 end
 
 
 function ScienceTradeCtrl:Refresh()
+    Event.Brocast("m_techTradeGetDetail",self.m_data.itemid)
     ---name
-    panel.nameText.text=self.m_data.prefabData.name
+    panel.nameText.text=self.m_data.nameText.text
+    panel.scoreText.text=self.m_data.ScoreText.text
+    panel.mylevelText.text=self.m_data.myleveltext.text
+    panel.owenrText.text=self.m_data.ownerText.text
+    panel.highlevelTetx.text=self.m_data.leveltext.text
+    self.itemId=self.m_data.itemid
 end
 
 --返回
 function ScienceTradeCtrl:OnClick_backBtn()
     UIPage.ClosePage();
+    for i, v in pairs(Mgr.scienceItemList) do
+        v:SetActive(false)
+    end
 end
 
 --搜索
@@ -65,7 +68,9 @@ function ScienceTradeCtrl:OnClick_search(Ins)
    ct.OpenCtrl("ScienceSellPopCtrl",Ins)
 end
 
-function ScienceTradeCtrl:CreatedSciencetradeItem()
+function ScienceTradeCtrl:CreatedSciencetradeItem(data)
     Mgr:creatSciencetradeItem(materialBehaviour,data)
-    data.itemId=data.itemId+1
 end
+
+
+

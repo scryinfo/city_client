@@ -26,50 +26,152 @@ end
 function ScienceSellHallModel:OnCreate()
 
     --注册本地事件
-  --  Event.AddListener("m_detailPublicFacility", this.m_detailPublicFacility,self);--广告细节
-
-
+    Event.AddListener("m_techTradeGetSummary", this.m_techTradeGetSummary,self);--一级科技列表
+    Event.AddListener("m_techTradeGetDetail",this.m_techTradeGetDetail,self)--获取科技交易二级列表
+    Event.AddListener("m_techTradeAdd",this.m_techTradeAdd,self)--上架
+    Event.AddListener("m_techTradeDel",this.m_techTradeDel,self)--下架
+    Event.AddListener("m_techTradeBuy",this.m_techTradeBuy,self)--购买
     ----注册 AccountServer 消息
     ScienceSellHallModel.registerAsNetMsg()
 end
 
 function ScienceSellHallModel.registerAsNetMsg()
     --as网络回调注册
-   -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailPublicFacility"),ScienceSellHallModel.n_getdetailPublicFacility);--广告细节
-
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeGetSummary"),this.n_techTradeGetSummary);--一级科技列表
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeGetDetail"),this.n_techTradeGetDetail);--二级科技列表
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeAdd"),this.n_techTradeAdd);--上架
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeA"),this.n_techTradeDel);--下架
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTeAdd"),this.n_techTradeBuy);--购买
 end
 
 --关闭事件--
 function ScienceSellHallModel.Close()
     --清空本地UI事件
-    --Event.RemoveListener("m_detailPublicFacility", this.m_detailPublicFacility);
+    --Event.RemoveListener("m_techTradeGetSummary", this.m_techTradeGetSummary);
+
+end
+
+---获取科技交易一级列表发包
+function ScienceSellHallModel:m_techTradeGetSummary()
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","techTradeGetSummary")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = nil
+    ----3、 序列化成二进制数据
+    --local  pMsg = assert(pbl.encode("gs.nothing", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,lMsg);
+end
+
+---获取科技交易一级列表收包
+function ScienceSellHallModel.n_techTradeGetSummary(stream)
+    local lMsg = assert(pbl.decode("gs.TechTradeSummary", stream),"获取科技交易一级列表收包失败")
+    Event.Brocast("c_RefreshHallItem",lMsg.info)
+end
+
+
+
+
+---获取科技交易二级列表发包
+function ScienceSellHallModel:m_techTradeGetDetail(num)--metaId
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","techTradeGetDetail")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = {num=num}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.Num", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+end
+
+---获取科技交易二级列表收包
+function ScienceSellHallModel.n_techTradeGetDetail(stream)
+    local lMsg = assert(pbl.decode("gs.TechTradeDetail", stream),"获取科技交易二级列表收包失败")
+
+    Event.Brocast("c_IsSell",lMsg.info)
 
 end
 
 
+---上架发包
+function ScienceSellHallModel:m_techTradeAdd(itemId,lv,price)
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","techTradeAdd")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = {itemId=itemId,lv=lv,price=price}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.TechTradeAdd", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+
+end
+
+---上架收包
+function ScienceSellHallModel.n_techTradeAdd(stream)
+    local lMsg = assert(pbl.decode("gs.TechTradeAdd",stream),"上架收包失败")
+end
+
+
+
+---下架发包
+function ScienceSellHallModel:m_techTradeDel(id)
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","techTradeDel")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = {id=id}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.Id", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+end
+
+---下架收包
+function ScienceSellHallModel.n_techTradeDel(stream)
+
+end
+
+
+
+---购买发包
+function ScienceSellHallModel:m_techTradeBuy(id)
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","techTradeBuy")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = {id=id}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.Id", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+end
+
+---购买收包
+function ScienceSellHallModel.n_techTradeBuy(stream)
+    local lMsg = assert(pbl.decode("gs.TechTradeAdd", stream),"上架收包失败")
+end
 
 
 
 
 function ScienceSellHallModel.Update()
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
+       -- Event.Brocast("m_techTradeGetSummary")
+  --  Event.Brocast("m_techTradeAdd",2155003,0,50)
 
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
-    --    --    for i, v in pairs(ScienceSellHallModel.lMsg.ad) do
-    --    --
-    --    --        Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.id)
-    --    --    end
-    --    --
-    --    --    num=num+1
-    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    --    --end
-    --    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
-    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
-    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    --    --end
+     Event.Brocast("m_techTradeGetDetail",2156003)
+
+      -- Event.Brocast("m_techTradeDel",2155003)
+       -- ct.log("system","m_techTradeGetDetail")
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.O) then
+        -- Event.Brocast("m_techTradeGetSummary")
+         Event.Brocast("m_techTradeAdd",2156003,0,50)
+
+       -- Event.Brocast("m_techTradeGetDetail",2155003)
+
+        -- Event.Brocast("m_techTradeDel",2155003)
+        ct.log("system","m_techTradeAdd")
+    end
 end
-
-
-
 
 
 

@@ -118,7 +118,6 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     else
         ServerListModel.loginRole(lMsg.info)
     end
-
     --cache data
 end
 function ServerListModel.loginRole(info)
@@ -149,6 +148,12 @@ function ServerListModel.n_OnRoleLogin(stream)
         ct.log("rodger_w8_GameMainInterface","[test_n_OnRoleLogin]  测试完毕",pMsg.bagCapacity)
         Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
+
+        --激活相机脚本
+        local camOjb = UnityEngine.Camera.main.gameObject:GetComponent("CameraScripts")
+        if camOjb then
+            camOjb.enabled = true;
+        end
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

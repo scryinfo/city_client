@@ -9,7 +9,7 @@ local ModelBase = class('ModelBase')
 local ControllerBase = class('ControllerBase')
 
 local tempCtrlList = {}
-local test_count = 10000
+local test_count = 500000
 
 function ModelBase:initialize(name)
     self.name = name
@@ -27,10 +27,20 @@ function Model_1:testfun(arg_int1, arg_int2)
     return #self.name+arg_int1+arg_int2
 end
 
+function Model_1:testfunNoRet(arg_int1, arg_int2)
+    --ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
+    local value = #self.name+arg_int1+arg_int2
+end
+
 Model_2 = class('Model_2',ModelBase)
 function Model_2:testfun(arg_str)
     --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
     return self.name..arg_str
+end
+
+function Model_2:testfunNoRet(arg_str)
+    --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
+    local len = #self.name+#arg_str
 end
 --model类}
 
@@ -49,13 +59,22 @@ end
 function ModelManager:getModel(pos)
     return modelList[pos]
 end
-
+--出于性能上的考量，把有返回值和没有返回值的rpc分开
+--modelRpc是有返回值的
 function ModelManager.modelRpc(insId, modelMethord, ...)
     local arg = {...}
     --优化版本
     local md = modelList[insId]
     arg[#arg](md[modelMethord](md,...))
 end
+--modelRpcNoRet是没有返回值的
+function ModelManager.modelRpcNoRet(insId, modelMethord, ...)
+    local arg = {...}
+    --优化版本
+    local md = modelList[insId]
+    md[modelMethord](md,...)
+end
+
 --最后一个参数必须是函数或者nil
 function ModelManager.modelRpc1(insId, modelMethord, ...)
     local arg = {...}
@@ -97,6 +116,9 @@ end
 function ct.model_rpc(insId, modelMethord, ...)
     ModelManager.modelRpc(insId, modelMethord, ...)
 end
+function ct.model_rpcNoRet(insId, modelMethord, ...)
+    ModelManager.modelRpcNoRet(insId, modelMethord, ...)
+end
 
 function ct.model_rpc1(insId, modelMethord, ...)
     ModelManager.modelRpc1(insId, modelMethord, ...)
@@ -133,31 +155,27 @@ function Ctrl_2:reqDatafun(arg_str)
 end
 --controller类}
 
---数据准备{
 local ModelManager = ModelManager
 ModelManager.initialize()
 
-for i = 1, test_count do
-    ModelManager.addModel(nil,Model_1:new('Model_1'..i))
-    tempCtrlList[i] = Ctrl_1:new('Ctrl_1_ins_'..i, i)
-end
-for i = test_count+1, test_count *2 do
-    ModelManager.addModel(nil,Model_2:new('Model_2'..i))
-    tempCtrlList[i] = Ctrl_2:new('Ctrl_1_ins_'..i, i)
-end
+--数据准备{
+UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_initTestData",  function ()
+    for i = 1, test_count do
+        --使用相同的实例id实例化对应的 Model 和 Ctrl, 这里的 i 就是实例id: insId
+        --Model类型要和Crtl的类型匹配，就像加工厂的Model和Ctrl类型是对应的，Ctrl要调用对应的Model的Rpc方法，
+        --前提是Ctrl知道对应Model的实例id，这里就简单处理，让新创建的Model和Ctrl的实例id都等于i，那么我们
+        --在后边的测试中，就可以通过Ctrl中的实例id找打对应的Model实例
+        ModelManager.addModel(nil,Model_1:new('Model_1'..i))
+        tempCtrlList[i] = Ctrl_1:new('Ctrl_1_ins_'..i, i)
+    end
+    for i = test_count+1, test_count *2 do
+        ModelManager.addModel(nil,Model_2:new('Model_2'..i))
+        tempCtrlList[i] = Ctrl_2:new('Ctrl_1_ins_'..i, i)
+    end
+end)
 --数据准备}
 
-UnitTest.Exec("wk16_abel_controller_model", "test_wk16_abel_controller_model",  function ()
-    local pCrtl_1 = Ctrl_1:new('Crtl_1_ins', ct.getIntPart(test_count*0.5) )
-    local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
-    --测试{
-    pCrtl_1:reqDatafun(1,2)
-    pCrtl_2:reqDatafun('hello')
-    --测试}
-end)
-
-
-
+--基础功能测试-------------------------------------------{
 UnitTest.Exec("wk16_abel_model_rpc_errfun", "test_wk16_abel_model_rpc_errfun",  function ()
     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
     --测试{
@@ -171,11 +189,22 @@ end)
 UnitTest.Exec("wk16_abel_model_rpc_noCb", "test_wk16_abel_model_rpc_noCb",  function ()
     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
     --测试{
-    --不存在的方法,会有 Error 日志输出
+    --需要返回值的情况下，如果不传递回调,会有 Error 日志输出
     ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello')
     --测试}
 end)
 
+UnitTest.Exec("wk16_abel_model_rpcNoRet", "test_wk16_abel_model_rpc_noCb",  function ()
+    local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
+    --测试{
+    --不需要返回值的情况下,调用 model_rpcNoRet
+    ct.model_rpcNoRet(pCrtl_2.insId, 'testfun1', 'hello')
+    --测试}
+end)
+--基础功能测试-------------------------------------------}
+
+
+--性能测试-------------------------------------------{
 UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  function ()
     collectgarbage("collect")
     ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
@@ -192,13 +221,11 @@ UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  
     UnitTest.PerformanceTest("wk16_abel_ctrl_model","model_rpc 性能测试2：model_rpc 调用", function()
         local pRetvalue = nil
         for i = 1, test_count do
-            --tempCtrlList[i]:reqDatafun(1,2)
             ct.model_rpc(tempCtrlList[i].insId, 'testfun', 1,2,function (retvalue)
                 pRetvalue = retvalue
             end)
         end
         for i = test_count+1, test_count*2 do
-            --tempCtrlList[i]:reqDatafun('hello_'..i)
             ct.model_rpc(tempCtrlList[i].insId, 'testfun', 'hello',function (retvalue)
                 pRetvalue = retvalue
             end)
@@ -233,7 +260,7 @@ UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  
             end)
         end
     end)
-
+    ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."次调用,测试结束------------------------------------------")
     --[[
     100万次调用
         model_rpc 性能测试1：直接调用 model 方法    执行时间:      4.1279999999999
@@ -258,5 +285,35 @@ UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  
     性能比较接近
     --]]
 end)
+
+UnitTest.Exec("wk16_abel_ctrl_model_noRetPerformance", "test_wk16_abel_ctrl_model_noRetPerformance",  function ()
+    collectgarbage("collect")
+    ct.log('wk16_abel_ctrl_model_noRetPerformance', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc 性能测试1：直接调用 model 方法", function()
+        local retvalue = nil
+        for i = 1, test_count do
+            retvalue = ModelManager.getModel(nil,i):testfunNoRet(1,2)
+        end
+        for i = test_count+1, test_count*2 do
+            retvalue = ModelManager.getModel(nil,i):testfunNoRet('hello_'..i)
+        end
+    end)
+    collectgarbage("collect")
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc 性能测试2：model_rpcNoRet 调用", function()
+        local pRetvalue = nil
+        for i = 1, test_count do
+            ct.model_rpcNoRet(tempCtrlList[i].insId, 'testfun', 1,2,function (retvalue)
+                pRetvalue = retvalue
+            end)
+        end
+        for i = test_count+1, test_count*2 do
+            ct.model_rpcNoRet(tempCtrlList[i].insId, 'testfun', 'hello',function (retvalue)
+                pRetvalue = retvalue
+            end)
+        end
+    end)
+    collectgarbage("collect")
+end)
+--性能测试-------------------------------------------}
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

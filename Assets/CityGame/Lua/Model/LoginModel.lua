@@ -95,9 +95,13 @@ end
 UnitTest.TestBlockStart()-------------------------------------------------------------
 UnitTest.Exec("abel_w17_ctrlRpcTest", "test_abel_w17_ctrlRpcTest",  function ()
     ct.log("abel_w17_ctrlRpcTest","[test_abel_w17_ctrlRpcTest]  测试开始")
+
+    ct.ctrlRpcNoRet('LoginCtrl','rpcTest', 1,2)
+
     ct.ctrlRpc('LoginCtrl','rpcTest', 1,2,function (retvalue)
         ct.log("abel_w17_ctrlRpcTest","[test_abel_w17_ctrlRpcTest]  LoginCtrl:rpcTest return ="..retvalue)
     end)
+
 end)
 UnitTest.TestBlockEnd()---------------------------------------------------------------
 

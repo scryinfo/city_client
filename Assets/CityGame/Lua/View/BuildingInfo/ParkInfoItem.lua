@@ -8,7 +8,7 @@ local class=require'Framework/class'
 
 ParkInfoItem=class('ParkInfoItem')
 ParkInfoItem.static.TOTAL_H =561  --整个Item的高度
-ParkInfoItem.static.CONTENT_H = 480 --显示内容的高度
+ParkInfoItem.static.CONTENT_H = 380 --显示内容的高度
 ParkInfoItem.static.TOP_H = 100  --top条的高度
 
 function ParkInfoItem:initialize(itemData, clickOpenFunc, itemRect, LuaBehaviour, toggleData, mgrTable)

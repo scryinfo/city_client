@@ -7,15 +7,13 @@
 require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
 require('Framework/UI/UIPage')
-require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
+
 require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 local class = require 'Framework/class'
 MunicipalCtrl = class('MunicipalCtrl',UIPage)
 UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 
-
-MunicipalCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 
 --构建函数
 function MunicipalCtrl:initialize()
@@ -49,10 +47,7 @@ function MunicipalCtrl:Awake(go)
     local creatData={count=1,buildingType=BuildingType.ProcessingFactory,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
     self.ItemCreatDeleteMgr:creat(ServerListCtrl.serverListBehaviour,creatData)
-    ---小弹窗
-    self.root=MunicipalPanel.changeNameBtn.root;
 
-    Event.AddListener("SmallPop",self.c_SmallPop,self)
 end
 
     --更改名字
@@ -75,35 +70,9 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-
+    Event.Brocast("c_TicketValueChange")
 
 end
 
----生成预制
-function MunicipalCtrl:c_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent);--.transform
-    rect.transform.localScale = Vector3.one;
-    rect.transform.localPosition=Vector3.zero
-    return go
-end
 
-function MunicipalCtrl:c_SmallPop(string)
-    if not self.prefab  then
-        self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
-    end
-
-    SmallPopItem:new(string,self.prefab ,self);
-end
-
-UnitTest.TestBlockStart()---------------------------------------------------------
-
-UnitTest.Exec("fisher_w11_MunicipalCtrl", "test_MunicipalCtrl_ShowPage",  function ()
-    ct.log("fisher_w11_MunicipalCtrl","[test_MunicipalCtrl_ShowPage]  测试开始")
-    ct.OpenCtrl('MunicipalCtrl') --注意传入的是类名
-end)
-
-UnitTest.TestBlockEnd()-----------------------------------------------------------
 

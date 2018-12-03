@@ -21,7 +21,8 @@ ScienceItemCreatDeleteMgr.scienceItem2Preb_Path="View/GoodsItem/ScienceItem2"
 
 
 function ScienceItemCreatDeleteMgr:initialize()
-    self.materialItemList={}  self. materialInsList={}  ---science kind
+    self.materialItemList={}  self. materialInsList={}  ---材料
+     self.goodItemList={}     self.goodInsList={}       ---物品
     self.scienceItemList={}     self.scienceInsList={}    ---scienceItem
 
 end
@@ -40,10 +41,10 @@ end
 function ScienceItemCreatDeleteMgr:creatSciencehallItem1(luabehaviour,creatData)
     ---creat  preab
     local item=self:c_creatGoods(self.materialItemPreb_Path,ScienceSellHallPanel.goodsscrollcontent)
-    self.materialItemList[creatData.itemId]=item
+    self.goodItemList[creatData.itemId]=item
     ---creat  ins
     local ins=ScienceKindItem:new(creatData,item,luabehaviour,self,creatData.itemId)
-    self. materialInsList[creatData.itemId]=ins
+    self. goodInsList[creatData.itemId]=ins
 end
 --------------------------------------------------------------------------------------------------------------
 
@@ -53,9 +54,11 @@ function ScienceItemCreatDeleteMgr:creatSciencetradeItem(luabehaviour,creatData)
     local item=self:c_creatGoods(self.scienceItemPreb_Path,ScienceTradePanel.scrollContent)
     self.scienceItemList[creatData.itemId]=item
     item.transform:SetAsFirstSibling()
+
     ---creat  ins
     local ins=ScienceItem:new(creatData,item,luabehaviour,self,creatData.itemId)
     self. scienceInsList[creatData.itemId]=ins
+    return item
 end
 
 --- creat scienceItem2
@@ -85,7 +88,10 @@ function ScienceItemCreatDeleteMgr:_deleteGoods(ins)
     destroy(ins.ItemList[ins.id])
 end
 
-
+---删除物品
+function ScienceItemCreatDeleteMgr:_deleteGood(ins)
+    ins.ItemList[ins.id]:SetActive(false)
+end
 
 
 

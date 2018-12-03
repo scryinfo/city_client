@@ -86,6 +86,8 @@ function MunicipalModel.n_getdetailPublicFacility(stream)
     end
     MunicipalModel.ticket=lMsg.ticketPrice;
     MunicipalModel.lMsg=lMsg
+    MunicipalModel.owenerId=PlayerTempModel.roleData.id
+    MunicipalModel.buildingOwnerId=lMsg.info.ownerId
 
 end
 
@@ -139,8 +141,6 @@ function MunicipalModel:m_adPutAdToSlot(Slotid,metaId,type,buildingId)
     local  pMsg = assert(pbl.encode("gs.AddAd", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-
-    local t=self
 end
 
 ---打广告收包

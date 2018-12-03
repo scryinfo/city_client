@@ -74,6 +74,8 @@ end
 
 function UIPage:OnCreate(go)
     if self.gameObject == nil then
+        go.layer = LayerMask.NameToLayer("UI");
+        UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
         self.gameObject = go;
         assert(go, "system","[UIPage.Show] "," 没有找到资源： ",uiPath)
         if go == nil then

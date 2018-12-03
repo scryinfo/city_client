@@ -48,5 +48,5 @@ end
 function SignOnCtrl:OnClick_confirm()
     UIPage.ClosePage();
 
-    Event.Brocast("SmallPop","Successful adjustment")
+    Event.Brocast("SmallPop","Successful adjustment",57)
 end

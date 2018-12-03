@@ -36,7 +36,7 @@ function TicketItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanel
 
 
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_TicketValueChange",self.updateInfo,self);
 end
 
 
@@ -72,12 +72,12 @@ function TicketItem:closeToggleItem(targetMovePos)
 end
 
 --刷新数据
-function TicketItem:updateInfo(data)
-    --[[    self.occupancyData = data
-
-    if not self.viewRect.gameObject.activeSelf then
-        return
-    end]]
+function TicketItem:updateInfo()
+    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then
+        self.toDoBtn.localScale=Vector3.zero
+    else
+        self.toDoBtn.localScale=Vector3.one
+    end
 end
 
 

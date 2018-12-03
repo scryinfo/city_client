@@ -40,15 +40,17 @@ namespace LuaFramework {
                 if (prefab == null) return;
 
                 GameObject go = Instantiate(prefab) as GameObject;
-                go.name = name;
-                go.layer = LayerMask.NameToLayer("UI");
-                
+                //go.name = name+ GetInstanceID();                
+                go.name = name;                
                 RectTransform rect = go.GetComponent<RectTransform>();
-                rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;                
-                go.AddComponent<LuaBehaviour>();
+                rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
 
-                if (func != null) func.Call(obj,go);
-                Debug.LogWarning("CreatePanel::>> " + name + " " + prefab);
+                if (func != null)
+                {
+                    func.Call(obj, go);                
+                    Debug.LogWarning("CreatePanel::>> " + name + " " + prefab);
+                }
+                    
             });
 #else
             GameObject prefab = ResManager.LoadAsset<GameObject>(name, assetName);

@@ -11,8 +11,9 @@ LabInventionItemPhaseState =
     Null = 3,
 }
 LabInventionItemPhaseItems = class('LabInventionItemPhaseItems')
-function LabInventionItemPhaseItems:initialize(transform)
+function LabInventionItemPhaseItems:initialize(transform, needShowNum)
     self.transform = transform
+    self.needShowNum = needShowNum
 
     self.itemRects = {}
     local childCount = transform.childCount
@@ -22,6 +23,9 @@ function LabInventionItemPhaseItems:initialize(transform)
         itemData.finish = itemData.itemRect:Find("finish")
         itemData.willTo = itemData.itemRect:Find("willTo")
         itemData.null = itemData.itemRect:Find("null")
+        if self.needShowNum then
+            itemData.text = itemData.itemRect:Find("Text"):GetComponent("Text")
+        end
         self.itemRects[i] = itemData
     end
 end
@@ -45,6 +49,11 @@ function LabInventionItemPhaseItems:showState(datas)
             self.itemRect[i].finish.localScale = Vector3.zero
             self.itemRect[i].willTo.localScale = Vector3.zero
             self.itemRect[i].null.localScale = Vector3.one
+
+            --发明界面有种情况是只有null和finish状态的，而且当为null状态时，需要显示成功率
+            if itemData.percentData then
+                itemData.text.text = itemData.percentData
+            end
         end
     end
 end

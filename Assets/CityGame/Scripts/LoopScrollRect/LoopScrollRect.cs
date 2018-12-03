@@ -339,7 +339,7 @@ namespace UnityEngine.UI
         {
             if (Application.isPlaying && this.isActiveAndEnabled)
             {
-                itemTypeEnd = itemTypeStart;
+                itemTypeEnd = itemTypeStart = 0;
                 // recycle items if we can
                 for (int i = 0; i < content.childCount; i++)
                 {

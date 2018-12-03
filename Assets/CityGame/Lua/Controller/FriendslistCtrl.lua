@@ -48,31 +48,38 @@ end
 --初始首次进入所需数据
 function FriendslistCtrl:_initState()
     local type = self.m_data.type
+    FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88);
     if type == 3 then
         FriendslistPanel.panelNameText.text = "MANAGE"
         self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
+        FriendslistPanel.searchInputField:SetActive(false)
     elseif type == 4 then
         FriendslistPanel.panelNameText.text = "BLACK LIST"
         self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(true)
         FriendslistPanel.friendsNumberText.text = "20"
+        FriendslistPanel.searchInputField:SetActive(false)
     elseif type == 5 then
         FriendslistPanel.panelNameText.text = "ADD NEW FRIENDS"
         self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
+        FriendslistPanel.searchInputField:SetActive(true)
     elseif type == 6 then
         FriendslistPanel.panelNameText.text = "APPLICATION LIST"
         self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
+        FriendslistPanel.searchInputField:SetActive(false)
+        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-30);
     elseif type == 7 then
         FriendslistPanel.panelNameText.text = "MANAGE"
         self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
+        FriendslistPanel.searchInputField:SetActive(false)
     end
 
 end

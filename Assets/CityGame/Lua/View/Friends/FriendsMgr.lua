@@ -39,12 +39,12 @@ end
 function FriendsMgr:_createFriendsAndGroupItems(luaBehaviour,data)
     self.luaBehaviour = luaBehaviour
     self.data = data
-    for k, v in ipairs(data) do
-        for i, j in ipairs(v.data) do
-            local item = self:_createItem(k, j)
-            table.insert(self.allItems[k].items, item)
-        end
-    end
+    --for k, v in ipairs(data) do
+    --    for i, j in ipairs(v.data) do
+    --        local item = self:_createItem(k, j)
+    --        table.insert(self.allItems[k].items, item)
+    --    end
+    --end
 end
 
 function FriendsMgr:_createListItems(type)

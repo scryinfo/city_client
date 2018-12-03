@@ -27,20 +27,20 @@ function FriendsCtrl:OnCreate(go)
     --调用基类方法处理实例的数据
     UIPage.OnCreate(self, go)
     --初始化管理器
-    self.friendsMgr = FriendsMgr:new()
+    FriendsCtrl.friendsMgr = FriendsMgr:new()
 
     --添加UI事件点击监听
-    local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
-    luaBehaviour:AddClick(FriendsPanel.backBtn, function ()
+    FriendsCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.backBtn, function ()
         UIPage.ClosePage()
     end)
 
-    luaBehaviour:AddClick(FriendsPanel.friendsManageBtn, self.OnFriendsManage, self)
-    luaBehaviour:AddClick(FriendsPanel.blacklistBtn, self.OnBlacklist, self)
-    luaBehaviour:AddClick(FriendsPanel.addFriendsBtn, self.OnAddFriends, self)
-    luaBehaviour:AddClick(FriendsPanel.applicationlistBtn, self.OnApplicationlist, self)
-    luaBehaviour:AddClick(FriendsPanel.groupManageBtn, self.OnGroupManage, self)
-    luaBehaviour:AddClick(FriendsPanel.startGroupBtn, self.OnStartGaroup, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.friendsManageBtn, self.OnFriendsManage, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.blacklistBtn, self.OnBlacklist, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.addFriendsBtn, self.OnAddFriends, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.applicationlistBtn, self.OnApplicationlist, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.groupManageBtn, self.OnGroupManage, self)
+    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.startGroupBtn, self.OnStartGaroup, self)
 
     FriendsPanel.friendsToggle.onValueChanged:AddListener(function (isOn)
         self:_friendsToggleValueChange(isOn)
@@ -51,11 +51,16 @@ function FriendsCtrl:OnCreate(go)
     end)
 
     --模拟数据
-    local data =
+    FriendsCtrl.data =
     {
         {
             data =
             {
+                { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
+                { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
+                { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+                { name = "Avene", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+                { name = "TherMale", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
                 { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
                 { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
                 { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
@@ -70,14 +75,52 @@ function FriendsCtrl:OnCreate(go)
                 { name = "Scry1", number = "110/300"},
                 { name = "Scry2", number = "66/300"},
                 { name = "Scry3", number = "77/300"},
+                { name = "Scry4", number = "88/300"},
+                { name = "Labrador", number = "122/300"},
+                { name = "Scry1", number = "110/300"},
+                { name = "Scry2", number = "66/300"},
+                { name = "Scry3", number = "77/300"},
                 { name = "Scry4", number = "88/300"}
             }
         }
     }
 
     --初始化进入状态
-    self:_initState()
-    self.friendsMgr:_createFriendsAndGroupItems(luaBehaviour, data)
+    --self:_initState()
+    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.friendsSource.mProvideData = FriendsCtrl.static.FriendsProvideData
+    self.friendsSource.mClearData = FriendsCtrl.static.FriendsClearData
+    self.groupSource = UnityEngine.UI.LoopScrollDataSource.New()  --收藏
+    self.groupSource.mProvideData = FriendsCtrl.static.GroupProvideData
+    self.groupSource.mClearData = FriendsCtrl.static.GroupClearData
+
+    FriendsCtrl.friendsMgr:_createFriendsAndGroupItems(FriendsCtrl.luaBehaviour, FriendsCtrl.data)
+
+    --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
+    --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("ActiveLoopScrollRect"))
+    --UnityEngine.GameObject.AddComponent(FriendsPanel.groupView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
+    --UnityEngine.GameObject.AddComponent(FriendsPanel.groupView, LuaHelper.GetType("ActiveLoopScrollRect"))
+
+    FriendsPanel.friendsView:GetComponent("ActiveLoopScrollRect"):ActiveLoopScroll(self.friendsSource, #FriendsCtrl.data[1].data) -- , self.friendsMgr.allItems[1].path
+    FriendsPanel.groupView:GetComponent("ActiveLoopScrollRect"):ActiveLoopScroll(self.groupSource, #FriendsCtrl.data[2].data) -- , self.friendsMgr.allItems[2].path
+end
+
+FriendsCtrl.static.FriendsProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = FriendsItem:new(1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.data[1].data[idx])
+    FriendsCtrl.friendsMgr.allItems[1].items[idx] = item
+end
+
+FriendsCtrl.static.FriendsClearData = function(transform)
+end
+
+FriendsCtrl.static.GroupProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = GroupItem:new(2, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.data[2].data[idx])
+    FriendsCtrl.friendsMgr.allItems[2].items[idx] = item
+end
+
+FriendsCtrl.static.GroupClearData = function(transform)
 end
 
 -- 刷新
@@ -94,22 +137,26 @@ function FriendsCtrl:_initState()
     --FriendsPanel.friendsToggle.isOn = true
     --FriendsPanel.friendsNumberText.text = "20"
     --FriendsPanel.groupNumberText.text = "5"
-    --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
-    --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("ActiveLoopScrollRect"))
-    --UnityEngine.GameObject.AddComponent(FriendsPanel.groupView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
-    --UnityEngine.GameObject.AddComponent(FriendsPanel.groupView, LuaHelper.GetType("ActiveLoopScrollRect"))
 end
 
 -- 二次刷新界面的数据
 function FriendsCtrl:_refreshState()
-    FriendsPanel.friendsToggle.isOn = true
-    self:_friendsToggleValueChange(true)
-    FriendsPanel.friendsNumberText.text = "20"
-    FriendsPanel.groupNumberText.text = "5"
+    if not self.type or self.type == 1 then
+        self.type = 1
+        FriendsPanel.friendsToggle.isOn = true
+        self:_friendsToggleValueChange(true)
+        FriendsPanel.friendsNumberText.text = "20"
+        FriendsPanel.groupNumberText.text = "5"
+    elseif self.type == 2 then
+        FriendsPanel.groupToggle.isOn = true
+        self:_groupToggleValueChange(true)
+    end
+
 end
 
 -- 控制好友分页
 function FriendsCtrl:_friendsToggleValueChange(isOn)
+    self.type = 1
     FriendsPanel.friendsRoot:SetActive(isOn)
     FriendsPanel.groupRoot:SetActive(not isOn)
     FriendsPanel.friendsOpen:SetActive(isOn)
@@ -120,6 +167,7 @@ end
 
 -- 控制群组分页
 function FriendsCtrl:_groupToggleValueChange(isOn)
+    self.type = 2
     FriendsPanel.friendsRoot:SetActive(not isOn)
     FriendsPanel.groupRoot:SetActive(isOn)
     FriendsPanel.friendsOpen:SetActive(not isOn)

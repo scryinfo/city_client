@@ -28,12 +28,20 @@ function ScienceItem:initialize(prefabData,prefab,inluabehaviour,mgr, itemid)
     self.deleteBtn=prefab.transform:Find("rightroot/delete")
     self.buyBtn=prefab.transform:Find("rightroot/buy")
 
-
-
-   self:start()
+    if prefabData.price then
+        self:InitData()
+    end
+    self:start()
 end
+
+function ScienceItem:InitData()
+    self.levelText.text=self.prefabData.level
+    self.priceText.text=getPriceString(self.prefabData.price..".0000",30,24)
+end
+
 ---delete
 function ScienceItem:OnClicl_XBtn(go)
+    go.price=nil
     go.func=go.callback
     ct.OpenCtrl("SciencePopCtrl",go)
 end
@@ -45,10 +53,10 @@ end
 
 ---buy
 function ScienceItem:OnClick_buyBtn(ins)
-     ins.price=ins.priceText.text
+     ins.price=ins.prefabData.price
      ins.func=ins.callback1
      ct.OpenCtrl("SciencePopCtrl",ins)
-     ins.price=nil
+
 end
 
 function ScienceItem:start()
@@ -64,9 +72,15 @@ end
 
 
 function ScienceItem:callback1()
-    ct.log("system","dsaddasd")
+    if ScienceSellHallModel.money>=tonumber(self.prefabData.price) then
+        Event.Brocast("SmallPop","Success",257)
+        Event.Brocast("m_techTradeBuy",self.id)
+    end
 end
 
 function ScienceItem:callback()
-    self.manager:_deleteGoods(self)
+    self.manager:_deleteGood(self)
+    Event.Brocast("m_techTradeDel",ScienceSellHallModel.sellitemId)
+    Event.Brocast("SmallPop","Success",257)
+
 end

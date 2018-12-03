@@ -2591,6 +2591,7 @@ end
                 error("\nERROR during LuaUnit test execution:\n" .. node.msg)
                 self.result.aborted = true
             end
+            ct.log('system', "\nERROR :" .. node.msg)
         elseif node:isFailure() then
             if self.quitOnFailure then
                 -- Failure - abort test execution as requested by

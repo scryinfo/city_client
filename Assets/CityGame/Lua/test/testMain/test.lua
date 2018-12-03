@@ -531,5 +531,29 @@ UnitTest.Exec("cycle_w15_laboratory03", "test_cycle_w15_laboratory03",  function
     --ct.OpenCtrl("LaboratoryCtrl", {})
 end)
 
+UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()
+    local v1 = math.ceil(2)
+    local v2 = math.ceil(1.7)
+    local v3 = math.ceil(1.5)
+    local v4 = math.ceil(1)
+    local v5 = math.ceil(0.7)
+    local v6 = math.ceil(0.5)
+    local v7 = math.ceil(0)
+    local v8 = math.ceil(-0.3)
+    local v9 = math.ceil(-0.7)
+    local v10 = math.ceil(-1)
+    local v11 = math.ceil(-1.3)
+    local v12 = math.ceil(-1.7)
+
+    local t1 = ct.getIntPart(2)
+    local t2 = ct.getIntPart(1.7)
+    local t3 = ct.getIntPart(0.7)
+    local t4 = ct.getIntPart(0)
+    local t5 = ct.getIntPart(-0.7)
+    local t6 = ct.getIntPart(-1.7)
+    local t7 = ct.getIntPart(-2)
+
+    local t8 = 8
+end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

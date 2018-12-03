@@ -26,32 +26,26 @@ function ScienceSellHallPanel.InitPanel()
     this.materialBtngrey=transform:Find("body/toproot/toproot/materselectedBG")
     ---kind sort
     this.kindtop=transform:Find("body/toproot/botton/left/KindText/top")
-    this.kinddown=transform:Find("body/toproot/botton/left/KindText/down")
     this.kindredtop=transform:Find("body/toproot/botton/left/KindText/redtop")
     this.kindreddown=transform:Find("body/toproot/botton/left/KindText/reddown")
     ---class sort
     this.classtop=transform:Find("body/toproot/botton/middle/classText/top")
-    this.classdown=transform:Find("body/toproot/botton/middle/classText/down")
     this.classredtop=transform:Find("body/toproot/botton/middle/classText/redtop")
     this.classreddown=transform:Find("body/toproot/botton/middle/classText/reddown")
     ---owner sort
     this.ownertop=transform:Find("body/toproot/botton/middle/ownerText/top")
-    this.ownerdown=transform:Find("body/toproot/botton/middle/ownerText/down")
     this.ownerredtop=transform:Find("body/toproot/botton/middle/ownerText/redtop")
     this.ownerreddown=transform:Find("body/toproot/botton/middle/ownerText/reddown")
     ---level sort
     this.leveltop=transform:Find("body/toproot/botton/middle/levelText/top")
-    this.leveldown=transform:Find("body/toproot/botton/middle/levelText/down")
     this.levelredtop=transform:Find("body/toproot/botton/middle/levelText/redtop")
     this.levelreddown=transform:Find("body/toproot/botton/middle/levelText/reddown")
     ---mylevel sort
     this.myleveltop=transform:Find("body/toproot/botton/right/levelText/top")
-    this.myleveldown=transform:Find("body/toproot/botton/right/levelText/down")
     this.mylevelredtop=transform:Find("body/toproot/botton/right/levelText/redtop")
     this.mylevelreddown=transform:Find("body/toproot/botton/right/levelText/reddown")
     ---score sort
     this.scoretop=transform:Find("body/toproot/botton/right/scoreText/top")
-    this.scoredown=transform:Find("body/toproot/botton/right/scoreText/down")
     this.scoreredtop=transform:Find("body/toproot/botton/right/scoreText/redtop")
     this.scorereddown=transform:Find("body/toproot/botton/right/scoreText/reddown")
     ---scroll gameObject

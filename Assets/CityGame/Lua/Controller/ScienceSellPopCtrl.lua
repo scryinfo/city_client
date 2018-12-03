@@ -26,7 +26,7 @@ function ScienceSellPopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
 local panel
-local arg
+local Mgr
 function ScienceSellPopCtrl:Awake(go)
     self.gameObject = go;
     panel=ScienceSellPopPanel
@@ -35,8 +35,7 @@ function ScienceSellPopCtrl:Awake(go)
     materialBehaviour:AddClick(panel.okBtn.gameObject,self.OnClick_confirm,self);
     materialBehaviour:AddClick(panel.plusBtn.gameObject,self.OnClick_plus,self);
     materialBehaviour:AddClick(panel.cutBtn.gameObject,self.OnClick_cut,self);
-    --panel.priceInp.
-
+   Mgr=ScienceSellHallModel.Mgr
 end
 
 ---close
@@ -66,9 +65,16 @@ end
 
 ---confirm
 function ScienceSellPopCtrl:OnClick_confirm(ins)
-    ins.m_data:CreatedSciencetradeItem()
+    Mgr.scienceInsList[1].levelText.text =panel.levleInp.text
+   Mgr.scienceInsList[1].priceText.text = getPriceString(panel.priceInp.text..".0000",30,24)
+    Mgr.scienceItemList[1]:SetActive(true)
+
+    Event.Brocast("SmallPop","Success",257)
+    Event.Brocast("m_techTradeAdd",ins.m_data.itemId,tonumber(panel.levleInp.text),tonumber(panel.priceInp.text))
+    ---clear
+    panel.levleInp.text=0
+    panel.priceInp.text=0
     ins:Hide();
-    Event.Brocast("SmallPop","Success")
 end
 
 function ScienceSellPopCtrl:Refresh()

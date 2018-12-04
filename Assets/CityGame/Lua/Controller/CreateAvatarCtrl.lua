@@ -15,7 +15,7 @@ end
 
 function CreateAvatarCtrl.Awake()
 	logWarn("CreateAvatarCtrl.Awake--->>");
-	panelMgr:CreatePanel('CreateAvatar', this.OnCreate, this);
+	panelMgr:LoadPrefab_A('CreateAvatar', this.OnCreate, this);
 
 	Event.AddListener("onCreateAvatarResult", this.onCreateAvatarResult);
 end

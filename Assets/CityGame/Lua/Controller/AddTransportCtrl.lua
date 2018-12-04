@@ -10,7 +10,7 @@ function AddTransportCtrl.New()
     return this;
 end
 function AddTransportCtrl.Awake()
-    panelMgr:CreatePanel('AddTransport',this.OnCreate);
+    panelMgr:LoadPrefab_A('AddTransport',this.OnCreate);
 end
 function AddTransportCtrl.OnCreate(obj)
     gameObject = obj;

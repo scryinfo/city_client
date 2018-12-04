@@ -16,8 +16,8 @@ function newObject(prefab)
 end
 
 --创建面板--
-function createPanel(name)
-	PanelManager:CreatePanel(name);
+function LoadPrefab_A(name)
+	PanelManager:LoadPrefab_A(name);
 end
 --创建窗口--
 function createWindows(name,pos)

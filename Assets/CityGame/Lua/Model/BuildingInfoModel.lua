@@ -70,9 +70,9 @@ function BuildingInfoModel.CreatBuildingInfoPanel(panelInfo)
     this.rightFinish = false
     this.bottomFinish = false
 
-    panelMgr:CreatePanel('BuildingInfo', this.OnPanelCreated, this);
+    panelMgr:LoadPrefab_A('BuildingInfo', this.OnPanelCreated, this);
     --将右侧的界面加入
-    panelMgr:CreatePanel('BuildingInfoRight', this.OnRightPanelCreated, this);
+    panelMgr:LoadPrefab_A('BuildingInfoRight', this.OnRightPanelCreated, this);
 end
 
 --当界面生成完毕之后，添加监听
@@ -95,7 +95,7 @@ end
 
 --打开转让界面
 function BuildingInfoModel.OpenTransferPage()
-    panelMgr:CreatePanel('BuildingTransfer');
+    panelMgr:LoadPrefab_A('BuildingTransfer');
 
 end
 

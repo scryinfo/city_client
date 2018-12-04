@@ -15,7 +15,7 @@ end
 
 function PlayerHeadCtrl.Awake()
 	logWarn("PlayerHeadCtrl.Awake--->>");
-	panelMgr:CreatePanel('PlayerHead', this.OnCreate, this);
+	panelMgr:LoadPrefab_A('PlayerHead', this.OnCreate, this);
 
 	--Event.AddListener("onPlayerHeadResult", this.onPlayerHeadResult);
 end

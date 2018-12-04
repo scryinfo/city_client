@@ -8,7 +8,7 @@ function TransportOrderCtrl.New()
     return this;
 end
 function TransportOrderCtrl.Awake()
-    panelMgr:CreatePanel('TransportOrder',this.OnCreate);
+    panelMgr:LoadPrefab_A('TransportOrder',this.OnCreate);
     TransportOrderCtrl.Initialize();
 end
 function TransportOrderCtrl.OnCreate(obj)

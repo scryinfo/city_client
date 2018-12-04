@@ -104,8 +104,8 @@ function UIPage:Show(path, callback)
         --else
         --    go = Resources.Load(uiPath)
         --end
-        --panelMgr:CreatePanel(path, callback, self);
-        panelMgr:CreatePanel(path, callback, self);
+        --panelMgr:LoadPrefab_A(path, callback, self);
+        panelMgr:LoadPrefab_A(path, callback, self);
     else
         self:DoShow()
     end

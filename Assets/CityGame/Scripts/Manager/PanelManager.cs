@@ -19,11 +19,11 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// ������壬������Դ������
+        /// Lua中用的异步加载资源方法，必须传入Lua的回调
         /// </summary>
         /// <param name="type"></param>
         //public void CreatePanel(string name, LuaFunction func = null, object obj = null) {
-        public void CreatePanel(string name, LuaFunction func = null, object obj = null)
+        public void LoadPrefab_A(string name, LuaFunction func = null, object obj = null)
         {
             string assetName = name ;
 #if RES_BUNDEL

@@ -31,6 +31,7 @@ else
     AutoRequire.getInstance():require("test/testFrameWork/memory")
     AutoRequire.getInstance():require("test/group")
     AutoRequire.getInstance():require("test/pbl")
+    require('test/__require_first__')
     AutoRequire.getInstance():require("test/performance")
     AutoRequire.getInstance():require("test/performanceOpt1")
     AutoRequire.getInstance():require("test/modelPerformance")

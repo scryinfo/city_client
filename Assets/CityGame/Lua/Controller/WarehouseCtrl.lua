@@ -16,7 +16,6 @@ ct.sortingItemType = {
 }
 --存放选中的物品,临时表
 WarehouseCtrl.temporaryItems = {}
-local temporaryInfo = {}  --临时储存选中goods的信息
 local isShowList;
 local switchIsShow;
 
@@ -114,35 +113,35 @@ function WarehouseCtrl:c_temporaryifNotGoods(id)
 end
 --获取仓库总数量
 function WarehouseCtrl:getNumber(table)
-    local number = 0
+    local warehouseCapacity = 0
     if not table then
-        number = 0
-        return number;
+        warehouseCapacity = 0
+        return warehouseCapacity;
     else
         for k,v in pairs(table) do
-            number = number + v.n
+            warehouseCapacity = warehouseCapacity + v.n
         end
-        return number
+        return warehouseCapacity
     end
 end
 
---右边Shelf
+--Open shelf
 function WarehouseCtrl:OnClick_shelfBtn()
     WarehouseCtrl:OnClick_rightInfo(not switchIsShow,0)
 end
---右边Transpor
+--Open transpor
 function WarehouseCtrl:OnClick_transportBtn()
     WarehouseCtrl:OnClick_rightInfo(not switchIsShow,1)
 end
 
---根据名字排序
+--名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
     WarehousePanel.nowText.text = "By name";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
     WarehouseCtrl:_getSortItems(nameType,ins.ShelfGoodsMgr.WarehouseItems)
 end
---根据数量排序
+--数量排序
 function WarehouseCtrl:OnClick_OnNumber(ins)
     WarehousePanel.nowText.text = "By quantity";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
@@ -151,7 +150,6 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
 end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(ins)
-    --UIPage:ShowPage(ChooseWarehouseCtrl);
     ct.OpenCtrl("ChooseWarehouseCtrl")
 end
 --确定上架
@@ -175,7 +173,7 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         end
     end
 end
---上架回调操作
+--上架回调执行
 function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
@@ -194,7 +192,7 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         Event.Brocast("m_ReqTransport",MaterialModel.buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
     end
 end
---运输回调后执行操作
+--运输回调执行
 function WarehouseCtrl:n_transports(msg)
     local table = self.ShelfGoodsMgr.WarehouseItems
     for i,v in pairs(table) do
@@ -219,7 +217,7 @@ end
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end
---打开排序列表
+--打开排序
 function WarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
         WarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -230,7 +228,7 @@ function WarehouseCtrl:OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
---判断打开右侧货架还是运输
+--判断右侧是货架还是运输
 function WarehouseCtrl:OnClick_rightInfo(isShow,number)
     if isShow then
         WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);

@@ -9,7 +9,7 @@ local ModelBase = class('ModelBase')
 local ControllerBase = class('ControllerBase')
 
 local tempCtrlList = {}
-local test_count = 1000
+local test_count = 10000
 
 function ModelBase:initialize(name)
     self.name = name
@@ -203,6 +203,7 @@ end)
 
 
 --性能测试-------------------------------------------{
+--有返回值的rpc测试
 UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  function ()
     collectgarbage("collect")
     ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
@@ -284,6 +285,7 @@ UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  
     --]]
 end)
 
+--没有返回值的rpc测试
 UnitTest.Exec("wk16_abel_ctrl_model_noRetPerformance", "test_wk16_abel_ctrl_model_noRetPerformance",  function ()
     collectgarbage("collect")
     ct.log('wk16_abel_ctrl_model_noRetPerformance', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
@@ -311,6 +313,21 @@ UnitTest.Exec("wk16_abel_ctrl_model_noRetPerformance", "test_wk16_abel_ctrl_mode
         end
     end)
     collectgarbage("collect")
+    --[[
+    100万次调用
+        model_rpc 性能测试1：直接调用 model 方法    执行时间:      3.5659999999998
+        model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:      3.1400000000003
+    50万次调用
+      model_rpc 性能测试1：直接调用 model 方法    执行时间:        1.7050000000004
+      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        1.5460000000003
+    10万次调用
+      model_rpc 性能测试1：直接调用 model 方法    执行时间:        0.32999999999993
+      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        0.29899999999998
+    1万次调用
+      model_rpc 性能测试1：直接调用 model 方法    执行时间:        0.030999999999949
+      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        0.0300000000002
+  性能比较接近
+  --]]
 end)
 --性能测试-------------------------------------------}
 

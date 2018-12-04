@@ -2853,8 +2853,7 @@ end
         for i,v in ipairs( filteredList ) do
             local name, instance = v[1], v[2]
             if M.LuaUnit.asFunction(instance) then
-                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                ct.log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "测试开始==================================================================================================================================================================================")
                 local startTime = os.clock()
                 self:execOneFunction( nil, name, nil, instance )
                 local endTime = os.clock()
@@ -2867,8 +2866,7 @@ end
                 assert( className ~= nil )
                 local methodInstance = instance[methodName]
                 assert(methodInstance ~= nil)
-                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                ct.log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "测试开始==================================================================================================================================================================================")
                 local startTime = os.clock()
                 self:execOneFunction( className, methodName, instance, methodInstance )
                 local endTime = os.clock()

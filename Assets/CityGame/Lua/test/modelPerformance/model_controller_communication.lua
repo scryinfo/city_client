@@ -9,7 +9,7 @@ local ModelBase = class('ModelBase')
 local ControllerBase = class('ControllerBase')
 
 local tempCtrlList = {}
-local test_count = 10000
+local test_count = 1000
 
 function ModelBase:initialize(name)
     self.name = name
@@ -63,14 +63,11 @@ end
 --modelRpc是有返回值的
 function ModelManager.modelRpc(insId, modelMethord, ...)
     local arg = {...}
-    --优化版本
     local md = modelList[insId]
     arg[#arg](md[modelMethord](md,...))
 end
 --modelRpcNoRet是没有返回值的
 function ModelManager.modelRpcNoRet(insId, modelMethord, ...)
-    local arg = {...}
-    --优化版本
     local md = modelList[insId]
     md[modelMethord](md,...)
 end

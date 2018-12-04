@@ -379,7 +379,6 @@ end
 --ctrlRpc是有返回值的rpc
 function ct.ctrlRpc(ctrlName, modelMethord, ...)
     local arg = {...}
-    --优化版本
     local ctrl = UIPage.static.m_allPages[ctrlName]
     if arg[#arg] ~= nil then
         arg[#arg](ctrl[modelMethord](ctrl,...))
@@ -389,8 +388,6 @@ function ct.ctrlRpc(ctrlName, modelMethord, ...)
 end
 --ctrlRpcNoRet 是没有返回值的rpc
 function ct.ctrlRpcNoRet(ctrlName, modelMethord, ...)
-    --优化版本
-    local arg = {...}
     local ctrl = UIPage.static.m_allPages[ctrlName]
     ctrl[modelMethord](ctrl,...)
 end

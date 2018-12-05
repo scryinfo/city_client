@@ -27,7 +27,7 @@ function ShelfCtrl:OnCreate(obj)
     self.luabehaviour = shelf
     self.m_data = {};
     self.m_data.buildingType = BuildingInType.Shelf
-    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
+    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
 
 end
 
@@ -48,21 +48,21 @@ function ShelfCtrl:OnClick_OnName(ins)
     ShelfPanel.nowText.text = "By name";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
-    ShelfCtrl:_getSortItems(nameType,ins.ShelfGoodsMgr.items)
+    ShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.items)
 end
 --根据数量排序
 function ShelfCtrl:OnClick_OnNumber(ins)
     ShelfPanel.nowText.text = "By quantity";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local quantityType = ct.sortingItemType.Quantity
-    ShelfCtrl:_getSortItems(quantityType,ins.ShelfGoodsMgr.items)
+    ShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.items)
 end
 --根据价格排序
 function ShelfCtrl:OnClick_OnpriceBtn(ins)
     ShelfPanel.nowText.text = "By price";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local priceType = ct.sortingItemType.Price
-    ShelfCtrl:_getSortItems(priceType,ins.ShelfGoodsMgr.items)
+    ShelfCtrl:_getSortItems(priceType,ins.GoodsUnifyMgr.items)
 end
 
 function ShelfCtrl.OnClick_OnSorting(ins)

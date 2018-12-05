@@ -33,7 +33,7 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     --读取服务器发过来的信息，是否有生产线
-    ShelfGoodsMgr:_getProductionLine(self.m_data,adjustLine)
+    GoodsUnifyMgr:_getProductionLine(self.m_data,adjustLine)
     Event.Brocast("refreshTime",self.m_data)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
@@ -43,11 +43,10 @@ function AdjustProductionLineCtrl:Awake(go)
 end
 
 function AdjustProductionLineCtrl:Refresh()
-    --local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
     local itemId = MaterialModel.buildingCode
     self:refreshWorkerNum()
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
-    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getNumber(MaterialModel.MaterialWarehouse);
+    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.MaterialWarehouse);
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
 
 end
@@ -64,25 +63,23 @@ end
 function AdjustProductionLineCtrl:calculateTime(msg)
     local time = 1 / Material[msg.itemId].numOneSec / msg.workerNum * msg.targetCount
     local timeTab = getTimeString(time)
-
-    ShelfGoodsMgr.sendInfoTempTab[msg.itemId].timeText.text = timeTab
-    ShelfGoodsMgr.sendInfoTempTab = nil
+    GoodsUnifyMgr.sendInfoTempTab[msg.itemId].timeText.text = timeTab
+    GoodsUnifyMgr.sendInfoTempTab = nil
 end
 
 --添加生产线
 function AdjustProductionLineCtrl:OnClick_determineBtn()
-    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    local number,steffNumber,itemid = ShelfGoodsMgr:getSendInfo()
-    if number == nil then
-        ct.log("system","数量不能为0")
+    local number,steffNumber,itemid = GoodsUnifyMgr:getSendInfo()
+    if number == "0" then
+        Event.Brocast("SmallPop","目标产量不能为0",300)
         return;
     end
-    if steffNumber == nil then
-        ct.log("system","人数不能为0")
+    if steffNumber == "0" then
+        Event.Brocast("SmallPop","员工人数不能为0",300)
         return;
     end
     if tonumber(steffNumber) < 5 then
-        ct.log("system","人数不足")
+        Event.Brocast("SmallPop","员工人数不足",300)
         return;
     end
     Event.Brocast("m_ReqAddLine",MaterialModel.buildingId,number,steffNumber,itemid);
@@ -91,7 +88,6 @@ end
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
     Event.Brocast("m_ResModifyKLine",MaterialModel.buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
-
 --获取剩余员工人数
 function AdjustProductionLineCtrl:getWorkerNum()
     local workerNum = 0  --剩余员工数量

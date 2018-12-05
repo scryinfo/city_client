@@ -5,17 +5,17 @@ require 'View/BuildingInfo/DetailsItem'  --仓库shelf Item
 require 'View/BuildingInfo/ProductionItem'  --选择添加生产线Item
 require 'View/BuildingInfo/SmallProductionLineItem'  --生产线 Item
 
-ShelfGoodsMgr = class('ShelfGoodsMgr')
+GoodsUnifyMgr = class('GoodsUnifyMgr')
 
 local itemsId
-ShelfGoodsMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
-ShelfGoodsMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
-ShelfGoodsMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
-ShelfGoodsMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
-ShelfGoodsMgr.static.AddProductionLine_PATH = "View/GoodsItem/ProductionItem"  --选择添加生产线 Item
-ShelfGoodsMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProductionLineItem"  --生产线 Item
+GoodsUnifyMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
+GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
+GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
+GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
+GoodsUnifyMgr.static.AddProductionLine_PATH = "View/GoodsItem/ProductionItem"  --选择添加生产线 Item
+GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProductionLineItem"  --生产线 Item
 
-function ShelfGoodsMgr:initialize(insluabehaviour, buildingData)
+function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.buildingType == BuildingInType.Shelf then
         self:_creatStaffItemGoods();
@@ -25,9 +25,8 @@ function ShelfGoodsMgr:initialize(insluabehaviour, buildingData)
         self:_creatProductionItem();
     end
 end
-
 --仓库
-function ShelfGoodsMgr:_creatWarehouseItemGoods()
+function GoodsUnifyMgr:_creatWarehouseItemGoods()
     if not MaterialModel.MaterialWarehouse then
         return;
     end
@@ -40,11 +39,10 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
         uiTab.itemId = v.key.id
         configTable[i] = uiTab
 
-        --预制的信息
         local prefabData = {}
         prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_PATH,WarehousePanel.Content)
+        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
         self.WarehouseModelData[i] = prefabData
 
         local warehouseLuaItem = WarehouseItem:new(self.WarehouseModelData[i].uiData,prefabData._prefab,self.behaviour,self,i)
@@ -52,17 +50,14 @@ function ShelfGoodsMgr:_creatWarehouseItemGoods()
             self.WarehouseItems = {}
         end
         self.WarehouseItems[i] = warehouseLuaItem
-        ct.log("这是仓库的!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     end
 end
-
 --货架
-function ShelfGoodsMgr:_creatStaffItemGoods()
+function GoodsUnifyMgr:_creatStaffItemGoods()
     if not MaterialModel.MaterialShelf then
         return;
     end
     self.ModelDataList={}
-
     local configTable = {}
     for i,v in pairs(MaterialModel.MaterialShelf) do
         local shelfDataInfo = {}
@@ -73,11 +68,10 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
         shelfDataInfo.itemId = v.k.id
         configTable[i] = shelfDataInfo
 
-        --预制的信息
         local prefabData={}
         prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Staff_PATH,ShelfPanel.Content)
+        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
 
         local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i)
@@ -94,9 +88,8 @@ function ShelfGoodsMgr:_creatStaffItemGoods()
         end
     end
 end
-
 --添加生产线可以生产的原料或商品
-function ShelfGoodsMgr:_creatProductionItem()
+function GoodsUnifyMgr:_creatProductionItem()
     local configTable = {}
     for i,v in pairs(Material) do
         local key = 2151
@@ -106,11 +99,10 @@ function ShelfGoodsMgr:_creatProductionItem()
             productionItemInfo.name = Material[i].name
             configTable[i] = productionItemInfo
 
-            --预制的信息
             local prefabData = {}
             prefabData.state = 'idel'
             prefabData.uiData = configTable[i]
-            prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
+            prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
             AddProductionLineCtrl.productionItemTab[i] = prefabData
 
             local productionItem = ProductionItem:new(AddProductionLineCtrl.productionItemTab[i].uiData,prefabData._prefab,self.behaviour,self,i)
@@ -122,7 +114,7 @@ function ShelfGoodsMgr:_creatProductionItem()
     end
 end
 --添加生产线
-function ShelfGoodsMgr:_creatProductionLine(name,itemId)
+function GoodsUnifyMgr:_creatProductionLine(name,itemId)
         local configTable = {};
         configTable.name = name
         configTable.itemId = itemId;
@@ -132,14 +124,14 @@ function ShelfGoodsMgr:_creatProductionLine(name,itemId)
         local prefabData = {}
         prefabData.state = 'idel'
         prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[itemId]
-        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.productionLinePrefab[itemId] = prefabData
 
         local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
         AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
-function ShelfGoodsMgr:_getProductionLine(table,behaviour)
+function GoodsUnifyMgr:_getProductionLine(table,behaviour)
     if not table then
         return;
     end
@@ -153,13 +145,12 @@ function ShelfGoodsMgr:_getProductionLine(table,behaviour)
         uiTab.workerNum = v.workerNum
         uiTab.lineId = v.id
         configTable[i] = uiTab
-
         AdjustProductionLineCtrl.productionLineUIInfo[i] = configTable
 
         local prefabData = {}
         prefabData.state = 'idel'
         prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[i]
-        prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.productionLinePrefab[i] = prefabData
 
         local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,behaviour,self,i);
@@ -167,14 +158,14 @@ function ShelfGoodsMgr:_getProductionLine(table,behaviour)
     end
 end
 --获取发送的物品信息
-function ShelfGoodsMgr:getSendInfo()
+function GoodsUnifyMgr:getSendInfo()
     if itemsId == nil then
         return;
     end
-    ShelfGoodsMgr.sendInfoTempTab = {}
-    ShelfGoodsMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.productionLineTab[itemsId]
-    local number = ShelfGoodsMgr.sendInfoTempTab[itemsId].inputNumber.text;
-    local steffNumber = ShelfGoodsMgr.sendInfoTempTab[itemsId].staffNumberText.text;
+    GoodsUnifyMgr.sendInfoTempTab = {}
+    GoodsUnifyMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.productionLineTab[itemsId]
+    local number = GoodsUnifyMgr.sendInfoTempTab[itemsId].inputNumber.text;
+    local steffNumber = GoodsUnifyMgr.sendInfoTempTab[itemsId].staffNumberText.text;
     if number == nil then
         return;
     end
@@ -184,11 +175,11 @@ function ShelfGoodsMgr:getSendInfo()
     return number,steffNumber,itemsId;
 end
 --仓库选中物品上架
-function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
+function GoodsUnifyMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
     prefabData.state = 'idel'
-    prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
+    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
     local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId)
 
     if not self.shelfPanelItem then
@@ -197,17 +188,16 @@ function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     self.shelfPanelItem[id] = shelfLuaItem
 end
 --仓库右侧删除上架
-function ShelfGoodsMgr:_deleteShelfItem(id)
+function GoodsUnifyMgr:_deleteShelfItem(id)
     destroy(self.shelfPanelItem[id].prefab.gameObject);
     self.shelfPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
 --仓库选中物品运输
-function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
-    --预制的信息
+function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
     prefabData.state = 'idel'
-    prefabData._prefab = self:_creatGoods(ShelfGoodsMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
+    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
     local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
@@ -216,14 +206,14 @@ function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     self.transportPanelItem[id] = transportLuaItem
 end
 --仓库右侧删除运输
-function ShelfGoodsMgr:_deleteTransportItem(id)
+function GoodsUnifyMgr:_deleteTransportItem(id)
     destroy(self.transportPanelItem[id].prefab.gameObject);
     self.transportPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
 --货架删除
-function ShelfGoodsMgr:_deleteGoods(ins)
-    ct.log("fisher_week9_ShelfGoodsItem","[ShelfGoodsMgr:_deleteGoods]",ins.id);
+function GoodsUnifyMgr:_deleteGoods(ins)
+    ct.log("fisher_week9_ShelfGoodsItem","[GoodsUnifyMgr:_deleteGoods]",ins.id);
     destroy(self.items[ins.id].prefab.gameObject);
     table.remove(self.ModelDataList, ins.id)
     table.remove(self.items, ins.id)
@@ -234,7 +224,7 @@ function ShelfGoodsMgr:_deleteGoods(ins)
     end
 end
 --删除生产线
-function ShelfGoodsMgr:_deleteProductionLine(ins)
+function GoodsUnifyMgr:_deleteProductionLine(ins)
     destroy(AdjustProductionLineCtrl.productionLineTab[ins.id].prefab.gameObject);
     table.remove(AdjustProductionLineCtrl.productionLinePrefab,ins.id)
     table.remove(AdjustProductionLineCtrl.productionLineTab,ins.id)
@@ -245,7 +235,7 @@ function ShelfGoodsMgr:_deleteProductionLine(ins)
     end
 end
 --仓库删除
-function ShelfGoodsMgr:_WarehousedeleteGoods(id)
+function GoodsUnifyMgr:_WarehousedeleteGoods(id)
     destroy(self.WarehouseItems[id].prefab.gameObject);
     table.remove(self.WarehouseModelData,id);
     table.remove(self.WarehouseItems,id);
@@ -256,7 +246,7 @@ function ShelfGoodsMgr:_WarehousedeleteGoods(id)
     end
 end
 --生成预制
-function ShelfGoodsMgr:_creatGoods(path,parent)
+function GoodsUnifyMgr:_creatGoods(path,parent)
     local prefab = UnityEngine.Resources.Load(path);
     local go = UnityEngine.GameObject.Instantiate(prefab);
     local rect = go.transform:GetComponent("RectTransform");

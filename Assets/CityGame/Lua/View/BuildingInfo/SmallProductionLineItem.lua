@@ -69,7 +69,6 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
-    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
     Event.Brocast("m_ReqDeleteLine",MaterialModel.buildingId,go.lineId)
     go.manager:_deleteProductionLine(go)
 end

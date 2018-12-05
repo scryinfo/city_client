@@ -21,7 +21,7 @@ function AddProductionLineCtrl:OnCreate(obj)
     self.luabehaviour = addLine
     self.m_data = {}
     self.m_data.buildingType = BuildingInType.ProductionLine;
-    self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour,self.m_data);
+    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.m_data);
 
 
     addLine:AddClick(AddProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
@@ -75,10 +75,10 @@ function AddProductionLineCtrl:_selectedProductionLine(id,itemId,name)
         self.temporaryIdTable[id] = id;
         self.itemId = itemId;
         self.name = name;
-        self.ShelfGoodsMgr.productionItems[id].selectedImg.transform.localScale = Vector3.one
+        self.GoodsUnifyMgr.productionItems[id].selectedImg.transform.localScale = Vector3.one
     else
         self.temporaryIdTable[id] = nil;
-        self.ShelfGoodsMgr.productionItems[id].selectedImg.transform.localScale = Vector3.zero
+        self.GoodsUnifyMgr.productionItems[id].selectedImg.transform.localScale = Vector3.zero
     end
 end
 
@@ -90,7 +90,7 @@ function AddProductionLineCtrl:OnClick_determineBtn(go)
     --if  then
     --
     --end
-    go.ShelfGoodsMgr:_creatProductionLine(go.name,go.itemId);
+    go.GoodsUnifyMgr:_creatProductionLine(go.name,go.itemId);
     UIPage.ClosePage();
 end
 

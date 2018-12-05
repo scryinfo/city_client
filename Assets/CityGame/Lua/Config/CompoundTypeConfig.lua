@@ -1,36 +1,22 @@
 CompoundTypeConfig={
-
 	[2151] = {
-		
 		[1] = {
 		itemId = 2151001,
 		name = "fooddata", 
 		itemType = 0,
-		matCompoundGoods = {2201001,2201003,2201004}, 
-		goodsNeedMatData = {},
 		},
-		
 		[2] = {
 		itemId = 2151002,
 		name = "fooddata", 
 		itemType = 0,
-		matCompoundGoods = {2201002,2201004}, 
-		goodsNeedMatData = {},
 		},
-		
 		[3] = {
 		itemId = 2151003,
 		name = "fooddata", 
 		itemType = 0,
-		matCompoundGoods = {2201003,2201004}, 
-		goodsNeedMatData = {},
 		},
 	},
-	
-	
-	
 	[2152] = {
-		
 		[1] = {
 		itemId = 2152001,
 		name = "dressdata", 
@@ -38,7 +24,6 @@ CompoundTypeConfig={
 		matCompoundGoods = {2202001,2202003,2202004}, 
 		goodsNeedMatData = {},
 		},
-		
 		[2] = {
 		itemId = 2152002,
 		name = "dressdata", 
@@ -46,7 +31,6 @@ CompoundTypeConfig={
 		matCompoundGoods = {2202002,2202004}, 
 		goodsNeedMatData = {},
 		},
-		
 		[3] = {
 		itemId = 2152003,
 		name = "dressdata", 
@@ -55,7 +39,6 @@ CompoundTypeConfig={
 		goodsNeedMatData = {},
 		},
 	},
-	
 	[2201] = {
 		[1] = {
 		itemId = 2201001,
@@ -96,9 +79,7 @@ CompoundTypeConfig={
 			[3] = {itemId = 2151003, num = 1},
 		}
 		}
-	}	
-
-	
+	},
 	[2202] = {
 		[1] = {
 		itemId = 2202001,

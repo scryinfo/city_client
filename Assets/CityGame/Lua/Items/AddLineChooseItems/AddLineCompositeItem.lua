@@ -18,5 +18,5 @@ function AddLineCompositeItem:initialize(viewRect)
 end
 --初始化
 function AddLineCompositeItem:initData(data)
-    
+
 end

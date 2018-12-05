@@ -75,7 +75,6 @@ function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize)
     end
 end
 
-
 --功能
 --  返回一块范围内的blockID集合
 --参数
@@ -128,6 +127,7 @@ function DataManager.RefreshBaseBuildData(data)
     end
 end
 
+--[[
 --功能
 --  刷新商业建筑集合的详细数据--
 --参数
@@ -153,7 +153,7 @@ function DataManager.RefreshDetailBuildData(data,buildTypeClass)
         BuildDataStack.DetailDataModels[blockID] = buildTypeClass:new(data)
     end
 end
-
+--]]
 --功能
 --  删除整个地块集合数据
 --      相机移动时触发
@@ -184,6 +184,64 @@ function DataManager.GetBlockDataByID(blockID)
         return nil
     end
 end
+---------------------------------------------------------------------------------- 建筑详情数据---------------------------------------------------------------------------------
+ModelBase = class('ModelBase')
+
+function ModelBase:initialize(name)
+    self.name = name
+end
+
+--添加新DetailModel到管理器中
+function DataManager.AddNewDetailModel(model,insId)
+    if not BuildDataStack.DetailModelStack then
+        BuildDataStack.DetailModelStack = {}
+    end
+    --如果数据冲突
+    if BuildDataStack.DetailModelStack[insId] then
+        BuildDataStack.DetailModelStack[insId] = nil
+    end
+    BuildDataStack.DetailModelStack[insId] = model
+end
+
+--获取DetailModel到管理器中
+function DataManager.GetDetailModelByID(insId)
+    if  BuildDataStack.DetailModelStack then
+        return BuildDataStack.DetailModelStack[insId]
+    end
+    return nil
+end
+
+--远程调用DetailModel的无返回值方法
+--参数：
+--1：实例ID
+--2：model中self方法名
+function DataManager.DetailModelRpcNoRet(insId,modelMethord,...)
+    if not BuildDataStack.DetailModelStack and not insId and not modelMethord  then
+        return
+    end
+    local tempDetailModel = BuildDataStack.DetailModelStack[insId]
+    if tempDetailModel and tempDetailModel[modelMethord] then
+        tempDetailModel[modelMethord](tempDetailModel,...)
+    end
+end
+
+--远程调用DetailModel的有返回值方法
+--参数：
+--1：实例ID
+--2：model中self方法名
+--3：回调函数，参数为2中方法的返回值
+--4：... model中方法参数
+function DataManager.DetailModelRpc(insId,modelMethord,callBackMethord,...)
+    if not BuildDataStack.DetailModelStack and not insId and not modelMethord and not callBackMethord then
+        return
+    end
+    local tempDetailModel = BuildDataStack.DetailModelStack[insId]
+    if tempDetailModel and tempDetailModel[modelMethord] then
+        callBackMethord(tempDetailModel[modelMethord](tempDetailModel,...))
+    end
+end
+
+
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 
 --土地集合

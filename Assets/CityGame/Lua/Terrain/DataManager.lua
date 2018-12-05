@@ -187,8 +187,19 @@ end
 ---------------------------------------------------------------------------------- 建筑详情数据---------------------------------------------------------------------------------
 ModelBase = class('ModelBase')
 
-function ModelBase:initialize(name)
-    self.name = name
+function ModelBase:initialize(insId)
+    self.insId = insId
+end
+
+--功能，确认在本地有对应DetailModel打开
+--参数：
+--modelclass：详情数据类
+--insId: 详情数据唯一ID
+function DataManager.OpenDetailModel(modelclass,insId,...)
+    --如果已有详情建筑信息
+    if not DataManager.GetDetailModelByID(insId) then
+        DataManager.AddNewDetailModel(modelclass:New(insId,...),insId)
+    end
 end
 
 --添加新DetailModel到管理器中
@@ -216,14 +227,16 @@ end
 --1：实例ID
 --2：model中self方法名
 function DataManager.DetailModelRpcNoRet(insId,modelMethord,...)
-    if not BuildDataStack.DetailModelStack and not insId and not modelMethord  then
+    --参数验证
+    if not BuildDataStack.DetailModelStack or not insId or not modelMethord  then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel and tempDetailModel[modelMethord] then
+    if tempDetailModel or tempDetailModel[modelMethord] then
         tempDetailModel[modelMethord](tempDetailModel,...)
     end
 end
+
 
 --远程调用DetailModel的有返回值方法
 --参数：
@@ -232,15 +245,93 @@ end
 --3：回调函数，参数为2中方法的返回值
 --4：... model中方法参数
 function DataManager.DetailModelRpc(insId,modelMethord,callBackMethord,...)
-    if not BuildDataStack.DetailModelStack and not insId and not modelMethord and not callBackMethord then
+    --参数验证
+    if not BuildDataStack.DetailModelStack or not insId or not modelMethord or not callBackMethord then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel and tempDetailModel[modelMethord] then
+    if tempDetailModel or tempDetailModel[modelMethord] then
         callBackMethord(tempDetailModel[modelMethord](tempDetailModel,...))
     end
 end
 
+--远程调用Control的无返回值方法
+--参数：
+--1：Controller名字
+--2：ontroller中self方法名
+function DataManager.ControllerRpcNoRet(ctrlName, modelMethord, ...)
+    --参数验证
+    if not UIPage.static.m_allPages or  not insId or not modelMethord  then
+        return
+    end
+    local tempController = UIPage.static.m_allPages[ctrlName]
+    if tempController or tempController[modelMethord]  then
+        tempController[modelMethord](tempController,...)
+    end
+end
+
+--远程调用Control的有返回值方法
+--参数：
+--1：Controller名字
+--2：Controller中self方法名
+--3：回调函数，参数为2中方法的返回值
+--4：... Controller中方法参数
+function DataManager.ControllerRpc(ctrlName, modelMethord, callBackMethord, ...)
+    --参数验证
+    if not UIPage.static.m_allPages or not ctrlName or not modelMethord or not callBackMethord then
+        return
+    end
+    local tempController = UIPage.static.m_allPages[ctrlName]
+    if tempController or tempController[modelMethord]  then
+        callBackMethord(tempController[modelMethord](tempController,...))
+    end
+end
+
+----------------------------------------------------------------------------------DetailModel的网络消息管理
+
+local ModelNetMsgStack = {}
+
+--DetailModel 注册消息回调
+--参数：
+--insId：Model唯一ID
+--protoNameStr：protobuf表名
+--protoNumStr:  protobuf协议号
+--protoAnaStr:  protobuf解析数据结构名
+--callBackMethord： 具体回调函数(参数为已解析)
+function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
+    if not ModelNetMsgStack[protoNameStr] then
+        ModelNetMsgStack[protoNameStr] = {}
+    end
+    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= table then
+        ModelNetMsgStack[protoNameStr][protoNumStr] = {}
+        --注册分发函数
+        CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
+            local protoData = assert(pbl.decode(protoAnaStr, stream), "")
+            if protoData then
+                local protoID = nil
+                if (protoData.BuildingInfo and protoData.BuildingInfo.id )then
+                    protoID = protoData.BuildingInfo.id
+                elseif protoData.id then
+                    protoID = protoData.id
+                end
+                if protoID then
+                    for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                        if key == protoID then
+                            call(protoData)
+                            return
+                        end
+                    end
+                else
+                    ct.log("System","服务器返回的建筑详情中数据没有唯一ID")
+                end
+            else
+                ct.log("System","解析服务器返回的建筑详情中数据失败")
+            end
+            ct.log("System","没有找到对应的建筑详情Model类的回调函数")
+        end)
+    end
+    ModelNetMsgStack[protoNameStr][protoNumStr][insId] = callBackMethord
+end
 
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 
@@ -288,6 +379,17 @@ function  DataManager.InitPersonDatas(tempData)
         for key, value in pairs(tempData.goodLv) do
             if value.id and value.num then
                 PersonDataStack.m_goodLv[value.id] = value.num
+            end
+        end
+    end
+    --初始化好友信息
+    if  PersonDataStack.m_friends == nil then
+        PersonDataStack.m_friends = {}
+    end
+    if tempData.friends then
+        for key, value in pairs(tempData.friends) do
+            if value.id and value.b then
+                PersonDataStack.m_friends[value.id] = value.b
             end
         end
     end
@@ -355,7 +457,19 @@ function DataManager.SetMyGoodLv(tempData)
     end
 end
 
+--获取自己好友信息
+function DataManager.GetMyFriends()
+    return PersonDataStack.m_friends
+end
 
+--刷新自己好友信息
+--参数： tempData==>  ByteBool
+--如果需要删除好友，ByteBool={ id = "XXXXXXXX",b = nil }
+function DataManager.SetMyFriends(tempData)
+    if tempData.id then
+        PersonDataStack.m_buildingBrands[tempData.id] = tempData.b
+    end
+end
 
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
@@ -509,7 +623,4 @@ function DataManager.n_OnReceiveGroundChange(stream)
 end
 
 ----------
-
-
-
 

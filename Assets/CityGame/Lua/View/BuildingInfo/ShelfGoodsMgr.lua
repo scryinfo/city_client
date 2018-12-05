@@ -166,7 +166,7 @@ function ShelfGoodsMgr:_getProductionLine(table,behaviour)
         AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
     end
 end
---获取要发送的物品信息
+--获取发送的物品信息
 function ShelfGoodsMgr:getSendInfo()
     if itemsId == nil then
         return;
@@ -183,7 +183,6 @@ function ShelfGoodsMgr:getSendInfo()
     end
     return number,steffNumber,itemsId;
 end
-
 --仓库选中物品上架
 function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
@@ -197,14 +196,12 @@ function ShelfGoodsMgr:_creatShelfGoods(id,luabehaviour,itemId)
     end
     self.shelfPanelItem[id] = shelfLuaItem
 end
-
 --仓库右侧删除上架
 function ShelfGoodsMgr:_deleteShelfItem(id)
     destroy(self.shelfPanelItem[id].prefab.gameObject);
     self.shelfPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
-
 --仓库选中物品运输
 function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     --预制的信息
@@ -218,7 +215,6 @@ function ShelfGoodsMgr:_creatTransportGoods(id,luabehaviour,itemId)
     end
     self.transportPanelItem[id] = transportLuaItem
 end
-
 --仓库右侧删除运输
 function ShelfGoodsMgr:_deleteTransportItem(id)
     destroy(self.transportPanelItem[id].prefab.gameObject);

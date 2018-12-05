@@ -59,10 +59,12 @@ end
 function AdjustProductionLineCtrl:OnClick_addBtn()
     ct.OpenCtrl("AddProductionLineCtrl")
 end
+
 --计算一条生产线总时间
 function AdjustProductionLineCtrl:calculateTime(msg)
     local time = 1 / Material[msg.itemId].numOneSec / msg.workerNum * msg.targetCount
-    local timeTab = AdjustProductionLineCtrl:formattingTime(time)
+    local timeTab = getTimeString(time)
+
     ShelfGoodsMgr.sendInfoTempTab[msg.itemId].timeText.text = timeTab
     ShelfGoodsMgr.sendInfoTempTab = nil
 end
@@ -90,30 +92,6 @@ function AdjustProductionLineCtrl:OnClick_modifyBtn()
     Event.Brocast("m_ResModifyKLine",MaterialModel.buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
 
---格式化时分秒  00:00:00
-function AdjustProductionLineCtrl:formattingTime(time)
-    if time < 0 then
-        return;
-    end
-    local hour,minute,second = 0,0,0
-    second = time % 60
-    minute = time / 60
-    if minute > 60 then
-        hour = minute / 60
-        minute = minute % 60
-    end
-    hour,minute,second = math.floor(hour),math.floor(minute),math.ceil(second)
-    if #tostring(hour) == 1 then
-        hour = "0"..hour
-    end
-    if #tostring(minute) == 1 then
-        minute = "0"..minute
-    end
-    if #tostring(second) == 1 then
-        second = "0"..second
-    end
-    return hour..":"..minute..":"..second
-end
 --获取剩余员工人数
 function AdjustProductionLineCtrl:getWorkerNum()
     local workerNum = 0  --剩余员工数量
@@ -148,7 +126,7 @@ function AdjustProductionLineCtrl:refreshTime(infoTab)
     for i,v in pairs(infoTab) do
         local remainingNum = v.targetCount - v.nowCount
         local time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
-        local timeTab = AdjustProductionLineCtrl:formattingTime(time)
+        local timeTab = getTimeString(time)
         if remainingNum > 0 then
             AdjustProductionLineCtrl.productionLineTab[i].timeText.text = timeTab
         elseif remainingNum < 0 or remainingNum == 0 then

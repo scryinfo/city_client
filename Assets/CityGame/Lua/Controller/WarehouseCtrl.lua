@@ -56,13 +56,11 @@ function WarehouseCtrl:OnCreate(obj)
     self.m_data.buildingType = BuildingInType.Warehouse;
     self.ShelfGoodsMgr = ShelfGoodsMgr:new(self.luabehaviour, self.m_data)
 end
-
 function WarehouseCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
 end
-
 function WarehouseCtrl:Refresh()
     --local itemId = PlayerTempModel.roleData.buys.materialFactory[1].info.mId
     local itemId = MaterialModel.buildingCode
@@ -71,7 +69,6 @@ function WarehouseCtrl:Refresh()
     WarehousePanel.Warehouse_Slider.value = numText;
     WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
 end
-
 function WarehouseCtrl:OnClick_returnBtn()
     UIPage.ClosePage();
     --WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
@@ -80,7 +77,6 @@ end
 function WarehouseCtrl:OnClick_searchBtn(ins)
 
 end
-
 --选中物品
 function WarehouseCtrl:_selectedGoods(id,itemId)
     if self.temporaryItems[id] == nil then
@@ -124,7 +120,6 @@ function WarehouseCtrl:getNumber(table)
         return warehouseCapacity
     end
 end
-
 --Open shelf
 function WarehouseCtrl:OnClick_shelfBtn()
     WarehouseCtrl:OnClick_rightInfo(not switchIsShow,0)
@@ -133,7 +128,6 @@ end
 function WarehouseCtrl:OnClick_transportBtn()
     WarehouseCtrl:OnClick_rightInfo(not switchIsShow,1)
 end
-
 --名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
     WarehousePanel.nowText.text = "By name";
@@ -212,8 +206,6 @@ function WarehouseCtrl:n_transports(msg)
         end
     end
 end
-
-
 function WarehouseCtrl:OnClick_OnSorting(ins)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end

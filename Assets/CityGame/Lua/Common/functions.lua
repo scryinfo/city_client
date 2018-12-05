@@ -64,6 +64,17 @@ function getColorString(num1,num2,col1,col2)
     local str = table.concat({str1,"/",str2})
     return str
 end
+--秒数转换时间格式
+function getTimeString(time)
+	local hours = math.floor(time / 3600)
+	local minutes = math.floor((time % 3600) / 60)
+	local seconds = math.floor(time % 60)
+	if hours < 10 then hours = "0"..hours end
+	if minutes < 10 then  minutes = "0"..minutes end
+	if seconds < 10 then seconds = "0"..seconds end
+	local time = hours..":"..minutes..":"..seconds
+	return time
+end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
 	local r1 = r / 255

@@ -56,9 +56,13 @@ end
 --服务器回调--
 --添加生产线
 function AdjustProductionLineModel.n_GsDetermineBtn(stream)
+    if stream == nil then
+        return;
+    end
     local msgAllGameServerInfo = assert(pbl.decode("gs.Line", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
     Event.Brocast("calculateTime",msgAllGameServerInfo)
     Event.Brocast("refreshIdleWorkerNum",msgAllGameServerInfo)
+    Event.Brocast("SmallPop","添加成功",300)
 end
 --修改生产线
 function AdjustProductionLineModel.n_GsModifyKLine(stream)
@@ -67,6 +71,10 @@ function AdjustProductionLineModel.n_GsModifyKLine(stream)
 end
 --删除生产线
 function AdjustProductionLineModel.nGsDeleteLine(stream)
+    if stream == nil then
+        return;
+    end
+    Event.Brocast("SmallPop","删除成功",300)
     --local msgProductionLine = assert(pbl.decode("gs.DelLine"),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
 end
 --生产线变化推送

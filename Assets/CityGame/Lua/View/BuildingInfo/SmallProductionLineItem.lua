@@ -110,7 +110,7 @@ function SmallProductionLineItem:refreshTimeText(msg)
     for i,n in pairs(msg) do
         local remainingNum = tonumber(self.time_Slider.maxValue) - msg.nowCount
         local time = 1 / Material[self.itemId].numOneSec / tonumber(self.staffNumberText.text) * remainingNum
-        local timeTab = AdjustProductionLineCtrl:formattingTime(time)
+        local timeTab = getTimeString(time)
 
         for k,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
             if AdjustProductionLineCtrl.productionLineTab[k].lineId == msg.lineId then

@@ -15,6 +15,13 @@ AddLineTogglesSideValue =
     Left = 0,
     Right = 1,
 }
+AddLineDetailItemState =
+{
+    Default = 0,
+    ToBeInvented = 1,  --还未发明
+    InventIng = 2,  --发明中
+    ResearchIng = 3,  --研究中
+}
 function AddLineTogglesMgr:initialize(viewRect, sideValue)
     self.viewRect = viewRect
     self.sideValue = sideValue
@@ -22,41 +29,41 @@ function AddLineTogglesMgr:initialize(viewRect, sideValue)
     self.typeToggleGroup = viewRect:Find("typeRoot"):GetComponent("ToggleGroup")
     self.typeContent = viewRect:Find("typeRoot/typeScroll/content")
     self.detailToggleGroup = viewRect:Find("detailRoot"):GetComponent("ToggleGroup")
-    self.detailContent = viewRect:Find("typeRoot/detailScroll/content")
+    self.detailContent = viewRect:Find("detailRoot/detailScroll/content")
 
     self.detailPrefab = UnityEngine.Resources.Load(AddLineTogglesMgr.static.DetailItemPath)
     self.togglePrefab = UnityEngine.Resources.Load(AddLineTogglesMgr.static.ToggleItemPath)
 
     self.detailPrefabList = {}
     self.toggleItems = {}
-    if self.sideValue == AddLineTogglesSideValue.Left then  --原料
-        for i, typeItem in pairs(CompoundTypeConfig) do
-            if i < 2200 then
-                local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
-                go.transform:SetParent(self.typeContent.transform)
-                go.transform.localScale = Vector3.one
-                local tempData = {name = typeItem.name, typeId = i, backFunc = function (typeId)
-                    self._showDetails(typeId)
-                end}
-                local item = AddLineToggleItem:new(go.transform, tempData, self.typeToggleGroup)
-                self.toggleItems[#self.toggleItems + 1] = item
-            end
-        end
-    else
-        for i, typeItem in pairs(CompoundTypeConfig) do  --产品
-            if i > 2200 then
-
-            end
+    --生成分组
+    for i, typeItem in pairs(CompoundTypeConfig) do
+        if (sideValue == AddLineTogglesSideValue.Left) and i < 2200 or (sideValue == AddLineTogglesSideValue.Right and i > 2200) then
+            local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
+            go.transform:SetParent(self.typeContent.transform)
+            go.transform.localScale = Vector3.one
+            local tempData = {name = typeItem[1].name, typeId = i, backFunc = function (typeId)
+                self:_showDetails(typeId)
+            end}
+            local item = AddLineToggleItem:new(go.transform, tempData, self.typeToggleGroup)
+            self.toggleItems[#self.toggleItems + 1] = item
         end
     end
-
 end
 --初始化
 function AddLineTogglesMgr:initData(data)
+    --设置默认打开的类别
+    for i, item in pairs(self.toggleItems) do
+        self.toggleItems[i]:showState(false)
+    end
+    self.toggleItems[1]:setToggleIsOn(true)
 
+    --可能会有设置正在研究中等状态
 end
 
 function AddLineTogglesMgr:_showDetails(typeId)
+    self.contentItems = {}
+
     --暂时是直接使用content下的子物体，多了的就移出content
     local data = CompoundTypeConfig[typeId]
     local count = #self.detailPrefabList - #data
@@ -83,11 +90,16 @@ function AddLineTogglesMgr:_showDetails(typeId)
         self.contentItems[#self.contentItems + 1] = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
     end
 
+    for i, item in pairs(self.contentItems) do
+        self.contentItems[i]:showState(false)
+    end
+    self.contentItems[1]:setToggleIsOn(true)
 end
 --选择了某个item，显示线路
 function AddLineTogglesMgr:_setLineShow(itemId)
     --ctrl去处理，传的是分配表里的数据
     --Event.Brocast("", )
+    ct.log("cycle_w15_laboratory03", "选择了"..itemId)
 end
 
 --回收预制

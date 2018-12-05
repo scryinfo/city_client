@@ -15,18 +15,14 @@ end
 function AddLineChooseItemPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.searchBtn = transform:Find("topRoot/searchBtn")
-    --this.leftTypeToggleGroup = transform:Find("leftRoot/typeRoot"):GetComponent("ToggleGroup")
-    --this.leftTypeContent = transform:Find("leftRoot/typeRoot/typeScroll/content")
-    --this.leftDetailToggleGroup = transform:Find("leftRoot/detailRoot"):GetComponent("ToggleGroup")
-    --this.leftDetailContent = transform:Find("leftRoot/typeRoot/detailScroll/content")
-    --
-    --this.rightTypeToggleGroup = transform:Find("rightRoot/typeRoot/"):GetComponent("ToggleGroup")
-    --this.rightTypeContent = transform:Find("rightRoot/typeRoot/typeScroll/content")
-    --this.rightDetailToggleGroup = transform:Find("rightRoot/detailRoot"):GetComponent("ToggleGroup")
-    --this.rightDetailContent = transform:Find("rightRoot/typeRoot/detailScroll/content")
+    this.leftTypeToggleTran = transform:Find("leftRoot")
+    this.rightTypeToggleTran = transform:Find("rightRoot")
 
     this.hLine = transform:Find("centerRoot/lineRoot/hLine")
     this.vLine = transform:Find("centerRoot/lineRoot/vLine")
+
+    this.leftToggleMgr = AddLineTogglesMgr:new(this.leftTypeToggleTran, AddLineTogglesSideValue.Left)
+    this.rightToggleMgr = AddLineTogglesMgr:new(this.rightTypeToggleTran, AddLineTogglesSideValue.Right)
 end
 --设置
 function AddLineChooseItemPanel:setBulbState(state)

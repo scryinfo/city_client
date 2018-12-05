@@ -18,6 +18,11 @@ function AddLineToggleItem:initialize(viewRect, data, toggleGroup)
         self.data.backFunc(self.data.typeId)
     end)
 end
+--外部设置toggle状态
+function AddLineToggleItem:setToggleIsOn(isOn)
+    self.toggle.isOn = isOn
+    self:showState(isOn)
+end
 --显示状态，选中或者未选中
 function AddLineToggleItem:showState(select)
     if select then

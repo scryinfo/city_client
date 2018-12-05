@@ -18,16 +18,45 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
     self.infoBtn = viewRect:Find("infoBtn")
     self.chooseImgTran = viewRect:Find("chooseImg")
 
+    self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
-        self.data.backFunc(self.data.itemId)  --显示中间的线路
+        if isOn then
+            self.data.backFunc(self.data.itemId)  --显示中间的线路
+        end
     end)
-end
 
+    --如果是可展示状态
+    if data.enableShow then
+        self.disableImg.transform.localScale = Vector3.zero
+    else
+        self.disableImg.transform.localScale = Vector3.one
+    end
+    if data.itemState == AddLineDetailItemState.InventIng then
+        self.stateRoot.localScale = Vector3.one
+        self.stateText.text = "Be inventing..."
+    elseif data.itemState == AddLineDetailItemState.ToBeInvented then
+        self.stateRoot.localScale = Vector3.one
+        self.stateText.text = "To be invented..."
+    elseif data.itemState == AddLineDetailItemState.ResearchIng then
+        self.stateRoot.localScale = Vector3.one
+        self.stateText.text = "Be researching..."
+    elseif data.itemState == AddLineDetailItemState.Default then
+        self.stateRoot.localScale = Vector3.zero
+    end
+
+    self.nameText.text = data.name
+end
+--外部设置toggle状态
+function AddLineDetailItem:setToggleIsOn(isOn)
+    self.toggle.isOn = isOn
+    self:showState(isOn)
+end
+--显示
 function AddLineDetailItem:showState(select)
     if select then
-        select.chooseImgTran.localScale = Vector3.one
+        self.chooseImgTran.localScale = Vector3.one
     else
-        select.chooseImgTran.localScale = Vector3.zero
+        self.chooseImgTran.localScale = Vector3.zero
     end
 end

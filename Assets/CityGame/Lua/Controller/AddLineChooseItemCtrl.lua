@@ -38,7 +38,7 @@ end
 
 function AddLineChooseItemCtrl:_initData()
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
-
-
+    AddLineChooseItemPanel.leftToggleMgr:initData()
+    AddLineChooseItemPanel.rightToggleMgr:initData()
 end
 

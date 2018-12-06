@@ -333,6 +333,18 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
     ModelNetMsgStack[protoNameStr][protoNumStr][insId] = callBackMethord
 end
 
+--移除 消息回调
+function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
+    if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
+        ModelNetMsgStack[protoNameStr][protoNumStr][insId] = nil
+        --[[
+        if #ModelNetMsgStack[protoNameStr][protoNumStr] == 0 then
+            ModelNetMsgStack[protoNameStr][protoNumStr] = nil
+        end
+        --]]
+    end
+end
+
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 
 --土地集合
@@ -388,7 +400,7 @@ function  DataManager.InitPersonDatas(tempData)
     end
     if tempData.friends then
         for key, value in pairs(tempData.friends) do
-            if value.id and value.b then
+            if value.id and value.b ~= nil then
                 PersonDataStack.m_friends[value.id] = value.b
             end
         end
@@ -467,7 +479,7 @@ end
 --如果需要删除好友，ByteBool={ id = "XXXXXXXX",b = nil }
 function DataManager.SetMyFriends(tempData)
     if tempData.id then
-        PersonDataStack.m_buildingBrands[tempData.id] = tempData.b
+        PersonDataStack.m_friends[tempData.id] = tempData.b
     end
 end
 
@@ -513,10 +525,6 @@ function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
 end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
-
-
-
-
 
 --注册所有消息回调
 local function InitialEvents()

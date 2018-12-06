@@ -64,7 +64,7 @@ function getColorString(num1,num2,col1,col2)
     local str = table.concat({str1,"/",str2})
     return str
 end
---秒数转换时间格式
+--秒数转换时间格式字符串
 function getTimeString(time)
 	local hours = math.floor(time / 3600)
 	local minutes = math.floor((time % 3600) / 60)

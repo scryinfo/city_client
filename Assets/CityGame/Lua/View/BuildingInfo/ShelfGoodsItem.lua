@@ -29,12 +29,13 @@ end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
     Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
 end
 function ShelfGoodsItem:OnClick_detailsBtn(ins)
     UIPage:ShowPage(DETAILSBoxCtrl,ins);
 end
---删除后刷新ID及刷新显示
+--删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)
     self.id = id
     if id % 5 == 0 then

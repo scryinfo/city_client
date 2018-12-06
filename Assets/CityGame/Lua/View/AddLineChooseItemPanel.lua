@@ -20,19 +20,18 @@ function AddLineChooseItemPanel.InitPanel()
 
     this.hLine = transform:Find("centerRoot/lineRoot/hLine")
     this.vLine = transform:Find("centerRoot/lineRoot/vLine")
+    this._getCenterItems(transform:Find("centerRoot/itemRoot"))
 
     this.leftToggleMgr = AddLineTogglesMgr:new(this.leftTypeToggleTran, AddLineTogglesSideValue.Left)
     this.rightToggleMgr = AddLineTogglesMgr:new(this.rightTypeToggleTran, AddLineTogglesSideValue.Right)
 end
---设置
-function AddLineChooseItemPanel:setBulbState(state)
-    this.itemRects = {}
-    local childCount = transform.childCount - 1
-    for i = 0, childCount do
-        local itemData = {}
-        itemData.itemRect = transform:Find("item0"..i + 1)
-        itemData.matImg = itemData.itemRect:Find("matImg"):GetComponent("Image")
-        itemData.matCountText = itemData.itemRect:Find("matCountText"):GetComponent("Text")
-        self.itemRects[i] = itemData
+--获取中间的item
+function AddLineChooseItemPanel._getCenterItems(viewTran)
+    this.centerItems = {}
+    local childCount = viewTran.childCount - 1
+    for i = 0, childCount - 1 do
+        local tran = viewTran:Find("item0"..i + 1)
+        this.centerItems[#this.centerItems] = AddLineCompositeItem:new(tran)
     end
+    this.productionItem = AddLineCompositeItem:new(viewTran:Find("productionItem"))
 end

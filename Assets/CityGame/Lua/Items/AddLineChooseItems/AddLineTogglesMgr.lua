@@ -20,7 +20,8 @@ AddLineDetailItemState =
     Default = 0,
     ToBeInvented = 1,  --还未发明
     InventIng = 2,  --发明中
-    ResearchIng = 3,  --研究中
+    HasInvented = 3,  --已经发明过了
+    ResearchIng = 4,  --研究中
 }
 function AddLineTogglesMgr:initialize(viewRect, sideValue)
     self.viewRect = viewRect
@@ -86,7 +87,7 @@ function AddLineTogglesMgr:_showDetails(typeId)
         go.transform.localScale = Vector3.one
 
         local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId)
-            self:_setLineShow(itemId)
+            self:_setLineShow(itemId, itemData.itemType)
         end}
         self.contentItems[#self.contentItems + 1] = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
     end
@@ -97,9 +98,9 @@ function AddLineTogglesMgr:_showDetails(typeId)
     self.contentItems[1]:setToggleIsOn(true)
 end
 --选择了某个item，显示线路
-function AddLineTogglesMgr:_setLineShow(itemId)
+function AddLineTogglesMgr:_setLineShow(itemId, itemType)
     --ctrl去处理，传的是分配表里的数据
-    --Event.Brocast("", )
+    Event.Brocast("c_setCenterLine", itemId, itemType)
     ct.log("cycle_w15_laboratory03", "选择了"..itemId)
 end
 

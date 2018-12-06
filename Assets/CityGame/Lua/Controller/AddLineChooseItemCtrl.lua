@@ -20,9 +20,8 @@ end
 
 function AddLineChooseItemCtrl:Awake(go)
     self.gameObject = go
-    self.behaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.behaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, self._backBtn, self)
-    --self.behaviour:AddClick(AddLineChooseItemPanel.searchBtn.gameObject, self._backBtn, self)
+    self.beHaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.beHaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, self._backBtn, self)
     self:_addListener()
 end
 
@@ -30,15 +29,65 @@ function AddLineChooseItemCtrl:Refresh()
     self:_initData()
 end
 function AddLineChooseItemCtrl:_addListener()
-    Event.AddListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
+    Event.AddListener("c_setCenterLine", self._setCenterLine, self)
 end
 function AddLineChooseItemCtrl:_removeListener()
-    Event.RemoveListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
+    Event.RemoveListener("c_setCenterLine", self._setCenterLine, self)
 end
 
 function AddLineChooseItemCtrl:_initData()
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     AddLineChooseItemPanel.leftToggleMgr:initData()
     AddLineChooseItemPanel.rightToggleMgr:initData()
-end
 
+
+end
+--刷新线路显示
+function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType)
+    local tempData
+    if itemType == 0 then
+        tempData = Material[itemId]
+        self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
+        local lineDatas = {}  --获取线的数据
+        for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
+            --状态Emmmm 在进入研究所的时候就要区分
+            lineDatas[#lineDatas + 1] = matData
+        end
+        self:_setLineDetailInfo(lineDatas)
+        AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
+    else
+        tempData = Good[itemId]
+    end
+end
+--设置原料线的信息  根据个数显示位置
+function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
+    local lineCount = #datas
+    if lineCount == 1 then
+        AddLineChooseItemPanel.centerItems[1]:setObjState(false)
+        AddLineChooseItemPanel.centerItems[2]:setObjState(true)
+        AddLineChooseItemPanel.centerItems[3]:setObjState(false)
+        AddLineChooseItemPanel.hLine.localScale = Vector3.one
+        AddLineChooseItemPanel.vLine.localScale = Vector3.zero
+
+        AddLineChooseItemPanel.centerItems[2]:initData(datas[1])
+    elseif lineCount == 2 then
+        AddLineChooseItemPanel.centerItems[1]:setObjState(true)
+        AddLineChooseItemPanel.centerItems[2]:setObjState(false)
+        AddLineChooseItemPanel.centerItems[3]:setObjState(true)
+        AddLineChooseItemPanel.hLine.localScale = Vector3.zero
+        AddLineChooseItemPanel.vLine.localScale = Vector3.one
+
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[3]:initData(datas[2])
+    elseif lineCount == 3 then
+        AddLineChooseItemPanel.centerItems[1]:setObjState(true)
+        AddLineChooseItemPanel.centerItems[2]:setObjState(true)
+        AddLineChooseItemPanel.centerItems[3]:setObjState(true)
+        AddLineChooseItemPanel.hLine.localScale = Vector3.one
+        AddLineChooseItemPanel.vLine.localScale = Vector3.one
+
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[2]:initData(datas[2])
+        AddLineChooseItemPanel.centerItems[3]:initData(datas[3])
+    end
+end

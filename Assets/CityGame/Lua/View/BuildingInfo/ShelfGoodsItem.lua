@@ -28,13 +28,11 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
-    --
     Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
     go.manager:_deleteGoods(go)
 end
-function ShelfGoodsItem:OnClick_detailsBtn()
-    UIPage:ShowPage(DETAILSBoxCtrl);
+function ShelfGoodsItem:OnClick_detailsBtn(ins)
+    UIPage:ShowPage(DETAILSBoxCtrl,ins);
 end
 --删除后刷新ID及刷新显示
 function ShelfGoodsItem:RefreshID(id)

@@ -16,14 +16,12 @@ function MaterialModel.OnCreate()
 
     --注册本地UI事件
     Event.AddListener("m_ReqOpenMaterial",this.m_ReqOpenMaterial)
-
     MaterialModel.registerAsNetMsg()
 end
 
 function MaterialModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),MaterialModel.n_OnOpenMaterial);
-
 end
 
 function MaterialModel.Close()
@@ -41,7 +39,7 @@ end
 --网络回调--
 --打开原料厂
 function MaterialModel.n_OnOpenMaterial(stream)
-    if stream ==nil or stream == "" then
+    if stream == nil or stream == "" then
         return;
     end
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")

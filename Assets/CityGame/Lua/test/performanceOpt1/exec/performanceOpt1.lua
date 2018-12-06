@@ -3,44 +3,113 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/11/13 16:52
 ---
-UnitTest.TestBlockStart()---------------------------------------------------------
---icon 上限测试相关测试(一)
-UnitTest.Exec("abel_w16_Icon_load", "test_abel_w16_Icon_load",  function ()
-    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次加载30个]", function()
+UnitTest.TestBlockStart()-------------------------------------------------------
+--[[
+1、 测试目的
+    1、 确定总量为1000-2000个128*128大小的Icon分散存好还是拼装好
+        1、 IO操作卡顿情况
+        2、 GPU压力
+        3、 内存用量压力
+    2、
+--]]
+
+--同步加载prefab资源对比测试
+UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  function ()
+    --测试数据准备{
+    local testcount = 10
+    local ResPathList = {}
+    for i = 1, testcount do
+        ResPathList[i] = 'View/TempIcon/A ('..i..')'
+    end
+    --测试数据准备}
+    local exectime1 = UnitTest.PerformanceTest("abel_w17_load_s128_n400_Sync","[同步加载400个尺寸为128的 Icon: Resource.Load]", function()
+        local prefab = UnityEngine.Resources.Load( 'View/TempIcon/Image');
+
+        for i = 1, testcount do
+            --加载 prefab 资源
+            local resLoad = UnityEngine.Resources.Load(ResPathList[i])
+            local go = UnityEngine.GameObject.Instantiate(prefab)
+            --go.transform:GetComponent("Image").sprite = resLoad
+            local xxx = 0
+        end
+    end)
+
+    local exectime1 = UnitTest.PerformanceTest("abel_w17_load_s128_n400_Sync","[同步加载400个尺寸为128的 Icon: AssetBundle.Load]", function()
 
     end)
 
-    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载60个]", function()
+    ct.OpenCtrl('TestSliderCtrl',ResPathList)
+end)
+--异步加载prefab资源
+UnitTest.Exec("abel_w17_load_s128_n400_ASync", "abel_w17_load_s128_n400_ASync",  function ()
+    UnitTest.PerformanceTest("abel_w17_load_s128_n400_ASync","[异步加载400个尺寸为128的 Icon: LoadPrefab]", function()
 
     end)
-
-    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载120个]", function()
-
-    end)
-    UnitTest.PerformanceTest("abel_w16_Icon_load","[一次卸载1000个]", function()
+end)
+--卸载资源测试 AssetBundle.Unload、 UnloadUnusedAssets
+UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)
 
-UnitTest.Exec("abel_w16_Icon_unload", "test_abel_w16_Icon_load",  function ()
-    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载30个]", function()
-
-    end)
-
-    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载60个]", function()
-
-    end)
-
-    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载120个]", function()
-
-    end)
-    UnitTest.PerformanceTest("abel_w16_Icon_unload","[一次卸载1000个]", function()
+--测试 Instantiate 及对应 destory 的性能开销
+UnitTest.Exec("abel_w17_Instantiate_destory_s128_n400", "abel_w17_Instantiate_destory_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s128_n400","[Instantiate 及对应 destory 的性能开销]", function()
 
     end)
 end)
 
-UnitTest.Exec("abel_w16_Icon_memory", "test_abel_w16_Icon_memory",  function ()
-    UnitTest.PerformanceTest("abel_w16_Icon_memory","[一次加载和卸载30个]", function()
+--分散打包资源的加载及销毁测试
+--每帧创建和销毁100个128尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s128_n100_memory", "abel_w17_Icon_load_s128_n100_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s128_n100_memory","[分散打包资源的加载及销毁测试 100个128尺寸]", function()
+
+    end)
+end)
+
+--每帧创建和销毁50个128尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s128_n50_memory", "abel_w17_Icon_load_s128_n50_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s128_n50_memory","[分散打包资源的加载及销毁测试 50个128尺寸]", function()
+
+    end)
+end)
+
+--每帧创建和销毁100个256尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s256_n100_memory", "abel_w17_Icon_load_s256_n100_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s256_n100_memory","[分散打包资源的加载及销毁测试 100个128尺寸]", function()
+
+    end)
+end)
+--每帧创建和销毁50个256尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s256_n50_memory", "abel_w17_Icon_load_s128_n50_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s256_n50_memory","[分散打包资源的加载及销毁测试 50个128尺寸]", function()
+
+    end)
+end)
+
+--每帧创建和销毁100个1024尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s1024_n100_memory", "abel_w17_Icon_load_s1024_n100_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s1024_n100_memory","[分散打包资源的加载及销毁测试 100个1024尺寸]", function()
+
+    end)
+end)
+--每帧创建和销毁50个1024尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s1024_n50_memory", "abel_w17_Icon_load_s1024_n50_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s1024_n50_memory","[分散打包资源的加载及销毁测试 50个1024尺寸]", function()
+
+    end)
+end)
+
+--每帧创建和销毁100个2048尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s2048_n100_memory", "abel_w17_Icon_load_s2048_n100_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s2048_n100_memory","[分散打包资源的加载及销毁测试 100个2048尺寸]", function()
+
+    end)
+end)
+--每帧创建和销毁50个2048尺寸的Icon
+UnitTest.Exec("abel_w17_Icon_load_s2048_n50_memory", "abel_w17_Icon_load_s2048_n50_memory",  function ()
+    UnitTest.PerformanceTest("abel_w17_Icon_load_s2048_n50_memory","[分散打包资源的加载及销毁测试 50个1024尺寸]", function()
 
     end)
 end)

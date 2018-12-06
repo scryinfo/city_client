@@ -124,7 +124,7 @@ function ct.file_saveTable(filename, data)
 		file = io.stdout
 	else
 		local err
-		file, err = io.open(filename, "wa+")
+		file, err = io.open(filename, "wb")
 		if file == nil then
 			error(("Unable to write '%s': %s"):format(filename, err))
 		end

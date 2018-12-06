@@ -34,6 +34,7 @@ else
     require('test/__require_first__')
     AutoRequire.getInstance():require("test/performance")
     AutoRequire.getInstance():require("test/performanceOpt1")
+    AutoRequire.getInstance():require("test/performanceOpt1/exec")
     AutoRequire.getInstance():require("test/modelPerformance")
     --AutoRequire.getInstance():require("test/testCoroutine")
     AutoRequire.getInstance():require("test")

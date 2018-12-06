@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using LuaInterface;
+using System;
 
 namespace LuaFramework {
     public class PanelManager : Manager {
@@ -23,9 +24,12 @@ namespace LuaFramework {
         /// </summary>
         /// <param name="type"></param>
         //public void CreatePanel(string name, LuaFunction func = null, object obj = null) {
-        public void LoadPrefab_A(string name, LuaFunction func = null, object obj = null)
+        public void LoadPrefab_A(string name, LuaFunction func = null, object obj = null, System.Type type = null)
         {
             string assetName = name ;
+            if (type == null) {
+                type = typeof(GameObject);
+            }
 #if RES_BUNDEL
             int pos = assetName.LastIndexOf('/');
             assetName = assetName.Remove(0,pos+1);
@@ -37,11 +41,19 @@ namespace LuaFramework {
             ResManager.LoadPrefab(abName, assetName, delegate(UnityEngine.Object[] objs) {
                 if (objs.Length == 0) return;
                 GameObject prefab = objs[0] as GameObject;
-                if (prefab == null) return;
+                Sprite txt = objs[0] as Sprite;
+                if (prefab == null) {
+                    if (func != null)
+                    {
+                        func.Call(obj, objs[0]);
+                    }
+                    return;
+                }
+                
 
                 GameObject go = Instantiate(prefab) as GameObject;
                 //go.name = name+ GetInstanceID();                
-                go.name = name;                
+                go.name = prefab.name;                
                 RectTransform rect = go.GetComponent<RectTransform>();
                 rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
 
@@ -51,7 +63,7 @@ namespace LuaFramework {
                     Debug.LogWarning("CreatePanel::>> " + name + " " + prefab);
                 }
                     
-            });
+            }, type);
 #else
             GameObject prefab = ResManager.LoadAsset<GameObject>(name, assetName);
             if (prefab == null) return;

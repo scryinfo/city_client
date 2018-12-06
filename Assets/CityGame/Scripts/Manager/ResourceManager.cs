@@ -46,6 +46,11 @@ namespace LuaFramework {
             });
         }
 
+        public void LoadPrefab(string abName, string assetName, Action<UObject[]> func, System.Type type = null)
+        {
+            LoadAsset<GameObject>(abName, new string[] { assetName }, func, null, type);
+        }
+
         public void LoadPrefab(string abName, string assetName, Action<UObject[]> func) {
             LoadAsset<GameObject>(abName, new string[] { assetName }, func);
         }
@@ -87,10 +92,15 @@ namespace LuaFramework {
             return null;
         }
 
-        IEnumerator NoneBundleLoadRes(string resPath, Action<UObject[]> action = null )
+        IEnumerator NoneBundleLoadRes(string resPath, Action<UObject[]> action = null , System.Type type = null)
         {
             List<UObject> result = new List<UObject>();
-            ResourceRequest r = Resources.LoadAsync(resPath);
+            ResourceRequest r = null;
+            if (type == null)
+                r = Resources.LoadAsync(resPath);
+            else
+                r = Resources.LoadAsync(resPath, type);
+            
             while (!r.isDone)
             {
                 yield return null;
@@ -106,7 +116,7 @@ namespace LuaFramework {
         /// <summary>
         /// 载入素材
         /// </summary>
-        void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null) where T : UObject {
+        void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null, System.Type type = null) where T : UObject {
 
 #if RES_BUNDEL
             abName = GetRealAssetPath(abName);
@@ -139,7 +149,7 @@ namespace LuaFramework {
                     result.Add(prefab);
                 }*/
                 //异步加载
-                StartCoroutine(NoneBundleLoadRes(realpath, action));
+                StartCoroutine(NoneBundleLoadRes(realpath, action, type));
             }            
 #endif
         }

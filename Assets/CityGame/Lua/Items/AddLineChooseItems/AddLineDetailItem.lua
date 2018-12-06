@@ -45,7 +45,13 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
         self.stateRoot.localScale = Vector3.zero
     end
 
-    self.nameText.text = data.name
+    local tempData
+    if data.itemType == 0 then
+        tempData = Material[data.itemId]
+    else
+        tempData = Good[data.itemId]
+    end
+    self.nameText.text = tempData.name
 end
 --外部设置toggle状态
 function AddLineDetailItem:setToggleIsOn(isOn)
@@ -58,5 +64,11 @@ function AddLineDetailItem:showState(select)
         self.chooseImgTran.localScale = Vector3.one
     else
         self.chooseImgTran.localScale = Vector3.zero
+    end
+end
+--清除选中状态
+function AddLineDetailItem:cleanState()
+    if self.toggle.isOn then
+        self:setToggleIsOn(false)
     end
 end

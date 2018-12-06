@@ -15,7 +15,9 @@ function AddLineToggleItem:initialize(viewRect, data, toggleGroup)
     self.nameText.text = data.name
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
-        self.data.backFunc(self.data.typeId)
+        if isOn then
+            self.data.backFunc(self.data.typeId)
+        end
     end)
 end
 --外部设置toggle状态

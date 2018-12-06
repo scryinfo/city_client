@@ -23,23 +23,7 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
-        PlayerTempModel.tempTestReqAddMoney(9999999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2151001, 9999)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        PlayerTempModel.m_ReqAddBuilding(1500001, 12, 12)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.V) then
-        PlayerTempModel.tempTestInvent(2151001, 23)
-        PlayerTempModel.tempTestInvent(2151002, 26)
-        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-        --PlayerTempModel.tempTestInvent(2151003, 0)
-        --PlayerTempModel.tempTestInvent(2151004, 0)
-        --PlayerTempModel.tempTestInvent(2152001, 0)
-        --PlayerTempModel.tempTestInvent(2152002, 0)
+        ct.OpenCtrl("AddLineChooseItemCtrl", {})
     end
 end
 --add invent

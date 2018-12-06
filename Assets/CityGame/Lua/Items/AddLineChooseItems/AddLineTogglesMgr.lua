@@ -62,6 +62,7 @@ function AddLineTogglesMgr:initData(data)
 end
 
 function AddLineTogglesMgr:_showDetails(typeId)
+    self:_resetDetails()
     self.contentItems = {}
 
     --暂时是直接使用content下的子物体，多了的就移出content
@@ -73,7 +74,7 @@ function AddLineTogglesMgr:_showDetails(typeId)
         end
     end  --将多余的预制回收隐藏
 
-    for i, itemData in pairs(data) do
+    for i, itemData in ipairs(data) do
         local go
         if self.detailPrefabList[i] then
             go = self.detailPrefabList[i]
@@ -84,13 +85,13 @@ function AddLineTogglesMgr:_showDetails(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId, backFunc = function (itemId)
+        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId)
             self:_setLineShow(itemId)
         end}
         self.contentItems[#self.contentItems + 1] = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
     end
 
-    for i, item in pairs(self.contentItems) do
+    for i, item in ipairs(self.contentItems) do
         self.contentItems[i]:showState(false)
     end
     self.contentItems[1]:setToggleIsOn(true)
@@ -107,4 +108,12 @@ function AddLineTogglesMgr:_releaseObj(obj)
     obj.transform:SetParent(self.detailToggleGroup.transform)
     obj.transform.localScale = Vector3.zero
     obj.transform.localPosition = Vector3.zero
+end
+--清空选中状态
+function AddLineTogglesMgr:_resetDetails()
+    if self.contentItems then
+        for i, item in ipairs(self.contentItems) do
+            item:cleanState()
+        end
+    end
 end

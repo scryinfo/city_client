@@ -4,36 +4,37 @@
 --- DateTime: 2018/11/30 15:16
 ---
 FriendslistCtrl = class('FriendslistCtrl', UIPage)
---注册打开方法
 UIPage:ResgisterOpen(FriendslistCtrl)
 
 function FriendslistCtrl:initialize()
-    ct.log("tina_w15_friends", "FriendsBlacklistCtrl:initialize")
+    ct.log("tina_w7_friends", "FriendslistCtrl:initialize")
     UIPage.initialize(self, UIType.Normal, UIMode.NeedBack, UICollider.None)
 end
 
 function FriendslistCtrl:bundleName()
-    ct.log("tina_w15_friends", "FriendsBlacklistCtrl:bundleName")
+    ct.log("tina_w7_friends", "FriendslistCtrl:bundleName")
     return "FriendslistPanel"
 end
 
 function FriendslistCtrl:Awake(go)
-    ct.log("tina_w15_friends", "FriendsBlacklistCtrl:Awake")
+    ct.log("tina_w7_friends", "FriendslistCtrl:Awake")
+    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --好友
+    self.friendsSource.mProvideData = FriendslistCtrl.static.FriendsProvideData
+    self.friendsSource.mClearData = FriendslistCtrl.static.FriendsClearData
 end
 
 function FriendslistCtrl:OnCreate(go)
-    ct.log("tina_w15_friends", "FriendsBlacklistCtrl:OnCreate")
+    ct.log("tina_w7_friends", "FriendslistCtrl:OnCreate")
     --调用基类方法处理实例的数据
     UIPage.OnCreate(self, go)
 
     --添加UI事件点击监听
-    local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
-    luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
+    FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
+    FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
         UIPage.ClosePage()
     end)
 
-    --初始化进入状态
-    --self:_initState()
+    FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.searchBtn, self.OnSearch, self)
 end
 
 -- 刷新
@@ -48,38 +49,67 @@ end
 --初始首次进入所需数据
 function FriendslistCtrl:_initState()
     local type = self.m_data.type
-    FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88);
-    if type == 3 then
+    FriendslistCtrl.type = self.m_data.type
+    --FriendslistPanel.listContent.offsetMax = Vector2.New(0,0);
+    if type == 2 then
         FriendslistPanel.panelNameText.text = "MANAGE"
-        self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
-    elseif type == 4 then
+        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-60);
+    elseif type == 3 then
         FriendslistPanel.panelNameText.text = "BLACK LIST"
-        self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(true)
         FriendslistPanel.friendsNumberText.text = "20"
         FriendslistPanel.searchInputField:SetActive(false)
-    elseif type == 5 then
+        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88);
+    elseif type == 4 then
         FriendslistPanel.panelNameText.text = "ADD NEW FRIENDS"
-        self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
+        --显示和清空搜索框
         FriendslistPanel.searchInputField:SetActive(true)
-    elseif type == 6 then
+        FriendslistPanel.searchInputField:GetComponent("InputField").text = ""
+        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-120);
+    elseif type == 5 then
         FriendslistPanel.panelNameText.text = "APPLICATION LIST"
-        self.m_data.friendsMgr:_createListItems(type)
         FriendslistPanel.friendsNumberImage:SetActive(false)
         FriendslistPanel.friendsNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
         FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-30);
-    elseif type == 7 then
-        FriendslistPanel.panelNameText.text = "MANAGE"
-        self.m_data.friendsMgr:_createListItems(type)
-        FriendslistPanel.friendsNumberImage:SetActive(false)
-        FriendslistPanel.friendsNumberText.text = ""
-        FriendslistPanel.searchInputField:SetActive(false)
     end
 
+    --好友界面数据刷新
+    if type == 4 then
+        FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
+    else
+        FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendsCtrl.data[1])
+    end
+end
+
+function FriendslistCtrl:OnSearch(go)
+    local text = FriendslistPanel.searchInputField:GetComponent("InputField").text
+    if text == "" then
+        return
+    end
+
+    --打开弹框
+    local data = {}
+    data.titleInfo = "WARNING"
+    data.contentInfo = "向服务器发送查找好友请求?"
+    data.tipInfo = text
+    data.btnCallBack = function()
+        ct.log("cycle_w11_exchange03", "向服务器发送查找好友请求")
+        --UIPage.ClosePage()
+        FriendslistPanel.friendsView:ActiveLoopScroll(go.friendsSource, #FriendsCtrl.data[1])
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", data)
+end
+
+FriendslistCtrl.static.FriendsProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = FriendsItem:new(FriendslistCtrl.type, FriendslistCtrl.luaBehaviour, transform, FriendsCtrl.data[1][idx])
+end
+
+FriendslistCtrl.static.FriendsClearData = function(transform)
 end

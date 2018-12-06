@@ -24,11 +24,11 @@ function GroupItem:initialize(type, luaBehaviour, prefab, data)
 
     self.nameText.text = data.name
     self.numberText.text = data.number
-    self.renameBtn:SetActive(false)
-    self.deleteBtn:SetActive(false)
-    --if type == 2 then -- 群组主界面
-    --else
-    if type == 7 then -- 群组管理界面
+
+    if type == 1 then -- 群组主界面
+        self.renameBtn:SetActive(false)
+        self.deleteBtn:SetActive(false)
+    elseif type == 2 then -- 群组管理界面
         self.renameBtn:SetActive(true)
         self.deleteBtn:SetActive(true)
         luaBehaviour:AddClick(self.renameBtn, self.OnRename, self)
@@ -36,15 +36,27 @@ function GroupItem:initialize(type, luaBehaviour, prefab, data)
     end
 end
 
+-- 重命名
 function GroupItem:OnRename(go)
-    UIPage.ClosePage()
+    local data = {}
+    data.titleInfo = "REMINDER"
+    data.tipInfo = "Please input new name!"
+    data.btnCallBack = function(name)
+        ct.log("tina_w8_friends", "向服务器发送重命名群名")
+        Event.Brocast("SmallPop","Group name was modified successfully." .. name,80)
+    end
+    ct.OpenCtrl("CommonDialogCtrl", data)
 end
 
+-- 退群
 function GroupItem:OnDelete(go)
-    UIPage.ClosePage()
-end
-
-function GroupItem:_setBtnState()
-    self.renameBtn:SetActive(not self.renameBtn.activeSelf)
-    self.deleteBtn:SetActive(not self.deleteBtn.activeSelf)
+    local data = {}
+    data.titleInfo = "WARNING"
+    data.contentInfo = "Delete the production line?"
+    data.tipInfo = "(The production schedule will be empty!)"
+    data.btnCallBack = function()
+        ct.log("tina_w8_friends", "向服务器发送退群请求")
+        Event.Brocast("SmallPop","Successful exit group.",60)
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", data)
 end

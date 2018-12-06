@@ -23,48 +23,90 @@ function FriendsItem:initialize(type, luaBehaviour, prefab, data)
     self.signatureText = transform:Find("SignatureBg/SignatureText"):GetComponent("Text")
     -- 删除好友按钮
     self.deleteBtn = transform:Find("DeleteBtn").gameObject
+
     -- 解除屏蔽
     self.removeMaskBtn = transform:Find("RemoveMaskBtn").gameObject
-    -- 小签名
-    self.sign = transform:Find("SignatureImage").gameObject
-    self.signText = transform:Find("SignatureImage/SignatureText"):GetComponent("Text")
-    -- 同意好友申请
-    self.agreeBtn  = transform:Find("AgreeBtn").gameObject
-    -- 拒绝好友申请
-    self.refuseBtn  = transform:Find("RefuseBtn").gameObject
+
     -- 加好友
     self.addFriendsBtn  = transform:Find("AddFriendsBtn").gameObject
     -- 发送私聊
     self.sendMsgBtn  = transform:Find("SendMsgBtn").gameObject
 
+    -- 验证消息
+    self.validation = transform:Find("ValidationImage").gameObject
+    self.validationMsgText = transform:Find("ValidationImage/ValidationMsgText"):GetComponent("Text")
+    -- 同意好友申请
+    self.agreeBtn  = transform:Find("AgreeBtn").gameObject
+    -- 拒绝好友申请
+    self.refuseBtn  = transform:Find("RefuseBtn").gameObject
+
     self.nameText.text = data.name
     self.companyText.text = data.company
     self.signatureText.text = data.sign
-    self.signText.text = data.sign
-    self.deleteBtn:SetActive(false)
+    self.validationMsgText.text = data.sign
+
+    luaBehaviour:AddClick(self.bgBtn, self.OnBg, self)
+    luaBehaviour:AddClick(self.headBtn, self.OnHead, self)
+    luaBehaviour:AddClick(self.deleteBtn, self.OnDelete, self)
+    luaBehaviour:AddClick(self.removeMaskBtn, self.OnRemoveMask, self)
+    luaBehaviour:AddClick(self.sendMsgBtn, self.OnSendMsg, self)
+    luaBehaviour:AddClick(self.addFriendsBtn, self.OnAddFriends, self)
+    luaBehaviour:AddClick(self.agreeBtn, self.OnAgree, self)
+    luaBehaviour:AddClick(self.refuseBtn, self.OnRefuse, self)
 
     if type == 1 then -- 好友主界面
-        self.signature:SetActive(true)
-
         self.bgBtn:GetComponent("Button").interactable = true
         self.headBtn:GetComponent("Button").interactable = true
-
-        luaBehaviour:AddClick(self.bgBtn, self.OnBg, self)
-        luaBehaviour:AddClick(self.headBtn, self.OnHead, self)
-        luaBehaviour:AddClick(self.deleteBtn, self.OnDelete, self)
-    elseif type == 3 then -- 好友管理
+        self.signature:SetActive(true)
+        self.deleteBtn:SetActive(false)
+        self.removeMaskBtn:SetActive(false)
+        self.validation:SetActive(false)
+        self.addFriendsBtn:SetActive(false)
+        self.sendMsgBtn:SetActive(false)
+        self.agreeBtn:SetActive(false)
+        self.refuseBtn:SetActive(false)
+    elseif type == 2 then -- 好友管理
+        self.bgBtn:GetComponent("Button").interactable = false
+        self.headBtn:GetComponent("Button").interactable = false
         self.signature:SetActive(true)
         self.deleteBtn:SetActive(true)
         self.removeMaskBtn:SetActive(false)
-    elseif type == 4 then -- 黑名单
-        self.removeMaskBtn:SetActive(true)
+        self.validation:SetActive(false)
+        self.addFriendsBtn:SetActive(false)
+        self.sendMsgBtn:SetActive(false)
+        self.agreeBtn:SetActive(false)
+        self.refuseBtn:SetActive(false)
+    elseif type == 3 then -- 黑名单
+        self.bgBtn:GetComponent("Button").interactable = false
+        self.headBtn:GetComponent("Button").interactable = false
         self.signature:SetActive(false)
-        luaBehaviour:AddClick(self.removeMaskBtn, self.OnRemoveMask, self)
-    elseif type == 5 then -- 添加好友
+        self.deleteBtn:SetActive(false)
+        self.removeMaskBtn:SetActive(true)
+        self.validation:SetActive(false)
+        self.addFriendsBtn:SetActive(false)
+        self.sendMsgBtn:SetActive(false)
+        self.agreeBtn:SetActive(false)
+        self.refuseBtn:SetActive(false)
+    elseif type == 4 then -- 添加好友
+        self.bgBtn:GetComponent("Button").interactable = false
+        self.headBtn:GetComponent("Button").interactable = false
+        self.signature:SetActive(false)
+        self.deleteBtn:SetActive(false)
+        self.removeMaskBtn:SetActive(false)
+        self.validation:SetActive(false)
         self.addFriendsBtn:SetActive(true)
         self.sendMsgBtn:SetActive(true)
-    elseif type == 6 then -- 申请列表
-        self.sign:SetActive(true)
+        self.agreeBtn:SetActive(false)
+        self.refuseBtn:SetActive(false)
+    elseif type == 5 then -- 申请列表
+        self.bgBtn:GetComponent("Button").interactable = false
+        self.headBtn:GetComponent("Button").interactable = false
+        self.signature:SetActive(false)
+        self.deleteBtn:SetActive(false)
+        self.removeMaskBtn:SetActive(false)
+        self.validation:SetActive(true)
+        self.addFriendsBtn:SetActive(false)
+        self.sendMsgBtn:SetActive(false)
         self.agreeBtn:SetActive(true)
         self.refuseBtn:SetActive(true)
     end
@@ -73,14 +115,15 @@ end
 function FriendsItem:OnBg(go)
     --UIPage.ClosePage()
     --GameObject.Destroy(go.prefab)
-    ct.log("tina_w15_friends", "向好友发起聊天")
+    ct.log("tina_w7_friends", "向好友发起聊天")
 end
 
 function FriendsItem:OnHead(go)
     UIPage.ClosePage()
-    ct.log("tina_w15_friends", "显示好友个人信息")
+    ct.log("tina_w7_friends", "显示好友个人信息")
 end
 
+-- 删除好友
 function FriendsItem:OnDelete(go)
     --UIPage.ClosePage()
     --打开弹框
@@ -89,28 +132,51 @@ function FriendsItem:OnDelete(go)
     data.contentInfo = "Delete the production line?"
     data.tipInfo = "(The production schedule will be empty!)"
     data.btnCallBack = function()
-        ct.log("cycle_w11_exchange03", "向服务器发送删除好友请求")
-        --UIPage.ClosePage()
-        GameObject.Destroy(go.prefab)
+        ct.log("tina_w7_friends", "向服务器发送删除好友请求")
+        Event.Brocast("SmallPop","Friend deleted successfully.",60)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", data)
 end
 
+-- 移除屏蔽
 function FriendsItem:OnRemoveMask(go)
-    --UIPage.ClosePage()
     --打开弹框
     local data = {}
     data.titleInfo = "WARNING"
     data.contentInfo = "Delete the production line?"
     data.tipInfo = "(The production schedule will be empty!)"
     data.btnCallBack = function()
-        ct.log("cycle_w11_exchange03", "向服务器发送删除好友请求")
-        --UIPage.ClosePage()
-        GameObject.Destroy(go.prefab)
+        ct.log("tina_w7_friends", "向服务器发送移除屏蔽请求")
+        Event.Brocast("SmallPop","Successful removal from blacklist.",60)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", data)
 end
 
-function FriendsItem:_setBtnState()
-    self.deleteBtn:SetActive(not self.deleteBtn.activeSelf)
+-- 发送私聊
+function FriendsItem:OnSendMsg(go)
+    ct.log("tina_w8_friends", "向陌生人发起私聊")
+end
+
+-- 加好友
+function FriendsItem:OnAddFriends(go)
+    local data = {}
+    data.titleInfo = "REMINDER"
+    data.tipInfo = "Please input verification information!"
+    data.btnCallBack = function(name)
+        ct.log("tina_w8_friends", "向服务器发送加好友信息")
+        Event.Brocast("SmallPop","Your request has been sent." .. name,80)
+    end
+    ct.OpenCtrl("CommonDialogCtrl", data)
+end
+
+-- 同意好友申请
+function FriendsItem:OnAgree(go)
+    ct.log("tina_w8_friends", "向服务器发送同意好友申请请求")
+    Event.Brocast("SmallPop","Agree to friend application.",80)
+end
+
+-- 拒绝好友申请
+function FriendsItem:OnRefuse(go)
+    ct.log("tina_w8_friends", "向服务器发送拒绝好友申请请求")
+    Event.Brocast("SmallPop","Refuse friend application.",80)
 end

@@ -10,7 +10,7 @@ FriendslistPanel = {}
 local this = FriendslistPanel
 
 function FriendslistPanel.Awake(obj)
-    ct.log("tina_w15_friends", "FriendsPanel.Awake")
+    ct.log("tina_w7_friends", "FriendsPanel.Awake")
     transform = obj.transform
 
     this.InitPanel()
@@ -26,10 +26,12 @@ function FriendslistPanel.InitPanel()
     this.friendsNumberImage = transform:Find("MiddleRoot/Bg/FriendsNumberImage").gameObject
     this.friendsNumberText = transform:Find("MiddleRoot/Bg/FriendsNumberText"):GetComponent("Text")
 
-    --好友搜索
+    --好友搜索及按钮
     this.searchInputField = transform:Find("MiddleRoot/Bg/SearchInputField").gameObject
+    this.searchBtn = transform:Find("MiddleRoot/Bg/SearchInputField/SearchBtn").gameObject
 
     --好友群组滑动框显示
     this.listScrollView = transform:Find("MiddleRoot/Bg/Scroll View"):GetComponent("RectTransform");
+    this.friendsView = transform:Find("MiddleRoot/Bg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.listContent = transform:Find("MiddleRoot/Bg/Scroll View/Viewport/Content")
 end

@@ -10,7 +10,7 @@ FriendsPanel = {}
 local this = FriendsPanel
 
 function FriendsPanel.Awake(obj)
-    ct.log("tina_w15_friends", "FriendsPanel.Awake")
+    ct.log("tina_w7_friends", "FriendsPanel.Awake")
     transform = obj.transform
 
     this.InitPanel()
@@ -36,9 +36,9 @@ function FriendsPanel.InitPanel()
     this.groupNumberText = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/TopRoot/NumberText"):GetComponent("Text")
 
     --好友群组滑动框显示
-    this.friendsView = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport").gameObject
+    this.friendsView = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.friendsContent = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport/Content")
-    this.groupView = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport").gameObject
+    this.groupView = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.groupContent = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport/Content")
 
     --好友按钮群组（管理、黑名单、加好友、申请列表）

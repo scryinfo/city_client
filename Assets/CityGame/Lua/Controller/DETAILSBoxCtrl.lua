@@ -22,7 +22,7 @@ function DETAILSBoxCtrl:OnCreate(obj)
         self:numberSliderInfo();
     end)
 
-    Event.AddListener("RefreshUiInfo",self.RefreshUiInfo,self)
+    Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 end
 
 function DETAILSBoxCtrl:Awake(go)
@@ -88,7 +88,7 @@ function DETAILSBoxCtrl:numberSliderInfo()
     DETAILSBoxPanel.numberInput.text = DETAILSBoxPanel.numberSlider.value;
 end
 --刷新UI显示
-function DETAILSBoxCtrl:RefreshUiInfo(msg)
+function DETAILSBoxCtrl:refreshUiInfo(msg)
     self.obj.moneyText.text = getPriceString("E"..msg.price..".0000",35,25)
     self.obj.numberText.text = msg.item.n
 end

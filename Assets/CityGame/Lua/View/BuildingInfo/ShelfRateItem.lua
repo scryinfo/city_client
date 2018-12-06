@@ -21,16 +21,16 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
-    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
+    self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
 
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
+    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
         clickOpenFunc(mgrTable,self.toggleData)
     end);
 
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,function()
+    mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end

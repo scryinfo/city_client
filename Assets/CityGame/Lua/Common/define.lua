@@ -202,11 +202,7 @@ BuildingInType =
 	Transport = 2,  --运输
 	ProductionLine = 3,  --生产线
 }
---建筑入口类型
---BuildingEntranceType =
---{
---
---}
+
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

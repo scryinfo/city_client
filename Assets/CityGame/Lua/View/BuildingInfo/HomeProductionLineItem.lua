@@ -16,14 +16,14 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");    --关闭状态
-    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");   --打开按钮
+    self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
 
 --[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
         clickOpenFunc(mgrTable,self.toggleData)
     end);                                                       ]]
 
-    mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,function()
+    mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end

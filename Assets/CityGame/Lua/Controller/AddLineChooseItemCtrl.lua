@@ -40,7 +40,6 @@ function AddLineChooseItemCtrl:_initData()
     AddLineChooseItemPanel.leftToggleMgr:initData()
     AddLineChooseItemPanel.rightToggleMgr:initData()
 
-
 end
 --刷新线路显示
 function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType)

@@ -27,26 +27,18 @@ function HouseCtrl:Awake(go)
     self.houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
-    self:_addListener()
 end
 
 function HouseCtrl:Refresh()
     self:_initData()
-end
-function HouseCtrl:_addListener()
-    ---需要监听改变建筑名字的协议
-    ---等待中
-    Event.AddListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
-end
-function HouseCtrl:_removeListener()
-    Event.RemoveListener("c_onReceiveHouseDetailInfo", self._receiveHouseDetailInfo, self)
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
     if self.m_data then
         --向服务器请求建筑详情
-        Event.Brocast("m_ReqHouseDetailInfo", self.m_data)
+        DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
     end
 end
 

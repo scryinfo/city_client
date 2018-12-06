@@ -84,7 +84,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
-	modelList[ModelNames.House] = HouseModel.New();
+	--modelList[ModelNames.House] = HouseModel.New();
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();

@@ -63,7 +63,7 @@ function LabScientificLineCtrl:Refresh()
 end
 
 function LabScientificLineCtrl:Close()
-    self:_removeListener()
+    --self:_removeListener()
 end
 
 function LabScientificLineCtrl:_addListener()
@@ -76,18 +76,14 @@ function LabScientificLineCtrl:_removeListener()
 end
 
 function LabScientificLineCtrl:_initPanelData()
-    self:_addListener()
+    --self:_addListener()
     LabScientificLineCtrl.researchItems = {}
     LabScientificLineCtrl.inventionItems = {}
     self.researchDatas = {}
     self.inventionDatas = {}
 
-    --这个界面的数据是从主界面拿到的，然后数据有变化的时候才会更新，所以不需要请求服务器数据
-    --将数据分开
-    local workingStaffCount = 0
     if self.m_data.line then
         for key, itemData in pairs(self.m_data.line) do
-            workingStaffCount = workingStaffCount + itemData.workerNum
             if itemData.type == 0 then
                 self.researchDatas[#self.researchDatas] = itemData
             elseif itemData.type == 1 then
@@ -95,17 +91,10 @@ function LabScientificLineCtrl:_initPanelData()
             end
         end
     end
-    local totalCount = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
-    self.remainStaffCount = totalCount - workingStaffCount
-    LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, self.remainStaffCount, totalCount)
-    self.storeItemData = {}  --获取所有的库存
-    if self.m_data.store then
-        if self.m_data.store.inHand then
-            for i, item in pairs(self.m_data.store.inHand) do
-                self.storeItemData[item.key.id] = item.n
-            end
-        end
-    end
+    local totalCount = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetWorkerCount', function (remainWorker)
+        LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, totalCount)
+    end)
     self:_researchLineOpen()
 end
 

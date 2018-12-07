@@ -57,6 +57,7 @@ end
 --设置--
 function GameMainInterfaceCtrl.Onset()
     ct.log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
+    ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--

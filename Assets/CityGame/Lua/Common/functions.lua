@@ -194,3 +194,61 @@ function ct.getIntPart(x)
 	return x;
 end
 
+
+--获取价格显示文本 --整数和小数部分大小不同
+function getPriceString(str, intSize, floatSize)
+	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+	return finalStr
+end
+
+currentLanguage={}
+chinese={}
+english={}
+function ReadConfigLanguage()
+	for ID, ch in pairs(Language_Chinese) do
+		chinese[ID]=ch
+	end
+	for ID, en in pairs(Language_English) do
+		english[ID]=en
+	end
+
+   local num=UnityEngine.PlayerPrefs.GetInt("Language")
+	if num==0 then
+		currentLanguage=english
+	elseif num==1 then
+		currentLanguage=chinese
+	end
+end
+
+function SaveLanguageSettings(languageType)
+	if languageType==LanguageType.Chinese then
+		UnityEngine.PlayerPrefs.SetInt("Language",1)
+		currentLanguage=chinese
+	elseif languageType==LanguageType.English then
+		UnityEngine.PlayerPrefs.SetInt("Language",0)
+		currentLanguage=english
+	end
+end
+
+function GetLanguage(key,...)
+	local temp={...}
+	for Id, String in pairs(currentLanguage) do
+		if Id==key then
+          local tempString=String
+			for i = 1, #temp do
+				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+			end
+			return tempString
+		end
+	end
+	return key.."没有设置"
+end
+

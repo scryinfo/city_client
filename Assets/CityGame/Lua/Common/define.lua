@@ -194,6 +194,11 @@ Buildingowner=
    other=2,--其他人的
 }
 
+LanguageType={
+	Chinese=0,
+	English=1,
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {

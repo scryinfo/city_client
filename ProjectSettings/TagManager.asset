@@ -7,6 +7,9 @@ TagManager:
   - GuiCamera
   - GameManager
   - UICanvas
+  - DNAnimator
+  - Music
+  - Musiceffect
   layers:
   - Default
   - TransparentFX

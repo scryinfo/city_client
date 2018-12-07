@@ -54,6 +54,7 @@ local ctrlList = {};	--控制器列表--
 local modelList = {};	--模型列表--
 
 function CtrlManager.Init()
+	ReadConfigLanguage()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名

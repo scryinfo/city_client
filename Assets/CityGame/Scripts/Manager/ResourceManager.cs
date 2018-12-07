@@ -133,7 +133,7 @@ namespace LuaFramework {
                 requests = new List<LoadAssetRequest>();
                 requests.Add(request);
                 m_LoadRequests.Add(abName, requests);
-                StartCoroutine(OnLoadAsset<T>(abName));
+                StartCoroutine(OnLoadAsset<T>(abName,type));
             }
             else
             {
@@ -154,7 +154,7 @@ namespace LuaFramework {
 #endif
         }
 
-        IEnumerator OnLoadAsset<T>(string abName) where T : UObject {
+        IEnumerator OnLoadAsset<T>(string abName, System.Type type) where T : UObject {
             AssetBundleInfo bundleInfo = GetLoadedAssetBundle(abName);
             if (bundleInfo == null) {
                 yield return StartCoroutine(OnLoadAssetBundle(abName, typeof(T)));
@@ -178,7 +178,15 @@ namespace LuaFramework {
                 AssetBundle ab = bundleInfo.m_AssetBundle;
                 for (int j = 0; j < assetNames.Length; j++) {
                     string assetPath = assetNames[j];
-                    AssetBundleRequest request = ab.LoadAssetAsync(assetPath, list[i].assetType);
+                    AssetBundleRequest request = null;
+                    if (type != null)
+                    {
+                        request = ab.LoadAssetAsync(assetPath, type);
+                    }
+                    else {
+                        request = ab.LoadAssetAsync(assetPath, list[i].assetType);
+                    }
+
                     yield return request;
                     result.Add(request.asset);
 

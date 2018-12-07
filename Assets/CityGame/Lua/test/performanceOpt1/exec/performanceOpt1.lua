@@ -19,7 +19,7 @@ UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  f
     local testcount = 10
     local ResPathList = {}
     for i = 1, testcount do
-        ResPathList[i] = 'View/TempIcon/A ('..i..')'
+        ResPathList[i] = 'View/TempIcon/A'..i
     end
     --测试数据准备}
     local exectime1 = UnitTest.PerformanceTest("abel_w17_load_s128_n400_Sync","[同步加载400个尺寸为128的 Icon: Resource.Load]", function()

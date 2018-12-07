@@ -105,6 +105,7 @@ public class Packager {
                 {
                     string bundleName = subdir + files[i].Remove(0, pos + 1);
                     bundleName = bundleName.Replace(".prefab", "");
+                    bundleName = bundleName.Replace(".png", "");
                     bundleName += AppConst.BundleExt;
                     AssetBundleBuild build = new AssetBundleBuild();
                     build.assetBundleName = bundleName;
@@ -131,10 +132,12 @@ public class Packager {
     static void AddBuildMapOp(string path)
     {        
         AutoAddBuildMap("*.prefab", path, path);
+        AutoAddBuildMap("*.png", path, path);
         string[] dirs = Directory.GetDirectories(path);
         for (int i = 0; i < dirs.Length; ++i)
         {
             AutoAddBuildMap("*.prefab", dirs[i], path);
+            AutoAddBuildMap("*.png", dirs[i], path);
         }
     }
 

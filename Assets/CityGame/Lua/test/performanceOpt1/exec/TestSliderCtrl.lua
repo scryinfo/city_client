@@ -70,7 +70,7 @@ function TestSliderCtrl:_initPanelData()
 
     panelMgr:LoadPrefab_A("TestCycle/Icon_Prefab", nil, nil,function(self, obj )
         _Icon_Prefab = obj
-        TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 17);
+        TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 2);
     end)
 
 end
@@ -89,16 +89,18 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
         local dataSource = UnityEngine.UI.LoopScrollDataSource.New()
 
         --加载 Icon_Prefab
-        local funHorizontalSb = function(self, obj,i,trans)
+            local funHorizontalSb = function(self, obj,i,trans)
             local loadedOjb = ct.InstantiatePrefab(obj);
             local Icon_Prefab =  loadedOjb.transform:GetComponent("Image")
             local go = Icon_Prefab
             local type = Icon_Prefab.GetType(Icon_Prefab.sprite)
             --加载图片，赋值给 Icon_Prefab 的 Image 组件的 sprite
-            panelMgr:LoadPrefab_A("TempIcon/A ("..i..")", type, go, function(staticData, obj )
-                local texture = ct.InstantiatePrefab(obj)
-                local pngImage =  trans:GetComponent("Image")
-                pngImage.sprite = texture
+            panelMgr:LoadPrefab_A("TempIcon/A"..i, type, go, function(staticData, obj )
+                if obj ~= nil then
+                    local texture = ct.InstantiatePrefab(obj)
+                    local pngImage =  trans:GetComponent("Image")
+                    pngImage.sprite = texture
+                end
             end)
             --staticData[i] = {text = 001,image = go}
         end

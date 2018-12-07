@@ -109,6 +109,11 @@ function LabScientificLineCtrl:_initPanelData()
     self:_researchLineOpen()
 end
 
+--某条线的数据改变
+function LabScientificLineCtrl:_updateSingleLine()
+
+end
+
 ---按钮切页
 function LabScientificLineCtrl:_researchLineOpen()
     LabScientificLinePanel._researchToggleState(true)

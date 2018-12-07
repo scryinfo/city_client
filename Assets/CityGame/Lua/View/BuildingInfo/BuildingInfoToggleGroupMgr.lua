@@ -43,10 +43,6 @@ BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem
 
 --初始化
 function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
-    self:updateData(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
-end
---
-function BuildingInfoToggleGroupMgr:updateData(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     self.leftRect = leftRect
     self.rightRect = rightRect
@@ -71,6 +67,22 @@ function BuildingInfoToggleGroupMgr:updateData(leftRect, rightRect, mainPanelLua
     self:_sortItems(1)
     self:_sortRightItems()
 end
+--刷新数据
+function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
+    self.toggleData = buildingData
+    if buildingData.buildingType == BuildingType.House then
+        self:_creatHouseInfo()
+    elseif buildingData.buildingType == BuildingType.MaterialFactory then
+        self:_creatMaterialInfo()
+    elseif buildingData.buildingType == BuildingType.Municipal then
+        self:_creatMunicipalInfo()
+    elseif buildingData.buildingType == BuildingType.ProcessingFactory then
+        self:_creatProcessingInfo()
+    elseif buildingData.buildingType == BuildingType.Laboratory then
+        self:_creatResearchLineInfo()
+    end
+end
+
 --清除lua实例
 function BuildingInfoToggleGroupMgr:cleanItems()
     for i, item in ipairs(self.leftData) do
@@ -438,15 +450,24 @@ end
 ---研究所部分
 --研究线
 function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
-    if not self.researchLineViewRect then
-        self.researchLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Laboratory_Path, self.rightRect)
-        self.researchLineViewRect.gameObject.name = "ResearchLine"
-    end
+    --如果已经存在则直接刷新数据，否则重新生成
+    if self.labLineItem then
+        local data = {}
+        data.buildingId = self.toggleData.insId
+        data.buildingTypeId = self.toggleData.mId
+        data.lines = self.toggleData.orderLineData
+        self.labLineItem:updateInfo(data)
+    else
+        if not self.researchLineViewRect then
+            self.researchLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Laboratory_Path, self.rightRect)
+            self.researchLineViewRect.gameObject.name = "ResearchLine"
+        end
 
-    local data = {}
-    data.buildingId = self.toggleData.info.id
-    data.buildingTypeId = self.toggleData.info.mId
-    data.lines = self.toggleData.line
-    local item = LabBuildingLineItem:new(data, self.researchLineViewRect, self.mainPanelLuaBehaviour, researchLineToggleData, self)
-    return item
+        local data = {}
+        data.buildingId = self.toggleData.insId
+        data.buildingTypeId = self.toggleData.mId
+        data.lines = self.toggleData.orderLineData
+        self.labLineItem = LabBuildingLineItem:new(data, self.researchLineViewRect, self.mainPanelLuaBehaviour, researchLineToggleData, self)
+    end
+    return self.labLineItem
 end

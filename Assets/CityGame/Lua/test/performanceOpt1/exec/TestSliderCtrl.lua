@@ -7,10 +7,13 @@ TestSliderCtrl = class('TestSliderCtrl',UIPage)
 UIPage:ResgisterOpen(TestSliderCtrl) --这个是注册打开的类方法
 
 TestSliderCtrl.static.staticData = {}
+
+local _Icon_Prefab = nil
+
 function TestSliderCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
     self.itemlist = {}
-    self.Icon_Prefab = nil
+
 end
 
 function TestSliderCtrl:bundleName()
@@ -66,7 +69,7 @@ function TestSliderCtrl:_initPanelData()
     loopSource.mClearData = TestSliderCtrl.static.ClearData
 
     panelMgr:LoadPrefab_A("TestCycle/Icon_Prefab", nil, nil,function(self, obj )
-        self.Icon_Prefab = obj
+        _Icon_Prefab = obj
         TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 17);
     end)
 
@@ -86,7 +89,7 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
         local dataSource = UnityEngine.UI.LoopScrollDataSource.New()
 
         --加载 Icon_Prefab
-        local funHorizontalSb = function(self, obj,i)
+        local funHorizontalSb = function(self, obj,i,trans)
             local loadedOjb = ct.InstantiatePrefab(obj);
             local Icon_Prefab =  loadedOjb.transform:GetComponent("Image")
             local go = Icon_Prefab
@@ -103,9 +106,10 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
         --TestSliderPanel 更新 item 时的回调，每次更新，都会更新该元素内部所有的 Icon_Prefab
         dataSource.mProvideData = function(trans, i)
             i = i + 1
-            funHorizontalSb(nil, self.Icon_Prefab, i)
+            funHorizontalSb(nil, _Icon_Prefab, i,trans)
         end
         dataSource.mClearData = function(transform)
+            local xxx = 0
         end
 
         local ptext = transform:Find("Text"):GetComponent("Text");

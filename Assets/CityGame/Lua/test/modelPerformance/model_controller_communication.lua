@@ -11,12 +11,13 @@ local ControllerBase = class('ControllerBase')
 local tempCtrlList = {}
 local test_count = 10000
 
-function ModelBase:initialize(name)
-    self.name = name
+function ModelBase:initialize(name, newInsId)
+    self.instanceName = name
+    self.insId = newInsId
 end
 
 function ControllerBase:initialize(name, newInsId)
-    self.name = name
+    self.instanceName = name
     self.insId = newInsId
 end
 
@@ -24,23 +25,23 @@ end
 Model_1 = class('Model_1',ModelBase)
 function Model_1:testfun(arg_int1, arg_int2)
     --ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
-    return #self.name+arg_int1+arg_int2
+    return #self.instanceName+arg_int1+arg_int2
 end
 
 function Model_1:testfunNoRet(arg_int1, arg_int2)
     --ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
-    local value = #self.name+arg_int1+arg_int2
+    local value = #self.instanceName+arg_int1+arg_int2
 end
 
 Model_2 = class('Model_2',ModelBase)
 function Model_2:testfun(arg_str)
     --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
-    return self.name..arg_str
+    return self.instanceName..arg_str
 end
 
 function Model_2:testfunNoRet(arg_str)
     --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
-    local len = #self.name+#arg_str
+    local len = #self.instanceName+#arg_str
 end
 --model类}
 
@@ -54,6 +55,11 @@ function ModelManager:initialize()
 end
 function ModelManager:addModel(model)
     modelList[#modelList+1] = model
+    return model
+end
+
+function ModelManager:OpenCtrl(model, CtrlClass)
+    return CtrlClass:new(CtrlClass.name..'_ins_'..model.insId, model.insId)
 end
 
 function ModelManager:getModel(pos)
@@ -163,12 +169,12 @@ UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_in
         --Model类型要和Crtl的类型匹配，就像加工厂的Model和Ctrl类型是对应的，Ctrl要调用对应的Model的Rpc方法，
         --前提是Ctrl知道对应Model的实例id，这里就简单处理，让新创建的Model和Ctrl的实例id都等于i，那么我们
         --在后边的测试中，就可以通过Ctrl中的实例id找打对应的Model实例
-        ModelManager.addModel(nil,Model_1:new('Model_1'..i))
-        tempCtrlList[i] = Ctrl_1:new('Ctrl_1_ins_'..i, i)
+        local newModel = ModelManager.addModel(nil,Model_1:new('Model_1'..i,i))
+        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_1) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
     end
     for i = test_count+1, test_count *2 do
-        ModelManager.addModel(nil,Model_2:new('Model_2'..i))
-        tempCtrlList[i] = Ctrl_2:new('Ctrl_1_ins_'..i, i)
+        local newModel =ModelManager.addModel(nil,Model_2:new('Model_2'..i))
+        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_2) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
     end
 end)
 --数据准备}

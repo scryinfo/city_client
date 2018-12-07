@@ -16,8 +16,8 @@ function newObject(prefab)
 end
 
 --创建面板--
-function LoadPrefab_A(name)
-	PanelManager:LoadPrefab_A(name);
+function LoadPrefab_A(name, type, instance, callback)
+	PanelManager:LoadPrefab_A(name,type, instance, callback);
 end
 --创建窗口--
 function createWindows(name,pos)
@@ -192,5 +192,14 @@ function ct.getIntPart(x)
 		x = resault - 1;
 	end
 	return x;
+end
+
+--实例化UI的prefab
+function ct.InstantiatePrefab(prefab)
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	go.name = prefab.name;
+	local rect = go.transform:GetComponent("RectTransform");
+	rect.sizeDelta = prefab:GetComponent("RectTransform").sizeDelta;
+	return go
 end
 

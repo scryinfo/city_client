@@ -15,14 +15,14 @@ end
 
 function CreateAvatarCtrl.Awake()
 	logWarn("CreateAvatarCtrl.Awake--->>");
-	panelMgr:LoadPrefab_A('CreateAvatar', this.OnCreate, this);
+	panelMgr:LoadPrefab_A('CreateAvatar', nil, this, this.OnCreate);
 
 	Event.AddListener("onCreateAvatarResult", this.onCreateAvatarResult);
 end
 
 --启动事件--
 function CreateAvatarCtrl.OnCreate(obj)
-	gameObject = obj;
+	gameObject = ct.InstantiatePrefab(obj);
 
 	CreateAvatar = gameObject:GetComponent('LuaBehaviour');
 	CreateAvatar:AddClick(CreateAvatarPanel.btnCreateAvatar, this.OnCreateAvatar);

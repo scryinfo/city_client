@@ -8,11 +8,11 @@ function TransportOrderCtrl.New()
     return this;
 end
 function TransportOrderCtrl.Awake()
-    panelMgr:LoadPrefab_A('TransportOrder',this.OnCreate);
+    panelMgr:LoadPrefab_A('TransportOrder',nil,this,this.OnCreate);
     TransportOrderCtrl.Initialize();
 end
 function TransportOrderCtrl.OnCreate(obj)
-    gameObject = obj;
+    gameObject = ct.InstantiatePrefab(obj);
 
     TransportOrder = gameObject:GetComponent('LuaBehaviour');
     TransportOrder:AddClick(TransportOrderPanel.returnBtn,this.OnReturnBtn);

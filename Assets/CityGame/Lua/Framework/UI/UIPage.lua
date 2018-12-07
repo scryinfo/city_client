@@ -72,8 +72,14 @@ function UIPage:Active()
     self.isActived = true;
 end
 
-function UIPage:OnCreate(go)
+function UIPage:OnCreate(obj)
     if self.gameObject == nil then
+        --把C#中的 LoadPrefab_A 中实例化相关的处理剥离到lua中来，LoadPrefab_A只处理资源加载，
+        --这里传入的prefab就是 LoadPrefab_A 加载的原始资源，不能直接使用，需要实例化，否则
+        --对它的任何改动都会影响到所有引用该资源的地方
+        ------{
+        local go = ct.InstantiatePrefab(obj);
+        ------}
         go.layer = LayerMask.NameToLayer("UI");
         UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
         self.gameObject = go;
@@ -105,7 +111,7 @@ function UIPage:Show(path, callback)
         --    go = Resources.Load(uiPath)
         --end
         --panelMgr:LoadPrefab_A(path, callback, self);
-        panelMgr:LoadPrefab_A(path, callback, self);
+        panelMgr:LoadPrefab_A(path, nil, self, callback);
     else
         self:DoShow()
     end

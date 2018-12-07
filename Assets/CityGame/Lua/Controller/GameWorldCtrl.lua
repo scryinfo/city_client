@@ -15,12 +15,12 @@ end
 
 function GameWorldCtrl.Awake()
 	logWarn("GameWorldCtrl.Awake--->>");
-	panelMgr:LoadPrefab_A('GameWorld',  this.OnCreate, this);
+	panelMgr:LoadPrefab_A('GameWorld', nil,this, this.OnCreate);
 end
 
 --启动事件--
-function GameWorldCtrl.OnCreate(obj)
-	gameObject = obj;
+function GameWorldCtrl.OnCreate(prefab)
+	gameObject = ct.InstantiatePrefab(prefab);
 
 	GameWorld = gameObject:GetComponent('LuaBehaviour');
 	--GameWorld:AddClick(GameWorldPanel.btnGameWorld, this.OnGameWorld);

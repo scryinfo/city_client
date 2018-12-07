@@ -24,7 +24,7 @@ namespace LuaFramework {
         /// </summary>
         /// <param name="type"></param>
         //public void CreatePanel(string name, LuaFunction func = null, object obj = null) {
-        public void LoadPrefab_A(string name, LuaFunction func = null, object obj = null, System.Type type = null)
+        public void LoadPrefab_A(string name, System.Type type = null, object objInstance = null, LuaFunction func = null)
         {
             string assetName = name ;
             if (type == null) {
@@ -40,27 +40,12 @@ namespace LuaFramework {
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate(UnityEngine.Object[] objs) {
                 if (objs.Length == 0) return;
-                GameObject prefab = objs[0] as GameObject;
-                Sprite txt = objs[0] as Sprite;
-                if (prefab == null) {
-                    if (func != null)
-                    {
-                        func.Call(obj, objs[0]);
-                    }
-                    return;
-                }
+                GameObject go = objs[0] as GameObject;
                 
-
-                GameObject go = Instantiate(prefab) as GameObject;
-                //go.name = name+ GetInstanceID();                
-                go.name = prefab.name;                
-                RectTransform rect = go.GetComponent<RectTransform>();
-                rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
-
                 if (func != null)
                 {
-                    func.Call(obj, go);                
-                    Debug.LogWarning("CreatePanel::>> " + name + " " + prefab);
+                    func.Call(objInstance, go);                
+                    Debug.LogWarning("CreatePanel::>> " + name + " " + go);
                 }
                     
             }, type);

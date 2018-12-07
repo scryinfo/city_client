@@ -70,13 +70,14 @@ function BuildingInfoModel.CreatBuildingInfoPanel(panelInfo)
     this.rightFinish = false
     this.bottomFinish = false
 
-    panelMgr:LoadPrefab_A('BuildingInfo', this.OnPanelCreated, this);
+    panelMgr:LoadPrefab_A('BuildingInfo', nil, this.OnPanelCreated);
     --将右侧的界面加入
-    panelMgr:LoadPrefab_A('BuildingInfoRight', this.OnRightPanelCreated, this);
+    panelMgr:LoadPrefab_A('BuildingInfoRight', nil, this, this.OnRightPanelCreated);
 end
 
 --当界面生成完毕之后，添加监听
-function BuildingInfoModel.OnPanelCreated(panelObj)
+function BuildingInfoModel.OnPanelCreated(obj)
+    local panelObj = ct.InstantiatePrefab(obj);
     local groundAuctionBehaviour = panelObj:GetComponent('LuaBehaviour');
     groundAuctionBehaviour:AddClick(BuildingInfoPanel.transferBtn.gameObject, this.OpenTransferPage);
     groundAuctionBehaviour:AddClick(BuildingInfoPanel.buyBtn.gameObject, this.SendBuyInfoToServer);
@@ -95,8 +96,7 @@ end
 
 --打开转让界面
 function BuildingInfoModel.OpenTransferPage()
-    panelMgr:LoadPrefab_A('BuildingTransfer');
-
+    --panelMgr:LoadPrefab_A('BuildingTransfer', this.OnPanelCreated, this);
 end
 
 --- 客户端请求 ---

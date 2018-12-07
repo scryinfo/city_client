@@ -40,12 +40,11 @@ namespace LuaFramework {
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate(UnityEngine.Object[] objs) {
                 if (objs.Length == 0) return;
-                GameObject go = objs[0] as GameObject;
                 
                 if (func != null)
                 {
-                    func.Call(objInstance, go);                
-                    Debug.LogWarning("CreatePanel::>> " + name + " " + go);
+                    func.Call(objInstance, objs[0]);                
+                    Debug.LogWarning("CreatePanel::>> " + name + " " + objs[0]);
                 }
                     
             }, type);

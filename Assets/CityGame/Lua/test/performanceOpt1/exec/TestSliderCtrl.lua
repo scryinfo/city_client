@@ -10,6 +10,7 @@ TestSliderCtrl.static.staticData = {}
 function TestSliderCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
     self.itemlist = {}
+    self.Icon_Prefab = nil
 end
 
 function TestSliderCtrl:bundleName()
@@ -63,8 +64,11 @@ function TestSliderCtrl:_initPanelData()
     local loopSource = UnityEngine.UI.LoopScrollDataSource.New()
     loopSource.mProvideData = TestSliderCtrl.static.ProvideData
     loopSource.mClearData = TestSliderCtrl.static.ClearData
-    --TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 17);
-    TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 17);
+
+    panelMgr:LoadPrefab_A("TestCycle/Icon_Prefab", nil, nil,function(self, obj )
+        self.Icon_Prefab = obj
+        TestSliderPanel.loopScroll:ActiveLoopScroll(loopSource, 17);
+    end)
 
 end
 
@@ -80,24 +84,26 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
     local subScroll = trans:GetComponent("ActiveLoopScrollRect");
     if subScroll ~= nil then
         local dataSource = UnityEngine.UI.LoopScrollDataSource.New()
+
+        --加载 Icon_Prefab
+        local funHorizontalSb = function(self, obj,i)
+            local loadedOjb = ct.InstantiatePrefab(obj);
+            local Icon_Prefab =  loadedOjb.transform:GetComponent("Image")
+            local go = Icon_Prefab
+            local type = Icon_Prefab.GetType(Icon_Prefab.sprite)
+            --加载图片，赋值给 Icon_Prefab 的 Image 组件的 sprite
+            panelMgr:LoadPrefab_A("TempIcon/A ("..i..")", type, go, function(staticData, obj )
+                local texture = ct.InstantiatePrefab(obj)
+                local pngImage =  trans:GetComponent("Image")
+                pngImage.sprite = texture
+            end)
+            --staticData[i] = {text = 001,image = go}
+        end
+
         --TestSliderPanel 更新 item 时的回调，每次更新，都会更新该元素内部所有的 Icon_Prefab
         dataSource.mProvideData = function(trans, i)
-            local staticData = {}
-            --加载 Icon_Prefab
-            panelMgr:LoadPrefab_A("TestCycle/Icon_Prefab", nil, nil,function(self, obj )
-                local loadedOjb = ct.InstantiatePrefab(obj);
-                local Icon_Prefab =  loadedOjb.transform:GetComponent("Image")
-                --local go = UnityEngine.GameObject.Instantiate(img_comp)
-                local go = Icon_Prefab
-                local type = Icon_Prefab.GetType(Icon_Prefab.sprite)
-                --加载图片，赋值给 Icon_Prefab 的 Image 组件的 sprite
-                panelMgr:LoadPrefab_A("TempIcon/A ("..i..")", type, go, function(staticData, obj )
-                    local texture = ct.InstantiatePrefab(obj);
-                    local pngImage =  trans:GetComponent("Image")
-                    pngImage.sprite = texture
-                end)
-                staticData[i] = {text = 001,image = go}
-            end)
+            i = i + 1
+            funHorizontalSb(nil, self.Icon_Prefab, i)
         end
         dataSource.mClearData = function(transform)
         end

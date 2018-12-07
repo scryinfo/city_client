@@ -1,4 +1,6 @@
 --查找对象--
+local _typeof = tolua.typeof
+
 function find(str)
 	return GameObject.Find(str);
 end
@@ -194,12 +196,17 @@ function ct.getIntPart(x)
 	return x;
 end
 
+function ct.getType(obj)
+	return _typeof(obj)
+end
 --实例化UI的prefab
 function ct.InstantiatePrefab(prefab)
 	local go = UnityEngine.GameObject.Instantiate(prefab);
 	go.name = prefab.name;
-	local rect = go.transform:GetComponent("RectTransform");
-	rect.sizeDelta = prefab:GetComponent("RectTransform").sizeDelta;
+	if _typeof(prefab) == _typeof(UnityEngine.GameObject) then
+		local rect = go.transform:GetComponent("RectTransform");
+		rect.sizeDelta = prefab:GetComponent("RectTransform").sizeDelta;
+	end
 	return go
 end
 

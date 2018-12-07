@@ -173,7 +173,7 @@ UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_in
         tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_1) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
     end
     for i = test_count+1, test_count *2 do
-        local newModel =ModelManager.addModel(nil,Model_2:new('Model_2'..i))
+        local newModel =ModelManager.addModel(nil,Model_2:new('Model_2'..i,i))
         tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_2) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
     end
 end)

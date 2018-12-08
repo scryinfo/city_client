@@ -16,6 +16,7 @@ function MaterialModel.OnCreate()
 
     --注册本地UI事件
     Event.AddListener("m_ReqOpenMaterial",this.m_ReqOpenMaterial)
+
     MaterialModel.registerAsNetMsg()
 end
 
@@ -45,9 +46,9 @@ function MaterialModel.n_OnOpenMaterial(stream)
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
         MaterialModel.buildingId = msgMaterial.info.id
-        MaterialModel.MaterialWarehouse = msgMaterial.store.inHand;
-        MaterialModel.MaterialShelf = msgMaterial.shelf.good
-        MaterialModel.MaterialProductionLine = msgMaterial.line
+        MaterialModel.materialWarehouse = msgMaterial.store.inHand;
+        MaterialModel.materialShelf = msgMaterial.shelf.good
+        MaterialModel.materialProductionLine = msgMaterial.line
         MaterialModel.buildingCode = msgMaterial.info.mId
     end
 end

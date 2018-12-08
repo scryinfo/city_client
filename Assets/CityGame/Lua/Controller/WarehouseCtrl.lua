@@ -63,7 +63,7 @@ function WarehouseCtrl:Awake(go)
 end
 function WarehouseCtrl:Refresh()
     local itemId = MaterialModel.buildingCode
-    local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.MaterialWarehouse);
+    local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
     WarehousePanel.Warehouse_Slider.value = numText;
     WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
@@ -151,11 +151,11 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         return;
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
-            if not MaterialModel.MaterialShelf then
+            if not MaterialModel.materialShelf then
                 Event.Brocast("m_ReqShelfAdd",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
                 return;
             else
-                for k,t in pairs(MaterialModel.MaterialShelf) do
+                for k,t in pairs(MaterialModel.materialShelf) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
                         Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
                     end

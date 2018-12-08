@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/ProcessingModel"
 require "Model/ShelfModel"
 require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
@@ -89,6 +90,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
+	modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();

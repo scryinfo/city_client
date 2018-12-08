@@ -16,7 +16,7 @@ ct.homePage =
 function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.shelfData = shelfData;
-    self.toggleData = toggleData   --位于toggle的第四个   左边
+    self.toggleData = toggleData;   --位于toggle的第四个   左边
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
@@ -37,7 +37,11 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
         ct.OpenCtrl("ShelfCtrl")
     end);
 
-    self:initializeInfo(MaterialModel.MaterialShelf);
+    if self.shelfData.buildingType == BuildingType.MaterialFactory then
+        self:initializeInfo(MaterialModel.materialShelf);
+    elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
+        self:initializeInfo(ProcessingModel.processingShelf)
+    end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);

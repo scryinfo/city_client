@@ -30,7 +30,7 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
         ct.OpenCtrl("WarehouseCtrl")
     end);
     self.sizeSlider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-    self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.MaterialWarehouse);
+    self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
     self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)

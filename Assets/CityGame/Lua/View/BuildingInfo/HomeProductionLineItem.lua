@@ -27,16 +27,29 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        --UIPage:ShowPage(AdjustProductionLineCtrl,MaterialModel.MaterialProductionLine)
-        ct.OpenCtrl("AdjustProductionLineCtrl",MaterialModel.MaterialProductionLine)
+        if self.productionData.buildingType == BuildingType.MaterialFactory then
+            local data = {}
+            data.dataTab = MaterialModel.materialProductionLine
+            data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+            local data = {}
+            data.dataTab = ProcessingModel.processingProductionLine
+            data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+        end
     end);
 
-    self:initializeInfo(MaterialModel.MaterialProductionLine);
+    if self.productionData.buildingType == BuildingType.MaterialFactory then
+        self:initializeInfo(MaterialModel.materialProductionLine);
+    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+        self:initializeInfo(ProcessingModel.processingProductionLine);
+    end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.up0dateInfo,self);
 end
 
 --获取是第几次点击了

@@ -27,12 +27,12 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
 end
 --仓库
 function GoodsUnifyMgr:_creatWarehouseItemGoods()
-    if not MaterialModel.MaterialWarehouse then
+    if not MaterialModel.materialWarehouse then
         return;
     end
     self.WarehouseModelData = {}
     local configTable = {}
-    for i,v in pairs(MaterialModel.MaterialWarehouse) do
+    for i,v in pairs(MaterialModel.materialWarehouse) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.num = v.n
@@ -54,12 +54,12 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods()
 end
 --货架
 function GoodsUnifyMgr:_creatStaffItemGoods()
-    if not MaterialModel.MaterialShelf then
+    if not MaterialModel.materialShelf then
         return;
     end
     self.ModelDataList={}
     local configTable = {}
-    for i,v in pairs(MaterialModel.MaterialShelf) do
+    for i,v in pairs(MaterialModel.materialShelf) do
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
@@ -119,42 +119,46 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
         configTable.name = name
         configTable.itemId = itemId;
         itemsId = itemId;
-        AdjustProductionLineCtrl.productionLineUIInfo[itemId] = configTable
+        AdjustProductionLineCtrl.materialProductionUIInfo[itemId] = configTable
 
         local prefabData = {}
         prefabData.state = 'idel'
-        prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[itemId]
+        prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[itemId]
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-        AdjustProductionLineCtrl.productionLinePrefab[itemId] = prefabData
+        AdjustProductionLineCtrl.materialProductionPrefab[itemId] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
-        AdjustProductionLineCtrl.productionLineTab[itemId] = productionLineItem
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
+        AdjustProductionLineCtrl.materialProductionLine[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
 function GoodsUnifyMgr:_getProductionLine(table,behaviour)
-    if not table then
+    if not table.dataTab then
         return;
     end
     local configTable = {}
-    for i,v in pairs(table) do
+    for i,v in pairs(table.dataTab) do
         local uiTab = {}
-        uiTab.name = Material[v.itemId].name
+        if table.buildingType == BuildingType.MaterialFactory then
+            uiTab.name = Material[v.itemId].name
+        elseif table.buildingType == BuildingType.ProcessingFactory then
+            uiTab.name = Material[v.itemId].name
+        end
         uiTab.itemId = v.itemId
         uiTab.nowCount = v.nowCount
         uiTab.targetCount = v.targetCount
         uiTab.workerNum = v.workerNum
         uiTab.lineId = v.id
         configTable[i] = uiTab
-        AdjustProductionLineCtrl.productionLineUIInfo[i] = configTable
+        AdjustProductionLineCtrl.materialProductionUIInfo[i] = configTable
 
         local prefabData = {}
         prefabData.state = 'idel'
-        prefabData.uiData = AdjustProductionLineCtrl.productionLineUIInfo[i]
+        prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[i]
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-        AdjustProductionLineCtrl.productionLinePrefab[i] = prefabData
+        AdjustProductionLineCtrl.materialProductionPrefab[i] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.productionLinePrefab[i].uiData,prefabData._prefab,behaviour,self,i);
-        AdjustProductionLineCtrl.productionLineTab[i] = productionLineItem
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[i].uiData,prefabData._prefab,behaviour,self,i);
+        AdjustProductionLineCtrl.materialProductionLine[i] = productionLineItem
     end
 end
 --获取发送的物品信息
@@ -163,7 +167,7 @@ function GoodsUnifyMgr:getSendInfo()
         return;
     end
     GoodsUnifyMgr.sendInfoTempTab = {}
-    GoodsUnifyMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.productionLineTab[itemsId]
+    GoodsUnifyMgr.sendInfoTempTab[itemsId] = AdjustProductionLineCtrl.materialProductionLine[itemsId]
     local number = GoodsUnifyMgr.sendInfoTempTab[itemsId].inputNumber.text;
     local steffNumber = GoodsUnifyMgr.sendInfoTempTab[itemsId].staffNumberText.text;
     if number == nil then
@@ -225,12 +229,12 @@ function GoodsUnifyMgr:_deleteGoods(ins)
 end
 --删除生产线
 function GoodsUnifyMgr:_deleteProductionLine(ins)
-    destroy(AdjustProductionLineCtrl.productionLineTab[ins.id].prefab.gameObject);
-    table.remove(AdjustProductionLineCtrl.productionLinePrefab,ins.id)
-    table.remove(AdjustProductionLineCtrl.productionLineTab,ins.id)
+    destroy(AdjustProductionLineCtrl.materialProductionLine[ins.id].prefab.gameObject);
+    table.remove(AdjustProductionLineCtrl.materialProductionPrefab,ins.id)
+    table.remove(AdjustProductionLineCtrl.materialProductionLine,ins.id)
     local i = 1
-    for k,v in pairs(AdjustProductionLineCtrl.productionLineTab) do
-        AdjustProductionLineCtrl.productionLineTab[i]:RefreshID(i)
+    for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)
         i = i +1
     end
 end

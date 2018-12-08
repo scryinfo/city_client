@@ -29,6 +29,7 @@ function BaseBuildModel:OpenPanel()
         Event.Brocast('m_ReqOpenMaterial',instanceID)
         ct.OpenCtrl('MaterialCtrl')
     elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --加工厂
+        Event.Brocast('m_ReqOpenProcessing',instanceID)
         ct.OpenCtrl('ProcessingCtrl')
     elseif typeID == 1300001 or typeID == 1300002 or typeID == 1300003 then    --零售店
 

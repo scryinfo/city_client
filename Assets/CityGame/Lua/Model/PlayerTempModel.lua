@@ -36,15 +36,19 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
         PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
     end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.V) then
-    --    PlayerTempModel.tempTestInvent(2151001, 0)
-    --    PlayerTempModel.tempTestInvent(2151002, 0)
-    --    PlayerTempModel.tempTestInvent(2151003, 0)
-    --    PlayerTempModel.tempTestInvent(2151004, 0)
-    --    PlayerTempModel.tempTestInvent(2152001, 0)
-    --    PlayerTempModel.tempTestInvent(2152002, 0)
-    --    --增加科技作弊码，可能没用了
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
+        PlayerTempModel.tempTestAddGroung(41,41, 50,50)
+        --增加科技作弊码，可能没用了
+        --PlayerTempModel.tempTestInvent(2151001, 0)
+        --PlayerTempModel.tempTestInvent(2151002, 0)
+        --PlayerTempModel.tempTestInvent(2151003, 0)
+        --PlayerTempModel.tempTestInvent(2151004, 0)
+        --PlayerTempModel.tempTestInvent(2152001, 0)
+        --PlayerTempModel.tempTestInvent(2152002, 0)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
+        PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
         PlayerTempModel.tempTestReqAddItem(2151002, 2000)
     end

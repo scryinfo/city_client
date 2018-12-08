@@ -90,9 +90,8 @@ end
 --加工厂--
 function GameMainInterfaceCtrl.OnSourceMill()
     ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
-    --Event.Brocast("");
-   -- UIPage:OpenCtrl('CenterWareHouseCtrl')
-    --UIPage:ShowPage(CenterWareHouseCtrl)
+    local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
+    Event.Brocast('m_ReqOpenProcessing',buildingId)
     ct.OpenCtrl('ProcessingCtrl')
 end
 

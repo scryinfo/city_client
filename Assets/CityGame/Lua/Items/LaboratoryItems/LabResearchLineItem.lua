@@ -36,6 +36,9 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
+    Event.AddListener("c_LabLineInfoUpdate", function (data)
+        self:_updateInfo(data)
+    end)
 end
 function LabResearchLineItem:_initData(data)
     self.data = data
@@ -55,6 +58,32 @@ function LabResearchLineItem:_initData(data)
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     end
     self.startTimeDown = true
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
+end
+--刷新数据
+function LabResearchLineItem:_updateInfo(data)
+    if data.id ~= self.data.id then
+        return
+    end
+    --成果展示
+    self.data.roll = data.roll
+    self.data.leftSec = data.leftSec
+    self.data.run = data.run
+    if data.roll > 0 then
+        self.bottleImg.color = Color.white
+    else
+        self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
+    end
+    self.startTimeDown = true
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
 --点击删除按钮
 function LabResearchLineItem:_clickDeleteBtn()
@@ -74,16 +103,16 @@ end
 --倒计时
 function LabResearchLineItem:_update()
     if self.startTimeDown then
-        self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.leftSec < 0 then
+        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
+        if self.data.leftSec < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
             return
         end
-        local timeTable = getTimeBySec(self.leftSec)
+        local timeTable = getTimeBySec(self.data.leftSec)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.formularData.phaseSec - self.leftSec) / self.formularData.phaseSec * LabResearchLineItem.static.FinishBulbHight
+        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabResearchLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
     end
 end

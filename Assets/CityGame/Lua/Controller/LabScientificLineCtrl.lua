@@ -48,6 +48,7 @@ function LabScientificLineCtrl:Awake(go)
     LabScientificLinePanel.staffSlider.onValueChanged:AddListener(function(value)
         self:_onStaffSliderValueChange(value)
     end)
+    self:_addListener()
 
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
@@ -62,47 +63,26 @@ function LabScientificLineCtrl:Refresh()
     self:_initPanelData()
 end
 
-function LabScientificLineCtrl:Close()
-    --self:_removeListener()
-end
-
 function LabScientificLineCtrl:_addListener()
-    Event.AddListener("c_OnReceiveLabLineAdd", self._onReceiveLabAddLine, self)
     --Event.AddListener("c_OnReceiveLabLineAdd", self._onReceiveLabAddLine, self)
-
 end
 function LabScientificLineCtrl:_removeListener()
     --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
 end
 
 function LabScientificLineCtrl:_initPanelData()
-    --self:_addListener()
     LabScientificLineCtrl.researchItems = {}
     LabScientificLineCtrl.inventionItems = {}
-    self.researchDatas = {}
-    self.inventionDatas = {}
 
-    if self.m_data.line then
-        for key, itemData in pairs(self.m_data.line) do
-            if itemData.type == 0 then
-                self.researchDatas[#self.researchDatas] = itemData
-            elseif itemData.type == 1 then
-                self.inventionDatas[#self.inventionDatas] = itemData
-            end
-        end
-    end
-    local totalCount = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetWorkerCount', function (remainWorker)
-        LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, totalCount)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
+        self.remainWorker = remainWorker
+        self.maxWorkerNum = maxWorkerNum
+        self.researchDatas = researchLines
+        self.inventionDatas = inventionLines
+        LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, maxWorkerNum)
+        self:_researchLineOpen()
     end)
-    self:_researchLineOpen()
 end
-
---某条线的数据改变
-function LabScientificLineCtrl:_updateSingleLine()
-
-end
-
 ---按钮切页
 function LabScientificLineCtrl:_researchLineOpen()
     LabScientificLinePanel._researchToggleState(true)
@@ -114,7 +94,7 @@ function LabScientificLineCtrl:_inventionLineOpen()
     LabScientificLinePanel._researchToggleState(false)
     LabScientificLinePanel._inventionToggleState(true)
 
-    self:c_onReceiveLabInventionData(self.inventionDatas)
+    self:_onReceiveLabInventionData(self.inventionDatas)
 end
 
 ---滑动复用
@@ -132,8 +112,6 @@ LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
     LabScientificLineCtrl.researchItems[idx] = item
 end
-LabScientificLineCtrl.static.researchClearData = function(transform)
-end
 --发明
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
@@ -148,9 +126,6 @@ LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)
     LabScientificLineCtrl.inventionItems[idx] = item
 end
-LabScientificLineCtrl.static.inventionClearData = function(transform)
-end
-
 ---刷新数据
 --研究
 function LabScientificLineCtrl:_onReceiveLabResearchData(datas)
@@ -167,7 +142,7 @@ function LabScientificLineCtrl:_onReceiveLabResearchData(datas)
     LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 end
 --发明
-function LabScientificLineCtrl:c_onReceiveLabInventionData(datas)
+function LabScientificLineCtrl:_onReceiveLabInventionData(datas)
     local inventionInfoData = BaseTools.TableCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do

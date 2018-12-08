@@ -88,7 +88,8 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     for i, lineItem in ipairs(data.line) do
         self.remainWorker = self.remainWorker + lineItem.workerNum
     end
-    self.remainWorker = PlayerBuildingBaseData[data.info.mId].maxWorkerNum - self.remainWorker
+    self.maxWorkerNum = PlayerBuildingBaseData[data.info.mId].maxWorkerNum
+    self.remainWorker = self.maxWorkerNum - self.remainWorker
 
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info.mId, data.info.ownerId)
 end
@@ -124,9 +125,19 @@ function LaboratoryModel:n_OnReceiveDelLine(data)
     --ctrl找到对应item，执行删除
     --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', data)
 end
---信息更新
+--更新某条线的具体数据
 function LaboratoryModel:n_OnReceiveLineChange(data)
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', data)
+    local line = self.hashLineData[data.id]
+    if line then
+        line.lv = data.lv
+        line.leftSec = data.leftSec
+        line.phase = data.phase
+        line.run = data.run
+        line.roll = data.roll
+        Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
+    else
+        ct.log("", "找不到对应lineId的线路")
+    end
 end
 --发明成功  --用来更新玩家数据
 function LaboratoryModel:n_OnReceiveNewItem(data)
@@ -145,6 +156,22 @@ end
 --获取空闲员工数
 function LaboratoryModel:m_GetWorkerCount()
     return self.remainWorker
+end
+--获取科技线界面所需要的信息 --研究线，发明线以及员工数量
+function LaboratoryModel:m_GetScientificData()
+    if (not self.researchLines) or (not self.inventionLines) then
+        self.researchLines = {}
+        self.inventionLines = {}
+        for i, lineItem in ipairs(self.orderLineData) do
+            if lineItem.type == 0 then
+                self.researchLines[#self.researchLines + 1] = lineItem
+            else
+                self.inventionLines[#self.inventionLines + 1] = lineItem
+            end
+        end
+    end
+
+    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker
 end
 --更新ctrl 线的信息
 function LaboratoryModel:m_UpdateCtrlLineInfo()

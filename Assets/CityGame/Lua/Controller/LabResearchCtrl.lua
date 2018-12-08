@@ -61,7 +61,7 @@ function LabResearchCtrl:_update()
         end
         LabResearchPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
 
-        if self.remainTime < 0 then
+        if self.remainTime <= 0 then
             self.bulbState = LabInventionBulbItemState.Finish
             LabResearchPanel:setBulbState(self.bulbState)
             return
@@ -74,7 +74,11 @@ function LabResearchCtrl:_update()
 end
 --初始化数据
 function LabResearchCtrl:_initPanelData()
-    self:_addListener()
+    --当正常点进界面时
+    if self.m_data.roll > 0 then
+
+    end
+
     self.bulbState = self.m_data.bulbState
     if not self.bulbState then
         self.bulbState = LabInventionBulbItemState.Empty
@@ -110,11 +114,11 @@ function LabResearchCtrl:_getStoreData(data)
     LabResearchPanel:showLine(formularItem.materials)
 end
 
---显示
+--点击研究按钮
 function LabResearchCtrl:_researchBtnFunc()
-    self.bulbState = LabInventionBulbItemState.Locked
-    LabResearchPanel:setBulbState(self.bulbState)  --只是显示出来，并没有开始倒计时
-    LabResearchPanel.researchBtn.localScale = Vector3.zero
+    self.data.bulbState = LabInventionBulbItemState.Locked
 
+    --LabResearchPanel:setBulbState(self.bulbState)  --只是显示出来，并没有开始倒计时
+    --LabResearchPanel.researchBtn.localScale = Vector3.zero
     UIPage.ClosePage()
 end

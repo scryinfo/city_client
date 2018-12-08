@@ -5,7 +5,6 @@
 ---
 LabInventionCtrl = class('LabInventionCtrl',UIPage)
 UIPage:ResgisterOpen(LabInventionCtrl)
-
 LabInventionCtrl.static.InventionBulbItemPath = "View/Items/LaboratoryItems/LabInventionBulbItem"  --灯泡的预制
 
 function LabInventionCtrl:initialize()
@@ -25,37 +24,26 @@ function LabInventionCtrl:Awake(go)
         UIPage.ClosePage()
     end)
     self.luaBehaviour:AddClick(LabInventionPanel.inventionBtn.gameObject, function()
-        self:_researchBtnFunc()
+        self:_inventeBtnClick()
     end)
 end
 function LabInventionCtrl:Refresh()
-    self:_addListener()
     self:_initPanelData()
 end
 function LabInventionCtrl:Hide()
-    UIPage.Hide(self)
-    self._removeListener()
-end
-function LabInventionCtrl:Close()
-    self:_removeListener()
-end
-
-function LabInventionCtrl:_addListener()
-    Event.AddListener("c_OnReceiveLaboratoryStoreInfo", self._getStoreData, self)  --DBMgr发送过来的store数据
-end
-function LabInventionCtrl:_removeListener()
-    Event.AddListener("c_OnReceiveLaboratoryStoreInfo", self._getStoreData, self)
+    --UIPage.Hide(self)
 end
 --初始化数据
 function LabInventionCtrl:_initPanelData()
-    self:_addListener()
+    --addline/取消addLine的时候只会传一个itemId和buildingId
+    --一般的点进来的时候会有正常的数据
+
+
     local formularItem = FormularConfig[self.m_data.itemId]
     if formularItem.phase ~= 5 then
         ct.log("cycle_w15_laboratory03", "阶段数不为5")
         return
     end
-    --Event.Brocast("m_ReqLabStoreInfo", self.m_data.buildingId)  --本地，向DBMgr请求仓库信息
-
     --总阶段数，然后roll个数，当前阶段，当前阶段的剩余时间
     for i, index in pairs(self.m_data.totalPhase) do
         local go = UnityEngine.GameObject.Instantiate(self.bulbPrefab)
@@ -64,16 +52,7 @@ function LabInventionCtrl:_initPanelData()
 
     end
 end
---拿到仓库信息
-function LabInventionCtrl:_getStoreData(data)
-    --获取基础数据
-    local itemInfo
-    if self.m_data.isMaterial then
-        itemInfo = Material[self.data.itemId]
-    else
-        itemInfo = Good[self.data.itemId]
-    end
-    LabInventionPanel.itemNameText.text = itemInfo.name
-    --LabInventionPanel.iconImg.mainTexture = itemInfo.img
-    LabInventionPanel:showLine(formularItem.materials)
+--点了发明按钮
+function LabInventionCtrl:_inventeBtnClick()
+    UIPage.ClosePage()
 end

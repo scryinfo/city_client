@@ -168,7 +168,7 @@ function AdjustProductionLineCtrl:refreshTime(infoTab)
         end
     end
 end
---关闭面板时清空UI信息
+--关闭面板时清空UI信息，以备其他模块调用
 function AdjustProductionLineCtrl:deleteObjInfo()
     if not AdjustProductionLineCtrl.materialProductionLine then
         return;

@@ -74,10 +74,18 @@ function LabResearchCtrl:_update()
 end
 --初始化数据
 function LabResearchCtrl:_initPanelData()
-    --当正常点进界面时
-    if self.m_data.roll > 0 then
+    --addline/取消addLine的时候只会传一个itemId和buildingId
+    self.m_data.type = 0
 
+    --获取商品等级
+    local goodLv = DataManager.GetMyGoodLv()
+    if not goodLv[self.m_data.itemId] then
+        LabResearchPanel.levelText.text = "Lv."..0
+    else
+        LabResearchPanel.levelText.text = "Lv."..goodLv[self.m_data.itemId]
     end
+
+    --一般的点进来的时候会有正常的数据
 
     self.bulbState = self.m_data.bulbState
     if not self.bulbState then
@@ -89,13 +97,6 @@ function LabResearchCtrl:_initPanelData()
     if formularItem.phase ~= 1 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
-    end
-    --获取商品等级
-    local goodLv = DataManager.GetMyGoodLv()
-    if not goodLv[self.m_data.itemId] then
-        LabResearchPanel.levelText.text = "Lv."..0
-    else
-        LabResearchPanel.levelText.text = "Lv."..goodLv[self.m_data.itemId]
     end
 
     Event.Brocast("m_ReqLabStoreInfo", self.m_data.buildingId)  --本地，向DBMgr请求仓库信息
@@ -116,9 +117,11 @@ end
 
 --点击研究按钮
 function LabResearchCtrl:_researchBtnFunc()
-    self.data.bulbState = LabInventionBulbItemState.Locked
+    --self.data.bulbState = LabInventionBulbItemState.Locked
 
     --LabResearchPanel:setBulbState(self.bulbState)  --只是显示出来，并没有开始倒计时
     --LabResearchPanel.researchBtn.localScale = Vector3.zero
+
+    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqAddLine')
     UIPage.ClosePage()
 end

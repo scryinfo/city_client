@@ -102,8 +102,7 @@ end
 LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            --打开研究选择界面
-            ct.log("cycle_w15_laboratory03", "打开研究选择界面")
+            ct.OpenCtrl("LabResearchCtrl", {buildingId = self.insId, itemId = 2151001})
         end)
         return
     end
@@ -116,8 +115,7 @@ end
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            --打开研究选择界面
-            ct.log("cycle_w13_laboratory", "打开发明选择界面")
+            ct.OpenCtrl("LabInventionCtrl", {buildingId = self.insId, itemId = 2151001})
         end)
         return
     end

@@ -173,6 +173,32 @@ function LaboratoryModel:m_GetScientificData()
 
     return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker
 end
+--客户端显示 --添加临时线
+function LaboratoryModel:m_AddTempLineData(data)
+    local tempLine
+    tempLine.itemId = data.itemId
+    tempLine.phase = data.phase
+    tempLine.workerNum = data.workerNum
+    if data.type == 0 then
+        table.insert(self.researchLines, 1, tempLine)
+    else
+        table.insert(self.inventionLines, 1, tempLine)
+    end
+end
+--客户端显示 --删除临时线
+function LaboratoryModel:m_AddTempLineData(data)
+    if data.type == 0 then
+        if self.researchLines[1].lineId then
+            ct.log("", "错误错误错误")
+        end
+        table.remove(self.researchLines, 1)
+    else
+        if self.inventionLines[1].lineId then
+            ct.log("", "错误错误错误")
+        end
+        table.remove(self.inventionLines, 1)
+    end
+end
 --更新ctrl 线的信息
 function LaboratoryModel:m_UpdateCtrlLineInfo()
 

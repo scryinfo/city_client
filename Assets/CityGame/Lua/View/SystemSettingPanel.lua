@@ -16,6 +16,9 @@ function SystemSettingPanel.Awake(obj)
 end
 
 function SystemSettingPanel.InitPanel()
+    this.Music=UnityEngine.GameObject.FindGameObjectWithTag("Music").transform:GetComponent("AudioSource")
+    this.MusicEffect=UnityEngine.GameObject.FindGameObjectWithTag("Musiceffect").transform:GetComponent("AudioSource")
+
     this.titleText=transform:Find("Panel/topRoot/bg/Text"):GetComponent("Text")
     this.backBtn = transform:Find("Panel/topRoot/bg/closeBtn");
 
@@ -60,4 +63,25 @@ function SystemSettingPanel:InitDate(string)
         this.LanguageBtnText.text=GetLanguage(1000006,string)
         this.chineseBtnText.text=GetLanguage(1000007)
         this.englishBtnText.text=GetLanguage(1000008)
+     local music=UnityEngine.PlayerPrefs.GetInt("Music")
+    local musicEffect=UnityEngine.PlayerPrefs.GetInt("MusicEffect")
+    if music==0 then
+        this.MusicBtnyellosw.localScale=Vector3.one
+        this.MusicBtngrey.localScale=Vector3.zero
+        this.Music:Play()
+    else
+        this.MusicBtnyellosw.localScale=Vector3.zero
+        this.MusicBtngrey.localScale=Vector3.one
+        this.Music:Stop()
+    end
+    if musicEffect==0 then
+        this.MusicEffectBtnyellow.localScale=Vector3.one
+        this.MusicEffectBtngrey.localScale=Vector3.zero
+        this.Music:Play()
+    else
+        this.MusicEffectBtnyellow.localScale=Vector3.zero
+        this.MusicEffectBtngrey.localScale=Vector3.one
+        this.MusicEffect:Stop()
+    end
+
 end

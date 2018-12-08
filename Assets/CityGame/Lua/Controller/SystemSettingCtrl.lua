@@ -53,24 +53,28 @@ function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtnyellosw.localScale=Vector3.one
     ins.Music:Play()
+    UnityEngine.PlayerPrefs.SetInt("Music",0)
 end
 --开音效
 function SystemSettingCtrl:c_OnClickMusicEffect(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicEffectBtnyellow.localScale=Vector3.one
     ins.MusicEffect:Play()
+    UnityEngine.PlayerPrefs.SetInt("MusicEffect",0)
 end
 --音乐
 function SystemSettingCtrl:c_OnClick_Music(ins)
         self.transform.localScale=Vector3.zero
         panel.MusicBtngrey.localScale=Vector3.one
         ins.Music:Stop();
+    UnityEngine.PlayerPrefs.SetInt("Music",1)
 end
 --音效
 function SystemSettingCtrl:c_OnClick_MusicEffect(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicEffectBtngrey.localScale=Vector3.one
     ins.MusicEffect:Stop();
+    UnityEngine.PlayerPrefs.SetInt("MusicEffect",1)
 end
 
 --返回

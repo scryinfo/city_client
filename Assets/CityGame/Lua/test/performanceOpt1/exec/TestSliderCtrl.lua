@@ -82,7 +82,7 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
         return
     end
     ----[[
-        TestSliderCtrl.static.sourceInfo[idx].transform = transform
+    TestSliderCtrl.static.sourceInfo[idx].transform = transform
     local trans = transform:Find("TestSliderPanel/root/LoopScroll")
     local subScroll = trans:GetComponent("ActiveLoopScrollRect");
     if subScroll ~= nil then

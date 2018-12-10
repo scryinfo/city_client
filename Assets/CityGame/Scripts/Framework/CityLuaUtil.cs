@@ -29,6 +29,10 @@ namespace City
     }
     public static class CityLuaUtil
     {
+        public static System.Type getSpriteType()
+        {
+            return typeof(UnityEngine.Sprite) ;
+        }
         public static UIRoot GetUIRoot()
         {
             return UIRoot.Instance;

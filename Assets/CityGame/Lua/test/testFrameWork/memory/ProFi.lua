@@ -107,6 +107,7 @@ function ProFi:checkMemory( interval, note )
 	table.insert( self.memoryReports, memoryReport )
 	self:setHighestMemoryReport( memoryReport )
 	self:setLowestMemoryReport( memoryReport )
+    return memoryReport.memory
 end
 
 --[[
@@ -290,10 +291,20 @@ function ProFi:writeMemoryReportsToFile( reports, file )
 	self:writeHighestMemoryReportToFile( file )
 	self:writeLowestMemoryReportToFile( file )
 	file:write( FORMAT_MEMORY_HEADER2 )
+    local memoryUsed = 0
 	for i, memoryReport in ipairs( reports ) do
 		local outputLine = self:formatMemoryReportWithFormatter( memoryReport, FORMAT_MEMORY_LINE )
 		file:write( outputLine )
+        if i == 1 then
+            memoryUsed = memoryReport.memory
+        else
+            memoryUsed = memoryReport.memory - memoryUsed
+        end
+
 	end
+    if #reports > 1 then
+        file:write( 'Memory used total: '..memoryUsed..'kb / '..(memoryUsed/1024)..'M' )
+    end
 end
 
 function ProFi:writeHighestMemoryReportToFile( file )

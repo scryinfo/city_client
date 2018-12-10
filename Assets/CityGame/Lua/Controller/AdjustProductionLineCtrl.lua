@@ -7,6 +7,9 @@ AdjustProductionLineCtrl.materialProductionLine = {};
 AdjustProductionLineCtrl.materialProductionUIInfo = {};
 --原料厂预制
 AdjustProductionLineCtrl.materialProductionPrefab = {};
+--添加生产线临时表
+AdjustProductionLineCtrl.tempProductionLine = {}
+
 ----加工厂实例
 --AdjustProductionLineCtrl.materialProductionLine = {};
 ----加工厂UI信息
@@ -39,34 +42,44 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     --self.idleWorkerNum = self:getWorkerNum()
     --AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     ----读取服务器发过来的信息，是否有生产线
-    --GoodsUnifyMgr:_getProductionLine(self.m_data,self.adjustLine)
-    --Event.Brocast("refreshTime",self.m_data.dataTab)
+    --GoodsUnifyMgr:_getProductionLine(self.data,self.adjustLine)
+    --Event.Brocast("refreshTime",self.data.dataTab)
     --AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
 function AdjustProductionLineCtrl:Awake(go)
     self.gameObject = go
+
 end
 
 function AdjustProductionLineCtrl:Refresh()
+    if self.m_data ~= nil then
+        self.data = self.m_data
+    end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
+    if self.data.buildingType == BuildingType.MaterialFactory then
         self.buildingMaxWorkerNum = PlayerBuildingBaseData[MaterialModel.buildingCode].maxWorkerNum
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+        AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
+    elseif self.data.buildingType == BuildingType.ProcessingFactory then
         self.buildingMaxWorkerNum = PlayerBuildingBaseData[ProcessingModel.buildingCode].maxWorkerNum
+        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
+        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
+        AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     end
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     --读取服务器发过来的信息，是否有生产线
-    GoodsUnifyMgr:_getProductionLine(self.m_data,adjustLine)
-    Event.Brocast("refreshTime",self.m_data.dataTab)
+    GoodsUnifyMgr:_getProductionLine(self.data,adjustLine)
+    Event.Brocast("refreshTime",self.data.dataTab)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 
-    local itemId = MaterialModel.buildingCode
+    --local itemId = MaterialModel.buildingCode
     self:refreshWorkerNum()
-    AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
-    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-    AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
+    --AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+    --AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+    --AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
 
 end
 
@@ -75,8 +88,9 @@ function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     UIPage.ClosePage();
 end
 
-function AdjustProductionLineCtrl:OnClick_addBtn()
-    ct.OpenCtrl("AddProductionLineCtrl")
+function AdjustProductionLineCtrl:OnClick_addBtn(go)
+    go:deleteObjInfo()
+    ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
 end
 
 --计算一条生产线总时间
@@ -112,7 +126,7 @@ end
 function AdjustProductionLineCtrl:getWorkerNum()
     local workerNum = 0  --剩余员工数量
     local workNum = 0    --工作的员工数量
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
+    if self.data.buildingType == BuildingType.MaterialFactory then
         if not MaterialModel.materialProductionLine then
             workerNum = self.buildingMaxWorkerNum
             return workerNum
@@ -123,7 +137,7 @@ function AdjustProductionLineCtrl:getWorkerNum()
             workerNum = self.buildingMaxWorkerNum - workNum
             return workerNum
         end
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+    elseif self.data.buildingType == BuildingType.ProcessingFactory then
         if not ProcessingModel.processingProductionLine then
             workerNum = self.buildingMaxWorkerNum
             return workerNum

@@ -115,20 +115,20 @@ function GoodsUnifyMgr:_creatProductionItem()
 end
 --添加生产线
 function GoodsUnifyMgr:_creatProductionLine(name,itemId)
-        local configTable = {};
-        configTable.name = name
-        configTable.itemId = itemId;
-        itemsId = itemId;
-        AdjustProductionLineCtrl.materialProductionUIInfo[itemId] = configTable
+    local configTable = {};
+    configTable.name = name
+    configTable.itemId = itemId;
+    itemsId = itemId;
+    AdjustProductionLineCtrl.materialProductionUIInfo[itemId] = configTable
 
-        local prefabData = {}
-        prefabData.state = 'idel'
-        prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[itemId]
-        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-        AdjustProductionLineCtrl.materialProductionPrefab[itemId] = prefabData
+    local prefabData = {}
+    prefabData.state = 'idel'
+    prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[itemId]
+    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+    AdjustProductionLineCtrl.materialProductionPrefab[itemId] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
-        AdjustProductionLineCtrl.materialProductionLine[itemId] = productionLineItem
+    local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
+    AdjustProductionLineCtrl.materialProductionLine[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
 function GoodsUnifyMgr:_getProductionLine(table,behaviour)

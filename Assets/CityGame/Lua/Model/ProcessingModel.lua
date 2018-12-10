@@ -50,6 +50,5 @@ function ProcessingModel.n_OnOpenProcessing(stream)
         ProcessingModel.processingWarehouse = msgProcessing.store.inHand;
         ProcessingModel.processingShelf = msgProcessing.shelf.good;
         ProcessingModel.buildingCode = msgProcessing.info.mId
-
     end
 end

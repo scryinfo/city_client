@@ -207,7 +207,7 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
     warehouseView.gameObject.name = "WarehouseRateItem"
     local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
     self.leftData[3] = warehouseLuaItem
 
     ---货架Item --左边第四个
@@ -249,7 +249,7 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
     warehouseView.gameObject.name = "WarehouseRateItem"
     local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
     self.leftData[3] = warehouseLuaItem
 
     ---货架Item --左边第四个

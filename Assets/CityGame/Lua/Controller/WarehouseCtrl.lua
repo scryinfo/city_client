@@ -18,6 +18,7 @@ ct.sortingItemType = {
 WarehouseCtrl.temporaryItems = {}
 local isShowList;
 local switchIsShow;
+local warehouse
 
 function WarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -29,7 +30,7 @@ end
 
 function WarehouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local warehouse = self.gameObject:GetComponent('LuaBehaviour');
+    --warehouse = self.gameObject:GetComponent('LuaBehaviour');
     warehouse:AddClick(WarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     warehouse:AddClick(WarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     warehouse:AddClick(WarehousePanel.nameBtn.gameObject,self.OnClick_OnName,self);
@@ -51,10 +52,11 @@ function WarehouseCtrl:OnCreate(obj)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
 
-    self.luabehaviour = warehouse
-    self.m_data = {};
-    self.m_data.buildingType = BuildingInType.Warehouse;
-    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --self.luabehaviour = warehouse
+    --self.data = {};
+    ----self.data.buildingType = BuildingInType.Warehouse;
+    --self.data.buildingType = self.m_data.buildingType;
+    --self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
 end
 function WarehouseCtrl:Awake(go)
     self.gameObject = go
@@ -62,13 +64,35 @@ function WarehouseCtrl:Awake(go)
     switchIsShow = false;
 end
 function WarehouseCtrl:Refresh()
-    local itemId = MaterialModel.buildingCode
-    local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-    WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[itemId].storeCapacity;
-    WarehousePanel.Warehouse_Slider.value = numText;
-    WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    warehouse = self.gameObject:GetComponent('LuaBehaviour');
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        self.luabehaviour = warehouse
+        self.data = {};
+        self.data.buildingType = self.m_data.buildingType;
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+
+        local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+        WarehousePanel.Warehouse_Slider.value = numText;
+        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        self.luabehaviour = warehouse
+        self.data = {};
+        self.data.buildingType = self.m_data.buildingType;
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+
+        local numText = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
+        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
+        WarehousePanel.Warehouse_Slider.value = numText;
+        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    end
+    --local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+    --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+    --WarehousePanel.Warehouse_Slider.value = numText;
+    --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
 end
-function WarehouseCtrl:OnClick_returnBtn()
+function WarehouseCtrl:OnClick_returnBtn(go)
+    go:deleteObjInfo()
     UIPage.ClosePage();
     --WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
 end
@@ -271,5 +295,17 @@ function WarehouseCtrl:_getSortItems(type,sortingTable)
             v.id = i
             WarehouseItem:RefreshData(v.goodsDataInfo,i)
         end
+    end
+end
+--关闭面板时清空UI信息，以备其他模块调用
+function WarehouseCtrl:deleteObjInfo()
+    if not self.GoodsUnifyMgr.WarehouseItems then
+        return;
+    else
+        for i,v in pairs(self.GoodsUnifyMgr.WarehouseItems) do
+            destroy(v.prefab.gameObject);
+        end
+        self.GoodsUnifyMgr.WarehouseItems = {};
+        self.GoodsUnifyMgr.WarehouseModelData = {};
     end
 end

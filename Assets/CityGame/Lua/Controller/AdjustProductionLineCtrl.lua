@@ -190,11 +190,8 @@ function AdjustProductionLineCtrl:deleteObjInfo()
         for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
             destroy(v.prefab.gameObject);
         end
-        --实例
         AdjustProductionLineCtrl.materialProductionLine = {};
-        --UI信息
         AdjustProductionLineCtrl.materialProductionUIInfo = {};
-        --预制
         AdjustProductionLineCtrl.materialProductionPrefab = {};
     end
 

@@ -19,20 +19,22 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.buildingType == BuildingInType.Shelf then
         self:_creatStaffItemGoods();
-    elseif buildingData.buildingType == BuildingInType.Warehouse then
-        self:_creatWarehouseItemGoods();
+    elseif buildingData.buildingType == BuildingType.MaterialFactory then
+        self:_creatWarehouseItemGoods(MaterialModel.materialWarehouse);
+    elseif buildingData.buildingType == BuildingType.ProcessingFactory then
+        self:_creatWarehouseItemGoods(ProcessingModel.processingWarehouse);
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
     end
 end
 --仓库
-function GoodsUnifyMgr:_creatWarehouseItemGoods()
-    if not MaterialModel.materialWarehouse then
+function GoodsUnifyMgr:_creatWarehouseItemGoods(table)
+    if not table then
         return;
     end
     self.WarehouseModelData = {}
     local configTable = {}
-    for i,v in pairs(MaterialModel.materialWarehouse) do
+    for i,v in pairs(table) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.num = v.n

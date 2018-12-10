@@ -27,11 +27,27 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        ct.OpenCtrl("WarehouseCtrl")
+        if self.warehouseData.buildingType == BuildingType.MaterialFactory then
+            local data = {}
+            data.dataTab = MaterialModel.materialWarehouse
+            data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("WarehouseCtrl",data)
+        elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory  then
+            local data = {}
+            data.dataTab = ProcessingModel.processingWarehouse
+            data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("WarehouseCtrl",data)
+        end
     end);
-    self.sizeSlider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-    self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-    self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
+    if self.warehouseData.buildingType == BuildingType.MaterialFactory then
+        self.sizeSlider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+        self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+        self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
+    elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
+        self.sizeSlider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
+        self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
+        self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
+    end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);

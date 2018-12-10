@@ -195,6 +195,39 @@ function PlayerTempModel._getCollectStore(datas)
     end
     return storeList
 end
+
+---------------
+--获取item含量
+function PlayerTempModel:_getItemCount(store)
+    local itemTable = {}
+    local storeTemp = BaseTools.TableCopy(store)
+    for i, itemData in pairs(storeTemp.locked) do
+        itemTable[itemData.key.id] = itemData.n
+    end
+    for i, itemData in pairs(storeTemp.inHand) do
+        local tempCount = itemTable[itemData.key.id]
+        if tempCount then
+            itemTable[itemData.key.id] = itemData.n - tempCount
+        else
+            itemTable[itemData.key.id] = itemData.n
+        end
+    end
+    return itemTable
+end
+--获取仓库还剩多少容量
+function PlayerTempModel:_getRemianSpace(store, buildTypeId)
+    local totalCount = PlayerBuildingBaseData[buildTypeId].storeCapacity
+
+    local inUsedCount = 0
+    for i, itemData in pairs(store.reserved) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    for i, itemData in pairs(store.inHand) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    return totalCount - inUsedCount
+end
+
 --获取所有建筑，根据buildingId
 function PlayerTempModel._getBuildingInfo(roleData)
     local buyBuilding = {}

@@ -80,10 +80,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     end
     table.sort(self.orderLineData, function (m, n) return m.createTs > n.createTs end)
 
-    self.store = {}
-    for i, item in ipairs(data.store) do
-        self.store[item.key.id] = item.n
-    end
+    self.store = getItemStore(data.store)  --获取item个数的表
     self.remainWorker = 0
     for i, lineItem in ipairs(data.line) do
         self.remainWorker = self.remainWorker + lineItem.workerNum
@@ -149,14 +146,22 @@ function LaboratoryModel:n_OnReceiveLabRoll(data)
 end
 
 ---本地消息---
---根据id获取库存量
+--根据id获取库存量 --传入单个itemId
 function LaboratoryModel:m_GetItemStoreCount(itemId)
     return self.store[itemId] or 0
+end
+--根据传入的原料合成表返回包含仓库含量的表
+function LaboratoryModel:m_GetFormularData(matTable)
+    for i, item in ipairs(matTable) do
+        item.haveCount = self.store[item.matId]
+    end
+    return matTable
 end
 --获取空闲员工数
 function LaboratoryModel:m_GetWorkerCount()
     return self.remainWorker
 end
+
 --获取科技线界面所需要的信息 --研究线，发明线以及员工数量
 function LaboratoryModel:m_GetScientificData()
     if (not self.researchLines) or (not self.inventionLines) then

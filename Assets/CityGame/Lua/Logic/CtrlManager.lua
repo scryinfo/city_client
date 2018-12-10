@@ -91,8 +91,6 @@ function CtrlManager.Init()
 	modelList[ModelNames.Material] = MaterialModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
-	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
-	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();

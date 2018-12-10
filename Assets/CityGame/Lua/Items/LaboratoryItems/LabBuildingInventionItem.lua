@@ -60,7 +60,7 @@ function LabBuildingInventionItem:_initData(data)
     self.startTimeDown = true
 end
 --倒计时
-function LabBuildingResearchItem:_update()
+function LabBuildingInventionItem:_update()
     if self.startTimeDown then
         self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
         if self.leftSec < 0 then

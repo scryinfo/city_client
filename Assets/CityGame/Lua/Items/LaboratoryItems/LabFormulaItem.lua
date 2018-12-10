@@ -27,11 +27,9 @@ function LabFormulaItem:showState(datas)
     end
 
     for i, itemData in pairs(datas) do
-        ---测试 默认设置为0
-        local haveCount = 0  --通过itemId获取仓库中自己含有的个数
         local showStr
         if haveCount < itemData.matCount then
-            showStr = string.format("<color=%s>%d/%d</color>", LabFormulaItem.static.Red_Color, haveCount, itemData.matCount)
+            showStr = string.format("<color=%s>%d/%d</color>", LabFormulaItem.static.Red_Color, itemData.haveCount, itemData.matCount)
         else
             showStr = string.format("%d/%d", haveCount, itemData.matCount)
         end

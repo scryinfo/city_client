@@ -381,7 +381,10 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
-    PersonDataStack.m_GroundInfos = tempData.ground
+    PersonDataStack.m_groundInfos = tempData.ground
+    --获取自己所有的建筑详情
+    PersonDataStack.m_buysBuilding = tempData.buys or {}
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -431,16 +434,16 @@ end
 --修改自己所拥有土地集合
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
-    if PersonDataStack.m_GroundInfos then
-        for key, value in pairs(PersonDataStack.m_GroundInfos) do
+    if PersonDataStack.m_groundInfos then
+        for key, value in pairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
                 return
             end
         end
     else
-        PersonDataStack.m_GroundInfos = {}
+        PersonDataStack.m_groundInfos = {}
     end
-    table.insert(PersonDataStack.m_GroundInfos,groundInfoData)
+    table.insert(PersonDataStack.m_groundInfos,groundInfoData)
 end
 
 function DataManager.GetMyOwnerID()
@@ -504,10 +507,20 @@ function DataManager.SetMyFriends(tempData)
     end
 end
 
+--获取自己所有的建筑详情
+function DataManager.GetMyAllBuildingDetail()
+    return PersonDataStack.m_buysBuilding
+end
+
+--刷新自己所有的建筑详情
+function DataManager.SetMyAllBuildingDetail(tempData)
+    PersonDataStack.m_buysBuilding = tempData
+end
+
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
-    for key, value in pairs(PersonDataStack.m_GroundInfos) do
+    for key, value in pairs(PersonDataStack.m_groundInfos) do
         if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
             return true
         end
@@ -560,6 +573,8 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
+
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllBuildingDetail"), DataManager.n_OnReceiveAllBuildingDetail)  --获取所有建筑详情
 end
 --清除所有消息回调
 local function ClearEvents()
@@ -654,6 +669,14 @@ function DataManager.n_OnReceiveGroundChange(stream)
             DataManager.AddMyGroundInfo(value)
         end
     end
+end
+
+function DataManager.n_OnReceiveAllBuildingDetail(stream)
+    local buildings = assert(pbl.decode("gs.BuildingSet", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    if not buildings then
+        return
+    end
+    DataManager.SetMyAllBuildingDetail(buildings)
 end
 
 ----------

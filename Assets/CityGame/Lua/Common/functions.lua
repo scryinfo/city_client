@@ -120,6 +120,23 @@ function getTimeBySec(secTime)
 	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
 	return tb
 end
+--根据建筑store获取一个以itemId为key的字典
+function getItemStore(store)
+	local itemTable = {}
+	local storeTemp = BaseTools.TableCopy(store)
+	for i, itemData in pairs(storeTemp.locked) do
+		itemTable[itemData.key.id] = itemData.n
+	end
+	for i, itemData in pairs(storeTemp.inHand) do
+		local tempCount = itemTable[itemData.key.id]
+		if tempCount then
+			itemTable[itemData.key.id] = itemData.n - tempCount
+		else
+			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	return itemTable
+end
 
 function ct.file_exists(path)
 	local file = io.open(path, "rb")

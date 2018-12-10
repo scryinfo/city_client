@@ -4,10 +4,13 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
---TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S")
+TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S")
 --TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S_IoTime")
 --TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S")
+--TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S")
 --TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S_IoTime")
+--TestGroup.active_TestGroup("abel_w17_load_Instantiate_s128_n1000")
+--TestGroup.active_TestGroup("abel_w17_unload_Desotyr_s128_n1000")
 --TestGroup.active_TestGroup("abel_w17_load_s128_n400_Sync")
 --TestGroup.active_TestGroup("abel_w16_Icon_CPU")
 --TestGroup.active_TestGroup("abel_w16_Icon_memory")
@@ -25,8 +28,8 @@ TestGroup.active_TestGroup("abel_w11_showFps")
 --TestGroup.active_TestGroup("Allen_wk14_MyGround")
 --TestGroup.active_TestGroup("cycle_w12_hosueServer")
 --TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --激活测试组
-TestGroup.active_TestGroup("Allen_w9") --激活测试组
-TestGroup.active_TestGroup("abel_w13_SceneOpt") --激活测试组
+--TestGroup.active_TestGroup("Allen_w9") --激活测试组
+--TestGroup.active_TestGroup("abel_w13_SceneOpt") --激活测试组
 --TestGroup.active_TestGroup("abel_w4_proto_Role")
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
 --TestGroup.active_TestGroup("cycle_w11_exchangeModel")

@@ -13,44 +13,51 @@ UnitTest.TestBlockStart()-------------------------------------------------------
     2、
 --]]
 
-UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  function ()
-    --测试数据准备{
-    local testcount = 1000
-    local ResPathList = {}
+--测试数据准备{
+local testcount = 1000
+local ResPathList = {}
+for i = 1, testcount do
+    ResPathList[i] = 'View/TempIcon/A'..i
+end
+
+local ptype = CityLuaUtil.getSpriteType()
+local Icon_Prefab = UnityEngine.Resources.Load("View/TestCycle/Icon_Prefab")
+local loadedOjb = ct.InstantiatePrefab(Icon_Prefab);
+local Icon =  loadedOjb.transform:GetComponent("Image")
+local pSprite = Icon.sprite
+local type = Icon_Prefab.GetType(pSprite)
+--加载测试
+local testLoadFun = function(reslist)
     for i = 1, testcount do
-        ResPathList[i] = 'View/TempIcon/A'..i
+        reslist[i] = UnityEngine.Resources.Load(ResPathList[i])
     end
+end
 
-    local ptype = CityLuaUtil.getSpriteType()
-    local Icon_Prefab = UnityEngine.Resources.Load("View/TestCycle/Icon_Prefab")
-    local loadedOjb = ct.InstantiatePrefab(Icon_Prefab);
-    local Icon =  loadedOjb.transform:GetComponent("Image")
-    local pSprite = Icon.sprite
-    local type = Icon_Prefab.GetType(pSprite)
-
-    --加载测试
-    local testLoadFun = function(reslist)
-        for i = 1, testcount do
-            reslist[i] = UnityEngine.Resources.Load(ResPathList[i])
-        end
+--卸载测试
+local testUnLoadFun = function(reslist)
+    for i = 1, testcount do
+        reslist[i] = UnityEngine.Resources.UnloadAsset(reslist[i])
     end
+end
 
-    --卸载测试
-    local testUnLoadFun = function(reslist)
-        for i = 1, testcount do
-            reslist[i] = UnityEngine.Resources.UnloadAsset(reslist[i])
-        end
+--加载和实例化
+local testLoadAndInsFun = function(pblist, inslist)
+    for i = 1, testcount do
+        pblist[i] = UnityEngine.Resources.Load(ResPathList[i],type)
+        inslist[i] = UnityEngine.GameObject.Instantiate(pblist[i])
     end
+end
 
-    --加载和实例化
-    local testLoadAndInsFun = function(pblist, inslist)
-        for i = 1, testcount do
-            pblist[i] = UnityEngine.Resources.Load(ResPathList[i],type)
-            inslist[i] = UnityEngine.GameObject.Instantiate(pblist[i])
-        end
+--卸载
+local testUnLoadAndDestoryInsFun = function(pblist, inslist)
+    for i = 1, testcount do
+        Destory(inslist[i])
+        UnityEngine.Resources.unLoad(pblist[i])
     end
+end
 
-    --测试数据准备}
+--测试数据准备}
+UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  function ()
 
     --Load 测试------------------------------------------------------------------------------------------------------------{
     --load 内存用量
@@ -66,48 +73,66 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     --正常1000个128图标尺寸应该为 16*1000 = 15.625M
     --编辑器中看， 一个icon压缩为ect2的话，大小为8k， 那也不止 836 kb, 这里的 836 kb应该不是真正把资源加载到内存中了，
     --那么真正的资源加载发生在上面时候？
-    reslist = {}
     collectgarbage("collect")
-    --load IO执行时间
-    local reslist = {}
-    collectgarbage("collect")
-    UnitTest.PerformanceTest("abel_w17_load_s128_n1000_S_IoTime","[同步加载1000个尺寸为128的执行时间]", function()
-        testLoadFun(reslist)
-    end)
 
-    --reslist = {}
-    --timer = FrameTimer.New(memtest, 3, 0)
-    --timer:Start()
     --测试unload内存用量
     collectgarbage("collect")
     UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_Unload_s128_n1000_S_mem",function()
         testUnLoadFun(reslist)
     end)
 
+    --Instantiate 内存用量, 看看内存是否是预期的
+    collectgarbage("collect")
+    UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_load_Instantiate_s128_n1000_S_mem",function()
+        local prefablist = {}
+        local inslist = {}
+        testLoadAndInsFun(prefablist, inslist)
+    end)
+
+    local prefablist = {}
+    local inslist = {}
+    testLoadAndInsFun(prefablist, inslist)
+
+    collectgarbage("collect")
+    --内存开销
+    UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_unload_Desotyr_s128_n1000_mem",function()
+        local prefablist = {}
+        local inslist = {}
+        testLoadAndInsFun(prefablist, inslist)
+    end)
+    --Instantiate 测试------------------------------------------------------------------------------------------------------------
+end)
+
+UnitTest.Exec("abel_w17_load_s128_n1000_S_IoTime", "abel_w17_load_s128_n1000_S_IoTime",  function ()
+
+    --load IO执行时间
+    local reslist = {}
+    collectgarbage("collect")
+    UnitTest.PerformanceTest("abel_w17_load_s128_n1000_S_IoTime","[同步加载1000个尺寸为128的执行时间]", function()
+        testLoadFun(reslist)
+    end)
     --测试unload IO操作时间
     testLoadFun(reslist)
     collectgarbage("collect")
     UnitTest.PerformanceTest("abel_w17_Unload_s128_n1000_S_IoTime","[同步加载1000个尺寸为128的执行时间]", function()
         testUnLoadFun(reslist)
     end)
-
-    --Load 测试------------------------------------------------------------------------------------------------------------}
-
-    --unLoad 测试------------------------------------------------------------------------------------------------------------{
-
-    --unLoad 测试------------------------------------------------------------------------------------------------------------}
-
-    --Instantiate 测试------------------------------------------------------------------------------------------------------------
-    --Instantiate 内存用量, 看看内存是否是预期的
+    --IO执行时间
     collectgarbage("collect")
-    UnitTest.MemoryConsumptionTest("abel_w17_load_Instantiate_s128_n1000","abel_w17_load_Instantiate_s128_n1000_S_mem",function()
+    UnitTest.PerformanceTest("abel_w17_load_Instantiate_s128_n1000","[同步加载并实例化1000个尺寸为128的执行时间]", function()
         local prefablist = {}
         local inslist = {}
         testLoadAndInsFun(prefablist, inslist)
     end)
-    --Instantiate 测试------------------------------------------------------------------------------------------------------------
-
+    --IO执行时间
+    testLoadAndInsFun(prefablist, inslist)
+    collectgarbage("collect")
+    UnitTest.PerformanceTest("abel_w17_unload_Desotyr_s128_n1000","[同步卸载并销毁1000个尺寸为128的实例的执行时间]", function()
+        testUnLoadAndDestoryInsFun(prefablist, inslist)
+    end)
 end)
+
+
 
 --同步加载prefab资源对比测试
 UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  function ()

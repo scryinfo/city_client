@@ -28,13 +28,13 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     end
 end
 --仓库
-function GoodsUnifyMgr:_creatWarehouseItemGoods(table)
-    if not table then
+function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
+    if not warehouseTable then
         return;
     end
     self.WarehouseModelData = {}
     local configTable = {}
-    for i,v in pairs(table) do
+    for i,v in pairs(warehouseTable) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.num = v.n

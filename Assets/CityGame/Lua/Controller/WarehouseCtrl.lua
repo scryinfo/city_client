@@ -30,7 +30,6 @@ end
 
 function WarehouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    --warehouse = self.gameObject:GetComponent('LuaBehaviour');
     warehouse:AddClick(WarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     warehouse:AddClick(WarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     warehouse:AddClick(WarehousePanel.nameBtn.gameObject,self.OnClick_OnName,self);
@@ -44,8 +43,6 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
-    --初始化物品上架还是运输
-    self.operation = nil;
 
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
@@ -64,6 +61,9 @@ function WarehouseCtrl:Awake(go)
     switchIsShow = false;
 end
 function WarehouseCtrl:Refresh()
+    --初始化物品上架还是运输
+    self.operation = nil;
+
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = warehouse
@@ -86,15 +86,11 @@ function WarehouseCtrl:Refresh()
         WarehousePanel.Warehouse_Slider.value = numText;
         WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     end
-    --local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-    --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-    --WarehousePanel.Warehouse_Slider.value = numText;
-    --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     go:deleteObjInfo()
     UIPage.ClosePage();
-    --WarehouseCtrl:OnClick_rightInfo(not switchIsShow)
 end
 --搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)
@@ -144,12 +140,12 @@ function WarehouseCtrl:getWarehouseCapacity(table)
     end
 end
 --Open shelf
-function WarehouseCtrl:OnClick_shelfBtn()
-    WarehouseCtrl:OnClick_rightInfo(not switchIsShow,0)
+function WarehouseCtrl:OnClick_shelfBtn(go)
+    go:OnClick_rightInfo(not switchIsShow,0)
 end
 --Open transpor
-function WarehouseCtrl:OnClick_transportBtn()
-    WarehouseCtrl:OnClick_rightInfo(not switchIsShow,1)
+function WarehouseCtrl:OnClick_transportBtn(go)
+    go:OnClick_rightInfo(not switchIsShow,1)
 end
 --名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
@@ -248,10 +244,11 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         if number == 0 then
             WarehousePanel.shelf:SetActive(true);
             self.operation = ct.goodsState.shelf;
-            Event.Brocast("c_GoodsItemChoose")
         else
             WarehousePanel.transport:SetActive(true);
             self.operation = ct.goodsState.transport;
+        end
+        if self.GoodsUnifyMgr.WarehouseItems ~= nil then
             Event.Brocast("c_GoodsItemChoose")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
@@ -259,18 +256,19 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         WarehousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         if number == 0 then
             WarehousePanel.shelf:SetActive(false);
-            Event.Brocast("c_GoodsItemDelete")
             for i in pairs(WarehouseCtrl.temporaryItems) do
                 Event.Brocast("c_temporaryifNotGoods", i)
             end
             self.operation = nil;
         else
             WarehousePanel.transport:SetActive(false);
-            Event.Brocast("c_GoodsItemDelete")
             for i in pairs(WarehouseCtrl.temporaryItems) do
                 Event.Brocast("c_temporaryifNotGoods", i)
             end
             self.operation = nil;
+        end
+        if self.GoodsUnifyMgr.WarehouseItems ~= nil then
+            Event.Brocast("c_GoodsItemDelete")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);
     end
@@ -303,6 +301,7 @@ function WarehouseCtrl:deleteObjInfo()
         return;
     else
         for i,v in pairs(self.GoodsUnifyMgr.WarehouseItems) do
+            v:closeEvent()
             destroy(v.prefab.gameObject);
         end
         self.GoodsUnifyMgr.WarehouseItems = {};

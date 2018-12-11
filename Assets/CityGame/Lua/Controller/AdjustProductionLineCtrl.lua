@@ -194,5 +194,4 @@ function AdjustProductionLineCtrl:deleteObjInfo()
         AdjustProductionLineCtrl.materialProductionUIInfo = {};
         AdjustProductionLineCtrl.materialProductionPrefab = {};
     end
-
 end

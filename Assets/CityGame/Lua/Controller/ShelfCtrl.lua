@@ -38,6 +38,9 @@ end
 
 function ShelfCtrl:Refresh()
     shelf = self.gameObject:GetComponent('LuaBehaviour')
+    if self.m_data == nil then
+        return
+    end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = shelf
         self.data = {}
@@ -95,8 +98,21 @@ function ShelfCtrl.OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
-function ShelfCtrl:OnClick_createGoods()
-    ct.OpenCtrl("WarehouseCtrl")
+function ShelfCtrl:OnClick_createGoods(go)
+    if go.m_data == nil then
+        return
+    end
+    if go.m_data.buildingType == BuildingType.MaterialFactory then
+        local data = {}
+        data.dataTab = MaterialModel.materialWarehouse
+        data.buildingType = BuildingType.MaterialFactory
+        ct.OpenCtrl("WarehouseCtrl",data)
+    elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
+        local data = {}
+        data.dataTab = ProcessingModel.processingWarehouse
+        data.buildingType = BuildingType.ProcessingFactory
+        ct.OpenCtrl("WarehouseCtrl",data)
+    end
 end
 
 --排序

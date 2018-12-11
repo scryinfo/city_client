@@ -60,12 +60,12 @@ end
 function CityInfoCtrl:_initData()
     --CityInfoCtrl:_createCityInfo(CityInfoPathType[1],CityInfoPanel.right,1)
     CityInfoPanel.cityName.text = CityInfoData[1].cityName;
-    CityInfoPanel.cityScale.text = CityInfoData[1].cityScale;
-    CityInfoPanel.citizenNum.text = CityInfoData[1].citizenNum;
+    CityInfoPanel.citySize.text = CityInfoData[1].cityScale;
+    CityInfoPanel.citizen.text = CityInfoData[1].citizenNum;
     CityInfoPanel.man.text = CityInfoData[1].man;
     CityInfoPanel.woMan.text = CityInfoData[1].woMan;
     CityInfoPanel.cityFund.text = CityInfoData[1].cityFund;
-    for i, v in pairs(CityInfoInHand) do
+    for i, v in ipairs(CityInfoInHand) do
         --local cityInfo_prefab = self:_createCityInfoPab(CityInfoCtrl.static.CityInfo_PATH,CityInfoPanel.content)
         local cityInfo_prefab = CityInfoPanel.content:GetChild(i-1).gameObject;
         local cityInfoLuaItem = CityInfoItem:new(CityInfoCtrlBehaviour,cityInfo_prefab,self,v,i)
@@ -124,6 +124,7 @@ function CityInfoCtrl:_initData()
 
     CityInfoPanel.line :InjectDatas(verts,Color.New(1,1,1,1))
     CityInfoPanel.line:InjectDatas(verts1,Color.New(0,1,0,1))
+
 end
 
 --点击城市信息左边的背景
@@ -133,14 +134,16 @@ function CityInfoCtrl:c_cityInfoBg(go)
     end
     go.yellowBg:SetActive(true)
     temp = go.yellowBg
+    ct.log("system","人数不能为0000000000000")
     --生成实例
-    if cityInfo[go.id] ==nil then
-        CityInfoCtrl:_createCityInfo(go.id)
+    local lenght = go.DataInfo.layout
+    if lenght ~= nil then
+        ct.OpenCtrl("CityInfoDataCtrl",go.DataInfo.layout)
+        CityInfoPanel.basicInfo:SetActive(false)
+    else
+        CityInfoPanel.basicInfo:SetActive(true)
+        Event.Brocast("c_bacK")
     end
-    tempShow:SetActive(false);
-    cityInfo[go.id].show:SetActive(true);
-    tempShow = cityInfo[go.id].show
-
 end
 
 --生成预制
@@ -153,10 +156,10 @@ function CityInfoCtrl:_createCityInfoPab(path,parent)
     return rect
 end
 
---生成实例
+--[[--生成实例
 function CityInfoCtrl:_createCityInfo(id)
     --local cityInfo_prefab = self:_createCityInfoPab(path,parent)
     local cityInfo_prefab = CityInfoPanel.right:GetChild(id-1).gameObject;
     local cityInfoLuaItem = CityDataItem:new(CityInfoCtrlBehaviour,cityInfo_prefab,self,CityInfoData[id],id)
     cityInfo[id] = cityInfoLuaItem;
-end
+end]]

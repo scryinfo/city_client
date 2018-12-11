@@ -7,34 +7,43 @@ CityMaterialCtrl = class('CityMaterialCtrl',UIPage)
 UIPage:ResgisterOpen(CityMaterialCtrl) --注册打开的方法
 local CityInfoCtrlBehaviour;
 local gameObject;
-local materialItems
-local prafabItem = {}
-local Items = {}
+local close
+local prefab
 
 function  CityMaterialCtrl:bundleName()
     return "CityMaterialPanel"
 end
 
 function CityMaterialCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    --UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 --启动事件--
 function CityMaterialCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
+    close = nil
+    if  self.titlePrefabs ~= nil then
+        prefab = self.titlePrefabs[1]
+    end
     CityInfoCtrlBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityInfoCtrlBehaviour:AddClick(CityMaterialPanel.backBtn,self.OnBackBtn,self);
     CityInfoCtrlBehaviour:AddClick(CityMaterialPanel.companyNumBtn,self.OnCompanyNumBtn,self);
-    CityMaterialPanel.time.text = os.date("%m月".."\n".."%d");
+
+
+--[[
+    self.prefabs = {}
+    self.prefabs = tableSort(self.m_data.CityCommodityProcess,CityMaterialPanel.company)   --生成cityinfoName表格
+]]
+
     Event.AddListener("c_OnBtn",self.c_OnBtn,self)
+    
 end
 function CityMaterialCtrl:Awake(go)
     self.gameObject = go
-    materialItems = {}
     CityMaterialCtrl.CityMaterial = {}
-    CityMaterialCtrl.CityMaterial = CityMaterial
+    CityMaterialCtrl.CityMaterial = CityMaterialData
     CityMaterialCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.material = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -42,8 +51,32 @@ function CityMaterialCtrl:Awake(go)
     self.material.mClearData = CityMaterialCtrl.static.MaterialClearData
     CityMaterialPanel.materialScroll:ActiveLoopScroll(self.material, #self.CityMaterial)
 
-    --tableSort(test,CityMaterialPanel.cityName)
+end
 
+function CityMaterialCtrl:Refresh()
+    CityMaterialPanel.time.text = os.date("%m月".."\n".."%d");
+    if self.m_data == nil then
+        return
+    end
+    if self.m_data.Title ~= nil then
+        self.titlePrefabs = tableSort( self.m_data.Title,CityMaterialPanel.title)
+        self.titlePrefabs[1].transform:Find("Text"):GetComponent("Text").color = getColorByInt(255,255,255,255)
+        self.titlePrefabs[1].transform:Find("bg").localScale = Vector3.zero
+        self.titlePrefabs[1].transform:Find("bgSelect").localScale = Vector3.one
+        CityMaterialPanel.toggle.transform.localScale = Vector3.one
+        CityMaterialPanel.down.offsetMax = Vector2.New(0,-300)
+        self.prefabs = tableSort(self.m_data.Jump[self.m_data.Title[1].data],CityMaterialPanel.company)  --生成cityinfoName表格
+        for i, v in pairs(self.titlePrefabs) do
+            v.gameObject:GetComponent("Button").onClick:AddListener(function ()
+                local name = v.transform:Find("Text"):GetComponent("Text").text
+                self:OnToggle(self.m_data.Jump[name],CityMaterialPanel.company,self.prefabs,v)
+            end)
+        end
+    else
+        CityMaterialPanel.toggle.transform.localScale = Vector3.zero
+        CityMaterialPanel.down.offsetMax = Vector2.New(0,-146)
+        self.prefabs = tableSort(self.m_data.CityData,CityMaterialPanel.company)  --生成cityinfoName表格
+    end
 end
 
 --返回按钮
@@ -55,23 +88,9 @@ end
 CityMaterialCtrl.static.MaterialProvideData = function(transform, idx)
 
     idx = idx + 1
-   -- local id = CityMaterialPanel.content.transform.childCount
     local item = CityMaterialItem:new(CityMaterialCtrl.CityMaterial[idx], transform,idx)
+    local materialItems = {}
     materialItems[idx] = item
---[[    for i = 1,  CityMaterialPanel.content.transform.childCount do
-        prafabItem[i] = CityMaterialPanel.content.transform:GetChild(i-1);
-    end
-    for k, v in pairs(materialItems) do
-        for i, j in pairs(prafabItem) do
-            if v.data.name == prafabItem[i]:Find("cityinfoData/name/Text"):GetComponent("Text").text then
-                v.id = i
-                Items[k] = i
-            end
-        end
-    end
-    ct.log("system","人数不能为1111111111")]]
-   -- materialItems[idx].line:SetActive(false)
-
 end
 CityMaterialCtrl.static.MaterialClearData = function(transform)
 end
@@ -82,26 +101,30 @@ function CityMaterialCtrl:OnCompanyNumBtn(go)
     CityMaterialPanel.materialScroll:ActiveLoopScroll(go.material, #go.CityMaterial)
 end
 
-function CityMaterialCtrl:c_OnBtn(go)
+function CityMaterialCtrl:c_OnBtn(go,isoppen)
+    if close ~= nil then
+        CityMaterialCtrl:Close(close)
+    end
+    if isoppen  then
+        CityMaterialCtrl:Oppen(go)
+--[[    else
+        CityMaterialCtrl:Close(go)]]
+    end
+    close = go
+    --UpdataTable(MaterialCommodityProcess1,CityMaterialPanel.company, self.prefabs)
+end
 
-    --  self.transform.sizeDelta.height = 130
-    go.transform.sizeDelta = Vector2.New(1920,560)
-    go.line:SetActive(true)
-    --self.cityinfoData.sizeDelta.height = 0
-    go.cityinfoData.offsetMin = Vector2.New(0,430)
-
-    --[[    ct.log("system","人数不能为1111111111")
-        CityMaterialPanel.content.enabled = false
-        CityMaterialPanel.materialLoop.enabled = false
-        go.line:SetActive( true)
-        local b = Items[go.id ]
-        for i =b+1, CityMaterialPanel.content.transform.childCount do
-            local a = go.id
-            a = a+1
-            local temp = prafabItem[i].transform.anchoredPosition
-            temp = temp + Vector2.New(0,-300);
-            prafabItem[i].transform.anchoredPosition = temp
-        end]]
+function CityMaterialCtrl:OnToggle(table,gameObject,prefabs,go)
+    if prefab ~= nil then
+        prefab.transform:Find("Text"):GetComponent("Text").color = getColorByInt(90,118,213,255)
+        prefab.transform:Find("bg").localScale = Vector3.one
+        prefab.transform:Find("bgSelect").localScale = Vector3.zero
+    end
+    UpdataTable(table,gameObject,prefabs)
+    go.transform:Find("Text"):GetComponent("Text").color = getColorByInt(255,255,255,255)
+    go.transform:Find("bg").localScale = Vector3.zero
+    go.transform:Find("bgSelect").localScale = Vector3.one
+    prefab = go
 end
 
 --排序方法
@@ -113,4 +136,16 @@ function CityMaterialCtrl:_createCityInfoPab(path,parent)
     go.transform:SetParent(parent.transform);
     rect.transform.localScale = Vector3.one;
     return rect
+end
+--打开曲线图
+function CityMaterialCtrl:Oppen(go)
+    go.transform.sizeDelta = Vector2.New(1920,560)
+    go.change:Change(go.element,560)
+    go.gameObject:SetActive(true)
+end
+--关闭曲线图
+function CityMaterialCtrl:Close(go)
+    go.transform.sizeDelta = Vector2.New(1920,130)
+    go.change:Change(go.element,130)
+    go.gameObject:SetActive(false)
 end

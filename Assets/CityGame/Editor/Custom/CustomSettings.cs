@@ -193,6 +193,7 @@ public static class CustomSettings
         _GT(typeof(BuildManager)),
         _GT(typeof(RayManager)),
         _GT(typeof(GridSort)),
+        _GT(typeof(ChangePreferredHeight)),
 
         //City
         _GT(typeof(City.NetworkInterface)),

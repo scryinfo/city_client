@@ -11,6 +11,7 @@ CityInfoItem = class('CityInfoItem')
 function CityInfoItem:initialize(inluabehaviour, prefab, mgr, DataInfo ,id)
     self.prefab = prefab;
     self.DataInfo = DataInfo;
+    self.layout = DataInfo.Layout;
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
@@ -19,7 +20,7 @@ function CityInfoItem:initialize(inluabehaviour, prefab, mgr, DataInfo ,id)
     self.yellowBg = self.prefab.transform:Find("yellowBg").gameObject;
     self.name = self.prefab.transform:Find("name").gameObject:GetComponent("Text");
 
-    self.name.text = DataInfo
+    self.name.text = DataInfo.name
     self.yellowBg:SetActive(false)
     self._luabehaviour:AddClick(self.bgBtn, self.OBgBtn, self);
 

@@ -118,6 +118,10 @@ end
 function tableSort(table,gameObject)
 	TableSort.tableSort(table,gameObject)
 end
+--修改表数据
+function UpdataTable(table,gameObject,prefabs)
+	TableSort:UpdataTable(table,gameObject,prefabs)
+end
 
 function ct.file_exists(path)
 	local file = io.open(path, "rb")

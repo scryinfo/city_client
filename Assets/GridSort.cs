@@ -17,29 +17,29 @@ namespace UnityEngine
         [Header("宽度间隙")]
         public float spaceWidth; //宽度间隙
 
-        public void _initData(float[] width, float spaceWidths )
+        public void _initData(float[] width, float spaceWidths,GameObject[] prefabs )
         {
             cellWidth = new float[width.Length];
             for (int i = 0; i < width.Length; i++)
             {
                 cellWidth[i] = width[i];
             }
-            spaceWidth = spaceWidths;
-        }
-        private void Start()
-        {
-            widthCount = this.transform.childCount;
-            width = this.transform.GetComponent<RectTransform>().rect.width;
-            height = this.transform.GetComponent<RectTransform>().rect.height;
-            childObj = new Transform[widthCount];
-            for (int i = 0; i < widthCount; i++)
+            for (int i = 0; i < prefabs.Length; i++)
             {
-                childObj[i] = this.transform.GetChild(i);
+                childObj[i] = prefabs[i].transform ;
             }
             if (widthCount > childObj.Length)
                 return;
-            Stro(childObj, widthCount, cellWidth, spaceWidth);
+            spaceWidth = spaceWidths;
         }
+        //public void Start()
+        //{
+        //    widthCount = cellWidth.Length;
+        //    width = this.transform.GetComponent<RectTransform>().rect.width;
+        //    height = this.transform.GetComponent<RectTransform>().rect.height;
+        //    childObj = new Transform[widthCount];
+        //    Stro(childObj, widthCount, cellWidth, spaceWidth);
+        //}
         private void Stro(Transform[] childObj, int row, float[] cellWidth, float spaceWidth)
         {
             float lenght = 0;

@@ -49,6 +49,40 @@ public class Packager {
         BuildAssetResource(BuildTarget.StandaloneWindows);
     }
 
+    public static void CopyDir(string fromDir, string toDir)
+    {
+        if (!Directory.Exists(fromDir))
+            return;
+
+        if (!Directory.Exists(toDir))
+        {
+            Directory.CreateDirectory(toDir);
+        }
+
+        string[] files = Directory.GetFiles(fromDir);
+        foreach (string formFileName in files)
+        {
+            string fileName = Path.GetFileName(formFileName);
+            string toFileName = Path.Combine(toDir, fileName);
+            File.Copy(formFileName, toFileName);
+        }
+        string[] fromDirs = Directory.GetDirectories(fromDir);
+        foreach (string fromDirName in fromDirs)
+        {
+            string dirName = Path.GetFileName(fromDirName);
+            string toDirName = Path.Combine(toDir, dirName);
+            CopyDir(fromDirName, toDirName);
+        }
+    }
+
+    public static void MoveDir(string fromDir, string toDir)
+    {
+        if (!Directory.Exists(fromDir))
+            return;
+
+        CopyDir(fromDir, toDir);
+        Directory.Delete(fromDir, true);
+    }
 
     public static void BuildLuaBundel(BuildTarget target)
     {
@@ -65,12 +99,22 @@ public class Packager {
             HandleLuaFile();
         }
 
-        string resPath = "Assets/" + AppConst.AssetDir;
+        string luaPath = "Assets/" + AppConst.AssetDir+"/lua";
+        if (Directory.Exists(luaPath)) {
+            Directory.Delete(luaPath, true);
+        }   
+        
+        string resPath = "Assets/luaUpdate";
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle |
                                           BuildAssetBundleOptions.UncompressedAssetBundle;        
 
         BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
-        
+
+        MoveDir(resPath+"/lua", luaPath);
+
+        string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
+        if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
+        AssetDatabase.Refresh();
     }
 
     /// <summary>

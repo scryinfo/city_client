@@ -63,7 +63,8 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     --Load 测试------------------------------------------------------------------------------------------------------------{
     --load 内存用量
     collectgarbage("collect")
-    ct.log('abel_w17_load_s128_n1000_S','[abel_w17_load_s128_n1000_S_mem] hahah')
+    ct.log('abel_w17_load_s128_n1000_S','[abel_w17_load_s128_n1000_S_mem] xixi')
+
     UnitTest.MemoryConsumptionTest("abel_w17_load_s128_n1000_S","abel_w17_load_s128_n1000_S_mem",function()
         testLoadFun(reslist)
     end)
@@ -106,7 +107,7 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
         end, 10, 0)
         timer:Start()
     end, 10, 0)
-    timer:Start()
+    --timer:Start()
     --Instantiate 测试------------------------------------------------------------------------------------------------------------
 end)
 

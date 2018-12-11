@@ -2,6 +2,7 @@ ShelfCtrl = class('ShelfCtrl',UIPage)
 UIPage:ResgisterOpen(ShelfCtrl) --注册打开的方法
 
 local isShowList;
+local shelf
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
@@ -16,7 +17,6 @@ end
 function ShelfCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
 
-    local shelf = self.gameObject:GetComponent('LuaBehaviour')
     shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn, self);
     shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
     shelf:AddClick(ShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
@@ -24,10 +24,10 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.priceBtn.gameObject,self.OnClick_OnpriceBtn, self);
     shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods, self);
 
-    self.luabehaviour = shelf
-    self.m_data = {};
-    self.m_data.buildingType = BuildingInType.Shelf
-    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --self.luabehaviour = shelf
+    --self.m_data = {};
+    --self.m_data.buildingType = BuildingInType.Shelf
+    --self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
 
 end
 
@@ -36,11 +36,26 @@ function ShelfCtrl:Awake(go)
     isShowList = false;
 end
 
-function ShelfCtrl:Refesh()
+function ShelfCtrl:Refresh()
+    shelf = self.gameObject:GetComponent('LuaBehaviour')
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        self.luabehaviour = shelf
+        self.data = {}
+        self.data.type = BuildingInType.Shelf
+        self.data.buildingType = self.m_data.buildingType
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        self.luabehaviour = shelf
+        self.data = {}
+        self.data.buildingType = self.m_data.buildingType
+        self.data.type = BuildingInType.Shelf
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+    end
 
 end
 
-function ShelfCtrl:OnClick_return_Btn()
+function ShelfCtrl:OnClick_return_Btn(go)
+    go:deleteObjInfo();
     UIPage.ClosePage();
 end
 --根据名字排序
@@ -114,7 +129,18 @@ function ShelfCtrl:_getSortItems(type,sortingTable)
         end
     end
 end
-
+--关闭面板时清空UI信息，以备其他模块调用
+function ShelfCtrl:deleteObjInfo()
+    if not self.GoodsUnifyMgr.items then
+        return;
+    else
+        for i,v in pairs(self.GoodsUnifyMgr.items) do
+            destroy(v.prefab.gameObject);
+        end
+        self.GoodsUnifyMgr.items = {};
+        self.ModelDataList = {};
+    end
+end
 function ShelfCtrl.OnCloseBtn()
     ShelfPanel.OnDestroy();
 end

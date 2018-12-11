@@ -34,7 +34,17 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        ct.OpenCtrl("ShelfCtrl")
+        if self.shelfData.buildingType == BuildingType.MaterialFactory then
+            local data = {}
+            data.dataTab = MaterialModel.materialShelf
+            data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("ShelfCtrl",data)
+        elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
+            local data = {}
+            data.dataTab = ProcessingModel.processingShelf
+            data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("ShelfCtrl",data)
+        end
     end);
 
     if self.shelfData.buildingType == BuildingType.MaterialFactory then

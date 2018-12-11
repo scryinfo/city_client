@@ -17,11 +17,13 @@ GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProduct
 
 function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
-    if buildingData.buildingType == BuildingInType.Shelf then
-        self:_creatStaffItemGoods();
-    elseif buildingData.buildingType == BuildingType.MaterialFactory then
+    if buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.MaterialFactory then
+        self:_creatStaffItemGoods(MaterialModel.materialShelf);
+    elseif buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.ProcessingFactory then
+        self:_creatStaffItemGoods(ProcessingModel.processingShelf);
+    elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.MaterialFactory then
         self:_creatWarehouseItemGoods(MaterialModel.materialWarehouse);
-    elseif buildingData.buildingType == BuildingType.ProcessingFactory then
+    elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.ProcessingFactory then
         self:_creatWarehouseItemGoods(ProcessingModel.processingWarehouse);
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
@@ -55,13 +57,13 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
     end
 end
 --货架
-function GoodsUnifyMgr:_creatStaffItemGoods()
-    if not MaterialModel.materialShelf then
+function GoodsUnifyMgr:_creatStaffItemGoods(shelfTable)
+    if not shelfTable then
         return;
     end
     self.ModelDataList={}
     local configTable = {}
-    for i,v in pairs(MaterialModel.materialShelf) do
+    for i,v in pairs(shelfTable) do
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n

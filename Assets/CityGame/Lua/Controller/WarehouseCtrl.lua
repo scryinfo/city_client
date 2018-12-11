@@ -68,6 +68,7 @@ function WarehouseCtrl:Refresh()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = warehouse
         self.data = {};
+        self.data.type = BuildingInType.Warehouse
         self.data.buildingType = self.m_data.buildingType;
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
 
@@ -78,6 +79,7 @@ function WarehouseCtrl:Refresh()
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.luabehaviour = warehouse
         self.data = {};
+        self.data.type = BuildingInType.Warehouse
         self.data.buildingType = self.m_data.buildingType;
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
 

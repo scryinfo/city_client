@@ -38,7 +38,7 @@ public class Packager {
         BuildAssetResource(BuildTarget.Android);
     }
     //新增的Lua文件必须执行 BuildAndroidResource，非新增的Lua改动执行 BuildAndroidLua 即可 
-    [MenuItem("LuaFramework/Update Android Lua", false, 102)]
+    [MenuItem("LuaFramework/Update Android LuaBundle Only", false, 102)]
     public static void BuildAndroidLua()
     {
         BuildLuaBundel(BuildTarget.Android);
@@ -102,9 +102,14 @@ public class Packager {
         string luaPath = "Assets/" + AppConst.AssetDir+"/lua";
         if (Directory.Exists(luaPath)) {
             Directory.Delete(luaPath, true);
-        }   
-        
+        }        
+
         string resPath = "Assets/luaUpdate";
+        if (!Directory.Exists(resPath))
+        {
+            Directory.CreateDirectory(resPath);
+        }
+
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle |
                                           BuildAssetBundleOptions.UncompressedAssetBundle;        
 
@@ -114,6 +119,7 @@ public class Packager {
 
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
+        if (Directory.Exists(resPath)) Directory.Delete(resPath, true);
         AssetDatabase.Refresh();
     }
 

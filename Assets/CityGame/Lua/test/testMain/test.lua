@@ -508,11 +508,11 @@ UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
     --    HouseModel:Awake()
     --end
     --ct.OpenCtrl("LaboratoryCtrl", {})
-    ct.OpenCtrl("LabResearchCtrl", {})
+    --ct.OpenCtrl("LabResearchCtrl", {})
 end)
 
 UnitTest.Exec("cycle_w15_laboratory03", "test_cycle_w15_laboratory03",  function ()
-    --ct.OpenCtrl("AddLineChooseItemCtrl", {})
+    --ct.OpenCtrl("LaboratoryCtrl", {})
 end)
 
 UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()

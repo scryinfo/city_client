@@ -27,12 +27,8 @@ function LabScientificLinePanel.InitPanel()
 
     --提示框部分
     this.changeStaffCountBtn = transform:Find("changeStaffCountBtn"):GetComponent("Button")
-    this.changeStaffCountItemRect = transform:Find("changeStaffCountBtn/changeStaffCountItem"):GetComponent("RectTransform")
-    this.staffText = transform:Find("changeStaffCountBtn/changeStaffCountItem/staffRoot/staffText"):GetComponent("Text")
-    this.staffSlider = transform:Find("changeStaffCountBtn/changeStaffCountItem/staffRoot/staffScrollbar"):GetComponent("Slider")
-    this.delBtn = transform:Find("changeStaffCountBtn/changeStaffCountItem/btnRoot/delBtn"):GetComponent("Button")
-    this.delDisableImgTran = transform:Find("changeStaffCountBtn/changeStaffCountItem/btnRoot/delBtn/disableImg")
-    this.okBtn = transform:Find("changeStaffCountBtn/changeStaffCountItem/btnRoot/okBtn")
+    this.researchTipItem = LabScientificChangeStaffItem:new(transform:Find("changeStaffCountBtn/researchChangeStaffItem"), this.changeStaffCountBtn)
+    this.inventTipItem = LabScientificChangeStaffItem:new(transform:Find("changeStaffCountBtn/inventChangeStaffItem"), this.changeStaffCountBtn)
 end
 ---状态显示
 function LabScientificLinePanel._researchToggleState(isOn)

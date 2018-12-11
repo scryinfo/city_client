@@ -74,20 +74,22 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 
     self.hashLineData = {}  --以lineId为key存储所有的线的信息
     self.orderLineData = {}  --由创建时间排序的所有line信息
-    for i, lineInfo in pairs(data.line) do
-        self.hashLineData[lineInfo.id] = lineInfo
-        self.orderLineData[#self.orderLineData + 1] = lineInfo
-    end
-    table.sort(self.orderLineData, function (m, n) return m.createTs > n.createTs end)
-
-    self.store = getItemStore(data.store)  --获取item个数的表
     self.remainWorker = 0
-    for i, lineItem in ipairs(data.line) do
-        self.remainWorker = self.remainWorker + lineItem.workerNum
+    if data.line then
+        for i, lineInfo in pairs(data.line) do
+            self.hashLineData[lineInfo.id] = lineInfo
+            self.orderLineData[#self.orderLineData + 1] = lineInfo
+        end
+        table.sort(self.orderLineData, function (m, n) return m.createTs > n.createTs end)
+
+        for i, lineItem in pairs(data.line) do
+            self.remainWorker = self.remainWorker + lineItem.workerNum
+        end
     end
     self.maxWorkerNum = PlayerBuildingBaseData[data.info.mId].maxWorkerNum
     self.remainWorker = self.maxWorkerNum - self.remainWorker
 
+    self.store = getItemStore(data.store)  --获取item个数的表
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info.mId, data.info.ownerId)
 end
 --添加研究发明线
@@ -108,19 +110,25 @@ function LaboratoryModel:n_OnReceiveLaunchLine(data)
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(data)
+    local type
     if self.hashLineData[data.lineId] then
+        type = self.hashLineData[data.lineId].type
         self.hashLineData[data.lineId] = nil
     else
-        ct.log("", "不存在线但是请求删除")
+        ct.log("cycle_w15_laboratory03", "不存在线但是请求删除")
+        return
     end
     for i, item in ipairs(self.orderLineData) do
         if item.id == data.lineId then
             table.remove(self.orderLineData, i)
         end
     end
-
-    --ctrl找到对应item，执行删除
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', data)
+    self:_getScientificLine()
+    if type == 0 then
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', type, self.researchLines)
+    else
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', type, self.inventionLines)
+    end
 end
 --更新某条线的具体数据
 function LaboratoryModel:n_OnReceiveLineChange(data)
@@ -165,18 +173,22 @@ end
 --获取科技线界面所需要的信息 --研究线，发明线以及员工数量
 function LaboratoryModel:m_GetScientificData()
     if (not self.researchLines) or (not self.inventionLines) then
-        self.researchLines = {}
-        self.inventionLines = {}
-        for i, lineItem in ipairs(self.orderLineData) do
-            if lineItem.type == 0 then
-                self.researchLines[#self.researchLines + 1] = lineItem
-            else
-                self.inventionLines[#self.inventionLines + 1] = lineItem
-            end
-        end
+        self:_getScientificLine()
     end
 
     return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker
+end
+--获取最新的科技线信息
+function LaboratoryModel:_getScientificLine()
+    self.researchLines = {}
+    self.inventionLines = {}
+    for i, lineItem in ipairs(self.orderLineData) do
+        if lineItem.type == 0 then
+            self.researchLines[#self.researchLines + 1] = lineItem
+        else
+            self.inventionLines[#self.inventionLines + 1] = lineItem
+        end
+    end
 end
 --客户端显示 --添加临时线
 function LaboratoryModel:m_AddTempLineData(data)
@@ -186,22 +198,26 @@ function LaboratoryModel:m_AddTempLineData(data)
     tempLine.workerNum = data.workerNum
     if data.type == 0 then
         table.insert(self.researchLines, 1, tempLine)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'createTempLine', data.type, self.researchLines)
     else
         table.insert(self.inventionLines, 1, tempLine)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'createTempLine', data.type, self.inventionLines)
     end
 end
 --客户端显示 --删除临时线
-function LaboratoryModel:m_AddTempLineData(data)
+function LaboratoryModel:m_DelTempLineData(data)
     if data.type == 0 then
         if self.researchLines[1].lineId then
             ct.log("", "错误错误错误")
         end
         table.remove(self.researchLines, 1)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
     else
         if self.inventionLines[1].lineId then
             ct.log("", "错误错误错误")
         end
         table.remove(self.inventionLines, 1)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
 --更新ctrl 线的信息

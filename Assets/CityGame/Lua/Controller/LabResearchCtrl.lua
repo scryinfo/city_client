@@ -68,7 +68,7 @@ function LabResearchCtrl:_initPanelData()
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
     end
-    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_GetFormularData', function (data)
+    DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
         LabResearchPanel:showLine(data)
     end, formularItem.materials)
 

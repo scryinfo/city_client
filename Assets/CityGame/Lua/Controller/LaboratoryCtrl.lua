@@ -63,7 +63,7 @@ function LaboratoryCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
+        --ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
 
         ---临时代码，直接改变名字
         ins:_updateName(name)

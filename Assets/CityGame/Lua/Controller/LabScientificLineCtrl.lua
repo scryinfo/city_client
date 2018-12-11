@@ -36,18 +36,6 @@ function LabScientificLineCtrl:Awake(go)
         self:_inventionLineOpen()
     end)
 
-    self.luaBehaviour:AddClick(LabScientificLinePanel.changeStaffCountBtn.gameObject, function()
-        self:_cancelChangeStaffCount()
-    end)
-    self.luaBehaviour:AddClick(LabScientificLinePanel.delBtn.gameObject, function()
-        self:_cancelChangeStaffCount()
-    end)
-    self.luaBehaviour:AddClick(LabScientificLinePanel.okBtn.gameObject, function()
-        self:_sureChangeStaffCount()
-    end)
-    LabScientificLinePanel.staffSlider.onValueChanged:AddListener(function(value)
-        self:_onStaffSliderValueChange(value)
-    end)
     self:_addListener()
 
     --滑动复用部分
@@ -74,7 +62,7 @@ function LabScientificLineCtrl:_initPanelData()
     LabScientificLineCtrl.researchItems = {}
     LabScientificLineCtrl.inventionItems = {}
 
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
+    DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
         self.remainWorker = remainWorker
         self.maxWorkerNum = maxWorkerNum
         self.researchDatas = researchLines
@@ -88,13 +76,13 @@ function LabScientificLineCtrl:_researchLineOpen()
     LabScientificLinePanel._researchToggleState(true)
     LabScientificLinePanel._inventionToggleState(false)
 
-    self:_onReceiveLabResearchData(self.researchDatas)
+    self:onReceiveLabResearchData(self.researchDatas)
 end
 function LabScientificLineCtrl:_inventionLineOpen()
     LabScientificLinePanel._researchToggleState(false)
     LabScientificLinePanel._inventionToggleState(true)
 
-    self:_onReceiveLabInventionData(self.inventionDatas)
+    self:onReceiveLabInventionData(self.inventionDatas)
 end
 
 ---滑动复用
@@ -102,12 +90,17 @@ end
 LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabResearchCtrl", {buildingId = self.insId, itemId = 2151001})
+            ct.OpenCtrl("LabResearchCtrl", {buildingId = self.buildingId, itemId = 2151001})
         end)
         return
     end
 
     idx = idx + 1
+    if idx == 2 and (not LabScientificLineCtrl.researchInfoData[idx].lineId) then  --新增临时线
+        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.researchInfoData[idx], remainWorker)
+        end)
+    end
     local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
     LabScientificLineCtrl.researchItems[idx] = item
 end
@@ -115,18 +108,23 @@ end
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabInventionCtrl", {buildingId = self.insId, itemId = 2151001})
+            ct.OpenCtrl("LabInventionCtrl", {buildingId = self.buildingId, itemId = 2151001})
         end)
         return
     end
 
     idx = idx + 1
+    if idx == 2 and (not LabScientificLineCtrl.inventionInfoData[idx].lineId) then  --新增临时线
+        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.inventionInfoData[idx], remainWorker)
+        end)
+    end
     local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)
     LabScientificLineCtrl.inventionItems[idx] = item
 end
 ---刷新数据
 --研究
-function LabScientificLineCtrl:_onReceiveLabResearchData(datas)
+function LabScientificLineCtrl:onReceiveLabResearchData(datas)
     local researchInfoData = BaseTools.TableCopy(datas)
     local researchPrefabList = {}
     for i, item in pairs(researchInfoData) do
@@ -140,7 +138,7 @@ function LabScientificLineCtrl:_onReceiveLabResearchData(datas)
     LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 end
 --发明
-function LabScientificLineCtrl:_onReceiveLabInventionData(datas)
+function LabScientificLineCtrl:onReceiveLabInventionData(datas)
     local inventionInfoData = BaseTools.TableCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do
@@ -152,28 +150,6 @@ function LabScientificLineCtrl:_onReceiveLabInventionData(datas)
 
     LabScientificLineCtrl.inventionInfoData = inventionInfoData
     LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
-end
-
---客户端创建一个新的line，还未开工
-function LabScientificLineCtrl:_addScientificLineCilent(lineItem)
-    self.tempLine = lineItem
-    --记录一个当前正在处理的item，self.tempLine
-    --判断，如果self。tempLine不为空，则激活小弹窗
-    if lineItem.type == 0 then
-        --在最前面插入一个数据，包含buildingId，itemId，以及phase
-        --然后在UI上根据type选择是哪个界面，研究还是发明，然后刷新Scroll
-    elseif lineItem.type == 1 then
-
-    end
-    self.isNewLine = true
-    self:_startSetStaffCount(lineItem)
-end
---收到LabLineAdd回调
-function LabScientificLineCtrl:_onReceiveLabAddLine(lineData)
-    if lineData.itemId == self.tempLine.itemId then
-        Event.Brocast("m_ReqLabLaunchLine", lineData.buildingId, lineData.lineId, self.tempLine.phase)
-        self.isNewLine = false
-    end
 end
 
 ---提示框部分
@@ -201,8 +177,4 @@ function LabScientificLineCtrl:_sureChangeStaffCount()
     end
 
     LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
-end
---slider 值改变时的监听
-function LabScientificLineCtrl:_onStaffSliderValueChange(value)
-    LabScientificLinePanel.staffText.text = value
 end

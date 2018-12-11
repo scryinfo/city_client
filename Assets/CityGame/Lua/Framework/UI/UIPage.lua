@@ -260,7 +260,8 @@ function  UIPage:ShowPageInstance(pageInstance,pageData)
 end
 
 function  UIPage:ShowPageByClass(inClass,pageData)
-    pageName = inClass.bundleName()
+    --pageName = inClass.bundleName()
+    pageName = inClass.name
     callback = inClass.OnCreate
     if pageName == "" then
         ct.log("system","[UI] show page error with :" , pageName , " maybe nil instance.");
@@ -372,6 +373,26 @@ function UIPage:ResgisterOpen(inClass)
     Event.AddListener('c_OnOpen'..inClass.name, function (data)
         UIPage:ShowPage(inClass,data)
     end);
+end
+
+--controller的rpc方法
+--ctrlRpc是有返回值的rpc
+function ct.ctrlRpc(ctrlName, modelMethord, ...)
+    local arg = {...}
+    --优化版本
+    local ctrl = UIPage.static.m_allPages[ctrlName]
+    if arg[#arg] ~= nil then
+        arg[#arg](ctrl[modelMethord](ctrl,...))
+    else
+        ct.log('system', 'ctrlRpcRet need callback function')
+    end
+end
+--ctrlRpcNoRet 是没有返回值的rpc
+function ct.ctrlRpcNoRet(ctrlName, modelMethord, ...)
+    --优化版本
+    local arg = {...}
+    local ctrl = UIPage.static.m_allPages[ctrlName]
+    ctrl[modelMethord](ctrl,...)
 end
 
 

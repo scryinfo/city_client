@@ -37,27 +37,60 @@ public class Packager {
     public static void BuildAndroidResource() {        
         BuildAssetResource(BuildTarget.Android);
     }
+    //新增的Lua文件必须执行 BuildAndroidResource，非新增的Lua改动执行 BuildAndroidLua 即可 
+    [MenuItem("LuaFramework/Update Android Lua", false, 102)]
+    public static void BuildAndroidLua()
+    {
+        BuildLuaBundel(BuildTarget.Android);
+    }
 
-    [MenuItem("LuaFramework/Build Windows Resource", false, 102)]
+    [MenuItem("LuaFramework/Build Windows Resource", false, 103)]
     public static void BuildWindowsResource() {
         BuildAssetResource(BuildTarget.StandaloneWindows);
+    }
+
+
+    public static void BuildLuaBundel(BuildTarget target)
+    {
+        //生成 Require_RunTime.lua        
+        if (LuaFramework.LuaManager.generate_RequireRT() == false)
+            return;
+
+        if (AppConst.LuaBundleMode)
+        {
+            HandleLuaBundle();
+        }
+        else
+        {
+            HandleLuaFile();
+        }
+
+        string resPath = "Assets/" + AppConst.AssetDir;
+        BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle |
+                                          BuildAssetBundleOptions.UncompressedAssetBundle;        
+
+        BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
+        
     }
 
     /// <summary>
     /// 生成绑定素材
     /// </summary>
-    public static void BuildAssetResource(BuildTarget target) {
-        if (Directory.Exists(Util.DataPath)) {
+    public static void BuildAssetResource(BuildTarget target, bool buildLuaOnly = false) {
+        if (Directory.Exists(Util.DataPath))
+        {
             Directory.Delete(Util.DataPath, true);
         }
         string streamPath = Application.streamingAssetsPath;
-        if (Directory.Exists(streamPath)) {
+        if (Directory.Exists(streamPath))
+        {
             Directory.Delete(streamPath, true);
         }
         Directory.CreateDirectory(streamPath);
         AssetDatabase.Refresh();
 
         maps.Clear();
+
 
         //生成 Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
@@ -74,10 +107,9 @@ public class Packager {
         string resPath = "Assets/" + AppConst.AssetDir;
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle | 
                                           BuildAssetBundleOptions.UncompressedAssetBundle;
-        BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
-        //BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), BuildAssetBundleOptions.None, target);
-        BuildFileIndex();
 
+        BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
+        BuildFileIndex();
 
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);

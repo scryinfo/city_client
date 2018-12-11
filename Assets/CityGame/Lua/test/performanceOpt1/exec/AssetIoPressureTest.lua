@@ -26,6 +26,7 @@ local loadedOjb = ct.InstantiatePrefab(Icon_Prefab);
 local Icon =  loadedOjb.transform:GetComponent("Image")
 local pSprite = Icon.sprite
 local type = Icon_Prefab.GetType(pSprite)
+reslist={} --改成全局的看看
 --加载测试
 local testLoadFun = function(reslist)
     for i = 1, testcount do
@@ -36,7 +37,7 @@ end
 --卸载测试
 local testUnLoadFun = function(reslist)
     for i = 1, testcount do
-        reslist[i] = UnityEngine.Resources.UnloadAsset(reslist[i])
+        UnityEngine.Resources.UnloadAsset(reslist[i])
     end
 end
 
@@ -51,8 +52,8 @@ end
 --卸载
 local testUnLoadAndDestoryInsFun = function(pblist, inslist)
     for i = 1, testcount do
-        Destory(inslist[i])
-        UnityEngine.Resources.unLoad(pblist[i])
+        destroy(inslist[i])
+        UnityEngine.Resources.UnloadAsset(pblist[i])
     end
 end
 
@@ -62,8 +63,8 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     --Load 测试------------------------------------------------------------------------------------------------------------{
     --load 内存用量
     collectgarbage("collect")
+    ct.log('abel_w17_load_s128_n1000_S','[abel_w17_load_s128_n1000_S_mem] hahah')
     UnitTest.MemoryConsumptionTest("abel_w17_load_s128_n1000_S","abel_w17_load_s128_n1000_S_mem",function()
-        local reslist = {}
         testLoadFun(reslist)
     end)
     -- 5470-4524 = 946 kb
@@ -73,33 +74,39 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     --正常1000个128图标尺寸应该为 16*1000 = 15.625M
     --编辑器中看， 一个icon压缩为ect2的话，大小为8k， 那也不止 836 kb, 这里的 836 kb应该不是真正把资源加载到内存中了，
     --那么真正的资源加载发生在上面时候？
-    collectgarbage("collect")
 
-    --测试unload内存用量
-    collectgarbage("collect")
-    UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_Unload_s128_n1000_S_mem",function()
-        testUnLoadFun(reslist)
-    end)
-
-    --Instantiate 内存用量, 看看内存是否是预期的
-    collectgarbage("collect")
-    UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_load_Instantiate_s128_n1000_S_mem",function()
-        local prefablist = {}
-        local inslist = {}
-        testLoadAndInsFun(prefablist, inslist)
-    end)
-
-    local prefablist = {}
-    local inslist = {}
-    testLoadAndInsFun(prefablist, inslist)
-
-    collectgarbage("collect")
-    --内存开销
-    UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_unload_Desotyr_s128_n1000_mem",function()
-        local prefablist = {}
-        local inslist = {}
-        testLoadAndInsFun(prefablist, inslist)
-    end)
+    local timer = FrameTimer.New(function()
+        --测试unload内存用量
+        collectgarbage("collect")
+        ct.log('abel_w17_Unload_s128_n1000_S','[abel_w17_Unload_s128_n1000_S_mem]')
+        UnitTest.MemoryConsumptionTest("abel_w17_Unload_s128_n1000_S","abel_w17_Unload_s128_n1000_S_mem",function()
+            testUnLoadFun(reslist)
+        end)
+        local timer = FrameTimer.New(function()
+            --Instantiate 内存用量, 看看内存是否是预期的
+            collectgarbage("collect")
+            ct.log('abel_w17_load_Instantiate_s128_n1000_S_mem','[abel_w17_load_Instantiate_s128_n1000_S_mem]')
+            UnitTest.MemoryConsumptionTest("abel_w17_load_Instantiate_s128_n1000_S_mem","abel_w17_load_Instantiate_s128_n1000_S_mem",function()
+                local prefablist = {}
+                local inslist = {}
+                testLoadAndInsFun(prefablist, inslist)
+            end)
+            local timer = FrameTimer.New(function()
+                local prefablist = {}
+                local inslist = {}
+                testLoadAndInsFun(prefablist, inslist)
+                collectgarbage("collect")
+                --内存开销
+                ct.log('abel_w17_UnLoadAndDestory_s128_n1000_S','[abel_w17_UnLoadAndDestory_s128_n1000_S]')
+                UnitTest.MemoryConsumptionTest("abel_w17_UnLoadAndDestory_s128_n1000_S","abel_w17_UnLoadAndDestory_s128_n1000_S",function()
+                    testUnLoadAndDestoryInsFun(prefablist, inslist)
+                end)
+            end, 10, 0)
+            timer:Start()
+        end, 10, 0)
+        timer:Start()
+    end, 10, 0)
+    timer:Start()
     --Instantiate 测试------------------------------------------------------------------------------------------------------------
 end)
 

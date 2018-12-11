@@ -5,8 +5,9 @@
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
 TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S")
---TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S_IoTime")
 --TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S")
+--TestGroup.active_TestGroup("abel_w17_load_Instantiate_s128_n1000_S_mem")
+--TestGroup.active_TestGroup("abel_w17_UnLoadAndDestory_s128_n1000_S")
 --TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S")
 --TestGroup.active_TestGroup("abel_w17_Unload_s128_n1000_S_IoTime")
 --TestGroup.active_TestGroup("abel_w17_load_Instantiate_s128_n1000")

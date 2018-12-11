@@ -44,7 +44,6 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
         configTable[i] = uiTab
 
         local prefabData = {}
-        prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
         self.WarehouseModelData[i] = prefabData
@@ -73,7 +72,6 @@ function GoodsUnifyMgr:_creatStaffItemGoods(shelfTable)
         configTable[i] = shelfDataInfo
 
         local prefabData={}
-        prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
@@ -104,7 +102,6 @@ function GoodsUnifyMgr:_creatProductionItem()
             configTable[i] = productionItemInfo
 
             local prefabData = {}
-            prefabData.state = 'idel'
             prefabData.uiData = configTable[i]
             prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
             AddProductionLineCtrl.productionItemTab[i] = prefabData
@@ -126,7 +123,6 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
     AdjustProductionLineCtrl.materialProductionUIInfo[itemId] = configTable
 
     local prefabData = {}
-    prefabData.state = 'idel'
     prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[itemId]
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
     AdjustProductionLineCtrl.materialProductionPrefab[itemId] = prefabData
@@ -156,7 +152,6 @@ function GoodsUnifyMgr:_getProductionLine(table,behaviour)
         AdjustProductionLineCtrl.materialProductionUIInfo[i] = configTable
 
         local prefabData = {}
-        prefabData.state = 'idel'
         prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[i]
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.materialProductionPrefab[i] = prefabData
@@ -186,7 +181,6 @@ end
 function GoodsUnifyMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
-    prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
     local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId)
 
@@ -204,7 +198,6 @@ end
 --仓库选中物品运输
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
-    prefabData.state = 'idel'
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
     local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 

@@ -84,6 +84,7 @@ function AdjustProductionLineCtrl:Refresh()
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
+
     go:deleteObjInfo()
     UIPage.ClosePage();
 end
@@ -112,9 +113,11 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
         Event.Brocast("SmallPop","员工人数不能为0",300)
         return;
     end
-    if tonumber(steffNumber) < 5 then
-        Event.Brocast("SmallPop","员工人数不足",300)
-        return;
+    if steffNumber ~= nil then
+        if tonumber(steffNumber) < 5 then
+            Event.Brocast("SmallPop","员工人数不足",300)
+            return;
+        end
     end
     Event.Brocast("m_ReqAddLine",MaterialModel.buildingId,number,steffNumber,itemid);
 end

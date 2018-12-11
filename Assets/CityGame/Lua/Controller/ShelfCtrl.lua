@@ -24,11 +24,7 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.priceBtn.gameObject,self.OnClick_OnpriceBtn, self);
     shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods, self);
 
-    --self.luabehaviour = shelf
-    --self.m_data = {};
-    --self.m_data.buildingType = BuildingInType.Shelf
-    --self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-
+    --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
 end
 
 function ShelfCtrl:Awake(go)
@@ -56,6 +52,24 @@ function ShelfCtrl:Refresh()
     end
 
 end
+----刷新数据
+--function ShelfCtrl:refreshShelfInfo(data)
+--    if not data then
+--        return;
+--    end
+--    --self.WarehouseModelData = {}
+--    --local configTable = {}
+--    --local uiTab = {}
+--    --uiTab.name = Material[v.key.id].name
+--    --uiTab.num = v.n
+--    --uiTab.itemId = v.key.id
+--    --configTable[i] = uiTab
+--
+--    local prefabData = {}
+--    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
+--
+--    local warehouseLuaItem = ShelfGoodsItem:refreshInfo(data,prefabData._prefab)
+--end
 
 function ShelfCtrl:OnClick_return_Btn(go)
     go:deleteObjInfo();
@@ -144,6 +158,15 @@ function ShelfCtrl:_getSortItems(type,sortingTable)
             ShelfGoodsItem:RefreshData(v.goodsDataInfo,i)
         end
     end
+end
+--生成预制
+function ShelfCtrl:_creatGoods(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
 end
 --关闭面板时清空UI信息，以备其他模块调用
 function ShelfCtrl:deleteObjInfo()

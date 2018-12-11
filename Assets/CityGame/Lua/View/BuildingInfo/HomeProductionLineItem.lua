@@ -50,6 +50,7 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     --    --end);
 
     Event.AddListener("c_onOccupancyValueChange",self.up0dateInfo,self);
+    Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
 end
 
 --获取是第几次点击了
@@ -84,7 +85,7 @@ function HomeProductionLineItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeProductionLineItem.static.TOP_H);
 end
---初始化信息
+--初始化数据
 function HomeProductionLineItem:initializeInfo(data)
     if not data then
         return;
@@ -100,12 +101,15 @@ function HomeProductionLineItem:initializeInfo(data)
         self.SmallLineRateItemTab[i] = SmallLineRateItem
     end
 end
--- 刷新数据
-function HomeProductionLineItem:updateInfo(data)
-    --self.occupancyData = data
-    --if not self.viewRect.gameObject.activeSelf then
-    --    return
-    --end
+--刷新数据
+function HomeProductionLineItem:productionRefreshInfo(data)
+    if not data then
+        return;
+    end
+    local homePageType = ct.homePage.productionLine
+    local prefabData={}
+    prefabData.prefab = self:_creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
+    local SmallLineRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
 end
 --生成预制
 function HomeProductionLineItem:_creatGoods(path,parent)

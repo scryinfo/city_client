@@ -57,6 +57,7 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     --    --end);
 
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
 end
 
 --获取是第几个点击了
@@ -91,7 +92,7 @@ function ShelfRateItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - ShelfRateItem.static.TOP_H);
 end
---初始化信息
+--初始化数据
 function ShelfRateItem:initializeInfo(data)
     if not data then
         return;
@@ -108,11 +109,14 @@ function ShelfRateItem:initializeInfo(data)
     end
 end
 --刷新数据
-function ShelfRateItem:updateInfo(data)
-    --self.occupancyData = data
-    --if not self.viewRect.gameObject.activeSelf then
-    --    return
-    --end
+function ShelfRateItem:shelfRefreshInfo(data)
+    if not data then
+        return;
+    end
+    local homePageType = ct.homePage.shelf
+    local prefabData={}
+    prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
 end
 --生成预制
 function ShelfRateItem:_creatGoods(path,parent)

@@ -43,17 +43,11 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
-
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
 
-    --self.luabehaviour = warehouse
-    --self.data = {};
-    ----self.data.buildingType = BuildingInType.Warehouse;
-    --self.data.buildingType = self.m_data.buildingType;
-    --self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
 end
 function WarehouseCtrl:Awake(go)
     self.gameObject = go

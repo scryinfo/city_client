@@ -33,6 +33,9 @@ end
 function ExchangeChooseWareHouseCtrl:Hide()
     UIPage.Hide(self)
     self.luaBehaviour:RemoveClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack, self)
+    Event.RemoveListener("m_OnReceiveAllBuildingDetail", self._getBuildingDetailFunc, self)
+
+    --ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, 0)
 end
 
 function ExchangeChooseWareHouseCtrl:Close()
@@ -40,8 +43,13 @@ function ExchangeChooseWareHouseCtrl:Close()
 end
 
 function ExchangeChooseWareHouseCtrl:_initPanelData()
-    local buildingInfo = DataManager.GetMyAllBuildingDetail()
     self.luaBehaviour:AddClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack,self)
+    Event.AddListener("m_OnReceiveAllBuildingDetail", self._getBuildingDetailFunc, self)
+    Event.Brocast("m_ReqAllBuildingDetail")
+end
+--收到建筑信息之后再显示
+function ExchangeChooseWareHouseCtrl:_getBuildingDetailFunc(data)
+    local buildingInfo = self:_getAllStoreBuildings(data)
     if self.m_data.isSell then
         --遍历所有仓库，根据item的个数排序
         --需要建筑类型，大小，icon，最大容量-这几个可以通过id读配置表得到，建筑名字
@@ -55,6 +63,31 @@ function ExchangeChooseWareHouseCtrl:_initPanelData()
     if ExchangeChooseWareHouseCtrl.storeList ~= nil then
         ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, #ExchangeChooseWareHouseCtrl.storeList)
     end
+end
+--获取所有带有store的建筑table
+function ExchangeChooseWareHouseCtrl:_getAllStoreBuildings(data)
+    local tempTable = {}
+    if data.materialFactory then
+        for i, building in ipairs(data.materialFactory) do
+            tempTable[#tempTable + 1] = building
+        end
+    end
+    if data.produceDepartment then
+        for i, building in ipairs(data.produceDepartment) do
+            tempTable[#tempTable + 1] = building
+        end
+    end
+    if data.retailShop then
+        for i, building in ipairs(data.retailShop) do
+            tempTable[#tempTable + 1] = building
+        end
+    end
+    if data.laboratory then
+        for i, building in ipairs(data.laboratory) do
+            tempTable[#tempTable + 1] = building
+        end
+    end
+    return tempTable
 end
 
 function ExchangeChooseWareHouseCtrl:OnClickBack()
@@ -78,11 +111,13 @@ function ExchangeChooseWareHouseCtrl:_getStoresData(datas, isSell, itemId)
         local buildingsStore = {}
         for i, building in pairs(datas) do
             if building.store then
-                buildingsStore[#buildingsStore + 1] = {store = getItemStore(building.store), buildingTypeId = building.info.mId, buildingId = building.info.id, isSell = true, buildingName = "Building"..(#buildingsStore + 1)}
+                if getItemStore(building.store)[itemId] then
+                    buildingsStore[#buildingsStore + 1] = {itemCount = getItemStore(building.store)[itemId], buildingTypeId = building.info.mId, buildingId = building.info.id, isSell = true, buildingName = "Building"..(#buildingsStore + 1)}
+                end
             end
         end
         tempDatas = buildingsStore
-        table.sort(tempDatas, function (m, n) return m.store[itemId] > n.store[itemId] end)
+        table.sort(tempDatas, function (m, n) return m.itemCount > n.itemCount end)
     else
         local buildingsStore = {}
         for i, building in pairs(datas) do
@@ -100,11 +135,15 @@ end
 function ExchangeChooseWareHouseCtrl:_getRemianSpace(store, buildTypeId)
     local totalCount = PlayerBuildingBaseData[buildTypeId].storeCapacity
     local inUsedCount = 0
-    for i, itemData in pairs(store.reserved) do
-        inUsedCount = inUsedCount + itemData.num
+    if store.reserved then
+        for i, itemData in pairs(store.reserved) do
+            inUsedCount = inUsedCount + itemData.num
+        end
     end
-    for i, itemData in pairs(store.inHand) do
-        inUsedCount = inUsedCount + itemData.num
+    if store.inHand then
+        for i, itemData in pairs(store.inHand) do
+            inUsedCount = inUsedCount + itemData.num
+        end
     end
     return totalCount - inUsedCount
 end

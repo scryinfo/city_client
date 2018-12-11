@@ -573,8 +573,6 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
-
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllBuildingDetail"), DataManager.n_OnReceiveAllBuildingDetail)  --获取所有建筑详情
 end
 --清除所有消息回调
 local function ClearEvents()
@@ -669,14 +667,6 @@ function DataManager.n_OnReceiveGroundChange(stream)
             DataManager.AddMyGroundInfo(value)
         end
     end
-end
-
-function DataManager.n_OnReceiveAllBuildingDetail(stream)
-    local buildings = assert(pbl.decode("gs.BuildingSet", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
-    if not buildings then
-        return
-    end
-    DataManager.SetMyAllBuildingDetail(buildings)
 end
 
 ----------

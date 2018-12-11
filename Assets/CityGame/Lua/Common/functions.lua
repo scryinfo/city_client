@@ -124,15 +124,19 @@ end
 function getItemStore(store)
 	local itemTable = {}
 	local storeTemp = BaseTools.TableCopy(store)
-	for i, itemData in pairs(storeTemp.locked) do
-		itemTable[itemData.key.id] = itemData.n
-	end
-	for i, itemData in pairs(storeTemp.inHand) do
-		local tempCount = itemTable[itemData.key.id]
-		if tempCount then
-			itemTable[itemData.key.id] = itemData.n - tempCount
-		else
+	if storeTemp.locked then
+		for i, itemData in pairs(storeTemp.locked) do
 			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	if storeTemp.inHand then
+		for i, itemData in pairs(storeTemp.inHand) do
+			local tempCount = itemTable[itemData.key.id]
+			if tempCount then
+				itemTable[itemData.key.id] = itemData.n - tempCount
+			else
+				itemTable[itemData.key.id] = itemData.n
+			end
 		end
 	end
 	return itemTable

@@ -52,6 +52,14 @@ function ManageAdvertisementPosCtrl:Awake(go)
     local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
     self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
+    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+        self.ItemCreatDeleteMgr.addItemInSList[0].numText.transform.parent.localScale=Vector3.zero
+        self.ItemCreatDeleteMgr.addItemInSList[0].timeText.transform.parent.localScale=Vector3.zero
+    else--他人进入
+        self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
+    end
+
+
 end
 
 
@@ -83,10 +91,73 @@ function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 end
 --刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
+    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+        if self.ItemCreatDeleteMgr.addItemList[1] then
+            self.ItemCreatDeleteMgr.addItemList[1]:SetActive(true)
+        end
 
+    else--他人进入
+        if self.ItemCreatDeleteMgr.addItemList[1] then
+            self.ItemCreatDeleteMgr.addItemList[1]:SetActive(false)
+        end
+        self:c_ScreenOut(self.m_data.myBuySlots)
+    end
 
 end
 
+
+function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
+    self.slotList={}
+    local tempList={}
+    for i, slot in pairs(slotList) do
+        if not tempList[slot.days] then
+            tempList[slot.days]={}
+            table.insert(tempList[slot.days],slot)
+        else
+            table.insert(tempList[slot.days],slot)
+        end
+    end
+    for i, v in pairs(tempList) do
+       table.insert(self.slotList,v)
+    end
+
+   ---刷新数据
+    if #self.ItemCreatDeleteMgr.addItemInSList-1>#self.slotList then--实例数量大于数据数量
+       for i = 1, #self.ItemCreatDeleteMgr.addItemInSList-1 do
+          
+           if self.slotList[i] then
+               self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
+               --刷新时间
+               self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
+
+           else
+               self.ItemCreatDeleteMgr.addItemInSList[i].prefab:SetActive(false)
+           end
+       end
+
+    else--实例数量小于数据数量
+       for i = 1, #self.slotList do
+           if self.ItemCreatDeleteMgr.addItemInSList[i] then
+               self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
+               --刷新时间
+               self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
+           else
+             self.ItemCreatDeleteMgr:_creataddItem({})
+               self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
+               --刷新时间
+               self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
+           end
+
+       end
+    end
+    ---默认开启一个四角
+    if self.ItemCreatDeleteMgr.addItemInSList[1] then
+        self.ItemCreatDeleteMgr.addItemInSList[1].angleRoot.localScale=Vector3.one
+        self.ItemCreatDeleteMgr.current=self.ItemCreatDeleteMgr.addItemInSList[1]
+    end
+
+
+end
 
 
 --根据名字排序

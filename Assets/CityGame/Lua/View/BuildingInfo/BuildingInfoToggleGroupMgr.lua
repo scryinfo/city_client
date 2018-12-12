@@ -418,6 +418,7 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     end
 
     local occData = {}
+    occData.qty = self.toggleData.qty
     occData.buildingId = self.toggleData.info.id
     occData.buildingTypeId = self.toggleData.info.mId
     occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc

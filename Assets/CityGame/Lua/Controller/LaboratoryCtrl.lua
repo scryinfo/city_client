@@ -72,8 +72,8 @@ function LaboratoryCtrl:_changeName(ins)
 end
 ---返回
 function LaboratoryCtrl:_backBtn(ins)
-    ins.houseToggleGroup:cleanItems()
-    ins.houseToggleGroup = nil
+    ins.laboratoryToggleGroup:cleanItems()
+    ins.laboratoryToggleGroup = nil
     UIPage.ClosePage()
 end
 ---更改名字成功

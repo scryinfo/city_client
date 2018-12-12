@@ -196,14 +196,13 @@ function LaboratoryModel:m_AddTempLineData(data)
     tempLine.itemId = data.itemId
     tempLine.phase = data.phase
     tempLine.workerNum = data.workerNum
-    --table.insert(self.orderLineData, 1, tempLine)
+    tempLine.type = data.type
+    tempLine.buildingId = self.insId
 
     if data.type == 0 then
         table.insert(self.researchLines, 1, tempLine)
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'createTempLine', data.type, self.researchLines)
     else
         table.insert(self.inventionLines, 1, tempLine)
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'createTempLine', data.type, self.inventionLines)
     end
 end
 --客户端显示 --删除临时线

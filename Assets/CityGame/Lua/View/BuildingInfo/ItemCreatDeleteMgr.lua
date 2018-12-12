@@ -149,9 +149,9 @@ function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
     self.serverMapAdvertisementINSList[prefabData.metaId]=ins
     ServerMapAdvertisementItemID=ServerMapAdvertisementItemID+1
 
-    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then--他人进入
-        item.transform:SetAsLastSibling();
-    end
+    --if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then--他人进入
+    --    item.transform:SetAsLastSibling();
+    --end
 end
 
 ---创建映射广告

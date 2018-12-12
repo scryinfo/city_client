@@ -47,7 +47,6 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.goodsBtn1.gameObject,self.OnClick_OnGoods,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
     -- self:OnClick_OnGoods();
-
     -----创建广告管理
     local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
@@ -58,7 +57,6 @@ function ManageAdvertisementPosCtrl:Awake(go)
     else--他人进入
         self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
     end
-
 
 end
 
@@ -104,19 +102,20 @@ end
 function ManageAdvertisementPosCtrl:Refresh()
 
 
-
     if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
         if self.ItemCreatDeleteMgr.addItemList[1] then
             self.ItemCreatDeleteMgr.addItemList[1]:SetActive(true)
         end
-
     else--他人进入
         if self.ItemCreatDeleteMgr.addItemList[0] then
             self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
         end
         self:c_ScreenOut(self.m_data.myBuySlots)
+        for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementItemList) do
+            v.transform:SetAsLastSibling();
+        end
     end
-
+    
 end
 
 

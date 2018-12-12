@@ -63,7 +63,7 @@ local function _createClass(name, super)
         if result == nil then
           return super.static[k]
         end
-        return result
+         return result
       end
     })
   else

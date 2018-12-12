@@ -16,12 +16,13 @@ function ShelfPanel.InitPanel()
     this.return_Btn = transform:Find("return_Btn").gameObject;  --返回按钮
     this.refresh_Btn = transform:Find("refresh_Btn").gameObject;--刷新按钮
     this.arrowBtn = transform:Find("Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
-    this.nameBtn = transform:Find("ListTable/List/nameBtn").gameObject;  --名字排序
-    this.quantityBtn = transform:Find("ListTable/List/quantityBtn").gameObject;  --数量排序
-    this.priceBtn = transform:Find("ListTable/List/priceBtn").gameObject;  --价格排序
+    this.nameBtn = transform:Find("ListTable/List/nameBtn");  --名字排序
+    this.quantityBtn = transform:Find("ListTable/List/quantityBtn");  --数量排序
+    this.priceBtn = transform:Find("ListTable/List/priceBtn");  --价格排序
     this.nowText = transform:Find("Sorting/bg/nowText"):GetComponent("Text");
     this.list = transform:Find("ListTable/List"):GetComponent("RectTransform");
     --Scroll View
+    this.scrollView = transform:Find("Scroll View")
     this.Content = transform:Find("Scroll View/Viewport/Content");
     this.bgBtn = transform:Find("Scroll View/Viewport/Content/ShelfAddItem/bgBtn").gameObject;
     --RightInformation  --Text Button

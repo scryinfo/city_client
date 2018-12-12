@@ -3,6 +3,58 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/21 11:23
 ---
+HouseModel  = class('HouseModel',ModelBase)
+local pbl = pbl
+
+function HouseModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
+end
+
+
+--启动事件--
+function HouseModel:OnCreate()
+    --网络回调注册
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnReceiveHouseDetailInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.ByteNum",self.n_OnReceiveHouseRentChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.ByteNum",self.n_OnReceiveHouseSalaryChange)
+
+    --本地的回调注册
+    Event.AddListener("m_ReqHouseChangeRent", HouseModel.m_ReqHouseChangeRent)
+    Event.AddListener("m_ReqHouseSetSalary", HouseModel.m_ReqHouseSetSalary)
+end
+
+
+--- 客户端请求 ---
+--获取建筑详情
+function HouseModel:m_ReqHouseDetailInfo(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "detailApartment","gs.Id",{ id = buildingId})
+end
+--改变房租
+function HouseModel.m_ReqHouseChangeRent(id, price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.ByteNum",{ id = id, num = price})
+end
+--改变员工工资
+function HouseModel.m_ReqHouseSetSalary(id, price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+end
+
+--- 回调 ---
+--住宅详情
+function HouseModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
+    DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_receiveHouseDetailInfo',houseDetailInfo)
+end
+--房租改变
+function HouseModel:n_OnReceiveHouseRentChange(rentData)
+    Event.Brocast("c_onReceiveHouseRentChange", rentData)
+end
+--员工工资改变
+function HouseModel:n_OnReceiveHouseSalaryChange(salaryData)
+    Event.Brocast("c_onReceiveHouseSalaryChange", salaryData)
+end
+
+
+--[[
 HouseModel = {};
 local this = HouseModel;
 local pbl = pbl
@@ -90,3 +142,4 @@ UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
     ct.log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
 end)
 UnitTest.TestBlockEnd()-----------------------------------------------------------
+--]]

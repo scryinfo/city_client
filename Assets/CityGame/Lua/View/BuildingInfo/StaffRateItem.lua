@@ -33,20 +33,20 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.openStateTran = viewTrans:Find("topRoot/open")  --打开状态
     self.closeStateTran = viewTrans:Find("topRoot/close")  --关闭状态
     self.totalStaffCountText = viewTrans:Find("topRoot/open/countText"):GetComponent("Text")  --住宅员工人数
-    self.toDoBtn = viewTrans:Find("topRoot/open/toDoBtn")
-    self.openBtn = viewTrans:Find("topRoot/close/openBtn")  --打开按钮
+    self.toDoBtns = viewTrans:Find("topRoot/open/toDoBtns")
+    self.openBtns = viewTrans:Find("topRoot/close/openBtns")  --打开按钮
     self.errorTipTrans = viewTrans:Find("topRoot/close/errorTipImg")  --当自己查看界面且有员工未找到住所时显示
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
+    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
 
     if self.staffData.isOther then
-        self.toDoBtn.localScale = Vector3.zero
+        self.toDoBtns.localScale = Vector3.zero
     else
-        self.toDoBtn.localScale = Vector3.one
-        --mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, self._clickOpenBtn, self)  --这个写法有问题
-        mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject, self._clickToDoBtn, self)
+        self.toDoBtns.localScale = Vector3.one
+        --mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, self._clickOpenBtn, self)  --这个写法有问题
+        mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject, self._clickToDoBtn, self)
     end
 
     Event.AddListener("c_onReceiveHouseSalaryChange", self.updateInfo, self)

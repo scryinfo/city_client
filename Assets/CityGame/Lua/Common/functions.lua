@@ -54,6 +54,27 @@ function getPriceString(str, intSize, floatSize)
 	return finalStr
 end
 
+--获取容量显示文本，总容量和已用容量颜色不同
+function getColorString(num1,num2,col1,col2)
+    if num1 == nil and num2 == nil then
+        return
+    end
+    local str1 = table.concat({"<color=",col1,">",num1,"</color>"})
+    local str2 = table.concat({"<color=",col2,">",num2,"</color>"})
+    local str = table.concat({str1,"/",str2})
+    return str
+end
+--秒数转换时间格式字符串
+function getTimeString(time)
+	local hours = math.floor(time / 3600)
+	local minutes = math.floor((time % 3600) / 60)
+	local seconds = math.floor(time % 60)
+	if hours < 10 then hours = "0"..hours end
+	if minutes < 10 then  minutes = "0"..minutes end
+	if seconds < 10 then seconds = "0"..seconds end
+	local time = hours..":"..minutes..":"..seconds
+	return time
+end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
 	local r1 = r / 255
@@ -110,6 +131,36 @@ function getFormatUnixTime(time)
 	end
 
 	return tb
+end
+--将秒转换成小时分秒的格式，非时间戳
+function getTimeBySec(secTime)
+	local tb = {}
+	secTime = math.floor(secTime)
+	tb.hour = math.floor(secTime / 3600) or 0
+	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
+	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+	return tb
+end
+--根据建筑store获取一个以itemId为key的字典
+function getItemStore(store)
+	local itemTable = {}
+	local storeTemp = BaseTools.TableCopy(store)
+	if storeTemp.locked then
+		for i, itemData in pairs(storeTemp.locked) do
+			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	if storeTemp.inHand then
+		for i, itemData in pairs(storeTemp.inHand) do
+			local tempCount = itemTable[itemData.key.id]
+			if tempCount then
+				itemTable[itemData.key.id] = itemData.n - tempCount
+			else
+				itemTable[itemData.key.id] = itemData.n
+			end
+		end
+	end
+	return itemTable
 end
 
 function ct.file_exists(path)

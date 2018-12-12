@@ -96,7 +96,7 @@ function CreateRoleModel.n_OnRoleLogin(stream)
         --初始化玩家个人信息
         Event.Brocast("c_RoleLoginDataInit",pMsg);
         Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
-        ct.OpenCtrl("GameMainInterfaceCtrl")
+        Event.Brocast("c_GsLoginSuccess");
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

@@ -29,13 +29,14 @@ function BaseBuildModel:OpenPanel()
         Event.Brocast('m_ReqOpenMaterial',instanceID)
         ct.OpenCtrl('MaterialCtrl')
     elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --加工厂
+        Event.Brocast('m_ReqOpenProcessing',instanceID)
         ct.OpenCtrl('ProcessingCtrl')
     elseif typeID == 1300001 or typeID == 1300002 or typeID == 1300003 then    --零售店
 
     elseif typeID == 1400001 or typeID == 1400002 or typeID == 1400003 then    --住宅
-        ct.OpenCtrl("HouseCtrl", instanceID)
+        ct.OpenCtrl("HouseCtrl", {insId = instanceID})
     elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --研究所
-
+    --    ct.OpenCtrl("LaboratoryCtrl", {insId = instanceID})
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
         Event.Brocast("m_detailPublicFacility",instanceID)
         ct.OpenCtrl("MunicipalCtrl")

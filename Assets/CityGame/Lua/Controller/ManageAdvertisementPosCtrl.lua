@@ -111,11 +111,13 @@ function ManageAdvertisementPosCtrl:Refresh()
             self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
         end
         self:c_ScreenOut(self.m_data.myBuySlots)
-        for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementItemList) do
-            v.transform:SetAsLastSibling();
+        if self.ItemCreatDeleteMgr.serverMapAdvertisementItemList then
+            for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementItemList) do
+                v.transform:SetAsLastSibling();
+            end
         end
     end
-    
+
 end
 
 

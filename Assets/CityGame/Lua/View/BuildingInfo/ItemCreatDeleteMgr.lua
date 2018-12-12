@@ -45,10 +45,10 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     self.behaviour = luabehaviour
     self.buildingData=creatData
 
-     idList={}
-  typelist={}
-   metald=0
-     adList={}
+    idList={}
+    typelist={}
+    metald=0
+    adList={}
 
     if creatData.lMsg then
         if creatData.lMsg.ad.ad then
@@ -89,34 +89,38 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     elseif creatData.buildingType == BuildingType.MunicipalManage then
         self:_creataddItem();
         self:_creatgoodsItem();
-
         self:_creatbuildingItem();
         ---创建自已打的广告
-        for i, v in pairs(typelist) do
-            local data=nil
-            local count=0
-            local id=0
-            for j, q in pairs(v) do
-                count=count+1
-                data=q
-                if i~=id then
-                    if not adList[i] then
-                        adList[i]={}
+        if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+            for i, v in pairs(typelist) do
+                local data=nil
+                local count=0
+                local id=0
+                for j, q in pairs(v) do
+                    count=count+1
+                    data=q
+                    if i~=id then
+                        if not adList[i] then
+                            adList[i]={}
+                        end
+                        table.insert(adList[i],q)
+                        id=i
+                    else
+                        table.insert(adList[i],q)
+                        id=i
                     end
-                    table.insert(adList[i],q)
-                    id=i
-                else
-                    table.insert(adList[i],q)
-                    id=i
                 end
+                data["count"]=count
+                self:_creatserverMapAdvertisementItem(data)
             end
-            data["count"]=count
-            self:_creatserverMapAdvertisementItem(data)
+            self.adList=adList
+        else--他人进入
+
+
+
         end
 
-        self.adList=adList
     else---创建外部广告
-
         for i, v in pairs(typelist) do
             local data=nil
             for j, q in pairs(v) do
@@ -125,9 +129,6 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
             self:_creatoutItem(data)
         end
     end
-
-
-
 end
 
 
@@ -202,13 +203,15 @@ local AddItemID=0;
 function ItemCreatDeleteMgr:_creataddItem(prefabData)
     if(not self.addItemList ) then
         self.addItemList={}
+        self.addItemInSList={}
     end
 
     ---创建预制
     local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
     self.addItemList[AddItemID]=itemclone
     ---给预制赋值数据
-    AddItem:new(prefabData,itemclone,self.behaviour,self,AddItemID)
+    local ins =AddItem:new(prefabData,itemclone,self.behaviour,self,AddItemID)
+    self.addItemInSList[AddItemID]=ins
     AddItemID=AddItemID+1;
     ----------------------------------------------------------------------------------------------------------
 end

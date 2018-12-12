@@ -30,6 +30,12 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
+
+    Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+end
+
+function GameMainInterfaceCtrl:Refresh()
+    self:_showFriendsNotice()
 end
 
 --通知--
@@ -53,11 +59,21 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+    ct.OpenCtrl("ChatCtrl")
 end
 
 --好友--
 function GameMainInterfaceCtrl.OnFriends()
     ct.OpenCtrl("FriendsCtrl")
+end
+
+--好友红点--
+function GameMainInterfaceCtrl._showFriendsNotice()
+    local friendsApply = DataManager.GetMyFriendsApply()
+    GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
+end
+function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
+    self._showFriendsNotice()
 end
 
 --设置--

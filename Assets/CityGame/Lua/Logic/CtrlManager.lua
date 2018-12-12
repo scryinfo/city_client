@@ -106,6 +106,7 @@ function CtrlManager.Init()
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.friends] = FriendsModel.New();
 
 	return this;
 end

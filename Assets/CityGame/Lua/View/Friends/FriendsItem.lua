@@ -7,9 +7,12 @@
 FriendsItem = class('FriendsItem')
 
 -- 初始化
-function FriendsItem:initialize(type, luaBehaviour, prefab, data)
+function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
+    self.itemId = itemId
     self.prefab = prefab
     self.data = data
+    self.data.company = "Scry"
+    self.data.sign = "Everything i do i wanna put a shine on it"
 
     local transform = prefab.transform
     self.bgBtn = transform:Find("Bg").gameObject
@@ -40,10 +43,12 @@ function FriendsItem:initialize(type, luaBehaviour, prefab, data)
     -- 拒绝好友申请
     self.refuseBtn  = transform:Find("RefuseBtn").gameObject
 
-    self.nameText.text = data.name
-    self.companyText.text = data.company
-    self.signatureText.text = data.sign
-    self.validationMsgText.text = data.sign
+    self.nameText.text = self.data.name
+    self.companyText.text = self.data.company
+    self.signatureText.text = self.data.sign
+    if self.data.desc then
+        self.validationMsgText.text = self.data.desc
+    end
 
     luaBehaviour:AddClick(self.bgBtn, self.OnBg, self)
     luaBehaviour:AddClick(self.headBtn, self.OnHead, self)
@@ -133,7 +138,7 @@ function FriendsItem:OnDelete(go)
     data.tipInfo = "(The production schedule will be empty!)"
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送删除好友请求")
-        Event.Brocast("SmallPop","Friend deleted successfully.",60)
+        Event.Brocast("m_DeleteFriend", go.data.id, false)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", data)
 end
@@ -147,7 +152,7 @@ function FriendsItem:OnRemoveMask(go)
     data.tipInfo = "(The production schedule will be empty!)"
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送移除屏蔽请求")
-        Event.Brocast("SmallPop","Successful removal from blacklist.",60)
+        Event.Brocast("m_DeleteBlacklist", go.data.id)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", data)
 end
@@ -162,9 +167,10 @@ function FriendsItem:OnAddFriends(go)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
-    data.btnCallBack = function(name)
+    data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
-        Event.Brocast("SmallPop","Your request has been sent." .. name,80)
+        Event.Brocast("m_AddFriends", go.data.id, text)
+        Event.Brocast("SmallPop","Your request has been sent.",80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -172,11 +178,21 @@ end
 -- 同意好友申请
 function FriendsItem:OnAgree(go)
     ct.log("tina_w8_friends", "向服务器发送同意好友申请请求")
-    Event.Brocast("SmallPop","Agree to friend application.",80)
+    Event.Brocast("m_AddFriendsReq", go.data.id, true)
+    if FriendslistCtrl.friendInfo[go.itemId] then
+        DataManager.SetMyFriendsApply({itemId = go.itemId})
+        FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
+        --FriendslistPanel.friendsView:ActiveLoopScroll(FriendslistCtrl.friendsSource, #FriendslistCtrl.friendInfo)
+    end
 end
 
 -- 拒绝好友申请
 function FriendsItem:OnRefuse(go)
     ct.log("tina_w8_friends", "向服务器发送拒绝好友申请请求")
-    Event.Brocast("SmallPop","Refuse friend application.",80)
+    Event.Brocast("m_AddFriendsReq", go.data.id, false)
+    if FriendslistCtrl.friendInfo[go.itemId] then
+        DataManager.SetMyFriendsApply({id = go.data.id})
+        table.remove(FriendslistCtrl.friendInfo, go.itemId)
+        FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
+    end
 end

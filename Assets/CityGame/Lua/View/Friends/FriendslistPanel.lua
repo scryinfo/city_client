@@ -23,8 +23,8 @@ function FriendslistPanel.InitPanel()
     this.backBtn = transform:Find("MiddleRoot/BackBtn").gameObject
 
     --好友图标及数量
-    this.friendsNumberImage = transform:Find("MiddleRoot/Bg/FriendsNumberImage").gameObject
-    this.friendsNumberText = transform:Find("MiddleRoot/Bg/FriendsNumberText"):GetComponent("Text")
+    this.blacklistNumberImage = transform:Find("MiddleRoot/Bg/BlacklistNumberImage").gameObject
+    this.blacklistNumberText = transform:Find("MiddleRoot/Bg/BlacklistNumberText"):GetComponent("Text")
 
     --好友搜索及按钮
     this.searchInputField = transform:Find("MiddleRoot/Bg/SearchInputField").gameObject

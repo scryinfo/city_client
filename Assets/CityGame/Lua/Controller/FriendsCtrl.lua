@@ -94,7 +94,7 @@ end
 
 FriendsCtrl.static.FriendsProvideData = function(transform, idx)
     idx = idx + 1
-    local item = FriendsItem:new(1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.data[1][idx])
+    local item = FriendsItem:new(idx, 1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.friendInfo[idx])
 end
 
 FriendsCtrl.static.FriendsClearData = function(transform)
@@ -110,27 +110,93 @@ end
 
 -- 刷新
 function FriendsCtrl:Refresh()
-    self:_refreshState()
+    self:_addListener()
 end
 
 function FriendsCtrl:Close()
 
 end
 
--- 刷新界面的数据
+function FriendsCtrl:_addListener()
+    -- 监听Model层网络回调
+    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
+    Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+
+    self:_refreshData()
+end
+
+function FriendsCtrl:Hide()
+    self:_removeListener()
+    UIPage.Hide(self)
+end
+
+function FriendsCtrl:_removeListener()
+    -- 监听Model层网络回调
+    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
+    Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+end
+
+-- 获取界面数据
+function FriendsCtrl:_refreshData()
+    local friendsBasicData = DataManager.GetMyFriends()
+    local friendsId = {}
+    for i, v in pairs(friendsBasicData) do
+        if v ~= nil then
+            table.insert(friendsId, i)
+        end
+    end
+    if friendsId[1] then
+        local friendsInfo = DataManager.GetMyFriendsInfo()
+        if friendsInfo[1] then
+            self:_showFriends()
+            FriendsPanel.friendsNumberText.text = #friendsId
+            FriendsPanel.groupNumberText.text = "5"
+        else
+            Event.Brocast("m_QueryPlayerInfo", friendsId)
+            FriendsPanel.friendsNumberText.text = #friendsId
+            FriendsPanel.groupNumberText.text = "5"
+        end
+    else
+        FriendsPanel.friendsNumberText.text = "0"
+        FriendsPanel.groupNumberText.text = "0"
+    end
+
+    self:_refreshState()
+end
+
+--显示好友信息
+function FriendsCtrl:_showFriends()
+    FriendsCtrl.friendInfo = DataManager.GetMyFriendsInfo()
+    FriendsPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendsCtrl.friendInfo)
+end
+
+-- 刷新界面的状态
 function FriendsCtrl:_refreshState()
+    self:_showFriendsApplyNotice()
     if not FriendsCtrl.type or FriendsCtrl.type == 1 then
         FriendsCtrl.type = 1
         FriendsPanel.friendsToggle.isOn = true
         self:_friendsToggleValueChange(true)
-        FriendsPanel.friendsNumberText.text = "20"
-        FriendsPanel.groupNumberText.text = "5"
     elseif FriendsCtrl.type == 2 then
         FriendsPanel.groupToggle.isOn = true
         self:_groupToggleValueChange(true)
     end
-    FriendsPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendsCtrl.data[1])
+
     FriendsPanel.groupView:ActiveLoopScroll(self.groupSource, #FriendsCtrl.data[2])
+end
+
+-- 收到好友申请
+function FriendsCtrl:c_OnReceiveAddFriendReq()
+    self:_showFriendsApplyNotice()
+end
+
+-- 申请列表红点控制
+function FriendsCtrl:_showFriendsApplyNotice()
+    local friendsApply = DataManager.GetMyFriendsApply()
+    FriendsPanel.applicationlistNotice:SetActive(#friendsApply > 0)
+    FriendsPanel.applicationlistNoticeText.text = #friendsApply > 0 and tostring(#friendsApply) or "0"
 end
 
 -- 控制好友分页
@@ -157,6 +223,7 @@ end
 
 -- 管理好友
 function FriendsCtrl:OnFriendsManage(go)
+    go:_removeListener()
     local data =
     {
         type = 2,
@@ -167,6 +234,7 @@ end
 
 --打开黑名单
 function FriendsCtrl:OnBlacklist(go)
+    go:_removeListener()
     local data =
     {
         type = 3,
@@ -177,6 +245,7 @@ end
 
 --添加好友
 function FriendsCtrl:OnAddFriends(go)
+    go:_removeListener()
     local data =
     {
         type = 4,
@@ -187,6 +256,7 @@ end
 
 --打开申请列表
 function FriendsCtrl:OnApplicationlist(go)
+    go:_removeListener()
     local data =
     {
         type = 5,
@@ -197,6 +267,7 @@ end
 
 --管理群组
 function FriendsCtrl:OnGroupManage(go)
+    go:_removeListener()
     FriendsCtrl.type = 2
     local data =
     {
@@ -208,5 +279,19 @@ end
 
 --发起群聊
 function FriendsCtrl:OnStartGaroup(go)
+    go:_removeListener()
     ct.log("tina_w8_friends", "发起群聊")
+end
+
+-- 网络回调
+function FriendsCtrl:c_OnReceivePlayerInfo(friendsData)
+    for _, v in ipairs(friendsData.info) do
+        DataManager.SetMyFriendsInfo(v)
+    end
+    self:_showFriends()
+end
+
+function FriendsCtrl:c_OnReceiveAddFriendSucess(friend)
+    FriendsPanel.friendsNumberText.text = tostring(tonumber(FriendsPanel.friendsNumberText.text) + 1)
+    self:_showFriends()
 end

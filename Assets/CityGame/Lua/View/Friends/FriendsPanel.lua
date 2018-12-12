@@ -41,11 +41,13 @@ function FriendsPanel.InitPanel()
     this.groupView = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.groupContent = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport/Content")
 
-    --好友按钮群组（管理、黑名单、加好友、申请列表）
+    --好友按钮群组（管理、黑名单、加好友、申请列表、申请列表红点、申请列表的申请个数）
     this.friendsManageBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ManageBtn").gameObject
     this.blacklistBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/BlacklistBtn").gameObject
     this.addFriendsBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/AddFriendsBtn").gameObject
     this.applicationlistBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn").gameObject
+    this.applicationlistNotice = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice").gameObject
+    this.applicationlistNoticeText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice/Text"):GetComponent("Text")
 
     --群按钮群组（管理、发起群聊）
     this.groupManageBtn = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/BtnRoot/ManageBtn").gameObject

@@ -15,8 +15,8 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
-    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
+    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
+    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
     self.sizeSlider = self.viewRect.transform:Find("contentRoot/sizeSlider"):GetComponent("Slider");  -- slider
 
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()

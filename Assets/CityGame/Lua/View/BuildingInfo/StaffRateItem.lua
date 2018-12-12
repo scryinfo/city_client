@@ -34,7 +34,7 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.closeStateTran = viewTrans:Find("topRoot/close")  --关闭状态
     self.totalStaffCountText = viewTrans:Find("topRoot/open/countText"):GetComponent("Text")  --住宅员工人数
     self.toDoBtn = viewTrans:Find("topRoot/open/toDoBtn")
-    self.openBtn = viewTrans:Find("topRoot/close/openBtn")  --打开按钮
+    self.openBtn = viewTrans:Find("topRoot/close/openBtns")  --打开按钮
     self.errorTipTrans = viewTrans:Find("topRoot/close/errorTipImg")  --当自己查看界面且有员工未找到住所时显示
 
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()

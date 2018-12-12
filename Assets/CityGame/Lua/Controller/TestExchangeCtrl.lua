@@ -42,29 +42,29 @@ function TestExchangeCtrl:_initPanelData()
     TestExchangeCtrl.static.mainPanelLuaBehaviour = self.luaBehaviour
 
     local staticData = {}
-    staticData[1] = {text = 001}
-    staticData[2] = {text = 002}
-    staticData[3] = {text = 003}
-    staticData[4] = {text = 004}
-    staticData[5] = {text = 005}
-    staticData[6] = {text = 006}
-    staticData[7] = {text = 007}
-    staticData[8] = {text = 008}
-    staticData[9] = {text = 009}
-    staticData[10] = {text = 010}
-    staticData[11] = {text = 011}
-    staticData[12] = {text = 012}
-    staticData[13] = {text = 013}
-    staticData[14] = {text = 014}
-    staticData[15] = {text = 015}
-    staticData[16] = {text = 016}
-    staticData[17] = {text = 017}
+    staticData[1] = {text = 001, imgPath = ""}
+    staticData[2] = {text = 002, imgPath = ""}
+    staticData[3] = {text = 003, imgPath = ""}
+    staticData[4] = {text = 004, imgPath = ""}
+    staticData[5] = {text = 005, imgPath = ""}
+    staticData[6] = {text = 006, imgPath = ""}
+    staticData[7] = {text = 007, imgPath = ""}
+    staticData[8] = {text = 008, imgPath = ""}
+    staticData[9] = {text = 009, imgPath = ""}
+    staticData[10] = {text = 010, imgPath = ""}
+    staticData[11] = {text = 011, imgPath = ""}
+    staticData[12] = {text = 012, imgPath = ""}
+    staticData[13] = {text = 013, imgPath = ""}
+    staticData[14] = {text = 014, imgPath = ""}
+    staticData[15] = {text = 015, imgPath = ""}
+    staticData[16] = {text = 016, imgPath = ""}
+    staticData[17] = {text = 017, imgPath = ""}
     TestExchangeCtrl.static.sourceInfo = staticData
 
     local loopSource = UnityEngine.UI.LoopScrollDataSource.New()
     loopSource.mProvideData = TestExchangeCtrl.static.ProvideData
     loopSource.mClearData = TestExchangeCtrl.static.ClearData
-    TestExchangePanel.loopScroll:ActiveScroll(loopSource, 17);
+    TestExchangePanel.loopScroll:ActiveScroll(loopSource, 17)
 
 end
 

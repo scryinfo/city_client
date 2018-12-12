@@ -85,7 +85,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
-	modelList[ModelNames.House] = HouseModel.New();
+	--modelList[ModelNames.House] = HouseModel.New();
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
@@ -93,8 +93,6 @@ function CtrlManager.Init()
 	modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
-	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
-	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();

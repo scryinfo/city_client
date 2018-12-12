@@ -16,8 +16,15 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 --测试数据准备{
 local testcount = 1000
 local ResPathList = {}
-for i = 1, testcount do
-    ResPathList[i] = 'View/TempIcon/A'..i
+if UnityEngine.Application.isEditor then
+    for i = 1, testcount do
+        ResPathList[i] = 'TempIcon/A'..i
+    end
+else
+    for i = 1, testcount do
+        --ResPathList[i] = CityLuaUtil.getAssetsPath()..'/tempIcon_a'..i..'.unity3d'
+        ResPathList[i] = 'TempIcon/A'..i
+    end
 end
 
 local ptype = CityLuaUtil.getSpriteType()
@@ -30,7 +37,12 @@ reslist={} --改成全局的看看
 --加载测试
 local testLoadFun = function(reslist)
     for i = 1, testcount do
-        reslist[i] = UnityEngine.Resources.Load(ResPathList[i])
+        panelMgr:LoadPrefab_A(ResPathList[i], ptype, nil,function(self, obj )
+            reslist[i] = obj
+            if obj ~= nil then
+                ct.log('abel_w17_load_s128_n1000_S','[testLoadFun] UnityEngine.Resources.Load file '..obj.name)
+            end
+        end)
     end
 end
 
@@ -65,9 +77,17 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     collectgarbage("collect")
     ct.log('abel_w17_load_s128_n1000_S','[abel_w17_load_s128_n1000_S_mem] hoho')
 
-    UnitTest.MemoryConsumptionTest("abel_w17_load_s128_n1000_S","abel_w17_load_s128_n1000_S_mem",function()
-        testLoadFun(reslist)
-    end)
+    testLoadFun(reslist)
+
+    local timer = FrameTimer.New(function()
+        testUnLoadFun(reslist)
+        reslist=nil
+    end, 90, 0)
+    timer:Start()
+
+    --UnitTest.MemoryConsumptionTest("abel_w17_load_s128_n1000_S","abel_w17_load_s128_n1000_S_mem",function()
+    --    testLoadFun(reslist)
+    --end)
     -- 5470-4524 = 946 kb
     -- 5355-4520 = 835 kb
     -- 5355-4519 = 836 kb
@@ -75,7 +95,7 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
     --正常1000个128图标尺寸应该为 16*1000 = 15.625M
     --编辑器中看， 一个icon压缩为ect2的话，大小为8k， 那也不止 836 kb, 这里的 836 kb应该不是真正把资源加载到内存中了，
     --那么真正的资源加载发生在上面时候？
-
+    --[[
     local timer = FrameTimer.New(function()
         --测试unload内存用量
         collectgarbage("collect")
@@ -103,12 +123,13 @@ UnitTest.Exec("abel_w17_load_s128_n1000_S", "abel_w17_load_s128_n1000_S",  funct
                     testUnLoadAndDestoryInsFun(prefablist, inslist)
                 end)
             end, 10, 0)
-            timer:Start()
+            --timer:Start()
         end, 10, 0)
-        timer:Start()
+        --timer:Start()
     end, 10, 0)
-    --timer:Start()
+    timer:Start()
     --Instantiate 测试------------------------------------------------------------------------------------------------------------
+    --]]
 end)
 
 UnitTest.Exec("abel_w17_load_s128_n1000_S_IoTime", "abel_w17_load_s128_n1000_S_IoTime",  function ()

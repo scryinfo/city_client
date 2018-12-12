@@ -38,15 +38,16 @@ namespace LuaFramework {
             string abName = name.ToLower() + AppConst.BundleExt;
 
 #if ASYNC_MODE
-            ResManager.LoadPrefab(abName, assetName, delegate(UnityEngine.Object[] objs) {
+            ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs)
+            {
                 if (objs.Length == 0) return;
-                
+
                 if (func != null)
                 {
-                    func.Call(objInstance, objs[0]);                
+                    func.Call(objInstance, objs[0]);
                     Debug.LogWarning("CreatePanel::>> " + name + " " + objs[0]);
                 }
-                    
+
             }, type);
 #else
             GameObject prefab = ResManager.LoadAsset<GameObject>(name, assetName);

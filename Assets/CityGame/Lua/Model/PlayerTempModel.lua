@@ -19,74 +19,32 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --PlayerTempModel.tempTestReqAddGroung(800,800,850,850)
-        --PlayerTempModel.tempTestReqAddGroung(700,700,750,750)
-        PlayerTempModel.tempTestReqAddGroung(100,100,105,105)
+        PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2151001, 9999)
-    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(300,300,310,310)
+        PlayerTempModel.tempTestAddGroung(31,31, 40,40)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
-        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+        PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
     end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-        PlayerTempModel.tempTestReqAddItem(2151002, 999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-        PlayerTempModel.tempTestReqAddItem(2151003, 8888)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
-        PlayerTempModel.tempTestReqAddItem(2151004, 666)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-        PlayerTempModel.tempTestReqAddItem(2152001, 777)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(200,200,210,210)
-        ct.log("system","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.m_ReqAddBuilding(1600001,205,205)
-        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        --PlayerTempModel.tempTestAddGroung(0,0,105,105)
-        PlayerTempModel.tempTestAddGroung(0,0,10,10)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.V) then
-        PlayerTempModel.tempTestInvent(2151001, 23)
-        PlayerTempModel.tempTestInvent(2151002, 26)
-        ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
+        PlayerTempModel.tempTestAddGroung(41,41, 50,50)
+        --增加科技作弊码，可能没用了
+        --PlayerTempModel.tempTestInvent(2151001, 0)
+        --PlayerTempModel.tempTestInvent(2151002, 0)
         --PlayerTempModel.tempTestInvent(2151003, 0)
         --PlayerTempModel.tempTestInvent(2151004, 0)
         --PlayerTempModel.tempTestInvent(2152001, 0)
         --PlayerTempModel.tempTestInvent(2152002, 0)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
+        PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
+    end
+    --ct.OpenCtrl("AddLineChooseItemCtrl", {})
 end
 --add invent
 function PlayerTempModel.tempTestInvent(itmeId,level)
@@ -187,7 +145,13 @@ function PlayerTempModel.tempTestReqAddGroung(x1, y1, x2, y2)
     local pMsg = assert(pbl.encode("gs.Str", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
-
+--add invent
+--function PlayerTempModel.tempTestInvent(itmeId,level)
+--    local msgId = pbl.enum("gscode.OpCode", "cheat")
+--    local lMsg = {str = string.format("addinvent %s %s",itmeId,level)}
+--    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+--    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+--end
 ---
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}
@@ -257,6 +221,39 @@ function PlayerTempModel._getCollectStore(datas)
     end
     return storeList
 end
+
+---------------
+--获取item含量
+function PlayerTempModel:_getItemCount(store)
+    local itemTable = {}
+    local storeTemp = BaseTools.TableCopy(store)
+    for i, itemData in pairs(storeTemp.locked) do
+        itemTable[itemData.key.id] = itemData.n
+    end
+    for i, itemData in pairs(storeTemp.inHand) do
+        local tempCount = itemTable[itemData.key.id]
+        if tempCount then
+            itemTable[itemData.key.id] = itemData.n - tempCount
+        else
+            itemTable[itemData.key.id] = itemData.n
+        end
+    end
+    return itemTable
+end
+--获取仓库还剩多少容量
+function PlayerTempModel:_getRemianSpace(store, buildTypeId)
+    local totalCount = PlayerBuildingBaseData[buildTypeId].storeCapacity
+
+    local inUsedCount = 0
+    for i, itemData in pairs(store.reserved) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    for i, itemData in pairs(store.inHand) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    return totalCount - inUsedCount
+end
+
 --获取所有建筑，根据buildingId
 function PlayerTempModel._getBuildingInfo(roleData)
     local buyBuilding = {}

@@ -35,9 +35,11 @@ function ExchangeModel.OnCreate()
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeBuy"), ExchangeModel.n_OnReceiveExchangeBuy)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeSell"), ExchangeModel.n_OnReceiveExchangeSell)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeWatchItemDetail"), ExchangeModel.n_OnReceiveBuySellItemsInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeItemDetailInform"), ExchangeModel.n_OnReceiveBuySellItemsInfo)
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","exchangeGetItemDealHistory"), ExchangeModel.n_OnReceiveExchangeLineInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllBuildingDetail"), ExchangeModel.n_OnReceiveAllBuildingDetailInfo)
 
     --本地的回调注册
     Event.AddListener("m_ReqExchangeItemList", this.m_ReqExchangeItemList)
@@ -52,6 +54,7 @@ function ExchangeModel.OnCreate()
     Event.AddListener("m_ReqExchangeSell", this.m_ReqExchangeSell)
     Event.AddListener("m_ReqExchangeWatchItemDetail", this.m_ReqExchangeWatchItemDetail)
     Event.AddListener("m_ReqExchangeStopWatchItemDetail", this.m_ReqExchangeStopWatchItemDetail)
+    Event.AddListener("m_ReqAllBuildingDetail", this.m_ReqAllBuildingDetail)
 
     Event.AddListener("m_ReqExchangeLineInfo", this.m_ReqExchangeLineInfo)
 end
@@ -139,6 +142,11 @@ function ExchangeModel.m_ReqExchangeLineInfo(itemId)
     local pMsg = assert(pbl.encode("gs.Num", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
+--请求玩家所有建筑详情
+function ExchangeModel.m_ReqAllBuildingDetail()
+    local msgId = pbl.enum("gscode.OpCode", "getAllBuildingDetail")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
 
 ---网络回调
 --收到行情信息
@@ -198,4 +206,12 @@ end
 function ExchangeModel.n_OnReceiveExchangeLineInfo(stream)
     local lineData = assert(pbl.decode("gs.ItemDealHistory", stream), "ExchangeDetailModel.n_OnReceiveExchangeItemList: stream == nil")
     Event.Brocast("c_onReceiveLineInfo", lineData)
+end
+--收到所有建筑详情
+function ExchangeModel.n_OnReceiveAllBuildingDetailInfo(stream)
+    local data = assert(pbl.decode("gs.BuildingSet", stream), "ExchangeModel.n_OnReceiveAllBuildingDetailInfo: stream == nil")
+    if data then
+        DataManager.SetMyAllBuildingDetail(data)
+        Event.Brocast("m_OnReceiveAllBuildingDetail", data)
+    end
 end

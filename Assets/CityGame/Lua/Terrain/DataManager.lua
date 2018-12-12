@@ -198,7 +198,7 @@ end
 function DataManager.OpenDetailModel(modelclass,insId,...)
     --如果已有详情建筑信息
     if not DataManager.GetDetailModelByID(insId) then
-        DataManager.AddNewDetailModel(modelclass:New(insId,...),insId)
+        DataManager.AddNewDetailModel(modelclass:new(insId,...),insId)
     end
 end
 
@@ -257,32 +257,34 @@ end
 
 --远程调用Control的无返回值方法
 --参数：
+--0:insId  与当前打开界面对比
 --1：Controller名字
 --2：ontroller中self方法名
-function DataManager.ControllerRpcNoRet(ctrlName, modelMethord, ...)
+function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
     --参数验证
     if not UIPage.static.m_allPages or  not insId or not modelMethord  then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if tempController or tempController[modelMethord]  then
+    if (tempController or tempController[modelMethord]) and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
 
 --远程调用Control的有返回值方法
 --参数：
+--0:insId  与当前打开界面对比
 --1：Controller名字
 --2：Controller中self方法名
 --3：回调函数，参数为2中方法的返回值
 --4：... Controller中方法参数
-function DataManager.ControllerRpc(ctrlName, modelMethord, callBackMethord, ...)
+function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethord, ...)
     --参数验证
-    if not UIPage.static.m_allPages or not ctrlName or not modelMethord or not callBackMethord then
+    if not UIPage.static.m_allPages or  not insId or not ctrlName or not modelMethord or not callBackMethord then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if tempController or tempController[modelMethord]  then
+    if (tempController or tempController[modelMethord]) and tempController.insId == insId then
         callBackMethord(tempController[modelMethord](tempController,...))
     end
 end
@@ -290,6 +292,21 @@ end
 ----------------------------------------------------------------------------------DetailModel的网络消息管理
 
 local ModelNetMsgStack = {}
+
+--DetailModel 向服务器发送数据
+--参数：
+--protoNameStr：protobuf表名
+--protoNumStr:  protobuf协议号
+--protoEncodeStr:  protobuf装箱数据结构名
+--Msgtable： 向服务器发送数据Table集合
+function DataManager.ModelSendNetMes(protoNameStr,protoNumStr,protoEncodeStr,Msgtable)
+    --TODO:发送数据判空检验
+    if Msgtable ~= nil then
+        local msgId = pbl.enum(protoNameStr, protoNumStr)
+        local pMsg = assert(pbl.encode(protoEncodeStr, Msgtable))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end
+end
 
 --DetailModel 注册消息回调
 --参数：
@@ -309,15 +326,19 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
             if protoData then
                 local protoID = nil
-                if (protoData.BuildingInfo and protoData.BuildingInfo.id )then
-                    protoID = protoData.BuildingInfo.id
+                if (protoData.info and protoData.info.id )then
+                    protoID = protoData.info.id
                 elseif protoData.id then
                     protoID = protoData.id
                 end
                 if protoID then
                     for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
                         if key == protoID then
-                            call(protoData)
+                            if BuildDataStack.DetailModelStack[protoID] then
+                                call(BuildDataStack.DetailModelStack[protoID],protoData)
+                            else
+                                call(protoData)
+                            end
                             return
                         end
                     end
@@ -360,7 +381,10 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
-    PersonDataStack.m_GroundInfos = tempData.ground
+    PersonDataStack.m_groundInfos = tempData.ground
+    --获取自己所有的建筑详情
+    PersonDataStack.m_buysBuilding = tempData.buys or {}
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -425,16 +449,16 @@ end
 --修改自己所拥有土地集合
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
-    if PersonDataStack.m_GroundInfos then
-        for key, value in pairs(PersonDataStack.m_GroundInfos) do
+    if PersonDataStack.m_groundInfos then
+        for key, value in pairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
-                return;
+                return
             end
         end
     else
-        PersonDataStack.m_GroundInfos = {}
+        PersonDataStack.m_groundInfos = {}
     end
-    table.insert(PersonDataStack.m_GroundInfos,groundInfoData)
+    table.insert(PersonDataStack.m_groundInfos,groundInfoData)
 end
 
 function DataManager.GetMyOwnerID()
@@ -556,10 +580,20 @@ function DataManager.SetMyBlacklist(tempData)
     end
 end
 
+--获取自己所有的建筑详情
+function DataManager.GetMyAllBuildingDetail()
+    return PersonDataStack.m_buysBuilding
+end
+
+--刷新自己所有的建筑详情
+function DataManager.SetMyAllBuildingDetail(tempData)
+    PersonDataStack.m_buysBuilding = tempData
+end
+
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
-    for key, value in pairs(PersonDataStack.m_GroundInfos) do
+    for key, value in pairs(PersonDataStack.m_groundInfos) do
         if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
             return true
         end
@@ -632,6 +666,11 @@ function DataManager.Init()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
+    ----研究所Model
+    --SystemDatas.LaboratoryModel  = LaboratoryModel.New()
+    --if SystemDatas.LaboratoryModel ~= nil then
+    --    SystemDatas.LaboratoryModel:Awake()
+    --end
 end
 
 function DataManager.Close()

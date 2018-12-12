@@ -9,13 +9,14 @@ TestExchangeScrollItemCtrl = class('TestExchangeScrollItemCtrl')
 
 --初始化方法
 function TestExchangeScrollItemCtrl:initialize(data)
-    self.data = data;
+    self.data = data
 
-    local viewTrans = self.data.transform;
-    self.text = viewTrans:Find("Text"):GetComponent("Text");
-    self.button = viewTrans:Find("Button"):GetComponent("Button");
+    local viewTrans = self.data.transform
+    self.text = viewTrans:Find("Text"):GetComponent("Text")
+    self.image = viewTrans:Find("Image"):GetComponent("Image")
+    self.button = viewTrans:Find("Button"):GetComponent("Button")
 
-    self.button.onClick:RemoveAllListeners();
+    self.button.onClick:RemoveAllListeners()
     self.button.onClick:AddListener(function ()
         ct.log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..self.data.text)
     end)
@@ -26,6 +27,7 @@ end
 --初始化界面
 function TestExchangeScrollItemCtrl:_initData()
     self.text.text = self.data.text
+    --self.image.mainTexture =
 end
 
 --点击

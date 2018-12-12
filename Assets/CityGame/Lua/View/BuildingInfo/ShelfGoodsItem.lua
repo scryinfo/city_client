@@ -8,6 +8,9 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.manager = mgr
     self.id = id
     self.itemId = goodsDataInfo.itemId
+    self.num = goodsDataInfo.number
+    self.name = goodsDataInfo.name
+    self.price = goodsDataInfo.price
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
     self.goodsicon = self.prefab.transform:Find("details/goodsicon");  --物品Icon
     self.nameText = self.prefab.transform:Find("details/nameText"):GetComponent("Text");  --物品名字
@@ -25,15 +28,14 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    ct.log('fisher_week9_ShelfGoodsItem','[ShelfGoodsItem:OnXBtnClick] my id = ', go.id)
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    Event.Brocast("m_ReqShelfDel",buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
 end
-function ShelfGoodsItem:OnClick_detailsBtn()
-    UIPage:ShowPage(DETAILSBoxCtrl);
+function ShelfGoodsItem:OnClick_detailsBtn(ins)
+    UIPage:ShowPage(DETAILSBoxCtrl,ins);
 end
---删除后刷新ID及刷新显示
+--删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)
     self.id = id
     if id % 5 == 0 then
@@ -42,3 +44,19 @@ function ShelfGoodsItem:RefreshID(id)
         self.shelfImg:SetActive(false);
     end
 end
+function ShelfGoodsItem:RefreshData(data,id)
+    self.id = id
+    self.num = data.num
+    self.name = data.name
+    self.itemId = data.itemId
+    self.price = data.price
+    --self.producerId = data.producerId
+    --self.qty = data.qty
+end
+----刷新数据
+--function ShelfGoodsItem:refreshInfo(data,prefab)
+--    self.prefab = prefab
+--    self.prefab.nameText.text = Material[data.k.id].name
+--    self.prefab.numberText.text = data.n
+--    self.prefab.moneyText.text = data.price
+--end

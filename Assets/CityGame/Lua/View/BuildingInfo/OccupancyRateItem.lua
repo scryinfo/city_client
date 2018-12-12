@@ -16,17 +16,20 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancyData = occupancyData
     self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.brandText = self.viewRect.transform:Find("contentRoot/brandText"):GetComponent("Text");  -- 品牌值
-    self.qualityText = self.viewRect.transform:Find("contentRoot/qualityText"):GetComponent("Text");  -- 品质
-    self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider");  -- slider
-    self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancySlider/Text"):GetComponent("Text");  -- slider显示的值
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
+    self.brandText = self.viewRect.transform:Find("contentRoot/brandText"):GetComponent("Text")  -- 品牌值
+    self.qualityText = self.viewRect.transform:Find("contentRoot/qualityText"):GetComponent("Text")  -- 品质
+    self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider")  -- slider
+    self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancySlider/Text"):GetComponent("Text")  -- slider显示的值
 
     self.occupancySlider.maxValue = occupancyData.totalCount  --暂时不知道这个字段叫什么，从配置表中读取
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
+    local brands = DataManager.GetMyBuildingBrands()
+    self.brandText.text = brands[occupancyData.mId] or 0
+    self.qualityText.text = occupancyData.qty
 
-    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self);
+    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self)
 end
 
 --获取是第几个点击了
@@ -70,6 +73,9 @@ function OccupancyRateItem:updateInfo(data)
 
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = self.occupancyData.renter.."/"..self.occupancyData.totalCount
+    local brands = DataManager.GetMyBuildingBrands()
+    self.brandText.text = brands[self.occupancyData.mId] or 0
+    self.qualityText.text = self.occupancyData.qty
 end
 
 function OccupancyRateItem:destory()

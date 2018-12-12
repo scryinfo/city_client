@@ -36,6 +36,8 @@ function MunicipalModel:OnCreate()
     Event.AddListener("m_Setticket",this.m_Setticket,self)--设置门票
     Event.AddListener("m_SetSlot",this.m_SetSlot,self)--设置槽位
     Event.AddListener("m_DelAdFromSlot",this.m_DelAdFromSlot,self)--删广告
+    Event.AddListener("m_buySlot",this.m_buySlot,self)--买槽位
+
 
     ----注册 AccountServer 消息
     MunicipalModel.registerAsNetMsg()
@@ -50,13 +52,14 @@ function MunicipalModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adSetSlot"),MunicipalModel.n_getSetSlot);--设置槽位
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adSlotTimeoutInform"),MunicipalModel.n_getadSlotTimeoutInform);--槽位过期
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adDelAdFromSlot"),MunicipalModel.n_getdeleteSlot);--删广告
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adBuySlot"),MunicipalModel.n_getBuySlot);--删广告
+
 end
 
 --关闭事件--
 function MunicipalModel.Close()
     --清空本地UI事件
     Event.RemoveListener("m_detailPublicFacility", this.m_detailPublicFacility);
-
 end
 ---广告细节发包
 
@@ -65,13 +68,11 @@ function MunicipalModel:m_detailPublicFacility(buildingID)
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","detailPublicFacility")
     ----2、 填充 protobuf 内部协议数据
-
     local lMsg = { id=buildingID}
     ----3、 序列化成二进制数据
     local  pMsg = assert(pbl.encode("gs.Id", lMsg))
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-    local t=self
 end
 ---广告细节收包
 
@@ -82,6 +83,15 @@ function MunicipalModel.n_getdetailPublicFacility(stream)
     if  lMsg.ad.availableSlot then
         for i, v in ipairs(lMsg.ad.availableSlot) do
             this.SlotList[i]=v
+        end
+    end
+    if lMsg.ad.soldSlot then
+        for i, v in pairs(lMsg.ad.soldSlot) do
+            for k, s in pairs(this.SlotList) do
+                if s.id==v.s.id then
+                    table.remove(this.SlotList,k)
+                end
+            end
         end
     end
     MunicipalModel.ticket=lMsg.ticketPrice;
@@ -96,7 +106,6 @@ function MunicipalModel:m_addSlot(buildingID,minDayToRent,maxDayToRent,rentPreDa
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","adAddSlot")
     ----2、 填充 protobuf 内部协议数据
-
     local lMsg = { buildingId=buildingID,minDayToRent=minDayToRent,maxDayToRent=maxDayToRent,rentPreDay=rentPreDay}--/*,deposit=deposit/*}
     ----3、 序列化成二进制数据
     local  pMsg = assert(pbl.encode("gs.AddSlot", lMsg))
@@ -106,7 +115,7 @@ end
 ---添加槽位收包
 function MunicipalModel.n_getaddSlot(stream)
 
-    local lMsg = assert(pbl.decode("gs.Advertisement.Slot", stream),"添加槽位收包失败")
+   -- local lMsg = assert(pbl.decode("gs.Advertisement.Slot", stream),"添加槽位收包失败")
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
@@ -132,11 +141,10 @@ end
 ---打广告发包
 function MunicipalModel:m_adPutAdToSlot(Slotid,metaId,type,buildingId)
     --local tp = pbl.enum("gs.PublicFacility.Ad.Type", "BUILDING")
-
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","adPutAdToSlot")
     ----2、 填充 protobuf 内部协议数据
-    local lMsg = {Slotid=Slotid ,metaId=metaId,type=type,buildingId=buildingId}
+    local lMsg = {id=Slotid ,metaId=metaId,type=type,buildingId=buildingId}
     ----3、 序列化成二进制数据
     local  pMsg = assert(pbl.encode("gs.AddAd", lMsg))
     ----4、 创建包，填入数据并发包
@@ -152,7 +160,7 @@ function MunicipalModel.n_adPutAdToSlot(stream)
             --this.manger:_creatserverMapAdvertisementItem(lMsg)
             --this.manger.serverMapAdvertisementINSList[lMsg.metaId].numtext.text=this.manger.MapAdvertisementINSList[lMsg.metaId].numtext.text
         end
-    table.insert(this.manger.adList[lMsg.metaId],lMsg)
+        table.insert(this.manger.adList[lMsg.metaId],lMsg)
 end
 
 ---设置门票发包
@@ -210,25 +218,31 @@ function MunicipalModel.n_getdeleteSlot(stream)
 
 end
 
+---购买槽位发包
+function MunicipalModel:m_buySlot(buildingId,slotId,day)
+    ----1、 获取协议id
+    local msgId = pbl.enum("gscode.OpCode","adBuySlot")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = { buildingId=buildingId,slotId=slotId,day=day}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("gs.AdBuySlot", lMsg))
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+end
+---购买槽位收包
+function MunicipalModel.n_getBuySlot(stream)
+    ---购买槽位成功
+    Event.Brocast("SmallPop","Successful adjustment",57)
+end
 
 
 
 
 function MunicipalModel.Update()
-
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.U) then
-    --    --    for i, v in pairs(MunicipalModel.lMsg.ad) do
-    --    --
-    --    --        Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.id)
-    --    --    end
-    --    --
-    --    --    num=num+1
-    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    --    --end
-    --    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
-    --    --    Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
-    --    --    ct.log("system","%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-    --    --end
+        --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.E) then
+        --    Event.Brocast("m_buySlot",MunicipalModel.lMsg.info.id,this.SlotList[23].id,3)
+        --    ct.log("system","#############################################")
+        --end
 end
 
 

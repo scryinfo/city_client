@@ -9,7 +9,7 @@ UIPage:ResgisterOpen(LabScientificLineCtrl)
 LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
 LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
 LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --发明
-LabScientificLineCtrl.static.LabRemainStaffColor = "4a7ff6"  --员工颜色
+LabScientificLineCtrl.static.LabRemainStaffColor = "#4a7ff6"  --员工颜色
 
 function LabScientificLineCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -61,8 +61,14 @@ end
 function LabScientificLineCtrl:_initPanelData()
     LabScientificLineCtrl.researchItems = {}
     LabScientificLineCtrl.inventionItems = {}
+    --有个问题，这个脚本并没有重写hide方法，为什么m_data会清空
+    if self.m_data then
+        self.buildingId = self.m_data.buildingId
+        LabScientificLineCtrl.static.buildingId = self.buildingId
+    end
+    LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
 
-    DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
+    DataManager.DetailModelRpc(self.buildingId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
         self.remainWorker = remainWorker
         self.maxWorkerNum = maxWorkerNum
         self.researchDatas = researchLines
@@ -90,15 +96,15 @@ end
 LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabResearchCtrl", {buildingId = self.buildingId, itemId = 2151001})
+            ct.OpenCtrl("LabResearchCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2201003})
         end)
         return
     end
 
     idx = idx + 1
     if idx == 2 and (not LabScientificLineCtrl.researchInfoData[idx].lineId) then  --新增临时线
-        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetWorkerCount', function (remainWorker)
-            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.researchInfoData[idx], remainWorker)
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.researchInfoData[idx], remainWorker, transform:GetComponent("RectTransform").anchoredPosition)
         end)
     end
     local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
@@ -108,15 +114,15 @@ end
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabInventionCtrl", {buildingId = self.buildingId, itemId = 2151001})
+            ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2201003})
         end)
         return
     end
 
     idx = idx + 1
     if idx == 2 and (not LabScientificLineCtrl.inventionInfoData[idx].lineId) then  --新增临时线
-        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetWorkerCount', function (remainWorker)
-            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.inventionInfoData[idx], remainWorker)
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.inventionInfoData[idx], remainWorker, transform:GetComponent("RectTransform").anchoredPosition)
         end)
     end
     local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)

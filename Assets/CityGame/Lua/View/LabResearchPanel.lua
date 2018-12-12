@@ -27,10 +27,10 @@ function LabResearchPanel.InitPanel()
     this.singleLineTran = transform:Find("bottomRoot/right/singleLine")
     this.singleLineItem = LabFormulaItem:new(this.singleLineTran)
     this.twoLineTran = transform:Find("bottomRoot/right/twoLine")
-    this.twoLineItem = LabFormulaItem:new(this.twoLine)
+    this.twoLineItem = LabFormulaItem:new(this.twoLineTran)
     this.threeLineTran = transform:Find("bottomRoot/right/threeLine")
     this.threeLineItem = LabFormulaItem:new(this.threeLineTran)
-    this.researchBtn = transform:Find("bottomRoot/workingImg/researchBtn"):GetComponent("Button")
+    this.researchBtn = transform:Find("bottomRoot/right/workingImg/researchBtn"):GetComponent("Button")
 end
 --设置
 function LabResearchPanel:setBulbState(state)

@@ -17,9 +17,9 @@ function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
 
     self.staffSlider.onValueChanged:AddListener(function(value)
         if value > 0 then
-            self.disableImgTran.localScale = Vector3.one
-        else
             self.disableImgTran.localScale = Vector3.zero
+        else
+            self.disableImgTran.localScale = Vector3.one
         end
         self.staffText.text = tostring(value)
     end)
@@ -28,9 +28,11 @@ function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
     end)
 end
 --处于新增线的状态 --需要包含itemId和buildingId
-function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
+function LabScientificChangeStaffItem:newLineState(lineData, remainWorker, pos)
     --父物体的bgBtn需要解除
     self.viewRect.localScale = Vector3.one
+    self.viewRect:GetComponent("RectTransform").anchoredPosition = pos
+    self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = false
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = "0"
@@ -47,13 +49,16 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
         local workerNum = self.staffSlider.value
-        DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase)
-        self:_hideSelf()
+        if workerNum > 0 then
+            DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase)
+            self:_hideSelf()
+        end
     end)
 end
 --改变员工数量状态
 function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker)
     self.viewRect.localScale = Vector3.one
+    self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = true
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = tostring(data.workerNum)

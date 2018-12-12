@@ -161,7 +161,7 @@ end
 --根据传入的原料合成表返回包含仓库含量的表
 function LaboratoryModel:m_GetFormularData(matTable)
     for i, item in ipairs(matTable) do
-        item.haveCount = self.store[item.matId]
+        item.haveCount = self.store[item.matId] or 0
     end
     return matTable
 end
@@ -192,10 +192,12 @@ function LaboratoryModel:_getScientificLine()
 end
 --客户端显示 --添加临时线
 function LaboratoryModel:m_AddTempLineData(data)
-    local tempLine
+    local tempLine = {}
     tempLine.itemId = data.itemId
     tempLine.phase = data.phase
     tempLine.workerNum = data.workerNum
+    --table.insert(self.orderLineData, 1, tempLine)
+
     if data.type == 0 then
         table.insert(self.researchLines, 1, tempLine)
         --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'createTempLine', data.type, self.researchLines)

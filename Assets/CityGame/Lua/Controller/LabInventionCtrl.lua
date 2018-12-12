@@ -39,6 +39,9 @@ function LabInventionCtrl:Hide()
     UIPage.Hide(self)
 end
 function LabInventionCtrl:_update()
+    if not self.m_data then
+        return
+    end
     if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
         if self.remainTime then
             self.remainTime = self.m_data.leftSec
@@ -100,7 +103,7 @@ function LabInventionCtrl:_initPanelData()
 end
 --点了发明按钮
 function LabInventionCtrl:_inventeBtnClick(ins)
-    local data = {itemId = ins.m_data.itemId, phase = 1, workerNum = 0}
+    local data = {itemId = ins.m_data.itemId, type = 1, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end

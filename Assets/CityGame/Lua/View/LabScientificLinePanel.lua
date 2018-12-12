@@ -55,21 +55,3 @@ function LabScientificLinePanel._inventionToggleState(isOn)
         --this.inventionScroll.gameObject:SetActive(false)
     end
 end
---打开更改员工数的提示弹框
-function LabScientificLinePanel.showNomalStaffTip(pos)
-    this.changeStaffCountBtn.transform.localScale = Vector3.one
-    this.changeStaffCountBtn.interactable = true
-    this.changeStaffCountItemRect.anchoredPosition = pos
-    this.delBtn.interactable = true
-    this.delDisableImgTran.localScale = Vector3.zero
-end
---new line 打开时的调整工资
-function LabScientificLinePanel.showNewLineStaffTip(pos)
-    this.changeStaffCountBtn.transform.localScale = Vector3.one
-    this.changeStaffCountBtn.interactable = false
-    this.changeStaffCountItemRect.anchoredPosition = pos
-    this.staffText.text = "0"
-    this.staffSlider.value = 0
-    this.delBtn.interactable = false
-    this.delDisableImgTran.localScale = Vector3.one
-end

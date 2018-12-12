@@ -41,6 +41,9 @@ function LabResearchCtrl:Hide()
 end
 
 function LabResearchCtrl:_update()
+    if not self.m_data then
+        return
+    end
     if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
         if self.remainTime then
             self.remainTime = self.m_data.leftSec
@@ -78,7 +81,7 @@ function LabResearchCtrl:_initPanelData()
     if not self.m_data.id then    --没有id则为临时添加的线
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabResearchPanel:setBulbState(self.m_data.bulbState)
-        LabResearchPanel.researchBtn.localScale = Vector3.one
+        LabResearchPanel.researchBtn.transform.localScale = Vector3.one
 
         LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
         LabResearchPanel.researchBtn.onClick:AddListener(function ()
@@ -87,11 +90,11 @@ function LabResearchCtrl:_initPanelData()
     else
         if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
-            LabResearchPanel.researchBtn.localScale = Vector3.zero
+            LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
         else
             self.m_data.bulbState = LabInventionBulbItemState.Finish
             if self.m_data.roll == 0 then    --没有倒计时结束，且没有roll，则为从暂停的线点进来
-                LabResearchPanel.researchBtn.localScale = Vector3.one
+                LabResearchPanel.researchBtn.transform.localScale = Vector3.one
                 LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
                 LabResearchPanel.researchBtn.onClick:AddListener(function ()
                     self:_launchLine(self)
@@ -105,7 +108,7 @@ function LabResearchCtrl:_initPanelData()
 end
 --添加临时线，返回科技线
 function LabResearchCtrl:_creatTempLine(ins)
-    local data = {itemId = ins.m_data.itemId, phase = 1, workerNum = 0}
+    local data = {itemId = ins.m_data.itemId, type = 0, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end

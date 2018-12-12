@@ -21,7 +21,7 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
     self.staffSlider = viewTrans:Find("mainRoot/staffRoot/staffSlider"):GetComponent("Slider")
 
-    self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
+    self.progressImgRect = viewTrans:Find("mainRoot/progressRoot/progressImg")
     self.bottleImg = viewTrans:Find("mainRoot/progressRoot/bottleImg"):GetComponent("Image")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
 
@@ -52,10 +52,10 @@ function LabResearchLineItem:_initData(data)
     self.phaseSec = FormularConfig[data.itemId].phaseSec
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
-    if data.roll > 0 then
-        self.bottleImg.color = Color.white
-    else
+    if not data.roll or data.roll <= 0 then
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
+    else
+        self.bottleImg.color = Color.white
     end
     self.startTimeDown = true
     self.timeDownText.transform.localScale = Vector3.one

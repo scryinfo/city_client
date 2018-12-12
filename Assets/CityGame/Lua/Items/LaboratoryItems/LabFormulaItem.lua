@@ -21,17 +21,17 @@ function LabFormulaItem:initialize(transform)
 end
 ---显示
 function LabFormulaItem:showState(datas)
-    if #datas ~= #self.itemRect then
+    if #datas ~= #self.itemRects then
         ct.log("cycle_w15_laboratory03", "场景中的item个数与期望显示的个数不一致，或者传入的不是顺序表")
         return
     end
 
     for i, itemData in pairs(datas) do
         local showStr
-        if haveCount < itemData.matCount then
-            showStr = string.format("<color=%s>%d/%d</color>", LabFormulaItem.static.Red_Color, itemData.haveCount, itemData.matCount)
+        if itemData.haveCount < itemData.matCount then
+            showStr = string.format("<color=%s>%d</color>/%d", LabFormulaItem.static.Red_Color, itemData.haveCount, itemData.matCount)
         else
-            showStr = string.format("%d/%d", haveCount, itemData.matCount)
+            showStr = string.format("%d/%d", itemData.haveCount, itemData.matCount)
         end
         self.itemRects[i].matCountText.text = showStr
         --self.itemRects[i].matImg = itemData.matId  --根据id读取图片

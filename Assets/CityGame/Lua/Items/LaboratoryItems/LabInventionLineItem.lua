@@ -35,10 +35,10 @@ function LabInventionLineItem:initialize(data, viewRect)
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
-    --self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    --self.staffScrollbar.onValueChanged:AddListener(function()
-    --
-    --end)
+    self.staffScrollbar.onValueChanged:RemoveAllListeners()
+    self.staffScrollbar.onValueChanged:AddListener(function()
+
+    end)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)
     end)
@@ -62,12 +62,12 @@ function LabInventionLineItem:_initData(data)
     self.formularData = FormularConfig[data.itemId]
     --self.staffSlider.maxValue = self.formularData.phaseSec
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
-    if data.roll > 0 then
-        self.bulbImg.color = Color.white
-        self.progressCountText.text = tostring(data.roll)
-    else
+    if not data.roll or data.roll <= 0 then
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
+    else
+        self.bulbImg.color = Color.white
+        self.progressCountText.text = tostring(data.roll)
     end
 
     --显示阶段状态

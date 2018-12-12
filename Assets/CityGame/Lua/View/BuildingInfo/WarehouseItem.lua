@@ -7,6 +7,9 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.id = id;
+    self.name = goodsDataInfo.name;
+    self.itemId = goodsDataInfo.itemId;
+    self.n = goodsDataInfo.num
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.icon = self.prefab.transform:Find("icon");  --物品Icon
     self.circleGreayImg = self.prefab.transform:Find("circleGreayImg"):GetComponent("RectTransform");  --圆
@@ -30,7 +33,6 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self._luabehaviour:AddClick(self.closeBtn.gameObject, self.OnClick_closeBtn,self);
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
 end
-
 --Item状态 选择
 function WarehouseItem:c_GoodsItemChoose()
     self.circleGreayImg.transform.localScale = Vector3.one;
@@ -51,15 +53,28 @@ end
 function WarehouseItem:OnClick_bgBtn(ins)
     Event.Brocast("c_warehouseClick", ins.id,ins.itemId)
 end
+--删除事件
+function WarehouseItem:closeEvent()
+    Event.RemoveListener("c_GoodsItemChoose",self.c_GoodsItemChoose,self);
+    Event.RemoveListener("c_GoodsItemDelete",self.c_GoodsItemDelete,self);
+end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
     --关闭消息事件
-    Event.RemoveListener("c_GoodsItemChoose",go.c_GoodsItemChoose, go);
-    Event.RemoveListener("c_GoodsItemDelete",go.c_GoodsItemDelete, go);
+    --Event.RemoveListener("c_GoodsItemChoose",go.c_GoodsItemChoose, go);
+    --Event.RemoveListener("c_GoodsItemDelete",go.c_GoodsItemDelete, go);
     go.manager:_WarehousedeleteGoods(go.id);
 
 end
 --删除后刷新ID及显示
 function WarehouseItem:RefreshID(id)
     self.id = id;
+end
+function WarehouseItem:RefreshData(data,id)
+    self.id = id
+    self.n = data.num
+    self.name = data.name
+    self.itemId = data.itemId
+    --self.producerId = data.producerId
+    --self.qty = data.qty
 end

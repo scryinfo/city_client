@@ -202,8 +202,8 @@ end
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     ---营业额折线图Item --左边第一个
-    local turnoverLineChart
-    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+    --local turnoverLineChart
+    local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
     turnoverLineChart.gameObject.name = "LineChartRateItem"
 
     local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
@@ -215,30 +215,27 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---仓库Item --左边第三个
-    local warehouseView
-    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+    --local warehouseView
+    local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
     warehouseView.gameObject.name = "WarehouseRateItem"
     local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
     self.leftData[3] = warehouseLuaItem
 
     ---货架Item --左边第四个
-    local shelfView
-    shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+    --local shelfView
+    local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
     shelfView.gameObject.name = "ShelfRateItem"
     local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-    local shelfLuaItem = ShelfRateItem:new(nil, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+    local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
     self.leftData[4] = shelfLuaItem
 
     ---生产线 --右侧第一个
-    local prodictionLineViewRect
-    prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
+    --local prodictionLineViewRect
+    local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
     prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
-    --[[    local rentalData = {}
-        rentalData.rent = 500.23
-        rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置]]
     local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-    local prodictionLuaItem = HomeProductionLineItem:new(nil, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
+    local prodictionLuaItem = HomeProductionLineItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
     self.rightData[1] = prodictionLuaItem
 end
 --创建加工厂主页左右信息
@@ -247,8 +244,8 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
     ---营业额折线图Item --左边第一个
-    local turnoverLineChart
-    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+    --local turnoverLineChart
+    local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
     turnoverLineChart.gameObject.name = "LineChartRateItem"
 
     local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
@@ -260,30 +257,27 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---仓库Item --左边第三个
-    local warehouseView
-    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+    --local warehouseView
+    local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
     warehouseView.gameObject.name = "WarehouseRateItem"
     local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
     self.leftData[3] = warehouseLuaItem
 
     ---货架Item --左边第四个
-    local shelfView
-    shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+    --local shelfView
+    local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
     shelfView.gameObject.name = "ShelfRateItem"
     local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-    local shelfLuaItem = ShelfRateItem:new(nil, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+    local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
     self.leftData[4] = shelfLuaItem
 
     ---生产线 --右侧第一个
-    local prodictionLineViewRect
-    prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
+    --local prodictionLineViewRect
+    local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
     prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
-    --[[    local rentalData = {}
-        rentalData.rent = 500.23
-        rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置]]
     local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-    local prodictionLuaItem = HomeProductionLineItem:new(nil, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
+    local prodictionLuaItem = HomeProductionLineItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
     self.rightData[1] = prodictionLuaItem
 
 end

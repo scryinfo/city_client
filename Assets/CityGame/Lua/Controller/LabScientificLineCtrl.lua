@@ -104,6 +104,8 @@ LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
     LabScientificLineCtrl.static.researchItems[idx] = item
 end
+LabScientificLineCtrl.static.researchClearData = function(transform)
+end
 --发明
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
@@ -115,6 +117,8 @@ LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     idx = idx + 1
     local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)
     LabScientificLineCtrl.static.inventionItems[idx] = item
+end
+LabScientificLineCtrl.static.inventionClearData = function(transform)
 end
 ---刷新数据
 --研究

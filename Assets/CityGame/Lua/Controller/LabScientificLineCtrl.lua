@@ -141,6 +141,9 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
             LabScientificLinePanel.researchTipItem:newLineState(researchInfoData[2], remainWorker)
         end)
+    else
+        LabScientificLinePanel.inventTipItem:_hideSelf()
+        LabScientificLinePanel.researchTipItem:_hideSelf()
     end
 end
 --发明
@@ -159,7 +162,13 @@ function LabScientificLineCtrl:onReceiveLabInventionData(datas)
 
     --特殊情况处理，如果是临时线的话，则打开调整员工状态
     if #inventionInfoData >= 2 and not inventionInfoData[2].lineId then
-
+        LabScientificLinePanel.researchTipItem:_hideSelf()
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.inventTipItem:newLineState(inventionInfoData[2], remainWorker)
+        end)
+    else
+        LabScientificLinePanel.inventTipItem:_hideSelf()
+        LabScientificLinePanel.researchTipItem:_hideSelf()
     end
 end
 

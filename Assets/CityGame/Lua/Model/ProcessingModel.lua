@@ -46,9 +46,11 @@ function ProcessingModel.n_OnOpenProcessing(stream)
     end
     local msgProcessing = assert(pbl.decode("gs.ProduceDepartment",stream),"ProcessingModel.n_OnOpenProcessing")
     if msgProcessing then
+        ProcessingModel.dataDetailsInfo = msgProcessing;
         ProcessingModel.buildingId = msgProcessing.info.id;
         ProcessingModel.processingWarehouse = msgProcessing.store.inHand;
         ProcessingModel.processingShelf = msgProcessing.shelf.good;
-        ProcessingModel.buildingCode = msgProcessing.info.mId
+        ProcessingModel.buildingCode = msgProcessing.info.mId;
     end
+    Event.Brocast("refreshProcessingDataInfo",msgProcessing)
 end

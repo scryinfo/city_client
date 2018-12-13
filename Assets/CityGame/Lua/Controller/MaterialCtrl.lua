@@ -22,9 +22,38 @@ function MaterialCtrl:Awake(go)
     materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    self.data = {}
-    self.data.buildingType = BuildingType.MaterialFactory
-    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
+    --self.data = {}
+    --self.data.buildingType = BuildingType.MaterialFactory
+    --local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
+
+    Event.AddListener("refreshMaterialDataInfo",self.refreshMaterialDataInfo,self)
+    --暂时
+    Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
+end
+function MaterialCtrl:Refresh()
+
+end
+
+--刷新原料厂信息
+function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
+    MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.isOther = true
+        MaterialPanel.changeNameBtn.localScale = Vector3.zero
+
+        self.data = {}
+        self.data.buildingType = BuildingType.MaterialFactory
+        self.data.isOther = true
+        local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
+    else
+        self.isOther = false
+        MaterialPanel.changeNameBtn.localScale = Vector3.one
+
+        self.data = {}
+        self.data.buildingType = BuildingType.MaterialFactory
+        self.data.isOther = false
+        local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
+    end
 end
 
 --更改名字

@@ -24,6 +24,26 @@ function ProcessingCtrl:Awake(go)
     self.m_data = {}
     self.m_data.buildingType = BuildingType.ProcessingFactory
     local processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, processingBehaviour, self.m_data)
+
+    Event.AddListener("refreshProcessingDataInfo",self.refreshProcessingDataInfo,self)
+    --暂时
+    Event.Brocast("refreshProcessingDataInfo",ProcessingModel.dataDetailsInfo)
+end
+function ProcessingCtrl:Refresh()
+    --if self.m_data then
+    --    Event.Brocast('m_ReqOpenProcessing',self.m_data)
+    --end
+end
+--刷新加工厂信息
+function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
+    ProcessingPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.isShow = true
+        ProcessingPanel.changeNameBtn.localScale = Vector3.zero
+    else
+        self.isShow = false
+        ProcessingPanel.changeNameBtn.localScale = Vector3.one
+    end
 end
 
 --更改名字

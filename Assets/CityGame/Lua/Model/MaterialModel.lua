@@ -45,10 +45,12 @@ function MaterialModel.n_OnOpenMaterial(stream)
     end
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
-        MaterialModel.buildingId = msgMaterial.info.id
+        MaterialModel.dataDetailsInfo = msgMaterial;
+        MaterialModel.buildingId = msgMaterial.info.id;
         MaterialModel.materialWarehouse = msgMaterial.store.inHand;
-        MaterialModel.materialShelf = msgMaterial.shelf.good
-        MaterialModel.materialProductionLine = msgMaterial.line
-        MaterialModel.buildingCode = msgMaterial.info.mId
+        MaterialModel.materialShelf = msgMaterial.shelf.good;
+        MaterialModel.materialProductionLine = msgMaterial.line;
+        MaterialModel.buildingCode = msgMaterial.info.mId;
     end
+    Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
 end

@@ -144,7 +144,7 @@ end
 --根据建筑store获取一个以itemId为key的字典
 function getItemStore(store)
 	local itemTable = {}
-	local storeTemp = BaseTools.TableCopy(store)
+	local storeTemp = ct.deepCopy(store)
 	if storeTemp.locked then
 		for i, itemData in pairs(storeTemp.locked) do
 			itemTable[itemData.key.id] = itemData.n

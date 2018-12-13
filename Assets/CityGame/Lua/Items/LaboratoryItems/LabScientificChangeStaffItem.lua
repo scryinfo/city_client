@@ -28,10 +28,10 @@ function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
     end)
 end
 --处于新增线的状态 --需要包含itemId和buildingId
-function LabScientificChangeStaffItem:newLineState(lineData, remainWorker, pos)
+function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     --父物体的bgBtn需要解除
+    self.viewRect.transform:SetAsLastSibling()
     self.viewRect.localScale = Vector3.one
-    self.viewRect:GetComponent("RectTransform").anchoredPosition = pos
     self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = false
     self.disableImgTran.transform.localScale = Vector3.one
@@ -45,6 +45,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker, pos)
         else
             ct.OpenCtrl("LabInventionCtrl", lineData)
         end
+        DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_DelTempLineData', lineData)
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
@@ -81,4 +82,6 @@ end
 --隐藏显示
 function LabScientificChangeStaffItem:_hideSelf()
     self.viewRect.localScale = Vector3.zero
+    self.parentBtn.interactable = true
+    self.parentBtn.transform.localScale = Vector3.zero
 end

@@ -337,7 +337,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
     warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
     warehouseView.gameObject.name = "WarehouseRateItem"
     local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
     self.leftData[2] = warehouseLuaItem
     ---研究线 --右1
     local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}

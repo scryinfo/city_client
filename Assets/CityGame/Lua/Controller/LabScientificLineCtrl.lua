@@ -59,8 +59,8 @@ function LabScientificLineCtrl:_removeListener()
 end
 
 function LabScientificLineCtrl:_initPanelData()
-    LabScientificLineCtrl.researchItems = {}
-    LabScientificLineCtrl.inventionItems = {}
+    LabScientificLineCtrl.static.researchItems = {}
+    LabScientificLineCtrl.static.inventionItems = {}
     --有个问题，这个脚本并没有重写hide方法，为什么m_data会清空
     if self.m_data then
         self.buildingId = self.m_data.buildingId
@@ -100,38 +100,26 @@ LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
         end)
         return
     end
-
     idx = idx + 1
-    if idx == 2 and (not LabScientificLineCtrl.researchInfoData[idx].lineId) then  --新增临时线
-        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
-            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.researchInfoData[idx], remainWorker, transform:GetComponent("RectTransform").anchoredPosition)
-        end)
-    end
     local item = LabResearchLineItem:new(LabScientificLineCtrl.researchInfoData[idx], transform)
-    LabScientificLineCtrl.researchItems[idx] = item
+    LabScientificLineCtrl.static.researchItems[idx] = item
 end
 --发明
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2201003})
+            ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2151003})
         end)
         return
     end
-
     idx = idx + 1
-    if idx == 2 and (not LabScientificLineCtrl.inventionInfoData[idx].lineId) then  --新增临时线
-        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
-            LabScientificLinePanel.researchTipItem:newLineState(LabScientificLineCtrl.inventionInfoData[idx], remainWorker, transform:GetComponent("RectTransform").anchoredPosition)
-        end)
-    end
     local item = LabInventionLineItem:new(LabScientificLineCtrl.inventionInfoData[idx], transform)
-    LabScientificLineCtrl.inventionItems[idx] = item
+    LabScientificLineCtrl.static.inventionItems[idx] = item
 end
 ---刷新数据
 --研究
 function LabScientificLineCtrl:onReceiveLabResearchData(datas)
-    local researchInfoData = BaseTools.TableCopy(datas)
+    local researchInfoData = ct.deepCopy(datas)
     local researchPrefabList = {}
     for i, item in pairs(researchInfoData) do
         researchPrefabList[i] = LabScientificLineCtrl.static.LabResearchItemPath
@@ -142,10 +130,18 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
 
     LabScientificLineCtrl.researchInfoData = researchInfoData
     LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
+
+    --特殊情况处理，如果是临时线的话，则打开调整员工状态
+    if #researchInfoData >= 2 and not researchInfoData[2].lineId then
+        LabScientificLinePanel.inventTipItem:_hideSelf()
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:newLineState(researchInfoData[2], remainWorker)
+        end)
+    end
 end
 --发明
 function LabScientificLineCtrl:onReceiveLabInventionData(datas)
-    local inventionInfoData = BaseTools.TableCopy(datas)
+    local inventionInfoData = ct.deepCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do
         inventionPrefabList[i] = LabScientificLineCtrl.static.LabInventionItemPath
@@ -156,6 +152,11 @@ function LabScientificLineCtrl:onReceiveLabInventionData(datas)
 
     LabScientificLineCtrl.inventionInfoData = inventionInfoData
     LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
+
+    --特殊情况处理，如果是临时线的话，则打开调整员工状态
+    if #inventionInfoData >= 2 and not inventionInfoData[2].lineId then
+
+    end
 end
 
 ---提示框部分

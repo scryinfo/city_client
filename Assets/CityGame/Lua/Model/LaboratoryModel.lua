@@ -212,13 +212,13 @@ function LaboratoryModel:m_DelTempLineData(data)
             ct.log("", "错误错误错误")
         end
         table.remove(self.researchLines, 1)
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
     else
         if self.inventionLines[1].lineId then
             ct.log("", "错误错误错误")
         end
         table.remove(self.inventionLines, 1)
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
 --更新ctrl 线的信息

@@ -226,7 +226,7 @@ end
 --获取item含量
 function PlayerTempModel:_getItemCount(store)
     local itemTable = {}
-    local storeTemp = BaseTools.TableCopy(store)
+    local storeTemp = ct.deepCopy(store)
     for i, itemData in pairs(storeTemp.locked) do
         itemTable[itemData.key.id] = itemData.n
     end

@@ -68,13 +68,17 @@ function LabScientificLineCtrl:_initPanelData()
     end
     LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
 
-    DataManager.DetailModelRpc(self.buildingId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker)
+    DataManager.DetailModelRpc(self.buildingId, 'm_GetScientificData', function (researchLines, inventionLines, maxWorkerNum, remainWorker, type)
         self.remainWorker = remainWorker
         self.maxWorkerNum = maxWorkerNum
         self.researchDatas = researchLines
         self.inventionDatas = inventionLines
         LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, maxWorkerNum)
-        self:_researchLineOpen()
+        if type == 0 then
+            self:_researchLineOpen()
+        else
+            self:_inventionLineOpen()
+        end
     end)
 end
 ---按钮切页
@@ -174,27 +178,3 @@ end
 
 ---提示框部分
 --打开弹框
-function LabScientificLineCtrl:_showSetStaffTip(lineItem)
-    self.tempLine = lineItem
-
-    LabScientificLinePanel.showNewLineStaffTip(lineItem.viewRect)
-end
---点击弹窗以外的地方，关闭弹窗，不改变员工数量
-function LabScientificLineCtrl:_cancelChangeStaffCount()
-    LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
-end
---点击确认按钮，向服务器发送消息
-function LabScientificLineCtrl:_sureChangeStaffCount()
-    local staffCount = tonumber(LabScientificLinePanel.staffText.text)
-    if staffCount <= 0 then
-        return
-    end
-
-    if self.isNewLine then
-        Event.Brocast("m_ReqAddLine", self.buildingId, self.tempLine.itemId, self.tempLine.type, staffCount)  --如果是新添加的线，则发送addLine
-    else
-        Event.Brocast("m_ReqSetWorkerNum", self.buildingId, self.tempLine.lineId, staffCount)  --一般的改变员工，则需要发送setWorkerNum
-    end
-
-    LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero
-end

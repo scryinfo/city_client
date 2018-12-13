@@ -20,7 +20,7 @@ function LabInventionPanel.InitPanel()
     this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
     this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")
 
-    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/successItems"))
+    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/rollRoot/successItems"))
 
     this.itemNameText = transform:Find("bottomRoot/right/titleBg/itemNameText"):GetComponent("Text")
     this.goodRootTran = transform:Find("bottomRoot/right/goods")
@@ -32,7 +32,7 @@ function LabInventionPanel.InitPanel()
     this.singleLineTran = transform:Find("bottomRoot/right/goods/singleLine")
     this.singleLineItem = LabFormulaItem:new(this.singleLineTran)
     this.twoLineTran = transform:Find("bottomRoot/right/goods/twoLine")
-    this.twoLineItem = LabFormulaItem:new(this.twoLine)
+    this.twoLineItem = LabFormulaItem:new(this.twoLineTran)
     this.threeLineTran = transform:Find("bottomRoot/right/goods/threeLine")
     this.threeLineItem = LabFormulaItem:new(this.threeLineTran)
 end

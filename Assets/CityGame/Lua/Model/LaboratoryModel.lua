@@ -39,16 +39,25 @@ function LaboratoryModel:m_ReqLaboratoryDetailInfo()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})
 end
 --添加线
-function LaboratoryModel:m_ReqAddLine(itemId, type, workerNum, phase)
+function LaboratoryModel:m_ReqAddLine(itemId, type, workerNum, rollTarget)
     --记录一个临时的线
-    self.tempLine = { itemId = itemId, type = type, workerNum = workerNum, phase = phase}
+    self.tempLine = { itemId = itemId, type = type, workerNum = workerNum, phase = rollTarget}
 
-    local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
-    DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
+    --研究的时候，必须已经有等级才行
+    if type == 0 then
+        local level = DataManager.GetMyGoodLv()
+        if level and level[itemId] then
+            local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
+            DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
+        end
+    else
+        local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
+        DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
+    end
 end
 --开工
-function LaboratoryModel:m_ReqLabLaunchLine(lineId, phase)
-    local lMsg = { buildingId = self.insId, lineId = lineId, phase = phase }
+function LaboratoryModel:m_ReqLabLaunchLine(lineId, rollTarget)
+    local lMsg = { buildingId = self.insId, lineId = lineId, phase = rollTarget }
     DataManager.ModelSendNetMes("gscode.OpCode", "labLaunchLine","gs.LabLaunchLine",lMsg)
 end
 --删除线
@@ -99,7 +108,7 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(data)
         self.hashLineData[data.id] = data
     end
     self.remainWorker = self.remainWorker - data.workerNum
-    self:m_ReqLabLaunchLine(self.insId, data.id, self.tempLine.phase)
+    self:m_ReqLabLaunchLine(self.insId, data.id, self.tempLine.rollTarget)
 end
 --开工
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
@@ -176,7 +185,7 @@ function LaboratoryModel:m_GetScientificData()
         self:_getScientificLine()
     end
 
-    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker
+    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker, self.tempType or 0
 end
 --获取最新的科技线信息
 function LaboratoryModel:_getScientificLine()
@@ -194,10 +203,11 @@ end
 function LaboratoryModel:m_AddTempLineData(data)
     local tempLine = {}
     tempLine.itemId = data.itemId
-    tempLine.phase = data.phase
+    tempLine.rollTarget = data.rollTarget
     tempLine.workerNum = data.workerNum
     tempLine.type = data.type
     tempLine.buildingId = self.insId
+    self.tempType = data.type
 
     if data.type == 0 then
         table.insert(self.researchLines, 1, tempLine)

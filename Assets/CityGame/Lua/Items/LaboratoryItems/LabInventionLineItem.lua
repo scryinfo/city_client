@@ -35,8 +35,8 @@ function LabInventionLineItem:initialize(data, viewRect)
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
-    self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    self.staffScrollbar.onValueChanged:AddListener(function()
+    self.staffSlider.onValueChanged:RemoveAllListeners()
+    self.staffSlider.onValueChanged:AddListener(function()
 
     end)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
@@ -75,11 +75,15 @@ function LabInventionLineItem:_initData(data)
     for i = 1, self.formularData.phase do
         self.data.phaseStates[i] = LabInventionItemPhaseState.Null
     end
-    for i = 1, data.rollTarget do
-        self.data.phaseStates[i] = LabInventionItemPhaseState.WillTo
+    if data.rollTarget then
+        for i = 1, data.rollTarget do
+            self.data.phaseStates[i] = LabInventionItemPhaseState.WillTo
+        end
     end
-    for i = 1, data.phase do
-        self.data.phaseStates[i] = LabInventionItemPhaseState.Finish
+    if data.phase then
+        for i = 1, data.phase do
+            self.data.phaseStates[i] = LabInventionItemPhaseState.Finish
+        end
     end
     self.phaseItems:showState(self.data.phaseStates)  --显示5个阶段的状态
     self.startTimeDown = true
@@ -127,10 +131,6 @@ function LabInventionLineItem:_clickDeleteBtn()
         Event.Brocast("")
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
-end
---点击发明界面
-function LabInventionLineItem:_clickOpenInventionPanelBtn()
-    ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end
 --倒计时
 function LabInventionLineItem:_update()

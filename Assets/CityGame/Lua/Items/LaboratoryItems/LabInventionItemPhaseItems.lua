@@ -31,29 +31,29 @@ function LabInventionItemPhaseItems:initialize(transform, needShowNum)
 end
 ---显示
 function LabInventionItemPhaseItems:showState(datas)
-    if #datas ~= #self.itemRect then
+    if #datas ~= #self.itemRects then
         ct.log("cycle_w13_laboratory", "场景中的item个数与期望显示的个数不一致，或者传入的不是顺序表")
         return
     end
 
     for i, itemData in pairs(datas) do
         if itemData == LabInventionItemPhaseState.Finish then
-            self.itemRect[i].finish.localScale = Vector3.one
-            self.itemRect[i].willTo.localScale = Vector3.zero
-            self.itemRect[i].null.localScale = Vector3.zero
+            self.itemRects[i].finish.localScale = Vector3.one
+            self.itemRects[i].willTo.localScale = Vector3.zero
+            self.itemRects[i].null.localScale = Vector3.zero
         elseif itemData == LabInventionItemPhaseState.WillTo then
-            self.itemRect[i].finish.localScale = Vector3.zero
-            self.itemRect[i].willTo.localScale = Vector3.one
-            self.itemRect[i].null.localScale = Vector3.zero
+            self.itemRects[i].finish.localScale = Vector3.zero
+            self.itemRects[i].willTo.localScale = Vector3.one
+            self.itemRects[i].null.localScale = Vector3.zero
         elseif itemData == LabInventionItemPhaseState.Null then
-            self.itemRect[i].finish.localScale = Vector3.zero
-            self.itemRect[i].willTo.localScale = Vector3.zero
-            self.itemRect[i].null.localScale = Vector3.one
+            self.itemRects[i].finish.localScale = Vector3.zero
+            self.itemRects[i].willTo.localScale = Vector3.zero
+            self.itemRects[i].null.localScale = Vector3.one
 
             --发明界面有种情况是只有null和finish状态的，而且当为null状态时，需要显示成功率
-            if itemData.percentData then
-                itemData.text.text = itemData.percentData
-            end
+            --if itemData.percentData then
+            --    itemData.text.text = tostring(itemData.percentData)
+            --end
         end
     end
 end

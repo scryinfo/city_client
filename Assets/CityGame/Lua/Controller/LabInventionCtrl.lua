@@ -52,7 +52,7 @@ function LabInventionCtrl:_update()
 
         if self.remainTime <= 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabInventionPanel:setBulbState(self.m_data.bulbState)
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
             return
         end
 
@@ -75,35 +75,35 @@ function LabInventionCtrl:_initPanelData()
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
         --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
+        LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
             LabInventionPanel.showLine(data)
             LabInventionPanel.goodRootTran.localScale = Vector3.one
             LabInventionPanel.rawRootTran.localScale = Vector3.zero
             --LabInventionPanel.goodIconImg.mainTexture = Good[self.m_data.itemId].img
+            LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
         end, formularItem.materials)
     end
 
-    LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
-
     if not self.m_data.id then    --没有id则为临时添加的线
         self.m_data.bulbState = LabInventionBulbItemState.Empty
-        LabInventionPanel:setBulbState(self.m_data.bulbState)
-        LabInventionPanel.researchBtn.localScale = Vector3.one
+        LabInventionPanel.setBulbState(self.m_data.bulbState)
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
     else
         if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
-            LabInventionPanel.researchBtn.localScale = Vector3.zero
+            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
         else
             self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabInventionPanel.researchBtn.localScale = Vector3.zero    --没有id则为临时添加的线
+            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero    --没有id则为临时添加的线
         end
-        LabInventionPanel:setBulbState(self.m_data.bulbState)
+        LabInventionPanel.setBulbState(self.m_data.bulbState)
     end
 end
 --点了发明按钮
-function LabInventionCtrl:_inventeBtnClick(ins)
-    local data = {itemId = ins.m_data.itemId, type = 1, phase = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_AddTempLineData', data)
+function LabInventionCtrl:_inventeBtnClick()
+    local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
+    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end

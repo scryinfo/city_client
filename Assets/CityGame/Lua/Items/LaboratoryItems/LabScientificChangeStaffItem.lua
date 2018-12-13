@@ -40,12 +40,12 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()
+        DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_DelTempLineData', lineData)
         if lineData.type == 0 then
             ct.OpenCtrl("LabResearchCtrl", lineData)
         else
             ct.OpenCtrl("LabInventionCtrl", lineData)
         end
-        DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_DelTempLineData', lineData)
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()

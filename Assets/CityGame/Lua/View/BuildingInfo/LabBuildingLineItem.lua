@@ -66,7 +66,7 @@ LabBuildingLineItem.static.provideData = function(transform, idx)
         LabBuildingLineItem.static.items[#LabBuildingLineItem.static.items + 1] = LabBuildingInventionItem:new(LabBuildingLineItem.static.lineInfoData[idx], transform)
     end
 end
-LabBuildingLineItem.static.researchClearData = function(transform)
+LabBuildingLineItem.static.clearData = function(transform)
 end
 ---
 

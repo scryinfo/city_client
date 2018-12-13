@@ -18,7 +18,7 @@ DataManager = {}
 --  a.修建建筑时的临时数据（包括展示用GameObject集合，修建状态IsConstructing）
 --          ==>> 打开修建界面时初始化，关闭时清空
 --4.系统数据
---  a.当前操作状态（Enum TouchState{ NormalState = 1，//正常状态（可拖拽点击状态）   ConstructState = 2，//修建状态   UIState = 3，//UI查看状态   }）
+--  a.当前操作状态（Enum TouchState{ NormalState = 0，//正常状态（可拖拽点击状态）   ConstructState = 2，//修建状态   UIState = 3，//UI查看状态   }）
 --          ==》登录时初始化，用于触摸操作的控制判断
 --  b.服务器时间戳
 --          ==>> 登录时同步，断线重连刷新一次
@@ -382,6 +382,10 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_GroundInfos = tempData.ground
+    --初始化自己所拥有建筑（购买的土地）
+    PersonDataStack.m_buysBuild = tempData.buys
+    --初始化自己所拥有建筑（租赁的土地）
+    PersonDataStack.m_rentsBuild = tempData.rents
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}

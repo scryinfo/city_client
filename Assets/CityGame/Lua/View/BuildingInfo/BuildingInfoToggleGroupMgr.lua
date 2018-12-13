@@ -203,13 +203,16 @@ end
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     ---营业额折线图Item --左边第一个
-    --local turnoverLineChart
-    local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
-    turnoverLineChart.gameObject.name = "LineChartRateItem"
-
-    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
-    self.leftData[1] = LineChartLuaItem
+    ----local turnoverLineChart
+    --local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
+    --turnoverLineChart.gameObject.name = "LineChartRateItem"
+    --
+    --local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    --local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
+    --self.leftData[1] = LineChartLuaItem
+    ---折线图  左1
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
 
     ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置

@@ -70,7 +70,6 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-    local t=self
     Event.Brocast("c_TicketValueChange")
 end
 

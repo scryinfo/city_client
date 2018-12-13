@@ -80,7 +80,7 @@ function AdvertisementPosCtrl:Awake(go)
     --end)
 
     panel.maxSlider.onValueChanged:AddListener(function (arg)
-        if MunicipalModel.SlotList[1].maxDayToRent<=0 then
+        if #MunicipalModel.SlotList<=0 then
             return
         end
         panel.maxInp.text=math.floor(MunicipalModel.SlotList[1].maxDayToRent*arg)
@@ -129,9 +129,10 @@ function AdvertisementPosCtrl:Refresh()
         panel.buyGo.gameObject:SetActive(false)
         else--他人进入
         panel.buyGo.gameObject:SetActive(true)
-        panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
-        panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
-
+        if MunicipalModel.SlotList[1] then
+            panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
+            panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
+        end
     panel.manageBtn.gameObject:SetActive(false)---管理我的广告位
     panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
         if MunicipalModel.lMsg.ad.soldSlot then
@@ -146,7 +147,7 @@ function AdvertisementPosCtrl:Refresh()
                 end
             end
         end
-        if self.myBuySlots then
+        if self.myBuySlots then--给（/）赋值
             if #self.myBuySlots>0 then panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
             panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
             panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.hasPos

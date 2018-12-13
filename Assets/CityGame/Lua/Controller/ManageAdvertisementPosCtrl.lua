@@ -283,7 +283,6 @@ function ManageAdvertisementPosCtrl:Mastercallback()
                 Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
                 self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
                 v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
-
             end
 
             else---删广告
@@ -292,6 +291,7 @@ function ManageAdvertisementPosCtrl:Mastercallback()
                 table.remove(self.ItemCreatDeleteMgr.adList[v.metaId],1)
                     self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
                     v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+
                 if tonumber(v.selfcount) ==0 then
                     destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
                     self.ItemCreatDeleteMgr.adList[v.metaId]=nil
@@ -313,7 +313,8 @@ function ManageAdvertisementPosCtrl:OtherCallback()
             table.remove(data.slots,1)
         end
     end
-
+    UIPage:ClosePage()
+    ct.OpenCtrl("AdvertisementPosCtrl")
 end
 
 

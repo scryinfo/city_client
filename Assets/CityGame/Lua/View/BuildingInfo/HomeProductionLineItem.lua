@@ -19,9 +19,9 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
 
---[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
-        clickOpenFunc(mgrTable,self.toggleData)
-    end);                                                       ]]
+    --[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
+            clickOpenFunc(mgrTable,self.toggleData)
+        end);                                                       ]]
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then

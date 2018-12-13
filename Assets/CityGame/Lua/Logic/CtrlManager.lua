@@ -55,6 +55,7 @@ local ctrlList = {};	--控制器列表--
 local modelList = {};	--模型列表--
 
 function CtrlManager.Init()
+	ReadConfigLanguage()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
@@ -85,7 +86,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
-	modelList[ModelNames.House] = HouseModel.New();
+	--modelList[ModelNames.House] = HouseModel.New();
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
@@ -93,8 +94,6 @@ function CtrlManager.Init()
 	modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
-	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
-	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
@@ -108,6 +107,7 @@ function CtrlManager.Init()
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.friends] = FriendsModel.New();
 
 	return this;
 end

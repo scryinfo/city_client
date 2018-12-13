@@ -23,13 +23,16 @@ public class ActiveLoopScrollRect : MonoBehaviour
     /// </summary>
     /// <param name="data">委托方法</param>
     /// <param name="totalCount">总数，默认为0</param>
-    public void ActiveLoopScroll(LoopScrollDataSource data, int totalCount = 0)
+    public void ActiveLoopScroll(LoopScrollDataSource data, int totalCount = 0, string prefabName = "")
     {
         if (mLoopScrollRect == null)
         {
             mLoopScrollRect = GetComponent<LoopScrollRect>();
         }
-
+        if (prefabName != "")
+        {
+            mLoopScrollRect.SetLoopNomalPrefabSource(prefabName);
+        }
         if (mLoopScrollRect.GetInstance() == null)
         {
             mLoopScrollRect.SetInstance(data);
@@ -41,34 +44,12 @@ public class ActiveLoopScrollRect : MonoBehaviour
             mLoopScrollRect.RefreshCells();
         }
     }
-
+    
     /// <summary>
     /// 初始化 滑动中存在不同预制的item
     /// </summary>
     /// <param name="data">委托方法</param>
     /// <param name="diffPrefabNameList">预制名字顺序表</param>
-    //public void ActiveDiffItemLoop(LoopScrollDataSource data, List<string> diffPrefabNameList = null)
-    //{
-    //    if (mLoopScrollRect == null)
-    //    {
-    //        mLoopScrollRect = GetComponent<LoopScrollRect>();
-    //    }
-    //    if (diffPrefabNameList != null)
-    //    {
-    //        mLoopScrollRect.SetLoopDiffPrefabSource(diffPrefabNameList);
-    //    }
-    //    if (mLoopScrollRect.GetInstance() == null)
-    //    {
-    //        mLoopScrollRect.SetInstance(data);
-    //        mLoopScrollRect.totalCount = diffPrefabNameList.Count;
-    //    }
-    //    else
-    //    {
-    //        mLoopScrollRect.totalCount = diffPrefabNameList.Count;
-    //        mLoopScrollRect.RefreshCells();
-    //    }
-    //}
-
     public void ActiveDiffItemLoop(LoopScrollDataSource data, string[] diffPrefabNameList = null)
     {
         if (mLoopScrollRect == null)

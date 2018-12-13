@@ -101,24 +101,22 @@ function AdvertisementPosCtrl:OnClick_infoBtn()
 end
 
 function AdvertisementPosCtrl:Refresh()
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
-        if #MunicipalModel.SlotList>0 then
-            panel.qunayityInp.text=#MunicipalModel.SlotList
-            panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
-            panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
-            panel.adAllday=panel.qunayityInp.text
-            panel.grey.gameObject:SetActive(true);
-        end
-        panel.buyGo.gameObject:SetActive(false)
-    else--他人进入
-        panel.buyGo.gameObject:SetActive(true)
-        panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
-        panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
-        panel.manageBtn.gameObject:SetActive(false)
-
-
-    end
-
+    --if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+    --    if #MunicipalModel.SlotList>0 then
+    --        panel.qunayityInp.text=#MunicipalModel.SlotList
+    --        panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
+    --        panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
+    --        panel.adAllday=panel.qunayityInp.text
+    --        panel.grey.gameObject:SetActive(true);
+    --    end
+    --    panel.buyGo.gameObject:SetActive(false)
+    --else--他人进入
+    --    --panel.buyGo.gameObject:SetActive(true)
+    --    --panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
+    --    --panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
+    --    --panel.manageBtn.gameObject:SetActive(false)
+    --
+    --end
 end
 
 

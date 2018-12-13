@@ -132,6 +132,36 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--将秒转换成小时分秒的格式，非时间戳
+function getTimeBySec(secTime)
+	local tb = {}
+	secTime = math.floor(secTime)
+	tb.hour = math.floor(secTime / 3600) or 0
+	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
+	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+	return tb
+end
+--根据建筑store获取一个以itemId为key的字典
+function getItemStore(store)
+	local itemTable = {}
+	local storeTemp = BaseTools.TableCopy(store)
+	if storeTemp.locked then
+		for i, itemData in pairs(storeTemp.locked) do
+			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	if storeTemp.inHand then
+		for i, itemData in pairs(storeTemp.inHand) do
+			local tempCount = itemTable[itemData.key.id]
+			if tempCount then
+				itemTable[itemData.key.id] = itemData.n - tempCount
+			else
+				itemTable[itemData.key.id] = itemData.n
+			end
+		end
+	end
+	return itemTable
+end
 
 function ct.file_exists(path)
 	local file = io.open(path, "rb")
@@ -213,5 +243,63 @@ function ct.getIntPart(x)
 		x = resault - 1;
 	end
 	return x;
+end
+
+
+--获取价格显示文本 --整数和小数部分大小不同
+function getPriceString(str, intSize, floatSize)
+	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+	return finalStr
+end
+
+currentLanguage={}
+chinese={}
+english={}
+function ReadConfigLanguage()
+	for ID, ch in pairs(Language_Chinese) do
+		chinese[ID]=ch
+	end
+	for ID, en in pairs(Language_English) do
+		english[ID]=en
+	end
+
+   local num=UnityEngine.PlayerPrefs.GetInt("Language")
+	if num==0 then
+		currentLanguage=english
+	elseif num==1 then
+		currentLanguage=chinese
+	end
+end
+
+function SaveLanguageSettings(languageType)
+	if languageType==LanguageType.Chinese then
+		UnityEngine.PlayerPrefs.SetInt("Language",1)
+		currentLanguage=chinese
+	elseif languageType==LanguageType.English then
+		UnityEngine.PlayerPrefs.SetInt("Language",0)
+		currentLanguage=english
+	end
+end
+
+function GetLanguage(key,...)
+	local temp={...}
+	for Id, String in pairs(currentLanguage) do
+		if Id==key then
+          local tempString=String
+			for i = 1, #temp do
+				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+			end
+			return tempString
+		end
+	end
+	return key.."没有设置"
 end
 

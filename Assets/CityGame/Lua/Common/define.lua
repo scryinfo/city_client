@@ -89,7 +89,9 @@ ModelNames = {
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	Warehouse = "WarehouseModel"  --仓库
+	Warehouse = "WarehouseModel",
+	friends = "FriendsModel", -- 好友
+	Laboratory = "LaboratoryModel",  --研究所
 }
 
 SYSEVENT =
@@ -193,6 +195,11 @@ Buildingowner=
 {
    master=1,--主人的
    other=2,--其他人的
+}
+
+LanguageType={
+	Chinese=0,
+	English=1,
 }
 
 --仓库 --货架 --运输(通用)

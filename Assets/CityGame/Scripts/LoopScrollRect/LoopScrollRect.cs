@@ -555,7 +555,10 @@ namespace UnityEngine.UI
         private RectTransform InstantiateNextItem(int itemIdx)
         {
             RectTransform nextItem = prefabSource.GetObject(itemIdx).GetComponent<RectTransform>();
-            nextItem.transform.SetParent(content, false);
+            nextItem.transform.SetParent(content, false);            
+            float v1 = nextItem.localToWorldMatrix.m03;
+            float v2 = nextItem.localToWorldMatrix.m13;
+            Debug.Log(string.Format("InstantiateNextItem x = %f y = %f", v1,v2));
             nextItem.gameObject.SetActive(true);
             dataSource.mProvideData(nextItem, itemIdx);
             return nextItem;

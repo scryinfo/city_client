@@ -21,7 +21,7 @@ namespace LuaFramework
             string abName = name.ToLower() + AppConst.BundleExt;
 
 #if ASYNC_MODE
-            ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs) {
+            ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab) {
                 if (objs.Length == 0) return;
                 GameObject prefab = objs[0] as GameObject;
                 if (prefab == null) return;

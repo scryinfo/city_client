@@ -31,13 +31,13 @@ namespace LuaFramework {
             public Type assetType;
             public string[] assetNames;
             public LuaFunction luaFunc;
-            public Action<UObject[]> sharpFunc;
+            public Action<UObject[], AssetBundle> sharpFunc;
         }
 
         // Load AssetBundleManifest.
         public void Initialize(string manifestName, Action initOK) {
             m_BaseDownloadingURL = Util.GetRelativePath();
-            LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs) {
+            LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs, AssetBundle ab) {
                 if (objs.Length > 0) {
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
                     m_AllManifest = m_AssetBundleManifest.GetAllAssetBundles();
@@ -46,16 +46,16 @@ namespace LuaFramework {
             });
         }
 
-        public void LoadPrefab(string abName, string assetName, Action<UObject[]> func, System.Type type = null)
+        public void LoadPrefab(string abName, string assetName, Action<UObject[], AssetBundle> func, System.Type type = null)
         {
             LoadAsset<GameObject>(abName, new string[] { assetName }, func, null, type);
         }
 
-        public void LoadPrefab(string abName, string assetName, Action<UObject[]> func) {
+        public void LoadPrefab(string abName, string assetName, Action<UObject[], AssetBundle> func) {
             LoadAsset<GameObject>(abName, new string[] { assetName }, func);
         }
 
-        public void LoadPrefab(string abName, string[] assetNames, Action<UObject[]> func) {
+        public void LoadPrefab(string abName, string[] assetNames, Action<UObject[], AssetBundle> func) {
             LoadAsset<GameObject>(abName, assetNames, func);
         }
 
@@ -92,7 +92,7 @@ namespace LuaFramework {
             return null;
         }
 
-        IEnumerator NoneBundleLoadRes(string resPath, Action<UObject[]> action = null , System.Type type = null)
+        IEnumerator NoneBundleLoadRes(string resPath, Action<UObject[], AssetBundle> action = null , System.Type type = null)
         {
             List<UObject> result = new List<UObject>();
             ResourceRequest r = null;
@@ -110,13 +110,13 @@ namespace LuaFramework {
                 result.Add(r.asset);                
             }
             if (action != null) {
-                action(result.ToArray());
+                action(result.ToArray(), null);
             }
         }
         /// <summary>
         /// 载入素材
         /// </summary>
-        void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[]> action = null, LuaFunction func = null, System.Type type = null) where T : UObject {
+        void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[], AssetBundle> action = null, LuaFunction func = null, System.Type type = null) where T : UObject {
 
 #if RES_BUNDEL
             abName = GetRealAssetPath(abName);
@@ -194,7 +194,7 @@ namespace LuaFramework {
                     //result.Add(assetObj);
                 }
                 if (list[i].sharpFunc != null) {
-                    list[i].sharpFunc(result.ToArray());
+                    list[i].sharpFunc(result.ToArray(), ab);
                     list[i].sharpFunc = null;
                 }
                 if (list[i].luaFunc != null) {

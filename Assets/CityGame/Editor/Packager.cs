@@ -117,6 +117,8 @@ public class Packager {
 
         MoveDir(resPath+"/lua", luaPath);
 
+        HandleNoneLuaBundleInLua();
+
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
         if (Directory.Exists(resPath)) Directory.Delete(resPath, true);
@@ -151,9 +153,9 @@ public class Packager {
         } else {
             HandleLuaFile();
         }
-
+        HandleNoneLuaBundleInLua();
         HandleResBundle();//资源打包
-
+        
         string resPath = "Assets/" + AppConst.AssetDir;
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle | 
                                           BuildAssetBundleOptions.UncompressedAssetBundle;
@@ -275,14 +277,23 @@ public class Packager {
             AddBuildMap(name, "*.bytes", path);
         }
         AddBuildMap("lua/lua" + AppConst.BundleExt, "*.bytes", "Assets/" + AppConst.LuaTempDir);
+    }
 
-        //-------------------------------处理非Lua文件----------------------------------
+    static void HandleNoneLuaBundleInLua()
+    {
+        string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
+        if (!Directory.Exists(streamDir)) Directory.CreateDirectory(streamDir);
+
+        string[] srcDirs = { CustomSettings.cityLuaDir, CustomSettings.FrameworkPath + "/ToLua/Lua" };
+        //-------------------------------处理Lua文件夹中非Lua文件----------------------------------
         string luaPath = AppDataPath + "/StreamingAssets/lua/";
-        for (int i = 0; i < srcDirs.Length; i++) {
+        for (int i = 0; i < srcDirs.Length; i++)
+        {
             paths.Clear(); files.Clear();
             string luaDataPath = srcDirs[i].ToLower();
             Recursive(luaDataPath);
-            foreach (string f in files) {
+            foreach (string f in files)
+            {
                 if (f.EndsWith(".meta") || f.EndsWith(".lua")) continue;
                 string newfile = f.Replace(luaDataPath, "");
                 string path = Path.GetDirectoryName(luaPath + newfile);

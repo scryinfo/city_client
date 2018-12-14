@@ -376,7 +376,7 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
     end)
     --[[
     测试结果
-        调用 table.sort (封装的 c 中的 native 快排方法) 排序的速度远高于在 lua 中的排序, 5万个元素排序 table.sort 比 lua 中的快排快 26倍， 比 448 倍
+        调用 table.sort (封装的 c 中的 native 快排方法) 排序的速度远高于在 lua 中的排序, 5万个元素排序 table.sort 比 lua 中的快排快 26倍， 比冒泡 448 倍
     --]]
 
 end)

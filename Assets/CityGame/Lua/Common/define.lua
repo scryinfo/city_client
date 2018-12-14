@@ -1,11 +1,26 @@
 ----City项目的全局数据
+local loginner = print
+local getIdHead = function(id)
+	return "["..id.."]";
+end
 ct ={
 	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
 	G_DEBUGLOG = true, --是否打开调试日志
 	G_UNITTEST = true,	--是否打开单元测试
 	G_PERFORMANCETEST = false,	--是否打开性能测试
+	log = function(logid,s,...)
+		if s == nil then
+			return
+		end
+		local plgid = TestGroup.get_TestGroupId(logid)
+		local palgid = TestGroup.get_ActiveTestGroupId(logid)
+		if plgid == nil or  palgid == nil then
+			return
+		end
+		assert(s)
+		loginner(getIdHead(plgid) .. s,...);
+	end
 }
-
 CtrlNames = {
 	Login = "LoginCtrl",
 	SelectAvatar = "SelectAvatarCtrl",
@@ -60,6 +75,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	Processing = "ProcessingModel",  --加工厂
 	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	tempTransport = "tempTransportModel",   --临时运输
@@ -73,7 +89,9 @@ ModelNames = {
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	Warehouse = "WarehouseModel"
+	Warehouse = "WarehouseModel",
+	friends = "FriendsModel", -- 好友
+	Laboratory = "LaboratoryModel",  --研究所
 }
 
 SYSEVENT =
@@ -179,6 +197,11 @@ Buildingowner=
    other=2,--其他人的
 }
 
+LanguageType={
+	Chinese=0,
+	English=1,
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {
@@ -187,6 +210,7 @@ BuildingInType =
 	Transport = 2,  --运输
 	ProductionLine = 3,  --生产线
 }
+
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

@@ -14,7 +14,7 @@ end
 function ShelfModel.OnCreate()
     --注册本地事件 m开头
     Event.AddListener("m_ReqShelfDel",this.m_ReqShelfDel)
-
+    Event.AddListener("n_OnShelfDelInfo",this.n_OnShelfDelInfo)
     ShelfModel.registerAsNetMsg()
 end
 

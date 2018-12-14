@@ -20,8 +20,8 @@ local prefabTrans;
 
 
 ---初始化方法   数据（读配置表）
-function SmallPopItem:initialize(string,prefab,mgr)
-
+function SmallPopItem:initialize(string,spacing,prefab,mgr)
+    self.spacing=spacing
     prefabTrans=prefab.transform:GetComponent("RectTransform");
     self.tipText=prefab.transform:Find("textbg/tipText"):GetComponent("Text");
 
@@ -39,7 +39,7 @@ end
 
 
 function SmallPopItem:_update()
-    self.textBgTrans.sizeDelta=Vector2.New(self.tipTextTrans.sizeDelta.x+57,75)
+    self.textBgTrans.sizeDelta=Vector2.New(self.tipTextTrans.sizeDelta.x+self.spacing,100)
 
     if  UnityEngine.Time.time>self.timenow  then
 

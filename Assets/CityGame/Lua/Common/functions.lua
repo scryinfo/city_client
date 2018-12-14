@@ -57,6 +57,27 @@ function getPriceString(str, intSize, floatSize)
 	return finalStr
 end
 
+--获取容量显示文本，总容量和已用容量颜色不同
+function getColorString(num1,num2,col1,col2)
+    if num1 == nil and num2 == nil then
+        return
+    end
+    local str1 = table.concat({"<color=",col1,">",num1,"</color>"})
+    local str2 = table.concat({"<color=",col2,">",num2,"</color>"})
+    local str = table.concat({str1,"/",str2})
+    return str
+end
+--秒数转换时间格式字符串
+function getTimeString(time)
+	local hours = math.floor(time / 3600)
+	local minutes = math.floor((time % 3600) / 60)
+	local seconds = math.floor(time % 60)
+	if hours < 10 then hours = "0"..hours end
+	if minutes < 10 then  minutes = "0"..minutes end
+	if seconds < 10 then seconds = "0"..seconds end
+	local time = hours..":"..minutes..":"..seconds
+	return time
+end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
 	local r1 = r / 255
@@ -121,6 +142,36 @@ end
 --修改表数据
 function UpdataTable(table,gameObject,prefabs)
 	TableSort:UpdataTable(table,gameObject,prefabs)
+--将秒转换成小时分秒的格式，非时间戳
+function getTimeBySec(secTime)
+	local tb = {}
+	secTime = math.floor(secTime)
+	tb.hour = math.floor(secTime / 3600) or 0
+	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
+	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+	return tb
+end
+--根据建筑store获取一个以itemId为key的字典
+function getItemStore(store)
+	local itemTable = {}
+	local storeTemp = BaseTools.TableCopy(store)
+	if storeTemp.locked then
+		for i, itemData in pairs(storeTemp.locked) do
+			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	if storeTemp.inHand then
+		for i, itemData in pairs(storeTemp.inHand) do
+			local tempCount = itemTable[itemData.key.id]
+			if tempCount then
+				itemTable[itemData.key.id] = itemData.n - tempCount
+			else
+				itemTable[itemData.key.id] = itemData.n
+			end
+		end
+	end
+	return itemTable
+>>>>>>> 584e0a7dd5f70f52d5b98db840a02a6f2583d420
 end
 
 function ct.file_exists(path)
@@ -190,16 +241,76 @@ end
 
 ct.deepCopy = deepCopy
 
+--取整函数
 function ct.getIntPart(x)
+	local resault = math.ceil(x)
 	if x <= 0 then
-		return math.ceil(x);
+		return resault
 	end
 
-	if math.ceil(x) == x then
-		x = math.ceil(x);
+	if resault == x then
+		x = resault
 	else
-		x = math.ceil(x) - 1;
+		x = resault - 1;
 	end
 	return x;
+end
+
+
+--获取价格显示文本 --整数和小数部分大小不同
+function getPriceString(str, intSize, floatSize)
+	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+	return finalStr
+end
+
+currentLanguage={}
+chinese={}
+english={}
+function ReadConfigLanguage()
+	for ID, ch in pairs(Language_Chinese) do
+		chinese[ID]=ch
+	end
+	for ID, en in pairs(Language_English) do
+		english[ID]=en
+	end
+
+   local num=UnityEngine.PlayerPrefs.GetInt("Language")
+	if num==0 then
+		currentLanguage=english
+	elseif num==1 then
+		currentLanguage=chinese
+	end
+end
+
+function SaveLanguageSettings(languageType)
+	if languageType==LanguageType.Chinese then
+		UnityEngine.PlayerPrefs.SetInt("Language",1)
+		currentLanguage=chinese
+	elseif languageType==LanguageType.English then
+		UnityEngine.PlayerPrefs.SetInt("Language",0)
+		currentLanguage=english
+	end
+end
+
+function GetLanguage(key,...)
+	local temp={...}
+	for Id, String in pairs(currentLanguage) do
+		if Id==key then
+          local tempString=String
+			for i = 1, #temp do
+				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+			end
+			return tempString
+		end
+	end
+	return key.."没有设置"
 end
 

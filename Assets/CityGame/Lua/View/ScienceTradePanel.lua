@@ -26,7 +26,7 @@ function ScienceTradePanel.InitPanel()
 
     this.scoreText=transform:Find("leftroot/bg/whitepanel/botton/hightToot (1)/icon/Text"):GetComponent("Text");
     this.mylevelText=transform:Find("leftroot/bg/whitepanel/botton/hightToot (1)/icon1/Text"):GetComponent("Text");
-    this.owenrTetx=transform:Find("leftroot/bg/whitepanel/botton/hightToot/icon/Text"):GetComponent("Text");
+    this.owenrText=transform:Find("leftroot/bg/whitepanel/botton/hightToot/icon/Text"):GetComponent("Text");
     this.highlevelTetx=transform:Find("leftroot/bg/whitepanel/botton/hightToot/icon1/Text"):GetComponent("Text");
 
     this.scrollContent=transform:Find("rightRoot/Scroll View/Viewport/Content")

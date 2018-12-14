@@ -27,7 +27,7 @@ function GroundAuctionModel.OnCreate()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GroundAuctionModel.n_OnReceiveWinBid)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GroundAuctionModel.n_OnReceiveFailBid)
 

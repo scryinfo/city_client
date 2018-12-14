@@ -92,6 +92,18 @@ function LoginModel.onUIGetServerList( stream )
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
+UnitTest.TestBlockStart()-------------------------------------------------------------
+UnitTest.Exec("abel_w17_ctrlRpcTest", "test_abel_w17_ctrlRpcTest",  function ()
+    ct.log("abel_w17_ctrlRpcTest","[test_abel_w17_ctrlRpcTest]  测试开始")
+
+    ct.ctrlRpcNoRet('LoginCtrl','rpcTest', 1,2)
+
+    ct.ctrlRpc('LoginCtrl','rpcTest', 1,2,function (retvalue)
+        ct.log("abel_w17_ctrlRpcTest","[test_abel_w17_ctrlRpcTest]  LoginCtrl:rpcTest return ="..retvalue)
+    end)
+
+end)
+UnitTest.TestBlockEnd()---------------------------------------------------------------
 
 --[[返回服务器列表
 function LoginModel.n_AllGameServerInfo( stream )

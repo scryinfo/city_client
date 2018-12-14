@@ -4,6 +4,8 @@ require('Controller/ServerListCtrl')
 LoginCtrl = class('LoginCtrl',UIPage)
 UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
+LoginCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
+require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
 --构建函数--
 function LoginCtrl:initialize()
 	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
@@ -44,7 +46,9 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-
+	self.root=go.transform.root;
+	-----小弹窗
+	Event.AddListener("SmallPop",self.c_SmallPop,self)
 	--启用 c_AddClick_self 单元测试
 	--ct.log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
 	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
@@ -196,8 +200,29 @@ UnitTest.Exec("abel_w7_RemoveClick", "test_RemoveClick_self",  function ()
 	end)
 end)
 
+function LoginCtrl:rpcTest(a,b)
+	ct.log("abel_w17_ctrlRpcTest","[rpcTest] invoked")
+	return a+b
+end
+
 UnitTest.TestBlockEnd()---------------------------------------------------------------
 
-
+---生成预制
+function LoginCtrl:c_creatGoods(path,parent)
+	local prefab = UnityEngine.Resources.Load(path);
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	local rect = go.transform:GetComponent("RectTransform");
+	go.transform:SetParent(parent);--.transform
+	rect.transform.localScale = Vector3.one;
+	rect.transform.localPosition=Vector3.zero
+	return go
+end
+---小弹窗
+function LoginCtrl:c_SmallPop(string,spacing)
+	if not self.prefab  then
+		self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
+	end
+	SmallPopItem:new(string,spacing,self.prefab ,self);
+end
 
 

@@ -106,6 +106,7 @@ public static class CustomSettings
         //_GT(typeof(LineRenderer))
         //_GT(typeof(TrailRenderer))
 #endif        
+         _GT(typeof(PlayerPrefs)),
         _GT(typeof(Behaviour)),
         _GT(typeof(MonoBehaviour)),        
         _GT(typeof(GameObject)),
@@ -176,6 +177,7 @@ public static class CustomSettings
         _GT(typeof(Toggle)),
         _GT(typeof(Scrollbar.ScrollEvent)),
         _GT(typeof(Slider)),
+        _GT(typeof(Slider.SliderEvent)),
 
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),

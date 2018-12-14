@@ -5,15 +5,16 @@
 ---
 CityToggleItem = class('CityToggleItem')
 --初始化方法
-function CityToggleItem:initialize(data, viewRect,id)
+function CityToggleItem:initialize(data, viewRect,id,iconTable)
 
     self. isoppen = false
     self.viewRect = viewRect
     self.data = data
     self.num = data.companyNum
     self.id = id
+    self.MaterialData = iconTable
     -- local luaCom = CityLuaUtil.AddLuaComponent( self.viewRect.gameObject,'View/Logic/test_cityInfo')
-    self:_initData()
+    --self:_initData()
     local viewTrans = self.viewRect
 
     self.transform = viewTrans:GetComponent("RectTransform")
@@ -26,13 +27,22 @@ function CityToggleItem:initialize(data, viewRect,id)
 
     self.prefabs = {}
     if  self.cityInfoData.transform.childCount == 0 then
-        tableSort(self.MaterialData, self.cityInfoData)
-        tableSort(MaterialCommodityProcessCurve,self.sign)
+        local item =  tableSort(self.MaterialData, self.cityInfoData)
+        local a = 1
+        for i, v in ipairs(self.data) do
+            item[a].transform:Find("Text"):GetComponent("Text").text = v
+            a = a+1
+        end
+        tableSort(MaterialCurve,self.sign)
     else
         for i = 1,  self.cityInfoData.transform.childCount do
-            self.prefabs[i] =  self.cityInfoData.gameObject:GetComponent("RectTransform"):GetChild(i-1)
+            self.prefabs[i] = self.cityInfoData.gameObject:GetComponent("RectTransform"):GetChild(i-1)
         end
-        UpdataTable(self. MaterialData,self.cityInfoData,self.prefabs)
+        local a = 1
+        for i, v in ipairs(self.data) do
+            self.prefabs[a].transform:Find("Text"):GetComponent("Text").text = v
+            a = a+1
+        end
     end
 
     self.transform.sizeDelta = Vector2.New(1920,130)

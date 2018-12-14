@@ -5,15 +5,17 @@
 ---
 CityMaterialItem = class('CityMaterialItem')
 --初始化方法
-function CityMaterialItem:initialize(data, viewRect,id)
+function CityMaterialItem:initialize(data, viewRect,id,iconTable,LineData)
 
     self. isoppen = false
     self.viewRect = viewRect
     self.data = data
     self.num = data.companyNum
     self.id = id
+    self.MaterialData = iconTable
+    self.LineData = LineData
    -- local luaCom = CityLuaUtil.AddLuaComponent( self.viewRect.gameObject,'View/Logic/test_cityInfo')
-    self:_initData()
+    --self:_initData()
     local viewTrans = self.viewRect
 
     self.transform = viewTrans:GetComponent("RectTransform")
@@ -21,18 +23,28 @@ function CityMaterialItem:initialize(data, viewRect,id)
     self.sign = viewTrans:Find("GameObject/Sign"):GetComponent("GridSort")self.element = viewTrans:GetComponent("LayoutElement")
     self.change = viewTrans:GetComponent("ChangePreferredHeight")
     self.btn = viewTrans:Find("cityinfoData"):GetComponent("Button")
+    self.lineBtn = viewTrans:Find("GameObject/Button"):GetComponent("Button")
     self.line = viewTrans:Find("GameObject/LineChartPanel/Image/Scroll View/Viewport/Content/GameObject"):GetComponent("LineChart");
     self.gameObject = viewTrans:Find("GameObject").gameObject
 
     self.prefabs = {}
     if  self.cityInfoData.transform.childCount == 0 then
-        tableSort(self.MaterialData, self.cityInfoData)
+       local item =  tableSort(self.MaterialData, self.cityInfoData)
+        local a = 1
+        for i, v in ipairs(self.data) do
+            item[a].transform:Find("Text"):GetComponent("Text").text = v
+            a = a+1
+        end
         tableSort(MaterialCurve,self.sign)
     else
         for i = 1,  self.cityInfoData.transform.childCount do
-             self.prefabs[i] =  self.cityInfoData.gameObject:GetComponent("RectTransform"):GetChild(i-1)
+             self.prefabs[i] = self.cityInfoData.gameObject:GetComponent("RectTransform"):GetChild(i-1)
         end
-        UpdataTable(self. MaterialData,self.cityInfoData,self.prefabs)
+        local a = 1
+        for i, v in ipairs(self.data) do
+            self.prefabs[a].transform:Find("Text"):GetComponent("Text").text = v
+            a = a+1
+        end
     end
 
     self.transform.sizeDelta = Vector2.New(1920,130)
@@ -85,17 +97,13 @@ function CityMaterialItem:initialize(data, viewRect,id)
 
     self.line :InjectDatas(verts,Color.New(1,1,1,1))
     self.line:InjectDatas(verts1,Color.New(0,1,0,1))
---[[
-  --  self.transform.sizeDelta.height = 130
-    self.transform.sizeDelta = Vector2.New( self.transform.sizeDelta.x,130)
-    --self.cityinfoData.sizeDelta.height = 0
-    self.cityinfoData.offsetMin = Vector2.New(0,0)]]
-
 
     self.btn.onClick:AddListener(function ()
         self:_OnBtn()
     end)
-
+    self.lineBtn.onClick:AddListener(function ()
+        self:_OnLineBtn(self)
+    end)
 end
 
 --初始化界面
@@ -185,5 +193,10 @@ function CityMaterialItem:_OnBtn()
 
     Event.Brocast("c_OnBtn",self,not self. isoppen)
     self. isoppen = not self. isoppen
-    --ct.log("system",isoppen)
+
+end
+--点击曲线Button
+function CityMaterialItem:_OnLineBtn(go)
+    ct.log("system","111111212122121")
+    ct.OpenCtrl("CityinfoSurveyCtrl",go.LineData)
 end

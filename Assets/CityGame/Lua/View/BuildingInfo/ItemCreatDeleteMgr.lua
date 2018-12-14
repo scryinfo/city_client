@@ -40,6 +40,7 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.selectItemList={}
         self.index=0
         self.AdvertisementDataList={}
+        self.isFirst=false
     end
     self.transform=ManageAdvertisementPosPanel.addCon;
 
@@ -100,13 +101,12 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
             ads[1]["count"]=#ads
+            ads[1].personId=personId
             self:_creatAdvertisementItem(ads[1])
         end
     end
     elseif creatData.buildingType == BuildingType.MunicipalManage then
-        self:_creataddItem();
-        self:_creatgoodsItem();
-        self:_creatbuildingItem();
+
         ---创建自已打的广告
         --if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
         for metaId, persons in pairs(againtypeList) do
@@ -119,7 +119,9 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.adList=adList
             for metaId, ads in pairs(adList) do
                 ads[1]["count"]=#ads
+                ads[1].ads=ads
                 self:_creatserverMapAdvertisementItem(ads[1])
+                --self:_creataddItem();
             end
         --else--他人进入
         --
@@ -143,15 +145,15 @@ function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
     end
 
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
-    self.serverMapAdvertisementItemList[ServerMapAdvertisementItemID]=item
+    self.serverMapAdvertisementItemList[prefabData.metaId]=item
     ---给映射广告赋值数据
    local ins =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
     self.serverMapAdvertisementINSList[prefabData.metaId]=ins
     ServerMapAdvertisementItemID=ServerMapAdvertisementItemID+1
 
     --if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then--他人进入
-    --    item.transform:SetAsLastSibling();
-    --end
+    --    --    item.transform:SetAsLastSibling();
+    --    --end
 end
 
 ---创建映射广告
@@ -195,13 +197,16 @@ function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
     ---创建预制
     local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
 
-    self.AdvertisementItemList[prefabData.metaId]=itemclone
+
     ---给预制赋值数据
     local ins =AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,AdvertisementItemID)
-    if prefabData.metaId then
+    if prefabData.personId==MunicipalModel.owenerId then
         self.AdvertisementINSList[prefabData.metaId]=ins
+        self.AdvertisementItemList[prefabData.metaId]=itemclone
     end
-
+    if prefabData.personId==MunicipalModel.buildingOwnerId then
+        ins.ownerIma.localScale=Vector3.one
+    end
     AdvertisementItemID=AdvertisementItemID+1;
 end
 ---创建添加按钮

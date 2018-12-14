@@ -26,6 +26,7 @@ function AdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.countText=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
     self.nameText=prefab.transform:Find("nameImage/Text"):GetComponent("Text");
     self.icon=prefab.transform:Find("icon"):GetComponent("Image");
+    self.ownerIma=prefab.transform:Find("bg/head/owner")
 
     if prefabData.count then
         self.countText.text=prefabData.count;

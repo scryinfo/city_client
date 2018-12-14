@@ -116,7 +116,7 @@ end
 function AdvertisementPosCtrl:OnClick_infoBtn()
 
 end
-
+local num=0
 function AdvertisementPosCtrl:Refresh()
     if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
         if #MunicipalModel.SlotList>0 then
@@ -147,12 +147,15 @@ function AdvertisementPosCtrl:Refresh()
                 end
             end
         end
-        if self.myBuySlots then--给（/）赋值
+        if self.myBuySlots  then--给（/）赋值
             if #self.myBuySlots>0 then panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
             panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
             panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.hasPos
+            end
+            if num == 0 then
                 panel.manageText.text=panel.manageText.text.."(" .."0".."/"..#self.myBuySlots..")"
             end
+            num=num+1
         end
     end
 end

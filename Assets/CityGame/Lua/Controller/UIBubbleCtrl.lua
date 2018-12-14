@@ -42,7 +42,7 @@ function UIBubbleCtrl:_removeListener()
 end
 
 function UIBubbleCtrl.static.RefreshLateUpdate()
-    Event.Brocast("c_RefreshLateUpdate")
+    --Event.Brocast("c_RefreshLateUpdate")
 end
 
 --生成拍卖气泡

@@ -48,8 +48,12 @@ function ManageAdvertisementPosCtrl:Awake(go)
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.buildingBtn.gameObject,self.OnClick_OnBuild,self);
     -- self:OnClick_OnGoods();
     -----创建广告管理
-    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr=MunicipalModel.manger
+    self.ItemCreatDeleteMgr:_creataddItem();
+    self.ItemCreatDeleteMgr:_creatgoodsItem();
+    self.ItemCreatDeleteMgr:_creatbuildingItem();
+
+    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
     if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
         self.ItemCreatDeleteMgr.addItemInSList[0].numText.transform.parent.localScale=Vector3.zero
@@ -57,7 +61,7 @@ function ManageAdvertisementPosCtrl:Awake(go)
     else--他人进入
         self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
     end
-
+  Event.AddListener("c_FirstCreate",ManageAdvertisementPosCtrl.c_FirstCreate,self)
 end
 
 
@@ -72,6 +76,7 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
         for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
             v:GetComponent("Image").raycastTarget=true;
         end
+        ------------------------------------------------------
         if ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
             ---服务器数据还原
             for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
@@ -80,7 +85,7 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
             end
         end
         ins.ItemCreatDeleteMgr.AdvertisementDataList={}
-    else
+    else---他人进入
         for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
             destroy(v)
         end
@@ -88,11 +93,28 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
             v:GetComponent("Image").raycastTarget=true;
         end
         ins.ItemCreatDeleteMgr.AdvertisementDataList={}
+-----------------------------------------------------------------------------
+        if ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
+           ---服务器数据还原
+          for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+            v.numtext.text=v.selfcount
+          end
+        end
+        --if ins.ItemCreatDeleteMgr.newaddIndex then
+        --    destroy(ins.ItemCreatDeleteMgr.addItemInSList[ins.ItemCreatDeleteMgr.newaddIndex].prefab)
+        --    ins.ItemCreatDeleteMgr.addItemInSList[ins.ItemCreatDeleteMgr.newaddIndex]=nil
+        --    ins.ItemCreatDeleteMgr.current=nil
+        --end
+        if ins.manger then
+            ins.manger.current=nil
+        end
+
     end
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
     UIPage.ClosePage();
 end
+
 
 --打开信息界面
 function ManageAdvertisementPosCtrl:OnClick_infoBtn()
@@ -111,9 +133,9 @@ function ManageAdvertisementPosCtrl:Refresh()
             self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
         end
         self:c_ScreenOut(self.m_data.myBuySlots)
-        if self.ItemCreatDeleteMgr.serverMapAdvertisementItemList then
-            for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementItemList) do
-                v.transform:SetAsLastSibling();
+        if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
+            for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+                v.prefab.transform:SetAsLastSibling();
             end
         end
     end
@@ -124,6 +146,7 @@ end
 function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
     self.slotList={}
     local tempList={}
+
     for i, slot in pairs(slotList) do
         if not tempList[slot.days] then
             tempList[slot.days]={}
@@ -132,10 +155,14 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
             table.insert(tempList[slot.days],slot)
         end
     end
+
     for i, v in pairs(tempList) do
-       table.insert(self.slotList,v)
+        table.insert(self.slotList,v)
     end
 
+    --if #self.slotList<=1 then
+    --    return
+    --end
    ---刷新数据
     if #self.ItemCreatDeleteMgr.addItemInSList-1>#self.slotList then--实例数量大于数据数量
        for i = 1, #self.ItemCreatDeleteMgr.addItemInSList-1 do
@@ -147,10 +174,10 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                ins.selfAcount=#self.slotList[i]
                ins.updateAcount=#self.slotList[i]
                ins.slots=self.slotList[i]
+               ins.days=self.slotList[i][1].days
            else
                ins.prefab:SetActive(false)
            end
-
        end
     else--实例数量小于数据数量
        for i = 1, #self.slotList do
@@ -162,25 +189,49 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                ins.selfAcount=#self.slotList[i]
                ins.updateAcount=#self.slotList[i]
                ins.slots=self.slotList[i]
-
+               ins.days=self.slotList[i][1].days
            else
                self.ItemCreatDeleteMgr:_creataddItem({})
                self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
                --刷新时间
                self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
-               self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
                self.ItemCreatDeleteMgr.addItemInSList[i].selfAcount=#self.slotList[i]
                self.ItemCreatDeleteMgr.addItemInSList[i].updateAcount=#self.slotList[i]
                self.ItemCreatDeleteMgr.addItemInSList[i].slots=self.slotList[i]
+               self.ItemCreatDeleteMgr.addItemInSList[i].days=self.slotList[i][1].days
            end
        end
     end
-    ---默认开启一个四角
-    local tempIns=self.ItemCreatDeleteMgr.addItemInSList[1]
-    if tempIns then
-        tempIns.angleRoot.localScale=Vector3.one
-        self.ItemCreatDeleteMgr.current=tempIns
+
+    ---除去已用的槽位
+    for metaId, metaIdAds in pairs(self.ItemCreatDeleteMgr.adList) do
+        for i, ad in pairs(metaIdAds) do
+            for k, slots in pairs(tempList) do
+                for v, slot in pairs(slots) do
+                    if slot.s.id==ad.slot.s.id then
+                        table.remove(tempList[k],v)
+                    end
+                end
+            end
+        end
     end
+
+    for i, v in pairs(self.slotList) do
+       self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#v
+        if #v==0 then
+            self.ItemCreatDeleteMgr.addItemInSList[i].prefab:SetActive(false)
+        end
+    end
+
+    ---默认开启一个四角
+    for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
+        local tempIns=self.ItemCreatDeleteMgr.addItemInSList[i]
+        if tempIns.prefab.activeInHierarchy then
+            tempIns.angleRoot.localScale=Vector3.one
+            self.ItemCreatDeleteMgr.current=tempIns
+        end
+    end
+
 end
 
 
@@ -212,7 +263,6 @@ function ManageAdvertisementPosCtrl:OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
-
 
 --设置显隐
 function ManageAdvertisementPosCtrl:OnClick_OnGoods()
@@ -258,10 +308,12 @@ function ManageAdvertisementPosCtrl:Mastercallback()
 
     ---创建打的广告
     for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
+        v.personId=MunicipalModel.owenerId
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
+        self.ItemCreatDeleteMgr:_creatoutItem(v)
         ---发送打广告请求
         for k = 1, v.count do
-            Event.Brocast("m_adPutAdToSlot",nil,2151002,v.type,MunicipalModel.lMsg.info.id)
+            Event.Brocast("m_adPutAdToSlot",nil,v.metaId,v.type,MunicipalModel.lMsg.info.id)
         end
         --------------------------------------------
         for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
@@ -295,6 +347,8 @@ function ManageAdvertisementPosCtrl:Mastercallback()
                 if tonumber(v.selfcount) ==0 then
                     destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
                     self.ItemCreatDeleteMgr.adList[v.metaId]=nil
+                    destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
+                    self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
                 end
                 end
             end
@@ -304,17 +358,84 @@ function ManageAdvertisementPosCtrl:Mastercallback()
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
 end
 
+function ManageAdvertisementPosCtrl:c_FirstCreate()
+    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
+    self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
+end
+
 function ManageAdvertisementPosCtrl:OtherCallback()
-
+    UIPage:ClosePage()
+    ct.OpenCtrl("AdvertisementPosCtrl")
+    ----从无到有的打广告
+    for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
+        destroy(v);
+    end
+    for i, v in pairs(self.ItemCreatDeleteMgr.selectItemList) do
+        v:GetComponent("Image").raycastTarget=true;
+    end
+    ----发送请求
     for i, data in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
-
+        data.personId=MunicipalModel.owenerId
+        self.ItemCreatDeleteMgr:_creatAdvertisementItem(data)
+        self.ItemCreatDeleteMgr:_creatoutItem(data)
         for i = 1, data.count do
             Event.Brocast("m_adPutAdToSlot",data.slots[1].s.id,data.metaId,data.type,MunicipalModel.lMsg.info.id)
             table.remove(data.slots,1)
         end
+        for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
+            if u==data.metaId then
+                return
+            end
+        end
+        self.ItemCreatDeleteMgr.isFirst=true
+        Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
     end
-    UIPage:ClosePage()
-    ct.OpenCtrl("AdvertisementPosCtrl")
+
+    self.ItemCreatDeleteMgr.AdvertisementDataList={}
+
+    ---修改广告
+    if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
+        for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+            if  tonumber(v.selfcount) < tonumber(v.updatecount) then---添加广告
+                 --找出slotid
+                 local slots={}
+                for i, addItemInS in pairs(self.ItemCreatDeleteMgr.addItemInSList) do
+                    if addItemInS.days==v.days then
+                        slots=addItemInS.slots
+                    end
+                end
+            for i = 1, (v.updatecount-v.selfcount) do
+
+                Event.Brocast("m_adPutAdToSlot",slots[1].s.id,v.metaId,v.type,MunicipalModel.lMsg.info.id)
+                table.remove(slots,1)
+                self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
+                v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+            end
+
+            else---删广告
+            for k = 1, (v.selfcount-v.updatecount)  do
+                Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.ads[1].id)
+                table.insert(v.slots,v.ads[1].slot)
+                table.remove(v.ads,1)
+                self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
+                v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+                 ---删数据和预制
+                if tonumber(v.selfcount) ==0 then
+                    destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
+                    self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId]=nil
+                    self.ItemCreatDeleteMgr.adList[v.metaId]=nil
+                    destroy(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList[v.metaId].prefab)
+                    self.ItemCreatDeleteMgr.serverMapAdvertisementINSList[v.metaId]=nil
+                     destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
+                     self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
+                 end
+            end
+            end
+        end
+    end
+
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
+
 end
 
 

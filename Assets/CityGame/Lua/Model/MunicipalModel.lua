@@ -81,7 +81,7 @@ function MunicipalModel.n_getdetailPublicFacility(stream)
 
     this.SlotList={}
     if  lMsg.ad.availableSlot then
-        for i, v in ipairs(lMsg.ad.availableSlot) do
+        for i, v in pairs(lMsg.ad.availableSlot) do
             this.SlotList[i]=v
         end
     end
@@ -99,6 +99,10 @@ function MunicipalModel.n_getdetailPublicFacility(stream)
     MunicipalModel.owenerId=PlayerTempModel.roleData.id
     MunicipalModel.buildingOwnerId=lMsg.info.ownerId
 
+    if MunicipalModel.manger.isFirst then
+        Event.Brocast("c_FirstCreate")
+    end
+    MunicipalModel.manger.isFirst=false
 end
 
 ---添加槽位发包

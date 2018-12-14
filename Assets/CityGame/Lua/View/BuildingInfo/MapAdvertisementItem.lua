@@ -85,7 +85,6 @@ function MapAdvertisementItem:OnClick_Plus(ins)
         if tonumber(ins.numtext.text)>=ins.manager.current.selfAcount then
               return
         end
-
         ins.numtext.text=ins.numtext.text+1
         ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001,metaId=2151002,slots=ins.manager.current.slots}
         ---处理添加文本显示

@@ -36,6 +36,8 @@ function LabScientificLineCtrl:Awake(go)
         self:_inventionLineOpen()
     end)
 
+    Event.AddListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
+
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.researchSource.mProvideData = LabScientificLineCtrl.static.researchProvideData
@@ -173,3 +175,16 @@ end
 
 ---提示框部分
 --打开弹框
+function LabScientificLineCtrl:_openTip(lineData, itemRect)
+    if lineData.type == 0 then
+        LabScientificLinePanel.inventTipItem:_hideSelf()
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.researchTipItem:changeStaffCountState(lineData, remainWorker, itemRect)
+        end)
+    else
+        LabScientificLinePanel.researchTipItem:_hideSelf()
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
+            LabScientificLinePanel.inventTipItem:changeStaffCountState(lineData, remainWorker, itemRect)
+        end)
+    end
+end

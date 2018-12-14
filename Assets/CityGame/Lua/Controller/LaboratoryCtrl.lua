@@ -24,7 +24,6 @@ function LaboratoryCtrl:Refresh()
     self:_initData()
 end
 function LaboratoryCtrl:Hide()
-    --UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
 end

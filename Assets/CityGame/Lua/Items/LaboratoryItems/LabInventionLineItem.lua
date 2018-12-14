@@ -29,7 +29,7 @@ function LabInventionLineItem:initialize(data, viewRect)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
-        ct.OpenCtrl("LabInventionCtrl", self.data)
+        ct.OpenCtrl("LabInventionCtrl", self.data, self.viewRect)
     end)
     self.closeBtn.onClick:RemoveAllListeners()
     self.closeBtn.onClick:AddListener(function ()
@@ -37,7 +37,8 @@ function LabInventionLineItem:initialize(data, viewRect)
     end)
     self.staffSlider.onValueChanged:RemoveAllListeners()
     self.staffSlider.onValueChanged:AddListener(function()
-
+        self.staffSlider.value = data.workerNum
+        Event.Brocast("c_OpenChangeStaffTip", self.data, self.viewRect)
     end)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)

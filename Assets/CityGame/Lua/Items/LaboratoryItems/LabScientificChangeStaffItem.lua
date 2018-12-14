@@ -57,8 +57,10 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     end)
 end
 --改变员工数量状态
-function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker)
+function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, itemRect)
     self.viewRect.localScale = Vector3.one
+    self.viewRect.position = itemRect.transform.position
+
     self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = true
     self.disableImgTran.transform.localScale = Vector3.one

@@ -13,7 +13,7 @@ function LabInventionLineItem:initialize(data, viewRect)
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
-    self.closeBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("topRoot/closeBtn"):GetComponent("Button")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
     self.staffSlider = viewTrans:Find("mainRoot/staffRoot/staffSlider"):GetComponent("Slider")
@@ -29,7 +29,7 @@ function LabInventionLineItem:initialize(data, viewRect)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
-
+        ct.OpenCtrl("LabInventionCtrl", self.data)
     end)
     self.closeBtn.onClick:RemoveAllListeners()
     self.closeBtn.onClick:AddListener(function ()

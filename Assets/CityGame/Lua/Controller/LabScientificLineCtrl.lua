@@ -140,7 +140,7 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
     LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 
     --特殊情况处理，如果是临时线的话，则打开调整员工状态
-    if #researchInfoData >= 2 and not researchInfoData[2].lineId then
+    if #researchInfoData >= 2 and not researchInfoData[2].id then
         LabScientificLinePanel.inventTipItem:_hideSelf()
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
             LabScientificLinePanel.researchTipItem:newLineState(researchInfoData[2], remainWorker)
@@ -165,7 +165,7 @@ function LabScientificLineCtrl:onReceiveLabInventionData(datas)
     LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
 
     --特殊情况处理，如果是临时线的话，则打开调整员工状态
-    if #inventionInfoData >= 2 and not inventionInfoData[2].lineId then
+    if #inventionInfoData >= 2 and not inventionInfoData[2].id then
         LabScientificLinePanel.researchTipItem:_hideSelf()
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
             LabScientificLinePanel.inventTipItem:newLineState(inventionInfoData[2], remainWorker)

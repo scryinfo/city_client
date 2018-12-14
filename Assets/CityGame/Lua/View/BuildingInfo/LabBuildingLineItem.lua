@@ -8,8 +8,8 @@ LabBuildingLineItem.static.TOTAL_H = 815  --整个Item的高度
 LabBuildingLineItem.static.CONTENT_H = 740  --显示内容的高度
 LabBuildingLineItem.static.TOP_H = 100  --top条的高度
 
-LabBuildingLineItem.static.LabBuildingInventionItemPath = "Items/LaboratoryItems/LabBuildingInventionItem"  --发明
-LabBuildingLineItem.static.LabBuildingResearchItemPath = "Items/LaboratoryItems/LabBuildingResearchItem"  --研究
+LabBuildingLineItem.static.LabBuildingInventionItemPath = "View/Items/LaboratoryItems/LabBuildingInventionItem"  --发明
+LabBuildingLineItem.static.LabBuildingResearchItemPath = "View/Items/LaboratoryItems/LabBuildingResearchItem"  --研究
 
 function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, toggleData)
     self.viewRect = viewRect

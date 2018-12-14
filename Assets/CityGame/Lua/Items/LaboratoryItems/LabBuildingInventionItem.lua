@@ -12,13 +12,13 @@ function LabBuildingInventionItem:initialize(data, viewRect)
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
-    self.bulbImg = viewTrans:Find("mainRoot/progressRoot/bulbImg"):GetComponent("Image")
+    self.bulbImg = viewTrans:Find("mainRoot/progressRoot/right/bulbImg"):GetComponent("Image")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/bg/timeDownText"):GetComponent("Text")
     self.progressCountText = viewTrans:Find("mainRoot/progressRoot/right/bulbImg/progressCountText"):GetComponent("Text")
     self.phaseItems = LabInventionItemPhaseItems:new(viewTrans:Find("mainRoot/successItems"))
     self.progressSlider = viewTrans:Find("mainRoot/progressRoot/progressSlider"):GetComponent("Slider")
 
-    self:_initData()
+    self:_initData(data)
     UpdateBeat:Add(self._update, self)
 end
 function LabBuildingInventionItem:_initData(data)
@@ -57,7 +57,9 @@ function LabBuildingInventionItem:_initData(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
-    self.startTimeDown = true
+    if self.run then
+        self.startTimeDown = true
+    end
 end
 --倒计时
 function LabBuildingInventionItem:_update()

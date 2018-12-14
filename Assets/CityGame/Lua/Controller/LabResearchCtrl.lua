@@ -44,18 +44,14 @@ function LabResearchCtrl:_update()
     if not self.m_data then
         return
     end
-    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
-        if self.remainTime then
-            self.remainTime = self.m_data.leftSec
-        else
-            self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        end
+    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec > 0 then
+        self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
         LabResearchPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
 
         if self.remainTime <= 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
             LabResearchPanel:setBulbState(self.m_data.bulbState)
-            return
+            self.remainTime = 0
         end
 
         local timeTable = getTimeBySec(self.remainTime)
@@ -66,12 +62,16 @@ end
 --初始化数据
 function LabResearchCtrl:_initPanelData()
     self.m_data.type = 0
+    self.remainTime = self.m_data.leftSec
     local formularItem = FormularConfig[self.m_data.itemId]
     if formularItem.phase ~= 1 or #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
     end
     DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
+        data.backFunc = function(success)
+            self.enough = success
+        end
         LabResearchPanel:showLine(data)
     end, formularItem.materials)
 
@@ -81,39 +81,43 @@ function LabResearchCtrl:_initPanelData()
     if not self.m_data.id then    --没有id则为临时添加的线
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabResearchPanel:setBulbState(self.m_data.bulbState)
-        LabResearchPanel.researchBtn.transform.localScale = Vector3.one
-
-        LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
-        LabResearchPanel.researchBtn.onClick:AddListener(function ()
-            self:_creatTempLine(self)
-        end)
+        if self.enough then
+            LabResearchPanel.researchBtn.transform.localScale = Vector3.one
+            LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
+            LabResearchPanel.researchBtn.onClick:AddListener(function ()
+                self:_creatTempLine()
+            end)
+        else
+            LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
+        end
     else
         if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
         else
-            self.m_data.bulbState = LabInventionBulbItemState.Finish
             if self.m_data.roll == 0 then    --没有倒计时结束，且没有roll，则为从暂停的线点进来
+                self.m_data.bulbState = LabInventionBulbItemState.Empty
                 LabResearchPanel.researchBtn.transform.localScale = Vector3.one
                 LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
                 LabResearchPanel.researchBtn.onClick:AddListener(function ()
-                    self:_launchLine(self)
+                    self:_launchLine()
                 end)
             else
-                LabResearchPanel.researchBtn.localScale = Vector3.zero    --没有id则为临时添加的线
+                LabResearchPanel.researchBtn.localScale = Vector3.zero
+                self.m_data.bulbState = LabInventionBulbItemState.Finish
             end
         end
         LabResearchPanel:setBulbState(self.m_data.bulbState)
     end
 end
 --添加临时线，返回科技线
-function LabResearchCtrl:_creatTempLine(ins)
-    local data = {itemId = ins.m_data.itemId, type = 0, phase = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_AddTempLineData', data)
+function LabResearchCtrl:_creatTempLine(self)
+    local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
+    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end
 --继续研究，返回科技线
-function LabResearchCtrl:_launchLine(ins)
-    DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_ReqLabLaunchLine', ins.m_data.lineId, ins.m_data.rollTarget + 1)
+function LabResearchCtrl:_launchLine()
+    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, self.m_data.rollTarget + 1)
     UIPage.ClosePage()
 end

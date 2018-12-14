@@ -26,14 +26,21 @@ function LabFormulaItem:showState(datas)
         return
     end
 
+    local success = true
     for i, itemData in pairs(datas) do
-        local showStr
-        if itemData.haveCount < itemData.matCount then
-            showStr = string.format("<color=%s>%d</color>/%d", LabFormulaItem.static.Red_Color, itemData.haveCount, itemData.matCount)
-        else
-            showStr = string.format("%d/%d", itemData.haveCount, itemData.matCount)
+        if type(itemData) ~= "function" then
+            local showStr
+            if itemData.haveCount < itemData.matCount then
+                showStr = string.format("<color=%s>%d</color>/%d", LabFormulaItem.static.Red_Color, itemData.haveCount, itemData.matCount)
+                success = false
+            else
+                showStr = string.format("%d/%d", itemData.haveCount, itemData.matCount)
+            end
+            self.itemRects[i].matCountText.text = showStr
+            --self.itemRects[i].matImg = itemData.matId  --根据id读取图片
         end
-        self.itemRects[i].matCountText.text = showStr
-        --self.itemRects[i].matImg = itemData.matId  --根据id读取图片
+    end
+    if datas.backFunc then
+        datas.backFunc(success)
     end
 end

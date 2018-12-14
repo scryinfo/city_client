@@ -37,7 +37,9 @@ function LabBuildingResearchItem:_initData(data)
     else
         self.bottleImg.color = getColorByVector3(LabBuildingResearchItem.static.NoRollColor)
     end
-    self.startTimeDown = true
+    if self.run then
+        self.startTimeDown = true
+    end
 end
 --倒计时
 function LabBuildingResearchItem:_update()

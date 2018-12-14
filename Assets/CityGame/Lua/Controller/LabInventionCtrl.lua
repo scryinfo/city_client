@@ -42,18 +42,14 @@ function LabInventionCtrl:_update()
     if not self.m_data then
         return
     end
-    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
-        if self.remainTime then
-            self.remainTime = self.m_data.leftSec
-        else
-            self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        end
+    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec > 0 then
+        self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
         LabInventionPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
 
         if self.remainTime <= 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
             LabInventionPanel.setBulbState(self.m_data.bulbState)
-            return
+            self.remainTime = 0
         end
 
         local timeTable = getTimeBySec(self.remainTime)
@@ -65,6 +61,7 @@ end
 --初始化数据
 function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
+    self.remainTime = self.m_data.leftSec
     local formularItem = FormularConfig[self.m_data.itemId]
     if formularItem.phase ~= 5 then
         ct.log("cycle_w15_laboratory03", "阶段数不为5")
@@ -72,12 +69,16 @@ function LabInventionCtrl:_initPanelData()
     end
     if #formularItem.materials == 0 then  --判断是否为原料
         LabInventionPanel.showLine({})
+        self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
         --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
+            data.backFunc = function(success)
+                self.enough = success
+            end
             LabInventionPanel.showLine(data)
             LabInventionPanel.goodRootTran.localScale = Vector3.one
             LabInventionPanel.rawRootTran.localScale = Vector3.zero
@@ -89,14 +90,24 @@ function LabInventionCtrl:_initPanelData()
     if not self.m_data.id then    --没有id则为临时添加的线
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabInventionPanel.setBulbState(self.m_data.bulbState)
-        LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
+        if self.enough then
+            LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
+        else
+            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+        end
     else
-        if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
+        if self.m_data.run and self.m_data.leftSec > 0 then    --如果在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
         else
-            self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero    --没有id则为临时添加的线
+            if self.m_data.roll > 0 then
+                self.m_data.bulbState = LabInventionBulbItemState.Finish
+                LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+            else
+                self.m_data.bulbState = LabInventionBulbItemState.Empty
+                LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+                ct.log("cycle_w15_laboratory03", "状态不对")
+            end
         end
         LabInventionPanel.setBulbState(self.m_data.bulbState)
     end

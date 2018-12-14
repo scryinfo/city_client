@@ -103,6 +103,9 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(data)
+    --先删除临时线
+    self:m_DelTempLineData(data)
+
     table.insert(self.orderLineData, 1, data)
     if not self.hashLineData[data.id] then
         self.hashLineData[data.id] = data
@@ -116,6 +119,12 @@ function LaboratoryModel:n_OnReceiveLaunchLine(data)
     --应该是更新数据
 
     self.tempLine = nil
+    self:_getScientificLine()
+    if self.hashLineData[data.lineId].type == 0 then
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', 0, self.researchLines)
+    else
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', 1, self.inventionLines)
+    end
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(data)
@@ -134,9 +143,9 @@ function LaboratoryModel:n_OnReceiveDelLine(data)
     end
     self:_getScientificLine()
     if type == 0 then
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', type, self.researchLines)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', type, self.researchLines)
     else
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', type, self.inventionLines)
+        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', type, self.inventionLines)
     end
 end
 --更新某条线的具体数据

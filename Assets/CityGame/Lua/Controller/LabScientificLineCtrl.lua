@@ -36,8 +36,6 @@ function LabScientificLineCtrl:Awake(go)
         self:_inventionLineOpen()
     end)
 
-    self:_addListener()
-
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.researchSource.mProvideData = LabScientificLineCtrl.static.researchProvideData
@@ -51,17 +49,14 @@ function LabScientificLineCtrl:Refresh()
     self:_initPanelData()
 end
 
-function LabScientificLineCtrl:_addListener()
-    --Event.AddListener("c_OnReceiveLabLineAdd", self._onReceiveLabAddLine, self)
-end
-function LabScientificLineCtrl:_removeListener()
-    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+function LabScientificLineCtrl:Hide()
+    self.gameObject:SetActive(false)
+    self.isActived = false
 end
 
 function LabScientificLineCtrl:_initPanelData()
     LabScientificLineCtrl.static.researchItems = {}
     LabScientificLineCtrl.static.inventionItems = {}
-    --有个问题，这个脚本并没有重写hide方法，为什么m_data会清空
     if self.m_data then
         self.buildingId = self.m_data.buildingId
         LabScientificLineCtrl.static.buildingId = self.buildingId

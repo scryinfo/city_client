@@ -9,23 +9,24 @@ UIPage:ResgisterOpen(LaboratoryCtrl)
 function LaboratoryCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
-
 function LaboratoryCtrl:bundleName()
     return "LaboratoryPanel"
 end
-
 function LaboratoryCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
-
 function LaboratoryCtrl:Awake(go)
     self.gameObject = go
     self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
 end
-
 function LaboratoryCtrl:Refresh()
     self:_initData()
+end
+function LaboratoryCtrl:Hide()
+    --UIPage:Hide()
+    self.gameObject:SetActive(false)
+    self.isActived = false
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id

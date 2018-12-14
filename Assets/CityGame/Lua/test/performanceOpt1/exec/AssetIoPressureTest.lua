@@ -7,13 +7,16 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 
 --基本测试数据准备{
 --目前的测试是1000个160*160贴图的资源IO测试
-local sprite_type = CityLuaUtil.getSpriteType() --Sprite类型
 local testcount = 1000  --资源加载数量
 local ResPathList = {}  --资源路径
 for i = 1, testcount do
     ResPathList[i] = 'TempIcon/A'..i
 end
 
+local ResPathListS = {}  --资源路径
+for i = 1, testcount do
+    ResPathListS[i] = 'TempIcon/A'..i
+end
 --基本测试数据准备}
 
 --异步方式加载、卸载的内存测试,
@@ -26,16 +29,41 @@ end
 --]]
 
 --异步加载测试
-local testLoadFun = function(inBundlelist, inAssertlist)
+local testLoadFun = function(inBundlelist, inAssertlist,type)
     for i = 1, testcount do
-        panelMgr:LoadPrefab_A(ResPathList[i], nil, nil,function(self, obj ,ab)
+        panelMgr:LoadPrefab_A(ResPathList[i], type, nil,function(self, obj ,ab)
             inBundlelist[#inBundlelist +1] = ab
             inAssertlist[#inAssertlist] = obj
         end)
     end
 end
 
-UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_unload_s160_mem",  function ()
+UnitTest.Exec("abel_w17_load_A_sprite_s160_mem", "abel_w17_load_A_sprite_s160_mem",  function ()
+    local bundlelist ={}        --存放bundle的表
+    local assetlist ={}
+
+    local timer0 = FrameTimer.New(function()
+        collectgarbage("collect")
+        ct.log('abel_w17_load_A_sprite_s160_mem','[abel_w17_load_A_sprite_s160_mem] testLoadFun')
+        testLoadFun(bundlelist, assetlist,CityLuaUtil.getSpriteType())
+        collectgarbage("collect")
+    end, 10, 0)
+    timer0:Start()
+end)
+
+UnitTest.Exec("abel_w17_load_A_texture_s160_mem", "abel_w17_load_A_texture_s160_mem",  function ()
+    local bundlelist ={}        --存放bundle的表
+    local assetlist ={}
+
+    local timer0 = FrameTimer.New(function()
+        collectgarbage("collect")
+        ct.log('abel_w17_load_A_texture_s160_mem','[abel_w17_load_A_texture_s160_mem] testLoadFun')
+        testLoadFun(bundlelist, assetlist)
+    end, 10, 0)
+    timer0:Start()
+end)
+
+UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_A_unload_force_s160_mem",  function ()
     local bundlelist ={}        --存放bundle的表
     local assetlist ={}
     -- unloadAllLoadedObjects 方式卸载测试
@@ -51,9 +79,9 @@ UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_unload_s16
     local timer0 = FrameTimer.New(function()
         collectgarbage("collect")
         ct.log('abel_w17_load_A_unload_force_s160_mem','[abel_w17_load_A_unload_force_s160_mem] testLoadFun')
-        testLoadFun(bundlelist, assetlist)
+        testLoadFun(bundlelist, assetlist, CityLuaUtil.getSpriteType())
         local timer = FrameTimer.New(function()
-            ct.log('abel_w17_load_AS_unload_No_force_s160_mem','[abel_w17_load_AS_unload_No_force_s160_mem] TestUnLoadFun_force')
+            ct.log('abel_w17_load_A_unload_force_s160_mem','[abel_w17_load_A_unload_force_s160_mem] TestUnLoadFun_force')
             TestUnLoadFun_force(bundlelist)
             bundlelist ={}
             collectgarbage("collect")
@@ -121,22 +149,24 @@ end)
         * 2、3步需要扩展一个单独的接口， 类似 panelMgr:LoadPrefab_S
         * 这个测试需要比对尺寸128和160的加载时间
 --]]
-UnitTest.Exec("abel_w17_load_S_unload_force_time", "abel_w17_load_S_unload_force_time",  function ()
+UnitTest.Exec("abel_w17_load_S_s160_time", "abel_w17_load_S_s160_time",  function ()
+    local assetlist ={}     --存放asset的表
     --异步加载测试
     local testLoadFun_S = function(reslist)
-        ct.log('abel_w17_load_S_unload_force_time','[testLoadFun_S] #reslist = '..#reslist)
+        ct.log('abel_w17_load_S_s160_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
             --注意这里返回的值包括两个数据： asset, bundle
-            reslist[#reslist+1] = panelMgr:LoadPrefab_S(ResPathList[i], nil)
+            reslist[#reslist+1] = panelMgr:LoadPrefab_S(ResPathListS[i], nil)
         end
     end
 
     --尺寸128的测试
-    UnitTest.PerformanceTest("abel_w17_load_S_unload_force_time","[同步加载1000个尺寸为128的执行时间]", function()
-        testLoadFun_S(reslist)
-    end)
 
     --尺寸160的测试
+    UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[同步加载1000个尺寸为128的执行时间]", function()
+        testLoadFun_S(assetlist)
+    end)
+    --[abel_w17_load_S_unload_force_time]    总执行时间:     19.108
 
 end)
 

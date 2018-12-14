@@ -162,7 +162,7 @@ public static class CustomSettings
         _GT(typeof(Resources)),     
         _GT(typeof(LuaProfiler)),
           
-        //for LuaFramework
+        //for LuaFramework        
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
         _GT(typeof(Button)),
@@ -194,6 +194,7 @@ public static class CustomSettings
         _GT(typeof(City.NetworkInterface)),
         _GT(typeof(City.MemoryStream)),
         _GT(typeof(City.CityLuaUtil)),
+        _GT(typeof(City.Sync_LoadData)),
         _GT(typeof(City.CityTest)),
         _GT(typeof(EasyJoystick)),
         _GT(typeof(MovingJoystick)),

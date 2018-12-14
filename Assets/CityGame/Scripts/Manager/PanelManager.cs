@@ -5,15 +5,9 @@ using UnityEngine.UI;
 using LuaInterface;
 using System;
 
-namespace LuaFramework {
+namespace LuaFramework {    
     public class PanelManager : Manager {
         private Transform parent;
-        public struct Sync_LoadData
-        {
-            public AssetBundle _bunldle ;
-            public GameObject _asset;
-        };
-
         Transform Parent {
             get {
                 if (parent == null) {
@@ -30,35 +24,8 @@ namespace LuaFramework {
         }
         string GetBundleName(ref string releativePath)
         {
-            releativePath = releativePath.Replace("/", "_");
-            return releativePath.ToLower() + AppConst.BundleExt;
-        }
-
-        public Sync_LoadData LoadPrefab_S(string releativePath, System.Type type = null) {
-            //1、 根据项目资源bundle命名规则，把传入的资源相对路径转为对应的bundle名字，同步加载bundle
-            Sync_LoadData retObj;
-            retObj._asset = null;
-            retObj._bunldle = null;
-            string assetName = releativePath;
-            if (type == null)
-            {
-                type = typeof(GameObject);
-            }
-#if RES_BUNDEL            
-            assetName = GetAssetName(ref releativePath);
-#endif
-            string abName = GetBundleName(ref releativePath);
-
-            retObj._bunldle = UnityEngine.Resources.Load(abName, type) as AssetBundle;
-            
-            if (retObj._bunldle != null) {
-                //2、 从传入的资源相对路径取出资源名字，从bundle同步加载该资源
-                AssetBundleRequest abre = retObj._bunldle.LoadAssetAsync(assetName, type);
-                if (abre != null) {
-                    retObj._asset = abre.asset as GameObject;
-                }
-            }
-            return retObj;
+            string outstr = releativePath.Replace("/", "_");
+            return outstr.ToLower() + AppConst.BundleExt;
         }
 
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                

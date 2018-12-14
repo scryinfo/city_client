@@ -116,13 +116,11 @@ public class Packager {
         BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
 
         MoveDir(resPath+"/lua", luaPath);
-
-        HandleNoneLuaBundleInLua();
-
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
         if (Directory.Exists(resPath)) Directory.Delete(resPath, true);
         AssetDatabase.Refresh();
+        HandleNoneLuaBundleInLua();
     }
 
     /// <summary>
@@ -152,8 +150,7 @@ public class Packager {
             HandleLuaBundle();
         } else {
             HandleLuaFile();
-        }
-        HandleNoneLuaBundleInLua();
+        }        
         HandleResBundle();//资源打包
         
         string resPath = "Assets/" + AppConst.AssetDir;
@@ -166,6 +163,7 @@ public class Packager {
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
         AssetDatabase.Refresh();
+        HandleNoneLuaBundleInLua();
     }
 
     static void AutoAddBuildMap(string pattern, string path, string rootPath)
@@ -277,6 +275,8 @@ public class Packager {
             AddBuildMap(name, "*.bytes", path);
         }
         AddBuildMap("lua/lua" + AppConst.BundleExt, "*.bytes", "Assets/" + AppConst.LuaTempDir);
+        AssetDatabase.Refresh();
+        //HandleNoneLuaBundleInLua();
     }
 
     static void HandleNoneLuaBundleInLua()

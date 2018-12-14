@@ -28,22 +28,22 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
             return
         end
         if self.productionData.buildingType == BuildingType.MaterialFactory then
-            local data = {}
-            data.dataTab = MaterialModel.materialProductionLine
-            data.buildingType = BuildingType.MaterialFactory
-            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+            --local data = {}
+            --data.dataTab = MaterialModel.materialProductionLine
+            --data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            local data = {}
-            data.dataTab = ProcessingModel.processingProductionLine
-            data.buildingType = BuildingType.ProcessingFactory
-            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+            --local data = {}
+            --data.dataTab = ProcessingModel.processingProductionLine
+            --data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         end
     end);
 
     if self.productionData.buildingType == BuildingType.MaterialFactory then
-        self:initializeInfo(MaterialModel.materialProductionLine);
+        self:initializeInfo(self.productionData.line);
     elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-        self:initializeInfo(ProcessingModel.processingProductionLine);
+        self:initializeInfo(self.productionData.line);
     end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)

@@ -1,3 +1,34 @@
+
+MaterialModel = class("MaterialModel",ModelBase)
+local pbl = pbl
+
+function MaterialModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
+end
+
+function MaterialModel:OnCreate()
+    --网络回调
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
+
+end
+
+function MaterialModel:Close()
+    --清空本地UI事件
+end
+--客户端请求--
+--打开原料厂
+function MaterialModel:m_ReqOpenMaterial(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
+end
+
+--服务器回调--
+--打开原料厂
+function MaterialModel:n_OnOpenMaterial(stream)
+    DataManager.ControllerRpcNoRet(self.insId,"MaterialCtrl", 'refreshMaterialDataInfo',stream)
+end
+
+--[[
 local pbl = pbl
 
 MaterialModel = {};
@@ -54,3 +85,4 @@ function MaterialModel.n_OnOpenMaterial(stream)
     end
     Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
 end
+]]

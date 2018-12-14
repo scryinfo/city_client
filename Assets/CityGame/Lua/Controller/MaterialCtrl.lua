@@ -15,44 +15,41 @@ function MaterialCtrl:OnCreate(obj)
 end
 
 function MaterialCtrl:Awake(go)
-
     self.gameObject = go;
-    local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    self.data = {}
-    self.data.buildingType = BuildingType.MaterialFactory
-    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
-
-    Event.AddListener("refreshMaterialDataInfo",self.refreshMaterialDataInfo,self)
-    --暂时
-    Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
 end
-function MaterialCtrl:Refresh()
 
+function MaterialCtrl:Refresh()
+    self:initializeData()
+end
+
+function MaterialCtrl:initializeData()
+    if self.m_data then
+        DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    end
 end
 
 --刷新原料厂信息
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
-        self.isOther = true
+        self.m_data.isOther = true
         MaterialPanel.changeNameBtn.localScale = Vector3.zero
-
-        --self.data = {}
-        --self.data.buildingType = BuildingType.MaterialFactory
-        --self.data.isOther = true
-        --local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
     else
-        self.isOther = false
+        self.m_data.isOther = false
         MaterialPanel.changeNameBtn.localScale = Vector3.one
-
-        --self.data = {}
-        --self.data.buildingType = BuildingType.MaterialFactory
-        --self.data.isOther = false
-        --local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
+    end
+    self.m_data.buildingType = BuildingType.MaterialFactory
+    if not self.materialToggleGroup then
+        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, self.materialBehaviour, self.m_data)
+    else
+        --self.materialToggleGroup:updataInfo(self.m_data)
     end
 end
 
@@ -66,17 +63,15 @@ function MaterialCtrl:OnClick_changeName()
 end
 
 --返回
-function MaterialCtrl:OnClick_backBtn()
+function MaterialCtrl:OnClick_backBtn(ins)
+    if ins.materialToggleGroup then
+        ins.materialToggleGroup:cleanItems()
+    end
     UIPage.ClosePage();
-    --关闭原料厂的监听
-    --Event.RemoveListener("c_temporaryifNotGoods",WarehouseCtrl.c_temporaryifNotGoods)
 end
 
 --打开信息界面
 function MaterialCtrl:OnClick_infoBtn()
-
-end
-function MaterialCtrl:Refresh()
 
 end
 

@@ -61,24 +61,26 @@ function WarehouseCtrl:Refresh()
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = warehouse
-        self.data = {};
-        self.data.type = BuildingInType.Warehouse
-        self.data.buildingType = self.m_data.buildingType;
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        --self.data = {};
+        --self.data.type = BuildingInType.Warehouse
+        --self.data.buildingType = self.m_data.buildingType;
+        self.m_data.type = BuildingInType.Warehouse
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
 
-        local numText = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
+        local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
         WarehousePanel.Warehouse_Slider.value = numText;
         WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.luabehaviour = warehouse
-        self.data = {};
-        self.data.type = BuildingInType.Warehouse
-        self.data.buildingType = self.m_data.buildingType;
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        --self.data = {};
+        --self.data.type = BuildingInType.Warehouse
+        --self.data.buildingType = self.m_data.buildingType;
+        self.m_data.type = BuildingInType.Warehouse
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
 
-        local numText = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
-        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
+        local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
         WarehousePanel.Warehouse_Slider.value = numText;
         WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     end
@@ -125,11 +127,11 @@ end
 --获取仓库总数量
 function WarehouseCtrl:getWarehouseCapacity(table)
     local warehouseCapacity = 0
-    if not table then
+    if not table.inHand then
         warehouseCapacity = 0
         return warehouseCapacity;
     else
-        for k,v in pairs(table) do
+        for k,v in pairs(table.inHand) do
             warehouseCapacity = warehouseCapacity + v.n
         end
         return warehouseCapacity
@@ -168,16 +170,16 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             if not MaterialModel.materialShelf then
-                Event.Brocast("m_ReqShelfAdd",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
                 return;
             else
                 for k,t in pairs(MaterialModel.materialShelf) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
-                        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
                     end
                 end
             end
-            Event.Brocast("m_ReqShelfAdd",MaterialModel.buildingId,v.itemId,v.inputNumber.text,v.inputPrice.text)
+            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
         end
     end
 end
@@ -196,7 +198,7 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         return;
     end
     for i,v in pairs(go.GoodsUnifyMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",MaterialModel.buildingId,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
+        Event.Brocast("m_ReqTransport",go.m_data.info.id,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
     end
 end
 --运输回调执行

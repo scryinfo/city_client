@@ -1,3 +1,33 @@
+
+ProcessingModel = class("ProcessingModel",ModelBase)
+local pbl = pbl
+
+function ProcessingModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
+end
+
+function ProcessingModel:OnCreate()
+    --网络回调
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenProcessing)
+end
+
+function ProcessingModel:Close()
+    --清空本地UI事件
+end
+
+--客户端请求--
+--打开加工厂
+function ProcessingModel:m_ReqOpenProcessing(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "detailProduceDepartment","gs.Id",{id = buildingId})
+end
+--服务器回调--
+--打开加工厂
+function ProcessingModel:n_OnOpenProcessing(stream)
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessingCtrl", 'refreshProcessingDataInfo',stream)
+end
+
+--[[
 local pbl = pbl
 
 ProcessingModel = {}
@@ -53,4 +83,4 @@ function ProcessingModel.n_OnOpenProcessing(stream)
         ProcessingModel.buildingCode = msgProcessing.info.mId;
     end
     Event.Brocast("refreshProcessingDataInfo",msgProcessing)
-end
+end]]

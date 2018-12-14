@@ -35,22 +35,22 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             return
         end
         if self.shelfData.buildingType == BuildingType.MaterialFactory then
-            local data = {}
-            data.dataTab = MaterialModel.materialShelf
-            data.buildingType = BuildingType.MaterialFactory
-            ct.OpenCtrl("ShelfCtrl",data)
+            --local data = {}
+            --data.dataTab = MaterialModel.materialShelf
+            --data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("ShelfCtrl",self.shelfData)
         elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-            local data = {}
-            data.dataTab = ProcessingModel.processingShelf
-            data.buildingType = BuildingType.ProcessingFactory
-            ct.OpenCtrl("ShelfCtrl",data)
+            --local data = {}
+            --data.dataTab = ProcessingModel.processingShelf
+            --data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("ShelfCtrl",self.shelfData)
         end
     end);
 
     if self.shelfData.buildingType == BuildingType.MaterialFactory then
-        self:initializeInfo(MaterialModel.materialShelf);
+        self:initializeInfo(self.shelfData.shelf.good);
     elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-        self:initializeInfo(ProcessingModel.processingShelf)
+        self:initializeInfo(self.shelfData.shelf.good)
     end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)

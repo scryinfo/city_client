@@ -39,16 +39,18 @@ function ShelfCtrl:Refresh()
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = shelf
-        self.data = {}
-        self.data.type = BuildingInType.Shelf
-        self.data.buildingType = self.m_data.buildingType
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        --self.data = {}
+        --self.data.type = BuildingInType.Shelf
+        --self.data.buildingType = self.m_data.buildingType
+        self.m_data.type = BuildingInType.Shelf
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.luabehaviour = shelf
-        self.data = {}
-        self.data.buildingType = self.m_data.buildingType
-        self.data.type = BuildingInType.Shelf
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        --self.data = {}
+        --self.data.buildingType = self.m_data.buildingType
+        --self.data.type = BuildingInType.Shelf
+        self.m_data.type = BuildingInType.Shelf
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
     end
 
 end
@@ -117,15 +119,15 @@ function ShelfCtrl:OnClick_createGoods(go)
         return
     end
     if go.m_data.buildingType == BuildingType.MaterialFactory then
-        local data = {}
-        data.dataTab = MaterialModel.materialWarehouse
-        data.buildingType = BuildingType.MaterialFactory
-        ct.OpenCtrl("WarehouseCtrl",data)
+        --local data = {}
+        --data.dataTab = MaterialModel.materialWarehouse
+        --data.buildingType = BuildingType.MaterialFactory
+        ct.OpenCtrl("WarehouseCtrl",go.m_data)
     elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-        local data = {}
-        data.dataTab = ProcessingModel.processingWarehouse
-        data.buildingType = BuildingType.ProcessingFactory
-        ct.OpenCtrl("WarehouseCtrl",data)
+        --local data = {}
+        --data.dataTab = ProcessingModel.processingWarehouse
+        --data.buildingType = BuildingType.ProcessingFactory
+        ct.OpenCtrl("WarehouseCtrl",go.m_data)
     end
 end
 

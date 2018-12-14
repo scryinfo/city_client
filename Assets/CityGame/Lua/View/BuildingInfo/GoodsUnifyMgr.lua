@@ -18,25 +18,25 @@ GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProduct
 function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.MaterialFactory then
-        self:_creatStaffItemGoods(MaterialModel.materialShelf);
+        self:_creatStaffItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.ProcessingFactory then
-        self:_creatStaffItemGoods(ProcessingModel.processingShelf);
+        self:_creatStaffItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.MaterialFactory then
-        self:_creatWarehouseItemGoods(MaterialModel.materialWarehouse);
+        self:_creatWarehouseItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.ProcessingFactory then
-        self:_creatWarehouseItemGoods(ProcessingModel.processingWarehouse);
+        self:_creatWarehouseItemGoods(buildingData);
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
     end
 end
 --仓库
-function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
-    if not warehouseTable then
+function GoodsUnifyMgr:_creatWarehouseItemGoods(buildingData)
+    if not buildingData.store.inHand then
         return;
     end
     self.WarehouseModelData = {}
     local configTable = {}
-    for i,v in pairs(warehouseTable) do
+    for i,v in pairs(buildingData.store.inHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.num = v.n
@@ -56,13 +56,13 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
     end
 end
 --货架
-function GoodsUnifyMgr:_creatStaffItemGoods(shelfTable)
-    if not shelfTable then
+function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
+    if not buildingData.shelf.good then
         return;
     end
     self.ModelDataList={}
     local configTable = {}
-    for i,v in pairs(shelfTable) do
+    for i,v in pairs(buildingData.shelf.good) do
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
@@ -132,11 +132,11 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
 end
 --读取服务器发过来的信息，是否有生产线
 function GoodsUnifyMgr:_getProductionLine(table,behaviour)
-    if not table.dataTab then
+    if not table.line then
         return;
     end
     local configTable = {}
-    for i,v in pairs(table.dataTab) do
+    for i,v in pairs(table.line) do
         local uiTab = {}
         if table.buildingType == BuildingType.MaterialFactory then
             uiTab.name = Material[v.itemId].name

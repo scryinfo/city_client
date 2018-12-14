@@ -5,9 +5,10 @@
 ---科技线界面改变员工工资item
 LabScientificChangeStaffItem = class('LabScientificChangeStaffItem')
 
-function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
+function LabScientificChangeStaffItem:initialize(viewRect, parentBtn, gridGroup)
     self.viewRect = viewRect
     self.parentBtn = parentBtn
+    self.gridGroup = gridGroup
 
     self.staffText = viewRect:Find("staffRoot/staffText"):GetComponent("Text")
     self.staffSlider = viewRect:Find("staffRoot/staffSlider"):GetComponent("Slider")
@@ -30,6 +31,7 @@ end
 --处于新增线的状态 --需要包含itemId和buildingId
 function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     --父物体的bgBtn需要解除
+    self.gridGroup.enabled = true
     self.viewRect.transform:SetAsLastSibling()
     self.viewRect.localScale = Vector3.one
     self.parentBtn.transform.localScale = Vector3.one
@@ -58,6 +60,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
 end
 --改变员工数量状态
 function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, itemRect)
+    self.gridGroup.enabled = false
     self.viewRect.localScale = Vector3.one
     self.viewRect.position = itemRect.transform.position
 

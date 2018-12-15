@@ -65,19 +65,16 @@ function AddLineTogglesMgr:initData(data)
     --可能会有设置正在研究中等状态
 end
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
-function AddLineTogglesMgr:setToggleIsOnByType(typeId, itemId)
-    --需要字典鸭
-    if typeId == 0 then
-        ct.log("", "-----------")
-    end
+function AddLineTogglesMgr:setToggleIsOnByType(itemId)
+    local typeId = tonumber(string.sub(itemId, 1, 4))
+    ct.log("cycle_w15_laboratory03", "------ typeId: "..typeId)
 
     if self.keyToggleItems[typeId] then
-        self.keyToggleItems[typeId]:showState(true)
-        if self.keyContentItems[itemId] then
-            self.keyContentItems[itemId]:setToggleIsOn(true)
-        end
-    else
-        ct.log("cycle_w15_laboratory03", "------ 找不到实例")
+        self.keyToggleItems[typeId]:setToggleIsOn(true)
+    end
+
+    if self.keyContentItems[itemId] then
+        self.keyContentItems[itemId]:setToggleIsOn(true)
     end
 end
 

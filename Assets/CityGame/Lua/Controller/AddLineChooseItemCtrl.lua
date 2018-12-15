@@ -43,9 +43,9 @@ end
 --刷新线路显示
 function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
     local tempData
-    if itemType == 0 then
+    --如果是原料
+    if itemType < 2200 then
         AddLineChooseItemPanel.researchBtn.transform.position = rectPosition
-
         tempData = Material[itemId]
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         local lineDatas = {}  --获取线的数据
@@ -55,7 +55,7 @@ function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
         end
         self:_setLineDetailInfo(lineDatas)
         AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
-        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(itemType, itemId)
+        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[1])
     else
         tempData = Good[itemId]
         AddLineChooseItemPanel.inventionBtn.transform.position = rectPosition

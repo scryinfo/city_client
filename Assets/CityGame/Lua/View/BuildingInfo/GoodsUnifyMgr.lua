@@ -12,6 +12,7 @@ GoodsUnifyMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预�
 GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
 GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
+GoodsUnifyMgr.static.Shelf_BuyGoods_PATH = "View/GoodsItem/BuyDetailsItem"  --货架购买物品 Item
 GoodsUnifyMgr.static.AddProductionLine_PATH = "View/GoodsItem/ProductionItem"  --选择添加生产线 Item
 GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProductionLineItem"  --生产线 Item
 
@@ -213,6 +214,12 @@ function GoodsUnifyMgr:_deleteTransportItem(id)
     self.transportPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
+----货架购买暂用这个(后边修改物品上架，运输，购买)
+function GoodsUnifyMgr:_buyShelfGoods()
+    local shelfGoodsData = {}
+    shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,)
+end
+
 --货架删除
 function GoodsUnifyMgr:_deleteGoods(ins)
     ct.log("fisher_week9_ShelfGoodsItem","[GoodsUnifyMgr:_deleteGoods]",ins.id);

@@ -27,6 +27,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,
     self.numberText.text = goodsDataInfo.number
     self.moneyText.text = goodsDataInfo.money
     --点击事件
+    self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
     self._luabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self);
     --初始化ItemUI状态
@@ -63,6 +64,10 @@ function ShelfGoodsItem:c_buyGoodsItemDelete()
     self.circleGreayImg.transform.localScale = Vector3.zero;
     --self.XBtn.transform.localScale = Vector3.one
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
+end
+--勾选物品
+function ShelfGoodsItem:OnClick_bgBtn(ins)
+    Event.Brocast("_selectedBuyGoods",ins.id,ins.itemId);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)

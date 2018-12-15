@@ -20,8 +20,8 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,it
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_closeBtn,self);
 end
 --删除
-function BuyDetailsItem:OnClick_closeBtn()
-
+function BuyDetailsItem:OnClick_closeBtn(ins)
+    Event.Brocast("c_temporaryifNotGoods",ins.id);
 end
 --刷新滑动条
 function BuyDetailsItem:scrollbarInfo()

@@ -200,7 +200,7 @@ end
 --仓库选中物品运输
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
-    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
+    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
     local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
@@ -214,12 +214,23 @@ function GoodsUnifyMgr:_deleteTransportItem(id)
     self.transportPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
-----货架购买暂用这个(后边修改物品上架，运输，购买)
-function GoodsUnifyMgr:_buyShelfGoods()
+--货架购买暂用这个(后边修改物品上架，运输，购买)
+function GoodsUnifyMgr:_buyShelfGoods(id,luabehaviour,itemId)
     local shelfGoodsData = {}
-    shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,)
-end
+    shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
+    local buyGoodsItem = BuyDetailsItem:new(self.items[id].uiData,shelfGoodsData._prefab,luabehaviour,self,id,itemId);
 
+    if not self.shelfBuyGoodslItems then
+        self.shelfBuyGoodslItems = {}
+    end
+    self.shelfBuyGoodslItems[id] = buyGoodsItem
+end
+--货架右侧删除购买
+function GoodsUnifyMgr:_deleteBuyGoods(id)
+    destroy(self.shelfBuyGoodslItems[id].prefab.gameObject);
+    self.shelfBuyGoodslItems[id] = nil;
+    ShelfCtrl.temporaryItems[id] = nil;
+end
 --货架删除
 function GoodsUnifyMgr:_deleteGoods(ins)
     ct.log("fisher_week9_ShelfGoodsItem","[GoodsUnifyMgr:_deleteGoods]",ins.id);

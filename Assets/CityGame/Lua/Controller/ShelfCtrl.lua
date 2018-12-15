@@ -29,6 +29,8 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
 
     --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
+    Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods,self);
 end
 
 function ShelfCtrl:Awake(go)
@@ -81,19 +83,19 @@ end
 function ShelfCtrl:_selectedBuyGoods(id,itemId)
     if self.temporaryItems[id] == nil then
         self.temporaryItems[id] = id
-        self.GoodsUnifyMgr:_creatTransportGoods(id,self.luabehaviour,itemId)
+        self.GoodsUnifyMgr:_buyShelfGoods(id,self.luabehaviour,itemId)
         self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.one
     else
         self.temporaryItems[id] = nil;
         self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
-        self.GoodsUnifyMgr:_deleteTransportItem(id);
+        self.GoodsUnifyMgr:_deleteBuyGoods(id);
     end
 end
 --临时表里是否有这个物品
 function ShelfCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
-    self.GoodsUnifyMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
-    self.GoodsUnifyMgr:_deleteTransportItem(id);
+    self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
+    self.GoodsUnifyMgr:_deleteBuyGoods(id);
 end
 
 function ShelfCtrl:OnClick_return_Btn(go)

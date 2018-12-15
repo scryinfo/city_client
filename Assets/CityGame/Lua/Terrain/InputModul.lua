@@ -103,7 +103,6 @@ function MobileInput:GetZoomValue()
     return self.m_zoomValue
 end
 
-
 function MobileInput:GetClickFocusPoint()
     return UnityEngine.Input.GetTouch(0).position
 end

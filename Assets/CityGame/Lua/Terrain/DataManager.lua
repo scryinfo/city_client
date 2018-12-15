@@ -40,7 +40,7 @@ DataManager.TempDatas ={ constructObj = nil, constructID = nil}
 
 
 ---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
-
+-------------------------------原子地块数据--------------------------------
 --功能
 --  创建一个新的原子地块集合，并将内部所有数据置为 -1
 --参数
@@ -91,7 +91,94 @@ function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     end
     return idList
 end
+-------------------------------道路数据集合--------------------------------
+--功能
+--  依据BlockDatas创建道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.CreateWaysByCollectionID(tempCollectionID)
+    --TODO://
+    if not BuildDataStack[tempCollectionID].RoteDatas then
+        BuildDataStack[tempCollectionID].RoteDatas = {}
+    end
+    for itemBlockID, itemNodeID in ipairs(BuildDataStack[tempCollectionID].BlockDatas) do
+        if itemNodeID == -1 then
+            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemNodeID)
+            if roadNum ~= 0 then
+                BuildDataStack[tempCollectionID].RoteDatas[itemNodeID].roadNum = roadNum
+            end
+        end
+    end
+end
 
+--功能
+--  依据BlockDatas刷新道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RefreshWaysByCollectionID(tempCollectionID)
+
+
+end
+
+--功能
+-- 移除道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RemoveWaysByCollectionID(tempCollectionID)
+
+
+end
+
+
+local RoadAroundNumber = {
+    FrontUpperItem = { Num = 2 },   --正上方
+    FrontBelowItem = { Num = 8 },   --正下方
+    LeftUpperItem = { Num = 16 },    --左上方
+    LeftMiddleItem = { Num = 1 },   --正左方
+    LeftBelowItem = { Num = 128 },    --左下方
+    RightUpperItem ={ Num = 32 },    --右上方
+    RightMiddleItem = { Num = 4 },  --正右方
+    RightBelowItem = { Num = 64 },   --右下方
+}
+--功能
+-- 移除道路的基础数据，管理GameObject
+function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
+    local roadNum = 0
+    for key, value in ipairs(RoadAroundNumber) do
+        value.ID = nil
+    end
+    --边缘判定（上下不判定的原因是因为计算值的时候会被排除）
+    if  roadBlockID % TerrainRangeSize ~= 0 then    --不靠地图右边边界--->右边一列
+        RoadAroundNumber.RightBelowItem.ID = roadBlockID - TerrainRangeSize + 1
+        RoadAroundNumber.RightMiddleItem.ID = roadBlockID + 1
+        RoadAroundNumber.RightBelowItem.ID = roadBlockID + TerrainRangeSize + 1
+    end
+    if roadBlockID % TerrainRangeSize ~= 1 then     --不靠地图左边边界--->计算左边一列
+        RoadAroundNumber.LeftUpperItem.ID = roadBlockID - TerrainRangeSize - 1
+        RoadAroundNumber.LeftMiddleItem.ID = roadBlockID - 1
+        RoadAroundNumber.LeftBelowItem.ID = roadBlockID + TerrainRangeSize - 1
+    end
+    RoadAroundNumber.FrontUpperItem.ID = roadBlockID - TerrainRangeSize
+    RoadAroundNumber.FrontBelowItem.ID = roadBlockID + TerrainRangeSize
+    --计算中间一列
+    local topItemID = roadBlockID - TerrainRangeSize
+    --如果存在  那么计算这个值
+    for key, value in ipairs(RoadAroundNumber) do
+        if value.ID then
+            if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
+                roadNum  = roadNum + value.ID
+            else
+                local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
+                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] then
+                    roadNum  = roadNum + value.ID
+                end
+            end
+        end
+    end
+    return roadNum
+end
+
+-------------------------------商业建筑基础数据集合--------------------------------
 --功能
 --  刷新商业建筑集合的基础数据--
 --参数

@@ -20,7 +20,9 @@ function CameraMove:Start(gameObject)
     mCameraState = TouchStateType.NormalState
     --初始化是否点击到UI上
     self.IsTouchUI = false
-
+    --初始化点击位置
+    self.touchBeginPosition = nil
+    self.touchBeginBlockID = nil
 end
 
 function CameraMove:Update(gameObject)
@@ -29,40 +31,46 @@ function CameraMove:Update(gameObject)
         self.IsTouchUI = true
     end
     --点击结束时
-    if self.IsTouchUI and  inputTools:GetIsClickUp()then
-        self.IsTouchUI = false
+    if  inputTools:GetIsClickUp() then
+        self.touchBeginPosition = nil
+        self.touchBeginBlockID = nil
+        --点击在UI上
+        if self.IsTouchUI then
+            self.IsTouchUI = false
+        end
     end
     --如果是点击到UI状态，则不做接下来的判定
     if self.IsTouchUI then
         return
     end
+    --如果检测到按下
+    if inputTools:GetIsClickDown() then
+        self.touchBeginPosition = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
+        self.touchBeginBlockID = TerrainManager.PositionTurnBlockID(tempPos)
+        self.touchBeginCameraPos = mainCameraTransform.position
+    end
     --如果为UI状态，则直接返回不做点击/拖拽判断
     if mCameraState == TouchStateType.NormalState then
         local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
         if inputTools:GetIsZoom() then           --如果是缩放状态
-
+            self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
-
+            self:UpdateMove()
         elseif inputTools:GetIsPoint() then     --如果是点击状态
-            if tempPos  then
-                local blockID = TerrainManager.PositionTurnBlockID(tempPos)
-                local tempNodeID  = DataManager.GetBlockDataByID(blockID)
-                if tempNodeID ~= nil and tempNodeID ~= -1 then
-                    local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
-                    if nil ~= tempModel then
-                        tempModel:OpenPanel()
-                    end
-                end
-            end
+            self:TouchBuild()
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
     elseif mCameraState == TouchStateType.ConstructState then
         local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
         if inputTools:GetIsZoom() then           --如果是缩放状态
-
+            self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
-
+            if self.touchBeginBlockID and DataManager.TempDatas.constructID == self.touchBeginBlockID then
+                self:MoveConstructObj()
+            else
+                self:UpdateMove()
+            end
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
@@ -77,6 +85,58 @@ function CameraMove:Update(gameObject)
 
 end
 
+
+--缩放相机距离远近
+function DataManager:ScaleCamera()
+
+end
+
+
+--点击到建筑
+function DataManager:TouchBuild()
+    local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
+    if tempPos  then
+        local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        local tempNodeID  = DataManager.GetBlockDataByID(blockID)
+        if tempNodeID ~= nil and tempNodeID ~= -1 then
+            local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
+            if nil ~= tempModel then
+                tempModel:OpenPanel()
+            end
+        end
+    end
+end
+
+--拖动临时建筑
+function DataManager:MoveConstructObj()
+    --[[
+    if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
+        return
+    end
+    --]]
+    local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
+    if tempPos  then
+        local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        if blockID ~= self.touchBeginBlockID then
+            DataManager.TempDatas.constructObj.transform.position = TerrainManager.BlockIDTurnPosition(blockID)
+            self.touchBeginBlockID = blockID
+        end
+    end
+end
+
+--拖动时更新相机位置
+function DataManager:UpdateMove()
+    --[[
+    if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
+        return
+    end
+    --]]
+    local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
+    if tempPos  then
+        local OffsetVec  = tempPos - self.touchBeginPosition
+        mainCameraTransform.position = self.touchBeginCameraPos - OffsetVec
+    end
+end
 
 --拖动结束后平滑移动
 function CameraMove:SmoothCameraView()

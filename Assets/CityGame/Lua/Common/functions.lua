@@ -142,6 +142,7 @@ end
 --修改表数据
 function UpdataTable(table,gameObject,prefabs)
 	TableSort:UpdataTable(table,gameObject,prefabs)
+end
 --将秒转换成小时分秒的格式，非时间戳
 function getTimeBySec(secTime)
 	local tb = {}
@@ -171,7 +172,6 @@ function getItemStore(store)
 		end
 	end
 	return itemTable
->>>>>>> 584e0a7dd5f70f52d5b98db840a02a6f2583d420
 end
 
 function ct.file_exists(path)

@@ -47,16 +47,18 @@ function CityinfoSurveyCtrl:Awake(go)
 end
 
 function CityinfoSurveyCtrl:Refresh()
-    tableSort(self.m_data.LineData.pandect,CityinfoSurveyPanel.name) --生成name
-    tableSort(self.m_data.LineData.pandect,CityinfoSurveyPanel.data) --生成data
-    tableSort(self.m_data.LineData.lineNmae,CityinfoSurveyPanel.company)   --生成cityinfoName表格
-    local lineName = CityinfoSurveyPanel.name:GetComponent("RectTransform")
-    local lineData = CityinfoSurveyPanel.data:GetComponent("RectTransform")
-    local linecompany = CityinfoSurveyPanel.company:GetComponent("RectTransform")
-    destroy(lineName:GetChild(lineName.childCount-1):Find("line").gameObject)
-    destroy(lineData:GetChild(lineData.childCount-1):Find("line").gameObject)
-    destroy(linecompany:GetChild(linecompany.childCount-1):Find("line").gameObject)
-end
+    if self.m_data.LineData ~=nil then
+        tableSort(self.m_data.LineData.pandect,CityinfoSurveyPanel.name) --生成name
+        tableSort(self.m_data.LineData.pandect,CityinfoSurveyPanel.data) --生成data
+        tableSort(self.m_data.LineData.lineNmae,CityinfoSurveyPanel.company)   --生成cityinfoName表格
+        local lineName = CityinfoSurveyPanel.name:GetComponent("RectTransform")
+        local lineData = CityinfoSurveyPanel.data:GetComponent("RectTransform")
+        local linecompany = CityinfoSurveyPanel.company:GetComponent("RectTransform")
+        destroy(lineName:GetChild(lineName.childCount-1):Find("line").gameObject)
+        destroy(lineData:GetChild(lineData.childCount-1):Find("line").gameObject)
+        destroy(linecompany:GetChild(linecompany.childCount-1):Find("line").gameObject)
+    end
+    end
 
 --返回按钮
 function CityinfoSurveyCtrl:OnBackBtn()

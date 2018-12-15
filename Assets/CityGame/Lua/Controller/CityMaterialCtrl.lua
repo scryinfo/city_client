@@ -114,7 +114,9 @@ function CityMaterialCtrl:OnBackBtn(go)
             destroy(CityMaterialPanel.company:GetComponent("RectTransform").transform:GetChild(i-1).gameObject)
         end
     end
-    UIPage.ClosePage();
+    --UIPage.ClosePage();
+    ct.OpenCtrl("CityInfoCtrl")
+    ct.OpenCtrl("CityInfoDataCtrl")
 end
 
 --滑动互用

@@ -44,6 +44,7 @@ function CityInfoCtrl:OnCreate(obj)
     gameObject = obj;
     CityInfoCtrlBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityInfoCtrlBehaviour:AddClick(CityInfoPanel.backBtn,self.OnBackBtn,self);
+    CityInfoCtrlBehaviour:AddClick(CityInfoPanel.btn,self.OnBtn,self);
 
     Event.AddListener("c_cityInfoBg",self.c_cityInfoBg,self)
     CityInfoPanel.time.text = os.date("%m月".."\n".."%d");
@@ -56,12 +57,17 @@ function CityInfoCtrl:OnBackBtn()
     UIPage.ClosePage();
 end
 
+--点击市民行为
+function CityInfoCtrl:OnBtn()
+    ct.OpenCtrl("CitizenBehaviorsCtrl")
+end
+
 --初始化
 function CityInfoCtrl:_initData()
     --CityInfoCtrl:_createCityInfo(CityInfoPathType[1],CityInfoPanel.right,1)
     CityInfoPanel.cityName.text = CityInfoData[1].cityName;
     CityInfoPanel.citySize.text = CityInfoData[1].cityScale;
-    CityInfoPanel.citizen.text = CityInfoData[1].citizenNum;
+    CityInfoPanel.citizenNum.text = CityInfoData[1].citizenNum;
     CityInfoPanel.man.text = CityInfoData[1].man;
     CityInfoPanel.woMan.text = CityInfoData[1].woMan;
     CityInfoPanel.cityFund.text = CityInfoData[1].cityFund;
@@ -140,8 +146,14 @@ function CityInfoCtrl:c_cityInfoBg(go)
     if lenght ~= nil then
         ct.OpenCtrl("CityInfoDataCtrl",go.DataInfo.layout)
         CityInfoPanel.basicInfo:SetActive(false)
-    else
+        CityInfoPanel.citizen:SetActive(false)
+    elseif go.DataInfo.name == "总览" then
         CityInfoPanel.basicInfo:SetActive(true)
+        CityInfoPanel.citizen:SetActive(false)
+        Event.Brocast("c_bacK")
+    else
+        CityInfoPanel.basicInfo:SetActive(false)
+        CityInfoPanel.citizen:SetActive(true)
         Event.Brocast("c_bacK")
     end
 end

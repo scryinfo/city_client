@@ -7,7 +7,8 @@
 --模拟服务器发来的数据
 CityInfoInHand = {
     [1] = {["name"] = "总览",},
-    [2] = {["name"] = "转卖",["layout"] = {
+    [2] =  {["name"] = "市民",},
+    [3] = {["name"] = "转卖",["layout"] = {
         ["name"] = {
             [1] = {
                 ["data"] = "原料利润",
@@ -64,7 +65,7 @@ CityInfoInHand = {
                 ["width"] = 0,
                 ["path"] = "View/CityInfoItem/ClearImage",
                 ["color"] = {r = 204, b = 204, g = 204, a = 0},
-                ["itemPath"] = "0001",
+                ["itemPath"] = "CityInfo/0001",
                 ["itemColor"] = {r = 255, b = 255, g = 255, a = 255},
             }, [3] = {
                 ["data"] = "12345.123",
@@ -177,7 +178,7 @@ CityInfoInHand = {
             }
         }
     }},
-    [3] = {["name"] = "土地",["layout"] = {
+    [4] = {["name"] = "土地",["layout"] = {
         ["name"] = {
             [1] = {
                 ["data"] = "参与公司量",
@@ -400,7 +401,7 @@ CityInfoInHand = {
             }
         }
     }},
-    [4] =  {["name"] = "公司",["layout"] = {
+    [5] =  {["name"] = "公司",["layout"] = {
         ["name"] = {
             [1] = {
                 ["data"] = "成员",
@@ -484,7 +485,7 @@ CityInfoInHand = {
                 ["width"] = 0,
                 ["path"] = "View/CityInfoItem/ClearImage",
                 ["color"] = {r = 204, b = 204, g = 204, a = 0},
-                ["itemPath"] = "0001",
+                ["itemPath"] = "CityInfo/0001",
                 ["itemColor"] = {r = 255, b = 255, g = 255, a = 255},
             },  [2] = {
                 ["data"] = "1",
@@ -493,7 +494,7 @@ CityInfoInHand = {
                 ["width"] = 0,
                 ["path"] = "View/CityInfoItem/ClearImage",
                 ["color"] = {r = 204, b = 204, g = 204, a = 0},
-                ["itemPath"] = "0001",
+                ["itemPath"] = "CityInfo/0001",
                 ["itemColor"] = {r = 255, b = 255, g = 255, a = 255},
             }, [3] = {
                 ["data"] = "1234",
@@ -696,7 +697,7 @@ CityInfoInHand = {
             }
         }
     }},
-    [5] = {["name"] = "商会",["layout"] = {
+    [6] = {["name"] = "商会",["layout"] = {
         ["name"] = {
             [1] = {
                 ["data"] = "名称",
@@ -938,7 +939,6 @@ CityInfoInHand = {
             }
         }
     }},
-    [6] =  {["name"] = "建筑",},
     [7] = {["name"] = "原料",["layout"] = {
         ["name"] = {
         [1] = {
@@ -4006,20 +4006,20 @@ ResellCurve = {
 --图标显示表
 ShowIcon = {
     ["参与公司数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                  ["itemPath"] = "0002"},
+                  ["itemPath"] = "CityInfo/0002"},
     ["加工厂员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                  ["itemPath"] = "0003"},
+                  ["itemPath"] = "CityInfo/0003"},
     ["零售店员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPath"] = "0003"},
+                   ["itemPath"] = "CityInfo/0003"},
     ["科技员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPtth"] = "0003"},
+                   ["itemPtth"] = "CityInfo/0003"},
     ["广告员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPath"] = "0003"},
+                   ["itemPath"] = "CityInfo/0003"},
     ["员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPath"] = "0003"},
+                   ["itemPath"] = "CityInfo/0003"},
     ["加工厂员工数量"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPath"] = "0003"},
+                   ["itemPath"] = "CityInfo/0003"},
     ["最高科技等级"] = {["path"] = "View/CityInfoItem/ClearImage",
-                   ["itemPath"] = "0004"},
+                   ["itemPath"] = "CityInfo/0004"},
 }
 

@@ -121,7 +121,7 @@ function CityToggleItem:_initData()
             ["width"] = 0,
             ["path"] = "View/CityInfoItem/Image",
             ["color"] = {r = 255, b = 255, g = 255, a = 255},
-            ["itemPath"] = "0001",
+            ["itemPath"] = "CityInfo/0001",
             ["itemColor"] = {r = 255, b = 255, g = 255, a = 255},
         }, [2] = {
             ["data"] = data.companyNum,

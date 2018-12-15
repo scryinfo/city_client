@@ -90,7 +90,8 @@ function CityInfoDataCtrl:_initData()
 end
 
 function CityInfoDataCtrl:c_bacK()
-    UIPage.ClosePage();
+    --UIPage.ClosePage();
+    ct.OpenCtrl("CityInfoCtrl")
 end
 
 function CityInfoDataCtrl:OnBtn(go)

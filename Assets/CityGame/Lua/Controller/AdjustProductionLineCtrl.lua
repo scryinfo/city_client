@@ -75,7 +75,6 @@ function AdjustProductionLineCtrl:Refresh()
     Event.Brocast("refreshTime",self.data.dataTab)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 
-    --local itemId = MaterialModel.buildingCode
     self:refreshWorkerNum()
 
 end

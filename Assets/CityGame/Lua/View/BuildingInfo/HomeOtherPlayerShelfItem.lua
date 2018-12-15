@@ -20,7 +20,31 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         if not self.viewRect.gameObject.activeSelf then
             return
         end
+        if self.productionData.buildingType == BuildingType.MaterialFactory then
+            ct.OpenCtrl("ShelfCtrl",self.productionData)
+        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+            ct.OpenCtrl("ShelfCtrl",self.productionData)
+        end
     end);
+
+    self:initializeInfo(self.productionData.shelf.good)
+end
+
+--初始化数据
+function HomeOtherPlayerShelfItem:initializeInfo(data)
+    if not data then
+        return;
+    end
+    for i,v in pairs(data) do
+        local homePageType = ct.homePage.shelf
+        local prefabData={}
+        prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
+        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+    end
 end
 
 --获取是第几次点击了
@@ -54,4 +78,14 @@ function HomeOtherPlayerShelfItem:closeToggleItem(targetMovePos)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeOtherPlayerShelfItem.static.TOP_H);
+end
+
+--生成预制
+function HomeOtherPlayerShelfItem:_creatGoods(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
 end

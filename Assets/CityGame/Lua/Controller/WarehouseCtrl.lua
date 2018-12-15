@@ -61,24 +61,16 @@ function WarehouseCtrl:Refresh()
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = warehouse
-        --self.data = {};
-        --self.data.type = BuildingInType.Warehouse
-        --self.data.buildingType = self.m_data.buildingType;
         self.m_data.type = BuildingInType.Warehouse
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-
         local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
         WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
         WarehousePanel.Warehouse_Slider.value = numText;
         WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.luabehaviour = warehouse
-        --self.data = {};
-        --self.data.type = BuildingInType.Warehouse
-        --self.data.buildingType = self.m_data.buildingType;
         self.m_data.type = BuildingInType.Warehouse
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-
         local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
         WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
         WarehousePanel.Warehouse_Slider.value = numText;
@@ -299,7 +291,7 @@ function WarehouseCtrl:deleteObjInfo()
         return;
     else
         for i,v in pairs(self.GoodsUnifyMgr.WarehouseItems) do
-            v:closeEvent()
+            v:closeEvent();
             destroy(v.prefab.gameObject);
         end
         self.GoodsUnifyMgr.WarehouseItems = {};

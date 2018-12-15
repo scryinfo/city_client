@@ -60,6 +60,7 @@ function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
     if not buildingData.shelf.good then
         return;
     end
+    self.state = buildingData.isOther
     self.ModelDataList={}
     local configTable = {}
     for i,v in pairs(buildingData.shelf.good) do
@@ -76,7 +77,7 @@ function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
 
-        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i)
+        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i,self.state)
         if not self.items then
             self.items = {}
         end

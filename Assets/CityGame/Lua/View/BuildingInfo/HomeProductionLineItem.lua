@@ -40,11 +40,12 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         end
     end);
 
-    if self.productionData.buildingType == BuildingType.MaterialFactory then
-        self:initializeInfo(self.productionData.line);
-    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-        self:initializeInfo(self.productionData.line);
-    end
+    self:initializeInfo(self.productionData.line);
+    --if self.productionData.buildingType == BuildingType.MaterialFactory then
+    --    self:initializeInfo(self.productionData.line);
+    --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+    --    self:initializeInfo(self.productionData.line);
+    --end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);

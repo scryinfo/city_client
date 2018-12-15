@@ -204,36 +204,29 @@ end
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
     ---营业额折线图Item --左边第一个
-    ----local turnoverLineChart
-    --local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
-    --turnoverLineChart.gameObject.name = "LineChartRateItem"
-    --
-    --local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    --local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
-    --self.leftData[1] = LineChartLuaItem
     ---折线图  左1
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
 
-    ---员工  左2
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    self.leftData[2] = self:_createStaff(staffToggleData)
-
-    ---仓库Item --左边第三个
-    local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-    warehouseView.gameObject.name = "WarehouseRateItem"
-    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-    self.leftData[3] = warehouseLuaItem
-
     if self.toggleData.isOther then
         --其他玩家进入
-        --生产线 --左边第四个
-        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
-        shelfView.gameObject.name = "HomeOtherPlayerLineItem"
-        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
-        self.leftData[4] = shelfLuaItem
+        -----员工  左2
+        --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        --self.leftData[2] = self:_createStaff(staffToggleData)
+
+        -----仓库Item --左边第三个
+        --local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        --warehouseView.gameObject.name = "WarehouseRateItem"
+        --local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        --local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        --self.leftData[3] = warehouseLuaItem
+
+        ----生产线 --左边第四个
+        --local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
+        --shelfView.gameObject.name = "HomeOtherPlayerLineItem"
+        --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+        --local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+        --self.leftData[4] = shelfLuaItem
 
         --货架 --右边第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
@@ -241,15 +234,28 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
         self.rightData[1] = prodictionLuaItem
+
+
     else
-        ---线 --左边第四个
+        -----员工  左2
+        local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.leftData[2] = self:_createStaff(staffToggleData)
+
+        -----仓库Item --左边第三个
+        local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        warehouseView.gameObject.name = "WarehouseRateItem"
+        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        self.leftData[3] = warehouseLuaItem
+
+        ---货架 --左边第四个
         local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
         shelfView.gameObject.name = "ShelfRateItem"
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         self.leftData[4] = shelfLuaItem
 
-        ---货架 --右侧第一个
+        ---生长线 --右侧第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
         prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
@@ -263,33 +269,29 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
-    ---营业额折线图Item --左边第一个
-    local turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
-    turnoverLineChart.gameObject.name = "LineChartRateItem"
-
-    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
-    self.leftData[1] = LineChartLuaItem
-
-    ---员工  左2
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    self.leftData[2] = self:_createStaff(staffToggleData)
-
-    ---仓库Item --左边第三个
-    local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-    warehouseView.gameObject.name = "WarehouseRateItem"
-    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-    self.leftData[3] = warehouseLuaItem
+    -----营业额折线图Item --左边第一个
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
 
     if self.toggleData.isOther then
         --其他玩家进入
-        --生产线 --左边第四个
-        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
-        shelfView.gameObject.name = "HomeOtherPlayerLineItem"
-        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
-        self.leftData[4] = shelfLuaItem
+        -----员工  左2
+        --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        --self.leftData[2] = self:_createStaff(staffToggleData)
+        --
+        -----仓库Item --左边第三个
+        --local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        --warehouseView.gameObject.name = "WarehouseRateItem"
+        --local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        --local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        --self.leftData[3] = warehouseLuaItem
+        --
+        ----生产线 --左边第四个
+        --local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
+        --shelfView.gameObject.name = "HomeOtherPlayerLineItem"
+        --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+        --local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+        --self.leftData[4] = shelfLuaItem
 
         --货架 --右边第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
@@ -298,14 +300,25 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
         self.rightData[1] = prodictionLuaItem
     else
-        ---线 --左边第四个
+        -----员工  左2
+        local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.leftData[2] = self:_createStaff(staffToggleData)
+
+        -----仓库Item --左边第三个
+        local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        warehouseView.gameObject.name = "WarehouseRateItem"
+        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        self.leftData[3] = warehouseLuaItem
+
+        ---货架 --左边第四个
         local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
         shelfView.gameObject.name = "ShelfRateItem"
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         self.leftData[4] = shelfLuaItem
 
-        ---货架 --右侧第一个
+        ---生产线 --右侧第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
         prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}

@@ -286,15 +286,9 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
     --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
 
-    ---营业额折线图Item --左1
-    local turnoverLineChart
-    turnoverLineChart = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH, self.leftRect)
-    turnoverLineChart.gameObject.name = "LineChartRateItem"
-
-    local LineChartToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    local LineChartLuaItem = LineChartRateItem:new(nil, self._clickItemFunc, turnoverLineChart, self.mainPanelLuaBehaviour, LineChartToggleData, self)
-    self.leftData[1] = LineChartLuaItem
-
+    ---折线图  左1
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
     ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
     self.leftData[2] = self:_createStaff(staffToggleData)
@@ -306,6 +300,8 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
     local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
     self.leftData[3] = TicketItem
+
+
 
     ---广告展示--右1
     local advertisementViewRect

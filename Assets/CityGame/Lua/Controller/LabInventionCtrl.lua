@@ -63,10 +63,10 @@ function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
     self.remainTime = self.m_data.leftSec
     local formularItem = FormularConfig[self.m_data.itemId]
-    if formularItem.phase ~= 5 then
-        ct.log("cycle_w15_laboratory03", "阶段数不为5")
-        return
-    end
+    --if formularItem.phase ~= 5 then
+        --ct.log("cycle_w15_laboratory03", "阶段数不为5")
+        --return
+    --end
     if #formularItem.materials == 0 then  --判断是否为原料
         LabInventionPanel.showLine({})
         self.enough = true

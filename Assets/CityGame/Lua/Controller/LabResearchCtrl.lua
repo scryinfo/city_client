@@ -64,7 +64,7 @@ function LabResearchCtrl:_initPanelData()
     self.m_data.type = 0
     self.remainTime = self.m_data.leftSec
     local formularItem = FormularConfig[self.m_data.itemId]
-    if formularItem.phase ~= 1 or #formularItem.materials == 0 then
+    if #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
     end

@@ -25,7 +25,11 @@ function AddLineCompositeItem:initialize(viewRect)
 end
 --初始化
 function AddLineCompositeItem:initData(data)
-    self.nameText.text = data.name
+    if Material[data.itemId] then
+        self.nameText.text = Material[data.itemId].name
+    else
+        self.nameText.text = Good[data.itemId].name
+    end
     if data.itemState == AddLineDetailItemState.InventIng then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "Be inventing..."

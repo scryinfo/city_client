@@ -41,7 +41,7 @@ CompoundDetailConfig ={
 			[1] = {itemId = 2151002, num = 1},
 		}
 		},
-		[22010033] = {
+		[2201003] = {
 		matCompoundGoods = {},
 		goodsNeedMatData = {
 			[1] = {itemId = 2151001, num = 1},

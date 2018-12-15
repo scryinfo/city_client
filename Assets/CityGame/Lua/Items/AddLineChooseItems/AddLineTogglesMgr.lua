@@ -37,6 +37,8 @@ function AddLineTogglesMgr:initialize(viewRect, sideValue)
 
     self.detailPrefabList = {}
     self.toggleItems = {}
+    self.keyToggleItems = {}
+    self.keyContentItems = {}
     --生成分组
     for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineTogglesSideValue.Left) and i < 2200 or (sideValue == AddLineTogglesSideValue.Right and i > 2200) then
@@ -48,6 +50,7 @@ function AddLineTogglesMgr:initialize(viewRect, sideValue)
             end}
             local item = AddLineToggleItem:new(go.transform, tempData, self.typeToggleGroup)
             self.toggleItems[#self.toggleItems + 1] = item
+            self.keyToggleItems[i] = item  --创建以typeId为key的表
         end
     end
 end
@@ -60,6 +63,22 @@ function AddLineTogglesMgr:initData(data)
     self.toggleItems[1]:setToggleIsOn(true)
 
     --可能会有设置正在研究中等状态
+end
+--根据typeId 和 itemId 获取对应的item，并显示选中状态
+function AddLineTogglesMgr:setToggleIsOnByType(typeId, itemId)
+    --需要字典鸭
+    if typeId == 0 then
+        ct.log("", "-----------")
+    end
+
+    if self.keyToggleItems[typeId] then
+        self.keyToggleItems[typeId]:showState(true)
+        if self.keyContentItems[itemId] then
+            self.keyContentItems[itemId]:setToggleIsOn(true)
+        end
+    else
+        ct.log("cycle_w15_laboratory03", "------ 找不到实例")
+    end
 end
 
 function AddLineTogglesMgr:_showDetails(typeId)
@@ -86,10 +105,12 @@ function AddLineTogglesMgr:_showDetails(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId)
-            self:_setLineShow(itemId, itemData.itemType)
+        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition)
+            self:_setLineShow(itemId, typeId, rectPosition)
         end}
-        self.contentItems[#self.contentItems + 1] = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
+        local item = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
+        self.contentItems[#self.contentItems + 1] = item
+        self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
     end
 
     for i, item in ipairs(self.contentItems) do
@@ -98,9 +119,9 @@ function AddLineTogglesMgr:_showDetails(typeId)
     self.contentItems[1]:setToggleIsOn(true)
 end
 --选择了某个item，显示线路
-function AddLineTogglesMgr:_setLineShow(itemId, itemType)
+function AddLineTogglesMgr:_setLineShow(itemId, itemType, rectPosition)
     --ctrl去处理，传的是分配表里的数据
-    Event.Brocast("c_setCenterLine", itemId, itemType)
+    Event.Brocast("c_setCenterLine", itemId, itemType, rectPosition)
     ct.log("cycle_w15_laboratory03", "选择了"..itemId)
 end
 

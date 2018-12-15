@@ -22,7 +22,7 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
         if isOn then
-            self.data.backFunc(self.data.itemId)  --显示中间的线路
+            self.data.backFunc(self.data.itemId, self.viewRect.transform.position)  --显示中间的线路
         end
     end)
 

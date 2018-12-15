@@ -39,12 +39,13 @@ function AddLineChooseItemCtrl:_initData()
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     AddLineChooseItemPanel.leftToggleMgr:initData()
     AddLineChooseItemPanel.rightToggleMgr:initData()
-
 end
 --刷新线路显示
-function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType)
+function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
     local tempData
     if itemType == 0 then
+        AddLineChooseItemPanel.researchBtn.transform.position = rectPosition
+
         tempData = Material[itemId]
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         local lineDatas = {}  --获取线的数据
@@ -54,9 +55,13 @@ function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType)
         end
         self:_setLineDetailInfo(lineDatas)
         AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
+        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(itemType, itemId)
     else
         tempData = Good[itemId]
+        AddLineChooseItemPanel.inventionBtn.transform.position = rectPosition
+        AddLineChooseItemPanel.leftToggleMgr:setToggleIsOnByType(itemType, itemId)
     end
+
 end
 --设置原料线的信息  根据个数显示位置
 function AddLineChooseItemCtrl:_setLineDetailInfo(datas)

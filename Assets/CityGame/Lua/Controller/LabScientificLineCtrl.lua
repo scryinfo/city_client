@@ -97,7 +97,8 @@ end
 LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabResearchCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2201003})
+            --ct.OpenCtrl("LabResearchCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2201003})
+            ct.OpenCtrl("AddLineChooseItemCtrl", {type = 0})
         end)
         return
     end
@@ -111,7 +112,8 @@ end
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
-            ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2151003})
+            --ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2151003})
+            ct.OpenCtrl("AddLineChooseItemCtrl", {type = 1})
         end)
         return
     end

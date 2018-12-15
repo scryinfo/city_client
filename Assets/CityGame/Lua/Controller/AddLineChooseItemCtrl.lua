@@ -57,9 +57,10 @@ function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
         AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
         AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[1])
     else
-        tempData = Good[itemId]
         AddLineChooseItemPanel.inventionBtn.transform.position = rectPosition
-        AddLineChooseItemPanel.leftToggleMgr:setToggleIsOnByType(itemType, itemId)
+        local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
+        self:_setLineDetailInfo(selectItemMatToGoodIds)
+        AddLineChooseItemPanel.productionItem:initData(Good[itemId])
     end
 
 end

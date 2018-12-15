@@ -14,7 +14,7 @@ function LineChartRateItem:initialize(materialData, clickOpenFunc, viewRect, mai
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
 
     self.goLineChart = self.viewRect.transform:Find("contentRoot/bgLine/LineChartPanel/Image/Scroll View/Viewport/Content/GameObject"):GetComponent("LineChart");
     local verts={
@@ -51,9 +51,9 @@ function LineChartRateItem:initialize(materialData, clickOpenFunc, viewRect, mai
 
     --UIPage:ShowPage(LineChartCtrl)
 
-    ct.log("cycle_w5","------- Occ实例化"..self.openBtn.gameObject:GetInstanceID())
+    ct.log("cycle_w5","------- Occ实例化"..self.openBtns.gameObject:GetInstanceID())
 
-    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
+    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);                                                              --这个方法是mgr传来的，每次点击都会调一次
 

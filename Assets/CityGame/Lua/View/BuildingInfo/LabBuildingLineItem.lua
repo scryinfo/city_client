@@ -28,28 +28,20 @@ function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, t
     self.itemSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.itemSource.mProvideData = LabBuildingLineItem.static.provideData
     self.itemSource.mClearData = LabBuildingLineItem.static.clearData
-
-    --Event.AddListener("c_onReceiveHouseRentChange", self.updateInfo, self)
-
     self:_initData()
 end
 --初始化数据
 function LabBuildingLineItem:_initData()
     LabBuildingLineItem.static.items = {}
-    if not self.line then
-        self.line = {}
-    else
-        table.sort(self.line, function (m, n) return m.createTs > n.createTs end)
-    end
     local prefabList = {}
-    for i, dataItem in pairs(self.line) do
+    for i, dataItem in ipairs(self.data.lines) do
         if dataItem.type == 0 then
             prefabList[#prefabList + 1] = LabBuildingLineItem.static.LabBuildingResearchItemPath
         elseif dataItem.type == 1 then
             prefabList[#prefabList + 1] = LabBuildingLineItem.static.LabBuildingInventionItemPath
         end
     end
-    LabBuildingLineItem.static.lineInfoData = self.line
+    LabBuildingLineItem.static.lineInfoData = self.data.lines
     self.loopScroll:ActiveDiffItemLoop(self.itemSource, prefabList)  --滑动部分
 
     if self.data.isOther then
@@ -60,9 +52,8 @@ function LabBuildingLineItem:_initData()
         self.otherOpenImg.localScale = Vector3.zero
     end
     self.mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-        ct.OpenCtrl("LabScientificLineCtrl", self.data)  --按照时间排好的顺序表
+        ct.OpenCtrl("LabScientificLineCtrl", {buildingId = self.data.buildingId})  --打开科技线界面，传入实例id
     end, self)
-
 end
 
 ---静态方法
@@ -105,10 +96,8 @@ end
 
 --刷新数据
 function LabBuildingLineItem:updateInfo(data)
-    if self.data.buildingId ~= data.id then
-        return
-    end
-
+    self.data.lines = data
+    self:_initData()
 end
 
 function LabBuildingLineItem:destory()

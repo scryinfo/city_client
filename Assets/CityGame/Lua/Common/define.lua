@@ -75,6 +75,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	Processing = "ProcessingModel",  --加工厂
 	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	tempTransport = "tempTransportModel",   --临时运输
@@ -89,6 +90,7 @@ ModelNames = {
 	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
 	Warehouse = "WarehouseModel",
+	friends = "FriendsModel", -- 好友
 	Laboratory = "LaboratoryModel",  --研究所
 }
 
@@ -195,6 +197,11 @@ Buildingowner=
    other=2,--其他人的
 }
 
+LanguageType={
+	Chinese=0,
+	English=1,
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {
@@ -203,6 +210,7 @@ BuildingInType =
 	Transport = 2,  --运输
 	ProductionLine = 3,  --生产线
 }
+
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

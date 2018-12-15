@@ -37,6 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/ProcessingModel"
 require "Model/ShelfModel"
 require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
@@ -54,11 +55,12 @@ local ctrlList = {};	--控制器列表--
 local modelList = {};	--模型列表--
 
 function CtrlManager.Init()
+	ReadConfigLanguage()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
-	ct.OpenCtrl('LoginCtrl',Vector2.New(0, -100)) --注意传入的是类名
+	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
@@ -89,10 +91,9 @@ function CtrlManager.Init()
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	modelList[ModelNames.Material] = MaterialModel.New();
+	modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
-	modelList[ModelNames.ExchangeTransaction] = ExchangeTransactionModel.New();
-	modelList[ModelNames.ExchangeDetail] = ExchangeDetailModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
@@ -106,6 +107,7 @@ function CtrlManager.Init()
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.friends] = FriendsModel.New();
 
 	return this;
 end

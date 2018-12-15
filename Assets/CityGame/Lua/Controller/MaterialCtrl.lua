@@ -15,15 +15,16 @@ function MaterialCtrl:OnCreate(obj)
 end
 
 function MaterialCtrl:Awake(go)
+
     self.gameObject = go;
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    self.m_data = {}
-    self.m_data.buildingType = BuildingType.MaterialFactory
-    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.m_data)
+    self.data = {}
+    self.data.buildingType = BuildingType.MaterialFactory
+    local materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, materialBehaviour, self.data)
 end
 
 --更改名字

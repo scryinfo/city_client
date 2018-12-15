@@ -4,13 +4,12 @@
 --- DateTime: 2018/11/19 15:18
 ---
 LabResearchLineItem = class('LabResearchLineItem')
-LabResearchLineItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
-LabResearchLineItem.static.CHANGE_RED = "#E42E2E"
+LabResearchLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
+LabResearchLineItem.static.FinishBulbHight = 176  --进度完成时灯泡背景的最高高度
 
 --初始化方法
 function LabResearchLineItem:initialize(data, viewRect)
     self.viewRect = viewRect
-    self.data = data
 
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
@@ -20,13 +19,14 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.closeBtn = viewTrans:Find("topRoot/closeBtn"):GetComponent("Button")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
-    self.staffScrollbar = viewTrans:Find("mainRoot/staffRoot/staffScrollbar"):GetComponent("Scrollbar")
+    self.staffSlider = viewTrans:Find("mainRoot/staffRoot/staffSlider"):GetComponent("Slider")
 
-    self.progressImg = viewTrans:Find("mainRoot/progressRoot/progressImg"):GetComponent("Image")
+    self.progressImgRect = viewTrans:Find("mainRoot/progressRoot/progressImg")
     self.bottleImg = viewTrans:Find("mainRoot/progressRoot/bottleImg"):GetComponent("Image")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
 
-    self:_initData()
+    self:_initData(data)
+    UpdateBeat:Add(self._update, self)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
@@ -36,19 +36,54 @@ function LabResearchLineItem:initialize(data, viewRect)
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
-    --self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    --self.staffScrollbar.onValueChanged:AddListener(function()
-    --
-    --end)
+    Event.AddListener("c_LabLineInfoUpdate", function (data)
+        self:_updateInfo(data)
+    end)
 end
+function LabResearchLineItem:_initData(data)
+    self.data = data
+    self.leftSec = self.data.leftSec
 
---初始化界面
-function LabResearchLineItem:_initData()
+    local goodData = Good[data.itemId]
+    self.nameText.text = goodData.name
+    --self.iconImg.sprite =
+    self.staffText.text = tostring(data.workerNum)
+    self.levelText.text = data.lv
+    self.phaseSec = FormularConfig[data.itemId].phaseSec
+    self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
+    if not data.roll or data.roll <= 0 then
+        self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
+    else
+        self.bottleImg.color = Color.white
+    end
+    self.startTimeDown = true
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
---消息更新
-function LabResearchLineItem:_updateInfo(updateInfo)
-
+--刷新数据
+function LabResearchLineItem:_updateInfo(data)
+    if data.id ~= self.data.id then
+        return
+    end
+    --成果展示
+    self.data.roll = data.roll
+    self.data.leftSec = data.leftSec
+    self.data.run = data.run
+    if data.roll > 0 then
+        self.bottleImg.color = Color.white
+    else
+        self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
+    end
+    self.startTimeDown = true
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
 --点击删除按钮
 function LabResearchLineItem:_clickDeleteBtn()
@@ -64,4 +99,20 @@ end
 --点击发明界面
 function LabResearchLineItem:_clickOpenInventionPanelBtn()
     --ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
+end
+--倒计时
+function LabResearchLineItem:_update()
+    if self.startTimeDown then
+        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
+        if self.data.leftSec < 0 then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            return
+        end
+        local timeTable = getTimeBySec(self.data.leftSec)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.timeDownText.text = timeStr
+        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabResearchLineItem.static.FinishBulbHight
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+    end
 end

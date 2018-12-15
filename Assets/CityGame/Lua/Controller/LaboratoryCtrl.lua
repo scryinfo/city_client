@@ -21,36 +21,27 @@ end
 function LaboratoryCtrl:Awake(go)
     self.gameObject = go
     self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    --self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
-    --self.laboratoryBehaviour:AddClick(LaboratoryPanel.infoBtn.gameObject, self._openInfo, self)
-    --self.laboratoryBehaviour:AddClick(LaboratoryPanel.changeNameBtn.gameObject, self._changeName, self)
-
-    self:_addListener()
+    self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
 end
 
 function LaboratoryCtrl:Refresh()
     self:_initData()
 end
-function LaboratoryCtrl:_addListener()
-    ---需要监听改变建筑名字的协议
-    ---等待中
-    Event.AddListener("c_OnReceiveLaboratoryDetailInfo", self._receiveLaboratoryDetailInfo, self)
-end
-function LaboratoryCtrl:_removeListener()
-    Event.RemoveListener("c_OnReceiveLaboratoryDetailInfo", self._receiveLaboratoryDetailInfo, self)
-end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function LaboratoryCtrl:_initData()
     if self.m_data then
-        Event.Brocast("m_ReqLaboratoryDetailInfo", self.m_data)
+        DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
     end
 end
 
-function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
-    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[laboratoryDetailData.info.mId].sizeName..PlayerBuildingBaseData[laboratoryDetailData.info.mId].typeName
-    self.m_data = laboratoryDetailData
-    if laboratoryDetailData.info.ownerId ~= PlayerTempModel.roleData.id then  --判断是自己还是别人打开了界面
+function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId)
+    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[mId].sizeName..PlayerBuildingBaseData[mId].typeName
+    self.m_data.ownerId = ownerId
+    self.m_data.mId = mId
+    self.m_data.orderLineData = orderLineData
+    if ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
     else
@@ -61,7 +52,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(laboratoryDetailData)
     if not self.laboratoryToggleGroup then
         self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     else
-        self.laboratoryToggleGroup:updateData(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
+        self.laboratoryToggleGroup:updateData(self.m_data)
     end
 end
 
@@ -72,7 +63,7 @@ function LaboratoryCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
+        --ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
 
         ---临时代码，直接改变名字
         ins:_updateName(name)
@@ -81,7 +72,8 @@ function LaboratoryCtrl:_changeName(ins)
 end
 ---返回
 function LaboratoryCtrl:_backBtn(ins)
-    ins.houseToggleGroup:cleanItems()
+    ins.laboratoryToggleGroup:cleanItems()
+    ins.laboratoryToggleGroup = nil
     UIPage.ClosePage()
 end
 ---更改名字成功

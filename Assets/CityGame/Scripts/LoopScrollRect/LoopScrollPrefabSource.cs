@@ -82,6 +82,11 @@ namespace UnityEngine.UI
                 return null;
             }
             string tempPrefabName = mPrefabNameList[index];
+            if (AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).GetPool(tempPrefabName) == null)
+            {
+                GameObject obj = Resources.Load<GameObject>(tempPrefabName);
+                AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).CreatePool(tempPrefabName, poolSize, poolSize, obj);
+            }
             GameObject go = AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).Get(tempPrefabName);
             if (!mObjNameDic.ContainsKey(go.name))
             {

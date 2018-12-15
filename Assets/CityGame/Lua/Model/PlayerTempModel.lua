@@ -23,8 +23,28 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
-        ct.OpenCtrl("AddLineChooseItemCtrl", {})
+        PlayerTempModel.tempTestReqAddMoney(9999999)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+        PlayerTempModel.tempTestAddGroung(31,31, 40,40)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
+        PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
+        PlayerTempModel.tempTestAddGroung(41,41, 50,50)
+        --增加科技作弊码，可能没用了
+        --PlayerTempModel.tempTestInvent(2151001, 0)
+        --PlayerTempModel.tempTestInvent(2151002, 0)
+        --PlayerTempModel.tempTestInvent(2151003, 0)
+        --PlayerTempModel.tempTestInvent(2151004, 0)
+        --PlayerTempModel.tempTestInvent(2152001, 0)
+        --PlayerTempModel.tempTestInvent(2152002, 0)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
+        PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
+    end
+    --ct.OpenCtrl("AddLineChooseItemCtrl", {})
 end
 --add invent
 function PlayerTempModel.tempTestInvent(itmeId,level)
@@ -125,7 +145,13 @@ function PlayerTempModel.tempTestReqAddGroung(x1, y1, x2, y2)
     local pMsg = assert(pbl.encode("gs.Str", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
-
+--add invent
+--function PlayerTempModel.tempTestInvent(itmeId,level)
+--    local msgId = pbl.enum("gscode.OpCode", "cheat")
+--    local lMsg = {str = string.format("addinvent %s %s",itmeId,level)}
+--    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+--    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+--end
 ---
 function PlayerTempModel._getStore(roleData)
     local buyStore = {}
@@ -195,6 +221,39 @@ function PlayerTempModel._getCollectStore(datas)
     end
     return storeList
 end
+
+---------------
+--获取item含量
+function PlayerTempModel:_getItemCount(store)
+    local itemTable = {}
+    local storeTemp = BaseTools.TableCopy(store)
+    for i, itemData in pairs(storeTemp.locked) do
+        itemTable[itemData.key.id] = itemData.n
+    end
+    for i, itemData in pairs(storeTemp.inHand) do
+        local tempCount = itemTable[itemData.key.id]
+        if tempCount then
+            itemTable[itemData.key.id] = itemData.n - tempCount
+        else
+            itemTable[itemData.key.id] = itemData.n
+        end
+    end
+    return itemTable
+end
+--获取仓库还剩多少容量
+function PlayerTempModel:_getRemianSpace(store, buildTypeId)
+    local totalCount = PlayerBuildingBaseData[buildTypeId].storeCapacity
+
+    local inUsedCount = 0
+    for i, itemData in pairs(store.reserved) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    for i, itemData in pairs(store.inHand) do
+        inUsedCount = inUsedCount + itemData.num
+    end
+    return totalCount - inUsedCount
+end
+
 --获取所有建筑，根据buildingId
 function PlayerTempModel._getBuildingInfo(roleData)
     local buyBuilding = {}

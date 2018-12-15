@@ -56,7 +56,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if not self.houseToggleGroup then
         self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
     else
-        self.houseToggleGroup:updateData(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+        self.houseToggleGroup:updateInfo(self.m_data)
     end
 end
 ---更改名字

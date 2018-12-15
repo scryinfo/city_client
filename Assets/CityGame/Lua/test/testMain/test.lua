@@ -332,22 +332,6 @@ UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  functi
     if exchangeModel ~= nil then
         exchangeModel:Awake()
     end
-
-    local exchangeTransactionModel = CtrlManager.GetModel(ModelNames.ExchangeTransaction);
-    if exchangeTransactionModel ~= nil then
-        exchangeTransactionModel:Awake()
-    end
-
-    local exchangeDetailModel = CtrlManager.GetModel(ModelNames.ExchangeDetail);
-    if exchangeDetailModel ~= nil then
-        exchangeDetailModel:Awake()
-    end
-
-    --local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
-    --if playerTempModel ~= nil then
-    --    playerTempModel:Awake()
-    --end
-
 end)
 
 UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function ()
@@ -524,11 +508,11 @@ UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
     --    HouseModel:Awake()
     --end
     --ct.OpenCtrl("LaboratoryCtrl", {})
-    ct.OpenCtrl("LabResearchCtrl", {})
+    --ct.OpenCtrl("LabResearchCtrl", {})
 end)
 
 UnitTest.Exec("cycle_w15_laboratory03", "test_cycle_w15_laboratory03",  function ()
-    --ct.OpenCtrl("AddLineChooseItemCtrl", {})
+    --ct.OpenCtrl("LaboratoryCtrl", {})
 end)
 
 UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()

@@ -39,7 +39,7 @@ end
 
 
 function SmallPopItem:_update()
-    self.textBgTrans.sizeDelta=Vector2.New(self.tipTextTrans.sizeDelta.x+self.spacing,75)
+    self.textBgTrans.sizeDelta=Vector2.New(self.tipTextTrans.sizeDelta.x+self.spacing,100)
 
     if  UnityEngine.Time.time>self.timenow  then
 

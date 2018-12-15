@@ -21,6 +21,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.chatButton.gameObject,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.exchangeButton.gameObject,self.OnExchange,self);
@@ -29,6 +30,12 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
+
+    Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+end
+
+function GameMainInterfaceCtrl:Refresh()
+    self:_showFriendsNotice()
 end
 
 --通知--
@@ -52,11 +59,27 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+    ct.OpenCtrl("ChatCtrl")
+end
+
+--好友--
+function GameMainInterfaceCtrl.OnFriends()
+    ct.OpenCtrl("FriendsCtrl")
+end
+
+--好友红点--
+function GameMainInterfaceCtrl._showFriendsNotice()
+    local friendsApply = DataManager.GetMyFriendsApply()
+    GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
+end
+function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
+    self._showFriendsNotice()
 end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
     ct.log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
+    ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
@@ -90,9 +113,8 @@ end
 --加工厂--
 function GameMainInterfaceCtrl.OnSourceMill()
     ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
-    --Event.Brocast("");
-   -- UIPage:OpenCtrl('CenterWareHouseCtrl')
-    --UIPage:ShowPage(CenterWareHouseCtrl)
+    local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
+    Event.Brocast('m_ReqOpenProcessing',buildingId)
     ct.OpenCtrl('ProcessingCtrl')
 end
 

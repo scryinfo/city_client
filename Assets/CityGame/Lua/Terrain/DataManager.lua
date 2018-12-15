@@ -429,6 +429,21 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
+
+    --初始化好友信息
+    if  PersonDataStack.m_friendsInfo == nil then
+        PersonDataStack.m_friendsInfo = {}
+    end
+
+    --初始化好友申请信息
+    if  PersonDataStack.m_friendsApply == nil then
+        PersonDataStack.m_friendsApply = {}
+    end
+
+    --初始化黑名单
+    if  PersonDataStack.m_blacklist == nil then
+        PersonDataStack.m_blacklist = {}
+    end
 end
 
 --修改自己所拥有土地集合
@@ -507,6 +522,64 @@ function DataManager.SetMyFriends(tempData)
     end
 end
 
+--获取自己好友详细信息
+function DataManager.GetMyFriendsInfo()
+    return PersonDataStack.m_friendsInfo
+end
+
+--刷新自己好友详细信息
+--参数： tempData==>  RoleInfo
+--如果需要删除好友，ByteBool={ id = "XXXXXXXX",name = nil }
+function DataManager.SetMyFriendsInfo(tempData)
+    if tempData.id and tempData.name then
+        table.insert(PersonDataStack.m_friendsInfo, tempData)
+    elseif tempData.id and not tempData.name then
+        for i, v in ipairs(PersonDataStack.m_friendsInfo) do
+            if v.id == tempData.id then
+                table.remove(PersonDataStack.m_friendsInfo, i)
+                break
+            end
+        end
+    end
+end
+
+--获取自己好友申请信息
+function DataManager.GetMyFriendsApply()
+    return PersonDataStack.m_friendsApply
+end
+
+--刷新自己好友申请信息
+--参数： tempData==>  RequestFriend
+--如果需要删除好友申请，ByteBool={ id = "XXXXXXXX",name = nil }
+function DataManager.SetMyFriendsApply(tempData)
+    if tempData.id and tempData.name then
+        table.insert(PersonDataStack.m_friendsApply, tempData)
+    elseif tempData.itemId and not tempData.id then
+        table.remove(PersonDataStack.m_friendsApply, tempData.itemId)
+    end
+end
+
+--获取自己黑名单
+function DataManager.GetMyBlacklist()
+    return PersonDataStack.m_blacklist
+end
+
+--刷新自己黑名单
+--参数： tempData==>  Bytes
+--如果需要删除黑名单，tempData={ id = "XXXXXXXX",name = nil }
+function DataManager.SetMyBlacklist(tempData)
+    if tempData.id and tempData.name then
+        table.insert(PersonDataStack.m_blacklist, tempData)
+    elseif tempData.id and not tempData.name then
+        for i, v in ipairs(PersonDataStack.m_blacklist) do
+            if v.id == tempData.id then
+                table.remove(PersonDataStack.m_blacklist, i)
+                break
+            end
+        end
+    end
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding
@@ -573,6 +646,10 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendReq"), DataManager.n_OnReceiveAddFriendReq)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
 end
 --清除所有消息回调
 local function ClearEvents()
@@ -669,5 +746,46 @@ function DataManager.n_OnReceiveGroundChange(stream)
     end
 end
 
+-- 接收好友申请
+function DataManager.n_OnReceiveAddFriendReq(stream)
+    local requestFriend = assert(pbl.decode("gs.RequestFriend", stream), "DataManager.n_OnReceiveAddFriendReq: stream == nil")
+    if not requestFriend or not requestFriend.id then
+        return
+    end
+    DataManager.SetMyFriendsApply(requestFriend)
+    Event.Brocast("c_OnReceiveAddFriendReq", requestFriend)
+end
+
+-- 接收好友添加成功申请
+function DataManager.n_OnReceiveAddFriendSucess(stream)
+    local friend = assert(pbl.decode("gs.RoleInfo", stream), "DataManager.n_OnReceiveAddFriendSucess: stream == nil")
+    if not friend or not friend.id then
+        return
+    end
+    friend.b = true
+    DataManager.SetMyFriends(friend)
+    DataManager.SetMyFriendsInfo(friend)
+    DataManager.SetMyFriendsApply({id = friend.id})
+    Event.Brocast("c_OnReceiveAddFriendSucess", friend)
+end
+
+-- 接收黑名单
+function DataManager.n_OnReceiveGetBlacklist(stream)
+    local roleInfos = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceiveGetBlacklist: stream == nil")
+    if not roleInfos.info then
+        return
+    end
+    for _, v in ipairs(roleInfos.info) do
+        if v then
+            DataManager.SetMyBlacklist(v)
+        end
+    end
+end
+
+--查询玩家信息返回
+function DataManager.n_OnReceivePlayerInfo(stream)
+    local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
+    Event.Brocast("c_OnReceivePlayerInfo", playerData)
+end
 ----------
 

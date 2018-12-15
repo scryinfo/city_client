@@ -19,32 +19,33 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
 
---[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
-        clickOpenFunc(mgrTable,self.toggleData)
-    end);                                                       ]]
+    --[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
+            clickOpenFunc(mgrTable,self.toggleData)
+        end);                                                       ]]
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
         if self.productionData.buildingType == BuildingType.MaterialFactory then
-            local data = {}
-            data.dataTab = MaterialModel.materialProductionLine
-            data.buildingType = BuildingType.MaterialFactory
-            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+            --local data = {}
+            --data.dataTab = MaterialModel.materialProductionLine
+            --data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            local data = {}
-            data.dataTab = ProcessingModel.processingProductionLine
-            data.buildingType = BuildingType.ProcessingFactory
-            ct.OpenCtrl("AdjustProductionLineCtrl",data)
+            --local data = {}
+            --data.dataTab = ProcessingModel.processingProductionLine
+            --data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         end
     end);
 
-    if self.productionData.buildingType == BuildingType.MaterialFactory then
-        self:initializeInfo(MaterialModel.materialProductionLine);
-    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-        self:initializeInfo(ProcessingModel.processingProductionLine);
-    end
+    self:initializeInfo(self.productionData.line);
+    --if self.productionData.buildingType == BuildingType.MaterialFactory then
+    --    self:initializeInfo(self.productionData.line);
+    --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+    --    self:initializeInfo(self.productionData.line);
+    --end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);

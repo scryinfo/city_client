@@ -3,6 +3,7 @@
 require "Controller/LoginCtrl"
 --require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"
+require "Controller/ProcessingCtrl"
 require "Controller/WarehouseCtrl"
 require "Controller/TransportCtrl"
 require "Controller/TransportOrderCtrl"
@@ -14,6 +15,7 @@ require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
 require "Controller/ShelfCtrl"
+
 require "Controller/ChooseWarehouseCtrl"
 require "Controller/TransportBoxCtrl"
 require "Controller/DETAILSBoxCtrl"
@@ -90,8 +92,8 @@ function CtrlManager.Init()
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
 	modelList[ModelNames.ServerList] = ServerListModel.New();
 	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
-	modelList[ModelNames.Material] = MaterialModel.New();
-	modelList[ModelNames.Processing] = ProcessingModel.New();
+	--modelList[ModelNames.Material] = MaterialModel.New();
+	--modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
@@ -107,6 +109,7 @@ function CtrlManager.Init()
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	modelList[ModelNames.friends] = FriendsModel.New();
 
 	return this;
 end

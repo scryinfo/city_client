@@ -48,16 +48,16 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
-    --原料厂
-    local materialModel = CtrlManager.GetModel(ModelNames.Material);
-    if materialModel ~= nil then
-        materialModel:Awake();
-    end
-    --加工厂
-    local processingModel = CtrlManager.GetModel(ModelNames.Processing)
-    if processingModel ~= nil then
-        processingModel:Awake();
-    end
+    ----原料厂
+    --local materialModel = CtrlManager.GetModel(ModelNames.Material);
+    --if materialModel ~= nil then
+    --    materialModel:Awake();
+    --end
+    ----加工厂
+    --local processingModel = CtrlManager.GetModel(ModelNames.Processing)
+    --if processingModel ~= nil then
+    --    processingModel:Awake();
+    --end
 
     --测试选服界面
     local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
@@ -120,6 +120,12 @@ function Game.OnPostInitOK()
     if tempTransportModel ~= nil then
         tempTransportModel:Awake();
     end
+
+    local friendsModel = CtrlManager.GetModel(ModelNames.friends);
+    if friendsModel ~= nil then
+        friendsModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

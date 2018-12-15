@@ -2,10 +2,12 @@ ShelfCtrl = class('ShelfCtrl',UIPage)
 UIPage:ResgisterOpen(ShelfCtrl) --注册打开的方法
 
 local isShowList;
-local shelf
-local listTrue = Vector3.New(0,0,180)
-local listFalse = Vector3.New(0,0,0)
-
+local switchIsShow;
+local shelf;
+local listTrue = Vector3.New(0,0,180);
+local listFalse = Vector3.New(0,0,0);
+--存放选中的物品，临时表
+ShelfCtrl.temporaryItems = {}
 function ShelfCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -22,14 +24,19 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
     shelf:AddClick(ShelfPanel.quantityBtn.gameObject,self.OnClick_OnNumber, self);
     shelf:AddClick(ShelfPanel.priceBtn.gameObject,self.OnClick_OnpriceBtn, self);
-    shelf:AddClick(ShelfPanel.bgBtn,self.OnClick_createGoods, self);
+    shelf:AddClick(ShelfPanel.addBtn,self.OnClick_createGoods, self);
+    shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
+    shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
 
     --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
+    Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods,self);
 end
 
 function ShelfCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
+    switchIsShow = false;
 end
 
 function ShelfCtrl:Refresh()
@@ -39,18 +46,20 @@ function ShelfCtrl:Refresh()
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.luabehaviour = shelf
-        self.data = {}
-        self.data.type = BuildingInType.Shelf
-        self.data.buildingType = self.m_data.buildingType
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        self.m_data.type = BuildingInType.Shelf
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.luabehaviour = shelf
-        self.data = {}
-        self.data.buildingType = self.m_data.buildingType
-        self.data.type = BuildingInType.Shelf
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.data)
+        self.m_data.type = BuildingInType.Shelf
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
     end
-
+    if self.m_data.isOther then
+        ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+        ShelfPanel.shelfAddItem.gameObject:SetActive(false)
+        self:shelfImgSetActive(self.GoodsUnifyMgr.items,5)
+    else
+        ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+    end
 end
 ----刷新数据
 --function ShelfCtrl:refreshShelfInfo(data)
@@ -70,6 +79,24 @@ end
 --
 --    local warehouseLuaItem = ShelfGoodsItem:refreshInfo(data,prefabData._prefab)
 --end
+--选中物品
+function ShelfCtrl:_selectedBuyGoods(id,itemId)
+    if self.temporaryItems[id] == nil then
+        self.temporaryItems[id] = id
+        self.GoodsUnifyMgr:_buyShelfGoods(id,self.luabehaviour,itemId)
+        self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.one
+    else
+        self.temporaryItems[id] = nil;
+        self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
+        self.GoodsUnifyMgr:_deleteBuyGoods(id);
+    end
+end
+--临时表里是否有这个物品
+function ShelfCtrl:c_temporaryifNotGoods(id)
+    self.temporaryItems[id] = nil
+    self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
+    self.GoodsUnifyMgr:_deleteBuyGoods(id);
+end
 
 function ShelfCtrl:OnClick_return_Btn(go)
     go:deleteObjInfo();
@@ -112,23 +139,49 @@ function ShelfCtrl.OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
+function ShelfCtrl:OnClick_playerBuy(go)
+    go:openPlayerBuy(not switchIsShow)
+end
+
+function ShelfCtrl:openPlayerBuy(isShow)
+    if isShow then
+        ShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        Event.Brocast("c_buyGoodsItemChoose")
+        ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
+        --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
+        self:shelfImgSetActive(self.GoodsUnifyMgr.items,3)
+    else
+        ShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        Event.Brocast("c_buyGoodsItemDelete")
+        ShelfPanel.Content.offsetMax = Vector2.New(0,0);
+        self:shelfImgSetActive(self.GoodsUnifyMgr.items,5)
+    end
+    switchIsShow = isShow
+end
+
 function ShelfCtrl:OnClick_createGoods(go)
     if go.m_data == nil then
         return
     end
     if go.m_data.buildingType == BuildingType.MaterialFactory then
-        local data = {}
-        data.dataTab = MaterialModel.materialWarehouse
-        data.buildingType = BuildingType.MaterialFactory
-        ct.OpenCtrl("WarehouseCtrl",data)
+        ct.OpenCtrl("WarehouseCtrl",go.m_data)
     elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-        local data = {}
-        data.dataTab = ProcessingModel.processingWarehouse
-        data.buildingType = BuildingType.ProcessingFactory
-        ct.OpenCtrl("WarehouseCtrl",data)
+        ct.OpenCtrl("WarehouseCtrl",go.m_data)
     end
 end
-
+--架子隐藏和显示
+function ShelfCtrl:shelfImgSetActive(table,num)
+    if not table then
+        return
+    end
+    for i,v in pairs(table) do
+        if i % 5 == 1 then
+            v.shelfImg:SetActive(true);
+        else
+            v.shelfImg:SetActive(false);
+        end
+    end
+end
 --排序
 function ShelfCtrl:_getSortItems(type,sortingTable)
     if type == ct.sortingItemType.Name then
@@ -174,6 +227,7 @@ function ShelfCtrl:deleteObjInfo()
         return;
     else
         for i,v in pairs(self.GoodsUnifyMgr.items) do
+            v:closeEvent();
             destroy(v.prefab.gameObject);
         end
         self.GoodsUnifyMgr.items = {};

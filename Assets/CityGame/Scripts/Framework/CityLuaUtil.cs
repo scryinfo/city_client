@@ -14,7 +14,7 @@ namespace City
     public struct Sync_LoadData
     {
         public AssetBundle _bunldle;
-        public GameObject _asset;
+        public UnityEngine.Object _asset;
     };
     public static class CityTest
     {
@@ -75,7 +75,7 @@ namespace City
                 AssetBundleRequest abre = retObj._bunldle.LoadAssetAsync(assetName, type);
                 if (abre != null)
                 {
-                    retObj._asset = abre.asset as GameObject;
+                    retObj._asset = abre.asset;
                 }
             }
 #else            

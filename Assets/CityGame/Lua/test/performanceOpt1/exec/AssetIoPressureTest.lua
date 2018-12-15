@@ -152,22 +152,173 @@ end)
 UnitTest.Exec("abel_w17_load_S_s160_time", "abel_w17_load_S_s160_time",  function ()
     local assetlist ={}     --存放asset的表
     --异步加载测试
-    local testLoadFun_S = function(reslist)
+    local testLoadFun_S = function(reslist,type)
         ct.log('abel_w17_load_S_s160_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
             --注意这里返回的值包括两个数据： asset, bundle
-            reslist[#reslist+1] = panelMgr:LoadPrefab_S(ResPathListS[i], nil)
+            reslist[#reslist+1] = CityLuaUtil.LoadRes_S(ResPathListS[i], type)
         end
     end
 
     --尺寸128的测试
 
     --尺寸160的测试
-    UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[同步加载1000个尺寸为128的执行时间]", function()
-        testLoadFun_S(assetlist)
+    --加载 sprite
+    collectgarbage("collect")
+    local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[Sprite同步加载的时间测试]", function()
+        testLoadFun_S(assetlist,CityLuaUtil.getSpriteType())
     end)
-    --[abel_w17_load_S_unload_force_time]    总执行时间:     19.108
+    ct.log('abel_w17_load_S_s160_time','1000个160大小的Sprite同步加载的时间 = '..t1)
 
+    --卸载
+    for k,v in pairs(assetlist ) do
+        UnityEngine.AssetBundle.Unload(v._bunldle,true)
+        v = nil
+    end
+    assetlist = {}
+    collectgarbage("collect")
+
+    --加载 texture
+    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[Texture同步加载的时间测试]", function()
+        testLoadFun_S(assetlist, nil)
+    end)
+    ct.log('abel_w17_load_S_s160_time','1000个160大小的Texture同步加载的时间 = '..t2)
+    collectgarbage("collect")
+
+    --[[
+    测试结果
+    pc
+        [abel_w17_load_S_s160_time]1000个160大小的Sprite同步加载的时间 = 20.255
+        [abel_w17_load_S_s160_time]1000个160大小的Texture同步加载的时间 = 19.454
+        *  性能差别可以忽略不计
+    设备
+        [abel_w17_load_S_s160_time]1000个160大小的Sprite同步加载的时间 = 5.945922
+        [abel_w17_load_S_s160_time]1000个160大小的Texture同步加载的时间 = 3.020269
+        *  性能差别比较明显，近1倍， 不过一般情况下，滑动滚动条时，加载3屏，一屏10个算，那么一次加载10个，那么加载时间为
+
+    --]]
+end)
+
+UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time",  function ()
+    local testcount = 30
+    local assetlist ={}     --存放asset的表
+    --异步加载测试
+    local testLoadFun_S = function(reslist,type)
+        ct.log('abel_w17_load_S_s160_n30_time','[testLoadFun_S] #reslist = '..#reslist)
+        for i = 1, testcount do
+            --注意这里返回的值包括两个数据： asset, bundle
+            reslist[#reslist+1] = CityLuaUtil.LoadRes_S(ResPathListS[i], type)
+        end
+    end
+
+    --尺寸128的测试
+
+    --尺寸160的测试
+    --加载 sprite
+    collectgarbage("collect")
+    local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Sprite同步加载的时间测试]", function()
+        testLoadFun_S(assetlist,CityLuaUtil.getSpriteType())
+    end)
+    ct.log('abel_w17_load_S_s160_n30_time','30个160大小的Sprite同步加载的时间 = '..t1)
+
+    --卸载
+    for k,v in pairs(assetlist ) do
+        UnityEngine.AssetBundle.Unload(v._bunldle,true)
+        v = nil
+    end
+    assetlist = {}
+    collectgarbage("collect")
+
+    --加载 texture
+    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Texture同步加载的时间测试]", function()
+        testLoadFun_S(assetlist, nil)
+    end)
+    ct.log('abel_w17_load_S_s160_n30_time','30个160大小的Texture同步加载的时间 = '..t2)
+    collectgarbage("collect")
+
+    --[[
+    测试结果
+    pc
+        ......
+    设备
+        [abel_w17_load_S_s160_n30_time]30个160大小的Sprite同步加载的时间 = 0.227158
+        [abel_w17_load_S_s160_n30_time]30个160大小的Texture同步加载的时间 = 0.119937
+        *  性能差别比较明显，1倍
+        *  按一帧 0.03333 秒算， 同步加载 30 个 Sprite 要  0.227158/0.03333 = 6.8 , 将近7帧
+        *  异步会比这个快得多
+    --]]
+end)
+
+AsyncSequenceTester = class('AsyncSequenceTester')
+function AsyncSequenceTester:excute()
+    self.loadCount = 0
+    self.startTime = os.clock()
+    local curSeq = self:getCurSeq()
+    if curSeq then
+        curSeq.fun(curSeq.type,self,curSeq.cb)
+    end
+end
+function AsyncSequenceTester:getCurSeq()
+    return self.testSquence[self.curPos]
+end
+function AsyncSequenceTester:Nextfun()
+    self.curPos = self.curPos + 1
+end
+
+--异步加载30个160 icon 时间测试
+UnitTest.Exec("abel_w17_load_A_s160_n30_time", "abel_w17_load_A_s160_n30_time",  function ()
+    --尺寸160的测试
+    local aTester = AsyncSequenceTester:new()
+
+    --初始化测试数据
+    aTester.testcount = 30
+    aTester.loadCount = 0
+    aTester.bundlelist = {}
+    aTester.assertlist = {}
+    aTester.startTime = 0
+    aTester.ResPathList = ResPathList
+    aTester.curPos = 1
+    aTester.testSquence = {}
+
+    --异步加载测试,带回调
+    local testLoadFunA = function(type, testData, cb)
+        for i = 1, testData.testcount do
+            panelMgr:LoadPrefab_A(testData.ResPathList[i], type, testData,cb)
+        end
+    end
+
+    --加载成功后的回调
+    local callback = function (testData, obj , ab)
+        testData.bundlelist[#testData.bundlelist +1] = ab
+        testData.assertlist[#testData.assertlist] = obj
+        testData.loadCount = testData.loadCount + 1
+        if testData.loadCount >= testData.testcount then
+            local costTime = os.clock() - testData.startTime
+            ct.log('abel_w17_load_A_s160_n30_time',testData:getCurSeq().msg ..costTime)
+            testData:Nextfun()
+            collectgarbage("collect")
+            testData:excute()
+        end
+    end
+
+    aTester.testSquence[1] = { fun = testLoadFunA, type = nil, cb = callback, msg = '30个160大小的 Texture 同步加载的时间 ='}
+    aTester.testSquence[2] = { fun = testLoadFunA, type = CityLuaUtil.getSpriteType(), cb = callback, msg = '30个160大小的 Sprite 同步加载的时间 = '}
+
+    --开始执行异步测试序列
+    collectgarbage("collect")
+    aTester:excute()
+    --尺寸128的测试
+    --[[
+    测试结果
+    pc
+        ......
+    设备
+        [abel_w17_load_A_s160_n30_time]30个160大小的 Texture 同步加载的时间 = 0.575239
+        [abel_w17_load_A_s160_n30_time]30个160大小的Texture同步加载的时间 = 0.119937
+        *  性能差别比较明显，1倍
+        *  按一帧 0.03333 秒算， 同步加载 30 个 Sprite 要  0.227158/0.03333 = 6.8 , 将近7帧
+        *  异步会比这个快得多
+    --]]
 end)
 
 --加载和实例化

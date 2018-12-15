@@ -33,7 +33,7 @@ namespace LuaFramework {
         {
             string assetName = releativePath ;
             if (type == null) {
-                type = typeof(GameObject);
+                type = typeof(UnityEngine.Object);
             }
 #if RES_BUNDEL            
             assetName = GetAssetName(ref releativePath);

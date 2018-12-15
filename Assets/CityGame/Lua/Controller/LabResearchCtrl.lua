@@ -27,8 +27,8 @@ function LabResearchCtrl:Awake(go)
         self:_researchBtnFunc()
     end)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
-        if self.m_data.buildingId and self.m_data.lineId then
-            DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
+        if LabScientificLineCtrl.static.buildingId and self.m_data.lineId then
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
         end
     end)
     UpdateBeat:Add(self._update, self)
@@ -68,7 +68,7 @@ function LabResearchCtrl:_initPanelData()
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
     end
-    DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
+    DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
         data.backFunc = function(success)
             self.enough = success
         end
@@ -113,11 +113,11 @@ end
 --添加临时线，返回科技线
 function LabResearchCtrl:_creatTempLine(self)
     local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_AddTempLineData', data)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end
 --继续研究，返回科技线
 function LabResearchCtrl:_launchLine()
-    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, self.m_data.rollTarget + 1)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, self.m_data.rollTarget + 1)
     UIPage.ClosePage()
 end

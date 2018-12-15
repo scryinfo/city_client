@@ -82,12 +82,14 @@ end
 function LabScientificLineCtrl:_researchLineOpen()
     LabScientificLinePanel._researchToggleState(true)
     LabScientificLinePanel._inventionToggleState(false)
+    LabScientificLineCtrl.static.type = 0
 
     self:onReceiveLabResearchData(self.researchDatas)
 end
 function LabScientificLineCtrl:_inventionLineOpen()
     LabScientificLinePanel._researchToggleState(false)
     LabScientificLinePanel._inventionToggleState(true)
+    LabScientificLineCtrl.static.type = 1
 
     self:onReceiveLabInventionData(self.inventionDatas)
 end

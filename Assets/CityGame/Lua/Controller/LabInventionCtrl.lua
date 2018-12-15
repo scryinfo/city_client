@@ -26,8 +26,8 @@ function LabInventionCtrl:Awake(go)
         self:_inventeBtnClick()
     end)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
-        if self.m_data.buildingId and self.m_data.lineId then
-            DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
+        if LabScientificLineCtrl.static.buildingId and self.m_data.lineId then
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
         end
     end)
     UpdateBeat:Add(self._update, self)
@@ -75,7 +75,7 @@ function LabInventionCtrl:_initPanelData()
         --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
-        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
             data.backFunc = function(success)
                 self.enough = success
             end
@@ -115,6 +115,6 @@ end
 --点了发明按钮
 function LabInventionCtrl:_inventeBtnClick()
     local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_AddTempLineData', data)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
 end

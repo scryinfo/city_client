@@ -18,33 +18,26 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
     self.infoBtn = viewRect:Find("infoBtn")
     self.chooseImgTran = viewRect:Find("chooseImg")
 
-    self.toggle.onValueChanged:RemoveAllListeners()
-    self.toggle.onValueChanged:AddListener(function(isOn)
-        self:showState(isOn)
-        if isOn then
-            self.data.backFunc(self.data.itemId, self.viewRect.transform.position)  --显示中间的线路
-        end
-    end)
-
+    local stateData = AddLineChooseItemCtrl.GetItemState(data.itemId)
     --如果是可展示状态
-    if data.enableShow then
+    if stateData.enableShow then
         self.disableImg.transform.localScale = Vector3.zero
     else
         self.disableImg.transform.localScale = Vector3.one
     end
-    if data.itemState == AddLineDetailItemState.InventIng then
+    if stateData.itemState == AddLineDetailItemState.InventIng then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "Be inventing..."
-    elseif data.itemState == AddLineDetailItemState.ToBeInvented then
+    elseif stateData.itemState == AddLineDetailItemState.ToBeInvented then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "To be invented..."
-    elseif data.itemState == AddLineDetailItemState.ResearchIng then
+    elseif stateData.itemState == AddLineDetailItemState.ResearchIng then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "Be researching..."
-    elseif data.itemState == AddLineDetailItemState.HasInvented then
+    elseif stateData.itemState == AddLineDetailItemState.HasInvented then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "Has been invented..."
-    elseif data.itemState == AddLineDetailItemState.Default then
+    elseif stateData.itemState == AddLineDetailItemState.Default then
         self.stateRoot.localScale = Vector3.zero
     end
 
@@ -55,7 +48,20 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
         tempData = Good[data.itemId]
     end
     self.nameText.text = tempData.name
+
+    self.toggle.onValueChanged:RemoveAllListeners()
+    self.toggle.onValueChanged:AddListener(function(isOn)
+        self:showState(isOn)
+        if isOn then
+            self.data.backFunc(self.data.itemId, self.viewRect.transform.position, stateData.enableShow)  --显示中间的线路
+        end
+    end)
 end
+--根据itemId去查状态
+function AddLineDetailItem:_showState(itemId)
+
+end
+
 --外部设置toggle状态
 function AddLineDetailItem:setToggleIsOn(isOn)
     self.toggle.isOn = isOn

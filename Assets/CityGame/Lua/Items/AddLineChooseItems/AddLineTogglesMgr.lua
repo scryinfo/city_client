@@ -102,8 +102,8 @@ function AddLineTogglesMgr:_showDetails(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition)
-            self:_setLineShow(itemId, typeId, rectPosition)
+        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
+            self:_setLineShow(itemId, typeId, rectPosition, enableShow)
         end}
         local item = AddLineDetailItem:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
@@ -116,9 +116,9 @@ function AddLineTogglesMgr:_showDetails(typeId)
     self.contentItems[1]:setToggleIsOn(true)
 end
 --选择了某个item，显示线路
-function AddLineTogglesMgr:_setLineShow(itemId, itemType, rectPosition)
+function AddLineTogglesMgr:_setLineShow(itemId, itemType, rectPosition, enableShow)
     --ctrl去处理，传的是分配表里的数据
-    Event.Brocast("c_setCenterLine", itemId, itemType, rectPosition)
+    Event.Brocast("c_setCenterLine", itemId, itemType, rectPosition, enableShow)
     ct.log("cycle_w15_laboratory03", "选择了"..itemId)
 end
 

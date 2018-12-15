@@ -240,7 +240,19 @@ function LaboratoryModel:m_DelTempLineData(data)
         --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
---更新ctrl 线的信息
-function LaboratoryModel:m_UpdateCtrlLineInfo()
-
+--获取正在发明的item
+function LaboratoryModel:m_GetInventingItem()
+    local tempIds = {}
+    for i, line in pairs(self.inventionLines) do
+        tempIds[line.itemId] = line.lv
+    end
+    return tempIds
+end
+--获取正在研究的item
+function LaboratoryModel:m_GetResearchingItem()
+    local tempIds = {}
+    for i, line in pairs(self.researchLines) do
+        tempIds[line.itemId] = line.lv
+    end
+    return tempIds
 end

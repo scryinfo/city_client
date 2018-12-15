@@ -7,7 +7,7 @@ AddLineChooseItemCtrl = class('AddLineChooseItemCtrl',UIPage)
 UIPage:ResgisterOpen(AddLineChooseItemCtrl)
 
 function AddLineChooseItemCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function AddLineChooseItemCtrl:bundleName()
@@ -20,8 +20,19 @@ end
 
 function AddLineChooseItemCtrl:Awake(go)
     self.gameObject = go
-    self.beHaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.beHaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, self._backBtn, self)
+    self.behaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.behaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, function ()
+        self:Hide()
+    end, self)
+    self.behaviour:AddClick(AddLineChooseItemPanel.researchBtn.gameObject, function ()
+        ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
+        self:Hide()
+    end, self)
+    self.behaviour:AddClick(AddLineChooseItemPanel.inventionBtn.gameObject, function ()
+        ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
+        self:Hide()
+    end, self)
+
     self:_addListener()
 end
 
@@ -36,12 +47,53 @@ function AddLineChooseItemCtrl:_removeListener()
 end
 
 function AddLineChooseItemCtrl:_initData()
+    AddLineChooseItemCtrl.goodLv = DataManager.GetMyGoodLv()
+    local buildingId = LabScientificLineCtrl.static.buildingId
+    if LabScientificLineCtrl.static.type == 0 then
+        DataManager.DetailModelRpc(buildingId, 'm_GetResearchingItem', function (tables)
+            AddLineChooseItemCtrl.researchingItems = tables
+        end)
+    else
+        DataManager.DetailModelRpc(buildingId, 'm_GetInventingItem', function (tables)
+            AddLineChooseItemCtrl.inventingItems = tables
+        end)
+    end
+
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     AddLineChooseItemPanel.leftToggleMgr:initData()
     AddLineChooseItemPanel.rightToggleMgr:initData()
 end
+--根据itemId获得当前应该显示的状态
+function AddLineChooseItemCtrl.GetItemState(itemId)
+    local data = {}
+    data.enableShow = true
+    data.itemState = AddLineDetailItemState.Default
+
+    if LabScientificLineCtrl.static.type == 0 then
+        if AddLineChooseItemCtrl.researchingItems[itemId] then
+            data.enableShow = false
+            data.itemState = AddLineDetailItemState.ResearchIng
+        end
+        if not AddLineChooseItemCtrl.goodLv[itemId] then
+            data.enableShow = false
+            data.itemState = AddLineDetailItemState.ToBeInvented
+        end
+    else
+        if AddLineChooseItemCtrl.inventingItems[itemId] then
+            data.enableShow = false
+            data.itemState = AddLineDetailItemState.InventIng
+        end
+        if AddLineChooseItemCtrl.goodLv[itemId] then
+            data.enableShow = false
+            data.itemState = AddLineDetailItemState.HasInvented
+        end
+    end
+
+    return data
+end
+
 --刷新线路显示
-function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
+function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition, enableShow)
     local tempData
     --如果是原料
     if itemType < 2200 then
@@ -50,7 +102,6 @@ function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         local lineDatas = {}  --获取线的数据
         for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
-            --状态Emmmm 在进入研究所的时候就要区分
             lineDatas[#lineDatas + 1] = matData
         end
         self:_setLineDetailInfo(lineDatas)
@@ -61,6 +112,27 @@ function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition)
         local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
         self:_setLineDetailInfo(selectItemMatToGoodIds)
         AddLineChooseItemPanel.productionItem:initData(Good[itemId])
+    end
+
+    --设置按钮状态
+    if LabScientificLineCtrl.static.type == 0 then
+        AddLineChooseItemPanel.inventionBtn.transform.localScale = Vector3.zero
+        AddLineChooseItemPanel.researchBtn.transform.localScale = Vector3.one
+        if enableShow then
+            AddLineChooseItemPanel.researchDisableImg.localScale = Vector3.zero
+        else
+            AddLineChooseItemPanel.researchDisableImg.localScale = Vector3.one
+        end
+        self.chooseResearchItemId = itemId
+    else
+        AddLineChooseItemPanel.inventionBtn.transform.localScale = Vector3.one
+        AddLineChooseItemPanel.researchBtn.transform.localScale = Vector3.one
+        if enableShow then
+            AddLineChooseItemPanel.inventDisableImg.localScale = Vector3.zero
+        else
+            AddLineChooseItemPanel.inventDisableImg.localScale = Vector3.one
+        end
+        self.chooseInventItemId = itemId
     end
 
 end

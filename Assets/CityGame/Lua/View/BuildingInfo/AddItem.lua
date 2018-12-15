@@ -44,7 +44,8 @@ function AddItem:OnClick_Add(go)
 end
 
 function AddItem:updateTime()
-
-
-
+    if self.remainTime then
+        self.remainTime=self.remainTime-1
+        self.timeText.text=self.remainTime.hour+24*self.remainTime.day.. ":"..self.remainTime.minute..":"..self.remainTime.second --"h"
+    end
 end

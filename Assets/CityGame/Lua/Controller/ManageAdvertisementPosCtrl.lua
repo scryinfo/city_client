@@ -178,7 +178,7 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                --剩余时间
                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
                local remainTime= getFormatUnixTime(endTime-os.time())
-               ins.timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
                ins.remainTime=remainTime
            else
                ins.prefab:SetActive(false)
@@ -199,7 +199,7 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                --剩余时间
                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
                local remainTime= getFormatUnixTime(endTime-os.time())
-               ins.timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
                ins.remainTime=remainTime
            else
                self.ItemCreatDeleteMgr:_creataddItem({})
@@ -213,7 +213,7 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                --剩余时间
                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
                local remainTime= getFormatUnixTime(endTime-os.time())
-               self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
                self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=remainTime
            end
        end

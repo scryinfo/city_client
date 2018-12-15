@@ -27,13 +27,22 @@ ItemCreatDeleteMgr.AddedItem_Path="View/GoodsItem/MapAdvertisementItem"
 
 function ItemCreatDeleteMgr:initialize()
 
-
+    UpdateBeat:Add(self._updateTime, self);
 end
 local idList={}
 local typelist={}
 local againtypeList={}
 local metald=0
 local adList={}
+
+
+
+function ItemCreatDeleteMgr:_updateTime()
+
+
+
+end
+
 function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     if not  self.addedItemList then
         self.addedItemList={}

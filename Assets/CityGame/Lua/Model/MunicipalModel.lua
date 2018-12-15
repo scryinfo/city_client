@@ -53,7 +53,6 @@ function MunicipalModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adSlotTimeoutInform"),MunicipalModel.n_getadSlotTimeoutInform);--槽位过期
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adDelAdFromSlot"),MunicipalModel.n_getdeleteSlot);--删广告
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adBuySlot"),MunicipalModel.n_getBuySlot);--删广告
-
 end
 
 --关闭事件--
@@ -64,7 +63,6 @@ end
 ---广告细节发包
 
 function MunicipalModel:m_detailPublicFacility(buildingID)
-
     ----1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","detailPublicFacility")
     ----2、 填充 protobuf 内部协议数据
@@ -75,7 +73,6 @@ function MunicipalModel:m_detailPublicFacility(buildingID)
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
 ---广告细节收包
-
 function MunicipalModel.n_getdetailPublicFacility(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility",stream),"广告细节收包失败")
 

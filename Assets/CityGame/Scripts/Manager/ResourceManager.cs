@@ -176,6 +176,9 @@ namespace LuaFramework {
                 List<UObject> result = new List<UObject>();
 
                 AssetBundle ab = bundleInfo.m_AssetBundle;
+                if (ab == null) {
+                    int xxx = 0;
+                }
                 for (int j = 0; j < assetNames.Length; j++) {
                     string assetPath = assetNames[j];
                     AssetBundleRequest request = null;
@@ -263,10 +266,10 @@ namespace LuaFramework {
         /// <param name="isThorough"></param>
         public void UnloadAssetBundle(string abName, bool isThorough = false) {
             abName = GetRealAssetPath(abName);
-            Debug.Log(m_LoadedAssetBundles.Count + " assetbundle(s) in memory before unloading " + abName);
+            //Debug.Log(m_LoadedAssetBundles.Count + " assetbundle(s) in memory before unloading " + abName);
             UnloadAssetBundleInternal(abName, isThorough);
             UnloadDependencies(abName, isThorough);
-            Debug.Log(m_LoadedAssetBundles.Count + " assetbundle(s) in memory after unloading " + abName);
+            //Debug.Log(m_LoadedAssetBundles.Count + " assetbundle(s) in memory after unloading " + abName);
         }
 
         void UnloadDependencies(string abName, bool isThorough) {
@@ -291,7 +294,7 @@ namespace LuaFramework {
                 }
                 bundle.m_AssetBundle.Unload(isThorough);
                 m_LoadedAssetBundles.Remove(abName);
-                Debug.Log(abName + " has been unloaded successfully");
+                //Debug.Log(abName + " has been unloaded successfully");
             }
         }
     }

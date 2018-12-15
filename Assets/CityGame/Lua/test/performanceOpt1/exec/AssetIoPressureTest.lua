@@ -249,29 +249,13 @@ UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time", 
     --]]
 end)
 
-AsyncSequenceTester = class('AsyncSequenceTester')
-function AsyncSequenceTester:excute()
-    self.loadCount = 0
-    self.startTime = os.clock()
-    local curSeq = self:getCurSeq()
-    if curSeq then
-        curSeq.fun(curSeq.type,self,curSeq.cb)
-    end
-end
-function AsyncSequenceTester:getCurSeq()
-    return self.testSquence[self.curPos]
-end
-function AsyncSequenceTester:Nextfun()
-    self.curPos = self.curPos + 1
-end
-
 --异步加载30个160 icon 时间测试
-UnitTest.Exec("abel_w17_load_A_s160_n30_time", "abel_w17_load_A_s160_n30_time",  function ()
+UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_time",  function ()
     --尺寸160的测试
     local aTester = AsyncSequenceTester:new()
 
     --初始化测试数据
-    aTester.testcount = 30
+    aTester.testcount = 1000
     aTester.loadCount = 0
     aTester.bundlelist = {}
     aTester.assertlist = {}
@@ -294,15 +278,35 @@ UnitTest.Exec("abel_w17_load_A_s160_n30_time", "abel_w17_load_A_s160_n30_time", 
         testData.loadCount = testData.loadCount + 1
         if testData.loadCount >= testData.testcount then
             local costTime = os.clock() - testData.startTime
-            ct.log('abel_w17_load_A_s160_n30_time',testData:getCurSeq().msg ..costTime)
-            testData:Nextfun()
-            collectgarbage("collect")
-            testData:excute()
+            ct.log('abel_w17_load_A_s160_n1000_time',testData:getCurSeq().msg ..costTime)
+
+            --卸载
+
+            local pos = #testData.bundlelist
+            while pos > 0 do
+                if testData.bundlelist[pos] ~= nil then
+                    resMgr:UnloadAssetBundle(testData.bundlelist[pos].name, true)
+                    --UnityEngine.AssetBundle.Unload(testData.bundlelist[pos],true)
+                    table.remove(testData.bundlelist, pos)
+                    pos = pos -1
+                end
+            end
+
+            --testData:Nextfun()
+            --collectgarbage("collect")
+            --testData:excute()
+
+            local timer = FrameTimer.New(function()
+                testData:Nextfun()
+                collectgarbage("collect")
+                testData:excute()
+            end, 90,0)
+            timer:Start()
         end
     end
 
-    aTester.testSquence[1] = { fun = testLoadFunA, type = nil, cb = callback, msg = '30个160大小的 Texture 同步加载的时间 ='}
-    aTester.testSquence[2] = { fun = testLoadFunA, type = CityLuaUtil.getSpriteType(), cb = callback, msg = '30个160大小的 Sprite 同步加载的时间 = '}
+    aTester.testSquence[1] = { fun = testLoadFunA, type = nil, cb = callback, msg = '1000个160大小的 Texture 异步加载的时间 ='}
+    aTester.testSquence[2] = { fun = testLoadFunA, type = CityLuaUtil.getSpriteType(), cb = callback, msg = '1000个160大小的 Sprite 异步加载的时间 = '}
 
     --开始执行异步测试序列
     collectgarbage("collect")
@@ -311,13 +315,11 @@ UnitTest.Exec("abel_w17_load_A_s160_n30_time", "abel_w17_load_A_s160_n30_time", 
     --[[
     测试结果
     pc
-        ......
+        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =2.2260000000001
+        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 2.3319999999999
+        *  性能差别比不大
     设备
-        [abel_w17_load_A_s160_n30_time]30个160大小的 Texture 同步加载的时间 = 0.575239
-        [abel_w17_load_A_s160_n30_time]30个160大小的Texture同步加载的时间 = 0.119937
-        *  性能差别比较明显，1倍
-        *  按一帧 0.03333 秒算， 同步加载 30 个 Sprite 要  0.227158/0.03333 = 6.8 , 将近7帧
-        *  异步会比这个快得多
+
     --]]
 end)
 

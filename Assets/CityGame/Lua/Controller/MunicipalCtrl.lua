@@ -71,6 +71,11 @@ end
 
 function MunicipalCtrl:Refresh()
     Event.Brocast("c_TicketValueChange")
+    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then
+        MunicipalPanel.changeNameBtn.localScale=Vector3.zero
+    else
+        MunicipalPanel.changeNameBtn.localScale=Vector3.one
+    end
 end
 
 

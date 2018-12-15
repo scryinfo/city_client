@@ -27,6 +27,8 @@ function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.numText=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
     self.timeText=prefab.transform:Find("bg/timeImage/Text"):GetComponent("Text");
 
+
+
     self._luabehaviour:AddClick(self.addBtn.gameObject, self.OnClick_Add, self);
 
 
@@ -34,9 +36,15 @@ end
 ---添加
 function AddItem:OnClick_Add(go)
    -- go.manager.transform=go.parent
-
-    go.manager.current.angleRoot.localScale=Vector3.zero
+    if   go.manager.current then
+        go.manager.current.angleRoot.localScale=Vector3.zero
+    end
     go.angleRoot.localScale=Vector3.one
     go.manager.current=go
 end
 
+function AddItem:updateTime()
+
+
+
+end

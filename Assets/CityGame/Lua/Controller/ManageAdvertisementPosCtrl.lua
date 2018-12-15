@@ -175,8 +175,14 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                ins.updateAcount=#self.slotList[i]
                ins.slots=self.slotList[i]
                ins.days=self.slotList[i][1].days
+               --剩余时间
+               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+               local remainTime= getFormatUnixTime(endTime-os.time())
+               ins.timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               ins.remainTime=remainTime
            else
                ins.prefab:SetActive(false)
+                ins.remainTime=nil
            end
        end
     else--实例数量小于数据数量
@@ -190,6 +196,11 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                ins.updateAcount=#self.slotList[i]
                ins.slots=self.slotList[i]
                ins.days=self.slotList[i][1].days
+               --剩余时间
+               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+               local remainTime= getFormatUnixTime(endTime-os.time())
+               ins.timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               ins.remainTime=remainTime
            else
                self.ItemCreatDeleteMgr:_creataddItem({})
                self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
@@ -199,6 +210,11 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                self.ItemCreatDeleteMgr.addItemInSList[i].updateAcount=#self.slotList[i]
                self.ItemCreatDeleteMgr.addItemInSList[i].slots=self.slotList[i]
                self.ItemCreatDeleteMgr.addItemInSList[i].days=self.slotList[i][1].days
+               --剩余时间
+               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+               local remainTime= getFormatUnixTime(endTime-os.time())
+               self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+               self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=remainTime
            end
        end
     end
@@ -223,14 +239,15 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
         end
     end
 
-    ---默认开启一个四角
-    for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
-        local tempIns=self.ItemCreatDeleteMgr.addItemInSList[i]
-        if tempIns.prefab.activeInHierarchy then
-            tempIns.angleRoot.localScale=Vector3.one
-            self.ItemCreatDeleteMgr.current=tempIns
-        end
-    end
+    -----默认开启一个四角
+    --for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
+    --    local tempIns=self.ItemCreatDeleteMgr.addItemInSList[i]
+    --    if tempIns.prefab.activeInHierarchy then
+    --        tempIns.angleRoot.localScale=Vector3.one
+    --        self.ItemCreatDeleteMgr.current=tempIns
+    --        return
+    --    end
+    --end
 
 end
 

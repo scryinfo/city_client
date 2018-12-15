@@ -19,7 +19,7 @@ end
 function MunicipalModel.Awake()
     this:OnCreate();
     this.SlotList={}
-    UpdateBeat:Add(this.Update, this)
+    --UpdateBeat:Add(this.Update, this)
     this.manger=ItemCreatDeleteMgr:new()
 end
 
@@ -199,6 +199,9 @@ end
 ---槽位过期收包
 function MunicipalModel.n_getadSlotTimeoutInform(stream)
     local lMsg = assert(pbl.decode("gs.PublicFacility.Slot.id", stream),"槽位过期收包失败")
+
+
+
 end
 
 ---删广告发包
@@ -240,10 +243,10 @@ end
 
 
 function MunicipalModel.Update()
-        --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.E) then
-        --    Event.Brocast("m_buySlot",MunicipalModel.lMsg.info.id,this.SlotList[23].id,3)
-        --    ct.log("system","#############################################")
-        --end
+        if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.E) then
+
+            ct.log("system","#############################################"..os.date().."::"..os.time())
+        end
 end
 
 

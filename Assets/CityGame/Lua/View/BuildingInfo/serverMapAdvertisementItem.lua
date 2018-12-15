@@ -79,7 +79,9 @@ function serverMapAdvertisementItem:OnClick_cut(go)
         go.numtext.text=go.numtext.text-1
         go.updatecount=go.numtext.text
         --槽位增加
-
+        if   go.manager.current then
+            go.manager.current.angleRoot.localScale=Vector3.zero
+        end
         for i, addItemIns in pairs(go.manager.addItemInSList) do
             if addItemIns.days == go.days then
                 addItemIns.prefab:SetActive(true)
@@ -122,6 +124,17 @@ function serverMapAdvertisementItem:OnClick_Plus(ins)
         --自身数量增加
         ins.numtext.text=ins.numtext.text+1
         ins.updatecount=ins.numtext.text
+        if   ins.manager.current then
+            ins.manager.current.angleRoot.localScale=Vector3.zero
+        end
+        for i, addItemIns in pairs(ins.manager.addItemInSList) do
+            if addItemIns.days == ins.days then
+                addItemIns.prefab:SetActive(true)
+                addItemIns.angleRoot.localScale=Vector3.one
+                --addItemIns.prefab.transform:SetAsFirstSibling()
+                ins.manager.current=addItemIns
+            end
+        end
         --槽位减少
         ins.manager.current.numText.text=ins.manager.current.numText.text-1
     end

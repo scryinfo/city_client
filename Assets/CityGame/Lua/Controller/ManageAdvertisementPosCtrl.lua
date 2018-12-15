@@ -239,15 +239,15 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
         end
     end
 
-    -----默认开启一个四角
-    --for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
-    --    local tempIns=self.ItemCreatDeleteMgr.addItemInSList[i]
-    --    if tempIns.prefab.activeInHierarchy then
-    --        tempIns.angleRoot.localScale=Vector3.one
-    --        self.ItemCreatDeleteMgr.current=tempIns
-    --        return
-    --    end
-    --end
+    ---默认开启一个四角
+    for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
+        local tempIns=self.ItemCreatDeleteMgr.addItemInSList[i]
+        if tempIns.prefab.activeInHierarchy then
+            tempIns.angleRoot.localScale=Vector3.one
+            self.ItemCreatDeleteMgr.current=tempIns
+            return
+        end
+    end
 
 end
 

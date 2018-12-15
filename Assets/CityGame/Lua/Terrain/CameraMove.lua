@@ -1,12 +1,14 @@
 CameraMove = class('CameraMove')
 local transform = nil
 local mainCameraTransform = nil
+local mainCameraCenterTransforms = nil
 local inputTools = nil
 local mCameraState = nil
 
 function CameraMove:Start(gameObject)
     transform = gameObject
     mainCameraTransform = UnityEngine.Camera.main.transform
+    mainCameraCenterTransforms = mainCameraTransform.parent
     --依据平台，初始化输入工具
     if inputTools then
         inputTools:Close()
@@ -87,13 +89,13 @@ end
 
 
 --缩放相机距离远近
-function DataManager:ScaleCamera()
+function CameraMove:ScaleCamera()
 
 end
 
 
 --点击到建筑
-function DataManager:TouchBuild()
+function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
@@ -108,7 +110,7 @@ function DataManager:TouchBuild()
 end
 
 --拖动临时建筑
-function DataManager:MoveConstructObj()
+function CameraMove:MoveConstructObj()
     --[[
     if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
         return
@@ -125,7 +127,7 @@ function DataManager:MoveConstructObj()
 end
 
 --拖动时更新相机位置
-function DataManager:UpdateMove()
+function CameraMove:UpdateMove()
     --[[
     if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
         return

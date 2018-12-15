@@ -98,14 +98,32 @@ end
 --  tempCollectionID: 所属地块集合ID
 function DataManager.CreateWaysByCollectionID(tempCollectionID)
     --TODO://
+    if not BuildDataStack[tempCollectionID] then
+        return
+    end
     if not BuildDataStack[tempCollectionID].RoteDatas then
         BuildDataStack[tempCollectionID].RoteDatas = {}
     end
-    for itemBlockID, itemNodeID in ipairs(BuildDataStack[tempCollectionID].BlockDatas) do
+    for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
         if itemNodeID == -1 then
-            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemNodeID)
-            if roadNum ~= 0 then
-                BuildDataStack[tempCollectionID].RoteDatas[itemNodeID].roadNum = roadNum
+            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+            if roadNum > 0 and roadNum < #RoadNumConfig  then
+                if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
+                else
+                    if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
+                        break
+                    else
+                        --TODO:删除之前的道路Obj
+                        destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                    end
+                end
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
+                local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
+                local go = UnityEngine.GameObject.Instantiate(prefab)
+                go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
             end
         end
     end
@@ -131,25 +149,28 @@ end
 
 
 local RoadAroundNumber = {
-    FrontUpperItem = { Num = 2 },   --正上方
-    FrontBelowItem = { Num = 8 },   --正下方
-    LeftUpperItem = { Num = 16 },    --左上方
-    LeftMiddleItem = { Num = 1 },   --正左方
-    LeftBelowItem = { Num = 128 },    --左下方
-    RightUpperItem ={ Num = 32 },    --右上方
-    RightMiddleItem = { Num = 4 },  --正右方
-    RightBelowItem = { Num = 64 },   --右下方
+    FrontUpperItem = { Num = 1 },   --正上方
+    FrontBelowItem = { Num = 4 },   --正下方
+    LeftUpperItem = { Num = 128 },    --左上方
+    LeftMiddleItem = { Num = 8 },   --正左方
+    LeftBelowItem = { Num = 64 },    --左下方
+    RightUpperItem ={ Num = 16 },    --右上方
+    RightMiddleItem = { Num = 2 },  --正右方
+    RightBelowItem = { Num = 32 },   --右下方
 }
 --功能
--- 移除道路的基础数据，管理GameObject
+-- 计算道路number
 function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
+    if roadBlockID == 7006 then
+        local a = 0
+    end
     local roadNum = 0
-    for key, value in ipairs(RoadAroundNumber) do
+    for key, value in pairs(RoadAroundNumber) do
         value.ID = nil
     end
     --边缘判定（上下不判定的原因是因为计算值的时候会被排除）
     if  roadBlockID % TerrainRangeSize ~= 0 then    --不靠地图右边边界--->右边一列
-        RoadAroundNumber.RightBelowItem.ID = roadBlockID - TerrainRangeSize + 1
+        RoadAroundNumber.RightUpperItem.ID = roadBlockID - TerrainRangeSize + 1
         RoadAroundNumber.RightMiddleItem.ID = roadBlockID + 1
         RoadAroundNumber.RightBelowItem.ID = roadBlockID + TerrainRangeSize + 1
     end
@@ -163,14 +184,16 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
     --计算中间一列
     local topItemID = roadBlockID - TerrainRangeSize
     --如果存在  那么计算这个值
-    for key, value in ipairs(RoadAroundNumber) do
-        if value.ID then
+    for key, value in pairs(RoadAroundNumber) do
+        if value.ID and value.ID > 0 and value.ID < TerrainRangeSize*TerrainRangeSize then
             if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
-                roadNum  = roadNum + value.ID
+                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] ~= -1 then
+                    roadNum  = roadNum + value.Num
+                end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] then
-                    roadNum  = roadNum + value.ID
+                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                    roadNum  = roadNum + value.Num
                 end
             end
         end
@@ -625,7 +648,7 @@ function DataManager.SetMyFriendsInfo(tempData)
     if tempData.id and tempData.name then
         table.insert(PersonDataStack.m_friendsInfo, tempData)
     elseif tempData.id and not tempData.name then
-        for i, v in ipairs(PersonDataStack.m_friendsInfo) do
+        for i, v in pairs(PersonDataStack.m_friendsInfo) do
             if v.id == tempData.id then
                 table.remove(PersonDataStack.m_friendsInfo, i)
                 break
@@ -662,7 +685,7 @@ function DataManager.SetMyBlacklist(tempData)
     if tempData.id and tempData.name then
         table.insert(PersonDataStack.m_blacklist, tempData)
     elseif tempData.id and not tempData.name then
-        for i, v in ipairs(PersonDataStack.m_blacklist) do
+        for i, v in pairs(PersonDataStack.m_blacklist) do
             if v.id == tempData.id then
                 table.remove(PersonDataStack.m_blacklist, i)
                 break

@@ -20,11 +20,28 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
     self.ItemList=mgr.outAdvertisementItemList
 
     self.peopleText=prefab.transform:Find("showPanel/peoplecount/peoplecountText"):GetComponent("Text")
-    self.peopleText.text=prefabData.metaId
+    self.dayText=prefab.transform:Find("bg/day/dayText"):GetComponent("Text")
+    self.nameText=prefab.transform:Find("nameImage/Text"):GetComponent("Text")
+    self.iconIma=prefab.transform:Find("icon"):GetComponent("Image")
+    self.adNameText=prefab.transform:Find("showPanel/nameImage/nameText"):GetComponent("Text")
 
-
+    if prefabData.npcFlow then
+        --人流量
+        self.peopleText.text=prefabData.npcFlow
+        --时间
+        local beginTs=tostring(prefabData.beginTs)
+        beginTs=string.sub(beginTs,1,10)
+        local passTime=os.time()-beginTs
+        self.dayText.text=string.sub(getFormatUnixTime(passTime).day,2,2).."d"
+    end
 end
 ---删除
 function outAdvertisementItem:OnClicl_XBtn(go)
     go.manager:_deleteGoods(go)
+end
+
+function outAdvertisementItem:updateData()
+
+
+
 end

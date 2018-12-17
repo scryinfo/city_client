@@ -139,7 +139,11 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
 
     if enableShow then
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.zero
-        self.chooseResearchItemId = itemId
+        if LabScientificLineCtrl.static.type == 0 then
+            self.chooseResearchItemId = itemId
+        else
+            self.chooseInventItemId = itemId
+        end
     else
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.one
     end

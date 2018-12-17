@@ -22,6 +22,9 @@ function LabResearchCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
         UIPage.ClosePage()
+        if self.backToCompose then
+            ct.OpenCtrl("AddLineChooseItemCtrl")
+        end
     end)
     self.luaBehaviour:AddClick(LabResearchPanel.researchBtn.gameObject, function()
         self:_researchBtnFunc()
@@ -79,6 +82,7 @@ function LabResearchCtrl:_initPanelData()
     LabResearchPanel.itemNameText.text = Good[self.m_data.itemId].name
 
     if not self.m_data.id then    --没有id则为临时添加的线
+        self.backToCompose = true
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabResearchPanel:setBulbState(self.m_data.bulbState)
         if self.enough then
@@ -91,6 +95,7 @@ function LabResearchCtrl:_initPanelData()
             LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
         end
     else
+        self.backToCompose = false
         if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             LabResearchPanel.researchBtn.transform.localScale = Vector3.zero

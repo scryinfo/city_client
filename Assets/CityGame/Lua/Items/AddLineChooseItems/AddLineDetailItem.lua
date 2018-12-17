@@ -30,13 +30,13 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
         self.stateText.text = "Be inventing..."
     elseif stateData.itemState == AddLineDetailItemState.ToBeInvented then
         self.stateRoot.localScale = Vector3.one
-        self.stateText.text = "To be invented..."
+        self.stateText.text = "To be invented"
     elseif stateData.itemState == AddLineDetailItemState.ResearchIng then
         self.stateRoot.localScale = Vector3.one
         self.stateText.text = "Be researching..."
     elseif stateData.itemState == AddLineDetailItemState.HasInvented then
         self.stateRoot.localScale = Vector3.one
-        self.stateText.text = "Has been invented..."
+        self.stateText.text = "Has invented"
     elseif stateData.itemState == AddLineDetailItemState.Default then
         self.stateRoot.localScale = Vector3.zero
     end

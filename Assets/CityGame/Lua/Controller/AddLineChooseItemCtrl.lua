@@ -24,11 +24,7 @@ function AddLineChooseItemCtrl:Awake(go)
     self.behaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, function ()
         self:Hide()
     end, self)
-    self.behaviour:AddClick(AddLineChooseItemPanel.researchBtn.gameObject, function ()
-        ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
-        self:Hide()
-    end, self)
-    self.behaviour:AddClick(AddLineChooseItemPanel.inventionBtn.gameObject, function ()
+    self.behaviour:AddClick(AddLineChooseItemPanel.leftBtn.gameObject, function ()
         ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
         self:Hide()
     end, self)
@@ -40,20 +36,42 @@ function AddLineChooseItemCtrl:Refresh()
     self:_initData()
 end
 function AddLineChooseItemCtrl:_addListener()
-    Event.AddListener("c_setCenterLine", self._setCenterLine, self)
+    Event.AddListener("c_leftSetCenter", self._leftSetCenter, self)
+    Event.AddListener("c_rightSetCenter", self._rightSetCenter, self)
 end
 function AddLineChooseItemCtrl:_removeListener()
-    Event.RemoveListener("c_setCenterLine", self._setCenterLine, self)
+    Event.RemoveListener("c_leftSetCenter", self._leftSetCenter, self)
+    Event.RemoveListener("c_rightSetCenter", self._rightSetCenter, self)
 end
 
 function AddLineChooseItemCtrl:_initData()
     AddLineChooseItemCtrl.goodLv = DataManager.GetMyGoodLv()
     local buildingId = LabScientificLineCtrl.static.buildingId
     if LabScientificLineCtrl.static.type == 0 then
+        AddLineChooseItemPanel.titleText.text = "Research"
+        AddLineChooseItemPanel.leftBtn.transform.localScale = Vector3.zero
+        AddLineChooseItemPanel.rightBtn.transform.localScale = Vector3.one
+
+        AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
+        AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
+            ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
+            self:Hide()
+        end)
+
         DataManager.DetailModelRpc(buildingId, 'm_GetResearchingItem', function (tables)
             AddLineChooseItemCtrl.researchingItems = tables
         end)
     else
+        AddLineChooseItemPanel.titleText.text = "Invent"
+        AddLineChooseItemPanel.leftBtn.transform.localScale = Vector3.one
+        AddLineChooseItemPanel.rightBtn.transform.localScale = Vector3.one
+
+        AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
+        AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
+            ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
+            self:Hide()
+        end)
+
         DataManager.DetailModelRpc(buildingId, 'm_GetInventingItem', function (tables)
             AddLineChooseItemCtrl.inventingItems = tables
         end)
@@ -92,50 +110,41 @@ function AddLineChooseItemCtrl.GetItemState(itemId)
     return data
 end
 
---刷新线路显示
-function AddLineChooseItemCtrl:_setCenterLine(itemId, itemType, rectPosition, enableShow)
-    local tempData
-    --如果是原料
-    if itemType < 2200 then
-        AddLineChooseItemPanel.researchBtn.transform.position = rectPosition
-        tempData = Material[itemId]
-        self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
-        local lineDatas = {}  --获取线的数据
-        for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
-            lineDatas[#lineDatas + 1] = matData
-        end
-        self:_setLineDetailInfo(lineDatas)
-        AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
-        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[1])
-    else
-        AddLineChooseItemPanel.inventionBtn.transform.position = rectPosition
-        local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
-        self:_setLineDetailInfo(selectItemMatToGoodIds)
-        AddLineChooseItemPanel.productionItem:initData(Good[itemId])
+--左边的detail被点击，需要改变中心线
+function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
+    AddLineChooseItemPanel.leftBtn.transform.position = rectPosition
+    --tempData = Material[itemId]
+    self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
+    local lineDatas = {}  --获取线的数据
+    for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
+        lineDatas[#lineDatas + 1] = matData
     end
+    self:_setLineDetailInfo(lineDatas)
+    AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[1]])
+    AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[1])
 
-    --设置按钮状态
-    if LabScientificLineCtrl.static.type == 0 then
-        AddLineChooseItemPanel.inventionBtn.transform.localScale = Vector3.zero
-        AddLineChooseItemPanel.researchBtn.transform.localScale = Vector3.one
-        if enableShow then
-            AddLineChooseItemPanel.researchDisableImg.localScale = Vector3.zero
-        else
-            AddLineChooseItemPanel.researchDisableImg.localScale = Vector3.one
-        end
+    if enableShow then
+        AddLineChooseItemPanel.leftDisableImg.localScale = Vector3.zero
+        self.chooseInventItemId = itemId
+    else
+        AddLineChooseItemPanel.leftDisableImg.localScale = Vector3.one
+    end
+end
+--右侧的detail被点击，改变中心线
+function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
+    AddLineChooseItemPanel.rightBtn.transform.position = rectPosition
+    local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
+    self:_setLineDetailInfo(selectItemMatToGoodIds)
+    AddLineChooseItemPanel.productionItem:initData(Good[itemId])
+
+    if enableShow then
+        AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.zero
         self.chooseResearchItemId = itemId
     else
-        AddLineChooseItemPanel.inventionBtn.transform.localScale = Vector3.one
-        AddLineChooseItemPanel.researchBtn.transform.localScale = Vector3.one
-        if enableShow then
-            AddLineChooseItemPanel.inventDisableImg.localScale = Vector3.zero
-        else
-            AddLineChooseItemPanel.inventDisableImg.localScale = Vector3.one
-        end
-        self.chooseInventItemId = itemId
+        AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.one
     end
-
 end
+
 --设置原料线的信息  根据个数显示位置
 function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
     local lineCount = #datas

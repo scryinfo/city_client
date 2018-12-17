@@ -328,8 +328,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 local protoID = nil
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
-                elseif protoData.id then
-                    protoID = protoData.id
+                elseif protoData.buildingId then
+                    protoID = protoData.buildingId
                 end
                 if protoID then
                     for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do

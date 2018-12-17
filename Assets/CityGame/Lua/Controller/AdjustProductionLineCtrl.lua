@@ -33,7 +33,7 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
-    adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
+    --adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
 
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshIdleWorkerNum",self.refreshIdleWorkerNum,self)
@@ -58,14 +58,14 @@ function AdjustProductionLineCtrl:Refresh()
     end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     if self.data.buildingType == BuildingType.MaterialFactory then
-        self.buildingMaxWorkerNum = PlayerBuildingBaseData[MaterialModel.buildingCode].maxWorkerNum
-        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+        self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
+        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
+        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
         AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     elseif self.data.buildingType == BuildingType.ProcessingFactory then
-        self.buildingMaxWorkerNum = PlayerBuildingBaseData[ProcessingModel.buildingCode].maxWorkerNum
-        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
-        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
+        self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
+        AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
+        AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
         AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     end
     self.idleWorkerNum = self:getWorkerNum()
@@ -75,11 +75,7 @@ function AdjustProductionLineCtrl:Refresh()
     Event.Brocast("refreshTime",self.data.dataTab)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 
-    --local itemId = MaterialModel.buildingCode
     self:refreshWorkerNum()
-    --AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-    --AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
-    --AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
 
 end
 
@@ -103,7 +99,7 @@ function AdjustProductionLineCtrl:calculateTime(msg)
 end
 
 --添加生产线
-function AdjustProductionLineCtrl:OnClick_determineBtn()
+function AdjustProductionLineCtrl:OnClick_determineBtn(ins)
     local number,steffNumber,itemid = GoodsUnifyMgr:getSendInfo()
     if number == "0" then
         Event.Brocast("SmallPop","目标产量不能为0",300)
@@ -119,11 +115,11 @@ function AdjustProductionLineCtrl:OnClick_determineBtn()
             return;
         end
     end
-    Event.Brocast("m_ReqAddLine",MaterialModel.buildingId,number,steffNumber,itemid);
+    Event.Brocast("m_ReqAddLine",ins.data.info.id,number,steffNumber,itemid);
 end
 --修改生产线
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
-    Event.Brocast("m_ResModifyKLine",MaterialModel.buildingId,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
+    Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
 --获取剩余员工人数
 function AdjustProductionLineCtrl:getWorkerNum()

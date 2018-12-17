@@ -43,6 +43,7 @@ CtrlNames = {
 	CreateRole = "CreateRoleCtrl",--创角页面
 
 	Material = "MaterialCtrl", --原料厂
+	Processing = "ProcessingCtrl",  --加工厂
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 	Exchange = "ExchangeCtrl",  --交易所

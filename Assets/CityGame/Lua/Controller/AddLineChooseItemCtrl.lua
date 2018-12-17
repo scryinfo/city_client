@@ -49,8 +49,8 @@ function AddLineChooseItemCtrl:_initData()
     local buildingId = LabScientificLineCtrl.static.buildingId
     if LabScientificLineCtrl.static.type == 0 then
         AddLineChooseItemPanel.titleText.text = "Research"
-        AddLineChooseItemPanel.leftBtn.transform.localScale = Vector3.zero
-        AddLineChooseItemPanel.rightBtn.transform.localScale = Vector3.one
+        AddLineChooseItemPanel.leftBtnParentTran.transform.localScale = Vector3.zero
+        AddLineChooseItemPanel.rightBtnParentTran.transform.localScale = Vector3.one
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
@@ -63,8 +63,8 @@ function AddLineChooseItemCtrl:_initData()
         end)
     else
         AddLineChooseItemPanel.titleText.text = "Invent"
-        AddLineChooseItemPanel.leftBtn.transform.localScale = Vector3.one
-        AddLineChooseItemPanel.rightBtn.transform.localScale = Vector3.one
+        AddLineChooseItemPanel.leftBtnParentTran.transform.localScale = Vector3.one
+        AddLineChooseItemPanel.rightBtnParentTran.transform.localScale = Vector3.one
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
@@ -112,7 +112,7 @@ end
 
 --左边的detail被点击，需要改变中心线
 function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
-    AddLineChooseItemPanel.leftBtn.transform.position = rectPosition
+    AddLineChooseItemPanel.leftBtnParentTran.transform.position = rectPosition
     --tempData = Material[itemId]
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
@@ -132,7 +132,7 @@ function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
 end
 --右侧的detail被点击，改变中心线
 function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
-    AddLineChooseItemPanel.rightBtn.transform.position = rectPosition
+    AddLineChooseItemPanel.rightBtnParentTran.transform.position = rectPosition
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
     AddLineChooseItemPanel.productionItem:initData(Good[itemId])

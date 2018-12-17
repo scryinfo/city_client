@@ -33,10 +33,21 @@ function GameNoticeCtrl:OnCreate(obj)
     GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
 
-    NoticeMgr:_createNotice(GameNoticeBehaviour)
+    NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
 
     Event.AddListener("c_onBg",self.c_onBg,self)
 
+end
+
+function GameNoticeCtrl:Refresh()
+    --打开通知Model
+    self:initializeData()
+end
+
+function GameNoticeCtrl:initializeData()
+    if self.m_data then
+        DataManager.OpenDetailModel(GameNoticeModel,1)
+    end
 end
 
 --初始化
@@ -83,9 +94,15 @@ function GameNoticeCtrl:OnXBtn(go)
     data.contentInfo = "Delete the message?"
     data.tipInfo = ""
     data.btnCallBack = function ()
+      --  DataManager.DetailModelRpcNoRet(1, 'm_deleMail',go.id)
         GameNoticeCtrl:_deleteNotice(id,go)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
+end
+
+--点击删除回调
+function GameNoticeCtrl:_delMails(data)
+
 end
 
 --跳转场景

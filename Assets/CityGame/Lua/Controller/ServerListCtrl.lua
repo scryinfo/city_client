@@ -78,10 +78,10 @@ function ServerListCtrl:c_GsCreateRole()
     UIPage:ClearAllPages()
     UIPage:ShowPage(CreateRoleCtrl)
 end
-function ServerListCtrl:c_GsLoginSuccess()
-    UIPage:ClearAllPages()
+function ServerListCtrl:c_GsLoginSuccess(playerId)
+    UIPage:ClearAllPages()---------------------
     --UIPage:ShowPage(GameMainInterfaceCtrl)
-    ct.OpenCtrl('GameMainInterfaceCtrl')
+    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
     --UIPage:ShowPage(TopBarCtrl)
     --UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
 end

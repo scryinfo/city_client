@@ -35,9 +35,22 @@ function GameMainInterfaceCtrl:OnCreate(obj)
 end
 
 function GameMainInterfaceCtrl:Refresh()
+    --打开主界面Model
+    self:initializeData()
     self:_showFriendsNotice()
 end
 
+function GameMainInterfaceCtrl:initializeData()
+    if self.m_data then
+        DataManager.OpenDetailModel(GameMainInterfaceModel,1)
+        DataManager.DetailModelRpcNoRet(1, 'm_GetAllMails',self.m_data)
+    end
+end
+
+--获取所有邮件
+function GameMainInterfaceCtrl:_receiveAllMails(DataInfo)
+     self.Mails = DataInfo
+end
 --通知--
 function GameMainInterfaceCtrl.OnNotice()
     if  NoticeMgr.notice ~= nil then
@@ -54,6 +67,11 @@ function GameMainInterfaceCtrl.OnNotice()
         end
     end
 
+--[[    if self.Mails == nil then
+        ct.OpenCtrl("NoMessageCtrl")
+    else
+        ct.OpenCtrl('GameNoticeCtrl',self.Mails)
+    end]]
 end
 
 --聊天--

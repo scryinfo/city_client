@@ -91,26 +91,40 @@ function LabInventionCtrl:_initPanelData()
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabInventionPanel.setBulbState(self.m_data.bulbState)
         if self.enough then
-            LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
+            self:_setInventBtnState(LabResearchBtnState.EnableClick)
         else
-            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+            self:_setInventBtnState(LabResearchBtnState.NotEnough)
         end
     else
         self.backToCompose = false
         if self.m_data.run and self.m_data.leftSec > 0 then    --如果在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
-            LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+            self:_setInventBtnState(LabResearchBtnState.Working)
         else
             if self.m_data.roll > 0 then
                 self.m_data.bulbState = LabInventionBulbItemState.Finish
-                LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
             else
                 self.m_data.bulbState = LabInventionBulbItemState.Empty
-                LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
-                ct.log("cycle_w15_laboratory03", "状态不对")
             end
+            self:_setInventBtnState(LabResearchBtnState.NotEnough)
         end
         LabInventionPanel.setBulbState(self.m_data.bulbState)
+    end
+end
+
+function LabInventionCtrl:_setInventBtnState(state)
+    if state == LabResearchBtnState.EnableClick then  --默认可以点击
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabInventionPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.NotEnough then  --不够的状态/不可点击状态
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.one
+        LabInventionPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.Working then  --工作中
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabInventionPanel.workingImgTran.localScale = Vector3.one
     end
 end
 --点了发明按钮

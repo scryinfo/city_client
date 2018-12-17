@@ -27,7 +27,10 @@ function LabInventionPanel.InitPanel()
     this.rawRootTran = transform:Find("bottomRoot/right/rawMat")
     this.goodIconImg = transform:Find("bottomRoot/right/goods/iconImg"):GetComponent("Image")
     this.matIconImg = transform:Find("bottomRoot/right/rawMat/iconImg"):GetComponent("Image")
-    this.inventionBtn = transform:Find("bottomRoot/right/workingImg/inventionBtn"):GetComponent("Button")
+
+    this.inventionBtn = transform:Find("bottomRoot/right/inventBtnParent/inventionBtn"):GetComponent("Button")
+    this.workingImgTran = transform:Find("bottomRoot/right/inventBtnParent/workingImg")
+    this.notEnoughImgTran = transform:Find("bottomRoot/right/inventBtnParent/notEnoughImg")
 
     this.singleLineTran = transform:Find("bottomRoot/right/goods/singleLine")
     this.singleLineItem = LabFormulaItem:new(this.singleLineTran)

@@ -3,6 +3,13 @@
 --- Created by xuyafang.
 --- DateTime: 2018/11/29 17:38
 ---
+LabResearchBtnState =
+{
+    EnableClick = 0,
+    Working = 1,
+    NotEnough = 2,
+}
+
 LabResearchCtrl = class('LabResearchCtrl',UIPage)
 UIPage:ResgisterOpen(LabResearchCtrl)
 
@@ -86,33 +93,48 @@ function LabResearchCtrl:_initPanelData()
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabResearchPanel:setBulbState(self.m_data.bulbState)
         if self.enough then
-            LabResearchPanel.researchBtn.transform.localScale = Vector3.one
+            self:_setResearchBtnState(LabResearchBtnState.EnableClick)
             LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
             LabResearchPanel.researchBtn.onClick:AddListener(function ()
                 self:_creatTempLine()
             end)
         else
-            LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
+            self:_setResearchBtnState(LabResearchBtnState.NotEnough)
         end
     else
         self.backToCompose = false
         if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
-            LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
+            self:_setResearchBtnState(LabResearchBtnState.Working)
         else
             if self.m_data.roll == 0 then    --没有倒计时结束，且没有roll，则为从暂停的线点进来
                 self.m_data.bulbState = LabInventionBulbItemState.Empty
-                LabResearchPanel.researchBtn.transform.localScale = Vector3.one
+                self:_setResearchBtnState(LabResearchBtnState.EnableClick)
                 LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
                 LabResearchPanel.researchBtn.onClick:AddListener(function ()
                     self:_launchLine()
                 end)
             else
-                LabResearchPanel.researchBtn.localScale = Vector3.zero
+                self:_setResearchBtnState(LabResearchBtnState.NotEnough)
                 self.m_data.bulbState = LabInventionBulbItemState.Finish
             end
         end
         LabResearchPanel:setBulbState(self.m_data.bulbState)
+    end
+end
+function LabResearchCtrl:_setResearchBtnState(state)
+    if state == LabResearchBtnState.EnableClick then  --默认可以点击
+        LabResearchPanel.researchBtn.transform.localScale = Vector3.one
+        LabResearchPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabResearchPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.NotEnough then  --不够的状态/不可点击状态
+        LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
+        LabResearchPanel.notEnoughImgTran.localScale = Vector3.one
+        LabResearchPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.Working then  --工作中
+        LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
+        LabResearchPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabResearchPanel.workingImgTran.localScale = Vector3.one
     end
 end
 --添加临时线，返回科技线

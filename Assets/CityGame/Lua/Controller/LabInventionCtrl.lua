@@ -21,10 +21,13 @@ function LabInventionCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabInventionPanel.backBtn.gameObject, function()
         UIPage.ClosePage()
-    end)
+        if self.backToCompose then
+            ct.OpenCtrl("AddLineChooseItemCtrl")
+        end
+    end, self)
     self.luaBehaviour:AddClick(LabInventionPanel.inventionBtn.gameObject, function()
         self:_inventeBtnClick()
-    end)
+    end, self)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.lineId then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
@@ -63,10 +66,6 @@ function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
     self.remainTime = self.m_data.leftSec
     local formularItem = FormularConfig[self.m_data.itemId]
-    --if formularItem.phase ~= 5 then
-        --ct.log("cycle_w15_laboratory03", "阶段数不为5")
-        --return
-    --end
     if #formularItem.materials == 0 then  --判断是否为原料
         LabInventionPanel.showLine({})
         self.enough = true
@@ -88,6 +87,7 @@ function LabInventionCtrl:_initPanelData()
     end
 
     if not self.m_data.id then    --没有id则为临时添加的线
+        self.backToCompose = true
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabInventionPanel.setBulbState(self.m_data.bulbState)
         if self.enough then
@@ -96,6 +96,7 @@ function LabInventionCtrl:_initPanelData()
             LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
         end
     else
+        self.backToCompose = false
         if self.m_data.run and self.m_data.leftSec > 0 then    --如果在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero

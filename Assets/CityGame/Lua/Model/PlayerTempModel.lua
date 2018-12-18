@@ -22,6 +22,10 @@ function PlayerTempModel.Update()
         PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
 
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        PlayerTempModel.tempTestReqAddItem(2101001,99)
+    end
+
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end

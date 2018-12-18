@@ -35,26 +35,13 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             return
         end
         if self.shelfData.buildingType == BuildingType.MaterialFactory then
-            local data = {}
-            data.dataTab = MaterialModel.materialShelf
-            data.buildingType = BuildingType.MaterialFactory
-            ct.OpenCtrl("ShelfCtrl",data)
+            ct.OpenCtrl("ShelfCtrl",self.shelfData)
         elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-            local data = {}
-            data.dataTab = ProcessingModel.processingShelf
-            data.buildingType = BuildingType.ProcessingFactory
-            ct.OpenCtrl("ShelfCtrl",data)
+            ct.OpenCtrl("ShelfCtrl",self.shelfData)
         end
     end);
+    self:initializeInfo(self.shelfData.shelf.good)
 
-    if self.shelfData.buildingType == BuildingType.MaterialFactory then
-        self:initializeInfo(MaterialModel.materialShelf);
-    elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-        self:initializeInfo(ProcessingModel.processingShelf)
-    end
-    --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
-    --    --    mgrTable:houseOccDataUpdate(data)
-    --    --end);
 
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
@@ -92,6 +79,7 @@ function ShelfRateItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - ShelfRateItem.static.TOP_H);
 end
+
 --初始化数据
 function ShelfRateItem:initializeInfo(data)
     if not data then

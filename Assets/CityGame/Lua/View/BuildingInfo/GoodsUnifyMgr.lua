@@ -12,31 +12,32 @@ GoodsUnifyMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预�
 GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
 GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
+GoodsUnifyMgr.static.Shelf_BuyGoods_PATH = "View/GoodsItem/BuyDetailsItem"  --货架购买物品 Item
 GoodsUnifyMgr.static.AddProductionLine_PATH = "View/GoodsItem/ProductionItem"  --选择添加生产线 Item
 GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProductionLineItem"  --生产线 Item
 
 function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.MaterialFactory then
-        self:_creatStaffItemGoods(MaterialModel.materialShelf);
+        self:_creatStaffItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Shelf and buildingData.buildingType == BuildingType.ProcessingFactory then
-        self:_creatStaffItemGoods(ProcessingModel.processingShelf);
+        self:_creatStaffItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.MaterialFactory then
-        self:_creatWarehouseItemGoods(MaterialModel.materialWarehouse);
+        self:_creatWarehouseItemGoods(buildingData);
     elseif buildingData.type == BuildingInType.Warehouse and buildingData.buildingType == BuildingType.ProcessingFactory then
-        self:_creatWarehouseItemGoods(ProcessingModel.processingWarehouse);
+        self:_creatWarehouseItemGoods(buildingData);
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
     end
 end
 --仓库
-function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
-    if not warehouseTable then
+function GoodsUnifyMgr:_creatWarehouseItemGoods(buildingData)
+    if not buildingData.store.inHand then
         return;
     end
     self.WarehouseModelData = {}
     local configTable = {}
-    for i,v in pairs(warehouseTable) do
+    for i,v in pairs(buildingData.store.inHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.num = v.n
@@ -56,13 +57,14 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(warehouseTable)
     end
 end
 --货架
-function GoodsUnifyMgr:_creatStaffItemGoods(shelfTable)
-    if not shelfTable then
+function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
+    if not buildingData.shelf.good then
         return;
     end
+    self.state = buildingData.isOther
     self.ModelDataList={}
     local configTable = {}
-    for i,v in pairs(shelfTable) do
+    for i,v in pairs(buildingData.shelf.good) do
         local shelfDataInfo = {}
         shelfDataInfo.name = Material[v.k.id].name
         shelfDataInfo.number = v.n
@@ -76,7 +78,7 @@ function GoodsUnifyMgr:_creatStaffItemGoods(shelfTable)
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
 
-        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i)
+        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i,self.state)
         if not self.items then
             self.items = {}
         end
@@ -132,11 +134,11 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
 end
 --读取服务器发过来的信息，是否有生产线
 function GoodsUnifyMgr:_getProductionLine(table,behaviour)
-    if not table.dataTab then
+    if not table.line then
         return;
     end
     local configTable = {}
-    for i,v in pairs(table.dataTab) do
+    for i,v in pairs(table.line) do
         local uiTab = {}
         if table.buildingType == BuildingType.MaterialFactory then
             uiTab.name = Material[v.itemId].name
@@ -198,7 +200,7 @@ end
 --仓库选中物品运输
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
-    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent)
+    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
     local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
@@ -211,6 +213,23 @@ function GoodsUnifyMgr:_deleteTransportItem(id)
     destroy(self.transportPanelItem[id].prefab.gameObject);
     self.transportPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
+end
+--货架购买暂用这个(后边修改物品上架，运输，购买)
+function GoodsUnifyMgr:_buyShelfGoods(id,luabehaviour,itemId)
+    local shelfGoodsData = {}
+    shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
+    local buyGoodsItem = BuyDetailsItem:new(self.items[id].uiData,shelfGoodsData._prefab,luabehaviour,self,id,itemId);
+
+    if not self.shelfBuyGoodslItems then
+        self.shelfBuyGoodslItems = {}
+    end
+    self.shelfBuyGoodslItems[id] = buyGoodsItem
+end
+--货架右侧删除购买
+function GoodsUnifyMgr:_deleteBuyGoods(id)
+    destroy(self.shelfBuyGoodslItems[id].prefab.gameObject);
+    self.shelfBuyGoodslItems[id] = nil;
+    ShelfCtrl.temporaryItems[id] = nil;
 end
 --货架删除
 function GoodsUnifyMgr:_deleteGoods(ins)

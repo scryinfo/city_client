@@ -1,3 +1,34 @@
+
+MaterialModel = class("MaterialModel",ModelBase)
+local pbl = pbl
+
+function MaterialModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
+end
+
+function MaterialModel:OnCreate()
+    --网络回调
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
+
+end
+
+function MaterialModel:Close()
+    --清空本地UI事件
+end
+--客户端请求--
+--打开原料厂
+function MaterialModel:m_ReqOpenMaterial(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
+end
+
+--服务器回调--
+--打开原料厂
+function MaterialModel:n_OnOpenMaterial(stream)
+    DataManager.ControllerRpcNoRet(self.insId,"MaterialCtrl", 'refreshMaterialDataInfo',stream)
+end
+
+--[[
 local pbl = pbl
 
 MaterialModel = {};
@@ -45,10 +76,13 @@ function MaterialModel.n_OnOpenMaterial(stream)
     end
     local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
     if msgMaterial then
-        MaterialModel.buildingId = msgMaterial.info.id
+        MaterialModel.dataDetailsInfo = msgMaterial;
+        MaterialModel.buildingId = msgMaterial.info.id;
         MaterialModel.materialWarehouse = msgMaterial.store.inHand;
-        MaterialModel.materialShelf = msgMaterial.shelf.good
-        MaterialModel.materialProductionLine = msgMaterial.line
-        MaterialModel.buildingCode = msgMaterial.info.mId
+        MaterialModel.materialShelf = msgMaterial.shelf.good;
+        MaterialModel.materialProductionLine = msgMaterial.line;
+        MaterialModel.buildingCode = msgMaterial.info.mId;
     end
+    Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
 end
+]]

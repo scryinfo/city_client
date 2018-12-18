@@ -161,7 +161,7 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
 --[[    ct.OpenCtrl('TransportBoxCtrl')]]
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
        -- ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",PlayerTempModel.roleData.buys.materialFactory[1].info.id)
-        Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
+        Event.Brocast("m_ReqTransport", PlayerTempModel.roleData.bagId, PlayerTempModel.roleData.buys.laboratory[1].info.id,v.itemId,v.inputText.text)
     end
     WareHouseGoodsMgr:ClearAll()
     itemId = {}

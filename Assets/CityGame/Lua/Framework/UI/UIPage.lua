@@ -64,7 +64,6 @@ end
 function UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
-    self.m_data = nil
 end
 
 function UIPage:Active()
@@ -251,7 +250,9 @@ function  UIPage:ShowPage(inClass,pageData)
 end
 
 function  UIPage:ShowPageInstance(pageInstance,pageData)
-    pageInstance.m_data = pageData;
+    if pageData then
+        pageInstance.m_data = pageData;
+    end
     if pageInstance.isAsync then
         pageInstance:Show(pageInstance.OnCreate)
     else

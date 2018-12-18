@@ -59,6 +59,9 @@ function LabBuildingInventionItem:_initData(data)
     self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
     if self.run then
         self.startTimeDown = true
+        self.timeDownText.transform.localScale = Vector3.one
+    else
+        self.timeDownText.transform.localScale = Vector3.zero
     end
 end
 --倒计时

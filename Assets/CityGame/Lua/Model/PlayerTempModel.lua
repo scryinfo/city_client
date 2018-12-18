@@ -23,7 +23,13 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2101001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then

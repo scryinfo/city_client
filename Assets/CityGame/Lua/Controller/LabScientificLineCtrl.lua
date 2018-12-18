@@ -60,7 +60,7 @@ function LabScientificLineCtrl:_initPanelData()
     LabScientificLineCtrl.static.researchItems = {}
     LabScientificLineCtrl.static.inventionItems = {}
     if self.m_data then
-        self.buildingId = self.m_data.buildingId
+        self.buildingId = self.m_data.insId
         LabScientificLineCtrl.static.buildingId = self.buildingId
     end
     LabScientificLinePanel.changeStaffCountBtn.transform.localScale = Vector3.zero

@@ -266,7 +266,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.m_data.insId == insId  then
+    if (tempController or tempController[modelMethord]) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -498,6 +498,11 @@ end
 --刷新自己所拥有商品科技等级
 function DataManager.GetMyGoodLv()
     return PersonDataStack.m_goodLv
+end
+
+--根据id查询等级
+function DataManager.GetMyGoodLvByItemId(itemId)
+    return PersonDataStack.m_goodLv[itemId]
 end
 
 --刷新自己所拥有商品科技等级

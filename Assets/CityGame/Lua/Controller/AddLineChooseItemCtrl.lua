@@ -54,8 +54,8 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
             self:Hide()
+            ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
         end)
 
         DataManager.DetailModelRpc(buildingId, 'm_GetResearchingItem', function (tables)
@@ -68,8 +68,8 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
             self:Hide()
+            ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
         end)
 
         DataManager.DetailModelRpc(buildingId, 'm_GetInventingItem', function (tables)
@@ -140,7 +140,9 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     if enableShow then
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.zero
         if LabScientificLineCtrl.static.type == 0 then
-            self.chooseResearchItemId = itemId
+            if itemId >= 2200000 then
+                self.chooseResearchItemId = itemId
+            end
         else
             self.chooseInventItemId = itemId
         end

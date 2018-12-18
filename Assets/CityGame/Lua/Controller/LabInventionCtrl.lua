@@ -29,8 +29,8 @@ function LabInventionCtrl:Awake(go)
         self:_inventeBtnClick()
     end, self)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
-        if LabScientificLineCtrl.static.buildingId and self.m_data.lineId then
-            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
+        if LabScientificLineCtrl.static.buildingId and self.m_data.id then
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
         end
     end)
     UpdateBeat:Add(self._update, self)

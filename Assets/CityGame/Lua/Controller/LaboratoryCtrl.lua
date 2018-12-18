@@ -52,7 +52,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId
     if not self.laboratoryToggleGroup then
         self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     else
-        self.laboratoryToggleGroup:updateData(self.m_data)
+        self.laboratoryToggleGroup:updateInfo(self.m_data)
     end
 end
 
@@ -72,8 +72,9 @@ function LaboratoryCtrl:_changeName(ins)
 end
 ---返回
 function LaboratoryCtrl:_backBtn(ins)
-    ins.laboratoryToggleGroup:cleanItems()
-    ins.laboratoryToggleGroup = nil
+    if ins.laboratoryToggleGroup then
+        ins.laboratoryToggleGroup:cleanItems()
+    end
     UIPage.ClosePage()
 end
 ---更改名字成功

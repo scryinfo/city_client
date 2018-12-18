@@ -37,8 +37,8 @@ function LabResearchCtrl:Awake(go)
         self:_researchBtnFunc()
     end)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
-        if LabScientificLineCtrl.static.buildingId and self.m_data.lineId then
-            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
+        if LabScientificLineCtrl.static.buildingId and self.m_data.id then
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
         end
     end)
     UpdateBeat:Add(self._update, self)
@@ -56,7 +56,7 @@ function LabResearchCtrl:_update()
     end
     if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec > 0 then
         self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        LabResearchPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
+        LabResearchPanel.progressWorkingImg.fillAmount = 1 - self.remainTime / self.m_data.phaseSec  --设置图片进度
 
         if self.remainTime <= 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
@@ -73,6 +73,14 @@ end
 function LabResearchCtrl:_initPanelData()
     self.m_data.type = 0
     self.remainTime = self.m_data.leftSec
+    local level = DataManager.GetMyGoodLvByItemId(self.m_data.itemId)
+    if not level then
+        return
+    end
+    LabResearchPanel.levelText.text = "Lv"..tostring(level)
+    if not self.m_data.phaseSec then
+        self.m_data.phaseSec = FormularConfig[self.m_data.itemId].phaseSec
+    end
     local formularItem = FormularConfig[self.m_data.itemId]
     if #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
@@ -103,7 +111,7 @@ function LabResearchCtrl:_initPanelData()
         end
     else
         self.backToCompose = false
-        if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
+        if self.m_data.run then    --如果还在倒计时，则正在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             self:_setResearchBtnState(LabResearchBtnState.Working)
         else
@@ -138,7 +146,7 @@ function LabResearchCtrl:_setResearchBtnState(state)
     end
 end
 --添加临时线，返回科技线
-function LabResearchCtrl:_creatTempLine(self)
+function LabResearchCtrl:_creatTempLine()
     local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()

@@ -30,7 +30,7 @@ function LabResearchLineItem:initialize(data, viewRect)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
-        self:_clickCollectBtn()
+        ct.OpenCtrl("LabResearchCtrl", self.data, self.viewRect)
     end)
     self.closeBtn.onClick:RemoveAllListeners()
     self.closeBtn.onClick:AddListener(function ()
@@ -52,9 +52,9 @@ function LabResearchLineItem:_initData(data)
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
+    self.formularData = FormularConfig[data.itemId]
     self.staffText.text = tostring(data.workerNum)
     self.levelText.text = data.lv
-    self.phaseSec = FormularConfig[data.itemId].phaseSec
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
     if not data.roll or data.roll <= 0 then
@@ -97,7 +97,7 @@ function LabResearchLineItem:_clickDeleteBtn()
     info.contentInfo = "Delete the advertisment?"
     info.tipInfo = "(The statistical data of brand will be reset!)"
     info.btnCallBack = function ()
-        Event.Brocast("")
+        Event.Brocast("m_ReqLabDeleteLine", self.data.id)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

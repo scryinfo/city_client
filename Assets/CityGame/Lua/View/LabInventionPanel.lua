@@ -54,12 +54,12 @@ function LabInventionPanel.setBulbState(state)
         this.timeDownText.text = ""
     elseif state == LabInventionBulbItemState.Working then
         this.emptyTextTran.localScale = Vector3.zero
-        this.workingImgRootTran.localScale = Vector3.zero
-        this.progressSuccessBtn.localScale = Vector3.one
-    elseif state == LabInventionBulbItemState.Finish then
-        this.emptyTextTran.localScale = Vector3.zero
         this.workingImgRootTran.localScale = Vector3.one
         this.progressSuccessBtn.localScale = Vector3.zero
+    elseif state == LabInventionBulbItemState.Finish then
+        this.emptyTextTran.localScale = Vector3.zero
+        this.workingImgRootTran.localScale = Vector3.zero
+        this.progressSuccessBtn.localScale = Vector3.one
     end
 end
 --显示填充线的信息

@@ -490,7 +490,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
     --如果已经存在则直接刷新数据，否则重新生成
     if self.labLineItem then
         local data = {}
-        data.buildingId = self.toggleData.insId
+        data.insId = self.toggleData.insId
         data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
         self.labLineItem:updateInfo(data)
@@ -501,7 +501,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
         end
 
         local data = {}
-        data.buildingId = self.toggleData.insId
+        data.insId = self.toggleData.insId
         data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
         self.labLineItem = LabBuildingLineItem:new(data, self.researchLineViewRect, self.mainPanelLuaBehaviour, researchLineToggleData, self)

@@ -14,7 +14,7 @@ function LabBuildingResearchItem:initialize(data, viewRect)
     self.levelText = viewTrans:Find("topRoot/levelText"):GetComponent("Text")
     self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
-    self.bottleImg = viewTrans:Find("mainRoot/right/bottleImg"):GetComponent("Image")
+    self.bottleImg = viewTrans:Find("mainRoot/progressRoot/right/bottleImg"):GetComponent("Image")
     self.progressSlider = viewTrans:Find("mainRoot/progressRoot/progressSlider"):GetComponent("Slider")
     self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/bg/timeDownText"):GetComponent("Text")
 
@@ -34,11 +34,15 @@ function LabBuildingResearchItem:_initData(data)
 
     if data.roll > 0 then
         self.bottleImg.color = Color.white
+        self.progressSlider.value = self.progressSlider.maxValue
     else
         self.bottleImg.color = getColorByVector3(LabBuildingResearchItem.static.NoRollColor)
     end
     if self.run then
         self.startTimeDown = true
+        self.timeDownText.transform.localScale = Vector3.one
+    else
+        self.timeDownText.transform.localScale = Vector3.zero
     end
 end
 --倒计时

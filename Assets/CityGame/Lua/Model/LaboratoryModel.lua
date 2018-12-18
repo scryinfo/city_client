@@ -15,22 +15,20 @@ end
 function LaboratoryModel:_addListener()
     --网络回调注册
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAdd","gs.Laboratory.Line",self.n_OnReceiveLabLineAdd)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineAddInform",self.n_OnReceiveLabLineAdd)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLaunchLine","gs.LabLaunchLine",self.n_OnReceiveLaunchLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineDel","gs.LabDelLine",self.n_OnReceiveDelLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.Laboratory.Line",self.n_OnReceiveLineChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","",self.n_OnReceiveLabRoll)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.Bool",self.n_OnReceiveLabRoll)
 
     --本地的回调注册
-    Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo)
-    Event.AddListener("m_ReqAddLine", self.m_ReqAddLine)
-    Event.AddListener("m_ReqLabLaunchLine", self.m_ReqLabLaunchLine)
-    Event.AddListener("m_ReqDeleteLine", self.m_ReqDeleteLine)
-    Event.AddListener("m_ReqSetWorkerNum", self.m_ReqSetWorkerNum)
-    Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll)
-
-    Event.AddListener("m_ReqLabStoreInfo", self.m_ReqLabRoll)
+    Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
+    Event.AddListener("m_ReqAddLine", self.m_ReqAddLine, self)
+    Event.AddListener("m_ReqLabLaunchLine", self.m_ReqLabLaunchLine, self)
+    Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
+    Event.AddListener("m_ReqSetWorkerNum", self.m_ReqSetWorkerNum, self)
+    Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll, self)
 end
 
 --- 客户端请求 ---
@@ -61,7 +59,7 @@ function LaboratoryModel:m_ReqLabLaunchLine(lineId, rollTarget)
     DataManager.ModelSendNetMes("gscode.OpCode", "labLaunchLine","gs.LabLaunchLine",lMsg)
 end
 --删除线
-function LaboratoryModel:m_ReqDeleteLine(lineId)
+function LaboratoryModel:m_ReqLabDeleteLine(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
     DataManager.ModelSendNetMes("gscode.OpCode", "labLineDel","gs.LabDelLine",lMsg)
 end
@@ -102,7 +100,8 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info.mId, data.info.ownerId)
 end
 --添加研究发明线
-function LaboratoryModel:n_OnReceiveLabLineAdd(data)
+function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
+    local data = lineData.line
     --先删除临时线
     self:m_DelTempLineData(data)
 
@@ -111,7 +110,7 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(data)
         self.hashLineData[data.id] = data
     end
     self.remainWorker = self.remainWorker - data.workerNum
-    self:m_ReqLabLaunchLine(self.insId, data.id, self.tempLine.rollTarget)
+    self:m_ReqLabLaunchLine(data.id, self.tempLine.rollTarget or 1)
 end
 --开工
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
@@ -121,9 +120,9 @@ function LaboratoryModel:n_OnReceiveLaunchLine(data)
     self.tempLine = nil
     self:_getScientificLine()
     if self.hashLineData[data.lineId].type == 0 then
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', 0, self.researchLines)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
     else
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', 1, self.inventionLines)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
 --删除line
@@ -143,9 +142,9 @@ function LaboratoryModel:n_OnReceiveDelLine(data)
     end
     self:_getScientificLine()
     if type == 0 then
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', type, self.researchLines)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
     else
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', type, self.inventionLines)
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
 --更新某条线的具体数据

@@ -18,13 +18,12 @@ function LaboratoryModel:_addListener()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineAddInform",self.n_OnReceiveLabLineAdd)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLaunchLine","gs.LabLaunchLine",self.n_OnReceiveLaunchLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineDel","gs.LabDelLine",self.n_OnReceiveDelLine)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.Laboratory.Line",self.n_OnReceiveLineChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.labLineAddInform",self.n_OnReceiveLineChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.Bool",self.n_OnReceiveLabRoll)
 
     --本地的回调注册
     Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
-    Event.AddListener("m_ReqAddLine", self.m_ReqAddLine, self)
+    Event.AddListener("m_ReqLabAddLine", self.m_ReqAddLine, self)
     Event.AddListener("m_ReqLabLaunchLine", self.m_ReqLabLaunchLine, self)
     Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
     Event.AddListener("m_ReqSetWorkerNum", self.m_ReqSetWorkerNum, self)
@@ -164,14 +163,14 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
 end
 --发明成功  --用来更新玩家数据
 function LaboratoryModel:n_OnReceiveNewItem(data)
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', data)
-end
---roll
-function LaboratoryModel:n_OnReceiveLabRoll(data)
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', data)
+    DataManager.SetMyGoodLv(data)
 end
 
 ---本地消息---
+--主界面获取建筑详情
+function LaboratoryModel:m_ReqLaboratoryCurrentInfo()
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, self.info.mId, self.info.ownerId)
+end
 --根据id获取库存量 --传入单个itemId
 function LaboratoryModel:m_GetItemStoreCount(itemId)
     return self.store[itemId] or 0
@@ -231,13 +230,11 @@ function LaboratoryModel:m_DelTempLineData(data)
             ct.log("", "错误错误错误")
         end
         table.remove(self.researchLines, 1)
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
     else
         if self.inventionLines[1].lineId then
             ct.log("", "错误错误错误")
         end
         table.remove(self.inventionLines, 1)
-        --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
 --获取正在发明的item

@@ -94,7 +94,7 @@ end
 function LabResearchLineItem:_clickDeleteBtn()
     local info = {}
     info.titleInfo = "WARNING"
-    info.contentInfo = "Delete the advertisment?"
+    info.contentInfo = "Delete the researchLine?"
     info.tipInfo = "(The statistical data of brand will be reset!)"
     info.btnCallBack = function ()
         Event.Brocast("m_ReqLabDeleteLine", self.data.id)

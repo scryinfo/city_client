@@ -655,6 +655,9 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
+
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
+
 end
 --清除所有消息回调
 local function ClearEvents()
@@ -791,6 +794,18 @@ end
 function DataManager.n_OnReceivePlayerInfo(stream)
     local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
+end
+
+--研究所Roll失败信息
+function DataManager.n_OnReceiveLabRoll(stream)
+    local data = assert(pbl.decode("gs.Bool", stream), "DataManager.n_OnReceiveLabRoll: stream == nil")
+    if not data then
+        local info = {}
+        info.titleInfo = "FAIL"
+        info.contentInfo = "Roll Fail"
+        info.tipInfo = ""
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+    end
 end
 ----------
 

@@ -30,13 +30,19 @@ end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function LaboratoryCtrl:_initData()
-    if self.m_data then
-        DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+    if self.hasOpened then
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryCurrentInfo')
+    else
+        if self.m_data then
+            DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+        end
     end
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId)
+    self.hasOpened = true
+
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[mId].sizeName..PlayerBuildingBaseData[mId].typeName
     self.m_data.ownerId = ownerId
     self.m_data.mId = mId
@@ -75,6 +81,8 @@ function LaboratoryCtrl:_backBtn(ins)
     if ins.laboratoryToggleGroup then
         ins.laboratoryToggleGroup:cleanItems()
     end
+    --关闭界面时再发一遍详情
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
     UIPage.ClosePage()
 end
 ---更改名字成功

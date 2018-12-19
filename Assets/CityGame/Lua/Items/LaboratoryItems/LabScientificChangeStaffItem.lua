@@ -53,7 +53,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     self.okBtn.onClick:AddListener(function ()
         local workerNum = self.staffSlider.value
         if workerNum > 0 then
-            DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase)
+            DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqLabAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase)
             self:_hideSelf()
         end
     end)

@@ -1,11 +1,12 @@
 SmallProductionLineItem = class('SmallProductionLineItem')
 
 --初始化方法
-function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i)
+function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i,buildingId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
+    self.buildingId = buildingId;
     self.companyNameText = self.prefab.transform:Find("Top/companyNameText"):GetComponent("Text");  --品牌名字
     self.modificationBtn = self.prefab.transform:Find("Top/modificationBtn");  --修改名字
     self.minText = self.prefab.transform:Find("Top/minText"):GetComponent("Text");  --没分钟多少个
@@ -69,7 +70,7 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqDeleteLine",MaterialModel.buildingId,go.lineId)
+    Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
     go.manager:_deleteProductionLine(go)
 end
 --刷新滑动条

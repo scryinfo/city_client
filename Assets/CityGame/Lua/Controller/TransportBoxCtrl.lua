@@ -24,7 +24,21 @@ function TransportBoxCtrl:Awake(go)
     self.gameObject = go;
 end
 
+function TransportBoxCtrl:Refresh()
+    if self.m_data == nil then
+        return;
+    end
+    TransportBoxPanel.fromName.text = self.m_data.currentLocationName;
+    TransportBoxPanel.targetName.text = self.m_data.targetLocationName;
+    TransportBoxPanel.distanceText.text = self.m_data.distance;
+    TransportBoxPanel.timeText.text = self.m_data.time;
+    TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice;
+    TransportBoxPanel.transportMoney.text = "E"..self.m_data.freight;
+    TransportBoxPanel.totalMoney.text = "E"..self.m_data.total;
+end
+
 function TransportBoxCtrl:OnClick_closeBtn(obj)
+    obj.m_data = nil;
     obj:Hide();
 end
 function TransportBoxCtrl:OnClick_confirmBtn(obj)
@@ -36,9 +50,4 @@ function TransportBoxCtrl:OnClick_confirmBtn(obj)
     CenterWareHousePanel.transportConfirm:SetActive(true);
     CenterWareHousePanel.nameText.text = nil;
     obj:Hide();
-
-end
-
-function TransportBoxCtrl:Refresh()
-
 end

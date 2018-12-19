@@ -78,7 +78,7 @@ function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
 
-        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i,self.state)
+        local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i,self.state,buildingData.info.id)
         if not self.items then
             self.items = {}
         end
@@ -96,7 +96,8 @@ end
 function GoodsUnifyMgr:_creatProductionItem()
     local configTable = {}
     for i,v in pairs(Material) do
-        local key = 2151
+        --原料类型分类
+        local key = 2101
         if math.floor(i / 1000) == key then
             local productionItemInfo = {}
             productionItemInfo.itemId = Material[i].itemId
@@ -158,7 +159,7 @@ function GoodsUnifyMgr:_getProductionLine(table,behaviour)
         prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.materialProductionPrefab[i] = prefabData
 
-        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[i].uiData,prefabData._prefab,behaviour,self,i);
+        local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[i].uiData,prefabData._prefab,behaviour,self,i,table.info.id);
         AdjustProductionLineCtrl.materialProductionLine[i] = productionLineItem
     end
 end
@@ -218,7 +219,7 @@ end
 function GoodsUnifyMgr:_buyShelfGoods(id,luabehaviour,itemId)
     local shelfGoodsData = {}
     shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
-    local buyGoodsItem = BuyDetailsItem:new(self.items[id].uiData,shelfGoodsData._prefab,luabehaviour,self,id,itemId);
+    local buyGoodsItem = BuyDetailsItem:new(self.items[id].goodsDataInfo,shelfGoodsData._prefab,luabehaviour,self,id,itemId);
 
     if not self.shelfBuyGoodslItems then
         self.shelfBuyGoodslItems = {}

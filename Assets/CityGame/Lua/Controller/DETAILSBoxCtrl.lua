@@ -50,8 +50,8 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
 
     if number ~= ins.uiInfo.number and price ~= ins.uiInfo.price then
         local num = ins.uiInfo.number - number
-        Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,ins.itemId,num)
-        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,ins.itemId,number,price);
+        Event.Brocast("m_ReqShelfDel",self.obj.buildingId,ins.itemId,num)
+        Event.Brocast("m_ReqModifyShelf",self.obj.buildingId,ins.itemId,number,price);
         ins:Hide();
         Event.Brocast("SmallPop","修改成功",300)
         return;
@@ -62,13 +62,13 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
     end
     if number ~= ins.uiInfo.number and price == ins.uiInfo.price then
         local num = ins.uiInfo.number - number
-        Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,ins.itemId,num)
+        Event.Brocast("m_ReqShelfDel",self.obj.buildingId,ins.itemId,num)
         ins:Hide();
         Event.Brocast("SmallPop","数量修改成功",300)
         return;
     end
     if number == ins.uiInfo.number and price ~= ins.uiInfo.price then
-        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,ins.itemId,number,price);
+        Event.Brocast("m_ReqModifyShelf",self.obj.buildingId,ins.itemId,number,price);
         ins:Hide();
         Event.Brocast("SmallPop","价格修改成功",300)
         return;

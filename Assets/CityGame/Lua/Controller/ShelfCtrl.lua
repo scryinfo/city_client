@@ -27,10 +27,11 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.addBtn,self.OnClick_createGoods, self);
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
+    shelf:AddClick(ShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
 
     --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
-    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods,self);
+    Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
 end
 
 function ShelfCtrl:Awake(go)
@@ -92,10 +93,30 @@ function ShelfCtrl:_selectedBuyGoods(id,itemId)
     end
 end
 --临时表里是否有这个物品
-function ShelfCtrl:c_temporaryifNotGoods(id)
+function ShelfCtrl:c_tempTabNotGoods(id)
     self.temporaryItems[id] = nil
     self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
     self.GoodsUnifyMgr:_deleteBuyGoods(id);
+end
+--购买物品
+function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+    if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
+        return;
+    else
+        local buyListing = {}
+        buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
+        buyListing.targetLocationName = "中心仓库";
+        buyListing.distance = "0km";
+        buyListing.time = "00:00:00";
+        local price = 0;
+        for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+            price = price + tonumber(v.moneyText.text);
+        end
+        buyListing.goodsPrice = price;
+        buyListing.freight = "0";
+        buyListing.total = price;
+        ct.OpenCtrl("TransportBoxCtrl",buyListing);
+    end
 end
 
 function ShelfCtrl:OnClick_return_Btn(go)
@@ -212,15 +233,15 @@ function ShelfCtrl:_getSortItems(type,sortingTable)
         end
     end
 end
---生成预制
-function ShelfCtrl:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
-end
+----生成预制
+--function ShelfCtrl:_creatGoods(path,parent)
+--    local prefab = UnityEngine.Resources.Load(path);
+--    local go = UnityEngine.GameObject.Instantiate(prefab);
+--    local rect = go.transform:GetComponent("RectTransform");
+--    go.transform:SetParent(parent.transform);
+--    rect.transform.localScale = Vector3.one;
+--    return go
+--end
 --关闭面板时清空UI信息，以备其他模块调用
 function ShelfCtrl:deleteObjInfo()
     if not self.GoodsUnifyMgr.items then

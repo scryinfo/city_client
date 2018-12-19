@@ -24,6 +24,7 @@ function ChooseWarehousePanel.InitPanel()
     this.faceImg = transform:Find("Left/mine/FriendsLineItem/face");
     this.nameText = transform:Find("Left/mine/FriendsLineItem/name");
     this.boxImg = transform:Find("Left/mine/FriendsLineItem/box").gameObject;
+    this.bgBtn = transform:Find("Left/mine/FriendsLineItem/bg");
     --Addresslist  ScrollView
     this.leftcontent = transform:Find("Left/ScrollView/Viewport/Content");
     --Right  ScrollView

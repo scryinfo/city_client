@@ -15,19 +15,40 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,it
     self.moneyText = self.prefab.transform:Find("buttombg/moneyImg/moneyText"):GetComponent("Text");
     self.closeBtn = self.prefab.transform:Find("closeBtn");
 
+    self.nameText.text = self.goodsDataInfo.name;
+    self.inputNumber.text = 0;
+    self.numberScrollbar.maxValue = self.goodsDataInfo.number;
+    self.numberScrollbar.value = 0;
+    self.moneyText.text = 0;
 
     --点击事件
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_closeBtn,self);
+
+    self.numberScrollbar.onValueChanged:AddListener(function()
+        self:scrollbarInfo();
+    end);
+    self.inputNumber.onValueChanged:AddListener(function()
+        self:inputInfo();
+    end);
 end
 --删除
 function BuyDetailsItem:OnClick_closeBtn(ins)
-    Event.Brocast("c_temporaryifNotGoods",ins.id);
+    Event.Brocast("c_tempTabNotGoods",ins.id);
 end
 --刷新滑动条
 function BuyDetailsItem:scrollbarInfo()
-
+    local number = self.numberScrollbar.value;
+    self.inputNumber.text = number;
+    self.moneyText.text = number * self.goodsDataInfo.price;
 end
 --刷新输入框
 function BuyDetailsItem:inputInfo()
-
+    local number = self.inputNumber.text;
+    if number ~= "" then
+        self.numberScrollbar.value = number;
+        self.moneyText.text = number * self.goodsDataInfo.price;
+    else
+        self.numberScrollbar.value = 0;
+        self.moneyText.text = 0;
+    end
 end

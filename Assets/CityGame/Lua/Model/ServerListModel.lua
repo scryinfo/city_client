@@ -142,6 +142,8 @@ function ServerListModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
+        ServerListModel.bagId = pMsg.bagId
+        ServerListModel.bagHand = pMsg.bag.inHand
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")
         Event.Brocast("c_GsLoginSuccess");
         Event.Brocast("c_RoleLoginDataInit",pMsg);

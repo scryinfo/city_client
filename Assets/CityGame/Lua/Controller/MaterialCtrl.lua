@@ -37,6 +37,7 @@ end
 --刷新原料厂信息
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true

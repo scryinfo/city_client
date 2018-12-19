@@ -72,7 +72,8 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     --读取服务器发过来的信息，是否有生产线
     GoodsUnifyMgr:_getProductionLine(self.data,adjustLine)
-    Event.Brocast("refreshTime",self.data.dataTab)
+    self:refreshTime(self.data.line)
+    --Event.Brocast("refreshTime",self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 
     self:refreshWorkerNum()
@@ -80,7 +81,6 @@ function AdjustProductionLineCtrl:Refresh()
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
-
     go:deleteObjInfo()
     UIPage.ClosePage();
 end
@@ -92,9 +92,9 @@ end
 
 --计算一条生产线总时间
 function AdjustProductionLineCtrl:calculateTime(msg)
-    local time = 1 / Material[msg.itemId].numOneSec / msg.workerNum * msg.targetCount
+    local time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
     local timeTab = getTimeString(time)
-    GoodsUnifyMgr.sendInfoTempTab[msg.itemId].timeText.text = timeTab
+    GoodsUnifyMgr.sendInfoTempTab[msg.line.itemId].timeText.text = timeTab
     GoodsUnifyMgr.sendInfoTempTab = nil
 end
 
@@ -162,7 +162,7 @@ function AdjustProductionLineCtrl:refreshWorkerNum()
 end
 --添加生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshIdleWorkerNum(msg)
-    self.idleWorkerNum = self.idleWorkerNum - msg.workerNum
+    self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 --读取生产线，初始化时间

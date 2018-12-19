@@ -1,13 +1,14 @@
 ShelfGoodsItem = class('ShelfGoodsItem')
 
 --初始化方法   数据（接受服务器）
-function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,state)
-    self.prefab = prefab;
-    self.goodsDataInfo = goodsDataInfo;
-    self.state = state
-    self._luabehaviour = inluabehaviour
-    self.manager = mgr
+function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,state,buildingId)
     self.id = id
+    self.manager = mgr
+    self.state = state
+    self.prefab = prefab;
+    self.buildingId = buildingId
+    self.goodsDataInfo = goodsDataInfo;
+    self._luabehaviour = inluabehaviour
     self.itemId = goodsDataInfo.itemId
     self.num = goodsDataInfo.number
     self.name = goodsDataInfo.name
@@ -71,7 +72,7 @@ function ShelfGoodsItem:OnClick_bgBtn(ins)
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
     Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
 end
@@ -96,8 +97,8 @@ function ShelfGoodsItem:RefreshData(data,id)
     self.id = id
     self.num = data.num
     self.name = data.name
-    self.itemId = data.itemId
     self.price = data.price
+    self.itemId = data.itemId
     --self.producerId = data.producerId
     --self.qty = data.qty
 end

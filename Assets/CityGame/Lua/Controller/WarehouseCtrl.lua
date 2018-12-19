@@ -60,6 +60,7 @@ function WarehouseCtrl:Refresh()
 
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     if self.m_data.buildingType == BuildingType.MaterialFactory then
+        WarehouseCtrl.playerId = self.m_data.info.id
         self.luabehaviour = warehouse
         self.m_data.type = BuildingInType.Warehouse
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
@@ -189,8 +190,9 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     if not go.GoodsUnifyMgr.transportPanelItem then
         return;
     end
+    --local targetBuildingId = DataManager.GetMyOwnerID()
     for i,v in pairs(go.GoodsUnifyMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",go.m_data.info.id,PlayerTempModel.roleData.bagId,v.itemId,v.inputNumber.text)
+        Event.Brocast("m_ReqTransport",go.m_data.info.id,ServerListModel.bagId,v.itemId,v.inputNumber.text)
     end
 end
 --运输回调执行

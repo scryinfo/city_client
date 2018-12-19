@@ -11,7 +11,7 @@ WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
---WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
+WareHouseGoodsMgr.static.Line_PATH = "View/GoodsItem/ChooseLineItem";
 
 function WareHouseGoodsMgr:initialize()
 
@@ -24,10 +24,10 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if PlayerTempModel.roleData.bag.inHand == nil then
+    if ServerListModel.bagHand == nil then
         return
     end
-    for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
+    for i, v in pairs(ServerListModel.bagHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.number = v.n
@@ -47,6 +47,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
+       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -88,9 +89,21 @@ function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(data)
+function WareHouseGoodsMgr:_creatLinePanel()
     --local line_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-
+    local buysBuildings = DataManager.GetMyAllBuildingDetail()
+    for i, v in pairs(buysBuildings) do
+        for k, z in pairs(v) do
+            if z.store ~= nil then
+                local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self.AddressListIns,self,z)
+                if not self.ipaItems then
+                    self.ipaItems = {}
+                end
+                self.ipaItems[i] = LinePaneltLuaItem
+            end
+        end
+    end
 
 end
 

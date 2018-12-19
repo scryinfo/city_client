@@ -444,6 +444,15 @@ function  DataManager.InitPersonDatas(tempData)
     if  PersonDataStack.m_blacklist == nil then
         PersonDataStack.m_blacklist = {}
     end
+
+    PersonDataStack.socialityManager = SocialityManager:new()
+    if tempData.friends then
+        for _, value in pairs(tempData.friends) do
+            if value.id and value.b ~= nil then
+                DataManager.SetMyFriends(value)
+            end
+        end
+    end
 end
 
 --修改自己所拥有土地集合
@@ -510,37 +519,38 @@ end
 
 --获取自己好友信息
 function DataManager.GetMyFriends()
-    return PersonDataStack.m_friends
+    --return PersonDataStack.m_friends
+    return PersonDataStack.socialityManager:GetMyFriends()
 end
 
 --刷新自己好友信息
 --参数： tempData==>  ByteBool
 --如果需要删除好友，ByteBool={ id = "XXXXXXXX",b = nil }
 function DataManager.SetMyFriends(tempData)
-    if tempData.id then
-        PersonDataStack.m_friends[tempData.id] = tempData.b
-    end
+    PersonDataStack.socialityManager:SetMyFriends(tempData)
 end
 
 --获取自己好友详细信息
 function DataManager.GetMyFriendsInfo()
-    return PersonDataStack.m_friendsInfo
+    return PersonDataStack.socialityManager:GetMyFriendsInfo()
 end
 
 --刷新自己好友详细信息
 --参数： tempData==>  RoleInfo
 --如果需要删除好友，ByteBool={ id = "XXXXXXXX",name = nil }
 function DataManager.SetMyFriendsInfo(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_friendsInfo, tempData)
-    elseif tempData.id and not tempData.name then
-        for i, v in ipairs(PersonDataStack.m_friendsInfo) do
-            if v.id == tempData.id then
-                table.remove(PersonDataStack.m_friendsInfo, i)
-                break
-            end
-        end
-    end
+    --if tempData.id and tempData.name then
+    --    table.insert(PersonDataStack.m_friendsInfo, tempData)
+    --elseif tempData.id and not tempData.name then
+    --    for i, v in ipairs(PersonDataStack.m_friendsInfo) do
+    --        if v.id == tempData.id then
+    --            table.remove(PersonDataStack.m_friendsInfo, i)
+    --            break
+    --        end
+    --    end
+    --end
+
+    PersonDataStack.socialityManager:SetMyFriendsInfo(tempData)
 end
 
 --获取自己好友申请信息
@@ -578,6 +588,16 @@ function DataManager.SetMyBlacklist(tempData)
             end
         end
     end
+end
+
+-- 获取聊天消息
+function DataManager.GetMyChatInfo()
+    return PersonDataStack.socialityManager:GetMyChatInfo()
+end
+
+-- 刷新聊天消息
+function DataManager.SetMyChatInfo(tempData)
+    PersonDataStack.socialityManager:SetMyChatInfo(tempData)
 end
 
 --获取自己所有的建筑详情
@@ -650,6 +670,8 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
 end
 --清除所有消息回调
 local function ClearEvents()
@@ -785,7 +807,22 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
     local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
-    Event.Brocast("c_OnReceivePlayerInfo", playerData)
+    for _, v in ipairs(playerData.info) do
+        DataManager.SetMyFriendsInfo(v)
+    end
+    Event.Brocast("c_OnReceivePlayerInfo")
+end
+
+-- 收到服务器的聊天消息
+function DataManager.n_OnReceiveRoleCommunication(stream)
+    local chatData = assert(pbl.decode("gs.CommunicationProces", stream), "ChatModel.n_OnReceiveRoleCommunication: stream == nil")
+    DataManager.SetMyChatInfo(chatData)
+    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+end
+
+-- 好友在线状态刷新
+function DataManager.n_OnReceiveRoleStatusChange(stream)
+    local roleData = assert(pbl.decode("gs.roleStatusChange", stream), "ChatModel.n_OnReceiveRoleCommunication: stream == nil")
+    DataManager.SetMyFriends(roleData)
 end
 ----------
-

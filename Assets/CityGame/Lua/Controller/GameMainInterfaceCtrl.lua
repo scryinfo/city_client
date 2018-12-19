@@ -30,8 +30,10 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
 
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -59,7 +61,7 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
-    ct.OpenCtrl("ChatCtrl")
+    ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
 --好友--
@@ -74,6 +76,23 @@ function GameMainInterfaceCtrl._showFriendsNotice()
 end
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
     self._showFriendsNotice()
+end
+
+function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
+    if chatData.channel == "WORLD" then
+        if GameMainInterfacePanel.worldChatContent.childCount >= 5 then
+            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 4 do
+                UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
+            end
+        end
+
+        local prefab = UnityEngine.GameObject.Instantiate(UnityEngine.Resources.Load("View/Chat/ChatWorldItem"))
+        local rect = prefab.transform:GetComponent("RectTransform")
+        prefab.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+        rect.transform.localScale = Vector3.one
+
+        local chatWorldItem = ChatWorldItem:new(prefab, chatData)
+    end
 end
 
 --设置--

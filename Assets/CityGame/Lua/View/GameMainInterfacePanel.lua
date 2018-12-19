@@ -31,6 +31,8 @@ function GameMainInterfacePanel.InitPanel()
 
     this.bonusPoolText = transform:Find("RightUpPanel/BonusPool/BonusPoolText").gameObject;--奖金池--
     this.messageText = transform:Find("RightUpPanel/Message/MessageText").gameObject;--信息--
+    this.worldChatPanel = transform:Find("RightUpPanel/WorldChatPanel").gameObject;--世界聊天--
+    this.worldChatContent = transform:Find("RightUpPanel/WorldChatPanel/Content")--世界内容--
 
     this.exchangeButton = transform:Find("DownCreatePanel/ExchangeButton").gameObject;--交易所--
     this.houseButton = transform:Find("DownCreatePanel/HouseButton").gameObject;--住宅--

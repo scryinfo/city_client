@@ -93,6 +93,10 @@ function LabScientificLineCtrl:_inventionLineOpen()
 
     self:onReceiveLabInventionData(self.inventionDatas)
 end
+--更新界面员工数
+function LabScientificLineCtrl:_updateWorker(remainWorker, maxWorkerNum)
+    LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, maxWorkerNum)
+end
 
 ---滑动复用
 --研究

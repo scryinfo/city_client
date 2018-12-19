@@ -42,7 +42,6 @@ end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId)
     self.hasOpened = true
-
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[mId].sizeName..PlayerBuildingBaseData[mId].typeName
     self.m_data.ownerId = ownerId
     self.m_data.mId = mId
@@ -55,7 +54,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId
         LaboratoryPanel.changeNameBtn.localScale = Vector3.one
     end
     self.m_data.buildingType = BuildingType.Laboratory
-    if not self.laboratoryToggleGroup then
+    if self.laboratoryToggleGroup == nil then
         self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
     else
         self.laboratoryToggleGroup:updateInfo(self.m_data)
@@ -78,11 +77,11 @@ function LaboratoryCtrl:_changeName(ins)
 end
 ---返回
 function LaboratoryCtrl:_backBtn(ins)
-    if ins.laboratoryToggleGroup then
+    if ins.laboratoryToggleGroup ~= nil then
         ins.laboratoryToggleGroup:cleanItems()
     end
     --关闭界面时再发一遍详情
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo')
     UIPage.ClosePage()
 end
 ---更改名字成功

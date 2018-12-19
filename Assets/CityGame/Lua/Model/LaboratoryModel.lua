@@ -23,7 +23,7 @@ function LaboratoryModel:_addListener()
 
     --本地的回调注册
     Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
-    Event.AddListener("m_ReqLabAddLine", self.m_ReqAddLine, self)
+    Event.AddListener("m_ReqLabAddLine", self.m_ReqLabAddLine, self)
     Event.AddListener("m_ReqLabLaunchLine", self.m_ReqLabLaunchLine, self)
     Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
     Event.AddListener("m_ReqSetWorkerNum", self.m_ReqSetWorkerNum, self)
@@ -36,7 +36,7 @@ function LaboratoryModel:m_ReqLaboratoryDetailInfo()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})
 end
 --添加线
-function LaboratoryModel:m_ReqAddLine(itemId, type, workerNum, rollTarget)
+function LaboratoryModel:m_ReqLabAddLine(itemId, type, workerNum, rollTarget)
     --记录一个临时的线
     self.tempLine = { itemId = itemId, type = type, workerNum = workerNum, phase = rollTarget}
 
@@ -77,12 +77,12 @@ end
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.info = data.info
-
     self.hashLineData = {}  --以lineId为key存储所有的线的信息
     self.orderLineData = {}  --由创建时间排序的所有line信息
     self.remainWorker = 0
     if data.line then
         for i, lineInfo in pairs(data.line) do
+            lineInfo.finishTime = lineInfo.leftSec + os.time()  --计算结束时间
             self.hashLineData[lineInfo.id] = lineInfo
             self.orderLineData[#self.orderLineData + 1] = lineInfo
         end
@@ -109,12 +109,15 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
         self.hashLineData[data.id] = data
     end
     self.remainWorker = self.remainWorker - data.workerNum
+
     self:m_ReqLabLaunchLine(data.id, self.tempLine.rollTarget or 1)
+    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)
 end
 --开工
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
     self.hashLineData[data.lineId].run = true
     self.hashLineData[data.lineId].rollTarget = data.phase
+    self.hashLineData[data.lineId].finishTime = self.hashLineData[data.lineId].leftSec + os.time()  --计算结束时间
 
     self.tempLine = nil
     self:_getScientificLine()
@@ -129,6 +132,9 @@ function LaboratoryModel:n_OnReceiveDelLine(data)
     local type
     if self.hashLineData[data.lineId] then
         type = self.hashLineData[data.lineId].type
+        self.remainWorker = self.remainWorker + self.hashLineData[data.lineId].workerNum
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)  --刷新员工数
+
         self.hashLineData[data.lineId] = nil
     else
         ct.log("cycle_w15_laboratory03", "不存在线但是请求删除")
@@ -153,6 +159,7 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
     if line then
         line.lv = data.lv
         line.leftSec = data.leftSec
+        line.finishTime = data.leftSec + os.time()
         line.phase = data.phase
         line.run = data.run
         line.roll = data.roll
@@ -161,7 +168,7 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
         ct.log("", "找不到对应lineId的线路")
     end
 end
---发明成功  --用来更新玩家数据
+--发明研究成功  --用来更新玩家数据
 function LaboratoryModel:n_OnReceiveNewItem(data)
     DataManager.SetMyGoodLv(data)
 end

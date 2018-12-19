@@ -23,7 +23,7 @@ function LabBuildingInventionItem:initialize(data, viewRect)
 end
 function LabBuildingInventionItem:_initData(data)
     self.data = data
-    self.leftSec = self.data.leftSec
+    --self.leftSec = self.data.leftSec
     local itemInfo = Material[data.itemId]
     if not itemInfo then
         itemInfo = Good[data.itemId]
@@ -59,23 +59,48 @@ function LabBuildingInventionItem:_initData(data)
     self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
     if self.run then
         self.startTimeDown = true
+        self.currentTime = os.time()
         self.timeDownText.transform.localScale = Vector3.one
     else
+        self.startTimeDown = false
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
 --倒计时
 function LabBuildingInventionItem:_update()
     if self.startTimeDown then
-        self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
-            self.progressSlider.value = self.formularData.phaseSec
+            self.progressSlider.value = 1
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
             return
         end
-        local timeTable = getTimeBySec(self.leftSec)
+
+        local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        self.progressSlider.value = self.formularData.phaseSec - self.leftSec
+        self.progressSlider.value = self.currentTime / self.data.finishTime
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressSlider.value = 1
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
+            return
+        end
+
+        --self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
+        --if self.leftSec < 0 then
+        --    self.startTimeDown = false
+        --    self.progressSlider.value = self.formularData.phaseSec
+        --    return
+        --end
+        --local timeTable = getTimeBySec(self.leftSec)
+        --local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        --self.timeDownText.text = timeStr
+        --self.progressSlider.value = self.formularData.phaseSec - self.leftSec
     end
 end

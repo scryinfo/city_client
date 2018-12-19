@@ -39,6 +39,7 @@ function AdvertisementPosPanel.InitPanel()
     this.adAllday="0"
 
     --他人进入
+    this.manageText=transform:Find("leftRoot/manage/head/Text"):GetComponent("Text")
     this.buyGo=transform:Find("rightRoot/Buy")
     this.confirmBtn1=transform:Find("rightRoot/Buy/okBtn");
     this.numInp=transform:Find("rightRoot/Buy/body/quantity/numInput"):GetComponent("InputField")
@@ -49,7 +50,9 @@ function AdvertisementPosPanel.InitPanel()
     this.dotText=transform:Find("rightRoot/Buy/body/dot/NUMBER"):GetComponent("Text")
     this.totalText=transform:Find("rightRoot/Buy/body/total/NUMBER"):GetComponent("Text")
 
-
+    this.hasPos=this.manageBtn.parent:GetComponent("RectTransform").anchoredPosition
+    local temp=Vector2.New(this.hasPos.x,this.hasPos.y+145)
+    this.noPos=temp
 end
 --数据初始化
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)

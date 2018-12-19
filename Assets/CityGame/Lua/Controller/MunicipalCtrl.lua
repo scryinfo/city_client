@@ -50,14 +50,14 @@ function MunicipalCtrl:Awake(go)
 
 end
 
-    --更改名字
-    function MunicipalCtrl:OnClick_changeName()
-    local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    UIPage:ShowPage(InputDialogPageCtrl, data)
-    end
+--更改名字
+function MunicipalCtrl:OnClick_changeName()
+local data = {}
+data.titleInfo = "RENAME";
+data.tipInfo = "Modified every seven days";
+data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+UIPage:ShowPage(InputDialogPageCtrl, data)
+end
 
 --返回
 function MunicipalCtrl:OnClick_backBtn()
@@ -71,7 +71,11 @@ end
 
 function MunicipalCtrl:Refresh()
     Event.Brocast("c_TicketValueChange")
-
+    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then
+        MunicipalPanel.changeNameBtn.localScale=Vector3.zero
+    else
+        MunicipalPanel.changeNameBtn.localScale=Vector3.one
+    end
 end
 
 

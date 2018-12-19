@@ -28,30 +28,43 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
             return
         end
         if self.warehouseData.buildingType == BuildingType.MaterialFactory then
-            local data = {}
-            data.dataTab = MaterialModel.materialWarehouse
-            data.buildingType = BuildingType.MaterialFactory
-            ct.OpenCtrl("WarehouseCtrl",data)
+            --local data = {}
+            --data.dataTab = MaterialModel.materialWarehouse
+            --data.buildingType = BuildingType.MaterialFactory
+            ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
         elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory  then
-            local data = {}
-            data.dataTab = ProcessingModel.processingWarehouse
-            data.buildingType = BuildingType.ProcessingFactory
-            ct.OpenCtrl("WarehouseCtrl",data)
+            --local data = {}
+            --data.dataTab = ProcessingModel.processingWarehouse
+            --data.buildingType = BuildingType.ProcessingFactory
+            ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
         end
     end);
     if self.warehouseData.buildingType == BuildingType.MaterialFactory then
-        self.sizeSlider.maxValue = PlayerBuildingBaseData[MaterialModel.buildingCode].storeCapacity;
-        self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(MaterialModel.materialWarehouse);
+        self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
+        self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
         self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
     elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
-        self.sizeSlider.maxValue = PlayerBuildingBaseData[ProcessingModel.buildingCode].storeCapacity;
-        self.sizeSlider.value = WarehouseCtrl:getWarehouseCapacity(ProcessingModel.processingWarehouse);
+        self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
+        self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
         self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
     end
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+end
+
+function WarehouseRateItem:getWarehouseCapacity(table)
+    local warehouseCapacity = 0
+    if not table.inHand then
+        warehouseCapacity = 0
+        return warehouseCapacity;
+    else
+        for k,v in pairs(table.inHand) do
+            warehouseCapacity = warehouseCapacity + v.n
+        end
+        return warehouseCapacity
+    end
 end
 
 --获取是第几个点击了

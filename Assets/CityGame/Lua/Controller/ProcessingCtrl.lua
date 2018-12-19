@@ -16,14 +16,39 @@ end
 
 function ProcessingCtrl:Awake(go)
     self.gameObject = go;
-    local processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    processingBehaviour:AddClick(ProcessingPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
-    self.m_data = {}
+end
+function ProcessingCtrl:Refresh()
+    self:initializeData()
+end
+
+function ProcessingCtrl:initializeData()
+    if self.m_data then
+        DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    end
+end
+--刷新加工厂信息
+function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
+    ProcessingPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    self.m_data = DataInfo
+    if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.m_data.isOther = true
+        ProcessingPanel.changeNameBtn.localScale = Vector3.zero
+    else
+        self.m_data.isOther = false
+        ProcessingPanel.changeNameBtn.localScale = Vector3.one
+    end
     self.m_data.buildingType = BuildingType.ProcessingFactory
-    local processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, processingBehaviour, self.m_data)
+    if not self.processingToggleGroup then
+        self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
+    else
+        --self.processingToggleGroup:updataInfo(self.m_data)
+    end
 end
 
 --更改名字
@@ -36,17 +61,15 @@ function ProcessingCtrl:OnClick_changeName()
 end
 
 --返回
-function ProcessingCtrl:OnClick_backBtn()
+function ProcessingCtrl:OnClick_backBtn(ins)
+    if ins.processingToggleGroup then
+        ins.processingToggleGroup:cleanItems()
+    end
     UIPage.ClosePage();
-    --关闭加工厂的监听
-    --Event.RemoveListener("c_temporaryifNotGoods",WarehouseCtrl.c_temporaryifNotGoods)
 end
 
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
-
-end
-function ProcessingCtrl:Refresh()
 
 end
 UnitTest.TestBlockStart()---------------------------------------------------------

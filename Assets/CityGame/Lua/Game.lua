@@ -48,16 +48,16 @@ function Game.OnPostInitOK()
     if BuildingInfoModel ~= nil then
         BuildingInfoModel:Awake();
     end
-    --原料厂
-    local materialModel = CtrlManager.GetModel(ModelNames.Material);
-    if materialModel ~= nil then
-        materialModel:Awake();
-    end
-    --加工厂
-    local processingModel = CtrlManager.GetModel(ModelNames.Processing)
-    if processingModel ~= nil then
-        processingModel:Awake();
-    end
+    ----原料厂
+    --local materialModel = CtrlManager.GetModel(ModelNames.Material);
+    --if materialModel ~= nil then
+    --    materialModel:Awake();
+    --end
+    ----加工厂
+    --local processingModel = CtrlManager.GetModel(ModelNames.Processing)
+    --if processingModel ~= nil then
+    --    processingModel:Awake();
+    --end
 
     --测试选服界面
     local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);

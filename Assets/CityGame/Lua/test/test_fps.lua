@@ -18,7 +18,7 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
 
     local tp = ct.getType(LuaFramework.LuaBehaviour)
     --绑定脚本,使用 LuaHelper.GetType
-    UnityEngine.GameObject.AddComponent(camera.gameObject, ct.getType(LuaFramework.LuaBehaviour))
+    UnityEngine.GameObject.AddComponent(camera.gameObject, ct.getType(LuaFramework.ShowFPS))
     --UnityEngine.GameObject.AddComponent(camera.gameObject, LuaHelper.GetType('LuaFramework.LuaBehaviour'))
     local testFPS = camera.gameObject:GetComponent('ShowFPS')
     testFPS.fpsMeasuringDelta = 0.1

@@ -10,12 +10,7 @@ using City;
 using LuaFramework;
 
 namespace City
-{
-    public struct Sync_LoadData
-    {
-        public AssetBundle _bunldle;
-        public UnityEngine.Object _asset;
-    };
+{    
     public static class CityTest
     {
         public static void Test()
@@ -34,96 +29,7 @@ namespace City
         }
     }
     public static class CityLuaUtil
-    {
-        static string GetAssetName(ref string releativePath)
-        {
-            int pos = releativePath.LastIndexOf('/');
-            return releativePath.Remove(0, pos + 1);
-        }
-        static string GetBundleName(ref string releativePath)
-        {
-            string outstr = releativePath.Replace("/", "_");
-            return outstr.ToLower() + AppConst.BundleExt;
-        }
-
-        public static ResourceManager GetResManager()
-        {
-            return AppFacade.Instance.GetManager<ResourceManager>(ManagerName.Resource);
-        }
-
-        public static Sync_LoadData LoadRes_S(string releativePath, System.Type type = null)
-        {
-            //1、 根据项目资源bundle命名规则，把传入的资源相对路径转为对应的bundle名字，同步加载bundle
-            Sync_LoadData retObj;
-            retObj._asset = null;
-            retObj._bunldle = null;
-            string assetName = releativePath;
-            if (type == null)
-            {
-                type = typeof(GameObject);
-            }
-
-#if RES_BUNDEL            
-            assetName = GetAssetName(ref releativePath);
-            string abName = GetBundleName(ref releativePath);
-            abName = City.CityLuaUtil.getLuaBundelPath() + "/" + abName;
-            //同步加载bundle
-            retObj._bunldle = AssetBundle.LoadFromFile(abName);
-            if (retObj._bunldle != null)
-            {
-                //2、 从传入的资源相对路径取出资源名字，从bundle同步加载该资源
-                AssetBundleRequest abre = retObj._bunldle.LoadAssetAsync(assetName, type);
-                if (abre != null)
-                {
-                    retObj._asset = abre.asset;
-                }
-            }
-#else            
-            retObj._asset = UnityEngine.Resources.Load(releativePath);
-#endif      
-            return retObj;
-        }
-
-        public static void LoadRes_A(string bundlePath, string assetName, System.Type type = null, object objInstance = null, LuaFunction func = null)
-        {
-            if (type == null)
-            {
-                type = typeof(GameObject);
-            }
-            string abName = GetBundleName(ref bundlePath);
-
-#if ASYNC_MODE
-            GetResManager().LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
-            {
-                if (objs.Length == 0) return;
-
-                if (func != null)
-                {
-                    func.Call(objInstance, objs[0], ab);
-                }
-
-            }, type);
-#else
-            GameObject prefab = ResManager.LoadAsset<GameObject>(releativePath, assetName);
-            if (prefab == null) return;
-
-            GameObject go = Instantiate(prefab) as GameObject;
-            go.name = assetName;
-            go.layer = LayerMask.NameToLayer("Default");
-            go.transform.SetParent(Parent);
-            go.transform.localScale = Vector3.one;
-            go.transform.localPosition = Vector3.zero;
-            //
-            RectTransform rect = go.GetComponent<RectTransform>();
-            rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
-
-            go.AddComponent<LuaBehaviour>();
-
-            if (func != null) func.Call(go);
-            Debug.LogWarning("CreatePanel::>> " + releativePath + " " + prefab);
-#endif
-        }
-
+    {   
         public static System.Type getSpriteType()
         {
             return typeof(UnityEngine.Sprite) ;

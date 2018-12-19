@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/13 16:52
 ---
 UnitTest.TestBlockStart()-------------------------------------------------------
-
+local typeof = tolua.typeof
 --基本测试数据准备{
 --目前的测试是1000个160*160贴图的资源IO测试
 local testcount = 1000  --资源加载数量
@@ -45,7 +45,7 @@ UnitTest.Exec("abel_w17_load_A_sprite_s160_mem", "abel_w17_load_A_sprite_s160_me
     local timer0 = FrameTimer.New(function()
         collectgarbage("collect")
         ct.log('abel_w17_load_A_sprite_s160_mem','[abel_w17_load_A_sprite_s160_mem] testLoadFun')
-        testLoadFun(bundlelist, assetlist,CityLuaUtil.getSpriteType())
+        testLoadFun(bundlelist, assetlist,ct.getType(UnityEngine.Sprite))
         collectgarbage("collect")
     end, 10, 0)
     timer0:Start()
@@ -79,7 +79,7 @@ UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_A_unload_f
     local timer0 = FrameTimer.New(function()
         collectgarbage("collect")
         ct.log('abel_w17_load_A_unload_force_s160_mem','[abel_w17_load_A_unload_force_s160_mem] testLoadFun')
-        testLoadFun(bundlelist, assetlist, CityLuaUtil.getSpriteType())
+        testLoadFun(bundlelist, assetlist, ct.getType(UnityEngine.Sprite))
         local timer = FrameTimer.New(function()
             ct.log('abel_w17_load_A_unload_force_s160_mem','[abel_w17_load_A_unload_force_s160_mem] TestUnLoadFun_force')
             TestUnLoadFun_force(bundlelist)
@@ -149,14 +149,14 @@ end)
         * 2、3步需要扩展一个单独的接口， 类似 panelMgr:LoadPrefab_S
         * 这个测试需要比对尺寸128和160的加载时间
 --]]
-UnitTest.Exec("abel_w17_load_S_s160_time", "abel_w17_load_S_s160_time",  function ()
+UnitTest.Exec("abel_w17_load_S_s160_n1000_time", "abel_w17_load_S_s160_n1000_time",  function ()
     local assetlist ={}     --存放asset的表
     --异步加载测试
     local testLoadFun_S = function(reslist,type)
-        ct.log('abel_w17_load_S_s160_time','[testLoadFun_S] #reslist = '..#reslist)
+        ct.log('abel_w17_load_S_s160_n1000_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
             --注意这里返回的值包括两个数据： asset, bundle
-            reslist[#reslist+1] = CityLuaUtil.LoadRes_S(ResPathListS[i], type)
+            reslist[#reslist+1] = resMgr:LoadRes_S(ResPathListS[i], type)
         end
     end
 
@@ -165,10 +165,10 @@ UnitTest.Exec("abel_w17_load_S_s160_time", "abel_w17_load_S_s160_time",  functio
     --尺寸160的测试
     --加载 sprite
     collectgarbage("collect")
-    local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[Sprite同步加载的时间测试]", function()
-        testLoadFun_S(assetlist,CityLuaUtil.getSpriteType())
+    local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Sprite同步加载的时间测试]", function()
+        testLoadFun_S(assetlist,ct.getType(UnityEngine.Sprite))
     end)
-    ct.log('abel_w17_load_S_s160_time','1000个160大小的Sprite同步加载的时间 = '..t1)
+    ct.log('abel_w17_load_S_s160_n1000_time','1000个160大小的Sprite同步加载的时间 = '..t1)
 
     --卸载
     for k,v in pairs(assetlist ) do
@@ -179,26 +179,28 @@ UnitTest.Exec("abel_w17_load_S_s160_time", "abel_w17_load_S_s160_time",  functio
     collectgarbage("collect")
 
     --加载 texture
-    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_time","[Texture同步加载的时间测试]", function()
+    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Texture同步加载的时间测试]", function()
         testLoadFun_S(assetlist, nil)
     end)
-    ct.log('abel_w17_load_S_s160_time','1000个160大小的Texture同步加载的时间 = '..t2)
+    ct.log('abel_w17_load_S_s160_n1000_time','1000个160大小的Texture同步加载的时间 = '..t2)
     collectgarbage("collect")
 
     --[[
     测试结果
     pc
-        [abel_w17_load_S_s160_time]1000个160大小的Sprite同步加载的时间 = 20.255
-        [abel_w17_load_S_s160_time]1000个160大小的Texture同步加载的时间 = 19.454
+        [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 20.255
+        [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 19.454
         *  性能差别可以忽略不计
+        *  pc 上每帧加载 33.33 / 20.255 = 1.65
     设备
-        [abel_w17_load_S_s160_time]1000个160大小的Sprite同步加载的时间 = 5.945922
-        [abel_w17_load_S_s160_time]1000个160大小的Texture同步加载的时间 = 3.020269
+        [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
+        [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
         *  性能差别比较明显，近1倍， 不过一般情况下，滑动滚动条时，加载3屏，一屏10个算，那么一次加载10个，那么加载时间为
-
+        *  设备上每帧加载  33.33 / 5.95 = 5.60
     --]]
 end)
 
+--同步下周30张Icon
 UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time",  function ()
     local testcount = 30
     local assetlist ={}     --存放asset的表
@@ -207,7 +209,7 @@ UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time", 
         ct.log('abel_w17_load_S_s160_n30_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
             --注意这里返回的值包括两个数据： asset, bundle
-            reslist[#reslist+1] = CityLuaUtil.LoadRes_S(ResPathListS[i], type)
+            reslist[#reslist+1] = resMgr:LoadRes_S(ResPathListS[i], type)
         end
     end
 
@@ -217,7 +219,7 @@ UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time", 
     --加载 sprite
     collectgarbage("collect")
     local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Sprite同步加载的时间测试]", function()
-        testLoadFun_S(assetlist,CityLuaUtil.getSpriteType())
+        testLoadFun_S(assetlist,ct.getType(UnityEngine.Sprite))
     end)
     ct.log('abel_w17_load_S_s160_n30_time','30个160大小的Sprite同步加载的时间 = '..t1)
 
@@ -249,7 +251,7 @@ UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time", 
     --]]
 end)
 
---异步加载30个160 icon 时间测试
+--异步加载1000个160 icon 时间测试
 UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_time",  function ()
     --尺寸160的测试
     local aTester = AsyncSequenceTester:new()
@@ -306,7 +308,7 @@ UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_tim
     end
 
     aTester.testSquence[1] = { fun = testLoadFunA, type = nil, cb = callback, msg = '1000个160大小的 Texture 异步加载的时间 ='}
-    aTester.testSquence[2] = { fun = testLoadFunA, type = CityLuaUtil.getSpriteType(), cb = callback, msg = '1000个160大小的 Sprite 异步加载的时间 = '}
+    aTester.testSquence[2] = { fun = testLoadFunA, type = ct.getType(UnityEngine.Sprite), cb = callback, msg = '1000个160大小的 Sprite 异步加载的时间 = '}
 
     --开始执行异步测试序列
     collectgarbage("collect")
@@ -317,9 +319,58 @@ UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_tim
     pc
         [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =2.2260000000001
         [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 2.3319999999999
-        *  性能差别比不大
+        *  性能差别比不大, 平均每帧可以加载 33.33/2.332 = 14.29 个
     设备
+        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =6.757779
+        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 6.006067
+        *  设备上 Sprite 比 Texture 加载的时间还短
+            * 这个结论与同步加载的结论一致？
+        * 平均每帧可以加载 33.33/6.006067 = 5.555 个（texture 33.33/6.757779 = 4.932 个 ）
+        * 比对同步加载
+            [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
+            [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
+            * Sprite异步加载总的耗时与同步加载差不多；texture 同步加载时间会少不少
+            * 同步加载期间会导致程序卡顿
+    --]]
+end)
 
+--测试 Instantiate 及对应 destory 的性能开销
+UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_destory_s160_n1000",  function ()
+    --local resTexture = resMgr:LoadRes_S(ResPathListS[1], LuaHelper.GetType("UnityEngine.Texture2D"))
+    --local resTexture = resMgr:LoadRes_S(ResPathListS[1], LuaHelper.GetType("UnityEngine_Texture2DWrap"))
+    local tp = ct.getType(UnityEngine.Texture2D)
+    local tp1 = ct.getType(UnityEngine.Sprite)
+
+    local resTexture = resMgr:LoadRes_S(ResPathListS[1], ct.getType(UnityEngine.Texture2D))
+    --[[
+    --这里设置贴图资源为 Readable ,否则 Instantiate 会失败，提示为 Instantiating a non-readable texture is not allowed!
+    --参考 https://www.cnblogs.com/weigx/p/7300586.html
+    --]]
+    --resTexture._asset:Apply(true,true)
+    local resSprite = resMgr:LoadRes_S(ResPathListS[1], ct.getType(UnityEngine.Sprite))
+    local insList_texture = {}
+    local insList_sprite = {}
+
+    --实例化1000张Sprite
+    local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[1000 张 Sprite Instantiate 的时间]", function()
+        for i = 1, testcount do
+            insList_sprite[#insList_sprite+1] = UnityEngine.GameObject.Instantiate(resSprite._asset);
+        end
+    end)
+
+    --销毁1000张Sprete的实例
+    local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[1000 张 Sprite 销毁 的时间]", function()
+        for i, v in pairs(insList_sprite) do
+            GameObject.DestroyImmediate(v, true)
+        end
+        insList_sprite = {}
+    end)
+
+    --[[
+    测试结果
+    [abel_w17_Instantiate_destory_s160_n1000][1000 张 Sprite Instantiate 的时间]        执行时间:     0.014999999999873  一帧 Instantiate 2.22 个
+        * 这个数据还只是简单数据的实例化，复杂数据可能会更耗时，所以 Instantiate 一定要慎用
+    [abel_w17_Instantiate_destory_s160_n1000][1000 张 Sprite 销毁 的时间]               执行时间:     0.0029999999997017 一帧销毁 11.11 个
     --]]
 end)
 
@@ -412,13 +463,6 @@ end)
 --卸载资源测试 AssetBundle.Unload、 UnloadUnusedAssets
 UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
     UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
-
-    end)
-end)
-
---测试 Instantiate 及对应 destory 的性能开销
-UnitTest.Exec("abel_w17_Instantiate_destory_s128_n400", "abel_w17_Instantiate_destory_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s128_n400","[Instantiate 及对应 destory 的性能开销]", function()
 
     end)
 end)

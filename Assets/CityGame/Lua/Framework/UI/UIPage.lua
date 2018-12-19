@@ -5,6 +5,7 @@
 ---
 
 require('Framework/UI/UIRoot')
+local typeof = tolua.typeof
 local UIRoot = UIRoot
 UIType = {
     Normal =1 ,
@@ -81,7 +82,7 @@ function UIPage:OnCreate(obj)
         local go = ct.InstantiatePrefab(obj);
         ------}
         go.layer = LayerMask.NameToLayer("UI");
-        UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+        UnityEngine.GameObject.AddComponent(go, typeof(LuaFramework.LuaBehaviour))
         self.gameObject = go;
         assert(go, "system","[UIPage.Show] "," 没有找到资源： ",uiPath)
         if go == nil then

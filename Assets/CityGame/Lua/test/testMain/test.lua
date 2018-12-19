@@ -249,7 +249,7 @@ UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_M
     end
 
     --绑定脚本,使用 LuaHelper.GetType
-    UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+    UnityEngine.GameObject.AddComponent(go, ct.getType(LuaFramework.LuaBehaviour))
     local topBarBehaviour = go:GetComponent('LuaBehaviour')
     if topBarBehaviour == nil then
         ct.log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)

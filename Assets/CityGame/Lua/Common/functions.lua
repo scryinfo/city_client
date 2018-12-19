@@ -210,3 +210,9 @@ function ct.InstantiatePrefab(prefab)
 	return go
 end
 
+function ct.DestroyTable(tb)
+	for i, v in pairs(tb) do
+		GameObject.DestroyImmediate(v, true)
+	end
+	tb = {}
+end

@@ -18,13 +18,18 @@ public class AssetBundleInfo {
 }
 
 namespace LuaFramework {
+    public struct Sync_LoadData
+    {
+        public AssetBundle _bunldle;
+        public UnityEngine.Object _asset;
+    };
 
     public class ResourceManager : Manager {
         string m_BaseDownloadingURL = "";
         string[] m_AllManifest = null;
         AssetBundleManifest m_AssetBundleManifest = null;
-        Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]>();
-        Dictionary<string, AssetBundleInfo> m_LoadedAssetBundles = new Dictionary<string, AssetBundleInfo>();
+        static Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]>();
+        static Dictionary<string, AssetBundleInfo> m_LoadedAssetBundles = new Dictionary<string, AssetBundleInfo>();
         Dictionary<string, List<LoadAssetRequest>> m_LoadRequests = new Dictionary<string, List<LoadAssetRequest>>();
 
         class LoadAssetRequest {
@@ -154,6 +159,123 @@ namespace LuaFramework {
 #endif
         }
 
+        public static string GetAssetName(ref string releativePath)
+        {
+            int pos = releativePath.LastIndexOf('/');
+            return releativePath.Remove(0, pos + 1);
+        }
+        public static string GetBundleName(ref string releativePath)
+        {
+            string outstr = releativePath.Replace("/", "_");
+            return outstr.ToLower() + AppConst.BundleExt;
+        }
+
+        public static ResourceManager GetResManager()
+        {
+            return AppFacade.Instance.GetManager<ResourceManager>(ManagerName.Resource);
+        }
+
+        public void LoadRes_A(string bundlePath, string assetName, System.Type type = null, object objInstance = null, LuaFunction func = null)
+        {
+            if (type == null)
+            {
+                type = typeof(GameObject);
+            }
+            string abName = GetBundleName(ref bundlePath);
+
+#if ASYNC_MODE
+            GetResManager().LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
+            {
+                if (objs.Length == 0) return;
+
+                if (func != null)
+                {
+                    func.Call(objInstance, objs[0], ab);
+                }
+
+            }, type);
+#else
+            GameObject prefab = ResManager.LoadAsset<GameObject>(releativePath, assetName);
+            if (prefab == null) return;
+
+            GameObject go = Instantiate(prefab) as GameObject;
+            go.name = assetName;
+            go.layer = LayerMask.NameToLayer("Default");
+            go.transform.SetParent(Parent);
+            go.transform.localScale = Vector3.one;
+            go.transform.localPosition = Vector3.zero;
+            //
+            RectTransform rect = go.GetComponent<RectTransform>();
+            rect.sizeDelta = prefab.GetComponent<RectTransform>().sizeDelta;
+
+            go.AddComponent<LuaBehaviour>();
+
+            if (func != null) func.Call(go);
+            Debug.LogWarning("CreatePanel::>> " + releativePath + " " + prefab);
+#endif
+        }
+
+        public Sync_LoadData LoadRes_S(string releativePath, System.Type type = null) {
+            //1、 根据项目资源bundle命名规则，把传入的资源相对路径转为对应的bundle名字，同步加载bundle
+            Sync_LoadData retObj;
+            retObj._asset = null;
+            retObj._bunldle = null;
+            string assetName = releativePath;
+            if (type == null)
+            {
+                type = typeof(UnityEngine.Object);
+            }
+
+#if RES_BUNDEL            
+            assetName = GetAssetName(ref releativePath);
+            string abName = GetBundleName(ref releativePath);
+            abName = City.CityLuaUtil.getLuaBundelPath() + "/" + abName;
+            //同步加载bundle
+            AssetBundleInfo bundleInfo = GetLoadedAssetBundle(abName);
+
+            if (bundleInfo == null)
+            {
+                string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
+                if (dependencies.Length > 0)
+                {
+                    m_Dependencies.Add(abName, dependencies);
+                    for (int i = 0; i < dependencies.Length; i++)
+                    {
+                        string depName = dependencies[i];
+                        if (m_LoadedAssetBundles.TryGetValue(depName, out bundleInfo))
+                        {
+                            bundleInfo.m_ReferencedCount++;
+                        }
+                        else if (!m_LoadRequests.ContainsKey(depName))
+                        {
+                            AssetBundle depAb = AssetBundle.LoadFromFile(depName);
+                            m_LoadedAssetBundles.Add(depName, new AssetBundleInfo(depAb));
+                        }
+                    }
+                }
+
+                retObj._bunldle = AssetBundle.LoadFromFile(abName);
+                m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(retObj._bunldle));
+            }
+            else {
+                retObj._bunldle = bundleInfo.m_AssetBundle;
+            }
+                
+            if (retObj._bunldle != null)
+            {
+                //2、 从传入的资源相对路径取出资源名字，从bundle同步加载该资源
+                AssetBundleRequest abre = retObj._bunldle.LoadAssetAsync(assetName, type);
+                if (abre != null)
+                {
+                    retObj._asset = abre.asset;                    
+                }
+            }
+#else            
+            retObj._asset = UnityEngine.Resources.Load(releativePath);
+#endif      
+            return retObj;
+        }
+
         IEnumerator OnLoadAsset<T>(string abName, System.Type type) where T : UObject {
             AssetBundleInfo bundleInfo = GetLoadedAssetBundle(abName);
             if (bundleInfo == null) {
@@ -240,7 +362,7 @@ namespace LuaFramework {
             }
         }
 
-        AssetBundleInfo GetLoadedAssetBundle(string abName) {
+        static AssetBundleInfo GetLoadedAssetBundle(string abName) {
             AssetBundleInfo bundle = null;
             m_LoadedAssetBundles.TryGetValue(abName, out bundle);
             if (bundle == null) return null;

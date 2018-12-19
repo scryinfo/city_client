@@ -22,6 +22,11 @@ namespace LuaFramework {
             {
                 t = assb.GetType(classname);
             }
+
+            System.Type t1 = System.Reflection.Assembly.Load("UnityEngine").GetType(classname);
+            System.Type[] types = assb.GetTypes();            
+            System.Type[] types1 = assb.GetExportedTypes();
+
             return t;
         }
 

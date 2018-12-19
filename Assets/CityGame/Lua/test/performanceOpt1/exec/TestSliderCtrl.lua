@@ -91,11 +91,9 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
         --加载 Icon_Prefab
             local funHorizontalSb = function(self, obj,i,trans)
             local loadedOjb = ct.InstantiatePrefab(obj);
-            local Icon_Prefab =  loadedOjb.transform:GetComponent("Image")
-            local go = Icon_Prefab
-            local type = Icon_Prefab.GetType(Icon_Prefab.sprite)
+            local type = ct.getType(UnityEngine.Sprite)
             --加载图片，赋值给 Icon_Prefab 的 Image 组件的 sprite
-            panelMgr:LoadPrefab_A("TempIcon/A"..i, type, go, function(staticData, obj )
+            panelMgr:LoadPrefab_A("TempIcon/A"..i, type, nil, function(staticData, obj )
                 if obj ~= nil then
                     local texture = ct.InstantiatePrefab(obj)
                     local pngImage =  trans:GetComponent("Image")

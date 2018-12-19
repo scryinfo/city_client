@@ -558,6 +558,13 @@ function  DataManager.InitPersonDatas(tempData)
     if  PersonDataStack.m_blacklist == nil then
         PersonDataStack.m_blacklist = {}
     end
+
+
+
+    ------------------------------------打开相机
+    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
+    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
+
 end
 
 --修改自己所拥有土地集合
@@ -746,7 +753,6 @@ function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
 end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
-
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
@@ -765,11 +771,11 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
 end
+
 --清除所有消息回调
 local function ClearEvents()
     
 end
-
 
 --DataManager初始化
 function DataManager.Init()

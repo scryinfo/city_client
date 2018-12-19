@@ -4,6 +4,7 @@ local mainCameraTransform = nil
 local mainCameraCenterTransforms = nil
 local inputTools = nil
 local mCameraState = nil
+local oldPos = nil
 
 function CameraMove:Start(gameObject)
     transform = gameObject
@@ -27,13 +28,14 @@ function CameraMove:Start(gameObject)
     self.touchBeginBlockID = nil
 end
 
-function CameraMove:Update(gameObject)
+function CameraMove:FixedUpdate(gameObject)
     --点击时判断是否点击到UI
     if CameraMove.IsClickDownOverUI() then
         self.IsTouchUI = true
     end
     --点击结束时
     if  inputTools:GetIsClickUp() then
+        ct.log("system"," 点击结束")
         self.touchBeginPosition = nil
         self.touchBeginBlockID = nil
         --点击在UI上
@@ -45,26 +47,27 @@ function CameraMove:Update(gameObject)
     if self.IsTouchUI then
         return
     end
+
     --如果检测到按下
     if inputTools:GetIsClickDown() then
+        ct.log("system"," 检测到按下")
         self.touchBeginPosition = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
-        self.touchBeginBlockID = TerrainManager.PositionTurnBlockID(tempPos)
-        self.touchBeginCameraPos = mainCameraTransform.position
+        self.touchBeginBlockID = TerrainManager.PositionTurnBlockID(self.touchBeginPosition)
+        self.touchBeginCameraPos = mainCameraCenterTransforms.position
     end
     --如果为UI状态，则直接返回不做点击/拖拽判断
     if mCameraState == TouchStateType.NormalState then
-        local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             self:UpdateMove()
+            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
         elseif inputTools:GetIsPoint() then     --如果是点击状态
             self:TouchBuild()
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
     elseif mCameraState == TouchStateType.ConstructState then
-        local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
@@ -73,6 +76,7 @@ function CameraMove:Update(gameObject)
             else
                 self:UpdateMove()
             end
+            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
@@ -94,7 +98,7 @@ function CameraMove:ScaleCamera()
 end
 
 
---点击到建筑
+--点击到建筑[over]
 function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
@@ -109,7 +113,7 @@ function CameraMove:TouchBuild()
     end
 end
 
---拖动临时建筑
+--拖动临时建筑[over]
 function CameraMove:MoveConstructObj()
     --[[
     if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
@@ -133,10 +137,33 @@ function CameraMove:UpdateMove()
         return
     end
     --]]
-    local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
+    if not inputTools:IsMove() then
+        return
+    end
+    local touchPos = inputTools:GetClickFocusPoint()
+    if touchPos == nil then
+        return
+    end
+    local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
     if tempPos  then
+        ct.log("system"," 主相机位置->帧前=》.x   ".. mainCameraCenterTransforms.position.x.."   z  " ..mainCameraCenterTransforms.position.z)
+        ct.log("system", "射线检测坐标：" .. touchPos.x .."   ".. touchPos.y )
+        ct.log("system", "射线检测位置：" .. tempPos.x .."   ".. tempPos.y .."   ".. tempPos.z )
+        ct.log("system", "touchBeginPosition：" .. self.touchBeginPosition.x .."   ".. self.touchBeginPosition.y .."   ".. self.touchBeginPosition.z )
         local OffsetVec  = tempPos - self.touchBeginPosition
-        mainCameraTransform.position = self.touchBeginCameraPos - OffsetVec
+        local tempPosition = self.touchBeginCameraPos - OffsetVec
+        if tempPosition.y ~= 0 then
+            tempPosition.y = 0
+        end
+        --self.touchBeginPosition = tempPos
+        self.touchBeginCameraPos = tempPosition
+        mainCameraCenterTransforms.position = tempPosition
+        --ct.log("system", "鼠标位置：" .. inputTools:GetClickFocusPoint().x .."   ".. inputTools:GetClickFocusPoint().y .."   ".. inputTools:GetClickFocusPoint().z )
+
+        ct.log("system"," 相机位移.x   ".. OffsetVec.x.."  相机位移.z  " ..OffsetVec.z)
+        --ct.log("system"," self.touchBeginCameraPos.x   ".. self.touchBeginCameraPos.x.."   self.touchBeginCameraPos.z  " ..self.touchBeginCameraPos.z)
+        ct.log("system"," 主相机位置->帧后=》.x   ".. mainCameraCenterTransforms.position.x.."   z  " ..mainCameraCenterTransforms.position.z)
+        ct.log("system","---------------------------------------------------------------------------------------")
     end
 end
 
@@ -159,7 +186,7 @@ function CameraMove.GetTouchTerrianPosition(screenPoint)
     if isHit then
         return hit.point
     else
-        ct.log("system","CameraMove.GetTouchTerrianPosition  ===>  射线与地面无碰撞")
+        --ct.log("system","无碰撞物体")
         return nil
     end
 end
@@ -176,11 +203,11 @@ end
 --判断是否点击到UI上
 function CameraMove.IsClickDownOverUI()
     if UnityEngine.Application.isEditor then
-        if UnityEngine.Input.GetMouseButtonDown(0) and UnityEngine.EventSystem.current.IsPointerOverGameObject() then
+        if UnityEngine.Input.GetMouseButtonDown(0) and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject() then
             return true
         end
     else
-        if UnityEngine.Input.touchCount == 1 and UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began and UnityEngine.EventSystem.current.IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId) then
+        if UnityEngine.Input.touchCount == 1 and UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId) then
             return true
         end
     end

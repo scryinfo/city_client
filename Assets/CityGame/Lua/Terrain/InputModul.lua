@@ -2,19 +2,19 @@
 WindowsInput = class('WindowsInput')
 
 function WindowsInput:initialize( ... )
-    self.m_moveV2 = Vector2.zero
+    self.m_moveV2 = nil
     self.m_zoomValue = 0
-    self.m_oldMousePos = Vector3.zero
+    self.m_oldMousePos = nil
     self.m_startMousePos = Vector3.zero
     UpdateBeat:Add(self.Update, self)
 end
 
 function WindowsInput:GetIsClickDown()
-    UnityEngine.Input.GetMouseButtonDown(0)
+    return UnityEngine.Input.GetMouseButtonDown(0)
 end
 
 function WindowsInput:GetIsClickUp()
-    UnityEngine.Input.GetMouseButtonUp(0)
+    return UnityEngine.Input.GetMouseButtonUp(0)
 end
 function WindowsInput:GetIsDragging()
     return UnityEngine.Input.GetMouseButton(0)
@@ -28,12 +28,27 @@ function WindowsInput:GetIsZoom()
     return self.m_zoomValue ~= 0
 end
 
+function WindowsInput:IsMove()
+    if self:GetMoveV2() ~= nil and (self:GetMoveV2().x~= 0 or self:GetMoveV2().y~= 0) then
+        ct.log("system","旧的屏幕坐标  "..self.m_oldMousePos.x .."  ".. self.m_oldMousePos.y)
+        ct.log("system","新的屏幕坐标差值"..self.m_moveV2.x .."  ".. self.m_moveV2.y)
+        return true
+    else
+        return false
+    end
+end
+
 function WindowsInput:AnyPress()
     return UnityEngine.Input.GetMouseButton(0) or UnityEngine.Input.GetMouseButton(1) or UnityEngine.Input.GetMouseButton(2)
 end
 
 function WindowsInput:GetMoveV2()
-    return self.m_moveV2
+    if self.m_oldMousePos then
+        self.m_moveV2 = UnityEngine.Input.mousePosition - self.m_oldMousePos
+        return self.m_moveV2
+    else
+        return nil
+    end
 end
 
 function WindowsInput:GetZoomValue()
@@ -41,15 +56,25 @@ function WindowsInput:GetZoomValue()
 end
 
 function WindowsInput:GetClickFocusPoint()
-    return UnityEngine.Input.mousePosition
+    if  self:GetIsDragging() then
+        return UnityEngine.Input.mousePosition
+    else
+        return nil
+    end
 end
 
 function WindowsInput:Update()
     if UnityEngine.Input.GetMouseButtonDown(0) then
         self.m_startMousePos = UnityEngine.Input.mousePosition
     end
-    self.m_moveV2 = UnityEngine.Input.mousePosition - self.m_oldMousePos
-    self.m_oldMousePos = UnityEngine.Input.mousePosition
+    --[[
+    if  self:GetIsDragging() then
+        if self.m_oldMousePos ~= nil then
+            self.m_moveV2 = UnityEngine.Input.mousePosition - self.m_oldMousePos
+        end
+        self.m_oldMousePos = UnityEngine.Input.mousePosition
+    end
+   --]]
     self.m_zoomValue = UnityEngine.Input.GetAxis("Mouse ScrollWheel")
 end
 
@@ -93,9 +118,17 @@ end
 
 function MobileInput:GetMoveV2()
     if (UnityEngine.Input.touchCount >= 1) then
-        return UnityEngine.Input.GetTouch(0).deltaPosition;
+        return UnityEngine.Input.GetTouch(0).deltaPosition
     else
-        return Vector2.zero;
+        return Vector2.zero
+    end
+end
+
+function MobileInput:IsMove()
+    if (UnityEngine.Input.touchCount >= 1) and( UnityEngine.Input.GetTouch(0).deltaPosition.x ~= 0 or UnityEngine.Input.GetTouch(0).deltaPosition.y ~= 0 ) then
+        return true
+    else
+        return false
     end
 end
 
@@ -109,8 +142,8 @@ end
 
 function MobileInput:Update()
     if GetIsZoom then
-        currentPosition0 = Input.GetTouch(0).position;
-        currentPosition1 = Input.GetTouch(1).position;
+        currentPosition0 = UnityEngine.Input.GetTouch(0).position;
+        currentPosition1 = UnityEngine.Input.GetTouch(1).position;
         if (not self.m_Zoomed) then
             self.m_oldTouch0Pos = currentPosition0;
             self.m_oldTouch1Pos = currentPosition1;

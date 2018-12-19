@@ -35,7 +35,7 @@ function LabBuildingInventionItem:_initData(data)
 
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
-    self.formularData = FormularConfig[data.itemId]
+    self.formularData = FormularConfig[1][data.itemId]
     self.progressSlider.maxValue = self.formularData.phaseSec
     if data.roll > 0 then
         self.bulbImg.color = Color.white

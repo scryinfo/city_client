@@ -79,9 +79,9 @@ function LabResearchCtrl:_initPanelData()
     end
     LabResearchPanel.levelText.text = "Lv"..tostring(level)
     if not self.m_data.phaseSec then
-        self.m_data.phaseSec = FormularConfig[self.m_data.itemId].phaseSec
+        self.m_data.phaseSec = FormularConfig[0][self.m_data.itemId].phaseSec
     end
-    local formularItem = FormularConfig[self.m_data.itemId]
+    local formularItem = FormularConfig[0][self.m_data.itemId]
     if #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return

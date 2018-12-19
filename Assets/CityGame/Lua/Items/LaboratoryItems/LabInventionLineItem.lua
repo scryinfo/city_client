@@ -60,7 +60,7 @@ function LabInventionLineItem:_initData(data)
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
     self.staffText.text = tostring(data.workerNum)
-    self.formularData = FormularConfig[data.itemId]
+    self.formularData = FormularConfig[1][data.itemId]
     --self.staffSlider.maxValue = self.formularData.phaseSec
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
     if not data.roll or data.roll <= 0 then

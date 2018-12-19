@@ -65,8 +65,8 @@ end
 function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
     self.remainTime = self.m_data.leftSec
-    local formularItem = FormularConfig[self.m_data.itemId]
-    if #formularItem.materials == 0 then  --判断是否为原料
+    --根据itemId判断是不是原料
+    if self.m_data.itemId < 2200000 then
         LabInventionPanel.showLine({})
         self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
@@ -74,6 +74,7 @@ function LabInventionCtrl:_initPanelData()
         --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
+        local formularItem = FormularConfig[1][self.m_data.itemId]
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
             data.backFunc = function(success)
                 self.enough = success

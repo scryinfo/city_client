@@ -114,8 +114,8 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
 end
 --开工
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_onReceiveLabAddLine', self.line[1])
-    --应该是更新数据
+    self.hashLineData[data.lineId].run = true
+    self.hashLineData[data.lineId].rollTarget = data.phase
 
     self.tempLine = nil
     self:_getScientificLine()
@@ -147,8 +147,9 @@ function LaboratoryModel:n_OnReceiveDelLine(data)
         DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
     end
 end
---更新某条线的具体数据
-function LaboratoryModel:n_OnReceiveLineChange(data)
+--更新某条线的具体数据 --只有roll之后才会发这个
+function LaboratoryModel:n_OnReceiveLineChange(lineData)
+    local data = lineData.line
     local line = self.hashLineData[data.id]
     if line then
         line.lv = data.lv
@@ -156,7 +157,7 @@ function LaboratoryModel:n_OnReceiveLineChange(data)
         line.phase = data.phase
         line.run = data.run
         line.roll = data.roll
-        Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
+        --Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
     else
         ct.log("", "找不到对应lineId的线路")
     end

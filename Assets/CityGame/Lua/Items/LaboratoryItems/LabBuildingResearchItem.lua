@@ -29,7 +29,7 @@ function LabBuildingResearchItem:_initData(data)
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
     self.levelText.text = data.lv
-    self.phaseSec = FormularConfig[data.itemId].phaseSec
+    self.phaseSec = FormularConfig[0][data.itemId].phaseSec  --0为研究部分，1为发明
     self.progressSlider.maxValue = self.phaseSec
 
     if data.roll > 0 then

@@ -52,7 +52,7 @@ function LabResearchLineItem:_initData(data)
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
-    self.formularData = FormularConfig[data.itemId]
+    self.formularData = FormularConfig[0][data.itemId]
     self.staffText.text = tostring(data.workerNum)
     self.levelText.text = data.lv
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)

@@ -36,9 +36,10 @@ function LabBuildingResearchItem:_initData(data)
         self.bottleImg.color = Color.white
         self.progressSlider.value = 1
     else
+        self.progressSlider.value = 0
         self.bottleImg.color = getColorByVector3(LabBuildingResearchItem.static.NoRollColor)
     end
-    if self.run then
+    if data.run then
         self.startTimeDown = true
         self.currentTime = os.time()
         self.timeDownText.transform.localScale = Vector3.one

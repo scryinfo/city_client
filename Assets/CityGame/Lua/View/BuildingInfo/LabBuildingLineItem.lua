@@ -96,7 +96,7 @@ end
 
 --刷新数据
 function LabBuildingLineItem:updateInfo(data)
-    self.data = data
+    self.data.lines = data.lines
     self:_initData()
 end
 

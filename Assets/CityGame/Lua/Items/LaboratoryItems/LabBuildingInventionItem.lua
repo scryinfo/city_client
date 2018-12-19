@@ -35,14 +35,17 @@ function LabBuildingInventionItem:_initData(data)
 
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
-    self.formularData = FormularConfig[1][data.itemId]
-    self.progressSlider.maxValue = self.formularData.phaseSec
+    self.phaseSec = FormularConfig[0][data.itemId].phaseSec / data.workerNum  --0为研究部分，1为发明
+    self.progressSlider.maxValue = 1
+
     if data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)
+        self.progressSlider.value = 1
     else
         self.bulbImg.color = getColorByVector3(LabBuildingInventionItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
+        self.progressSlider.value = 0
     end
 
     --显示阶段状态
@@ -57,7 +60,7 @@ function LabBuildingInventionItem:_initData(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
-    if self.run then
+    if data.run then
         self.startTimeDown = true
         self.currentTime = os.time()
         self.timeDownText.transform.localScale = Vector3.one

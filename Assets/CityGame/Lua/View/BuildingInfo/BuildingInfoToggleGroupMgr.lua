@@ -490,8 +490,8 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
     --如果已经存在则直接刷新数据，否则重新生成
     if self.labLineItem then
         local data = {}
-        data.insId = self.toggleData.insId
-        data.buildingTypeId = self.toggleData.mId
+        --data.insId = self.toggleData.insId
+        --data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
         self.labLineItem:updateInfo(data)
     else

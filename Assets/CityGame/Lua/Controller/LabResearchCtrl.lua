@@ -153,6 +153,6 @@ function LabResearchCtrl:_creatTempLine()
 end
 --继续研究，返回科技线
 function LabResearchCtrl:_launchLine()
-    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, self.m_data.rollTarget + 1)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
     UIPage.ClosePage()
 end

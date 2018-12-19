@@ -89,6 +89,7 @@ function LabInventionLineItem:_initData(data)
     self.phaseItems:showState(self.data.phaseStates)  --显示5个阶段的状态
     self.startTimeDown = true
     self.timeDownText.transform.localScale = Vector3.one
+    self.currentTime = os.time()
     if not self.data.run then
         self.startTimeDown = false
         self.timeDownText.transform.localScale = Vector3.zero
@@ -115,6 +116,7 @@ function LabInventionLineItem:_updateInfo(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.startTimeDown = true
+    self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
@@ -136,16 +138,28 @@ end
 --倒计时
 function LabInventionLineItem:_update()
     if self.startTimeDown then
-        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.data.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
             return
         end
-        local timeTable = getTimeBySec(self.data.leftSec)
+
+        local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabInventionLineItem.static.FinishBulbHight
+        local height = (self.currentTime / self.data.finishTime) * LabInventionLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
+            return
+        end
     end
 end

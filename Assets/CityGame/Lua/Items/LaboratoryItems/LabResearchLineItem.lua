@@ -47,7 +47,7 @@ function LabResearchLineItem:initialize(data, viewRect)
 end
 function LabResearchLineItem:_initData(data)
     self.data = data
-    self.leftSec = self.data.leftSec
+    --self.leftSec = self.data.leftSec
 
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
@@ -63,6 +63,7 @@ function LabResearchLineItem:_initData(data)
         self.bottleImg.color = Color.white
     end
     self.startTimeDown = true
+    self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
@@ -84,6 +85,7 @@ function LabResearchLineItem:_updateInfo(data)
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     end
     self.startTimeDown = true
+    self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
@@ -108,16 +110,28 @@ end
 --倒计时
 function LabResearchLineItem:_update()
     if self.startTimeDown then
-        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.data.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
             return
         end
-        local timeTable = getTimeBySec(self.data.leftSec)
+
+        local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabResearchLineItem.static.FinishBulbHight
+        local height = (self.currentTime / self.data.finishTime) * LabResearchLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.data.roll = self.data.roll + 1
+            self.bottleImg.color = Color.white
+            return
+        end
     end
 end

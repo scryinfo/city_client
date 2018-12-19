@@ -146,7 +146,8 @@ local function CreateConstructBuildSuccess(go,table)
     ct.OpenCtrl('ConstructSwitchCtrl')
     DataManager.TempDatas.constructObj = go
     DataManager.TempDatas.constructObj.transform.position = table[2]
-    --TerrainManager.MoveTempConstructObj()
+    DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
+    TerrainManager.MoveTempConstructObj()
 end
 
 --取消建筑的修建

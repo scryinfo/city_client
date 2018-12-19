@@ -67,6 +67,7 @@ end
 function ConstructCtrl:Hide()
     UIPage.Hide(self)
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
+    CameraMove.ChangeCameraState(TouchStateType.NormalState)
 end
 
 

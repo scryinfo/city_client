@@ -35,7 +35,6 @@ function CameraMove:FixedUpdate(gameObject)
     end
     --点击结束时
     if  inputTools:GetIsClickUp() then
-        ct.log("system"," 点击结束")
         self.touchBeginPosition = nil
         self.touchBeginBlockID = nil
         --点击在UI上
@@ -50,13 +49,13 @@ function CameraMove:FixedUpdate(gameObject)
 
     --如果检测到按下
     if inputTools:GetIsClickDown() then
-        ct.log("system"," 检测到按下")
         self.touchBeginPosition = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
         self.touchBeginBlockID = TerrainManager.PositionTurnBlockID(self.touchBeginPosition)
         self.touchBeginCameraPos = mainCameraCenterTransforms.position
     end
     --如果为UI状态，则直接返回不做点击/拖拽判断
     if mCameraState == TouchStateType.NormalState then
+        ct.log("system"," NormalState状态")
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
@@ -71,11 +70,12 @@ function CameraMove:FixedUpdate(gameObject)
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
-            if self.touchBeginBlockID and DataManager.TempDatas.constructID == self.touchBeginBlockID then
+            if self.touchBeginBlockID and DataManager.TempDatas and DataManager.TempDatas.constructPosID and  DataManager.TempDatas.constructPosID == self.touchBeginBlockID then
                 self:MoveConstructObj()
             else
                 self:UpdateMove()
             end
+            TerrainManager.MoveTempConstructObj()
             inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
@@ -113,7 +113,8 @@ function CameraMove:TouchBuild()
     end
 end
 
---拖动临时建筑[over]
+--拖动临时建筑
+--TODO:2*2/3*3建筑范围
 function CameraMove:MoveConstructObj()
     --[[
     if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
@@ -125,6 +126,7 @@ function CameraMove:MoveConstructObj()
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
         if blockID ~= self.touchBeginBlockID then
             DataManager.TempDatas.constructObj.transform.position = TerrainManager.BlockIDTurnPosition(blockID)
+            DataManager.TempDatas.constructPosID = blockID
             self.touchBeginBlockID = blockID
         end
     end
@@ -146,24 +148,14 @@ function CameraMove:UpdateMove()
     end
     local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
     if tempPos  then
-        ct.log("system"," 主相机位置->帧前=》.x   ".. mainCameraCenterTransforms.position.x.."   z  " ..mainCameraCenterTransforms.position.z)
-        ct.log("system", "射线检测坐标：" .. touchPos.x .."   ".. touchPos.y )
-        ct.log("system", "射线检测位置：" .. tempPos.x .."   ".. tempPos.y .."   ".. tempPos.z )
-        ct.log("system", "touchBeginPosition：" .. self.touchBeginPosition.x .."   ".. self.touchBeginPosition.y .."   ".. self.touchBeginPosition.z )
-        local OffsetVec  = tempPos - self.touchBeginPosition
+       local OffsetVec  = tempPos - self.touchBeginPosition
         local tempPosition = self.touchBeginCameraPos - OffsetVec
         if tempPosition.y ~= 0 then
             tempPosition.y = 0
         end
-        --self.touchBeginPosition = tempPos
         self.touchBeginCameraPos = tempPosition
         mainCameraCenterTransforms.position = tempPosition
-        --ct.log("system", "鼠标位置：" .. inputTools:GetClickFocusPoint().x .."   ".. inputTools:GetClickFocusPoint().y .."   ".. inputTools:GetClickFocusPoint().z )
 
-        ct.log("system"," 相机位移.x   ".. OffsetVec.x.."  相机位移.z  " ..OffsetVec.z)
-        --ct.log("system"," self.touchBeginCameraPos.x   ".. self.touchBeginCameraPos.x.."   self.touchBeginCameraPos.z  " ..self.touchBeginCameraPos.z)
-        ct.log("system"," 主相机位置->帧后=》.x   ".. mainCameraCenterTransforms.position.x.."   z  " ..mainCameraCenterTransforms.position.z)
-        ct.log("system","---------------------------------------------------------------------------------------")
     end
 end
 
@@ -181,12 +173,15 @@ end
 --返回：
 --  与地面的碰撞点，若无碰撞则返回nil
 function CameraMove.GetTouchTerrianPosition(screenPoint)
+    if nil == screenPoint then
+        return
+    end
     local ray = UnityEngine.Camera.main:ScreenPointToRay(screenPoint)
     local isHit, hit = UnityEngine.Physics.Raycast(ray, nil,Mathf.Infinity)
     if isHit then
         return hit.point
     else
-        --ct.log("system","无碰撞物体")
+        ct.log("system","无碰撞物体")
         return nil
     end
 end

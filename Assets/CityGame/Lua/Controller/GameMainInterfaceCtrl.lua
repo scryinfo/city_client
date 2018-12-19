@@ -86,6 +86,8 @@ end
 function GameMainInterfaceCtrl.OnBuild()
     ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
     ct.OpenCtrl('ConstructCtrl')
+    --相机切换到建造状态
+    CameraMove.ChangeCameraState(TouchStateType.ConstructState)
 end
 
 --交易所--

@@ -36,8 +36,7 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 
-DataManager.TempDatas ={ constructObj = nil, constructID = nil}
-
+DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
 ---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
 -------------------------------原子地块数据--------------------------------

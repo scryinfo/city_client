@@ -1,4 +1,3 @@
-
 WindowsInput = class('WindowsInput')
 
 function WindowsInput:initialize( ... )
@@ -30,8 +29,6 @@ end
 
 function WindowsInput:IsMove()
     if self:GetMoveV2() ~= nil and (self:GetMoveV2().x~= 0 or self:GetMoveV2().y~= 0) then
-        ct.log("system","旧的屏幕坐标  "..self.m_oldMousePos.x .."  ".. self.m_oldMousePos.y)
-        ct.log("system","新的屏幕坐标差值"..self.m_moveV2.x .."  ".. self.m_moveV2.y)
         return true
     else
         return false

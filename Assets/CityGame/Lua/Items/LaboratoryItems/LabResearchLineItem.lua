@@ -47,20 +47,19 @@ function LabResearchLineItem:initialize(data, viewRect)
 end
 function LabResearchLineItem:_initData(data)
     self.data = data
-    --self.leftSec = self.data.leftSec
-
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
     self.formularData = FormularConfig[0][data.itemId]
     self.staffText.text = tostring(data.workerNum)
-    self.levelText.text = data.lv
+    self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
     if not data.roll or data.roll <= 0 then
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     else
         self.bottleImg.color = Color.white
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
     end
     self.startTimeDown = true
     self.currentTime = os.time()
@@ -103,10 +102,6 @@ function LabResearchLineItem:_clickDeleteBtn()
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
---点击发明界面
-function LabResearchLineItem:_clickOpenInventionPanelBtn()
-    --ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
-end
 --倒计时
 function LabResearchLineItem:_update()
     if self.startTimeDown then
@@ -115,22 +110,24 @@ function LabResearchLineItem:_update()
         if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
-            self.data.roll = self.data.roll + 1
             self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.currentTime / self.data.finishTime) * LabResearchLineItem.static.FinishBulbHight
+        local height = (1 - remainTime / self.data.totalTime) * LabResearchLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
 
         if self.currentTime >= self.data.finishTime then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
-            self.data.roll = self.data.roll + 1
             self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
             return
         end
     end

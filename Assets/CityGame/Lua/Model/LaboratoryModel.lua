@@ -91,7 +91,9 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.remainWorker = 0
     if data.line then
         for i, lineInfo in pairs(data.line) do
-            lineInfo.finishTime = lineInfo.leftSec + os.time()  --计算结束时间
+            lineInfo.totalTime = FormularConfig[lineInfo.type][lineInfo.itemId].phaseSec / lineInfo.workerNum
+            lineInfo.finishTime = lineInfo.totalTime + os.time()  --计算结束时间
+
             self.hashLineData[lineInfo.id] = lineInfo
             self.orderLineData[#self.orderLineData + 1] = lineInfo
         end
@@ -124,9 +126,11 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
 end
 --开工
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
-    self.hashLineData[data.lineId].run = true
-    self.hashLineData[data.lineId].rollTarget = data.phase
-    self.hashLineData[data.lineId].finishTime = self.hashLineData[data.lineId].leftSec + os.time()  --计算结束时间
+    local line = self.hashLineData[data.lineId]
+    line.run = true
+    line.rollTarget = data.phase
+    line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
+    line.finishTime = line.totalTime + os.time()  --计算结束时间
 
     self.tempLine = nil
     self:_getScientificLine()
@@ -168,13 +172,16 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
     if line then
         line.lv = data.lv
         line.leftSec = data.leftSec
-        line.finishTime = data.leftSec + os.time()
+
+        line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
+        line.finishTime = line.totalTime + os.time()  --计算结束时间
+
         line.phase = data.phase
         line.run = data.run
         line.roll = data.roll
         --Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
     else
-        ct.log("", "找不到对应lineId的线路")
+        ct.log("cycle_w15_laboratory03", "找不到对应lineId的线路")
     end
 end
 --员工数量改变
@@ -246,12 +253,12 @@ end
 function LaboratoryModel:m_DelTempLineData(data)
     if data.type == 0 then
         if self.researchLines[1].lineId then
-            ct.log("", "错误错误错误")
+            ct.log("cycle_w15_laboratory03", "错误错误错误")
         end
         table.remove(self.researchLines, 1)
     else
         if self.inventionLines[1].lineId then
-            ct.log("", "错误错误错误")
+            ct.log("cycle_w15_laboratory03", "错误错误错误")
         end
         table.remove(self.inventionLines, 1)
     end

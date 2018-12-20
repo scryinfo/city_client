@@ -58,33 +58,35 @@ function LabResearchCtrl:_update()
     if not self.m_data then
         return
     end
-    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec > 0 then
-        self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        LabResearchPanel.progressWorkingImg.fillAmount = 1 - self.remainTime / self.m_data.phaseSec  --设置图片进度
-
-        if self.remainTime <= 0 then
+    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.m_data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
             LabResearchPanel.setBulbState(self.m_data.bulbState)
-            self.remainTime = 0
+            LabResearchPanel.progressWorkingImg.fillAmount = 1
+            return
         end
 
-        local timeTable = getTimeBySec(self.remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         LabResearchPanel.timeDownText.text = timeStr
+        LabResearchPanel.progressWorkingImg.fillAmount = 1 - remainTime / self.m_data.totalTime  --设置图片进度
+
+        if self.currentTime >= self.m_data.finishTime then
+            self.m_data.bulbState = LabInventionBulbItemState.Finish
+            LabResearchPanel.setBulbState(self.m_data.bulbState)
+            LabResearchPanel.progressWorkingImg.fillAmount = 1
+            return
+        end
     end
 end
 --初始化数据
 function LabResearchCtrl:_initPanelData()
     self.m_data.type = 0
-    self.remainTime = self.m_data.leftSec
-    local level = DataManager.GetMyGoodLvByItemId(self.m_data.itemId)
-    if not level then
-        return
-    end
-    LabResearchPanel.levelText.text = "Lv"..tostring(level)
-    if not self.m_data.phaseSec then
-        self.m_data.phaseSec = FormularConfig[0][self.m_data.itemId].phaseSec
-    end
+    self.currentTime = os.time()
+    LabResearchPanel.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(self.m_data.itemId))
+
     local formularItem = FormularConfig[0][self.m_data.itemId]
     if #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")

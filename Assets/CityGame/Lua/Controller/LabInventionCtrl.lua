@@ -49,26 +49,35 @@ function LabInventionCtrl:_update()
     if not self.m_data then
         return
     end
-    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec > 0 then
-        self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        LabInventionPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
-
-        if self.remainTime <= 0 then
+    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.m_data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
             LabInventionPanel.setBulbState(self.m_data.bulbState)
-            self.remainTime = 0
+            LabInventionPanel.progressWorkingImg.fillAmount = 1
+            return
         end
 
-        local timeTable = getTimeBySec(self.remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         LabInventionPanel.timeDownText.text = timeStr
+        LabInventionPanel.progressWorkingImg.fillAmount = 1 - remainTime / self.m_data.totalTime  --设置图片进度
+
+        if self.currentTime >= self.m_data.finishTime then
+            self.m_data.bulbState = LabInventionBulbItemState.Finish
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
+            LabInventionPanel.progressWorkingImg.fillAmount = 1
+            return
+        end
     end
 end
 
 --初始化数据
 function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
-    self.remainTime = self.m_data.leftSec
+    self.currentTime = os.time()
+
     --根据itemId判断是不是原料
     if self.m_data.itemId < 2200000 then
         LabInventionPanel.showLine({})

@@ -13,7 +13,7 @@ function LabBuildingInventionItem:initialize(data, viewRect)
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.bulbImg = viewTrans:Find("mainRoot/progressRoot/right/bulbImg"):GetComponent("Image")
-    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/bg/timeDownText"):GetComponent("Text")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/timeDownText"):GetComponent("Text")
     self.progressCountText = viewTrans:Find("mainRoot/progressRoot/right/bulbImg/progressCountText"):GetComponent("Text")
     self.phaseItems = LabInventionItemPhaseItems:new(viewTrans:Find("mainRoot/successItems"))
     self.progressSlider = viewTrans:Find("mainRoot/progressRoot/progressSlider"):GetComponent("Slider")
@@ -29,19 +29,18 @@ function LabBuildingInventionItem:_initData(data)
         itemInfo = Good[data.itemId]
     end
     if not itemInfo.name then
-        ct.log("", "找不到itemId对应的数据"..self.itemId)
+        ct.log("cycle_w15_laboratory03", "找不到itemId对应的数据"..self.itemId)
         return
     end
 
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
-    self.phaseSec = FormularConfig[0][data.itemId].phaseSec / data.workerNum  --0为研究部分，1为发明
     self.progressSlider.maxValue = 1
 
     if data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)
-        self.progressSlider.value = 1
+        self.progressSlider.value = self.progressSlider.maxValue
     else
         self.bulbImg.color = getColorByVector3(LabBuildingInventionItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
@@ -76,34 +75,21 @@ function LabBuildingInventionItem:_update()
         local remainTime = self.data.finishTime - self.currentTime
         if remainTime < 0 then
             self.startTimeDown = false
-            self.progressSlider.value = 1
-            self.data.roll = self.data.roll + 1
+            self.progressSlider.value = self.progressSlider.maxValue
             self.bottleImg.color = Color.white
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        self.progressSlider.value = self.currentTime / self.data.finishTime
+        self.progressSlider.value = 1 - remainTime / self.data.totalTime
 
         if self.currentTime >= self.data.finishTime then
             self.startTimeDown = false
-            self.progressSlider.value = 1
-            self.data.roll = self.data.roll + 1
+            self.progressSlider.value = self.progressSlider.maxValue
             self.bottleImg.color = Color.white
             return
         end
-
-        --self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
-        --if self.leftSec < 0 then
-        --    self.startTimeDown = false
-        --    self.progressSlider.value = self.formularData.phaseSec
-        --    return
-        --end
-        --local timeTable = getTimeBySec(self.leftSec)
-        --local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
-        --self.timeDownText.text = timeStr
-        --self.progressSlider.value = self.formularData.phaseSec - self.leftSec
     end
 end

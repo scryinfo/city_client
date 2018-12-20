@@ -502,7 +502,7 @@ end
 
 --根据id查询等级
 function DataManager.GetMyGoodLvByItemId(itemId)
-    return PersonDataStack.m_goodLv[itemId]
+    return PersonDataStack.m_goodLv[itemId] or 0
 end
 
 --刷新自己所拥有商品科技等级

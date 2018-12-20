@@ -145,13 +145,14 @@ function LabInventionLineItem:_update()
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
             self.data.roll = self.data.roll + 1
             self.bottleImg.color = Color.white
+            self.data.run = false
             return
         end
 
         local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.currentTime / self.data.finishTime) * LabInventionLineItem.static.FinishBulbHight
+        local height = (1 - remainTime / self.data.totalTime) * LabInventionLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
 
         if self.currentTime >= self.data.finishTime then
@@ -159,6 +160,7 @@ function LabInventionLineItem:_update()
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
             self.data.roll = self.data.roll + 1
             self.bottleImg.color = Color.white
+            self.data.run = false
             return
         end
     end

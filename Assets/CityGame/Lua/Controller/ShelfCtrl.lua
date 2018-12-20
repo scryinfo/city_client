@@ -124,10 +124,16 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         buyListing.freight = freight
         buyListing.total = price + freight;
         --buyListing.good = ins.GoodsUnifyMgr.shelfBuyGoodslItems
+        local moneyValue = DataManager.GetMyMoney()
+
         buyListing.btnClick = function()
+            if moneyValue < buyListing.total then
+                Event.Brocast("SmallPop","钱不够",280)
+            end
             for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
                 Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,ServerListModel.bagId);
             end
+            DataManager.SetSubtractMyMoney(math.floor(buyListing.total))
         end
         ct.OpenCtrl("TransportBoxCtrl",buyListing);
     end
@@ -214,6 +220,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
             end
         end
     end
+    Event.Brocast("SmallPop","购买成功",300)
 end
 function ShelfCtrl:OnClick_createGoods(go)
     if go.m_data == nil then

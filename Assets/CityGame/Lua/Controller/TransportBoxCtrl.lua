@@ -3,7 +3,7 @@
 
 TransportBoxCtrl = class('TransportBoxCtrl',UIPage);
 UIPage:ResgisterOpen(TransportBoxCtrl) --注册打开的方法
-
+local transportbox
 
 function TransportBoxCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
@@ -15,9 +15,7 @@ end
 
 function TransportBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local transportbox = self.gameObject:GetComponent('LuaBehaviour');
-    transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
-    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
+
 end
 
 function TransportBoxCtrl:Awake(go)
@@ -25,6 +23,9 @@ function TransportBoxCtrl:Awake(go)
 end
 
 function TransportBoxCtrl:Refresh()
+    transportbox = self.gameObject:GetComponent('LuaBehaviour');
+    transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
+    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     if self.m_data == nil then
         return;
     end
@@ -53,8 +54,8 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)
-    ins.transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
-    ins.transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
+    transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
+    transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     --ins.m_data = nil;
     ins:Hide();
 end
@@ -63,14 +64,6 @@ function TransportBoxCtrl:OnClick_confirmBtn(ins)
         ins.m_data.btnClick()
         ins.m_data.btnClick = nil
     end
-    ins:Hide();
-    --ins:OnClick_closeBtn(ins)
-    --local data = {}
-    --data.titleInfo = "提示"
-    --data.contentInfo = "商品开始运输"
-    --data.tipInfo = "可在运输线查看详情"
-    --ct.OpenCtrl('BtnDialogPageCtrl',data)
-    --CenterWareHousePanel.transportConfirm:SetActive(true);
-    --CenterWareHousePanel.nameText.text = nil;
-    --obj:Hide();
+    --ins:Hide();
+    ins:OnClick_closeBtn(ins)
 end

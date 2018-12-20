@@ -44,6 +44,7 @@ function LabResearchLineItem:initialize(data, viewRect)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)
     end)
+    Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
 function LabResearchLineItem:_initData(data)
     self.data = data
@@ -71,10 +72,11 @@ function LabResearchLineItem:_initData(data)
 end
 --刷新数据
 function LabResearchLineItem:_updateInfo(data)
-    if data.id ~= self.data.id then
+    if data.itemId ~= self.data.itemId then
         return
     end
     --成果展示
+    self.data.id = data.id
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
     self.data.run = data.run
@@ -91,6 +93,15 @@ function LabResearchLineItem:_updateInfo(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
+--员工数量改变
+function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime)
+    if lineId == self.data.id then
+        self.currentTime = os.time()
+        self.data.finishTime = finishTime
+        self.data.totalTime = totalTime
+    end
+end
+
 --点击删除按钮
 function LabResearchLineItem:_clickDeleteBtn()
     local info = {}
@@ -104,12 +115,13 @@ function LabResearchLineItem:_clickDeleteBtn()
 end
 --倒计时
 function LabResearchLineItem:_update()
-    if self.startTimeDown then
+    if self.startTimeDown and self.data.run then
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
         local remainTime = self.data.finishTime - self.currentTime
         if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
             self.bottleImg.color = Color.white
             self.data.roll = self.data.roll + 1
             self.data.run = false
@@ -125,6 +137,7 @@ function LabResearchLineItem:_update()
         if self.currentTime >= self.data.finishTime then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
             self.bottleImg.color = Color.white
             self.data.roll = self.data.roll + 1
             self.data.run = false

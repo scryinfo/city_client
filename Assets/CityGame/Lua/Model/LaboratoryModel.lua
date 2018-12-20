@@ -93,6 +93,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
         for i, lineInfo in pairs(data.line) do
             lineInfo.totalTime = lineInfo.leftSec / lineInfo.workerNum
             lineInfo.finishTime = lineInfo.totalTime + os.time()  --计算结束时间
+            lineInfo.startTime = os.time()
 
             self.hashLineData[lineInfo.id] = lineInfo
             self.orderLineData[#self.orderLineData + 1] = lineInfo
@@ -131,14 +132,17 @@ function LaboratoryModel:n_OnReceiveLaunchLine(data)
     line.rollTarget = data.phase
     line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
     line.finishTime = line.totalTime + os.time()  --计算结束时间
+    line.startTime = os.time()
+
+    Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
 
     self.tempLine = nil
     self:_getScientificLine()
-    if self.hashLineData[data.lineId].type == 0 then
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
-    else
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
-    end
+    --if self.hashLineData[data.lineId].type == 0 then
+    --    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
+    --else
+    --    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
+    --end
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(data)
@@ -175,6 +179,7 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
 
         line.totalTime = line.leftSec / line.workerNum
         line.finishTime = line.totalTime + os.time()  --计算结束时间
+        line.startTime = os.time()
 
         line.phase = data.phase
         line.run = data.run
@@ -187,9 +192,11 @@ end
 --员工数量改变
 function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
     local line = self.hashLineData[data.lineId]
-    if line.finishTime then
+    line.workerNum = data.n
 
-    end
+    line.totalTime = (line.finishTime - os.time()) / data.n  --重新计算
+    line.finishTime = os.time() + line.totalTime
+    Event.Brocast("c_LabLineWorkerNumChange", line.lineId, line.totalTime, line.finishTime)
 end
 
 ---本地消息---

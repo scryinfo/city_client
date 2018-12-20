@@ -43,6 +43,7 @@ function LabInventionLineItem:initialize(data, viewRect)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)
     end)
+    Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
 
 --初始化界面
@@ -123,7 +124,14 @@ function LabInventionLineItem:_updateInfo(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
-
+--员工数量改变
+function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime)
+    if lineId == self.data.id then
+        self.currentTime = os.time()
+        self.data.finishTime = finishTime
+        self.data.totalTime = totalTime
+    end
+end
 --点击删除按钮
 function LabInventionLineItem:_clickDeleteBtn()
     local info = {}

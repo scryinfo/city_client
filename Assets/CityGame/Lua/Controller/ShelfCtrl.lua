@@ -32,6 +32,7 @@ function ShelfCtrl:OnCreate(obj)
     --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
+    Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
 end
 
 function ShelfCtrl:Awake(go)
@@ -104,17 +105,30 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         return;
     else
         local buyListing = {}
+        --buyListing.buildingId = ins.m_data.info.id
         buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
         buyListing.targetLocationName = "中心仓库";
-        buyListing.distance = "0km";
-        buyListing.time = "00:00:00";
+        --buyListing.distance = "0km";
+        buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
+        --buyListing.time = "00:00:00";
         local price = 0;
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
             price = price + tonumber(v.moneyText.text);
         end
         buyListing.goodsPrice = price;
-        buyListing.freight = "0";
-        buyListing.total = price;
+        local freight = 0;
+        for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+            freight = freight + (buyListing.distance * tonumber(v.numberScrollbar.value) * 10);
+            buyListing.number = tonumber(v.numberScrollbar.value)
+        end
+        buyListing.freight = freight
+        buyListing.total = price + freight;
+        --buyListing.good = ins.GoodsUnifyMgr.shelfBuyGoodslItems
+        buyListing.btnClick = function()
+            for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,ServerListModel.bagId);
+            end
+        end
         ct.OpenCtrl("TransportBoxCtrl",buyListing);
     end
 end
@@ -179,7 +193,28 @@ function ShelfCtrl:openPlayerBuy(isShow)
     end
     switchIsShow = isShow
 end
-
+--购买成功后回调
+function ShelfCtrl:receiveBuyRefreshInfo(Data)
+    if not Data then
+        return;
+    end
+    for i,v in pairs(self.GoodsUnifyMgr.items) do
+        if v.itemId == Data.item.key.id then
+            if v.goodsDataInfo.number == Data.item.n then
+                self.GoodsUnifyMgr:_deleteGoods(v)
+                for i,v in pairs(ShelfCtrl.temporaryItems) do
+                    self.GoodsUnifyMgr:_deleteBuyGoods(v)
+                end
+            else
+                v.numberText.text = v.goodsDataInfo.number - Data.item.n;
+                v.goodsDataInfo.number = v.numberText.text
+                for i in pairs(ShelfCtrl.temporaryItems) do
+                    Event.Brocast("c_tempTabNotGoods", i)
+                end
+            end
+        end
+    end
+end
 function ShelfCtrl:OnClick_createGoods(go)
     if go.m_data == nil then
         return

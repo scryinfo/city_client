@@ -14,7 +14,7 @@ end
 function ShelfModel.OnCreate()
     --注册本地事件 m开头
     Event.AddListener("m_ReqShelfDel",this.m_ReqShelfDel)
-    Event.AddListener("n_OnBuyShelfGoods",this.m_ReqBuyShelfGoods)
+    Event.AddListener("m_ReqBuyShelfGoods",this.m_ReqBuyShelfGoods)
     --Event.AddListener("n_OnShelfDelInfo",this.n_OnShelfDelInfo)
     ShelfModel.registerAsNetMsg()
 end
@@ -41,7 +41,7 @@ end
 --购买物品
 function ShelfModel.m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId)
     local msgId = pbl.enum("gscode.OpCode","buyInShelf")
-    local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = number},price = price,wareHouseId = wareHouseId}
+    local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = tonumber(number)},price = tonumber(price),wareHouseId = wareHouseId}
     local pMsg = assert(pbl.encode("gs.BuyInShelf", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
@@ -53,4 +53,5 @@ end
 --购买物品
 function ShelfModel.n_OnBuyShelfGoods(stream)
     local msgBuyShelfGoods = assert(pbl.decode("gs.BuyInShelf",stream),"ShelfModel.n_OnBuyShelfGoods")
+    Event.Brocast("receiveBuyRefreshInfo",msgBuyShelfGoods);
 end

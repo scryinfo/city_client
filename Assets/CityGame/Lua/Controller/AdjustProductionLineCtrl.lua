@@ -126,11 +126,11 @@ function AdjustProductionLineCtrl:getWorkerNum()
     local workerNum = 0  --剩余员工数量
     local workNum = 0    --工作的员工数量
     if self.data.buildingType == BuildingType.MaterialFactory then
-        if not MaterialModel.materialProductionLine then
+        if not self.data.line then
             workerNum = self.buildingMaxWorkerNum
             return workerNum
         else
-            for i,v in pairs(MaterialModel.materialProductionLine) do
+            for i,v in pairs(self.data.line) do
                 workNum = workNum + v.workerNum
             end
             workerNum = self.buildingMaxWorkerNum - workNum

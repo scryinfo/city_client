@@ -6,7 +6,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,it
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
     self.id = id;
-
+    self.itemId = itemId;
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");

@@ -110,7 +110,7 @@ function HomeProductionLineItem:productionRefreshInfo(data)
     local homePageType = ct.homePage.productionLine
     local prefabData={}
     prefabData.prefab = self:_creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
-    local SmallLineRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
+    local SmallLineRateItem = HomePageDisplay:new(homePageType,data.line,prefabData.prefab)
 end
 --生成预制
 function HomeProductionLineItem:_creatGoods(path,parent)

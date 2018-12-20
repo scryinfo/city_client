@@ -28,26 +28,49 @@ function TransportBoxCtrl:Refresh()
     if self.m_data == nil then
         return;
     end
+    self:refreshUiInfo()
+end
+--刷新数据
+function TransportBoxCtrl:refreshUiInfo()
+    if not self.m_data.goodsPrice then
+        TransportBoxPanel.goodsObj.localScale = Vector3.zero
+        TransportBoxPanel.transportObj.localScale = Vector3.zero
+        TransportBoxPanel.transportsObj.localScale = Vector3.one
+        TransportBoxPanel.transportMoney.text = self.m_data.freight
+    else
+        TransportBoxPanel.goodsObj.localScale = Vector3.one
+        TransportBoxPanel.transportObj.localScale = Vector3.one
+        TransportBoxPanel.transportsObj.localScale = Vector3.zero
+        TransportBoxPanel.transportMoney.text = "E"..math.floor(self.m_data.freight)..".0000";
+    end
+    --self.buildingId = self.m_data.buildingId;
+    --self.buyGood = self.m_data.good;
     TransportBoxPanel.fromName.text = self.m_data.currentLocationName;
     TransportBoxPanel.targetName.text = self.m_data.targetLocationName;
-    TransportBoxPanel.distanceText.text = self.m_data.distance;
-    TransportBoxPanel.timeText.text = self.m_data.time;
-    TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice;
-    TransportBoxPanel.transportMoney.text = "E"..self.m_data.freight;
-    TransportBoxPanel.totalMoney.text = "E"..self.m_data.total;
+    TransportBoxPanel.distanceText.text = math.floor(self.m_data.distance).."km";
+    TransportBoxPanel.numberText.text = self.m_data.number;
+    TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
+    TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
-
-function TransportBoxCtrl:OnClick_closeBtn(obj)
-    obj.m_data = nil;
-    obj:Hide();
+function TransportBoxCtrl:OnClick_closeBtn(ins)
+    ins.transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
+    ins.transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
+    --ins.m_data = nil;
+    ins:Hide();
 end
-function TransportBoxCtrl:OnClick_confirmBtn(obj)
-    local data = {}
-    data.titleInfo = "提示"
-    data.contentInfo = "商品开始运输"
-    data.tipInfo = "可在运输线查看详情"
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
-    CenterWareHousePanel.transportConfirm:SetActive(true);
-    CenterWareHousePanel.nameText.text = nil;
-    obj:Hide();
+function TransportBoxCtrl:OnClick_confirmBtn(ins)
+    if ins.m_data.btnClick then
+        ins.m_data.btnClick()
+        ins.m_data.btnClick = nil
+    end
+    ins:Hide();
+    --ins:OnClick_closeBtn(ins)
+    --local data = {}
+    --data.titleInfo = "提示"
+    --data.contentInfo = "商品开始运输"
+    --data.tipInfo = "可在运输线查看详情"
+    --ct.OpenCtrl('BtnDialogPageCtrl',data)
+    --CenterWareHousePanel.transportConfirm:SetActive(true);
+    --CenterWareHousePanel.nameText.text = nil;
+    --obj:Hide();
 end

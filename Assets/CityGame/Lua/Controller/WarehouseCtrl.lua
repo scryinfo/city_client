@@ -162,11 +162,11 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         return;
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
-            if not MaterialModel.materialShelf then
+            if not go.m_data.shelf.good then
                 Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
                 return;
             else
-                for k,t in pairs(MaterialModel.materialShelf) do
+                for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
                         Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
                     end
@@ -196,17 +196,17 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     end
 end
 --运输回调执行
-function WarehouseCtrl:n_transports(msg)
+function WarehouseCtrl:n_transports(Data)
     local table = self.GoodsUnifyMgr.WarehouseItems
     for i,v in pairs(table) do
-        if v.itemId == msg.item.key.id then
-            if v.goodsDataInfo.num == msg.item.n then
+        if v.itemId == Data.item.key.id then
+            if v.goodsDataInfo.num == Data.item.n then
                 self.GoodsUnifyMgr:_WarehousedeleteGoods(i)
                 for i,v in pairs(WarehouseCtrl.temporaryItems) do
                    self.GoodsUnifyMgr:_deleteTransportItem(v)
                 end
             else
-                v.numberText.text = v.goodsDataInfo.num - msg.item.n;
+                v.numberText.text = v.goodsDataInfo.num - Data.item.n;
                 v.goodsDataInfo.num = v.numberText.text
                 for i in pairs(WarehouseCtrl.temporaryItems) do
                     Event.Brocast("c_temporaryifNotGoods", i)

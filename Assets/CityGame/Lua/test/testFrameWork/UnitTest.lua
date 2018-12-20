@@ -169,9 +169,14 @@ function AsyncSequenceTester:initialize()
 end
 
 function AsyncSequenceTester:excute()
-    self:resetData()
-    self.startTime = os.clock()
     local curSeq = self:getCurSeq()
+    if curSeq == nil then
+        return
+    end
+    if curSeq.prefun ~= nil then
+        curSeq:prefun()
+    end
+    self.startTime = os.clock()
     if curSeq then
         curSeq.fun(self,curSeq)
     end

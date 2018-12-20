@@ -516,13 +516,156 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
                 测试分配的内存 138.5 - 123.8 = 14.7 M
         设备
             texture memory 	7.7M
+                * 7个建筑平均每个1.1M
             Total Allocated
                 打开测试分组 122 帧 36.7 M
                 关闭测试分组 122 帧 27.7 M
                 测试分配的内存 36.7 - 27.7 = 9 M
+    --卸载
+        PC
+            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.020000000000437
+       设备
+            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.066083000000001
+            * 0.0333333333333333秒一帧，那么2帧可以完全卸载
     --结论
         在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
-        所以建筑的加载策略应该是根据城市来预加载，并常驻内存
+        所以建筑的加载策略应该是根据城市来预加载，并常驻内存； 卸载压力很小，可以不用考虑
+    --]]
+end)
+
+--AOI 9屏建筑实例化时间及内存测试
+UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid",  function ()
+    local aTester = AsyncSequenceTester:new()
+    --初始化测试数据
+    aTester.testcount = 1
+    aTester.loadCount = 0
+    aTester.startTime = 0
+    aTester.curPos = 1
+    aTester.testSquence = {}
+    aTester.ResPathList = {}
+    aTester.loadedBundles = {}
+    aTester.loadedAssets = {}
+    aTester.instances = {}
+    aTester.resetData = function(self)
+        self.startTime = 0
+    end
+    --数据准备
+    local ResPathListS = {}
+    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/Park_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/Techo_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Build'
+
+    local LoadTestRes = function(ResPathList)
+        aTester.ResPathList = ResPathListS
+        for i = 1, #ResPathList do
+            local loadDataInfo =  resMgr:LoadRes_S(ResPathList[i], ct.getType(UnityEngine.GameObject));
+            aTester.loadedBundles[#aTester.loadedBundles+1] = loadDataInfo._bunldle
+            aTester.loadedAssets[#aTester.loadedAssets+1] = loadDataInfo._asset
+        end
+    end
+    LoadTestRes(ResPathListS)
+    --数据准备
+
+    --实例化方法
+    local InstantiateFun = function(tester)
+        ct.log('abel_w17_Aoi_Instantiate_9Grid','[InstantiateFun]')
+        local curSeq = tester:getCurSeq()
+        for i = 1, #aTester.loadedAssets do
+            for j = 1, curSeq._inscount do
+                tester.instances[#tester.instances+1] = UnityEngine.GameObject.Instantiate(aTester.loadedAssets[i])
+            end
+        end
+
+        curSeq.postfun(tester)
+    end
+
+    local destroyInstances = function(tester)
+        ct.log('abel_w17_Aoi_Instantiate_9Grid','[destroyInstances]')
+        for i, v in pairs(tester.instances) do
+            GameObject.DestroyImmediate(v, false)
+        end
+        tester.instances = {}
+        tester:getCurSeq().postfun(tester)
+    end
+
+    local unloadFun = function(tester)
+        ct.log('abel_w17_Aoi_Instantiate_9Grid','[unloadFun]')
+        for i, v in pairs(tester.loadedBundles) do
+            if v ~= nil then
+                resMgr:UnloadAssetBundle(v.name, true)
+            end
+        end
+        tester:getCurSeq().postfun(tester)
+    end
+
+    --加载成功后的回调
+    local callback = function (tester)
+        local costTime = os.clock() - tester.startTime
+        ct.log('abel_w17_Aoi_Instantiate_9Grid',tester:getCurSeq().msg ..costTime)
+        local timer = FrameTimer.New(function()
+            tester:Nextfun()
+            collectgarbage("collect")
+            tester:excute()
+        end, 15,0)
+        timer:Start()
+    end
+
+    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 198, prefun = aTester.resetData, postfun = callback, msg = '1屏220个实例，9屏1980实例的实例化耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 198, prefun = aTester.resetData, postfun = callback, msg = '9屏1980实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 450, prefun = aTester.resetData, postfun = callback, msg = '1屏450个实例，9屏4050实例的实例化耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 450, prefun = aTester.resetData, postfun = callback, msg = '9屏4050实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 405, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
+
+    --开始执行异步测试序列
+    collectgarbage("collect")
+    aTester:excute()
+    --[[
+    测试结果
+    --加载时间
+        PC
+            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.372      --第一个的时间貌似都偏长
+            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.065000000000001
+            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.096999999999753
+            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.065999999999804
+            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.095999999999549
+            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.097999999999956
+            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.096999999999753
+        设备
+            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.515782   --第一个的时间貌似都偏长
+            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.330709
+            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.308198
+            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.232529
+            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.307951
+            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.293312
+            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.341899
+            加载一个建筑大概 0.330709/0.0333333333333333 = 9.92127000000001 左右， 假设建筑类型10个，加载所有建筑要要   0.33*10 = 3.3秒
+     --内存占用
+        PC
+            texture momory 32M
+            Total Allocated
+                打开测试分组 249帧 138.5 M
+                关闭测试分组 249帧 123.8 M
+                测试分配的内存 138.5 - 123.8 = 14.7 M
+        设备
+            texture memory 	7.7M
+                * 7个建筑平均每个1.1M
+            Total Allocated
+                打开测试分组 122 帧 36.7 M
+                关闭测试分组 122 帧 27.7 M
+                测试分配的内存 36.7 - 27.7 = 9 M
+    --卸载
+        PC
+            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.020000000000437
+       设备
+            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.066083000000001
+            * 0.0333333333333333秒一帧，那么2帧可以完全卸载
+    --结论
+        在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
+        所以建筑的加载策略应该是根据城市来预加载，并常驻内存； 卸载压力很小，可以不用考虑
     --]]
 end)
 

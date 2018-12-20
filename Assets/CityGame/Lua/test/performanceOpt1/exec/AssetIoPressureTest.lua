@@ -572,7 +572,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
 
     --实例化方法
     local InstantiateFun = function(tester)
-        ct.log('abel_w17_Aoi_Instantiate_9Grid','[InstantiateFun]')
+        --ct.log('abel_w17_Aoi_Instantiate_9Grid','[InstantiateFun]')
         local curSeq = tester:getCurSeq()
         for i = 1, #aTester.loadedAssets do
             for j = 1, curSeq._inscount do
@@ -584,7 +584,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     end
 
     local destroyInstances = function(tester)
-        ct.log('abel_w17_Aoi_Instantiate_9Grid','[destroyInstances]')
+        --ct.log('abel_w17_Aoi_Instantiate_9Grid','[destroyInstances]')
         for i, v in pairs(tester.instances) do
             GameObject.DestroyImmediate(v, false)
         end
@@ -593,7 +593,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     end
 
     local unloadFun = function(tester)
-        ct.log('abel_w17_Aoi_Instantiate_9Grid','[unloadFun]')
+        --ct.log('abel_w17_Aoi_Instantiate_9Grid','[unloadFun]')
         for i, v in pairs(tester.loadedBundles) do
             if v ~= nil then
                 resMgr:UnloadAssetBundle(v.name, true)
@@ -627,13 +627,12 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     测试结果
     --加载时间
         PC
-            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.372      --第一个的时间貌似都偏长
-            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.065000000000001
-            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.096999999999753
-            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.065999999999804
-            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.095999999999549
-            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.097999999999956
-            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.096999999999753
+            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.489
+            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.391
+            [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.026999999999987
+            [abel_w17_Aoi_Instantiate_9Grid]1屏450个实例，9屏4050实例的实例化耗时 =4.269
+            [abel_w17_Aoi_Instantiate_9Grid]9屏4050实例的销毁耗时 =0.057999999999993
+            [abel_w17_Aoi_Instantiate_9Grid]所有(一共7个)建筑卸载的时间 =0.0010000000000048
         设备
             [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.515782   --第一个的时间貌似都偏长
             [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.330709

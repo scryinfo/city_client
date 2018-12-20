@@ -22,7 +22,6 @@ end
 function CenterWareHousePanel.InitPanel()
     this.backBtn = transform:Find("topRoot/BackButton").gameObject;--返回按钮
     this.number = transform:Find("topRoot/Capacity/Slider/Number").gameObject;--仓库商品个数
-    this.total = transform:Find("topRoot/Capacity/Slider/TotalNumber").gameObject;--仓库总容量
     this.slider = transform:Find("topRoot/Capacity/Slider");
     this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
     this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn").gameObject;  --名字排序
@@ -45,6 +44,7 @@ function CenterWareHousePanel.InitPanel()
     this.transportConfirmBtn = transform:Find("rightRoot/bg/transport/confirmBtn").gameObject;
     this.transportConfirm = transform:Find("rightRoot/bg/transport/confirm").gameObject;
     this.moneyText = transform:Find("rightRoot/bg/transport/moneyItem/moneyText").gameObject:GetComponent("Text");
+    this.tipText = transform:Find("rightRoot/bg/transport/tip/tipText").gameObject:GetComponent("Text");
     this.transportopenBtn = transform:Find("rightRoot/bg/transport/warehouseName/openBtn").gameObject;
     this.nameText = transform:Find("rightRoot/bg/transport/warehouseName").gameObject:GetComponent("InputField");
     this.tspContent = transform:Find("rightRoot/bg/transport/ScrollView/Viewport/Content").gameObject:GetComponent("RectTransform");

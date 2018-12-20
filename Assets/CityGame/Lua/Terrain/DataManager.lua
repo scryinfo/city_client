@@ -385,6 +385,9 @@ function  DataManager.InitPersonDatas(tempData)
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
 
+    --初始化自己中心仓库的建筑ID
+    PersonDataStack.m_bagId = tempData.bagIds
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -463,6 +466,10 @@ end
 
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
+end
+
+function DataManager.GetBagId()
+    return PersonDataStack.m_bagId
 end
 
 function DataManager.GetMyPersonData()

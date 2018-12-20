@@ -36,15 +36,13 @@ end
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model
-    self:initializeData()
+    self:initInsData()
     self:_showFriendsNotice()
 end
 
-function GameMainInterfaceCtrl:initializeData()
-    if self.m_data then
-        DataManager.OpenDetailModel(GameMainInterfaceModel,1)
-        DataManager.DetailModelRpcNoRet(1, 'm_GetAllMails',self.m_data)
-    end
+function GameMainInterfaceCtrl:initInsData()
+        DataManager.OpenDetailModel(GameMainInterfaceModel,4)
+        DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
 end
 
 --获取所有邮件
@@ -88,7 +86,7 @@ end
 --好友红点--
 function GameMainInterfaceCtrl._showFriendsNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
-    GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
+  --  GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
 end
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
     self._showFriendsNotice()
@@ -145,7 +143,8 @@ end
 
 --中心仓库
 function GameMainInterfaceCtrl:OncenterWareHouse()
-    Event.Brocast("m_opCenterWareHouse")
+    --Event.Brocast("m_opCenterWareHouse")
+    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
     --ct.OpenCtrl("ScienceSellHallCtrl")
 
 end

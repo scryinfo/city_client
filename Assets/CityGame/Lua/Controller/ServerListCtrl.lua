@@ -9,6 +9,7 @@ local serverListBehaviour;
 local gameObject;
 local tempBg = nil;
 local tempTag = nil;
+local Index = nil
 
 function  ServerListCtrl:bundleName()
     return "ServerListPanel"
@@ -19,9 +20,19 @@ function ServerListCtrl:initialize()
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
+function ServerListCtrl:Refresh()
+    self:_initInsData()
+end
+
+function ServerListCtrl:_initInsData()
+    DataManager.OpenDetailModel(ServerListModel,2)
+
+end
+
 function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
+    self.data = self.m_data
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
@@ -32,7 +43,7 @@ function ServerListCtrl:OnCreate(obj)
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
 
-end
+ end
 
 function ServerListCtrl:_initData()
     for i, v in ipairs(self.m_data) do
@@ -45,12 +56,7 @@ function ServerListCtrl:_initData()
         self.server[i] = serverLuaItem
     end
 end
-function ServerListCtrl:Refresh()
-    --[[    ct.log("rodger_w8_GameMainInterface","[ServerListCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
-        ServerListPanel.serverOneText:GetComponent('Text').text =self.m_data[1];
-        ServerListPanel.serverTwoText:GetComponent('Text').text = self.m_data[2];]]
 
-end
 
 --选择服务器--
 function ServerListCtrl:c_OnServer(go)
@@ -62,21 +68,21 @@ function ServerListCtrl:c_OnServer(go)
     go.tag:SetActive(true);
     tempBg = go.bg;
     tempTag = go.tag
-    local Index = go.id;
-    Event.Brocast("m_chooseGameServer", Index);
+    Index = go.id;
 end
 
 --点击确定--
-function ServerListCtrl:c_OnOK()
-    if ServerListModel.isClick then
-        Event.Brocast("m_GsOK");
-    end
-    ServerListModel.isClick = false
+function ServerListCtrl:c_OnOK(go)
+    --Event.Brocast("m_chooseGameServer", Index,go.data);
+    local data = {}
+    data.Index = Index
+    data.serinofs = go.data
+    DataManager.DetailModelRpcNoRet(2, 'm_chooseGameServer',data)
 end
 
 function ServerListCtrl:c_GsCreateRole()
     UIPage:ClearAllPages()
-    UIPage:ShowPage(CreateRoleCtrl)
+    ct.OpenCtrl("CreateRoleCtrl")
 end
 function ServerListCtrl:c_GsLoginSuccess(playerId)
     UIPage:ClearAllPages()---------------------

@@ -46,7 +46,7 @@ end
 
 function GameNoticeCtrl:initializeData()
     if self.m_data then
-        DataManager.OpenDetailModel(GameNoticeModel,1)
+        DataManager.OpenDetailModel(GameNoticeModel,5)
     end
 end
 

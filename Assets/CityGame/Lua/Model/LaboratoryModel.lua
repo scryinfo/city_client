@@ -91,7 +91,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.remainWorker = 0
     if data.line then
         for i, lineInfo in pairs(data.line) do
-            lineInfo.totalTime = FormularConfig[lineInfo.type][lineInfo.itemId].phaseSec / lineInfo.workerNum
+            lineInfo.totalTime = lineInfo.leftSec / lineInfo.workerNum
             lineInfo.finishTime = lineInfo.totalTime + os.time()  --计算结束时间
 
             self.hashLineData[lineInfo.id] = lineInfo
@@ -173,7 +173,7 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
         line.lv = data.lv
         line.leftSec = data.leftSec
 
-        line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
+        line.totalTime = line.leftSec / line.workerNum
         line.finishTime = line.totalTime + os.time()  --计算结束时间
 
         line.phase = data.phase

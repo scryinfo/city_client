@@ -134,15 +134,15 @@ function LaboratoryModel:n_OnReceiveLaunchLine(data)
     line.finishTime = line.totalTime + os.time()  --计算结束时间
     line.startTime = os.time()
 
-    Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
+    --Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
 
     self.tempLine = nil
     self:_getScientificLine()
-    --if self.hashLineData[data.lineId].type == 0 then
-    --    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
-    --else
-    --    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
-    --end
+    if self.hashLineData[data.lineId].type == 0 then
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
+    else
+        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
+    end
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(data)
@@ -226,7 +226,7 @@ function LaboratoryModel:m_GetScientificData()
         self:_getScientificLine()
     end
 
-    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker, self.tempType or 0
+    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker, self.tempType
 end
 --获取最新的科技线信息
 function LaboratoryModel:_getScientificLine()

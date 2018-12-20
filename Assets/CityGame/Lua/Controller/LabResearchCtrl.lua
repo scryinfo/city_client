@@ -33,9 +33,6 @@ function LabResearchCtrl:Awake(go)
             ct.OpenCtrl("AddLineChooseItemCtrl")
         end
     end)
-    self.luaBehaviour:AddClick(LabResearchPanel.researchBtn.gameObject, function()
-        self:_researchBtnFunc()
-    end)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)

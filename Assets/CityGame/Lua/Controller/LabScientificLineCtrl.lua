@@ -71,6 +71,9 @@ function LabScientificLineCtrl:_initPanelData()
         self.researchDatas = researchLines
         self.inventionDatas = inventionLines
         LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, maxWorkerNum)
+        if type == nil then
+            type = LabScientificLineCtrl.static.type or 0
+        end
         if type == 0 then
             self:_researchLineOpen()
         else

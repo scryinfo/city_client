@@ -158,15 +158,22 @@ function UnitTest.Exec_now(groupid, event,...)
     Event.Brocast(event,...);
 end
 
+
 AsyncSequenceTester = class('AsyncSequenceTester')
+
+function AsyncSequenceTester:resetData()
+end
+
+function AsyncSequenceTester:initialize()
+    self:resetData()
+end
+
 function AsyncSequenceTester:excute()
-    self.bundlelist = {}
-    self.assetlist = {}
-    self.loadCount = 0
+    self:resetData()
     self.startTime = os.clock()
     local curSeq = self:getCurSeq()
     if curSeq then
-        curSeq.fun(curSeq.type,self,curSeq.cb)
+        curSeq.fun(self,curSeq)
     end
 end
 function AsyncSequenceTester:getCurSeq()

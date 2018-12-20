@@ -196,7 +196,7 @@ UnitTest.Exec("abel_w17_load_S_s160_n1000_time", "abel_w17_load_S_s160_n1000_tim
         [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
         [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
         *  性能差别比较明显，近1倍， 不过一般情况下，滑动滚动条时，加载3屏，一屏10个算，那么一次加载10个，那么加载时间为
-        *  设备上每帧加载  33.33 / 5.95 = 5.60
+        *  设备上每帧加载  33.33 / 4.293647 = 7.76
     --]]
 end)
 
@@ -351,6 +351,8 @@ UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_d
     local insList_texture = {}
     local insList_sprite = {}
 
+    ct.log('abel_w17_Instantiate_destory_s160_n1000','testcount = '..testcount)
+
     --实例化1000张Sprite
     local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[1000 张 Sprite Instantiate 的时间]", function()
         for i = 1, testcount do
@@ -374,59 +376,7 @@ UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_d
     --]]
 end)
 
---加载和实例化
-local testLoadAndInsFun = function(pblist, inslist)
-    for i = 1, testcount do
-        pblist[i] = UnityEngine.Resources.Load(ResPathList[i],type)
-        inslist[i] = UnityEngine.GameObject.Instantiate(pblist[i])
-    end
-end
-
---卸载
-local testUnLoadAndDestoryInsFun = function(pblist, inslist)
-    for i = 1, testcount do
-        destroy(inslist[i])
-        UnityEngine.Resources.UnloadAsset(pblist[i])
-    end
-end
-
-
-
-UnitTest.Exec("abel_w17_load_s128_n1000_S_IoTime", "abel_w17_load_s128_n1000_S_IoTime",  function ()
-
-    --load IO执行时间
-    local bundlelist = {}
-    local assetlist = {}
-    collectgarbage("collect")
-    UnitTest.PerformanceTest("abel_w17_load_s128_n1000_S_IoTime","[同步加载1000个尺寸为128的执行时间]", function()
-        testLoadFun(bundlelist,assetlist)
-    end)
-    --[[
-    --测试unload IO操作时间
-    testLoadFun(reslist)
-    collectgarbage("collect")
-    UnitTest.PerformanceTest("abel_w17_Unload_s128_n1000_S_IoTime","[同步加载1000个尺寸为128的执行时间]", function()
-        testUnLoadFun(reslist)
-    end)
-    --IO执行时间
-    collectgarbage("collect")
-    UnitTest.PerformanceTest("abel_w17_load_Instantiate_s128_n1000","[同步加载并实例化1000个尺寸为128的执行时间]", function()
-        local prefablist = {}
-        local inslist = {}
-        testLoadAndInsFun(prefablist, inslist)
-    end)
-    --IO执行时间
-    testLoadAndInsFun(prefablist, inslist)
-    collectgarbage("collect")
-    UnitTest.PerformanceTest("abel_w17_unload_Desotyr_s128_n1000","[同步卸载并销毁1000个尺寸为128的实例的执行时间]", function()
-        testUnLoadAndDestoryInsFun(prefablist, inslist)
-    end)
-    --]]
-end)
-
-
-
---同步加载prefab资源对比测试
+--滚动条同步加载prefab资源对比测试
 UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  function ()
     --测试数据准备{
     local testcount = 10
@@ -454,69 +404,144 @@ UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  f
     ct.OpenCtrl('TestSliderCtrl',ResPathList)
 end)
 
---异步加载prefab资源
+---AOI测试---------------------------------------------------------------------------------------------------------------------------
+--AOI异步加载时间测试
+UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_ASync",  function ()
+    local aTester = AsyncSequenceTester:new()
+    --初始化测试数据
+    aTester.testcount = 1
+    aTester.loadCount = 0
+    aTester.bundlelist = {}
+    aTester.assertlist = {}
+    aTester.startTime = 0
+    aTester.curPos = 1
+    aTester.testSquence = {}
+
+    aTester.resetData = function(self)
+        self.bundlelist = {}
+        self.assertlist = {}
+        self.startTime = 0
+    end
+
+    --异步加载测试,带回调
+    local testLoadFunA = function(tester, curSeq)
+        for i = 1, tester.testcount do
+            panelMgr:LoadPrefab_A(curSeq.path, curSeq.type, tester,curSeq.cb)
+        end
+    end
+
+    --加载成功后的回调
+    local callback = function (testData, obj , ab)
+        testData.testSquence[testData.curPos].bundle = ab
+        testData.testSquence[testData.curPos].asset = obj
+        testData.loadCount = testData.loadCount + 1
+        if testData.loadCount >= testData.testcount then
+            local costTime = os.clock() - testData.startTime
+            ct.log('abel_w17_Aoi_load_building_ASync',testData:getCurSeq().msg ..costTime)
+
+            --卸载
+            --local pos = #testData.bundlelist
+            --while pos > 0 do
+            --    if testData.bundlelist[pos] ~= nil then
+            --        resMgr:UnloadAssetBundle(testData.bundlelist[pos].name, true)
+            --        table.remove(testData.bundlelist, pos)
+            --        pos = pos -1
+            --    end
+            --end
+
+            local timer = FrameTimer.New(function()
+                testData:Nextfun()
+                collectgarbage("collect")
+                testData:excute()
+            end, 1,0)
+            timer:Start()
+        end
+    end
+
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Factory_3x3_Build',msg = 'Factory_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/CentralBuilding_Build',msg = 'CentralBuilding_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/MaterialBuilding_3x3_Build',msg = 'MaterialBuilding_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Park_3x3_Build',msg = 'Park_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/SuperMarket_3x3_Build',msg = 'SuperMarket_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Techo_3x3_Build',msg = 'Techo_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/WareHouse_3x3_Build',msg = 'WareHouse_3x3_Build 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Museum',msg = 'Museum 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Park_3x3',msg = 'Park_3x3 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Stadium',msg = 'Stadium 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/TechnologyBuilding_3x3',msg = 'TechnologyBuilding_3x3 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/UnderConstruction_3x3_03',msg = 'UnderConstruction_3x3_03 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/University',msg = 'University 异步加载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Airport',msg = 'Airport 异步加载的时间 ='}
+    
+    --开始执行异步测试序列
+    collectgarbage("collect")
+    aTester:excute()
+    --[[
+    测试结果
+    --加载时间
+        PC
+            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.372      --第一个的时间貌似都偏长
+            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.065000000000001
+            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.096999999999753
+            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.065999999999804
+            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.095999999999549
+            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.097999999999956
+            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.096999999999753
+        设备
+            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.515782   --第一个的时间貌似都偏长
+            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.330709
+            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.308198
+            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.232529
+            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.307951
+            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.293312
+            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.341899
+
+            加载一个建筑大概 0.330709/0.0333333333333333 = 9.92127000000001 左右， 假设建筑类型10个，加载所有建筑要要   0.33*10 = 3.3秒
+     --内存占用
+        PC        12M
+        设备
+
+    --]]
+end)
+
+--AOI异步加载内存测试
 UnitTest.Exec("abel_w17_load_s128_n400_ASync", "abel_w17_load_s128_n400_ASync",  function ()
     UnitTest.PerformanceTest("abel_w17_load_s128_n400_ASync","[异步加载400个尺寸为128的 Icon: LoadPrefab]", function()
 
     end)
 end)
---卸载资源测试 AssetBundle.Unload、 UnloadUnusedAssets
+
+--AOI同步加载时间测试
 UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
     UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)
 
---分散打包资源的加载及销毁测试
---每帧创建和销毁100个128尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s128_n100_memory", "abel_w17_Icon_load_s128_n100_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s128_n100_memory","[分散打包资源的加载及销毁测试 100个128尺寸]", function()
+--AOI Unload 时间测试
+UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)
 
---每帧创建和销毁50个128尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s128_n50_memory", "abel_w17_Icon_load_s128_n50_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s128_n50_memory","[分散打包资源的加载及销毁测试 50个128尺寸]", function()
+--AOI Instantiate 时间测试
+UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)
 
---每帧创建和销毁100个256尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s256_n100_memory", "abel_w17_Icon_load_s256_n100_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s256_n100_memory","[分散打包资源的加载及销毁测试 100个128尺寸]", function()
-
-    end)
-end)
---每帧创建和销毁50个256尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s256_n50_memory", "abel_w17_Icon_load_s128_n50_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s256_n50_memory","[分散打包资源的加载及销毁测试 50个128尺寸]", function()
+--AOI Instantiate 内存测试
+UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)
 
---每帧创建和销毁100个1024尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s1024_n100_memory", "abel_w17_Icon_load_s1024_n100_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s1024_n100_memory","[分散打包资源的加载及销毁测试 100个1024尺寸]", function()
-
-    end)
-end)
---每帧创建和销毁50个1024尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s1024_n50_memory", "abel_w17_Icon_load_s1024_n50_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s1024_n50_memory","[分散打包资源的加载及销毁测试 50个1024尺寸]", function()
-
-    end)
-end)
-
---每帧创建和销毁100个2048尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s2048_n100_memory", "abel_w17_Icon_load_s2048_n100_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s2048_n100_memory","[分散打包资源的加载及销毁测试 100个2048尺寸]", function()
-
-    end)
-end)
---每帧创建和销毁50个2048尺寸的Icon
-UnitTest.Exec("abel_w17_Icon_load_s2048_n50_memory", "abel_w17_Icon_load_s2048_n50_memory",  function ()
-    UnitTest.PerformanceTest("abel_w17_Icon_load_s2048_n50_memory","[分散打包资源的加载及销毁测试 50个1024尺寸]", function()
+--AOI 销毁 时间测试
+UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
+    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
 
     end)
 end)

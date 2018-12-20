@@ -177,7 +177,7 @@ public class Packager {
         if (true)
         {
             string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-            if (files.Length == 0) return;
+            //if (files.Length == 0) return;
             int pos = -1;
             for (int i = 0; i < files.Length; i++)
             {
@@ -195,6 +195,11 @@ public class Packager {
                     maps.Add(build);
                 }
             }
+            /*string[] dirs = Directory.GetDirectories(path);
+            for (int i = 0; i < dirs.Length; ++i)
+            {
+                AutoAddBuildMap(pattern, dirs[i], path);
+            }*/
         }    
         else {
             /*bundleName = bundleName.Replace("\\", "");

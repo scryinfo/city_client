@@ -430,6 +430,16 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
         end
     end
 
+    local unloadFun = function(testData)
+        for i, v in pairs(testData.testSquence) do
+            if v.bundle ~= nil then
+                resMgr:UnloadAssetBundle(v.bundle.name, true)
+            end
+        end
+        local costTime = os.clock() - testData.startTime
+        ct.log('abel_w17_Aoi_load_building_ASync',testData:getCurSeq().msg ..costTime)
+    end
+
     --加载成功后的回调
     local callback = function (testData, obj , ab)
         testData.testSquence[testData.curPos].bundle = ab
@@ -453,18 +463,19 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
                 testData:Nextfun()
                 collectgarbage("collect")
                 testData:excute()
-            end, 1,0)
+            end, 15,0)
             timer:Start()
         end
     end
 
-    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Factory_3x3_Build',msg = 'Factory_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/CentralBuilding_Build',msg = 'CentralBuilding_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Factory_3x3_Build',msg = 'Factory_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/MaterialBuilding_3x3_Build',msg = 'MaterialBuilding_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Park_3x3_Build',msg = 'Park_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/SuperMarket_3x3_Build',msg = 'SuperMarket_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Techo_3x3_Build',msg = 'Techo_3x3_Build 异步加载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/WareHouse_3x3_Build',msg = 'WareHouse_3x3_Build 异步加载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, type = nil, cb = nil, path = ' ',msg = 'unloadFun 卸载所有建筑的耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Museum',msg = 'Museum 异步加载的时间 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Park_3x3',msg = 'Park_3x3 异步加载的时间 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Stadium',msg = 'Stadium 异步加载的时间 ='}
@@ -495,12 +506,23 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
             [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.307951
             [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.293312
             [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.341899
-
             加载一个建筑大概 0.330709/0.0333333333333333 = 9.92127000000001 左右， 假设建筑类型10个，加载所有建筑要要   0.33*10 = 3.3秒
      --内存占用
-        PC        12M
+        PC
+            texture momory 32M
+            Total Allocated
+                打开测试分组 249帧 138.5 M
+                关闭测试分组 249帧 123.8 M
+                测试分配的内存 138.5 - 123.8 = 14.7 M
         设备
-
+            texture memory 	7.7M
+            Total Allocated
+                打开测试分组 122 帧 36.7 M
+                关闭测试分组 122 帧 27.7 M
+                测试分配的内存 36.7 - 27.7 = 9 M
+    --结论
+        在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
+        所以建筑的加载策略应该是根据城市来预加载，并常驻内存
     --]]
 end)
 

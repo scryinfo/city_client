@@ -551,24 +551,27 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     end
     --数据准备
     local ResPathListS = {}
-    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_3x3_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/Park_3x3_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_3x3_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/Techo_3x3_Build'
-    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Build'
+    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Park_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Techo_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Build'
 
-    local LoadTestRes = function(ResPathList)
-        aTester.ResPathList = ResPathListS
-        for i = 1, #ResPathList do
-            local loadDataInfo =  resMgr:LoadRes_S(ResPathList[i], ct.getType(UnityEngine.GameObject));
-            aTester.loadedBundles[#aTester.loadedBundles+1] = loadDataInfo._bunldle
-            aTester.loadedAssets[#aTester.loadedAssets+1] = loadDataInfo._asset
-        end
-    end
-    LoadTestRes(ResPathListS)
+    aTester.ResPathList = ResPathListS
     --数据准备
+
+    local LoadTestRes = function(tester)
+        for i = 1, #tester.ResPathList do
+            local loadDataInfo =  resMgr:LoadRes_S(tester.ResPathList[i], ct.getType(UnityEngine.GameObject));
+            tester.loadedBundles[#tester.loadedBundles+1] = loadDataInfo._bunldle
+            tester.loadedAssets[#tester.loadedAssets+1] = loadDataInfo._asset
+        end
+        tester:getCurSeq().postfun(tester)
+    end
 
     --实例化方法
     local InstantiateFun = function(tester)
@@ -579,16 +582,16 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
                 tester.instances[#tester.instances+1] = UnityEngine.GameObject.Instantiate(aTester.loadedAssets[i])
             end
         end
-
         curSeq.postfun(tester)
     end
 
     local destroyInstances = function(tester)
         --ct.log('abel_w17_Aoi_Instantiate_9Grid','[destroyInstances]')
         for i, v in pairs(tester.instances) do
-            GameObject.DestroyImmediate(v, false)
+            GameObject.DestroyImmediate(v, true)
         end
         tester.instances = {}
+        collectgarbage("collect")
         tester:getCurSeq().postfun(tester)
     end
 
@@ -596,9 +599,16 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
         --ct.log('abel_w17_Aoi_Instantiate_9Grid','[unloadFun]')
         for i, v in pairs(tester.loadedBundles) do
             if v ~= nil then
-                resMgr:UnloadAssetBundle(v.name, true)
+                UnityEngine.AssetBundle.Unload(v,true)
             end
         end
+        for i, v in pairs(tester.loadedAssets) do
+            if v ~= nil then
+                UnityEngine.Resources.UnloadAsset(v)
+            end
+        end
+        tester.loadedBundles = {}
+        tester.loadedAssets = {}
         tester:getCurSeq().postfun(tester)
     end
 
@@ -610,15 +620,16 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
             tester:Nextfun()
             collectgarbage("collect")
             tester:excute()
-        end, 15,0)
+        end, 5,0)
         timer:Start()
     end
 
-    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 198, prefun = aTester.resetData, postfun = callback, msg = '1屏220个实例，9屏1980实例的实例化耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 198, prefun = aTester.resetData, postfun = callback, msg = '9屏1980实例的销毁耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 450, prefun = aTester.resetData, postfun = callback, msg = '1屏450个实例，9屏4050实例的实例化耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 450, prefun = aTester.resetData, postfun = callback, msg = '9屏4050实例的销毁耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 405, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 6, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 507, prefun = aTester.resetData, postfun = callback, msg = '1屏450个实例，9屏4050实例的实例化耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '9屏4050实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = InstantiateFun, _inscount = 248, prefun = aTester.resetData, postfun = callback, msg = '1屏220个实例，9屏1980实例的实例化耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '9屏1980实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
 
     --开始执行异步测试序列
     collectgarbage("collect")
@@ -627,33 +638,54 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     测试结果
     --加载时间
         PC
-            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.489
             [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.391
             [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.026999999999987
             [abel_w17_Aoi_Instantiate_9Grid]1屏450个实例，9屏4050实例的实例化耗时 =4.269
             [abel_w17_Aoi_Instantiate_9Grid]9屏4050实例的销毁耗时 =0.057999999999993
             [abel_w17_Aoi_Instantiate_9Grid]所有(一共7个)建筑卸载的时间 =0.0010000000000048
         设备
-            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.515782   --第一个的时间貌似都偏长
-            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.330709
-            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.308198
-            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.232529
-            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.307951
-            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.293312
-            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.341899
-            加载一个建筑大概 0.330709/0.0333333333333333 = 9.92127000000001 左右， 假设建筑类型10个，加载所有建筑要要   0.33*10 = 3.3秒
+            [abel_w17_Aoi_Instantiate_9Grid]加载所有建筑资源耗时 =0.698422
+            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =13.512051
+            [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.33568
+            [abel_w17_Aoi_Instantiate_9Grid]1屏450个实例，9屏4050实例的实例化耗时 =24.404046
+            [abel_w17_Aoi_Instantiate_9Grid]9屏4050实例的销毁耗时 =0.57482
+            [abel_w17_Aoi_Instantiate_9Grid]所有(一共6个)建筑卸载的时间 =0.054358000000001
      --内存占用
         PC
-            texture momory 32M
+            texture memory
+                打开测试分组
+                    第1帧     21.1 M
+                    第4帧     32.9 M
             Total Allocated
-                打开测试分组 249帧 138.5 M
+                打开测试分组
+                    第1帧     123.6 M
+                    第12帧    294.0 M
+                    第26帧    274.6 M
+                    第43帧    418.2 M
+                    第47帧之后    370.2 M
                 关闭测试分组 249帧 123.8 M
                 测试分配的内存 138.5 - 123.8 = 14.7 M
         设备
-            texture memory 	7.7M
-                * 7个建筑平均每个1.1M
+           texture memory
+                打开测试分组
+                    第1帧     21.1 M
+                    第4帧     32.9 M
             Total Allocated
-                打开测试分组 122 帧 36.7 M
+                打开测试分组
+                    LoadTestRes 结束    30.9 M
+                    InstantiateFun 330 结束    55,1 M
+                    destroyInstances 结束  41.4 M
+                    InstantiateFun 670 结束 82.3 M
+                    destroyInstances 结束 52.5 M
+                    unloadFun 结束    43.5 M
+                    * 剩余 43.5 M
+                        Not Saved
+                            RenderTexture 26.7
+                                TempBuffer 1 1080*2160 17.8 M
+                                ImageEffects Temp 8.9 M
+                        Other
+                            GfxDevice
+                                GfxDeviceClient 8 M
                 关闭测试分组 122 帧 27.7 M
                 测试分配的内存 36.7 - 27.7 = 9 M
     --卸载

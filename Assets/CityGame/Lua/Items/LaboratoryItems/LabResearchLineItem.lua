@@ -85,7 +85,7 @@ function LabResearchLineItem:_updateInfo(data)
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     end
     self.startTimeDown = true
-    self.currentTime = os.time()
+    --self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false

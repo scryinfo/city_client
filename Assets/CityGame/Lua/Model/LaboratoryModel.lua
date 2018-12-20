@@ -15,11 +15,12 @@ end
 function LaboratoryModel:_addListener()
     --网络回调注册
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineAddInform",self.n_OnReceiveLabLineAdd)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineInform",self.n_OnReceiveLabLineAdd)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLaunchLine","gs.LabLaunchLine",self.n_OnReceiveLaunchLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineDel","gs.LabDelLine",self.n_OnReceiveDelLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.labLineAddInform",self.n_OnReceiveLineChange)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
+    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineSetWorkerNum","gs.LabSetLineWorkerNum",self.n_OnReceiveWorkerNumChange)
 
     --本地的回调注册
     Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
@@ -32,7 +33,8 @@ end
 
 --- 客户端请求 ---
 --获取建筑详情
-function LaboratoryModel:m_ReqLaboratoryDetailInfo()
+function LaboratoryModel:m_ReqLaboratoryDetailInfo(isClose)
+    self.isClose = isClose
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})
 end
 --添加线
@@ -41,15 +43,17 @@ function LaboratoryModel:m_ReqLabAddLine(itemId, type, workerNum, rollTarget)
     self.tempLine = { itemId = itemId, type = type, workerNum = workerNum, phase = rollTarget}
 
     --研究的时候，必须已经有等级才行
+    local level = DataManager.GetMyGoodLv()
     if type == 0 then
-        local level = DataManager.GetMyGoodLv()
         if level and level[itemId] then
             local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
             DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
         end
     else
-        local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
-        DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
+        if level and level[itemId] == nil then
+            local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
+            DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
+        end
     end
 end
 --开工
@@ -76,6 +80,11 @@ end
 --- 回调 ---
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
+    --增加判定，如果是close，则不刷新数据
+    if self.isClose then
+        return
+    end
+
     self.info = data.info
     self.hashLineData = {}  --以lineId为key存储所有的线的信息
     self.orderLineData = {}  --由创建时间排序的所有line信息
@@ -168,9 +177,12 @@ function LaboratoryModel:n_OnReceiveLineChange(lineData)
         ct.log("", "找不到对应lineId的线路")
     end
 end
---发明研究成功  --用来更新玩家数据
-function LaboratoryModel:n_OnReceiveNewItem(data)
-    DataManager.SetMyGoodLv(data)
+--员工数量改变
+function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
+    local line = self.hashLineData[data.lineId]
+    if line.finishTime then
+
+    end
 end
 
 ---本地消息---

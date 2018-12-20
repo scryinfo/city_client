@@ -36,7 +36,7 @@ function LabResearchPanel.InitPanel()
     this.notEnoughImgTran = transform:Find("bottomRoot/right/researchBtnParent/notEnoughImg")
 end
 --设置
-function LabResearchPanel:setBulbState(state)
+function LabResearchPanel.setBulbState(state)
     if state == LabInventionBulbItemState.Empty then
         this.emptyTextTran.localScale = Vector3.one
         this.workingImgRootTran.localScale = Vector3.zero
@@ -60,7 +60,7 @@ function LabResearchPanel:setBulbState(state)
     end
 end
 --显示填充线的信息
-function LabResearchPanel:showLine(datas)
+function LabResearchPanel.showLine(datas)
     local count = #datas
     if count == 1 then
         this.singleLineTran.localScale = Vector3.one

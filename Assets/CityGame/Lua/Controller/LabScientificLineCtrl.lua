@@ -132,6 +132,7 @@ end
 ---刷新数据
 --研究
 function LabScientificLineCtrl:onReceiveLabResearchData(datas)
+    self.researchDatas = datas
     local researchInfoData = ct.deepCopy(datas)
     local researchPrefabList = {}
     for i, item in pairs(researchInfoData) do
@@ -157,6 +158,7 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
 end
 --发明
 function LabScientificLineCtrl:onReceiveLabInventionData(datas)
+    self.inventionDatas = datas
     local inventionInfoData = ct.deepCopy(datas)
     local inventionPrefabList = {}
     for i, item in pairs(inventionInfoData) do

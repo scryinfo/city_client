@@ -116,7 +116,7 @@ function LabInventionLineItem:_updateInfo(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.startTimeDown = true
-    self.currentTime = os.time()
+    --self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false

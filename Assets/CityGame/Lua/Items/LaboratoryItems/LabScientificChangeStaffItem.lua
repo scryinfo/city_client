@@ -79,7 +79,7 @@ function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, 
     self.okBtn.onClick:AddListener(function ()
         local workerNum = self.staffSlider.value
         if workerNum ~= data.workerNum then
-            DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSetWorkerNum', data.lineId, workerNum)
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqSetWorkerNum', data.id, workerNum)
         end
         self:_hideSelf()
     end)

@@ -657,6 +657,8 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
+    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
 
 end
 --清除所有消息回调
@@ -796,16 +798,37 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
 end
 
---研究所Roll失败信息
+--研究所Roll回复信息
 function DataManager.n_OnReceiveLabRoll(stream)
-    local data = assert(pbl.decode("gs.Bool", stream), "DataManager.n_OnReceiveLabRoll: stream == nil")
-    if not data then
-        local info = {}
-        info.titleInfo = "FAIL"
-        info.contentInfo = "Roll Fail"
-        info.tipInfo = ""
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+    Event.Brocast("c_LabRollSuccess")
+end
+
+--发明研究成功  --用来更新玩家数据
+function DataManager.n_OnReceiveNewItem(stream)
+    local data = assert(pbl.decode("gs.IdNum", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    if data then
+        DataManager.SetMyGoodLv(data)
     end
 end
+
+--处理错误信息
+--研究所Roll回复信息
+function DataManager.n_OnReceiveErrorCode(stream)
+    local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    if data then
+        ct.log("cycle_w15_laboratory03", "---- error opcode："..data.opcode)
+        if data.opcode == 1157 then  --研究所roll失败
+            local info = {}
+            info.titleInfo = "FAIL"
+            info.contentInfo = "Roll Fail"
+            info.tipInfo = ""
+            ct.OpenCtrl("BtnDialogPageCtrl", info)
+        else
+
+        end
+    end
+end
+
+
 ----------
 

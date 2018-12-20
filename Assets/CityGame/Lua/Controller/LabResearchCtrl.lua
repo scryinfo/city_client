@@ -39,14 +39,18 @@ function LabResearchCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
+            self.m_data.bulbState = LabInventionBulbItemState.Empty
+            LabResearchPanel.setBulbState(self.m_data.bulbState)
         end
     end)
     UpdateBeat:Add(self._update, self)
 end
 function LabResearchCtrl:Refresh()
+    Event.AddListener("c_LabRollSuccess", self._backToScientificCtrl)
     self:_initPanelData()
 end
 function LabResearchCtrl:Hide()
+    Event.RemoveListener("c_LabRollSuccess", self._backToScientificCtrl)
     UIPage.Hide(self)
 end
 
@@ -60,7 +64,7 @@ function LabResearchCtrl:_update()
 
         if self.remainTime <= 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabResearchPanel:setBulbState(self.m_data.bulbState)
+            LabResearchPanel.setBulbState(self.m_data.bulbState)
             self.remainTime = 0
         end
 
@@ -90,7 +94,7 @@ function LabResearchCtrl:_initPanelData()
         data.backFunc = function(success)
             self.enough = success
         end
-        LabResearchPanel:showLine(data)
+        LabResearchPanel.showLine(data)
     end, formularItem.materials)
 
     --LabResearchPanel.iconImg.mainTexture = Good[self.m_data.itemId].img
@@ -99,7 +103,7 @@ function LabResearchCtrl:_initPanelData()
     if not self.m_data.id then    --没有id则为临时添加的线
         self.backToCompose = true
         self.m_data.bulbState = LabInventionBulbItemState.Empty
-        LabResearchPanel:setBulbState(self.m_data.bulbState)
+        LabResearchPanel.setBulbState(self.m_data.bulbState)
         if self.enough then
             self:_setResearchBtnState(LabResearchBtnState.EnableClick)
             LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
@@ -127,7 +131,7 @@ function LabResearchCtrl:_initPanelData()
                 self.m_data.bulbState = LabInventionBulbItemState.Finish
             end
         end
-        LabResearchPanel:setBulbState(self.m_data.bulbState)
+        LabResearchPanel.setBulbState(self.m_data.bulbState)
     end
 end
 function LabResearchCtrl:_setResearchBtnState(state)
@@ -155,4 +159,15 @@ end
 function LabResearchCtrl:_launchLine()
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
     UIPage.ClosePage()
+end
+--关闭自己，返回科技线界面
+function LabResearchCtrl:_backToScientificCtrl()
+    local info = {}
+    info.titleInfo = "SUCCESS"
+    info.contentInfo = "Stage of success!"
+    info.tipInfo = ""
+    info.btnCallBack = function ()
+        UIPage.ClosePage()
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

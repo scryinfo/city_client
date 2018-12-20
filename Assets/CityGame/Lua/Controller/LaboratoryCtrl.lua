@@ -35,7 +35,7 @@ function LaboratoryCtrl:_initData()
     else
         if self.m_data then
             DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
         end
     end
 end
@@ -80,8 +80,9 @@ function LaboratoryCtrl:_backBtn(ins)
     if ins.laboratoryToggleGroup ~= nil then
         ins.laboratoryToggleGroup:cleanItems()
     end
+    ins.hasOpened = false
     --关闭界面时再发一遍详情
-    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', true)
     UIPage.ClosePage()
 end
 ---更改名字成功

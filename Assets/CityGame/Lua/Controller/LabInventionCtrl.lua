@@ -31,14 +31,18 @@ function LabInventionCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
+            self.m_data.bulbState = LabInventionBulbItemState.Empty
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
         end
     end)
     UpdateBeat:Add(self._update, self)
 end
 function LabInventionCtrl:Refresh()
+    Event.AddListener("c_LabRollSuccess", self._backToScientificCtrl)
     self:_initPanelData()
 end
 function LabInventionCtrl:Hide()
+    Event.RemoveListener("c_LabRollSuccess", self._backToScientificCtrl)
     UIPage.Hide(self)
 end
 function LabInventionCtrl:_update()
@@ -133,4 +137,15 @@ function LabInventionCtrl:_inventeBtnClick()
     local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
     UIPage.ClosePage()
+end
+--关闭自己，返回科技线界面
+function LabInventionCtrl:_backToScientificCtrl()
+    local info = {}
+    info.titleInfo = "SUCCESS"
+    info.contentInfo = "Stage of success!"
+    info.tipInfo = ""
+    info.btnCallBack = function ()
+        UIPage.ClosePage()
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

@@ -18,7 +18,6 @@ UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 --构建函数
 function MunicipalCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
-    self.prefab = nil
 end
 
 function MunicipalCtrl:bundleName()
@@ -32,9 +31,9 @@ end
 function MunicipalCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    self. materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.  materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-   self. materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
@@ -42,11 +41,6 @@ function MunicipalCtrl:Awake(go)
     BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, self.data)
 
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
-
-    -----创建外部广告
-    local creatData={count=1,buildingType=BuildingType.ProcessingFactory,lMsg=MunicipalModel.lMsg}
-    self.ItemCreatDeleteMgr=MunicipalModel.manger
-    self.ItemCreatDeleteMgr:creat(ServerListCtrl.serverListBehaviour,creatData)
 
 end
 
@@ -60,8 +54,12 @@ UIPage:ShowPage(InputDialogPageCtrl, data)
 end
 
 --返回
-function MunicipalCtrl:OnClick_backBtn()
+function MunicipalCtrl:OnClick_backBtn(ins)
     UIPage.ClosePage();
+
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+    end
 end
 
 --打开信息界面
@@ -70,13 +68,67 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-    Event.Brocast("c_TicketValueChange")
-    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then
-        MunicipalPanel.changeNameBtn.localScale=Vector3.zero
+   self:changeData()
+end
+
+function MunicipalCtrl:changeData()
+    if self.m_data then
+        DataManager.OpenDetailModel(MunicipalModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
     else
-        MunicipalPanel.changeNameBtn.localScale=Vector3.one
+        DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
     end
 end
 
+function MunicipalCtrl:c_receiveParkData(parkData)
 
+    local model =DataManager.GetDetailModelByID(parkData.info.id)
+    local lMsg=parkData
+    MunicipalPanel.lMsg=lMsg
 
+    ---刷新门票
+    Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
+    ---是否可以改名
+    if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--他人
+        MunicipalPanel.changeNameBtn.localScale=Vector3.zero
+    else--自已
+        MunicipalPanel.changeNameBtn.localScale=Vector3.one
+    end
+    ---效验
+    if MunicipalPanel.buildingId~=self.currentBuildingId then
+        ---清空数据
+        if self.pastManger then
+            self:ClearData(self.pastManger)
+        end
+        ---创建外部广告
+        local creatData={model=model,buildingType=BuildingType.ProcessingFactory,lMsg=lMsg}
+        model.manger:creat(ServerListCtrl.serverListBehaviour,creatData)
+        ---标记管理器
+        self.pastManger=model.manger
+    end
+    ---标记buildingId
+    self.currentBuildingId=parkData.info.id
+end
+
+function MunicipalCtrl:ClearData(manger)
+    DestroyListItem(manger.outAdvertisementItemList)
+    DestroyListItem(manger.AdvertisementItemList)
+    DestroyListItem(manger.serverMapAdvertisementItemList)
+    DestroyListItem(manger.buildItemList)
+    DestroyListItem(manger.goodsItemList)
+    DestroyListItem(manger.addItemList)
+    DestroyListItem(manger.addItemList)
+    for i, v in pairs(manger.addItemInSList) do
+        v=nil
+    end
+    manger.addItemInSList={}
+
+    manger.AddItemID=0
+end
+
+function DestroyListItem(List)
+    for i, item in pairs(List) do
+       destroy(item)
+    end
+end

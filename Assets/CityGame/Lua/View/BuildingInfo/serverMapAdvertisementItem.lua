@@ -22,8 +22,12 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
 
 
     self.numtext=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
+    self.peopleCount=prefab.transform:Find("showPanel/peoplecount/peoplecountText"):GetComponent("Text");
+    self.dayText=prefab.transform:Find("bg/day/dayText"):GetComponent("Text");
     self.plusBtn=prefab.transform:Find("bg/numImage/plusBtn");
     self.cutBtnBtn=prefab.transform:Find("bg/numImage/cutBtn");
+
+
 
     self._luabehaviour:AddClick(self.cutBtnBtn.gameObject, self.OnClick_cut, self);
     self._luabehaviour:AddClick(self.plusBtn.gameObject, self.OnClick_Plus, self);
@@ -38,8 +42,6 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
         self.slots=temp
     end
 
-
-
     if prefabData.count then
         self.numtext.text=prefabData.count
         self.selfcount=prefabData.count
@@ -52,11 +54,20 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
         self.type=1
     end
 
+    if prefabData.npcFlow then
+       self.peopleCount.text=prefabData.npcFlow
+
+        local beginTs=tostring(prefabData.beginTs)
+        beginTs=string.sub(beginTs,1,10)
+        local passTime=os.time()-beginTs
+        self.dayText.text=string.sub(getFormatUnixTime(passTime).day,2,2).."d"
+    end
 end
 
 ---添加
 function serverMapAdvertisementItem:OnClick_cut(go)
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
         if go.numtext.text-1==0 then
             go.manager.serverMapAdvertisementINSList[go.metaId].updatecount=0
             ---消除自身
@@ -108,16 +119,17 @@ function serverMapAdvertisementItem:OnClick_cut(go)
 
     end
 
-    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
+
 end
 
 function serverMapAdvertisementItem:OnClick_Plus(ins)
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId  then--自已进入
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId  then--自已进入
         ins.numtext.text=ins.numtext.text+1
         ins.updatecount=ins.numtext.text
 
     else-----他人进入
         --限制上限
+
         if ins.manager.current.numText.text=="0" then
             return
         end
@@ -138,6 +150,7 @@ function serverMapAdvertisementItem:OnClick_Plus(ins)
         --槽位减少
         ins.manager.current.numText.text=ins.manager.current.numText.text-1
     end
+
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
 end

@@ -32,9 +32,13 @@ function ManageAdvertisementPosCtrl:OnCreate(obj)
     isShowList = false;
 end
 local materialBehaviours
+local MunicipalModel
 function ManageAdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
+
+
     materialBehaviours=materialBehaviour
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     materialBehaviour:AddClick(ManageAdvertisementPosPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
@@ -49,19 +53,10 @@ function ManageAdvertisementPosCtrl:Awake(go)
     -- self:OnClick_OnGoods();
     -----创建广告管理
     self.ItemCreatDeleteMgr=MunicipalModel.manger
-    self.ItemCreatDeleteMgr:_creataddItem();
-    self.ItemCreatDeleteMgr:_creatgoodsItem();
-    self.ItemCreatDeleteMgr:_creatbuildingItem();
 
-    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
-    self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
-        self.ItemCreatDeleteMgr.addItemInSList[0].numText.transform.parent.localScale=Vector3.zero
-        self.ItemCreatDeleteMgr.addItemInSList[0].timeText.transform.parent.localScale=Vector3.zero
-    else--他人进入
-        self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
-    end
-  Event.AddListener("c_FirstCreate",ManageAdvertisementPosCtrl.c_FirstCreate,self)
+
+
+    Event.AddListener("c_FirstCreate",ManageAdvertisementPosCtrl.c_FirstCreate,self)
 end
 
 
@@ -69,7 +64,7 @@ end
 function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
 
 
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--自已进入
         for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
             destroy(v)
         end
@@ -86,19 +81,19 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
         end
         ins.ItemCreatDeleteMgr.AdvertisementDataList={}
     else---他人进入
-        for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
-            destroy(v)
-        end
+    for i, v in pairs(ins.ItemCreatDeleteMgr.addedItemList) do
+        destroy(v)
+    end
         for i, v in pairs(ins.ItemCreatDeleteMgr.selectItemList) do
             v:GetComponent("Image").raycastTarget=true;
         end
         ins.ItemCreatDeleteMgr.AdvertisementDataList={}
------------------------------------------------------------------------------
+        -----------------------------------------------------------------------------
         if ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
-           ---服务器数据还原
-          for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
-            v.numtext.text=v.selfcount
-          end
+            ---服务器数据还原
+            for i, v in pairs(ins.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
+                v.numtext.text=v.selfcount
+            end
         end
         --if ins.ItemCreatDeleteMgr.newaddIndex then
         --    destroy(ins.ItemCreatDeleteMgr.addItemInSList[ins.ItemCreatDeleteMgr.newaddIndex].prefab)
@@ -110,7 +105,7 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
         end
 
     end
-
+    ins.ItemCreatDeleteMgr:Remove()
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
     UIPage.ClosePage();
 end
@@ -120,18 +115,39 @@ end
 function ManageAdvertisementPosCtrl:OnClick_infoBtn()
 
 end
+--是否打开第一个槽位
+function ManageAdvertisementPosCtrl:isFirstSlot()
+
+    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--自已进入
+        MunicipalModel.manger.addItemList[0]:SetActive(true)
+        MunicipalModel.manger.addItemList[0].transform:SetAsFirstSibling()
+        MunicipalModel.manger.addItemInSList[0].numText.transform.parent.localScale=Vector3.zero
+        MunicipalModel.manger.addItemInSList[0].timeText.transform.parent.localScale=Vector3.zero
+    else--他人进入
+        MunicipalModel.manger.addItemList[0]:SetActive(false)
+    end
+end
+
 --刷新数据
 function ManageAdvertisementPosCtrl:Refresh()
+    MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
+    self.ItemCreatDeleteMgr=MunicipalModel.manger
 
+    if MunicipalPanel.buildingId~=ManageAdvertisementPosPanel.currentBuildingId then
+        local temp=MunicipalPanel.buildingId
+        local creatData={model=MunicipalModel,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalPanel.lMsg}
+        self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
+        ManageAdvertisementPosPanel.currentBuildingId=temp
+        self.ItemCreatDeleteMgr:_creataddItem();
+        self.ItemCreatDeleteMgr:_creatgoodsItem();
+        self.ItemCreatDeleteMgr:_creatbuildingItem();
+    end
 
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
-        if self.ItemCreatDeleteMgr.addItemList[1] then
-            self.ItemCreatDeleteMgr.addItemList[1]:SetActive(true)
-        end
+    --是否打开第一个槽位
+    self:isFirstSlot()
+    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--自已进入
+
     else--他人进入
-        if self.ItemCreatDeleteMgr.addItemList[0] then
-            self.ItemCreatDeleteMgr.addItemList[0]:SetActive(false)
-        end
         self:c_ScreenOut(self.m_data.myBuySlots)
         if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
             for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
@@ -141,7 +157,6 @@ function ManageAdvertisementPosCtrl:Refresh()
     end
 
 end
-
 
 function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
     self.slotList={}
@@ -160,66 +175,65 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
         table.insert(self.slotList,v)
     end
 
-    --if #self.slotList<=1 then
-    --    return
-    --end
-   ---刷新数据
+    ---刷新数据
     if #self.ItemCreatDeleteMgr.addItemInSList-1>#self.slotList then--实例数量大于数据数量
-       for i = 1, #self.ItemCreatDeleteMgr.addItemInSList-1 do
-          local ins=self.ItemCreatDeleteMgr.addItemInSList[i]
-           if self.slotList[i] then
-               ins.numText.text=#self.slotList[i]--刷新数量
-               --刷新时间
-               ins.angleRoot.localScale=Vector3.zero--关闭四角
-               ins.selfAcount=#self.slotList[i]
-               ins.updateAcount=#self.slotList[i]
-               ins.slots=self.slotList[i]
-               ins.days=self.slotList[i][1].days
-               --剩余时间
-               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-               local remainTime= getFormatUnixTime(endTime-os.time())
-               ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-               ins.remainTime=remainTime
-           else
-               ins.prefab:SetActive(false)
+        for i = 1, #self.ItemCreatDeleteMgr.addItemInSList-1 do
+            local ins=self.ItemCreatDeleteMgr.addItemInSList[i]
+            if self.slotList[i] then
+                ins.prefab:SetActive(true)
+                ins.numText.text=#self.slotList[i]--刷新数量
+                --刷新时间
+                ins.angleRoot.localScale=Vector3.zero--关闭四角
+                ins.selfAcount=#self.slotList[i]
+                ins.updateAcount=#self.slotList[i]
+                ins.slots=self.slotList[i]
+                ins.days=self.slotList[i][1].days
+                --剩余时间
+                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+                local remainTime= getFormatUnixTime(endTime-os.time())
+                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+                ins.remainTime=endTime
+            else
+                ins.prefab:SetActive(false)
                 ins.remainTime=nil
-           end
-       end
+            end
+        end
     else--实例数量小于数据数量
-       for i = 1, #self.slotList do
-          local ins=self.ItemCreatDeleteMgr.addItemInSList[i]
-           if ins then
-               ins.numText.text=#self.slotList[i]--刷新数量
-               --刷新时间
-               ins.angleRoot.localScale=Vector3.zero--关闭四角
-               ins.selfAcount=#self.slotList[i]
-               ins.updateAcount=#self.slotList[i]
-               ins.slots=self.slotList[i]
-               ins.days=self.slotList[i][1].days
-               --剩余时间
-               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-               local remainTime= getFormatUnixTime(endTime-os.time())
-               ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-               ins.remainTime=remainTime
-           else
-               self.ItemCreatDeleteMgr:_creataddItem({})
-               self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
-               --刷新时间
-               self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
-               self.ItemCreatDeleteMgr.addItemInSList[i].selfAcount=#self.slotList[i]
-               self.ItemCreatDeleteMgr.addItemInSList[i].updateAcount=#self.slotList[i]
-               self.ItemCreatDeleteMgr.addItemInSList[i].slots=self.slotList[i]
-               self.ItemCreatDeleteMgr.addItemInSList[i].days=self.slotList[i][1].days
-               --剩余时间
-               local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-               local remainTime= getFormatUnixTime(endTime-os.time())
-               self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-               self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=remainTime
-           end
-       end
+        for i = 1, #self.slotList do
+            local ins=self.ItemCreatDeleteMgr.addItemInSList[i]
+            if ins then
+                ins.numText.text=#self.slotList[i]--刷新数量
+                --刷新时间
+                ins.angleRoot.localScale=Vector3.zero--关闭四角
+                ins.selfAcount=#self.slotList[i]
+                ins.updateAcount=#self.slotList[i]
+                ins.slots=self.slotList[i]
+                ins.days=self.slotList[i][1].days
+                --剩余时间
+                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+                local remainTime= getFormatUnixTime(endTime-os.time())
+                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+                ins.remainTime=endTime
+            else
+                self.ItemCreatDeleteMgr:_creataddItem({})
+                self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
+                --刷新时间
+                self.ItemCreatDeleteMgr.addItemInSList[i].angleRoot.localScale=Vector3.zero--关闭四角
+                self.ItemCreatDeleteMgr.addItemInSList[i].selfAcount=#self.slotList[i]
+                self.ItemCreatDeleteMgr.addItemInSList[i].updateAcount=#self.slotList[i]
+                self.ItemCreatDeleteMgr.addItemInSList[i].slots=self.slotList[i]
+                self.ItemCreatDeleteMgr.addItemInSList[i].days=self.slotList[i][1].days
+                --剩余时间
+                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
+                local remainTime= getFormatUnixTime(endTime-os.time())
+                self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+                self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=endTime
+            end
+        end
     end
 
-    ---除去已用的槽位
+---除去已用的槽位
+if self.ItemCreatDeleteMgr.adList then
     for metaId, metaIdAds in pairs(self.ItemCreatDeleteMgr.adList) do
         for i, ad in pairs(metaIdAds) do
             for k, slots in pairs(tempList) do
@@ -231,13 +245,16 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
             end
         end
     end
+end
+
 
     for i, v in pairs(self.slotList) do
-       self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#v
+        self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#v
         if #v==0 then
             self.ItemCreatDeleteMgr.addItemInSList[i].prefab:SetActive(false)
         end
     end
+    self.ItemCreatDeleteMgr:begin()
 
     ---默认开启一个四角
     for i = 1, #self.ItemCreatDeleteMgr.addItemInSList do
@@ -245,10 +262,9 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
         if tempIns.prefab.activeInHierarchy then
             tempIns.angleRoot.localScale=Vector3.one
             self.ItemCreatDeleteMgr.current=tempIns
-            return
+            break
         end
     end
-
 end
 
 
@@ -303,14 +319,13 @@ function ManageAdvertisementPosCtrl:OnClick_OnBuild()
 end
 
 function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
-    local data={}
-    data=ins
-    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then --自已进入
-        data.callback=ins.Mastercallback
+
+    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then --自已进入
+        ins.callback=ins.Mastercallback
     else
-        data.callback=ins.OtherCallback
+        ins.callback=ins.OtherCallback
     end
-    ct.OpenCtrl("ConfirmPopCtrl",data)
+    ct.OpenCtrl("ConfirmPopCtrl",ins)
 end
 
 function ManageAdvertisementPosCtrl:Mastercallback()
@@ -322,15 +337,15 @@ function ManageAdvertisementPosCtrl:Mastercallback()
     for i, v in pairs(self.ItemCreatDeleteMgr.selectItemList) do
         v:GetComponent("Image").raycastTarget=true;
     end
-
-    ---创建打的广告
+    local buildingId=MunicipalPanel.buildingId
+    ---从无到有的打广告
     for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
-        v.personId=MunicipalModel.owenerId
+        v.personId=DataManager.GetMyOwnerID()
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(v)
         self.ItemCreatDeleteMgr:_creatoutItem(v)
         ---发送打广告请求
         for k = 1, v.count do
-            Event.Brocast("m_adPutAdToSlot",nil,v.metaId,v.type,MunicipalModel.lMsg.info.id)
+            DataManager.DetailModelRpcNoRet(buildingId, 'm_adPutAdToSlot',nil,v.metaId,v.type,buildingId)
         end
         --------------------------------------------
         for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
@@ -344,45 +359,49 @@ function ManageAdvertisementPosCtrl:Mastercallback()
 
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
 
-    ---服务器数据跟新
+    ---修改广告
     if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
         for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
             if  tonumber(v.selfcount) < tonumber(v.updatecount) then---添加广告
             for i = 1, (v.updatecount-v.selfcount) do
-                Event.Brocast("m_adPutAdToSlot",nil,2151002,0,MunicipalModel.lMsg.info.id)
+                DataManager.DetailModelRpcNoRet(buildingId, 'm_adPutAdToSlot',nil,v.metaId,v.type,buildingId)
                 self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
                 v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
             end
 
             else---删广告
-                for k = 1, (v.selfcount-v.updatecount)  do
-               Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,self.ItemCreatDeleteMgr.adList[v.metaId][1].id)
+            for k = 1, (v.selfcount-v.updatecount)  do
+                DataManager.DetailModelRpcNoRet(buildingId, 'm_DelAdFromSlot',buildingId,self.ItemCreatDeleteMgr.adList[v.metaId][1].id)
                 table.remove(self.ItemCreatDeleteMgr.adList[v.metaId],1)
-                    self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
-                    v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+                self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
+                v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
 
-                if tonumber(v.selfcount) ==0 then
-                    destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
+                if tonumber(v.selfcount)==0 then
+                    destroy(self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].prefab)
                     self.ItemCreatDeleteMgr.adList[v.metaId]=nil
                     destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
                     self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
                 end
-                end
+            end
             end
         end
     end
+
+   -- DataManager.DetailModelRpcNoRet(buildingId, 'm_detailPublicFacility',buildingId)
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
 end
 
 function ManageAdvertisementPosCtrl:c_FirstCreate()
-    local creatData={count=1,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
+    local creatData={model=MunicipalModel,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalModel.lMsg}
     self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
 end
 
 function ManageAdvertisementPosCtrl:OtherCallback()
     UIPage:ClosePage()
     ct.OpenCtrl("AdvertisementPosCtrl")
+    local buildingId=MunicipalPanel.buildingId
+
     ----从无到有的打广告
     for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
         destroy(v);
@@ -392,11 +411,11 @@ function ManageAdvertisementPosCtrl:OtherCallback()
     end
     ----发送请求
     for i, data in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
-        data.personId=MunicipalModel.owenerId
+        data.personId=DataManager.GetMyOwnerID()
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(data)
         self.ItemCreatDeleteMgr:_creatoutItem(data)
         for i = 1, data.count do
-            Event.Brocast("m_adPutAdToSlot",data.slots[1].s.id,data.metaId,data.type,MunicipalModel.lMsg.info.id)
+            DataManager.DetailModelRpcNoRet(buildingId, 'm_adPutAdToSlot',data.slots[1].s.id,data.metaId,data.type,buildingId)
             table.remove(data.slots,1)
         end
         for u, p in pairs(self.ItemCreatDeleteMgr.adList) do
@@ -405,7 +424,6 @@ function ManageAdvertisementPosCtrl:OtherCallback()
             end
         end
         self.ItemCreatDeleteMgr.isFirst=true
-        Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
     end
 
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
@@ -414,42 +432,46 @@ function ManageAdvertisementPosCtrl:OtherCallback()
     if self.ItemCreatDeleteMgr.serverMapAdvertisementINSList then
         for i, v in pairs(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList) do
             if  tonumber(v.selfcount) < tonumber(v.updatecount) then---添加广告
-                 --找出slotid
-                 local slots={}
+                --找出slotid
+                local slots={}
                 for i, addItemInS in pairs(self.ItemCreatDeleteMgr.addItemInSList) do
                     if addItemInS.days==v.days then
                         slots=addItemInS.slots
                     end
                 end
-            for i = 1, (v.updatecount-v.selfcount) do
+                for i = 1, (v.updatecount-v.selfcount) do
 
-                Event.Brocast("m_adPutAdToSlot",slots[1].s.id,v.metaId,v.type,MunicipalModel.lMsg.info.id)
-                table.remove(slots,1)
-                self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
-                v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
-            end
+                    DataManager.DetailModelRpcNoRet(buildingId, 'm_adPutAdToSlot',slots[1].s.id,v.metaId,v.type,buildingId)
+                    table.remove(slots,1)
+                    self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text+1
+                    v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
+                end
 
             else---删广告
             for k = 1, (v.selfcount-v.updatecount)  do
-                Event.Brocast("m_DelAdFromSlot",MunicipalModel.lMsg.info.id,v.ads[1].id)
+                DataManager.DetailModelRpcNoRet(buildingId, 'm_DelAdFromSlot',buildingId,v.ads[1].id)
                 table.insert(v.slots,v.ads[1].slot)
                 table.remove(v.ads,1)
                 self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text-1
                 v.selfcount=self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].countText.text
-                 ---删数据和预制
+
+                ---删数据和预制
                 if tonumber(v.selfcount) ==0 then
-                    destroy(self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId])
+                    destroy(self.ItemCreatDeleteMgr.AdvertisementINSList[v.metaId].prefab)
                     self.ItemCreatDeleteMgr.AdvertisementItemList[v.metaId]=nil
                     self.ItemCreatDeleteMgr.adList[v.metaId]=nil
                     destroy(self.ItemCreatDeleteMgr.serverMapAdvertisementINSList[v.metaId].prefab)
                     self.ItemCreatDeleteMgr.serverMapAdvertisementINSList[v.metaId]=nil
-                     destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
-                     self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
-                 end
+                    destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
+                    self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
+                end
             end
             end
         end
     end
+
+
+    DataManager.DetailModelRpcNoRet(buildingId, 'm_detailPublicFacility',buildingId)
 
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
 

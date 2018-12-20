@@ -266,7 +266,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.m_data.insId == insId  then
+    if (tempController or tempController[modelMethord]) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -313,13 +313,13 @@ end
 --insId：Model唯一ID
 --protoNameStr：protobuf表名
 --protoNumStr:  protobuf协议号
---protoAnaStr:  protobuf解析数据结构名
+--protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
 function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
     if not ModelNetMsgStack[protoNameStr] then
         ModelNetMsgStack[protoNameStr] = {}
     end
-    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= table then
+    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= "table" then
         ModelNetMsgStack[protoNameStr][protoNumStr] = {}
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
@@ -328,8 +328,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 local protoID = nil
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
-                elseif protoData.id then
-                    protoID = protoData.id
+                elseif protoData.buildingId then
+                    protoID = protoData.buildingId
                 end
                 if protoID then
                     for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
@@ -356,7 +356,7 @@ end
 
 --移除 消息回调
 function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
-    if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
+     if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
         ModelNetMsgStack[protoNameStr][protoNumStr][insId] = nil
         --[[
         if #ModelNetMsgStack[protoNameStr][protoNumStr] == 0 then

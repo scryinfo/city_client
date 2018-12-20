@@ -35,7 +35,7 @@ function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
 end
 ---添加
 function AddItem:OnClick_Add(go)
-   -- go.manager.transform=go.parent
+    -- go.manager.transform=go.parent
     if   go.manager.current then
         go.manager.current.angleRoot.localScale=Vector3.zero
     end
@@ -45,7 +45,7 @@ end
 
 function AddItem:updateTime()
     if self.remainTime then
-        self.remainTime=self.remainTime-1
-        self.timeText.text=self.remainTime.hour+24*self.remainTime.day.. ":"..self.remainTime.minute..":"..self.remainTime.second --"h"
+        local remainTime= getFormatUnixTime(self.remainTime-1-os.time())
+        self.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
     end
 end

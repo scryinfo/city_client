@@ -133,9 +133,6 @@ function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
 
 end
 
-
-
-
 --创建临时修建建筑物
 local function CreateConstructBuildSuccess(go,table)
     --判空
@@ -143,12 +140,15 @@ local function CreateConstructBuildSuccess(go,table)
         return;
     end
     DataManager.TempDatas.constructID  = table[1]
-    ct.OpenCtrl('ConstructSwitchCtrl')
     DataManager.TempDatas.constructObj = go
     DataManager.TempDatas.constructObj.transform.position = table[2]
     DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
-    TerrainManager.MoveTempConstructObj()
+    --一定要放在数据刷新完后打开
+    ct.OpenCtrl('ConstructSwitchCtrl')
 end
+
+
+
 
 --取消建筑的修建
 function TerrainManager.AbolishConstructBuild()
@@ -156,7 +156,9 @@ function TerrainManager.AbolishConstructBuild()
     if DataManager.TempDatas.constructObj ~= nil then
         destroy(DataManager.TempDatas.constructObj)
         DataManager.TempDatas.constructObj = nil
+        DataManager.TempDatas.constructPosID = nil
         DataManager.TempDatas.constructID = nil
+        DataManager.TempDatas.constructBlockList = nil
     end
 end
 

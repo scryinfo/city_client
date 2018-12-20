@@ -53,7 +53,7 @@ function WindowsInput:GetZoomValue()
 end
 
 function WindowsInput:GetClickFocusPoint()
-    if  self:GetIsDragging() then
+    if  self:GetIsDragging() or self:GetIsPoint() then
         return UnityEngine.Input.mousePosition
     else
         return nil

@@ -741,6 +741,7 @@ function DataManager.IsEnableChangeGround(blockID)
     end
 end
 
+--判断所有范围内地块允不允许改变
 function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
     for key, value in ipairs(idList) do
@@ -749,6 +750,21 @@ function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
         end
     end
     return true
+end
+
+--判断是否在覆盖范围内
+--startBlockID 根节点
+--rangeSize 范围大小
+--tempID   判断点
+function DataManager.IsInTheRange(startBlockID,rangeSize,tempID)
+    for i = startBlockID, (startBlockID + TerrainRangeSize * (rangeSize - 1)),TerrainRangeSize  do
+        for tempkey = i, (i + rangeSize - 1) do
+            if  tempkey == tempID then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------

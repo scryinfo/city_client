@@ -55,7 +55,6 @@ function CameraMove:FixedUpdate(gameObject)
     end
     --如果为UI状态，则直接返回不做点击/拖拽判断
     if mCameraState == TouchStateType.NormalState then
-        ct.log("system"," NormalState状态")
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
@@ -70,7 +69,7 @@ function CameraMove:FixedUpdate(gameObject)
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
-            if self.touchBeginBlockID and DataManager.TempDatas and DataManager.TempDatas.constructPosID and  DataManager.TempDatas.constructPosID == self.touchBeginBlockID then
+            if nil ~= DataManager.TempDatas.constructPosID and  DataManager.IsInTheRange(DataManager.TempDatas.constructPosID,PlayerBuildingBaseData[DataManager.TempDatas.constructID]["x"],self.touchBeginBlockID) then
                 self:MoveConstructObj()
             else
                 self:UpdateMove()
@@ -90,6 +89,7 @@ function CameraMove:FixedUpdate(gameObject)
 
 
 end
+
 
 
 --缩放相机距离远近
@@ -114,19 +114,14 @@ function CameraMove:TouchBuild()
 end
 
 --拖动临时建筑
---TODO:2*2/3*3建筑范围
 function CameraMove:MoveConstructObj()
-    --[[
-    if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
-        return
-    end
-    --]]
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
         if blockID ~= self.touchBeginBlockID then
-            DataManager.TempDatas.constructObj.transform.position = TerrainManager.BlockIDTurnPosition(blockID)
-            DataManager.TempDatas.constructPosID = blockID
+            local targetID= DataManager.TempDatas.constructPosID + blockID - self.touchBeginBlockID
+            DataManager.TempDatas.constructObj.transform.position = TerrainManager.BlockIDTurnPosition(targetID)
+            DataManager.TempDatas.constructPosID = targetID
             self.touchBeginBlockID = blockID
         end
     end
@@ -134,11 +129,6 @@ end
 
 --拖动时更新相机位置
 function CameraMove:UpdateMove()
-    --[[
-    if nil == self.touchBeginPosition and nil == self.touchBeginBlockID then
-        return
-    end
-    --]]
     if not inputTools:IsMove() then
         return
     end

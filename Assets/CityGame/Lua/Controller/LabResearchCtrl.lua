@@ -36,6 +36,11 @@ function LabResearchCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
+            --roll之后减掉roll的次数，设置run为false状态
+            self.m_data.roll = 0
+            self.m_data.run = false
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabLineInfoAfterRoll', self.m_data)
+
             self.m_data.bulbState = LabInventionBulbItemState.Empty
             LabResearchPanel.setBulbState(self.m_data.bulbState)
         end
@@ -152,7 +157,7 @@ end
 --添加临时线，返回科技线
 function LabResearchCtrl:_creatTempLine()
     local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
     UIPage.ClosePage()
 end
 --继续研究，返回科技线

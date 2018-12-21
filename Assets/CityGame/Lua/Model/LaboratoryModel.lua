@@ -115,6 +115,11 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
     local data = lineData.line
     --先删除临时线
     self:m_DelTempLineData(data)
+    --减去消耗的材料
+    if not self.tempUsedStore then
+        self:m_UpdateLabStore(self.tempUsedStore)
+        self.tempUsedStore = nil
+    end
 
     table.insert(self.orderLineData, 1, data)
     if not self.hashLineData[data.id] then
@@ -241,7 +246,7 @@ function LaboratoryModel:_getScientificLine()
     end
 end
 --客户端显示 --添加临时线
-function LaboratoryModel:m_AddTempLineData(data)
+function LaboratoryModel:m_AddTempLineData(data, tempUsedStore)
     local tempLine = {}
     tempLine.itemId = data.itemId
     tempLine.rollTarget = data.rollTarget
@@ -249,6 +254,7 @@ function LaboratoryModel:m_AddTempLineData(data)
     tempLine.type = data.type
     tempLine.buildingId = self.insId
     self.tempType = data.type
+    self.tempUsedStore = tempUsedStore
 
     if data.type == 0 then
         table.insert(self.researchLines, 1, tempLine)
@@ -297,5 +303,13 @@ function LaboratoryModel:m_UpdateLabStore(usedData)
         else
             ct.log("", "没有库存但是研究/发明按钮点击了")
         end
+    end
+end
+--客户端roll之后，更新线的信息
+function LaboratoryModel:m_UpdateLabLineInfoAfterRoll(lineInfo)
+    local line = self.hashLineData[lineInfo.id]
+    if line ~= nil then
+        line.roll = lineInfo.roll
+        line.run = lineInfo.run
     end
 end

@@ -31,6 +31,12 @@ function LabInventionCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
+
+            --roll之后减掉roll的次数，设置run为false状态
+            self.m_data.roll = 0
+            self.m_data.run = false
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabLineInfoAfterRoll', self.m_data)
+
             self.m_data.bulbState = LabInventionBulbItemState.Empty
             LabInventionPanel.setBulbState(self.m_data.bulbState)
         end
@@ -146,7 +152,7 @@ end
 --点了发明按钮
 function LabInventionCtrl:_inventeBtnClick()
     local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
     UIPage.ClosePage()
 end

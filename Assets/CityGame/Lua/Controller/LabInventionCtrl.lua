@@ -143,17 +143,18 @@ function LabInventionCtrl:_initPanelData()
         else
             if self.m_data.roll > 0 then
                 self.m_data.bulbState = LabInventionBulbItemState.Working
+                self:_setInventBtnState(LabResearchBtnState.Working)
             else
                 self.m_data.bulbState = LabInventionBulbItemState.Empty
                 LabInventionPanel.inventionBtn.onClick:RemoveAllListeners()
                 LabInventionPanel.inventionBtn.onClick:AddListener(function ()
                     self:_launchLine()
                 end)
-            end
-            if self.enough then
-                self:_setInventBtnState(LabResearchBtnState.EnableClick)
-            else
-                self:_setInventBtnState(LabResearchBtnState.NotEnough)
+                if self.enough then
+                    self:_setInventBtnState(LabResearchBtnState.EnableClick)
+                else
+                    self:_setInventBtnState(LabResearchBtnState.NotEnough)
+                end
             end
         end
         LabInventionPanel.setBulbState(self.m_data.bulbState)

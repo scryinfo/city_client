@@ -134,14 +134,13 @@ end
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
     local line = self.hashLineData[data.lineId]
     line.run = true
-    line.rollTarget = data.phase + data.rollTarget
+    line.rollTarget = line.phase + data.phase
     line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
     line.finishTime = line.totalTime + os.time()  --计算结束时间
     line.startTime = os.time()
-
-    --Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
-
     self.tempLine = nil
+    self.tempType = nil
+
     self:_getScientificLine()
     if self.hashLineData[data.lineId].type == 0 then
         DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
@@ -278,6 +277,7 @@ function LaboratoryModel:m_DelTempLineData(data)
         end
         table.remove(self.inventionLines, 1)
     end
+    self.tempType = nil
 end
 --获取正在发明的item
 function LaboratoryModel:m_GetInventingItem()

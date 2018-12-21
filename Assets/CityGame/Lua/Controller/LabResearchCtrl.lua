@@ -85,6 +85,7 @@ function LabResearchCtrl:_initPanelData()
     LabResearchPanel.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(self.m_data.itemId))
 
     local formularItem = FormularConfig[0][self.m_data.itemId]
+    self.usedData = formularItem
     if #formularItem.materials == 0 then
         ct.log("cycle_w15_laboratory03", "阶段数不为1")
         return
@@ -157,6 +158,7 @@ end
 --继续研究，返回科技线
 function LabResearchCtrl:_launchLine()
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
     UIPage.ClosePage()
 end
 --关闭自己，返回科技线界面

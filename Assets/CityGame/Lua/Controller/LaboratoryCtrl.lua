@@ -43,6 +43,7 @@ end
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId)
     self.hasOpened = true
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[mId].sizeName..PlayerBuildingBaseData[mId].typeName
+    LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[mId]
     self.m_data.ownerId = ownerId
     self.m_data.mId = mId
     self.m_data.orderLineData = orderLineData

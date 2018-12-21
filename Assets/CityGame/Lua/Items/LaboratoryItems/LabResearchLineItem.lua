@@ -53,6 +53,8 @@ function LabResearchLineItem:_initData(data)
     --self.iconImg.sprite =
     self.formularData = FormularConfig[0][data.itemId]
     self.staffText.text = tostring(data.workerNum)
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
@@ -79,6 +81,8 @@ function LabResearchLineItem:_updateInfo(data)
     self.data.id = data.id
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     self.data.run = data.run
     if data.roll > 0 then
         self.bottleImg.color = Color.white

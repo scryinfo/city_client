@@ -286,3 +286,16 @@ function LaboratoryModel:m_GetResearchingItem()
     end
     return tempIds
 end
+--更新仓库库存
+function LaboratoryModel:m_UpdateLabStore(usedData)
+    if self.store == nil or usedData.materials == nil then
+        return
+    end
+    for i, itemData in pairs(usedData.materials) do
+        if type(itemData) ~= "function" and self.store[itemData.matId] then
+            self.store[itemData.matId] = self.store[itemData.matId] - itemData.matCount
+        else
+            ct.log("", "没有库存但是研究/发明按钮点击了")
+        end
+    end
+end

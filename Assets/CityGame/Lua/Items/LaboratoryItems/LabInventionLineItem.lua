@@ -62,7 +62,8 @@ function LabInventionLineItem:_initData(data)
     --self.iconImg.sprite =
     self.staffText.text = tostring(data.workerNum)
     self.formularData = FormularConfig[1][data.itemId]
-    --self.staffSlider.maxValue = self.formularData.phaseSec
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
     if not data.roll or data.roll <= 0 then
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
@@ -105,6 +106,8 @@ function LabInventionLineItem:_updateInfo(data)
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
     self.data.run = data.run
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     if data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)

@@ -81,6 +81,7 @@ function LabInventionCtrl:_initPanelData()
     --根据itemId判断是不是原料
     if self.m_data.itemId < 2200000 then
         LabInventionPanel.showLine({})
+        self.usedData = {}
         self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
@@ -88,6 +89,7 @@ function LabInventionCtrl:_initPanelData()
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         local formularItem = FormularConfig[1][self.m_data.itemId]
+        self.usedData = formularItem
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
             data.backFunc = function(success)
                 self.enough = success
@@ -145,6 +147,7 @@ end
 function LabInventionCtrl:_inventeBtnClick()
     local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
     UIPage.ClosePage()
 end
 --关闭自己，返回科技线界面

@@ -160,6 +160,15 @@ end
 
 
 AsyncSequenceTester = class('AsyncSequenceTester')
+AsyncSequenceTester.static.testers = nil
+
+function AsyncSequenceTester.recordTester(newTester)
+    AsyncSequenceTester.static.testers = newTester
+end
+
+function AsyncSequenceTester.Tester()
+    return AsyncSequenceTester.static.testers
+end
 
 function AsyncSequenceTester:resetData()
 end

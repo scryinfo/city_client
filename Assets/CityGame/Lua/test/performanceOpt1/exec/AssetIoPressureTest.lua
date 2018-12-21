@@ -636,7 +636,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     aTester:excute()
     --[[
     测试结果
-    --加载时间
+    --实例化时间
         PC
             [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.391
             [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.026999999999987
@@ -697,6 +697,159 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     --结论
         在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
         所以建筑的加载策略应该是根据城市来预加载，并常驻内存； 卸载压力很小，可以不用考虑
+
+        1秒可以实例化 4050/24.404046 = 165.9560877733143
+        1帧实例化 165.9560877733143/30 = 5.53186959244381
+        1个实例化需要时间 24.404046/4050 = 0.0060256903703704 秒
+        1屏实例化需要时间 450 * 0.0060256903703704 = 2.71156066666668
+    --]]
+end)
+
+--AOI 9屏4050个对象实例化并放到对象池帧速测试
+--[[
+1屏实例化需要时间 450 * 0.0060256903703704 = 2.71156066666668秒， 那么就按一屏算
+8 种建筑每个实例化 450/8 = 56.25 个 aTester.testcount = 57
+    1帧实例化1个
+    1帧实例化2个
+    1帧实例化3个
+    1帧实例化4个
+    1帧实例化5个
+    1帧实例化6个
+    1帧实例化7个
+    1帧实例化8个
+    1帧实例化9个
+    1帧实例化10个
+-]]
+UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_frameRate",  function ()
+    local aTester = AsyncSequenceTester:new()
+    AsyncSequenceTester.recordTester(aTester)
+    --初始化测试数据
+    --aTester.testcount = 450
+    aTester.testcount = 20
+    aTester.instancedCount = 1
+    aTester.loadCount = 0
+    aTester.startTime = 0
+    aTester.curPos = 1
+    aTester.testSquence = {}
+    aTester.ResPathList = {}
+    aTester.loadedBundles = {}
+    aTester.loadedAssets = {}
+    aTester.loadedAssetsNextIdx = 1
+    aTester.instances = {}
+    aTester._timer = nil
+    aTester.resetData = function(self)
+        self.startTime = 0
+        self.instancedCount = 1
+    end
+    --数据准备
+    local ResPathListS = {}
+    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Park_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Techo_3x3_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Root'
+
+    aTester.ResPathList = ResPathListS
+    --数据准备
+
+    local LoadTestRes = function(tester)
+        for i = 1, #tester.ResPathList do
+            local loadDataInfo =  resMgr:LoadRes_S(tester.ResPathList[i], ct.getType(UnityEngine.GameObject));
+            tester.loadedBundles[#tester.loadedBundles+1] = loadDataInfo._bunldle
+            tester.loadedAssets[#tester.loadedAssets+1] = loadDataInfo._asset
+        end
+        tester:getCurSeq().postfun(tester)
+    end
+
+    --实例化方法
+    local InstantiateFun = function()
+        local tester = AsyncSequenceTester.Tester()
+        local curSeq = tester:getCurSeq()
+        for j = 1, curSeq._inscount do
+            tester.instances[#tester.instances+1] = UnityEngine.GameObject.Instantiate(aTester.loadedAssets[aTester.loadedAssetsNextIdx])
+            aTester.loadedAssetsNextIdx = aTester.loadedAssetsNextIdx +1
+            tester.instancedCount = tester.instancedCount + 1
+            --循环从资源列表中抽取要实例化的资源
+            if aTester.loadedAssetsNextIdx > #aTester.loadedAssets then
+                aTester.loadedAssetsNextIdx = 1
+            end
+        end
+        --超过
+        if tester.instancedCount >=   tester.testcount then
+            tester._timer:Stop()
+            curSeq.postfun(tester)
+        end
+    end
+
+    aTester._timer = FrameTimer.New(function()
+        InstantiateFun()
+    end, 1,1)
+
+    local Insfun_Loop = function(tester)
+        tester._timer:Start()
+    end
+
+    local destroyInstances = function(tester)
+        for i, v in pairs(tester.instances) do
+            GameObject.DestroyImmediate(v, true)
+        end
+        tester.instances = {}
+        collectgarbage("collect")
+        tester:getCurSeq().postfun(tester)
+    end
+
+    local unloadFun = function(tester)
+        --ct.log('abel_w17_Aoi_Inst_9Grid_frameRate','[unloadFun]')
+        for i, v in pairs(tester.loadedBundles) do
+            if v ~= nil then
+                UnityEngine.AssetBundle.Unload(v,true)
+            end
+        end
+        for i, v in pairs(tester.loadedAssets) do
+            if v ~= nil then
+                UnityEngine.Resources.UnloadAsset(v)
+            end
+        end
+        tester.loadedBundles = {}
+        tester.loadedAssets = {}
+        tester:getCurSeq().postfun(tester)
+    end
+
+    --加载成功后的回调
+    local callback = function (tester)
+        local costTime = os.clock() - tester.startTime
+        ct.log('abel_w17_Aoi_Inst_9Grid_frameRate',tester:getCurSeq().msg ..costTime)
+        local timer = FrameTimer.New(function()
+            tester:Nextfun()
+            collectgarbage("collect")
+            tester:excute()
+        end, 5,0)
+        timer:Start()
+    end
+
+    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, prefun = nil, postfun = callback, msg = '每帧执行 1 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, prefun = nil, postfun = callback, msg = '每帧执行 2 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 3, prefun = nil, postfun = callback, msg = '每帧执行 3 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 4, prefun = nil, postfun = callback, msg = '每帧执行 4 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 5, prefun = nil, postfun = callback, msg = '每帧执行 5 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 6, prefun = nil, postfun = callback, msg = '每帧执行 6 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, prefun = nil, postfun = callback, msg = '每帧执行 7 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, prefun = nil, postfun = callback, msg = '每帧执行 8 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, prefun = nil, postfun = callback, msg = '每帧执行 9 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, prefun = nil, postfun = callback, msg = '每帧执行 10 次实例化'}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '4050个实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
+
+    --开始执行异步测试序列
+    collectgarbage("collect")
+    aTester:excute()
+    --[[
+    测试结果
+
     --]]
 end)
 

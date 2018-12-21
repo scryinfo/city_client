@@ -23,8 +23,8 @@ function LabBuildingInventionItem:initialize(data, viewRect)
 end
 function LabBuildingInventionItem:_initData(data)
     self.data = data
-    --self.leftSec = self.data.leftSec
     local itemInfo = Material[data.itemId]
+    self.formularData = FormularConfig[1][data.itemId]
     if not itemInfo then
         itemInfo = Good[data.itemId]
     end

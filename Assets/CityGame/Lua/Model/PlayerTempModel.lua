@@ -29,6 +29,7 @@ function PlayerTempModel.Update()
         --PlayerTempModel.tempTestReqAddItem(2102001,99)
         PlayerTempModel.tempTestReqAddItem(2102001,99)
         PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
 
         --PlayerTempModel.tempTestReqAddItem(2102001,99)
         --PlayerTempModel.tempTestReqAddItem(2102001,99)

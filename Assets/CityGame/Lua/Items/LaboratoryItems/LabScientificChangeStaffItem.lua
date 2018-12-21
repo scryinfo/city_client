@@ -78,7 +78,7 @@ function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, 
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
-        local workerNum = self.staffSlider.value
+        local workerNum = self.staffSlider.value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
         if workerNum ~= data.workerNum then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqSetWorkerNum', data.id, workerNum)
         end

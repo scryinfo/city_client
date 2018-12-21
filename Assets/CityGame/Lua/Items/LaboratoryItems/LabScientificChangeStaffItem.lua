@@ -39,6 +39,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = "0"
     self.staffSlider.maxValue = remainWorker / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
+    self.staffSlider.value = 0
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()
@@ -68,8 +69,8 @@ function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, 
     self.parentBtn.interactable = true
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = tostring(data.workerNum)
-    self.staffSlider.maxValue = remainWorker + data.workerNum
-    self.staffSlider.value = data.workerNum
+    self.staffSlider.maxValue = (remainWorker + data.workerNum) / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
+    self.staffSlider.value = data.workerNum / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()

@@ -724,8 +724,8 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
     --初始化测试数据
-    aTester.testcount = 450
-    --aTester.testcount = 20
+    aTester.testcount = 4050
+    --aTester.testcount = 2
     aTester.instancedCount = 1
     aTester.loadCount = 0
     aTester.startTime = 0
@@ -737,6 +737,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     aTester.loadedAssetsNextIdx = 1
     aTester.instances = {}
     aTester._timer = nil
+    aTester._msgs = ''
     aTester.resetData = function()
         local tester = AsyncSequenceTester.Tester()
         tester.startTime = 0
@@ -820,32 +821,41 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
         tester:getCurSeq().postfun(tester)
     end
 
+    local finishedfun = function(tester)
+        ct.log('abel_w17_Aoi_Inst_9Grid_frameRate',tester._msgs)
+    end
     --加载成功后的回调
     local callback = function (tester)
         local nextDelay = tester:getCurSeq()._nextTestDelay
         local costTime = os.clock() - tester.startTime
-        ct.log('abel_w17_Aoi_Inst_9Grid_frameRate',tester:getCurSeq().msg ..costTime)
+        collectgarbage("collect")
+        tester._msgs = tester._msgs..'\n'..tester:getCurSeq().msg ..costTime
         local timer = FrameTimer.New(function()
             tester:Nextfun()
-            collectgarbage("collect")
             tester:excute()
         end, nextDelay,0)
         timer:Start()
     end
 
     aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 5, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 1 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 3, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 3 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 4, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 4 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 5, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 5 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 6, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 6 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 7 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 8 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 9 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = '4050个实例的销毁耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 1 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, '..aTester.testcount..'个实例耗时 ='}
+        --设备上有30帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 3, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 3 次实例化, '..aTester.testcount..'个实例耗时 ='}
+        --每帧执行 3 次实例化, 450个实例耗时 =9.404152, 设备上 30 帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 4, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 4 次实例化, '..aTester.testcount..'个实例耗时 ='}
+        --每帧执行 4 次实例化, 450个实例耗时 =8.442372, 设备上 30 帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 5, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 5 次实例化, '..aTester.testcount..'个实例耗时 ='}
+        --每帧执行 5 次实例化, 450个实例耗时 =6.922939, 设备上 30 帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 6, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 6 次实例化, '..aTester.testcount..'个实例耗时 ='}
+        --每帧执行 6 次实例化, 450个实例耗时 =7.094051, 设备上 5 帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 7 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 8 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 9 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = aTester.testcount.'个实例的销毁耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
 
     --开始执行异步测试序列
     collectgarbage("collect")

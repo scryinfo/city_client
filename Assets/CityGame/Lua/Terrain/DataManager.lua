@@ -805,7 +805,7 @@ end
 
 --发明研究成功  --用来更新玩家数据
 function DataManager.n_OnReceiveNewItem(stream)
-    local data = assert(pbl.decode("gs.IdNum", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    local data = assert(pbl.decode("gs.IntNum", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
     if data then
         DataManager.SetMyGoodLv(data)
     end

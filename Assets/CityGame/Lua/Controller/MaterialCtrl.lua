@@ -1,33 +1,33 @@
-RetailStoresCtrl = class('MaterialCtrl',UIPage)
-UIPage:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
+MaterialCtrl = class('MaterialCtrl',UIPage)
+UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
 
 --构建函数
-function RetailStoresCtrl:initialize()
+function MaterialCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
-function RetailStoresCtrl:bundleName()
+function MaterialCtrl:bundleName()
     return "MaterialPanel";
 end
 
-function RetailStoresCtrl:OnCreate(obj)
+function MaterialCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
 
-function RetailStoresCtrl:Awake(go)
+function MaterialCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    self.materialBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.materialBehaviour:AddClick(RetailStoresPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    self.materialBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
 end
 
-function RetailStoresCtrl:Refresh()
+function MaterialCtrl:Refresh()
     self:initializeData()
 end
 
-function RetailStoresCtrl:initializeData()
+function MaterialCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
@@ -35,27 +35,27 @@ function RetailStoresCtrl:initializeData()
 end
 
 --刷新原料厂信息
-function RetailStoresCtrl:refreshMaterialDataInfo(DataInfo)
-    RetailStoresPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
+    MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
-        RetailStoresPanel.changeNameBtn.localScale = Vector3.zero
+        MaterialPanel.changeNameBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        RetailStoresPanel.changeNameBtn.localScale = Vector3.one
+        MaterialPanel.changeNameBtn.localScale = Vector3.one
     end
     self.m_data.buildingType = BuildingType.MaterialFactory
     if not self.materialToggleGroup then
-        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.materialBehaviour, self.m_data)
+        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, self.materialBehaviour, self.m_data)
     else
         --self.materialToggleGroup:updataInfo(self.m_data)
     end
 end
 
 --更改名字
-function RetailStoresCtrl:OnClick_changeName()
+function MaterialCtrl:OnClick_changeName()
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
@@ -64,7 +64,7 @@ function RetailStoresCtrl:OnClick_changeName()
 end
 
 --返回
-function RetailStoresCtrl:OnClick_backBtn(ins)
+function MaterialCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
@@ -72,7 +72,7 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
 end
 
 --打开信息界面
-function RetailStoresCtrl:OnClick_infoBtn()
+function MaterialCtrl:OnClick_infoBtn()
 
 end
 

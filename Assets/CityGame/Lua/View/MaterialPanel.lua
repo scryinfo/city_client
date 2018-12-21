@@ -2,10 +2,10 @@
 
 local transform;
 
-RetailStoresPanel = {};
-local this = RetailStoresPanel;
+MaterialPanel = {};
+local this = MaterialPanel;
 
-function RetailStoresPanel.Awake(obj)
+function MaterialPanel.Awake(obj)
     transform = obj.transform;
     --this.InitPanel();
     --this.rightRootTran = transform:Find("rightRoot");
@@ -18,7 +18,7 @@ function RetailStoresPanel.Awake(obj)
     this.InitPanel();
 end
 
-function RetailStoresPanel.InitPanel()
+function MaterialPanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
@@ -29,6 +29,6 @@ function RetailStoresPanel.InitPanel()
     this.infoBtn = transform:Find("topRoot/infoBtn");
 end
 --数据初始化
-function RetailStoresPanel.InitDate(materialData)
+function MaterialPanel.InitDate(materialData)
     this.materialData = materialData;
 end

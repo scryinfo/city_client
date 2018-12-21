@@ -1,4 +1,4 @@
-RetailStoresCtrl = class('MaterialCtrl',UIPage)
+RetailStoresCtrl = class('RetailStoresCtrl',UIPage)
 UIPage:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
 
 --构建函数
@@ -28,7 +28,10 @@ function RetailStoresCtrl:Refresh()
 end
 
 function RetailStoresCtrl:initializeData()
-
+    if self.m_data then
+        DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    end
 end
 
 --刷新原料厂信息
@@ -63,14 +66,14 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPage:ShowPage(MaterialCtrl);
-        ct.OpenCtrl("MaterialCtrl")
+        --UIPage:ShowPage(RetailStoresCtrl);
+        ct.OpenCtrl("RetailStoresCtrl")
     end)
 end)
 
-UnitTest.Exec("fisher_w11_OpenMaterialCtrl", "test_MaterialModel_ShowPage",  function ()
-    ct.log("fisher_w11_OpenMaterialCtrl","[test_RemoveClick_self]  测试开始")
-    ct.OpenCtrl('MaterialCtrl',Vector2.New(0, -300)) --注意传入的是类名
+UnitTest.Exec("fisher_w11_OpenRetailStoresCtrl", "test_MaterialModel_ShowPage",  function ()
+    ct.log("fisher_w11_OpenRetailStoresCtrl","[test_RemoveClick_self]  测试开始")
+    ct.OpenCtrl('RetailStoresCtrl',Vector2.New(0, -300)) --注意传入的是类名
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

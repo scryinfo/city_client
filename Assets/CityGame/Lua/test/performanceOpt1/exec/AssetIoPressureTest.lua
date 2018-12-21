@@ -724,8 +724,8 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
     --初始化测试数据
-    --aTester.testcount = 450
-    aTester.testcount = 20
+    aTester.testcount = 450
+    --aTester.testcount = 20
     aTester.instancedCount = 1
     aTester.loadCount = 0
     aTester.startTime = 0
@@ -822,13 +822,14 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
 
     --加载成功后的回调
     local callback = function (tester)
+        local nextDelay = tester:getCurSeq()._nextTestDelay
         local costTime = os.clock() - tester.startTime
         ct.log('abel_w17_Aoi_Inst_9Grid_frameRate',tester:getCurSeq().msg ..costTime)
         local timer = FrameTimer.New(function()
             tester:Nextfun()
             collectgarbage("collect")
             tester:excute()
-        end, 5,0)
+        end, nextDelay,0)
         timer:Start()
     end
 
@@ -842,8 +843,8 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 7 次实例化, 450个实例耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 8 次实例化, 450个实例耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 9 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, 450个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 90, prefun = aTester.resetData, postfun = callback, msg = '4050个实例的销毁耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, 450个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = '4050个实例的销毁耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
 
     --开始执行异步测试序列

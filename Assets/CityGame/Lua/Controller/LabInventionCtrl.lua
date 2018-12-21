@@ -25,9 +25,6 @@ function LabInventionCtrl:Awake(go)
             ct.OpenCtrl("AddLineChooseItemCtrl")
         end
     end, self)
-    self.luaBehaviour:AddClick(LabInventionPanel.inventionBtn.gameObject, function()
-        self:_inventeBtnClick()
-    end, self)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
@@ -95,6 +92,23 @@ function LabInventionCtrl:_initPanelData()
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         local formularItem = FormularConfig[1][self.m_data.itemId]
+        --显示阶段状态
+        self.phaseStates = {}
+        for i = 1, formularItem.phase do
+            self.phaseStates[i] = LabInventionItemPhaseState.Null
+        end
+        if self.m_data.rollTarget then
+            for i = 1, self.m_data.rollTarget do
+                self.phaseStates[i] = LabInventionItemPhaseState.WillTo
+            end
+        end
+        if self.m_data.phase then
+            for i = 1, self.m_data.phase do
+                self.phaseStates[i] = LabInventionItemPhaseState.Finish
+            end
+        end
+        LabInventionPanel.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
+
         self.usedData = formularItem
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
             data.backFunc = function(success)
@@ -114,21 +128,33 @@ function LabInventionCtrl:_initPanelData()
         LabInventionPanel.setBulbState(self.m_data.bulbState)
         if self.enough then
             self:_setInventBtnState(LabResearchBtnState.EnableClick)
+            LabInventionPanel.inventionBtn.onClick:RemoveAllListeners()
+            LabInventionPanel.inventionBtn.onClick:AddListener(function ()
+                self:_creatTempLine()
+            end)
         else
             self:_setInventBtnState(LabResearchBtnState.NotEnough)
         end
     else
         self.backToCompose = false
-        if self.m_data.run and self.m_data.leftSec > 0 then    --如果在工作状态
+        if self.m_data.run then    --如果在工作状态
             self.m_data.bulbState = LabInventionBulbItemState.Working
             self:_setInventBtnState(LabResearchBtnState.Working)
         else
             if self.m_data.roll > 0 then
-                self.m_data.bulbState = LabInventionBulbItemState.Finish
+                self.m_data.bulbState = LabInventionBulbItemState.Working
             else
                 self.m_data.bulbState = LabInventionBulbItemState.Empty
+                LabInventionPanel.inventionBtn.onClick:RemoveAllListeners()
+                LabInventionPanel.inventionBtn.onClick:AddListener(function ()
+                    self:_launchLine()
+                end)
             end
-            self:_setInventBtnState(LabResearchBtnState.NotEnough)
+            if self.enough then
+                self:_setInventBtnState(LabResearchBtnState.EnableClick)
+            else
+                self:_setInventBtnState(LabResearchBtnState.NotEnough)
+            end
         end
         LabInventionPanel.setBulbState(self.m_data.bulbState)
     end
@@ -149,10 +175,16 @@ function LabInventionCtrl:_setInventBtnState(state)
         LabInventionPanel.workingImgTran.localScale = Vector3.one
     end
 end
---点了发明按钮
-function LabInventionCtrl:_inventeBtnClick()
-    local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
+--添加临时线，返回科技线
+function LabInventionCtrl:_creatTempLine()
+    local data = {itemId = self.m_data.itemId, type = 1, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
+    UIPage.ClosePage()
+end
+--继续发明
+function LabInventionCtrl:_launchLine()
+    local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
     UIPage.ClosePage()
 end

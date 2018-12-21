@@ -18,7 +18,7 @@ function LaboratoryModel:_addListener()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineInform",self.n_OnReceiveLabLineAdd)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLaunchLine","gs.LabLaunchLine",self.n_OnReceiveLaunchLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineDel","gs.LabDelLine",self.n_OnReceiveDelLine)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.labLineAddInform",self.n_OnReceiveLineChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.LabLineInform",self.n_OnReceiveLineChange)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineSetWorkerNum","gs.LabSetLineWorkerNum",self.n_OnReceiveWorkerNumChange)
 
@@ -134,7 +134,7 @@ end
 function LaboratoryModel:n_OnReceiveLaunchLine(data)
     local line = self.hashLineData[data.lineId]
     line.run = true
-    line.rollTarget = data.phase
+    line.rollTarget = data.phase + data.rollTarget
     line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
     line.finishTime = line.totalTime + os.time()  --计算结束时间
     line.startTime = os.time()
@@ -197,11 +197,14 @@ end
 --员工数量改变
 function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
     local line = self.hashLineData[data.lineId]
+    self.remainWorker = self.remainWorker - line.workerNum
     line.workerNum = data.n
+    self.remainWorker = self.remainWorker + line.workerNum
 
     line.totalTime = (line.finishTime - os.time()) / data.n  --重新计算
     line.finishTime = os.time() + line.totalTime
-    Event.Brocast("c_LabLineWorkerNumChange", line.lineId, line.totalTime, line.finishTime)
+    Event.Brocast("c_LabLineWorkerNumChange", data.lineId, line.totalTime, line.finishTime, data.n)
+    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)
 end
 
 ---本地消息---

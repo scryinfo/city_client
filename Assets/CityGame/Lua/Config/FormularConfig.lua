@@ -1,63 +1,63 @@
 FormularConfig = {
 [1] = {
 [2101003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2102002] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2103001] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2103004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2104003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2105002] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2106001] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2106004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
 }
 },
 [2251003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -66,7 +66,7 @@ materials =
 }
 },
 [2251004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -75,7 +75,7 @@ materials =
 }
 },
 [2251007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -85,7 +85,7 @@ materials =
 }
 },
 [2251008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -95,7 +95,7 @@ materials =
 }
 },
 [2252003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -104,7 +104,7 @@ materials =
 }
 },
 [2252004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -113,7 +113,7 @@ materials =
 }
 },
 [2252007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -123,7 +123,7 @@ materials =
 }
 },
 [2252008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -133,7 +133,7 @@ materials =
 }
 },
 [2253003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -142,7 +142,7 @@ materials =
 }
 },
 [2253004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -151,7 +151,7 @@ materials =
 }
 },
 [2253007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -161,7 +161,7 @@ materials =
 }
 },
 [2253008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -171,7 +171,7 @@ materials =
 }
 },
 [2254003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -180,7 +180,7 @@ materials =
 }
 },
 [2254004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -189,7 +189,7 @@ materials =
 }
 },
 [2254007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -199,7 +199,7 @@ materials =
 }
 },
 [2254008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -209,7 +209,7 @@ materials =
 }
 },
 [2255003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -218,7 +218,7 @@ materials =
 }
 },
 [2255004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -227,7 +227,7 @@ materials =
 }
 },
 [2255007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -237,7 +237,7 @@ materials =
 }
 },
 [2255008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -247,7 +247,7 @@ materials =
 }
 },
 [2256003] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -256,7 +256,7 @@ materials =
 }
 },
 [2256004] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -265,7 +265,7 @@ materials =
 }
 },
 [2256007] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {
@@ -275,7 +275,7 @@ materials =
 }
 },
 [2256008] = {
-phaseSec = 10000,
+phaseSec = 300,
 phase = 5,
 materials = 
 {

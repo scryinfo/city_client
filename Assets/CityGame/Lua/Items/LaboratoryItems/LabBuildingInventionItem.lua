@@ -76,7 +76,7 @@ function LabBuildingInventionItem:_update()
         if remainTime < 0 then
             self.startTimeDown = false
             self.progressSlider.value = self.progressSlider.maxValue
-            self.bottleImg.color = Color.white
+            self.bulbImg.color = Color.white
             return
         end
 
@@ -88,7 +88,7 @@ function LabBuildingInventionItem:_update()
         if self.currentTime >= self.data.finishTime then
             self.startTimeDown = false
             self.progressSlider.value = self.progressSlider.maxValue
-            self.bottleImg.color = Color.white
+            self.bulbImg.color = Color.white
             return
         end
     end

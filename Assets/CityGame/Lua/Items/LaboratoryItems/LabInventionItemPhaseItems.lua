@@ -41,14 +41,23 @@ function LabInventionItemPhaseItems:showState(datas)
             self.itemRects[i].finish.localScale = Vector3.one
             self.itemRects[i].willTo.localScale = Vector3.zero
             self.itemRects[i].null.localScale = Vector3.zero
+            if self.itemRects[i].text ~= nil then
+                self.itemRects[i].text.transform.localScale = Vector3.zero
+            end
         elseif itemData == LabInventionItemPhaseState.WillTo then
             self.itemRects[i].finish.localScale = Vector3.zero
             self.itemRects[i].willTo.localScale = Vector3.one
             self.itemRects[i].null.localScale = Vector3.zero
+            if self.itemRects[i].text ~= nil then
+                self.itemRects[i].text.transform.localScale = Vector3.one
+            end
         elseif itemData == LabInventionItemPhaseState.Null then
             self.itemRects[i].finish.localScale = Vector3.zero
             self.itemRects[i].willTo.localScale = Vector3.zero
             self.itemRects[i].null.localScale = Vector3.one
+            if self.itemRects[i].text ~= nil then
+                self.itemRects[i].text.transform.localScale = Vector3.one
+            end
 
             --发明界面有种情况是只有null和finish状态的，而且当为null状态时，需要显示成功率
             --if itemData.percentData then

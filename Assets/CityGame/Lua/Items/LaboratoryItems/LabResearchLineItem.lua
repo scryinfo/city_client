@@ -98,11 +98,13 @@ function LabResearchLineItem:_updateInfo(data)
     end
 end
 --员工数量改变
-function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime)
+function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
     if lineId == self.data.id then
         self.currentTime = os.time()
         self.data.finishTime = finishTime
         self.data.totalTime = totalTime
+        self.staffText.text = tostring(workerNum)
+        --self.staffSlider.value = workerNum
     end
 end
 

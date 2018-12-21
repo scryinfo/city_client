@@ -108,9 +108,10 @@ function LabInventionLineItem:_updateInfo(data)
     self.data.run = data.run
     self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
     self.staffSlider.value = data.workerNum
-    if data.roll > 0 then
+    if data.roll and data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
     else
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
@@ -128,11 +129,13 @@ function LabInventionLineItem:_updateInfo(data)
     end
 end
 --员工数量改变
-function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime)
+function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
     if lineId == self.data.id then
         self.currentTime = os.time()
         self.data.finishTime = finishTime
         self.data.totalTime = totalTime
+        self.staffText.text = tostring(workerNum)
+        --self.staffSlider.value = workerNum
     end
 end
 --点击删除按钮
@@ -154,13 +157,14 @@ function LabInventionLineItem:_update()
         if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
             self.data.roll = self.data.roll + 1
-            self.bottleImg.color = Color.white
+            self.bulbImg.color = Color.white
             self.data.run = false
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
         local height = (1 - remainTime / self.data.totalTime) * LabInventionLineItem.static.FinishBulbHight
@@ -169,8 +173,9 @@ function LabInventionLineItem:_update()
         if self.currentTime >= self.data.finishTime then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
             self.data.roll = self.data.roll + 1
-            self.bottleImg.color = Color.white
+            self.bulbImg.color = Color.white
             self.data.run = false
             return
         end

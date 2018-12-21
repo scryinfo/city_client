@@ -20,7 +20,7 @@ function LabInventionPanel.InitPanel()
     this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
     this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")
 
-    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/rollRoot/successItems"))
+    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/rollRoot/successItems"), true)
 
     this.itemNameText = transform:Find("bottomRoot/right/titleBg/itemNameText"):GetComponent("Text")
     this.goodRootTran = transform:Find("bottomRoot/right/goods")

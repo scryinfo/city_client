@@ -22,7 +22,7 @@ function LabScientificChangeStaffItem:initialize(viewRect, parentBtn, gridGroup)
         else
             self.disableImgTran.localScale = Vector3.one
         end
-        self.staffText.text = tostring(value)
+        self.staffText.text = tostring(value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum)
     end)
     parentBtn.onClick:AddListener(function ()
         self:_hideSelf()
@@ -38,7 +38,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     self.parentBtn.interactable = false
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = "0"
-    self.staffSlider.maxValue = remainWorker
+    self.staffSlider.maxValue = remainWorker / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()
@@ -51,7 +51,7 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
-        local workerNum = self.staffSlider.value
+        local workerNum = self.staffSlider.value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
         if workerNum > 0 then
             DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqLabAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase or 1)
             self:_hideSelf()

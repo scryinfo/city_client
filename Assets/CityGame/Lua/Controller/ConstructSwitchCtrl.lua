@@ -38,6 +38,10 @@ function ConstructSwitchCtrl:Awake(go)
     Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self);
 end
 
+function ConstructSwitchCtrl:Refresh()
+    TerrainManager.MoveTempConstructObj()
+end
+
 
 --移动节点位置
 --触发：1.创建时触发一次2.移动建筑物时触发一次3.移动屏幕时触发一次

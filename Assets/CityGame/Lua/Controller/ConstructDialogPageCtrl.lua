@@ -39,6 +39,7 @@ function ConstructDialogPageCtrl:Refresh()
     ConstructDialogPagePanel.titleText.text = PlayerBuildingBaseData[DataManager.TempDatas.constructID].sizeName .. "  " .. PlayerBuildingBaseData[DataManager.TempDatas.constructID].typeName
     ConstructDialogPagePanel.buildSizeText.text = PlayerBuildingBaseData[DataManager.TempDatas.constructID].x * PlayerBuildingBaseData[DataManager.TempDatas.constructID].y
 end
+
 --确认建造建筑
 function ConstructDialogPageCtrl:ConstructBuildConfirm()
     --TODO：向服务器发送建造数据

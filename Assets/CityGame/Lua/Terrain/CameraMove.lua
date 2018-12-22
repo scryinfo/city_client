@@ -108,6 +108,7 @@ function CameraMove:TouchBuild()
             local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
             if nil ~= tempModel then
                 tempModel:OpenPanel()
+                CameraMove.MoveIntoUILayer(tempNodeID)
             end
         end
     end
@@ -197,6 +198,34 @@ function CameraMove.IsClickDownOverUI()
         end
     end
     return false
+end
+
+local NormalStateCameraPos      --记录正常状态相机的位置
+local NormalStateCameraScalePos    --记录正常状态相机的远近(即相机真正的坐标位置)
+local m_IntoDurationtime = 0.3
+local m_OutDurationtime = 0.2
+
+--移动放大到某个指定建筑
+function CameraMove.MoveIntoUILayer(targetID)
+    --记录位置状态
+    NormalStateCameraPos = mainCameraCenterTransforms.position
+    NormalStateCameraScalePos = mainCameraTransform.position
+    --相机移动到目标点
+    local tempPos = TerrainManager.BlockIDTurnPosition(targetID)--TODO:加上配置表偏移量
+    mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)
+    --相机移动到目标位置
+    local tempScalePos = Vector3:new(7,7,7)
+    mainCameraTransform:DOMove(tempScalePos,m_IntoDurationtime)
+    --TODO:战争迷雾缩小到目标大小
+end
+
+--还原到正常状态
+function CameraMove.MoveOutUILayer()
+    --相机还原到目标点
+    mainCameraCenterTransforms:DOMove(NormalStateCameraPos,m_OutDurationtime)
+    --相机还原到目标大小
+    mainCameraTransform:DOMove(NormalStateCameraScalePos,m_OutDurationtime)
+    --TODO:战争迷雾换到到正常大小
 end
 
 return CameraMove

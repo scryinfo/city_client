@@ -18,7 +18,7 @@ DataManager = {}
 --  a.修建建筑时的临时数据（包括展示用GameObject集合，修建状态IsConstructing）
 --          ==>> 打开修建界面时初始化，关闭时清空
 --4.系统数据
---  a.当前操作状态（Enum TouchState{ NormalState = 1，//正常状态（可拖拽点击状态）   ConstructState = 2，//修建状态   UIState = 3，//UI查看状态   }）
+--  a.当前操作状态（Enum TouchState{ NormalState = 0，//正常状态（可拖拽点击状态）   ConstructState = 1，//修建状态   UIState = 2，//UI查看状态   }）
 --          ==》登录时初始化，用于触摸操作的控制判断
 --  b.服务器时间戳
 --          ==>> 登录时同步，断线重连刷新一次
@@ -36,11 +36,10 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 
-DataManager.TempDatas ={ constructObj = nil, constructID = nil}
-
+DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
 ---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
-
+-------------------------------原子地块数据--------------------------------
 --功能
 --  创建一个新的原子地块集合，并将内部所有数据置为 -1
 --参数
@@ -91,7 +90,117 @@ function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     end
     return idList
 end
+-------------------------------道路数据集合--------------------------------
+--功能
+--  依据BlockDatas创建道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.CreateWaysByCollectionID(tempCollectionID)
+    --TODO://
+    if not BuildDataStack[tempCollectionID] then
+        return
+    end
+    if not BuildDataStack[tempCollectionID].RoteDatas then
+        BuildDataStack[tempCollectionID].RoteDatas = {}
+    end
+    for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
+        if itemNodeID == -1 then
+            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+            if roadNum > 0 and roadNum < #RoadNumConfig  then
+                if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
+                else
+                    if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
+                        break
+                    else
+                        --TODO:删除之前的道路Obj
+                        destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                    end
+                end
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
+                local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
+                local go = UnityEngine.GameObject.Instantiate(prefab)
+                go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
+            end
+        end
+    end
+end
 
+--功能
+--  依据BlockDatas刷新道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RefreshWaysByCollectionID(tempCollectionID)
+
+
+end
+
+--功能
+-- 移除道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RemoveWaysByCollectionID(tempCollectionID)
+
+
+end
+
+
+local RoadAroundNumber = {
+    FrontUpperItem = { Num = 1 },   --正上方
+    FrontBelowItem = { Num = 4 },   --正下方
+    LeftUpperItem = { Num = 128 },    --左上方
+    LeftMiddleItem = { Num = 8 },   --正左方
+    LeftBelowItem = { Num = 64 },    --左下方
+    RightUpperItem ={ Num = 16 },    --右上方
+    RightMiddleItem = { Num = 2 },  --正右方
+    RightBelowItem = { Num = 32 },   --右下方
+}
+--功能
+-- 计算道路number
+function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
+    if roadBlockID == 7006 then
+        local a = 0
+    end
+    local roadNum = 0
+    for key, value in pairs(RoadAroundNumber) do
+        value.ID = nil
+    end
+    --边缘判定（上下不判定的原因是因为计算值的时候会被排除）
+    if  roadBlockID % TerrainRangeSize ~= 0 then    --不靠地图右边边界--->右边一列
+        RoadAroundNumber.RightUpperItem.ID = roadBlockID - TerrainRangeSize + 1
+        RoadAroundNumber.RightMiddleItem.ID = roadBlockID + 1
+        RoadAroundNumber.RightBelowItem.ID = roadBlockID + TerrainRangeSize + 1
+    end
+    if roadBlockID % TerrainRangeSize ~= 1 then     --不靠地图左边边界--->计算左边一列
+        RoadAroundNumber.LeftUpperItem.ID = roadBlockID - TerrainRangeSize - 1
+        RoadAroundNumber.LeftMiddleItem.ID = roadBlockID - 1
+        RoadAroundNumber.LeftBelowItem.ID = roadBlockID + TerrainRangeSize - 1
+    end
+    RoadAroundNumber.FrontUpperItem.ID = roadBlockID - TerrainRangeSize
+    RoadAroundNumber.FrontBelowItem.ID = roadBlockID + TerrainRangeSize
+    --计算中间一列
+    local topItemID = roadBlockID - TerrainRangeSize
+    --如果存在  那么计算这个值
+    for key, value in pairs(RoadAroundNumber) do
+        if value.ID and value.ID > 0 and value.ID < TerrainRangeSize*TerrainRangeSize then
+            if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
+                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] ~= -1 then
+                    roadNum  = roadNum + value.Num
+                end
+            else
+                local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
+                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                    roadNum  = roadNum + value.Num
+                end
+            end
+        end
+    end
+    return roadNum
+end
+
+-------------------------------商业建筑基础数据集合--------------------------------
 --功能
 --  刷新商业建筑集合的基础数据--
 --参数
@@ -385,6 +494,10 @@ function  DataManager.InitPersonDatas(tempData)
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
 
+    --初始化自己所拥有建筑（购买的土地）
+    PersonDataStack.m_buysBuild = tempData.buys
+    --初始化自己所拥有建筑（租赁的土地）
+    PersonDataStack.m_rentsBuild = tempData.rents
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -438,6 +551,13 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
+
+
+
+    ------------------------------------打开相机
+    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
+    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
+
 end
 
 --修改自己所拥有土地集合
@@ -611,6 +731,7 @@ function DataManager.IsEnableChangeGround(blockID)
     end
 end
 
+--判断所有范围内地块允不允许改变
 function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
     for key, value in ipairs(idList) do
@@ -621,8 +742,22 @@ function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     return true
 end
 
----------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
+--判断是否在覆盖范围内
+--startBlockID 根节点
+--rangeSize 范围大小
+--tempID   判断点
+function DataManager.IsInTheRange(startBlockID,rangeSize,tempID)
+    for i = startBlockID, (startBlockID + TerrainRangeSize * (rangeSize - 1)),TerrainRangeSize  do
+        for tempkey = i, (i + rangeSize - 1) do
+            if  tempkey == tempID then
+                return true
+            end
+        end
+    end
+    return false
+end
 
+---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
@@ -643,11 +778,11 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
 end
+
 --清除所有消息回调
 local function ClearEvents()
     
 end
-
 
 --DataManager初始化
 function DataManager.Init()

@@ -210,6 +210,7 @@ public static class CustomSettings
         _GT(typeof(LuaComponent)),
         _GT(typeof(LoopDropfreshBar)),
 
+        _GT(typeof(UnityEngine.EventSystems.EventSystem)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

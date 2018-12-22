@@ -15,10 +15,10 @@ end
 function AddLineChooseItemPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.searchBtn = transform:Find("topRoot/searchBtn")
-    this.leftBtnParentTran = transform:Find("leftBtnParent")
+    this.leftBtnParentTran = transform:Find("leftBtnParent"):GetComponent("RectTransform")
     this.leftBtn = transform:Find("leftBtnParent/leftBtn")
     this.leftDisableImg = transform:Find("leftBtnParent/disableImg")
-    this.rightBtnParentTran = transform:Find("rightBtnParent")
+    this.rightBtnParentTran = transform:Find("rightBtnParent"):GetComponent("RectTransform")
     this.rightBtn = transform:Find("rightBtnParent/rightBtn"):GetComponent("Button")
     this.rightDisableImg = transform:Find("rightBtnParent/disableImg")
 

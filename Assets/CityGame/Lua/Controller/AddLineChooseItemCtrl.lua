@@ -113,6 +113,8 @@ end
 --左边的detail被点击，需要改变中心线
 function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.leftBtnParentTran.transform.position = rectPosition
+    AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition = AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition + Vector2.New(174, 0)
+
     --tempData = Material[itemId]
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
@@ -133,6 +135,8 @@ end
 --右侧的detail被点击，改变中心线
 function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.rightBtnParentTran.transform.position = rectPosition
+    AddLineChooseItemPanel.rightBtnParentTran.anchoredPosition = AddLineChooseItemPanel.rightBtnParentTran.anchoredPosition - Vector2.New(174, 0)
+
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
     AddLineChooseItemPanel.productionItem:initData(Good[itemId])

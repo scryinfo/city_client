@@ -63,6 +63,7 @@ function AddLineTogglesMgr:initData(data)
     self.toggleItems[1]:setToggleIsOn(true)
 
     --可能会有设置正在研究中等状态
+    self:_showDetails(self.toggleItems[1]:getTypeId())
 end
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
 function AddLineTogglesMgr:setToggleIsOnByType(itemId)

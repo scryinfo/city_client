@@ -140,24 +140,18 @@ end
 
 -- 获取界面数据
 function FriendsCtrl:_refreshData()
+    FriendsCtrl.friendInfo = {}
     local friendsBasicData = DataManager.GetMyFriends()
     local friendsId = {}
-    for i, v in pairs(friendsBasicData) do
+    for _, v in pairs(friendsBasicData) do
         if v ~= nil then
-            table.insert(friendsId, i)
+            table.insert(friendsId, v.id)
         end
     end
     if friendsId[1] then
-        local friendsInfo = DataManager.GetMyFriendsInfo()
-        if friendsInfo[1] then
-            self:_showFriends()
-            FriendsPanel.friendsNumberText.text = #friendsId
-            FriendsPanel.groupNumberText.text = "5"
-        else
-            Event.Brocast("m_QueryPlayerInfo", friendsId)
-            FriendsPanel.friendsNumberText.text = #friendsId
-            FriendsPanel.groupNumberText.text = "5"
-        end
+        Event.Brocast("m_QueryPlayerInfo", friendsId)
+        FriendsPanel.friendsNumberText.text = #friendsId
+        FriendsPanel.groupNumberText.text = "5"
     else
         FriendsPanel.friendsNumberText.text = "0"
         FriendsPanel.groupNumberText.text = "0"
@@ -168,7 +162,6 @@ end
 
 --显示好友信息
 function FriendsCtrl:_showFriends()
-    FriendsCtrl.friendInfo = DataManager.GetMyFriendsInfo()
     FriendsPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendsCtrl.friendInfo)
 end
 
@@ -286,12 +279,13 @@ end
 -- 网络回调
 function FriendsCtrl:c_OnReceivePlayerInfo(friendsData)
     for _, v in ipairs(friendsData.info) do
-        DataManager.SetMyFriendsInfo(v)
+        table.insert(FriendsCtrl.friendInfo, v)
     end
     self:_showFriends()
 end
 
 function FriendsCtrl:c_OnReceiveAddFriendSucess(friend)
-    FriendsPanel.friendsNumberText.text = tostring(tonumber(FriendsPanel.friendsNumberText.text) + 1)
+    table.insert(FriendsCtrl.friendInfo, friend)
+    FriendsPanel.friendsNumberText.text = tostring(tonumber(#FriendsCtrl.friendInfo))
     self:_showFriends()
 end

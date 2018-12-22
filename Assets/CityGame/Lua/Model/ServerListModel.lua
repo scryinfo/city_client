@@ -104,10 +104,12 @@ function ServerListModel.n_OnRoleLogin(stream)
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
 
         --激活相机脚本
+        --[[
         local camOjb = UnityEngine.Camera.main.gameObject:GetComponent("CameraScripts")
         if camOjb then
             camOjb.enabled = true;
         end
+        --]]
         --logDebug(pMsg.role.id)
         --logDebug(pMsg.role.name)
         --logDebug(pMsg.role.name)

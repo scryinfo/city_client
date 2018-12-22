@@ -203,8 +203,8 @@ function CameraMove.IsClickDownOverUI()
     return false
 end
 
-local NormalStateCameraPos      --记录正常状态相机的位置
-local NormalStateCameraScalePos    --记录正常状态相机的远近(即相机真正的坐标位置)
+local NormalStateCameraPos = nil       --记录正常状态相机的位置
+local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
 local m_IntoDurationtime = 0.3
 local m_OutDurationtime = 0.2
 
@@ -226,6 +226,9 @@ end
 
 --还原到正常状态
 function CameraMove.MoveOutUILayer()
+    if not NormalStateCameraPos or not NormalStateCameraScalePos then
+        return
+    end
     --相机状态切换至NormalState
     CameraMove.ChangeCameraState(TouchStateType.NormalState)
     --相机还原到目标点
@@ -233,6 +236,9 @@ function CameraMove.MoveOutUILayer()
     --相机还原到目标大小
     mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
     --TODO:战争迷雾换到到正常大小
+
+    NormalStateCameraPos = nil
+    NormalStateCameraScalePos = nil
 end
 
 return CameraMove

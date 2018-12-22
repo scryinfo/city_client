@@ -7,12 +7,13 @@
 ChatFriendsItem = class('ChatFriendsItem')
 
 -- 初始化
-function ChatFriendsItem:initialize(itemId, prefab, isOn, data)
+function ChatFriendsItem:initialize(itemId, index, prefab, isOn, data)
     --prefab:GetComponent("Image").sprite = UnityEngine.Resources.Load("1")
     --ChatCtrl.static.luaBehaviour:AddClick(prefab, self.OnExpressionBtn, self)
     self.prefab = prefab
     self.data = data
     self.data.itemId = itemId
+    self.data.index = index
     self.data.company = "Scry"
 
     local transform = prefab.transform
@@ -36,11 +37,31 @@ function ChatFriendsItem:initialize(itemId, prefab, isOn, data)
     end)
 end
 
+function ChatFriendsItem:SetNoticeText(text)
+    if text and text > 0 then
+        self.noticeImage:SetActive(true)
+        self.noticeText.text = text
+    else
+        self.noticeImage:SetActive(false)
+    end
+end
+
 function ChatFriendsItem:_toggleValueChange(isOn)
     if isOn then
         self.toggle.interactable = false
-        ChatCtrl.static.chatMgr:DestroyContentChildren()
-        ChatCtrl.static.chatMgr:SetFriendsIdAndToggle(self.data.id, self.toggle)
-        ChatCtrl.static.chatMgr:ShowPlayerInfo(2, self.data)
+        self.noticeImage:SetActive(false)
+        ChatCtrl.static.chatMgr:SetToggle(self.toggle)
+        if self.data.index == 1 then
+            ChatCtrl.static.chatMgr:DestroyContentChildren(2)
+            ChatCtrl.static.chatMgr:ShowPlayerInfo(2, self.data)
+            DataManager.SetMyReadChatInfo(2, self.data.id)
+            ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)
+            ChatCtrl.static.chatMgr:StartScrollBottom()
+        else
+            ChatCtrl.static.chatMgr:ShowPlayerInfo(3, self.data)
+            DataManager.SetMyReadChatInfo(3, self.data.id)
+            ChatCtrl.static.chatMgr:ShowAllChatInfo(3, self.data.id)
+            ChatCtrl.static.chatMgr:StartScrollBottom()
+        end
     end
 end

@@ -8,6 +8,8 @@ ChatMgr = class('FriendsMgr')
 ChatMgr.static.ExpressionBtnPATH = "View/Chat/ExpressionBtnItem"
 ChatMgr.static.ChatRightItemPath = "View/Chat/ChatRightItem"
 ChatMgr.static.ChatLeftItemPath = "View/Chat/ChatLeftItem"
+ChatMgr.static.ChatTimeItemPath = "View/Chat/ChatTimeItem"
+ChatMgr.static.ChatFriendsItemPath = "View/Chat/ChatFriendsItem"
 
 function ChatMgr:initialize()
     ct.log("tina_w9_friends", "FriendsMgr:initialize")
@@ -15,11 +17,18 @@ function ChatMgr:initialize()
 end
 
 function ChatMgr:initData()
-    self.worldItem = {}
-    self.friendsItem = {}
-    self.friendsId = nil
+    self.worldItem = {} -- 世界聊天Item
+    self.friendsItem = {} -- 好友聊天Item
+    self.friendsTimeItem = {} -- 好友聊天时间显示Item
+    self.activePlayerData = {} -- 当前操作的玩家ID
     self.friendsToggle = nil
-    self.ownerId = DataManager.GetMyOwnerID()
+    self.strangersItem = {} -- 陌生人聊天Item
+    self.friendsPlayer = {} -- 好友玩家信息
+    self.friendsPlayer.item = {} -- 好友玩家信息Item、id
+    self.friendsPlayer.id = {} -- 好友玩家信息Item、id
+    self.strangersPlayer = {} -- 陌生人玩家信息
+    self.strangersPlayer.item = {} -- 陌生人玩家信息Item、id
+    self.strangersPlayer.id = {} -- 陌生人玩家信息Item、id
 end
 
 function ChatMgr:SetRootScrollbar(scrollbar)
@@ -27,35 +36,136 @@ function ChatMgr:SetRootScrollbar(scrollbar)
         self.rootScrollbar = ChatPanel.worldVerticalScrollbar
     elseif scrollbar == 2 then
         self.rootScrollbar = ChatPanel.friendsVerticalScrollbar
+    elseif scrollbar == 3 then
+        self.rootScrollbar = ChatPanel.strangersVerticalScrollbar
     end
 end
 
-function ChatMgr:SetFriendsIdAndToggle(friendsId, friendsToggle)
+function ChatMgr:SetToggle(friendsToggle)
     if self.friendsToggle then
         self.friendsToggle.isOn = false
         self.friendsToggle.interactable = true
     end
-    self.friendsId = friendsId
-    self.friendsToggle = friendsToggle
-end
-
-function ChatMgr:GetFriendsId()
-    return self.friendsId
-end
-
-function ChatMgr:GetOwnerId()
-    return self.ownerId
-end
-
-function ChatMgr:DestroyContentChildren()
-    for _, v in ipairs(self.friendsItem) do
-        UnityEngine.GameObject.Destroy(v.prefab)
+    if friendsToggle then
+        self.friendsToggle = friendsToggle
+    else
+        self.friendsToggle = nil
     end
-    self.friendsItem = {}
+end
+
+function ChatMgr:SetActivePlayerId(friendsId)
+    self.activePlayerData.id = friendsId
+end
+
+function ChatMgr:GetActivePlayerId()
+    return self.activePlayerData.id
+end
+
+function ChatMgr:SetActivePlayerData(data)
+    self.activePlayerData = data
+end
+
+function ChatMgr:GetActivePlayerData()
+    return self.activePlayerData
+end
+
+function ChatMgr:GetFriendsPlayer()
+    return self.friendsPlayer
+end
+
+function ChatMgr:GetStrangersPlayer()
+    return self.strangersPlayer
+end
+
+-- 删除单个Item
+function ChatMgr:DestroyItem(index, id)
+    if index == 1 then -- 删除好友列表Item
+        if self.friendsPlayer.item[id] then
+            UnityEngine.GameObject.Destroy(self.friendsPlayer.item[id].prefab)
+        end
+        self.friendsPlayer.item[id] = nil
+        if not self.friendsPlayer.id then
+            return
+        end
+        for i, v in ipairs(self.friendsPlayer.id) do
+            if v == id then
+                table.remove(self.friendsPlayer.id, i)
+            end
+        end
+    elseif index == 2 then -- 删除陌生人列表Item
+        if self.strangersPlayer.item[id] then
+            UnityEngine.GameObject.Destroy(self.strangersPlayer.item[id].prefab)
+        end
+        self.strangersPlayer.item[id] = nil
+        if not self.strangersPlayer.id then
+            return
+        end
+        for i, v in ipairs(self.strangersPlayer.id) do
+            if v == id then
+                table.remove(self.strangersPlayer.id, i)
+            end
+        end
+    end
+end
+
+-- 清空列表
+function ChatMgr:DestroyContentChildren(index)
+    if index == 0 then -- 删除世界列表Item
+        for _, v in pairs(self.worldItem) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.worldItem = {}
+    elseif index == 1 then -- 删除好友列表Item
+        if not self.friendsPlayer.item then
+            return
+        end
+        for _, v in pairs(self.friendsPlayer.item) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.friendsPlayer.item = {}
+        self.friendsPlayer.id = {}
+    elseif index == 2 then -- 删除好友聊天Item
+        for _, v in ipairs(self.friendsItem) do
+        UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        for _, v in ipairs(self.friendsTimeItem) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.friendsItem = {}
+        self.friendsTimeItem = {}
+    elseif index == 3 then -- 删除陌生人列表Item
+        if not self.strangersPlayer.item then
+            return
+        end
+        for _, v in pairs(self.strangersPlayer.item) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.strangersPlayer.item = {}
+        self.strangersPlayer.id = {}
+    elseif index == 4 then -- 删除陌生人聊天Item
+        for _, v in ipairs(self.strangersItem) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        for _, v in ipairs(self.friendsTimeItem) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.strangersItem = {}
+        self.friendsTimeItem = {}
+    end
+end
+
+function ChatMgr:GetActivePlayerItem()
+    if self.friendsPlayer.item[self.activePlayerData.id] then
+        return self.friendsPlayer.item[self.activePlayerData.id]
+    end
+
+    if self.strangersPlayer.item[self.activePlayerData.id] then
+        return self.strangersPlayer.item[self.activePlayerData.id]
+    end
 end
 
 --创建表情
-function ChatMgr:_createNotice()
+function ChatMgr:CreateExpression()
     for i = 1, 80 do -- 生成80个表情
         local prefab = self:_createNoticePab(ChatMgr.static.ExpressionBtnPATH, ChatPanel.expressionContent)
         local ExpressionBtnItem = ExpressionBtnItem:new(i,prefab)
@@ -63,27 +173,74 @@ function ChatMgr:_createNotice()
 end
 
 --创建聊天Item
-function ChatMgr:_createChatItem(chatData)
+function ChatMgr:CreateChatItem(chatData)
     if DataManager.GetMyOwnerID() == chatData.id then
         if chatData.channel == "WORLD" then -- 代表世界频道
             local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.worldContent)
             local chatRightItem = ChatRightItem:new(#self.worldItem + 1, prefab, chatData)
             table.insert(self.worldItem, chatRightItem)
-        elseif chatData.channel == "FRIEND" and chatData.channelId == self.friendsId then -- 代表好友频道
+        elseif chatData.channel == "FRIEND" and chatData.channelId == self.activePlayerData.id then -- 代表好友频道
+            if self.friendsItem[#self.friendsItem] and chatData.time - self.friendsItem[#self.friendsItem].data.time > 60000 then
+                local prefab = self:_createNoticePab(ChatMgr.static.ChatTimeItemPath, ChatPanel.friendsContent)
+                local chatTimeItem = ChatTimeItem:new(prefab, chatData.time)
+                table.insert(self.friendsTimeItem, chatTimeItem)
+            end
             local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.friendsContent)
             local chatRightItem = ChatRightItem:new(#self.friendsItem + 1, prefab, chatData)
             table.insert(self.friendsItem, chatRightItem)
+            DataManager.SetMyReadChatInfo(2, chatData.channelId)
+        elseif chatData.channel == "UNKNOWN" and chatData.channelId == self.activePlayerData.id then -- 代表陌生人频道
+            if self.strangersItem[#self.strangersItem] and chatData.time - self.strangersItem[#self.strangersItem].data.time > 60000 then
+                local prefab = self:_createNoticePab(ChatMgr.static.ChatTimeItemPath, ChatPanel.friendsContent)
+                local chatTimeItem = ChatTimeItem:new(prefab, chatData.time)
+                table.insert(self.friendsTimeItem, chatTimeItem)
+            end
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.strangersContent)
+            local chatRightItem = ChatRightItem:new(#self.strangersItem + 1, prefab, chatData)
+            table.insert(self.strangersItem, chatRightItem)
+            DataManager.SetMyReadChatInfo(3, chatData.channelId)
         end
     else
         if chatData.channel == "WORLD" then -- 代表世界频道
             local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.worldContent)
             local chatLeftItem = ChatLeftItem:new(#self.worldItem + 1, prefab, chatData)
             table.insert(self.worldItem, chatLeftItem)
-        elseif chatData.channel == "FRIEND" and chatData.channelId == self.friendsId then -- 代表好友频道
+        elseif chatData.channel == "FRIEND" and chatData.id == self.activePlayerData.id then -- 代表好友频道
+            if self.friendsItem[#self.friendsItem] and chatData.time - self.friendsItem[#self.friendsItem].data.time > 60000 then
+                local prefab = slf:_createNoticePab(ChatMgr.static.ChatTimeItemPath, ChatPanel.friendsContent)
+                local chatTimeItem = ChatTimeItem:new(prefab, chatData.time)
+                table.insert(self.friendsTimeItem, chatTimeItem)
+            end
             local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.friendsContent)
             local chatLeftItem = ChatLeftItem:new(#self.friendsItem + 1, prefab, chatData)
             table.insert(self.friendsItem, chatLeftItem)
+            DataManager.SetMyReadChatInfo(2, chatData.id)
+        elseif chatData.channel == "UNKNOWN" and chatData.id == self.activePlayerData.id then -- 代表陌生人频道
+            if self.strangersItem[#self.strangersItem] and chatData.time - self.strangersItem[#self.strangersItem].data.time > 60000 then
+                local prefab = self:_createNoticePab(ChatMgr.static.ChatTimeItemPath, ChatPanel.friendsContent)
+                local chatTimeItem = ChatTimeItem:new(prefab, chatData.time)
+                table.insert(self.friendsTimeItem, chatTimeItem)
+            end
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.strangersContent)
+            local chatLeftItem = ChatLeftItem:new(#self.strangersItem + 1, prefab, chatData)
+            table.insert(self.strangersItem, chatLeftItem)
+            DataManager.SetMyReadChatInfo(3, chatData.id)
         end
+    end
+end
+
+-- 创建人员显示列表
+function ChatMgr:CreatePlayerItem(index, playerData)
+    if index == 1 then
+        table.insert(self.friendsPlayer.id, playerData.id)
+        local prefab = self:_createNoticePab(ChatMgr.static.ChatFriendsItemPath, ChatPanel.friendsPlayerContent)
+        local chatFriendsItem = ChatFriendsItem:new(#self.friendsPlayer.id, 1, prefab, false, playerData)
+        self.friendsPlayer.item[playerData.id] = chatFriendsItem
+    elseif index == 2 then
+        table.insert(self.strangersPlayer.id, playerData.id)
+        local prefab = self:_createNoticePab(ChatMgr.static.ChatFriendsItemPath, ChatPanel.strangersPlayerContent)
+        local chatFriendsItem = ChatFriendsItem:new(#self.strangersPlayer.id, 2, prefab, false, playerData)
+        self.strangersPlayer.item[playerData.id] = chatFriendsItem
     end
 end
 
@@ -92,15 +249,23 @@ function ChatMgr:ShowPlayerInfo(index, data)
     ChatPanel.playerInfoRoot:SetActive(true)
     ChatPanel.nameText.text = data.name
     ChatPanel.companyText.text = data.company
-    if index == 1 then
+    self:SetActivePlayerData(data)
+    if index == 1 then -- 世界界面陌生人信息显示
         ChatPanel.shieldBtn:SetActive(false)
         ChatPanel.addFriendsBtn:SetActive(true)
         ChatPanel.chatBtn:SetActive(true)
-    elseif index == 2 then
+    elseif index == 2 then -- 好友界面好友信息显示
         ChatPanel.backChatBtn:SetActive(true)
         ChatPanel.shieldBtn:SetActive(true)
         ChatPanel.addFriendsBtn:SetActive(false)
         ChatPanel.chatBtn:SetActive(false)
+        ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, -292)
+    elseif index == 3 then -- 陌生人界面陌生人信息显示
+        ChatPanel.backChatBtn:SetActive(true)
+        ChatPanel.shieldBtn:SetActive(true)
+        ChatPanel.addFriendsBtn:SetActive(true)
+        ChatPanel.chatBtn:SetActive(false)
+        ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(93.5, -292)
     end
 end
 
@@ -114,9 +279,15 @@ function ChatMgr:_createNoticePab(path,parent)
     return go
 end
 
-function ChatMgr:StartScrollBottom()
-    self.timeNow = UnityEngine.Time.time + 0.1
-    UpdateBeat:Add(self._scrollBottom, self)
+-- 显示已有的聊天记录
+function ChatMgr:ShowAllChatInfo(index, id)
+    if not DataManager.GetMyChatInfo(index)[id] then
+        return
+    end
+    local chatInfo = DataManager.GetMyChatInfo(index)[id].read
+    for _, v in ipairs(chatInfo) do
+        self:CreateChatItem(v)
+    end
 end
 
 --滑动到底部
@@ -129,4 +300,9 @@ function ChatMgr:_scrollBottom()
         self.rootScrollbar.value = 0
         UpdateBeat:Remove(self._scrollBottom, self)
     end
+end
+
+function ChatMgr:StartScrollBottom()
+    self.timeNow = UnityEngine.Time.time + 0.1
+    UpdateBeat:Add(self._scrollBottom, self)
 end

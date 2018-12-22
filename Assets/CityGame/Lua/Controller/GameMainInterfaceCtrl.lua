@@ -38,6 +38,7 @@ end
 
 function GameMainInterfaceCtrl:Refresh()
     self:_showFriendsNotice()
+    self:_showWorldChatNoticeItem()
 end
 
 --通知--
@@ -74,10 +75,12 @@ function GameMainInterfaceCtrl._showFriendsNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
     GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
 end
+
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
     self._showFriendsNotice()
 end
 
+-- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
         if GameMainInterfacePanel.worldChatContent.childCount >= 5 then
@@ -92,6 +95,30 @@ function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
         rect.transform.localScale = Vector3.one
 
         local chatWorldItem = ChatWorldItem:new(prefab, chatData)
+    else
+        GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+    end
+end
+
+function GameMainInterfaceCtrl._showWorldChatNoticeItem()
+    GameMainInterfacePanel.worldChatNoticeItem:SetActive(false)
+    local chatFriendsInfo = DataManager.GetMyChatInfo(2)
+    local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    for _, v in pairs(chatFriendsInfo) do
+        if v.unread then
+            if v.unread[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                break
+            end
+        end
+    end
+    for _, m in pairs(chatStrangersInfo) do
+        if m.unread then
+            if m.unread[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                break
+            end
+        end
     end
 end
 

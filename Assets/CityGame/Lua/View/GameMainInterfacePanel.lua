@@ -33,6 +33,7 @@ function GameMainInterfacePanel.InitPanel()
     this.messageText = transform:Find("RightUpPanel/Message/MessageText").gameObject;--信息--
     this.worldChatPanel = transform:Find("RightUpPanel/WorldChatPanel").gameObject;--世界聊天--
     this.worldChatContent = transform:Find("RightUpPanel/WorldChatPanel/Content")--世界内容--
+    this.worldChatNoticeItem = transform:Find("RightUpPanel/WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
 
     this.exchangeButton = transform:Find("DownCreatePanel/ExchangeButton").gameObject;--交易所--
     this.houseButton = transform:Find("DownCreatePanel/HouseButton").gameObject;--住宅--

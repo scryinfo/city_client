@@ -33,6 +33,10 @@ function ChatPanel.InitPanel()
     this.strangersOpen  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Open").gameObject
     this.strangersClose  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Close").gameObject
 
+    -- 好友、陌生人红点
+    this.friendsNoticeImage = transform:Find("LeftRoot/TopRoot/FriendsToggle/NoticeImage").gameObject
+    this.strangersNoticeImage = transform:Find("LeftRoot/TopRoot/StrangersToggle/NoticeImage").gameObject
+
     -- 显示节点
     this.worldRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot").gameObject
     this.friendsRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot").gameObject
@@ -44,12 +48,11 @@ function ChatPanel.InitPanel()
     this.expressionBtn = transform:Find("LeftRoot/BottomRoot/ExpressionBtn").gameObject
     this.backExpressionBtn = transform:Find("LeftRoot/ExpressionRoot/BackExpressionBtn").gameObject
 
-    -- 好友节点、个数
-    this.friendsView = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/LeftRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
+    -- 好友列表节点、个数
+    this.friendsPlayerContent = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/LeftRoot/Scroll View/Viewport/Content")
     this.friendsNum = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/LeftRoot/FriendsNum"):GetComponent("Text")
 
     -- 世界聊天节点、滑动条
-    this.worldView = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
     this.worldContent = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View/Viewport/Content")
     this.worldVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
@@ -61,10 +64,18 @@ function ChatPanel.InitPanel()
     this.chatInputField = transform:Find("LeftRoot/BottomRoot/InputField"):GetComponent("InputField")
     this.sendBtn = transform:Find("LeftRoot/BottomRoot/SendBtn").gameObject
 
-    -- 玩家信息显示
+    -- 玩家信息显示及操作
     this.nameText = transform:Find("PlayerInfoRoot/NameText"):GetComponent("Text")
     this.companyText = transform:Find("PlayerInfoRoot/CompanyBg/CompanyText"):GetComponent("Text")
     this.shieldBtn = transform:Find("PlayerInfoRoot/ShieldBtn").gameObject
     this.addFriendsBtn = transform:Find("PlayerInfoRoot/AddFriendsBtn").gameObject
     this.chatBtn = transform:Find("PlayerInfoRoot/ChatBtn").gameObject
+
+    -- 陌生人列表节点、个数
+    this.strangersPlayerContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/LeftRoot/Scroll View/Viewport/Content")
+    this.strangersPlayerNum = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/LeftRoot/StrangersNum"):GetComponent("Text")
+
+    -- 陌生人聊天节点、滑动条
+    this.strangersContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/Viewport/Content")
+    this.strangersVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 end

@@ -11,14 +11,11 @@ function ChatRightItem:initialize(itemId, prefab, data)
     self.prefab = prefab
     self.data = data
     self.data.itemId = itemId
+    self.data.company = "Scry"
 
     local transform = prefab.transform
-    --if self.data.channel == "WORLD" then
-    --    transform.sizeDelta = Vector2.New(1120, transform.sizeDelta.y)
-    --end
     -- 说话人的背景
     self.playerNameImage = transform:Find("PlayerNameImage")
-
     -- 说话人的名字
     self.playerNameText = transform:Find("PlayerNameImage/PlayerNameText"):GetComponent("Text")
     -- 聊天的背景
@@ -34,9 +31,9 @@ function ChatRightItem:initialize(itemId, prefab, data)
         self.chatText.verticalOverflow = UnityEngine.VerticalWrapMode.Overflow
         local chatTextPreferredHeight = self.chatText.preferredHeight
         self.chatText.transform.sizeDelta = Vector2.New(580, chatTextPreferredHeight)
-        self.playerNameImage.localPosition = Vector3.New(330,chatTextPreferredHeight -34, 0)
+        self.playerNameImage.anchoredPosition = Vector2.New(-170, chatTextPreferredHeight + 66)
     else
         self.chatText.transform.sizeDelta = Vector2.New(chatTextPreferredWidth, 30)
-        self.playerNameImage.localPosition = Vector3.New(330, -4, 0)
+        self.playerNameImage.anchoredPosition = Vector2.New(-170, 97)
     end
  end

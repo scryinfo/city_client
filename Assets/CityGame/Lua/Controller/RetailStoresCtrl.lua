@@ -16,27 +16,42 @@ end
 
 function RetailStoresCtrl:Awake(go)
     self.gameObject = go;
-    self.retailBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    self.retailBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.retailBehaviour:AddClick(RetailStoresPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
-    self.retailBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
 end
 
 function RetailStoresCtrl:Refresh()
-
+    self:initializeData()
 end
 
 function RetailStoresCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
     end
 end
 
---刷新原料厂信息
-function RetailStoresCtrl:refreshMaterialDataInfo(DataInfo)
+--刷新零售店信息
+function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
+    RetailStoresPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
+    self.m_data = DataInfo
+    if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.m_data.isOther = true
+        RetailStoresPanel.changeNameBtn.localScale = Vector3.zero
+    else
+        self.m_data.isOther = false
+        RetailStoresPanel.changeNameBtn.localScale = Vector3.one
+    end
+    self.m_data.buildingType = BuildingType.RetailShop
+    if not self.retailShopToggleGroup then
+        self.retailShopToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.retailShopBehaviour, self.m_data)
+    else
+        --self.retailShopToggleGroup:updataInfo(self.m_data)
+    end
 end
 
 --更改名字

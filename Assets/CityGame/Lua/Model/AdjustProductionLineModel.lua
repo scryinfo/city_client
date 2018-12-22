@@ -26,8 +26,8 @@ end
 function AdjustProductionLineModel.registerAsNetMsg()
     --网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyLineAddInform"),AdjustProductionLineModel.n_GsDetermineBtn);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","changeLine"),AdjustProductionLineModel.n_GsModifyKLine);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delLine"),AdjustProductionLineModel.nGsDeleteLine);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyChangeLine"),AdjustProductionLineModel.n_GsModifyKLine);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyDelLine"),AdjustProductionLineModel.nGsDeleteLine);
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
 
 end
@@ -41,7 +41,7 @@ function AdjustProductionLineModel.m_ReqAddLine(buildingId,number,steffNumber,it
 end
 --修改生产线
 function AdjustProductionLineModel.m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
-    local msgId = pbl.enum("gscode.OpCode", "changeLine")
+    local msgId = pbl.enum("gscode.OpCode", "ftyChangeLine")
     local lMsg = {buildingId = buildingId,targetNum = tonumber(targetNum),workerNum = tonumber(steffNumber),lineId = lineId}
     local pMsg = assert(pbl.encode("gs.ChangeLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
@@ -61,7 +61,7 @@ function AdjustProductionLineModel.n_GsDetermineBtn(stream)
     end
     local msgAllGameServerInfo = assert(pbl.decode("gs.FtyLineAddInform", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
     Event.Brocast("calculateTime",msgAllGameServerInfo)
-    Event.Brocast("refreshIdleWorkerNum",msgAllGameServerInfo)
+    Event.Brocast("refreshSubtractWorkerNum",msgAllGameServerInfo)
     Event.Brocast("SmallPop","添加成功",300)
     Event.Brocast("productionRefreshInfo",msgAllGameServerInfo)
 end
@@ -75,8 +75,9 @@ function AdjustProductionLineModel.nGsDeleteLine(stream)
     if stream == nil then
         return;
     end
+    local msgProductionLine = assert(pbl.decode("gs.DelLine",stream),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
     Event.Brocast("SmallPop","删除成功",300)
-    --local msgProductionLine = assert(pbl.decode("gs.DelLine"),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
+    Event.Brocast("_deleteProductionLine",msgProductionLine)
 end
 --生产线变化推送
 function AdjustProductionLineModel.n_GsLineChangeInform(stream)

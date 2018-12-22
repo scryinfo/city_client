@@ -17,12 +17,12 @@ function RetailStoresModel:Close()
 end
 --客户端请求--
 --打开零售店
-function RetailStoresModel:m_ReqOpenMaterial(buildingId)
+function RetailStoresModel:m_ReqOpenRetailShop(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailRetailShop","gs.Id",{id = buildingId})
 end
 
 --服务器回调--
 --打开零售店
 function RetailStoresModel:n_OnOpenRetailShop(stream)
-    DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshMaterialDataInfo',stream)
+    DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshRetailShopDataInfo',stream)
 end

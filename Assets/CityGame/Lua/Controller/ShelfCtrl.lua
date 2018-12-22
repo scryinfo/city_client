@@ -129,6 +129,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         buyListing.btnClick = function()
             if moneyValue < buyListing.total then
                 Event.Brocast("SmallPop","钱不够",280)
+                return;
             end
             for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
                 Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,ServerListModel.bagId);

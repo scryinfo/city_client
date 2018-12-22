@@ -29,6 +29,8 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
     end
+
+
 end
 --仓库
 function GoodsUnifyMgr:_creatWarehouseItemGoods(buildingData)
@@ -244,17 +246,17 @@ function GoodsUnifyMgr:_deleteGoods(ins)
         i = i + 1
     end
 end
---删除生产线
-function GoodsUnifyMgr:_deleteProductionLine(ins)
-    destroy(AdjustProductionLineCtrl.materialProductionLine[ins.id].prefab.gameObject);
-    table.remove(AdjustProductionLineCtrl.materialProductionPrefab,ins.id)
-    table.remove(AdjustProductionLineCtrl.materialProductionLine,ins.id)
-    local i = 1
-    for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-        AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)
-        i = i +1
-    end
-end
+----删除生产线
+--function GoodsUnifyMgr:_deleteProductionLine(ins)
+--    destroy(AdjustProductionLineCtrl.materialProductionLine[ins.id].prefab.gameObject);
+--    table.remove(AdjustProductionLineCtrl.materialProductionPrefab,ins.id)
+--    table.remove(AdjustProductionLineCtrl.materialProductionLine,ins.id)
+--    local i = 1
+--    for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+--        AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)
+--        i = i +1
+--    end
+--end
 --仓库删除
 function GoodsUnifyMgr:_WarehousedeleteGoods(id)
     destroy(self.WarehouseItems[id].prefab.gameObject);

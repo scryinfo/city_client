@@ -36,15 +36,9 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     --adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
 
     Event.AddListener("calculateTime",self.calculateTime,self)
-    Event.AddListener("refreshIdleWorkerNum",self.refreshIdleWorkerNum,self)
+    Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     Event.AddListener("refreshTime",self.refreshTime,self)
-    --self.buildingMaxWorkerNum = PlayerBuildingBaseData[MaterialModel.buildingCode].maxWorkerNum
-    --self.idleWorkerNum = self:getWorkerNum()
-    --AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
-    ----读取服务器发过来的信息，是否有生产线
-    --GoodsUnifyMgr:_getProductionLine(self.data,self.adjustLine)
-    --Event.Brocast("refreshTime",self.data.dataTab)
-    --AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+    Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -121,6 +115,23 @@ end
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
     Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
+--删除生产线
+function AdjustProductionLineCtrl:_deleteProductionLine(msg)
+    if not msg then
+        return;
+    end
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.buildingId == msg.buildingId and v.lineId == msg.lineId then
+            self:refreshAddWorkerNum(tonumber(v.sNumberScrollbar.value))
+            destroy(v.prefab.gameObject);
+        end
+    end
+    local i = 1
+    for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)
+        i = i +1
+    end
+end
 --获取剩余员工人数
 function AdjustProductionLineCtrl:getWorkerNum()
     local workerNum = 0  --剩余员工数量
@@ -161,10 +172,16 @@ function AdjustProductionLineCtrl:refreshWorkerNum()
     end
 end
 --添加生产线成功后回调刷新剩余人数
-function AdjustProductionLineCtrl:refreshIdleWorkerNum(msg)
+function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
+--删除生产线成功后回调刷新剩余人数
+function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
+    self.idleWorkerNum = self.idleWorkerNum + number
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+end
+
 --读取生产线，初始化时间
 function AdjustProductionLineCtrl:refreshTime(infoTab)
     if not infoTab then

@@ -44,6 +44,7 @@ CtrlNames = {
 
 	Material = "MaterialCtrl", --原料厂
 	Processing = "ProcessingCtrl",  --加工厂
+	RetailStores = "RetailStoresCtrl",  --零售店
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 	Exchange = "ExchangeCtrl",  --交易所
@@ -76,6 +77,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	RetailStores = "RetailStoresModel",  --零售店
 	Processing = "ProcessingModel",  --加工厂
 	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
@@ -190,6 +192,7 @@ BuildingType =
 	MunicipalManage = 3,--市政管理
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
+	RetailShop = 6,  --零售店
 }
 --建筑所属
 Buildingowner=

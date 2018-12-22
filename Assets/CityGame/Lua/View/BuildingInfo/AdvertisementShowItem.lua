@@ -18,7 +18,13 @@ function AdvertisementShowItem:initialize(itemlData, clickOpenFunc, itemRect, ma
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
+
+    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
+        clickOpenFunc(mgrTable, self.toggleData)
+    end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,self.OntodoBtn)
 
     Event.AddListener("c_AdvertisementShowValueChange", self.updateInfo, self);
@@ -31,24 +37,28 @@ end
 
 --打开
 function AdvertisementShowItem:openToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Open
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
 
-    -- self.rentalValueText = self:_getPriceString(self.rentalData.rent, 30, 24)
+    self.openStateTran.localScale = Vector3.one;
+    self.closeStateTran.localScale = Vector3.zero;
 
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, AdvertisementShowItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, AdvertisementShowItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    return Vector2.New(targetMovePos.x, targetMovePos.y - AdvertisementShowItem.static.TOTAL_H)
+    return Vector2.New(targetMovePos.x,targetMovePos.y - AdvertisementShowItem.static.TOTAL_H);
 end
 
 --关闭
-function AdvertisementShowItem:closeToggleItem( )
-    self.buildingInfoToggleState = BuildingInfoToggleState.Close
+function AdvertisementShowItem:closeToggleItem(targetMovePos)
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
 
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.openStateTran.localScale = Vector3.zero;
+    self.closeStateTran.localScale = Vector3.one;
 
-    return Vector2.New(targetMovePos.x, targetMovePos.y - AdvertisementShowItem.static.TOP_H)
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
+    return Vector2.New(targetMovePos.x,targetMovePos.y - AdvertisementShowItem.static.TOP_H);
 end
 
 --刷新数据

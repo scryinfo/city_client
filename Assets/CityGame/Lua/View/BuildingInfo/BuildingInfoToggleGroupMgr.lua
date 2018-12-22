@@ -7,6 +7,7 @@ require 'View/BuildingInfo/OccupancyRateItem'
 require 'View/BuildingInfo/RentalItem'
 
 require 'View/BuildingInfo/LineChartRateItem'
+require 'View/BuildingInfo/AdLineChartItem'
 require 'View/BuildingInfo/StaffRateItem'
 require 'View/BuildingInfo/WarehouseRateItem'
 require 'View/BuildingInfo/ShelfRateItem'
@@ -39,6 +40,7 @@ BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER = "View/BuildingMainPageI
 BuildingInfoToggleGroupMgr.static.Staff_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --建筑员工
 
 BuildingInfoToggleGroupMgr.static.Municipal_Advertisement_Path="View/BuildingMainPageInfoItem/AdvertisementShowItem"--广告展示
+BuildingInfoToggleGroupMgr.static.Municipal_LineChart_Path = "View/BuildingMainPageInfoItem/AdLineChartItem"  --广告折线图
 BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--公园信息
 BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
 BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
@@ -63,11 +65,13 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
+    elseif buildingData.buildingType == BuildingType.RetailShop then
+        self:_creatRetailShop()
     end
 
     --创建完之后调整item位置
-    self:_sortItems(1)
-    self:_sortRightItems()
+    self:_sortItems(1,1)
+    --self:_sortRightItems()
 end
 --刷新数据
 function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
@@ -103,11 +107,11 @@ function BuildingInfoToggleGroupMgr:_clickItemFunc(toggleData)
     local leftIndex, rightIndex = nil
     if toggleData.pos == BuildingInfoTogglePos.Left then
         leftIndex = toggleData.index
-    --elseif toggleData.pos == BuildingInfoTogglePos.Right then
-    --    rightIndex = toggleData.index
+    elseif toggleData.pos == BuildingInfoTogglePos.Right then
+        rightIndex = toggleData.index
     end
 
-    self:_sortItems(leftIndex)
+    self:_sortItems(leftIndex,rightIndex)
 end
 
 --通过预制创建view
@@ -123,7 +127,7 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent)
 end
 
 --刷新item位置信息
-function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
+function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex,rightOpenIndex)
 
     if leftOpenIndex ~= nil and leftOpenIndex > 0 then
         local leftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
@@ -136,16 +140,16 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
         end
     end
 
-    --if rightOpenIndex ~= nil and rightOpenIndex > 0 then
-    --    local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
-    --    for key, toggleItem in pairs(self.rightData) do
-    --        if toggleItem:getToggleIndex() == leftOpenIndex then
-    --            rightPos = toggleItem:openToggleItem(rightPos)
-    --        else
-    --            rightPos = toggleItem:closeToggleItem(rightPos)
-    --        end
-    --    end
-    --end
+    if rightOpenIndex ~= nil and rightOpenIndex > 0 then
+        local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+        for key, toggleItem in pairs(self.rightData) do
+            if toggleItem:getToggleIndex() == rightOpenIndex then
+                rightPos = toggleItem:openToggleItem(rightPos)
+            else
+                rightPos = toggleItem:closeToggleItem(rightPos)
+            end
+        end
+    end
 end
 
 --排列右侧信息，只需要排一次，一直都处于打开状态
@@ -326,6 +330,44 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         self.rightData[1] = prodictionLuaItem
     end
 
+end
+--创建零售店左右信息
+function BuildingInfoToggleGroupMgr:_creatRetailShop()
+    -----营业额折线图Item --左边第一个
+    local lineLeftData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineLeftData)
+
+    -----员工  左2
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    self.leftData[2] = self:_createStaff(staffToggleData)
+
+    -----仓库Item --左边第三个
+    local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+    warehouseView.gameObject.name = "WarehouseRateItem"
+    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+    local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+    self.leftData[3] = warehouseLuaItem
+
+    ---货架 --左边第四个
+    local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+    shelfView.gameObject.name = "ShelfRateItem"
+    local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+    local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+    self.leftData[4] = shelfLuaItem
+
+    ---营业额折线图Item --右1
+    local adLineChartData = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_LineChart_Path, self.rightRect)
+    adLineChartData.gameObject.name = "AdLineChartItem"
+    local LineChartToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
+    local AdLineChartItem = AdLineChartItem:new(nil, self._clickItemFunc, adLineChartData, self.mainPanelLuaBehaviour, LineChartToggleData, self)
+    self.rightData[1] = AdLineChartItem
+
+    ---广告展示--右1
+    local advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
+    advertisementViewRect.gameObject.name = "Advertisement"
+    local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
+    local AdvertisementShowItem = AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+    self.rightData[2] = AdvertisementShowItem
 end
 --创建市镇设施左右信息
 function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()

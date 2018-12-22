@@ -25,30 +25,30 @@ end
 
 function AdjustProductionLineModel.registerAsNetMsg()
     --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addLine"),AdjustProductionLineModel.n_GsDetermineBtn);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","changeLine"),AdjustProductionLineModel.n_GsModifyKLine);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delLine"),AdjustProductionLineModel.nGsDeleteLine);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyAddLine"),AdjustProductionLineModel.n_GsDetermineBtn);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyChangeLine"),AdjustProductionLineModel.n_GsModifyKLine);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyDelLine"),AdjustProductionLineModel.nGsDeleteLine);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyLineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
 
 end
 --客户端请求--
 --添加生产线
 function AdjustProductionLineModel.m_ReqAddLine(buildingId,number,steffNumber,itemId)
-    local msgId = pbl.enum("gscode.OpCode", "addLine")
+    local msgId = pbl.enum("gscode.OpCode", "ftyAddLine")
     local lMsg = {id = buildingId, itemId = itemId, targetNum = tonumber(number), workerNum = tonumber(steffNumber)}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --修改生产线
 function AdjustProductionLineModel.m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
-    local msgId = pbl.enum("gscode.OpCode", "changeLine")
+    local msgId = pbl.enum("gscode.OpCode", "ftyChangeLine")
     local lMsg = {buildingId = buildingId,targetNum = tonumber(targetNum),workerNum = tonumber(steffNumber),lineId = lineId}
     local pMsg = assert(pbl.encode("gs.ChangeLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --删除生产线
 function AdjustProductionLineModel.m_ReqDeleteLine(buildingId,lineId)
-    local msgId = pbl.enum("gscode.OpCode", "delLine")
+    local msgId = pbl.enum("gscode.OpCode", "ftyDelLine")
     local lMsg = {buildingId = buildingId, lineId = lineId}
     local pMsg = assert(pbl.encode("gs.DelLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)

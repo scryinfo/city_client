@@ -180,6 +180,9 @@ end
 --切换相机状态
 function CameraMove.ChangeCameraState(changeState)
     if changeState == TouchStateType.NormalState or changeState == TouchStateType.ConstructState or changeState == TouchStateType.UIState then
+        if mCameraState == TouchStateType.UIState and changeState == changeState == TouchStateType.NormalState then
+            CameraMove.MoveOutUILayer()
+        end
         mCameraState = changeState
     else
         ct.log("system","意图修改相机状态失败，目标状态为无效状态")
@@ -207,24 +210,28 @@ local m_OutDurationtime = 0.2
 
 --移动放大到某个指定建筑
 function CameraMove.MoveIntoUILayer(targetID)
+    --相机状态切换至UIState
+    CameraMove.ChangeCameraState(TouchStateType.UIState)
     --记录位置状态
     NormalStateCameraPos = mainCameraCenterTransforms.position
-    NormalStateCameraScalePos = mainCameraTransform.position
+    NormalStateCameraScalePos = mainCameraTransform.localPosition
     --相机移动到目标点
     local tempPos = TerrainManager.BlockIDTurnPosition(targetID)--TODO:加上配置表偏移量
     mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)
-    --相机移动到目标位置
-    local tempScalePos = Vector3:new(7,7,7)
-    mainCameraTransform:DOMove(tempScalePos,m_IntoDurationtime)
+    --相机移动到目标位置--TODO:读取配置表距离远近
+    local tempScalePos = Vector3.New(7,7,-7)
+    mainCameraTransform:DOLocalMove(tempScalePos,m_IntoDurationtime)
     --TODO:战争迷雾缩小到目标大小
 end
 
 --还原到正常状态
 function CameraMove.MoveOutUILayer()
+    --相机状态切换至NormalState
+    CameraMove.ChangeCameraState(TouchStateType.NormalState)
     --相机还原到目标点
     mainCameraCenterTransforms:DOMove(NormalStateCameraPos,m_OutDurationtime)
     --相机还原到目标大小
-    mainCameraTransform:DOMove(NormalStateCameraScalePos,m_OutDurationtime)
+    mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
     --TODO:战争迷雾换到到正常大小
 end
 

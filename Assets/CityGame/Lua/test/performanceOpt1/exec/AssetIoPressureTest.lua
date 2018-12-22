@@ -724,9 +724,10 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
     --初始化测试数据
-    aTester.testcount = 4050
+    --aTester.testcount = 600
     --aTester.testcount = 2
     aTester.instancedCount = 1
+    aTester.resLoadedCount = 1
     aTester.loadCount = 0
     aTester.startTime = 0
     aTester.curPos = 1
@@ -757,13 +758,19 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     aTester.ResPathList = ResPathListS
     --数据准备
 
+    local LoadedCb = function(tester, as, ab)
+        tester.loadedBundles[#tester.loadedBundles+1] = ab
+        tester.loadedAssets[#tester.loadedAssets+1] = as
+        tester.resLoadedCount = tester.resLoadedCount + 1
+        if tester.resLoadedCount > #tester.ResPathList then
+            tester:getCurSeq().postfun(tester)
+        end
+    end
+    --异步加载测试,带回调
     local LoadTestRes = function(tester)
         for i = 1, #tester.ResPathList do
-            local loadDataInfo =  resMgr:LoadRes_S(tester.ResPathList[i], ct.getType(UnityEngine.GameObject));
-            tester.loadedBundles[#tester.loadedBundles+1] = loadDataInfo._bunldle
-            tester.loadedAssets[#tester.loadedAssets+1] = loadDataInfo._asset
+            panelMgr:LoadPrefab_A(tester.ResPathList[i], nil, tester,LoadedCb)
         end
-        tester:getCurSeq().postfun(tester)
     end
 
     --实例化方法
@@ -837,22 +844,24 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
         timer:Start()
     end
 
-    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 5, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
+    aTester.testcount = 1500
+    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 1 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, '..aTester.testcount..'个实例耗时 ='}
-        --设备上有30帧
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 3, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 3 次实例化, '..aTester.testcount..'个实例耗时 ='}
-        --每帧执行 3 次实例化, 450个实例耗时 =9.404152, 设备上 30 帧
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 4, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 4 次实例化, '..aTester.testcount..'个实例耗时 ='}
-        --每帧执行 4 次实例化, 450个实例耗时 =8.442372, 设备上 30 帧
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 5, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 5 次实例化, '..aTester.testcount..'个实例耗时 ='}
-        --每帧执行 5 次实例化, 450个实例耗时 =6.922939, 设备上 30 帧
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 6, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 6 次实例化, '..aTester.testcount..'个实例耗时 ='}
-        --每帧执行 6 次实例化, 450个实例耗时 =7.094051, 设备上 5 帧
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 7 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 8 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 9 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 15, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 15 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 20, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 20 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 30, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 30 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 40, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 80, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 80 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 160, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 160 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = aTester.testcount.'个实例的销毁耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
@@ -861,8 +870,50 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     collectgarbage("collect")
     aTester:excute()
     --[[
-    测试结果
+    cpu
+        DirectorUpdateAnimationBegin    39.6%
+        DirectorUpdateAnimationEnd      30.2%
+        * 去掉所有建筑的 Animator ，没有固定的GC掉帧了
+            500个实例
+                稳定在 30 帧，没有帧速波动 每帧执行 40 次实例化, 500个实例
+            1500个实例
+                稳定在 30 帧，没有帧速波动 每帧执行 40 次实例化, 1500个实例耗时 =1.464776
+            4050个实例
+                一开始稳定在 30 帧， 一段时间之后持续 22~30之间波动，没有帧速波动  每帧执行 40 次实例化, 4050个实例耗时 =5.059065
+                                                                                   每帧执行 40 次实例化, 4050个实例耗时 =5.251131
+                                     * unity profile 更新时，会在 22~30之间波动 ,否则稳定在 30 帧
+                * 也就是说 4050 个实例实际上是可以支撑下来的，只不过要限制实例中 Animator 中的数量（带Animator组件的实例超过500就会出现高频度的GC，导致帧数波动剧烈）
+    内存
 
+    测试结果
+        500个实例
+            设备上 30 帧    每帧执行 40 次实例化, 500个实例耗时 =0.922895
+        600个实例
+            设备上 30 帧 每帧执行 2 次实例化, 600个实例耗时 =14.984493
+            设备上 30 帧 每帧执行 2 次实例化, 600个实例耗时 =15.828577
+            设备上 30 帧 每帧执行 3 次实例化, 600个实例耗时 =9.766479
+            设备上 30 帧 每帧执行 4 次实例化, 600个实例耗时 =7.621891
+            设备上 30 帧 每帧执行 5 次实例化, 600个实例耗时 =5.989155
+            设备上 30 帧 每帧执行 6 次实例化, 600个实例耗时 =5.25467
+            设备上 30 帧 每帧执行 10 次实例化, 600个实例耗时 =3.38418
+                * 期间帧速会偶尔掉到 20多帧
+            设备上 30 帧 每帧执行 15 次实例化, 600个实例耗时 =2.309575
+            设备上 30 帧 每帧执行 20 次实例化, 600个实例耗时 =1.870934
+                * 期间帧速有抖动
+            设备上 30 帧    每帧执行 40 次实例化, 600个实例耗时 =1.157611
+                            每帧执行 40 次实例化, 600个实例耗时 =1.179974
+                            每帧执行 40 次实例化, 600个实例耗时 =1.188734
+                * 帧速有波动 15~20~30 ， 卡顿不明显
+                * 如果是release版应该就更加不明显了
+                            每帧执行 40 次实例化, 600个实例耗时 =0.931607
+                            波动 18~30 帧 卡顿不明显
+        1000个实例
+            设备上 22-30帧浮动（一直，GC导致） 每帧执行 40 次实例化, 1000个实例耗时 =1.768171
+        设备上 30 帧 每帧执行 80 次实例化, 600个实例耗时 =0.906708
+            * 期间帧速有抖动明显 12~15~30 区间浮动
+        设备上 22-30 帧 每帧执行 2 次实例化, 800个实例耗时 =27.511312
+            GC导致帧速波动
+        设备上 26 帧 每帧执行 3 次实例化, 1000个实例耗时 =14.984493
     --]]
 end)
 

@@ -271,7 +271,7 @@ namespace LuaFramework {
                 }
             }
 #else            
-            retObj._asset = UnityEngine.Resources.Load(releativePath);
+            retObj._asset = UnityEngine.Resources.Load("View/"+releativePath);
 #endif      
             return retObj;
         }

@@ -199,7 +199,7 @@ public static class CustomSettings
         _GT(typeof(City.CityTest)),
         _GT(typeof(EasyJoystick)),
         _GT(typeof(MovingJoystick)),
-        _GT(typeof(EffectFlying)),
+        //_GT(typeof(EffectFlying)),
         _GT(typeof(PieChartGraph)),
         _GT(typeof(PieNeedData)),
         _GT(typeof(City.LineChart)),

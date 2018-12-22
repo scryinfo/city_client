@@ -193,8 +193,6 @@ end
 function GameMainInterfaceCtrl:OncenterWareHouse()
     --Event.Brocast("m_opCenterWareHouse")
     ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
-    --ct.OpenCtrl("ScienceSellHallCtrl")
-
 end
 
 

@@ -375,7 +375,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.m_data.insId == insId  then
+    if (tempController or tempController[modelMethord]) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -437,8 +437,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 local protoID = nil
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
-                elseif protoData.id then
-                    protoID = protoData.id
+                elseif protoData.buildingId then
+                    protoID = protoData.buildingId
                 end
                 if protoID then
                     for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
@@ -622,6 +622,11 @@ function DataManager.GetMyGoodLv()
     return PersonDataStack.m_goodLv
 end
 
+--根据id查询等级
+function DataManager.GetMyGoodLvByItemId(itemId)
+    return PersonDataStack.m_goodLv[itemId] or 0
+end
+
 --刷新自己所拥有商品科技等级
 --参数： tempData==>  IntNum
 function DataManager.SetMyGoodLv(tempData)
@@ -783,6 +788,9 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
+    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
 end
@@ -924,6 +932,40 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
 end
+
+--研究所Roll回复信息
+function DataManager.n_OnReceiveLabRoll(stream)
+    Event.Brocast("c_LabRollSuccess")
+end
+
+--发明研究成功  --用来更新玩家数据
+function DataManager.n_OnReceiveNewItem(stream)
+    local data = assert(pbl.decode("gs.IntNum", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    if data then
+        DataManager.SetMyGoodLv(data)
+    end
+end
+
+--处理错误信息
+--研究所Roll回复信息
+function DataManager.n_OnReceiveErrorCode(stream)
+    local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    if data then
+        ct.log("cycle_w15_laboratory03", "---- error opcode："..data.opcode)
+        if data.opcode == 1157 then  --研究所roll失败
+            local info = {}
+            info.titleInfo = "FAIL"
+            info.contentInfo = "Roll Fail"
+            info.tipInfo = ""
+            ct.OpenCtrl("BtnDialogPageCtrl", info)
+        else
+
+        end
+    end
+end
+
+
+----------
 
 -- 收到服务器的聊天消息
 function DataManager.n_OnReceiveRoleCommunication(stream)

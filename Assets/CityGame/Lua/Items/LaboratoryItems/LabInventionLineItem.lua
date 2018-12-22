@@ -13,7 +13,7 @@ function LabInventionLineItem:initialize(data, viewRect)
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
-    self.closeBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("topRoot/closeBtn"):GetComponent("Button")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
     self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
     self.staffSlider = viewTrans:Find("mainRoot/staffRoot/staffSlider"):GetComponent("Slider")
@@ -29,19 +29,21 @@ function LabInventionLineItem:initialize(data, viewRect)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
-
+        ct.OpenCtrl("LabInventionCtrl", self.data, self.viewRect)
     end)
     self.closeBtn.onClick:RemoveAllListeners()
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
-    self.staffScrollbar.onValueChanged:RemoveAllListeners()
-    self.staffScrollbar.onValueChanged:AddListener(function()
-
+    self.staffSlider.onValueChanged:RemoveAllListeners()
+    self.staffSlider.onValueChanged:AddListener(function()
+        self.staffSlider.value = data.workerNum
+        Event.Brocast("c_OpenChangeStaffTip", self.data, self.viewRect)
     end)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)
     end)
+    Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
 
 --初始化界面
@@ -59,8 +61,9 @@ function LabInventionLineItem:_initData(data)
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
     self.staffText.text = tostring(data.workerNum)
-    self.formularData = FormularConfig[data.itemId]
-    --self.staffSlider.maxValue = self.formularData.phaseSec
+    self.formularData = FormularConfig[1][data.itemId]
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
     if not data.roll or data.roll <= 0 then
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
@@ -75,15 +78,20 @@ function LabInventionLineItem:_initData(data)
     for i = 1, self.formularData.phase do
         self.data.phaseStates[i] = LabInventionItemPhaseState.Null
     end
-    for i = 1, data.rollTarget do
-        self.data.phaseStates[i] = LabInventionItemPhaseState.WillTo
+    if data.rollTarget then
+        for i = 1, data.rollTarget do
+            self.data.phaseStates[i] = LabInventionItemPhaseState.WillTo
+        end
     end
-    for i = 1, data.phase do
-        self.data.phaseStates[i] = LabInventionItemPhaseState.Finish
+    if data.phase then
+        for i = 1, data.phase do
+            self.data.phaseStates[i] = LabInventionItemPhaseState.Finish
+        end
     end
     self.phaseItems:showState(self.data.phaseStates)  --显示5个阶段的状态
     self.startTimeDown = true
     self.timeDownText.transform.localScale = Vector3.one
+    self.currentTime = os.time()
     if not self.data.run then
         self.startTimeDown = false
         self.timeDownText.transform.localScale = Vector3.zero
@@ -98,9 +106,12 @@ function LabInventionLineItem:_updateInfo(data)
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
     self.data.run = data.run
-    if data.roll > 0 then
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
+    if data.roll and data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
     else
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
@@ -110,41 +121,63 @@ function LabInventionLineItem:_updateInfo(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.startTimeDown = true
+    --self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
-
+--员工数量改变
+function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
+    if lineId == self.data.id then
+        self.currentTime = os.time()
+        self.data.finishTime = finishTime
+        self.data.totalTime = totalTime
+        self.staffText.text = tostring(workerNum)
+        --self.staffSlider.value = workerNum
+    end
+end
 --点击删除按钮
 function LabInventionLineItem:_clickDeleteBtn()
     local info = {}
     info.titleInfo = "WARNING"
-    info.contentInfo = "Delete the advertisment?"
+    info.contentInfo = "Delete the inventionLine?"
     info.tipInfo = "(The statistical data of brand will be reset!)"
     info.btnCallBack = function ()
-        Event.Brocast("")
+        Event.Brocast("m_ReqLabDeleteLine", self.data.id)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
-end
---点击发明界面
-function LabInventionLineItem:_clickOpenInventionPanelBtn()
-    ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
 end
 --倒计时
 function LabInventionLineItem:_update()
     if self.startTimeDown then
-        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.data.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.data.roll = self.data.roll + 1
+            self.bulbImg.color = Color.white
+            self.data.run = false
             return
         end
-        local timeTable = getTimeBySec(self.data.leftSec)
+
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabInventionLineItem.static.FinishBulbHight
+        local height = (1 - remainTime / self.data.totalTime) * LabInventionLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabInventionLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.data.roll = self.data.roll + 1
+            self.bulbImg.color = Color.white
+            self.data.run = false
+            return
+        end
     end
 end

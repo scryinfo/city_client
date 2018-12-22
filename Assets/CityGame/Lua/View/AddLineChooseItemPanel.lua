@@ -15,9 +15,16 @@ end
 function AddLineChooseItemPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.searchBtn = transform:Find("topRoot/searchBtn")
+    this.leftBtnParentTran = transform:Find("leftBtnParent"):GetComponent("RectTransform")
+    this.leftBtn = transform:Find("leftBtnParent/leftBtn")
+    this.leftDisableImg = transform:Find("leftBtnParent/disableImg")
+    this.rightBtnParentTran = transform:Find("rightBtnParent"):GetComponent("RectTransform")
+    this.rightBtn = transform:Find("rightBtnParent/rightBtn"):GetComponent("Button")
+    this.rightDisableImg = transform:Find("rightBtnParent/disableImg")
+
+    this.titleText = transform:Find("topRoot/titleText"):GetComponent("Text")
     this.leftTypeToggleTran = transform:Find("leftRoot")
     this.rightTypeToggleTran = transform:Find("rightRoot")
-
     this.hLine = transform:Find("centerRoot/lineRoot/hLine")
     this.vLine = transform:Find("centerRoot/lineRoot/vLine")
     this._getCenterItems(transform:Find("centerRoot/itemRoot"))
@@ -31,7 +38,7 @@ function AddLineChooseItemPanel._getCenterItems(viewTran)
     local childCount = viewTran.childCount - 1
     for i = 0, childCount - 1 do
         local tran = viewTran:Find("item0"..i + 1)
-        this.centerItems[#this.centerItems] = AddLineCompositeItem:new(tran)
+        this.centerItems[#this.centerItems + 1] = AddLineCompositeItem:new(tran)
     end
     this.productionItem = AddLineCompositeItem:new(viewTran:Find("productionItem"))
 end

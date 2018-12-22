@@ -150,12 +150,23 @@ function getTimeBySec(secTime)
 	tb.hour = math.floor(secTime / 3600) or 0
 	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
 	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+
+	if tb.hour < 10 then
+		tb.hour = "0"..tb.hour
+	end
+	if tb.minute < 10 then
+		tb.minute = "0"..tb.minute
+	end
+	if tb.second < 10 then
+		tb.second = "0"..tb.second
+	end
+
 	return tb
 end
 --根据建筑store获取一个以itemId为key的字典
 function getItemStore(store)
 	local itemTable = {}
-	local storeTemp = BaseTools.TableCopy(store)
+	local storeTemp = ct.deepCopy(store)
 	if storeTemp.locked then
 		for i, itemData in pairs(storeTemp.locked) do
 			itemTable[itemData.key.id] = itemData.n

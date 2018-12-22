@@ -254,7 +254,9 @@ function  UIPage:ShowPage(inClass,pageData)
 end
 
 function  UIPage:ShowPageInstance(pageInstance,pageData)
-    pageInstance.m_data = pageData;
+    if pageData then
+        pageInstance.m_data = pageData;
+    end
     if pageInstance.isAsync then
         pageInstance:Show(pageInstance.OnCreate)
     else

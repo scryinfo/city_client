@@ -1,78 +1,91 @@
 CompoundTypeConfig={
-	[2151] = {
+
+	[2101] = {
+		
 		[1] = {
-		itemId = 2151001,
+		itemId = 2101001,
 		name = "fooddata", 
 		itemType = 0,
 		},
+		
 		[2] = {
-		itemId = 2151002,
+		itemId = 2101002,
 		name = "fooddata", 
 		itemType = 0,
 		},
+		
 		[3] = {
-		itemId = 2151003,
+		itemId = 2101003,
 		name = "fooddata", 
 		itemType = 0,
 		},
 	},
-	[2152] = {
+	
+	
+	
+	[2102] = {
+		
 		[1] = {
-		itemId = 2152001,
+		itemId = 2102001,
 		name = "dressdata", 
 		itemType = 0,
 		},
+		
 		[2] = {
-		itemId = 2152002,
+		itemId = 2102002,
 		name = "dressdata", 
 		itemType = 0,
 		},
+		
 		[3] = {
-		itemId = 2152003,
+		itemId = 2102003,
 		name = "dressdata", 
 		itemType = 0,
 		},
 	},
-	[2201] = {
+	
+	[2251] = {
 		[1] = {
-		itemId = 2201001,
+		itemId = 2251001,
 		name = "food",
 		itemType = 1,
 		},
 		[2] = {
-		itemId = 2201002,
+		itemId = 2251002,
 		name = "food",
 		itemType = 1
 		},
 		[3] = {
-		itemId = 2201003,
+		itemId = 2251003,
 		name = "food",
 		itemType = 1,
 		},
 		[4] = {
-		itemId = 2201004,
+		itemId = 2251004,
 		name = "food",
 		itemType = 1,
 		}
 	},
-	[2202] = {
+
+	
+	[2252] = {
 		[1] = {
-		itemId = 2202001,
+		itemId = 2252001,
 		name = "dress",
 		itemType = 1,
 		},
 		[2] = {
-		itemId = 2202002,
+		itemId = 2252002,
 		name = "dress",
 		itemType = 1,
 		},
 		[3] = {
-		itemId = 2202003,
+		itemId = 2252003,
 		name = "dress",
 		itemType = 1,
 		},
 		[4] = {
-		itemId = 2202004,
+		itemId = 2252004,
 		name = "dress",
 		itemType = 1,
 		}

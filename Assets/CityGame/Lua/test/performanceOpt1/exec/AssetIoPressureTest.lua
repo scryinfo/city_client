@@ -883,6 +883,10 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
                                                                                    每帧执行 40 次实例化, 4050个实例耗时 =5.251131
                                      * unity profile 更新时，会在 22~30之间波动 ,否则稳定在 30 帧
                 * 也就是说 4050 个实例实际上是可以支撑下来的，只不过要限制实例中 Animator 中的数量（带Animator组件的实例超过500就会出现高频度的GC，导致帧数波动剧烈）
+         * 上述测试是在 荣耀9
+         * 小米5X 即便打开 unity profile 采集数据的情况下， 稳定在 29-30 帧
+         * Vivo X20A  稳定在 29-30 帧
+         * Oppo R11t
     内存
 
     测试结果

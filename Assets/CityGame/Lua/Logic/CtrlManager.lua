@@ -110,6 +110,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	modelList[ModelNames.friends] = FriendsModel.New();
+	modelList[ModelNames.Chat] = ChatModel.New();
 
 	return this;
 end

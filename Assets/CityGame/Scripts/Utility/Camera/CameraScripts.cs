@@ -106,7 +106,7 @@ public class CameraScripts : MonoBehaviour
     bool IsUpInUI()
     { 
     #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
 #else
     if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
 #endif
@@ -127,7 +127,7 @@ public class CameraScripts : MonoBehaviour
     bool IsUpNotInUI()
     {
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
 #else
     if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
 #endif

@@ -50,15 +50,6 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.validationMsgText.text = self.data.desc
     end
 
-    luaBehaviour:AddClick(self.bgBtn, self.OnBg, self)
-    luaBehaviour:AddClick(self.headBtn, self.OnHead, self)
-    luaBehaviour:AddClick(self.deleteBtn, self.OnDelete, self)
-    luaBehaviour:AddClick(self.removeMaskBtn, self.OnRemoveMask, self)
-    luaBehaviour:AddClick(self.sendMsgBtn, self.OnSendMsg, self)
-    luaBehaviour:AddClick(self.addFriendsBtn, self.OnAddFriends, self)
-    luaBehaviour:AddClick(self.agreeBtn, self.OnAgree, self)
-    luaBehaviour:AddClick(self.refuseBtn, self.OnRefuse, self)
-
     if type == 1 then -- 好友主界面
         self.bgBtn:GetComponent("Button").interactable = true
         self.headBtn:GetComponent("Button").interactable = true
@@ -70,6 +61,11 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.sendMsgBtn:SetActive(false)
         self.agreeBtn:SetActive(false)
         self.refuseBtn:SetActive(false)
+
+        self.bgBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.bgBtn, self.OnBg, self)
+        self.headBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.headBtn, self.OnHead, self)
     elseif type == 2 then -- 好友管理
         self.bgBtn:GetComponent("Button").interactable = false
         self.headBtn:GetComponent("Button").interactable = false
@@ -81,6 +77,10 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.sendMsgBtn:SetActive(false)
         self.agreeBtn:SetActive(false)
         self.refuseBtn:SetActive(false)
+
+        self.deleteBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.deleteBtn, self.OnDelete, self)
+
     elseif type == 3 then -- 黑名单
         self.bgBtn:GetComponent("Button").interactable = false
         self.headBtn:GetComponent("Button").interactable = false
@@ -92,6 +92,9 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.sendMsgBtn:SetActive(false)
         self.agreeBtn:SetActive(false)
         self.refuseBtn:SetActive(false)
+
+        self.removeMaskBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.removeMaskBtn, self.OnRemoveMask, self)
     elseif type == 4 then -- 添加好友
         self.bgBtn:GetComponent("Button").interactable = false
         self.headBtn:GetComponent("Button").interactable = false
@@ -103,6 +106,11 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.sendMsgBtn:SetActive(true)
         self.agreeBtn:SetActive(false)
         self.refuseBtn:SetActive(false)
+
+        self.sendMsgBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.sendMsgBtn, self.OnSendMsg, self)
+        self.addFriendsBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.addFriendsBtn, self.OnAddFriends, self)
     elseif type == 5 then -- 申请列表
         self.bgBtn:GetComponent("Button").interactable = false
         self.headBtn:GetComponent("Button").interactable = false
@@ -114,6 +122,11 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         self.sendMsgBtn:SetActive(false)
         self.agreeBtn:SetActive(true)
         self.refuseBtn:SetActive(true)
+
+        self.agreeBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.agreeBtn, self.OnAgree, self)
+        self.refuseBtn:GetComponent("Button").onClick:RemoveAllListeners()
+        luaBehaviour:AddClick(self.refuseBtn, self.OnRefuse, self)
     end
 end
 

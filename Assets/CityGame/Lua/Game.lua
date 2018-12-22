@@ -126,6 +126,11 @@ function Game.OnPostInitOK()
         friendsModel:Awake();
     end
 
+    local chatModel = CtrlManager.GetModel(ModelNames.Chat);
+    if chatModel ~= nil then
+        chatModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

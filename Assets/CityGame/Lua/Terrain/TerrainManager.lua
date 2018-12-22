@@ -48,6 +48,9 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
     end
+    if CameraCollectionID  and CameraCollectionID ~= -1 then
+        DataManager.CreateWaysByCollectionID( CameraCollectionID)
+    end
 end
 
 --应该每帧调用传camera的位置
@@ -57,6 +60,7 @@ function TerrainManager.Refresh(pos)
     --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         CameraCollectionID = tempCollectionID
+        DataManager.CreateWaysByCollectionID( CameraCollectionID)
         --向服务器发送新的所在地块ID
         local msgId = pbl.enum("gscode.OpCode", "move")
         local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
@@ -102,8 +106,9 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     if blockID == nil then
         return -1
     end
-    local X = math.floor((blockID %  blockRange.x)  / math.ceil(TerrainRange.x /blockRange.x) )
-    local Y = math.ceil((blockID / TerrainRange.x) / blockRange.y)
+    local rowNum = math.ceil(TerrainRange.x /blockRange.x)
+    local X = math.floor((blockID / TerrainRange.x) / blockRange.y) * rowNum    --行
+    local Y = math.ceil((blockID %  TerrainRange.x) / blockRange.x )            --列
     return X +  Y
 end
 
@@ -128,9 +133,6 @@ function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
 
 end
 
-
-
-
 --创建临时修建建筑物
 local function CreateConstructBuildSuccess(go,table)
     --判空
@@ -138,11 +140,15 @@ local function CreateConstructBuildSuccess(go,table)
         return;
     end
     DataManager.TempDatas.constructID  = table[1]
-    ct.OpenCtrl('ConstructSwitchCtrl')
     DataManager.TempDatas.constructObj = go
     DataManager.TempDatas.constructObj.transform.position = table[2]
-    --TerrainManager.MoveTempConstructObj()
+    DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
+    --一定要放在数据刷新完后打开
+    ct.OpenCtrl('ConstructSwitchCtrl')
 end
+
+
+
 
 --取消建筑的修建
 function TerrainManager.AbolishConstructBuild()
@@ -150,7 +156,9 @@ function TerrainManager.AbolishConstructBuild()
     if DataManager.TempDatas.constructObj ~= nil then
         destroy(DataManager.TempDatas.constructObj)
         DataManager.TempDatas.constructObj = nil
+        DataManager.TempDatas.constructPosID = nil
         DataManager.TempDatas.constructID = nil
+        DataManager.TempDatas.constructBlockList = nil
     end
 end
 

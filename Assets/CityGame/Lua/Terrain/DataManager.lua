@@ -18,7 +18,7 @@ DataManager = {}
 --  a.修建建筑时的临时数据（包括展示用GameObject集合，修建状态IsConstructing）
 --          ==>> 打开修建界面时初始化，关闭时清空
 --4.系统数据
---  a.当前操作状态（Enum TouchState{ NormalState = 1，//正常状态（可拖拽点击状态）   ConstructState = 2，//修建状态   UIState = 3，//UI查看状态   }）
+--  a.当前操作状态（Enum TouchState{ NormalState = 0，//正常状态（可拖拽点击状态）   ConstructState = 1，//修建状态   UIState = 2，//UI查看状态   }）
 --          ==》登录时初始化，用于触摸操作的控制判断
 --  b.服务器时间戳
 --          ==>> 登录时同步，断线重连刷新一次
@@ -36,11 +36,10 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 
-DataManager.TempDatas ={ constructObj = nil, constructID = nil}
-
+DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
 ---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
-
+-------------------------------原子地块数据--------------------------------
 --功能
 --  创建一个新的原子地块集合，并将内部所有数据置为 -1
 --参数
@@ -91,7 +90,117 @@ function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     end
     return idList
 end
+-------------------------------道路数据集合--------------------------------
+--功能
+--  依据BlockDatas创建道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.CreateWaysByCollectionID(tempCollectionID)
+    --TODO://
+    if not BuildDataStack[tempCollectionID] then
+        return
+    end
+    if not BuildDataStack[tempCollectionID].RoteDatas then
+        BuildDataStack[tempCollectionID].RoteDatas = {}
+    end
+    for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
+        if itemNodeID == -1 then
+            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+            if roadNum > 0 and roadNum < #RoadNumConfig  then
+                if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
+                else
+                    if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
+                        break
+                    else
+                        --TODO:删除之前的道路Obj
+                        destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                    end
+                end
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
+                local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
+                local go = UnityEngine.GameObject.Instantiate(prefab)
+                go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
+            end
+        end
+    end
+end
 
+--功能
+--  依据BlockDatas刷新道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RefreshWaysByCollectionID(tempCollectionID)
+
+
+end
+
+--功能
+-- 移除道路的基础数据，管理GameObject
+--参数
+--  tempCollectionID: 所属地块集合ID
+function DataManager.RemoveWaysByCollectionID(tempCollectionID)
+
+
+end
+
+
+local RoadAroundNumber = {
+    FrontUpperItem = { Num = 1 },   --正上方
+    FrontBelowItem = { Num = 4 },   --正下方
+    LeftUpperItem = { Num = 128 },    --左上方
+    LeftMiddleItem = { Num = 8 },   --正左方
+    LeftBelowItem = { Num = 64 },    --左下方
+    RightUpperItem ={ Num = 16 },    --右上方
+    RightMiddleItem = { Num = 2 },  --正右方
+    RightBelowItem = { Num = 32 },   --右下方
+}
+--功能
+-- 计算道路number
+function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
+    if roadBlockID == 7006 then
+        local a = 0
+    end
+    local roadNum = 0
+    for key, value in pairs(RoadAroundNumber) do
+        value.ID = nil
+    end
+    --边缘判定（上下不判定的原因是因为计算值的时候会被排除）
+    if  roadBlockID % TerrainRangeSize ~= 0 then    --不靠地图右边边界--->右边一列
+        RoadAroundNumber.RightUpperItem.ID = roadBlockID - TerrainRangeSize + 1
+        RoadAroundNumber.RightMiddleItem.ID = roadBlockID + 1
+        RoadAroundNumber.RightBelowItem.ID = roadBlockID + TerrainRangeSize + 1
+    end
+    if roadBlockID % TerrainRangeSize ~= 1 then     --不靠地图左边边界--->计算左边一列
+        RoadAroundNumber.LeftUpperItem.ID = roadBlockID - TerrainRangeSize - 1
+        RoadAroundNumber.LeftMiddleItem.ID = roadBlockID - 1
+        RoadAroundNumber.LeftBelowItem.ID = roadBlockID + TerrainRangeSize - 1
+    end
+    RoadAroundNumber.FrontUpperItem.ID = roadBlockID - TerrainRangeSize
+    RoadAroundNumber.FrontBelowItem.ID = roadBlockID + TerrainRangeSize
+    --计算中间一列
+    local topItemID = roadBlockID - TerrainRangeSize
+    --如果存在  那么计算这个值
+    for key, value in pairs(RoadAroundNumber) do
+        if value.ID and value.ID > 0 and value.ID < TerrainRangeSize*TerrainRangeSize then
+            if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
+                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] ~= -1 then
+                    roadNum  = roadNum + value.Num
+                end
+            else
+                local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
+                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                    roadNum  = roadNum + value.Num
+                end
+            end
+        end
+    end
+    return roadNum
+end
+
+-------------------------------商业建筑基础数据集合--------------------------------
 --功能
 --  刷新商业建筑集合的基础数据--
 --参数
@@ -385,6 +494,10 @@ function  DataManager.InitPersonDatas(tempData)
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
 
+    --初始化自己所拥有建筑（购买的土地）
+    PersonDataStack.m_buysBuild = tempData.buys
+    --初始化自己所拥有建筑（租赁的土地）
+    PersonDataStack.m_rentsBuild = tempData.rents
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -430,20 +543,21 @@ function  DataManager.InitPersonDatas(tempData)
         end
     end
 
-    --初始化好友信息
-    if  PersonDataStack.m_friendsInfo == nil then
-        PersonDataStack.m_friendsInfo = {}
+    PersonDataStack.socialityManager = SocialityManager:new()
+    if tempData.friends then
+        for _, value in pairs(tempData.friends) do
+            if value.id and value.b ~= nil then
+                DataManager.SetMyFriends(value)
+            end
+        end
     end
 
-    --初始化好友申请信息
-    if  PersonDataStack.m_friendsApply == nil then
-        PersonDataStack.m_friendsApply = {}
-    end
 
-    --初始化黑名单
-    if  PersonDataStack.m_blacklist == nil then
-        PersonDataStack.m_blacklist = {}
-    end
+
+    ------------------------------------打开相机
+    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
+    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
+
 end
 
 --修改自己所拥有土地集合
@@ -515,74 +629,70 @@ end
 
 --获取自己好友信息
 function DataManager.GetMyFriends()
-    return PersonDataStack.m_friends
+    --return PersonDataStack.m_friends
+    return PersonDataStack.socialityManager:GetMyFriends()
 end
 
 --刷新自己好友信息
 --参数： tempData==>  ByteBool
 --如果需要删除好友，ByteBool={ id = "XXXXXXXX",b = nil }
 function DataManager.SetMyFriends(tempData)
-    if tempData.id then
-        PersonDataStack.m_friends[tempData.id] = tempData.b
-    end
-end
-
---获取自己好友详细信息
-function DataManager.GetMyFriendsInfo()
-    return PersonDataStack.m_friendsInfo
-end
-
---刷新自己好友详细信息
---参数： tempData==>  RoleInfo
---如果需要删除好友，ByteBool={ id = "XXXXXXXX",name = nil }
-function DataManager.SetMyFriendsInfo(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_friendsInfo, tempData)
-    elseif tempData.id and not tempData.name then
-        for i, v in ipairs(PersonDataStack.m_friendsInfo) do
-            if v.id == tempData.id then
-                table.remove(PersonDataStack.m_friendsInfo, i)
-                break
-            end
-        end
-    end
+    PersonDataStack.socialityManager:SetMyFriends(tempData)
 end
 
 --获取自己好友申请信息
 function DataManager.GetMyFriendsApply()
-    return PersonDataStack.m_friendsApply
+    --return PersonDataStack.m_friendsApply
+    return PersonDataStack.socialityManager:GetMyFriendsApply()
 end
 
 --刷新自己好友申请信息
 --参数： tempData==>  RequestFriend
 --如果需要删除好友申请，ByteBool={ id = "XXXXXXXX",name = nil }
 function DataManager.SetMyFriendsApply(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_friendsApply, tempData)
-    elseif tempData.itemId and not tempData.id then
-        table.remove(PersonDataStack.m_friendsApply, tempData.itemId)
-    end
+    --if tempData.id and tempData.name then
+    --    table.insert(PersonDataStack.m_friendsApply, tempData)
+    --elseif tempData.itemId and not tempData.id then
+    --    table.remove(PersonDataStack.m_friendsApply, tempData.itemId)
+    --end
+    PersonDataStack.socialityManager:SetMyFriendsApply(tempData)
 end
 
 --获取自己黑名单
 function DataManager.GetMyBlacklist()
-    return PersonDataStack.m_blacklist
+    return PersonDataStack.socialityManager:GetMyBlacklist()
 end
 
 --刷新自己黑名单
 --参数： tempData==>  Bytes
 --如果需要删除黑名单，tempData={ id = "XXXXXXXX",name = nil }
 function DataManager.SetMyBlacklist(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_blacklist, tempData)
-    elseif tempData.id and not tempData.name then
-        for i, v in ipairs(PersonDataStack.m_blacklist) do
-            if v.id == tempData.id then
-                table.remove(PersonDataStack.m_blacklist, i)
-                break
-            end
-        end
-    end
+    --if tempData.id and tempData.name then
+    --    table.insert(PersonDataStack.m_blacklist, tempData)
+    --elseif tempData.id and not tempData.name then
+    --    for i, v in ipairs(PersonDataStack.m_blacklist) do
+    --        if v.id == tempData.id then
+    --            table.remove(PersonDataStack.m_blacklist, i)
+    --            break
+    --        end
+    --    end
+    --end
+    PersonDataStack.socialityManager:SetMyBlacklist(tempData)
+end
+
+-- 获取聊天消息
+function DataManager.GetMyChatInfo(index)
+    return PersonDataStack.socialityManager:GetMyChatInfo(index)
+end
+
+-- 刷新聊天消息
+function DataManager.SetMyChatInfo(tempData)
+    PersonDataStack.socialityManager:SetMyChatInfo(tempData)
+end
+
+-- 已读聊天消息
+function DataManager.SetMyReadChatInfo(index, id)
+    PersonDataStack.socialityManager:SetMyReadChatInfo(index, id)
 end
 
 --获取自己所有的建筑详情
@@ -626,6 +736,7 @@ function DataManager.IsEnableChangeGround(blockID)
     end
 end
 
+--判断所有范围内地块允不允许改变
 function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
     for key, value in ipairs(idList) do
@@ -636,8 +747,22 @@ function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     return true
 end
 
----------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
+--判断是否在覆盖范围内
+--startBlockID 根节点
+--rangeSize 范围大小
+--tempID   判断点
+function DataManager.IsInTheRange(startBlockID,rangeSize,tempID)
+    for i = startBlockID, (startBlockID + TerrainRangeSize * (rangeSize - 1)),TerrainRangeSize  do
+        for tempkey = i, (i + rangeSize - 1) do
+            if  tempkey == tempID then
+                return true
+            end
+        end
+    end
+    return false
+end
 
+---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
@@ -655,17 +780,17 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
-
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
-
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
 end
+
 --清除所有消息回调
 local function ClearEvents()
     
 end
-
 
 --DataManager初始化
 function DataManager.Init()
@@ -774,7 +899,6 @@ function DataManager.n_OnReceiveAddFriendSucess(stream)
     end
     friend.b = true
     DataManager.SetMyFriends(friend)
-    DataManager.SetMyFriendsInfo(friend)
     DataManager.SetMyFriendsApply({id = friend.id})
     Event.Brocast("c_OnReceiveAddFriendSucess", friend)
 end
@@ -795,6 +919,9 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
     local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
+    --for _, v in ipairs(playerData.info) do
+    --    DataManager.SetMyFriendsInfo(v)
+    --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
 end
 
@@ -832,3 +959,16 @@ end
 
 ----------
 
+-- 收到服务器的聊天消息
+function DataManager.n_OnReceiveRoleCommunication(stream)
+    local chatData = assert(pbl.decode("gs.CommunicationProces", stream), "ChatModel.n_OnReceiveRoleCommunication: stream == nil")
+    DataManager.SetMyChatInfo(chatData)
+    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+end
+
+-- 好友在线状态刷新
+function DataManager.n_OnReceiveRoleStatusChange(stream)
+    local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
+    DataManager.SetMyFriends(roleData)
+end
+----------

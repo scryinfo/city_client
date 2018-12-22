@@ -495,6 +495,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
         --data.insId = self.toggleData.insId
         --data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
+        data.isOther = self.toggleData.isOther
         self.labLineItem:updateInfo(data)
     else
         if not self.researchLineViewRect then
@@ -503,6 +504,7 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
         end
 
         local data = {}
+        data.isOther = self.toggleData.isOther
         data.insId = self.toggleData.insId
         data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData

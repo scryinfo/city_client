@@ -108,7 +108,8 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.remainWorker = self.maxWorkerNum - self.remainWorker
 
     self.store = getItemStore(data.store)  --获取item个数的表
-    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info.mId, data.info.ownerId)
+    self.tempStore = data.store
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info, self.tempStore)
 end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
@@ -209,7 +210,7 @@ end
 ---本地消息---
 --主界面获取建筑详情
 function LaboratoryModel:m_ReqLaboratoryCurrentInfo()
-    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, self.info.mId, self.info.ownerId)
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, self.info, self.tempStore)
 end
 --根据id获取库存量 --传入单个itemId
 function LaboratoryModel:m_GetItemStoreCount(itemId)

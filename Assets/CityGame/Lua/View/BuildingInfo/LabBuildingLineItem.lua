@@ -24,6 +24,12 @@ function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, t
     self.doSthImg = self.viewRect.transform:Find("topRoot/open/openBtn/doSthImg")
     self.otherOpenImg = self.viewRect.transform:Find("topRoot/open/openBtn/otherOpenImg")
 
+    if self.data.isOther then
+        self.openBtn.transform.localScale = Vector3.zero
+    else
+        self.openBtn.transform.localScale = Vector3.one
+    end
+
     --滑动复用部分
     self.itemSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
     self.itemSource.mProvideData = LabBuildingLineItem.static.provideData

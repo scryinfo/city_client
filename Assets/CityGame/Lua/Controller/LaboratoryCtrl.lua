@@ -40,14 +40,16 @@ function LaboratoryCtrl:_initData()
     end
 end
 
-function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, mId, ownerId)
+function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     self.hasOpened = true
-    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[mId].sizeName..PlayerBuildingBaseData[mId].typeName
-    LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[mId]
-    self.m_data.ownerId = ownerId
-    self.m_data.mId = mId
+    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
+    LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
+    self.m_data.ownerId = info.ownerId
+    self.m_data.mId = info.mId
     self.m_data.orderLineData = orderLineData
-    if ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
+    self.m_data.info = info
+    self.m_data.store = store
+    if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
     else

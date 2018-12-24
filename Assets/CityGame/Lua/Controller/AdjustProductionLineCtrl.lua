@@ -115,7 +115,7 @@ end
 function AdjustProductionLineCtrl:OnClick_modifyBtn()
     Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
 end
---删除生产线
+--删除生产中或生产完的生产线
 function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     if not msg then
         return;

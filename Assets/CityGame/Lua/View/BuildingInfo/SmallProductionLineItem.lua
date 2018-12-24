@@ -70,7 +70,11 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
+    if not go.lineId then
+        go.manager:_deleteProductionLine(go)
+    else
+        Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
+    end
 end
 --刷新滑动条
 function SmallProductionLineItem:pNumberScrollbarInfo()

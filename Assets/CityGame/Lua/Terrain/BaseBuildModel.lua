@@ -38,8 +38,8 @@ function BaseBuildModel:OpenPanel()
     elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --研究所
         ct.OpenCtrl("LaboratoryCtrl", {insId = instanceID})
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
-        Event.Brocast("m_detailPublicFacility",instanceID)
-        ct.OpenCtrl("MunicipalCtrl")
+        --Event.Brocast("m_detailPublicFacility",instanceID)
+        ct.OpenCtrl("MunicipalCtrl",{insId=instanceID})
     end
 end
 

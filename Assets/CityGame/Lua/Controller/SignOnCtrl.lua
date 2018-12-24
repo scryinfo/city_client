@@ -35,9 +35,10 @@ function SignOnCtrl:OnCreate(obj)
 
 end
 
-
+local MunicipalModel
 function SignOnCtrl:Refresh()
     local data=self.m_data
+    MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
     SignOnPanel.dayilyRentnumText.text=getPriceString("E"..MunicipalModel.SlotList[1].rentPreDay..".0000",30,30)
     SignOnPanel.dayilyRentnumText.text=getPriceString("E"..(3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,30)
@@ -53,9 +54,11 @@ end
 function SignOnCtrl:OnClick_confirm(ins)
 
     for i = 1, ins.m_data.acount do
-        Event.Brocast("m_buySlot",MunicipalModel.lMsg.info.id,MunicipalModel.SlotList[1].id,ins.m_data.dayAcount)
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_buySlot',
+                MunicipalPanel.buildingId,MunicipalModel.SlotList[1].id,ins.m_data.dayAcount)
         table.remove(MunicipalModel.SlotList,1)
     end
-    Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
+    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+
     UIPage.ClosePage();
 end

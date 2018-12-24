@@ -100,7 +100,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	--modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
-	modelList[ModelNames.Municipal]=MunicipalModel.New();
+	--modelList[ModelNames.Municipal]=MunicipalModel.New();
 	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	modelList[ModelNames.Warehouse] = WarehouseModel.New();

@@ -167,19 +167,22 @@ end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
-    --UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-    local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    Event.Brocast('m_ReqOpenMaterial',buildingId)
-    ct.OpenCtrl('MaterialCtrl')
+    --ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
+    ----UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
+    --Event.Brocast('m_ReqOpenMaterial',buildingId)
+    --ct.OpenCtrl('MaterialCtrl')
+    ct.OpenCtrl("ScienceSellHallCtrl")
+
 end
 
 --加工厂--
 function GameMainInterfaceCtrl.OnSourceMill()
-    ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
-    local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
-    Event.Brocast('m_ReqOpenProcessing',buildingId)
-    ct.OpenCtrl('ProcessingCtrl')
+    --ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
+    --local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
+    --Event.Brocast('m_ReqOpenProcessing',buildingId)
+    --ct.OpenCtrl('ProcessingCtrl')
+    ct.OpenCtrl("GuidBookCtrl")
 end
 
 --广告设施

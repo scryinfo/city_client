@@ -67,15 +67,13 @@ function TicketItem:closeToggleItem(targetMovePos)
 end
 
 --刷新数据
-function TicketItem:updateInfo()
-    if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then
+function TicketItem:updateInfo(buildingOwnerId,ticketPrice)
+    if DataManager.GetMyOwnerID()~=buildingOwnerId then
         self.toDoBtn.localScale=Vector3.zero
     else
         self.toDoBtn.localScale=Vector3.one
     end
-    if MunicipalModel.ticket then
-        self.wageText.text=getPriceString(MunicipalModel.lMsg.ticketPrice..".0000",30,24)
-    end
+   self.wageText.text=getPriceString(ticketPrice..".0000",30,24)
 end
 
 
@@ -86,10 +84,10 @@ end
 
 function TicketItem:callback()
     if TicketAdjustPopPanel. ticketInp.text=="" then
-        Event.Brocast("m_Setticket",MunicipalModel.lMsg.info.info.id,0)
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,0)
         self.wageText.text=0;
     else
-        Event.Brocast("m_Setticket",MunicipalModel.lMsg.info.id,tonumber(TicketAdjustPopPanel. ticketInp.text))
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,tonumber(TicketAdjustPopPanel. ticketInp.text))
         self.wageText.text=getPriceString(TicketAdjustPopPanel.ticketInp.text..".0000",30,24)
     end
 end

@@ -178,7 +178,6 @@ function AdvertisementPosCtrl:Refresh()
                 panel.manageText.text=text.."(" ..tostring(num).."/"..#self.myBuySlots..")"
         end
     end
-
 end
 
 

@@ -54,7 +54,7 @@ UIPage:ShowPage(InputDialogPageCtrl, data)
 end
 
 --返回
-function MunicipalCtrl:OnClick_backBtn(ins)
+function MunicipalCtrl:OnClick_backBtn()
     UIPage.ClosePage();
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
@@ -64,7 +64,7 @@ end
 
 --打开信息界面
 function MunicipalCtrl:OnClick_infoBtn()
-
+   
 end
 
 function MunicipalCtrl:Refresh()
@@ -91,16 +91,16 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
     ---是否可以改名
     if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--他人
-        MunicipalPanel.changeNameBtn.localScale=Vector3.zero
+    MunicipalPanel.changeNameBtn.localScale=Vector3.zero
     else--自已
-        MunicipalPanel.changeNameBtn.localScale=Vector3.one
+    MunicipalPanel.changeNameBtn.localScale=Vector3.one
     end
     ---效验
     if MunicipalPanel.buildingId~=self.currentBuildingId then
-        ---清空数据
-        if self.pastManger then
-            self:ClearData(self.pastManger)
-        end
+    ---清空数据
+    if self.pastManger then
+    self:ClearData(self.pastManger)
+    end
         ---创建外部广告
         local creatData={model=model,buildingType=BuildingType.ProcessingFactory,lMsg=lMsg}
         model.manger:creat(ServerListCtrl.serverListBehaviour,creatData)

@@ -44,6 +44,9 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
         PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        PlayerTempModel.tempTestAddGroung(11,0, 20,10)
+    end
     --ct.OpenCtrl("AddLineChooseItemCtrl", {})
 end
 --add invent

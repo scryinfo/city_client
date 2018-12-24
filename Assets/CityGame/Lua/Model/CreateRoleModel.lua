@@ -27,12 +27,14 @@ end
 
 --创角发包
 function CreateRoleModel.m_createNewRole()
-    DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.Str",{ str = CityEngineLua.username.."_role1"})
+    DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
+            { male = true ,name = CityEngineLua.username.."_role1",companyName = CityEngineLua.username.."_company"})
 end
 
 --创角回调
 function CreateRoleModel.n_CreateNewRole(stream)
     --message Role {
+
     --    required bytes id = 1;
     if stream == nil then
         ct.log("system", "[LoginModel.n_CreateNewRole] stream = nil")

@@ -21,89 +21,182 @@ function LabInventionCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabInventionPanel.backBtn.gameObject, function()
         UIPage.ClosePage()
-    end)
-    self.luaBehaviour:AddClick(LabInventionPanel.inventionBtn.gameObject, function()
-        self:_inventeBtnClick()
-    end)
+        if self.backToCompose then
+            ct.OpenCtrl("AddLineChooseItemCtrl")
+        end
+    end, self)
     self.luaBehaviour:AddClick(LabInventionPanel.progressSuccessBtn.gameObject, function()
-        if self.m_data.buildingId and self.m_data.lineId then
-            DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_ReqLabRoll', self.m_data.lineId)
+        if LabScientificLineCtrl.static.buildingId and self.m_data.id then
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
+
+            --roll之后减掉roll的次数，设置run为false状态
+            self.m_data.roll = 0
+            self.m_data.run = false
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabLineInfoAfterRoll', self.m_data)
+
+            self.m_data.bulbState = LabInventionBulbItemState.Empty
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
         end
     end)
     UpdateBeat:Add(self._update, self)
 end
 function LabInventionCtrl:Refresh()
+    Event.AddListener("c_LabRollSuccess", self._backToScientificCtrl)
     self:_initPanelData()
 end
 function LabInventionCtrl:Hide()
+    Event.RemoveListener("c_LabRollSuccess", self._backToScientificCtrl)
     UIPage.Hide(self)
 end
 function LabInventionCtrl:_update()
     if not self.m_data then
         return
     end
-    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working and self.m_data.leftSec then
-        if self.remainTime then
-            self.remainTime = self.m_data.leftSec
-        else
-            self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
-        end
-        LabInventionPanel.progressWorkingImg.fillAmount = self.remainTime / self.m_data.phaseSec  --设置图片进度
-
-        if self.remainTime <= 0 then
+    if self.m_data.bulbState and self.m_data.bulbState == LabInventionBulbItemState.Working then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.m_data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabInventionPanel:setBulbState(self.m_data.bulbState)
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
+            LabInventionPanel.progressWorkingImg.fillAmount = 1
             return
         end
 
-        local timeTable = getTimeBySec(self.remainTime)
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         LabInventionPanel.timeDownText.text = timeStr
+        LabInventionPanel.progressWorkingImg.fillAmount = 1 - remainTime / self.m_data.totalTime  --设置图片进度
+
+        if self.currentTime >= self.m_data.finishTime then
+            self.m_data.bulbState = LabInventionBulbItemState.Finish
+            LabInventionPanel.setBulbState(self.m_data.bulbState)
+            LabInventionPanel.progressWorkingImg.fillAmount = 1
+            return
+        end
     end
 end
 
 --初始化数据
 function LabInventionCtrl:_initPanelData()
     self.m_data.type = 1
-    local formularItem = FormularConfig[self.m_data.itemId]
-    if formularItem.phase ~= 5 then
-        ct.log("cycle_w15_laboratory03", "阶段数不为5")
-        return
-    end
-    if #formularItem.materials == 0 then  --判断是否为原料
+    self.currentTime = os.time()
+
+    --根据itemId判断是不是原料
+    if self.m_data.itemId < 2200000 then
         LabInventionPanel.showLine({})
+        self.usedData = {}
+        self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
         --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
+        LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
-        DataManager.DetailModelRpc(self.m_data.buildingId, 'm_GetFormularData', function (data)
+        local formularItem = FormularConfig[1][self.m_data.itemId]
+        --显示阶段状态
+        self.phaseStates = {}
+        for i = 1, formularItem.phase do
+            self.phaseStates[i] = LabInventionItemPhaseState.Null
+        end
+        if self.m_data.rollTarget then
+            for i = 1, self.m_data.rollTarget do
+                self.phaseStates[i] = LabInventionItemPhaseState.WillTo
+            end
+        end
+        if self.m_data.phase then
+            for i = 1, self.m_data.phase do
+                self.phaseStates[i] = LabInventionItemPhaseState.Finish
+            end
+        end
+        LabInventionPanel.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
+
+        self.usedData = formularItem
+        DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetFormularData', function (data)
+            data.backFunc = function(success)
+                self.enough = success
+            end
             LabInventionPanel.showLine(data)
             LabInventionPanel.goodRootTran.localScale = Vector3.one
             LabInventionPanel.rawRootTran.localScale = Vector3.zero
             --LabInventionPanel.goodIconImg.mainTexture = Good[self.m_data.itemId].img
+            LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
         end, formularItem.materials)
     end
 
-    LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
-
     if not self.m_data.id then    --没有id则为临时添加的线
+        self.backToCompose = true
         self.m_data.bulbState = LabInventionBulbItemState.Empty
-        LabInventionPanel:setBulbState(self.m_data.bulbState)
-        LabInventionPanel.researchBtn.localScale = Vector3.one
-    else
-        if self.m_data.leftSec > 0 then    --如果还在倒计时，则正在工作状态
-            self.m_data.bulbState = LabInventionBulbItemState.Working
-            LabInventionPanel.researchBtn.localScale = Vector3.zero
+        LabInventionPanel.setBulbState(self.m_data.bulbState)
+        if self.enough then
+            self:_setInventBtnState(LabResearchBtnState.EnableClick)
+            LabInventionPanel.inventionBtn.onClick:RemoveAllListeners()
+            LabInventionPanel.inventionBtn.onClick:AddListener(function ()
+                self:_creatTempLine()
+            end)
         else
-            self.m_data.bulbState = LabInventionBulbItemState.Finish
-            LabInventionPanel.researchBtn.localScale = Vector3.zero    --没有id则为临时添加的线
+            self:_setInventBtnState(LabResearchBtnState.NotEnough)
         end
-        LabInventionPanel:setBulbState(self.m_data.bulbState)
+    else
+        self.backToCompose = false
+        if self.m_data.run then    --如果在工作状态
+            self.m_data.bulbState = LabInventionBulbItemState.Working
+            self:_setInventBtnState(LabResearchBtnState.Working)
+        else
+            if self.m_data.roll > 0 then
+                self.m_data.bulbState = LabInventionBulbItemState.Working
+                self:_setInventBtnState(LabResearchBtnState.Working)
+            else
+                self.m_data.bulbState = LabInventionBulbItemState.Empty
+                LabInventionPanel.inventionBtn.onClick:RemoveAllListeners()
+                LabInventionPanel.inventionBtn.onClick:AddListener(function ()
+                    self:_launchLine()
+                end)
+                if self.enough then
+                    self:_setInventBtnState(LabResearchBtnState.EnableClick)
+                else
+                    self:_setInventBtnState(LabResearchBtnState.NotEnough)
+                end
+            end
+        end
+        LabInventionPanel.setBulbState(self.m_data.bulbState)
     end
 end
---点了发明按钮
-function LabInventionCtrl:_inventeBtnClick(ins)
-    local data = {itemId = ins.m_data.itemId, type = 1, phase = 1, workerNum = 0}
-    DataManager.DetailModelRpcNoRet(ins.m_data.buildingId, 'm_AddTempLineData', data)
+
+function LabInventionCtrl:_setInventBtnState(state)
+    if state == LabResearchBtnState.EnableClick then  --默认可以点击
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.one
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabInventionPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.NotEnough then  --不够的状态/不可点击状态
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.one
+        LabInventionPanel.workingImgTran.localScale = Vector3.zero
+    elseif state == LabResearchBtnState.Working then  --工作中
+        LabInventionPanel.inventionBtn.transform.localScale = Vector3.zero
+        LabInventionPanel.notEnoughImgTran.localScale = Vector3.zero
+        LabInventionPanel.workingImgTran.localScale = Vector3.one
+    end
+end
+--添加临时线，返回科技线
+function LabInventionCtrl:_creatTempLine()
+    local data = {itemId = self.m_data.itemId, type = 1, phase = 1, workerNum = 0}
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
     UIPage.ClosePage()
+end
+--继续发明
+function LabInventionCtrl:_launchLine()
+    local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
+    UIPage.ClosePage()
+end
+--关闭自己，返回科技线界面
+function LabInventionCtrl:_backToScientificCtrl()
+    local info = {}
+    info.titleInfo = "SUCCESS"
+    info.contentInfo = "Stage of success!"
+    info.tipInfo = ""
+    info.btnCallBack = function ()
+        UIPage.ClosePage()
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

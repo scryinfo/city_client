@@ -23,6 +23,9 @@ end
 function createWindows(name,pos)
 	PanelManager:CreateWindow(name,pos);
 end
+function ResourcesImage(path)
+	PanelManager:ResourcesImage(path)
+end
 function child(str)
 	return transform:Find(str);
 end
@@ -132,6 +135,14 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--表格排序
+function tableSort(table,gameObject)
+	TableSort.tableSort(table,gameObject)
+end
+--修改表数据
+function UpdataTable(table,gameObject,prefabs)
+	TableSort:UpdataTable(table,gameObject,prefabs)
+end
 --将秒转换成小时分秒的格式，非时间戳
 function getTimeBySec(secTime)
 	local tb = {}
@@ -139,12 +150,23 @@ function getTimeBySec(secTime)
 	tb.hour = math.floor(secTime / 3600) or 0
 	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
 	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+
+	if tb.hour < 10 then
+		tb.hour = "0"..tb.hour
+	end
+	if tb.minute < 10 then
+		tb.minute = "0"..tb.minute
+	end
+	if tb.second < 10 then
+		tb.second = "0"..tb.second
+	end
+
 	return tb
 end
 --根据建筑store获取一个以itemId为key的字典
 function getItemStore(store)
 	local itemTable = {}
-	local storeTemp = BaseTools.TableCopy(store)
+	local storeTemp = ct.deepCopy(store)
 	if storeTemp.locked then
 		for i, itemData in pairs(storeTemp.locked) do
 			itemTable[itemData.key.id] = itemData.n

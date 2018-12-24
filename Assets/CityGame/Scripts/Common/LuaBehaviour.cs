@@ -89,7 +89,6 @@ namespace LuaFramework {
             }
             buttons.Clear();
         }
-
         //-----------------------------------------------------------------
         protected void OnDestroy() {
             ClearClick();

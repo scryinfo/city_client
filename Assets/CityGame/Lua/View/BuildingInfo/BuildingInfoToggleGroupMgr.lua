@@ -43,6 +43,10 @@ BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPage
 BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
 BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
 
+BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
+BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/TalentManagementItem"  --挖掘人才
+
+
 --初始化
 function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
@@ -63,6 +67,8 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
+    elseif buildingData.buildingType == BuildingType.TalentCenter then
+        self:_creatTalentInfo()
     end
 
     --创建完之后调整item位置
@@ -82,6 +88,8 @@ function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
+    elseif buildingData.buildingType == BuildingType.TalentCenter then
+        self:_creatTalentInfo()
     end
 end
 
@@ -103,11 +111,11 @@ function BuildingInfoToggleGroupMgr:_clickItemFunc(toggleData)
     local leftIndex, rightIndex = nil
     if toggleData.pos == BuildingInfoTogglePos.Left then
         leftIndex = toggleData.index
-    --elseif toggleData.pos == BuildingInfoTogglePos.Right then
-    --    rightIndex = toggleData.index
+    elseif toggleData.pos == BuildingInfoTogglePos.Right then
+        rightIndex = toggleData.index
     end
 
-    self:_sortItems(leftIndex)
+    self:_sortItems(leftIndex, rightIndex)
 end
 
 --通过预制创建view
@@ -123,7 +131,7 @@ function BuildingInfoToggleGroupMgr:_creatItemObj(path, parent)
 end
 
 --刷新item位置信息
-function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
+function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
 
     if leftOpenIndex ~= nil and leftOpenIndex > 0 then
         local leftPos = BuildingInfoToggleGroupMgr.static.LEFT_POS
@@ -136,16 +144,16 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex)
         end
     end
 
-    --if rightOpenIndex ~= nil and rightOpenIndex > 0 then
-    --    local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
-    --    for key, toggleItem in pairs(self.rightData) do
-    --        if toggleItem:getToggleIndex() == leftOpenIndex then
-    --            rightPos = toggleItem:openToggleItem(rightPos)
-    --        else
-    --            rightPos = toggleItem:closeToggleItem(rightPos)
-    --        end
-    --    end
-    --end
+    if rightOpenIndex ~= nil and rightOpenIndex > 0 then
+        local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
+        for key, toggleItem in pairs(self.rightData) do
+            if toggleItem:getToggleIndex() == leftOpenIndex then
+                rightPos = toggleItem:openToggleItem(rightPos)
+            else
+                rightPos = toggleItem:closeToggleItem(rightPos)
+            end
+        end
+    end
 end
 
 --排列右侧信息，只需要排一次，一直都处于打开状态
@@ -375,15 +383,37 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
     self.leftData[1] = self:_createStaff(staffToggleData)
     ---仓库  左2
-    local warehouseView
-    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-    warehouseView.gameObject.name = "WarehouseRateItem"
-    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local warehouseLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-    self.leftData[2] = warehouseLuaItem
+    if self.warehouseLuaItem == nil then
+        local warehouseView
+        warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        warehouseView.gameObject.name = "WarehouseRateItem"
+        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        self.leftData[2] = self.warehouseLuaItem
+    end
     ---研究线 --右1
     local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     self.rightData[1] = self:_creatResearchLine(researchLineToggleData)
+end
+--人才中心
+function BuildingInfoToggleGroupMgr:_creatTalentInfo()
+    --员工  左1
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
+    self.leftData[1] = self:_createStaff(staffToggleData)
+    --人才管理  左2
+    local management
+    management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
+    management.gameObject.name = "TalentManagement"
+    local managementToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    local managementLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
+    self.leftData[2] = managementLuaItem
+    --挖掘人才
+    local excavate
+    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.rightRect)
+    excavate.gameObject.name = "ExcavateTalents"
+    local excavateToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
+    local excavateLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
+    self.rightData[1] = excavateLuaItem
 end
 
 ---通用部分
@@ -490,9 +520,10 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
     --如果已经存在则直接刷新数据，否则重新生成
     if self.labLineItem then
         local data = {}
-        data.buildingId = self.toggleData.insId
-        data.buildingTypeId = self.toggleData.mId
+        --data.insId = self.toggleData.insId
+        --data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
+        data.isOther = self.toggleData.isOther
         self.labLineItem:updateInfo(data)
     else
         if not self.researchLineViewRect then
@@ -501,7 +532,8 @@ function BuildingInfoToggleGroupMgr:_creatResearchLine(researchLineToggleData)
         end
 
         local data = {}
-        data.buildingId = self.toggleData.insId
+        data.isOther = self.toggleData.isOther
+        data.insId = self.toggleData.insId
         data.buildingTypeId = self.toggleData.mId
         data.lines = self.toggleData.orderLineData
         self.labLineItem = LabBuildingLineItem:new(data, self.researchLineViewRect, self.mainPanelLuaBehaviour, researchLineToggleData, self)

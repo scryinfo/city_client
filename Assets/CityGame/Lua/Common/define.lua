@@ -93,6 +93,7 @@ ModelNames = {
 	Warehouse = "WarehouseModel",
 	friends = "FriendsModel", -- 好友
 	Laboratory = "LaboratoryModel",  --研究所
+	Chat = "ChatModel", -- 聊天
 }
 
 SYSEVENT =
@@ -190,6 +191,7 @@ BuildingType =
 	MunicipalManage = 3,--市政管理
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
+	TalentCenter = 6 ,--人才中心
 }
 --建筑所属
 Buildingowner=
@@ -216,6 +218,14 @@ BuildingInType =
 InputDialogPageServerType =
 {
 	UpdateBuildingName = 0,  --修改建筑名称
+}
+
+--相机移动状态类型
+TouchStateType =
+{
+	NormalState = 0, 	--正常状态（可点击，可拖拽）
+	ConstructState = 1, --修建建筑状态（不可点击，可拖拽）
+	UIState = 2, 		--UI查看状态(不可点击，不可拖拽）
 }
 
 Util = LuaFramework.Util;

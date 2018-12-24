@@ -12,37 +12,39 @@ function LabBuildingInventionItem:initialize(data, viewRect)
     local viewTrans = self.viewRect
     self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
-    self.bulbImg = viewTrans:Find("mainRoot/progressRoot/bulbImg"):GetComponent("Image")
-    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/bg/timeDownText"):GetComponent("Text")
+    self.bulbImg = viewTrans:Find("mainRoot/progressRoot/right/bulbImg"):GetComponent("Image")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/timeDownText"):GetComponent("Text")
     self.progressCountText = viewTrans:Find("mainRoot/progressRoot/right/bulbImg/progressCountText"):GetComponent("Text")
     self.phaseItems = LabInventionItemPhaseItems:new(viewTrans:Find("mainRoot/successItems"))
     self.progressSlider = viewTrans:Find("mainRoot/progressRoot/progressSlider"):GetComponent("Slider")
 
-    self:_initData()
+    self:_initData(data)
     UpdateBeat:Add(self._update, self)
 end
 function LabBuildingInventionItem:_initData(data)
     self.data = data
-    self.leftSec = self.data.leftSec
     local itemInfo = Material[data.itemId]
+    self.formularData = FormularConfig[1][data.itemId]
     if not itemInfo then
         itemInfo = Good[data.itemId]
     end
     if not itemInfo.name then
-        ct.log("", "找不到itemId对应的数据"..self.itemId)
+        ct.log("cycle_w15_laboratory03", "找不到itemId对应的数据"..self.itemId)
         return
     end
 
     self.nameText.text = itemInfo.name
     --self.iconImg.sprite =
-    self.formularData = FormularConfig[data.itemId]
-    self.progressSlider.maxValue = self.formularData.phaseSec
+    self.progressSlider.maxValue = 1
+
     if data.roll > 0 then
         self.bulbImg.color = Color.white
         self.progressCountText.text = tostring(data.roll)
+        self.progressSlider.value = self.progressSlider.maxValue
     else
         self.bulbImg.color = getColorByVector3(LabBuildingInventionItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
+        self.progressSlider.value = 0
     end
 
     --显示阶段状态
@@ -57,20 +59,37 @@ function LabBuildingInventionItem:_initData(data)
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
     self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
-    self.startTimeDown = true
+    if data.run then
+        self.startTimeDown = true
+        self.currentTime = os.time()
+        self.timeDownText.transform.localScale = Vector3.one
+    else
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
 --倒计时
 function LabBuildingInventionItem:_update()
     if self.startTimeDown then
-        self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
-            self.progressSlider.value = self.formularData.phaseSec
+            self.progressSlider.value = self.progressSlider.maxValue
+            self.bulbImg.color = Color.white
             return
         end
-        local timeTable = getTimeBySec(self.leftSec)
+
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        self.progressSlider.value = self.formularData.phaseSec - self.leftSec
+        self.progressSlider.value = 1 - remainTime / self.data.totalTime
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressSlider.value = self.progressSlider.maxValue
+            self.bulbImg.color = Color.white
+            return
+        end
     end
 end

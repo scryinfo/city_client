@@ -42,6 +42,7 @@ function UIBubbleCtrl:_removeListener()
 end
 
 function UIBubbleCtrl.static.RefreshLateUpdate()
+    --Event.Brocast("c_RefreshLateUpdate")
     if not UIBubbleCtrl.startFlowCam then
         return
     end

@@ -14,43 +14,61 @@ function LabBuildingResearchItem:initialize(data, viewRect)
     self.levelText = viewTrans:Find("topRoot/levelText"):GetComponent("Text")
     self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
     self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
-    self.bottleImg = viewTrans:Find("mainRoot/right/bottleImg"):GetComponent("Image")
+    self.bottleImg = viewTrans:Find("mainRoot/progressRoot/right/bottleImg"):GetComponent("Image")
     self.progressSlider = viewTrans:Find("mainRoot/progressRoot/progressSlider"):GetComponent("Slider")
-    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/bg/timeDownText"):GetComponent("Text")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/progressSlider/timeDownText"):GetComponent("Text")
 
     self:_initData(data)
     UpdateBeat:Add(self._update, self)
 end
 function LabBuildingResearchItem:_initData(data)
     self.data = data
-    self.leftSec = self.data.leftSec
+    --self.leftSec = self.data.leftSec
 
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
-    self.levelText.text = data.lv
-    self.phaseSec = FormularConfig[data.itemId].phaseSec
-    self.progressSlider.maxValue = self.phaseSec
+    self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
+    self.progressSlider.maxValue = 1
 
     if data.roll > 0 then
         self.bottleImg.color = Color.white
+        self.progressSlider.value = self.progressSlider.maxValue
     else
+        self.progressSlider.value = 0
         self.bottleImg.color = getColorByVector3(LabBuildingResearchItem.static.NoRollColor)
     end
-    self.startTimeDown = true
+    if data.run then
+        self.startTimeDown = true
+        self.currentTime = os.time()
+        self.timeDownText.transform.localScale = Vector3.one
+    else
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
 --倒计时
 function LabBuildingResearchItem:_update()
     if self.startTimeDown then
-        self.leftSec = self.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.leftSec < 0 then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
-            self.progressSlider.value = self.formularData.phaseSec
+            self.progressSlider.value = self.progressSlider.maxValue
+            self.bottleImg.color = Color.white
             return
         end
-        local timeTable = getTimeBySec(self.leftSec)
+
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        self.progressSlider.value = self.phaseSec - self.leftSec
+        self.progressSlider.value = 1 - remainTime / self.data.totalTime
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressSlider.value = self.progressSlider.maxValue
+            self.bottleImg.color = Color.white
+            return
+        end
     end
 end

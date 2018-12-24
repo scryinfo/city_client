@@ -21,14 +21,57 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        PlayerTempModel.tempTestReqAddGroung(0,0,10,10)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
+
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+    end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        PlayerTempModel.tempTestReqAddItem(2151001, 999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
         PlayerTempModel.tempTestAddGroung(31,31, 40,40)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
+        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+        PlayerTempModel.tempTestReqAddItem(2151002, 888)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+        PlayerTempModel.tempTestReqAddItem(2151003, 777)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+        PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+        PlayerTempModel.tempTestReqAddItem(2152001, 555)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
         PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
@@ -229,7 +272,7 @@ end
 --获取item含量
 function PlayerTempModel:_getItemCount(store)
     local itemTable = {}
-    local storeTemp = BaseTools.TableCopy(store)
+    local storeTemp = ct.deepCopy(store)
     for i, itemData in pairs(storeTemp.locked) do
         itemTable[itemData.key.id] = itemData.n
     end

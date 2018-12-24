@@ -20,19 +20,22 @@ function LabInventionPanel.InitPanel()
     this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
     this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")
 
-    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/successItems"))
+    this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/rollRoot/successItems"), true)
 
     this.itemNameText = transform:Find("bottomRoot/right/titleBg/itemNameText"):GetComponent("Text")
     this.goodRootTran = transform:Find("bottomRoot/right/goods")
     this.rawRootTran = transform:Find("bottomRoot/right/rawMat")
     this.goodIconImg = transform:Find("bottomRoot/right/goods/iconImg"):GetComponent("Image")
     this.matIconImg = transform:Find("bottomRoot/right/rawMat/iconImg"):GetComponent("Image")
-    this.inventionBtn = transform:Find("bottomRoot/right/workingImg/inventionBtn"):GetComponent("Button")
+
+    this.inventionBtn = transform:Find("bottomRoot/right/inventBtnParent/inventionBtn"):GetComponent("Button")
+    this.workingImgTran = transform:Find("bottomRoot/right/inventBtnParent/workingImg")
+    this.notEnoughImgTran = transform:Find("bottomRoot/right/inventBtnParent/notEnoughImg")
 
     this.singleLineTran = transform:Find("bottomRoot/right/goods/singleLine")
     this.singleLineItem = LabFormulaItem:new(this.singleLineTran)
     this.twoLineTran = transform:Find("bottomRoot/right/goods/twoLine")
-    this.twoLineItem = LabFormulaItem:new(this.twoLine)
+    this.twoLineItem = LabFormulaItem:new(this.twoLineTran)
     this.threeLineTran = transform:Find("bottomRoot/right/goods/threeLine")
     this.threeLineItem = LabFormulaItem:new(this.threeLineTran)
 end
@@ -51,12 +54,12 @@ function LabInventionPanel.setBulbState(state)
         this.timeDownText.text = ""
     elseif state == LabInventionBulbItemState.Working then
         this.emptyTextTran.localScale = Vector3.zero
-        this.workingImgRootTran.localScale = Vector3.zero
-        this.progressSuccessBtn.localScale = Vector3.one
-    elseif state == LabInventionBulbItemState.Finish then
-        this.emptyTextTran.localScale = Vector3.zero
         this.workingImgRootTran.localScale = Vector3.one
         this.progressSuccessBtn.localScale = Vector3.zero
+    elseif state == LabInventionBulbItemState.Finish then
+        this.emptyTextTran.localScale = Vector3.zero
+        this.workingImgRootTran.localScale = Vector3.zero
+        this.progressSuccessBtn.localScale = Vector3.one
     end
 end
 --显示填充线的信息

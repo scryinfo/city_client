@@ -11,7 +11,7 @@ WareHouseGoodsMgr = class('WareHouseGoodsMgr')
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
---WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
+WareHouseGoodsMgr.static.Line_PATH = "View/GoodsItem/ChooseLineItem";
 
 function WareHouseGoodsMgr:initialize()
 
@@ -24,10 +24,10 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if PlayerTempModel.roleData.bag.inHand == nil then
+    if ServerListModel.inHand == nil then
         return
     end
-    for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
+    for i, v in pairs(ServerListModel.inHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.number = v.n
@@ -47,6 +47,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
+       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -63,6 +64,28 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
     self.allTspItem[goodsData.id] = TransportLuaItem;
     for i, v in pairs(self.allTspItem) do
         self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
+            local isOnClick = false
+            if self.ipaItems == nil then
+                isOnClick = false
+            else
+                for i, v in pairs(self.ipaItems) do
+                    if v.isOnClick then
+                        isOnClick = true
+                    end
+                end
+            end
+            local n = 0
+            for i, v in pairs(self.allTspItem) do
+                n = n + tonumber(v.inputText.text)
+                if v.inputText.text == "0" then
+                    isOnClick = false
+                end
+            end
+            CenterWareHousePanel.tipText.text = n
+            if isOnClick == false then
+                CenterWareHousePanel.transportConfirm:SetActive(true);
+            end
+            WareHouseGoodsMgr:TransportConfirm(isOnClick)
             if self.allTspItem[i].inputText.text =="" then
                 return
             end
@@ -88,9 +111,21 @@ function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(data)
+function WareHouseGoodsMgr:_creatLinePanel()
     --local line_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-
+    local buysBuildings = DataManager.GetMyAllBuildingDetail()
+    for i, v in pairs(buysBuildings) do
+        for k, z in pairs(v) do
+            if z.store ~= nil then
+                local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self.AddressListIns,self,z)
+                if not self.ipaItems then
+                    self.ipaItems = {}
+                end
+                self.ipaItems[i] = LinePaneltLuaItem
+            end
+        end
+    end
 
 end
 
@@ -172,7 +207,18 @@ end
 
 --显示运输按钮使其可以点击
 function WareHouseGoodsMgr:TransportConfirm(isOnClick)
-    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
+    local isTransport = false
+    if self.allTspItem == nil then
+        return
+    end
+    for i, v in pairs(self.allTspItem) do
+        if v.inputText.text == "0" then
+            isTransport = false
+        else
+            isTransport = true
+        end
+    end
+    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick and isTransport then
         CenterWareHousePanel.transportConfirm:SetActive(false);
     end
 end

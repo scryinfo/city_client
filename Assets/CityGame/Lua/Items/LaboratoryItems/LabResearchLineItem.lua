@@ -30,34 +30,42 @@ function LabResearchLineItem:initialize(data, viewRect)
 
     self.itemBtn.onClick:RemoveAllListeners()
     self.itemBtn.onClick:AddListener(function ()
-        self:_clickCollectBtn()
+        ct.OpenCtrl("LabResearchCtrl", self.data, self.viewRect)
     end)
     self.closeBtn.onClick:RemoveAllListeners()
     self.closeBtn.onClick:AddListener(function ()
         self:_clickDeleteBtn()
     end)
+    self.staffSlider.onValueChanged:RemoveAllListeners()
+    self.staffSlider.onValueChanged:AddListener(function()
+        self.staffSlider.value = data.workerNum
+        Event.Brocast("c_OpenChangeStaffTip", self.data, self.viewRect)
+    end)
     Event.AddListener("c_LabLineInfoUpdate", function (data)
         self:_updateInfo(data)
     end)
+    Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
 function LabResearchLineItem:_initData(data)
     self.data = data
-    self.leftSec = self.data.leftSec
-
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
     --self.iconImg.sprite =
+    self.formularData = FormularConfig[0][data.itemId]
     self.staffText.text = tostring(data.workerNum)
-    self.levelText.text = data.lv
-    self.phaseSec = FormularConfig[data.itemId].phaseSec
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
+    self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
     self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
     if not data.roll or data.roll <= 0 then
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     else
         self.bottleImg.color = Color.white
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
     end
     self.startTimeDown = true
+    self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
@@ -66,12 +74,15 @@ function LabResearchLineItem:_initData(data)
 end
 --刷新数据
 function LabResearchLineItem:_updateInfo(data)
-    if data.id ~= self.data.id then
+    if data.itemId ~= self.data.itemId then
         return
     end
     --成果展示
+    self.data.id = data.id
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
     self.data.run = data.run
     if data.roll > 0 then
         self.bottleImg.color = Color.white
@@ -79,40 +90,64 @@ function LabResearchLineItem:_updateInfo(data)
         self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     end
     self.startTimeDown = true
+    --self.currentTime = os.time()
     self.timeDownText.transform.localScale = Vector3.one
     if not self.data.run then
         self.startTimeDown = false
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
+--员工数量改变
+function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
+    if lineId == self.data.id then
+        self.currentTime = os.time()
+        self.data.finishTime = finishTime
+        self.data.totalTime = totalTime
+        self.staffText.text = tostring(workerNum)
+        --self.staffSlider.value = workerNum
+    end
+end
+
 --点击删除按钮
 function LabResearchLineItem:_clickDeleteBtn()
     local info = {}
     info.titleInfo = "WARNING"
-    info.contentInfo = "Delete the advertisment?"
+    info.contentInfo = "Delete the researchLine?"
     info.tipInfo = "(The statistical data of brand will be reset!)"
     info.btnCallBack = function ()
-        Event.Brocast("")
+        Event.Brocast("m_ReqLabDeleteLine", self.data.id)
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
---点击发明界面
-function LabResearchLineItem:_clickOpenInventionPanelBtn()
-    --ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
-end
 --倒计时
 function LabResearchLineItem:_update()
-    if self.startTimeDown then
-        self.data.leftSec = self.data.leftSec - UnityEngine.Time.unscaledDeltaTime
-        if self.data.leftSec < 0 then
+    if self.startTimeDown and self.data.run then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
             self.startTimeDown = false
             self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
             return
         end
-        local timeTable = getTimeBySec(self.data.leftSec)
+
+        local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         self.timeDownText.text = timeStr
-        local height = (self.formularData.phaseSec - self.data.leftSec) / self.formularData.phaseSec * LabResearchLineItem.static.FinishBulbHight
+        local height = (1 - remainTime / self.data.totalTime) * LabResearchLineItem.static.FinishBulbHight
         self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
+            return
+        end
     end
 end

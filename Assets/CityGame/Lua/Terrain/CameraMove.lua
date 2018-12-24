@@ -206,7 +206,7 @@ end
 local NormalStateCameraPos = nil       --记录正常状态相机的位置
 local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
 local m_IntoDurationtime = 0.3
-local m_OutDurationtime = 0.2
+local m_OutDurationtime = 0.4
 
 --移动放大到某个指定建筑
 function CameraMove.MoveIntoUILayer(targetID)
@@ -222,6 +222,7 @@ function CameraMove.MoveIntoUILayer(targetID)
     local tempScalePos = Vector3.New(7,7,-7)
     mainCameraTransform:DOLocalMove(tempScalePos,m_IntoDurationtime)
     --TODO:战争迷雾缩小到目标大小
+    FOWManager.RefreshFOWRangeByBlockPos(tempPos,2)
 end
 
 --还原到正常状态
@@ -236,7 +237,7 @@ function CameraMove.MoveOutUILayer()
     --相机还原到目标大小
     mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
     --TODO:战争迷雾换到到正常大小
-
+    FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil
 end

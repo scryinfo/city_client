@@ -71,7 +71,7 @@ end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
     if not go.lineId then
-        go.manager:_deleteProductionLine(go)
+        go.manager:_deleteLine(go)
     else
         Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
     end

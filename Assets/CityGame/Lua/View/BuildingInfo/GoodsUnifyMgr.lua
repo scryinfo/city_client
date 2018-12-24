@@ -125,15 +125,18 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
     configTable.name = name
     configTable.itemId = itemId;
     itemsId = itemId;
-    AdjustProductionLineCtrl.materialProductionUIInfo[itemId] = configTable
+    self.materialProductionUIInfo = {};
+    self.materialProductionUIInfo[itemId] = configTable
 
     local prefabData = {}
-    prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[itemId]
+    prefabData.uiData = self.materialProductionUIInfo[itemId]
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-    AdjustProductionLineCtrl.materialProductionPrefab[itemId] = prefabData
+    self.materialProductionPrefab = {};
+    self.materialProductionPrefab[itemId] = prefabData
 
-    local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
-    AdjustProductionLineCtrl.materialProductionLine[itemId] = productionLineItem
+    local productionLineItem = SmallProductionLineItem:new(self.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
+    self.materialProductionLine = {}
+    self.materialProductionLine[itemId] = productionLineItem
 end
 --读取服务器发过来的信息，是否有生产线
 function GoodsUnifyMgr:_getProductionLine(table,behaviour)
@@ -247,10 +250,10 @@ function GoodsUnifyMgr:_deleteGoods(ins)
     end
 end
 --删除刚添加的生产线
-function GoodsUnifyMgr:_deleteProductionLine(ins)
-    destroy(AdjustProductionLineCtrl.materialProductionLine[ins.itemId].prefab.gameObject);
-    table.remove(AdjustProductionLineCtrl.materialProductionPrefab,ins.itemId)
-    table.remove(AdjustProductionLineCtrl.materialProductionLine,ins.itemId)
+function GoodsUnifyMgr:_deleteLine(ins)
+    destroy(self.materialProductionLine[ins.itemId].prefab.gameObject);
+    table.remove(self.materialProductionPrefab,ins.itemId)
+    table.remove(self.materialProductionLine,ins.itemId)
     --local i = 1
     --for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
     --    AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)

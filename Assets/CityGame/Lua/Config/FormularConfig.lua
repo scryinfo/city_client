@@ -1,702 +1,722 @@
 FormularConfig = {
-[2151003] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2152002] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2153001] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2153004] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2154003] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2155002] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2156001] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2156004] = {
-phaseSec = 1000,
-phase = 5,
-materials={}
-},
-[2201003] = {
-phaseSec = 1000,
+[1] = {
+[2101003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 10},
-[2] = {matId = 2151003, matCount = 10},
 }
 },
-[2201004] = {
-phaseSec = 1000,
+[2102002] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 10},
-[2] = {matId = 2151003, matCount = 10},
 }
 },
-[2201007] = {
-phaseSec = 1000,
+[2103001] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 10},
-[2] = {matId = 2151003, matCount = 10},
-[3] = {matId = 2151004, matCount = 10},
 }
 },
-[2201008] = {
-phaseSec = 1000,
+[2103004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 10},
-[2] = {matId = 2151003, matCount = 10},
-[3] = {matId = 2151004, matCount = 10},
 }
 },
-[2202003] = {
-phaseSec = 1000,
+[2104003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 10},
-[2] = {matId = 2152003, matCount = 10},
 }
 },
-[2202004] = {
-phaseSec = 1000,
+[2105002] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 10},
-[2] = {matId = 2152003, matCount = 10},
 }
 },
-[2202007] = {
-phaseSec = 1000,
+[2106001] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 10},
-[2] = {matId = 2152003, matCount = 10},
-[3] = {matId = 2152004, matCount = 10},
 }
 },
-[2202008] = {
-phaseSec = 1000,
+[2106004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 10},
-[2] = {matId = 2152003, matCount = 10},
-[3] = {matId = 2152004, matCount = 10},
 }
 },
-[2203003] = {
-phaseSec = 1000,
+[2251003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 10},
-[2] = {matId = 2153003, matCount = 10},
+[1] = {matId = 2101001, matCount = 10},
+[2] = {matId = 2101003, matCount = 10},
 }
 },
-[2203004] = {
-phaseSec = 1000,
+[2251004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 10},
-[2] = {matId = 2153003, matCount = 10},
+[1] = {matId = 2101002, matCount = 10},
+[2] = {matId = 2101003, matCount = 10},
 }
 },
-[2203007] = {
-phaseSec = 1000,
+[2251007] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 10},
-[2] = {matId = 2153003, matCount = 10},
-[3] = {matId = 2153004, matCount = 10},
+[1] = {matId = 2101001, matCount = 10},
+[2] = {matId = 2101003, matCount = 10},
+[3] = {matId = 2101004, matCount = 10},
 }
 },
-[2203008] = {
-phaseSec = 1000,
+[2251008] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 10},
-[2] = {matId = 2153003, matCount = 10},
-[3] = {matId = 2153004, matCount = 10},
+[1] = {matId = 2101002, matCount = 10},
+[2] = {matId = 2101003, matCount = 10},
+[3] = {matId = 2101004, matCount = 10},
 }
 },
-[2204003] = {
-phaseSec = 1000,
+[2252003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 10},
-[2] = {matId = 2154003, matCount = 10},
+[1] = {matId = 2102001, matCount = 10},
+[2] = {matId = 2102003, matCount = 10},
 }
 },
-[2204004] = {
-phaseSec = 1000,
+[2252004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 10},
-[2] = {matId = 2154003, matCount = 10},
+[1] = {matId = 2102002, matCount = 10},
+[2] = {matId = 2102003, matCount = 10},
 }
 },
-[2204007] = {
-phaseSec = 1000,
+[2252007] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 10},
-[2] = {matId = 2154003, matCount = 10},
-[3] = {matId = 2154004, matCount = 10},
+[1] = {matId = 2102001, matCount = 10},
+[2] = {matId = 2102003, matCount = 10},
+[3] = {matId = 2102004, matCount = 10},
 }
 },
-[2204008] = {
-phaseSec = 1000,
+[2252008] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 10},
-[2] = {matId = 2154003, matCount = 10},
-[3] = {matId = 2154004, matCount = 10},
+[1] = {matId = 2102002, matCount = 10},
+[2] = {matId = 2102003, matCount = 10},
+[3] = {matId = 2102004, matCount = 10},
 }
 },
-[2205003] = {
-phaseSec = 1000,
+[2253003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 10},
-[2] = {matId = 2155003, matCount = 10},
+[1] = {matId = 2103001, matCount = 10},
+[2] = {matId = 2103003, matCount = 10},
 }
 },
-[2205004] = {
-phaseSec = 1000,
+[2253004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 10},
-[2] = {matId = 2155003, matCount = 10},
+[1] = {matId = 2103002, matCount = 10},
+[2] = {matId = 2103003, matCount = 10},
 }
 },
-[2205007] = {
-phaseSec = 1000,
+[2253007] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 10},
-[2] = {matId = 2155003, matCount = 10},
-[3] = {matId = 2155004, matCount = 10},
+[1] = {matId = 2103001, matCount = 10},
+[2] = {matId = 2103003, matCount = 10},
+[3] = {matId = 2103004, matCount = 10},
 }
 },
-[2205008] = {
-phaseSec = 1000,
+[2253008] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 10},
-[2] = {matId = 2155003, matCount = 10},
-[3] = {matId = 2155004, matCount = 10},
+[1] = {matId = 2103002, matCount = 10},
+[2] = {matId = 2103003, matCount = 10},
+[3] = {matId = 2103004, matCount = 10},
 }
 },
-[2206003] = {
-phaseSec = 1000,
+[2254003] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 10},
-[2] = {matId = 2156003, matCount = 10},
+[1] = {matId = 2104001, matCount = 10},
+[2] = {matId = 2104003, matCount = 10},
 }
 },
-[2206004] = {
-phaseSec = 1000,
+[2254004] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 10},
-[2] = {matId = 2156003, matCount = 10},
+[1] = {matId = 2104002, matCount = 10},
+[2] = {matId = 2104003, matCount = 10},
 }
 },
-[2206007] = {
-phaseSec = 1000,
+[2254007] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 10},
-[2] = {matId = 2156003, matCount = 10},
-[3] = {matId = 2156004, matCount = 10},
+[1] = {matId = 2104001, matCount = 10},
+[2] = {matId = 2104003, matCount = 10},
+[3] = {matId = 2104004, matCount = 10},
 }
 },
-[2206008] = {
-phaseSec = 1000,
+[2254008] = {
+phaseSec = 300,
 phase = 5,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 10},
-[2] = {matId = 2156003, matCount = 10},
-[3] = {matId = 2156004, matCount = 10},
+[1] = {matId = 2104002, matCount = 10},
+[2] = {matId = 2104003, matCount = 10},
+[3] = {matId = 2104004, matCount = 10},
 }
 },
-[2201001] = {
-phaseSec = 100,
+[2255003] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2105001, matCount = 10},
+[2] = {matId = 2105003, matCount = 10},
+}
+},
+[2255004] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2105002, matCount = 10},
+[2] = {matId = 2105003, matCount = 10},
+}
+},
+[2255007] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2105001, matCount = 10},
+[2] = {matId = 2105003, matCount = 10},
+[3] = {matId = 2105004, matCount = 10},
+}
+},
+[2255008] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2105002, matCount = 10},
+[2] = {matId = 2105003, matCount = 10},
+[3] = {matId = 2105004, matCount = 10},
+}
+},
+[2256003] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2106001, matCount = 10},
+[2] = {matId = 2106003, matCount = 10},
+}
+},
+[2256004] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2106002, matCount = 10},
+[2] = {matId = 2106003, matCount = 10},
+}
+},
+[2256007] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2106001, matCount = 10},
+[2] = {matId = 2106003, matCount = 10},
+[3] = {matId = 2106004, matCount = 10},
+}
+},
+[2256008] = {
+phaseSec = 300,
+phase = 5,
+materials = 
+{
+[1] = {matId = 2106002, matCount = 10},
+[2] = {matId = 2106003, matCount = 10},
+[3] = {matId = 2106004, matCount = 10},
+}
+}
+},
+[0] = {
+[2251001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 1},
+[1] = {matId = 2101001, matCount = 1},
 }
 },
-[2201002] = {
-phaseSec = 100,
+[2251002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 1},
+[1] = {matId = 2101002, matCount = 1},
 }
 },
-[2201003] = {
-phaseSec = 100,
+[2251003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 1},
-[2] = {matId = 2151003, matCount = 1},
+[1] = {matId = 2101001, matCount = 1},
+[2] = {matId = 2101003, matCount = 1},
 }
 },
-[2201004] = {
-phaseSec = 100,
+[2251004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 1},
-[2] = {matId = 2151003, matCount = 1},
+[1] = {matId = 2101002, matCount = 1},
+[2] = {matId = 2101003, matCount = 1},
 }
 },
-[2201005] = {
-phaseSec = 100,
+[2251005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 1},
-[2] = {matId = 2151004, matCount = 1},
+[1] = {matId = 2101001, matCount = 1},
+[2] = {matId = 2101004, matCount = 1},
 }
 },
-[2201006] = {
-phaseSec = 100,
+[2251006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 1},
-[2] = {matId = 2151004, matCount = 1},
+[1] = {matId = 2101002, matCount = 1},
+[2] = {matId = 2101004, matCount = 1},
 }
 },
-[2201007] = {
-phaseSec = 100,
+[2251007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151001, matCount = 1},
-[2] = {matId = 2151003, matCount = 1},
-[3] = {matId = 2151004, matCount = 1},
+[1] = {matId = 2101001, matCount = 1},
+[2] = {matId = 2101003, matCount = 1},
+[3] = {matId = 2101004, matCount = 1},
 }
 },
-[2201008] = {
-phaseSec = 100,
+[2251008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2151002, matCount = 1},
-[2] = {matId = 2151003, matCount = 1},
-[3] = {matId = 2151004, matCount = 1},
+[1] = {matId = 2101002, matCount = 1},
+[2] = {matId = 2101003, matCount = 1},
+[3] = {matId = 2101004, matCount = 1},
 }
 },
-[2202001] = {
-phaseSec = 100,
+[2252001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 1},
+[1] = {matId = 2102001, matCount = 1},
 }
 },
-[2202002] = {
-phaseSec = 100,
+[2252002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 1},
+[1] = {matId = 2102002, matCount = 1},
 }
 },
-[2202003] = {
-phaseSec = 100,
+[2252003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 1},
-[2] = {matId = 2152003, matCount = 1},
+[1] = {matId = 2102001, matCount = 1},
+[2] = {matId = 2102003, matCount = 1},
 }
 },
-[2202004] = {
-phaseSec = 100,
+[2252004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 1},
-[2] = {matId = 2152003, matCount = 1},
+[1] = {matId = 2102002, matCount = 1},
+[2] = {matId = 2102003, matCount = 1},
 }
 },
-[2202005] = {
-phaseSec = 100,
+[2252005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 1},
-[2] = {matId = 2152004, matCount = 1},
+[1] = {matId = 2102001, matCount = 1},
+[2] = {matId = 2102004, matCount = 1},
 }
 },
-[2202006] = {
-phaseSec = 100,
+[2252006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 1},
-[2] = {matId = 2152004, matCount = 1},
+[1] = {matId = 2102002, matCount = 1},
+[2] = {matId = 2102004, matCount = 1},
 }
 },
-[2202007] = {
-phaseSec = 100,
+[2252007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152001, matCount = 1},
-[2] = {matId = 2152003, matCount = 1},
-[3] = {matId = 2152004, matCount = 1},
+[1] = {matId = 2102001, matCount = 1},
+[2] = {matId = 2102003, matCount = 1},
+[3] = {matId = 2102004, matCount = 1},
 }
 },
-[2202008] = {
-phaseSec = 100,
+[2252008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2152002, matCount = 1},
-[2] = {matId = 2152003, matCount = 1},
-[3] = {matId = 2152004, matCount = 1},
+[1] = {matId = 2102002, matCount = 1},
+[2] = {matId = 2102003, matCount = 1},
+[3] = {matId = 2102004, matCount = 1},
 }
 },
-[2203001] = {
-phaseSec = 100,
+[2253001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 1},
+[1] = {matId = 2103001, matCount = 1},
 }
 },
-[2203002] = {
-phaseSec = 100,
+[2253002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 1},
+[1] = {matId = 2103002, matCount = 1},
 }
 },
-[2203003] = {
-phaseSec = 100,
+[2253003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 1},
-[2] = {matId = 2153003, matCount = 1},
+[1] = {matId = 2103001, matCount = 1},
+[2] = {matId = 2103003, matCount = 1},
 }
 },
-[2203004] = {
-phaseSec = 100,
+[2253004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 1},
-[2] = {matId = 2153003, matCount = 1},
+[1] = {matId = 2103002, matCount = 1},
+[2] = {matId = 2103003, matCount = 1},
 }
 },
-[2203005] = {
-phaseSec = 100,
+[2253005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 1},
-[2] = {matId = 2153004, matCount = 1},
+[1] = {matId = 2103001, matCount = 1},
+[2] = {matId = 2103004, matCount = 1},
 }
 },
-[2203006] = {
-phaseSec = 100,
+[2253006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 1},
-[2] = {matId = 2153004, matCount = 1},
+[1] = {matId = 2103002, matCount = 1},
+[2] = {matId = 2103004, matCount = 1},
 }
 },
-[2203007] = {
-phaseSec = 100,
+[2253007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153001, matCount = 1},
-[2] = {matId = 2153003, matCount = 1},
-[3] = {matId = 2153004, matCount = 1},
+[1] = {matId = 2103001, matCount = 1},
+[2] = {matId = 2103003, matCount = 1},
+[3] = {matId = 2103004, matCount = 1},
 }
 },
-[2203008] = {
-phaseSec = 100,
+[2253008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2153002, matCount = 1},
-[2] = {matId = 2153003, matCount = 1},
-[3] = {matId = 2153004, matCount = 1},
+[1] = {matId = 2103002, matCount = 1},
+[2] = {matId = 2103003, matCount = 1},
+[3] = {matId = 2103004, matCount = 1},
 }
 },
-[2204001] = {
-phaseSec = 100,
+[2254001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 1},
+[1] = {matId = 2104001, matCount = 1},
 }
 },
-[2204002] = {
-phaseSec = 100,
+[2254002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 1},
+[1] = {matId = 2104002, matCount = 1},
 }
 },
-[2204003] = {
-phaseSec = 100,
+[2254003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 1},
-[2] = {matId = 2154003, matCount = 1},
+[1] = {matId = 2104001, matCount = 1},
+[2] = {matId = 2104003, matCount = 1},
 }
 },
-[2204004] = {
-phaseSec = 100,
+[2254004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 1},
-[2] = {matId = 2154003, matCount = 1},
+[1] = {matId = 2104002, matCount = 1},
+[2] = {matId = 2104003, matCount = 1},
 }
 },
-[2204005] = {
-phaseSec = 100,
+[2254005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 1},
-[2] = {matId = 2154004, matCount = 1},
+[1] = {matId = 2104001, matCount = 1},
+[2] = {matId = 2104004, matCount = 1},
 }
 },
-[2204006] = {
-phaseSec = 100,
+[2254006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 1},
-[2] = {matId = 2154004, matCount = 1},
+[1] = {matId = 2104002, matCount = 1},
+[2] = {matId = 2104004, matCount = 1},
 }
 },
-[2204007] = {
-phaseSec = 100,
+[2254007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154001, matCount = 1},
-[2] = {matId = 2154003, matCount = 1},
-[3] = {matId = 2154004, matCount = 1},
+[1] = {matId = 2104001, matCount = 1},
+[2] = {matId = 2104003, matCount = 1},
+[3] = {matId = 2104004, matCount = 1},
 }
 },
-[2204008] = {
-phaseSec = 100,
+[2254008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2154002, matCount = 1},
-[2] = {matId = 2154003, matCount = 1},
-[3] = {matId = 2154004, matCount = 1},
+[1] = {matId = 2104002, matCount = 1},
+[2] = {matId = 2104003, matCount = 1},
+[3] = {matId = 2104004, matCount = 1},
 }
 },
-[2205001] = {
-phaseSec = 100,
+[2255001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 1},
+[1] = {matId = 2105001, matCount = 1},
 }
 },
-[2205002] = {
-phaseSec = 100,
+[2255002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 1},
+[1] = {matId = 2105002, matCount = 1},
 }
 },
-[2205003] = {
-phaseSec = 100,
+[2255003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 1},
-[2] = {matId = 2155003, matCount = 1},
+[1] = {matId = 2105001, matCount = 1},
+[2] = {matId = 2105003, matCount = 1},
 }
 },
-[2205004] = {
-phaseSec = 100,
+[2255004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 1},
-[2] = {matId = 2155003, matCount = 1},
+[1] = {matId = 2105002, matCount = 1},
+[2] = {matId = 2105003, matCount = 1},
 }
 },
-[2205005] = {
-phaseSec = 100,
+[2255005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 1},
-[2] = {matId = 2155004, matCount = 1},
+[1] = {matId = 2105001, matCount = 1},
+[2] = {matId = 2105004, matCount = 1},
 }
 },
-[2205006] = {
-phaseSec = 100,
+[2255006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 1},
-[2] = {matId = 2155004, matCount = 1},
+[1] = {matId = 2105002, matCount = 1},
+[2] = {matId = 2105004, matCount = 1},
 }
 },
-[2205007] = {
-phaseSec = 100,
+[2255007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155001, matCount = 1},
-[2] = {matId = 2155003, matCount = 1},
-[3] = {matId = 2155004, matCount = 1},
+[1] = {matId = 2105001, matCount = 1},
+[2] = {matId = 2105003, matCount = 1},
+[3] = {matId = 2105004, matCount = 1},
 }
 },
-[2205008] = {
-phaseSec = 100,
+[2255008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2155002, matCount = 1},
-[2] = {matId = 2155003, matCount = 1},
-[3] = {matId = 2155004, matCount = 1},
+[1] = {matId = 2105002, matCount = 1},
+[2] = {matId = 2105003, matCount = 1},
+[3] = {matId = 2105004, matCount = 1},
 }
 },
-[2206001] = {
-phaseSec = 100,
+[2256001] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 1},
+[1] = {matId = 2106001, matCount = 1},
 }
 },
-[2206002] = {
-phaseSec = 100,
+[2256002] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 1},
+[1] = {matId = 2106002, matCount = 1},
 }
 },
-[2206003] = {
-phaseSec = 100,
+[2256003] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 1},
-[2] = {matId = 2156003, matCount = 1},
+[1] = {matId = 2106001, matCount = 1},
+[2] = {matId = 2106003, matCount = 1},
 }
 },
-[2206004] = {
-phaseSec = 100,
+[2256004] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 1},
-[2] = {matId = 2156003, matCount = 1},
+[1] = {matId = 2106002, matCount = 1},
+[2] = {matId = 2106003, matCount = 1},
 }
 },
-[2206005] = {
-phaseSec = 100,
+[2256005] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 1},
-[2] = {matId = 2156004, matCount = 1},
+[1] = {matId = 2106001, matCount = 1},
+[2] = {matId = 2106004, matCount = 1},
 }
 },
-[2206006] = {
-phaseSec = 100,
+[2256006] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 1},
-[2] = {matId = 2156004, matCount = 1},
+[1] = {matId = 2106002, matCount = 1},
+[2] = {matId = 2106004, matCount = 1},
 }
 },
-[2206007] = {
-phaseSec = 100,
+[2256007] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156001, matCount = 1},
-[2] = {matId = 2156003, matCount = 1},
-[3] = {matId = 2156004, matCount = 1},
+[1] = {matId = 2106001, matCount = 1},
+[2] = {matId = 2106003, matCount = 1},
+[3] = {matId = 2106004, matCount = 1},
 }
 },
-[2206008] = {
-phaseSec = 100,
+[2256008] = {
+phaseSec = 1000,
 phase = 1,
 materials = 
 {
-[1] = {matId = 2156002, matCount = 1},
-[2] = {matId = 2156003, matCount = 1},
-[3] = {matId = 2156004, matCount = 1},
+[1] = {matId = 2106002, matCount = 1},
+[2] = {matId = 2106003, matCount = 1},
+[3] = {matId = 2106004, matCount = 1},
+}
 }
 }
 }

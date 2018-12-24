@@ -8,8 +8,8 @@ LabBuildingLineItem.static.TOTAL_H = 815  --整个Item的高度
 LabBuildingLineItem.static.CONTENT_H = 740  --显示内容的高度
 LabBuildingLineItem.static.TOP_H = 100  --top条的高度
 
-LabBuildingLineItem.static.LabBuildingInventionItemPath = "Items/LaboratoryItems/LabBuildingInventionItem"  --发明
-LabBuildingLineItem.static.LabBuildingResearchItemPath = "Items/LaboratoryItems/LabBuildingResearchItem"  --研究
+LabBuildingLineItem.static.LabBuildingInventionItemPath = "View/Items/LaboratoryItems/LabBuildingInventionItem"  --发明
+LabBuildingLineItem.static.LabBuildingResearchItemPath = "View/Items/LaboratoryItems/LabBuildingResearchItem"  --研究
 
 function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, toggleData)
     self.viewRect = viewRect
@@ -23,6 +23,12 @@ function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, t
     self.openBtn = self.viewRect.transform:Find("topRoot/open/openBtn"):GetComponent("Button")
     self.doSthImg = self.viewRect.transform:Find("topRoot/open/openBtn/doSthImg")
     self.otherOpenImg = self.viewRect.transform:Find("topRoot/open/openBtn/otherOpenImg")
+
+    if self.data.isOther then
+        self.openBtn.transform.localScale = Vector3.zero
+    else
+        self.openBtn.transform.localScale = Vector3.one
+    end
 
     --滑动复用部分
     self.itemSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
@@ -52,7 +58,7 @@ function LabBuildingLineItem:_initData()
         self.otherOpenImg.localScale = Vector3.zero
     end
     self.mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-        ct.OpenCtrl("LabScientificLineCtrl", {buildingId = self.data.buildingId})  --打开科技线界面，传入实例id
+        ct.OpenCtrl("LabScientificLineCtrl", {insId = self.data.insId})  --打开科技线界面，传入实例id
     end, self)
 end
 
@@ -66,7 +72,7 @@ LabBuildingLineItem.static.provideData = function(transform, idx)
         LabBuildingLineItem.static.items[#LabBuildingLineItem.static.items + 1] = LabBuildingInventionItem:new(LabBuildingLineItem.static.lineInfoData[idx], transform)
     end
 end
-LabBuildingLineItem.static.researchClearData = function(transform)
+LabBuildingLineItem.static.clearData = function(transform)
 end
 ---
 
@@ -96,7 +102,7 @@ end
 
 --刷新数据
 function LabBuildingLineItem:updateInfo(data)
-    self.data.lines = data
+    self.data.lines = data.lines
     self:_initData()
 end
 

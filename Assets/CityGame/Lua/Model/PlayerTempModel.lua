@@ -21,6 +21,20 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
         PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        PlayerTempModel.tempTestReqAddGroung(0,0,10,10)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
+
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+    end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
@@ -255,7 +269,7 @@ end
 --获取item含量
 function PlayerTempModel:_getItemCount(store)
     local itemTable = {}
-    local storeTemp = BaseTools.TableCopy(store)
+    local storeTemp = ct.deepCopy(store)
     for i, itemData in pairs(storeTemp.locked) do
         itemTable[itemData.key.id] = itemData.n
     end

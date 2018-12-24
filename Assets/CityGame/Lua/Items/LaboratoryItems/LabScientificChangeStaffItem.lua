@@ -5,9 +5,10 @@
 ---科技线界面改变员工工资item
 LabScientificChangeStaffItem = class('LabScientificChangeStaffItem')
 
-function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
+function LabScientificChangeStaffItem:initialize(viewRect, parentBtn, gridGroup)
     self.viewRect = viewRect
     self.parentBtn = parentBtn
+    self.gridGroup = gridGroup
 
     self.staffText = viewRect:Find("staffRoot/staffText"):GetComponent("Text")
     self.staffSlider = viewRect:Find("staffRoot/staffSlider"):GetComponent("Slider")
@@ -21,25 +22,28 @@ function LabScientificChangeStaffItem:initialize(viewRect, parentBtn)
         else
             self.disableImgTran.localScale = Vector3.one
         end
-        self.staffText.text = tostring(value)
+        self.staffText.text = tostring(value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum)
     end)
     parentBtn.onClick:AddListener(function ()
         self:_hideSelf()
     end)
 end
 --处于新增线的状态 --需要包含itemId和buildingId
-function LabScientificChangeStaffItem:newLineState(lineData, remainWorker, pos)
+function LabScientificChangeStaffItem:newLineState(lineData, remainWorker)
     --父物体的bgBtn需要解除
+    self.gridGroup.enabled = true
+    self.viewRect.transform:SetAsLastSibling()
     self.viewRect.localScale = Vector3.one
-    self.viewRect:GetComponent("RectTransform").anchoredPosition = pos
     self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = false
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = "0"
-    self.staffSlider.maxValue = remainWorker
+    self.staffSlider.maxValue = remainWorker / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
+    self.staffSlider.value = 0
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()
+        DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_DelTempLineData', lineData)
         if lineData.type == 0 then
             ct.OpenCtrl("LabResearchCtrl", lineData)
         else
@@ -48,22 +52,25 @@ function LabScientificChangeStaffItem:newLineState(lineData, remainWorker, pos)
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
-        local workerNum = self.staffSlider.value
+        local workerNum = self.staffSlider.value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
         if workerNum > 0 then
-            DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase)
+            DataManager.DetailModelRpcNoRet(lineData.buildingId, 'm_ReqLabAddLine', lineData.itemId, lineData.type, workerNum, lineData.phase or 1)
             self:_hideSelf()
         end
     end)
 end
 --改变员工数量状态
-function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker)
+function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker, itemRect)
+    self.gridGroup.enabled = false
     self.viewRect.localScale = Vector3.one
+    self.viewRect.position = itemRect.transform.position
+
     self.parentBtn.transform.localScale = Vector3.one
     self.parentBtn.interactable = true
     self.disableImgTran.transform.localScale = Vector3.one
     self.staffText.text = tostring(data.workerNum)
-    self.staffSlider.maxValue = remainWorker + data.workerNum
-    self.staffSlider.value = data.workerNum
+    self.staffSlider.maxValue = (remainWorker + data.workerNum) / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
+    self.staffSlider.value = data.workerNum / LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
 
     self.delBtn.onClick:RemoveAllListeners()
     self.delBtn.onClick:AddListener(function ()
@@ -71,9 +78,9 @@ function LabScientificChangeStaffItem:changeStaffCountState(data, remainWorker)
     end)
     self.okBtn.onClick:RemoveAllListeners()
     self.okBtn.onClick:AddListener(function ()
-        local workerNum = self.staffSlider.value
+        local workerNum = self.staffSlider.value * LaboratoryCtrl.static.buildingBaseData.lineMinWorkerNum
         if workerNum ~= data.workerNum then
-            DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSetWorkerNum', data.lineId, workerNum)
+            DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqSetWorkerNum', data.id, workerNum)
         end
         self:_hideSelf()
     end)
@@ -81,4 +88,6 @@ end
 --隐藏显示
 function LabScientificChangeStaffItem:_hideSelf()
     self.viewRect.localScale = Vector3.zero
+    self.parentBtn.interactable = true
+    self.parentBtn.transform.localScale = Vector3.zero
 end

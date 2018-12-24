@@ -30,14 +30,17 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
 
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
 end
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model
     self:initInsData()
     self:_showFriendsNotice()
+    self:_showWorldChatNoticeItem()
 end
 
 function GameMainInterfaceCtrl:initInsData()
@@ -75,7 +78,7 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
-    ct.OpenCtrl("ChatCtrl")
+    ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
 --好友--
@@ -88,8 +91,51 @@ function GameMainInterfaceCtrl._showFriendsNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
   --  GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
 end
+
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
     self._showFriendsNotice()
+end
+
+-- 世界聊天显示
+function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
+    if chatData.channel == "WORLD" then
+        if GameMainInterfacePanel.worldChatContent.childCount >= 5 then
+            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 4 do
+                UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
+            end
+        end
+
+        local prefab = UnityEngine.GameObject.Instantiate(UnityEngine.Resources.Load("View/Chat/ChatWorldItem"))
+        local rect = prefab.transform:GetComponent("RectTransform")
+        prefab.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+        rect.transform.localScale = Vector3.one
+
+        local chatWorldItem = ChatWorldItem:new(prefab, chatData)
+    else
+        GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+    end
+end
+
+function GameMainInterfaceCtrl._showWorldChatNoticeItem()
+    GameMainInterfacePanel.worldChatNoticeItem:SetActive(false)
+    local chatFriendsInfo = DataManager.GetMyChatInfo(2)
+    local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    for _, v in pairs(chatFriendsInfo) do
+        if v.unread then
+            if v.unread[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                break
+            end
+        end
+    end
+    for _, m in pairs(chatStrangersInfo) do
+        if m.unread then
+            if m.unread[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                break
+            end
+        end
+    end
 end
 
 --设置--
@@ -102,6 +148,8 @@ end
 function GameMainInterfaceCtrl.OnBuild()
     ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
     ct.OpenCtrl('ConstructCtrl')
+    --相机切换到建造状态
+    CameraMove.ChangeCameraState(TouchStateType.ConstructState)
 end
 
 --交易所--
@@ -145,8 +193,6 @@ end
 function GameMainInterfaceCtrl:OncenterWareHouse()
     --Event.Brocast("m_opCenterWareHouse")
     ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
-    --ct.OpenCtrl("ScienceSellHallCtrl")
-
 end
 
 

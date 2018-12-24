@@ -33,3 +33,7 @@ function AddLineToggleItem:showState(select)
         self.chooseTran.localScale = Vector3.zero
     end
 end
+--外部获取typeId
+function AddLineToggleItem:getTypeId()
+    return self.data.typeId
+end

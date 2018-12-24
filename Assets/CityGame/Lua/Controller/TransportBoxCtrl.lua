@@ -15,7 +15,6 @@ end
 
 function TransportBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-
 end
 
 function TransportBoxCtrl:Awake(go)
@@ -64,6 +63,5 @@ function TransportBoxCtrl:OnClick_confirmBtn(ins)
         ins.m_data.btnClick()
         ins.m_data.btnClick = nil
     end
-    --ins:Hide();
     ins:OnClick_closeBtn(ins)
 end

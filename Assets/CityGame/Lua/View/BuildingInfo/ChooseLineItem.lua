@@ -13,14 +13,17 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.buildingId = DataInfo.info.id;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
+    self.posX =  DataInfo.info.pos.x
+    self.posY =  DataInfo.info.pos.y
+    self._luabehaviour = inluabehaviour;
+    self.manager = mgr;
+    self.isOnClick = false
 
     self.bg = self.prefab.transform:Find("bg").gameObject
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
-
-
     self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
     self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
     self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
@@ -33,6 +36,9 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
         end
     end
     self.warehouse_Slider.value = n
+
+    self.spareCapacity = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity - n --剩余容量
+
     self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
 
     self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
@@ -40,4 +46,18 @@ end
 
 function ChooseLineItem:OnLinePanelBG(go)
     Event.Brocast("c_OnLinePanelBG",go.buildingId)
+    if go.spareCapacity <  tonumber(CenterWareHousePanel.tipText.text) then
+        Event.Brocast("SmallPop","仓库容量不足",300)
+        return
+    end
+    CenterWareHousePanel.nameText.text = go.size.text .. go.name.text
+    go.isOnClick = true
+    go.manager:TransportConfirm(go.isOnClick )
+    local data = {}
+    data.buildingId = go.buildingId
+    data.posX = go.posX
+    data.posY = go.posY
+    data.name =  go.size.text .. go.name.text
+    Event.Brocast("c_OnLinePanelBG",data)
+    ChooseWarehouseCtrl:OnClick_returnBtn()
 end

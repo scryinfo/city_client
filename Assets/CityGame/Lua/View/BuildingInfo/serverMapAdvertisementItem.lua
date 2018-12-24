@@ -28,35 +28,117 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
     self._luabehaviour:AddClick(self.cutBtnBtn.gameObject, self.OnClick_cut, self);
     self._luabehaviour:AddClick(self.plusBtn.gameObject, self.OnClick_Plus, self);
 
+    if prefabData.slot then
+        self.days=prefabData.slot.days
+        self.ads=prefabData.ads
+        local temp={}
+        for i, ad in pairs(prefabData.ads) do
+           table.insert(temp,ad.slot)
+        end
+        self.slots=temp
+    end
+
+
+
     if prefabData.count then
         self.numtext.text=prefabData.count
         self.selfcount=prefabData.count
         self.updatecount=prefabData.count
     end
+
+    if prefabData.type=="GOOD" then
+        self.type=0
+    else
+        self.type=1
+    end
+
 end
 
 ---添加
 function serverMapAdvertisementItem:OnClick_cut(go)
-    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
-    if go.numtext.text-1==0 then
-       go.manager.serverMapAdvertisementINSList[go.metaId].updatecount=0
-        ---消除自身
-        self.transform.parent.parent.parent.gameObject:SetActive(false)
-        ---对应广告还原
-       -- go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
-        ---表数据清除
-        --self.manager.serverMapAdvertisementItemList[go.index]=nil
-        return
+    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+        if go.numtext.text-1==0 then
+            go.manager.serverMapAdvertisementINSList[go.metaId].updatecount=0
+            ---消除自身
+            self.transform.parent.parent.parent.gameObject:SetActive(false)
+            ---对应广告还原
+            -- go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
+            ---表数据清除
+            --self.manager.serverMapAdvertisementItemList[go.index]=nil
+            return
+        end
+        go.numtext.text=go.numtext.text-1
+        go.updatecount=go.numtext.text
+
+    else---他人进入
+
+        if  go.numtext.text=="0" then
+            return
+        end
+        --自身数量减少
+        go.numtext.text=go.numtext.text-1
+        go.updatecount=go.numtext.text
+        --槽位增加
+        if   go.manager.current then
+            go.manager.current.angleRoot.localScale=Vector3.zero
+        end
+        for i, addItemIns in pairs(go.manager.addItemInSList) do
+            if addItemIns.days == go.days then
+                addItemIns.prefab:SetActive(true)
+                addItemIns.angleRoot.localScale=Vector3.one
+                addItemIns.prefab.transform:SetAsFirstSibling()
+                go.manager.current=addItemIns
+            end
+
+            --go.manager:_creataddItem({})
+            --local i=#go.manager.addItemInSList
+            --go.manager.addItemInSList[i].numText.text=0--刷新数量
+            ----刷新时间
+            --go.manager.addItemInSList[i].angleRoot.localScale=Vector3.one--关闭四角
+            --go.manager.addItemInSList[i].selfAcount=tonumber(go.numtext.text+1)
+            --go.manager.addItemInSList[i].updateAcount=tonumber(go.numtext.text+1)
+            --go.manager.addItemInSList[i].slots=go.slots
+            --go.manager.addItemInSList[i].days=go.days
+            --go.manager.addItemInSList[i].prefab.transform:SetAsFirstSibling()
+            --
+            --go.manager.current=go.manager.addItemInSList[i]
+            --go.manager.newaddIndex=i
+        end
+        go.manager.current.numText.text=go.manager.current.numText.text+1
+
     end
 
-    go.numtext.text=go.numtext.text-1
-    go.updatecount=go.numtext.text
-
+    ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
 end
 
 function serverMapAdvertisementItem:OnClick_Plus(ins)
-    ins.numtext.text=ins.numtext.text+1
-    ins.updatecount=ins.numtext.text
+    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId  then--自已进入
+        ins.numtext.text=ins.numtext.text+1
+        ins.updatecount=ins.numtext.text
+
+    else-----他人进入
+        --限制上限
+        if ins.manager.current.numText.text=="0" then
+            return
+        end
+        --自身数量增加
+        ins.numtext.text=ins.numtext.text+1
+        ins.updatecount=ins.numtext.text
+        if   ins.manager.current then
+            ins.manager.current.angleRoot.localScale=Vector3.zero
+        end
+        for i, addItemIns in pairs(ins.manager.addItemInSList) do
+            if addItemIns.days == ins.days then
+                addItemIns.prefab:SetActive(true)
+                addItemIns.angleRoot.localScale=Vector3.one
+                --addItemIns.prefab.transform:SetAsFirstSibling()
+                ins.manager.current=addItemIns
+            end
+        end
+        --槽位减少
+        ins.manager.current.numText.text=ins.manager.current.numText.text-1
+    end
+
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
 end
 

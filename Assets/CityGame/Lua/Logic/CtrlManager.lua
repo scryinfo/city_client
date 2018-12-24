@@ -63,6 +63,7 @@ function CtrlManager.Init()
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
+
 	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
@@ -85,20 +86,20 @@ function CtrlManager.Init()
     --ctrlList[CtrlNames.GroundAuction] = GroundAuctionCtrl.New();
     --ctrlList[CtrlNames.House] = HouseCtrl.New();
 
-    modelList[ModelNames.Login] = LoginModel.New();
+    --modelList[ModelNames.Login] = LoginModel.New();
 	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
 	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
 	--modelList[ModelNames.House] = HouseModel.New();
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();
-	modelList[ModelNames.ServerList] = ServerListModel.New();
-	modelList[ModelNames.CreateRole] = CreateRoleModel.New();
+	--modelList[ModelNames.ServerList] = ServerListModel.New();
+	--modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	--modelList[ModelNames.Material] = MaterialModel.New();
 	--modelList[ModelNames.Processing] = ProcessingModel.New();
 	modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
-	modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
+	--modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	modelList[ModelNames.Municipal]=MunicipalModel.New();
 	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
@@ -111,6 +112,7 @@ function CtrlManager.Init()
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	modelList[ModelNames.friends] = FriendsModel.New();
+	modelList[ModelNames.Chat] = ChatModel.New();
 
 	return this;
 end

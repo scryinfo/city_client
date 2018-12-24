@@ -179,7 +179,7 @@ function ExchangeCtrl:_quotesToggleValueChange(isOn)
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Quotes then
             ExchangePanel._quotesToggleState(isOn)
-            ExchangePanel.quotesPage.localScale = Vector3.zero
+            ExchangePanel.quotesPage.localScale = Vector3.New(0, 1, 1)
         end
     end
 end
@@ -196,7 +196,7 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
             if #ExchangeCtrl.collectDatas == 0 then
                 ExchangePanel.noTipText.text = "Currently no collection!"
                 ExchangePanel.noTipText.transform.localScale = Vector3.one
-                ExchangePanel.collectPage.localScale = Vector3.zero
+                ExchangePanel.collectPage.localScale = Vector3.New(0, 1, 1)
                 return
             else
                 self.collectSortMgr:_reSetSortData()  --按照默认排序
@@ -208,7 +208,7 @@ function ExchangeCtrl:_collectToggleValueChange(isOn)
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Collect then
             ExchangePanel._collectToggleState(isOn)
-            ExchangePanel.collectPage.localScale = Vector3.zero
+            ExchangePanel.collectPage.localScale = Vector3.New(0, 1, 1)
         end
     end
 end
@@ -228,7 +228,7 @@ function ExchangeCtrl:_recordToggleValueChange(isOn)
     else
         if ExchangeCtrl.titleType == ExchangeTitleType.Record then
             ExchangePanel._recordToggleState(isOn)
-            ExchangePanel.recordPage.localScale = Vector3.zero
+            ExchangePanel.recordPage.localScale = Vector3.New(0, 1, 1)
         end
     end
 end
@@ -476,7 +476,7 @@ function ExchangeCtrl:_deleteOrder(idInTable)
     if #ExchangeCtrl.entrustmentInfo == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
-        ExchangePanel.entrustmentPage.localScale = Vector3.zero
+        ExchangePanel.entrustmentPage.localScale = Vector3.New(0, 1, 1)
     end
 
     ExchangePanel.entrustmentScroll:ActiveLoopScroll(self.entrustmentSource, #ExchangeCtrl.entrustmentInfo)
@@ -521,7 +521,7 @@ function ExchangeCtrl:_getEntrustmentRecord(datas)
     if not datas.order or #datas.order == 0 then
         ExchangePanel.noTipText.text = "No delegation at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
-        ExchangePanel.entrustmentPage.localScale = Vector3.zero
+        ExchangePanel.entrustmentPage.localScale = Vector3.New(0, 1, 1)
         return
     end
 
@@ -536,7 +536,7 @@ function ExchangeCtrl:_getTransactionRecord(datas)
     if not datas.log or #datas.log == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
-        ExchangePanel.selfRecordPage.localScale = Vector3.zero
+        ExchangePanel.selfRecordPage.localScale = Vector3.New(0, 1, 1)
         return
     end
 
@@ -561,7 +561,7 @@ function ExchangeCtrl:_getCityRecord(datas)
     if not datas.log or #datas.log == 0 then
         ExchangePanel.noTipText.text = "No record at present!"
         ExchangePanel.noTipText.transform.localScale = Vector3.one
-        ExchangePanel.cityRecordPage.localScale = Vector3.zero
+        ExchangePanel.cityRecordPage.localScale = Vector3.New(0, 1, 1)
         return
     end
     ExchangeCtrl.cityRecordInfo = {}

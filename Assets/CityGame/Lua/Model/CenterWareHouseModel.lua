@@ -3,37 +3,28 @@
 --- Created by password.
 --- DateTime: 2018/11/2 15:22
 ---中心仓库
+CenterWareHouseModel = class("CenterWareHouseModel",ModelBase)
 local pbl = pbl
-local log = log
 
-CenterWareHouseModel= {};
-local this = CenterWareHouseModel;
-
---构建函数--
-function CenterWareHouseModel.New()
-    logDebug("CenterWareHouseModel.New--->>");
-    return this;
-end
-
-function CenterWareHouseModel.Awake()
-    logDebug("CenterWareHouseModel.Awake--->>");
-    this:OnCreate();
+function CenterWareHouseModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
 end
 
 --启动事件--
-function CenterWareHouseModel.OnCreate()
+function CenterWareHouseModel:OnCreate()
     --注册本地UI事件
-    Event.AddListener("m_extendBag", this.m_ExtendBag,this);
-    Event.AddListener("m_bagCapacity",this.m_bagCapacity,this)
-    Event.AddListener("m_opCenterWareHouse",this.m_opCenterWareHouse,this)
-    Event.AddListener("m_DeleteItem",this.m_DeleteItem,this)
+  --  Event.AddListener("m_extendBag", self.m_ExtendBag,self);
+    Event.AddListener("m_bagCapacity",self.m_bagCapacity,self)
+    Event.AddListener("m_opCenterWareHouse",self.m_opCenterWareHouse,self)
+    Event.AddListener("m_DeleteItem",self.m_DeleteItem,self)
     --as网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),CenterWareHouseModel.n_GsDelItem);
 end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
-   this.bagCapacity = bagCapacity
+   self.bagCapacity = bagCapacity
 end
 
 function CenterWareHouseModel:m_opCenterWareHouse()
@@ -57,14 +48,6 @@ function CenterWareHouseModel:n_GsDelItem(stream)
 end
 
 --删除商品发包
-function CenterWareHouseModel:m_DeleteItem(buildingId,id)
-
-    ct.log("rodger_w8_GameMainInterface","[test_n_GsDel]  测试完毕",buildingId)
-    ----1、 获取协议id
-    local msgId = pbl.enum("gscode.OpCode","delItem")
-    ----2、 填充 protobuf 内部协议数据
-    local lMsg = { buildingId = buildingId, item = {id = id} }
-    local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
-    ----3、 创建包，填入数据并发包
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+function CenterWareHouseModel:m_DeleteItem(dataId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "delItem","gs.DelItem",{buildingId = dataId.buildingId, item = {id = dataId.id}})
 end

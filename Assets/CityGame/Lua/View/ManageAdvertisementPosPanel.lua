@@ -45,7 +45,6 @@ function ManageAdvertisementPosPanel.InitPanel()
     this.nameBtn = transform:Find("topRoot/ListTable/List/brandBtn");
     this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn")
 
-
 end
 
 --数据初始化

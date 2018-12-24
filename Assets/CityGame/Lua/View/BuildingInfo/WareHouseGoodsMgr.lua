@@ -64,6 +64,28 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
     self.allTspItem[goodsData.id] = TransportLuaItem;
     for i, v in pairs(self.allTspItem) do
         self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
+            local isOnClick = false
+            if self.ipaItems == nil then
+                isOnClick = false
+            else
+                for i, v in pairs(self.ipaItems) do
+                    if v.isOnClick then
+                        isOnClick = true
+                    end
+                end
+            end
+            local n = 0
+            for i, v in pairs(self.allTspItem) do
+                n = n + tonumber(v.inputText.text)
+                if v.inputText.text == "0" then
+                    isOnClick = false
+                end
+            end
+            CenterWareHousePanel.tipText.text = n
+            if isOnClick == false then
+                CenterWareHousePanel.transportConfirm:SetActive(true);
+            end
+            WareHouseGoodsMgr:TransportConfirm(isOnClick)
             if self.allTspItem[i].inputText.text =="" then
                 return
             end
@@ -185,7 +207,18 @@ end
 
 --显示运输按钮使其可以点击
 function WareHouseGoodsMgr:TransportConfirm(isOnClick)
-    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
+    local isTransport = false
+    if self.allTspItem == nil then
+        return
+    end
+    for i, v in pairs(self.allTspItem) do
+        if v.inputText.text == "0" then
+            isTransport = false
+        else
+            isTransport = true
+        end
+    end
+    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick and isTransport then
         CenterWareHousePanel.transportConfirm:SetActive(false);
     end
 end

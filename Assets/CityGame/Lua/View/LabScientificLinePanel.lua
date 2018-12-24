@@ -26,9 +26,10 @@ function LabScientificLinePanel.InitPanel()
     this.inventionScroll = transform:Find("bottomPageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
 
     --提示框部分
-    this.changeStaffCountBtn = transform:Find("changeStaffCountBtn"):GetComponent("Button")
-    this.researchTipItem = LabScientificChangeStaffItem:new(transform:Find("changeStaffCountBtn/researchChangeStaffItem"), this.changeStaffCountBtn)
-    this.inventTipItem = LabScientificChangeStaffItem:new(transform:Find("changeStaffCountBtn/inventChangeStaffItem"), this.changeStaffCountBtn)
+    this.gridGroup = transform:Find("tipRoot/contentRoot/content"):GetComponent("GridLayoutGroup")
+    this.changeStaffCountBtn = transform:Find("tipRoot/changeStaffCountBtn"):GetComponent("Button")
+    this.researchTipItem = LabScientificChangeStaffItem:new(transform:Find("tipRoot/contentRoot/content/researchChangeStaffItem"), this.changeStaffCountBtn, this.gridGroup)
+    this.inventTipItem = LabScientificChangeStaffItem:new(transform:Find("tipRoot/contentRoot/content/inventChangeStaffItem"), this.changeStaffCountBtn, this.gridGroup)
 end
 ---状态显示
 function LabScientificLinePanel._researchToggleState(isOn)
@@ -39,7 +40,8 @@ function LabScientificLinePanel._researchToggleState(isOn)
     else
         this.researchOpen.localScale = Vector3.zero
         this.researchClose.localScale = Vector3.one
-        this.researchScroll.transform.localScale = Vector3.zero
+        --this.researchScroll.transform.localScale = Vector3.zero
+        this.researchScroll.transform.localScale = Vector3.New(0, 1, 1)
     end
 end
 function LabScientificLinePanel._inventionToggleState(isOn)
@@ -51,7 +53,7 @@ function LabScientificLinePanel._inventionToggleState(isOn)
     else
         this.inventionOpen.localScale = Vector3.zero
         this.inventionClose.localScale = Vector3.one
-        this.inventionScroll.transform.localScale = Vector3.zero
+        this.inventionScroll.transform.localScale = Vector3.New(0, 1, 1)
         --this.inventionScroll.gameObject:SetActive(false)
     end
 end

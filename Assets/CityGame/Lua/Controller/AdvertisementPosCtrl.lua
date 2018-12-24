@@ -46,34 +46,51 @@ function AdvertisementPosCtrl:Awake(go)
     panel.leaseInp.onValueChanged:AddListener(self.Set)
     panel.rentInp.onValueChanged:AddListener(self.Set)
     -------------------------------------------------------------------------------------------------------------------------
-    panel.numInp.onValueChanged:AddListener(function (arg)
-        if panel.numInp.text==""then
-            return
-        end
-        if( panel.numInp.text/#MunicipalModel.SlotList>=1)then
-            panel.numInp.text=#MunicipalModel.SlotList
-        end
-        panel.numSlider.value=arg/#MunicipalModel.SlotList ;
-         panel.totalText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
-    end)
+    --panel.numInp.onValueChanged:AddListener(function (arg)
+    --    if panel.numInp.text==""then
+    --        return
+    --    end
+    --    if( panel.numInp.text/#MunicipalModel.SlotList>=1)then
+    --        panel.numInp.text=#MunicipalModel.SlotList
+    --    end
+    --    panel.numSlider.value=arg/#MunicipalModel.SlotList ;
+    --     panel.totalText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
+    --end)
 
     panel.numSlider.onValueChanged:AddListener(function (arg)
-        panel.numInp.text=math.floor(#MunicipalModel.SlotList*arg)
-    end)
-
-    panel.maxInp.onValueChanged:AddListener(function (arg)
-        if panel.maxInp.text==""then
+        if #MunicipalModel.SlotList<=0 then
             return
         end
-        if(panel.maxInp.text/MunicipalModel.SlotList[1].maxDayToRent>=1)then
-            panel.maxInp.text=MunicipalModel.SlotList[1].maxDayToRent
+        panel.numInp.text=math.floor(#MunicipalModel.SlotList*arg)
+        self.acount=panel.numInp.text
+        if panel.maxInp.text~="" and  panel.maxInp.text~=0 then
+            self.totalPrice=3*MunicipalModel.SlotList[1].rentPreDay+(panel.numInp.text*panel.maxInp.text*MunicipalModel.SlotList[1].rentPreDay)
+            panel.totalText.text=getPriceString(self.totalPrice..".0000",30,24)
         end
-        panel.maxSlider.value=arg/MunicipalModel.SlotList[1].maxDayToRent;
     end)
 
+    --panel.maxInp.onValueChanged:AddListener(function (arg)
+    --    if panel.maxInp.text==""then
+    --        return
+    --    end
+    --    if(panel.maxInp.text/MunicipalModel.SlotList[1].maxDayToRent>=1)then
+    --        panel.maxInp.text=MunicipalModel.SlotList[1].maxDayToRent
+    --    end
+    --    panel.maxSlider.value=arg/MunicipalModel.SlotList[1].maxDayToRent;
+    --end)
+
     panel.maxSlider.onValueChanged:AddListener(function (arg)
+        if #MunicipalModel.SlotList<=0 then
+            return
+        end
         panel.maxInp.text=math.floor(MunicipalModel.SlotList[1].maxDayToRent*arg)
+        self.dayAcount=panel.maxInp.text
+        if panel.numInp.text~="" and  panel.numInp.text~=0 then
+            self.totalPrice=3*MunicipalModel.SlotList[1].rentPreDay+(panel.numInp.text*panel.maxInp.text*MunicipalModel.SlotList[1].rentPreDay)
+            panel.totalText.text=getPriceString(self.totalPrice..".0000",30,24)
+        end
     end)
+
 
     -----创建广告
     local creatData={buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
@@ -99,31 +116,55 @@ end
 function AdvertisementPosCtrl:OnClick_infoBtn()
 
 end
-
+local num=0
 function AdvertisementPosCtrl:Refresh()
-    --if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
-    --    if #MunicipalModel.SlotList>0 then
-    --        panel.qunayityInp.text=#MunicipalModel.SlotList
-    --        panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
-    --        panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
-    --        panel.adAllday=panel.qunayityInp.text
-    --        panel.grey.gameObject:SetActive(true);
-    --    end
-    --    panel.buyGo.gameObject:SetActive(false)
-    --else--他人进入
-    --    --panel.buyGo.gameObject:SetActive(true)
-    --    --panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
-    --    --panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
-    --    --panel.manageBtn.gameObject:SetActive(false)
-    --
-    --end
+    if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+        if #MunicipalModel.SlotList>0 then
+            panel.qunayityInp.text=#MunicipalModel.SlotList
+            panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
+            panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
+            panel.adAllday=panel.qunayityInp.text
+            panel.grey.gameObject:SetActive(true);
+        end
+        panel.buyGo.gameObject:SetActive(false)
+        else--他人进入
+        panel.buyGo.gameObject:SetActive(true)
+        if MunicipalModel.SlotList[1] then
+            panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
+            panel.dotText.text=getPriceString((3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,24)
+        end
+    panel.manageBtn.gameObject:SetActive(false)---管理我的广告位
+    panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
+        if MunicipalModel.lMsg.ad.soldSlot then
+            self.myBuySlots={}
+            for i, v in pairs(MunicipalModel.lMsg.ad.soldSlot) do
+                if v.renterId==MunicipalModel.owenerId then--有槽位
+                 ---筛选
+                    table.insert(self.myBuySlots,v)
+                else --无槽位
+                panel.manageBtn.gameObject:SetActive(false)---管理我的广告位
+                panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
+                end
+            end
+        end
+        if self.myBuySlots  then--给（/）赋值
+            if #self.myBuySlots>0 then panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
+            panel.manageBtn.gameObject:SetActive(true)---管理我的广告位
+            panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.hasPos
+            end
+            if num == 0 then
+                panel.manageText.text=panel.manageText.text.."(" .."0".."/"..#self.myBuySlots..")"
+            end
+            num=num+1
+        end
+    end
 end
 
 
 ---管理广告按钮
-function AdvertisementPosCtrl:OnClick_manageBtn()
+function AdvertisementPosCtrl:OnClick_manageBtn(ins)
 
-    ct.OpenCtrl("ManageAdvertisementPosCtrl")
+    ct.OpenCtrl("ManageAdvertisementPosCtrl",ins)
 
 end
 
@@ -154,9 +195,12 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     end
 end
 
-function AdvertisementPosCtrl:OnClick_otherConfirm()
+function AdvertisementPosCtrl:OnClick_otherConfirm(ins)
     --他人点击
-    ct.OpenCtrl("SignOnCtrl");
+    if ins.acount==""or ins.acount==0 or ins.dayAcount==""or ins.dayAcount==0 or not ins.acount or not ins.dayAcount then
+       return
+    end
+    ct.OpenCtrl("SignOnCtrl",ins);
 end
 
 

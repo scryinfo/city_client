@@ -21,7 +21,6 @@ end
 function TalentMiningCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
-    self:_initData();
 
     TalentMiningBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     TalentMiningBehaviour:AddClick(TalentMiningPanel.backBtn,self.OnBackBtn,self);
@@ -32,6 +31,8 @@ function TalentMiningCtrl:OnCreate(obj)
 end
 
 function TalentMiningCtrl:Refresh()
+    --初始化
+    self:_initData();
     --打开通知Model
     self:initializeData()
 end
@@ -44,10 +45,7 @@ end
 
 --初始化
 function TalentMiningCtrl:_initData()
-    GameNoticePanel.jumpBtn:SetActive(false)
-    GameNoticePanel.hedaer.text = ""
-    GameNoticePanel.time.text = ""
-    GameNoticePanel.rightContent.text = "请选择左边的邮件"
+
 end
 
 --点击返回按钮
@@ -57,5 +55,15 @@ end
 
 --点击添加
 function TalentMiningCtrl:OnAddBtn()
+     --ct.OpenCtrl("TalentSelectPanel")
+end
 
+--生成预制
+function TalentMiningCtrl:_creatTalentLine(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
 end

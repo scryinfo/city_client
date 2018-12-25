@@ -96,7 +96,6 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.CreateWaysByCollectionID(tempCollectionID)
-    --TODO://
     if not BuildDataStack[tempCollectionID] then
         return
     end

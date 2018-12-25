@@ -115,12 +115,12 @@ function SmallProductionLineItem:refreshTimeText(msg)
         local time = 1 / Material[self.itemId].numOneSec / tonumber(self.staffNumberText.text) * remainingNum
         local timeTab = getTimeString(time)
 
-        for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-            if AdjustProductionLineCtrl.materialProductionLine[k].lineId == msg.lineId then
-                AdjustProductionLineCtrl.materialProductionLine[k].timeText.text = timeTab
+            for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+                if AdjustProductionLineCtrl.materialProductionLine[k].lineId == msg.lineId then
+                    AdjustProductionLineCtrl.materialProductionLine[k].timeText.text = timeTab
+                end
             end
-        end
-        if remainingNum > 0 then
+            if remainingNum > 0 then
             self.timeText.text = timeTab
         elseif remainingNum < 0 or remainingNum == 0 then
             self.timeText.text = "00:00:00"

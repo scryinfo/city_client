@@ -38,6 +38,8 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
         elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
+        elseif self.shelfData.buildingType == BuildingType.RetailShop then
+            --ct.OpenCtrl("")
         end
     end);
     self:initializeInfo(self.shelfData.shelf.good)

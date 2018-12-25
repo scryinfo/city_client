@@ -25,7 +25,7 @@ function GroundTransDetailCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
     local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
-    --groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
+    groundAuctionBehaviour:AddClick(GroundTransDetailPanel.bgBtn.gameObject, self.BidGround, self)
 
 end
 
@@ -125,3 +125,25 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
         end
     end
 end
+--按钮方法
+function GroundTransDetailCtrl:_closeBtnFunc(ins)
+    -- hide
+end
+--owner出租按钮
+function GroundTransDetailCtrl:_rentFunc(ins)
+    local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Rent}
+    --打开设置租金/售卖金额界面，参数为info
+    ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+end
+--owner出售按钮
+function GroundTransDetailCtrl:_sellFunc(ins)
+    local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell}
+    --打开设置租金/售卖金额界面，参数为info
+    ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+end
+--owner出售按钮
+--function GroundTransDetailCtrl:_sellFunc(ins)
+--    local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell}
+--    --打开设置租金/售卖金额界面，参数为info
+--    ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+--end

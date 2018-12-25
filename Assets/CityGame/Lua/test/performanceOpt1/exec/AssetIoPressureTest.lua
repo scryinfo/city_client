@@ -844,7 +844,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
         timer:Start()
     end
 
-    aTester.testcount = 1500
+    aTester.testcount = 4050
     aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 1 次实例化, '..aTester.testcount..'个实例耗时 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, '..aTester.testcount..'个实例耗时 ='}
@@ -883,12 +883,15 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
                                                                                    每帧执行 40 次实例化, 4050个实例耗时 =5.251131
                                      * unity profile 更新时，会在 22~30之间波动 ,否则稳定在 30 帧
                 * 也就是说 4050 个实例实际上是可以支撑下来的，只不过要限制实例中 Animator 中的数量（带Animator组件的实例超过500就会出现高频度的GC，导致帧数波动剧烈）
+                * 最新测试
+                    --稳定在 30 帧 每帧执行 40 次实例化, 4050个实例耗时 =2.799826
          * 上述测试是在 荣耀9
          * 小米5X 即便打开 unity profile 采集数据的情况下， 稳定在 29-30 帧
          * Vivo X20A  稳定在 29-30 帧
          * Oppo R11t
     内存
-
+       4050个实例 设备上内存 66.3M
+       * 可以常驻内存
     测试结果
         500个实例
             设备上 30 帧    每帧执行 40 次实例化, 500个实例耗时 =0.922895
@@ -921,46 +924,380 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     --]]
 end)
 
---AOI异步加载内存测试
-UnitTest.Exec("abel_w17_load_s128_n400_ASync", "abel_w17_load_s128_n400_ASync",  function ()
-    UnitTest.PerformanceTest("abel_w17_load_s128_n400_ASync","[异步加载400个尺寸为128的 Icon: LoadPrefab]", function()
+--建筑Aoi更新测试
+--[[
+测试条件
+    1屏450个，最多一次更新3屏
+--]]
+UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3Grid_frameRate",  function ()
+    local aTester = AsyncSequenceTester:new()
+    AsyncSequenceTester.recordTester(aTester)
+    --初始化测试数据
+    --aTester.testcount = 600
+    --aTester.testcount = 2
+    aTester.instancedCount = 1
+    aTester.instancedPoolCount = 1
+    aTester.resLoadedCount = 1
+    aTester.loadCount = 0
+    aTester.startTime = 0
+    aTester.curPos = 1
+    aTester.testSquence = {}
+    aTester.ResPathList = {}
+    aTester.loadedBundles = {}
+    aTester.loadedAssets = {}
+    aTester.loadedAssetsNextIdx = 1
+    aTester.instances = {}      --使用中的实例
+    aTester.defaultInstancePools = {}   --对象池，闲置的实例
+    aTester._timer = nil
+    aTester._msgs = ''
+    aTester.resetData = function()
+        local tester = AsyncSequenceTester.Tester()
+        tester.startTime = 0
+        tester.instancedCount = 1
+    end
+    --数据准备
+    local ResPathListS = {}
+    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Factory_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Park_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'
+    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
 
-    end)
-end)
+    aTester.CountEachType = math.ceil(aTester.testcount / #ResPathListS)
+    aTester.ResPathList = ResPathListS
+    --数据准备
 
---AOI同步加载时间测试
-UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
+    local LoadedCb = function(tester, as, ab)
+        local pathName = string.gsub(tester.loadedBundles.name)
+        tester.loadedBundles[ab.name] = ab
+        tester.loadedAssets[as.name] = as
+        tester.resLoadedCount = tester.resLoadedCount + 1
+        if tester.resLoadedCount > #tester.ResPathList then
+            tester:getCurSeq().postfun(tester)
+        end
+    end
+    --异步加载测试,带回调
+    local LoadTestRes = function(tester)
+        for i = 1, #tester.ResPathList do
+            panelMgr:LoadPrefab_A(tester.ResPathList[i], nil, tester,LoadedCb)
+        end
+    end
 
-    end)
-end)
+    --往默认对象池中添加指定类型和数量的对象
+    local extendInstancePool = function(pools, typeid, count)
+        local tester = AsyncSequenceTester.Tester()
+        for i = 1, count do
+            pools[typeid][#pools[typeid]+1] = UnityEngine.GameObject.Instantiate(tester.loadedAssets[typeid])
+        end
+    end
 
---AOI Unload 时间测试
-UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
+    local getPoolSize = function(pools, typeid)
+        if pools[typeid] == nil then
+            return 0
+        else
+            return  #pools[typeid]
+        end
+    end
 
-    end)
-end)
+    --从默认对象池中获取特定类型实例，没有的话并且 allocate == true ，一次性实例化 40 个
+    local getInstance = function(pools, typeid, allocate)
+        local validInstance = nil
+        local outPool = pools[typeid]
+        validInstance = outPool[#outPool]
+        if allocate ~= nil and allocate == true then
+            --实例化
+            if validInstance == nil then
+                extendInstancePool(pools, typeid, 40 ) --一帧实例化40个不会影响性能
+            end
+        end
+        --从对象池中移除该实例(否则会有多个对象池同时使用一个实例，是不对的)
+        validInstance = outPool[#outPool]
+        if outPool[#outPool] ~= nil then
+            outPool[#outPool] = nil
+        end
+        return validInstance
+    end
+    --把实例放回对象池
+    local instanceToPools = function(pools, instance)
+        local typeid = instance.name
+        pools[typeid][#pools[typeid]+1] = instance --注意这里没有进行类型检查，使用的时候需要用户自己保证类型正确
+    end
 
---AOI Instantiate 时间测试
-UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
+    --创建默认对象池
+    local DefaultInsPoolsSetup = function()
+        local tester = AsyncSequenceTester.Tester()
+        local curSeq = tester:getCurSeq()
 
-    end)
-end)
 
---AOI Instantiate 内存测试
-UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
+        local pollsize = getPoolSize(tester.defaultInstancePools, tester.loadedAssets[tester.loadedAssetsNextIdx])
+        if pollsize >= tester.CountEachType then --当每种类型的资源实例数量大于限定的数量后，开始另一种资源类型的实例化
+            tester.loadedAssetsNextIdx = tester.loadedAssetsNextIdx + 1
+            --超过
+            if tester.loadedAssetsNextIdx > #tester.ResPathList then --loadedAssetsNextIdx 大于ResPathList资源类型数量，说明 所有资源类型的对象池都建立好了
+                tester._timer:Stop()
+                return curSeq.postfun(tester)
+            end
+        end
+        --对象池创建，按资源路径分别建立对象池； 一次只创建 curSeq._inscount 个实例(每帧40个可以保证不卡)
+        extendInstancePool(tester.defaultInstancePools,tester.ResPathList[tester.loadedAssetsNextIdx],curSeq._inscount)
+    end
 
-    end)
-end)
+    aTester._timer = FrameTimer.New(function()
+        DefaultInsPoolsSetup()
+    end, 1,1)
 
---AOI 销毁 时间测试
-UnitTest.Exec("abel_w17_unload_s128_n400", "abel_w17_unload_s128_n400",  function ()
-    UnitTest.PerformanceTest("abel_w17_unload_s128_n400","[异步加载400个尺寸为128的 Icon LoadPrefab]", function()
+    local DefaultInsPoolsSetup = function(tester)
+        tester._timer:Start()
+    end
 
-    end)
+    local builddata = { uuid = 'xxxxxxxx-xxxx- xxxx-xxxxxxxxxxxxxxxx',typeid = '',position={x=0,y=0 }}
+    --建筑重定位测试-----------------------------------------------------------
+    --目前使用25屏作为整个游戏地图来测试------------------------------------{
+    --[[
+        一屏450相当于 21*21=441个格子
+        25屏相当于 (21*5)^2 = 11025 格单位， 长宽为 105单位
+    --]]
+    aTester.gridsOneBlock = 21 --1屏的横纵坐标跨度
+    aTester.data_25Screen = (aTester.gridsOneBlock * 5)^2  --11025
+    aTester._buildingdata = {}
+    local gridsFiveBlocks = aTester.gridsOneBlock * 5 --全局地图宽度
+
+    --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
+    for i = 1, gridsFiveBlocks do
+        for j = 1, gridsFiveBlocks do
+            local gridId = i + (j-1) * gridsFiveBlocks
+            aTester._buildingdata[gridId] = {
+                                            uuid = 'xxxxxxxx-xxxx- xxxx-xxxxxxxxxxxxxxxx',
+                                            typeid = ResPathListS[math.random(1, #ResPathListS)],
+                                            position=
+                                            {
+                                                 x = i ,
+                                                 y = j
+                                            }
+            }
+        end
+    end
+    local buildingCount = #aTester._buildingdata --看看是否是预期的数量 11025
+    --25屏数据------------------------------------}
+
+    --9屏Aoi
+    aTester.relocateStartPos = 1
+    aTester.relocateTestExcuteCount = 60 --总的执行 relocate 的批次
+    aTester.relocateTestExcutePos = 1 --当前执行的批次
+    aTester.relocateTestCountEveryExcute = 1350
+    aTester.interval = 1 --每次测试的间隔帧
+
+    local RelocateResetfun = function()
+        local tester = AsyncSequenceTester.Tester()
+        tester.startTime = 0
+        tester.relocateStartPos = tester.relocateStartPos + aTester.relocateTestCountEveryExcute
+        if tester.relocateStartPos >  tester.testcount then
+        tester.relocateStartPos = 1
+        end
+    end
+
+    aTester.ScreenBlockSizeWorld = {x = 5, y = 5}   --整个地图aoi分块数， 一个单位相当于 1 屏， 目前是横竖各5屏，每屏21*21个建筑单位
+    aTester.AoiScreenBlockSize = {x = 3, y = 3}         --真正要实例化的屏幕数据, 形成的矩形区域
+    aTester.AoiScreenBlocks = {}    --实际Aoi的分块
+    aTester.BuildingsInAoi = {}    --分块中的建筑
+    aTester.AoiScreenBlocksNewIn = {}    --新增的分块
+    aTester.AoiScreenBlocksOut = {}    --超出9屏的分块
+    aTester.BuildingsOutAoi = {}    --超出9屏的分块，放入临时回收池 AoiGridsOut
+    --注： 新增块中的建筑从超出反馈的块中获取，如果没有，就实例化
+
+    --根据aoi中心，获取九屏索引数据
+    local aoi_get9ScreenBlock = function(tester, aoiCenterScreenPos)
+        local aoiRect = { --aoiRect取值范围在是(1,1)-(5,5)之间
+        lu = {x = aoiCenterScreenPos.x -1, y = aoiCenterScreenPos.x -1}, --左上角
+        rb = {x = aoiCenterScreenPos.x +1, y = aoiCenterScreenPos.x +1}  --右下角
+        }
+        local AoiScreenBlocksNewIn = {}
+        --取出所有块的id（所有9屏id）
+        for x = aoiRect.lu.x, aoiRect.rb.x do
+            for y = aoiRect.lu.y, aoiRect.rb.y do
+                local id_1D = x + (y-1)*tester.ScreenBlockSizeWorld.x --因为lua中数组第一个元素的索引为1，所以这里要保证id从1开始, x 不需要 -1 就可以保证
+                newAoiScreenBlockArea[id_1D] = id_1D --暂时key和value都是分块id
+            end
+        end
+        return newAoiScreenBlockArea
+    end
+
+    --比对新旧Aoi区域，超出范围的，放到 AoiScreenBlocksOut ，作为新进入范围的区块放入 AoiScreenBlocksNewIn
+    local filterAoiBlocks = function(tester)
+        for k,v in pairs(tester.AoiScreenBlocks) do
+            if v ~= nil then
+                if tester.AoiScreenBlocksNewIn[v] == nil then --原Aoi范围内有，新aoi区域中没有的块，放入 AoiScreenBlocksOut ，后边单独处理
+                    tester.AoiScreenBlocksOut[#tester.AoiScreenBlocksOut+1] = v
+                    tester.AoiScreenBlocks[k] = nil
+                else --都有的，从新的区域中剔除掉，newAoiScreenBlockArea剩下的就是新进入范围的块
+                    tester.AoiScreenBlocksNewIn[v] = nil
+                end
+            end
+        end
+    end
+
+    --[[
+        此时，  tester.AoiScreenBlocks 中只有新旧aoi数据中的交集， 超出范围的都回收到了 AoiScreenBlocksOut ， newAoiScreenBlockArea 仅有新进入范围的部分
+        后续操作只需要从 AoiScreenBlocksOut（作为对象池 ）提取 newAoiScreenBlockArea 需要的建筑类型并更新位置即可，如果 newAoiScreenBlockArea 没有，
+        那么再实例化（这样要实例化的就不多了）
+    --]]
+    local BlockID2Pos = function(tester, blockid)
+        return {
+            x=math.fmod( blockid, tester.ScreenBlockSizeWorld.x ),  --x 取余得x坐标
+            y=math.modf( blockid, tester.ScreenBlockSizeWorld.x )+1   --y 取整得y坐标, 加1表示从 1开始计算
+        }
+    end
+
+    local BlockPos2GridPos = function(tester, blockPos)
+        return { --这里是从(0,0)开始的
+            x = (blockPos.x -1) * tester.gridsOneBlock,
+            y = (blockPos.y -1) * tester.gridsOneBlock
+        }
+    end
+
+    local BlockID2GridPos = function(tester,blockid)
+        --1维数组升2维，注意：这里仅仅是针对 block 分块而言，目前每个block对应 1 屏
+        local blockPos = BlockID2Pos(tester, blockid)
+        return BlockPos2GridPos(tester, blockPos)
+    end
+    local gridsOutProcessing = function(tester)
+        for k, v in pairs(tester.AoiScreenBlocksOut) do
+            local gridStartPos = BlockID2GridPos(tester, v)
+            --根据block位置计算其中所有grid的索引
+            for i = 1, tester.gridsOneBlock do
+                for j = 1, tester.gridsOneBlock do
+                    local gridId = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
+                    local outinstance = tester.BuildingsInAoi[gridId]
+                    tester.BuildingsInAoi[gridId] = nil
+                    instanceToPools(tester.BuildingsOutAoi, outinstance) --放入激活的实例表中
+                end
+            end
+            tester.AoiScreenBlocks[k] = nil
+        end
+    end
+
+    --第一次aoi计算， AoiScreenBlocks 为空, 从 aTester._buildingdata 中取出范围内的建筑数据
+    --注意， 一个ScreenBlocks 跨度为横纵坐标为: gridsOneBlock = 21 --1屏的横纵坐标跨度
+    --初步的算法是 把 newAoiScreenBlockArea block id 升维转成 grid 位置， 然后再取block中所有grid对应的 builddata ,
+    --根据 builddata.typeid 从 defaultInstancePools 取出对象，并使用 builddata.position 设置该对象位置
+    --后边看看有没有不需要升维的算法
+    local aoi_newBlockProcess = function(tester, newAoiBlocks)
+        for k,v in pairs(newAoiBlocks) do
+            local gridStartPos = BlockID2GridPos(tester, v)
+            --根据block位置计算其中所有grid的索引
+            for i = 1, tester.gridsOneBlock do
+                for j = 1, tester.gridsOneBlock do
+                    local gridIndex = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
+                    local buildingdata = tester._buildingdata[gridIndex] --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
+                    --先从 BuildingsOutAoi 中提取指定类型的对象， 没有再检查  defaultInstancePools ， 没有再 实例化
+                    --BuildingsOutAoi
+                    local validInstance = getInstance(tester.BuildingsOutAoi, buildingdata.typeid) --这里不允许分配新的实例
+                    --defaultInstancePools
+                    if validInstance == nil then
+                        validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) --只有默认对象池才允许分配新实例
+                    end
+                    if validInstance then
+                        validInstance.transform.position.x = buildingdata.position.x
+                        validInstance.transform.position.z = buildingdata.position.y
+                    end
+                    tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
+                end
+            end
+            tester.AoiScreenBlocks[k] = v
+        end
+        newAoiBlocks = {}  --清空新增表
+    end
+
+    local RelocateFun = function(tester)
+        local tester = AsyncSequenceTester.Tester()
+        local curSeq = tester:getCurSeq()
+        tester.AoiScreenBlocksNewIn = {}    --新增的分块
+        tester.AoiScreenBlocksOut = {}   --原来有的，现在超出范围了
+        --中心屏幕坐标,这里随机取非边缘的分块位置, 中心坐标x,y在(2-4)之间随机，边缘在1-5之间，也就是(1,1)-(5,5)之间，
+        --注意不是(0,0)-(4,4)
+        local aoiCenterScreenPos = {
+        x = math.random(2,aTester.ScreenBlockSizeWorld-1),
+        y = math.random(2,aTester.ScreenBlockSizeWorld-1)
+        }
+        --根据新的中心点确定新的aoi 9 屏 block
+        tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(aoiCenterScreenPos)
+        --分拣block， 新旧aoi中都有的，保留； 新增的block放到 AoiScreenBlocksNewIn ； 超出范围的放入 AoiScreenBlocksOut
+        filterAoiBlocks(tester)
+
+        --aoi 建筑实例处理
+        gridsOutProcessing(tester)
+        aoi_newBlockProcess(tester, newAoiScreenBlockArea)
+    end
+
+    --从超出范围的块中提取对象
+    --原有9屏分块与新的Aoi分块的比对，都有的，不用变，新增的，放到
+    if aTester.relocateTestExcutePos > aTester.relocateTestExcuteCount then
+        tester._timerRelocate:Stop()
+        return curSeq.postfun(tester)
+    end
+    --未优化版本，9屏全部更新
+    for i = 1, tester.relocateTestCountEveryExcute do
+        tester.relocateStartPos = tester.relocateStartPos + 1
+        if tester.relocateStartPos > tester.testcount then
+        tester.relocateStartPos = 1
+        end
+        local transform = tester.instances[tester.relocateStartPos].transform
+        if transform ~= nil then
+        transform.position.x = math.random(1000)
+        transform.position.z = math.random(1000)
+        end
+    end
+
+    aTester._timerRelocate = FrameTimer.New(function()
+    RelocateFun()
+    end, aTester.interval,1)
+
+    local Relocatefun_Loop = function(tester)
+    tester._timerRelocate:Start()
+    end
+
+    local finishedfun = function(tester)
+    ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate',tester._msgs)
+    end
+
+    --加载成功后的回调
+    local callback = function (tester)
+        local nextDelay = tester:getCurSeq()._nextTestDelay
+        local costTime = os.clock() - tester.startTime
+        collectgarbage("collect")
+        tester._msgs = tester._msgs..'\n'..tester:getCurSeq().msg ..costTime
+        local timer = FrameTimer.New(function()
+        tester:Nextfun()
+        tester:excute()
+        end, nextDelay,0)
+        timer:Start()
+    end
+
+    aTester.testcount = 4050
+    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = DefaultInsPoolsSetup, _inscount = 40, _nextTestDelay = 60, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
+
+    --开始执行异步测试序列
+    collectgarbage("collect")
+    aTester:excute()
+    --[[
+    cpu
+        * 4050个 1*1建筑实例，每帧执行 40 次实例化, 4050个实例耗时 =3.995006
+        * 设备上稳定在 30 帧
+         * 上述测试是在 荣耀9
+         * 小米5X 即便打开 unity profile 采集数据的情况下
+         * Vivo X20A
+         * Oppo R11t
+    内存
+        * 4050个 1*1建筑实例 内存为
+
+    测试结果
+        *
+    --]]
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

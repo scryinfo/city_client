@@ -44,7 +44,7 @@ namespace LuaFramework {
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
                 if (objs.Length == 0) return;
-
+                objs[0].name = releativePath;
                 if (func != null)
                 {
                     func.Call(objInstance, objs[0], ab);                    

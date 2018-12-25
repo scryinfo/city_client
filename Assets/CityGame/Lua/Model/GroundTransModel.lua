@@ -27,17 +27,38 @@ function GroundTransModel:m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDa
     data.deposit = 0  --现在没有押金
     DataManager.ModelSendNetMes("gscode.OpCode", "rentOutGround","gs.GroundRent", data)
 end
---租别人的房子
-function GroundTransModel.m_ReqRentGround(id, price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "rentGround","gs.ByteNum",{ id = id, num = price})
+--租别人的房子 --参数为groundInfo.rent
+function GroundTransModel:m_ReqRentGround(data, days)
+    local tempData = {}
+    local info = {}
+    info.rentPreDay = data.rentPreDay
+    info.deposit = data.deposit
+    info.rentDaysMin = data.rentDaysMin
+    info.rentDaysMax = data.rentDaysMax
+    info.coord = self.blockPos
+    tempData.info = info
+    tempData.days = days
+    DataManager.ModelSendNetMes("gscode.OpCode", "rentGround","gs.RentGround", tempData)
 end
---改变员工工资
-function GroundTransModel.m_ReqHouseSetSalary(id, price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+--出售土地
+function GroundTransModel:m_ReqSellGround(price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.GroundSale",{ price = price, coord = self.blockPos})
+end
+--购买土地
+function GroundTransModel:m_ReqBuyGround(price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.GroundSale",{ price = price, coord = self.blockPos})
+end
+--取消出租
+function GroundTransModel:m_ReqCancelRentGround()
+    DataManager.ModelSendNetMes("gscode.OpCode", "cancelRentGround","gs.MiniIndexCollection",{ coord = self.blockPos})
+end
+--取消售卖
+function GroundTransModel:m_ReqCancelSellGround()
+    DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = self.blockPos})
 end
 
 --- 回调 ---
 --住宅详情
 function GroundTransModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
-    DataManager.ControllerRpcNoRet(self.blockID,"HouseCtrl", '_receiveHouseDetailInfo',houseDetailInfo)
+    --DataManager.ControllerRpcNoRet(self.blockID,"HouseCtrl", '_receiveHouseDetailInfo',houseDetailInfo)
 end

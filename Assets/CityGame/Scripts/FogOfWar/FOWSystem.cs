@@ -65,7 +65,7 @@ public class FOWSystem : MonoSingletons<FOWSystem>
 	/// Size of your world in units. For example, if you have a 256x256 terrain, then just leave this at '256'.
 	/// </summary>
     /// 
-	public float worldSize = 1024f;
+	public float worldSize = 1100f;
 
 	/// <summary>
 	/// Size of the fog of war texture. Higher resolution will result in more precise fog of war, at the cost of performance.

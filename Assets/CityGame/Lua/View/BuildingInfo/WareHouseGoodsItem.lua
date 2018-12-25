@@ -13,6 +13,8 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
     self.manager = mgr
+    self.name = goodsDataInfo.name;
+    self.n = goodsDataInfo.number;
     self.id = id
     self.itemId = goodsDataInfo.itemId
     self.producerId = goodsDataInfo.producerId
@@ -66,4 +68,14 @@ end
 function WareHouseGoodsItem:Enabled()
     self.select_while:SetActive(true);
     self.transportBG:GetComponent("Button").enabled = true
+end
+
+--刷新ID数据
+function WareHouseGoodsItem:RefreshData(data,id)
+    self.id = id
+    self.n = data.number
+    self.name = data.name
+    self.itemId = data.itemId
+    --self.producerId = data.producerId
+    --self.qty = data.qty
 end

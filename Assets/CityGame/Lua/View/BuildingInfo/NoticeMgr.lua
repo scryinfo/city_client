@@ -13,7 +13,7 @@ function NoticeMgr:initialize()
 end
 
 --创建商品
-function NoticeMgr:_createNotice(insluabehaviour)
+function NoticeMgr:_createNotice(insluabehaviour,MailsData)
     self.behaviour = insluabehaviour
     --测试数据
     self.ModelDataList={}
@@ -46,7 +46,7 @@ function NoticeMgr:_createNotice(insluabehaviour)
     end
 end
 
---删除商品
+--删除邮件
 function NoticeMgr:_deleteNotice(id)
     --清空之前的旧数据
     destroy(self.items[id].prefab.gameObject);

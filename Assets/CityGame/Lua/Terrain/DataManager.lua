@@ -96,7 +96,6 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.CreateWaysByCollectionID(tempCollectionID)
-    --TODO://
     if not BuildDataStack[tempCollectionID] then
         return
     end
@@ -422,13 +421,13 @@ end
 --insId：Model唯一ID
 --protoNameStr：protobuf表名
 --protoNumStr:  protobuf协议号
---protoAnaStr:  protobuf解析数据结构名
+--protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
 function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
     if not ModelNetMsgStack[protoNameStr] then
         ModelNetMsgStack[protoNameStr] = {}
     end
-    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= table then
+    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= "table" then
         ModelNetMsgStack[protoNameStr][protoNumStr] = {}
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
@@ -465,7 +464,7 @@ end
 
 --移除 消息回调
 function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
-    if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
+     if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
         ModelNetMsgStack[protoNameStr][protoNumStr][insId] = nil
         --[[
         if #ModelNetMsgStack[protoNameStr][protoNumStr] == 0 then
@@ -494,10 +493,14 @@ function  DataManager.InitPersonDatas(tempData)
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
 
+    --初始化自己中心仓库的建筑ID
+    PersonDataStack.m_bagId = tempData.bagIds
+
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
     PersonDataStack.m_rentsBuild = tempData.rents
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -543,19 +546,13 @@ function  DataManager.InitPersonDatas(tempData)
         end
     end
 
-    --初始化好友信息
-    if  PersonDataStack.m_friendsInfo == nil then
-        PersonDataStack.m_friendsInfo = {}
-    end
-
-    --初始化好友申请信息
-    if  PersonDataStack.m_friendsApply == nil then
-        PersonDataStack.m_friendsApply = {}
-    end
-
-    --初始化黑名单
-    if  PersonDataStack.m_blacklist == nil then
-        PersonDataStack.m_blacklist = {}
+    PersonDataStack.socialityManager = SocialityManager:new()
+    if tempData.friends then
+        for _, value in pairs(tempData.friends) do
+            if value.id and value.b ~= nil then
+                DataManager.SetMyFriends(value)
+            end
+        end
     end
 
 
@@ -583,6 +580,10 @@ end
 
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
+end
+
+function DataManager.GetBagId()
+    return PersonDataStack.m_bagId
 end
 
 function DataManager.GetMyPersonData()
@@ -635,74 +636,70 @@ end
 
 --获取自己好友信息
 function DataManager.GetMyFriends()
-    return PersonDataStack.m_friends
+    --return PersonDataStack.m_friends
+    return PersonDataStack.socialityManager:GetMyFriends()
 end
 
 --刷新自己好友信息
 --参数： tempData==>  ByteBool
 --如果需要删除好友，ByteBool={ id = "XXXXXXXX",b = nil }
 function DataManager.SetMyFriends(tempData)
-    if tempData.id then
-        PersonDataStack.m_friends[tempData.id] = tempData.b
-    end
-end
-
---获取自己好友详细信息
-function DataManager.GetMyFriendsInfo()
-    return PersonDataStack.m_friendsInfo
-end
-
---刷新自己好友详细信息
---参数： tempData==>  RoleInfo
---如果需要删除好友，ByteBool={ id = "XXXXXXXX",name = nil }
-function DataManager.SetMyFriendsInfo(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_friendsInfo, tempData)
-    elseif tempData.id and not tempData.name then
-        for i, v in pairs(PersonDataStack.m_friendsInfo) do
-            if v.id == tempData.id then
-                table.remove(PersonDataStack.m_friendsInfo, i)
-                break
-            end
-        end
-    end
+    PersonDataStack.socialityManager:SetMyFriends(tempData)
 end
 
 --获取自己好友申请信息
 function DataManager.GetMyFriendsApply()
-    return PersonDataStack.m_friendsApply
+    --return PersonDataStack.m_friendsApply
+    return PersonDataStack.socialityManager:GetMyFriendsApply()
 end
 
 --刷新自己好友申请信息
 --参数： tempData==>  RequestFriend
 --如果需要删除好友申请，ByteBool={ id = "XXXXXXXX",name = nil }
 function DataManager.SetMyFriendsApply(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_friendsApply, tempData)
-    elseif tempData.itemId and not tempData.id then
-        table.remove(PersonDataStack.m_friendsApply, tempData.itemId)
-    end
+    --if tempData.id and tempData.name then
+    --    table.insert(PersonDataStack.m_friendsApply, tempData)
+    --elseif tempData.itemId and not tempData.id then
+    --    table.remove(PersonDataStack.m_friendsApply, tempData.itemId)
+    --end
+    PersonDataStack.socialityManager:SetMyFriendsApply(tempData)
 end
 
 --获取自己黑名单
 function DataManager.GetMyBlacklist()
-    return PersonDataStack.m_blacklist
+    return PersonDataStack.socialityManager:GetMyBlacklist()
 end
 
 --刷新自己黑名单
 --参数： tempData==>  Bytes
 --如果需要删除黑名单，tempData={ id = "XXXXXXXX",name = nil }
 function DataManager.SetMyBlacklist(tempData)
-    if tempData.id and tempData.name then
-        table.insert(PersonDataStack.m_blacklist, tempData)
-    elseif tempData.id and not tempData.name then
-        for i, v in pairs(PersonDataStack.m_blacklist) do
-            if v.id == tempData.id then
-                table.remove(PersonDataStack.m_blacklist, i)
-                break
-            end
-        end
-    end
+    --if tempData.id and tempData.name then
+    --    table.insert(PersonDataStack.m_blacklist, tempData)
+    --elseif tempData.id and not tempData.name then
+    --    for i, v in ipairs(PersonDataStack.m_blacklist) do
+    --        if v.id == tempData.id then
+    --            table.remove(PersonDataStack.m_blacklist, i)
+    --            break
+    --        end
+    --    end
+    --end
+    PersonDataStack.socialityManager:SetMyBlacklist(tempData)
+end
+
+-- 获取聊天消息
+function DataManager.GetMyChatInfo(index)
+    return PersonDataStack.socialityManager:GetMyChatInfo(index)
+end
+
+-- 刷新聊天消息
+function DataManager.SetMyChatInfo(tempData)
+    PersonDataStack.socialityManager:SetMyChatInfo(tempData)
+end
+
+-- 已读聊天消息
+function DataManager.SetMyReadChatInfo(index, id)
+    PersonDataStack.socialityManager:SetMyReadChatInfo(index, id)
 end
 
 --获取自己所有的建筑详情
@@ -790,11 +787,11 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
-
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
-
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
 end
 
 --清除所有消息回调
@@ -909,7 +906,6 @@ function DataManager.n_OnReceiveAddFriendSucess(stream)
     end
     friend.b = true
     DataManager.SetMyFriends(friend)
-    DataManager.SetMyFriendsInfo(friend)
     DataManager.SetMyFriendsApply({id = friend.id})
     Event.Brocast("c_OnReceiveAddFriendSucess", friend)
 end
@@ -930,6 +926,9 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
     local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
+    --for _, v in ipairs(playerData.info) do
+    --    DataManager.SetMyFriendsInfo(v)
+    --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
 end
 
@@ -967,3 +966,16 @@ end
 
 ----------
 
+-- 收到服务器的聊天消息
+function DataManager.n_OnReceiveRoleCommunication(stream)
+    local chatData = assert(pbl.decode("gs.CommunicationProces", stream), "ChatModel.n_OnReceiveRoleCommunication: stream == nil")
+    DataManager.SetMyChatInfo(chatData)
+    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+end
+
+-- 好友在线状态刷新
+function DataManager.n_OnReceiveRoleStatusChange(stream)
+    local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
+    DataManager.SetMyFriends(roleData)
+end
+----------

@@ -23,6 +23,9 @@ end
 function createWindows(name,pos)
 	PanelManager:CreateWindow(name,pos);
 end
+function ResourcesImage(path)
+	PanelManager:ResourcesImage(path)
+end
 function child(str)
 	return transform:Find(str);
 end
@@ -131,6 +134,14 @@ function getFormatUnixTime(time)
 	end
 
 	return tb
+end
+--表格排序
+function tableSort(table,gameObject)
+	TableSort.tableSort(table,gameObject)
+end
+--修改表数据
+function UpdataTable(table,gameObject,prefabs)
+	TableSort:UpdataTable(table,gameObject,prefabs)
 end
 --将秒转换成小时分秒的格式，非时间戳
 function getTimeBySec(secTime)
@@ -314,3 +325,13 @@ function GetLanguage(key,...)
 	return key.."没有设置"
 end
 
+---生成预制
+function creatGoods(path,parent)
+	local prefab = UnityEngine.Resources.Load(path);
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	local rect = go.transform:GetComponent("RectTransform");
+	go.transform:SetParent(parent);--.transform
+	rect.transform.localScale = Vector3.one;
+	rect.transform.localPosition=Vector3.zero
+	return go
+end

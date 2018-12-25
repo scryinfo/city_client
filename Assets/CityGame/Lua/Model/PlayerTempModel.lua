@@ -39,10 +39,39 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+        PlayerTempModel.tempTestReqAddItem(2151001, 999)
+    end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
         PlayerTempModel.tempTestAddGroung(31,31, 40,40)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
+        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+        PlayerTempModel.tempTestReqAddItem(2151002, 888)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+        PlayerTempModel.tempTestReqAddItem(2151003, 777)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+        PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+        PlayerTempModel.tempTestReqAddItem(2152001, 555)
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
+        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
+        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
+        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
         PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
@@ -57,6 +86,9 @@ function PlayerTempModel.Update()
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
         PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        PlayerTempModel.tempTestAddGroung(11,0, 20,10)
     end
     --ct.OpenCtrl("AddLineChooseItemCtrl", {})
 end

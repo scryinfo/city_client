@@ -3,50 +3,46 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/8/27 14:13
 ---
+LoginModel = class("LoginModel",ModelBase)
 local pbl = pbl
-local log = log
+--local log = log
 
-LoginModel= {};
-local this = LoginModel;
-
---构建函数--
-function LoginModel.New()
-    logDebug("LoginModel.New--->>");
-    return this;
-end
-
-function LoginModel.Awake()
-    logDebug("LoginModel.Awake--->>");
-    this:OnCreate();
+function LoginModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
 end
 
 --启动事件--
-function LoginModel.OnCreate()
+function LoginModel:OnCreate()
     --注册本地UI事件
-    Event.AddListener("m_OnAsLogin", this.m_OnAsLogin);
+    Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
    -- Event.AddListener("m_Gslogin", this.m_Gslogin);
     --Event.AddListener("m_chooseGameServer", this.m_chooseGameServer);
-    Event.AddListener("m_onConnectionState", this.m_onConnectionState);
-    Event.AddListener("m_onDisconnect", this.m_onDisconnect);
+    Event.AddListener("m_onConnectionState", self.m_onConnectionState);
+    Event.AddListener("m_onDisconnect", self.m_onDisconnect);
     --注册 AccountServer 消息
+   -- DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","login","as.Login",self.n_AsLogin)--新版model网络注册
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),ServerListModel.n_AllGameServerInfo);
+   -- DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","getServerList","as.AllGameServerInfo",self.n_AllGameServerInfo)
     LoginModel.registerAsNetMsg()
 end
 --关闭事件--
 function LoginModel.Close()
     --清空本地UI事件
-    Event.RemoveListener("m_OnAsLogin", this.OnLogin);
+    Event.RemoveListener("m_OnAsLogin", self.OnLogin);
    -- Event.RemoveListener("m_Gslogin", this.m_Gslogin);
     --Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
-    Event.RemoveListener("m_onConnectionState", this.m_onConnectionState);
-    Event.RemoveListener("m_onDisconnect", this.m_onDisconnect);
+    Event.RemoveListener("m_onConnectionState", self.m_onConnectionState);
+    Event.RemoveListener("m_onDisconnect", self.m_onDisconnect);
 end
 function LoginModel.registerAsNetMsg()
     --as网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","login"),LoginModel.n_AsLogin);
-   -- CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
-   -- CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),LoginModel.n_ChooseGameServer);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
+
 end
 
+--点击登录
 function LoginModel.m_OnAsLogin( username, password, data )
     CityEngineLua.username = username;
     CityEngineLua.password = password;
@@ -54,12 +50,20 @@ function LoginModel.m_OnAsLogin( username, password, data )
     CityEngineLua.login_loginapp(true);
 end
 
---[[function LoginModel.m_Gslogin( )
-    --注册gs的网络回调
-    LoginModel.registerGsNetMsg()
-    --连接gs
-    CityEngineLua.login_baseapp(true)
-end--]]
+--返回服务器列表回调
+function LoginModel.n_AllGameServerInfo( stream )
+    local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
+    if #msgAllGameServerInfo.infos ~= 0 then
+        local serinofs = msgAllGameServerInfo.infos
+        ct.OpenCtrl("ServerListCtrl", serinofs)
+        --服务器发过来的bytes测试
+        UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",serinofs)
+        --服务器发过来的bytes测试
+        return
+    end
+
+    local xxx = 0 ;
+end
 
 function LoginModel.m_onConnectionState( isSuccess )
     Event.Brocast("c_ConnectionStateChange", isSuccess );
@@ -70,6 +74,7 @@ function LoginModel.m_onDisconnect( isSuccess )
     CityEngineLua.reConnect()
 end
 
+--登录AS回调
 function LoginModel.n_AsLogin(stream )
     local successfully = true
     --这里本来应该是反序列化pb字节流，但暂时因为服务器那边的login协议是特殊处理的，返回的包没有pb数据，所以暂时没有反序列化这一步
@@ -77,8 +82,9 @@ function LoginModel.n_AsLogin(stream )
     --msglogion:ParseFromString(stream)
     --successfully = msglogion.successed
     --end
+    Event.Brocast("c_LoginSuccessfully", successfully );
     LoginModel:onUIGetServerList()
-    --Event.Brocast("c_LoginSuccessfully", successfully );
+
 end
 function LoginModel.onUIGetServerList( stream )
     --1、 获取协议id

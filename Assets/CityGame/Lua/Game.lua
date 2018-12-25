@@ -60,10 +60,10 @@ function Game.OnPostInitOK()
     --end
 
     --测试选服界面
-    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
+--[[    local serverListModel = CtrlManager.GetModel(ModelNames.ServerList);
     if serverListModel ~= nil then
         serverListModel:Awake();
-    end
+    end]]
 
     --测试创角界面
     local createRoleModel = CtrlManager.GetModel(ModelNames.CreateRole);
@@ -96,7 +96,7 @@ function Game.OnPostInitOK()
     --调整生产线
     local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
     if AdjustProductionLineModel ~= nil then
-        AdjustProductionLineModel:Awake();
+      --  AdjustProductionLineModel:Awake();
     end
     --科技交易所
     local ScienceSellHallModel = CtrlManager.GetModel(ModelNames.ScienceSellHall);
@@ -126,10 +126,15 @@ function Game.OnPostInitOK()
         friendsModel:Awake();
     end
 
+    local chatModel = CtrlManager.GetModel(ModelNames.Chat);
+    if chatModel ~= nil then
+        chatModel:Awake();
+    end
+
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()
     --end
     DataManager.Init()
-    UnitTest.Exec_now("Allen_w9", "c_CameraMove",self)
+    TerrainManager.Init()
 end

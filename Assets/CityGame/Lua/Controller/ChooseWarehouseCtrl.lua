@@ -2,6 +2,8 @@ ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
 UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 
 local isShowList;
+local buildingInfo;
+
 function ChooseWarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -20,9 +22,16 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     chooseWarehouse:AddClick(ChooseWarehousePanel.quantityBtn.gameObject,self.OnClick_quantityBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.priceBtn.gameObject,self.OnClick_priceBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
-    WareHouseGoodsMgr:_creatAddressList(chooseWarehouse,nil)
+    chooseWarehouse:AddClick(ChooseWarehousePanel.bgBtn.gameObject,self.OnClick_bgBtn,self);
 
+    ChooseWarehousePanel.boxImg:SetActive(true)
+
+    WareHouseGoodsMgr:_creatAddressList(chooseWarehouse,nil)
+    WareHouseGoodsMgr:_creatLinePanel()
+    self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
+    Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
+    Event.AddListener("c_Transport",self.c_Transport,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
     self.gameObject = go;
@@ -36,12 +45,46 @@ end
 function ChooseWarehouseCtrl:OnClick_searchBtn()
 
 end
+--点击ming BG
+function ChooseWarehouseCtrl:OnClick_bgBtn(go)
+    ChooseWarehousePanel.boxImg:SetActive(true)
+    if go.WareHouseGoodsMgr.lastBox == nil then
+        return
+    end
+    go.WareHouseGoodsMgr.lastBox:SetActive(false)
+end
 
 --点击通讯录BG
 function ChooseWarehouseCtrl:c_OnAddressListBG(go)
+    ChooseWarehousePanel.boxImg:SetActive(false)
     go.manager:SelectBox(go)
-    go.manager:TransportConfirm(true)
+    --go.manager:TransportConfirm(true)
     CenterWareHousePanel.nameText.text = go.name;
+end
+
+--点击所运输的地方
+function ChooseWarehouseCtrl:c_OnLinePanelBG(info)
+    buildingInfo = info
+end
+
+--运输
+function ChooseWarehouseCtrl:c_Transport(src, itemId, n)
+
+    Event.Brocast("m_ReqTransport",src,buildingInfo.buildingId,itemId,n)
+end
+
+--计算距离
+function ChooseWarehouseCtrl:GetDistance(pos)
+    local distance
+    distance = math.sqrt(math.pow((pos.x-buildingInfo.posX),2)+math.pow((pos.y-buildingInfo.posY),2))
+    return distance
+end
+
+--点击建筑的名字
+function ChooseWarehouseCtrl:GetName()
+    local name
+    name = buildingInfo.name
+    return name
 end
 
 --根据名字排序

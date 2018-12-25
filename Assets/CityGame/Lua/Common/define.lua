@@ -93,6 +93,7 @@ ModelNames = {
 	Warehouse = "WarehouseModel",
 	friends = "FriendsModel", -- 好友
 	Laboratory = "LaboratoryModel",  --研究所
+	Chat = "ChatModel", -- 聊天
 }
 
 SYSEVENT =
@@ -190,6 +191,7 @@ BuildingType =
 	MunicipalManage = 3,--市政管理
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
+	TalentCenter = 6 ,--人才中心
 }
 --建筑所属
 Buildingowner=

@@ -27,7 +27,7 @@ ItemCreatDeleteMgr.AddedItem_Path="View/GoodsItem/MapAdvertisementItem"
 
 function ItemCreatDeleteMgr:initialize()
 
-    UpdateBeat:Add(self._updateTime, self);
+
 end
 local idList={}
 local typelist={}
@@ -35,12 +35,25 @@ local againtypeList={}
 local metald=0
 local adList={}
 
+function ItemCreatDeleteMgr:begin()
+    self.time=UnityEngine.Time.time+1
 
+        UpdateBeat:Add(self._updateTime, self);
+end
+function ItemCreatDeleteMgr:Remove()
+    UpdateBeat:Remove(self._updateTime,self)
+end
 
 function ItemCreatDeleteMgr:_updateTime()
 
+    if UnityEngine.Time.time>self.time then
+            for i, v in pairs(self.addItemInSList) do
+                v:updateTime()
+            end
+        UpdateBeat:Remove(self._updateTime,self)
 
-
+        self:begin()
+    end
 end
 
 function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
@@ -50,6 +63,14 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.index=0
         self.AdvertisementDataList={}
         self.isFirst=false
+        self.serverMapAdvertisementItemList={}
+        self.outAdvertisementItemList={}
+        self.AdvertisementItemList={}
+        self.buildItemList={}
+        self.goodsItemList={}
+        self.addItemList={}
+        self.addItemInSList={}
+        self.AddItemID=0
     end
     self.transform=ManageAdvertisementPosPanel.addCon;
 
@@ -77,7 +98,7 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
                     idList[v.metaId]=v.metaId
                     metald=v.metaId
                     if not typelist[v.metaId]then
-                    typelist[v.metaId]={}
+                        typelist[v.metaId]={}
                     end
                     typelist[v.metaId][v.id]=v
                 end
@@ -89,10 +110,10 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
                 end
                 for k, Ad in pairs(metaIdAd) do
                     if not Ad.slot then--建筑主人广告
-                        if not againtypeList[i][MunicipalModel.buildingOwnerId] then
-                            againtypeList[i][MunicipalModel.buildingOwnerId]={}
+                        if not againtypeList[i][creatData.model.buildingOwnerId] then
+                            againtypeList[i][creatData.model.buildingOwnerId]={}
                         end
-                        table.insert(againtypeList[i][MunicipalModel.buildingOwnerId],Ad)
+                        table.insert(againtypeList[i][creatData.model.buildingOwnerId],Ad)
                         metaIdAd[k]=nil
                     else--别人广告
                         if not againtypeList[i][ Ad.slot.renterId] then
@@ -109,6 +130,14 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     if creatData.buildingType == BuildingType.Municipal then---创建广告
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
+            if personId==DataManager.GetMyOwnerID() then
+                adList[metaId]=ads
+            end
+        end
+    end
+        self.adList=adList
+    for metaId, persons in pairs(againtypeList) do
+        for personId, ads in pairs(persons) do
             ads[1]["count"]=#ads
             ads[1].personId=personId
             self:_creatAdvertisementItem(ads[1])
@@ -117,52 +146,46 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     elseif creatData.buildingType == BuildingType.MunicipalManage then
 
         ---创建自已打的广告
-        --if MunicipalModel.owenerId==MunicipalModel.buildingOwnerId then--自已进入
+        --if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--自已进入
         for metaId, persons in pairs(againtypeList) do
             for personId, ads in pairs(persons) do
-                if personId==MunicipalModel.owenerId then
+                if personId==DataManager.GetMyOwnerID() then
                     adList[metaId]=ads
                 end
             end
         end
         self.adList=adList
-            for metaId, ads in pairs(adList) do
-                ads[1]["count"]=#ads
-                ads[1].ads=ads
-                self:_creatserverMapAdvertisementItem(ads[1])
-                --self:_creataddItem();
-            end
-        --else--他人进入
-        --
-        --end
+        for metaId, ads in pairs(adList) do
+            ads[1]["count"]=#ads
+            ads[1].ads=ads
+            self:_creatserverMapAdvertisementItem(ads[1])
+            --self:_creataddItem();
+        end
+
     else---创建外部广告
-        for metaId, persons in pairs(againtypeList) do
-         for personId, ads in pairs(persons) do
+    for metaId, persons in pairs(againtypeList) do
+        for personId, ads in pairs(persons) do
+            ads[1].personId=personId
             self:_creatoutItem(ads[1])
-         end
         end
     end
+    end
 end
-
 
 ---创建服务器映射广告
 local ServerMapAdvertisementItemID=0
 function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
-    if(not self.serverMapAdvertisementItemList ) then
-        self.serverMapAdvertisementItemList={}
+    if( not self.serverMapAdvertisementINSList ) then
         self.serverMapAdvertisementINSList={}
     end
 
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.serverMapAdvertisementItemList[prefabData.metaId]=item
     ---给映射广告赋值数据
-   local ins =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
+    local ins =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
     self.serverMapAdvertisementINSList[prefabData.metaId]=ins
     ServerMapAdvertisementItemID=ServerMapAdvertisementItemID+1
 
-    --if MunicipalModel.owenerId~=MunicipalModel.buildingOwnerId then--他人进入
-    --    --    item.transform:SetAsLastSibling();
-    --    --end
 end
 
 ---创建映射广告
@@ -172,18 +195,17 @@ function ItemCreatDeleteMgr:_creatMapAdvertisementItem(prefabData)
         self.MapAdvertisementItemList={}
     end
 
-   local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
+    local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.MapAdvertisementItemList[MapAdvertisementItemID]=item
     ---给映射广告赋值数据
-   MapAdvertisementItem:new(prefabData,item,self.behaviour,self,MapAdvertisementItemID)
+    MapAdvertisementItem:new(prefabData,item,self.behaviour,self,MapAdvertisementItemID)
     MapAdvertisementItemID=MapAdvertisementItemID+1
 end
 
 ---创建外部广告
-local outAdvertisementItemID=0;
+local outAdvertisementItemID=1;
 function ItemCreatDeleteMgr:_creatoutItem(prefabData)
-    if(not self.outAdvertisementItemList ) then
-        self.outAdvertisementItemList={}
+    if(not self.outAdvertisementINSList ) then
         self.outAdvertisementINSList={}
     end
     ------创建预制
@@ -191,56 +213,51 @@ function ItemCreatDeleteMgr:_creatoutItem(prefabData)
 
     self.outAdvertisementItemList[outAdvertisementItemID]=itemclone
     -----给预制赋值数据
-   local Ins = outAdvertisementItem:new(prefabData,itemclone,self.behaviour,self,outAdvertisementItemID)
-    self.outAdvertisementINSList[prefabData.metaId]=Ins
+    local Ins = outAdvertisementItem:new(prefabData,itemclone,self.behaviour,self,outAdvertisementItemID)
+    if prefabData.personId==DataManager.GetMyOwnerID() then
+        self.outAdvertisementINSList[prefabData.metaId]=Ins
+    end
     outAdvertisementItemID=outAdvertisementItemID+1;
 end
 
+
 ---创建广告
-local AdvertisementItemID=0;
+local AdvertisementItemID=1;
 function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
-    if(not self.AdvertisementItemList ) then
-        self.AdvertisementItemList={}
+    if(not self.AdvertisementINSList ) then
         self.AdvertisementINSList={}
     end
     ---创建预制
     local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
 
-
     ---给预制赋值数据
     local ins =AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,AdvertisementItemID)
-    if prefabData.personId==MunicipalModel.owenerId then
+    if prefabData.personId==DataManager.GetMyOwnerID() then
         self.AdvertisementINSList[prefabData.metaId]=ins
-        self.AdvertisementItemList[prefabData.metaId]=itemclone
     end
-    if prefabData.personId==MunicipalModel.buildingOwnerId then
+    self.AdvertisementItemList[AdvertisementItemID]=itemclone
+    if prefabData.personId==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
         ins.ownerIma.localScale=Vector3.one
     end
     AdvertisementItemID=AdvertisementItemID+1;
 end
 ---创建添加按钮
-local AddItemID=0;
+
 function ItemCreatDeleteMgr:_creataddItem(prefabData)
-    if(not self.addItemList ) then
-        self.addItemList={}
-        self.addItemInSList={}
-    end
 
     ---创建预制
     local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
-    self.addItemList[AddItemID]=itemclone
+    self.addItemList[self.AddItemID]=itemclone
     ---给预制赋值数据
     local ins =AddItem:new(prefabData,itemclone,self.behaviour,self,AddItemID)
-    self.addItemInSList[AddItemID]=ins
-    AddItemID=AddItemID+1;
+    self.addItemInSList[self.AddItemID]=ins
+    self.AddItemID=self.AddItemID+1;
     ----------------------------------------------------------------------------------------------------------
 end
+
 ---创建商品广告
 local goodsItemID=0
 function ItemCreatDeleteMgr:_creatgoodsItem(goodsPrebData)
-    if(not self.goodsItemList)then
-        self.goodsItemList={}
-    end
 
     ---创建预制
     local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
@@ -252,9 +269,7 @@ end
 ---创建建筑广告
 local buildItemID=0
 function ItemCreatDeleteMgr:_creatbuildingItem(buildingPrebData)
-    if not self.buildItemList then
-        self.buildItemList={}
-    end
+
 
     ---创建预制
     local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)

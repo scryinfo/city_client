@@ -957,17 +957,19 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     end
     --数据准备
     local ResPathListS = {}
-    ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
     ResPathListS[#ResPathListS+1] = 'Build/Factory_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/Park_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'
-    ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/Park_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
 
     --aTester.testcount = 4050
-    aTester.testcount = 4050
+    aTester.testcount = 4050 --450 1屏
+    --aTester.testcount = 2700 --300  1屏
+    --aTester.testcount = 360 --40  1屏
     aTester.CountEachType = math.ceil(aTester.testcount / #ResPathListS)
     aTester.ResPathList = ResPathListS
     aTester.gridsOneBlock = 21 --1屏的横纵坐标跨度
@@ -987,13 +989,15 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     aTester.AoiScreenBlocksOut = {}    --超出9屏的分块
     aTester.BuildingsOutAoi = {}    --超出9屏的分块，放入临时回收池 AoiGridsOut
     --注： 新增块中的建筑从超出反馈的块中获取，如果没有，就实例化
-    aTester.interval = 10 --每次测试的间隔帧
+    --aTester.interval = 10 --每次测试的间隔帧
+    aTester.interval = 60 --每次测试的间隔帧
     aTester.instancCount = 0 --每次测试的间隔帧
     aTester._AoiUpdateTimer = nil --每次新增Aoi数据分屏更新的timer
     aTester._AoiUpdateTimerInterval = 1 --每次Aoi的间隔帧
     aTester._AoiUpdateBlockCountEachTime = 1 --每次Aoi更新的屏幕数量
     aTester.updatedBlockCount = 1       --每次Aoi已经更新的屏幕数量
-
+    aTester.outRange_Pos = {x = -10000, y = 0, z = -10000}
+    aTester.temp_Pos = {x = -10000, y = 0, z = -10000}
 
     --数据准备
 
@@ -1024,6 +1028,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             pools[typeid][#pools[typeid]+1] = UnityEngine.GameObject.Instantiate(tester.loadedAssets[typeid])
             tester.instancCount = tester.instancCount +  1
             pools[typeid][#pools[typeid]].name = typeid
+            pools[typeid][#pools[typeid]].transform.position = tester.outRange_Pos
             --暂时把实例的名字命名为资源路径，这样在后续的实例迁移到不同的对象池时，能够辨识
             --[[
                 local instanceToPools = function(pools, instance)
@@ -1215,6 +1220,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     local aoi_newBlockProcess = function(tester, newAoiBlocks)
         local updatedBlockCount = 0
         local updatedInstanceCount = 0
+        local temp_Pos = {}
         for k,v in pairs(newAoiBlocks) do
             if tester.updatedBlockCount > tester._AoiUpdateBlockCountEachTime then
                 tester.updatedBlockCount = 1
@@ -1236,8 +1242,10 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
                             validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) --只有默认对象池才允许分配新实例
                         end
                         if validInstance then
-                            validInstance.transform.position.x = buildingdata.position.x
-                            validInstance.transform.position.z = buildingdata.position.y
+                            temp_Pos.y = validInstance.transform.position.y
+                            temp_Pos.x = buildingdata.position.x
+                            temp_Pos.z = buildingdata.position.y
+                            validInstance.transform.position = temp_Pos
                             tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
                             updatedInstanceCount = updatedInstanceCount +1
                         end

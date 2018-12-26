@@ -37,6 +37,8 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
             --data.dataTab = ProcessingModel.processingWarehouse
             --data.buildingType = BuildingType.ProcessingFactory
             ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+        elseif self.warehouseData.buildingType == BuildingType.RetailShop then
+            ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
         end
     end);
     if self.warehouseData.buildingType == BuildingType.MaterialFactory then

@@ -10,13 +10,6 @@ AdjustProductionLineCtrl.materialProductionPrefab = {};
 --添加生产线临时表
 AdjustProductionLineCtrl.tempProductionLine = {}
 
-----加工厂实例
---AdjustProductionLineCtrl.materialProductionLine = {};
-----加工厂UI信息
---AdjustProductionLineCtrl.materialProductionUIInfo = {};
-----加工厂预制
---AdjustProductionLineCtrl.materialProductionPrefab = {};
-
 AdjustProductionLineCtrl.idleWorkerNums = 0
 local adjustLine
 function AdjustProductionLineCtrl:initialize()

@@ -8,13 +8,15 @@ require 'View/BuildingInfo/SmallProductionLineItem'  --生产线 Item
 GoodsUnifyMgr = class('GoodsUnifyMgr')
 
 local itemsId
-GoodsUnifyMgr.static.Staff_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
+GoodsUnifyMgr.static.Shelf_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
+GoodsUnifyMgr.static.RetailGoods_PATH = "View/GoodsItem/RetailGoodsItem"  --零售店货架预制
 GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
 GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
 GoodsUnifyMgr.static.Shelf_BuyGoods_PATH = "View/GoodsItem/BuyDetailsItem"  --货架购买物品 Item
 GoodsUnifyMgr.static.AddProductionLine_PATH = "View/GoodsItem/ProductionItem"  --选择添加生产线 Item
 GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProductionLineItem"  --生产线 Item
+
 
 function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
@@ -28,9 +30,9 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
         self:_creatWarehouseItemGoods(buildingData);
     elseif buildingData.buildingType == BuildingInType.ProductionLine then
         self:_creatProductionItem();
+    elseif buildingData.buildingData == BuildingType.RetailShop then
+        self:_creatretailShelfGoods();
     end
-
-
 end
 --仓库
 function GoodsUnifyMgr:_creatWarehouseItemGoods(buildingData)
@@ -48,7 +50,9 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(buildingData)
 
         local prefabData = {}
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
+        --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
+        prefabData._prefab = creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
+
         self.WarehouseModelData[i] = prefabData
 
         local warehouseLuaItem = WarehouseItem:new(self.WarehouseModelData[i].uiData,prefabData._prefab,self.behaviour,self,i)
@@ -77,7 +81,8 @@ function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
 
         local prefabData={}
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
+        --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_PATH,ShelfPanel.Content)
+        prefabData._prefab = creatGoods(GoodsUnifyMgr.static.Shelf_PATH,ShelfPanel.Content)
         self.ModelDataList[i] = prefabData
 
         local shelfLuaItem = ShelfGoodsItem:new(self.ModelDataList[i].uiData, prefabData._prefab, self.behaviour, self, i,self.state,buildingData.info.id)
@@ -90,6 +95,37 @@ function GoodsUnifyMgr:_creatStaffItemGoods(buildingData)
                 shelfLuaItem.shelfImg:SetActive(true);
             else
                 shelfLuaItem.shelfImg:SetActive(false);
+            end
+        end
+    end
+end
+--零售店货架
+function GoodsUnifyMgr:_creatretailShelfGoods()
+    local configTable = {}
+    for i = 1, 11 do
+        local goodsDataInfo = {}
+        goodsDataInfo.name = "wood"..i
+        goodsDataInfo.brandName = "Addypolly"..i
+        goodsDataInfo.brandValue = math.random(50,100)
+        goodsDataInfo.qualityValue = math.random(50,100)
+        goodsDataInfo.price = math.random(1000,10000)
+        goodsDataInfo.number = math.random(50,99)
+        configTable[i] = goodsDataInfo
+
+        local prefab = {}
+        prefab.uiData = configTable[i]
+        --prefab._prefab = self:_creatGoods(GoodsUnifyMgr.static.RetailGoods_PATH,RetailShelfPanel.content)
+        prefab._prefab = creatGoods(GoodsUnifyMgr.static.RetailGoods_PATH,RetailShelfPanel.content)
+        RetailShelfCtrl.retailShelfUIData[i] = prefab
+
+        local retailGoodsItem = RetailGoodsItem:new(RetailShelfCtrl.retailShelfUIData[i].uiData,prefab._prefab,self.behaviour,i)
+        RetailShelfCtrl.retailShelfGoods[i] = retailGoodsItem;
+
+        for k,v in pairs(RetailShelfCtrl.retailShelfGoods) do
+            if k % 5 == 0 then
+                v.shelfImg:SetActive(true);
+            else
+                v.shelfImg:SetActive(false);
             end
         end
     end
@@ -108,7 +144,8 @@ function GoodsUnifyMgr:_creatProductionItem()
 
             local prefabData = {}
             prefabData.uiData = configTable[i]
-            prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
+            --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
+            prefabData._prefab = creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
             AddProductionLineCtrl.productionItemTab[i] = prefabData
 
             local productionItem = ProductionItem:new(AddProductionLineCtrl.productionItemTab[i].uiData,prefabData._prefab,self.behaviour,self,i)
@@ -130,7 +167,8 @@ function GoodsUnifyMgr:_creatProductionLine(name,itemId)
 
     local prefabData = {}
     prefabData.uiData = self.materialProductionUIInfo[itemId]
-    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+    --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+    prefabData._prefab = creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
     self.materialProductionPrefab = {};
     self.materialProductionPrefab[itemId] = prefabData
 
@@ -161,7 +199,8 @@ function GoodsUnifyMgr:_getProductionLine(table,behaviour)
 
         local prefabData = {}
         prefabData.uiData = AdjustProductionLineCtrl.materialProductionUIInfo[i]
-        prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+        prefabData._prefab = creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
         AdjustProductionLineCtrl.materialProductionPrefab[i] = prefabData
 
         local productionLineItem = SmallProductionLineItem:new(AdjustProductionLineCtrl.materialProductionPrefab[i].uiData,prefabData._prefab,behaviour,self,i,table.info.id);
@@ -189,7 +228,8 @@ end
 function GoodsUnifyMgr:_creatShelfGoods(id,luabehaviour,itemId)
     --预制的信息
     local prefabData = {}
-    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
+    --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
+    prefabData._prefab = creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
     local shelfLuaItem = DetailsItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId)
 
     if not self.shelfPanelItem then
@@ -206,7 +246,8 @@ end
 --仓库选中物品运输
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
-    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
+    --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
+    prefabData._prefab = creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
     local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
 
     if not self.transportPanelItem then
@@ -223,7 +264,8 @@ end
 --货架购买暂用这个(后边修改物品上架，运输，购买)
 function GoodsUnifyMgr:_buyShelfGoods(id,luabehaviour,itemId)
     local shelfGoodsData = {}
-    shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
+    --shelfGoodsData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
+    shelfGoodsData._prefab = creatGoods(GoodsUnifyMgr.static.Shelf_BuyGoods_PATH,ShelfPanel.buyContent);
     local buyGoodsItem = BuyDetailsItem:new(self.items[id].goodsDataInfo,shelfGoodsData._prefab,luabehaviour,self,id,itemId);
 
     if not self.shelfBuyGoodslItems then
@@ -271,12 +313,12 @@ function GoodsUnifyMgr:_WarehousedeleteGoods(id)
         i = i + 1
     end
 end
---生成预制
-function GoodsUnifyMgr:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
-end
+----生成预制
+--function GoodsUnifyMgr:_creatGoods(path,parent)
+--    local prefab = UnityEngine.Resources.Load(path);
+--    local go = UnityEngine.GameObject.Instantiate(prefab);
+--    local rect = go.transform:GetComponent("RectTransform");
+--    go.transform:SetParent(parent.transform);
+--    rect.transform.localScale = Vector3.one;
+--    return go
+--end

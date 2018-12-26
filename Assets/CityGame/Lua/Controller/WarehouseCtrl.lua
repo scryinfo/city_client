@@ -59,24 +59,34 @@ function WarehouseCtrl:Refresh()
     self.operation = nil;
 
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
+    self.luabehaviour = warehouse
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         WarehouseCtrl.playerId = self.m_data.info.id
-        self.luabehaviour = warehouse
+        --self.luabehaviour = warehouse
         self.m_data.type = BuildingInType.Warehouse
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-        local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-        WarehousePanel.Warehouse_Slider.value = numText;
-        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+        --WarehousePanel.Warehouse_Slider.value = numText;
+        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.luabehaviour = warehouse
+        --self.luabehaviour = warehouse
         self.m_data.type = BuildingInType.Warehouse
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-        local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-        WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-        WarehousePanel.Warehouse_Slider.value = numText;
-        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+        --WarehousePanel.Warehouse_Slider.value = numText;
+        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    elseif self.m_data.buildingType == BuildingType.RetailShop then
+        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+        --WarehousePanel.Warehouse_Slider.value = numText;
+        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     end
+    local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+    WarehousePanel.Warehouse_Slider.value = numText;
+    WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
 
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
@@ -153,7 +163,7 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
     WarehouseCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.WarehouseItems)
 end
 --跳转选择仓库界面
-function WarehouseCtrl:OnClick_transportopenBtn(ins)
+function WarehouseCtrl:OnClick_transportopenBtn()
     ct.OpenCtrl("ChooseWarehouseCtrl")
 end
 --确定上架

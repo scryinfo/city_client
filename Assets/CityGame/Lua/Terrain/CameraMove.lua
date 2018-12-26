@@ -95,7 +95,7 @@ function CameraMove:FixedUpdate(gameObject)
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             self:UpdateMove()
-            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
+            inputTools:SetOldPosition(inputTools:GetClickFocusPoint())
         elseif inputTools:GetIsPoint() then     --如果是点击状态
             self:TouchBuild()
         elseif not inputTools:AnyPress() then
@@ -111,7 +111,7 @@ function CameraMove:FixedUpdate(gameObject)
                 self:UpdateMove()
             end
             TerrainManager.MoveTempConstructObj()
-            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
+            inputTools:SetOldPosition(inputTools:GetClickFocusPoint())
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
@@ -269,10 +269,17 @@ end
 --判断是否点击到UI上
 function CameraMove.IsClickDownOverUI()
     if UnityEngine.Application.isEditor then
+        local tempI  =UnityEngine.Input.GetMouseButtonDown(0)
+        local tempBool =  UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject()
         if UnityEngine.Input.GetMouseButtonDown(0) and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject() then
             return true
         end
     else
+
+        ct.log("System",UnityEngine.Input.touchCount == 1)
+        ct.log("System", UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began)
+        ct.log("System", UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId))
+
         if UnityEngine.Input.touchCount == 1 and UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId) then
             return true
         end

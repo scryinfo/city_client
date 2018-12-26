@@ -970,6 +970,31 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     aTester.testcount = 4050
     aTester.CountEachType = math.ceil(aTester.testcount / #ResPathListS)
     aTester.ResPathList = ResPathListS
+    aTester.gridsOneBlock = 21 --1屏的横纵坐标跨度
+    aTester.data_25Screen = (aTester.gridsOneBlock * 5)^2  --11025
+    aTester._buildingdata = {}
+    local gridsFiveBlocks = aTester.gridsOneBlock * 5 --全局地图宽度
+    --9屏Aoi
+    aTester.relocateStartPos = 1
+    aTester.relocateTestExcuteCount = 600 --总的执行 relocate 的批次
+    --aTester.relocateTestExcuteCount = 2 --总的执行 relocate 的批次
+    aTester.relocateTestExcutePos = 1 --当前执行的批次
+    aTester.ScreenBlockSizeWorld = {x = 5, y = 5}   --整个地图aoi分块数， 一个单位相当于 1 屏， 目前是横竖各5屏，每屏21*21个建筑单位
+    aTester.AoiScreenBlockSize = {x = 3, y = 3}         --真正要实例化的屏幕数据, 形成的矩形区域
+    aTester.AoiScreenBlocks = {}    --实际Aoi的分块
+    aTester.BuildingsInAoi = {}    --分块中的建筑
+    aTester.AoiScreenBlocksNewIn = {}    --新增的分块
+    aTester.AoiScreenBlocksOut = {}    --超出9屏的分块
+    aTester.BuildingsOutAoi = {}    --超出9屏的分块，放入临时回收池 AoiGridsOut
+    --注： 新增块中的建筑从超出反馈的块中获取，如果没有，就实例化
+    aTester.interval = 10 --每次测试的间隔帧
+    aTester.instancCount = 0 --每次测试的间隔帧
+    aTester._AoiUpdateTimer = nil --每次新增Aoi数据分屏更新的timer
+    aTester._AoiUpdateTimerInterval = 1 --每次Aoi的间隔帧
+    aTester._AoiUpdateBlockCountEachTime = 1 --每次Aoi更新的屏幕数量
+    aTester.updatedBlockCount = 1       --每次Aoi已经更新的屏幕数量
+
+
     --数据准备
 
     local LoadedCb = function(tester, as, ab)
@@ -997,6 +1022,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
 
         for i = 1, count do
             pools[typeid][#pools[typeid]+1] = UnityEngine.GameObject.Instantiate(tester.loadedAssets[typeid])
+            tester.instancCount = tester.instancCount +  1
             pools[typeid][#pools[typeid]].name = typeid
             --暂时把实例的名字命名为资源路径，这样在后续的实例迁移到不同的对象池时，能够辨识
             --[[
@@ -1079,10 +1105,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         一屏450相当于 21*21=441个格子
         25屏相当于 (21*5)^2 = 11025 格单位， 长宽为 105单位
     --]]
-    aTester.gridsOneBlock = 21 --1屏的横纵坐标跨度
-    aTester.data_25Screen = (aTester.gridsOneBlock * 5)^2  --11025
-    aTester._buildingdata = {}
-    local gridsFiveBlocks = aTester.gridsOneBlock * 5 --全局地图宽度
+
 
     --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
     for i = 1, gridsFiveBlocks do
@@ -1102,25 +1125,14 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     local buildingCount = #aTester._buildingdata --看看是否是预期的数量 11025
     --25屏数据------------------------------------}
 
-    --9屏Aoi
-    aTester.relocateStartPos = 1
-    aTester.relocateTestExcuteCount = 600 --总的执行 relocate 的批次
-    --aTester.relocateTestExcuteCount = 2 --总的执行 relocate 的批次
-    aTester.relocateTestExcutePos = 1 --当前执行的批次
+
 
     local RelocateResetfun = function()
         local tester = AsyncSequenceTester.Tester()
         tester.startTime = 0
     end
 
-    aTester.ScreenBlockSizeWorld = {x = 5, y = 5}   --整个地图aoi分块数， 一个单位相当于 1 屏， 目前是横竖各5屏，每屏21*21个建筑单位
-    aTester.AoiScreenBlockSize = {x = 3, y = 3}         --真正要实例化的屏幕数据, 形成的矩形区域
-    aTester.AoiScreenBlocks = {}    --实际Aoi的分块
-    aTester.BuildingsInAoi = {}    --分块中的建筑
-    aTester.AoiScreenBlocksNewIn = {}    --新增的分块
-    aTester.AoiScreenBlocksOut = {}    --超出9屏的分块
-    aTester.BuildingsOutAoi = {}    --超出9屏的分块，放入临时回收池 AoiGridsOut
-    --注： 新增块中的建筑从超出反馈的块中获取，如果没有，就实例化
+
 
     --根据aoi中心，获取九屏索引数据
     local aoi_get9ScreenBlock = function(tester, aoiCenterScreenPos)
@@ -1201,7 +1213,14 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --根据 builddata.typeid 从 defaultInstancePools 取出对象，并使用 builddata.position 设置该对象位置
     --后边看看有没有不需要升维的算法
     local aoi_newBlockProcess = function(tester, newAoiBlocks)
+        local updatedBlockCount = 0
+        local updatedInstanceCount = 0
         for k,v in pairs(newAoiBlocks) do
+            if tester.updatedBlockCount > tester._AoiUpdateBlockCountEachTime then
+                tester.updatedBlockCount = 1
+                return
+            end
+            tester.updatedBlockCount = tester.updatedBlockCount +1
             local gridStartPos = BlockID2GridPos(tester, v)
             --根据block位置计算其中所有grid的索引
             for i = 1, tester.gridsOneBlock do
@@ -1220,6 +1239,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
                             validInstance.transform.position.x = buildingdata.position.x
                             validInstance.transform.position.z = buildingdata.position.y
                             tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
+                            updatedInstanceCount = updatedInstanceCount +1
                         end
                     end
                 end
@@ -1227,7 +1247,12 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             tester.AoiScreenBlocks[k] = v
             newAoiBlocks[k] = nil
         end
+        --updatedInstanceCount 为零说明更新完了，这时最好停止更新的timer
+        if updatedInstanceCount == 0 then
+            tester._AoiUpdateTimer:Stop()
+        end
         newAoiBlocks = {}  --清空新增表
+        ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[aoi_newBlockProcess] count of instance updated ='..updatedInstanceCount)
     end
 
     local RelocateFun = function(tester)
@@ -1244,13 +1269,18 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         --根据新的中心点确定新的aoi 9 屏 block
         tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(tester,aoiCenterScreenPos)
         ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] aoiCenterScreenPos x='..aoiCenterScreenPos.x..' y='..aoiCenterScreenPos.y)
+        --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] instancCount total = '..tester.instancCount)
         --分拣block， 新旧aoi中都有的，保留； 新增的block放到 AoiScreenBlocksNewIn ； 超出范围的放入 AoiScreenBlocksOut
         filterAoiBlocks(tester)
 
         local buidingcount = table.getn(tester.BuildingsInAoi)
         --aoi 建筑实例处理
         gridsOutProcessing(tester)
-        aoi_newBlockProcess(tester, tester.AoiScreenBlocksNewIn)
+
+        tester.updatedBlockCount = 1
+        tester._AoiUpdateTimer = FrameTimer.New(function()
+            aoi_newBlockProcess(tester, tester.AoiScreenBlocksNewIn)
+        end, tester._AoiUpdateTimerInterval,1)
 
         buidingcount = table.getn(tester.BuildingsInAoi)
 
@@ -1262,7 +1292,6 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         tester.relocateTestExcutePos = tester.relocateTestExcutePos +1
     end
 
-    aTester.interval = 5 --每次测试的间隔帧
     aTester._timerRelocate = FrameTimer.New(function()
         RelocateFun()
     end, aTester.interval,1)

@@ -1252,7 +1252,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             tester._AoiUpdateTimer:Stop()
         end
         newAoiBlocks = {}  --清空新增表
-        ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[aoi_newBlockProcess] count of instance updated ='..updatedInstanceCount)
+        --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[aoi_newBlockProcess] count of instance updated ='..updatedInstanceCount)
     end
 
     local RelocateFun = function(tester)
@@ -1268,7 +1268,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         }
         --根据新的中心点确定新的aoi 9 屏 block
         tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(tester,aoiCenterScreenPos)
-        ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] aoiCenterScreenPos x='..aoiCenterScreenPos.x..' y='..aoiCenterScreenPos.y)
+        --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] aoiCenterScreenPos x='..aoiCenterScreenPos.x..' y='..aoiCenterScreenPos.y)
         --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] instancCount total = '..tester.instancCount)
         --分拣block， 新旧aoi中都有的，保留； 新增的block放到 AoiScreenBlocksNewIn ； 超出范围的放入 AoiScreenBlocksOut
         filterAoiBlocks(tester)
@@ -1281,7 +1281,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         tester._AoiUpdateTimer = FrameTimer.New(function()
             aoi_newBlockProcess(tester, tester.AoiScreenBlocksNewIn)
         end, tester._AoiUpdateTimerInterval,1)
-
+        tester._AoiUpdateTimer:Start()
         buidingcount = table.getn(tester.BuildingsInAoi)
 
         --检查执行次数

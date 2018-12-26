@@ -42,11 +42,11 @@ function GroundTransModel:m_ReqRentGround(data, days)
 end
 --出售土地
 function GroundTransModel:m_ReqSellGround(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.GroundSale",{ price = price, coord = self.blockPos})
+    DataManager.ModelSendNetMes("gscode.OpCode", "sellGround","gs.GroundSale",{ price = price, coord = self.blockPos})
 end
 --购买土地
 function GroundTransModel:m_ReqBuyGround(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.GroundSale",{ price = price, coord = self.blockPos})
+    DataManager.ModelSendNetMes("gscode.OpCode", "buyGround","gs.GroundSale",{ price = price, coord = self.blockPos})
 end
 --取消出租
 function GroundTransModel:m_ReqCancelRentGround()

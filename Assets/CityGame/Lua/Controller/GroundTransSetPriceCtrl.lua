@@ -18,8 +18,14 @@ function GroundTransSetPriceCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
     local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
-    --groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
-
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.bgBtn.gameObject, self._closeBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.backBtn.gameObject, self._backBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentIssueBtnTran.gameObject, self._rentIssueBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentCancelBtnTran.gameObject, self._cancelRentBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentChangeBtnTran.gameObject, self._rentChangeBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellIssueBtnTran.gameObject, self._sellIssueBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellCancelBtnTran.gameObject, self._cancelSellBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellChangeBtnTran.gameObject, self._sellChangeBtnFunc, self)
 end
 
 function GroundTransSetPriceCtrl:Awake(go)
@@ -34,8 +40,7 @@ function GroundTransSetPriceCtrl:Hide()
 end
 
 function GroundTransSetPriceCtrl:Close()
-    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+
 end
 
 ---初始化
@@ -46,17 +51,85 @@ function GroundTransSetPriceCtrl:_initPanelData()
 end
 --根据状态显示界面
 function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPageType)
+    GroundTransSetPricePanel.sellRoot.localScale = Vector3.zero
+    GroundTransSetPricePanel.rentRoot.localScale = Vector3.zero
+    GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.zero
+    GroundTransSetPricePanel.sellIssueBtnTran.localScale = Vector3.zero
+    GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.zero
+    GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.zero
+
     if showPageType == GroundTransState.Rent then
+        GroundTransSetPricePanel.titleText.text = "RENT"
+        GroundTransSetPricePanel.rentRoot.localScale = Vector3.one
         if groundState == GroundTransState.None then
             --显示设置租金
+            GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.one
         elseif groundState == GroundTransState.Rent then
             --显示修改/取消状态
+            GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.one
         end
     elseif showPageType == GroundTransState.Sell then
+        GroundTransSetPricePanel.titleText.text = "SELL"
+        GroundTransSetPricePanel.sellRoot.localScale = Vector3.one
         if groundState == GroundTransState.None then
             --显示设置出售金额
+            GroundTransSetPricePanel.sellIssueBtnTran.localScale = Vector3.one
         elseif groundState == GroundTransState.Sell then
             --显示修改/取消状态
+            GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.one
         end
     end
+end
+
+---按钮方法
+--点其他地方则关闭整个堆栈，打开主界面
+function GroundTransSetPriceCtrl:_closeBtnFunc()
+    --关闭所有界面
+end
+--返回按钮
+function GroundTransSetPriceCtrl:_backBtnFunc()
+    UIPage:ClosePage()
+end
+
+--售卖发布按钮
+function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
+    local price = GroundTransSetPricePanel.sellInput.text
+    if price ~= "" and tonumber(price) > 0 then
+        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqSellGround', price)
+    end
+end
+--修改出售价格按钮
+function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
+    local price = GroundTransSetPricePanel.sellInput.text
+    if price ~= "" and tonumber(price) > 0 then
+        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelSellGround')  --先发送取消售卖再发送售卖，则为修改
+        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqSellGround', price)
+    end
+end
+--取消出售
+function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
+    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelSellGround')
+end
+
+--出租发布按钮
+function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
+    local minDay = GroundTransSetPricePanel.minRentDayInput.text
+    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
+    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
+    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
+        return
+    end
+    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqRentOutGround', minDay, maxDay, dayRentalPrice)
+end
+--修改出租价格按钮
+function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
+    local price = GroundTransSetPricePanel.sellInput.text
+    if price ~= "" and tonumber(price) > 0 then
+        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelRentGround')  --先发送取消售卖再发送售卖，则为修改
+        ins:_rentIssueBtnFunc(ins)
+    end
+end
+--取消出租
+function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
+    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelRentGround')
 end

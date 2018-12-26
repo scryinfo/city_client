@@ -29,3 +29,11 @@ function GroundTransDetailPanel.InitPanel()
     this.selfCheckBtnTran = transform:Find("root/bg02/stateBtnRoot/selfCheckBtn")
     this.otherCheckBtnTran = transform:Find("root/bg02/stateBtnRoot/otherCheckBtn")
 end
+--关掉所有状态
+function GroundTransDetailPanel._closeAllBtnTran()
+    this.noneStateTran.localScale = Vector3.zero
+    this.sellingBtnTran.localScale = Vector3.zero
+    this.rentingBtnTran.localScale = Vector3.zero
+    this.selfCheckBtnTran.localScale = Vector3.zero
+    this.otherCheckBtnTran.localScale = Vector3.zero
+end

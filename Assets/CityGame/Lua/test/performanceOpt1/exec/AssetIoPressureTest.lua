@@ -966,12 +966,13 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'
     ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
 
+    --aTester.testcount = 4050
+    aTester.testcount = 4050
     aTester.CountEachType = math.ceil(aTester.testcount / #ResPathListS)
     aTester.ResPathList = ResPathListS
     --数据准备
 
     local LoadedCb = function(tester, as, ab)
-        local pathName = string.gsub(tester.loadedBundles.name)
         tester.loadedBundles[ab.name] = ab
         tester.loadedAssets[as.name] = as
         tester.resLoadedCount = tester.resLoadedCount + 1
@@ -989,8 +990,19 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --往默认对象池中添加指定类型和数量的对象
     local extendInstancePool = function(pools, typeid, count)
         local tester = AsyncSequenceTester.Tester()
+
+        if pools[typeid] == nil then
+            pools[typeid] = {}
+        end
+
         for i = 1, count do
             pools[typeid][#pools[typeid]+1] = UnityEngine.GameObject.Instantiate(tester.loadedAssets[typeid])
+            pools[typeid][#pools[typeid]].name = typeid
+            --暂时把实例的名字命名为资源路径，这样在后续的实例迁移到不同的对象池时，能够辨识
+            --[[
+                local instanceToPools = function(pools, instance)
+                    local typeid = instance.name
+            ]]--
         end
     end
 
@@ -1006,6 +1018,9 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     local getInstance = function(pools, typeid, allocate)
         local validInstance = nil
         local outPool = pools[typeid]
+        if outPool == nil then
+            return validInstance
+        end
         validInstance = outPool[#outPool]
         if allocate ~= nil and allocate == true then
             --实例化
@@ -1023,6 +1038,9 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --把实例放回对象池
     local instanceToPools = function(pools, instance)
         local typeid = instance.name
+        if pools[typeid] == nil then
+            pools[typeid] = {}
+        end
         pools[typeid][#pools[typeid]+1] = instance --注意这里没有进行类型检查，使用的时候需要用户自己保证类型正确
     end
 
@@ -1032,7 +1050,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         local curSeq = tester:getCurSeq()
 
 
-        local pollsize = getPoolSize(tester.defaultInstancePools, tester.loadedAssets[tester.loadedAssetsNextIdx])
+        local pollsize = getPoolSize(tester.defaultInstancePools, tester.ResPathList[tester.loadedAssetsNextIdx])
         if pollsize >= tester.CountEachType then --当每种类型的资源实例数量大于限定的数量后，开始另一种资源类型的实例化
             tester.loadedAssetsNextIdx = tester.loadedAssetsNextIdx + 1
             --超过
@@ -1049,7 +1067,8 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         DefaultInsPoolsSetup()
     end, 1,1)
 
-    local DefaultInsPoolsSetup = function(tester)
+    local DefaultInsPoolsSetup = function()
+        local tester = AsyncSequenceTester.Tester()
         tester._timer:Start()
     end
 
@@ -1085,18 +1104,13 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
 
     --9屏Aoi
     aTester.relocateStartPos = 1
-    aTester.relocateTestExcuteCount = 60 --总的执行 relocate 的批次
+    aTester.relocateTestExcuteCount = 600 --总的执行 relocate 的批次
+    --aTester.relocateTestExcuteCount = 2 --总的执行 relocate 的批次
     aTester.relocateTestExcutePos = 1 --当前执行的批次
-    aTester.relocateTestCountEveryExcute = 1350
-    aTester.interval = 1 --每次测试的间隔帧
 
     local RelocateResetfun = function()
         local tester = AsyncSequenceTester.Tester()
         tester.startTime = 0
-        tester.relocateStartPos = tester.relocateStartPos + aTester.relocateTestCountEveryExcute
-        if tester.relocateStartPos >  tester.testcount then
-        tester.relocateStartPos = 1
-        end
     end
 
     aTester.ScreenBlockSizeWorld = {x = 5, y = 5}   --整个地图aoi分块数， 一个单位相当于 1 屏， 目前是横竖各5屏，每屏21*21个建筑单位
@@ -1111,10 +1125,10 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --根据aoi中心，获取九屏索引数据
     local aoi_get9ScreenBlock = function(tester, aoiCenterScreenPos)
         local aoiRect = { --aoiRect取值范围在是(1,1)-(5,5)之间
-        lu = {x = aoiCenterScreenPos.x -1, y = aoiCenterScreenPos.x -1}, --左上角
-        rb = {x = aoiCenterScreenPos.x +1, y = aoiCenterScreenPos.x +1}  --右下角
+        lu = {x = aoiCenterScreenPos.x -1, y = aoiCenterScreenPos.y -1}, --左上角
+        rb = {x = aoiCenterScreenPos.x +1, y = aoiCenterScreenPos.y +1}  --右下角
         }
-        local AoiScreenBlocksNewIn = {}
+        local newAoiScreenBlockArea = {}
         --取出所有块的id（所有9屏id）
         for x = aoiRect.lu.x, aoiRect.rb.x do
             for y = aoiRect.lu.y, aoiRect.rb.y do
@@ -1147,14 +1161,14 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     local BlockID2Pos = function(tester, blockid)
         return {
             x=math.fmod( blockid, tester.ScreenBlockSizeWorld.x ),  --x 取余得x坐标
-            y=math.modf( blockid, tester.ScreenBlockSizeWorld.x )+1   --y 取整得y坐标, 加1表示从 1开始计算
+            y=math.modf( blockid / tester.ScreenBlockSizeWorld.x )+1   --y 取整得y坐标, 加1表示从 1开始计算
         }
     end
 
     local BlockPos2GridPos = function(tester, blockPos)
         return { --这里是从(0,0)开始的
-            x = (blockPos.x -1) * tester.gridsOneBlock,
-            y = (blockPos.y -1) * tester.gridsOneBlock
+            x = (blockPos.x -1) * tester.gridsOneBlock + 1,
+            y = (blockPos.y -1) * tester.gridsOneBlock + 1
         }
     end
 
@@ -1172,10 +1186,12 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
                     local gridId = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
                     local outinstance = tester.BuildingsInAoi[gridId]
                     tester.BuildingsInAoi[gridId] = nil
-                    instanceToPools(tester.BuildingsOutAoi, outinstance) --放入激活的实例表中
+                    if outinstance ~= nil then
+                        instanceToPools(tester.BuildingsOutAoi, outinstance) --放入激活的实例表中
+                    end
                 end
             end
-            tester.AoiScreenBlocks[k] = nil
+            tester.AoiScreenBlocksOut[k] = nil
         end
     end
 
@@ -1192,21 +1208,24 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
                 for j = 1, tester.gridsOneBlock do
                     local gridIndex = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
                     local buildingdata = tester._buildingdata[gridIndex] --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
-                    --先从 BuildingsOutAoi 中提取指定类型的对象， 没有再检查  defaultInstancePools ， 没有再 实例化
-                    --BuildingsOutAoi
-                    local validInstance = getInstance(tester.BuildingsOutAoi, buildingdata.typeid) --这里不允许分配新的实例
-                    --defaultInstancePools
-                    if validInstance == nil then
-                        validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) --只有默认对象池才允许分配新实例
+                    if buildingdata ~= nil then
+                        --先从 BuildingsOutAoi 中提取指定类型的对象， 没有再检查  defaultInstancePools ， 没有再 实例化
+                        --BuildingsOutAoi
+                        local validInstance = getInstance(tester.BuildingsOutAoi, buildingdata.typeid) --这里不允许分配新的实例
+                        --defaultInstancePools
+                        if validInstance == nil then
+                            validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) --只有默认对象池才允许分配新实例
+                        end
+                        if validInstance then
+                            validInstance.transform.position.x = buildingdata.position.x
+                            validInstance.transform.position.z = buildingdata.position.y
+                            tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
+                        end
                     end
-                    if validInstance then
-                        validInstance.transform.position.x = buildingdata.position.x
-                        validInstance.transform.position.z = buildingdata.position.y
-                    end
-                    tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
                 end
             end
             tester.AoiScreenBlocks[k] = v
+            newAoiBlocks[k] = nil
         end
         newAoiBlocks = {}  --清空新增表
     end
@@ -1219,40 +1238,33 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         --中心屏幕坐标,这里随机取非边缘的分块位置, 中心坐标x,y在(2-4)之间随机，边缘在1-5之间，也就是(1,1)-(5,5)之间，
         --注意不是(0,0)-(4,4)
         local aoiCenterScreenPos = {
-        x = math.random(2,aTester.ScreenBlockSizeWorld-1),
-        y = math.random(2,aTester.ScreenBlockSizeWorld-1)
+        x = math.random(2,tester.ScreenBlockSizeWorld.x-1),
+        y = math.random(2,tester.ScreenBlockSizeWorld.y-1)
         }
         --根据新的中心点确定新的aoi 9 屏 block
-        tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(aoiCenterScreenPos)
+        tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(tester,aoiCenterScreenPos)
+        ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] aoiCenterScreenPos x='..aoiCenterScreenPos.x..' y='..aoiCenterScreenPos.y)
         --分拣block， 新旧aoi中都有的，保留； 新增的block放到 AoiScreenBlocksNewIn ； 超出范围的放入 AoiScreenBlocksOut
         filterAoiBlocks(tester)
 
+        local buidingcount = table.getn(tester.BuildingsInAoi)
         --aoi 建筑实例处理
         gridsOutProcessing(tester)
-        aoi_newBlockProcess(tester, newAoiScreenBlockArea)
+        aoi_newBlockProcess(tester, tester.AoiScreenBlocksNewIn)
+
+        buidingcount = table.getn(tester.BuildingsInAoi)
+
+        --检查执行次数
+        if tester.relocateTestExcutePos > tester.relocateTestExcuteCount then
+            tester._timerRelocate:Stop()
+            return curSeq.postfun(tester)
+        end
+        tester.relocateTestExcutePos = tester.relocateTestExcutePos +1
     end
 
-    --从超出范围的块中提取对象
-    --原有9屏分块与新的Aoi分块的比对，都有的，不用变，新增的，放到
-    if aTester.relocateTestExcutePos > aTester.relocateTestExcuteCount then
-        tester._timerRelocate:Stop()
-        return curSeq.postfun(tester)
-    end
-    --未优化版本，9屏全部更新
-    for i = 1, tester.relocateTestCountEveryExcute do
-        tester.relocateStartPos = tester.relocateStartPos + 1
-        if tester.relocateStartPos > tester.testcount then
-        tester.relocateStartPos = 1
-        end
-        local transform = tester.instances[tester.relocateStartPos].transform
-        if transform ~= nil then
-        transform.position.x = math.random(1000)
-        transform.position.z = math.random(1000)
-        end
-    end
-
+    aTester.interval = 5 --每次测试的间隔帧
     aTester._timerRelocate = FrameTimer.New(function()
-    RelocateFun()
+        RelocateFun()
     end, aTester.interval,1)
 
     local Relocatefun_Loop = function(tester)
@@ -1276,9 +1288,9 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         timer:Start()
     end
 
-    aTester.testcount = 4050
-    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = DefaultInsPoolsSetup, _inscount = 40, _nextTestDelay = 60, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 30, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = DefaultInsPoolsSetup, _inscount = 40, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
+    aTester.testSquence[#aTester.testSquence+1] = { fun = Relocatefun_Loop, _inscount = 40, _nextTestDelay = 90, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
 
     --开始执行异步测试序列

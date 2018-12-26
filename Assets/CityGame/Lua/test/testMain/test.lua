@@ -357,6 +357,12 @@ UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function (
     end
 end)
 
+UnitTest.Exec("abel_w18_fmod_modf", "abel_w18_fmod_modf",  function ()
+    local x = math.fmod( 7, 5 )
+    local y,z = math.modf( 7 / 5 )
+    local xx = x
+end)
+
 UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
     local pstr ='8a20a7b8c1644a59b79e030c81603ed9'
 

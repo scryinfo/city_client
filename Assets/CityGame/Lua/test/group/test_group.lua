@@ -10,6 +10,7 @@ TestGroup.active_TestGroup("abel_w11_showFps")
 --TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --强制卸载bundle中所有资源
 --TestGroup.active_TestGroup("abel_w17_load_AS_unload_No_force_s160_mem") --卸载bundle，手动卸载其中有资源
 --TestGroup.active_TestGroup("abel_w17_load_S_s160_n1000_time")
+--TestGroup.active_TestGroup("abel_w18_fmod_modf")
 TestGroup.active_TestGroup("abel_w17_Aoi_Relocate_3Grid_frameRate")
 --TestGroup.active_TestGroup("abel_w17_Aoi_Inst_9Grid_frameRate")
 --TestGroup.active_TestGroup("abel_w17_Aoi_Instantiate_9Grid")

@@ -17,7 +17,7 @@ UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 
 --构建函数
 function MunicipalCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
 function MunicipalCtrl:bundleName()
@@ -34,6 +34,7 @@ function MunicipalCtrl:Awake(go)
     self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
 
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
@@ -42,6 +43,11 @@ function MunicipalCtrl:Awake(go)
 
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
 
+end
+
+function MunicipalCtrl:OnClick_buildInfo()
+    --打开建筑信息界面
+    --ct.log("system","打开建筑信息界面")
 end
 
 --更改名字
@@ -75,9 +81,9 @@ function MunicipalCtrl:changeData()
     if self.m_data then
         DataManager.OpenDetailModel(MunicipalModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
-    else
-        DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
-        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+    --else
+    --    DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
+    --    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
     end
 end
 

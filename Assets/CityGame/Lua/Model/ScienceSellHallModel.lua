@@ -19,9 +19,10 @@ end
 
 function ScienceSellHallModel.Awake()
     this:OnCreate();
-    UpdateBeat:Add(this.Update, this)
+    --UpdateBeat:Add(this.Update, this)
     this.Mgr=ScienceItemCreatDeleteMgr:new()
 end
+
 
 function ScienceSellHallModel:OnCreate()
 
@@ -40,8 +41,8 @@ function ScienceSellHallModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeGetSummary"),this.n_techTradeGetSummary);--一级科技列表
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeGetDetail"),this.n_techTradeGetDetail);--二级科技列表
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeAdd"),this.n_techTradeAdd);--上架
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeA"),this.n_techTradeDel);--下架
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTeAdd"),this.n_techTradeBuy);--购买
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTradeA"),this.n_techTradeDel);--下架
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","techTeAdd"),this.n_techTradeBuy);--购买
 end
 
 --关闭事件--

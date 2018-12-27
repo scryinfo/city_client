@@ -34,6 +34,15 @@ local function CreateSuccess(go,table)
     end
 end
 
+function TerrainManager.Init()
+    Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
+end
+
+function TerrainManager.ReMove()
+    Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
+end
+
+
 --根据建筑数据生成GameObject
 --参数：
 --  datas：数据table集合( 一定包含数据有：坐标==》  x,y  ,建筑类型id==》 buildId)
@@ -48,10 +57,18 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
     end
-    if CameraCollectionID  and CameraCollectionID ~= -1 then
+    --TODO：干掉此处（1.应该初始化相机位置2.向服务器发送相机位置3.刷新当前位置）
+    if CameraCollectionID  and CameraCollectionID == -1 then
         DataManager.CreateWaysByCollectionID( CameraCollectionID)
     end
 end
+
+--计算AOI移动时，哪些地块内数据需要增加，哪些地块内数据需要删除
+local function CaculateAOI(oldCollectionID,nowCollectionID)
+
+
+end
+
 
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
@@ -87,7 +104,7 @@ function TerrainManager.BlockIDTurnPosition(id)
     local idPos = Vector3.New(-100,0,-100) --初始到视线外
     if id >= 1 and id<= (TerrainRange.x * TerrainRange.y) then
         idPos.z = id % TerrainRange.x - 1
-        idPos.x = id / TerrainRange.x
+        idPos.x =  math.floor(id / TerrainRange.x)
     end
     return idPos
 end

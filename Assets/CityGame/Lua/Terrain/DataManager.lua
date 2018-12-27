@@ -35,6 +35,8 @@ local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
+local RoadRootObj
+
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
@@ -96,7 +98,6 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.CreateWaysByCollectionID(tempCollectionID)
-    --TODO://
     if not BuildDataStack[tempCollectionID] then
         return
     end
@@ -121,6 +122,9 @@ function DataManager.CreateWaysByCollectionID(tempCollectionID)
                 BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
                 local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
                 local go = UnityEngine.GameObject.Instantiate(prefab)
+                if nil ~= RoadRootObj then
+                    go.transform:SetParent(RoadRootObj.transform)
+                end
                 go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
                 BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
             end
@@ -818,6 +822,7 @@ end
 
 --DataManager初始化
 function DataManager.Init()
+    RoadRootObj = find("Road")
     InitialEvents()
     InitialNetMessages()
     --土地拍卖Model

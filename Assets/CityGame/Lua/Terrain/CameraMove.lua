@@ -316,7 +316,7 @@ function CameraMove.MoveIntoUILayer(targetID)
     --相机移动到目标位置
     local tempScalePos = tempBuildScalePos  --相机远近
     mainCameraTransform:DOLocalMove(tempScalePos,m_IntoDurationtime)
-    --TODO:战争迷雾缩小到目标大小
+    --战争迷雾缩小到目标大小
     FOWManager.RefreshFOWRangeByBlockPos(tempPos,buildSize)
 end
 
@@ -331,7 +331,7 @@ function CameraMove.MoveOutUILayer()
     mainCameraCenterTransforms:DOMove(NormalStateCameraPos,m_OutDurationtime)
     --相机还原到目标大小
     mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
-    --TODO:战争迷雾换到到正常大小
+    --战争迷雾换到到正常大小
     FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil

@@ -540,4 +540,8 @@ UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()
     local t8 = 8
 end)
 
+UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function ()
+    ct.OpenCtrl("GroundTransSetPriceCtrl", {})
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

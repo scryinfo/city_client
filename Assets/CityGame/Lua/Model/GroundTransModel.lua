@@ -56,9 +56,7 @@ end
 function GroundTransModel:m_ReqCancelSellGround()
     DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = self.blockPos})
 end
-
---- 回调 ---
---住宅详情
-function GroundTransModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
-    --DataManager.ControllerRpcNoRet(self.blockID,"HouseCtrl", '_receiveHouseDetailInfo',houseDetailInfo)
+--请求玩家信息
+function GroundTransModel:m_ReqPlayersInfo(ids)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = ids})
 end

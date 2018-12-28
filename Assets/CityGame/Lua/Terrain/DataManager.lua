@@ -94,12 +94,11 @@ function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     return idList
 end
 
-
 --获取block地块所属建筑的根节点ID
 --如果没有建筑覆盖，值为-1
 function DataManager.GetBlockDataByID(blockID)
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    if BuildDataStack[collectionID] ~= nil  then
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BlockDatas ~= nil  then
         return BuildDataStack[collectionID].BlockDatas[blockID]
     else
         return nil
@@ -110,7 +109,7 @@ end
 --如果没有GroundInfo数据，返回nil
 function DataManager.GetGroundDataByID(blockID)
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    if BuildDataStack[collectionID] ~= nil  then
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].GroundDatas ~= nil then
         return BuildDataStack[collectionID].GroundDatas[blockID]
     else
         return nil
@@ -124,7 +123,7 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshWaysByCollectionID(tempCollectionID)
-    if not BuildDataStack[tempCollectionID] then
+    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].BlockDatas == nil then
         return
     end
     if not BuildDataStack[tempCollectionID].RoteDatas then

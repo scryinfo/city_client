@@ -59,7 +59,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
     end
     --TODO：干掉此处（1.应该初始化相机位置2.向服务器发送相机位置3.刷新当前位置）
     if CameraCollectionID  and CameraCollectionID == -1 then
-        DataManager.CreateWaysByCollectionID( CameraCollectionID)
+        DataManager.RefreshWaysByCollectionID( CameraCollectionID)
     end
 end
 
@@ -77,7 +77,7 @@ function TerrainManager.Refresh(pos)
     --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         CameraCollectionID = tempCollectionID
-        DataManager.CreateWaysByCollectionID( CameraCollectionID)
+        DataManager.RefreshWaysByCollectionID( CameraCollectionID)
         --向服务器发送新的所在地块ID
         local msgId = pbl.enum("gscode.OpCode", "move")
         local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
@@ -90,12 +90,23 @@ function TerrainManager.Refresh(pos)
 end
 
 --通过位置坐标转化为位置ID
+--pos:Vector3
 --注：z为列，x为行（y = 0）
 function TerrainManager.PositionTurnBlockID(pos)
     local tempX = math.floor(math.abs(pos.x))
     local tempZ = math.floor( math.abs(pos.z))
     return tempZ + tempX * TerrainRange.x + 1
 end
+
+--通过服务器坐标转化为位置ID
+--tempGridIndex ： x，y
+--注：z为列，x为行（y = 0）
+function TerrainManager.GridIndexTurnBlockID(tempGridIndex)
+    local tempX = math.floor(math.abs(tempGridIndex.x))
+    local tempZ = math.floor( math.abs(tempGridIndex.y))
+    return tempZ + tempX * TerrainRange.x + 1
+end
+
 
 
 --通过位置ID转化为位置坐标

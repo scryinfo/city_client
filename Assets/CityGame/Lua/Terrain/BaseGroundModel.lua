@@ -23,7 +23,7 @@ function BaseGroundModel:Refresh(data)
 end
 
 function BaseGroundModel:Close()
-    for  key, value in pairs(self.Data) do
+    for key, value in pairs(self.Data) do
         value = nil
     end
     self = nil

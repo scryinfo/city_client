@@ -482,7 +482,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_groundInfos = tempData.ground
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
-
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagIds
 
@@ -713,6 +712,23 @@ function DataManager.SetMyAllBuildingDetail(tempData)
     PersonDataStack.m_buysBuilding = tempData
 end
 
+--删除自己所拥有的某一个建筑
+-- tempbuildID: 建筑唯一ID
+function DataManager.RemoveMyBuildingDetailByBuildID(tempbuildID)
+    if PersonDataStack.m_buysBuilding ~= nil then
+        for type, value in pairs(PersonDataStack.m_buysBuilding) do
+            for key, data in pairs(value) do
+                if data ~= nil and data.info ~= nil and data.info.id ~= nil and  tempbuildID == data.info.id then
+                    PersonDataStack.m_buysBuilding[type][key] = nil
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
@@ -775,6 +791,7 @@ end
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+   -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
 end
 
 --注册所有网络消息回调
@@ -869,8 +886,8 @@ function DataManager.n_OnReceiveUnitRemove(stream)
     if removeInfo ~= nil and removeInfo.id ~= nil and removeInfo.x ~= nil and removeInfo.y ~= nil then
         local tempBlockID = TerrainManager.GridIndexTurnBlockID(removeInfo)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
-        if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
-            BuildDataStack[tempCollectionID].BlockDatas[tempBlockID]:Close()
+        if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
+            BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
             DataManager.RefreshWaysByCollectionID(tempCollectionID)
         end
     end
@@ -946,6 +963,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
+    DataManager.personInfo=playerData.info[1]
 end
 
 --研究所Roll回复信息

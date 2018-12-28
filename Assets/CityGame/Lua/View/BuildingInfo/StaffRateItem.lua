@@ -4,10 +4,10 @@
 --- DateTime: 2018/10/05 11:00
 ---
 StaffRateItem = class('StaffRateItem')
-StaffRateItem.static.TOTAL_NotAll_H = 407  --整个Item的高度，员工有未找到住所的
-StaffRateItem.static.TOTAL_ALLRIGHT_H = 347  --整个Item的高度，员工都有住所
-StaffRateItem.static.CONTENT_NotAll_H = 338  --显示内容的高度，员工有未找到住所的
-StaffRateItem.static.CONTENT_ALLRIGHT_H = 278  --显示内容的高度，员工都有住所
+StaffRateItem.static.TOTAL_NotAll_H = 418  --整个Item的高度，员工有未找到住所的
+StaffRateItem.static.TOTAL_ALLRIGHT_H = 418  --整个Item的高度，员工都有住所
+StaffRateItem.static.CONTENT_NotAll_H = 350  --显示内容的高度，员工有未找到住所的
+StaffRateItem.static.CONTENT_ALLRIGHT_H = 350  --显示内容的高度，员工都有住所
 StaffRateItem.static.TOP_H = 100  --top条的高度
 
 StaffRateItem.static.ROOTRECT_H = 66  --员工未找到住所的UI的高度
@@ -58,7 +58,8 @@ end
 function StaffRateItem:_initData()
     self.statisfactionText.text = (self.staffData.satisfaction * 100).."%"
     self.statisfactionSlider.value = self.staffData.satisfaction
-    self.perCapitaWageText.text = self.staffData.dayWage
+    --self.perCapitaWageText.text = self.staffData.dayWage
+    self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
     self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 
@@ -94,14 +95,17 @@ end
 function StaffRateItem:_clickOpenBtn()
     if self.clickOpenFunc then
         self.clickOpenFunc()
-        ct.log("cycle_w6_houseAndGround", "----------------------------------")
+        --ct.log("cycle_w6_houseAndGround", "----------------------------------")
     end
 end
 
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn(ins)
     --打开工资调整界面
-    ct.OpenCtrl("WagesAdjustBoxCtrl", ins.staffData)
+    --local value = {dayWage = self.staffData.dayWage, workerNum = self.m_data.totalStaffCount, callBackFunc = function ()
+    --    --xxx
+    --end}
+    --ct.OpenCtrl("WagesAdjustBoxCtrl", value)
 end
 
 --打开

@@ -32,7 +32,7 @@ function GroundTransDetailCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.rentingBtnTran.gameObject, self._rentingFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.selfCheckBtnTran.gameObject, self._selfCheckFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.otherCheckBtnTran.gameObject, self._otherCheckFunc, self)
-
+    ct.OpenCtrl("GroundTransDetailCtrl", {blockId = xxx})
 end
 
 function GroundTransDetailCtrl:Awake(go)
@@ -64,15 +64,21 @@ end
 
 ---初始化
 function GroundTransDetailCtrl:_initPanelData()
-    if self.m_data and self.m_data.groundInfo then
-        self:_setShowState(self.m_data.groundInfo)
-        self:_initData(self.m_data)
+    if self.m_data then
+        local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId)
+        if groundInfo then
+            self.m_data.groundInfo = groundInfo
+            self:_setShowState(self.m_data.groundInfo)
+            self:_initData(self.m_data)
+        end
     end
 end
 --根据状态显示界面
 function GroundTransDetailCtrl:_setShowState(groundInfo)
+    GroundTransDetailPanel._closeAllBtnTran()
     if not groundInfo.ownerId then  --判断是否有owner
         --显示标签icon，打开attribution界面，显示还未拍卖
+        GroundTransDetailPanel.otherCheckBtnTran.localScale = Vector3.one
         return
     end
 
@@ -84,7 +90,6 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
         self.groundState = GroundTransState.Sell
     end
 
-    GroundTransDetailPanel._closeAllBtnTran()
     if groundInfo.ownerId == DataManager.GetMyOwnerID() then  --如果是自己打开
         --判断状态
         local tempPageType

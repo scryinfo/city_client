@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/24 16:32
 ---
-GroundTransModel  = class('GroundTransModel',ModelBase)
+GroundTransModel = class('GroundTransModel',ModelBase)
 local pbl = pbl
 
 function GroundTransModel:initialize(blockID)

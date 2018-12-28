@@ -94,6 +94,7 @@ ModelNames = {
 	friends = "FriendsModel", -- 好友
 	Laboratory = "LaboratoryModel",  --研究所
 	Chat = "ChatModel", -- 聊天
+	GroundTrans = "GroundTransModel",  --土地交易
 }
 
 SYSEVENT =

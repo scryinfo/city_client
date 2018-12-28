@@ -963,7 +963,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --ResPathListS[#ResPathListS+1] = 'Build/HomeHouse_1x1_Root'
     --ResPathListS[#ResPathListS+1] = 'Build/MaterialBuilding_1x1_Root'
     --ResPathListS[#ResPathListS+1] = 'Build/Park_1x1_Root'
-    --ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'
+    --ResPathListS[#ResPathListS+1] = 'Build/Techo_1x1_Root'as.Brief
     --ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
 
     --aTester.testcount = 4050

@@ -69,6 +69,14 @@ local function CaculateAOI(oldCollectionID,nowCollectionID)
 
 end
 
+--向服务器发送新的所在地块ID
+function TerrainManager.SendMoveToServer(tempBlockID)
+    local msgId = pbl.enum("gscode.OpCode", "move")
+    local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
+    local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+
 
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
@@ -79,15 +87,13 @@ function TerrainManager.Refresh(pos)
         CameraCollectionID = tempCollectionID
         DataManager.RefreshWaysByCollectionID( CameraCollectionID)
         --向服务器发送新的所在地块ID
-        local msgId = pbl.enum("gscode.OpCode", "move")
-        local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
-        local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
-        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+        TerrainManager.SendMoveToServer(tempBlockID)
 
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
         UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
 end
+
 
 --通过位置坐标转化为位置ID
 --pos:Vector3

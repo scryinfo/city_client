@@ -877,7 +877,7 @@ end
 --接收服务器地块信息数据
 function DataManager.n_OnReceiveGroundChange(stream)
     local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
-    if GroundChange or GroundChange.info then
+    if GroundChange ~= nil and GroundChange.info ~= nil then
         for key, value in pairs(GroundChange.info) do
             --如果地块所有人是自己的话，写进自己所拥有地块集合
             if nil ~= PersonDataStack.m_owner and value.ownerId  == PersonDataStack.m_owner then

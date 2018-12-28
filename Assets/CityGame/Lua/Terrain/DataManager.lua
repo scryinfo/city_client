@@ -58,7 +58,7 @@ local function CreateBlockDataTable(tempCollectionID)
 end
 
 --功能
---  刷新原子地块集合的基本信息
+--  刷新某个原子地块的基本信息
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
@@ -69,11 +69,14 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
---
-function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize)
+--刷新原子地块集合的基本信息
+--nodeID： 根节点ID
+--nodeSize： 根节点范围
+--nodeSize： 根节点值
+function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
     local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
     for key, value in ipairs(idList) do
-        DataManager.RefreshBlockData(value,nodeID)
+        DataManager.RefreshBlockData(value,nodeValue)
     end
 end
 

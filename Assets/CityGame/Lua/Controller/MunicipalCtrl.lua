@@ -47,16 +47,17 @@ end
 
 function MunicipalCtrl:OnClick_buildInfo()
     --打开建筑信息界面
-    --ct.log("system","打开建筑信息界面")
+    -- TODO:ct.log("system","打开建筑信息界面")
+    Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
 end
 
 --更改名字
 function MunicipalCtrl:OnClick_changeName()
-local data = {}
-data.titleInfo = "RENAME";
-data.tipInfo = "Modified every seven days";
-data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-UIPage:ShowPage(InputDialogPageCtrl, data)
+    local data = {}
+    data.titleInfo = "RENAME";
+    data.tipInfo = "Modified every seven days";
+    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    ct.OpenCtrl("InputDialogPageCtrl",data)
 end
 
 --返回
@@ -66,6 +67,7 @@ function MunicipalCtrl:OnClick_backBtn()
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
     end
+
 end
 
 --打开信息界面
@@ -81,9 +83,11 @@ function MunicipalCtrl:changeData()
     if self.m_data then
         DataManager.OpenDetailModel(MunicipalModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
-    --else
-    --    DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
-    --    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+    else
+        DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+        self.m_data = {}
+        self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 
@@ -93,6 +97,11 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     local lMsg=parkData
     MunicipalPanel.lMsg=lMsg
 
+    if lMsg.info.state=="OPERATE" then
+        MunicipalPanel.panel.localScale=Vector3.zero
+    else
+        MunicipalPanel.panel.localScale=Vector3.one
+    end
     ---刷新门票
     Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
     ---是否可以改名

@@ -32,8 +32,19 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
 
+
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
+    Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
+
+end
+
+function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
+    local ids={}
+    table.insert(ids,buildingInfo.ownerId)
+    Event.Brocast("m_QueryPlayerInfo",ids)
+
+    ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Refresh()

@@ -774,6 +774,7 @@ end
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+   -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
 end
 
 --注册所有网络消息回调
@@ -930,6 +931,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
+    DataManager.personInfo=playerData.info[1]
 end
 
 --研究所Roll回复信息

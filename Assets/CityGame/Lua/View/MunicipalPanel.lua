@@ -29,6 +29,7 @@ function MunicipalPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn");
     this.infoBtn = transform:Find("topRoot/infoBtn");
     this.buildInfoBtn=transform:Find("buildInfo")
+    this.panel=transform:Find("Panel")
 end
 --数据初始化
 function MunicipalPanel.InitDate(MunicipalData)

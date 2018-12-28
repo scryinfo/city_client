@@ -118,12 +118,12 @@ function DataManager.GetGroundDataByID(blockID)
 end
 
 
--------------------------------道路数据集合--------------------------------
+-------------------------------------------------------------------------------------道路数据集合--------------------------------
 --功能
 --  依据BlockDatas创建道路的基础数据，管理GameObject
 --参数
 --  tempCollectionID: 所属地块集合ID
-function DataManager.CreateWaysByCollectionID(tempCollectionID)
+function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     if not BuildDataStack[tempCollectionID] then
         return
     end
@@ -140,7 +140,7 @@ function DataManager.CreateWaysByCollectionID(tempCollectionID)
                     if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
                         break
                     else
-                        --TODO:删除之前的道路Obj
+                        --删除之前的道路Obj
                         destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
                         BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
                     end
@@ -159,23 +159,18 @@ function DataManager.CreateWaysByCollectionID(tempCollectionID)
 end
 
 --功能
---  依据BlockDatas刷新道路的基础数据，管理GameObject
---参数
---  tempCollectionID: 所属地块集合ID
-function DataManager.RefreshWaysByCollectionID(tempCollectionID)
-
-
-end
-
---功能
 -- 移除道路的基础数据，管理GameObject
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RemoveWaysByCollectionID(tempCollectionID)
-
-
+    if BuildDataStack[tempCollectionID] == nil and BuildDataStack[tempCollectionID].RoteDatas == nil then
+        return
+    end
+    for key, value in pairs(BuildDataStack[tempCollectionID].RoteDatas) do
+        destroy(BuildDataStack[tempCollectionID].RoteDatas[key].roadObj)
+        BuildDataStack[tempCollectionID].RoteDatas[key] = nil
+    end
 end
-
 
 local RoadAroundNumber = {
     FrontUpperItem = { Num = 1 },   --正上方
@@ -242,7 +237,7 @@ function DataManager.RefreshBaseBuildData(data)
         blockID = data.id
     else--]]
     if data.x ~= nil and data.y ~= nil then
-        blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
+        blockID = TerrainManager.GridIndexTurnBlockID(data)
         data.posID = blockID
     else
         return
@@ -882,21 +877,28 @@ function DataManager.n_OnReceiveUnitChange(stream)
 end
 
 function DataManager.n_OnReceiveUnitRemove(stream)
-    --TODO:完成删除
-    local buildingInfo = assert(pbl.decode("gs.Bytes", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    --完成删除(注：删除自己的建筑回调，需做本地自己拥有建筑的删除)
+    local removeInfo = assert(pbl.decode("gs.UnitRemove", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    if removeInfo ~= nil and removeInfo.id ~= nil and removeInfo.x ~= nil and removeInfo.y ~= nil then
+        local tempBlockID = TerrainManager.GridIndexTurnBlockID(removeInfo)
+        local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+        if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
+            BuildDataStack[tempCollectionID].BlockDatas[tempBlockID]:Close()
+            DataManager.RefreshWaysByCollectionID(tempCollectionID)
+        end
+    end
 end
 
 --接收服务器地块信息数据
 function DataManager.n_OnReceiveGroundChange(stream)
     local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
-    if GroundChange or GroundChange.info then
+    if GroundChange ~= nil and GroundChange.info ~= nil then
         for key, value in pairs(GroundChange.info) do
             --如果地块所有人是自己的话，写进自己所拥有地块集合
             if nil ~= PersonDataStack.m_owner and value.ownerId  == PersonDataStack.m_owner then
                 DataManager.AddMyGroundInfo(value)
             end
-            local tempGroundPos = Vector3.New(value.x,0,value.y)
-            local tempGroundBlockID  = TerrainManager.PositionTurnBlockID(tempGroundPos)
+            local tempGroundBlockID  = TerrainManager.GridIndexTurnBlockID(value)
             local tempGroundCollectionID  = TerrainManager.BlockIDTurnCollectionID(tempGroundBlockID)
             --判空处理
             if BuildDataStack[tempGroundCollectionID] == nil then

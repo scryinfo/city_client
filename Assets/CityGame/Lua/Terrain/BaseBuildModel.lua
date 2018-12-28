@@ -51,7 +51,7 @@ function BaseBuildModel:Close()
     end
     --清除建筑GameObject
     if self.go ~= nil then
-        Destory(self.go)
+        destroy(self.go)
     end
     self = nil
 end

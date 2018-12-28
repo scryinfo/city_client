@@ -19,9 +19,10 @@ end
 
 function ScienceSellHallModel.Awake()
     this:OnCreate();
-    UpdateBeat:Add(this.Update, this)
+    --UpdateBeat:Add(this.Update, this)
     this.Mgr=ScienceItemCreatDeleteMgr:new()
 end
+
 
 function ScienceSellHallModel:OnCreate()
 

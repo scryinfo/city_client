@@ -47,6 +47,8 @@ end
 function ScienceTradeCtrl:Refresh()
     Event.Brocast("m_techTradeGetDetail",self.m_data.itemid)
     ---name
+    panel.iconImage.sprite=self.m_data.iconImage.sprite
+    self.iconImage=panel.iconImage
     panel.nameText.text=self.m_data.nameText.text
     panel.scoreText.text=self.m_data.ScoreText.text
     panel.mylevelText.text=self.m_data.myleveltext.text

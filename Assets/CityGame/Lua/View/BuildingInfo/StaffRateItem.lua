@@ -19,70 +19,80 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.toggleData = toggleData  --位于toggle的第二个   左边
     self.clickOpenFunc = clickOpenFunc
 
-    local viewTrans = self.viewRect.transform
-    self.contentRoot = viewTrans:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
-    self.rootRect = viewTrans:Find("contentRoot/rootRect"):GetComponent("RectTransform")  --内容Rect
-    self.perCapitaWageText = viewTrans:Find("contentRoot/rootRect/root2/comonRoot/perCapitaWageText"):GetComponent("Text")
-    self.totalWageText = viewTrans:Find("contentRoot/rootRect/root2/comonRoot/totalWageText"):GetComponent("Text")  --总工资
-    self.statisfactionSlider = viewTrans:Find("contentRoot/rootRect/root2/comonRoot/statisfactionSlider"):GetComponent("Slider")   -- 员工满意度slider
-    self.sliderFillImg = viewTrans:Find("contentRoot/rootRect/root2/comonRoot/statisfactionSlider/Background/Fill"):GetComponent("Image")   -- slider填充的颜色
-    self.statisfactionText = viewTrans:Find("contentRoot/rootRect/root2/comonRoot/statisfactionSlider/Background/Fill/Text"):GetComponent("Text")   -- 员工满意度text
-    self.noDomicileRoot = viewTrans:Find("contentRoot/rootRect/root2/noDomicileRoot")   -- 员工没有找到住所才显示
-    self.noDomicileText = viewTrans:Find("contentRoot/rootRect/root2/noDomicileRoot/noDomicileText"):GetComponent("Text")   --
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
+    self.working = self.viewRect.transform:Find("contentRoot/workState/working")
+    self.workingTimeText = self.viewRect.transform:Find("contentRoot/workState/working/workingText"):GetComponent("Text")
+    self.resting = self.viewRect.transform:Find("contentRoot/workState/resting")
+    self.restingTimeText = self.viewRect.transform:Find("contentRoot/workState/resting/restingText"):GetComponent("Text")
+    self.perCapitaWageText = self.viewRect.transform:Find("contentRoot/perCapitaWageText"):GetComponent("Text")
+    self.totalWageText = self.viewRect.transform:Find("contentRoot/totalWageText"):GetComponent("Text")
 
-    self.openStateTran = viewTrans:Find("topRoot/open")  --打开状态
-    self.closeStateTran = viewTrans:Find("topRoot/close")  --关闭状态
-    self.totalStaffCountText = viewTrans:Find("topRoot/open/countText"):GetComponent("Text")  --住宅员工人数
-    self.toDoBtns = viewTrans:Find("topRoot/open/toDoBtns")
-    self.openBtns = viewTrans:Find("topRoot/close/openBtns")  --打开按钮
-    self.errorTipTrans = viewTrans:Find("topRoot/close/errorTipImg")  --当自己查看界面且有员工未找到住所时显示
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open")
+    self.totalStaffCountText = self.viewRect.transform:Find("topRoot/open/countText"):GetComponent("Text")
+    self.openToDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn")
+    self.closeOpenBtn = self.viewRect.transform:Find("topRoot/close/openBtn")
 
-    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
+    self.openToDoBtn.localScale = Vector3.zero  --暂时不显示打开按钮
+    mainPanelLuaBehaviour:AddClick(self.closeOpenBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
-
-    if self.staffData.isOther then
-        self.toDoBtns.localScale = Vector3.zero
-    else
-        self.toDoBtns.localScale = Vector3.one
-        --mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, self._clickOpenBtn, self)  --这个写法有问题
-        mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject, self._clickToDoBtn, self)
-    end
-
-    Event.AddListener("c_onReceiveHouseSalaryChange", self.updateInfo, self)
-
     self:_initData()
 end
 
 --初始化界面
 function StaffRateItem:_initData()
-    self.statisfactionText.text = (self.staffData.satisfaction * 100).."%"
-    self.statisfactionSlider.value = self.staffData.satisfaction
+    --self.statisfactionText.text = (self.staffData.satisfaction * 100).."%"
+    --self.statisfactionSlider.value = self.staffData.satisfaction
     --self.perCapitaWageText.text = self.staffData.dayWage
     self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
     self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 
-    --如果有未找到房子的员工，则显示
-    if self.staffData.noDomicileCount >= 1 then
-        self.isAllRight = false
-        self.rootRect.sizeDelta = Vector2.New(self.rootRect.sizeDelta, StaffRateItem.static.ROOTRECT_H)
-        self.noDomicileRoot.localScale = Vector3.one
-        self.noDomicileText.text = string.format("<color=%s>%d</color>/%d", "#D3301A", self.staffData.noDomicileCount, self.staffData.totalStaffCount)
-        self.currentTotalH = StaffRateItem.static.TOTAL_NotAll_H
-        self.currentContentH = StaffRateItem.static.CONTENT_NotAll_H
-    else
-        self.isAllRight = true
-        self.rootRect.sizeDelta = Vector2.New(self.rootRect.sizeDelta, 0)
-        self.noDomicileRoot.localScale = Vector3.zero
-        self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H
-        self.currentContentH = StaffRateItem.static.CONTENT_ALLRIGHT_H
-    end
+    self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H
+    self.currentContentH = StaffRateItem.static.CONTENT_ALLRIGHT_H
+    self:_checkWorkTime()
+end
 
-    if self.staffData.satisfaction <= 0.3 then  --员工满意度低于30，则显示红色
-        self.sliderFillImg.color = getColorByInt(177, 38, 15)
+function StaffRateItem:_checkWorkTime()
+    self.workingTimeText.transform.localScale = Vector3.zero
+    self.restingTimeText.transform.localScale = Vector3.zero
+
+    local timeTable = getFormatUnixTime(os.time())
+    local time = timeTable.year..timeTable.month..timeTable.day
+    if HolidayConfig[time] == 0 then  --判断是否是工作日
+        self.working.localScale = Vector3.one
+        self.resting.localScale = Vector3.zero
+        local workTime = PlayerBuildingBaseData[self.staffData.buildingType].workTime
+        if #workTime == 0 then
+            return
+        end
+        if #workTime == 1 then
+            self.workingTimeText.transform = Vector3.one
+            self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(workTime[1][1]), self:_getTimeFormat(workTime[1][2]))
+        else
+            self.workingTimeText.transform = Vector3.one
+            --
+            for i, timeData in pairs(workTime) do
+                local temp = timeData[1] + timeTable[2]
+                if timeData.hour > timeData[1] and timeData.hour < temp then  --在工作时间内
+                    self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(timeData[1]), self:_getTimeFormat(temp))
+                    return
+                end
+            end
+            self.working.localScale = Vector3.zero
+            self.resting.localScale = Vector3.one
+            self.restingTimeText.transform.localScale = Vector3.zero
+        end
     else
-        self.sliderFillImg.color = getColorByInt(32, 182, 127)
+        self.working.localScale = Vector3.zero
+        self.resting.localScale = Vector3.one
+        self.restingTimeText.transform.localScale = Vector3.zero
+    end
+end
+
+function StaffRateItem:_getTimeFormat(value)
+    if value < 10 then
+        return "0"..value
     end
 end
 
@@ -95,7 +105,6 @@ end
 function StaffRateItem:_clickOpenBtn()
     if self.clickOpenFunc then
         self.clickOpenFunc()
-        --ct.log("cycle_w6_houseAndGround", "----------------------------------")
     end
 end
 
@@ -111,33 +120,20 @@ end
 --打开
 function StaffRateItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
-
     self.openStateTran.localScale = Vector3.one
     self.closeStateTran.localScale = Vector3.zero
-
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, self.currentContentH), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-
     return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH)
 end
 
 --关闭
 function StaffRateItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
-
     self.openStateTran.localScale = Vector3.zero
     self.closeStateTran.localScale = Vector3.one
-
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-
-    if not self.isAllRight then
-        self.errorTipTrans.localScale = Vector3.one
-    else
-        self.errorTipTrans.localScale = Vector3.zero
-    end
-
     return Vector2.New(targetMovePos.x,targetMovePos.y - StaffRateItem.static.TOP_H)
 end
 

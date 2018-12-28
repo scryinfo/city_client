@@ -64,7 +64,6 @@ end
 function UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
-    self.m_data = nil
     if #UIPage.static.m_currentPageNodes <= 1 then
         CameraMove.MoveOutUILayer()
     end

@@ -40,11 +40,22 @@ function GameMainInterfaceCtrl:OnCreate(obj)
 end
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
+    --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
     Event.Brocast("m_QueryPlayerInfo",ids)
-
+    --打开界面
     ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
+    --请求土地信息
+    local startBlockId=TerrainManager.GridIndexTurnBlockID(buildingInfo.pos)
+    local blockIds = DataManager.CaculationTerrainRangeBlock(startBlockId,PlayerBuildingBaseData[buildingInfo.mId].x)
+    local groundData={}
+    --for i, blockId in pairs(blockIds) do
+    --   local data = DataManager.GetGroundDataByID(blockId)
+    --   table.insert(groundData,data)
+    --end
+    --local data = DataManager.GetGroundDataByID(blockIds[1])
+    --return
 end
 
 function GameMainInterfaceCtrl:Refresh()

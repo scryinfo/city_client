@@ -35,6 +35,7 @@ function MunicipalCtrl:Awake(go)
     self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
+    --self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
 
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
@@ -98,9 +99,9 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     MunicipalPanel.lMsg=lMsg
 
     if lMsg.info.state=="OPERATE" then
-        MunicipalPanel.panel.localScale=Vector3.zero
+        MunicipalPanel.stopIconRoot.localScale=Vector3.zero
     else
-        MunicipalPanel.panel.localScale=Vector3.one
+        MunicipalPanel.stopIconRoot.localScale=Vector3.one
     end
     ---刷新门票
     Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)

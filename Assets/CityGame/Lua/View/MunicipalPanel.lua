@@ -19,17 +19,19 @@ function MunicipalPanel.Awake(obj)
 end
 
 function MunicipalPanel.InitPanel()
-    this.rightRootTran = transform:Find("rightRoot");
-    this.leftRootTran = transform:Find("leftRoot");
-    this.middleRootTran = transform:Find("middleRoot");
-    this.topRootTran = transform:Find("topRoot");
-    this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
-    this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
-    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
-    this.backBtn = transform:Find("topRoot/backBtn");
-    this.infoBtn = transform:Find("topRoot/infoBtn");
+    this.rightRootTran = transform:Find("rightRoot")
+    this.leftRootTran = transform:Find("leftRoot")
+    this.middleRootTran = transform:Find("middleRoot")
+    this.topRootTran = transform:Find("topRoot")
+    this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text")
+    this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text")
+    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn")
+    this.backBtn = transform:Find("topRoot/backBtn")
+    this.infoBtn = transform:Find("topRoot/infoBtn")
     this.buildInfoBtn=transform:Find("buildInfo")
     this.panel=transform:Find("Panel")
+    this.stopIconRoot=transform:Find("stopIconROOT")
+    this.stopText=transform:Find("stopIconROOT/Text"):GetComponent("Text")
 end
 --数据初始化
 function MunicipalPanel.InitDate(MunicipalData)

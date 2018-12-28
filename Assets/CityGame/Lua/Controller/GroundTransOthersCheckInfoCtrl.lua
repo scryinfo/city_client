@@ -44,7 +44,7 @@ end
 ---初始化
 function GroundTransOthersCheckInfoCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
-        DataManager.DetailModelRpcNoRet(self.m_data.blockId, 'm_ReqPlayersInfo', {[1] = self.m_data.groundInfo.ownerId})
+        GroundTransModel.m_ReqPlayersInfo({[1] = self.m_data.groundInfo.ownerId})
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
     end
 end

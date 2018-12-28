@@ -541,10 +541,10 @@ UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()
 end)
 
 UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function ()
-    --local groundTransModel = CtrlManager.GetModel(ModelNames.GroundTrans)
-    --if groundTransModel ~= nil then
-    --    groundTransModel:Awake()
-    --end
+    local groundTransModel = CtrlManager.GetModel(ModelNames.GroundTrans)
+    if groundTransModel ~= nil then
+        --groundTransModel:Awake()
+    end
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

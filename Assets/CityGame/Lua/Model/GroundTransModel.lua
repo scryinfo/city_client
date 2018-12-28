@@ -3,60 +3,78 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/24 16:32
 ---
-GroundTransModel = class('GroundTransModel',ModelBase)
-local pbl = pbl
+GroundTransModel = {}
+local this = GroundTransModel
 
-function GroundTransModel:initialize(blockID)
-    self.blockID = blockID
-    self:OnCreate()
+--构建函数--
+function GroundTransModel.New()
+    return this
 end
-
-function GroundTransModel:OnCreate()
-    local pos = TerrainManager.BlockIDTurnPosition(self.blockID)
-    self.blockPos = {x = pos.x, y = pos.z}  --存一个位置信息
+--设置地块ID
+function GroundTransModel.SetGroundBlockId(blockId)
+    GroundTransModel.blockId = blockId
+    local pos = TerrainManager.BlockIDTurnPosition(GroundTransModel.blockId)
+    GroundTransModel.blockPos = {x = pos.x, y = pos.z}  --存一个位置信息
 end
 
 --- 客户端请求 ---
 --出租
-function GroundTransModel:m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDay)
+function GroundTransModel.m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDay)
     local data = {}
-    data.coord = self.blockPos
+    data.coord = GroundTransModel.blockPos
     data.rentPreDay = rentPreDay
     data.rentDaysMin = rentDaysMin
     data.rentDaysMax = rentDaysMax
     data.deposit = 0  --现在没有押金
-    DataManager.ModelSendNetMes("gscode.OpCode", "rentOutGround","gs.GroundRent", data)
+
+    local msgId = pbl.enum("gscode.OpCode","rentOutGround")
+    local pMsg = assert(pbl.encode("gs.GroundRent", data))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --租别人的房子 --参数为groundInfo.rent
-function GroundTransModel:m_ReqRentGround(data, days)
+function GroundTransModel.m_ReqRentGround(data, days)
     local tempData = {}
     local info = {}
     info.rentPreDay = data.rentPreDay
     info.deposit = data.deposit
     info.rentDaysMin = data.rentDaysMin
     info.rentDaysMax = data.rentDaysMax
-    info.coord = self.blockPos
+    info.coord = GroundTransModel.blockPos
     tempData.info = info
     tempData.days = days
-    DataManager.ModelSendNetMes("gscode.OpCode", "rentGround","gs.RentGround", tempData)
+
+    local msgId = pbl.enum("gscode.OpCode","rentGround")
+    local pMsg = assert(pbl.encode("gs.RentGround", tempData))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --出售土地
-function GroundTransModel:m_ReqSellGround(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "sellGround","gs.GroundSale",{ price = price, coord = self.blockPos})
+function GroundTransModel.m_ReqSellGround(price)
+    local msgId = pbl.enum("gscode.OpCode","sellGround")
+    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = GroundTransModel.blockPos}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --购买土地
-function GroundTransModel:m_ReqBuyGround(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "buyGround","gs.GroundSale",{ price = price, coord = self.blockPos})
+function GroundTransModel.m_ReqBuyGround(price)
+    local msgId = pbl.enum("gscode.OpCode","buyGround")
+    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = GroundTransModel.blockPos}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --取消出租
-function GroundTransModel:m_ReqCancelRentGround()
-    DataManager.ModelSendNetMes("gscode.OpCode", "cancelRentGround","gs.MiniIndexCollection",{ coord = self.blockPos})
+function GroundTransModel.m_ReqCancelRentGround()
+    local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = GroundTransModel.blockPos}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --取消售卖
-function GroundTransModel:m_ReqCancelSellGround()
-    DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = self.blockPos})
+function GroundTransModel.m_ReqCancelSellGround()
+    local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = GroundTransModel.blockPos}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+    DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = GroundTransModel.blockPos})
 end
 --请求玩家信息
-function GroundTransModel:m_ReqPlayersInfo(ids)
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = ids})
+function GroundTransModel.m_ReqPlayersInfo(ids)
+    local msgId = pbl.enum("gscode.OpCode","queryPlayerInfo")
+    local pMsg = assert(pbl.encode("gs.Bytes", { ids = ids}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end

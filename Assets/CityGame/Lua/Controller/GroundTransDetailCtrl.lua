@@ -32,7 +32,6 @@ function GroundTransDetailCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.rentingBtnTran.gameObject, self._rentingFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.selfCheckBtnTran.gameObject, self._selfCheckFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.otherCheckBtnTran.gameObject, self._otherCheckFunc, self)
-    ct.OpenCtrl("GroundTransDetailCtrl", {blockId = xxx})
 end
 
 function GroundTransDetailCtrl:Awake(go)
@@ -67,6 +66,8 @@ function GroundTransDetailCtrl:_initPanelData()
     if self.m_data then
         local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId)
         if groundInfo then
+            GroundTransModel.SetGroundBlockId(self.m_data.blockId)  --设置地块Id
+
             self.m_data.groundInfo = groundInfo
             self:_setShowState(self.m_data.groundInfo)
             self:_initData(self.m_data)

@@ -95,20 +95,20 @@ end
 function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqSellGround', price)
+        GroundTransModel.m_ReqSellGround(price)
     end
 end
 --修改出售价格按钮
 function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelSellGround')  --先发送取消售卖再发送售卖，则为修改
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqSellGround', price)
+        GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
+        GroundTransModel.m_ReqSellGround(price)
     end
 end
 --取消出售
 function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
-    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelSellGround')
+    GroundTransModel.m_ReqCancelSellGround()
 end
 
 --出租发布按钮
@@ -119,17 +119,17 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
     if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
         return
     end
-    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqRentOutGround', minDay, maxDay, dayRentalPrice)
+    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
 end
 --修改出租价格按钮
 function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelRentGround')  --先发送取消售卖再发送售卖，则为修改
+        GroundTransModel.m_ReqCancelRentGround()
         ins:_rentIssueBtnFunc(ins)
     end
 end
 --取消出租
 function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
-    DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqCancelRentGround')
+    GroundTransModel.m_ReqCancelRentGround()
 end

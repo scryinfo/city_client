@@ -78,12 +78,12 @@ end
 --点击购买按钮
 function GroundTransContractCtrl:_buyBtnFunc(ins)
     if ins.m_data.groundInfo.sell.price then
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqBuyGround', ins.m_data.groundInfo.sell.price)
+        GroundTransModel.m_ReqBuyGround(ins.m_data.groundInfo.sell.price)
     end
 end
 --点击租房按钮
 function GroundTransContractCtrl:_rentBtnFunc(ins)
     if ins.m_data.groundInfo.rent then
-        DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqRentGround', ins.m_data.groundInfo.rent, ins.m_data.rentDay)
+        GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
     end
 end

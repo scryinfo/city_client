@@ -50,7 +50,7 @@ end
 ---初始化
 function GroundTransRentAndBuyCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
-        DataManager.DetailModelRpcNoRet(self.m_data.blockId, 'm_ReqPlayersInfo', {[1] = self.m_data.groundInfo.ownerId})
+        GroundTransModel.m_ReqPlayersInfo({[1] = self.m_data.groundInfo.ownerId})
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
     end
 end
@@ -96,14 +96,12 @@ end
 --点击购买按钮
 function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
     if ins.m_data.groundInfo.sell.price then
-        --DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqBuyGround', ins.m_data.groundInfo.sell.price)
         ct.OpenCtrl("GroundTransContractCtrl", {blockId = ins.m_data.blockId, ownerInfo = ins.roleInfo, groundInfo = ins.groundInfo})
     end
 end
 --点击租房按钮
 function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
     if ins.m_data.groundInfo.rent then
-        --DataManager.DetailModelRpcNoRet(ins.m_data.blockId, 'm_ReqRentGround', ins.m_data.groundInfo.rent, tonumber(GroundTransRentAndBuyPanel.tenancyText.text))
         ct.OpenCtrl("GroundTransContractCtrl", {blockId = ins.m_data.blockId, ownerInfo = ins.roleInfo, groundInfo = ins.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancyText.text)})
     end
 end

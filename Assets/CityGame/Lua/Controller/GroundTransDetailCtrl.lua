@@ -45,14 +45,6 @@ function GroundTransDetailCtrl:Refresh()
 end
 
 function GroundTransDetailCtrl:Hide()
-    Event.Brocast("c_ShowGroundBubble")
-
-    self.startTimeDownForStart = false
-    self.startTimeDownForFinish = false
-
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    Event.RemoveListener("c_BidEnd", self._bidEnd, self)
-    Event.RemoveListener("c_BidStart", self._bidStart, self)
     UIPage.Hide(self)
 end
 
@@ -64,7 +56,7 @@ end
 ---初始化
 function GroundTransDetailCtrl:_initPanelData()
     if self.m_data then
-        local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId)
+        local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId).Data
         if groundInfo then
             GroundTransModel.SetGroundBlockId(self.m_data.blockId)  --设置地块Id
 
@@ -146,7 +138,7 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
 end
 --初始化详情
 function GroundTransDetailCtrl:_initData(data)
-    data.blockId = TerrainManager.PositionTurnBlockID(data.groundInfo.x, data.groundInfo.y)
+    --data.blockId = TerrainManager.PositionTurnBlockID(data.groundInfo.x, data.groundInfo.y)
     --根据pos，获取周边一定范围内的所有建筑
     --人流量，building类型+个数
 

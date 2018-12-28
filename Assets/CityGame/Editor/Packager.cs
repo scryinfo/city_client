@@ -86,6 +86,7 @@ public class Packager {
 
     public static void BuildLuaBundel(BuildTarget target)
     {
+        files.Clear();
         //生成 Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
             return;
@@ -140,7 +141,7 @@ public class Packager {
         AssetDatabase.Refresh();
 
         maps.Clear();
-
+        files.Clear();
 
         //生成 Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
@@ -158,11 +159,13 @@ public class Packager {
                                           BuildAssetBundleOptions.UncompressedAssetBundle;
 
         BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
+        AssetDatabase.Refresh();
+
         BuildFileIndex();
 
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
-        AssetDatabase.Refresh();
+        
         HandleNoneLuaBundleInLua();
     }
 
@@ -254,12 +257,13 @@ public class Packager {
             if (AppConst.LuaByteMode) {
                 string sourceDir = srcDirs[i];
                 string[] files = Directory.GetFiles(sourceDir, "*.lua", SearchOption.AllDirectories);
-                int len = sourceDir.Length;
-
+                int len = sourceDir.Length;                
                 if (sourceDir[len - 1] == '/' || sourceDir[len - 1] == '\\') {
                     --len;
                 }
                 for (int j = 0; j < files.Length; j++) {
+                    if (files[j].EndsWith(".meta") || files[j].Contains(".DS_Store")) continue;
+
                     string str = files[j].Remove(0, len);
                     string dest = streamDir + str + ".bytes";
                     string dir = Path.GetDirectoryName(dest);
@@ -289,25 +293,37 @@ public class Packager {
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
         if (!Directory.Exists(streamDir)) Directory.CreateDirectory(streamDir);
 
-        string[] srcDirs = { CustomSettings.cityLuaDir, CustomSettings.FrameworkPath + "/ToLua/Lua" };
+        string[] srcDirs = { CustomSettings.cityLuaDir+ "3rd", CustomSettings.cityLuaDir + "pb", CustomSettings.FrameworkPath + "/ToLua/Lua" };
         //-------------------------------处理Lua文件夹中非Lua文件----------------------------------
         string luaPath = AppDataPath + "/StreamingAssets/lua/";
         for (int i = 0; i < srcDirs.Length; i++)
         {
-            paths.Clear(); 
             string luaDataPath = srcDirs[i].ToLower();
+            int pos = luaDataPath.LastIndexOf("/");
+            
+            if (pos < 0) {
+                continue;
+            }
+            string luaPathRoot = luaDataPath.Remove(pos+1); 
             List<string> NLfiles = new List<string>();
-            Recursive(luaDataPath, ref NLfiles);
+            List<string> NLpaths = new List<string>();
+            Recursive(luaDataPath, ref NLfiles, ref NLpaths, true);
             foreach (string f in NLfiles)
             {
-                if (f.EndsWith(".meta") || f.EndsWith(".lua")) continue;
-                string newfile = f.Replace(luaDataPath, "");
+                if (f.EndsWith(".lua")) continue;
+                string newfile = f.Replace(luaPathRoot, "");
+                if (i == 2)
+                {
+                    newfile = f.Replace(luaDataPath, "");
+                }
+                
+                
                 string path = Path.GetDirectoryName(luaPath + newfile);
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
+                string dirname = Path.GetDirectoryName(path);
                 string destfile = path + "/" + Path.GetFileName(f);
-                File.Copy(f, destfile, true);
-                files.Add(f);
+                File.Copy(f, destfile, true);                
+                files.Add(destfile.Replace('\\', '/'));
             }
         }
 
@@ -316,19 +332,13 @@ public class Packager {
         string newFilePath = resPath + "/files.txt";
         if (File.Exists(newFilePath)) File.Delete(newFilePath);
 
-        files.Clear();
-
         FileStream fs = new FileStream(newFilePath, FileMode.CreateNew);
         StreamWriter sw = new StreamWriter(fs);
         for (int i = 0; i < files.Count; i++)
         {
             string file = files[i];
             string ext = Path.GetExtension(file);
-            //if (file.EndsWith(".meta") || file.Contains(".DS_Store")) continue;
-            if (file.EndsWith(".meta"))
-            {
-                int t = 0;
-            }
+            //if (file.EndsWith(".meta") || file.Contains(".DS_Store")) continue;            
             if (file.Contains(".DS_Store")) continue;
 
             string md5 = Util.md5file(file);
@@ -459,7 +469,7 @@ public class Packager {
         string resPath = AppDataPath + "/StreamingAssets/";
         ///----------------------创建文件列表-----------------------        
         paths.Clear(); 
-        Recursive(resPath);
+        Recursive(resPath, false);
     }
 
     /// <summary>
@@ -472,24 +482,34 @@ public class Packager {
     /// <summary>
     /// 遍历目录及其子目录
     /// </summary>
-    static void Recursive(string path) {
-        Recursive(path, ref files);        
+    static void Recursive(string path, bool excludeMata = true) {
+        Recursive(path, ref files, ref paths, excludeMata);        
     }
 
-    static void Recursive(string path, ref List<string> inpaths)
+    static void Recursive(string path, ref List<string> infiles, ref List<string> inpaths, bool excludeMata)
     {
         string[] names = Directory.GetFiles(path);
         string[] dirs = Directory.GetDirectories(path);
         foreach (string filename in names)
         {
+            if (excludeMata)
+            {
+                if (filename.EndsWith(".meta")) continue;
+            }
             string ext = Path.GetExtension(filename);
-            if (ext.Equals(".meta")) continue;
-            files.Add(filename.Replace('\\', '/'));
+            infiles.Add(filename.Replace('\\', '/'));
         }
         foreach (string dir in dirs)
         {
             inpaths.Add(dir.Replace('\\', '/'));
-            Recursive(dir, ref inpaths);
+            if (dir.Equals("lua"))
+            {
+                Recursive(dir, ref infiles, ref inpaths, true);
+            }
+            else {
+                Recursive(dir, ref infiles, ref inpaths, excludeMata);
+            }
+            
         }
     }
     static void UpdateProgress(int progress, int progressMax, string desc) {

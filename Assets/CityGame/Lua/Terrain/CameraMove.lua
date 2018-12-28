@@ -156,13 +156,18 @@ function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
         if tempNodeID ~= nil and tempNodeID ~= -1 then
-            local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
-            if nil ~= tempModel then
-                tempModel:OpenPanel()
+            local tempBuildModel = DataManager.GetBaseBuildDataByID(tempNodeID)
+            if nil ~= tempBuildModel then
+                tempBuildModel:OpenPanel()
                 CameraMove.MoveIntoUILayer(tempNodeID)
             end
+        end
+        --判断是否是地块 --->是则打开
+        if DataManager.GetGroundDataByID(blockID) ~= nil then
+            ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})
         end
     end
 end

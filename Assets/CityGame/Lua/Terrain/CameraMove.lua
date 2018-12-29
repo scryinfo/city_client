@@ -1,13 +1,32 @@
 CameraMove = class('CameraMove')
-local transform = nil
-local mainCameraTransform = nil
-local mainCameraCenterTransforms = nil
-local inputTools = nil
-local mCameraState = nil
-local oldPos = nil
+local mObj = nil
+local mainCameraTransform = nil         --相机TransForm
+local mainCameraCenterTransforms = nil  --相机Root点的TransForm
+local inputTools = nil                  --接受输入脚本实例
+local mCameraState = nil                --相机脚本
+
+local m_CameraScaleValueMin = 7     --缩放最近距离
+local m_CameraScaleValueMax = 20    --缩放最远距离
+local m_ScaleFactor = 100;          --缩放速度
+
+local m_CameraRootXMin = 0      --相机root节点X轴移动范围最小值
+local m_CameraRootXMax = 1000   --相机root节点X轴移动范围最大值
+local m_CameraRootZMin = 0      --相机root节点Z轴移动范围最小值
+local m_CameraRootZMax = 1000   --相机root节点Z轴移动范围最大值
+
+local m_IntoDurationtime = 0.6          --相机切到UI层所需时间
+local m_OutDurationtime = 0.8           --相机切出UI层所需时间
+
+local NormalStateCameraPos = nil       --记录正常状态相机的位置
+local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
+
 
 function CameraMove:Start(gameObject)
-    transform = gameObject
+    if nil ~= mObj then
+        ct.log("System","警告:不允许场景中同时挂有两个CameraMove脚本")
+        self:Close()
+    end
+    mObj = gameObject
     mainCameraTransform = UnityEngine.Camera.main.transform
     mainCameraCenterTransforms = mainCameraTransform.parent
     --依据平台，初始化输入工具
@@ -26,7 +45,24 @@ function CameraMove:Start(gameObject)
     --初始化点击位置
     self.touchBeginPosition = nil
     self.touchBeginBlockID = nil
+    self:InitParameters()
 end
+
+--初始化相机参数
+function CameraMove:InitParameters()
+    m_CameraScaleValueMin = 7
+    m_CameraScaleValueMax = 20
+    m_ScaleFactor = 100;
+    m_CameraRootXMin = 0
+    m_CameraRootXMax = 1000
+    m_CameraRootZMin = 0
+    m_CameraRootZMax = 1000
+    m_IntoDurationtime = 0.6
+    m_OutDurationtime = 0.8
+    NormalStateCameraPos = nil
+    NormalStateCameraScalePos = nil
+end
+
 
 function CameraMove:FixedUpdate(gameObject)
     --点击时判断是否点击到UI
@@ -59,7 +95,7 @@ function CameraMove:FixedUpdate(gameObject)
             self:ScaleCamera()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             self:UpdateMove()
-            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
+            inputTools:SetOldPosition(inputTools:GetClickFocusPoint())
         elseif inputTools:GetIsPoint() then     --如果是点击状态
             self:TouchBuild()
         elseif not inputTools:AnyPress() then
@@ -75,26 +111,43 @@ function CameraMove:FixedUpdate(gameObject)
                 self:UpdateMove()
             end
             TerrainManager.MoveTempConstructObj()
-            inputTools.m_oldMousePos = inputTools:GetClickFocusPoint()
+            inputTools:SetOldPosition(inputTools:GetClickFocusPoint())
         elseif not inputTools:AnyPress() then
             self:SmoothCameraView()
         end
     elseif mCameraState == TouchStateType.UIState then
         return
     end
-
     if inputTools:GetIsPoint() then
         CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     end
-
-
 end
 
 
 
+--将距离远近值转化为相机Scale的Pos位置
+local function ValueTurnCameraScalePos(value)
+    if value ~= nil then
+        return Vector3.New(value,value,-value)
+    end
+    return nil
+end
+
 --缩放相机距离远近
 function CameraMove:ScaleCamera()
-
+    local tempValue =  inputTools:GetZoomValue() * UnityEngine.Time.deltaTime * m_ScaleFactor
+    local nowScaleValue = mainCameraTransform.localPosition.x - tempValue
+    local targetScalePos = nil
+    if nowScaleValue < m_CameraScaleValueMin then
+        targetScalePos  = ValueTurnCameraScalePos(m_CameraScaleValueMin)
+    elseif nowScaleValue > m_CameraScaleValueMax then
+        targetScalePos  = ValueTurnCameraScalePos(m_CameraScaleValueMax)
+    else
+        targetScalePos  = ValueTurnCameraScalePos(nowScaleValue)
+    end
+    if  targetScalePos ~= nil then
+        mainCameraTransform.localPosition = targetScalePos
+    end
 end
 
 
@@ -128,6 +181,8 @@ function CameraMove:MoveConstructObj()
     end
 end
 
+
+
 --拖动时更新相机位置
 function CameraMove:UpdateMove()
     if not inputTools:IsMove() then
@@ -139,19 +194,41 @@ function CameraMove:UpdateMove()
     end
     local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
     if tempPos  then
-       local OffsetVec  = tempPos - self.touchBeginPosition
+        local OffsetVec  = tempPos - self.touchBeginPosition
         local tempPosition = self.touchBeginCameraPos - OffsetVec
+        --范围限制
         if tempPosition.y ~= 0 then
             tempPosition.y = 0
         end
+        local tempX = tempPosition.x
+        local tempZ = tempPosition.z
+        if tempX < m_CameraRootXMin then
+            tempX = m_CameraRootXMin
+        elseif tempX > m_CameraRootXMax then
+            tempX = m_CameraRootXMax
+        end
+        if tempZ < m_CameraRootZMin then
+            tempZ = m_CameraRootZMin
+        elseif tempZ > m_CameraRootZMax then
+            tempZ = m_CameraRootZMax
+        end
+        tempPosition.x = tempX
+        tempPosition.z = tempZ
+        --
         self.touchBeginCameraPos = tempPosition
         mainCameraCenterTransforms.position = tempPosition
-
+        --调用地块刷新
+        Event.Brocast("CameraMoveTo", tempPosition)
     end
 end
 
---拖动结束后平滑移动
+--TODO：拖动结束后平滑移动
 function CameraMove:SmoothCameraView()
+
+end
+
+--TODO:清除实例
+function CameraMove:Close()
 
 end
 
@@ -192,10 +269,17 @@ end
 --判断是否点击到UI上
 function CameraMove.IsClickDownOverUI()
     if UnityEngine.Application.isEditor then
+        local tempI  =UnityEngine.Input.GetMouseButtonDown(0)
+        local tempBool =  UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject()
         if UnityEngine.Input.GetMouseButtonDown(0) and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject() then
             return true
         end
     else
+
+        ct.log("System",UnityEngine.Input.touchCount == 1)
+        ct.log("System", UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began)
+        ct.log("System", UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId))
+
         if UnityEngine.Input.touchCount == 1 and UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId) then
             return true
         end
@@ -203,10 +287,7 @@ function CameraMove.IsClickDownOverUI()
     return false
 end
 
-local NormalStateCameraPos = nil       --记录正常状态相机的位置
-local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
-local m_IntoDurationtime = 0.3
-local m_OutDurationtime = 0.2
+
 
 --移动放大到某个指定建筑
 function CameraMove.MoveIntoUILayer(targetID)
@@ -216,12 +297,27 @@ function CameraMove.MoveIntoUILayer(targetID)
     NormalStateCameraPos = mainCameraCenterTransforms.position
     NormalStateCameraScalePos = mainCameraTransform.localPosition
     --相机移动到目标点
-    local tempPos = TerrainManager.BlockIDTurnPosition(targetID)--TODO:加上配置表偏移量
+    --TODO:改为策划配置偏移量和距离远近
+    local tempBuildModel =  DataManager.GetBaseBuildDataByID(DataManager.GetBlockDataByID(targetID))
+    local OffsetPos = Vector3.zero
+    local buildSize = 2
+    if tempBuildModel and tempBuildModel.Data and tempBuildModel.Data.buildingID then
+        local tempBuildType = tempBuildModel.Data.buildingID
+        local OffsetValue = PlayerBuildingBaseData[tempBuildType].x / 2
+        buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
+        if nil ~= OffsetValue and OffsetValue > 0 then
+            OffsetPos = Vector3.New(OffsetValue,0,OffsetValue)
+        end
+    end
+    local tempBuildScalePos = Vector3.New(5,5,-5)
+    --
+    local tempPos = TerrainManager.BlockIDTurnPosition(targetID) + OffsetPos --偏移量
     mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)
-    --相机移动到目标位置--TODO:读取配置表距离远近
-    local tempScalePos = Vector3.New(7,7,-7)
+    --相机移动到目标位置
+    local tempScalePos = tempBuildScalePos  --相机远近
     mainCameraTransform:DOLocalMove(tempScalePos,m_IntoDurationtime)
     --TODO:战争迷雾缩小到目标大小
+    FOWManager.RefreshFOWRangeByBlockPos(tempPos,buildSize)
 end
 
 --还原到正常状态
@@ -236,7 +332,7 @@ function CameraMove.MoveOutUILayer()
     --相机还原到目标大小
     mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
     --TODO:战争迷雾换到到正常大小
-
+    FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil
 end

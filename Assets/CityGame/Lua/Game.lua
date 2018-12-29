@@ -136,5 +136,5 @@ function Game.OnPostInitOK()
         lu.LuaUnit.run()
     --end
     DataManager.Init()
-    UnitTest.Exec_now("Allen_w9", "c_CameraMove",self)
+    TerrainManager.Init()
 end

@@ -4,6 +4,7 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
+TestGroup.active_TestGroup("abel_w18_pb_save_load")
 --TestGroup.active_TestGroup("abel_w16_Icon_CPU")
 --TestGroup.active_TestGroup("abel_w16_Icon_memory")
 --TestGroup.active_TestGroup("wk16_abel_ceil")

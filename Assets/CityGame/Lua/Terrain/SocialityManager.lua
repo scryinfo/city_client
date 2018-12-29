@@ -24,7 +24,7 @@ function SocialityManager:GetMyFriends()
     local friendsIdTemp = {}
     for i, v in pairs(self.m_friends) do
         if v ~= nil then
-            table.insert(friendsIdTemp, {id = i, b = v})
+            friendsIdTemp[i] = v
         end
     end
     return friendsIdTemp
@@ -44,8 +44,8 @@ function SocialityManager:SetMyChatInfo(chatData)
         if not self.m_chatByType[2][dataId] then
             self.m_chatByType[2][dataId] = {}
         end
-        if not self.m_chatByType[2][dataId].unread then
-            self.m_chatByType[2][dataId].unread = {}
+        if not self.m_chatByType[2][dataId].chatInfo then
+            self.m_chatByType[2][dataId].chatInfo = {}
         end
         if DataManager.GetMyOwnerID() ~= chatData.id then
             if self.m_chatByType[2][dataId].unreadNum then
@@ -54,7 +54,7 @@ function SocialityManager:SetMyChatInfo(chatData)
                 self.m_chatByType[2][dataId].unreadNum = 1
             end
         end
-        table.insert(self.m_chatByType[2][dataId].unread, chatData)
+        table.insert(self.m_chatByType[2][dataId].chatInfo, chatData)
     elseif chatData.channel == "UNKNOWN" then
         local dataId
         if DataManager.GetMyOwnerID() == chatData.id then
@@ -65,8 +65,8 @@ function SocialityManager:SetMyChatInfo(chatData)
         if not self.m_chatByType[3][dataId] then
             self.m_chatByType[3][dataId] = {}
         end
-        if not self.m_chatByType[3][dataId].unread then
-            self.m_chatByType[3][dataId].unread = {}
+        if not self.m_chatByType[3][dataId].chatInfo then
+            self.m_chatByType[3][dataId].chatInfo = {}
         end
         if DataManager.GetMyOwnerID() ~= chatData.id then
             if self.m_chatByType[3][dataId].unreadNum then
@@ -75,7 +75,7 @@ function SocialityManager:SetMyChatInfo(chatData)
                 self.m_chatByType[3][dataId].unreadNum = 1
             end
         end
-        table.insert(self.m_chatByType[3][dataId].unread, chatData)
+        table.insert(self.m_chatByType[3][dataId].chatInfo, chatData)
     end
 end
 
@@ -83,13 +83,6 @@ function SocialityManager:SetMyReadChatInfo(index, id)
     if not self.m_chatByType[index][id] then
         return
     end
-    if not self.m_chatByType[index][id].read then
-        self.m_chatByType[index][id].read = {}
-    end
-    for _, v in ipairs(self.m_chatByType[index][id].unread) do
-        table.insert(self.m_chatByType[index][id].read, v)
-    end
-    self.m_chatByType[index][id].unread = {}
     self.m_chatByType[index][id].unreadNum = 0
 end
 

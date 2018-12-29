@@ -89,7 +89,7 @@ end
 --好友红点--
 function GameMainInterfaceCtrl._showFriendsNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
-  --  GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
+    GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
 end
 
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
@@ -121,19 +121,15 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
     for _, v in pairs(chatFriendsInfo) do
-        if v.unread then
-            if v.unread[1] then
-                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-                break
-            end
+        if v.unreadNum and v.unreadNum > 0 then
+            GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+            break
         end
     end
     for _, m in pairs(chatStrangersInfo) do
-        if m.unread then
-            if m.unread[1] then
-                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-                break
-            end
+        if m.unreadNum and m.unreadNum > 0 then
+            GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+            break
         end
     end
 end

@@ -958,8 +958,12 @@ function DataManager.n_OnReceiveErrorCode(stream)
             info.contentInfo = "Roll Fail"
             info.tipInfo = ""
             ct.OpenCtrl("BtnDialogPageCtrl", info)
-        else
-
+        elseif data.opcode == 5015 then  --世界发言失败
+            if data.reason == "highFrequency" then
+                Event.Brocast("SmallPop","Speeches are frequent. Please wait a moment.",80)
+            elseif data.reason == "notAllow" then
+                Event.Brocast("SmallPop","Has been shielded.",60)
+            end
         end
     end
 end
@@ -978,5 +982,6 @@ end
 function DataManager.n_OnReceiveRoleStatusChange(stream)
     local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
     DataManager.SetMyFriends(roleData)
+    Event.Brocast("c_OnReceiveRoleStatusChange", roleData)
 end
 ----------

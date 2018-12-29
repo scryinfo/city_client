@@ -139,6 +139,23 @@ function ct.file_saveTable(filename, data)
 	end
 end
 
+function ct.file_saveString(filename, str)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wb")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	file:write(str)
+	if filename ~= nil then
+		file:close()
+	end
+end
+
 function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end

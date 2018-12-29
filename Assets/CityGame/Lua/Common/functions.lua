@@ -156,6 +156,13 @@ function ct.file_saveString(filename, str)
 	end
 end
 
+function ct.file_readString(filename)
+	local file = assert(io.open(filename, "rb"))
+	local str = file:read("*all")
+	file:close()
+	return str
+end
+
 function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end

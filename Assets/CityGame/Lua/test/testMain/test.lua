@@ -56,8 +56,7 @@ UnitTest.Exec("abel_w18_pb_save_load", "abel_w18_pb_save_load",  function ()
     local path = CityLuaUtil.getAssetsPath().."/Lua/pb/mas.data"
     ct.file_saveString(path,pMsg)
     --读取
-    local file = assert(io.open(path, "rb"))
-    local str = file:read("*all")
+    local str = ct.file_readString(path)
     ----反序列化，取出数据
     local msg = assert(pbl.decode("as.Login", str), "pbl.decode decode failed")
 

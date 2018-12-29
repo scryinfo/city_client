@@ -453,10 +453,14 @@ end
 function ChatCtrl:_getSortDatas(data)
     local tempData = data
     table.sort(tempData, function (m, n)
-        if m.b then
-            return true
-        else
+        if m.b == n.b then
             return false
+        else
+            if m.b then
+                return true
+            else
+                return false
+            end
         end
     end)
     return tempData

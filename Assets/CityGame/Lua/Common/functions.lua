@@ -335,3 +335,27 @@ function creatGoods(path,parent)
 	rect.transform.localPosition=Vector3.zero
 	return go
 end
+
+function ct.file_saveString(filename, str)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wb")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	file:write(str)
+	if filename ~= nil then
+		file:close()
+	end
+end
+
+function ct.file_readString(filename)
+	local file = assert(io.open(filename, "rb"))
+	local str = file:read("*all")
+	file:close()
+	return str
+end

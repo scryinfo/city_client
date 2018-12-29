@@ -44,6 +44,25 @@ UnitTest.Exec("abel_w3", "test_pb",  function ()
     ct.log("abel_w3","[test_pb] login.account: "..msg.account)
 end)
 
+UnitTest.Exec("abel_w18_pb_save_load", "abel_w18_pb_save_load",  function ()
+    ----1、 获取协议id
+    local msgId = pbl.enum("ascode.OpCode","login")
+    ----2、 填充 protobuf 内部协议数据
+    local lMsg = { account = "11"}
+    ----3、 序列化成二进制数据
+    local  pMsg = assert(pbl.encode("as.Login", lMsg))
+    --CityLuaUtil.getAssetsPath().."/Lua/pb"
+    --保存
+    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/mas.data"
+    ct.file_saveString(path,pMsg)
+    --读取
+    local str = ct.file_readString(path)
+    ----反序列化，取出数据
+    local msg = assert(pbl.decode("as.Login", str), "pbl.decode decode failed")
+
+    ct.log("abel_w18_pb_save_load","[abel_w18_pb_save_load] login.account: "..msg.account)
+end)
+
 --[[
 message Phone {
 	optional string name        = 1;

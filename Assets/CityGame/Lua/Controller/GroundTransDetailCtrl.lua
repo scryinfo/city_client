@@ -169,6 +169,8 @@ function GroundTransDetailCtrl:_sellingFunc(ins)
         ct.OpenCtrl("GroundTransSetPriceCtrl", info)
     else
         --打开租赁购买界面
+        local info = {groundInfo = ins.m_data.groundInfo, groundState = GroundTransState.Sell}
+        ct.OpenCtrl("GroundTransRentAndBuyCtrl", info)
     end
 end
 --正在出租按钮
@@ -180,16 +182,19 @@ function GroundTransDetailCtrl:_rentingFunc(ins)
         ct.OpenCtrl("GroundTransSetPriceCtrl", info)
     else
         --打开租赁购买界面
+        local info = {groundInfo = ins.m_data.groundInfo, groundState = GroundTransState.Rent}
+        ct.OpenCtrl("GroundTransRentAndBuyCtrl", info)
     end
 end
 --租赁者/土地拥有者查看土地
 function GroundTransDetailCtrl:_selfCheckFunc(ins)
     --打开租赁详情界面
-
+    ct.OpenCtrl("GroundTransSelfCheckInfoCtrl", ins.m_data.groundInfo)
 end
 --其他人查看土地
 function GroundTransDetailCtrl:_otherCheckFunc(ins)
     --打开attribution界面
+    ct.OpenCtrl("GroundTransOthersCheckInfoCtrl", ins.m_data.groundInfo)
 end
 
 ---滑动复用

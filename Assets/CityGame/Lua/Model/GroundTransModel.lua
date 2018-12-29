@@ -25,7 +25,7 @@ function GroundTransModel.m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDa
     data.rentPreDay = rentPreDay
     data.rentDaysMin = rentDaysMin
     data.rentDaysMax = rentDaysMax
-    data.deposit = 0  --现在没有押金
+    data.deposit = 1  --现在没有押金
 
     local msgId = pbl.enum("gscode.OpCode","rentOutGround")
     local pMsg = assert(pbl.encode("gs.GroundRent", data))

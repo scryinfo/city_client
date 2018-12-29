@@ -30,6 +30,7 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.openStateTran = self.viewRect.transform:Find("topRoot/open")
     self.totalStaffCountText = self.viewRect.transform:Find("topRoot/open/countText"):GetComponent("Text")
     self.openToDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn")
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close")
     self.closeOpenBtn = self.viewRect.transform:Find("topRoot/close/openBtn")
 
     self.openToDoBtn.localScale = Vector3.zero  --暂时不显示打开按钮
@@ -43,8 +44,8 @@ end
 function StaffRateItem:_initData()
     --self.statisfactionText.text = (self.staffData.satisfaction * 100).."%"
     --self.statisfactionSlider.value = self.staffData.satisfaction
-    --self.perCapitaWageText.text = self.staffData.dayWage
-    self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
+    self.perCapitaWageText.text = self.staffData.dayWage
+    --self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
     self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 

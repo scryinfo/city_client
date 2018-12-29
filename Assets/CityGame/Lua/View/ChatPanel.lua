@@ -19,7 +19,7 @@ function ChatPanel.InitPanel()
     this.backBtn = transform:Find("BackBtn").gameObject
 
     -- 玩家信息节点管理
-    this.backChatBtn = transform:Find("BackChatBtn").gameObject
+    --this.backChatBtn = transform:Find("BackChatBtn").gameObject
     this.playerInfoRoot = transform:Find("PlayerInfoRoot").gameObject
 
     -- 世界、好友、陌生人分页
@@ -57,6 +57,7 @@ function ChatPanel.InitPanel()
     this.worldVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
     -- 好友聊天节点、滑动条
+    this.friendsScrollView = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.friendsContent = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/Viewport/Content")
     this.friendsVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
@@ -76,6 +77,7 @@ function ChatPanel.InitPanel()
     this.strangersPlayerNum = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/LeftRoot/StrangersNum"):GetComponent("Text")
 
     -- 陌生人聊天节点、滑动条
+    this.strangersScrollView = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.strangersContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/Viewport/Content")
     this.strangersVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 end

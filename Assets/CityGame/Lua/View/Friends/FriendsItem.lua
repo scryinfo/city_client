@@ -11,7 +11,7 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.itemId = itemId
     self.prefab = prefab
     self.data = data
-    self.data.company = "Scry"
+    --self.data.company = "Scry"
     self.data.sign = "Everything i do i wanna put a shine on it"
 
     local transform = prefab.transform
@@ -44,10 +44,18 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.refuseBtn  = transform:Find("RefuseBtn").gameObject
 
     self.nameText.text = self.data.name
-    self.companyText.text = self.data.company
+    self.companyText.text = self.data.companyName
     self.signatureText.text = self.data.sign
     if self.data.desc then
         self.validationMsgText.text = self.data.desc
+    end
+
+    -- 判断是否是自己的好友
+    local friendsBasicData = DataManager.GetMyFriends()
+    if friendsBasicData[data.id] == nil then
+        self.isFriends = false
+    else
+        self.isFriends = true
     end
 
     if type == 1 then -- 好友主界面
@@ -109,8 +117,12 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
 
         self.sendMsgBtn:GetComponent("Button").onClick:RemoveAllListeners()
         luaBehaviour:AddClick(self.sendMsgBtn, self.OnSendMsg, self)
-        self.addFriendsBtn:GetComponent("Button").onClick:RemoveAllListeners()
-        luaBehaviour:AddClick(self.addFriendsBtn, self.OnAddFriends, self)
+        if self.isFriends then
+            self.addFriendsBtn:GetComponent("Button").interactable = false
+        else
+            self.addFriendsBtn:GetComponent("Button").onClick:RemoveAllListeners()
+            luaBehaviour:AddClick(self.addFriendsBtn, self.OnAddFriends, self)
+        end
     elseif type == 5 then -- 申请列表
         self.bgBtn:GetComponent("Button").interactable = false
         self.headBtn:GetComponent("Button").interactable = false
@@ -134,6 +146,7 @@ function FriendsItem:OnBg(go)
     --UIPage.ClosePage()
     --GameObject.Destroy(go.prefab)
     ct.log("tina_w7_friends", "向好友发起聊天")
+    ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
 end
 
 function FriendsItem:OnHead(go)
@@ -173,6 +186,12 @@ end
 -- 发送私聊
 function FriendsItem:OnSendMsg(go)
     ct.log("tina_w8_friends", "向陌生人发起私聊")
+    FriendslistCtrl.static.isAddfriends = true
+    if go.isFriends then
+        ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
+    else
+        ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = go.data.id})
+    end
 end
 
 -- 加好友

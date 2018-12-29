@@ -4,6 +4,7 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
+TestGroup.active_TestGroup("abel_w18_pb_save_load")
 --TestGroup.active_TestGroup("abel_w16_Icon_CPU")
 --TestGroup.active_TestGroup("abel_w16_Icon_memory")
 --TestGroup.active_TestGroup("wk16_abel_ceil")
@@ -33,6 +34,7 @@ TestGroup.active_TestGroup("tina_w7_friends")
 TestGroup.active_TestGroup("tina_w8_friends")
 TestGroup.active_TestGroup("tina_w9_friends")
 TestGroup.active_TestGroup("tina_w10_friends")
+TestGroup.active_TestGroup("tina_w11_friends")
 --TestGroup.active_TestGroup("cycle_w13_laboratory")
 TestGroup.active_TestGroup("cycle_w15_laboratory03")
 TestGroup.active_TestGroup("cycle_w19_groundTrans")

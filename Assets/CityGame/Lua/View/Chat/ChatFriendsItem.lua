@@ -7,14 +7,14 @@
 ChatFriendsItem = class('ChatFriendsItem')
 
 -- 初始化
-function ChatFriendsItem:initialize(itemId, index, prefab, isOn, data)
+function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     --prefab:GetComponent("Image").sprite = UnityEngine.Resources.Load("1")
     --ChatCtrl.static.luaBehaviour:AddClick(prefab, self.OnExpressionBtn, self)
     self.prefab = prefab
     self.data = data
     self.data.itemId = itemId
     self.data.index = index
-    self.data.company = "Scry"
+    --self.data.company = "Scry"
 
     local transform = prefab.transform
     -- 复选框提示
@@ -26,15 +26,25 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isOn, data)
     -- 好友消息红点提示
     self.noticeImage = transform:Find("NoticeImage").gameObject
     self.noticeText = transform:Find("NoticeImage/NoticeText"):GetComponent("Text")
+    -- 头像
+    self.friendsImage = transform:Find("HeadBg/FriendsImage"):GetComponent("Image")
 
     self.toggle.isOn = false
     self.nameText.text = self.data.name
-    self.companyText.text = self.data.company
+    self.companyText.text = self.data.companyName
     self.noticeImage:SetActive(false)
 
     self.toggle.onValueChanged:AddListener(function (isOn)
         self:_toggleValueChange(isOn)
     end)
+
+    if isFrist then
+        transform:SetSiblingIndex(0)
+    end
+
+    if index == 1 and not data.b then
+        self:SetHeadColor(false)
+    end
 end
 
 function ChatFriendsItem:SetNoticeText(text)
@@ -43,6 +53,14 @@ function ChatFriendsItem:SetNoticeText(text)
         self.noticeText.text = text
     else
         self.noticeImage:SetActive(false)
+    end
+end
+
+function ChatFriendsItem:SetHeadColor(isOnline)
+    if isOnline then
+        self.friendsImage.color = Color.New(1, 1, 1, 1)
+    else
+        self.friendsImage.color = Color.New(83/255, 83/255, 83/255, 110/255)
     end
 end
 

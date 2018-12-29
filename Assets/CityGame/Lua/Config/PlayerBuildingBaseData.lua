@@ -476,4 +476,7 @@ PlayerBuildingBaseData=
         ["y"] =1,
         ["deviationPos"] = {0.5,0.5,0.05}
     },
+    [4000001] ={
+        ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块
+    },
 }

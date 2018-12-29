@@ -167,7 +167,7 @@ function CameraMove:TouchBuild()
         end
         --判断是否是地块 --->是则打开
         if DataManager.GetGroundDataByID(blockID) ~= nil then
-            ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})
+            --ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})
         end
     end
 end

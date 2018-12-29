@@ -185,6 +185,7 @@ end
 --租赁者/土地拥有者查看土地
 function GroundTransDetailCtrl:_selfCheckFunc(ins)
     --打开租赁详情界面
+
 end
 --其他人查看土地
 function GroundTransDetailCtrl:_otherCheckFunc(ins)

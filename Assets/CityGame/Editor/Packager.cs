@@ -87,6 +87,12 @@ public class Packager {
     public static void BuildLuaBundel(BuildTarget target)
     {
         files.Clear();
+        string luaPath = "Assets/" + AppConst.AssetDir + "/lua";
+        if (Directory.Exists(luaPath))
+        {
+            Directory.Delete(luaPath, true);
+        }
+
         //生成 Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
             return;
@@ -98,12 +104,7 @@ public class Packager {
         else
         {
             HandleLuaFile();
-        }
-
-        string luaPath = "Assets/" + AppConst.AssetDir+"/lua";
-        if (Directory.Exists(luaPath)) {
-            Directory.Delete(luaPath, true);
-        }        
+        }   
 
         string resPath = "Assets/luaUpdate";
         if (!Directory.Exists(resPath))
@@ -430,7 +431,7 @@ public class Packager {
     /// </summary>
     static void HandleLuaFile() {
         string resPath = AppDataPath + "/StreamingAssets/";
-        string luaPath = resPath + "/lua/";
+        string luaPath = resPath + "lua/";
 
         //----------复制Lua文件----------------
         if (!Directory.Exists(luaPath)) {
@@ -441,9 +442,11 @@ public class Packager {
 
         for (int i = 0; i < luaPaths.Length; i++) {
             string luaDataPath = luaPaths[i].ToLower();
-            Recursive(luaDataPath);
+            List<string> NLfiles = new List<string>();
+            List<string> NLpaths = new List<string>();
+            Recursive(luaDataPath, ref NLfiles, ref NLpaths,true);
             int n = 0;
-            foreach (string f in files) {
+            foreach (string f in NLfiles) {
                 if (f.EndsWith(".meta")) continue;
                 string newfile = f.Replace(luaDataPath, "");
                 string newpath = luaPath + newfile;
@@ -457,6 +460,7 @@ public class Packager {
                     EncodeLuaFile(f, newpath);
                 } else {
                     File.Copy(f, newpath, true);
+                    files.Add(newpath.Replace('\\', '/'));
                 }
                 UpdateProgress(n++, files.Count, newpath);
             } 

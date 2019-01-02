@@ -75,6 +75,7 @@ function CameraMove:LateUpdate(gameObject)
         --点击在UI上
         if self.IsTouchUI then
             self.IsTouchUI = false
+            return
         end
     end
     --如果是点击到UI状态，则不做接下来的判定
@@ -279,11 +280,6 @@ function CameraMove.IsClickDownOverUI()
             return true
         end
     else
-
-        ct.log("System",UnityEngine.Input.touchCount == 1)
-        ct.log("System", UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began)
-        ct.log("System", UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId))
-
         if UnityEngine.Input.touchCount == 1 and UnityEngine.Input.GetTouch(0).phase == UnityEngine.TouchPhase.Began and UnityEngine.EventSystems.EventSystem.current:IsPointerOverGameObject(UnityEngine.Input.GetTouch(0).fingerId) then
             return true
         end

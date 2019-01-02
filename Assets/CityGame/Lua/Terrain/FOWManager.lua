@@ -13,12 +13,12 @@ end
 --tempPos 迷雾中心位置
 --tempRadius 半径大小
 function FOWManager.RefreshFOWRangeByBlockPos(tempPos,tempRadius)
-    --Battle.FOWLogic.instance:ChangeFogOfWarRange(BlockPosTurnFowPos(tempPos), tempRadius)
-    --FOWSystem.instance.enableSystem = true
+    Battle.FOWLogic.instance:ChangeFogOfWarRange(BlockPosTurnFowPos(tempPos), tempRadius)
+    FOWSystem.instance.enableSystem = true
 end
 
 --还原最大迷雾范围
 function FOWManager.BackToMaxFowRange()
-    --Battle.FOWLogic.instance:ChangeFogOfWarRange(Vector3.zero ,FowRadius)
-    --FOWSystem.instance.enableSystem = true
+    Battle.FOWLogic.instance:ChangeFogOfWarRange(Vector3.zero ,FowRadius)
+    FOWSystem.instance.enableSystem = true
 end

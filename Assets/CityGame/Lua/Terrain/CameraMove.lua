@@ -305,15 +305,20 @@ function CameraMove.MoveIntoUILayer(targetID)
     local tempBuildModel =  DataManager.GetBaseBuildDataByID(DataManager.GetBlockDataByID(targetID))
     local OffsetPos = Vector3.zero
     local buildSize = 2
+    local tempBuildScalePos = Vector3.New(5,5,-5)
     if tempBuildModel and tempBuildModel.Data and tempBuildModel.Data.buildingID then
         local tempBuildType = tempBuildModel.Data.buildingID
-        local OffsetValue = PlayerBuildingBaseData[tempBuildType].x / 2
-        buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
-        if nil ~= OffsetValue and OffsetValue > 0 then
-            OffsetPos = Vector3.New(OffsetValue,0,OffsetValue)
+        if PlayerBuildingBaseData[tempBuildType].UICenterPos ~= nil then
+            OffsetPos =  Vector3.New( PlayerBuildingBaseData[tempBuildType]["UICenterPos"][1],PlayerBuildingBaseData[tempBuildType]["UICenterPos"][2],PlayerBuildingBaseData[tempBuildType]["UICenterPos"][3])
+        end
+        if PlayerBuildingBaseData[tempBuildType].x ~= nil then
+            buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
+        end
+        if PlayerBuildingBaseData[tempBuildType].ScalePos ~= nil then
+            tempBuildScalePos =  Vector3.New( PlayerBuildingBaseData[tempBuildType]["ScalePos"][1],PlayerBuildingBaseData[tempBuildType]["ScalePos"][2],PlayerBuildingBaseData[tempBuildType]["ScalePos"][3])
         end
     end
-    local tempBuildScalePos = Vector3.New(5,5,-5)
+
     --
     local tempPos = TerrainManager.BlockIDTurnPosition(targetID) + OffsetPos --偏移量
     mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)

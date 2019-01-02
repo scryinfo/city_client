@@ -58,7 +58,7 @@ local function CreateBlockDataTable(tempCollectionID)
 end
 
 --功能
---  刷新原子地块集合的基本信息
+--  刷新某个原子地块的基本信息
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
@@ -69,11 +69,14 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
---
-function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize)
+--刷新原子地块集合的基本信息
+--nodeID： 根节点ID
+--nodeSize： 根节点范围
+--nodeSize： 根节点值
+function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
     local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
     for key, value in ipairs(idList) do
-        DataManager.RefreshBlockData(value,nodeID)
+        DataManager.RefreshBlockData(value,nodeValue)
     end
 end
 
@@ -184,9 +187,6 @@ local RoadAroundNumber = {
 --功能
 -- 计算道路number
 function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
-    if roadBlockID == 7006 then
-        local a = 0
-    end
     local roadNum = 0
     for key, value in pairs(RoadAroundNumber) do
         value.ID = nil
@@ -215,7 +215,7 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
                 end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
                     roadNum  = roadNum + value.Num
                 end
             end
@@ -249,7 +249,12 @@ function DataManager.RefreshBaseBuildData(data)
         BuildDataStack[collectionID].BaseBuildDatas = {}
         CreateBlockDataTable(collectionID)
     end
-    --
+    --TODO:检查数据初始化
+    if BuildDataStack[collectionID].BaseBuildDatas == nil then
+        --初始化地块集合
+        BuildDataStack[collectionID].BaseBuildDatas = {}
+        CreateBlockDataTable(collectionID)
+    end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
         return false
@@ -988,8 +993,12 @@ function DataManager.n_OnReceiveErrorCode(stream)
             info.contentInfo = "Roll Fail"
             info.tipInfo = ""
             ct.OpenCtrl("BtnDialogPageCtrl", info)
-        else
-
+        elseif data.opcode == 5015 then  --世界发言失败
+            if data.reason == "highFrequency" then
+                Event.Brocast("SmallPop","Speeches are frequent. Please wait a moment.",80)
+            elseif data.reason == "notAllow" then
+                Event.Brocast("SmallPop","Has been shielded.",60)
+            end
         end
     end
 end
@@ -1008,5 +1017,6 @@ end
 function DataManager.n_OnReceiveRoleStatusChange(stream)
     local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
     DataManager.SetMyFriends(roleData)
+    Event.Brocast("c_OnReceiveRoleStatusChange", roleData)
 end
 ----------

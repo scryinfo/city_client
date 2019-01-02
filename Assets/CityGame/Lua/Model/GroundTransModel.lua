@@ -21,12 +21,10 @@ end
 --出租
 function GroundTransModel.m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDay)
     local data = {}
-    data.coord = GroundTransModel.blockPos
+    data.coord = {[1] = GroundTransModel.blockPos}
     data.rentPreDay = rentPreDay
     data.rentDaysMin = rentDaysMin
     data.rentDaysMax = rentDaysMax
-    data.deposit = 1  --现在没有押金
-
     local msgId = pbl.enum("gscode.OpCode","rentOutGround")
     local pMsg = assert(pbl.encode("gs.GroundRent", data))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
@@ -36,10 +34,9 @@ function GroundTransModel.m_ReqRentGround(data, days)
     local tempData = {}
     local info = {}
     info.rentPreDay = data.rentPreDay
-    info.deposit = data.deposit
     info.rentDaysMin = data.rentDaysMin
     info.rentDaysMax = data.rentDaysMax
-    info.coord = GroundTransModel.blockPos
+    info.coord = {[1] = GroundTransModel.blockPos}
     tempData.info = info
     tempData.days = days
 
@@ -50,25 +47,25 @@ end
 --出售土地
 function GroundTransModel.m_ReqSellGround(price)
     local msgId = pbl.enum("gscode.OpCode","sellGround")
-    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = GroundTransModel.blockPos}))
+    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = {[1] = GroundTransModel.blockPos}}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --购买土地
 function GroundTransModel.m_ReqBuyGround(price)
     local msgId = pbl.enum("gscode.OpCode","buyGround")
-    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = GroundTransModel.blockPos}))
+    local pMsg = assert(pbl.encode("gs.GroundSale", { price = price, coord = {[1] = GroundTransModel.blockPos}}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --取消出租
 function GroundTransModel.m_ReqCancelRentGround()
     local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
-    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = GroundTransModel.blockPos}))
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = {[1] = GroundTransModel.blockPos}}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --取消售卖
 function GroundTransModel.m_ReqCancelSellGround()
     local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
-    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = GroundTransModel.blockPos}))
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = {[1] = GroundTransModel.blockPos}}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
     DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = GroundTransModel.blockPos})
 end

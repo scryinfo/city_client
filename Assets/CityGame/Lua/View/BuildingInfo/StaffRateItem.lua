@@ -60,18 +60,18 @@ function StaffRateItem:_checkWorkTime()
 
     local timeTable = getFormatUnixTime(os.time())
     local time = timeTable.year..timeTable.month..timeTable.day
-    if HolidayConfig[time] == 0 then  --判断是否是工作日
+    if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
         self.working.localScale = Vector3.one
         self.resting.localScale = Vector3.zero
-        local workTime = PlayerBuildingBaseData[self.staffData.buildingType].workTime
+        local workTime = PlayerBuildingBaseData[self.staffData.buildingTypeId].workTime
         if #workTime == 0 then
             return
         end
         if #workTime == 1 then
-            self.workingTimeText.transform = Vector3.one
+            self.workingTimeText.transform.localScale = Vector3.one
             self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(workTime[1][1]), self:_getTimeFormat(workTime[1][2]))
         else
-            self.workingTimeText.transform = Vector3.one
+            self.workingTimeText.transform.localScale = Vector3.one
             --
             for i, timeData in pairs(workTime) do
                 local temp = timeData[1] + timeTable[2]
@@ -95,6 +95,7 @@ function StaffRateItem:_getTimeFormat(value)
     if value < 10 then
         return "0"..value
     end
+    return value
 end
 
 --获取是第几个点击了

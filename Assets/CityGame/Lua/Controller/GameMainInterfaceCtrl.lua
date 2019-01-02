@@ -37,13 +37,17 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
-    Event.AddListener("c_receiveOwnerDatas", function (self,ownerData)
-        if self.groundOwnerDatas then
-            table.insert(self.groundOwnerDatas,ownerData)
-        end end ,self)
+    Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
 
 end
+
+function GameMainInterfaceCtrl:SaveData(ownerData)
+    if self.groundOwnerDatas then
+        table.insert(self.groundOwnerDatas,ownerData)
+    end
+end
+
 
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")

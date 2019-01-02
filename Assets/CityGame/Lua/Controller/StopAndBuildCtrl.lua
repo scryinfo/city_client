@@ -153,7 +153,6 @@ function StopAndBuildCtrl:updatePersonInfo(data)
     local time=getFormatUnixTime(string.sub(data.constructCompleteTs,1,10))
     panel.construct.text=time.year.."/"..time.month.."/"..time.day
 
-
 end
 
 

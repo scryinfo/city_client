@@ -40,7 +40,7 @@ end
 --服务器回调--
 --获取所有邮件
 function GameMainInterfaceModel.n_OnGetAllMails(stream)
-    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllMails',stream)
+    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     local lMsg = assert(pbl.decode("gs.Mails", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     local a= lMsg
 end

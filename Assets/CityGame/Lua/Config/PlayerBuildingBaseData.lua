@@ -1,4 +1,5 @@
-PlayerBuildingBaseData={
+PlayerBuildingBaseData=
+{
     [1100001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="原料厂",
@@ -19,6 +20,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -42,6 +44,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -65,6 +68,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
@@ -88,6 +92,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -111,6 +116,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -134,6 +140,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
@@ -157,6 +164,7 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -180,6 +188,7 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -203,6 +212,7 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
@@ -226,6 +236,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =140,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -249,6 +260,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =630,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -272,6 +284,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =1580,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
@@ -295,6 +308,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -318,6 +332,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -341,6 +356,7 @@ PlayerBuildingBaseData={
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
@@ -364,6 +380,7 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
     },
@@ -387,6 +404,7 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
     },
@@ -410,22 +428,81 @@ PlayerBuildingBaseData={
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
+		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
     },
-    [3000001] ={
-        ["prefabRoute"] = "View/Building/HomeHouse_1x1",  --临时测试数据
+	[1800001] ={
+        ["sizeName"] ="小型",
+        ["typeName"] ="人才中心",
+        ["des"] ="小型人才中心的说明",
+        ["imgPath"] ="小型人才中心的图片位置",
+        ["prefabRoute"] = "Building/Park_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
-        ["deviationPos"] = {0.5,0.5,0.05}
+		["maxWorkerNum"] =20,
+        ["lineNum"] =10,
+        ["lineMaxWorkerNum"] =20,
+        ["lineMinWorkerNum"] =5,
+        ["storeCapacity"] =0,
+        ["shelfCapacity"] =0,
+        ["effectRange"] =6,
+        ["buildTime"] =30,
+        ["adNum"] =-1,
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
-    [3000002] ={
-        ["prefabRoute"] = "View/Building/Park_1x1",  --临时测试数据
+    [1800002] ={
+        ["sizeName"] ="中型",
+        ["typeName"] ="人才中心",
+        ["des"] ="中型人才中心的说明",
+        ["imgPath"] ="中型人才中心的图片位置",
+        ["prefabRoute"] = "Building/Park_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
-        ["x"] =1,
-        ["y"] =1,
-        ["deviationPos"] = {0.5,0.5,0.05}
+        ["x"] =2,
+        ["y"] =2,
+		["maxWorkerNum"] =90,
+        ["lineNum"] =100,
+        ["lineMaxWorkerNum"] =20,
+        ["lineMinWorkerNum"] =5,
+        ["storeCapacity"] =0,
+        ["shelfCapacity"] =0,
+        ["effectRange"] =12,
+        ["buildTime"] =60,
+        ["adNum"] =-1,
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
+    },
+    [1800003] ={
+        ["sizeName"] ="大型",
+        ["typeName"] ="人才中心",
+        ["des"] ="大型人才中心的说明",
+        ["imgPath"] ="大型人才中心的图片位置",
+        ["prefabRoute"] = "Building/Park_3x3",
+        ["LuaRoute"]  = "Terrain/ArchitectureView",
+        ["x"] =3,
+        ["y"] =3,
+		["maxWorkerNum"] =225,
+        ["lineNum"] =1000,
+        ["lineMaxWorkerNum"] =20,
+        ["lineMinWorkerNum"] =5,
+        ["storeCapacity"] =0,
+        ["shelfCapacity"] =0,
+        ["effectRange"] =18,
+        ["buildTime"] =120,
+        ["adNum"] =-1,
+        ["npc"] =-1,
+        ["deviationPos"] = {0.13,1.2,0.75},
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [4000001] ={
         ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块

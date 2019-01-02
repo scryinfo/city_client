@@ -16,8 +16,7 @@ local this=StopAndBuildModel
 
 function StopAndBuildModel.Awake()
    this:OnCreate()
-    UpdateBeat:Add(this._updateTime, self);
-
+   UpdateBeat:Add(this._updateTime, self);
 end
 
 function StopAndBuildModel:OnCreate()

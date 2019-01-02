@@ -177,16 +177,21 @@ function ChatCtrl._showChatNoticeItem()
     ChatPanel.strangersNoticeImage:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
-    for _, v in pairs(chatFriendsInfo) do
-        if v.unreadNum and v.unreadNum > 0 then
-            ChatPanel.friendsNoticeImage:SetActive(true)
-            break
+    if ChatPanel.friendsToggle.interactable then
+        for _, v in pairs(chatFriendsInfo) do
+            if v.unreadNum and v.unreadNum > 0 then
+                ChatPanel.friendsNoticeImage:SetActive(true)
+                break
+            end
         end
+
     end
-    for _, m in pairs(chatStrangersInfo) do
-        if m.unreadNum and m.unreadNum > 0 then
-            ChatPanel.strangersNoticeImage:SetActive(true)
-            break
+    if ChatPanel.strangersToggle.interactable then
+        for _, m in pairs(chatStrangersInfo) do
+            if m.unreadNum and m.unreadNum > 0 then
+                ChatPanel.strangersNoticeImage:SetActive(true)
+                break
+            end
         end
     end
 end
@@ -392,6 +397,7 @@ function ChatCtrl:OnSend(go)
         data = {msg = chatStr, channel = go.channel}
     else
         if not ChatCtrl.static.chatMgr:GetActivePlayerId() then
+            Event.Brocast("SmallPop","Choose someone to chat with.",80)
             return
         end
         data = {channelId = ChatCtrl.static.chatMgr:GetActivePlayerId(), msg = chatStr, channel = go.channel}
@@ -453,10 +459,14 @@ end
 function ChatCtrl:_getSortDatas(data)
     local tempData = data
     table.sort(tempData, function (m, n)
-        if m.b then
-            return true
-        else
+        if m.b == n.b then
             return false
+        else
+            if m.b then
+                return true
+            else
+                return false
+            end
         end
     end)
     return tempData

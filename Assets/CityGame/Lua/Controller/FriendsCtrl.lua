@@ -122,6 +122,7 @@ function FriendsCtrl:_addListener()
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 
     self:_refreshData()
 end
@@ -136,6 +137,7 @@ function FriendsCtrl:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 end
 
 -- 获取界面数据
@@ -155,6 +157,7 @@ function FriendsCtrl:_refreshData()
     else
         FriendsPanel.friendsNumberText.text = "0"
         --FriendsPanel.groupNumberText.text = "0"
+        self:_showFriends()
     end
 
     self:_refreshState()
@@ -183,6 +186,17 @@ end
 -- 收到好友申请
 function FriendsCtrl:c_OnReceiveAddFriendReq()
     self:_showFriendsApplyNotice()
+end
+
+function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
+    for i, v in ipairs(FriendsCtrl.friendInfo) do
+        if v.id == friendsId.id then
+            table.remove(FriendsCtrl.friendInfo, i)
+            break
+        end
+    end
+    FriendsPanel.friendsNumberText.text = tostring(tonumber(#FriendsCtrl.friendInfo))
+    self:_showFriends()
 end
 
 -- 申请列表红点控制

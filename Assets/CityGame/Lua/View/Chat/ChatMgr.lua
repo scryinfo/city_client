@@ -375,6 +375,6 @@ function ChatMgr:_scrollBottom()
 end
 
 function ChatMgr:StartScrollBottom()
-    self.timeNow = UnityEngine.Time.time + 0.05
+    self.timeNow = UnityEngine.Time.time + 0.1
     UpdateBeat:Add(self._scrollBottom, self)
 end

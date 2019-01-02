@@ -161,6 +161,7 @@ function CameraMove:TouchBuild()
             if nil ~= tempBuildModel then
                 tempBuildModel:OpenPanel()
                 CameraMove.MoveIntoUILayer(tempNodeID)
+                return
             end
         end
         --判断是否是地块 --->是则打开

@@ -17,7 +17,6 @@ function ScienceTradePanel.Awake(obj)
 end
 
 function ScienceTradePanel.InitPanel()
-
     this.backBtn=transform:Find("topRoot/backBtn")
     this.plusBtn=transform:Find("topRoot/plusBtn")
 
@@ -31,6 +30,7 @@ function ScienceTradePanel.InitPanel()
 
     this.scrollContent=transform:Find("rightRoot/Scroll View/Viewport/Content")
 end
+
 --数据初始化
 function ScienceTradePanel.InitDate(AdvertisementPosData)
     this.materialData = AdvertisementPosData;

@@ -30,7 +30,7 @@ DataManager = {}
 
 
 -- 数据集合
-local BuildDataStack = { }      --建筑信息堆栈
+local BuildDataStack = {}      --建筑信息堆栈
 local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
@@ -58,7 +58,7 @@ local function CreateBlockDataTable(tempCollectionID)
 end
 
 --功能
---  刷新原子地块集合的基本信息
+--  刷新某个原子地块的基本信息
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
@@ -69,10 +69,14 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
-function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize)
+--刷新原子地块集合的基本信息
+--nodeID： 根节点ID
+--nodeSize： 根节点范围
+--nodeSize： 根节点值
+function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
     local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
     for key, value in ipairs(idList) do
-        DataManager.RefreshBlockData(value,nodeID)
+        DataManager.RefreshBlockData(value,nodeValue)
     end
 end
 
@@ -92,13 +96,37 @@ function DataManager.CaculationTerrainRangeBlock(startBlockID,rangeSize)
     end
     return idList
 end
--------------------------------道路数据集合--------------------------------
+
+--获取block地块所属建筑的根节点ID
+--如果没有建筑覆盖，值为-1
+function DataManager.GetBlockDataByID(blockID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BlockDatas ~= nil  then
+        return BuildDataStack[collectionID].BlockDatas[blockID]
+    else
+        return nil
+    end
+end
+
+--返回 GroundInfo数据
+--如果没有GroundInfo数据，返回nil
+function DataManager.GetGroundDataByID(blockID)
+    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].GroundDatas ~= nil then
+        return BuildDataStack[collectionID].GroundDatas[blockID]
+    else
+        return nil
+    end
+end
+
+
+-------------------------------------------------------------------------------------道路数据集合--------------------------------
 --功能
 --  依据BlockDatas创建道路的基础数据，管理GameObject
 --参数
 --  tempCollectionID: 所属地块集合ID
-function DataManager.CreateWaysByCollectionID(tempCollectionID)
-    if not BuildDataStack[tempCollectionID] then
+function DataManager.RefreshWaysByCollectionID(tempCollectionID)
+    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].BlockDatas == nil then
         return
     end
     if not BuildDataStack[tempCollectionID].RoteDatas then
@@ -114,7 +142,7 @@ function DataManager.CreateWaysByCollectionID(tempCollectionID)
                     if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
                         break
                     else
-                        --TODO:删除之前的道路Obj
+                        --删除之前的道路Obj
                         destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
                         BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
                     end
@@ -133,23 +161,18 @@ function DataManager.CreateWaysByCollectionID(tempCollectionID)
 end
 
 --功能
---  依据BlockDatas刷新道路的基础数据，管理GameObject
---参数
---  tempCollectionID: 所属地块集合ID
-function DataManager.RefreshWaysByCollectionID(tempCollectionID)
-
-
-end
-
---功能
 -- 移除道路的基础数据，管理GameObject
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RemoveWaysByCollectionID(tempCollectionID)
-
-
+    if BuildDataStack[tempCollectionID] == nil and BuildDataStack[tempCollectionID].RoteDatas == nil then
+        return
+    end
+    for key, value in pairs(BuildDataStack[tempCollectionID].RoteDatas) do
+        destroy(BuildDataStack[tempCollectionID].RoteDatas[key].roadObj)
+        BuildDataStack[tempCollectionID].RoteDatas[key] = nil
+    end
 end
-
 
 local RoadAroundNumber = {
     FrontUpperItem = { Num = 1 },   --正上方
@@ -164,9 +187,6 @@ local RoadAroundNumber = {
 --功能
 -- 计算道路number
 function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
-    if roadBlockID == 7006 then
-        local a = 0
-    end
     local roadNum = 0
     for key, value in pairs(RoadAroundNumber) do
         value.ID = nil
@@ -195,7 +215,7 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
                 end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
                     roadNum  = roadNum + value.Num
                 end
             end
@@ -216,7 +236,7 @@ function DataManager.RefreshBaseBuildData(data)
         blockID = data.id
     else--]]
     if data.x ~= nil and data.y ~= nil then
-        blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
+        blockID = TerrainManager.GridIndexTurnBlockID(data)
         data.posID = blockID
     else
         return
@@ -229,7 +249,12 @@ function DataManager.RefreshBaseBuildData(data)
         BuildDataStack[collectionID].BaseBuildDatas = {}
         CreateBlockDataTable(collectionID)
     end
-    --
+    --TODO:检查数据初始化
+    if BuildDataStack[collectionID].BaseBuildDatas == nil then
+        --初始化地块集合
+        BuildDataStack[collectionID].BaseBuildDatas = {}
+        CreateBlockDataTable(collectionID)
+    end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
         return false
@@ -240,33 +265,6 @@ function DataManager.RefreshBaseBuildData(data)
     end
 end
 
---[[
---功能
---  刷新商业建筑集合的详细数据--
---参数
---  data:某个建筑详情数据（protobuf）
-function DataManager.RefreshDetailBuildData(data,buildTypeClass)
-    --数据判空处理
-    local blockID
-    if data.id ~= nil then
-        blockID = data.id
-    elseif data.x ~= nil and data.y ~= nil then
-        blockID =TerrainManager.PositionTurnBlockID(Vector3.New(data.x,0,data.y))
-    else
-        return
-    end
-    --
-    if nil ==  BuildDataStack.DetailDataModels  then
-        BuildDataStack.DetailDataModels = {}
-    end
-    --
-    if BuildDataStack.DetailDataModels[blockID] then
-        BuildDataStack.DetailDataModels[blockID]:Refresh(data)
-    else
-        BuildDataStack.DetailDataModels[blockID] = buildTypeClass:new(data)
-    end
-end
---]]
 --功能
 --  删除整个地块集合数据
 --      相机移动时触发
@@ -285,17 +283,6 @@ end
 function DataManager.GetBaseBuildDataByID(blockID)
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     return BuildDataStack[collectionID].BaseBuildDatas[blockID]
-end
-
---获取block地块所属建筑的根节点ID
---如果没有建筑覆盖，值为-1
-function DataManager.GetBlockDataByID(blockID)
-    local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    if BuildDataStack[collectionID] ~= nil  then
-        return BuildDataStack[collectionID].BlockDatas[blockID]
-    else
-        return nil
-    end
 end
 ---------------------------------------------------------------------------------- 建筑详情数据---------------------------------------------------------------------------------
 ModelBase = class('ModelBase')
@@ -497,7 +484,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_groundInfos = tempData.ground
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
-
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagIds
 
@@ -568,7 +554,7 @@ function  DataManager.InitPersonDatas(tempData)
 
 end
 
---修改自己所拥有土地集合
+--添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
     if PersonDataStack.m_groundInfos then
@@ -581,6 +567,17 @@ function DataManager.AddMyGroundInfo(groundInfoData)
         PersonDataStack.m_groundInfos = {}
     end
     table.insert(PersonDataStack.m_groundInfos,groundInfoData)
+end
+
+--删除自己所拥有土地
+function DataManager.RemoveMyGroundInfo(groundInfoData)
+    if PersonDataStack.m_groundInfos then
+        for key, value in ipairs(PersonDataStack.m_groundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData .y then
+                table.remove(PersonDataStack.m_groundInfos,key)
+            end
+        end
+    end
 end
 
 function DataManager.GetMyOwnerID()
@@ -717,6 +714,23 @@ function DataManager.SetMyAllBuildingDetail(tempData)
     PersonDataStack.m_buysBuilding = tempData
 end
 
+--删除自己所拥有的某一个建筑
+-- tempbuildID: 建筑唯一ID
+function DataManager.RemoveMyBuildingDetailByBuildID(tempbuildID)
+    if PersonDataStack.m_buysBuilding ~= nil then
+        for type, value in pairs(PersonDataStack.m_buysBuilding) do
+            for key, data in pairs(value) do
+                if data ~= nil and data.info ~= nil and data.info.id ~= nil and  tempbuildID == data.info.id then
+                    PersonDataStack.m_buysBuilding[type][key] = nil
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+
 --判断该地块是不是自己的
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
@@ -779,6 +793,7 @@ end
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
+   -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
 end
 
 --注册所有网络消息回调
@@ -869,28 +884,42 @@ function DataManager.n_OnReceiveUnitChange(stream)
 end
 
 function DataManager.n_OnReceiveUnitRemove(stream)
-    local buildingInfo = assert(pbl.decode("gs.Bytes", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
-    --buildingInfo  ==》BuildingInfo
-    if not buildingInfo or not buildingInfo.mId then
-        return
+    --完成删除(注：删除自己的建筑回调，需做本地自己拥有建筑的删除)
+    local removeInfo = assert(pbl.decode("gs.UnitRemove", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    if removeInfo ~= nil and removeInfo.id ~= nil and removeInfo.x ~= nil and removeInfo.y ~= nil then
+        local tempBlockID = TerrainManager.GridIndexTurnBlockID(removeInfo)
+        local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+        if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
+            BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
+            DataManager.RefreshWaysByCollectionID(tempCollectionID)
+        end
     end
-    --此处因命名和层级问题，临时处理
-    buildingInfo.buildingID = buildingInfo.mId
-    buildingInfo.x = buildingInfo.pos.x
-    buildingInfo.y = buildingInfo.pos.y
-    TerrainManager.ReceiveArchitectureDatas({buildingInfo})
 end
 
-
+--接收服务器地块信息数据
 function DataManager.n_OnReceiveGroundChange(stream)
     local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
-    --如果地块所有人是自己的话
-    if not GroundChange or not GroundChange.info then
-        return
-    end
-    for key, value in pairs(GroundChange.info) do
-        if nil ~= PersonDataStack.m_owner and  value.ownerId  == PersonDataStack.m_owner then
-            DataManager.AddMyGroundInfo(value)
+    if GroundChange ~= nil and GroundChange.info ~= nil then
+        for key, value in pairs(GroundChange.info) do
+            --如果地块所有人是自己的话，写进自己所拥有地块集合
+            if nil ~= PersonDataStack.m_owner and value.ownerId  == PersonDataStack.m_owner then
+                DataManager.AddMyGroundInfo(value)
+            end
+            local tempGroundBlockID  = TerrainManager.GridIndexTurnBlockID(value)
+            local tempGroundCollectionID  = TerrainManager.BlockIDTurnCollectionID(tempGroundBlockID)
+            --判空处理
+            if BuildDataStack[tempGroundCollectionID] == nil then
+                BuildDataStack[tempGroundCollectionID] = {}
+            end
+            if BuildDataStack[tempGroundCollectionID].GroundDatas == nil then
+                BuildDataStack[tempGroundCollectionID].GroundDatas = {}
+            end
+            --刷新/创建地块信息Model
+            if BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID] ~= nil then
+                BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]:Refresh(value)
+            else
+                BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]  = BaseGroundModel:new(value)
+            end
         end
     end
 end
@@ -937,6 +966,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
+    DataManager.personInfo=playerData.info[1]
 end
 
 --研究所Roll回复信息

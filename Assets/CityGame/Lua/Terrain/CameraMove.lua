@@ -63,8 +63,7 @@ function CameraMove:InitParameters()
     NormalStateCameraScalePos = nil
 end
 
-
-function CameraMove:FixedUpdate(gameObject)
+function CameraMove:LateUpdate(gameObject)
     --点击时判断是否点击到UI
     if CameraMove.IsClickDownOverUI() then
         self.IsTouchUI = true
@@ -82,7 +81,6 @@ function CameraMove:FixedUpdate(gameObject)
     if self.IsTouchUI then
         return
     end
-
     --如果检测到按下
     if inputTools:GetIsClickDown() then
         self.touchBeginPosition = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
@@ -156,13 +154,19 @@ function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
         if tempNodeID ~= nil and tempNodeID ~= -1 then
-            local tempModel = DataManager.GetBaseBuildDataByID(tempNodeID)
-            if nil ~= tempModel then
-                tempModel:OpenPanel()
+            local tempBuildModel = DataManager.GetBaseBuildDataByID(tempNodeID)
+            if nil ~= tempBuildModel then
+                tempBuildModel:OpenPanel()
                 CameraMove.MoveIntoUILayer(tempNodeID)
+                return
             end
+        end
+        --判断是否是地块 --->是则打开
+        if DataManager.GetGroundDataByID(blockID) ~= nil then
+            ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})
         end
     end
 end
@@ -301,22 +305,27 @@ function CameraMove.MoveIntoUILayer(targetID)
     local tempBuildModel =  DataManager.GetBaseBuildDataByID(DataManager.GetBlockDataByID(targetID))
     local OffsetPos = Vector3.zero
     local buildSize = 2
+    local tempBuildScalePos = Vector3.New(5,5,-5)
     if tempBuildModel and tempBuildModel.Data and tempBuildModel.Data.buildingID then
         local tempBuildType = tempBuildModel.Data.buildingID
-        local OffsetValue = PlayerBuildingBaseData[tempBuildType].x / 2
-        buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
-        if nil ~= OffsetValue and OffsetValue > 0 then
-            OffsetPos = Vector3.New(OffsetValue,0,OffsetValue)
+        if PlayerBuildingBaseData[tempBuildType].UICenterPos ~= nil then
+            OffsetPos =  Vector3.New( PlayerBuildingBaseData[tempBuildType]["UICenterPos"][1],PlayerBuildingBaseData[tempBuildType]["UICenterPos"][2],PlayerBuildingBaseData[tempBuildType]["UICenterPos"][3])
+        end
+        if PlayerBuildingBaseData[tempBuildType].x ~= nil then
+            buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
+        end
+        if PlayerBuildingBaseData[tempBuildType].ScalePos ~= nil then
+            tempBuildScalePos =  Vector3.New( PlayerBuildingBaseData[tempBuildType]["ScalePos"][1],PlayerBuildingBaseData[tempBuildType]["ScalePos"][2],PlayerBuildingBaseData[tempBuildType]["ScalePos"][3])
         end
     end
-    local tempBuildScalePos = Vector3.New(5,5,-5)
+
     --
     local tempPos = TerrainManager.BlockIDTurnPosition(targetID) + OffsetPos --偏移量
     mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)
     --相机移动到目标位置
     local tempScalePos = tempBuildScalePos  --相机远近
     mainCameraTransform:DOLocalMove(tempScalePos,m_IntoDurationtime)
-    --TODO:战争迷雾缩小到目标大小
+    --战争迷雾缩小到目标大小
     FOWManager.RefreshFOWRangeByBlockPos(tempPos,buildSize)
 end
 
@@ -331,7 +340,7 @@ function CameraMove.MoveOutUILayer()
     mainCameraCenterTransforms:DOMove(NormalStateCameraPos,m_OutDurationtime)
     --相机还原到目标大小
     mainCameraTransform:DOLocalMove(NormalStateCameraScalePos,m_OutDurationtime)
-    --TODO:战争迷雾换到到正常大小
+    --战争迷雾换到到正常大小
     FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil

@@ -16,7 +16,7 @@ function BaseBuildModel:Refresh(data)
     for key, value in pairs(data) do
         self.Data[key] = value
     end
-    DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x)
+    DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
 end
 
 --打开界面
@@ -46,12 +46,11 @@ end
 
 
 function BaseBuildModel:Close()
-    for  key, value in pairs(self.Data) do
-        value = nil
-    end
+    --删除节点
+    DataManager.RefreshBlockDataWhenNodeChange(self.Data[posID],PlayerBuildingBaseData[self.Data[buildingID]].x,-1)
     --清除建筑GameObject
     if self.go ~= nil then
-        Destory(self.go)
+        destroy(self.go)
     end
     self = nil
 end

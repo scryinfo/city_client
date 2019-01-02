@@ -154,6 +154,7 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
             end
         end
     end
+
 end
 
 --排列右侧信息，只需要排一次，一直都处于打开状态
@@ -343,6 +344,7 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     ---折线图  左1
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
+
     ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
     self.leftData[2] = self:_createStaff(staffToggleData)
@@ -355,16 +357,14 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
     self.leftData[3] = TicketItem
 
-
-
     ---广告展示--右1
     local advertisementViewRect
     advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
     advertisementViewRect.gameObject.name="Advertisement"
     local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+    --AdvertisementShowItem:openToggleItem(BuildingInfoToggleGroupMgr.static.RIGHT_POS)
     self.rightData[1] = AdvertisementShowItem
-
 
     ---个人公园信息--中1
     local ParkInfoRect

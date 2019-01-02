@@ -79,6 +79,8 @@ end
 
 function ScienceSellPopCtrl:Refresh()
 
+    panel.iconImage.sprite=self.m_data.iconImage.sprite
+
 end
 
 

@@ -143,6 +143,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
     AddLineChooseItemPanel.productionItem:initData(Good[itemId])
+    self.selectGoodId = itemId
 
     if enableShow then
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.zero
@@ -192,33 +193,33 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas, index)
 end
 
 function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
-    if self.selectItemId == itemId then
-        if index ~= nil then
-            index = index + 1
-            if index >= #self.selectItemMatToGoodIds then
-                index = 1
-            end
-            local lineDatas = {}  --获取线的数据
-            local data = {}
-            for j, matData in ipairs(CompoundDetailConfig[index].goodsNeedMatData) do
-                if matData.itemId ~= itemId then
-                    lineDatas[#lineDatas + 1] = matData
-                end
-            end
-            table.insert(lineDatas, 1, data)  --将item放在第一个位置
-            self:_setLineDetailInfo(lineDatas, index)
-            AddLineChooseItemPanel.productionItem:initData(Good[index])
-            AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(index)
+    if index ~= nil then
+        index = index + 1
+        if index > #self.selectItemMatToGoodIds then
+            index = 1
         end
+        local lineDatas = {}  --获取线的数据
+        local data = {}
+        for j, matData in ipairs(CompoundDetailConfig[index].goodsNeedMatData) do
+            if matData.itemId ~= itemId then
+                lineDatas[#lineDatas + 1] = matData
+            end
+        end
+        table.insert(lineDatas, 1, data)  --将item放在第一个位置
+        self:_setLineDetailInfo(lineDatas, index)
+        AddLineChooseItemPanel.productionItem:initData(Good[index])
+        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(index)
     else
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         for i, goodsId in ipairs(self.selectItemMatToGoodIds) do
-            if goodsId ~= itemId then
+            if goodsId ~= self.selectGoodId then
                 local lineDatas = {}  --获取线的数据
                 local data = {}
                 for j, matData in ipairs(CompoundDetailConfig[goodsId].goodsNeedMatData) do
                     if matData.itemId ~= itemId then
                         lineDatas[#lineDatas + 1] = matData
+                    else
+                        data = matData
                     end
                 end
                 table.insert(lineDatas, 1, data)  --将item放在第一个位置

@@ -345,9 +345,9 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
 
-    -----员工  左2
-    --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    --self.leftData[2] = self:_createStaff(staffToggleData)
+    ---员工  左2
+    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+    self.leftData[2] = self:_createStaff(staffToggleData)
 
     ---门票 --左3
     local ticketView

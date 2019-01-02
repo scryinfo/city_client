@@ -95,7 +95,6 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
 end
 
 function WagesAdjustBoxCtrl:_onClickClose(ins)
-
      ins:Hide()
 end
 

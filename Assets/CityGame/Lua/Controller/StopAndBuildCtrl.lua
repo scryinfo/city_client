@@ -17,6 +17,9 @@ end
 
 function StopAndBuildCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
+    local data = {workerNum=20,buildInfo= nil,func=nil}
+    ct.OpenCtrl("WagesAdjustBoxCtrl",data)
+    Event.Brocast("mCloes")
 end
 local panel
 function StopAndBuildCtrl:Awake(go)

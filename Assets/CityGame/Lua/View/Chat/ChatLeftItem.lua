@@ -34,12 +34,12 @@ function ChatLeftItem:initialize(itemId, prefab, data)
         self.chatText.verticalOverflow = UnityEngine.VerticalWrapMode.Overflow
         local chatTextPreferredHeight = self.chatText.preferredHeight
         self.chatText.transform.sizeDelta = Vector2.New(580, chatTextPreferredHeight)
-        self.playerNameImage.anchoredPosition = Vector2.New(170, chatTextPreferredHeight + 66)
+        self.playerNameImage.anchoredPosition = Vector2.New(190, chatTextPreferredHeight + 66)
         transformSizeDelta.y = chatTextPreferredHeight + 130
         transform.sizeDelta = Vector2.New(transformSizeDelta.x, chatTextPreferredHeight + 130)
     else
         self.chatText.transform.sizeDelta = Vector2.New(chatTextPreferredWidth, 30)
-        self.playerNameImage.anchoredPosition = Vector2.New(170, 97)
+        self.playerNameImage.anchoredPosition = Vector2.New(190, 97)
     end
 
     if self.data.channel == "WORLD" then

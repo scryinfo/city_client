@@ -173,7 +173,7 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
 end
 
 function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
-    DataManager.SetMyFriends({ id = friendsId.id, b = nil })
+    --DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     for i, v in ipairs(FriendslistCtrl.friendInfo) do
         if v.id == friendsId.id then
             table.remove(FriendslistCtrl.friendInfo, i)

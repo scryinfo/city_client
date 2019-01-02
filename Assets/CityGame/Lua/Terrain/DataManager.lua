@@ -814,6 +814,7 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
 end
 
 --清除所有消息回调
@@ -1020,5 +1021,12 @@ function DataManager.n_OnReceiveRoleStatusChange(stream)
     local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
     DataManager.SetMyFriends(roleData)
     Event.Brocast("c_OnReceiveRoleStatusChange", roleData)
+end
+
+-- 收到删除好友信息
+function DataManager.n_OnReceiveDeleteFriend(stream)
+    local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_OnReceiveDeleteFriend: stream == nil")
+    DataManager.SetMyFriends({ id = friendsId.id, b = nil })
+    Event.Brocast("c_OnReceiveDeleteFriend", friendsId)
 end
 ----------

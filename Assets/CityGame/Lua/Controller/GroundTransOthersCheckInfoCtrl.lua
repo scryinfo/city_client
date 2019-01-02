@@ -45,7 +45,7 @@ end
 function GroundTransOthersCheckInfoCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
         GroundTransModel.m_ReqPlayersInfo({[1] = self.m_data.groundInfo.ownerId})
-        self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
+        self:_setShowState(self.m_data.groundInfo)
     end
 end
 --根据状态显示界面

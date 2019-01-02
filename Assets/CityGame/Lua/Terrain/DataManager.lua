@@ -215,7 +215,7 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
                 end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                if BuildDataStack[ItemCollectionID] and BuildDataStack[ItemCollectionID].BlockDatas and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
                     roadNum  = roadNum + value.Num
                 end
             end
@@ -960,7 +960,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
-    DataManager.personInfo=playerData.info[1]
+    Event.Brocast("c_receiveOwnerDatas", playerData.info[1])
 end
 
 --研究所Roll回复信息

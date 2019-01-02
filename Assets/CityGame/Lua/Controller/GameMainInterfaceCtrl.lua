@@ -36,27 +36,52 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
+    Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
+    Event.AddListener("c_receiveOwnerDatas", function (self,ownerData)
+        if self.groundOwnerDatas then
+            table.insert(self.groundOwnerDatas,ownerData)
+        end end ,self)
+    Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
 
 end
 
+function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
+    -- TODO:ct.log("system","重新开业")
+    local data = {workerNum=20,buildInfo= buildingInfo,func=func}
+    ct.OpenCtrl("WagesAdjustBoxCtrl",data)
+end
+
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
+    --打开界面
+    buildingInfo.ctrl=self
+    ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
+end
+
+function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
+    --请求土地信息
+    local startBlockId=TerrainManager.GridIndexTurnBlockID(buildingInfo.pos)
+    local blockIds = DataManager.CaculationTerrainRangeBlock(startBlockId,PlayerBuildingBaseData[buildingInfo.mId].x)
+    self.groundDatas={}
+    for i, blockId in ipairs(blockIds) do
+        local data = DataManager.GetGroundDataByID(blockId)
+        table.insert(self.groundDatas,data)
+    end
+
+    --请求土地主人的信息
+    self.groundOwnerDatas={}
+    for i, groundData in ipairs(self.groundDatas) do
+        local Ids={}
+        table.insert(Ids,groundData.Data.ownerId)
+        Event.Brocast("m_QueryPlayerInfo",Ids)
+    end
+
     --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
     Event.Brocast("m_QueryPlayerInfo",ids)
-    --打开界面
-    ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
-    --请求土地信息
-    local startBlockId=TerrainManager.GridIndexTurnBlockID(buildingInfo.pos)
-    local blockIds = DataManager.CaculationTerrainRangeBlock(startBlockId,PlayerBuildingBaseData[buildingInfo.mId].x)
-    local groundData={}
-    --for i, blockId in pairs(blockIds) do
-    --   local data = DataManager.GetGroundDataByID(blockId)
-    --   table.insert(groundData,data)
-    --end
-    --local data = DataManager.GetGroundDataByID(blockIds[1])
-    --return
+
 end
+
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model

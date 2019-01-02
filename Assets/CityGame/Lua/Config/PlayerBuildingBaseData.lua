@@ -20,7 +20,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1100002] ={
         ["sizeName"] ="中型",
@@ -42,7 +44,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1100003] ={
         ["sizeName"] ="大型",
@@ -64,7 +68,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1200001] ={
         ["sizeName"] ="小型",
@@ -86,7 +92,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1200002] ={
         ["sizeName"] ="中型",
@@ -108,7 +116,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1200003] ={
         ["sizeName"] ="大型",
@@ -130,7 +140,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1300001] ={
         ["sizeName"] ="小型",
@@ -152,7 +164,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1300002] ={
         ["sizeName"] ="中型",
@@ -174,7 +188,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1300003] ={
         ["sizeName"] ="大型",
@@ -196,7 +212,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1400001] ={
         ["sizeName"] ="小型",
@@ -218,7 +236,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =140,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1400002] ={
         ["sizeName"] ="中型",
@@ -240,7 +260,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =630,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1400003] ={
         ["sizeName"] ="大型",
@@ -262,7 +284,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =1580,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1500001] ={
         ["sizeName"] ="小型",
@@ -284,7 +308,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1500002] ={
         ["sizeName"] ="中型",
@@ -306,7 +332,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1500003] ={
         ["sizeName"] ="大型",
@@ -328,7 +356,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1600001] ={
         ["sizeName"] ="小型",
@@ -350,7 +380,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1600002] ={
         ["sizeName"] ="中型",
@@ -372,7 +404,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1600003] ={
         ["sizeName"] ="大型",
@@ -394,7 +428,9 @@ PlayerBuildingBaseData=
         ["adNum"] =100,
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
-		["workTime"] = {[1]={0,24}}
+		["workTime"] = {[1]={0,24}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
 	[1800001] ={
         ["sizeName"] ="小型",
@@ -416,7 +452,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1800002] ={
         ["sizeName"] ="中型",
@@ -438,7 +476,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1800003] ={
         ["sizeName"] ="大型",
@@ -460,7 +500,9 @@ PlayerBuildingBaseData=
         ["adNum"] =-1,
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
-		["workTime"] = {[1]={8,4},[2]={14,4}}
+		["workTime"] = {[1]={8,4},[2]={14,4}},
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },	
     [3000001] ={
         ["prefabRoute"] = "Build/MaterialBuilding_1x1",

@@ -249,7 +249,12 @@ function DataManager.RefreshBaseBuildData(data)
         BuildDataStack[collectionID].BaseBuildDatas = {}
         CreateBlockDataTable(collectionID)
     end
-    --
+    --TODO:检查数据初始化
+    if BuildDataStack[collectionID].BaseBuildDatas == nil then
+        --初始化地块集合
+        BuildDataStack[collectionID].BaseBuildDatas = {}
+        CreateBlockDataTable(collectionID)
+    end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
         return false

@@ -116,6 +116,7 @@ function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition = AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition + Vector2.New(174, 0)
 
     --tempData = Material[itemId]
+    self.selectItemId = itemId
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
@@ -185,5 +186,46 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
         AddLineChooseItemPanel.centerItems[2]:initData(datas[2])
         AddLineChooseItemPanel.centerItems[3]:initData(datas[3])
+    end
+end
+
+function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
+    if self.selectItemId == itemId then
+        if index ~= nil then
+            index = index + 1
+            if index >= #self.selectItemMatToGoodIds then
+                index = 1
+            end
+            local lineDatas = {}  --获取线的数据
+            local data = {}
+            for j, matData in ipairs(CompoundDetailConfig[index].goodsNeedMatData) do
+                if matData.itemId ~= itemId then
+                    lineDatas[#lineDatas + 1] = matData
+                end
+            end
+            table.insert(lineDatas, 1, data)  --将item放在第一个位置
+            self:_setLineDetailInfo(lineDatas, i)
+            AddLineChooseItemPanel.productionItem:initData(Good[index])
+            AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(index)
+        end
+    else
+        self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
+        for i, goodsId in ipairs(self.selectItemMatToGoodIds) do
+            if goodsId ~= itemId then
+                local lineDatas = {}  --获取线的数据
+                local data = {}
+                for j, matData in ipairs(CompoundDetailConfig[goodsId].goodsNeedMatData) do
+                    if matData.itemId ~= itemId then
+                        lineDatas[#lineDatas + 1] = matData
+                    end
+                end
+                table.insert(lineDatas, 1, data)  --将item放在第一个位置
+                self:_setLineDetailInfo(lineDatas, i)
+                AddLineChooseItemPanel.productionItem:initData(Good[goodsId])
+                AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(goodsId)
+                return
+            end
+        end
+
     end
 end

@@ -94,8 +94,8 @@ function MunicipalCtrl:changeData()
     else
         DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
-        self.m_data = {}
-        self.m_data.insId = MunicipalPanel.buildingId
+        --self.m_data = {}
+        --self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 

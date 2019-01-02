@@ -12,6 +12,7 @@ end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+    obj.transform:SetAsFirstSibling()
 end
 
 function WagesAdjustBoxCtrl:Awake(go)
@@ -88,7 +89,7 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
                      Event.Brocast("m_startBusiness",m_data.buildInfo.id)
                      Event.Brocast("mCloes")
                      m_data:func()
-                      --m_data.transform.localScale=Vector3.zero
+                     Event.Brocast("SmallPop","Success",300)
                    end
     ct.OpenCtrl("ReminderCtrl",data)
 

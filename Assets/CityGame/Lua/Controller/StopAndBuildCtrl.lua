@@ -8,7 +8,6 @@ UIPage:ResgisterOpen(StopAndBuildCtrl) --注册打开的方法
 --构建函数
 function StopAndBuildCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
-    --StopAndBuildModel:new()
 end
 
 function StopAndBuildCtrl:bundleName()
@@ -17,12 +16,10 @@ end
 
 function StopAndBuildCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local data = {workerNum=20,buildInfo= nil,func=nil}
-    ct.OpenCtrl("WagesAdjustBoxCtrl",data)
-    Event.Brocast("mCloes")
 end
 local panel
 function StopAndBuildCtrl:Awake(go)
+
     self.gameObject = go;
     panel=StopAndBuildPanel
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');

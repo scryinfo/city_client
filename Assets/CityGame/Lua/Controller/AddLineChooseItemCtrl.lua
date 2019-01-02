@@ -38,10 +38,12 @@ end
 function AddLineChooseItemCtrl:_addListener()
     Event.AddListener("c_leftSetCenter", self._leftSetCenter, self)
     Event.AddListener("c_rightSetCenter", self._rightSetCenter, self)
+    Event.AddListener("c_LabAddLineChangeMatLine", self._changeLineByItemId, self)
 end
 function AddLineChooseItemCtrl:_removeListener()
     Event.RemoveListener("c_leftSetCenter", self._leftSetCenter, self)
     Event.RemoveListener("c_rightSetCenter", self._rightSetCenter, self)
+    Event.RemoveListener("c_LabAddLineChangeMatLine", self._changeLineByItemId, self)
 end
 
 function AddLineChooseItemCtrl:_initData()
@@ -157,7 +159,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
 end
 
 --设置原料线的信息  根据个数显示位置
-function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
+function AddLineChooseItemCtrl:_setLineDetailInfo(datas, index)
     local lineCount = #datas
     if lineCount == 1 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(false)
@@ -166,7 +168,7 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.one
         AddLineChooseItemPanel.vLine.localScale = Vector3.zero
 
-        AddLineChooseItemPanel.centerItems[2]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[2]:initData(datas[1], index)
     elseif lineCount == 2 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(true)
         AddLineChooseItemPanel.centerItems[2]:setObjState(false)
@@ -174,7 +176,7 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.zero
         AddLineChooseItemPanel.vLine.localScale = Vector3.one
 
-        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1], index)
         AddLineChooseItemPanel.centerItems[3]:initData(datas[2])
     elseif lineCount == 3 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(true)
@@ -183,7 +185,7 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.one
         AddLineChooseItemPanel.vLine.localScale = Vector3.one
 
-        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1], index)
         AddLineChooseItemPanel.centerItems[2]:initData(datas[2])
         AddLineChooseItemPanel.centerItems[3]:initData(datas[3])
     end
@@ -204,7 +206,7 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
                 end
             end
             table.insert(lineDatas, 1, data)  --将item放在第一个位置
-            self:_setLineDetailInfo(lineDatas, i)
+            self:_setLineDetailInfo(lineDatas, index)
             AddLineChooseItemPanel.productionItem:initData(Good[index])
             AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(index)
         end

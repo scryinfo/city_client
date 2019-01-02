@@ -19,21 +19,21 @@ function GroundTransContractPanel.InitPanel()
     this.rentTipText = transform:Find("bottomRoot/rent/tipText"):GetComponent("Text")
     this.buyBottomBtn = transform:Find("bottomRoot/buyBtn")
 
-    this.totalPriceText = transform:Find("centerRoot/total/totalPriceText")
+    this.totalPriceText = transform:Find("centerRoot/total/totalPriceText"):GetComponent("Text")
     this.rentCenterTran = transform:Find("centerRoot/rent")
-    this.rentAreaText = transform:Find("centerRoot/rent/areaText")
+    this.rentAreaText = transform:Find("centerRoot/rent/areaText"):GetComponent("Text")
     this.rentTenancyText = transform:Find("centerRoot/rent/tenancyText"):GetComponent("Text")
     this.rentTenancyTimeText = transform:Find("centerRoot/rent/tenancyTimeText"):GetComponent("Text")
     this.rentDailyRentText = transform:Find("centerRoot/rent/dailyRentText"):GetComponent("Text")
     this.buyCenterTran = transform:Find("centerRoot/buy")
-    this.buyAreaText = transform:Find("centerRoot/buy/areaText")
+    this.buyAreaText = transform:Find("centerRoot/buy/areaText"):GetComponent("Text")
 
     --A
     this.APortraitImg = transform:Find("leftRoot/bg02/portraitImg"):GetComponent("Image")
-    this.ANameText = transform:Find("leftRoot/nameText")
+    this.ANameText = transform:Find("leftRoot/nameText"):GetComponent("Text")
     --B
     this.BPortraitImg = transform:Find("rightRoot/bg02/portraitImg"):GetComponent("Image")
-    this.BNameText = transform:Find("rightRoot/nameText")
+    this.BNameText = transform:Find("rightRoot/nameText"):GetComponent("Text")
 end
 --
 function GroundTransContractPanel.chooseState(isRent)

@@ -25,7 +25,7 @@ function GroundTransRentAndBuyCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.rentBtn.gameObject, self._rentBtnFunc, self)
 
     GroundTransRentAndBuyPanel.tenancySlider.onValueChanged:AddListener(function(value)
-        GroundTransRentAndBuyPanel.tenancyText.text = "E"..value
+        GroundTransRentAndBuyPanel.tenancyText.text = value
         GroundTransRentAndBuyPanel.totalRentalText.text = "E"..value * GroundTransRentAndBuyPanel.tenancySlider.value
     end)
 end
@@ -65,7 +65,7 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
         GroundTransRentAndBuyPanel.tenancySlider.maxValue = groundInfo.rent.rentDaysMax
         GroundTransRentAndBuyPanel.tenancySlider.value = GroundTransRentAndBuyPanel.tenancySlider.maxValue
         GroundTransRentAndBuyPanel.tenancyText.text = GroundTransRentAndBuyPanel.tenancySlider.value
-        GroundTransRentAndBuyPanel.dayRentalText.text = groundInfo.rent.rentPreDay
+        GroundTransRentAndBuyPanel.dayRentalText.text = "E"..groundInfo.rent.rentPreDay
         GroundTransRentAndBuyPanel.totalRentalText.text = groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value
 
     elseif groundState == GroundTransState.Sell then
@@ -76,9 +76,9 @@ end
 
 --显示头像+名字信息
 function GroundTransRentAndBuyCtrl:_showPersonalInfo(roleInfo)
-    if roleInfo ~= nil and #roleInfo == 1 and roleInfo[1].id == self.groundInfo.ownerId then
-        self.roleInfo = roleInfo
-        GroundTransRentAndBuyPanel.nameText.text = roleInfo.name
+    if roleInfo.info ~= nil and #roleInfo.info == 1 and roleInfo.info[1].id == self.m_data.groundInfo.ownerId then
+        self.roleInfo = roleInfo.info[1]
+        GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
         --GroundTransRentAndBuyPanel.portraitImg.
     end
 end
@@ -96,13 +96,13 @@ end
 --点击购买按钮
 function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
     if ins.m_data.groundInfo.sell.price then
-        ct.OpenCtrl("GroundTransContractCtrl", {blockId = ins.m_data.blockId, ownerInfo = ins.roleInfo, groundInfo = ins.groundInfo})
+        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo})
     end
 end
 --点击租房按钮
 function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
     if ins.m_data.groundInfo.rent then
-        ct.OpenCtrl("GroundTransContractCtrl", {blockId = ins.m_data.blockId, ownerInfo = ins.roleInfo, groundInfo = ins.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancyText.text)})
+        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancyText.text)})
     end
 end
 --点击头像

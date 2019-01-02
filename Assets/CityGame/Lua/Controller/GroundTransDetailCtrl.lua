@@ -95,7 +95,7 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             GroundTransDetailPanel.sellingBtnTran.localScale = Vector3.one
 
         elseif self.groundState == GroundTransState.Rent then
-            if groundInfo.renterId then  --是否已经租出去了
+            if groundInfo.rent.renterId then  --是否已经租出去了
                 GroundTransDetailPanel.selfCheckBtnTran.localScale = Vector3.one
                 return
             end
@@ -120,8 +120,8 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             GroundTransDetailPanel.sellingBtnTran.localScale = Vector3.one
 
         elseif self.groundState == GroundTransState.Rent then
-            if groundInfo.renterId then
-                if groundInfo.renterId == DataManager.GetMyOwnerID() then  --如果自己是租房子的人
+            if groundInfo.rent.renterId then
+                if groundInfo.rent.renterId == DataManager.GetMyOwnerID() then  --如果自己是租房子的人
                     --显示查看状态
                     GroundTransDetailPanel.selfCheckBtnTran.localScale = Vector3.one
                 else

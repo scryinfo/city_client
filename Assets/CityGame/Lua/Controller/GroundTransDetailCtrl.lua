@@ -147,6 +147,7 @@ end
 ---按钮方法
 function GroundTransDetailCtrl:_closeBtnFunc(ins)
     -- hide
+    UIPage.ClosePage()
 end
 --owner出租按钮
 function GroundTransDetailCtrl:_rentFunc(ins)

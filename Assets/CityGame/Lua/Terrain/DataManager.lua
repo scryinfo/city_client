@@ -66,7 +66,9 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     if nodeID == nil then
         nodeID = -1
     end
-    BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
+    if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
+        BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
+    end
 end
 
 --刷新原子地块集合的基本信息

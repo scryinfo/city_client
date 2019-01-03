@@ -29,6 +29,7 @@ function MunicipalModel:m_detailPublicFacility(buildingID)
 end
 ---广告细节收包
 function MunicipalModel:n_getdetailPublicFacility(lMsg)
+
     MunicipalPanel.buildingId=lMsg.info.id
     local model =DataManager.GetDetailModelByID(lMsg.info.id)
     local lMsg=lMsg

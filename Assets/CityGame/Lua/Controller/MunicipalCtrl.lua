@@ -24,9 +24,8 @@ function MunicipalCtrl:bundleName()
     return "MunicipalPanel";
 end
 
-
-local this
 local BuildMgr
+local this
 function MunicipalCtrl:Awake(go)
     this=self
     self.gameObject = go;
@@ -48,12 +47,12 @@ function MunicipalCtrl:OnCreate(obj)
 end
 
 function MunicipalCtrl:OnClick_buildInfo()
-    --打开建筑信息界面
-    -- TODO:ct.log("system","打开建筑信息界面")
+
     Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
 end
---MunicipalPanel.lMsg.info
+
 function MunicipalCtrl:OnClick_prepareOpen(ins)
+
     Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 
@@ -103,6 +102,7 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     local model =DataManager.GetDetailModelByID(parkData.info.id)
     local lMsg=parkData
     MunicipalPanel.lMsg=lMsg
+
     Event.Brocast("c_GetBuildingInfo",MunicipalPanel.lMsg.info)
 
     if lMsg.info.state=="OPERATE" then

@@ -96,11 +96,17 @@ local select
 --刷新按钮
 function StopAndBuildCtrl:updateBtn(buildinghInfo)
     if buildinghInfo.state=="OPERATE" then
+        panel.stopBtn.localScale=Vector3.one
         panel.removeBtn.localScale=Vector3.zero
         panel.stopIconRoot.localScale=Vector3.zero
     else
         panel.removeBtn.localScale=Vector3.one
         panel.stopIconRoot.localScale=Vector3.one
+    end
+
+    if DataManager.GetMyOwnerID()~=buildinghInfo.ownerId then
+        panel.removeBtn.localScale=Vector3.zero
+        panel.stopBtn.localScale=Vector3.zero
     end
 
     local groundOwnerDatas=buildinghInfo.ctrl.groundOwnerDatas

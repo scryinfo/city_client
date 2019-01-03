@@ -12,11 +12,30 @@ end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+    obj.transform:SetAsFirstSibling()
 end
 
 function WagesAdjustBoxCtrl:Awake(go)
     self:_getComponent(go)
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
+    self.wageInput.onValueChanged:AddListener(function(value)
+
+        if self.wageInput.text=="" then
+            return
+        end
+
+        local blackColor = "#4B4B4B"
+        local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(value, 24, 18), blackColor, "/D")
+        self.perWageText.text = perWageStr
+
+        local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(value * self.m_data.workerNum, 24, 18), blackColor, "/D")
+        self.totalWageText.text = totalWageStr
+    end)
+
+    Event.AddListener("mCloes",self.mCloes,self)
+
 end
 
 function WagesAdjustBoxCtrl:initialize()
@@ -25,8 +44,6 @@ end
 
 function WagesAdjustBoxCtrl:Refresh()
     self:_initData()
-    self.luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
 end
 
 --function WagesAdjustBoxCtrl:Hide()
@@ -39,51 +56,22 @@ end
 function WagesAdjustBoxCtrl:_getComponent(go)
     self.confirmBtn = go.transform:Find("root/confirmBtn")
     self.closeBtn = go.transform:Find("root/closeBtn")
-    self.noDomicileRoot = go.transform:Find("root/noDomicileRoot")  --如果有未找到房子的npc，则需要显示
-    self.noDomicileNumText = go.transform:Find("root/noDomicileRoot/noDomicileNumText"):GetComponent("Text")
     self.perWageText = go.transform:Find("root/wage/perWageText"):GetComponent("Text")
     self.totalWageText = go.transform:Find("root/wage/totalWageText"):GetComponent("Text")
 
     self.wageInput = go.transform:Find("root/wageInput"):GetComponent("InputField")
-    self.suggestRect = go.transform:Find("root/suggestRect"):GetComponent("RectTransform")
-    self.suggestRentalText = go.transform:Find("root/suggestRentalText"):GetComponent("Text")
-    self.effectiveDateText = go.transform:Find("root/effectiveDateText"):GetComponent("Text")
-    self.satisfactionSlider = go.transform:Find("root/satisfactionSlider"):GetComponent("Slider")
-    self.satisfactionText = go.transform:Find("root/satisfactionSlider/FillArea/Fill/number"):GetComponent("Text")
-    self.satisfactionStopTran = go.transform:Find("root/satisfactionSlider/stop")
 end
 ---初始化
 function WagesAdjustBoxCtrl:_initData()
-    if self.m_data.noDomicileCount > 0 then
-        self.noDomicileRoot.localScale = Vector3.one
-        self.noDomicileNumText.text = string.format("%d<color=white>/%d</color>", self.m_data.noDomicileCount, self.m_data.totalStaffCount)
-    else
-        self.noDomicileRoot.localScale = Vector3.zero
-    end
+    local dayWage = self.m_data.dayWage or 0
+    local workerNum = self.m_data.workerNum or 0
 
     local blackColor = "#4B4B4B"
-    local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(self.m_data.dayWage, 24, 18), blackColor, "/D")
+    local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(dayWage, 24, 18), blackColor, "/D")
     self.perWageText.text = perWageStr
 
-    local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(self.m_data.dayWage * self.m_data.totalStaffCount, 24, 18), blackColor, "/D")
+    local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(dayWage * workerNum, 24, 18), blackColor, "/D")
     self.totalWageText.text = totalWageStr
-
-    local suggestStr = string.format("%sE<color=%s>%s</color>", getPriceString(self.m_data.dayWage, 20, 18), blackColor, "/D")
-    self.suggestRentalText.text = suggestStr
-
-    local trueTextW = self.suggestRentalText.preferredWidth
-    local pos = self.suggestRect.anchoredPosition
-    self.suggestRect.anchoredPosition = Vector2.New(70 + 164 - trueTextW, pos.y)
-
-    self.satisfactionText.text = self.m_data.satisfaction
-    if self.m_data.satisfaction <= 0.3 then
-        self.satisfactionStopTran.localScale = Vector3.one
-    else
-        self.satisfactionStopTran.localScale = Vector3.zero
-    end
-    self.satisfactionText.text = self.m_data.satisfaction
-    self.satisfactionSlider.value = self.m_data.satisfaction
-    self.effectiveDateText.text = self.m_data.effectiveDate
 end
 
 function WagesAdjustBoxCtrl:_onClickConfim(ins)
@@ -92,17 +80,25 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
         return
     end
 
-    ---暂时处理成不报错
-    if ins.m_data.buildingId == 1 then
-        ins:_onClickClose(ins)
-        return
-    end
+    local m_data=ins.m_data
+    local data={}
+    data.type="begin"
+    data.mainText="Processing plant successfully opened"
+    data.callback=function()
+                     Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,tonumber(inputValue))
+                     Event.Brocast("m_startBusiness",m_data.buildInfo.id)
+                     Event.Brocast("mCloes")
+                     m_data:func()
+                     Event.Brocast("SmallPop","Success",300)
+                   end
+    ct.OpenCtrl("ReminderCtrl",data)
 
-    Event.Brocast("m_ReqHouseSetSalary", ins.m_data.buildingId, inputValue)
-    ins:_onClickClose(ins)
 end
+
 function WagesAdjustBoxCtrl:_onClickClose(ins)
-    ins:Hide()
-    ins.luaBehaviour:RemoveClick(ins.confirmBtn.gameObject, ins._onClickConfim, ins)
-    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
+     ins:Hide()
+end
+
+function  WagesAdjustBoxCtrl:mCloes()
+    self:Hide()
 end

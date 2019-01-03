@@ -27,13 +27,10 @@ function PlayerTempModel.Update()
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         --PlayerTempModel.tempTestReqAddItem(2102001,99)
-        PlayerTempModel.tempTestReqAddItem(2102001,99)
-        PlayerTempModel.tempTestReqAddItem(2102002,99)
-        PlayerTempModel.tempTestReqAddItem(2102003,99)
+        --PlayerTempModel.tempTestReqAddItem(2102002,99)
+        --PlayerTempModel.tempTestReqAddItem(2102003,99)
 
-        --PlayerTempModel.tempTestReqAddItem(2102001,99)
-        --PlayerTempModel.tempTestReqAddItem(2102001,99)
-        --PlayerTempModel.tempTestReqAddItem(2102001,99)
+        ct.OpenCtrl("GroundTransDetailCtrl", {blockId = 8006})
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then

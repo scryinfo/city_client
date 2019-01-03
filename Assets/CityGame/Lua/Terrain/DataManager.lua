@@ -494,6 +494,16 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己所拥有建筑（租赁的土地）
     PersonDataStack.m_rentsBuild = tempData.rents
 
+    --初始化自己的基本信息
+    PersonDataStack.m_roleInfo =
+    {
+        id = tempData.id,
+        name = tempData.name,
+        companyName = tempData.companyName,
+        male = tempData.male,
+        des = tempData.des,
+    }
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -628,6 +638,11 @@ end
 --根据id查询等级
 function DataManager.GetMyGoodLvByItemId(itemId)
     return PersonDataStack.m_goodLv[itemId] or 0
+end
+
+--获取主页需要的显示信息
+function DataManager.GetMyPersonalHomepageInfo()
+    return PersonDataStack.m_roleInfo
 end
 
 --刷新自己所拥有商品科技等级
@@ -978,7 +993,10 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
-    DataManager.personInfo=playerData.info[1]
+    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
+
+    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
+
 end
 
 --研究所Roll回复信息

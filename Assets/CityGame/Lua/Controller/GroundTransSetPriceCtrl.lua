@@ -87,9 +87,7 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSetPriceCtrl:_closeBtnFunc()
-    --关闭所有界面
-    UIPage:ClearAllPages()
-    ct.OpenCtrl("GameMainInterfaceCtrl")
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()
@@ -102,6 +100,9 @@ function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqSellGround(price)
+        Event.Brocast("SmallPop","Released", 300)
+
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --修改出售价格按钮
@@ -110,11 +111,17 @@ function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
         GroundTransModel.m_ReqSellGround(price)
+
+        Event.Brocast("SmallPop","Modified", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --取消出售
 function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
     GroundTransModel.m_ReqCancelSellGround()
+
+    Event.Brocast("SmallPop","Stop selling", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 
 --出租发布按钮
@@ -126,6 +133,9 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
         return
     end
     GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
+
+    Event.Brocast("SmallPop","Released", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --修改出租价格按钮
 function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
@@ -133,9 +143,19 @@ function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqCancelRentGround()
         ins:_rentIssueBtnFunc(ins)
+
+        Event.Brocast("SmallPop","Modified", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --取消出租
 function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
     GroundTransModel.m_ReqCancelRentGround()
+    Event.Brocast("SmallPop","Stop renting", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
+end
+--返回主界面
+function GroundTransSetPriceCtrl._closeBackToMain()
+    UIPage:ClearAllPages()
+    ct.OpenCtrl("GameMainInterfaceCtrl")
 end

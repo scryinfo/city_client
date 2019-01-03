@@ -87,6 +87,7 @@ end
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransRentAndBuyCtrl:_closeBtnFunc()
     --关闭所有界面
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransRentAndBuyCtrl:_backBtnFunc()

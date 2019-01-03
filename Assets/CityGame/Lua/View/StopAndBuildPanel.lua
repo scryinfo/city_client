@@ -16,7 +16,7 @@ end
 
 function StopAndBuildPanel.InitPanel()
     this.backBtn=transform:Find("topRoot/backBtn")
-
+    this.backBtn1=transform:Find("Button")
     this.groundInfoText=transform:Find("leftRoot/topRoot/landInfo/Text"):GetComponent("Text");
     this.personIma=transform:Find("leftRoot/topRoot/PersonInfo/Avtar/personIma"):GetComponent("Image");
     this.nameInp=transform:Find("leftRoot/topRoot/PersonInfo/nameInp"):GetComponent("InputField")

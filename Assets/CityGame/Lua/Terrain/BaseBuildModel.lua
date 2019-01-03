@@ -45,9 +45,10 @@ function BaseBuildModel:OpenPanel()
 end
 
 
+
 function BaseBuildModel:Close()
     --删除节点
-    DataManager.RefreshBlockDataWhenNodeChange(self.Data[posID],PlayerBuildingBaseData[self.Data[buildingID]].x,-1)
+    DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --清除建筑GameObject
     if self.go ~= nil then
         destroy(self.go)

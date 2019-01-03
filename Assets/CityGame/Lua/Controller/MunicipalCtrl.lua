@@ -24,10 +24,9 @@ function MunicipalCtrl:bundleName()
     return "MunicipalPanel";
 end
 
-function MunicipalCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
-end
+
 local this
+local BuildMgr
 function MunicipalCtrl:Awake(go)
     this=self
     self.gameObject = go;
@@ -36,17 +35,17 @@ function MunicipalCtrl:Awake(go)
     self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
-   self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
-
-    self.data = {}
-    self.data.middleRootTran=MunicipalPanel.middleRootTran
-    self.data.buildingType = BuildingType.Municipal
-    BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, self.data)
-
+    self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+        local data={}
+        data.middleRootTran=MunicipalPanel.middleRootTran
+        data.buildingType = BuildingType.Municipal
+    BuildMgr=BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, data)
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
-
 end
 
+function MunicipalCtrl:OnCreate(obj)
+    UIPage.OnCreate(self,obj);
+end
 
 function MunicipalCtrl:OnClick_buildInfo()
     --打开建筑信息界面
@@ -133,6 +132,10 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     end
     ---标记buildingId
     self.currentBuildingId=parkData.info.id
+    --跟新左右
+    lMsg.buildingType=BuildingType.Municipal
+    BuildMgr:updateInfo(lMsg)
+
 end
 
 function MunicipalCtrl:ClearData(manger)

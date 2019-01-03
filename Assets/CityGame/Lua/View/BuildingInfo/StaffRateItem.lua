@@ -58,6 +58,12 @@ function StaffRateItem:_checkWorkTime()
     self.workingTimeText.transform.localScale = Vector3.zero
     self.restingTimeText.transform.localScale = Vector3.zero
 
+    if self.staffData.buildingTypeId~=1 then
+
+
+
+
+
     local timeTable = getFormatUnixTime(os.time())
     local time = timeTable.year..timeTable.month..timeTable.day
     if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
@@ -88,6 +94,8 @@ function StaffRateItem:_checkWorkTime()
         self.working.localScale = Vector3.zero
         self.resting.localScale = Vector3.one
         self.restingTimeText.transform.localScale = Vector3.zero
+    end
+
     end
 end
 

@@ -43,14 +43,14 @@ function MunicipalModel:n_getdetailPublicFacility(lMsg)
         for i, v in pairs(lMsg.ad.soldSlot) do
             for k, s in pairs(model.SlotList) do
                 if s.id==v.s.id then
-                    table.remove(model.SlotList,k)
+                table.remove(model.SlotList,k)
                 end
             end
         end
     end
 
     model.ticket=lMsg.ticketPrice;
-    model.lMsg=lMsg
+     model.lMsg=lMsg
     model.buildingOwnerId=lMsg.info.ownerId
 
     if model.manger.isFirst then
@@ -103,8 +103,9 @@ function MunicipalModel:n_getSetSlot(stream)
     DataManager.DetailModelRpcNoRet(self.insId, 'm_detailPublicFacility',self.insId)
 end
 ---槽位过期收包
-function MunicipalModel:n_getadSlotTimeoutInform(stream)
-    local lMsg = assert(pbl.decode("gs.PublicFacility.Slot.id", stream),"槽位过期收包失败")
+function MunicipalModel:n_getadSlotTimeoutInform(lMsg)
+     --self.manger
+
 end
 ---删广告发包
 function MunicipalModel:m_DelAdFromSlot(buildingID,adid)

@@ -200,15 +200,18 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
         end
         local lineDatas = {}  --获取线的数据
         local data = {}
-        for j, matData in ipairs(CompoundDetailConfig[index].goodsNeedMatData) do
+        local config = CompoundDetailConfig[self.selectItemMatToGoodIds[index]].goodsNeedMatData
+        for j, matData in ipairs(config) do
             if matData.itemId ~= itemId then
                 lineDatas[#lineDatas + 1] = matData
+            else
+                data = matData
             end
         end
         table.insert(lineDatas, 1, data)  --将item放在第一个位置
         self:_setLineDetailInfo(lineDatas, index)
-        AddLineChooseItemPanel.productionItem:initData(Good[index])
-        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(index)
+        AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[index]])
+        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[index])
     else
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         for i, goodsId in ipairs(self.selectItemMatToGoodIds) do

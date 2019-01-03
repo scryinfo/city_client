@@ -25,8 +25,13 @@ function AddLineCompositeItem:initialize(viewRect)
 end
 --初始化
 function AddLineCompositeItem:initData(data, index)
+    if data == nil or data.itemId == nil then
+        return
+    end
     self.data = data
-    self.index = index
+    if index then
+        self.index = index
+    end
     if Material[data.itemId] then
         self.nameText.text = Material[data.itemId].name
     else
@@ -70,5 +75,6 @@ function AddLineCompositeItem:setObjState(show)
         self.viewRect.localScale = Vector3.one
     else
         self.viewRect.localScale = Vector3.zero
+        self.index = nil
     end
 end

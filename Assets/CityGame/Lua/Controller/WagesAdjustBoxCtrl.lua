@@ -12,6 +12,7 @@ end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+    obj.transform:SetAsFirstSibling()
 end
 
 function WagesAdjustBoxCtrl:Awake(go)
@@ -20,6 +21,11 @@ function WagesAdjustBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
     self.wageInput.onValueChanged:AddListener(function(value)
+
+        if self.wageInput.text=="" then
+            return
+        end
+
         local blackColor = "#4B4B4B"
         local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(value, 24, 18), blackColor, "/D")
         self.perWageText.text = perWageStr
@@ -27,6 +33,9 @@ function WagesAdjustBoxCtrl:Awake(go)
         local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(value * self.m_data.workerNum, 24, 18), blackColor, "/D")
         self.totalWageText.text = totalWageStr
     end)
+
+    Event.AddListener("mCloes",self.mCloes,self)
+
 end
 
 function WagesAdjustBoxCtrl:initialize()
@@ -71,11 +80,25 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
         return
     end
 
-    if ins.m_data.callBackFunc then
-        ins.m_data.callBackFunc()
-    end
-    ins:_onClickClose(ins)
+    local m_data=ins.m_data
+    local data={}
+    data.type="begin"
+    data.mainText="Processing plant successfully opened"
+    data.callback=function()
+                     Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,tonumber(inputValue))
+                     Event.Brocast("m_startBusiness",m_data.buildInfo.id)
+                     Event.Brocast("mCloes")
+                     m_data:func()
+                     Event.Brocast("SmallPop","Success",300)
+                   end
+    ct.OpenCtrl("ReminderCtrl",data)
+
 end
+
 function WagesAdjustBoxCtrl:_onClickClose(ins)
-    ins:Hide()
+     ins:Hide()
+end
+
+function  WagesAdjustBoxCtrl:mCloes()
+    self:Hide()
 end

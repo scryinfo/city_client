@@ -131,7 +131,7 @@ function Game.OnPostInitOK()
         chatModel:Awake();
     end
     --开业停业
-    --StopAndBuildModel:Awake()
+    StopAndBuildModel:Awake()
     --单元测试入口
     --if CityLuaUtil.isluaLogEnable() == true then
         lu.LuaUnit.run()

@@ -984,8 +984,10 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     --    DataManager.SetMyFriendsInfo(v)
     --end
     Event.Brocast("c_OnReceivePlayerInfo", playerData)
+    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
+
     Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
-    DataManager.personInfo = playerData.info[1]
+
 end
 
 --研究所Roll回复信息

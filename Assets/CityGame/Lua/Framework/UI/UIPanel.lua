@@ -163,7 +163,8 @@ function UIPanel:PopNode(page,inClass,pageData)
     local pageNodes = UIPanel.static.m_instancePageNodes
     if pageData ~= nil and  pageData.insId ~= nil and inClass ~= nil then
         local tempPageNode  = {}
-        tempPageNode.page = inClass
+        tempPageNode.page = page
+        tempPageNode.pageName = inClass
         tempPageNode.pageType = page.type
         tempPageNode.pageData = pageData
         table.insert(pageNodes,tempPageNode)
@@ -275,30 +276,66 @@ function UIPanel:DoShow()
     self:Refresh()
 end
 
---关闭窗口--TODO：修改
-function UIPanel:ClosePage()
-    --//Debug.ct.log("Back&Close PageNodes Count:" + m_currentPageNodes.Count);
-    local pageNodes = UIPanel.static.m_currentPageNodes
-    if pageNodes == nil or #pageNodes <= 1 then return;    end
-
-    local closePage = pageNodes[#pageNodes];
+--关闭m_instancePageNodes最顶层的页面
+function UIPanel:ClosePopNode()
+    local pageNodes = UIPanel.static.m_instancePageNodes
+    pageNodes[#pageNodes].page:Hide()
     table.remove(pageNodes, #pageNodes)
-    --//show older page.
-    --//TODO:Sub pages.belong to root node.
-    if #pageNodes > 0 then
-        local page = pageNodes[#pageNodes];
-        if page.isAsyncUI == ture then
-            UIPanel:ShowPageInstance(page,function()
-                closePage:Hide();
-            end);
-        else
-            UIPanel:ShowPageInstance(page)
-            closePage:Hide();
+end
+
+--关闭窗口
+--Normal及PopUp使用
+--关闭当前最顶窗口（无论是Normal还是PopUp）
+function UIPanel:ClosePage()
+    local pageNodes = UIPanel.static.m_instancePageNodes
+    --判空
+    if pageNodes == nil or #pageNodes <= 1 then return;    end
+    --关闭窗口
+    UIPanel:ClosePopNode()
+    --打开旧界面
+    local NodeCount = #pageNodes
+    local Node = nil
+    while( NodeCount > 0 ) do
+        Node = pageNodes[NodeCount]
+        UIPanel:ShowPageInstance(Node.page,Node.pageData)
+        --如果是已经打开的界面
+        if (Node.pageType == UIType.PopUp and Node.page.isActived == true) or Node.pageType == UIType.Normal then
+            break
         end
+        NodeCount = NodeCount - 1
     end
 end
 
---通过Ctrl名字关闭窗口--TODO：修改
+--关闭所有窗口（到主窗口）
+--Normal及PopUp使用
+--关闭当前最顶窗口（无论是Normal还是PopUp）
+function UIPanel:CloseAllPage()
+    local pageNodes = UIPanel.static.m_instancePageNodes
+    --注：不能回退到没有主界面，所以最小为1
+    while( #pageNodes > 1 ) do
+        UIPanel:ClosePopNode()
+    end
+    local Node = pageNodes[#pageNodes]
+    UIPanel:ShowPageInstance(Node.page,Node.pageData)
+end
+
+--回退到指定窗口   注：不能回退到没有主界面
+function UIPanel:BackToPage(backtoPageName,instanceID)
+    local pageNodes = UIPanel.static.m_instancePageNodes
+    --注：不能回退到没有主界面，所以最小为1
+    local Node = pageNodes[#pageNodes]
+    while( #pageNodes > 1 ) do
+        if Node.pageName == backtoPageName then
+            if instanceID == nil or (instanceID ~= nil and Node.pageData ~= nil and Node.pageData.insId ~= nil and instanceID == Node.pageData.insId) then
+                UIPanel:ShowPageInstance(Node.page,Node.pageData)
+                break
+            end
+        end
+        UIPanel:ClosePopNode()
+    end
+end
+
+--通过Ctrl名字关闭窗口实例
 function UIPanel:ClosePageByName(pageName)
     if UIPanel.static.m_allPages ~= nil and UIPanel.static.m_allPages[pageName] then
         UIPanel:ClosePage(UIPanel.static.m_allPages[pageName])
@@ -307,11 +344,12 @@ function UIPanel:ClosePageByName(pageName)
     end
 end
 
---清空栈中所有的UI实例，销毁其对应perfab资源--TODO：修改
+--清空栈中所有的UI实例，销毁其对应perfab资源
+--切换场景时调用，暂时用不到
 function  UIPanel:ClearAllPages()
     --清空当前page
-    UIPanel.static.m_currentPageNodes = nil
-    UIPanel.static.m_currentPageNodes = {};
+    UIPanel.static.m_instancePageNodes = nil
+    UIPanel.static.m_instancePageNodes = {};
 
     --销毁栈中所有UI资源
     for k,v in pairs(UIPanel.static.m_allPages) do

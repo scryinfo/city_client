@@ -144,9 +144,32 @@ function  UIPanel:ShowPageByClass(inClass,pageData)
         pageInstance = inClass:new()
         UIPanel.static.m_allPages[pageName] = pageInstance
     end
+    pageInstance:PopNode(pageInstance,inClass,pageData)
     self:ShowPageInstance(pageInstance, pageData)
     return pageInstance
 end
+
+--将节点压栈,只在打开界面的时候执行
+function UIPanel:PopNode(page,inClass,pageData)
+    --判空
+    if UIPanel.static.m_instancePageNodes == nil then
+        UIPanel.static.m_instancePageNodes = {};
+        if page == nil then
+            ct.log("system","page popup is nil.")
+            return
+        end
+    end
+    --将界面压入栈内
+    local pageNodes = UIPanel.static.m_instancePageNodes
+    if pageData ~= nil and  pageData.insId ~= nil and inClass ~= nil then
+        local tempPageNode  = {}
+        tempPageNode.page = inClass
+        tempPageNode.pageType = page.type
+        tempPageNode.pageData = pageData
+        table.insert(pageNodes,tempPageNode)
+    end
+end
+
 
 --将参数写入self.m_data 【不修改】
 function  UIPanel:ShowPageInstance(pageInstance,pageData)
@@ -232,56 +255,6 @@ function UIPanel:AnchorUIGameObject(ui)
     end
 end
 
---DoShow，页面调用打开时调用--TODO：修改
-function UIPanel:DoShow()
-    self:PopNode(self)
-    self:Active()
-    self:Refresh()
-end
-
---置顶打开页面--TODO：修改
-function UIPanel:PopNode(page)
-    --判空
-    if UIPanel.static.m_instancePageNodes == nil then
-        UIPanel.static.m_instancePageNodes = {};
-        if page == nil then
-            ct.log("system","page popup is nil.")
-            return
-        end
-    end
-    --sub pages should not need back.
-    if self:CheckIfNeedBack(page) == false then
-        return
-    end
-    local pageNodes = UIPanel.static.m_instancePageNodes
-    --将界面压入栈内
-    if page.m_data ~= nil and  page.m_data.insId ~= nil then
-        local tempPageNode  = {}
-        tempPageNode.page = page
-        tempPageNode.pageType = page.type
-        pageNodes[#pageNodes+1] = tempPageNode
-    end
-
-
-    --//after pop should hide the old node if need.
-    self:HideOldNodes();
-end
-
---隐藏其他已打开界面--TODO：修改
-function  UIPanel:HideOldNodes()
-    local pageNodes = UIPanel.static.m_currentPageNodes
-    if #pageNodes < 0 then  return end
-    local topPage = pageNodes[#pageNodes]
-    if topPage.mode == UIMode.HideOther then
-        --form bottm to top.
-        for i = 1, #pageNodes - 1  do
-            if(pageNodes[i]:isActive()) then
-                pageNodes[i]:Hide();
-            end
-        end
-    end
-end
-
 --设置UI位置【不修改】
 function UIPanel:setPosition(x,y)
     self.offset.x = x
@@ -293,6 +266,13 @@ function UIPanel:setPosition(x,y)
             rect:DOAnchorPosY(self.offset.y, 0)
         end
     end
+end
+
+--DoShow，页面调用打开时调用--TODO：修改
+function UIPanel:DoShow()
+    self:PopNode(self)
+    self:Active()
+    self:Refresh()
 end
 
 --关闭窗口--TODO：修改

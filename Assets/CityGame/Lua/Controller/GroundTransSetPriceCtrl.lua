@@ -42,7 +42,7 @@ function GroundTransSetPriceCtrl:Hide()
 end
 
 function GroundTransSetPriceCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化
@@ -88,6 +88,8 @@ end
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSetPriceCtrl:_closeBtnFunc()
     --关闭所有界面
+    UIPage:ClearAllPages()
+    ct.OpenCtrl("GameMainInterfaceCtrl")
 end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()

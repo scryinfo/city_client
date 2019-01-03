@@ -64,10 +64,9 @@ function GroundTransModel.m_ReqCancelRentGround()
 end
 --取消售卖
 function GroundTransModel.m_ReqCancelSellGround()
-    local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
+    local msgId = pbl.enum("gscode.OpCode","cancelSellGround")
     local pMsg = assert(pbl.encode("gs.MiniIndexCollection", { coord = {[1] = GroundTransModel.blockPos}}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
-    DataManager.ModelSendNetMes("gscode.OpCode", "cancelSellGround","gs.MiniIndexCollection",{ coord = GroundTransModel.blockPos})
 end
 --请求玩家信息
 function GroundTransModel.m_ReqPlayersInfo(ids)

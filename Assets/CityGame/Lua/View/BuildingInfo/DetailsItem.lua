@@ -1,13 +1,13 @@
 DetailsItem = class('DetailsItem')
 
 --初始化方法
-function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemId)
+function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.id = id;
-    self.itemId = itemId;
+    self.itemId = goodsDataInfo.key.id;
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");
@@ -18,11 +18,11 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemI
 
     self.inputPrice.text = 0;
     self.inputNumber.text = 0;
-    self.inputNumber.characterLimit = string.len(goodsDataInfo.num)
+    self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
     self.numberScrollbar.value = 0;
     self.numberScrollbar.minValue = 0;
-    self.numberScrollbar.maxValue = goodsDataInfo.num
-    self.nameText.text = goodsDataInfo.name
+    self.numberScrollbar.maxValue = goodsDataInfo.n
+    self.nameText.text = Material[self.itemId].name
 
     self.numberScrollbar.onValueChanged:AddListener(function ()
         self:scrollbarInfo();

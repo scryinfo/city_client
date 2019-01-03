@@ -20,13 +20,14 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.detailToggleGroup = viewRect:Find("detailRoot"):GetComponent("ToggleGroup")
     self.detailContent = viewRect:Find("detailRoot/detailScroll/content")
 
-    self.detailPrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.GoodDetailItemPath)
     self.togglePrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.ButtonItemPath)
+    self.detailPrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.GoodDetailItemPath)
 
     self.detailPrefabList = {}
     self.toggleItems = {}
     self.keyToggleItems = {}
     self.keyContentItems = {}
+
 
     for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineButtonPosValue.Left) and i < 2200 or (sideValue == AddLineButtonPosValue.Right and i > 2200) then
@@ -49,9 +50,6 @@ function AddProductionLineMgr:initData(data)
         self.toggleItems[i]:showState(false)
     end
     self.toggleItems[1]:setToggleIsOn(true)
-
-    ----可能会有设置正在研究中等状态
-    --self:_showDetails(self.toggleItems[1]:getTypeId())
 end
 
 --根据typeId 和 itemId 获取对应的item，并显示选中状态

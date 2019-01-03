@@ -46,19 +46,25 @@ function ShelfCtrl:Refresh()
     if self.m_data == nil then
         return
     end
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.luabehaviour = shelf
-        self.m_data.type = BuildingInType.Shelf
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.luabehaviour = shelf
-        self.m_data.type = BuildingInType.Shelf
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-    end
+    self.luabehaviour = shelf
+    self.shelf = self.m_data.shelf
+    self.shelf.type = BuildingInType.Shelf
+    self.shelf.isOther = self.m_data.isOther
+    self.shelf.buildingId = self.m_data.info.id
+    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
+    --if self.m_data.buildingType == BuildingType.MaterialFactory then
+    --    self.luabehaviour = shelf
+    --    self.m_data.type = BuildingInType.Shelf
+    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+    --    self.luabehaviour = shelf
+    --    self.m_data.type = BuildingInType.Shelf
+    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --end
     if self.m_data.isOther then
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
         ShelfPanel.shelfAddItem.gameObject:SetActive(false)
-        self:shelfImgSetActive(self.GoodsUnifyMgr.items,5)
+        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
     else
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
@@ -82,21 +88,21 @@ end
 --    local warehouseLuaItem = ShelfGoodsItem:refreshInfo(data,prefabData._prefab)
 --end
 --选中物品
-function ShelfCtrl:_selectedBuyGoods(id,itemId)
-    if self.temporaryItems[id] == nil then
-        self.temporaryItems[id] = id
-        self.GoodsUnifyMgr:_buyShelfGoods(id,self.luabehaviour,itemId)
-        self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.one
+function ShelfCtrl:_selectedBuyGoods(ins)
+    if self.temporaryItems[ins.id] == nil then
+        self.temporaryItems[ins.id] = ins.id
+        self.GoodsUnifyMgr:_buyShelfGoods(ins,self.luabehaviour)
+        self.GoodsUnifyMgr.shelfLuaTab[ins.id].circleTickImg.transform.localScale = Vector3.one
     else
-        self.temporaryItems[id] = nil;
-        self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
-        self.GoodsUnifyMgr:_deleteBuyGoods(id);
+        self.temporaryItems[ins.id] = nil;
+        self.GoodsUnifyMgr.shelfLuaTab[ins.id].circleTickImg.transform.localScale = Vector3.zero
+        self.GoodsUnifyMgr:_deleteBuyGoods(ins.id);
     end
 end
 --临时表里是否有这个物品
 function ShelfCtrl:c_tempTabNotGoods(id)
     self.temporaryItems[id] = nil
-    self.GoodsUnifyMgr.items[id].circleTickImg.transform.localScale = Vector3.zero
+    self.GoodsUnifyMgr.shelfLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
     self.GoodsUnifyMgr:_deleteBuyGoods(id);
 end
 --购买物品
@@ -105,12 +111,9 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         return;
     else
         local buyListing = {}
-        --buyListing.buildingId = ins.m_data.info.id
         buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
         buyListing.targetLocationName = "中心仓库";
-        --buyListing.distance = "0km";
         buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
-        --buyListing.time = "00:00:00";
         local price = 0;
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
             price = price + tonumber(v.moneyText.text);
@@ -123,7 +126,6 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         end
         buyListing.freight = freight
         buyListing.total = price + freight;
-        --buyListing.good = ins.GoodsUnifyMgr.shelfBuyGoodslItems
         local moneyValue = DataManager.GetMyMoney()
 
         buyListing.btnClick = function()
@@ -149,21 +151,21 @@ function ShelfCtrl:OnClick_OnName(ins)
     ShelfPanel.nowText.text = "By name";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
-    ShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.items)
+    ShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.shelfLuaTab)
 end
 --根据数量排序
 function ShelfCtrl:OnClick_OnNumber(ins)
     ShelfPanel.nowText.text = "By quantity";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local quantityType = ct.sortingItemType.Quantity
-    ShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.items)
+    ShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.shelfLuaTab)
 end
 --根据价格排序
 function ShelfCtrl:OnClick_OnpriceBtn(ins)
     ShelfPanel.nowText.text = "By price";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local priceType = ct.sortingItemType.Price
-    ShelfCtrl:_getSortItems(priceType,ins.GoodsUnifyMgr.items)
+    ShelfCtrl:_getSortItems(priceType,ins.GoodsUnifyMgr.shelfLuaTab)
 end
 
 function ShelfCtrl.OnClick_OnSorting(ins)
@@ -191,12 +193,12 @@ function ShelfCtrl:openPlayerBuy(isShow)
         Event.Brocast("c_buyGoodsItemChoose")
         ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
         --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
-        self:shelfImgSetActive(self.GoodsUnifyMgr.items,3)
+        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
     else
         ShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         Event.Brocast("c_buyGoodsItemDelete")
         ShelfPanel.Content.offsetMax = Vector2.New(0,0);
-        self:shelfImgSetActive(self.GoodsUnifyMgr.items,5)
+        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
     end
     switchIsShow = isShow
 end
@@ -205,7 +207,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
     if not Data then
         return;
     end
-    for i,v in pairs(self.GoodsUnifyMgr.items) do
+    for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
         if v.itemId == Data.item.key.id then
             if v.goodsDataInfo.number == Data.item.n then
                 self.GoodsUnifyMgr:_deleteGoods(v)
@@ -287,15 +289,13 @@ end
 --end
 --关闭面板时清空UI信息，以备其他模块调用
 function ShelfCtrl:deleteObjInfo()
-    if not self.GoodsUnifyMgr.items then
+    if not self.GoodsUnifyMgr.shelfLuaTab then
         return;
     else
-        for i,v in pairs(self.GoodsUnifyMgr.items) do
+        for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
             v:closeEvent();
             destroy(v.prefab.gameObject);
         end
-        self.GoodsUnifyMgr.items = {};
-        self.ModelDataList = {};
     end
 end
 function ShelfCtrl.OnCloseBtn()

@@ -1,12 +1,12 @@
 BuyDetailsItem = class('BuyDetailsItem')
 
 --初始化方法
-function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemId)
+function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
     self.id = id;
-    self.itemId = itemId;
+    self.itemId = self.goodsDataInfo.k.id;
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");
@@ -15,9 +15,9 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,it
     self.moneyText = self.prefab.transform:Find("buttombg/moneyImg/moneyText"):GetComponent("Text");
     self.closeBtn = self.prefab.transform:Find("closeBtn");
 
-    self.nameText.text = self.goodsDataInfo.name;
+    self.nameText.text = Material[self.itemId].name;
     self.inputNumber.text = 0;
-    self.numberScrollbar.maxValue = self.goodsDataInfo.number;
+    self.numberScrollbar.maxValue = self.goodsDataInfo.n;
     self.numberScrollbar.value = 0;
     self.moneyText.text = 0;
 

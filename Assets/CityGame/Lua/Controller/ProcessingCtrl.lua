@@ -47,7 +47,7 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     if not self.processingToggleGroup then
         self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
     else
-        --self.processingToggleGroup:updataInfo(self.m_data)
+        --self.processingToggleGroup:updateInfo(self.m_data)
     end
 end
 

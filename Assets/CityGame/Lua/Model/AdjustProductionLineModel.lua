@@ -28,7 +28,7 @@ function AdjustProductionLineModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyLineAddInform"),AdjustProductionLineModel.n_GsDetermineBtn);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyChangeLine"),AdjustProductionLineModel.n_GsModifyKLine);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyDelLine"),AdjustProductionLineModel.nGsDeleteLine);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","lineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","ftyLineChangeInform"),AdjustProductionLineModel.n_GsLineChangeInform);
 
 end
 --客户端请求--
@@ -82,5 +82,5 @@ end
 --生产线变化推送
 function AdjustProductionLineModel.n_GsLineChangeInform(stream)
     local msgLineChangeInfo = assert(pbl.decode("gs.LineInfo",stream),"AdjustProductionLineModel.n_GsLineChangeInform: stream == nil")
-    --Event.Brocast("refreshTimeText",msgLineChangeInfo)
+    Event.Brocast("refreshTimeText",msgLineChangeInfo)
 end

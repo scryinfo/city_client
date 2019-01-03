@@ -2,7 +2,8 @@ AddProductionLineCtrl = class('AddProductionLineCtrl',UIPage)
 UIPage:ResgisterOpen(AddProductionLineCtrl)
 
 function AddProductionLineCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    --UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function AddProductionLineCtrl:bundleName()
@@ -18,11 +19,14 @@ function AddProductionLineCtrl:Awake(go)
     self.luabehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
-        UIPage.ClosePage();
+        self:Hide();
+        --UIPage.ClosePage();
     end,self)
     self.luabehaviour:AddClick(AddProductionLinePanel.leftBtn.gameObject,function()
-        ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
-        UIPage.ClosePage();
+        --ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
+        GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
+        self:Hide();
+        --UIPage.ClosePage();
     end,self)
 
     self:_addListener()
@@ -38,21 +42,49 @@ end
 
 function AddProductionLineCtrl:_initData()
     --这里要区分是生产左边还是右边，然后把确定按钮打开
-    --AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
+    AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
+        AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
 
-    AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
-    AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
+        AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
+        AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
+            self:Hide();
+            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
 
-    AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
-    AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-        UIPage.ClosePage();
-        ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-    end)
+        end)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
+        AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.one
+
+        --加工厂确定生产按钮
+        AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
+        AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
+            self:Hide();
+            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
+        end)
+    end
 
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     AddProductionLinePanel.leftToggleMgr:initData()
     AddProductionLinePanel.rightToggleMgr:initData()
 end
+
+--根据itemId获得当前应该显示的状态
+function AddProductionLineCtrl.GetItemState(itemId)
+    local data = {}
+    data.enableShow = true
+
+    if not AddProductionLineCtrl.goodLv[itemId] then
+        data.enableShow = false
+    else
+        data.enableShow = true
+    end
+    return data
+end
+
 --左边的detail被点击，需要改变中心线
 function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
     AddProductionLinePanel.leftBtnParent.transform.position = rectPosition

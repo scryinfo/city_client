@@ -27,6 +27,7 @@ function MaterialPanel.InitPanel()
     this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
     this.backBtn = transform:Find("topRoot/backBtn");
     this.infoBtn = transform:Find("topRoot/infoBtn");
+    this.buildInfo = transform:Find("buildInfo");
 end
 --数据初始化
 function MaterialPanel.InitDate(materialData)

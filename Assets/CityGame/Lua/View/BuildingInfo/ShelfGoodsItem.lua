@@ -9,9 +9,9 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     self.buildingId = buildingId
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
-    self.itemId = goodsDataInfo.itemId
-    self.num = goodsDataInfo.number
-    self.name = goodsDataInfo.name
+    self.itemId = goodsDataInfo.k.id
+    self.num = goodsDataInfo.n
+    self.name = Material[self.itemId].name
     self.price = goodsDataInfo.price
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
@@ -24,9 +24,9 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     self.XBtn = self.prefab.transform:Find("XBtn");  --删除按钮
     self.detailsBtn = self.prefab.transform:Find("detailsBtn");  --点击商品查看详情
     --赋值
-    self.nameText.text = goodsDataInfo.name
-    self.numberText.text = goodsDataInfo.number
-    self.moneyText.text = goodsDataInfo.money
+    self.nameText.text = self.name
+    self.numberText.text = self.num
+    self.moneyText.text = self.price..".0000"
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
@@ -68,7 +68,7 @@ function ShelfGoodsItem:c_buyGoodsItemDelete()
 end
 --勾选物品
 function ShelfGoodsItem:OnClick_bgBtn(ins)
-    Event.Brocast("_selectedBuyGoods",ins.id,ins.itemId);
+    Event.Brocast("_selectedBuyGoods",ins);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)

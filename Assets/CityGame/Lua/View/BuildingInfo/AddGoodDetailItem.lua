@@ -13,6 +13,14 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.infoBtn = viewRect:Find("infoBtn")
     self.chooseImgTran = viewRect:Find("chooseImg")
 
+    local stateData = AddProductionLineCtrl.GetItemState(data.itemId)
+    --如果是可展示状态
+    if stateData.enableShow then
+        self.disableImg.transform.localScale = Vector3.zero
+    else
+        self.disableImg.transform.localScale = Vector3.one
+    end
+
     local tempData
     if data.itemType == 0 then
         tempData = Material[data.itemId]
@@ -25,7 +33,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
         if isOn then
-            self.data.backFunc(self.data.itemId, self.viewRect.transform.position)  --显示中间的线路
+            self.data.backFunc(self.data.itemId, self.viewRect.transform.position,stateData.enableShow)  --显示中间的线路
         end
     end)
 end

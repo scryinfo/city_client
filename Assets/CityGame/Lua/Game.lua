@@ -96,7 +96,7 @@ function Game.OnPostInitOK()
     --调整生产线
     local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
     if AdjustProductionLineModel ~= nil then
-      --  AdjustProductionLineModel:Awake();
+        AdjustProductionLineModel:Awake();
     end
     --科技交易所
     local ScienceSellHallModel = CtrlManager.GetModel(ModelNames.ScienceSellHall);

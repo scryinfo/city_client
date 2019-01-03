@@ -20,6 +20,7 @@ function MaterialCtrl:Awake(go)
     self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
 
 end
 
@@ -53,7 +54,10 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
         --self.materialToggleGroup:updataInfo(self.m_data)
     end
 end
-
+function MaterialCtrl:OnClick_buildInfo(go)
+    Event.Brocast("m_ReqHouseSetSalary1",go.m_data.info.id,tonumber(50))
+    Event.Brocast("m_startBusiness",go.m_data.info.id)
+end
 --更改名字
 function MaterialCtrl:OnClick_changeName()
     local data = {}

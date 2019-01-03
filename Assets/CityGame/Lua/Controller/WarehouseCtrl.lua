@@ -59,30 +59,35 @@ function WarehouseCtrl:Refresh()
     self.operation = nil;
 
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
+    self.store = self.m_data.store
+    self.store.type = BuildingInType.Warehouse
     self.luabehaviour = warehouse
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
-        WarehouseCtrl.playerId = self.m_data.info.id
-        --self.luabehaviour = warehouse
-        self.m_data.type = BuildingInType.Warehouse
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-        --WarehousePanel.Warehouse_Slider.value = numText;
-        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        --self.luabehaviour = warehouse
-        self.m_data.type = BuildingInType.Warehouse
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-        --WarehousePanel.Warehouse_Slider.value = numText;
-        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
-    elseif self.m_data.buildingType == BuildingType.RetailShop then
-        --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-        --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-        --WarehousePanel.Warehouse_Slider.value = numText;
-        --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
-    end
+    WarehouseCtrl.playerId = self.m_data.info.id
+
+    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
+    --if self.m_data.buildingType == BuildingType.MaterialFactory then
+    --    WarehouseCtrl.playerId = self.m_data.info.id
+    --    --self.luabehaviour = warehouse
+    --    self.m_data.type = BuildingInType.Warehouse
+    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --    --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    --    --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+    --    --WarehousePanel.Warehouse_Slider.value = numText;
+    --    --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    --elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+    --    --self.luabehaviour = warehouse
+    --    self.m_data.type = BuildingInType.Warehouse
+    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
+    --    --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    --    --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+    --    --WarehousePanel.Warehouse_Slider.value = numText;
+    --    --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    --elseif self.m_data.buildingType == BuildingType.RetailShop then
+    --    --local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    --    --WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
+    --    --WarehousePanel.Warehouse_Slider.value = numText;
+    --    --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    --end
     local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.value = numText;
@@ -98,29 +103,29 @@ function WarehouseCtrl:OnClick_searchBtn(ins)
 
 end
 --选中物品
-function WarehouseCtrl:_selectedGoods(id,itemId)
-    if self.temporaryItems[id] == nil then
-        self.temporaryItems[id] = id
+function WarehouseCtrl:_selectedGoods(insData)
+    if self.temporaryItems[insData.id] == nil then
+        self.temporaryItems[insData.id] = insData.id
         if self.operation == ct.goodsState.shelf then
-            self.GoodsUnifyMgr:_creatShelfGoods(id,self.luabehaviour,itemId)
+            self.GoodsUnifyMgr:_creatShelfGoods(insData,self.luabehaviour)
         elseif self.operation == ct.goodsState.transport then
-            self.GoodsUnifyMgr:_creatTransportGoods(id,self.luabehaviour,itemId)
+            self.GoodsUnifyMgr:_creatTransportGoods(insData,self.luabehaviour)
         end
-        self.GoodsUnifyMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.one
+        self.GoodsUnifyMgr.warehouseLuaTab[insData.id].circleTickImg.transform.localScale = Vector3.one
     else
-        self.temporaryItems[id] = nil;
-        self.GoodsUnifyMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
+        self.temporaryItems[insData.id] = nil;
+        self.GoodsUnifyMgr.warehouseLuaTab[insData.id].circleTickImg.transform.localScale = Vector3.zero
         if self.operation == ct.goodsState.shelf then
-            self.GoodsUnifyMgr:_deleteShelfItem(id);
+            self.GoodsUnifyMgr:_deleteShelfItem(insData.id);
         elseif self.operation == ct.goodsState.transport then
-            self.GoodsUnifyMgr:_deleteTransportItem(id);
+            self.GoodsUnifyMgr:_deleteTransportItem(insData.id);
         end
     end
 end
 --临时表里是否有这个物品
 function WarehouseCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
-    self.GoodsUnifyMgr.WarehouseItems[id].circleTickImg.transform.localScale = Vector3.zero
+    self.GoodsUnifyMgr.warehouseLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
     if self.operation == ct.goodsState.shelf then
         self.GoodsUnifyMgr:_deleteShelfItem(id);
     elseif self.operation == ct.goodsState.transport then
@@ -207,7 +212,7 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
 end
 --运输回调执行
 function WarehouseCtrl:n_transports(Data)
-    local table = self.GoodsUnifyMgr.WarehouseItems
+    local table = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(table) do
         if v.itemId == Data.item.key.id then
             if v.goodsDataInfo.num == Data.item.n then
@@ -250,7 +255,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             WarehousePanel.transport:SetActive(true);
             self.operation = ct.goodsState.transport;
         end
-        if self.GoodsUnifyMgr.WarehouseItems ~= nil then
+        if self.GoodsUnifyMgr.warehouseLuaTab ~= nil then
             Event.Brocast("c_GoodsItemChoose")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(-810,0);
@@ -269,7 +274,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             end
             self.operation = nil;
         end
-        if self.GoodsUnifyMgr.WarehouseItems ~= nil then
+        if self.GoodsUnifyMgr.warehouseLuaTab ~= nil then
             Event.Brocast("c_GoodsItemDelete")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);
@@ -299,14 +304,12 @@ function WarehouseCtrl:_getSortItems(type,sortingTable)
 end
 --关闭面板时清空UI信息，以备其他模块调用
 function WarehouseCtrl:deleteObjInfo()
-    if not self.GoodsUnifyMgr.WarehouseItems then
+    if not self.GoodsUnifyMgr.warehouseLuaTab then
         return;
     else
-        for i,v in pairs(self.GoodsUnifyMgr.WarehouseItems) do
+        for i,v in pairs(self.GoodsUnifyMgr.warehouseLuaTab) do
             v:closeEvent();
             destroy(v.prefab.gameObject);
         end
-        self.GoodsUnifyMgr.WarehouseItems = {};
-        self.GoodsUnifyMgr.WarehouseModelData = {};
     end
 end

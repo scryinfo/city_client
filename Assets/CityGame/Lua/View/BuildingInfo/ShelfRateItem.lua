@@ -44,7 +44,6 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     end);
     self:initializeInfo(self.shelfData.shelf.good)
 
-
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
 end
@@ -89,14 +88,12 @@ function ShelfRateItem:initializeInfo(data)
     end
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
-        local prefabData={}
-        --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-        prefabData.prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
-        if not self.SmallShelfRateItemTab then
-            self.SmallShelfRateItemTab = {}
-        end
-        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+        local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
+        --if not self.SmallShelfRateItemTab then
+        --    self.SmallShelfRateItemTab = {}
+        --end
+        --self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
 --刷新数据
@@ -105,17 +102,7 @@ function ShelfRateItem:shelfRefreshInfo(data)
         return;
     end
     local homePageType = ct.homePage.shelf
-    local prefabData={}
     --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-    prefabData.prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
+    local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
 end
-----生成预制
---function ShelfRateItem:_creatGoods(path,parent)
---    local prefab = UnityEngine.Resources.Load(path);
---    local go = UnityEngine.GameObject.Instantiate(prefab);
---    local rect = go.transform:GetComponent("RectTransform");
---    go.transform:SetParent(parent.transform);
---    rect.transform.localScale = Vector3.one;
---    return go
---end

@@ -3,10 +3,6 @@ UIPage:ResgisterOpen(AdjustProductionLineCtrl) --注册打开的方法
 
 --原料厂实例
 AdjustProductionLineCtrl.materialProductionLine = {};
---原料厂UI信息
---AdjustProductionLineCtrl.materialProductionUIInfo = {};
---原料厂预制
---AdjustProductionLineCtrl.materialProductionPrefab = {};
 --添加生产线临时表
 AdjustProductionLineCtrl.tempProductionLine = {}
 
@@ -36,7 +32,6 @@ end
 
 function AdjustProductionLineCtrl:Awake(go)
     self.gameObject = go
-
 end
 
 function AdjustProductionLineCtrl:Refresh()
@@ -44,35 +39,19 @@ function AdjustProductionLineCtrl:Refresh()
         self.data = self.m_data
     end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
-    --if self.data.buildingType == BuildingType.MaterialFactory then
-    --    self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
-    --    AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
-    --    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
-    --    AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
-    --elseif self.data.buildingType == BuildingType.ProcessingFactory then
-    --    self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
-    --    AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
-    --    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
-    --    AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
-    --end
     self.luabehaviour = adjustLine
     if self.m_data.line then
         self.productionLine = self.m_data.line
         self.productionLine.type = BuildingInType.ProductionLine
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
-
     self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
-    ----读取服务器发过来的信息，是否有生产线
-    --
-    --GoodsUnifyMgr:_getProductionLine(self.data,adjustLine)
     self:refreshTime(self.data.line)
-    --Event.Brocast("refreshTime",self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 
     self:refreshWorkerNum()
@@ -150,31 +129,6 @@ function AdjustProductionLineCtrl:getWorkerNum()
         workerNum = self.buildingMaxWorkerNum - workNum
         return workerNum
     end
-
-    --if self.data.buildingType == BuildingType.MaterialFactory then
-    --    if not self.data.line then
-    --        workerNum = self.buildingMaxWorkerNum
-    --        return workerNum
-    --    else
-    --        for i,v in pairs(self.data.line) do
-    --            workNum = workNum + v.workerNum
-    --        end
-    --        workerNum = self.buildingMaxWorkerNum - workNum
-    --        return workerNum
-    --    end
-    --elseif self.data.buildingType == BuildingType.ProcessingFactory then
-    --    if not ProcessingModel.processingProductionLine then
-    --        workerNum = self.buildingMaxWorkerNum
-    --        return workerNum
-    --    else
-    --        for i,v in pairs(ProcessingModel.processingProductionLine) do
-    --            workNum = workNum + v.workerNum
-    --        end
-    --        workerNum = self.buildingMaxWorkerNum - workNum
-    --        return workerNum
-    --    end
-    --end
-
 end
 --刷新一条线可用的员工数量
 function AdjustProductionLineCtrl:refreshWorkerNum()
@@ -222,7 +176,5 @@ function AdjustProductionLineCtrl:deleteObjInfo()
             destroy(v.prefab.gameObject);
         end
         AdjustProductionLineCtrl.materialProductionLine = {};
-        --AdjustProductionLineCtrl.materialProductionUIInfo = {};
-        --AdjustProductionLineCtrl.materialProductionPrefab = {};
     end
 end

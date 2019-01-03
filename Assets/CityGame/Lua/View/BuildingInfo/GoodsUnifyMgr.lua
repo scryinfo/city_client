@@ -95,52 +95,6 @@ function GoodsUnifyMgr:_creatretailShelfGoods()
         end
     end
 end
-----添加生产线可以生产的原料或商品
---function GoodsUnifyMgr:_creatProductionItem()
---    local configTable = {}
---    for i,v in pairs(Material) do
---        --原料类型分类
---        local key = 2101
---        if math.floor(i / 1000) == key then
---            local productionItemInfo = {}
---            productionItemInfo.itemId = Material[i].itemId
---            productionItemInfo.name = Material[i].name
---            configTable[i] = productionItemInfo
---
---            local prefabData = {}
---            prefabData.uiData = configTable[i]
---            --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
---            prefabData._prefab = creatGoods(GoodsUnifyMgr.static.AddProductionLine_PATH,AddProductionLinePanel.content)
---            AddProductionLineCtrl.productionItemTab[i] = prefabData
---
---            local productionItem = ProductionItem:new(AddProductionLineCtrl.productionItemTab[i].uiData,prefabData._prefab,self.behaviour,self,i)
---            if not self.productionItems then
---                self.productionItems = {}
---            end
---            self.productionItems[i] = productionItem
---        end
---    end
---end
---添加生产线
-function GoodsUnifyMgr:_creatProductionLine(name,itemId)
-    local configTable = {};
-    configTable.name = name
-    configTable.itemId = itemId;
-    itemsId = itemId;
-    self.materialProductionUIInfo = {};
-    self.materialProductionUIInfo[itemId] = configTable
-
-    local prefabData = {}
-    prefabData.uiData = self.materialProductionUIInfo[itemId]
-    --prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-    prefabData._prefab = creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-    self.materialProductionPrefab = {};
-    self.materialProductionPrefab[itemId] = prefabData
-
-    local productionLineItem = SmallProductionLineItem:new(self.materialProductionPrefab[itemId].uiData,prefabData._prefab,self.behaviour,self);
-    self.materialProductionLine = {}
-    self.materialProductionLine[itemId] = productionLineItem
-end
 --添加生产线
 function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId)
     itemsId = itemId;
@@ -163,7 +117,7 @@ function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId)
     GoodsUnifyMgr.tempLinePrefab = {};
     GoodsUnifyMgr.tempLinePrefab[itemId] = prefabData
 
-    local productionLineItem = SmallProductionLineItem:new(self.tempLinePrefab[itemId].uiData,LinePrefab,luabehaviour,self);
+    local productionLineItem = SmallProductionLineItem:new(self.tempLinePrefab[itemId].uiData,LinePrefab,luabehaviour);
     GoodsUnifyMgr.tempLineItem = {}
     GoodsUnifyMgr.tempLineItem[itemId] = productionLineItem
 end

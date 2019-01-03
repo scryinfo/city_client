@@ -18,7 +18,7 @@ function RetailStoresCtrl:Awake(go)
     self.gameObject = go;
     self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
 
 end

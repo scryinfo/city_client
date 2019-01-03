@@ -3,6 +3,7 @@ UIPage:ResgisterOpen(RetailShelfCtrl)
 
 local isShowList
 local isShowLists
+local switchIsShow
 RetailShelfCtrl.retailShelfGoods = {}
 RetailShelfCtrl.retailShelfUIData = {}
 function RetailShelfCtrl:initialize()
@@ -31,14 +32,26 @@ function RetailShelfCtrl:Awake(go)
     self.retailShelf:AddClick(RetailShelfPanel.middleBtn.gameObject,self.OnClick_OnMiddle,self)
     self.retailShelf:AddClick(RetailShelfPanel.seniorBtn.gameObject,self.OnClick_OnSenior,self)
     self.retailShelf:AddClick(RetailShelfPanel.addBtn.gameObject,self.OnClick_addBtn,self)
+    self.retailShelf:AddClick(RetailShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
+    self.retailShelf:AddClick(RetailShelfPanel.closeBtn,self.OnClick_playerBuy,self);
+    self.retailShelf:AddClick(RetailShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
 
     isShowList = false;
     isShowLists = false;
+    switchIsShow = false;
 end
 
 function RetailShelfCtrl:Refresh()
     if self.m_data == nil then
         return;
+    end
+    if self.m_data.isOther then
+        RetailShelfPanel.retailAddItem.gameObject:SetActive(false);
+        RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+        --self:shelfImgSetActive()   传零售店的实例表进来  要求余数的大小
+
+    else
+        RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
     RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].shelfCapacity;
     RetailShelfPanel.capacitySlider.value = self:getShelfCapacity(self.m_data.shelf)
@@ -83,6 +96,63 @@ function RetailShelfCtrl:OnClick_addBtn(go)
     data.buildingData = BuildingType.RetailShop;
     go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
 end
+--其他玩家购买窗口
+function RetailShelfCtrl:OnClick_playerBuy(go)
+    go:openPlayerBuy(not switchIsShow)
+end
+
+function RetailShelfCtrl:openPlayerBuy(isShow)
+    if isShow then
+        RetailShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        --Event.Brocast("c_buyGoodsItemChoose")
+        RetailShelfPanel.content.offsetMax = Vector2.New(-740,0);
+        --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
+        --self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
+    else
+        RetailShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        --Event.Brocast("c_buyGoodsItemDelete")
+        RetailShelfPanel.content.offsetMax = Vector2.New(0,0);
+        --self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
+    end
+    switchIsShow = isShow
+end
+
+----购买物品
+--function RetailShelfCtrl:OnClcik_buyConfirmBtn(ins)
+--    if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
+--        return;
+--    else
+--        local buyListing = {}
+--        buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
+--        buyListing.targetLocationName = "中心仓库";
+--        buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
+--        local price = 0;
+--        for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+--            price = price + tonumber(v.moneyText.text);
+--        end
+--        buyListing.goodsPrice = price;
+--        local freight = 0;
+--        for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+--            freight = freight + (buyListing.distance * tonumber(v.numberScrollbar.value) * 10);
+--            buyListing.number = tonumber(v.numberScrollbar.value)
+--        end
+--        buyListing.freight = freight
+--        buyListing.total = price + freight;
+--        local moneyValue = DataManager.GetMyMoney()
+--
+--        buyListing.btnClick = function()
+--            if moneyValue < buyListing.total then
+--                Event.Brocast("SmallPop","钱不够",280)
+--                return;
+--            end
+--            for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
+--                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,ServerListModel.bagId);
+--            end
+--            DataManager.SetSubtractMyMoney(math.floor(buyListing.total))
+--        end
+--        ct.OpenCtrl("TransportBoxCtrl",buyListing);
+--    end
+--end
 
 --名字排序
 function RetailShelfCtrl:OnClick_OnName(go)
@@ -130,6 +200,19 @@ function RetailShelfCtrl:getShelfCapacity(table)
             shelfCapacity = shelfCapacity + v.n
         end
         return shelfCapacity;
+    end
+end
+--架子隐藏和显示
+function RetailShelfCtrl:shelfImgSetActive(table,num)
+    if not table then
+        return
+    end
+    for i,v in pairs(table) do
+        if i % 5 == 1 then
+            v.shelfImg:SetActive(true);
+        else
+            v.shelfImg:SetActive(false);
+        end
     end
 end
 function RetailShelfCtrl:OnClick_return_Btn()

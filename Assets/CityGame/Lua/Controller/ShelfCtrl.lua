@@ -18,7 +18,6 @@ end
 
 function ShelfCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-
     shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn, self);
     shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
     shelf:AddClick(ShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
@@ -29,7 +28,6 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
 
-    --Event.AddListener("refreshShelfInfo",self.refreshShelfInfo,self)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
@@ -52,15 +50,6 @@ function ShelfCtrl:Refresh()
     self.shelf.isOther = self.m_data.isOther
     self.shelf.buildingId = self.m_data.info.id
     self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
-    --if self.m_data.buildingType == BuildingType.MaterialFactory then
-    --    self.luabehaviour = shelf
-    --    self.m_data.type = BuildingInType.Shelf
-    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-    --elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-    --    self.luabehaviour = shelf
-    --    self.m_data.type = BuildingInType.Shelf
-    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.m_data)
-    --end
     if self.m_data.isOther then
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
         ShelfPanel.shelfAddItem.gameObject:SetActive(false)
@@ -69,24 +58,6 @@ function ShelfCtrl:Refresh()
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
 end
-----刷新数据
---function ShelfCtrl:refreshShelfInfo(data)
---    if not data then
---        return;
---    end
---    --self.WarehouseModelData = {}
---    --local configTable = {}
---    --local uiTab = {}
---    --uiTab.name = Material[v.key.id].name
---    --uiTab.num = v.n
---    --uiTab.itemId = v.key.id
---    --configTable[i] = uiTab
---
---    local prefabData = {}
---    prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Staff_PATH,ShelfPanel.Content)
---
---    local warehouseLuaItem = ShelfGoodsItem:refreshInfo(data,prefabData._prefab)
---end
 --选中物品
 function ShelfCtrl:_selectedBuyGoods(ins)
     if self.temporaryItems[ins.id] == nil then
@@ -182,7 +153,7 @@ function ShelfCtrl.OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
-
+--其他玩家购买窗口
 function ShelfCtrl:OnClick_playerBuy(go)
     go:openPlayerBuy(not switchIsShow)
 end

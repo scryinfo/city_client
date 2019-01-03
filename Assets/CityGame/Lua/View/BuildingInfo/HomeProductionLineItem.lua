@@ -1,6 +1,5 @@
 require('Controller/AdjustProductionLineCtrl')
 
-
 HomeProductionLineItem = class('HomeProductionLineItem')
 HomeProductionLineItem.static.TOTAL_H = 775  --整个Item的高度
 HomeProductionLineItem.static.CONTENT_H = 732  --显示内容的高度
@@ -19,36 +18,18 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
 
-    --[[    mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject,function()
-            clickOpenFunc(mgrTable,self.toggleData)
-        end);                                                       ]]
-
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
         if self.productionData.buildingType == BuildingType.MaterialFactory then
-            --local data = {}
-            --data.dataTab = MaterialModel.materialProductionLine
-            --data.buildingType = BuildingType.MaterialFactory
             ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            --local data = {}
-            --data.dataTab = ProcessingModel.processingProductionLine
-            --data.buildingType = BuildingType.ProcessingFactory
             ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
         end
     end);
 
     self:initializeInfo(self.productionData.line);
-    --if self.productionData.buildingType == BuildingType.MaterialFactory then
-    --    self:initializeInfo(self.productionData.line);
-    --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-    --    self:initializeInfo(self.productionData.line);
-    --end
-    --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
-    --    --    mgrTable:houseOccDataUpdate(data)
-    --    --end);
 
     Event.AddListener("c_onOccupancyValueChange",self.up0dateInfo,self);
     Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
@@ -87,19 +68,18 @@ function HomeProductionLineItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeProductionLineItem.static.TOP_H);
 end
 --初始化数据
-function HomeProductionLineItem:initializeInfo(data)
-    if not data then
+function HomeProductionLineItem:initializeInfo(productionLineData)
+    if not productionLineData then
         return;
     end
-    for i,v in pairs(data) do
+    for i,v in pairs(productionLineData) do
         local homePageType = ct.homePage.productionLine
-        local prefabData={}
-        prefabData.prefab = self:_creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
-        local SmallLineRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
-        if not self.SmallLineRateItemTab then
-            self.SmallLineRateItemTab = {}
-        end
-        self.SmallLineRateItemTab[i] = SmallLineRateItem
+        local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
+        local SmallLineRateItem = HomePageDisplay:new(homePageType,v,prefab)
+        --if not self.SmallLineRateItemTab then
+        --    self.SmallLineRateItemTab = {}
+        --end
+        --self.SmallLineRateItemTab[i] = SmallLineRateItem
     end
 end
 --刷新数据
@@ -108,16 +88,6 @@ function HomeProductionLineItem:productionRefreshInfo(data)
         return;
     end
     local homePageType = ct.homePage.productionLine
-    local prefabData={}
-    prefabData.prefab = self:_creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
-    local SmallLineRateItem = HomePageDisplay:new(homePageType,data.line,prefabData.prefab)
-end
---生成预制
-function HomeProductionLineItem:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
+    local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
+    local SmallLineRateItem = HomePageDisplay:new(homePageType,data.line,prefab)
 end

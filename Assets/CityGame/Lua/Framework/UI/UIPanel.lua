@@ -104,24 +104,10 @@ function UIPanel:Close()
     destroy(self.gameObject);
 end
 
-function UIPanel:CheckIfNeedBackInner()
-    if self.type == UIType.Fixed or self.type == UIType.PopUp or self.type == UIType.None then
-        return false
-    elseif self.mode == UIMode.NoNeedBack or self.mode == UIMode.DoNothing then
-        return false
-    end
-    return true
-end
-
---检查界面是否打开--TODO：修改
+--检查界面是否打开
 function UIPanel:isActive()
     local ret = self.gameObject ~= nil and self.gameObject.activeSelf
     return ret or self.isActived
-end
-
---检查界面是否需要返回--TODO：修改
-function UIPanel:CheckIfNeedBack(page)
-    return page ~= nil and page:CheckIfNeedBackInner();
 end
 
 --打开页面【不修改】
@@ -269,9 +255,8 @@ function UIPanel:setPosition(x,y)
     end
 end
 
---DoShow，页面调用打开时调用--TODO：修改
+--DoShow，页面调用打开时调用
 function UIPanel:DoShow()
-    self:PopNode(self)
     self:Active()
     self:Refresh()
 end
@@ -299,7 +284,7 @@ function UIPanel:ClosePage()
         Node = pageNodes[NodeCount]
         UIPanel:ShowPageInstance(Node.page,Node.pageData)
         --如果是已经打开的界面
-        if (Node.pageType == UIType.PopUp and Node.page.isActived == true) or Node.pageType == UIType.Normal then
+        if (Node.pageType == UIType.PopUp and Node.page:isActive() == true) or Node.pageType == UIType.Normal then
             break
         end
         NodeCount = NodeCount - 1

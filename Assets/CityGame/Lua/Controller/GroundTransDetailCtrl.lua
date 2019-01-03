@@ -40,7 +40,6 @@ function GroundTransDetailCtrl:Awake(go)
 end
 
 function GroundTransDetailCtrl:Refresh()
-    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     self:_initPanelData()
 end
 
@@ -103,12 +102,17 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             tempPageType = GroundTransState.Rent
             GroundTransDetailPanel.rentingBtnTran.localScale = Vector3.one
         end
-        if tempPageType == nil then
-            return
+        if self.hasOpened == nil or self.hasOpened == false then
+            if tempPageType == nil then
+                return
+            end
+            local info = {groundInfo = groundInfo, groundState = self.groundState, showPageType = tempPageType}
+            --打开设置租金/售卖金额界面，参数为info
+            ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+            self.hasOpened = true
+            ct.log("cycle_w19_groundTrans", "打开调整价格界面")
         end
-        local info = {groundInfo = groundInfo, groundState = self.groundState, showPageType = tempPageType}
-        --打开设置租金/售卖金额界面，参数为info
-        ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+
     else
         --判断状态
         if self.groundState == GroundTransState.None then
@@ -147,6 +151,7 @@ end
 ---按钮方法
 function GroundTransDetailCtrl:_closeBtnFunc(ins)
     -- hide
+    ins.hasOpened = false
     UIPage.ClosePage()
 end
 --owner出租按钮

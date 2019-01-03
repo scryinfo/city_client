@@ -36,6 +36,8 @@ function GroundTransSetPriceCtrl:Refresh()
 end
 
 function GroundTransSetPriceCtrl:Hide()
+    ct.log("cycle_w19_groundTrans", "调整价格_hide")
+
     UIPage.Hide(self)
 end
 
@@ -51,6 +53,7 @@ function GroundTransSetPriceCtrl:_initPanelData()
 end
 --根据状态显示界面
 function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPageType)
+    GroundTransSetPricePanel.cleanData()
     GroundTransSetPricePanel.sellRoot.localScale = Vector3.zero
     GroundTransSetPricePanel.rentRoot.localScale = Vector3.zero
     GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.zero
@@ -88,6 +91,7 @@ function GroundTransSetPriceCtrl:_closeBtnFunc()
 end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()
+    ct.log("cycle_w19_groundTrans", "点击了返回按钮")
     UIPage:ClosePage()
 end
 

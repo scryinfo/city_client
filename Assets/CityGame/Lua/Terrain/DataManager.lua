@@ -572,6 +572,7 @@ function DataManager.AddMyGroundInfo(groundInfoData)
     if PersonDataStack.m_groundInfos then
         for key, value in pairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
+                PersonDataStack.m_groundInfos[key] = groundInfoData
                 return
             end
         end

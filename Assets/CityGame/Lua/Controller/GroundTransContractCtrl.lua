@@ -35,7 +35,7 @@ function GroundTransContractCtrl:Hide()
 end
 
 function GroundTransContractCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化

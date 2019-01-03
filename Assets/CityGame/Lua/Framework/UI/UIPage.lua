@@ -253,7 +253,7 @@ function  UIPage:ShowPage(inClass,pageData)
 end
 
 function  UIPage:ShowPageInstance(pageInstance,pageData)
-    if pageData then
+    if pageData ~= nil then
         pageInstance.m_data = pageData;
     end
     if pageInstance.isAsync then

@@ -32,7 +32,6 @@ function MunicipalModel:n_getdetailPublicFacility(lMsg)
     MunicipalPanel.buildingId=lMsg.info.id
     local model =DataManager.GetDetailModelByID(lMsg.info.id)
     local lMsg=lMsg
-    MunicipalPanel.lMsg=lMsg
 
     model.SlotList={}
     if  lMsg.ad.availableSlot then

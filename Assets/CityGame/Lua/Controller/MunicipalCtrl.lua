@@ -27,15 +27,16 @@ end
 function MunicipalCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
 end
-
+local this
 function MunicipalCtrl:Awake(go)
+    this=self
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
-    --self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
+   self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
     self.data = {}
     self.data.middleRootTran=MunicipalPanel.middleRootTran
@@ -46,10 +47,15 @@ function MunicipalCtrl:Awake(go)
 
 end
 
+
 function MunicipalCtrl:OnClick_buildInfo()
     --打开建筑信息界面
     -- TODO:ct.log("system","打开建筑信息界面")
     Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
+end
+--MunicipalPanel.lMsg.info
+function MunicipalCtrl:OnClick_prepareOpen(ins)
+    Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 
 --更改名字
@@ -77,8 +83,9 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-   self:changeData()
+   this:changeData()
 end
+
 
 function MunicipalCtrl:changeData()
     if self.m_data then
@@ -87,8 +94,8 @@ function MunicipalCtrl:changeData()
     else
         DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
-        self.m_data = {}
-        self.m_data.insId = MunicipalPanel.buildingId
+        --self.m_data = {}
+        --self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 
@@ -97,6 +104,7 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     local model =DataManager.GetDetailModelByID(parkData.info.id)
     local lMsg=parkData
     MunicipalPanel.lMsg=lMsg
+    Event.Brocast("c_GetBuildingInfo",MunicipalPanel.lMsg.info)
 
     if lMsg.info.state=="OPERATE" then
         MunicipalPanel.stopIconRoot.localScale=Vector3.zero

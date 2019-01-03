@@ -7,11 +7,13 @@
 SocialityManager = class('SocialityManager')
 
 function SocialityManager:initialize()
+    self.path = CityLuaUtil.getAssetsPath().."/client.data"
     self.m_friends = {}
     self.m_chatInfo = {}
     self.m_chatByType = {{}, {}, {}}
     self.m_friendsApply = {}
     self.m_blacklist = {}
+    self:ReadFriendsChat()
 end
 
 function SocialityManager:SetMyFriends(friendsData)
@@ -54,6 +56,10 @@ function SocialityManager:SetMyChatInfo(chatData)
                 self.m_chatByType[2][dataId].unreadNum = 1
             end
         end
+        if not self.m_chatByType[2][dataId].unreadChatInfo then
+            self.m_chatByType[2][dataId].unreadChatInfo = {}
+        end
+        table.insert(self.m_chatByType[2][dataId].unreadChatInfo, chatData)
         table.insert(self.m_chatByType[2][dataId].chatInfo, chatData)
     elseif chatData.channel == "UNKNOWN" then
         local dataId
@@ -82,6 +88,9 @@ end
 function SocialityManager:SetMyReadChatInfo(index, id)
     if not self.m_chatByType[index][id] then
         return
+    end
+    if index == 2 then
+        self.m_chatByType[2][id].unreadChatInfo = {}
     end
     self.m_chatByType[index][id].unreadNum = 0
 end
@@ -131,4 +140,106 @@ function SocialityManager:SetMyBlacklist(tempData)
             end
         end
     end
+end
+
+-- 保存聊天记录
+function SocialityManager:SaveFriendsChat()
+    --local testmsg = {testValue = {1,2,3,8}}
+    --local pMsg1 = assert(pbl.encode("client.CTestMsg", testmsg))
+    --local msg = assert(pbl.decode("client.CTestMsg", pMsg1), "pbl.decode decode failed")
+
+    --local pbl = pbl
+    --local myFriendsChatInfo = {
+    --    {
+    --        id = DataManager.GetMyOwnerID(),
+    --        cRoleCommunication = {
+    --            {
+    --                readCommunication ={
+    --                    {id = DataManager.GetMyOwnerID(),name = "role1", msg = "1111", channelId = "1"},
+    --                    {id = DataManager.GetMyOwnerID(),name = "role2", msg = "22222", channelId = "1"}
+    --                },
+    --                unreadCommunication ={
+    --                    {id = DataManager.GetMyOwnerID(),name = "role3", msg = "1111", channelId = "1"}
+    --                }
+    --            }
+    --        }
+    --    },
+    --    {
+    --        id = DataManager.GetMyOwnerID(),
+    --        cRoleCommunication = {
+    --            {
+    --                readCommunication ={
+    --                    {id = DataManager.GetMyOwnerID(),name = "role4", msg = "444", channelId = "1"},
+    --                    {id = DataManager.GetMyOwnerID(),name = "role5", msg = "555", channelId = "1"}
+    --                },
+    --                unreadCommunication ={
+    --                }
+    --            }
+    --        }
+    --    }
+    --}
+
+    local myInfoTab = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
+    for m, n in pairs(self.m_chatByType[2]) do
+        if n.chatInfo then
+            for _, a in ipairs(n.chatInfo) do
+                table.insert(myInfoTab.readCommunication, a)
+            end
+        end
+        if n.unreadChatInfo then
+            for _, b in ipairs(n.unreadChatInfo) do
+                table.insert(myInfoTab.unreadCommunication, b)
+            end
+        end
+    end
+    if self.saveRoleCom then
+        local isExit = true
+        for _, v in ipairs(self.saveRoleCom.allRoleCom) do
+            if v.id == DataManager.GetMyOwnerID() then
+                for _, h in ipairs(myInfoTab.readCommunication) do
+                    table.insert(v.readCommunication, h)
+                end
+                for _, u in ipairs(myInfoTab.unreadCommunication) do
+                    table.insert(v.unreadCommunication, u)
+                end
+                isExit = false
+            end
+        end
+        if isExit then
+            table.insert(self.saveRoleCom.allRoleCom, myInfoTab)
+        end
+    else
+        self.saveRoleCom = {allRoleCom = {myInfoTab}}
+    end
+    local pMsg = assert(pbl.encode("client.AllRoleCommunication", self.saveRoleCom))
+    ct.file_saveString(self.path,pMsg)
+end
+
+-- 上线时读取，聊天记录
+function SocialityManager:ReadFriendsChat()
+    local str = ct.file_readString(self.path)
+    if str ~= nil then
+        self.saveRoleCom = assert(pbl.decode("client.AllRoleCommunication", str), "pbl.decode decode failed")
+        for _, v in ipairs(self.saveRoleCom.allRoleCom) do
+            if v.id == DataManager.GetMyOwnerID() then
+                self.mySaveRoleCom = v
+                if v.unreadCommunication then
+                    if v.unreadCommunication[1] then
+                        Event.Brocast("c_OnReceiveRoleCommunication", {channel = "FRIEND"})
+                    end
+                    for _, m in ipairs(v.unreadCommunication) do
+                        local dataId = m.channelId
+                        if not self.unread then
+                            self.unread = {}
+                        end
+                        if not self.unread[dataId] then
+                            self.unread[dataId] = {}
+                        end
+                        table.insert(self.unread[dataId], m)
+                    end
+                end
+            end
+        end
+    end
+    --local cRoleCommunication = msg.allRoleCom[1].cRoleCommunication[1].readCommunication[1].name
 end

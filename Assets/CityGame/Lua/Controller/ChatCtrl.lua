@@ -50,6 +50,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.addFriendsBtn, self.OnAddFriends, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.chatBtn, self.OnChat, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.shieldBtn, self.OnShield, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.friendsDeleteBtn, self.OnFriendsDelete, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -409,16 +410,17 @@ end
 
 -- 陌生人加好友
 function ChatCtrl:OnAddFriends(go)
-    local data = {}
-    data.titleInfo = "REMINDER"
-    data.tipInfo = "Please input verification information!"
-    data.btnCallBack = function(text)
-        ct.log("tina_w8_friends", "向服务器发送加好友信息")
-        Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
-        Event.Brocast("SmallPop","Your request has been sent.",80)
-        go:_closePlayerInfo()
-    end
-    ct.OpenCtrl("CommonDialogCtrl", data)
+    --local data = {}
+    --data.titleInfo = "REMINDER"
+    --data.tipInfo = "Please input verification information!"
+    --data.btnCallBack = function(text)
+    --    ct.log("tina_w8_friends", "向服务器发送加好友信息")
+    --    Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
+    --    Event.Brocast("SmallPop","Your request has been sent.",80)
+    --    go:_closePlayerInfo()
+    --end
+    --ct.OpenCtrl("CommonDialogCtrl", data)
+    DataManager.ReadFriendsChat()
 end
 
 -- 陌生人私聊
@@ -435,6 +437,12 @@ function ChatCtrl:OnChat()
         strangersPlayerItem.toggle.isOn = true
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
+end
+
+-- 删除聊天记录
+function ChatCtrl:OnFriendsDelete(go)
+    DataManager.SaveFriendsChat()
+
 end
 
 -- 屏蔽玩家
@@ -541,9 +549,11 @@ end
 
 -- 聊天
 function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
-    if chatData.channel == "WORLD" and ChatPanel.worldToggle.isOn then
+    if chatData.channel == "WORLD" then
         ChatCtrl.static.chatMgr:CreateChatItem(chatData)
-        ChatCtrl.static.chatMgr:StartScrollBottom()
+        if ChatPanel.worldToggle.isOn then
+            ChatCtrl.static.chatMgr:StartScrollBottom()
+        end
     elseif chatData.channel == "FRIEND"then
         if ChatPanel.friendsToggle.isOn then
             if chatData.id == ChatCtrl.static.chatMgr:GetActivePlayerId() or chatData.id == DataManager.GetMyOwnerID() then

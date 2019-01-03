@@ -354,7 +354,13 @@ function ct.file_saveString(filename, str)
 end
 
 function ct.file_readString(filename)
-	local file = assert(io.open(filename, "rb"))
+	--local file = assert(io.open(filename, "rb"))
+	local file, err
+	file, err = io.open(filename, "rb")
+	if file == nil then
+		error(("Unable to write '%s': %s"):format(filename, err))
+		return
+	end
 	local str = file:read("*all")
 	file:close()
 	return str

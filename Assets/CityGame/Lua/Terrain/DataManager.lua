@@ -706,6 +706,16 @@ function DataManager.SetMyReadChatInfo(index, id)
     PersonDataStack.socialityManager:SetMyReadChatInfo(index, id)
 end
 
+-- 本地保存聊天消息
+function DataManager.SaveFriendsChat()
+    PersonDataStack.socialityManager:SaveFriendsChat()
+end
+
+-- 读取保存聊天消息
+function DataManager.ReadFriendsChat()
+    PersonDataStack.socialityManager:ReadFriendsChat()
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding

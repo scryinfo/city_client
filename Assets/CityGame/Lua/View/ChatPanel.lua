@@ -60,6 +60,7 @@ function ChatPanel.InitPanel()
     this.friendsScrollView = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.friendsContent = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/Viewport/Content")
     this.friendsVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
+    this.friendsDeleteBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/DeleteBtn").gameObject
 
     -- 输入、发送消息
     this.chatInputField = transform:Find("LeftRoot/BottomRoot/InputField"):GetComponent("InputField")

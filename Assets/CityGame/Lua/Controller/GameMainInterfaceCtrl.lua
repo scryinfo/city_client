@@ -51,6 +51,9 @@ end
 
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
+    if buildingInfo.ownerId~=DataManager.GetMyOwnerID() then
+        return
+    end
     local data = {workerNum=20,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 end

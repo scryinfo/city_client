@@ -15,7 +15,7 @@ function LoginCtrl:initialize()
 end
 
 function LoginCtrl:bundleName()
-	return "LoginPanel"
+	return "Assets/CityGame/Resources/View/LoginPanel.prefab"
 end
 
 function LoginCtrl:Awake(go)

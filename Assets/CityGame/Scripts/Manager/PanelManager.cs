@@ -45,6 +45,7 @@ namespace LuaFramework {
                 {
                     func.Call(objInstance);
                     Debug.LogError("LoadPrefab_A::>> " + "abName"+ "is null ");
+                    return;
                 }
             }
 
@@ -52,7 +53,17 @@ namespace LuaFramework {
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
                 if (objs.Length == 0) return;
-                objs[0].name = releativePath;
+                /*int pos = releativePath.LastIndexOf(".");
+                assetName = assetName.Remove(pos);
+                pos = assetName.LastIndexOf('/');
+                assetName = assetName.Remove(0, pos + 1);
+                if (pos < 0) {
+                    func.Call(objInstance);
+                    Debug.LogError("LoadPrefab_A::>> " + "abName" + "is null ");
+                    return;
+                }*/
+                
+                //objs[0].name = assetName;
                 if (func != null)
                 {
                     func.Call(objInstance, objs[0], ab);                    

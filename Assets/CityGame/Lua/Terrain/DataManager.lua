@@ -175,7 +175,7 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RemoveWaysByCollectionID(tempCollectionID)
-    if BuildDataStack[tempCollectionID] == nil and BuildDataStack[tempCollectionID].RoteDatas == nil then
+    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].RoteDatas == nil then
         return
     end
     for key, value in pairs(BuildDataStack[tempCollectionID].RoteDatas) do
@@ -601,8 +601,6 @@ function  DataManager.InitPersonDatas(tempData)
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
-    --初始化相机位置
-    CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
 end
 
 --添加/修改自己所拥有土地

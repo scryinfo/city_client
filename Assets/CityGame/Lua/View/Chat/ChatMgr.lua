@@ -313,7 +313,7 @@ function ChatMgr:ShowAllChatInfo(index, id)
     local chatInfo = {}
     local saveUnread = DataManager.GetUnread()
     if index == 2 then
-        if saveUnread[id] then
+        if saveUnread and saveUnread[id] then
             for _, a in pairs(saveUnread[id]) do
                 table.insert(chatInfo, a)
             end

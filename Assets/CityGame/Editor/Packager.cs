@@ -37,6 +37,11 @@ public class Packager {
     public static void BuildAndroidResource() {        
         BuildAssetResource(BuildTarget.Android);
     }
+    [MenuItem("LuaFramework/Build Android Resource Only", false, 101)]
+    public static void BuildAndroidResourceOnly()
+    {
+        BuildAssetResourceOnly(BuildTarget.Android);
+    }
     //新增的Lua文件必须执行 BuildAndroidResource，非新增的Lua改动执行 BuildAndroidLua 即可 
     [MenuItem("LuaFramework/Update Android LuaBundle Only", false, 102)]
     public static void BuildAndroidLua()
@@ -123,6 +128,63 @@ public class Packager {
         if (Directory.Exists(resPath)) Directory.Delete(resPath, true);
         AssetDatabase.Refresh();
         HandleNoneLuaBundleInLua();
+    }
+
+    /// <summary>
+    /// 生成绑定素材
+    /// </summary>
+    public static void BuildAssetResourceOnly(BuildTarget target, bool buildLuaOnly = false)
+    {
+        if (Directory.Exists(Util.DataPath))
+        {
+            Directory.Delete(Util.DataPath, true);
+        }
+        string streamPath = Application.streamingAssetsPath;
+        if (Directory.Exists(streamPath))
+        {
+            Directory.Delete(streamPath, true);
+        }
+        Directory.CreateDirectory(streamPath);
+        AssetDatabase.Refresh();
+
+        maps.Clear();
+        files.Clear();
+
+        HandleResBundle();//资源打包
+
+        string resPath = "Assets/" + AppConst.AssetDir;
+        BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle |
+                                          BuildAssetBundleOptions.UncompressedAssetBundle;
+
+        BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), options, target);
+
+        BuildFileIndex();
+
+        string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
+        if (Directory.Exists(streamDir)) Directory.Delete(streamDir, true);
+
+        //HandleNoneLuaBundleInLua();
+        string streamResPath = AppDataPath + "/StreamingAssets/";
+        ///----------------------创建文件列表-----------------------
+        string newFilePath = streamResPath + "/files.txt";
+        if (File.Exists(newFilePath)) File.Delete(newFilePath);
+
+        FileStream fs = new FileStream(newFilePath, FileMode.CreateNew);
+        StreamWriter sw = new StreamWriter(fs);
+        for (int i = 0; i < files.Count; i++)
+        {
+            string file = files[i];
+            string ext = Path.GetExtension(file);
+            //if (file.EndsWith(".meta") || file.Contains(".DS_Store")) continue;            
+            if (file.Contains(".DS_Store")) continue;
+
+            string md5 = Util.md5file(file);
+            string value = file.Replace(streamResPath, string.Empty);
+            sw.WriteLine(value + "|" + md5);
+        }
+        sw.Close(); fs.Close();
+
+        //AssetDatabase.Refresh();
     }
 
     /// <summary>
@@ -358,7 +420,7 @@ public class Packager {
     {
         string resPath = AppDataPath + "/" + AppConst.AssetDir + "/";
         if (!Directory.Exists(resPath)) Directory.CreateDirectory(resPath);
-        AddBuildMapOp("Assets/CityGame/Resources/View");
+        AddBuildMapOp("Assets/CityGame/Resources");
 
         return;
 

@@ -57,16 +57,109 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
     end
-    --TODO：干掉此处（1.应该初始化相机位置2.向服务器发送相机位置3.刷新当前位置）
+    --TODO：（1.应该初始化相机位置2.向服务器发送相机位置）
+
+    --TODO:刷新数据内的数据
     if CameraCollectionID  and CameraCollectionID == -1 then
         DataManager.RefreshWaysByCollectionID( CameraCollectionID)
     end
 end
 
+--计算B在A中的补集（即A中有，而B中没有的）
+--A:Table(value为集合)
+--B:Table(value为集合)
+--return  Cab
+local function ComputingTheComplementSetOfBinA(ListA,ListB)
+    local ComplementSetList = {}
+    for keyA, valueA in pairs(ListA) do
+        for keyB, valueB in pairs(ListB) do
+            if valueA == valueB then
+                table.insert(ComplementSetList,valueA)
+                break
+            end
+        end
+    end
+    return ComplementSetList
+end
+--计算计算A集合中在B集合附近的所有值（包括B）--TODO:三层循环太慢,有机会再修改
+function TerrainManager.CalculateAllValuesInANearB(ListA,ListB)
+    local nearList = {}
+    local tempBlist
+    for keyB, valueB in pairs(ListB) do
+        tempBlist = CalculationAOICollectionIDList(valueB)
+        for keyTemp, valueTemp in pairs(tempBlist) do
+            if #ListA == 0 then
+                return nearList
+            end
+            for keyA, valueA in pairs(ListA) do
+                if valueTemp == valueA then
+                    table.insert(nearList,valueTemp)
+                    table.remove(ListA,keyA)
+                    break
+                end
+            end
+        end
+    end
+    return nearList
+end
+
+
+function TerrainManager.GetCameraCollectionIDAOIList()
+    return CalculationAOICollectionIDList(CameraCollectionID)
+end
+
+--计算AOI范围内的地块ID
+local function CalculationAOICollectionIDList(centerCollectionID)
+    local tempList = {}
+    local rowNum = math.ceil(TerrainRange.x /blockRange.x) --一行总个数
+    local columnNum = math.ceil(TerrainRange.y /blockRange.y) --一列总个数
+    local remain = centerCollectionID % rowNum
+    --是否靠近边缘
+    local IsNearTopEdge = centerCollectionID <= rowNum
+    local IsNearBottomEdge = centerCollectionID > (columnNum -1) * rowNum
+    local IsNearLeftEdge = centerCollectionID < rowNum
+    local IsNearRightEdge = centerCollectionID < rowNum
+    if  1 <= centerCollectionID and  rowNum*columnNum >= centerCollectionID then
+        table.insert(tempList,centerCollectionID)
+    else
+        return tempList
+    end
+    if ~IsNearTopEdge then --不靠上（写入正上方）
+        table.insert(tempList,centerCollectionID - rowNum)
+    end
+    if ~IsNearBottomEdge then --不靠下（写入正下方）
+        table.insert(tempList,centerCollectionID + rowNum)
+    end
+    if ~IsNearLeftEdge then --不靠上（写入正左方）
+        table.insert(tempList,centerCollectionID - 1)
+    end
+    if ~IsNearRightEdge then --不靠上（写入正右方）
+        table.insert(tempList,centerCollectionID + 1)
+    end
+    if ~IsNearTopEdge and ~IsNearLeftEdge then --不靠上且不靠左（写入左上角）
+        table.insert(tempList,centerCollectionID - rowNum - 1)
+    end
+    if ~IsNearTopEdge and ~IsNearRightEdge then --不靠上且不靠右（写入右上角）
+        table.insert(tempList,centerCollectionID - rowNum + 1)
+    end
+    if ~IsNearBottomEdge and ~IsNearLeftEdge then --不靠下且不靠左（写入左上角）
+        table.insert(tempList,centerCollectionID + rowNum - 1)
+    end
+    if ~IsNearBottomEdge and ~IsNearRightEdge then --不靠下且不靠右（写入右下角）
+        table.insert(tempList,centerCollectionID + rowNum + 1)
+    end
+    return tempList
+end
+
 --计算AOI移动时，哪些地块内数据需要增加，哪些地块内数据需要删除
-local function CaculateAOI(oldCollectionID,nowCollectionID)
-
-
+local function CalculateAOI(oldCollectionID,newCollectionID)
+    --1.计算C新旧
+    local oldCollectionList =  CalculationAOICollectionIDList(oldCollectionID)
+    local newCollectionList =  CalculationAOICollectionIDList(newCollectionID)
+    local willRemoveList = ComputingTheComplementSetOfBinA(oldCollectionList,newCollectionList)
+    for i, tempDeteleCollectionID in pairs(willRemoveList) do
+        DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
+    end
 end
 
 --向服务器发送新的所在地块ID
@@ -84,11 +177,12 @@ function TerrainManager.Refresh(pos)
     local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
     --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
+        --CalculateAOI,删除无用信息
+        CalculateAOI(CameraCollectionID,tempCollectionID)
         CameraCollectionID = tempCollectionID
-        DataManager.RefreshWaysByCollectionID( CameraCollectionID)
+        --DataManager.RefreshWaysByCollectionID( CameraCollectionID)
         --向服务器发送新的所在地块ID
         TerrainManager.SendMoveToServer(tempBlockID)
-
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
         UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
@@ -112,8 +206,6 @@ function TerrainManager.GridIndexTurnBlockID(tempGridIndex)
     local tempZ = math.floor( math.abs(tempGridIndex.y))
     return tempZ + tempX * TerrainRange.x + 1
 end
-
-
 
 --通过位置ID转化为位置坐标
 --注：z为列，x为行（y = 0）
@@ -146,7 +238,7 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
---通过BlcokID转化为BlockCollection坐标
+    --通过BlcokID转化为BlockCollection坐标
 function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if blockID == nil then
         return{ x = -1,y = -1}
@@ -156,7 +248,7 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     return{ x = X,y = Y}
 end
 
---通过BlockCollectionID转化为BlcokID
+    --通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
     local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
     local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x

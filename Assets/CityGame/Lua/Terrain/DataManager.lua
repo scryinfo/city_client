@@ -9,6 +9,9 @@ DataManager = {}
 --          ==>> 根据相机位置刷新，从服务器同步一整个BlockCollectionDatas，实时接收服务器数据刷新内部数据，当相机移走时数据清除
 --  d.DetailBuildDatas 商业建筑的详细数据（key = NodeID ，value = Model ）具体Model可根据建筑类型作为参数传入
 --          ==>> 打开建筑UI时，判断是否自己建筑，是->转到2c读取信息，否->从服务器读取数据并存储，退出界面时数据清除（后期可改为一定大小内存缓存机制）
+--        BuildDataStack 包含：BlockDatas(地块建筑覆盖信息)/GroundDatas（地块所属人信息）/RoteDatas（道路信息）/BaseBuildDatas（商业建筑基础信息）
+--
+
 --2.用户信息（登录时同步服务器，实时同步）
 --  a.用户基础数据（table={ userID , Name ， Sex ，Avatar ， CompanyID ，CompanyName }）
 --  b.用户自己所拥有的地块集合（key = BlockID ，value = nodeID）可修建为 -1  有建筑覆盖则记录节点ID
@@ -137,6 +140,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
         if itemNodeID == -1 then
             local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+            --如果有道路数据
             if roadNum > 0 and roadNum < #RoadNumConfig  then
                 if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
@@ -157,6 +161,10 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                 end
                 go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
                 BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
+            --如果没有道路数据，但原先有道路记录，则清除
+            elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
             end
         end
     end
@@ -268,24 +276,54 @@ function DataManager.RefreshBaseBuildData(data)
 end
 
 --功能
---  删除整个地块集合数据
---      相机移动时触发
+--  删除某个地块集合数据BuildDataStack
+--  相机移动时触发
+--BuildDataStack 包含：BlockDatas(地块建筑覆盖信息)/GroundDatas（地块所属人信息）/RoteDatas（道路信息）/BaseBuildDatas（商业建筑基础信息）
 --参数
 --  tempCollectionID：删除地块的ID
-function DataManager.RemoveCollectionDatas(tempCollectionID)
-    --删除 BlockDatas 和 BaseBuildDatas 对应的数据
-    --关闭所有基础数据Model
-    for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
-        value:Close()
+function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
+    --判断是否不需要执行数据清理
+    if tempCollectionID == nil or BuildDataStack[tempCollectionID] == nil then
+        return
     end
+    --删除所有地块建筑覆盖信息（BlockDatas）
+    if BuildDataStack[tempCollectionID].BlockDatas ~= nil then
+        --其实无意义，此句可删除
+        BuildDataStack[tempCollectionID].BlockDatas = nil
+    end
+    --删除所有道路信息数据（RoteDatas）
+    DataManager.RemoveWaysByCollectionID(tempCollectionID)
+    --删除所有地块信息BaseGroundModel（GroundDatas）
+    if BuildDataStack[tempCollectionID].GroundDatas ~= nil  then
+        for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
+            value:Close()
+        end
+        --其实无意义，此句可删除
+        BuildDataStack[tempCollectionID].GroundDatas = nil
+    end
+    --删除所有基础数据BaseBuildModel（BaseBuildDatas）
+    if BuildDataStack[tempCollectionID].BaseBuildDatas ~= nil  then
+        for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
+            value:Close()
+        end
+        --其实无意义，此句可删除
+        BuildDataStack[tempCollectionID].BaseBuildDatas = nil
+    end
+    --清空这个节点（这个才有意义）
     BuildDataStack[tempCollectionID] = nil
 end
 
+--获取建筑基础数据
 --建筑根节点的唯一ID
 function DataManager.GetBaseBuildDataByID(blockID)
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+    else
+        return nil
+    end
 end
+
 ---------------------------------------------------------------------------------- 建筑详情数据---------------------------------------------------------------------------------
 ModelBase = class('ModelBase')
 
@@ -909,7 +947,12 @@ function DataManager.n_OnReceiveUnitRemove(stream)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
         if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
             BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
-            DataManager.RefreshWaysByCollectionID(tempCollectionID)
+            --计算在当前AOI所有地块中 需要刷新的地块
+            local needRefreshList= TerrainManager.CalculateAllValuesInANearB(TerrainManager.GetCameraCollectionIDAOIList(),{tempCollectionID})
+            --刷新需要刷新的地块
+            for key, value in pairs(needRefreshList) do
+                DataManager.RefreshWaysByCollectionID(value)
+            end
         end
     end
 end

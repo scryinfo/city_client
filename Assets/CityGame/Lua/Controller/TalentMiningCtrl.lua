@@ -11,7 +11,7 @@ local talentTypeLuaItem = {}
 TalentMiningCtrl.static.Building_PATH = "View/TalentCenterItem/BuildingTalentsItem"
 
 function  TalentMiningCtrl:bundleName()
-    return "TalentMiningPanel"
+    return "Assets/CityGame/Resources/View/TalentMiningPanel.prefab"
 end
 
 function TalentMiningCtrl:initialize()

@@ -13,7 +13,7 @@ local id = nil  -- 类型Id
 local goId = nil --实例Id
 
 function  GameNoticeCtrl:bundleName()
-    return "GameNoticePanel"
+    return "Assets/CityGame/Resources/View/GameNoticePanel.prefab"
 end
 
 function GameNoticeCtrl:initialize()

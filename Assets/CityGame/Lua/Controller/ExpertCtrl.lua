@@ -10,7 +10,7 @@ local ExpertBehaviour
 ExpertCtrl.static.Addition_PATH = "View/TalentCenterItem/PropertyItem"
 
 function  ExpertCtrl:bundleName()
-    return "ExpertPanel"
+    return "Assets/CityGame/Resources/View/ExpertPanel.prefab"
 end
 
 function ExpertCtrl:initialize()

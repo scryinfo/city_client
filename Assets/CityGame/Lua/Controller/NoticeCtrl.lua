@@ -18,7 +18,7 @@ function NoticeCtrl:initialize()
 end
 
 function NoticeCtrl:bundleName()
-    return "NoticePanel"
+    return "Assets/CityGame/Resources/View/NoticePanel.prefab"
 end
 
 function NoticeCtrl:OnCreate(obj )

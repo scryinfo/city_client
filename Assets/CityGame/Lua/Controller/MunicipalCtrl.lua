@@ -21,7 +21,7 @@ function MunicipalCtrl:initialize()
 end
 
 function MunicipalCtrl:bundleName()
-    return "MunicipalPanel";
+    return "Assets/CityGame/Resources/View/MunicipalPanel.prefab";
 end
 
 local BuildMgr

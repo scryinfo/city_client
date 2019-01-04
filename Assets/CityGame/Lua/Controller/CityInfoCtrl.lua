@@ -30,7 +30,7 @@ local tempShow = nil;
 
 
 function  CityInfoCtrl:bundleName()
-    return "CityInfoPanel"
+    return "Assets/CityGame/Resources/View/CityInfoPanel.prefab"
 end
 
 function CityInfoCtrl:initialize()

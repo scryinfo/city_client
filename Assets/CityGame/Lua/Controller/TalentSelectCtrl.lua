@@ -10,7 +10,7 @@ local TalentSelectBehaviour
 TalentSelectCtrl.static.TaientType_PATH = "View/TalentCenterItem/TalentTypeItem"
 
 function  TalentSelectCtrl:bundleName()
-    return "TalentSelectPanel"
+    return "Assets/CityGame/Resources/View/TalentSelectPanel.prefab"
 end
 
 function TalentSelectCtrl:initialize()

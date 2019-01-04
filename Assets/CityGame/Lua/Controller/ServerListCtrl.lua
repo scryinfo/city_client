@@ -12,7 +12,7 @@ local tempTag = nil;
 local Index = nil
 
 function  ServerListCtrl:bundleName()
-    return "ServerListPanel"
+    return "Assets/CityGame/Resources/View/ServerListPanel.prefab"
 end
 
 function ServerListCtrl:initialize()

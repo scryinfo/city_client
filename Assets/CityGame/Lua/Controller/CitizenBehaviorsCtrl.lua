@@ -12,7 +12,7 @@ local rightBg
 local supermaketConsumptionBg
 
 function  CitizenBehaviorsCtrl:bundleName()
-    return "CitizenBehaviorsPanel"
+    return "Assets/CityGame/Resources/View/CitizenBehaviorsPanel.prefab"
 end
 
 function CitizenBehaviorsCtrl:initialize()

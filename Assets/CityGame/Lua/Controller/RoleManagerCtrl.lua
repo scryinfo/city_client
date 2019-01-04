@@ -8,7 +8,7 @@ local RoleManagerBehaviour
 local gameObject
 
 function  RoleManagerCtrl:bundleName()
-    return "RoleManagerPanel"
+    return "Assets/CityGame/Resources/View/RoleManagerPanel.prefab"
 end
 
 function RoleManagerCtrl:initialize()

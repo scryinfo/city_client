@@ -12,7 +12,7 @@ local luaBehaviour;
 GuidBookCtrl.aboutItem_Path="View/GoodsItem/about"
 
 function  GuidBookCtrl:bundleName()
-    return "GuidBookPanel"
+    return "Assets/CityGame/Resources/View/GuidBookPanel.prefab"
 end
 
 function GuidBookCtrl:initialize()

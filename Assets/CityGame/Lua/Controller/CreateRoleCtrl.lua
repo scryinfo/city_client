@@ -8,7 +8,7 @@ local createRoleBehaviour;
 local gameObject;
 
 function  CreateRoleCtrl:bundleName()
-    return "CreateRolePanel"
+    return "Assets/CityGame/Resources/View/CreateRolePanel.prefab"
 end
 
 function CreateRoleCtrl:initialize()

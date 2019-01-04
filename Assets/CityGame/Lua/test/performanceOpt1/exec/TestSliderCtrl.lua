@@ -17,7 +17,7 @@ function TestSliderCtrl:initialize()
 end
 
 function TestSliderCtrl:bundleName()
-    return "TestCycle/TestSliderPanel"
+    return "Assets/CityGame/Resources/View/TestCycle/TestSliderPanel.prefab"
 end
 
 function TestSliderCtrl:OnCreate(obj)

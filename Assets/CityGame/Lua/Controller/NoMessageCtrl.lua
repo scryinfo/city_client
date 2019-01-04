@@ -10,7 +10,7 @@ local NoMessageBehaviour
 
 
 function  NoMessageCtrl:bundleName()
-    return "NoMessagePanel"
+    return "Assets/CityGame/Resources/View/NoMessagePanel.prefab"
 end
 
 function NoMessageCtrl:initialize()

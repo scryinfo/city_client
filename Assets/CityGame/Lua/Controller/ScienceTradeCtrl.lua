@@ -19,7 +19,7 @@ function ScienceTradeCtrl:initialize()
 end
 
 function ScienceTradeCtrl:bundleName()
-    return "ScienceTradePanel";
+    return "Assets/CityGame/Resources/View/ScienceTradePanel.prefab";
 end
 
 function ScienceTradeCtrl:OnCreate(obj)

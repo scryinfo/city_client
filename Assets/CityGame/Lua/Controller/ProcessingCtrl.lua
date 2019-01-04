@@ -7,7 +7,7 @@ function ProcessingCtrl:initialize()
 end
 
 function ProcessingCtrl:bundleName()
-    return "ProcessingPanel";
+    return "Assets/CityGame/Resources/View/ProcessingPanel.prefab";
 end
 
 function ProcessingCtrl:OnCreate(obj)

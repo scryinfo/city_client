@@ -11,7 +11,7 @@ function LabInventionCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabInventionCtrl:bundleName()
-    return "LabInventionPanel"
+    return "Assets/CityGame/Resources/View/LabInventionPanel.prefab"
 end
 function LabInventionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)

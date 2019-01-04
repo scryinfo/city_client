@@ -18,7 +18,7 @@ function BattleCtrl:initialize()
 end
 
 function BattleCtrl:bundleName()
-    return "BattlePanel"
+    return "Assets/CityGame/Resources/View/BattlePanel.prefab"
 end
 
 function BattleCtrl:OnCreate(obj )

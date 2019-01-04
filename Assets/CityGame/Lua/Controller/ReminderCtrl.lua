@@ -12,7 +12,7 @@ function ReminderCtrl:initialize()
 end
 
 function ReminderCtrl:bundleName()
-    return "ReminderPanel";
+    return "Assets/CityGame/Resources/View/ReminderPanel.prefab";
 end
 
 function ReminderCtrl:OnCreate(obj)

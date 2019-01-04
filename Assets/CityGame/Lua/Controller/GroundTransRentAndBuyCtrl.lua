@@ -11,7 +11,7 @@ function GroundTransRentAndBuyCtrl:initialize()
 end
 
 function GroundTransRentAndBuyCtrl:bundleName()
-    return "GroundTransRentAndBuyPanel"
+    return "Assets/CityGame/Resources/View/GroundTransRentAndBuyPanel.prefab"
 end
 
 function GroundTransRentAndBuyCtrl:OnCreate(obj)

@@ -13,7 +13,7 @@ local data
 local Sort = false
 
 function  CityMaterialCtrl:bundleName()
-    return "CityMaterialPanel"
+    return "Assets/CityGame/Resources/View/CityMaterialPanel.prefab"
 end
 
 function CityMaterialCtrl:initialize()

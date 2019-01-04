@@ -11,7 +11,7 @@ function GroundTransSelfCheckInfoCtrl:initialize()
 end
 
 function GroundTransSelfCheckInfoCtrl:bundleName()
-    return "GroundTransSelfCheckInfoPanel"
+    return "Assets/CityGame/Resources/View/GroundTransSelfCheckInfoPanel.prefab"
 end
 
 function GroundTransSelfCheckInfoCtrl:OnCreate(obj)

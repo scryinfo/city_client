@@ -24,7 +24,7 @@ function AdjustProductionLineCtrl:initialize()
 end
 
 function AdjustProductionLineCtrl:bundleName()
-    return "AdjustProductionLinePanel"
+    return "Assets/CityGame/Resources/View/AdjustProductionLinePanel.prefab"
 end
 
 function AdjustProductionLineCtrl:OnCreate(obj)

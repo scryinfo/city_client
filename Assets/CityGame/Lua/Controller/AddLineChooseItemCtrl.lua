@@ -11,7 +11,7 @@ function AddLineChooseItemCtrl:initialize()
 end
 
 function AddLineChooseItemCtrl:bundleName()
-    return "AddLineChooseItemPanel"
+    return "Assets/CityGame/Resources/View/AddLineChooseItemPanel.prefab"
 end
 
 function AddLineChooseItemCtrl:OnCreate(obj)

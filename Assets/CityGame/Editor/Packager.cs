@@ -93,10 +93,6 @@ public class Packager {
     {
         files.Clear();
         string luaPath = "Assets/" + AppConst.AssetDir + "/lua";
-        if (Directory.Exists(luaPath))
-        {
-            Directory.Delete(luaPath, true);
-        }
 
         //生成 Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)

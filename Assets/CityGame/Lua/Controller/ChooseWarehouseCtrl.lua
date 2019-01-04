@@ -11,7 +11,7 @@ function ChooseWarehouseCtrl:initialize()
 end
 
 function ChooseWarehouseCtrl:bundleName()
-    return "ChooseWarehousePanel";
+    return "Assets/CityGame/Resources/View/ChooseWarehousePanel.prefab";
 end
 
 function ChooseWarehouseCtrl:OnCreate(obj)

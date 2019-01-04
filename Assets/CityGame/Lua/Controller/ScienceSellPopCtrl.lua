@@ -19,7 +19,7 @@ function ScienceSellPopCtrl:initialize()
 end
 
 function ScienceSellPopCtrl:bundleName()
-    return "ScienceSellPopPanel";
+    return "Assets/CityGame/Resources/View/ScienceSellPopPanel.prefab";
 end
 
 function ScienceSellPopCtrl:OnCreate(obj)

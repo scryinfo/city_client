@@ -11,7 +11,7 @@ function StopAndBuildCtrl:initialize()
 end
 
 function StopAndBuildCtrl:bundleName()
-    return "StopAndBuildPanel"
+    return "Assets/CityGame/Resources/View/StopAndBuildPanel.prefab"
 end
 
 function StopAndBuildCtrl:OnCreate(obj)

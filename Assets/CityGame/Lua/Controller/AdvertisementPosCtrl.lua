@@ -22,7 +22,7 @@ function AdvertisementPosCtrl:initialize()
 end
 
 function AdvertisementPosCtrl:bundleName()
-    return "AdvertisementPosPanel";
+    return "Assets/CityGame/Resources/View/AdvertisementPosPanel.prefab";
 end
 
 function AdvertisementPosCtrl:OnCreate(obj)

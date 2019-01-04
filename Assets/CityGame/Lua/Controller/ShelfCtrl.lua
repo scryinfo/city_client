@@ -13,7 +13,7 @@ function ShelfCtrl:initialize()
 end
 
 function ShelfCtrl:bundleName()
-    return "ShelfPanel"
+    return "Assets/CityGame/Resources/View/ShelfPanel.prefab"
 end
 
 function ShelfCtrl:OnCreate(obj)

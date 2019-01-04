@@ -141,8 +141,10 @@ end
 
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
-		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		self.logined = true
+		if LoginPanel.textStatus:GetComponent('Text') ~= nil then
+			LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
+			self.logined = true
+		end
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";
 	end

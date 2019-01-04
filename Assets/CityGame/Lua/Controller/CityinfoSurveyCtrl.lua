@@ -11,7 +11,7 @@ local close
 local data
 
 function  CityinfoSurveyCtrl:bundleName()
-    return "CityinfoSurveyPanel"
+    return "Assets/CityGame/Resources/View/CityinfoSurveyPanel.prefab"
 end
 
 function CityinfoSurveyCtrl:initialize()

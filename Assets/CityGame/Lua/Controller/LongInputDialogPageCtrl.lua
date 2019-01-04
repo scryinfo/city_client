@@ -11,7 +11,7 @@ function LongInputDialogPageCtrl:initialize()
 end
 
 function LongInputDialogPageCtrl:bundleName()
-    return "Common/LongInputDialogPagePanel"
+    return "Assets/CityGame/Resources/View/Common/LongInputDialogPagePanel.prefab"
 end
 
 function LongInputDialogPageCtrl:OnCreate(obj)

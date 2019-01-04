@@ -13,7 +13,7 @@ function LineChartCtrl:initialize()
 end
 
 function LineChartCtrl:bundleName()
-    return "LineChartPanel"
+    return "Assets/CityGame/Resources/View/LineChartPanel.prefab"
 end
 
 function LineChartCtrl:Awake(go)

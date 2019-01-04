@@ -11,7 +11,7 @@ function GroundAuctionCtrl:initialize()
 end
 
 function GroundAuctionCtrl:bundleName()
-    return "GroundAuctionPanel"
+    return "Assets/CityGame/Resources/View/GroundAuctionPanel.prefab"
 end
 
 function GroundAuctionCtrl:OnCreate(obj)

@@ -67,6 +67,8 @@ end
 function ConstructCtrl:Hide()
     UIPage.Hide(self)
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
+    CameraMove.ChangeCameraState(TouchStateType.NormalState)
+    Event.Brocast("m_abolishConstructBuild")
 end
 
 
@@ -79,8 +81,8 @@ UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
         end
         DataManager.TempDatas.myGroundObj = {}
         local myPersonData = DataManager.GetMyPersonData()
-        if myPersonData.m_GroundInfos then
-            for key, value in pairs(myPersonData.m_GroundInfos) do
+        if myPersonData.m_groundInfos then
+            for key, value in pairs(myPersonData.m_groundInfos) do
                 local myGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[4000001].prefabRoute)  --已经拍卖
                 local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)  --已经拍卖
                 tempObj.transform.position =Vector3.New(value.x,0,value.y)
@@ -88,7 +90,7 @@ UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
                 table.insert(DataManager.TempDatas.myGroundObj,tempObj)
             end
         else
-            myPersonData.m_GroundInfos = {}
+            myPersonData.m_groundInfos = {}
         end
     end)
 end)

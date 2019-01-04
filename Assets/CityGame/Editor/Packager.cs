@@ -437,11 +437,17 @@ public class Packager {
         curPath = "Assets/CityGame/Resources/Share1";
         AddBuildMapInOne(ref curPath, ref patterns);
 
+        curPath = "Assets/CityGame/Resources/Atlas";
+        AddBuildMapInOne(ref curPath, ref patterns);
+
+        curPath = "Assets/CityGame/Resources/Building";
+        AddBuildMapInOne(ref curPath, ref patterns);
+
         curPath = "Assets/CityGame/Resources/testPng";
         AddBuildMapInOne(ref curPath, ref patterns);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapInOne(ref curPath, ref patterns);
+        AddBuildMapOp(ref curPath, ref patterns);
 
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");

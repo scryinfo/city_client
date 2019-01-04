@@ -19,9 +19,10 @@ end
 
 function ScienceSellHallModel.Awake()
     this:OnCreate();
-    UpdateBeat:Add(this.Update, this)
+    --UpdateBeat:Add(this.Update, this)
     this.Mgr=ScienceItemCreatDeleteMgr:new()
 end
+
 
 function ScienceSellHallModel:OnCreate()
 
@@ -153,24 +154,24 @@ end
 
 
 function ScienceSellHallModel.Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
-       -- Event.Brocast("m_techTradeGetSummary")
-  --  Event.Brocast("m_techTradeAdd",2155003,0,50)
-
-     Event.Brocast("m_techTradeGetDetail",2156003)
-
-      -- Event.Brocast("m_techTradeDel",2155003)
-       -- ct.log("system","m_techTradeGetDetail")
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.O) then
-        -- Event.Brocast("m_techTradeGetSummary")
-         Event.Brocast("m_techTradeAdd",2156003,0,50)
-
-       -- Event.Brocast("m_techTradeGetDetail",2155003)
-
-        -- Event.Brocast("m_techTradeDel",2155003)
-        ct.log("system","m_techTradeAdd")
-    end
+  --  if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.K) then
+  --     -- Event.Brocast("m_techTradeGetSummary")
+  ----  Event.Brocast("m_techTradeAdd",2155003,0,50)
+  --
+  --   Event.Brocast("m_techTradeGetDetail",2156003)
+  --
+  --    -- Event.Brocast("m_techTradeDel",2155003)
+  --     -- ct.log("system","m_techTradeGetDetail")
+  --  end
+  --  if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.O) then
+  --      -- Event.Brocast("m_techTradeGetSummary")
+  --       Event.Brocast("m_techTradeAdd",2156003,0,50)
+  --
+  --     -- Event.Brocast("m_techTradeGetDetail",2155003)
+  --
+  --      -- Event.Brocast("m_techTradeDel",2155003)
+  --      ct.log("system","m_techTradeAdd")
+  --  end
 end
 
 

@@ -42,6 +42,10 @@ function UIBubbleCtrl:_removeListener()
 end
 
 function UIBubbleCtrl.static.RefreshLateUpdate()
+    --Event.Brocast("c_RefreshLateUpdate")
+    if not UIBubbleCtrl.startFlowCam then
+        return
+    end
     Event.Brocast("c_RefreshLateUpdate")
 end
 
@@ -56,6 +60,10 @@ function UIBubbleCtrl:_initGroundAucBubbles()
     end
     local auction = self.m_data
     for i, data in pairs(auction) do
+        if data then
+            UIBubbleCtrl.startFlowCam = true
+        end
+
         if data then
             self:_creatGroundAucBubbleItem(data)
         else

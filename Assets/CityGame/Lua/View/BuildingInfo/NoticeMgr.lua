@@ -13,49 +13,36 @@ function NoticeMgr:initialize()
 end
 
 --创建商品
-function NoticeMgr:_createNotice(insluabehaviour)
+function NoticeMgr:_createNotice(insluabehaviour,MailsData)
     self.behaviour = insluabehaviour
     --测试数据
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if Notice == nil then
+    if MailsData == nil then
         return
     end
-    for i, v in ipairs(Notice) do
+    for i, v in ipairs(MailsData) do
         local uiTab = {}
-        uiTab.header = v.header
-        uiTab.content = v.content
-        uiTab.redirect = v.redirect
-        uiTab.from = v.from
+        uiTab.header = Notice[v.type].header
+        uiTab.content = Notice[v.type].content
+        uiTab.redirect = Notice[v.type].redirect
+        uiTab.state = v.read
+        uiTab.from = "系统消息"
         configTable[i] = uiTab
         --预制的信息`
         local prefabData={}
-        prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
         prefabData._prefab = self:_createNoticePab(NoticeMgr.static.Notice_PATH,GameNoticePanel.leftContent)
         self.ModelDataList[i] = prefabData
 
-        local NoticeLuaItem = NoticeItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab,self.behaviour, self, i)
+        local NoticeLuaItem = NoticeItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab,self.behaviour, self,v.id,v.type)
         if not self.notice then
             self.notice = {}
         end
-        self.notice[i] = NoticeLuaItem
-        NoticeMgr.notice[i] = self.notice[i]
+        self.notice[v.id] = NoticeLuaItem
+        NoticeMgr.notice[v.id] = self.notice[v.id]
         --self.items  存的是Lua实例
-    end
-end
-
---删除商品
-function NoticeMgr:_deleteNotice(id)
-    --清空之前的旧数据
-    destroy(self.items[id].prefab.gameObject);
-    table.remove(self.ModelDataList, id)
-    table.remove(self.items, id)
-    local i = 1
-    for k,v in pairs(self.items)  do
-        self.items[i]:RefreshID(i)
-        i = i + 1
     end
 end
 

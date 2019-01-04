@@ -25,6 +25,9 @@ end
 function createWindows(name,pos)
 	PanelManager:CreateWindow(name,pos);
 end
+function ResourcesImage(path)
+	PanelManager:ResourcesImage(path)
+end
 function child(str)
 	return transform:Find(str);
 end
@@ -56,6 +59,27 @@ function getPriceString(str, intSize, floatSize)
 	return finalStr
 end
 
+--获取容量显示文本，总容量和已用容量颜色不同
+function getColorString(num1,num2,col1,col2)
+    if num1 == nil and num2 == nil then
+        return
+    end
+    local str1 = table.concat({"<color=",col1,">",num1,"</color>"})
+    local str2 = table.concat({"<color=",col2,">",num2,"</color>"})
+    local str = table.concat({str1,"/",str2})
+    return str
+end
+--秒数转换时间格式字符串
+function getTimeString(time)
+	local hours = math.floor(time / 3600)
+	local minutes = math.floor((time % 3600) / 60)
+	local seconds = math.floor(time % 60)
+	if hours < 10 then hours = "0"..hours end
+	if minutes < 10 then  minutes = "0"..minutes end
+	if seconds < 10 then seconds = "0"..seconds end
+	local time = hours..":"..minutes..":"..seconds
+	return time
+end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
 	local r1 = r / 255
@@ -112,6 +136,66 @@ function getFormatUnixTime(time)
 	end
 
 	return tb
+end
+
+function convertTimeForm(second)
+	local data={}
+	data.day  = math.floor(second/86400)
+	data.hour  = math.fmod(math.floor(second/3600), 24)
+	data.min = math.fmod(math.floor(second/60), 60)
+	data.sec  = math.fmod(second, 60)
+	return data
+end
+
+
+--表格排序
+function tableSort(table,gameObject)
+	TableSort.tableSort(table,gameObject)
+end
+--修改表数据
+function UpdataTable(table,gameObject,prefabs)
+	TableSort:UpdataTable(table,gameObject,prefabs)
+end
+--将秒转换成小时分秒的格式，非时间戳
+function getTimeBySec(secTime)
+	local tb = {}
+	secTime = math.floor(secTime)
+	tb.hour = math.floor(secTime / 3600) or 0
+	tb.minute = math.floor((secTime - tb.hour * 3600) / 60) or 0
+	tb.second = math.floor(secTime - tb.hour * 3600 - tb.minute * 60) or 0
+
+	if tb.hour < 10 then
+		tb.hour = "0"..tb.hour
+	end
+	if tb.minute < 10 then
+		tb.minute = "0"..tb.minute
+	end
+	if tb.second < 10 then
+		tb.second = "0"..tb.second
+	end
+
+	return tb
+end
+--根据建筑store获取一个以itemId为key的字典
+function getItemStore(store)
+	local itemTable = {}
+	local storeTemp = ct.deepCopy(store)
+	if storeTemp.locked then
+		for i, itemData in pairs(storeTemp.locked) do
+			itemTable[itemData.key.id] = itemData.n
+		end
+	end
+	if storeTemp.inHand then
+		for i, itemData in pairs(storeTemp.inHand) do
+			local tempCount = itemTable[itemData.key.id]
+			if tempCount then
+				itemTable[itemData.key.id] = itemData.n - tempCount
+			else
+				itemTable[itemData.key.id] = itemData.n
+			end
+		end
+	end
+	return itemTable
 end
 
 function ct.file_exists(path)
@@ -239,4 +323,111 @@ function ct.DestroyTable(tb)
 		GameObject.DestroyImmediate(v, true)
 	end
 	tb = {}
+end
+
+--获取价格显示文本 --整数和小数部分大小不同
+function getPriceString(str, intSize, floatSize)
+	local index = string.find(str, '%.')
+	if not index then
+		return str
+	end
+
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local finalStr = string.format("<size=%d>%s</size><size=%d>%s</size>", intSize, intString, floatSize, floatString)
+
+	return finalStr
+end
+
+currentLanguage={}
+chinese={}
+english={}
+function ReadConfigLanguage()
+	for ID, ch in pairs(Language_Chinese) do
+		chinese[ID]=ch
+	end
+	for ID, en in pairs(Language_English) do
+		english[ID]=en
+	end
+
+   local num=UnityEngine.PlayerPrefs.GetInt("Language")
+	if num==0 then
+		currentLanguage=english
+	elseif num==1 then
+		currentLanguage=chinese
+	end
+end
+
+function SaveLanguageSettings(languageType)
+	if languageType==LanguageType.Chinese then
+		UnityEngine.PlayerPrefs.SetInt("Language",1)
+		currentLanguage=chinese
+	elseif languageType==LanguageType.English then
+		UnityEngine.PlayerPrefs.SetInt("Language",0)
+		currentLanguage=english
+	end
+end
+
+function GetLanguage(key,...)
+	local temp={...}
+	for Id, String in pairs(currentLanguage) do
+		if Id==key then
+          local tempString=String
+			for i = 1, #temp do
+				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+			end
+			return tempString
+		end
+	end
+	return key.."没有设置"
+end
+
+---生成预制
+function creatGoods(path,parent)
+	local prefab = UnityEngine.Resources.Load(path);
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	local rect = go.transform:GetComponent("RectTransform");
+	go.transform:SetParent(parent);--.transform
+	rect.transform.localScale = Vector3.one;
+	rect.transform.localPosition=Vector3.zero
+	return go
+end
+
+function ct.file_saveString(filename, str)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wb")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	file:write(str)
+	if filename ~= nil then
+		file:close()
+	end
+end
+
+function ct.file_readString(filename)
+	local file = assert(io.open(filename, "rb"))
+	local str = file:read("*all")
+	file:close()
+	return str
+end
+
+--字符串分割
+function split(input, delimiter)
+	input = tostring(input)
+	delimiter = tostring(delimiter)
+	if (delimiter=='') then return false end
+	local pos,arr = 0, {}
+	-- for each divider found
+	for st,sp in function() return string.find(input, delimiter, pos, true) end do
+		table.insert(arr, string.sub(input, pos, st - 1))
+		pos = sp + 1
+	end
+	table.insert(arr, string.sub(input, pos))
+	return arr
 end

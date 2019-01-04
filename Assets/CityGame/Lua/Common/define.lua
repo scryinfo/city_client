@@ -43,6 +43,7 @@ CtrlNames = {
 	CreateRole = "CreateRoleCtrl",--创角页面
 
 	Material = "MaterialCtrl", --原料厂
+	Processing = "ProcessingCtrl",  --加工厂
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 	Exchange = "ExchangeCtrl",  --交易所
@@ -75,6 +76,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	Processing = "ProcessingModel",  --加工厂
 	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	tempTransport = "tempTransportModel",   --临时运输
@@ -88,7 +90,11 @@ ModelNames = {
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	Warehouse = "WarehouseModel"
+	Warehouse = "WarehouseModel",
+	friends = "FriendsModel", -- 好友
+	Laboratory = "LaboratoryModel",  --研究所
+	Chat = "ChatModel", -- 聊天
+	GroundTrans = "GroundTransModel",  --土地交易
 }
 
 SYSEVENT =
@@ -186,12 +192,18 @@ BuildingType =
 	MunicipalManage = 3,--市政管理
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
+	TalentCenter = 6 ,--人才中心
 }
 --建筑所属
 Buildingowner=
 {
    master=1,--主人的
    other=2,--其他人的
+}
+
+LanguageType={
+	Chinese=0,
+	English=1,
 }
 
 --仓库 --货架 --运输(通用)
@@ -202,10 +214,19 @@ BuildingInType =
 	Transport = 2,  --运输
 	ProductionLine = 3,  --生产线
 }
+
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {
 	UpdateBuildingName = 0,  --修改建筑名称
+}
+
+--相机移动状态类型
+TouchStateType =
+{
+	NormalState = 0, 	--正常状态（可点击，可拖拽）
+	ConstructState = 1, --修建建筑状态（不可点击，可拖拽）
+	UIState = 2, 		--UI查看状态(不可点击，不可拖拽）
 }
 
 Util = LuaFramework.Util;

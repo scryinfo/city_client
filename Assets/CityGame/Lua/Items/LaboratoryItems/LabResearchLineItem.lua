@@ -4,66 +4,150 @@
 --- DateTime: 2018/11/19 15:18
 ---
 LabResearchLineItem = class('LabResearchLineItem')
-LabResearchLineItem.static.CHANGE_GREEN = "#0B7B16"  --改变量的绿色数值
-LabResearchLineItem.static.CHANGE_RED = "#E42E2E"
+LabResearchLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
+LabResearchLineItem.static.FinishBulbHight = 176  --进度完成时灯泡背景的最高高度
 
 --初始化方法
 function LabResearchLineItem:initialize(data, viewRect)
     self.viewRect = viewRect
-    self.data = data
 
     local viewTrans = self.viewRect
-    self.nameText = viewTrans:Find("Text"):GetComponent("Text")
-    self.nameText.text = data.itemId
-    --self.iconImg = viewTrans:Find("name/iconBg/Image"):GetComponent("Image")
-    --self.collectBtn = viewTrans:Find("name/collectRoot/btn"):GetComponent("Button")
+    self.nameText = viewTrans:Find("topRoot/nameText"):GetComponent("Text")
+    self.levelText = viewTrans:Find("topRoot/levelText"):GetComponent("Text")
+    self.levelUpImg = viewTrans:Find("topRoot/levelText/levelUpImg"):GetComponent("Image")
+    self.itemBtn = viewTrans:Find("itemBtn"):GetComponent("Button")
+    self.closeBtn = viewTrans:Find("topRoot/closeBtn"):GetComponent("Button")
+    self.iconImg = viewTrans:Find("mainRoot/iconImg"):GetComponent("Image")
+    self.staffText = viewTrans:Find("mainRoot/staffRoot/staffText"):GetComponent("Text")
+    self.staffSlider = viewTrans:Find("mainRoot/staffRoot/staffSlider"):GetComponent("Slider")
 
-    --self:_initData()
+    self.progressImgRect = viewTrans:Find("mainRoot/progressRoot/progressImg")
+    self.bottleImg = viewTrans:Find("mainRoot/progressRoot/bottleImg"):GetComponent("Image")
+    self.timeDownText = viewTrans:Find("mainRoot/progressRoot/timeDownText"):GetComponent("Text")
 
-    --self.collectBtn.onClick:RemoveAllListeners()
-    --self.collectBtn.onClick:AddListener(function ()
-    --    self:_clickCollectBtn()
-    --end)
-    --self.exchangeBtn.onClick:RemoveAllListeners()
-    --self.exchangeBtn.onClick:AddListener(function ()
-    --    self:_clickExchnageBtn()
-    --end)
-    --if self.detailBtn ~= nil then
-    --    self.detailBtn.onClick:RemoveAllListeners()
-    --    self.detailBtn.onClick:AddListener(function ()
-    --        self:_clickDetailBtn()
-    --    end)
-    --end
+    self:_initData(data)
+    UpdateBeat:Add(self._update, self)
+
+    self.itemBtn.onClick:RemoveAllListeners()
+    self.itemBtn.onClick:AddListener(function ()
+        ct.OpenCtrl("LabResearchCtrl", self.data, self.viewRect)
+    end)
+    self.closeBtn.onClick:RemoveAllListeners()
+    self.closeBtn.onClick:AddListener(function ()
+        self:_clickDeleteBtn()
+    end)
+    self.staffSlider.onValueChanged:RemoveAllListeners()
+    self.staffSlider.onValueChanged:AddListener(function()
+        self.staffSlider.value = data.workerNum
+        Event.Brocast("c_OpenChangeStaffTip", self.data, self.viewRect)
+    end)
+    Event.AddListener("c_LabLineInfoUpdate", function (data)
+        self:_updateInfo(data)
+    end)
+    Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
+function LabResearchLineItem:_initData(data)
+    self.data = data
+    local goodData = Good[data.itemId]
+    self.nameText.text = goodData.name
+    --self.iconImg.sprite =
+    self.formularData = FormularConfig[0][data.itemId]
+    self.staffText.text = tostring(data.workerNum)
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
+    self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
+    self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, 0)
 
---初始化界面
-function LabResearchLineItem:_initData()
-    ---配合pb数据
-    local data = self.data
-    self:_setCollectState(data.isCollected)
-    self.nameText.text = data.name
-    self.lastPriceText.text = "E"..getPriceString(data.nowPrice, 30, 24)
-    if data.priceChange >= 0 then
-        self.changeText.text = string.format("<color=%s>+%6.2f%%</color>", LabResearchLineItem.static.CHANGE_GREEN, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.one
-        self.lastPriceRedTran.localScale = Vector3.zero
-        local greenPos = self.lastPriceGreenTran.localPosition
-        self.lastPriceGreenTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, greenPos.y, greenPos.z)
+    if not data.roll or data.roll <= 0 then
+        self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
     else
-        self.changeText.text = string.format("<color=%s>%6.2f%%</color>", LabResearchLineItem.static.CHANGE_RED, data.priceChange)
-        --设置箭头位置
-        self.lastPriceGreenTran.localScale = Vector3.zero
-        self.lastPriceRedTran.localScale = Vector3.one
-        local redPos = self.lastPriceRedTran.localPosition
-        self.lastPriceRedTran.localPosition = Vector3.New(-63 + self.lastPriceText.preferredWidth, redPos.y, redPos.z)
+        self.bottleImg.color = Color.white
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
     end
-
-    self.highText.text = "E"..data.highPrice
-    self.lowText.text = "E"..data.lowPrice
-    self.volumeText.text = "E"..data.sumDealedPrice
+    self.startTimeDown = true
+    self.currentTime = os.time()
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
 end
---点击交易按钮
-function LabResearchLineItem:_clickExchnageBtn()
-    ct.OpenCtrl("ExchangeTransactionCtrl", self.data)
+--刷新数据
+function LabResearchLineItem:_updateInfo(data)
+    if data.itemId ~= self.data.itemId then
+        return
+    end
+    --成果展示
+    self.data.id = data.id
+    self.data.roll = data.roll
+    self.data.leftSec = data.leftSec
+    self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum
+    self.staffSlider.value = data.workerNum
+    self.data.run = data.run
+    if data.roll > 0 then
+        self.bottleImg.color = Color.white
+    else
+        self.bottleImg.color = getColorByVector3(LabResearchLineItem.static.NoRollColor)
+    end
+    self.startTimeDown = true
+    --self.currentTime = os.time()
+    self.timeDownText.transform.localScale = Vector3.one
+    if not self.data.run then
+        self.startTimeDown = false
+        self.timeDownText.transform.localScale = Vector3.zero
+    end
+end
+--员工数量改变
+function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
+    if lineId == self.data.id then
+        self.currentTime = os.time()
+        self.data.finishTime = finishTime
+        self.data.totalTime = totalTime
+        self.staffText.text = tostring(workerNum)
+        --self.staffSlider.value = workerNum
+    end
+end
+
+--点击删除按钮
+function LabResearchLineItem:_clickDeleteBtn()
+    local info = {}
+    info.titleInfo = "WARNING"
+    info.contentInfo = "Delete the researchLine?"
+    info.tipInfo = "(The statistical data of brand will be reset!)"
+    info.btnCallBack = function ()
+        Event.Brocast("m_ReqLabDeleteLine", self.data.id)
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
+end
+--倒计时
+function LabResearchLineItem:_update()
+    if self.startTimeDown and self.data.run then
+        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
+        local remainTime = self.data.finishTime - self.currentTime
+        if remainTime < 0 then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
+            return
+        end
+
+        local timeTable = getTimeBySec(remainTime)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.timeDownText.text = timeStr
+        local height = (1 - remainTime / self.data.totalTime) * LabResearchLineItem.static.FinishBulbHight
+        self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, height)
+
+        if self.currentTime >= self.data.finishTime then
+            self.startTimeDown = false
+            self.progressImgRect.sizeDelta = Vector2.New(self.progressImgRect.sizeDelta.x, LabResearchLineItem.static.FinishBulbHight)
+            self.timeDownText.transform.localScale = Vector3.zero
+            self.bottleImg.color = Color.white
+            self.data.roll = self.data.roll + 1
+            self.data.run = false
+            return
+        end
+    end
 end

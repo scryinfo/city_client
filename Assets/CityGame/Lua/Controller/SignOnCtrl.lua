@@ -21,22 +21,28 @@ end
 
 function SignOnCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-
 end
-
+local panel
 --启动事件--
 function SignOnCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
+    panel=SignOnPanel
+
     gameObject = obj;
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    LuaBehaviour:AddClick(SignOnPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    LuaBehaviour:AddClick(SignOnPanel.confirmBtn.gameObject,self.OnClick_confirm,self);
+    LuaBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
+    LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.OnClick_confirm,self);
 
 end
 
-
+local MunicipalModel
 function SignOnCtrl:Refresh()
+    local data=self.m_data
+    MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
+    SignOnPanel.dayilyRentnumText.text=getPriceString("E"..MunicipalModel.SlotList[1].rentPreDay..".0000",30,30)
+    SignOnPanel.dayilyRentnumText.text=getPriceString("E"..(3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,30)
+    SignOnPanel.totalnumText.text=getPriceString("E"..data.totalPrice..".0000",48,36)
 
 end
 
@@ -45,8 +51,14 @@ function SignOnCtrl:OnClick_backBtn()
     UIPage.ClosePage();
 end
 
-function SignOnCtrl:OnClick_confirm()
-    UIPage.ClosePage();
+function SignOnCtrl:OnClick_confirm(ins)
 
-    Event.Brocast("SmallPop","Successful adjustment",57)
+    for i = 1, ins.m_data.acount do
+        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_buySlot',
+                MunicipalPanel.buildingId,MunicipalModel.SlotList[1].id,ins.m_data.dayAcount)
+        table.remove(MunicipalModel.SlotList,1)
+    end
+    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+
+    UIPage.ClosePage();
 end

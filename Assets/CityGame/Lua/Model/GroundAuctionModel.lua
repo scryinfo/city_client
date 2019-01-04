@@ -27,7 +27,7 @@ function GroundAuctionModel.OnCreate()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GroundAuctionModel.n_OnReceiveWinBid)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GroundAuctionModel.n_OnReceiveFailBid)
 
@@ -227,6 +227,7 @@ end
 
 --- 回调 ---
 --收到拍卖中的土地信息
+--[[
 function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     if stream == nil or stream == "" then
         return
@@ -245,6 +246,7 @@ function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     end
     this._getOrderGroundDatas(this.groundAucDatas)
 end
+]]
 
 --当收到所有拍卖的土地信息
 function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
@@ -337,29 +339,29 @@ end
 
 --接到新的meta拍卖信息
 function GroundAuctionModel.n_OnReceiveAddInform(stream)
-    if stream == nil or stream == "" then
-        return
-    end
-
-    local addInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveAddInform: stream == nil")
-    if #addInfo.auction == 0 then
-        return
-    end
-
-    --根据新的整个拍卖meta信息实例化气泡 --需要先清空之前存在的气泡
-    --参照GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo
-    for i, v in ipairs(addInfo.auction) do
-        v.bubbleType = BubblleType.GroundAuction
-        v.func = function(info)
-            if info.bubbleType ~= BubblleType.GroundAuction then
-                return
-            end
-            --GroundAuctionCtrl.OpenPanel(info)  --打开拍卖界面
-            UIPage:ShowPage(GroundAuctionCtrl, info)
-        end
-        GameBubbleManager.CreatBubble(v)
-    end
-
-    --实例化完之后，向服务器请求正在拍卖的土地
-    this.m_ReqRueryMetaGroundAuction()
+    --if stream == nil or stream == "" then
+    --    return
+    --end
+    --
+    --local addInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceiveAddInform: stream == nil")
+    --if #addInfo.auction == 0 then
+    --    return
+    --end
+    --
+    ----根据新的整个拍卖meta信息实例化气泡 --需要先清空之前存在的气泡
+    ----参照GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo
+    --for i, v in ipairs(addInfo.auction) do
+    --    v.bubbleType = BubblleType.GroundAuction
+    --    v.func = function(info)
+    --        if info.bubbleType ~= BubblleType.GroundAuction then
+    --            return
+    --        end
+    --        --GroundAuctionCtrl.OpenPanel(info)  --打开拍卖界面
+    --        UIPage:ShowPage(GroundAuctionCtrl, info)
+    --    end
+    --    GameBubbleManager.CreatBubble(v)
+    --end
+    --
+    ----实例化完之后，向服务器请求正在拍卖的土地
+    --this.m_ReqRueryMetaGroundAuction()
 end

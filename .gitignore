@@ -336,8 +336,278 @@ StreamingAssets
 /Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/ExampleWheelController.cs.meta
 /Assets/CityGame/Lua/Require_Android.lua
 /Assets/CityGame/Lua/Require_Android.lua.meta
+<<<<<<< HEAD
 /Assets/jiesuan.mp3
 /Assets/CityGame.meta
 /Assets/daozhang.mp3
 /Assets/daozhang.mp3.meta
 /Assets/jiesuan.mp3.meta
+=======
+/Assets/CityGame/Lua/View/BuildingInfo/MaterialHomepageInfo.meta~HEAD
+/Assets/CityGame/Lua/View/BuildingInfo/MaterialHomepageInfo.meta~HEAD.meta
+/Assets/CityGame/csharpRes.meta
+/Assets/CityGame/PostProcessing/Editor Resources.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/HistogramCompute.compute
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/HistogramCompute.compute.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/HistogramRender.shader
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/HistogramRender.shader.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/ParadeRender.shader
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/ParadeRender.shader.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/VectorscopeCompute.compute
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/VectorscopeCompute.compute.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/VectorscopeRender.shader
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/VectorscopeRender.shader.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/WaveformCompute.compute
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/WaveformCompute.compute.meta
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/WaveformRender.shader
+/Assets/CityGame/PostProcessing/Editor Resources/Monitors/WaveformRender.shader.meta
+/Assets/CityGame/PostProcessing/Editor Resources/UI.meta
+/Assets/CityGame/PostProcessing/Editor Resources/UI/CurveBackground.shader
+/Assets/CityGame/PostProcessing/Editor Resources/UI/CurveBackground.shader.meta
+/Assets/CityGame/PostProcessing/Editor Resources/UI/MotionBlendingIcon.png
+/Assets/CityGame/PostProcessing/Editor Resources/UI/MotionBlendingIcon.png.meta
+/Assets/CityGame/PostProcessing/Editor Resources/UI/Trackball.shader
+/Assets/CityGame/PostProcessing/Editor Resources/UI/Trackball.shader.meta
+/Assets/CityGame/PostProcessing/Resources.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/COPYING.txt.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_0.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_0.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_1.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_1.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_10.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_10.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_11.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_11.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_12.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_12.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_13.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_13.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_14.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_14.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_15.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_15.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_16.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_16.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_17.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_17.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_18.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_18.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_19.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_19.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_2.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_2.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_20.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_20.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_21.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_21.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_22.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_22.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_23.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_23.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_24.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_24.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_25.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_25.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_26.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_26.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_27.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_27.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_28.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_28.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_29.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_29.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_3.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_3.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_30.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_30.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_31.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_31.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_32.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_32.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_33.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_33.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_34.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_34.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_35.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_35.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_36.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_36.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_37.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_37.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_38.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_38.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_39.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_39.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_4.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_4.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_40.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_40.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_41.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_41.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_42.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_42.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_43.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_43.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_44.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_44.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_45.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_45.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_46.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_46.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_47.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_47.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_48.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_48.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_49.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_49.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_5.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_5.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_50.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_50.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_51.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_51.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_52.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_52.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_53.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_53.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_54.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_54.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_55.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_55.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_56.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_56.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_57.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_57.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_58.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_58.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_59.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_59.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_6.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_6.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_60.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_60.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_61.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_61.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_62.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_62.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_63.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_63.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_7.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_7.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_8.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_8.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_9.png
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LDR_LLL1_9.png.meta
+/Assets/CityGame/PostProcessing/Resources/Bluenoise64/LICENSE.txt.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/ACES.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/ACES.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/AmbientOcclusion.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/AmbientOcclusion.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/AmbientOcclusion.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/AmbientOcclusion.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Blit.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/Blit.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Bloom.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/Bloom.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Bloom.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/Bloom.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/BuiltinDebugViews.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/BuiltinDebugViews.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/ColorGrading.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/ColorGrading.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Common.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/Common.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/DepthOfField.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/DepthOfField.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/DepthOfField.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/DepthOfField.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/DiskKernels.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/DiskKernels.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeAdaptation.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeAdaptation.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeAdaptation.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeAdaptation.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeHistogram.compute
+/Assets/CityGame/PostProcessing/Resources/Shaders/EyeHistogram.compute.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/FXAA.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/FXAA.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/FXAA3.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/FXAA3.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Fog.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/Fog.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/GrainGen.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/GrainGen.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/LutGen.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/LutGen.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/MotionBlur.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/MotionBlur.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/MotionBlur.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/MotionBlur.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/ScreenSpaceRaytrace.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/ScreenSpaceRaytrace.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/ScreenSpaceReflection.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/ScreenSpaceReflection.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/TAA.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/TAA.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/TAA.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/TAA.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Tonemapping.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/Tonemapping.cginc.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/Uber.shader
+/Assets/CityGame/PostProcessing/Resources/Shaders/Uber.shader.meta
+/Assets/CityGame/PostProcessing/Resources/Shaders/UberSecondPass.cginc
+/Assets/CityGame/PostProcessing/Resources/Shaders/UberSecondPass.cginc.meta
+/Assets/CityGame/PostProcessing/Textures.meta
+/Assets/CityGame/PostProcessing/Textures/LUTs.meta
+/Assets/CityGame/PostProcessing/Textures/LUTs/NeutralLUT_16.png
+/Assets/CityGame/PostProcessing/Textures/LUTs/NeutralLUT_16.png.meta
+/Assets/CityGame/PostProcessing/Textures/LUTs/NeutralLUT_32.png
+/Assets/CityGame/PostProcessing/Textures/LUTs/NeutralLUT_32.png.meta
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt.meta
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt00.png
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt00.png.meta
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt01.png
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt01.png.meta
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt02.png
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt02.png.meta
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt03.png
+/Assets/CityGame/PostProcessing/Textures/Lens Dirt/LensDirt03.png.meta
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs.meta
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_BlueRed.tga
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_BlueRed.tga.meta
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_GreenPurple.tga
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_GreenPurple.tga.meta
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_PurpleGreen.tga
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_PurpleGreen.tga.meta
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_RedBlue.tga
+/Assets/CityGame/PostProcessing/Textures/Spectral LUTs/SpectralLut_RedBlue.tga.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/CustomMotionVectorDebugProfile.asset
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/CustomMotionVectorDebugProfile.asset.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/ExampleScene.unity
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/ExampleScene.unity.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/DebugMotionVectors.mat
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/DebugMotionVectors.mat.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/DebugQuad.mat
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/DebugQuad.mat.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/UVChecker.mat
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/UVChecker.mat.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/WheelMotionVectors.mat
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Materials/WheelMotionVectors.mat.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Models.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Models/WheelMovecs.FBX
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Models/WheelMovecs.FBX.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Shaders.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Shaders/CustomMotionVectorTexture.shader
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Shaders/CustomMotionVectorTexture.shader.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/DebugMotionVectors.png
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/DebugMotionVectors.png.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/UVChecker.png
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/UVChecker.png.meta
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/WheelMotionVectors.png
+/Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/WheelMotionVectors.png.meta
+>>>>>>> dbe7d230cbc291f23f2fa0740a208695e3661232

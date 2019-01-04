@@ -7,11 +7,16 @@
 require "View/BuildingInfo/WareHouseGoodsItem"
 local class = require 'Framework/class'
 WareHouseGoodsMgr = class('WareHouseGoodsMgr')
+local index = 1
+local indexAddress = 1   --自己的建筑id
+local lastBox = nil
+local OnClick = false  --是否点击路线面板
+local AddressItems = {}
 
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
 WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
---WareHouseGoodsMgr.static.Line_PATH = "View/ChooseLineItem";
+WareHouseGoodsMgr.static.Line_PATH = "View/GoodsItem/ChooseLineItem";
 
 function WareHouseGoodsMgr:initialize()
 
@@ -24,10 +29,10 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if PlayerTempModel.roleData.bag.inHand == nil then
+    if ServerListModel.inHand == nil then
         return
     end
-    for i, v in pairs(PlayerTempModel.roleData.bag.inHand) do
+    for i, v in pairs(ServerListModel.inHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.number = v.n
@@ -47,6 +52,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
+       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -61,12 +67,23 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
         self.allTspItem = {}
     end
     self.allTspItem[goodsData.id] = TransportLuaItem;
+    if self.allTspItem == nil then
+        return
+    end
     for i, v in pairs(self.allTspItem) do
-        self.allTspItem[i].inputText.onValueChanged:AddListener(function ()
-            if self.allTspItem[i].inputText.text =="" then
-                return
-            end
-            self.allTspItem[i].scrollbar.value =  self.allTspItem[i].inputText.text
+       v.inputText.onValueChanged:AddListener(function ()
+
+           if v.inputText.text =="" then
+               return
+           end
+           v.scrollbar.value =  v.inputText.text
+
+           local n = 0
+           for i, v in pairs(self.allTspItem) do
+               n = n + tonumber(v.inputText.text)
+           end
+            CenterWareHousePanel.tipText.text = n
+            WareHouseGoodsMgr:TransportConfirm()
         end);
     end
     UpdateBeat:Add(self._update, self);
@@ -74,24 +91,58 @@ end
 
 --创建通讯录
 function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
-    self.AddressListIns =insluabehaviour
+    AddressListIns =insluabehaviour
     self.lastBox =nil;
-    for i = 1, 15 do
+    for i, v in ipairs(data) do
         local addressList_prefab = self:_creatGoods(WareHouseGoodsMgr.static.AddressList_PATH,ChooseWarehousePanel.leftcontent)
-        local AddressListLuaItem = AddressListItem:new(data,addressList_prefab,self.AddressListIns,self)
-        if not self.ipaItems then
-            self.ipaItems = {}
+        local AddressListLuaItem = AddressListItem:new(v,addressList_prefab,AddressListIns,self)
+        if not self.AddressItems then
+            self.AddressItems = {}
         end
-        self.ipaItems[i] = AddressListLuaItem
+        self.AddressItems[i] = AddressListLuaItem
+        AddressItems[i] = AddressListLuaItem
     end
 
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(data)
+function WareHouseGoodsMgr:_creatLinePanel(buysBuildings)
+    if buysBuildings ==nil then
+        return
+    end
+    for i, v in pairs(buysBuildings) do
+        for k, z in pairs(v) do
+            if z.store ~= nil then
+                local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,AddressListIns,self,z)
+                if not self.ipaItems then
+                    self.ipaItems = {}
+                end
+                self.ipaItems[index] = LinePaneltLuaItem
+                index = index + 1
+            end
+        end
+    end
+
+end
+
+--创建好友路线面板
+function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings)
+    if buysBuildings == nil then
+        return
+    end
     --local line_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-
-
+    for i, v in pairs(buysBuildings) do
+        if v.store ~= nil then
+            local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+            local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,AddressListIns,self,v)
+            if not self.ipaItems then
+                self.ipaItems = {}
+            end
+            self.ipaItems[index] = LinePaneltLuaItem
+        end
+    end
+    index = index +1
 end
 
 --删除商品
@@ -141,22 +192,52 @@ function WareHouseGoodsMgr:_update()
         if self.allTspItem[i].inputText.text =="" then
             return
         end
-       -- ct.log("rodger_w8_GameMainInterface","[test__update]  测试完毕",self.allTspItem[i].scrollbar.value)
         self.allTspItem[i].inputText.text =  self.allTspItem[i].scrollbar.value;
     end
 end
 
 --通讯录选框
 function WareHouseGoodsMgr:SelectBox(go)
-    if self.lastBox ~= nil then
-        self.lastBox:SetActive(false);
+    if lastBox ~= nil then
+        lastBox.box:SetActive(false);
+        lastBox.onClick = true
     end
     go.box:SetActive(true);
-    self.lastBox = go.box;
+    lastBox = go;
+end
+
+--获取所点击的实例
+function WareHouseGoodsMgr:GetItem()
+    return  lastBox
+end
+
+--清空路线数据
+function WareHouseGoodsMgr:_deleteLinePanel()
+    if self.ipaItems ~= nil then
+        for i, v in pairs(self.ipaItems) do
+            destroy(v.prefab.gameObject)
+        end
+        self.ipaItems = {}
+    end
+end
+
+--清空通讯录与路线数据
+function WareHouseGoodsMgr:_clear()
+    if AddressItems ~= nil then
+        for i, v in pairs(AddressItems) do
+            destroy(v.prefab.gameObject)
+        end
+        AddressItems = {}
+    end
+    WareHouseGoodsMgr:_deleteLinePanel()
+    lastBox = nil
 end
 
 --清空运输数据
 function WareHouseGoodsMgr:ClearAll()
+    if self.allTspItem == nil then
+        return
+    end
     for i, v in pairs(self.allTspItem) do
         destroy(self.allTspItem[i].prefab.gameObject)
     end
@@ -165,14 +246,33 @@ end
 
 --显示所有商品BG,使其都能点击
 function WareHouseGoodsMgr:EnabledAll()
+    if self.items == nil then
+        return
+    end
     for i = 1, #self.items do
         self.items[i]:Enabled();
     end
 end
 
 --显示运输按钮使其可以点击
-function WareHouseGoodsMgr:TransportConfirm(isOnClick)
-    if CenterWareHousePanel.tspContent.childCount>=1 and isOnClick then
+function WareHouseGoodsMgr:TransportConfirm()
+--[[    local isTransport = false
+    if self.allTspItem == nil then
+        return
+    end
+    for i, v in pairs(self.allTspItem) do
+        if v.inputText.text == "0" then
+            isTransport = false
+        else
+            isTransport = true
+        end
+    end]]
+    if CenterWareHousePanel.tspContent.childCount>=1 and OnClick then
         CenterWareHousePanel.transportConfirm:SetActive(false);
     end
+end
+
+--改变点击状态
+function WareHouseGoodsMgr:_onClick()
+    OnClick = true
 end

@@ -8,6 +8,7 @@ require('Framework/UI/UIRoot')
 local typeof = tolua.typeof
 local UIRoot = UIRoot
 UIType = {
+    Bubble = 0,     --气泡
     Normal =1 ,
     Fixed =2 ,
     PopUp =3 ,
@@ -65,7 +66,9 @@ end
 function UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
-    self.m_data = nil
+    if #UIPage.static.m_currentPageNodes <= 1 then
+        CameraMove.MoveOutUILayer()
+    end
 end
 
 function UIPage:Active()
@@ -258,7 +261,9 @@ function  UIPage:ShowPage(inClass,pageData)
 end
 
 function  UIPage:ShowPageInstance(pageInstance,pageData)
-    pageInstance.m_data = pageData;
+    if pageData ~= nil then
+        pageInstance.m_data = pageData;
+    end
     if pageInstance.isAsync then
         pageInstance:Show(pageInstance.OnCreate)
     else

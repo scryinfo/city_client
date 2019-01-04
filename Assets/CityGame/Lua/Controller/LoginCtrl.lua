@@ -25,11 +25,15 @@ end
 
 function LoginCtrl:Refresh()
 	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	self:_initData()
 	if self.m_data ~= nil then
 		self:setPosition(self.m_data.x,self.m_data.y)
 	end
 end
 
+function LoginCtrl:_initData()
+	DataManager.OpenDetailModel(LoginModel,1)
+end
 --启动事件--
 function LoginCtrl:OnCreate(go)
 	UIPage.OnCreate(self,go)

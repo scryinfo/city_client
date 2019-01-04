@@ -15,6 +15,7 @@ protected static class FuncName
     public static readonly string OnEnable = "OnEnable";
     public static readonly string Start = "Start";
     public static readonly string Update = "Update";
+    public static readonly string LateUpdate = "LateUpdate";
     public static readonly string OnDisable = "OnDisable";
     public static readonly string OnDestroy = "OnDestroy";
 };
@@ -74,6 +75,7 @@ protected virtual bool Init()
     AddFunc(FuncName.OnEnable);
     AddFunc(FuncName.Start);
     AddFunc(FuncName.Update);
+    AddFunc(FuncName.LateUpdate);
     AddFunc(FuncName.OnDisable);
     AddFunc(FuncName.OnDestroy);
 
@@ -129,7 +131,12 @@ void Update()
     CallLuaFunction(FuncName.Update, mSelfTable, gameObject);
 }
 
-void OnDisable()
+void LateUpdate()
+{
+    CallLuaFunction(FuncName.LateUpdate, mSelfTable, gameObject);
+}
+
+    void OnDisable()
 {
     if (mSelfTable == null) {
             return;

@@ -18,14 +18,37 @@ function SignOnPanel.Awake(obj)
 end
 
 function SignOnPanel.InitPanel()
-    this.rightRootTran = transform:Find("rightRoot");
-    this.leftRootTran = transform:Find("leftRoot");
-    this.topRootTran = transform:Find("topRoot");
+    this.tittleText=transform:Find("topRoot/bg/TOPIC"):GetComponent("Text")
 
     this.backBtn = transform:Find("topRoot/bg/backBtn");
     this.infoBtn = transform:Find("topRoot/bg/infoBtn");
 
     this.confirmBtn=transform:Find("BG/Image/confirm");
+
+    this.firstpersonIma=transform:Find("leftRoot/Avtar/frame/person")
+    this.firstText=transform:Find("leftRoot/Avtar/dotline/Text"):GetComponent("Text")
+    this.firstnameText=transform:Find("leftRoot/Avtar/name"):GetComponent("Text")
+
+    this.secondpersonIma=transform:Find("rightRoot/Avtar/frame/person")
+    this.secondText=transform:Find("rightRoot/Avtar/dotline/Text"):GetComponent("Text")
+    this.secondnameText=transform:Find("rightRoot/Avtar/name"):GetComponent("Text")
+
+    this.topicText=transform:Find("topic"):GetComponent("Text")
+
+    this.dayilyRentText=transform:Find("agreement/bg/head/startline/daily rent"):GetComponent("Text")
+    this.dayilyRentnumText=transform:Find("agreement/bg/head/startline/daily rent/num"):GetComponent("Text")
+
+    this.depositText=transform:Find("agreement/bg/head/startline (1)/daily rent"):GetComponent("Text")
+    this.depositnumText=transform:Find("agreement/bg/head/startline (1)/daily rent/num"):GetComponent("Text")
+
+    this.totalText=transform:Find("agreement/bg/body/total"):GetComponent("Text")
+    this.totalnumText=transform:Find("agreement/bg/body/total/num"):GetComponent("Text")
+
+    this.beginText=transform:Find("agreement/bg/begintime/daily rent"):GetComponent("Text")
+    this.beginnumText=transform:Find("agreement/bg/begintime/daily rent/num"):GetComponent("Text")
+
+    this.endText=transform:Find("agreement/bg/endtime/daily rent"):GetComponent("Text")
+    this.endnumText=transform:Find("agreement/bg/endtime/daily rent/num"):GetComponent("Text")
 
 end
 --数据初始化

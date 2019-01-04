@@ -351,22 +351,6 @@ UnitTest.Exec("cycle_w11_exchangeModel", "test_cycle_w11_exchangeModel",  functi
     if exchangeModel ~= nil then
         exchangeModel:Awake()
     end
-
-    local exchangeTransactionModel = CtrlManager.GetModel(ModelNames.ExchangeTransaction);
-    if exchangeTransactionModel ~= nil then
-        exchangeTransactionModel:Awake()
-    end
-
-    local exchangeDetailModel = CtrlManager.GetModel(ModelNames.ExchangeDetail);
-    if exchangeDetailModel ~= nil then
-        exchangeDetailModel:Awake()
-    end
-
-    --local playerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
-    --if playerTempModel ~= nil then
-    --    playerTempModel:Awake()
-    --end
-
 end)
 
 UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function ()
@@ -549,7 +533,11 @@ UnitTest.Exec("cycle_w13_laboratory", "test_cycle_w13_laboratory",  function ()
     --    HouseModel:Awake()
     --end
     --ct.OpenCtrl("LaboratoryCtrl", {})
-    ct.OpenCtrl("LabResearchCtrl", {})
+    --ct.OpenCtrl("LabResearchCtrl", {})
+end)
+
+UnitTest.Exec("cycle_w15_laboratory03", "test_cycle_w15_laboratory03",  function ()
+    --ct.OpenCtrl("LaboratoryCtrl", {})
 end)
 
 UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()
@@ -575,6 +563,13 @@ UnitTest.Exec("wk16_abel_ceil", "test_wk16_abel_ceil",  function ()
     local t7 = ct.getIntPart(-2)
 
     local t8 = 8
+end)
+
+UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function ()
+    local groundTransModel = CtrlManager.GetModel(ModelNames.GroundTrans)
+    if groundTransModel ~= nil then
+        --groundTransModel:Awake()
+    end
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

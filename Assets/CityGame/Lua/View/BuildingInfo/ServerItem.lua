@@ -22,7 +22,7 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
 
     self.bg:SetActive(false);
     self.tag:SetActive(false);
-    self.serverName.text = goodsDataInfo
+    self.serverName.text = goodsDataInfo.name
     self._luabehaviour:AddClick(self.serverBtn, self.OnServerBtn, self);
 
 end

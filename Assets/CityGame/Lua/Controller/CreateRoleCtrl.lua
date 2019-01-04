@@ -1,7 +1,8 @@
 -----
 -----
 
-CreateRoleCtrl = class('ServerListCtrl',UIPage)
+CreateRoleCtrl = class('CreateRoleCtrl',UIPage)
+UIPage:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
 local gameObject;
@@ -15,6 +16,14 @@ function CreateRoleCtrl:initialize()
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
+function CreateRoleCtrl:Refresh()
+    self:_initInsData()
+end
+
+function CreateRoleCtrl:_initInsData()
+    DataManager.OpenDetailModel(CreateRoleModel,3)
+
+end
 function CreateRoleCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameObject = obj;
@@ -24,5 +33,6 @@ end
 
 --创建角色
 function CreateRoleCtrl:OnCreateRole()
-   Event.Brocast("m_createNewRole")
+   --Event.Brocast("m_createNewRole")
+    DataManager.DetailModelRpcNoRet(3, 'm_createNewRole')
 end

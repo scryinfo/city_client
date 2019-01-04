@@ -52,6 +52,15 @@ namespace UnityEngine.UI
             prefabSource.InitDiffPrefabData(diffPrefabNameList);
         }
 
+        public void SetLoopNomalPrefabSource(string prefabName)
+        {
+            if (prefabSource == null)
+            {
+                prefabSource = new LoopScrollPrefabSource();
+            }
+            prefabSource.InitPrefabData(prefabName);
+        }
+
         //-----------------------------------------------------------------------------------xyf
 
         [Tooltip("Threshold for preloading")]
@@ -330,7 +339,7 @@ namespace UnityEngine.UI
         {
             if (Application.isPlaying && this.isActiveAndEnabled)
             {
-                itemTypeEnd = itemTypeStart;
+                itemTypeEnd = itemTypeStart = 0;
                 // recycle items if we can
                 for (int i = 0; i < content.childCount; i++)
                 {

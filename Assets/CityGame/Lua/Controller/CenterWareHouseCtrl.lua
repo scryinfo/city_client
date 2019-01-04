@@ -34,19 +34,9 @@ end
 
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
-    self.number = 0;--商品个数
-    if self.m_data.bag.inHand ~= nil then
-        for i, v in pairs(self.m_data.bag.inHand) do
-            self.number =  self.number + tonumber(v.n)
-        end
-    end
-    self.money = 1000;--扩容所需金额
-    self:_initData();
     isShowList = false;
     switchIsShow = false;
     isSelect = true;
-
 
     centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
@@ -73,9 +63,9 @@ function CenterWareHouseCtrl:OnCreate(obj)
 end
 --初始化
 function CenterWareHouseCtrl:_initData()
-    CenterWareHousePanel.number:GetComponent("Text").text = self.number;
-    CenterWareHousePanel.total:GetComponent("Text").text =self.number .. "/" ..  self.totalCapacity;
-    CenterWareHousePanel.slider:GetComponent("Slider").value = self.number/ self.totalCapacity;
+    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
+    CenterWareHousePanel.slider:GetComponent("Slider").maxValue = self.totalCapacity;
+    CenterWareHousePanel.slider:GetComponent("Slider").value = self.number;
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
@@ -87,7 +77,10 @@ function CenterWareHouseCtrl:c_OnDelete(go)
     data.contentInfo = "确认销毁吗"
     data.tipInfo = "物品将永久消失"
     data.btnCallBack = function ()
-        Event.Brocast("m_DeleteItem",buildingId,go.itemId)
+        local dataId = {}
+        dataId.buildingId = buildingId
+        dataId.id = go.itemId
+        DataManager.DetailModelRpcNoRet(6, 'm_DeleteItem',dataId)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
@@ -126,21 +119,40 @@ end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
-    ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",1234)
     UIPage.ClosePage();
 end
 function CenterWareHouseCtrl:Refresh()
-    ct.log("rodger_w8_GameMainInterface","[test_Refresh]  测试完毕",self.m_data)
+    if self.m_data == nil then
+        return
+    end
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+    self.number = 0;--商品个数
+    if self.m_data.bag.inHand ~= nil then
+        for i, v in pairs(self.m_data.bag.inHand) do
+            self.number =  self.number + tonumber(v.n)
+        end
+    end
+    self.money = 1000;--扩容所需金额
+    self:_initData();
+    self:initInsData()
+    CenterWareHousePanel.tipText.text = 0
 end
+
+function CenterWareHouseCtrl:initInsData()
+    DataManager.OpenDetailModel(CenterWareHouseModel,6)
+   -- DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
+end
+
+
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    Event.Brocast("m_extendBag");
+    DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
 end
 
 function CenterWareHouseCtrl:c_GsExtendBag()
-        self.totalCapacity = self.totalCapacity+100
-        self.money = self.money*2;
-        self:_initData();
+    self.totalCapacity = self.totalCapacity+100
+    self.money = self.money*2;
+    self:_initData();
 end
 
 --运输按钮
@@ -158,19 +170,39 @@ end
 
 --开始运输按钮
 function CenterWareHouseCtrl:c_transportConfirmBtn(go)
---[[    ct.OpenCtrl('TransportBoxCtrl')]]
+    local data = {}
+    data.currentLocationName = "中心仓库"--起始地址
+    data.targetLocationName =ChooseWarehouseCtrl:GetName()--目标地址
+    local pos ={}
+    pos.x = 45
+    pos.y = 45
+    data.distance = ChooseWarehouseCtrl:GetDistance(pos)--距离
+    local n = 0
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
-       -- ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",PlayerTempModel.roleData.buys.materialFactory[1].info.id)
-        Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
+        n = n + v.inputText.text
     end
-    WareHouseGoodsMgr:ClearAll()
-    itemId = {}
-    WareHouseGoodsMgr:EnabledAll()
+    data.number = n--数量
+    data.freight = n*1--运费
+    data.total = n*1--总运费
+    data.btnClick = function()
+        for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
+            if v.inputText.text == "0" then
+                Event.Brocast("SmallPop","运输商品个数不能为0",300)
+                return
+            else
+                 Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text)
+            end
+        end
+        CenterWareHouseCtrl:clearAllData()
+    end
+    ct.OpenCtrl('TransportBoxCtrl',data)
 end
 
 --开始运输回调
 function CenterWareHouseCtrl:c_transport(msg)
     local table = self.WareHouseGoodsMgr.items
+    self.number = self.number - msg.item.n;
+    self:_initData()
     for i,v in pairs(table) do
         if v.itemId == msg.item.key.id then
             if v.goodsDataInfo.number == msg.item.n then
@@ -181,13 +213,24 @@ function CenterWareHouseCtrl:c_transport(msg)
             end
         end
     end
+    local data = {}
+    data.titleInfo = "提示"
+    data.contentInfo = "商品开始运输"
+    data.tipInfo = "可在运输线查看详情"
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    CenterWareHousePanel.transportConfirm:SetActive(true);
 end
 
+--关闭运输按钮
 function CenterWareHouseCtrl:c_transportCloseBtn()
     CenterWareHousePanel.addItem:SetActive(true);
     isSelect = true;
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
+    CenterWareHouseCtrl:clearAllData()
+--[[    WareHouseGoodsMgr:ClearAll()
+    itemId = {}
+    WareHouseGoodsMgr:EnabledAll()]]
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)
@@ -198,11 +241,14 @@ end
 function CenterWareHouseCtrl.OnClick_OnName(go)
     CenterWareHousePanel.nowText.text = "By name";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+    local type = CenterWareHouseSortItemType.Name
+    CenterWareHouseCtrl:_getSortItems(type)
 end
 --根据数量排序
 function CenterWareHouseCtrl.OnClick_OnNumber(go)
     CenterWareHousePanel.nowText.text = "By quantity";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
+    CenterWareHouseCtrl:_getSortItems(CenterWareHouseSortItemType.Quantity)
 end
 --根据水平排序
 function CenterWareHouseCtrl.OnClick_OnlevelBtn(go)
@@ -243,15 +289,32 @@ function CenterWareHouseCtrl:OnClick_transportBtn(isShow)
 end
 
 --排序
---[[
-function CenterWareHouseCtrl:_getSortItems(datas, sortType)
-    local tempDatas = datas
-    local sortType = sortType
-    if sortType == CenterWareHouseSortItemType.Name then
-        if isSmaller then
-            table.sort(tempDatas, function (m, n) return m.name > n.name end)
-        else
-            table.sort(tempDatas, function (m, n) return m.name < n.name end)
+function CenterWareHouseCtrl:_getSortItems(type)
+    if type == CenterWareHouseSortItemType.Name then
+        table.sort(WareHouseGoodsMgr.items, function (m, n) return m.name < n.name end )
+        for i, v in ipairs(WareHouseGoodsMgr.items) do
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.content.transform);
+            v.id = i
+            WareHouseGoodsItem:RefreshData(v.goodsDataInfo,i)
         end
     end
-end]]
+    if type == CenterWareHouseSortItemType.Quantity then
+        table.sort(WareHouseGoodsMgr.items, function (m, n) return m.n < n.n end )
+        for i, v in ipairs(WareHouseGoodsMgr.items) do
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(CenterWareHousePanel.content.transform);
+            v.id = i
+            WareHouseGoodsItem:RefreshData(v.goodsDataInfo,i)
+        end
+    end
+
+end
+--清空运输框里的内容
+function CenterWareHouseCtrl:clearAllData()
+    CenterWareHousePanel.tipText.text = 0
+    WareHouseGoodsMgr:ClearAll()
+    itemId = {}
+    WareHouseGoodsMgr:EnabledAll()
+    CenterWareHousePanel.transportConfirm:SetActive(true);
+end

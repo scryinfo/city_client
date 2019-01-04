@@ -16,7 +16,7 @@ function BaseBuildModel:Refresh(data)
     for key, value in pairs(data) do
         self.Data[key] = value
     end
-    DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x)
+    DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
 end
 
 --打开界面
@@ -26,30 +26,32 @@ function BaseBuildModel:OpenPanel()
     local typeID = self.Data.buildingID
     local instanceID = self.Data.id
     if typeID == 1100001 or typeID == 1100002 or typeID == 1100003 then         --原料厂
-        Event.Brocast('m_ReqOpenMaterial',instanceID)
-        ct.OpenCtrl('MaterialCtrl')
+        --Event.Brocast('m_ReqOpenMaterial',instanceID)
+        ct.OpenCtrl("MaterialCtrl", {insId = instanceID})
     elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --加工厂
-        ct.OpenCtrl('ProcessingCtrl')
+        --Event.Brocast('m_ReqOpenProcessing',instanceID)
+        ct.OpenCtrl('ProcessingCtrl',{insId = instanceID})
+
     elseif typeID == 1300001 or typeID == 1300002 or typeID == 1300003 then    --零售店
 
     elseif typeID == 1400001 or typeID == 1400002 or typeID == 1400003 then    --住宅
-        ct.OpenCtrl("HouseCtrl", instanceID)
+        ct.OpenCtrl("HouseCtrl", {insId = instanceID})
     elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --研究所
-
+        ct.OpenCtrl("LaboratoryCtrl", {insId = instanceID})
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
-        Event.Brocast("m_detailPublicFacility",instanceID)
-        ct.OpenCtrl("MunicipalCtrl")
+        --Event.Brocast("m_detailPublicFacility",instanceID)
+        ct.OpenCtrl("MunicipalCtrl",{insId=instanceID})
     end
 end
 
 
+
 function BaseBuildModel:Close()
-    for  key, value in pairs(self.Data) do
-        value = nil
-    end
+    --删除节点
+    DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --清除建筑GameObject
     if self.go ~= nil then
-        Destory(self.go)
+        destroy(self.go)
     end
     self = nil
 end

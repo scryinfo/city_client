@@ -11,7 +11,6 @@ namespace LuaFramework
         //创建建筑
         public void CreateBuild(string name, LuaFunction func = null, object luaObj = null)
         {
-            name = name + "_Build";
             string assetName = name;            
 #if RES_BUNDEL
             int pos = assetName.LastIndexOf('/');

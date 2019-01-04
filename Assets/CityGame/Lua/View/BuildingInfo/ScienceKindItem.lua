@@ -48,7 +48,7 @@ end
 
 function ScienceKindItem:InitData()
     self.nameText.text=self.prefabData.name
-    self.ScoreText.text=self.itemid
+    --self.ScoreText.text=self.itemid
 end
 
 function ScienceKindItem:AddClick()

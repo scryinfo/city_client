@@ -48,7 +48,8 @@ public static class CustomSettings
 
     //在这里添加你要导出注册到lua的类型列表
     public static BindType[] customTypeList =
-    {                
+
+    {   
         //------------------------为例子导出--------------------------------
         //_GT(typeof(TestEventListener)),
         //_GT(typeof(TestProtol)),
@@ -61,7 +62,8 @@ public static class CustomSettings
         //_GT(typeof(TestExport.Space)),
         //-------------------------------------------------------------------        
                         
-        _GT(typeof(Debugger)).SetNameSpace(null),          
+        _GT(typeof(Debugger)).SetNameSpace(null),
+        
 
 #if !USING_DOTWEENING
      
@@ -90,7 +92,8 @@ public static class CustomSettings
         _GT(typeof(Camera)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         _GT(typeof(AudioSource)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         //_GT(typeof(LineRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
-        //_GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),    
+        //_GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)), 
+        
 #else
                                          
         _GT(typeof(Component)),
@@ -103,6 +106,7 @@ public static class CustomSettings
         //_GT(typeof(LineRenderer))
         //_GT(typeof(TrailRenderer))
 #endif        
+         _GT(typeof(PlayerPrefs)),
         _GT(typeof(Behaviour)),
         _GT(typeof(MonoBehaviour)),        
         _GT(typeof(GameObject)),
@@ -173,9 +177,12 @@ public static class CustomSettings
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),
+        _GT(typeof(Scrollbar)),
         _GT(typeof(Scrollbar.ScrollEvent)),
         _GT(typeof(Slider)),
-        
+        _GT(typeof(Slider.SliderEvent)),
+        _GT(typeof(VerticalWrapMode)),
+
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),
         _GT(typeof(LuaHelper)),
@@ -191,6 +198,8 @@ public static class CustomSettings
         _GT(typeof(ResourceManager)),
         _GT(typeof(BuildManager)),
         _GT(typeof(RayManager)),
+        _GT(typeof(GridSort)),
+        _GT(typeof(ChangePreferredHeight)),
 
         //City
         _GT(typeof(City.NetworkInterface)),
@@ -208,6 +217,9 @@ public static class CustomSettings
         _GT(typeof(LuaComponent)),
         _GT(typeof(LoopDropfreshBar)),
 
+        _GT(typeof(UnityEngine.EventSystems.EventSystem)),
+        _GT(typeof(Battle.FOWLogic)),
+        _GT(typeof(FOWSystem)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

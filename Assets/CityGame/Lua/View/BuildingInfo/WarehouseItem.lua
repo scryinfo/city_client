@@ -8,7 +8,12 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.manager = mgr;
     self.id = id;
     self.itemId = goodsDataInfo.key.id;
-    self.name = Material[self.itemId].name;
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.name = Material[self.itemId].name;
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.name = Good[self.itemId].name;
+    end
     self.n = goodsDataInfo.n
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.icon = self.prefab.transform:Find("icon");  --物品Icon

@@ -27,6 +27,8 @@ function ProcessingPanel.InitPanel()
     this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
     this.backBtn = transform:Find("topRoot/backBtn");
     this.headImgBtn = transform:Find("topRoot/headBg/headImgBtn");
+    this.buildInfo = transform:Find("buildInfo");
+    this.stopIconROOT = transform:Find("stopIconROOT");
 end
 --数据初始化
 function ProcessingPanel.InitDate(processingData)

@@ -59,7 +59,8 @@ function AdjustProductionLineCtrl:Refresh()
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
-    go:deleteObjInfo()
+    go:deleteObjInfo();
+    --go:deleteTempTable();
     UIPage.ClosePage();
 end
 
@@ -158,7 +159,13 @@ function AdjustProductionLineCtrl:refreshTime(infoTab)
     end
     for i,v in pairs(infoTab) do
         local remainingNum = v.targetCount - v.nowCount
-        local time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
+        local materialKey,goodsKey = 21,22
+        local time = 0
+        if math.floor(v.itemId / 100000) == materialKey then
+            time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
+        elseif math.floor(v.itemId / 100000) == goodsKey then
+            time = 1 / Good[v.itemId].numOneSec / v.workerNum * remainingNum
+        end
         local timeTab = getTimeString(time)
         if remainingNum > 0 then
             AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
@@ -176,5 +183,19 @@ function AdjustProductionLineCtrl:deleteObjInfo()
             destroy(v.prefab.gameObject);
         end
         AdjustProductionLineCtrl.materialProductionLine = {};
+    end
+end
+--清理临时表
+function AdjustProductionLineCtrl:deleteTempTable()
+    --添加了但是没有生产的
+    if not GoodsUnifyMgr.tempLineItem or GoodsUnifyMgr.tempLineItem == nil then
+        return;
+    else
+        for i,v in pairs(GoodsUnifyMgr.tempLineItem) do
+            destroy(v.prefab.gameObject)
+        end
+        --GoodsUnifyMgr.tempLineUIInfo = {};
+        --GoodsUnifyMgr.tempLinePrefab = {};
+        GoodsUnifyMgr.tempLineItem = {};
     end
 end

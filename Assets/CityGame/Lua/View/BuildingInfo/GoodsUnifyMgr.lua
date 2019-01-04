@@ -10,7 +10,7 @@ GoodsUnifyMgr = class('GoodsUnifyMgr')
 local itemsId
 local LinePrefab = nil
 GoodsUnifyMgr.static.Shelf_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
-GoodsUnifyMgr.static.RetailGoods_PATH = "View/GoodsItem/RetailGoodsItem"  --零售店货架预制
+GoodsUnifyMgr.static.RetailGoods_PATH = "View/GoodsItem/CenterWareHouseItem"  --仓库商品预制
 GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
 GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
@@ -35,12 +35,26 @@ function GoodsUnifyMgr:_creatWarehouseItemGoods(storeData)
     if not storeData then
         return;
     end
+    --local materialKey,goodsKey = 21,22
+    self.warehouseLuaTab = {}
     for i,v in pairs(storeData) do
+        --if math.floor(v.key.id / 100000) == materialKey then
+        --    local prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
+        --    local warehouseLuaItem = WarehouseItem:new(v,prefab,self.behaviour,self,i)
+        --    self.warehouseLuaTab[i] = warehouseLuaItem
+        --    elseif math.floor(v.key.id / 100000) == goodsKey then
+        --    local prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
+        --    --local uiInfo = {}
+        --    --uiInfo.name = Good[v.key.id].name
+        --    --uiInfo.number = v.n
+        --    --uiInfo.itemId = v.key.id
+        --    --uiInfo.producerId = v.key.producerId
+        --    --uiInfo.qty = v.key.qty
+        --    local retailGoodsItem = WarehouseItem:new(v,prefab,self.behaviour,i)
+        --    self.warehouseLuaTab[i] = retailGoodsItem
+        --end
         local prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
         local warehouseLuaItem = WarehouseItem:new(v,prefab,self.behaviour,self,i)
-        if not self.warehouseLuaTab then
-            self.warehouseLuaTab = {}
-        end
         self.warehouseLuaTab[i] = warehouseLuaItem
     end
 end
@@ -99,10 +113,10 @@ end
 function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId)
     itemsId = itemId;
     local configTable = {};
-    local materialKey,goodsKey = 2101,2251
-    if math.floor(itemId / 1000) == materialKey then
+    local materialKey,goodsKey = 21,22
+    if math.floor(itemId / 100000) == materialKey then
         configTable.name = Material[itemId].name
-    elseif math.floor(itemId / 1000) == goodsKey then
+    elseif math.floor(itemId / 100000) == goodsKey then
         configTable.name = Good[itemId].name
     end
     configTable.itemId = itemId;
@@ -117,7 +131,7 @@ function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId)
     GoodsUnifyMgr.tempLinePrefab = {};
     GoodsUnifyMgr.tempLinePrefab[itemId] = prefabData
 
-    local productionLineItem = SmallProductionLineItem:new(self.tempLinePrefab[itemId].uiData,LinePrefab,luabehaviour);
+    local productionLineItem = SmallProductionLineItem:new(self.tempLinePrefab[itemId].uiData,LinePrefab,luabehaviour,nil,self);
     GoodsUnifyMgr.tempLineItem = {}
     GoodsUnifyMgr.tempLineItem[itemId] = productionLineItem
 end
@@ -131,7 +145,7 @@ function GoodsUnifyMgr:_getProductionLine(productionLineData)
             return;
         end
         local prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-        local productionLineLuaItem = SmallProductionLineItem:new(v,prefab,self.behaviour,i);
+        local productionLineLuaItem = SmallProductionLineItem:new(v,prefab,self.behaviour,i,nil);
         AdjustProductionLineCtrl.materialProductionLine[i] = productionLineLuaItem
     end
 end
@@ -172,12 +186,12 @@ end
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
-    local transportLuaItem = TransportItem:new(self.WarehouseModelData[id].uiData,prefabData._prefab,luabehaviour,self,id,itemId);
+    local transportLuaItem = TransportItem:new(id.goodsDataInfo,prefabData._prefab,luabehaviour,self,id.id,id.itemId);
 
     if not self.transportPanelItem then
         self.transportPanelItem = {}
     end
-    self.transportPanelItem[id] = transportLuaItem
+    self.transportPanelItem[id.id] = transportLuaItem
 end
 --仓库右侧删除运输
 function GoodsUnifyMgr:_deleteTransportItem(id)

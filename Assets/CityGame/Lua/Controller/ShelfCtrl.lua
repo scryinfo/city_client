@@ -44,6 +44,7 @@ function ShelfCtrl:Refresh()
     if self.m_data == nil then
         return
     end
+    self.data = self.m_data
     self.luabehaviour = shelf
     self.shelf = self.m_data.shelf
     self.shelf.type = BuildingInType.Shelf
@@ -197,14 +198,15 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
     Event.Brocast("SmallPop","购买成功",300)
 end
 function ShelfCtrl:OnClick_createGoods(go)
-    if go.m_data == nil then
+    if go.data == nil then
         return
     end
-    if go.m_data.buildingType == BuildingType.MaterialFactory then
-        ct.OpenCtrl("WarehouseCtrl",go.m_data)
-    elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-        ct.OpenCtrl("WarehouseCtrl",go.m_data)
-    end
+    ct.OpenCtrl("WarehouseCtrl",go.data)
+    --if go.data.buildingType == BuildingType.MaterialFactory then
+    --    ct.OpenCtrl("WarehouseCtrl",go.data)
+    --elseif go.data.buildingType == BuildingType.ProcessingFactory then
+    --    ct.OpenCtrl("WarehouseCtrl",go.data)
+    --end
 end
 --架子隐藏和显示
 function ShelfCtrl:shelfImgSetActive(table,num)

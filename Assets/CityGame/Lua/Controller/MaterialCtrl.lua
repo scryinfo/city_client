@@ -55,7 +55,7 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     end
 end
 function MaterialCtrl:OnClick_buildInfo(go)
-    Event.Brocast("m_ReqHouseSetSalary1",go.m_data.info.id,tonumber(50))
+    Event.Brocast("m_ReqHouseSetSalary1",go.m_data.info.id,tonumber(100))
     Event.Brocast("m_startBusiness",go.m_data.info.id)
 end
 --更改名字

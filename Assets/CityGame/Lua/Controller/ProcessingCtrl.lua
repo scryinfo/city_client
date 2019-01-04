@@ -20,6 +20,8 @@ function ProcessingCtrl:Awake(go)
     self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+
 
 end
 function ProcessingCtrl:Refresh()
@@ -49,6 +51,11 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     else
         --self.processingToggleGroup:updateInfo(self.m_data)
     end
+end
+
+function ProcessingCtrl:OnClick_buildInfo(go)
+    Event.Brocast("m_ReqHouseSetSalary1",go.m_data.info.id,tonumber(100))
+    Event.Brocast("m_startBusiness",go.m_data.info.id)
 end
 
 --更改名字

@@ -31,7 +31,13 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
     self.productionSlider = self.prefab.transform:Find("productionSlider"):GetComponent("Slider");
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");
 
-    self.nameText.text = Material[homePageProductionLineInfo.itemId].name
+    local materialKey,goodsKey = 21,22
+    if math.floor(homePageProductionLineInfo.itemId / 100000) == materialKey then
+        self.nameText.text = Material[homePageProductionLineInfo.itemId].name
+    elseif math.floor(homePageProductionLineInfo.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[homePageProductionLineInfo.itemId].name
+    end
+    --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
     --self.timeText =
     --self.productionText =
     self.productionSlider.maxValue = homePageProductionLineInfo.targetCount

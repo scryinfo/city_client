@@ -1,8 +1,9 @@
 SmallProductionLineItem = class('SmallProductionLineItem')
 
 --初始化方法
-function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,i)
+function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,i,manager)
     self.prefab = prefab;
+    self.manager = manager;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
     self.companyNameText = self.prefab.transform:Find("Top/companyNameText"):GetComponent("Text");  --品牌名字
@@ -24,7 +25,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 
     if not i then
         self.itemId = goodsDataInfo.itemId
-        self.nameText.text = Material[self.itemId].name
+        self.nameText.text = goodsDataInfo.name
         self.inputNumber.text = 0;
         self.pNumberScrollbar.maxValue = 5000; --先设置5000，每条生产线的最大生产数量是根据仓库容量算的
         self.staffNumberText.text = 0;
@@ -51,9 +52,14 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 end
 --初始化UI信息
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
+    local materialKey,goodsKey = 21,22
     self.id = i
     self.itemId = infoTab.itemId
-    self.nameText.text = Material[self.itemId].name
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+    end
     self.lineId = infoTab.id
     self.time_Slider.maxValue = 100;
     self.time_Slider.value = 0;

@@ -22,7 +22,13 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
     self.numberScrollbar.value = 0;
     self.numberScrollbar.minValue = 0;
     self.numberScrollbar.maxValue = goodsDataInfo.n
-    self.nameText.text = Material[self.itemId].name
+
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+    end
 
     self.numberScrollbar.onValueChanged:AddListener(function ()
         self:scrollbarInfo();

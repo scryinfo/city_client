@@ -355,8 +355,8 @@ function BuildingInfoToggleGroupMgr:_creatRetailShop()
         self.leftData[2] = shelfLuaItem
     else
         --员工  左2
-        --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-        --self.leftData[2] = self:_createStaff(staffToggleData)
+        local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.leftData[2] = self:_createStaff(staffToggleData)
 
         --仓库 左3
         local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)

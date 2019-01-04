@@ -97,9 +97,9 @@ function SocialityManager:SetMyReadChatInfo(index, id)
     end
     if index == 2 then
         if self.unread and self.unread[id] and self.unread[id][1] then
-            self.unread[id] = {}
-            self:SaveFriendsChat()
+            self.unread[id] = nil
         end
+        self:SaveFriendsChat()
     end
 end
 
@@ -152,70 +152,23 @@ end
 
 -- 保存聊天记录
 function SocialityManager:SaveFriendsChat()
-    --local testmsg = {testValue = {1,2,3,8}}
-    --local pMsg1 = assert(pbl.encode("client.CTestMsg", testmsg))
-    --local msg = assert(pbl.decode("client.CTestMsg", pMsg1), "pbl.decode decode failed")
-
-    --local pbl = pbl
-    --local myFriendsChatInfo = {
-    --    {
-    --        id = DataManager.GetMyOwnerID(),
-    --        cRoleCommunication = {
-    --            {
-    --                readCommunication ={
-    --                    {id = DataManager.GetMyOwnerID(),name = "role1", msg = "1111", channelId = "1"},
-    --                    {id = DataManager.GetMyOwnerID(),name = "role2", msg = "22222", channelId = "1"}
-    --                },
-    --                unreadCommunication ={
-    --                    {id = DataManager.GetMyOwnerID(),name = "role3", msg = "1111", channelId = "1"}
-    --                }
-    --            }
-    --        }
-    --    },
-    --    {
-    --        id = DataManager.GetMyOwnerID(),
-    --        cRoleCommunication = {
-    --            {
-    --                readCommunication ={
-    --                    {id = DataManager.GetMyOwnerID(),name = "role4", msg = "444", channelId = "1"},
-    --                    {id = DataManager.GetMyOwnerID(),name = "role5", msg = "555", channelId = "1"}
-    --                },
-    --                unreadCommunication ={
-    --                }
-    --            }
-    --        }
-    --    }
-    --}
-
-    self.mySaveRoleCom.unreadCommunication = {}
+    local tempUnreadCommunication = {}
     if self.unread then
-        for _, a in ipairs(self.unread) do
+        for _, a in pairs(self.unread) do
             for _, c in ipairs(a) do
-                table.insert(self.mySaveRoleCom.unreadCommunication, c)
+                table.insert(tempUnreadCommunication, c)
             end
         end
     end
     for _, n in pairs(self.m_chatByType[2]) do
         if n.unreadChatInfo then
             for _, b in ipairs(n.unreadChatInfo) do
-                table.insert(self.mySaveRoleCom.unreadCommunication, b)
+                table.insert(tempUnreadCommunication, b)
             end
         end
     end
+    self.mySaveRoleCom.unreadCommunication = tempUnreadCommunication
     if self.saveRoleCom then
-        --local isExit = true
-        --for _, v in ipairs(self.saveRoleCom.allRoleCom) do
-        --    if v.id == DataManager.GetMyOwnerID() then
-        --        for _, h in ipairs(myInfoTab.readCommunication) do
-        --            table.insert(v.readCommunication, h)
-        --        end
-        --        for _, u in ipairs(myInfoTab.unreadCommunication) do
-        --            table.insert(v.unreadCommunication, u)
-        --        end
-        --        isExit = false
-        --        break
-        --    end
-        --end
         if self.idIndex then
             self.saveRoleCom.allRoleCom[self.idIndex] = self.mySaveRoleCom
         else

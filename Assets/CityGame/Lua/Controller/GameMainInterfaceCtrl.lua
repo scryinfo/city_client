@@ -54,7 +54,8 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     if buildingInfo.ownerId~=DataManager.GetMyOwnerID() then
         return
     end
-    local data = {workerNum=20,buildInfo= buildingInfo,func=func}
+    local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
+    local data = {workerNum=workerNum,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 end
 

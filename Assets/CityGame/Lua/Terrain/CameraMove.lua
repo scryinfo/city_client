@@ -63,11 +63,7 @@ function CameraMove:InitParameters()
     NormalStateCameraScalePos = nil
 end
 
-<<<<<<< HEAD
-function CameraMove:FixedUpdate(gameObject)
-=======
 function CameraMove:LateUpdate(gameObject)
->>>>>>> dbe7d230cbc291f23f2fa0740a208695e3661232
     --点击时判断是否点击到UI
     if CameraMove.IsClickDownOverUI() then
         self.IsTouchUI = true

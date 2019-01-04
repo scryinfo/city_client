@@ -179,9 +179,6 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.distance = ChooseWarehouseCtrl:GetDistance(pos)--距离
     local n = 0
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
-       -- ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕",PlayerTempModel.roleData.buys.materialFactory[1].info.id)
-       -- Event.Brocast("m_ReqTransport",PlayerTempModel.roleData.bagId,PlayerTempModel.roleData.buys.materialFactory[1].info.id,v.itemId,v.inputText.text)
-        Event.Brocast("c_Transport",ServerListModel.bagId,v.itemId,v.inputText.text)
         n = n + v.inputText.text
     end
     data.number = n--数量

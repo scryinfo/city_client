@@ -261,8 +261,8 @@ end
 
 --中心仓库
 function GameMainInterfaceCtrl:OncenterWareHouse()
-    Event.Brocast("m_opCenterWareHouse")
-    --ct.OpenCtrl("ScienceSellHallCtrl")
+    --Event.Brocast("m_opCenterWareHouse")
+    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
 end
 
 

@@ -29,10 +29,10 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if ServerListModel.bagHand == nil then
+    if ServerListModel.inHand == nil then
         return
     end
-    for i, v in pairs(ServerListModel.bagHand) do
+    for i, v in pairs(ServerListModel.inHand) do
         local uiTab = {}
         uiTab.name = Material[v.key.id].name
         uiTab.number = v.n

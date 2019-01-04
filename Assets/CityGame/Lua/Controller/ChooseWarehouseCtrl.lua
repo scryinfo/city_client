@@ -2,7 +2,6 @@ ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
 UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 
 local isShowList;
-local buildingId;
 local buildingInfo;
 local chooseWarehouse
 local onClick = true

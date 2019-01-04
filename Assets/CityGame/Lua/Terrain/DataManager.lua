@@ -524,12 +524,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_groundInfos = tempData.ground
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
-<<<<<<< HEAD
-    --获取自己拥有的钱
-    PersonDataStack.m_money = tempData.money
-
-=======
->>>>>>> dbe7d230cbc291f23f2fa0740a208695e3661232
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagIds
 
@@ -704,20 +698,6 @@ function DataManager.SetMyGoodLv(tempData)
     end
 end
 
---获取自己拥有的钱
-function DataManager.GetMyMoney()
-    return PersonDataStack.m_money
-end
---增加自己拥有的钱
-function DataManager.SetAddMyMoney(moneyValue)
-    PersonDataStack.m_money = PersonDataStack.m_money + moneyValue
-    return PersonDataStack.m_money
-end
---减少自己拥有的钱
-function DataManager.SetSubtractMyMoney(moneyValue)
-    PersonDataStack.m_money = PersonDataStack.m_money - moneyValue
-    return PersonDataStack.m_money
-end
 --获取自己好友信息
 function DataManager.GetMyFriends()
     --return PersonDataStack.m_friends

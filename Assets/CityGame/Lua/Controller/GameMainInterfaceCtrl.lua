@@ -55,7 +55,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
         return
     end
     local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
-    local data = {workerNum=workerNum,buildInfo= buildingInfo,func=func}
+    local data = {workerNum=20,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 end
 

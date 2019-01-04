@@ -81,7 +81,9 @@ local function ComputingTheComplementSetOfBinA(ListA,ListB)
     end
     return ComplementSetList
 end
---计算计算A集合中在B集合附近的所有值（包括B）--TODO:三层循环太慢,有机会再修改
+
+--计算计算A集合中在B集合附近的所有值（包括B）
+--暂时废弃
 function TerrainManager.CalculateAllValuesInANearB(ListA,ListB)
     local nearList = {}
     local tempBlist

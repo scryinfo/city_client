@@ -946,11 +946,10 @@ function DataManager.n_OnReceiveUnitRemove(stream)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
         if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
             BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
-            --计算在当前AOI所有地块中 需要刷新的地块
-            local needRefreshList= TerrainManager.CalculateAllValuesInANearB(TerrainManager.GetCameraCollectionIDAOIList(),{tempCollectionID})
+            --TODO：计算在当前AOI所有地块中 需要刷新的地块
             --刷新需要刷新的地块
-            for key, value in pairs(needRefreshList) do
-                DataManager.RefreshWaysByCollectionID(value)
+            for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+                DataManager.RefreshWaysByCollectionID( value)
             end
         end
     end

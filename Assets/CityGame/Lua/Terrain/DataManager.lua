@@ -845,6 +845,7 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),DataManager.n_DeleteBlacklist)
 end
 
 --清除所有消息回调
@@ -1061,5 +1062,12 @@ function DataManager.n_OnReceiveDeleteFriend(stream)
     local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_OnReceiveDeleteFriend: stream == nil")
     DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     Event.Brocast("c_OnReceiveDeleteFriend", friendsId)
+end
+
+-- 解除屏蔽返回
+function DataManager.n_DeleteBlacklist(stream)
+    local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_DeleteBlacklist: stream == nil")
+    DataManager.SetMyBlacklist({ id = friendsId.id })
+    Event.Brocast("c_DeleteBlacklist", friendsId)
 end
 ----------

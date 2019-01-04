@@ -63,7 +63,7 @@ function SocialityManager:SetMyChatInfo(chatData)
         table.insert(self.m_chatByType[2][dataId].unreadChatInfo, chatData)
         table.insert(self.m_chatByType[2][dataId].chatInfo, chatData)
         table.insert(self.mySaveRoleCom.readCommunication, chatData)
-        self:SaveFriendsChat(false)
+        self:SaveFriendsChat()
     elseif chatData.channel == "UNKNOWN" then
         local dataId
         if DataManager.GetMyOwnerID() == chatData.id then
@@ -98,7 +98,7 @@ function SocialityManager:SetMyReadChatInfo(index, id)
     if index == 2 then
         if self.unread and self.unread[id] and self.unread[id][1] then
             self.unread[id] = {}
-            self:SaveFriendsChat(true)
+            self:SaveFriendsChat()
         end
     end
 end
@@ -151,7 +151,7 @@ function SocialityManager:SetMyBlacklist(tempData)
 end
 
 -- 保存聊天记录
-function SocialityManager:SaveFriendsChat(isUpdateUnread)
+function SocialityManager:SaveFriendsChat()
     --local testmsg = {testValue = {1,2,3,8}}
     --local pMsg1 = assert(pbl.encode("client.CTestMsg", testmsg))
     --local msg = assert(pbl.decode("client.CTestMsg", pMsg1), "pbl.decode decode failed")
@@ -187,20 +187,18 @@ function SocialityManager:SaveFriendsChat(isUpdateUnread)
     --    }
     --}
 
-    if isUpdateUnread then
-        self.mySaveRoleCom.unreadCommunication = {}
-        if self.unread then
-            for _, a in ipairs(self.unread) do
-                for _, c in ipairs(a) do
-                    table.insert(self.mySaveRoleCom.unreadCommunication, c)
-                end
+    self.mySaveRoleCom.unreadCommunication = {}
+    if self.unread then
+        for _, a in ipairs(self.unread) do
+            for _, c in ipairs(a) do
+                table.insert(self.mySaveRoleCom.unreadCommunication, c)
             end
         end
-        for _, n in pairs(self.m_chatByType[2]) do
-            if n.unreadChatInfo then
-                for _, b in ipairs(n.unreadChatInfo) do
-                    table.insert(self.mySaveRoleCom.unreadCommunication, b)
-                end
+    end
+    for _, n in pairs(self.m_chatByType[2]) do
+        if n.unreadChatInfo then
+            for _, b in ipairs(n.unreadChatInfo) do
+                table.insert(self.mySaveRoleCom.unreadCommunication, b)
             end
         end
     end

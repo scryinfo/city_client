@@ -39,7 +39,7 @@ namespace LuaFramework {
 #endif
             string abName = GetBundleName(ref releativePath);
 
-            if(abName == null)
+            if(abName == "")
             {
                 if (func != null)
                 {

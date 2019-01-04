@@ -53,8 +53,18 @@ namespace LuaFramework {
                     resInitCountAll = m_AllManifest.Length;
                     for (int i = 0; i < m_AllManifest.Length; i++) {
                         string bdname = m_AllManifest[i];
+
+                        if (bdname.Contains("lua/")) {
+                            resInitCountCur++;
+                            continue;                            
+                        }
+
                         LoadAsset<AssetBundleManifest>(bdname, new string[] { bdname }, delegate (UObject[] objs1, AssetBundle ab1) {
                             AssetBundle assetBundle = ab1;
+                            if (!m_LoadedAssetBundles.ContainsKey(bdname)) {
+                                m_LoadedAssetBundles[bdname] = new AssetBundleInfo(assetBundle);
+                            }
+                            
                             string[] assetlist = ab1.GetAllAssetNames();
                             for(int j = 0; j < assetlist.Length; ++j)
                             {

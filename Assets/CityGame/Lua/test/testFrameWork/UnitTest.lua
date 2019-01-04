@@ -190,6 +190,13 @@ function AsyncSequenceTester:excute()
         curSeq.fun(self,curSeq)
     end
 end
+
+function AsyncSequenceTester:printExcuteTime()
+    for i, v in pairs(self.testSquence) do
+        ct.log('system',v.msg..v.excutetime)
+    end
+end
+
 function AsyncSequenceTester:getCurSeq()
     return self.testSquence[self.curPos]
 end

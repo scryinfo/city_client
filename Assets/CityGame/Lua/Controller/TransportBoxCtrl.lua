@@ -42,6 +42,8 @@ function TransportBoxCtrl:refreshUiInfo()
         TransportBoxPanel.transportObj.localScale = Vector3.one
         TransportBoxPanel.transportsObj.localScale = Vector3.zero
         TransportBoxPanel.transportMoney.text = "E"..math.floor(self.m_data.freight)..".0000";
+        TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
+
     end
     --self.buildingId = self.m_data.buildingId;
     --self.buyGood = self.m_data.good;
@@ -49,7 +51,6 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.targetName.text = self.m_data.targetLocationName;
     TransportBoxPanel.distanceText.text = math.floor(self.m_data.distance).."km";
     TransportBoxPanel.numberText.text = self.m_data.number;
-    TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
     TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)

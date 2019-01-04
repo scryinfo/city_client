@@ -45,10 +45,15 @@ function RetailShelfCtrl:Refresh()
     if self.m_data == nil then
         return;
     end
+    self.shelf = self.m_data.shelf
+    self.shelf.type = BuildingInType.RetailShelf
+    self.shelf.isOther = self.m_data.isOther
+    self.shelf.buildingId = self.m_data.info.id
+    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.retailShelf,self.shelf)
     if self.m_data.isOther then
         RetailShelfPanel.retailAddItem.gameObject:SetActive(false);
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
-        --self:shelfImgSetActive()   传零售店的实例表进来  要求余数的大小
+        self:shelfImgSetActive(self.GoodsUnifyMgr.retailShelfs,5)   --传零售店的实例表进来  要求余数的大小
 
     else
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);

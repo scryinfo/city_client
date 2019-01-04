@@ -10,7 +10,7 @@ GoodsUnifyMgr = class('GoodsUnifyMgr')
 local itemsId
 local LinePrefab = nil
 GoodsUnifyMgr.static.Shelf_PATH = "View/GoodsItem/ShelfGoodsItem"  --货架预制
-GoodsUnifyMgr.static.RetailGoods_PATH = "View/GoodsItem/CenterWareHouseItem"  --仓库商品预制
+GoodsUnifyMgr.static.RetailGoods_PATH = "View/GoodsItem/RetailGoodsItem"  --仓库商品预制
 GoodsUnifyMgr.static.Warehouse_PATH = "View/GoodsItem/WarehouseItem"   --仓库预制
 GoodsUnifyMgr.static.Warehouse_Shelf_PATH = "View/GoodsItem/DetailsItem"  --仓库shelf Item
 GoodsUnifyMgr.static.Warehouse_Transport_PATH = "View/GoodsItem/TransportItem"  --仓库transport Item
@@ -28,6 +28,8 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     elseif buildingData.type == BuildingInType.ProductionLine then
         buildingData.type = nil
         self:_getProductionLine(buildingData)
+    elseif buildingData.type == BuildingInType.RetailShelf then
+        self:_creatretailShelfGoods(buildingData.good,buildingData.isOther,buildingData.buildingId)
     end
 end
 --仓库
@@ -80,34 +82,52 @@ function GoodsUnifyMgr:_creatStaffItemGoods(shelfData,goodState,buildingId)
     end
 end
 --零售店货架
-function GoodsUnifyMgr:_creatretailShelfGoods()
-    local configTable = {}
-    for i = 1, 11 do
-        local goodsDataInfo = {}
-        goodsDataInfo.name = "wood"..i
-        goodsDataInfo.brandName = "Addypolly"..i
-        goodsDataInfo.brandValue = math.random(50,100)
-        goodsDataInfo.qualityValue = math.random(50,100)
-        goodsDataInfo.price = math.random(1000,10000)
-        goodsDataInfo.number = math.random(50,99)
-        configTable[i] = goodsDataInfo
-
-        local prefab = {}
-        prefab.uiData = configTable[i]
-        prefab._prefab = self:_creatGoods(GoodsUnifyMgr.static.RetailGoods_PATH,RetailShelfPanel.content)
-        RetailShelfCtrl.retailShelfUIData[i] = prefab
-
-        local retailGoodsItem = RetailGoodsItem:new(RetailShelfCtrl.retailShelfUIData[i].uiData,prefab._prefab,self.behaviour,i)
-        RetailShelfCtrl.retailShelfGoods[i] = retailGoodsItem;
-
-        for k,v in pairs(RetailShelfCtrl.retailShelfGoods) do
-            if k % 5 == 0 then
-                v.shelfImg:SetActive(true);
-            else
-                v.shelfImg:SetActive(false);
-            end
+function GoodsUnifyMgr:_creatretailShelfGoods(shelfData,goodState,buildingId)
+    if not shelfData then
+        return;
+    end
+    for i,v in pairs(shelfData) do
+        local prefab = self:_creatGoods(GoodsUnifyMgr.static.RetailGoods_PATH,RetailShelfPanel.content)
+        local retailGoodsItem = RetailGoodsItem:new(v,prefab,self.behaviour,self,i,goodState,buildingId)
+        if not self.retailShelfs then
+            self.retailShelfs = {}
+        end
+        self.retailShelfs[i] = retailGoodsItem
+    end
+    for k,v in pairs(self.retailShelfs) do
+        if k % 5 == 0 then
+            v.shelfImg:SetActive(true);
+        else
+            v.shelfImg:SetActive(false);
         end
     end
+    --local configTable = {}
+    --for i = 1, 11 do
+    --    local goodsDataInfo = {}
+    --    goodsDataInfo.name = "wood"..i
+    --    goodsDataInfo.brandName = "Addypolly"..i
+    --    goodsDataInfo.brandValue = math.random(50,100)
+    --    goodsDataInfo.qualityValue = math.random(50,100)
+    --    goodsDataInfo.price = math.random(1000,10000)
+    --    goodsDataInfo.number = math.random(50,99)
+    --    configTable[i] = goodsDataInfo
+    --
+    --    local prefab = {}
+    --    prefab.uiData = configTable[i]
+    --    prefab._prefab = self:_creatGoods(GoodsUnifyMgr.static.RetailGoods_PATH,RetailShelfPanel.content)
+    --    RetailShelfCtrl.retailShelfUIData[i] = prefab
+    --
+    --    local retailGoodsItem = RetailGoodsItem:new(RetailShelfCtrl.retailShelfUIData[i].uiData,prefab._prefab,self.behaviour,i)
+    --    RetailShelfCtrl.retailShelfGoods[i] = retailGoodsItem;
+    --
+    --    for k,v in pairs(RetailShelfCtrl.retailShelfGoods) do
+    --        if k % 5 == 0 then
+    --            v.shelfImg:SetActive(true);
+    --        else
+    --            v.shelfImg:SetActive(false);
+    --        end
+    --    end
+    --end
 end
 --添加生产线
 function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId)

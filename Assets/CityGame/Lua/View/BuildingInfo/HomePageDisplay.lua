@@ -17,7 +17,12 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");
     self.moneyText = self.prefab.transform:Find("pricetag/MoneyText"):GetComponent("Text");
 
-    self.nameText.text = Material[homePageShelfInfo.k.id].name
+    local materialKey,goodsKey = 21,22
+    if math.floor(homePageShelfInfo.k.id / 100000) == materialKey then
+        self.nameText.text = Material[homePageShelfInfo.k.id].name
+    elseif math.floor(homePageShelfInfo.k.id / 100000) == goodsKey then
+        self.nameText.text = Good[homePageShelfInfo.k.id].name
+    end
     self.numberText.text = homePageShelfInfo.n
     self.moneyText.text = getPriceString("E"..homePageShelfInfo.price..".0000",15,13)
 end

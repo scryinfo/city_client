@@ -21,6 +21,7 @@ function RetailStoresCtrl:Awake(go)
     self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconROOT.gameObject,self.OnClick_prepareOpen,self);
 
 end
 
@@ -55,9 +56,8 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     end
 end
 
-function RetailStoresCtrl:OnClick_buildInfo(go)
-    Event.Brocast("m_ReqHouseSetSalary1",go.m_data.info.id,tonumber(100))
-    Event.Brocast("m_startBusiness",go.m_data.info.id)
+function RetailStoresCtrl:OnClick_prepareOpen(ins)
+    Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
 function RetailStoresCtrl:OnClick_changeName()

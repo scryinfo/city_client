@@ -1,11 +1,14 @@
 RetailGoodsItem = class('RetailGoodsItem')
 
 --初始化
-function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
+function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,state,buildingId)
     self.id = id;
     self.prefab = prefab;
     self.inluabehaviour = inluabehaviour;
     self.goodsDataInfo = goodsDataInfo;
+    self.manager = mgr
+    self.state = state
+    self.buildingId = buildingId
 
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;
     self.goodsicon = self.prefab.transform:Find("details/goodsicon"):GetComponent("Image");
@@ -20,11 +23,22 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.XBtn = self.prefab.transform:Find("XBtn");
 
     --UI信息赋值
-    self.nameText.text = self.goodsDataInfo.name
-    self.numberText.text = self.goodsDataInfo.number
-    self.brandName.text = self.goodsDataInfo.brandName
-    self.brandValue.text = self.goodsDataInfo.brandValue
-    self.qualityValue.text = self.goodsDataInfo.qualityValue
+    self.nameText.text = Good[self.goodsDataInfo.k.id].name
+    self.numberText.text = self.goodsDataInfo.n
+    self.brandName.text = "Addypolly"
+    self.brandValue.text = "0"
+    self.qualityValue.text = self.goodsDataInfo.k.qty
     self.moneyText.text = "E"..self.goodsDataInfo.price..".0000"
 
+    self:initializeUiState()
+end
+--初始化UI状态
+function RetailGoodsItem:initializeUiState()
+    if self.state then
+        self.XBtn.transform.localScale = Vector3.New(0,0,0);
+        self.detailsBtn.transform.localScale = Vector3.New(0,0,0);
+    else
+        self.XBtn.transform.localScale = Vector3.New(1,1,1);
+        self.detailsBtn.transform.localScale = Vector3.New(1,1,1);
+    end
 end

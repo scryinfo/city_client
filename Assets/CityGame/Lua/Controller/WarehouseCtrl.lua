@@ -149,7 +149,8 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
     WarehouseCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.WarehouseItems)
 end
 --跳转选择仓库界面
-function WarehouseCtrl:OnClick_transportopenBtn()
+function WarehouseCtrl:OnClick_transportopenBtn(go)
+    go:deleteObjInfo()
     ct.OpenCtrl("ChooseWarehouseCtrl")
 end
 --确定上架
@@ -159,16 +160,16 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             if not go.m_data.shelf.good then
-                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                 return;
             else
                 for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
-                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
+                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
                 end
             end
-            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text)
+            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
         end
     end
 end
@@ -188,7 +189,8 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     end
     --local targetBuildingId = DataManager.GetMyOwnerID()
     for i,v in pairs(go.GoodsUnifyMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",go.m_data.info.id,ServerListModel.bagId,v.itemId,v.inputNumber.text)
+        Event.Brocast("m_ReqTransport",go.m_data.info.id,ServerListModel.bagId,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --    Event.Brocast("c_Transport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.producerId,v.qty)
     end
 end
 --运输回调执行

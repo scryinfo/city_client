@@ -188,11 +188,15 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                 ins.updateAcount=#self.slotList[i]
                 ins.slots=self.slotList[i]
                 ins.days=self.slotList[i][1].days
-                --剩余时间
-                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-                local remainTime= getFormatUnixTime(endTime-os.time())
-                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-                ins.remainTime=endTime
+                ---结束点时间
+                local begTs=getFormatUnixTime( tonumber(string.sub(tostring(self.slotList[i][1].beginTs),1,10)))
+                begTs.day= begTs.day+self.slotList[i][1].days
+                local endTs=os.time(begTs)
+                ---剩余时间
+                local temp=os.date(endTs-os.time())
+                local remainTime= convertTimeForm(temp)
+                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.min..":"..remainTime.sec --"h"
+                ins.remainTime=temp
             else
                 ins.prefab:SetActive(false)
                 ins.remainTime=nil
@@ -209,11 +213,15 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                 ins.updateAcount=#self.slotList[i]
                 ins.slots=self.slotList[i]
                 ins.days=self.slotList[i][1].days
-                --剩余时间
-                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-                local remainTime= getFormatUnixTime(endTime-os.time())
-                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-                ins.remainTime=endTime
+                ---结束点时间
+                local begTs=getFormatUnixTime( tonumber(string.sub(tostring(self.slotList[i][1].beginTs),1,10)))
+                begTs.day= begTs.day+self.slotList[i][1].days
+                local endTs=os.time(begTs)
+                ---剩余时间
+                local temp=os.date(endTs-os.time())
+                local remainTime= convertTimeForm(temp)
+                ins.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.min..":"..remainTime.sec --"h"
+                ins.remainTime=temp
             else
                 self.ItemCreatDeleteMgr:_creataddItem({})
                 self.ItemCreatDeleteMgr.addItemInSList[i].numText.text=#self.slotList[i]--刷新数量
@@ -223,11 +231,15 @@ function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
                 self.ItemCreatDeleteMgr.addItemInSList[i].updateAcount=#self.slotList[i]
                 self.ItemCreatDeleteMgr.addItemInSList[i].slots=self.slotList[i]
                 self.ItemCreatDeleteMgr.addItemInSList[i].days=self.slotList[i][1].days
-                --剩余时间
-                local endTime=(self.slotList[i][1].days)*86400+ string.sub(tostring(self.slotList[i][1].beginTs),1,10)
-                local remainTime= getFormatUnixTime(endTime-os.time())
-                self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
-                self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=endTime
+                ---结束点时间
+                local begTs=getFormatUnixTime(tonumber(string.sub(tostring(self.slotList[i][1].beginTs),1,10)))
+                begTs.day= begTs.day+self.slotList[i][1].days
+                local endTs=os.time(begTs)
+                ---剩余时间
+                local temp=os.date(endTs-os.time())
+                local remainTime= convertTimeForm(temp)
+                self.ItemCreatDeleteMgr.addItemInSList[i].timeText.text=remainTime.hour+24*(remainTime.day).. ":"..remainTime.min..":"..remainTime.sec --"h"
+                self.ItemCreatDeleteMgr.addItemInSList[i].remainTime=temp
             end
         end
     end

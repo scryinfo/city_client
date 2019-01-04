@@ -42,7 +42,6 @@ function TerrainManager.ReMove()
     Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
 end
 
-
 --根据建筑数据生成GameObject
 --参数：
 --  datas：数据table集合( 一定包含数据有：坐标==》  x,y  ,建筑类型id==》 buildId)
@@ -50,6 +49,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
     if not datas then
         return
     end
+    local RefreshCollectionList = {}
     for key, value in pairs(datas) do
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
@@ -57,11 +57,11 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
     end
-    --TODO：（1.应该初始化相机位置2.向服务器发送相机位置）
-
-    --TODO:刷新数据内的数据
-    if CameraCollectionID  and CameraCollectionID == -1 then
-        DataManager.RefreshWaysByCollectionID( CameraCollectionID)
+    --刷新AOI内的数据
+    if CameraCollectionID ~= nil and CameraCollectionID == -1 then
+        for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+            DataManager.RefreshWaysByCollectionID( value)
+        end
     end
 end
 
@@ -102,7 +102,6 @@ function TerrainManager.CalculateAllValuesInANearB(ListA,ListB)
     end
     return nearList
 end
-
 
 function TerrainManager.GetCameraCollectionIDAOIList()
     return CalculationAOICollectionIDList(CameraCollectionID)
@@ -170,24 +169,21 @@ function TerrainManager.SendMoveToServer(tempBlockID)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
-
 --应该每帧调用传camera的位置
 function TerrainManager.Refresh(pos)
     local tempBlockID = TerrainManager.PositionTurnBlockID(pos)
     local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
-    --ct.log("Allen_w9","tempCollectionID===============>"..tempCollectionID)
     if CameraCollectionID ~= tempCollectionID then
         --CalculateAOI,删除无用信息
         CalculateAOI(CameraCollectionID,tempCollectionID)
         CameraCollectionID = tempCollectionID
-        --DataManager.RefreshWaysByCollectionID( CameraCollectionID)
         --向服务器发送新的所在地块ID
         TerrainManager.SendMoveToServer(tempBlockID)
+
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
         UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end
 end
-
 
 --通过位置坐标转化为位置ID
 --pos:Vector3
@@ -217,16 +213,7 @@ function TerrainManager.BlockIDTurnPosition(id)
     end
     return idPos
 end
---[[过时
---通过位置ID转化为地块区域坐标
---注：z为列，x为行
-function TerrainManager.PositionTurnBlockCollectionID(pos)
-    local tempPosition = Vector2.New( 0, 0)
-    tempPosition.x = math.ceil(pos.z / blockRange.x)
-    tempPosition.y = math.ceil(pos.x / blockRange.y)
-    return tempPosition
-end
---]]
+
 --通过BlcokID转化为BlockCollectionID
 function TerrainManager.BlockIDTurnCollectionID(blockID)
     if blockID == nil then
@@ -238,7 +225,7 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     return X +  Y
 end
 
-    --通过BlcokID转化为BlockCollection坐标
+--通过BlcokID转化为BlockCollection坐标
 function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if blockID == nil then
         return{ x = -1,y = -1}
@@ -248,7 +235,7 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     return{ x = X,y = Y}
 end
 
-    --通过BlockCollectionID转化为BlcokID
+--通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
     local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
     local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x
@@ -272,9 +259,6 @@ local function CreateConstructBuildSuccess(go,table)
     --一定要放在数据刷新完后打开
     ct.OpenCtrl('ConstructSwitchCtrl')
 end
-
-
-
 
 --取消建筑的修建
 function TerrainManager.AbolishConstructBuild()
@@ -316,7 +300,6 @@ function TerrainManager.TouchBuild(MousePos)
         end
     end
 end
-
 
 UnitTest.TestBlockStart()
 

@@ -5,7 +5,7 @@ PlayerBuildingBaseData=
         ["typeName"] ="原料厂",
         ["des"] ="小型原料厂的说明",
         ["imgPath"] ="小型原料厂的图片位置",
-        ["prefabRoute"] = "Build/MaterialBuilding_1x1",
+        ["prefabRoute"] = "Building/MaterialBuilding_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -21,14 +21,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1100002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="原料厂",
         ["des"] ="中型原料厂的说明",
         ["imgPath"] ="中型原料厂的图片位置",
-        ["prefabRoute"] = "Build/MaterialBuilding_2x2",
+        ["prefabRoute"] = "Building/MaterialBuilding_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -44,14 +45,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1100003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="原料厂",
         ["des"] ="大型原料厂的说明",
         ["imgPath"] ="大型原料厂的图片位置",
-        ["prefabRoute"] = "Build/MaterialBuilding_3x3",
+        ["prefabRoute"] = "Building/MaterialBuilding_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -67,14 +69,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1200001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="加工厂",
         ["des"] ="小型加工厂的说明",
         ["imgPath"] ="小型加工厂的图片位置",
-        ["prefabRoute"] = "Build/Factory_1x1",
+        ["prefabRoute"] = "Building/Factory_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -90,14 +93,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1200002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="加工厂",
         ["des"] ="中型加工厂的说明",
         ["imgPath"] ="中型加工厂的图片位置",
-        ["prefabRoute"] = "Build/Factory_2x2",
+        ["prefabRoute"] = "Building/Factory_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -113,14 +117,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1200003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="加工厂",
         ["des"] ="大型加工厂的说明",
         ["imgPath"] ="大型加工厂的图片位置",
-        ["prefabRoute"] = "Build/Factory_3x3",
+        ["prefabRoute"] = "Building/Factory_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -136,14 +141,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1300001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="零售店",
         ["des"] ="小型零售店的说明",
         ["imgPath"] ="小型零售店的图片位置",
-        ["prefabRoute"] = "Build/SuperMarket_1x1",
+        ["prefabRoute"] = "Building/SuperMarket_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -159,14 +165,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1300002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="零售店",
         ["des"] ="中型零售店的说明",
         ["imgPath"] ="中型零售店的图片位置",
-        ["prefabRoute"] = "Build/SuperMarket_2x2",
+        ["prefabRoute"] = "Building/SuperMarket_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -182,14 +189,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1300003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="零售店",
         ["des"] ="大型零售店的说明",
         ["imgPath"] ="大型零售店的图片位置",
-        ["prefabRoute"] = "Build/SuperMarket_3x3",
+        ["prefabRoute"] = "Building/SuperMarket_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -205,14 +213,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1400001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="住宅",
         ["des"] ="小型住宅的说明",
         ["imgPath"] ="小型住宅的图片位置",
-        ["prefabRoute"] = "Build/HomeHouse_1x1",
+        ["prefabRoute"] = "Building/HomeHouse_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -228,14 +237,15 @@ PlayerBuildingBaseData=
         ["npc"] =140,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1400002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="住宅",
         ["des"] ="中型住宅的说明",
         ["imgPath"] ="中型住宅的图片位置",
-        ["prefabRoute"] = "Build/HomeHouse_2x2",
+        ["prefabRoute"] = "Building/HomeHouse_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -251,14 +261,15 @@ PlayerBuildingBaseData=
         ["npc"] =630,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1400003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="住宅",
         ["des"] ="大型住宅的说明",
         ["imgPath"] ="大型住宅的图片位置",
-        ["prefabRoute"] = "Build/HomeHouse_3x3",
+        ["prefabRoute"] = "Building/HomeHouse_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -274,14 +285,15 @@ PlayerBuildingBaseData=
         ["npc"] =1580,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1500001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="研究所",
         ["des"] ="小型研究所的说明",
         ["imgPath"] ="小型研究所的图片位置",
-        ["prefabRoute"] = "Build/Techo_1x1",
+        ["prefabRoute"] = "Building/TechnologyBuilding_1X1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -297,14 +309,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1500002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="研究所",
         ["des"] ="中型研究所的说明",
         ["imgPath"] ="中型研究所的图片位置",
-        ["prefabRoute"] = "Build/Techo_2x2",
+        ["prefabRoute"] = "Building/TechnologyBuilding_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -320,14 +333,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1500003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="研究所",
         ["des"] ="大型研究所的说明",
         ["imgPath"] ="大型研究所的图片位置",
-        ["prefabRoute"] = "Build/Techo_3x3",
+        ["prefabRoute"] = "Building/TechnologyBuilding_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -343,14 +357,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1600001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="公园",
         ["des"] ="小型公园的说明",
         ["imgPath"] ="小型公园的图片位置",
-        ["prefabRoute"] = "Build/Park_1x1",
+        ["prefabRoute"] = "Building/Park_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -366,14 +381,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1600002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="公园",
         ["des"] ="中型公园的说明",
         ["imgPath"] ="中型公园的图片位置",
-        ["prefabRoute"] = "Build/Park_2x2",
+        ["prefabRoute"] = "Building/Park_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -389,14 +405,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.42,1.7,1.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1600003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="公园",
         ["des"] ="大型公园的说明",
         ["imgPath"] ="大型公园的图片位置",
-        ["prefabRoute"] = "Build/Park_3x3",
+        ["prefabRoute"] = "Building/Park_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -412,14 +429,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.34,2.5,2.9},
         ["workTime"] = {[1]={0,24}},
-        ["salary"] = 55
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [1800001] ={
         ["sizeName"] ="小型",
         ["typeName"] ="人才中心",
         ["des"] ="小型人才中心的说明",
         ["imgPath"] ="小型人才中心的图片位置",
-        ["prefabRoute"] = "Build/Park_1x1",
+        ["prefabRoute"] = "Building/Park_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =1,
         ["y"] =1,
@@ -435,14 +453,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.5,0,0.5},
+        ["ScalePos"] = {4,4,-4}
     },
     [1800002] ={
         ["sizeName"] ="中型",
         ["typeName"] ="人才中心",
         ["des"] ="中型人才中心的说明",
         ["imgPath"] ="中型人才中心的图片位置",
-        ["prefabRoute"] = "Build/Park_2x2",
+        ["prefabRoute"] = "Building/Park_2x2",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =2,
         ["y"] =2,
@@ -458,14 +477,15 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
+        ["UICenterPos"] = {0.7,0,1.3},
+        ["ScalePos"] = {5,5,-5}
     },
     [1800003] ={
         ["sizeName"] ="大型",
         ["typeName"] ="人才中心",
         ["des"] ="大型人才中心的说明",
         ["imgPath"] ="大型人才中心的图片位置",
-        ["prefabRoute"] = "Build/Park_3x3",
+        ["prefabRoute"] = "Building/Park_3x3",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
         ["x"] =3,
         ["y"] =3,
@@ -481,21 +501,8 @@ PlayerBuildingBaseData=
         ["npc"] =-1,
         ["deviationPos"] = {0.13,1.2,0.75},
         ["workTime"] = {[1]={8,4},[2]={14,4}},
-        ["salary"] = 55
-    },
-    [3000001] ={
-        ["prefabRoute"] = "Build/MaterialBuilding_1x1",
-        ["LuaRoute"]  = "Terrain/ArchitectureView",
-        ["x"] =1,
-        ["y"] =1,
-        ["deviationPos"] = {0.5,0.5,0.05}
-    },
-    [3000002] ={
-        ["prefabRoute"] = "Build/MaterialBuilding_1x1",
-        ["LuaRoute"]  = "Terrain/ArchitectureView",
-        ["x"] =1,
-        ["y"] =1,
-        ["deviationPos"] = {0.5,0.5,0.05}
+        ["UICenterPos"] = {1,0,2},
+        ["ScalePos"] = {6,6,-6}
     },
     [4000001] ={
         ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块

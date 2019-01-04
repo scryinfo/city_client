@@ -20,39 +20,39 @@ end
 function FriendsCtrl:Awake(go)
     ct.log("tina_w7_friends", "FriendsCtrl:Awake")
     --模拟数据
-    FriendsCtrl.data =
-    {
-        {
-            { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Avene", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
-            { name = "TherMale", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
-            { name = "Avene", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
-            { name = "TherMale", company = "Labrador", sign = "Everything i do i wanna put a shine on it"}
-        },
-        {
-            { name = "Labrador", number = "122/300"},
-            { name = "Scry1", number = "110/300"},
-            { name = "Scry2", number = "66/300"},
-            { name = "Scry3", number = "77/300"},
-            { name = "Scry4", number = "88/300"},
-            { name = "Labrador", number = "122/300"},
-            { name = "Scry1", number = "110/300"},
-            { name = "Scry2", number = "66/300"},
-            { name = "Scry3", number = "77/300"},
-            { name = "Scry4", number = "88/300"}
-        }
-    }
+    --FriendsCtrl.data =
+    --{
+    --    {
+    --        { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Avene", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "TherMale", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Edith", company = "Scry1", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Colin", company = "Scry2", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Jacob", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "Avene", company = "Labrador", sign = "Everything i do i wanna put a shine on it"},
+    --        { name = "TherMale", company = "Labrador", sign = "Everything i do i wanna put a shine on it"}
+    --    },
+    --    {
+    --        { name = "Labrador", number = "122/300"},
+    --        { name = "Scry1", number = "110/300"},
+    --        { name = "Scry2", number = "66/300"},
+    --        { name = "Scry3", number = "77/300"},
+    --        { name = "Scry4", number = "88/300"},
+    --        { name = "Labrador", number = "122/300"},
+    --        { name = "Scry1", number = "110/300"},
+    --        { name = "Scry2", number = "66/300"},
+    --        { name = "Scry3", number = "77/300"},
+    --        { name = "Scry4", number = "88/300"}
+    --    }
+    --}
     self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --好友
     self.friendsSource.mProvideData = FriendsCtrl.static.FriendsProvideData
     self.friendsSource.mClearData = FriendsCtrl.static.FriendsClearData
-    self.groupSource = UnityEngine.UI.LoopScrollDataSource.New()  --群组
-    self.groupSource.mProvideData = FriendsCtrl.static.GroupProvideData
-    self.groupSource.mClearData = FriendsCtrl.static.GroupClearData
+    --self.groupSource = UnityEngine.UI.LoopScrollDataSource.New()  --群组
+    --self.groupSource.mProvideData = FriendsCtrl.static.GroupProvideData
+    --self.groupSource.mClearData = FriendsCtrl.static.GroupClearData
 end
 
 function FriendsCtrl:OnCreate(go)
@@ -60,7 +60,7 @@ function FriendsCtrl:OnCreate(go)
     --调用基类方法处理实例的数据
     UIPage.OnCreate(self, go)
     --初始化管理器
-    FriendsCtrl.friendsMgr = FriendsMgr:new()
+    --FriendsCtrl.friendsMgr = FriendsMgr:new()
 
     --添加UI事件点击监听
     FriendsCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
@@ -72,18 +72,18 @@ function FriendsCtrl:OnCreate(go)
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.blacklistBtn, self.OnBlacklist, self)
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.addFriendsBtn, self.OnAddFriends, self)
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.applicationlistBtn, self.OnApplicationlist, self)
-    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.groupManageBtn, self.OnGroupManage, self)
-    FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.startGroupBtn, self.OnStartGaroup, self)
+    --FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.groupManageBtn, self.OnGroupManage, self)
+    --FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.startGroupBtn, self.OnStartGaroup, self)
 
-    FriendsPanel.friendsToggle.onValueChanged:AddListener(function (isOn)
-        self:_friendsToggleValueChange(isOn)
-    end)
+    --FriendsPanel.friendsToggle.onValueChanged:AddListener(function (isOn)
+    --    self:_friendsToggleValueChange(isOn)
+    --end)
+    --
+    --FriendsPanel.groupToggle.onValueChanged:AddListener(function (isOn)
+    --    self:_groupToggleValueChange(isOn)
+    --end)
 
-    FriendsPanel.groupToggle.onValueChanged:AddListener(function (isOn)
-        self:_groupToggleValueChange(isOn)
-    end)
-
-    FriendsCtrl.friendsMgr:_createFriendsAndGroupItems(FriendsCtrl.luaBehaviour, FriendsCtrl.data)
+    --FriendsCtrl.friendsMgr:_createFriendsAndGroupItems(FriendsCtrl.luaBehaviour, FriendsCtrl.data)
 
     -- Lua代码挂载C#滑动服用组件LoopVerticalScrollRect、ActiveLoopScrollRect，现在是在预制上，以后可修改为代码添加
     --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
@@ -100,13 +100,13 @@ end
 FriendsCtrl.static.FriendsClearData = function(transform)
 end
 
-FriendsCtrl.static.GroupProvideData = function(transform, idx)
-    idx = idx + 1
-    local item = GroupItem:new(1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.data[2][idx])
-end
-
-FriendsCtrl.static.GroupClearData = function(transform)
-end
+--FriendsCtrl.static.GroupProvideData = function(transform, idx)
+--    idx = idx + 1
+--    local item = GroupItem:new(1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.data[2][idx])
+--end
+--
+--FriendsCtrl.static.GroupClearData = function(transform)
+--end
 
 -- 刷新
 function FriendsCtrl:Refresh()
@@ -122,6 +122,7 @@ function FriendsCtrl:_addListener()
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 
     self:_refreshData()
 end
@@ -136,6 +137,7 @@ function FriendsCtrl:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 end
 
 -- 获取界面数据
@@ -143,18 +145,19 @@ function FriendsCtrl:_refreshData()
     FriendsCtrl.friendInfo = {}
     local friendsBasicData = DataManager.GetMyFriends()
     local friendsId = {}
-    for _, v in pairs(friendsBasicData) do
+    for id, v in pairs(friendsBasicData) do
         if v ~= nil then
-            table.insert(friendsId, v.id)
+            table.insert(friendsId, id)
         end
     end
     if friendsId[1] then
         Event.Brocast("m_QueryPlayerInfo", friendsId)
         FriendsPanel.friendsNumberText.text = #friendsId
-        FriendsPanel.groupNumberText.text = "5"
+        --FriendsPanel.groupNumberText.text = "5"
     else
         FriendsPanel.friendsNumberText.text = "0"
-        FriendsPanel.groupNumberText.text = "0"
+        --FriendsPanel.groupNumberText.text = "0"
+        self:_showFriends()
     end
 
     self:_refreshState()
@@ -168,21 +171,32 @@ end
 -- 刷新界面的状态
 function FriendsCtrl:_refreshState()
     self:_showFriendsApplyNotice()
-    if not FriendsCtrl.type or FriendsCtrl.type == 1 then
-        FriendsCtrl.type = 1
-        FriendsPanel.friendsToggle.isOn = true
-        self:_friendsToggleValueChange(true)
-    elseif FriendsCtrl.type == 2 then
-        FriendsPanel.groupToggle.isOn = true
-        self:_groupToggleValueChange(true)
-    end
-
-    FriendsPanel.groupView:ActiveLoopScroll(self.groupSource, #FriendsCtrl.data[2])
+    --if not FriendsCtrl.type or FriendsCtrl.type == 1 then
+    --    FriendsCtrl.type = 1
+    --    FriendsPanel.friendsToggle.isOn = true
+    --    self:_friendsToggleValueChange(true)
+    --elseif FriendsCtrl.type == 2 then
+    --    FriendsPanel.groupToggle.isOn = true
+    --    self:_groupToggleValueChange(true)
+    --end
+    --
+    --FriendsPanel.groupView:ActiveLoopScroll(self.groupSource, #FriendsCtrl.data[2])
 end
 
 -- 收到好友申请
 function FriendsCtrl:c_OnReceiveAddFriendReq()
     self:_showFriendsApplyNotice()
+end
+
+function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
+    for i, v in ipairs(FriendsCtrl.friendInfo) do
+        if v.id == friendsId.id then
+            table.remove(FriendsCtrl.friendInfo, i)
+            break
+        end
+    end
+    FriendsPanel.friendsNumberText.text = tostring(tonumber(#FriendsCtrl.friendInfo))
+    self:_showFriends()
 end
 
 -- 申请列表红点控制
@@ -193,26 +207,26 @@ function FriendsCtrl:_showFriendsApplyNotice()
 end
 
 -- 控制好友分页
-function FriendsCtrl:_friendsToggleValueChange(isOn)
-    --FriendsCtrl.type = 1
-    FriendsPanel.friendsRoot:SetActive(isOn)
-    FriendsPanel.groupRoot:SetActive(not isOn)
-    FriendsPanel.friendsOpen:SetActive(isOn)
-    FriendsPanel.friendsClose:SetActive(not isOn)
-    FriendsPanel.groupOpen:SetActive(not isOn)
-    FriendsPanel.groupClose:SetActive(isOn)
-end
+--function FriendsCtrl:_friendsToggleValueChange(isOn)
+--    --FriendsCtrl.type = 1
+--    FriendsPanel.friendsRoot:SetActive(isOn)
+--    FriendsPanel.groupRoot:SetActive(not isOn)
+--    FriendsPanel.friendsOpen:SetActive(isOn)
+--    FriendsPanel.friendsClose:SetActive(not isOn)
+--    FriendsPanel.groupOpen:SetActive(not isOn)
+--    FriendsPanel.groupClose:SetActive(isOn)
+--end
 
 -- 控制群组分页
-function FriendsCtrl:_groupToggleValueChange(isOn)
-    --FriendsCtrl.type = 2
-    FriendsPanel.friendsRoot:SetActive(not isOn)
-    FriendsPanel.groupRoot:SetActive(isOn)
-    FriendsPanel.friendsOpen:SetActive(not isOn)
-    FriendsPanel.friendsClose:SetActive(isOn)
-    FriendsPanel.groupOpen:SetActive(isOn)
-    FriendsPanel.groupClose:SetActive(not isOn)
-end
+--function FriendsCtrl:_groupToggleValueChange(isOn)
+--    --FriendsCtrl.type = 2
+--    FriendsPanel.friendsRoot:SetActive(not isOn)
+--    FriendsPanel.groupRoot:SetActive(isOn)
+--    FriendsPanel.friendsOpen:SetActive(not isOn)
+--    FriendsPanel.friendsClose:SetActive(isOn)
+--    FriendsPanel.groupOpen:SetActive(isOn)
+--    FriendsPanel.groupClose:SetActive(not isOn)
+--end
 
 -- 管理好友
 function FriendsCtrl:OnFriendsManage(go)
@@ -220,7 +234,7 @@ function FriendsCtrl:OnFriendsManage(go)
     local data =
     {
         type = 2,
-        friendsMgr = go.friendsMgr
+        --friendsMgr = go.friendsMgr
     }
     ct.OpenCtrl("FriendslistCtrl", data)
 end
@@ -231,7 +245,7 @@ function FriendsCtrl:OnBlacklist(go)
     local data =
     {
         type = 3,
-        friendsMgr = go.friendsMgr
+        --friendsMgr = go.friendsMgr
     }
     ct.OpenCtrl("FriendslistCtrl", data)
 end
@@ -242,7 +256,7 @@ function FriendsCtrl:OnAddFriends(go)
     local data =
     {
         type = 4,
-        friendsMgr = go.friendsMgr
+        --friendsMgr = go.friendsMgr
     }
     ct.OpenCtrl("FriendslistCtrl", data)
 end
@@ -253,7 +267,7 @@ function FriendsCtrl:OnApplicationlist(go)
     local data =
     {
         type = 5,
-        friendsMgr = go.friendsMgr
+        --friendsMgr = go.friendsMgr
     }
     ct.OpenCtrl("FriendslistCtrl", data)
 end
@@ -265,7 +279,7 @@ function FriendsCtrl:OnGroupManage(go)
     local data =
     {
         type = 2,
-        friendsMgr = go.friendsMgr
+        --friendsMgr = go.friendsMgr
     }
     ct.OpenCtrl("FriendsGrouplistCtrl", data)
 end

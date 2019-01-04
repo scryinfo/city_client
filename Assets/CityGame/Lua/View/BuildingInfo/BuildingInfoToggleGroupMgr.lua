@@ -46,7 +46,7 @@ BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageIn
 BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
 
 BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
-BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/TalentManagementItem"  --挖掘人才
+BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/ExcavateTalentsItem"  --挖掘人才
 
 
 --初始化
@@ -442,22 +442,25 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
 end
 --人才中心
 function BuildingInfoToggleGroupMgr:_creatTalentInfo()
-    --员工  左1
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
-    self.leftData[1] = self:_createStaff(staffToggleData)
+   -- 员工  左1
+   -- local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
+   -- self.leftData[1] = self:_createStaff(staffToggleData)
+
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
     --人才管理  左2
-    local management
-    management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
+    local management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
     management.gameObject.name = "TalentManagement"
     local managementToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local managementLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
+    local managementLuaItem = ManagementItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
     self.leftData[2] = managementLuaItem
+
     --挖掘人才
     local excavate
-    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.rightRect)
+    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path, self.rightRect)
     excavate.gameObject.name = "ExcavateTalents"
     local excavateToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
-    local excavateLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
+    local excavateLuaItem = ExcavateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
     self.rightData[1] = excavateLuaItem
 end
 

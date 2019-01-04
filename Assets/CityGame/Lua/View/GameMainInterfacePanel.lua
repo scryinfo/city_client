@@ -21,8 +21,7 @@ function GameMainInterfacePanel.InitPanel()
     this.earningText = transform:Find("LeftUpPanel/EarningBG/Earning").gameObject--收益--
 
     this.noticeButton = transform:Find("LeftDownPanel/NoticeButton").gameObject;
-    this.noticeItem = transform:Find("LeftDownPanel/NoticeButton/noticeItem").gameObject;
-    this.chatButton = transform:Find("LeftDownPanel/ChatButton").gameObject;
+    this.noticeItem = transform:Find("LeftDownPanel/NoticeButton/noticeItem"); --通知红点
     this.friendsButton = transform:Find("LeftDownPanel/FriendsButton").gameObject --好友
     this.friendsNotice = transform:Find("LeftDownPanel/FriendsButton/NoticeItem").gameObject --好友红点提示
     this.setButton = transform:Find("LeftDownPanel/SetButton").gameObject;

@@ -67,7 +67,7 @@ function AdvertisementShowItem:updateInfo(data)
 end
 
 function AdvertisementShowItem:OntodoBtn(ins)
-   ---测试
+    ---测试
     local data={}
     data.Buildingowner=Buildingowner.other
     ct.OpenCtrl('AdvertisementPosCtrl',Buildingowner.other)

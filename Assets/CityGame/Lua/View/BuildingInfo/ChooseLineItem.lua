@@ -17,9 +17,8 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.posY =  DataInfo.info.pos.y
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
-    self.isOnClick = false
 
-    self.bg = self.prefab.transform:Find("bg").gameObject
+    self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
@@ -41,7 +40,11 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
 
     self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
 
-    self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
+    self.bg.onClick:AddListener(function()
+        self:OnLinePanelBG(self);
+    end)
+
+    --self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
@@ -51,8 +54,11 @@ function ChooseLineItem:OnLinePanelBG(go)
         return
     end
     CenterWareHousePanel.nameText.text = go.size.text .. go.name.text
-    go.isOnClick = true
     go.manager:TransportConfirm(go.isOnClick )
+    -- [[  点击使其可以运输
+    go.manager:_onClick()
+    go.manager:TransportConfirm()
+    -- ]]
     local data = {}
     data.buildingId = go.buildingId
     data.posX = go.posX

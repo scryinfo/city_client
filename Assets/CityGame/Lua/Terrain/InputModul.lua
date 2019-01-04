@@ -1,4 +1,5 @@
 WindowsInput = class('WindowsInput')
+local m_WindowsScaleFactor = 100;          --缩放速度
 
 function WindowsInput:initialize( ... )
     self.m_moveV2 = nil
@@ -49,7 +50,7 @@ function WindowsInput:GetMoveV2()
 end
 
 function WindowsInput:GetZoomValue()
-    return self.m_zoomValue
+    return self.m_zoomValue * m_WindowsScaleFactor
 end
 
 function WindowsInput:GetClickFocusPoint()
@@ -151,12 +152,12 @@ function MobileInput:Update()
             self.m_oldTouch1Pos = currentPosition1;
             self.m_Zoomed = true;
         end
-        local newDis = Vector3.Distance(currentPosition0, currentPosition1);
-        local oldDis = Vector3.Distance(self.m_oldTouch0Pos, self.m_oldTouch1Pos);
-        self.m_zoomValue = (newDis - oldDis) * Time.deltaTime;
-        self.m_oldTouch0Pos = currentPosition0;
-        self.m_oldTouch1Pos = currentPosition1;
-        self.m_zoomCenter = (self.m_oldTouch0Pos + self.m_oldTouch1Pos) / 2;
+        local newDis = Vector3.Distance(currentPosition0, currentPosition1)
+        local oldDis = Vector3.Distance(self.m_oldTouch0Pos, self.m_oldTouch1Pos)
+        self.m_zoomValue = (newDis - oldDis)
+        self.m_oldTouch0Pos = currentPosition0
+        self.m_oldTouch1Pos = currentPosition1
+        --self.m_zoomCenter = (self.m_oldTouch0Pos + self.m_oldTouch1Pos) / 2
     else
         self.m_zoomValue = 0;
         self.m_Zoomed = false;

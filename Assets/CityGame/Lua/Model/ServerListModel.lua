@@ -94,6 +94,12 @@ function ServerListModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
+<<<<<<< HEAD
+=======
+        if pMsg.bag ~= nil then
+            ServerListModel.inHand = pMsg.bag.inHand
+        end
+>>>>>>> dbe7d230cbc291f23f2fa0740a208695e3661232
         ServerListModel.bagId = pMsg.bagId
         ServerListModel.bagHand = pMsg.bag.inHand
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")

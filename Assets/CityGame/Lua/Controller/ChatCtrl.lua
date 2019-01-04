@@ -9,7 +9,7 @@ UIPage:ResgisterOpen(ChatCtrl)
 
 function ChatCtrl:initialize()
     ct.log("tina_w9_friends", "ChatCtrl:initialize")
-    UIPage.initialize(self, UIType.Normal, UIMode.NeedBack, UICollider.None)
+    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ChatCtrl:bundleName()
@@ -29,16 +29,21 @@ function ChatCtrl:Awake(go)
 
     --初始化管理器
     ChatCtrl.static.chatMgr = ChatMgr:new()
+    ChatCtrl.WORLD_SHOW_NUM = 50
+    ChatCtrl.FRIENDS_SHOW_NUM = 5
 
     --添加UI事件点击监听
     ChatCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backBtn, function ()
         ChatCtrl.static.chatMgr:DestroyContentChildren(0)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(1)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(2)
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+        ChatCtrl.static.chatMgr:SetToggle()
         UIPage.ClosePage()
     end)
 
-    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backChatBtn, self.OnBackChat, self)
+    --ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backChatBtn, self.OnBackChat, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.expressionBtn, self.OnShowExpression, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backExpressionBtn, self.OnBackExpression, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.sendBtn, self.OnSend, self)
@@ -73,24 +78,56 @@ function ChatCtrl:Close()
 
 end
 
+--function ChatCtrl:AddListenerScrollView(index, isListener)
+--    if index == 2 then
+--        if isListener then
+--            ChatPanel.friendsScrollView.onValueChanged:AddListener(function (v2)
+--                --ct.log("tina_w11_friends", v2.x)
+--                ct.log("tina_w11_friends", ChatPanel.friendsVerticalScrollbar.value)
+--                if ChatPanel.friendsVerticalScrollbar.value == 1 then
+--                    if ChatCtrl.static.chatMgr.isShowChatInfo then
+--                        ChatCtrl.static.chatMgr.isShowChatInfo = false
+--                        ChatCtrl.static.chatMgr:ShowOtherChatInfo(2)
+--                    end
+--                end
+--            end)
+--        else
+--            ChatPanel.friendsScrollView.onValueChanged:RemoveAllListeners()
+--        end
+--    elseif index == 3 then
+--        if isListener then
+--            ChatPanel.strangersScrollView.onValueChanged:AddListener(function (v2)
+--                --ct.log("tina_w11_friends", v2.x)
+--                --ct.log("tina_w11_friends", v2.y)
+--            end)
+--        else
+--            ChatPanel.strangersScrollView.onValueChanged:RemoveAllListeners()
+--        end
+--    end
+--end
+
 function ChatCtrl:_addListener()
     -- 监听Model层网络回调
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
+    Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
+    Event.AddListener("c_OnReceiveRoleStatusChange", self.c_OnReceiveRoleStatusChange, self)
 
     self:_refreshData()
 end
 
 function ChatCtrl:Hide()
-    UIPage.Hide(self)
     self:_removeListener()
+    UIPage.Hide(self)
 end
 
 function ChatCtrl:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
+    Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
+    Event.RemoveListener("c_OnReceiveRoleStatusChange", self.c_OnReceiveRoleStatusChange, self)
 end
 
 -- 获取界面数据
@@ -110,37 +147,48 @@ function ChatCtrl:_refreshState()
         self.channel = 0 -- 聊天频道
         self:_showWorldInfo()
     elseif self.m_data.toggleId == 2 then  -- 打开好友分页
-        ChatPanel.friendsToggle.isOn = true
         --self:_friendsToggleValueChange(true)
         self.channel = 1 -- 聊天频道
+        ChatCtrl.static.isShowClickFriends = true
+        if ChatPanel.friendsToggle.interactable then
+            ChatPanel.friendsToggle.isOn = true
+        else
+            self:_queryFriendInfo()
+        end
+        ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
     elseif self.m_data.toggleId == 3 then  -- 打开陌生人分页
         ChatPanel.strangersToggle.isOn = true
         --self:_strangersToggleValueChange(true)
         self.channel = 3 -- 聊天频道
+        ChatCtrl.static.isShowClickStrangers = true
+        ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        self:_showStrangersInfo()
     end
 end
 
 function ChatCtrl:_closePlayerInfo()
-    ChatPanel.backChatBtn:SetActive(false)
+    --ChatPanel.backChatBtn:SetActive(false)
     ChatPanel.playerInfoRoot:SetActive(false)
 end
 
+-- 红点提示
 function ChatCtrl._showChatNoticeItem()
     ChatPanel.friendsNoticeImage:SetActive(false)
     ChatPanel.strangersNoticeImage:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
-    for _, v in pairs(chatFriendsInfo) do
-        if v.unread then
-            if v.unread[1] then
+    if ChatPanel.friendsToggle.interactable then
+        for _, v in pairs(chatFriendsInfo) do
+            if v.unreadNum and v.unreadNum > 0 then
                 ChatPanel.friendsNoticeImage:SetActive(true)
                 break
             end
         end
+
     end
-    for _, m in pairs(chatStrangersInfo) do
-        if m.unread then
-            if m.unread[1] then
+    if ChatPanel.strangersToggle.interactable then
+        for _, m in pairs(chatStrangersInfo) do
+            if m.unreadNum and m.unreadNum > 0 then
                 ChatPanel.strangersNoticeImage:SetActive(true)
                 break
             end
@@ -148,6 +196,7 @@ function ChatCtrl._showChatNoticeItem()
     end
 end
 
+-- 世界分页
 function ChatCtrl:_worldToggleValueChange(isOn)
     if isOn then
         ChatPanel.worldRoot:SetActive(isOn)
@@ -169,32 +218,46 @@ function ChatCtrl:_worldToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
         ChatCtrl.static.chatMgr:SetRootScrollbar(1)
         ChatCtrl.static.chatMgr:SetToggle()
+        ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        ChatPanel.playerInfoRoot:SetActive(false)
     end
 end
 
+-- 显示世界消息
 function ChatCtrl:_showWorldInfo()
     local data = DataManager.GetMyChatInfo(1)
     ChatCtrl.worldInfo = {}
-    for _, v in ipairs(data) do
-        table.insert(ChatCtrl.worldInfo, v)
-        ChatCtrl.static.chatMgr:CreateChatItem(v)
+    local worldInfoAllNum = #data
+    if worldInfoAllNum <= ChatCtrl.WORLD_SHOW_NUM then
+        for _, v in ipairs(data) do
+            table.insert(ChatCtrl.worldInfo, v)
+            ChatCtrl.static.chatMgr:CreateChatItem(v)
+        end
+        ChatCtrl.static.chatMgr:StartScrollBottom()
+    else
+        for i = worldInfoAllNum - ChatCtrl.WORLD_SHOW_NUM , worldInfoAllNum do
+            table.insert(ChatCtrl.worldInfo, data[i])
+            ChatCtrl.static.chatMgr:CreateChatItem(data[i])
+        end
+        ChatCtrl.static.chatMgr:StartScrollBottom()
     end
-    ChatCtrl.static.chatMgr:StartScrollBottom()
 end
 
+-- 查询好友信息
 function ChatCtrl:_queryFriendInfo()
     local friendsBasicData = DataManager.GetMyFriends()
-    if friendsBasicData[1] then
-        local idTemp = {}
-        for _, v in ipairs(friendsBasicData) do
-            table.insert(idTemp, v.id)
-        end
+    local idTemp = {}
+    for id, v in pairs(friendsBasicData) do
+        table.insert(idTemp, id)
+    end
+    if idTemp[1] then
         Event.Brocast("m_QueryPlayerInfoChat", idTemp)
     else
         ChatPanel.friendsNum.text = "0"
     end
 end
 
+-- 好友分页
 function ChatCtrl:_friendsToggleValueChange(isOn)
     if isOn then
         ChatPanel.worldRoot:SetActive(not isOn)
@@ -215,28 +278,65 @@ function ChatCtrl:_friendsToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetRootScrollbar(2)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatPanel.friendsNoticeImage:SetActive(false)
+        ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        ChatPanel.playerInfoRoot:SetActive(false)
         self:_queryFriendInfo()
     end
 end
 
+-- 显示陌生人信息
 function ChatCtrl:_showStrangersInfo()
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
+    local friendsBasicData = DataManager.GetMyFriends()
+    for m, n in pairs(strangersPlayerItem) do
+        if friendsBasicData[m] ~= nil then
+            ChatCtrl.static.chatMgr:DestroyItem(2, m)
+        end
+    end
+
     local strangersId = {}
+    local isExitStrangers = true
     for k, v in pairs(chatStrangersInfo) do
         if strangersPlayerItem[k] then
             strangersPlayerItem[k]:SetNoticeText(v.unreadNum)
+            if ChatCtrl.static.isShowClickStrangers and k == self.m_data.id then
+                strangersPlayerItem[k].toggle.isOn = true
+                ChatCtrl.static.isShowClickStrangers = false
+                ChatPanel.strangersPlayerContent.anchoredPosition = Vector2.New(0, tonumber(127 * strangersPlayerItem[k].prefab.transform:GetSiblingIndex()))
+            end
         else
             if k ~= DataManager.GetMyOwnerID() then
                 table.insert(strangersId, k)
             end
         end
+        if ChatCtrl.static.isShowClickStrangers and k == self.m_data.id then
+            isExitStrangers = false
+        end
+    end
+    local strangersPlayerId = ChatCtrl.static.chatMgr:GetStrangersPlayer().id
+    for _, j in ipairs(strangersPlayerId) do
+        if ChatCtrl.static.isShowClickStrangers and j == self.m_data.id then
+            isExitStrangers = false
+        end
+    end
+    if ChatCtrl.static.isShowClickStrangers then
+        if  isExitStrangers then
+            table.insert(strangersId, self.m_data.id)
+        else
+            ChatCtrl.static.isShowClickStrangers = false
+            local strangersPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
+            strangersPlayerItem.toggle.isOn = true
+            ChatPanel.strangersPlayerContent.anchoredPosition = Vector2.New(0, tonumber(127 * strangersPlayerItem.prefab.transform:GetSiblingIndex()))
+        end
     end
     if strangersId[1] then
         Event.Brocast("m_QueryPlayerInfoChat", strangersId)
     end
+    ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
 end
 
+-- 陌生人分页
 function ChatCtrl:_strangersToggleValueChange(isOn)
     if isOn then
         ChatPanel.worldRoot:SetActive(not isOn)
@@ -258,23 +358,29 @@ function ChatCtrl:_strangersToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetRootScrollbar(3)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatPanel.strangersNoticeImage:SetActive(false)
+        ChatCtrl.static.chatMgr:SetActivePlayerData({})
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+        ChatPanel.playerInfoRoot:SetActive(false)
         self:_showStrangersInfo()
     end
 end
 
-function ChatCtrl:OnBackChat(go)
-    go:_closePlayerInfo()
-end
+-- 关闭玩家信息显示
+--function ChatCtrl:OnBackChat(go)
+--    go:_closePlayerInfo()
+--end
 
+-- 点击表情按钮
 function ChatCtrl:OnShowExpression()
     ChatPanel.expressionRoot:SetActive(not ChatPanel.expressionRoot.activeSelf)
 end
 
+-- 关闭表情列表
 function ChatCtrl:OnBackExpression()
     ChatPanel.expressionRoot:SetActive(false)
 end
 
+-- 发送聊天消息
 function ChatCtrl:OnSend(go)
     local text = ChatPanel.chatInputField.text
     local chatStr = string.gsub(text, "^%s*(.-)%s*$", "%1")
@@ -291,6 +397,7 @@ function ChatCtrl:OnSend(go)
         data = {msg = chatStr, channel = go.channel}
     else
         if not ChatCtrl.static.chatMgr:GetActivePlayerId() then
+            Event.Brocast("SmallPop","Choose someone to chat with.",80)
             return
         end
         data = {channelId = ChatCtrl.static.chatMgr:GetActivePlayerId(), msg = chatStr, channel = go.channel}
@@ -315,7 +422,7 @@ function ChatCtrl:OnAddFriends(go)
 end
 
 -- 陌生人私聊
-function ChatCtrl:OnChat(go)
+function ChatCtrl:OnChat()
     local activePlayerData = ChatCtrl.static.chatMgr:GetActivePlayerData()
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
     if strangersPlayerItem[activePlayerData.id] then
@@ -324,7 +431,7 @@ function ChatCtrl:OnChat(go)
         ChatPanel.strangersToggle.isOn = true
         ChatCtrl.static.chatMgr:CreatePlayerItem(2, activePlayerData)
 
-        local strangersPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
+        local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item[activePlayerData.id]
         strangersPlayerItem.toggle.isOn = true
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
@@ -348,13 +455,14 @@ function ChatCtrl:OnShield(go)
     ct.OpenCtrl("BtnDialogPageCtrl", data)
 end
 
+-- 按照是否离线排序
 function ChatCtrl:_getSortDatas(data)
     local tempData = data
     table.sort(tempData, function (m, n)
-        if m.b then
-            return true
+        if m.b == n.b then
+            return false
         else
-            if n.b then
+            if m.b then
                 return true
             else
                 return false
@@ -398,6 +506,12 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
             end
         end
         ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
+        if ChatCtrl.static.isShowClickFriends then
+            local friendsPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
+            friendsPlayerItem.toggle.isOn = true
+            ChatCtrl.static.isShowClickFriends = false
+            ChatPanel.friendsPlayerContent.anchoredPosition = Vector2.New(0,tonumber(127 * friendsPlayerItem.prefab.transform:GetSiblingIndex()))
+        end
     elseif ChatPanel.strangersToggle.isOn then
         ChatCtrl.strangersInfo = {}
         if playerData.info then
@@ -415,6 +529,13 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
             end
         end
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.strangersInfo)
+        if ChatCtrl.static.isShowClickStrangers then
+            ChatCtrl.static.isShowClickStrangers = false
+            local strangersPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
+            strangersPlayerItem.toggle.isOn = true
+            ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+            ChatPanel.strangersPlayerContent.anchoredPosition = Vector2.New(0, tonumber(127 * strangersPlayerItem.prefab.transform:GetSiblingIndex()))
+        end
     end
 end
 
@@ -425,8 +546,16 @@ function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
         ChatCtrl.static.chatMgr:StartScrollBottom()
     elseif chatData.channel == "FRIEND"then
         if ChatPanel.friendsToggle.isOn then
-            ChatCtrl.static.chatMgr:CreateChatItem(chatData)
-            ChatCtrl.static.chatMgr:StartScrollBottom()
+            if chatData.id == ChatCtrl.static.chatMgr:GetActivePlayerId() or chatData.id == DataManager.GetMyOwnerID() then
+                ChatCtrl.static.chatMgr:CreateChatItem(chatData)
+                ChatCtrl.static.chatMgr:StartScrollBottom()
+            else
+                local chatStrangersInfo = DataManager.GetMyChatInfo(2)
+                local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
+                if friendsPlayerItem[chatData.id] then
+                    friendsPlayerItem[chatData.id]:SetNoticeText(chatStrangersInfo[chatData.id].unreadNum)
+                end
+            end
         else
             ChatPanel.friendsNoticeImage:SetActive(true)
         end
@@ -453,6 +582,7 @@ end
 function ChatCtrl:c_OnReceiveAddBlacklist(roleInfo)
     DataManager.SetMyBlacklist(roleInfo)
     DataManager.SetMyFriends({id = roleInfo.id})
+    Event.Brocast("SmallPop","Shield success.",60)
     local activePlayerId = ChatCtrl.static.chatMgr:GetActivePlayerId()
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
     local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
@@ -471,6 +601,42 @@ function ChatCtrl:c_OnReceiveAddBlacklist(roleInfo)
             ChatCtrl.static.chatMgr:DestroyContentChildren(4)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
             ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+        end
+    end
+end
+
+-- 添加好友成功
+function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
+    if ChatPanel.friendsToggle.isOn then
+        if not ChatCtrl.friendInfo then
+            ChatCtrl.friendInfo = {}
+        end
+        table.insert(ChatCtrl.friendInfo, roleInfo)
+        ChatCtrl.static.chatMgr:CreatePlayerItem(1, roleInfo, true)
+        ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
+    elseif ChatPanel.strangersToggle.isOn then
+        local activePlayerId = ChatCtrl.static.chatMgr:GetActivePlayerId()
+        if activePlayerId == roleInfo.id then
+            ChatCtrl.static.chatMgr:SetToggle()
+            ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+            ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        end
+        ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
+        ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+    end
+end
+
+-- 好友上下线
+function ChatCtrl:c_OnReceiveRoleStatusChange(roleData)
+    if ChatPanel.friendsToggle.isOn then
+        local friendsItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item[roleData.id]
+        if roleData.b then
+            friendsItem:SetHeadColor(true)
+            friendsItem.prefab.transform:SetSiblingIndex(0)
+        else
+            friendsItem:SetHeadColor(false)
+            friendsItem.prefab.transform:SetSiblingIndex(ChatPanel.friendsPlayerContent.childCount - 1)
+
         end
     end
 end

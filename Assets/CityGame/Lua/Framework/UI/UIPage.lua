@@ -7,6 +7,7 @@
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
 UIType = {
+    Bubble = 0,     --气泡
     Normal =1 ,
     Fixed =2 ,
     PopUp =3 ,
@@ -64,7 +65,6 @@ end
 function UIPage:Hide()
     self.gameObject:SetActive(false)
     self.isActived = false
-    self.m_data = nil
     if #UIPage.static.m_currentPageNodes <= 1 then
         CameraMove.MoveOutUILayer()
     end
@@ -254,7 +254,7 @@ function  UIPage:ShowPage(inClass,pageData)
 end
 
 function  UIPage:ShowPageInstance(pageInstance,pageData)
-    if pageData then
+    if pageData ~= nil then
         pageInstance.m_data = pageData;
     end
     if pageInstance.isAsync then

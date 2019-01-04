@@ -15,17 +15,19 @@ end
 function LaboratoryCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
+local this
 function LaboratoryCtrl:Awake(go)
+    this = self
     self.gameObject = go
     self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
+
+    self.laboratoryBehaviour:AddClick(LaboratoryPanel.centerBtn.gameObject, self._centerBtnFunc, self)
+    self.laboratoryBehaviour:AddClick(LaboratoryPanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 function LaboratoryCtrl:Refresh()
-    self:_initData()
-end
-function LaboratoryCtrl:Hide()
-    self.gameObject:SetActive(false)
-    self.isActived = false
+    --self:_initData()
+    this:_initData()
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -41,6 +43,13 @@ function LaboratoryCtrl:_initData()
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
+    Event.Brocast("c_GetBuildingInfo", info)
+    if info.state == "OPERATE" then
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
+    else
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.one
+    end
+
     self.hasOpened = true
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
@@ -52,6 +61,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         LaboratoryPanel.changeNameBtn.localScale = Vector3.one
@@ -91,4 +101,17 @@ end
 ---更改名字成功
 function LaboratoryCtrl:_updateName(name)
     LaboratoryPanel.nameText.text = name
+end
+
+--点击中间按钮的方法
+function LaboratoryCtrl:_centerBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
+    end
+end
+--点击开业按钮方法
+function LaboratoryCtrl:_openBuildingBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+    end
 end

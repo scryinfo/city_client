@@ -17,40 +17,52 @@ UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 
 --构建函数
 function MunicipalCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
 function MunicipalCtrl:bundleName()
     return "MunicipalPanel";
 end
 
-function MunicipalCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
-end
-
+local BuildMgr
+local this
 function MunicipalCtrl:Awake(go)
+    this=self
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
-
-    self.data = {}
-    self.data.middleRootTran=MunicipalPanel.middleRootTran
-    self.data.buildingType = BuildingType.Municipal
-    BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, self.data)
-
+    self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
+    self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+        local data={}
+        data.middleRootTran=MunicipalPanel.middleRootTran
+        data.buildingType = BuildingType.Municipal
+    BuildMgr=BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, data)
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
+end
 
+function MunicipalCtrl:OnCreate(obj)
+    UIPage.OnCreate(self,obj);
+end
+
+function MunicipalCtrl:OnClick_buildInfo()
+
+    Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
+end
+
+function MunicipalCtrl:OnClick_prepareOpen(ins)
+
+    Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 
 --更改名字
 function MunicipalCtrl:OnClick_changeName()
-local data = {}
-data.titleInfo = "RENAME";
-data.tipInfo = "Modified every seven days";
-data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-UIPage:ShowPage(InputDialogPageCtrl, data)
+    local data = {}
+    data.titleInfo = "RENAME";
+    data.tipInfo = "Modified every seven days";
+    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    ct.OpenCtrl("InputDialogPageCtrl",data)
 end
 
 --返回
@@ -60,6 +72,7 @@ function MunicipalCtrl:OnClick_backBtn()
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
     end
+
 end
 
 --打开信息界面
@@ -68,8 +81,9 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-   self:changeData()
+   this:changeData()
 end
+
 
 function MunicipalCtrl:changeData()
     if self.m_data then
@@ -78,6 +92,8 @@ function MunicipalCtrl:changeData()
     else
         DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+        --self.m_data = {}
+        --self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 
@@ -87,6 +103,13 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     local lMsg=parkData
     MunicipalPanel.lMsg=lMsg
 
+    Event.Brocast("c_GetBuildingInfo",MunicipalPanel.lMsg.info)
+
+    if lMsg.info.state=="OPERATE" then
+        MunicipalPanel.stopIconRoot.localScale=Vector3.zero
+    else
+        MunicipalPanel.stopIconRoot.localScale=Vector3.one
+    end
     ---刷新门票
     Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
     ---是否可以改名
@@ -109,6 +132,10 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     end
     ---标记buildingId
     self.currentBuildingId=parkData.info.id
+    --跟新左右
+    lMsg.buildingType=BuildingType.Municipal
+    BuildMgr:updateInfo(lMsg)
+
 end
 
 function MunicipalCtrl:ClearData(manger)

@@ -27,6 +27,7 @@ function FriendslistCtrl:OnCreate(go)
     ct.log("tina_w7_friends", "FriendslistCtrl:OnCreate")
     --调用基类方法处理实例的数据
     UIPage.OnCreate(self, go)
+    FriendslistCtrl.static.isAddfriends = false
 
     --添加UI事件点击监听
     FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
@@ -58,8 +59,10 @@ function FriendslistCtrl:_addListener()
 end
 
 function FriendslistCtrl:Hide()
-    UIPage.Hide(self)
     self:_removeListener()
+    --UIPage.Hide(self)
+    self.gameObject:SetActive(false)
+    self.isActived = false
 end
 
 function FriendslistCtrl:_removeListener()
@@ -73,6 +76,7 @@ end
 
 --初始首次进入所需数据
 function FriendslistCtrl:_initState()
+    --if
     local type = self.m_data.type
     FriendslistCtrl.type = self.m_data.type
     --FriendslistPanel.listContent.offsetMax = Vector2.New(0,0)
@@ -107,15 +111,19 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 4 then
-        FriendslistPanel.panelNameText.text = "ADD NEW FRIENDS"
-        FriendslistPanel.blacklistNumberImage:SetActive(false)
-        FriendslistPanel.blacklistNumberText.text = ""
-        --显示和清空搜索框
-        FriendslistPanel.searchInputField:SetActive(true)
-        FriendslistPanel.searchInputField:GetComponent("InputField").text = ""
-        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-120)
+        if FriendslistCtrl.static.isAddfriends then
+            FriendslistCtrl.static.isAddfriends = false
+        else
+            FriendslistPanel.panelNameText.text = "ADD NEW FRIENDS"
+            FriendslistPanel.blacklistNumberImage:SetActive(false)
+            FriendslistPanel.blacklistNumberText.text = ""
+            --显示和清空搜索框
+            FriendslistPanel.searchInputField:SetActive(true)
+            FriendslistPanel.searchInputField:GetComponent("InputField").text = ""
+            FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-120)
 
-        FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
+            FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
+        end
     elseif type == 5 then
         FriendslistPanel.panelNameText.text = "APPLICATION LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
@@ -125,8 +133,8 @@ function FriendslistCtrl:_initState()
 
         FriendslistCtrl.friendInfo = DataManager.GetMyFriendsApply()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
+            end
     end
-end
 
 function FriendslistCtrl:OnSearch(go)
     local text = FriendslistPanel.searchInputField:GetComponent("InputField").text
@@ -165,7 +173,7 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
 end
 
 function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
-    DataManager.SetMyFriends({ id = friendsId.id, b = nil })
+    --DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     for i, v in ipairs(FriendslistCtrl.friendInfo) do
         if v.id == friendsId.id then
             table.remove(FriendslistCtrl.friendInfo, i)

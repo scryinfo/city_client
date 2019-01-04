@@ -135,6 +135,17 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+
+function convertTimeForm(second)
+	local data={}
+	data.day  = math.floor(second/86400)
+	data.hour  = math.fmod(math.floor(second/3600), 24)
+	data.min = math.fmod(math.floor(second/60), 60)
+	data.sec  = math.fmod(second, 60)
+	return data
+end
+
+
 --表格排序
 function tableSort(table,gameObject)
 	TableSort.tableSort(table,gameObject)
@@ -334,4 +345,43 @@ function creatGoods(path,parent)
 	rect.transform.localScale = Vector3.one;
 	rect.transform.localPosition=Vector3.zero
 	return go
+end
+
+function ct.file_saveString(filename, str)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wb")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	file:write(str)
+	if filename ~= nil then
+		file:close()
+	end
+end
+
+function ct.file_readString(filename)
+	local file = assert(io.open(filename, "rb"))
+	local str = file:read("*all")
+	file:close()
+	return str
+end
+
+--字符串分割
+function split(input, delimiter)
+	input = tostring(input)
+	delimiter = tostring(delimiter)
+	if (delimiter=='') then return false end
+	local pos,arr = 0, {}
+	-- for each divider found
+	for st,sp in function() return string.find(input, delimiter, pos, true) end do
+		table.insert(arr, string.sub(input, pos, st - 1))
+		pos = sp + 1
+	end
+	table.insert(arr, string.sub(input, pos))
+	return arr
 end

@@ -12,10 +12,10 @@ function GameMainInterfaceModel:initialize(insId)
 end
 
 function GameMainInterfaceModel:OnCreate()
+    Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     --网络回调
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails)
+   -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
-
 end
 
 function GameMainInterfaceModel:Close()
@@ -40,7 +40,14 @@ end
 --服务器回调--
 --获取所有邮件
 function GameMainInterfaceModel.n_OnGetAllMails(stream)
-    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllMails',stream)
+    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     local lMsg = assert(pbl.decode("gs.Mails", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    local a= lMsg
+    Event.Brocast("c_AllMails",lMsg.mail)
 end
+
+--改变员工工资
+function GameMainInterfaceModel.m_ReqHouseSetSalary(self,id, price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+
+end
+

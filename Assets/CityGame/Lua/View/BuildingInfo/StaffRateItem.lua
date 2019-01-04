@@ -75,7 +75,7 @@ function StaffRateItem:_checkWorkTime()
             --
             for i, timeData in pairs(workTime) do
                 local temp = timeData[1] + timeData[2]
-                if timeTable.hour >= timeData[1] and timeTable.hour < temp then  --在工作时间内
+                if tonumber(timeTable.hour) >= timeData[1] and tonumber(timeTable.hour) < temp then  --在工作时间内
                     self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(timeData[1]), self:_getTimeFormat(temp))
                     return
                 end

@@ -38,7 +38,7 @@ function GroundTransOthersCheckInfoCtrl:Hide()
 end
 
 function GroundTransOthersCheckInfoCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化

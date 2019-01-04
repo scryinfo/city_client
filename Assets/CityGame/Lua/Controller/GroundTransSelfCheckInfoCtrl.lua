@@ -34,7 +34,7 @@ function GroundTransSelfCheckInfoCtrl:Hide()
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化

@@ -13,9 +13,9 @@ function TalentMiningPanel.Awake(obj)
 end
 
 function TalentMiningPanel.InitPanel()
-    this.backBtn = transform:Find("top/BackBtn")
+    this.backBtn = transform:Find("top/BackBtn").gameObject
     this.staffNum = transform:Find("staffNum/number"):GetComponent("Text")
     this.content = transform:Find("down/Scroll View/Viewport/Content")
-    this.add = transform:Find("down/Scroll View/Viewport/Content/add")
+    this.add = transform:Find("down/Scroll View/Viewport/Content/add").gameObject
 
 end

@@ -8,17 +8,19 @@ require('Framework/UI/UIPage')
 NoticeItem = class('NoticeItem')
 
 --初始化方法   数据（读配置表）
-function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
+function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,typeId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
+    self.state = goodsDataInfo.state
     self.manager = mgr
     self.id = id
+    self.typeId = typeId
 
     self.itemHedaer = self.prefab.transform:Find("bg/hedaer").gameObject:GetComponent("Text");
     self.from = self.prefab.transform:Find("bg/from").gameObject:GetComponent("Text");
     self.itemTime = self.prefab.transform:Find("bg/time").gameObject:GetComponent("Text");
-    self.hint = self.prefab.transform:Find("hint").gameObject;
+    self.hint = self.prefab.transform:Find("hint")
     self.onBg = self.prefab.transform:Find("bg").gameObject;
     self.newBg = self.prefab.transform:Find("newBg").gameObject;
     self.newHedaer = self.prefab.transform:Find("newBg/newHedaer").gameObject:GetComponent("Text");
@@ -31,6 +33,14 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id)
     self.newHedaer.text = goodsDataInfo.header
     self.newFrom.text = goodsDataInfo.from
     self.newTime.text = self.itemTime.text
+    self.from.text = goodsDataInfo.from
+
+    --是否显示红点
+    if goodsDataInfo.state then
+        self.hint.localScale = Vector3.zero
+    else
+        self.hint.localScale = Vector3.one
+    end
 
     self.newBg:SetActive(false)
     GameNoticePanel.GoodsScrollView:SetActive(false)

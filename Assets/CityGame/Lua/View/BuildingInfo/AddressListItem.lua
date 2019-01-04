@@ -13,12 +13,14 @@ function AddressListItem:initialize(DataInfo,prefab,inluabehaviour,mgr)
     self.dataInfo = DataInfo;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
+    self.id = DataInfo.id
+    self.onClick = true  --第一次点击
 
     self.bg = self.prefab.transform:Find("bg").gameObject
     self.name = self.prefab.transform:Find("name").gameObject:GetComponent("Text");
     self.box = self.prefab.transform:Find("box").gameObject;
 
-    self.name = "Addy-polly"
+    self.name.text = DataInfo.name
 
     self.box:SetActive(false);
     self._luabehaviour:AddClick(self.bg,self.OnAddressListBG,self)

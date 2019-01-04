@@ -29,10 +29,6 @@ function LaboratoryCtrl:Refresh()
     --self:_initData()
     this:_initData()
 end
-function LaboratoryCtrl:Hide()
-    self.gameObject:SetActive(false)
-    self.isActived = false
-end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function LaboratoryCtrl:_initData()
@@ -65,6 +61,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         LaboratoryPanel.changeNameBtn.localScale = Vector3.one

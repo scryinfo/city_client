@@ -14,7 +14,7 @@ end
 
 function FriendsCtrl:bundleName()
     ct.log("tina_w7_friends", "FriendsCtrl:bundleName")
-    return "FriendsPanel"
+    return "Assets/CityGame/Resources/View/FriendsPanel.prefab"
 end
 
 function FriendsCtrl:Awake(go)

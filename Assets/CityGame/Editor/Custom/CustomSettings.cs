@@ -112,6 +112,7 @@ public static class CustomSettings
         _GT(typeof(Physics)),
         _GT(typeof(Collider)),
         _GT(typeof(Time)),        
+        _GT(typeof(Sprite)),
         _GT(typeof(Texture)),
         _GT(typeof(Texture2D)),
         _GT(typeof(Shader)),        
@@ -163,7 +164,8 @@ public static class CustomSettings
         _GT(typeof(Resources)),     
         _GT(typeof(LuaProfiler)),
           
-        //for LuaFramework
+        //for LuaFramework   
+        _GT(typeof(LuaFramework.Sync_LoadData)),
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
         _GT(typeof(Button)),
@@ -195,11 +197,11 @@ public static class CustomSettings
         //City
         _GT(typeof(City.NetworkInterface)),
         _GT(typeof(City.MemoryStream)),
-        _GT(typeof(City.CityLuaUtil)),
+        _GT(typeof(City.CityLuaUtil)),        
         _GT(typeof(City.CityTest)),
         _GT(typeof(EasyJoystick)),
         _GT(typeof(MovingJoystick)),
-        _GT(typeof(EffectFlying)),
+        //_GT(typeof(EffectFlying)),
         _GT(typeof(PieChartGraph)),
         _GT(typeof(PieNeedData)),
         _GT(typeof(City.LineChart)),

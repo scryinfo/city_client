@@ -10,7 +10,7 @@ local CityInfoDataCtrlBehaviour;
 local gameObject;
 
 function  CityInfoDataCtrl:bundleName()
-    return "CityInfoDataPanel"
+    return "Assets/CityGame/Resources/View/CityInfoDataPanel.prefab"
 end
 
 function CityInfoDataCtrl:initialize()

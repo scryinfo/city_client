@@ -1,4 +1,6 @@
 --查找对象--
+local _typeof = tolua.typeof
+
 function find(str)
 	return GameObject.Find(str);
 end
@@ -16,8 +18,8 @@ function newObject(prefab)
 end
 
 --创建面板--
-function createPanel(name)
-	PanelManager:CreatePanel(name);
+function LoadPrefab_A(name, type, instance, callback)
+	PanelManager:LoadPrefab_A(name,type, instance, callback);
 end
 --创建窗口--
 function createWindows(name,pos)
@@ -208,7 +210,7 @@ function ct.file_saveTable(filename, data)
 		file = io.stdout
 	else
 		local err
-		file, err = io.open(filename, "wa+")
+		file, err = io.open(filename, "wb")
 		if file == nil then
 			error(("Unable to write '%s': %s"):format(filename, err))
 		end
@@ -219,6 +221,30 @@ function ct.file_saveTable(filename, data)
 	if filename ~= nil then
 		file:close()
 	end
+end
+
+function ct.file_saveString(filename, str)
+	local file
+	if filename == nil then
+		file = io.stdout
+	else
+		local err
+		file, err = io.open(filename, "wb")
+		if file == nil then
+			error(("Unable to write '%s': %s"):format(filename, err))
+		end
+	end
+	file:write(str)
+	if filename ~= nil then
+		file:close()
+	end
+end
+
+function ct.file_readString(filename)
+	local file = assert(io.open(filename, "rb"))
+	local str = file:read("*all")
+	file:close()
+	return str
 end
 
 function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 注意参数是类的名字。 使用消息机制，避免调用者和具体的Controller的耦合
@@ -278,6 +304,26 @@ function ct.getIntPart(x)
 	return x;
 end
 
+function ct.getType(obj)
+	return _typeof(obj)
+end
+--实例化UI的prefab
+function ct.InstantiatePrefab(prefab)
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	go.name = prefab.name;
+	if _typeof(prefab) == _typeof(UnityEngine.GameObject) then
+		local rect = go.transform:GetComponent("RectTransform");
+		rect.sizeDelta = prefab:GetComponent("RectTransform").sizeDelta;
+	end
+	return go
+end
+
+function ct.DestroyTable(tb)
+	for i, v in pairs(tb) do
+		GameObject.DestroyImmediate(v, true)
+	end
+	tb = {}
+end
 
 --获取价格显示文本 --整数和小数部分大小不同
 function getPriceString(str, intSize, floatSize)

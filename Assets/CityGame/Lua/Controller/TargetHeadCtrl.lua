@@ -15,13 +15,13 @@ end
 
 function TargetHeadCtrl.Awake()
 	logWarn("TargetHeadCtrl.Awake--->>");
-	panelMgr:CreatePanel('TargetHead', this.OnCreate, this);
+	panelMgr:LoadPrefab_A('TargetHead', nil,this,this.OnCreate);
 
 end
 
 --启动事件--
-function TargetHeadCtrl.OnCreate(obj)
-	gameObject = obj;
+function TargetHeadCtrl.OnCreate(prefab)
+	gameObject = ct.InstantiatePrefab(prefab);
 	gameObject.transform.position = Vector3.New(87.5, 337, 0);
 	TargetHead = gameObject:GetComponent('LuaBehaviour');
 

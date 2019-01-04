@@ -7,7 +7,7 @@ function WagesAdjustBoxCtrl:initialize()
 end
 
 function WagesAdjustBoxCtrl:bundleName()
-    return "WagesAdjustBoxPanel"
+    return "Assets/CityGame/Resources/View/WagesAdjustBoxPanel.prefab"
 end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)

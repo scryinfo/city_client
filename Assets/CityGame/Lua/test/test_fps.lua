@@ -7,7 +7,6 @@
 UnitTest.TestBlockStart()
 
 UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
-    ct.log("abel_w11_showFps","[test_abel_w11_showFps] ...............")
     require('Framework/UI/UIRoot')
     local UIRoot = UIRoot
     local rootIns = UIRoot.Instance()
@@ -17,8 +16,10 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
         return
     end
 
+    local tp = ct.getType(LuaFramework.LuaBehaviour)
     --绑定脚本,使用 LuaHelper.GetType
-    UnityEngine.GameObject.AddComponent(camera.gameObject, LuaHelper.GetType("LuaFramework.ShowFPS"))
+    UnityEngine.GameObject.AddComponent(camera.gameObject, ct.getType(LuaFramework.ShowFPS))
+    --UnityEngine.GameObject.AddComponent(camera.gameObject, LuaHelper.GetType('LuaFramework.LuaBehaviour'))
     local testFPS = camera.gameObject:GetComponent('ShowFPS')
     testFPS.fpsMeasuringDelta = 0.1
     if testFPS == nil then

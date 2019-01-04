@@ -19,7 +19,7 @@ function LabResearchCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabResearchCtrl:bundleName()
-    return "LabResearchPanel"
+    return "Assets/CityGame/Resources/View/LabResearchPanel.prefab"
 end
 function LabResearchCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)

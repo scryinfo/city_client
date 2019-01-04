@@ -25,7 +25,7 @@ function WarehouseCtrl:initialize()
 end
 
 function WarehouseCtrl:bundleName()
-    return "WarehousePanel";
+    return "Assets/CityGame/Resources/View/WarehousePanel.prefab";
 end
 
 function WarehouseCtrl:OnCreate(obj)

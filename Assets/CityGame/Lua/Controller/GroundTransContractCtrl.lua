@@ -11,7 +11,7 @@ function GroundTransContractCtrl:initialize()
 end
 
 function GroundTransContractCtrl:bundleName()
-    return "GroundTransContractPanel"
+    return "Assets/CityGame/Resources/View/GroundTransContractPanel.prefab"
 end
 
 function GroundTransContractCtrl:OnCreate(obj)

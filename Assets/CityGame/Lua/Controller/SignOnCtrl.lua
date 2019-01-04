@@ -16,7 +16,7 @@ local gameObject;
 
 
 function  SignOnCtrl:bundleName()
-    return "SignOnPanel"
+    return "Assets/CityGame/Resources/View/SignOnPanel.prefab"
 end
 
 function SignOnCtrl:initialize()

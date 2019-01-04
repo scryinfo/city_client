@@ -24,7 +24,7 @@ CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
 UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
-    return "CenterWareHousePanel"
+    return "Assets/CityGame/Resources/View/CenterWareHousePanel.prefab"
 end
 
 function CenterWareHouseCtrl:initialize()

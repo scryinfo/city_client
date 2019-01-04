@@ -7,7 +7,7 @@ function MaterialCtrl:initialize()
 end
 
 function MaterialCtrl:bundleName()
-    return "MaterialPanel";
+    return "Assets/CityGame/Resources/View/MaterialPanel.prefab";
 end
 
 function MaterialCtrl:OnCreate(obj)

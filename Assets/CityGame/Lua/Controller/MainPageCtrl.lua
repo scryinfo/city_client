@@ -16,7 +16,7 @@ function MainPageCtrl:initialize()
 end
 
 function MainPageCtrl:bundleName()
-    return "MainPagePanel"
+    return "Assets/CityGame/Resources/View/MainPagePanel.prefab"
 end
 
 function MainPageCtrl:OnCreate(obj )

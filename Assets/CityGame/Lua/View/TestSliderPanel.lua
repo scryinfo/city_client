@@ -7,16 +7,16 @@
 
 local transform
 
-TestExchangePanel = {};
-local this = TestExchangePanel;
+TestSliderPanel = {};
+local this = TestSliderPanel;
 
-function TestExchangePanel.Awake(obj)
+function TestSliderPanel.Awake(obj)
     transform = obj.transform;
 
     this.InitPanel();
 end
 
-function TestExchangePanel.InitPanel()
+function TestSliderPanel.InitPanel()
     this.loopScroll = transform:Find("root/LoopScroll"):GetComponent("ActiveLoopScrollRect");
     local xxx = 0
 end

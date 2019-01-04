@@ -17,7 +17,7 @@ function ConfirmPopCtrl:initialize()
 end
 
 function ConfirmPopCtrl:bundleName()
-    return "ConfirmPopPanel";
+    return "Assets/CityGame/Resources/View/ConfirmPopPanel.prefab";
 end
 
 function ConfirmPopCtrl:OnCreate(obj)

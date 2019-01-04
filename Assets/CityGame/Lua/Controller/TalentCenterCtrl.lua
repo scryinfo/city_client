@@ -12,7 +12,7 @@ function TalentCenterCtrl:initialize()
 end
 
 function TalentCenterCtrl:bundleName()
-    return "TalentCenterPanel"
+    return "Assets/CityGame/Resources/View/TalentCenterPanel.prefab"
 end
 
 function TalentCenterCtrl:OnCreate(obj)

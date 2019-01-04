@@ -13,7 +13,7 @@ function HouseCtrl:initialize()
 end
 
 function HouseCtrl:bundleName()
-    return "HousePanel"
+    return "Assets/CityGame/Resources/View/HousePanel.prefab"
 end
 
 function HouseCtrl:OnCreate(obj)

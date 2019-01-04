@@ -13,7 +13,7 @@ function ConstructCtrl:initialize()
 end
 
 function ConstructCtrl:bundleName()
-    return "ConstructPanel"
+    return "Assets/CityGame/Resources/View/ConstructPanel.prefab"
 end
 
 function ConstructCtrl:OnCreate(obj)

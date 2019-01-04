@@ -18,7 +18,7 @@ function GroundTransDetailCtrl:initialize()
 end
 
 function GroundTransDetailCtrl:bundleName()
-    return "GroundTransDetailPanel"
+    return "Assets/CityGame/Resources/View/GroundTransDetailPanel.prefab"
 end
 
 function GroundTransDetailCtrl:OnCreate(obj)

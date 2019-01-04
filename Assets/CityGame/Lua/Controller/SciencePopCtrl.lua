@@ -16,7 +16,7 @@ function SciencePopCtrl:initialize()
 end
 
 function SciencePopCtrl:bundleName()
-    return "SciencePopPanel";
+    return "Assets/CityGame/Resources/View/SciencePopPanel.prefab";
 end
 
 function SciencePopCtrl:OnCreate(obj)

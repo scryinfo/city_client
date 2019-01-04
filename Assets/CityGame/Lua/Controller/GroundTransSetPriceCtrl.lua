@@ -11,7 +11,7 @@ function GroundTransSetPriceCtrl:initialize()
 end
 
 function GroundTransSetPriceCtrl:bundleName()
-    return "GroundTransSetPricePanel"
+    return "Assets/CityGame/Resources/View/GroundTransSetPricePanel.prefab"
 end
 
 function GroundTransSetPriceCtrl:OnCreate(obj)

@@ -13,7 +13,7 @@ function ConstructDialogPageCtrl:initialize()
 end
 
 function ConstructDialogPageCtrl:bundleName()
-    return "ConstructDialogPagePanel"
+    return "Assets/CityGame/Resources/View/ConstructDialogPagePanel.prefab"
 end
 
 function ConstructDialogPageCtrl:OnCreate(obj)

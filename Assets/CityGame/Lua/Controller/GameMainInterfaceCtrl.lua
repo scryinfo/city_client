@@ -7,7 +7,7 @@ local Mails
 
 
 function  GameMainInterfaceCtrl:bundleName()
-    return "GameMainInterfacePanel"
+    return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
 
 function GameMainInterfaceCtrl:initialize()

@@ -10,7 +10,7 @@ function TransportBoxCtrl:initialize()
 end
 
 function TransportBoxCtrl:bundleName()
-    return "TransportBoxPanel";
+    return "Assets/CityGame/Resources/View/TransportBoxPanel.prefab";
 end
 
 function TransportBoxCtrl:OnCreate(obj)

@@ -6,7 +6,7 @@ function DETAILSBoxCtrl:initialize()
 end
 
 function DETAILSBoxCtrl:bundleName()
-    return "DETAILSBoxPanel";
+    return "Assets/CityGame/Resources/View/DETAILSBoxPanel.prefab";
 end
 
 function DETAILSBoxCtrl:OnCreate(obj)

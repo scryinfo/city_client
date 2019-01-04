@@ -11,7 +11,7 @@ function PersonalHomeDialogPageCtrl:initialize()
 end
 
 function PersonalHomeDialogPageCtrl:bundleName()
-    return "PersonalHomeDialogPagePanel"
+    return "Assets/CityGame/Resources/View/PersonalHomeDialogPagePanel.prefab"
 end
 
 function PersonalHomeDialogPageCtrl:OnCreate(obj )

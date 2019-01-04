@@ -13,7 +13,7 @@ function TopBarCtrl:initialize()
     UIPage.initialize(self,UIType.Fixed,UIMode.HideOther,UICollider.None)
 end
 function TopBarCtrl:bundleName()
-    return "TopbarPanel"
+    return "Assets/CityGame/Resources/View/TopbarPanel.prefab"
 end
 --function TopBarCtrl.OnCreate(obj ,self)
 --    UIPage.OnCreate(self,obj)

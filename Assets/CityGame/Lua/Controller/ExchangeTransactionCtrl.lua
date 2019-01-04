@@ -13,7 +13,7 @@ function ExchangeTransactionCtrl:initialize()
 end
 
 function ExchangeTransactionCtrl:bundleName()
-    return "ExchangeTransactionPanel"
+    return "Assets/CityGame/Resources/View/ExchangeTransactionPanel.prefab"
 end
 
 function ExchangeTransactionCtrl:OnCreate(obj)

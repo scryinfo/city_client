@@ -11,7 +11,7 @@ function GroundTransOthersCheckInfoCtrl:initialize()
 end
 
 function GroundTransOthersCheckInfoCtrl:bundleName()
-    return "GroundTransOthersCheckInfoPanel"
+    return "Assets/CityGame/Resources/View/GroundTransOthersCheckInfoPanel.prefab"
 end
 
 function GroundTransOthersCheckInfoCtrl:OnCreate(obj)

@@ -176,7 +176,7 @@ function AddProductionLineCtrl:initialize()
 end
 
 function AddProductionLineCtrl:bundleName()
-    return "AddProductionLinePanel"
+    return "Assets/CityGame/Resources/View/AddProductionLinePanel.prefab"
 end
 
 function AddProductionLineCtrl:OnCreate(obj)

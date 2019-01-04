@@ -34,7 +34,7 @@ function GroundTransSelfCheckInfoCtrl:Hide()
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化
@@ -47,7 +47,7 @@ end
 function GroundTransSelfCheckInfoCtrl:_setShowState(rent)
     GroundTransSelfCheckInfoPanel.rentalText.text = rent.rentPreDay
     GroundTransSelfCheckInfoPanel.tenancyText.text = rent.rentDays.."d"
-    local remainDay = math.floor(((rent.rentBeginTs + rent.rentDays * 86400) - os.time()) / 86400)
+    local remainDay = math.floor(((rent.rentBeginTs / 1000 + rent.rentDays * 86400) - os.time()) / 86400)
     GroundTransSelfCheckInfoPanel.remainDayText.text = remainDay.."d"
 end
 

@@ -27,10 +27,7 @@ function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.numText=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
     self.timeText=prefab.transform:Find("bg/timeImage/Text"):GetComponent("Text");
 
-
-
     self._luabehaviour:AddClick(self.addBtn.gameObject, self.OnClick_Add, self);
-
 
 end
 ---添加
@@ -45,7 +42,8 @@ end
 
 function AddItem:updateTime()
     if self.remainTime then
-        local remainTime= getFormatUnixTime(self.remainTime-1-os.time())
-        self.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.minute..":"..remainTime.second --"h"
+         self.remainTime=self.remainTime-1
+        local remainTime= convertTimeForm(self.remainTime)
+        self.timeText.text=remainTime.hour+24*remainTime.day.. ":"..remainTime.min..":"..remainTime.sec --"h"
     end
 end

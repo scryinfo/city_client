@@ -32,6 +32,8 @@ function MunicipalPanel.InitPanel()
     this.panel=transform:Find("Panel")
     this.stopIconRoot=transform:Find("stopIconROOT")
     this.stopText=transform:Find("stopIconROOT/Text"):GetComponent("Text")
+
+
 end
 --数据初始化
 function MunicipalPanel.InitDate(MunicipalData)

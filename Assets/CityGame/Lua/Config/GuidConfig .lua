@@ -1,5 +1,5 @@
 GuidBookConfig={
-    ["建筑说明"]=
+    ["建筑说明,building"]=
     {
         ["交易所"]=
         {
@@ -77,7 +77,7 @@ GuidBookConfig={
             ["人才"]="",
         },
     },
-    ["功能说明"]=
+    ["功能说明,function"]=
     {
         ["土地"]=
         {
@@ -112,7 +112,7 @@ GuidBookConfig={
         },
     },
 
-    ["AI系统"]=
+    ["AI系统,AI"]=
     {
         ["AI系统"]=
         {
@@ -126,7 +126,7 @@ GuidBookConfig={
 
     },
 
-    ["ScryCity介绍"]=
+    ["ScryCity介绍,about"]=
     {
         ["ScryCity介绍"]=
         {

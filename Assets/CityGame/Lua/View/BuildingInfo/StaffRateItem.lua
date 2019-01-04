@@ -58,6 +58,12 @@ function StaffRateItem:_checkWorkTime()
     self.workingTimeText.transform.localScale = Vector3.zero
     self.restingTimeText.transform.localScale = Vector3.zero
 
+    if self.staffData.buildingTypeId~=1 then
+
+
+
+
+
     local timeTable = getFormatUnixTime(os.time())
     local time = timeTable.year..timeTable.month..timeTable.day
     if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
@@ -75,7 +81,7 @@ function StaffRateItem:_checkWorkTime()
             --
             for i, timeData in pairs(workTime) do
                 local temp = timeData[1] + timeData[2]
-                if timeTable.hour >= timeData[1] and timeTable.hour < temp then  --在工作时间内
+                if tonumber(timeTable.hour) >= timeData[1] and tonumber(timeTable.hour) < temp then  --在工作时间内
                     self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(timeData[1]), self:_getTimeFormat(temp))
                     return
                 end
@@ -88,6 +94,8 @@ function StaffRateItem:_checkWorkTime()
         self.working.localScale = Vector3.zero
         self.resting.localScale = Vector3.one
         self.restingTimeText.transform.localScale = Vector3.zero
+    end
+
     end
 end
 

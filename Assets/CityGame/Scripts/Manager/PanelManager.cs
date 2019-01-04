@@ -24,14 +24,13 @@ namespace LuaFramework {
         }
         string GetBundleName(ref string releativePath)
         {
-            string outstr = releativePath.Replace("/", "_");
-            return outstr.ToLower() + AppConst.BundleExt;
+            return ResManager.getBundleName(releativePath.ToLower());
         }
 
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                
         public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null)
         {
-            string assetName = releativePath ;
+            string assetName = releativePath.ToLower() ;
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }
@@ -39,6 +38,15 @@ namespace LuaFramework {
             assetName = GetAssetName(ref releativePath);
 #endif
             string abName = GetBundleName(ref releativePath);
+
+            if(abName == null)
+            {
+                if (func != null)
+                {
+                    func.Call(objInstance);
+                    Debug.LogError("LoadPrefab_A::>> " + "abName"+ "is null ");
+                }
+            }
 
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)

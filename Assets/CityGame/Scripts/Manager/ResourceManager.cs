@@ -29,9 +29,11 @@ namespace LuaFramework {
         string[] m_AllManifest = null;
         AssetBundleManifest m_AssetBundleManifest = null;
         static Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]>();
+        static Dictionary<string, string> m_ResourcesBundleInfo = new Dictionary<string, string>();
         static Dictionary<string, AssetBundleInfo> m_LoadedAssetBundles = new Dictionary<string, AssetBundleInfo>();
         Dictionary<string, List<LoadAssetRequest>> m_LoadRequests = new Dictionary<string, List<LoadAssetRequest>>();
-
+        int resInitCountAll = 0;
+        int resInitCountCur = 0;
         class LoadAssetRequest {
             public Type assetType;
             public string[] assetNames;
@@ -43,12 +45,41 @@ namespace LuaFramework {
         public void Initialize(string manifestName, Action initOK) {
             m_BaseDownloadingURL = Util.GetRelativePath();
             LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs, AssetBundle ab) {
-                if (objs.Length > 0) {
+                if (objs.Length > 0) {                    
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
                     m_AllManifest = m_AssetBundleManifest.GetAllAssetBundles();
+                    string[] dependencies0 = m_AssetBundleManifest.GetAllDependencies(manifestName);
+                    int xx1 = 0;
+                    resInitCountAll = m_AllManifest.Length;
+                    for (int i = 0; i < m_AllManifest.Length; i++) {
+                        string bdname = m_AllManifest[i];
+                        LoadAsset<AssetBundleManifest>(bdname, new string[] { bdname }, delegate (UObject[] objs1, AssetBundle ab1) {
+                            AssetBundle assetBundle = ab1;
+                            string[] assetlist = ab1.GetAllAssetNames();
+                            for(int j = 0; j < assetlist.Length; ++j)
+                            {
+                                m_ResourcesBundleInfo[assetlist[j]] = bdname;
+                            }
+
+                            resInitCountCur++;
+
+                            if (resInitCountCur >= resInitCountAll) {
+                                if (initOK != null) initOK();
+                            }
+                        });
+                    }
                 }
-                if (initOK != null) initOK();
+                
             });
+        }
+
+        public string getBundleName(string resName)
+        {
+            if (m_ResourcesBundleInfo.ContainsKey(resName))
+            {
+                return m_ResourcesBundleInfo[resName];
+            }
+            return "";
         }
 
         public void LoadPrefab(string abName, string assetName, Action<UObject[], AssetBundle> func, System.Type type = null)

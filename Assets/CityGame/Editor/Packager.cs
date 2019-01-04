@@ -239,58 +239,38 @@ public class Packager {
         subdir = subdir.Replace("\\", "");
         if (subdir.Length > 0)
             subdir += "_";
-        //if (bundleName.Length == 0)
-        if (true)
+
+        string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+        int pos = -1;
+        for (int i = 0; i < files.Length; i++)
         {
-            string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-            //if (files.Length == 0) return;
-            int pos = -1;
-            for (int i = 0; i < files.Length; i++)
+            files[i] = files[i].Replace('\\', '/');
+            pos = files[i].LastIndexOf('/');
+            if (pos >= 0)
             {
-                files[i] = files[i].Replace('\\', '/');
-                pos = files[i].LastIndexOf('/');
-                if (pos >= 0)
-                {
-                    string bundleName = subdir + files[i].Remove(0, pos + 1);
-                    bundleName = bundleName.Replace(".prefab", "");
-                    bundleName = bundleName.Replace(".png", "");
-                    bundleName += AppConst.BundleExt;
-                    AssetBundleBuild build = new AssetBundleBuild();
-                    build.assetBundleName = bundleName;
-                    build.assetNames = new string[] { files[i] };
-                    maps.Add(build);
-                }
+                string bundleName = subdir + files[i].Remove(0, pos + 1);
+                string oldExt = pattern.Remove(0,1);
+                bundleName = bundleName.Replace(oldExt, "");
+                bundleName += AppConst.BundleExt;
+                AssetBundleBuild build = new AssetBundleBuild();
+                build.assetBundleName = bundleName;
+                build.assetNames = new string[] { files[i] };
+                maps.Add(build);
             }
-            /*string[] dirs = Directory.GetDirectories(path);
-            for (int i = 0; i < dirs.Length; ++i)
-            {
-                AutoAddBuildMap(pattern, dirs[i], path);
-            }*/
-        }    
-        else {
-            /*bundleName = bundleName.Replace("\\", "");
-            string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-            if (files.Length == 0) return;
-            for (int i = 0; i < files.Length; i++)
-            {
-                files[i] = files[i].Replace('\\', '/');
-            }
-            AssetBundleBuild build = new AssetBundleBuild();
-            build.assetBundleName = bundleName;
-            build.assetNames = files;
-            maps.Add(build);*/
         }
     }
 
-    static void AddBuildMapOp(string path)
-    {        
-        AutoAddBuildMap("*.prefab", path, path);
-        AutoAddBuildMap("*.png", path, path);
+    static void AddBuildMapOp(ref string path, ref string[] patterns)
+    {
+        for (int i = 0; i < patterns.Length; ++i)
+        {
+            AutoAddBuildMap(patterns[i], path, path);            
+        }
+
         string[] dirs = Directory.GetDirectories(path);
         for (int i = 0; i < dirs.Length; ++i)
         {
-            AutoAddBuildMap("*.prefab", dirs[i], path);
-            AutoAddBuildMap("*.png", dirs[i], path);
+            AddBuildMapOp(ref dirs[i], ref patterns);
         }
     }
 
@@ -413,6 +393,35 @@ public class Packager {
         AssetDatabase.Refresh();
     }
 
+    static void AddBuildMapInOne(ref string path, ref string[] patterns)
+    {
+        AssetBundleBuild build = new AssetBundleBuild();
+        int pos = -1;
+        path = path.Replace('\\', '/');
+        pos = path.LastIndexOf('/');
+        if (pos >= 0)
+        {
+            string bundleName = path.Remove(0, pos + 1);
+            build.assetBundleName = bundleName;
+            build.assetBundleName += AppConst.BundleExt;
+            List<string> reslist = new List<string>();
+
+            for (int i = 0; i < patterns.Length; ++i)
+            {
+                string[] files = Directory.GetFiles(path, patterns[i], SearchOption.AllDirectories);
+                for(int j = 0; j < files.Length; ++j)
+                {
+                    files[j] = files[j].Replace('\\', '/');
+                }
+                reslist.AddRange(files);
+            }
+
+            build.assetNames = reslist.ToArray();
+
+            maps.Add(build);
+        }
+    }
+
     /// <summary>
     /// 处理自定义框架实例包
     /// </summary>
@@ -420,7 +429,23 @@ public class Packager {
     {
         string resPath = AppDataPath + "/" + AppConst.AssetDir + "/";
         if (!Directory.Exists(resPath)) Directory.CreateDirectory(resPath);
-        AddBuildMapOp("Assets/CityGame/Resources");
+        string curPath = "Assets/CityGame/Resources/Share";
+        string[] patterns = { "*.png", "*.otf", "*.prefab" };
+        AssetBundleBuild pkginfo;
+        pkginfo.assetBundleName = null;
+        AddBuildMapOp(ref curPath, ref patterns);
+        curPath = "Assets/CityGame/Resources/Share1";
+        AddBuildMapInOne(ref curPath, ref patterns);
+
+        curPath = "Assets/CityGame/Resources/testPng";
+        AddBuildMapInOne(ref curPath, ref patterns);
+
+        curPath = "Assets/CityGame/Resources/View";
+        AddBuildMapInOne(ref curPath, ref patterns);
+
+        //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
+        //AddBuildMapOp("Assets/CityGame/Resources/testPng");
+        //AddBuildMapOp("Assets/CityGame/Resources/View");
 
         return;
 

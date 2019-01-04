@@ -108,11 +108,18 @@ end
 --获取所有邮件
 function GameMainInterfaceCtrl:c_AllMails(DataInfo)
      Mails = DataInfo
-    if Mails ~= nil then
-        GameMainInterfacePanel.noticeItem.localScale = Vector3.one
-        return
-    else
+    --判定红点是否显示
+    if Mails == nil then
         GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        return
+    end
+    for i, v in pairs(Mails) do
+        if v.read == false then
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.one
+            return
+        else
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        end
     end
 end
 --通知--

@@ -13,7 +13,9 @@ end
 
 function GameNoticeModel:OnCreate()
     --网络回调
-     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","deleMail","gs.mailId",self.n_OnDeleMails)
+    -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","deleMail","gs.mailId",self.n_OnDeleMails)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","mailRead"),GameNoticeModel.n_OnMailRead);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delMail"),GameNoticeModel.n_OnDeleMails);
 
 end
 
@@ -22,15 +24,31 @@ function GameNoticeModel:Close()
 end
 --客户端请求--
 
+--读取邮件
+function GameNoticeModel:m_mailRead(mailId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "mailRead","gs.Id",{id = mailId})
+
+end
+
 --删除邮件
-function GameNoticeModel:m_deleMail(mailId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "deleMail","gs.mailId",{mailId = mailId})
+function GameNoticeModel:m_delMail(mailId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "delMail","gs.Id",{id = mailId})
 
 end
 
 --服务器回调--
 
+--查看
+function GameNoticeModel.n_OnMailRead(stream)
+    local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    local go = NoticeMgr.notice[lMsg.id]
+    Event.Brocast("c_OnMailRead",go)
+end
+
 --删除
-function GameNoticeModel:n_OnDeleMails(stream)
-    DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_delMails',stream)
+function GameNoticeModel.n_OnDeleMails(stream)
+    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_delMails',stream)
+    local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    local go = NoticeMgr.notice[lMsg.id]
+    Event.Brocast("c_OnDeleMails",go)
 end

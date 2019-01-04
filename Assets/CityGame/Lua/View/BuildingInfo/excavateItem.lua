@@ -3,81 +3,65 @@
 --- Created by password.
 --- DateTime: 2018/12/22 14:50
 ---人才挖掘Item
-excavateItem = class('excavateItem');
-excavateItem.static.TOTAL_H = 475  --整个Item的高度
-excavateItem.static.CONTENT_H = 410  --显示内容的高度
-excavateItem.static.TOP_H = 100  --top条的高度
+ExcavateItem = class('ExcavateItem');
+ExcavateItem.static.TOTAL_H = 775  --整个Item的高度
+ExcavateItem.static.CONTENT_H = 690  --显示内容的高度
+ExcavateItem.static.TOP_H = 100  --top条的高度
+ExcavateItem.static.Line_PATH = "View/TalentCenterItem/ExcavateLineItem"
+local ExcavateLine = {}
+local content
 
 --初始化方法   数据需要接受服务器发送的数据
-function excavateItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
+function ExcavateItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.warehouseData = warehouseData;
-    self.toggleData = toggleData  --位于toggle的第三个  左边
+    self.toggleData = toggleData  --位于toggle的第1个  右边
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
-    self.sizeSlider = self.viewRect.transform:Find("contentRoot/sizeSlider"):GetComponent("Slider");  -- slider
-    self.numberText = self.viewRect.transform:Find("contentRoot/number"):GetComponent("Text");
+
+    content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
+
+    self:initdata()
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
-
+         ct.OpenCtrl("TalentMiningCtrl")
     end);
-    if self.warehouseData.buildingType == BuildingType.MaterialFactory then
-        self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
-        self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
-        self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
-    elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
-        self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
-        self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
-        self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
-    end
-    --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
-    --    --    mgrTable:houseOccDataUpdate(data)
-    --    --end);
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
-    Event.AddListener("m_addTalents",self.m_addTalents,self);
-    Event.AddListener("m_delTalents",self.m_delTalents,self);
 end
 
-function excavateItem:getWarehouseCapacity(table)
-    local warehouseCapacity = 0
-    if not table.inHand then
-        warehouseCapacity = 0
-        return warehouseCapacity;
-    else
-        for k,v in pairs(table.inHand) do
-            warehouseCapacity = warehouseCapacity + v.n
-        end
-        return warehouseCapacity
+--初始化
+function ExcavateItem:initdata()
+    for i = 1, 5 do
+        self:m_addTalents(ExcavateItem.static.Line_PATH,i,nil)
     end
 end
 
 --获取是第几个点击了
-function excavateItem:getToggleIndex()
+function ExcavateItem:getToggleIndex()
     return self.toggleData.index;
 end
 
 --打开
-function excavateItem:openToggleItem(targetMovePos)
+function ExcavateItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open;
 
     self.openStateTran.localScale = Vector3.one;
     self.closeStateTran.localScale = Vector3.zero;
 
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, excavateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, ExcavateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    return Vector2.New(targetMovePos.x,targetMovePos.y - excavateItem.static.TOTAL_H);
+    return Vector2.New(targetMovePos.x,targetMovePos.y - ExcavateItem.static.TOTAL_H);
 end
 
 --关闭
-function excavateItem:closeToggleItem(targetMovePos)
+function ExcavateItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close;
 
     self.openStateTran.localScale = Vector3.zero;
@@ -86,14 +70,16 @@ function excavateItem:closeToggleItem(targetMovePos)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    return Vector2.New(targetMovePos.x,targetMovePos.y - excavateItem.static.TOP_H);
+    return Vector2.New(targetMovePos.x,targetMovePos.y - ExcavateItem.static.TOP_H);
 end
 
 --添加人才挖掘线
-function excavateItem:m_addTalents(lineTable)
-
+function ExcavateItem:m_addTalents(path,id,data)
+    local prefab = creatGoods(path,content)
+    ExcavateLine[id] = ExcavateLineItem:new(prefab,id,data)
 end
 --删除人才挖掘线
-function excavateItem:m_delTalents(lineTable)
-
+function ExcavateItem:m_delTalents(id)
+    destroy(ExcavateLine[id].prefab.gameObject)
+    table.remove(ExcavateLine,id)
 end

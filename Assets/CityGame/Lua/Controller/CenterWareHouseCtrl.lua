@@ -135,7 +135,7 @@ function CenterWareHouseCtrl:Refresh()
     self.money = 1000;--扩容所需金额
     self:_initData();
     self:initInsData()
-    CenterWareHousePanel.tipText.text = 0
+    --CenterWareHousePanel.tipText.text = 0
 end
 
 function CenterWareHouseCtrl:initInsData()
@@ -145,6 +145,7 @@ end
 
 
 --扩容按钮
+
 function CenterWareHouseCtrl:c_OnAddBtn(go)
     DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
 end
@@ -174,16 +175,16 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.currentLocationName = "中心仓库"--起始地址
     data.targetLocationName =ChooseWarehouseCtrl:GetName()--目标地址
     local pos ={}
-    pos.x = 45
-    pos.y = 45
+    pos.x = BagPosInfo[1].bagX
+    pos.y = BagPosInfo[1].bagY
     data.distance = ChooseWarehouseCtrl:GetDistance(pos)--距离
     local n = 0
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
         n = n + v.inputText.text
     end
     data.number = n--数量
-    data.freight = n*1--运费
-    data.total = n*1--总运费
+    data.freight = n*data.distance*BagPosInfo[1].postageCost--运费
+    data.total = n*data.distance*BagPosInfo[1].postageCost--总运费
     data.btnClick = function()
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then

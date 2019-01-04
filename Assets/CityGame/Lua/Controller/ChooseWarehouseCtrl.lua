@@ -41,6 +41,7 @@ function ChooseWarehouseCtrl:Awake(go)
 end
 
 function ChooseWarehouseCtrl:Refresh()
+    WareHouseGoodsMgr:_clear()
     ChooseWarehousePanel.boxImg:SetActive(true)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
@@ -67,7 +68,7 @@ end
 
 --获取玩家好友列表
 function ChooseWarehouseCtrl:GetMyFriends()
-    local ids = DataManager.GetMyFriends()  --获取好友id
+    local ids = DataManager.GetMyFriends()  --获取好友id--
     if ids == nil then
         return
     end
@@ -98,8 +99,9 @@ end
 
 --返回
 function ChooseWarehouseCtrl:OnClick_returnBtn()
-    WareHouseGoodsMgr:_clear()
     ChooseWarehouseCtrl:_removeListener()
+    WareHouseGoodsMgr:_clear()
+
     UIPage.ClosePage();
 end
 --搜索

@@ -18,7 +18,7 @@ registerNetMsg:
 		要注册的回调函数，网络消息回来之后，会调用到这个注册的函数，并传入一个 存放Protobuf数据的 steam 字节流， 客户端需要在回调函数中调用 protobuf 对应协议的反序列化方法
 ]]--
 function CityEngineLua.Message:registerNetMsg(msgId, handler)
-	--CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
+	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
 end
 
 function CityEngineLua.Message:newNetMsg( id)

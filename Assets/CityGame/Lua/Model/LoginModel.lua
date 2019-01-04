@@ -39,7 +39,6 @@ function LoginModel.registerAsNetMsg()
     --as网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","login"),LoginModel.n_AsLogin);
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
-
 end
 
 --点击登录

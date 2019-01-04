@@ -18,17 +18,17 @@ namespace LuaFramework {
             }
         }
 
-        string GetAssetName(ref string releativePath) {
-            int pos = releativePath.LastIndexOf('/');
-            return releativePath.Remove(0, pos + 1);
+        public string GetAssetName(ref string releativePath) {
+            return ResourceManager.GetAssetName(ref releativePath);
         }
-        string GetBundleName(ref string releativePath)
+        public string GetBundleName( ref string releativePath)
         {
-            return ResManager.getBundleName(releativePath.ToLower());
+            string lstr = releativePath.ToLower();
+            return ResourceManager.getBundleName(ref lstr);
         }
 
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                
-        public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null)
+        public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null,Action<UnityEngine.Object[], AssetBundle> csFunc = null)
         {
             string assetName = releativePath.ToLower() ;
             if (type == null) {
@@ -52,23 +52,15 @@ namespace LuaFramework {
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
-                if (objs.Length == 0) return;
-                /*int pos = releativePath.LastIndexOf(".");
-                assetName = assetName.Remove(pos);
-                pos = assetName.LastIndexOf('/');
-                assetName = assetName.Remove(0, pos + 1);
-                if (pos < 0) {
-                    func.Call(objInstance);
-                    Debug.LogError("LoadPrefab_A::>> " + "abName" + "is null ");
-                    return;
-                }*/
+                if (objs.Length == 0) return;                                
                 
-                //objs[0].name = assetName;
                 if (func != null)
                 {
                     func.Call(objInstance, objs[0], ab);                    
                 }
-
+                if (csFunc != null) {
+                    csFunc(objs, ab);
+                }
             }, type);
 #else
             GameObject prefab = ResManager.LoadAsset<GameObject>(releativePath, assetName);

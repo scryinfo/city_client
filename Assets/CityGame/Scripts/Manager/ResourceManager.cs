@@ -83,7 +83,7 @@ namespace LuaFramework {
             });
         }
 
-        public string getBundleName(string resName)
+        public static string getBundleName(ref string resName)
         {
             if (m_ResourcesBundleInfo.ContainsKey(resName))
             {
@@ -199,12 +199,12 @@ namespace LuaFramework {
             }            
 #endif
         }
-
         public static string GetAssetName(ref string releativePath)
         {
             int pos = releativePath.LastIndexOf('/');
             return releativePath.Remove(0, pos + 1);
         }
+
         public static string GetBundleName(ref string releativePath)
         {
             string outstr = releativePath.Replace("/", "_");

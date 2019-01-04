@@ -218,3 +218,7 @@ end
 function RetailShelfCtrl:OnClick_return_Btn()
     UIPage.ClosePage();
 end
+function RetailShelfCtrl:Hide()
+    UIPage.Hide(self)
+    return {insId = self.m_data.info.id}
+end

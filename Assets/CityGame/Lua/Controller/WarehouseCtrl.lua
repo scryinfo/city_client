@@ -75,6 +75,10 @@ function WarehouseCtrl:OnClick_returnBtn(go)
     go:deleteObjInfo()
     UIPage.ClosePage();
 end
+function WarehouseCtrl:Hide()
+    UIPage.Hide(self)
+    return {insId = self.m_data.info.id}
+end
 --搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)
 

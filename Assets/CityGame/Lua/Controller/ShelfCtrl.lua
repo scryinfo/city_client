@@ -118,6 +118,10 @@ function ShelfCtrl:OnClick_return_Btn(go)
     go:deleteObjInfo();
     UIPage.ClosePage();
 end
+function ShelfCtrl:Hide()
+    UIPage.Hide(self)
+    return {insId = self.m_data.info.id}
+end
 --根据名字排序
 function ShelfCtrl:OnClick_OnName(ins)
     ShelfPanel.nowText.text = "By name";

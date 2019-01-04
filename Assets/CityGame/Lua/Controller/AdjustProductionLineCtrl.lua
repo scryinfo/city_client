@@ -63,6 +63,10 @@ function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     --go:deleteTempTable();
     UIPage.ClosePage();
 end
+function AdjustProductionLineCtrl:Hide()
+    UIPage.Hide(self)
+    return {insId = self.m_data.info.id}
+end
 
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
     ct.OpenCtrl("AddProductionLineCtrl",go.m_data)

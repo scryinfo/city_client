@@ -311,10 +311,9 @@ function UIPage:ClosePage()
     --//TODO:Sub pages.belong to root node.
     if #pageNodes > 0 then
         local page = pageNodes[#pageNodes];
-        if page.isAsyncUI == ture then
-            UIPage:ShowPageInstance(page,function()
-                closePage:Hide();
-            end);
+        if page.isAsyncUI == false then
+            local data = closePage:Hide()
+            UIPage:ShowPageInstance(page,data)
         else
             UIPage:ShowPageInstance(page)
             closePage:Hide();

@@ -88,8 +88,8 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
                      Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,tonumber(inputValue))
                      Event.Brocast("m_startBusiness",m_data.buildInfo.id)
                      Event.Brocast("mCloes")
-                     m_data:func()
-                     Event.Brocast("SmallPop","Success",300)
+                     --m_data:func()
+                     --Event.Brocast("SmallPop","Success",300)
                    end
     ct.OpenCtrl("ReminderCtrl",data)
 

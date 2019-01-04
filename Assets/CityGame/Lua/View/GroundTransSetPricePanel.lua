@@ -37,4 +37,5 @@ function GroundTransSetPricePanel.cleanData()
     this.minRentDayInput.text = ""
     this.maxRentDayInput.text = ""
     this.rentalInput.text = ""
+    this.sellInput.text = ""
 end

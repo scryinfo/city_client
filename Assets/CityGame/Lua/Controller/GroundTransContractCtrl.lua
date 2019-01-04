@@ -35,7 +35,7 @@ function GroundTransContractCtrl:Hide()
 end
 
 function GroundTransContractCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化
@@ -52,7 +52,9 @@ function GroundTransContractCtrl:_setShowState(data)
         GroundTransContractPanel.rentDailyRentText.text = "E"..data.groundInfo.rent.rentPreDay
         GroundTransContractPanel.totalPriceText.text = "E"..total
         GroundTransContractPanel.rentTenancyText.text = data.rentDay.."d"
-        --GroundTransContractPanel.rentTenancyTimeText.text = string.format("")
+        local nowStr = os.date("%Y/%m/%d %H:%M", os.time())
+        local endStr = os.date("%Y/%m/%d %H:%M", os.time() + data.rentDay * 86400)
+        GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
     else
         GroundTransContractPanel.chooseState(false)
         GroundTransContractPanel.totalPriceText.text = "E"..data.groundInfo.sell.price

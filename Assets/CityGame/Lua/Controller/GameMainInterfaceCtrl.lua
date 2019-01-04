@@ -51,9 +51,21 @@ end
 
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
+    if buildingInfo.ownerId~=DataManager.GetMyOwnerID() then
+        return
+    end
+    local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
     local data = {workerNum=20,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
+
+    Event.AddListener("c_successBuilding",function ()
+        func()
+        Event.Brocast("SmallPop","Success",300)
+    end ,self)
+
 end
+
+
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
     --打开界面

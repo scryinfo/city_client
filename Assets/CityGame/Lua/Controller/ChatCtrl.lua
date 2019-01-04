@@ -178,6 +178,7 @@ function ChatCtrl._showChatNoticeItem()
     ChatPanel.strangersNoticeImage:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    local saveUnread = DataManager.GetUnread()
     if ChatPanel.friendsToggle.interactable then
         for _, v in pairs(chatFriendsInfo) do
             if v.unreadNum and v.unreadNum > 0 then
@@ -192,6 +193,14 @@ function ChatCtrl._showChatNoticeItem()
             if m.unreadNum and m.unreadNum > 0 then
                 ChatPanel.strangersNoticeImage:SetActive(true)
                 break
+            end
+        end
+    end
+    if saveUnread then
+        for _, n in pairs(saveUnread) do
+            if n and n[1] then
+                ChatPanel.friendsNoticeImage:SetActive(true)
+                return
             end
         end
     end
@@ -410,17 +419,16 @@ end
 
 -- 陌生人加好友
 function ChatCtrl:OnAddFriends(go)
-    --local data = {}
-    --data.titleInfo = "REMINDER"
-    --data.tipInfo = "Please input verification information!"
-    --data.btnCallBack = function(text)
-    --    ct.log("tina_w8_friends", "向服务器发送加好友信息")
-    --    Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
-    --    Event.Brocast("SmallPop","Your request has been sent.",80)
-    --    go:_closePlayerInfo()
-    --end
-    --ct.OpenCtrl("CommonDialogCtrl", data)
-    DataManager.ReadFriendsChat()
+    local data = {}
+    data.titleInfo = "REMINDER"
+    data.tipInfo = "Please input verification information!"
+    data.btnCallBack = function(text)
+        ct.log("tina_w8_friends", "向服务器发送加好友信息")
+        Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
+        Event.Brocast("SmallPop","Your request has been sent.",80)
+        go:_closePlayerInfo()
+    end
+    ct.OpenCtrl("CommonDialogCtrl", data)
 end
 
 -- 陌生人私聊
@@ -441,8 +449,8 @@ end
 
 -- 删除聊天记录
 function ChatCtrl:OnFriendsDelete(go)
-    DataManager.SaveFriendsChat()
-
+    --DataManager.SaveFriendsChat()
+    DataManager.ReadFriendsChat()
 end
 
 -- 屏蔽玩家
@@ -503,13 +511,17 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
 
             local chatFriendsInfo = DataManager.GetMyChatInfo(2)
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
+            local saveUnread = DataManager.GetUnread()
             for _, m in ipairs(playerData.info) do
                 if m.id ~= ChatCtrl.static.chatMgr:GetActivePlayerId() then
-                    if chatFriendsInfo[m.id] then
-                        friendsPlayerItem[m.id]:SetNoticeText(chatFriendsInfo[m.id].unreadNum)
-                    else
-                        friendsPlayerItem[m.id]:SetNoticeText(0)
+                    local noticeNum = 0
+                    if saveUnread and saveUnread[m.id] then
+                        noticeNum = #saveUnread[m.id]
                     end
+                    if chatFriendsInfo[m.id] then
+                        noticeNum = noticeNum + chatFriendsInfo[m.id].unreadNum
+                    end
+                    friendsPlayerItem[m.id]:SetNoticeText(noticeNum)
                 end
             end
         end
@@ -560,10 +572,15 @@ function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
                 ChatCtrl.static.chatMgr:CreateChatItem(chatData)
                 ChatCtrl.static.chatMgr:StartScrollBottom()
             else
-                local chatStrangersInfo = DataManager.GetMyChatInfo(2)
+                local chatFriendsInfo = DataManager.GetMyChatInfo(2)
                 local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
                 if friendsPlayerItem[chatData.id] then
-                    friendsPlayerItem[chatData.id]:SetNoticeText(chatStrangersInfo[chatData.id].unreadNum)
+                    local saveUnread = DataManager.GetUnread()
+                    local noticeNum = chatFriendsInfo[chatData.id].unreadNum
+                    if saveUnread and saveUnread[chatData.id] then
+                        noticeNum = noticeNum + #saveUnread[chatData.id]
+                    end
+                    friendsPlayerItem[chatData.id]:SetNoticeText(noticeNum)
                 end
             end
         else

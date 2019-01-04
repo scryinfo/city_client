@@ -310,14 +310,27 @@ end
 
 -- 显示已有的聊天记录
 function ChatMgr:ShowAllChatInfo(index, id)
-    if not DataManager.GetMyChatInfo(index)[id] then
-        return
+    local chatInfo = {}
+    local saveUnread = DataManager.GetUnread()
+    if index == 2 then
+        if saveUnread[id] then
+            for _, a in pairs(saveUnread[id]) do
+                table.insert(chatInfo, a)
+            end
+        end
     end
-    local chatInfo = DataManager.GetMyChatInfo(index)[id].chatInfo
-    local firendsInfoAllNum = #chatInfo
+    if DataManager.GetMyChatInfo(index)[id] then
+        local onlineChatInfo = DataManager.GetMyChatInfo(index)[id].chatInfo
+        for _, b in pairs(onlineChatInfo) do
+            table.insert(chatInfo, b)
+        end
+    end
+
     for _, v in ipairs(chatInfo) do
         self:CreateChatItem(v)
     end
+
+    --local firendsInfoAllNum = #chatInfo
     --if firendsInfoAllNum <= 0 then
     --    return
     --end

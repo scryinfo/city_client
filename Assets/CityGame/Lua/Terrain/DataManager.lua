@@ -731,6 +731,11 @@ function DataManager.ReadFriendsChat()
     PersonDataStack.socialityManager:ReadFriendsChat()
 end
 
+-- 读取保存聊天消息
+function DataManager.GetUnread()
+    return PersonDataStack.socialityManager:GetUnread()
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding

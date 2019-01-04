@@ -13,6 +13,7 @@ function SocialityManager:initialize()
     self.m_chatByType = {{}, {}, {}}
     self.m_friendsApply = {}
     self.m_blacklist = {}
+    self.mySaveRoleCom = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
     self:ReadFriendsChat()
 end
 
@@ -61,6 +62,8 @@ function SocialityManager:SetMyChatInfo(chatData)
         end
         table.insert(self.m_chatByType[2][dataId].unreadChatInfo, chatData)
         table.insert(self.m_chatByType[2][dataId].chatInfo, chatData)
+        table.insert(self.mySaveRoleCom.readCommunication, chatData)
+        self:SaveFriendsChat(false)
     elseif chatData.channel == "UNKNOWN" then
         local dataId
         if DataManager.GetMyOwnerID() == chatData.id then
@@ -86,13 +89,18 @@ function SocialityManager:SetMyChatInfo(chatData)
 end
 
 function SocialityManager:SetMyReadChatInfo(index, id)
-    if not self.m_chatByType[index][id] then
-        return
+    if self.m_chatByType[index][id] then
+        self.m_chatByType[index][id].unreadNum = 0
+        if index == 2 then
+            self.m_chatByType[2][id].unreadChatInfo = {}
+        end
     end
     if index == 2 then
-        self.m_chatByType[2][id].unreadChatInfo = {}
+        if self.unread and self.unread[id] and self.unread[id][1] then
+            self.unread[id] = {}
+            self:SaveFriendsChat(true)
+        end
     end
-    self.m_chatByType[index][id].unreadNum = 0
 end
 
 --1 获取世界消息 2 获取好友消息 3 获取陌生人消息
@@ -143,7 +151,7 @@ function SocialityManager:SetMyBlacklist(tempData)
 end
 
 -- 保存聊天记录
-function SocialityManager:SaveFriendsChat()
+function SocialityManager:SaveFriendsChat(isUpdateUnread)
     --local testmsg = {testValue = {1,2,3,8}}
     --local pMsg1 = assert(pbl.encode("client.CTestMsg", testmsg))
     --local msg = assert(pbl.decode("client.CTestMsg", pMsg1), "pbl.decode decode failed")
@@ -179,37 +187,46 @@ function SocialityManager:SaveFriendsChat()
     --    }
     --}
 
-    local myInfoTab = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
-    for m, n in pairs(self.m_chatByType[2]) do
-        if n.chatInfo then
-            for _, a in ipairs(n.chatInfo) do
-                table.insert(myInfoTab.readCommunication, a)
+    if isUpdateUnread then
+        self.mySaveRoleCom.unreadCommunication = {}
+        if self.unread then
+            for _, a in ipairs(self.unread) do
+                for _, c in ipairs(a) do
+                    table.insert(self.mySaveRoleCom.unreadCommunication, c)
+                end
             end
         end
-        if n.unreadChatInfo then
-            for _, b in ipairs(n.unreadChatInfo) do
-                table.insert(myInfoTab.unreadCommunication, b)
+        for _, n in pairs(self.m_chatByType[2]) do
+            if n.unreadChatInfo then
+                for _, b in ipairs(n.unreadChatInfo) do
+                    table.insert(self.mySaveRoleCom.unreadCommunication, b)
+                end
             end
         end
     end
     if self.saveRoleCom then
-        local isExit = true
-        for _, v in ipairs(self.saveRoleCom.allRoleCom) do
-            if v.id == DataManager.GetMyOwnerID() then
-                for _, h in ipairs(myInfoTab.readCommunication) do
-                    table.insert(v.readCommunication, h)
-                end
-                for _, u in ipairs(myInfoTab.unreadCommunication) do
-                    table.insert(v.unreadCommunication, u)
-                end
-                isExit = false
-            end
-        end
-        if isExit then
-            table.insert(self.saveRoleCom.allRoleCom, myInfoTab)
+        --local isExit = true
+        --for _, v in ipairs(self.saveRoleCom.allRoleCom) do
+        --    if v.id == DataManager.GetMyOwnerID() then
+        --        for _, h in ipairs(myInfoTab.readCommunication) do
+        --            table.insert(v.readCommunication, h)
+        --        end
+        --        for _, u in ipairs(myInfoTab.unreadCommunication) do
+        --            table.insert(v.unreadCommunication, u)
+        --        end
+        --        isExit = false
+        --        break
+        --    end
+        --end
+        if self.idIndex then
+            self.saveRoleCom.allRoleCom[self.idIndex] = self.mySaveRoleCom
+        else
+            table.insert(self.saveRoleCom.allRoleCom, self.mySaveRoleCom)
+            self.idIndex = #self.saveRoleCom.allRoleCom
         end
     else
-        self.saveRoleCom = {allRoleCom = {myInfoTab}}
+        self.saveRoleCom = {allRoleCom = {self.mySaveRoleCom}}
+        self.idIndex = 1
     end
     local pMsg = assert(pbl.encode("client.AllRoleCommunication", self.saveRoleCom))
     ct.file_saveString(self.path,pMsg)
@@ -220,15 +237,13 @@ function SocialityManager:ReadFriendsChat()
     local str = ct.file_readString(self.path)
     if str ~= nil then
         self.saveRoleCom = assert(pbl.decode("client.AllRoleCommunication", str), "pbl.decode decode failed")
-        for _, v in ipairs(self.saveRoleCom.allRoleCom) do
+        for i, v in ipairs(self.saveRoleCom.allRoleCom) do
             if v.id == DataManager.GetMyOwnerID() then
+                self.idIndex = i
                 self.mySaveRoleCom = v
                 if v.unreadCommunication then
-                    if v.unreadCommunication[1] then
-                        Event.Brocast("c_OnReceiveRoleCommunication", {channel = "FRIEND"})
-                    end
                     for _, m in ipairs(v.unreadCommunication) do
-                        local dataId = m.channelId
+                        local dataId = m.id
                         if not self.unread then
                             self.unread = {}
                         end
@@ -238,8 +253,14 @@ function SocialityManager:ReadFriendsChat()
                         table.insert(self.unread[dataId], m)
                     end
                 end
+                break
             end
         end
     end
     --local cRoleCommunication = msg.allRoleCom[1].cRoleCommunication[1].readCommunication[1].name
+end
+
+-- 查找上次未读信息
+function SocialityManager:GetUnread()
+    return self.unread
 end

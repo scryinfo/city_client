@@ -68,7 +68,7 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransContractCtrl:_closeBtnFunc()
-    --关闭所有界面
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransContractCtrl:_backBtnFunc()
@@ -79,11 +79,15 @@ end
 function GroundTransContractCtrl:_buyBtnFunc(ins)
     if ins.m_data.groundInfo.sell.price then
         GroundTransModel.m_ReqBuyGround(ins.m_data.groundInfo.sell.price)
+        Event.Brocast("SmallPop","Success", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --点击租房按钮
 function GroundTransContractCtrl:_rentBtnFunc(ins)
     if ins.m_data.groundInfo.rent then
         GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
+        Event.Brocast("SmallPop","Success", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end

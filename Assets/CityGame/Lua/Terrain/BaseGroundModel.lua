@@ -14,12 +14,13 @@ end
 function BaseGroundModel:Refresh(data)
     --判断是否自己的地块被卖给了别人
     --自己ID不等于nil，本来属于自己,现在不属于自己了
-    if nil ~= DataManager.GetMyOwnerID() and self.Data[ownerId] == DataManager.GetMyOwnerID() and data.ownerId ~= DataManager.GetMyOwnerID() then
+    if nil ~= DataManager.GetMyOwnerID() and self.Data.ownerId == DataManager.GetMyOwnerID() and data.ownerId ~= DataManager.GetMyOwnerID() then
         DataManager.RemoveMyGroundInfo(data)
     end
-    for key, value in pairs(data) do
-        self.Data[key] = value
-    end
+    --for key, value in pairs(data) do
+    --    self.Data[key] = value
+    --end
+    self.Data = data
 end
 
 function BaseGroundModel:Close()

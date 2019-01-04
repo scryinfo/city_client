@@ -7,7 +7,6 @@ local mCameraState = nil                --相机脚本
 
 local m_CameraScaleValueMin = 7     --缩放最近距离
 local m_CameraScaleValueMax = 20    --缩放最远距离
-local m_ScaleFactor = 100;          --缩放速度
 
 local m_CameraRootXMin = 0      --相机root节点X轴移动范围最小值
 local m_CameraRootXMax = 1000   --相机root节点X轴移动范围最大值
@@ -133,7 +132,9 @@ end
 
 --缩放相机距离远近
 function CameraMove:ScaleCamera()
-    local tempValue =  inputTools:GetZoomValue() * UnityEngine.Time.deltaTime * m_ScaleFactor
+    ct.log("system","inputTools:GetZoomValue()"..inputTools:GetZoomValue())
+    ct.log("system","UnityEngine.Time.deltaTime"..UnityEngine.Time.deltaTime)
+    local tempValue =  inputTools:GetZoomValue() * UnityEngine.Time.deltaTime
     local nowScaleValue = mainCameraTransform.localPosition.x - tempValue
     local targetScalePos = nil
     if nowScaleValue < m_CameraScaleValueMin then

@@ -63,6 +63,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         HousePanel.changeNameBtn.localScale = Vector3.zero
+        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         HousePanel.changeNameBtn.localScale = Vector3.one

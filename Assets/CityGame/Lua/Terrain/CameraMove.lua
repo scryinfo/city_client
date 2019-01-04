@@ -20,7 +20,6 @@ local m_OutDurationtime = 0.8           --相机切出UI层所需时间
 local NormalStateCameraPos = nil       --记录正常状态相机的位置
 local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
 
-
 function CameraMove:Start(gameObject)
     if nil ~= mObj then
         ct.log("System","警告:不允许场景中同时挂有两个CameraMove脚本")
@@ -46,6 +45,8 @@ function CameraMove:Start(gameObject)
     self.touchBeginPosition = nil
     self.touchBeginBlockID = nil
     self:InitParameters()
+    --初始化相机位置
+    CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
 end
 
 --初始化相机参数
@@ -122,8 +123,6 @@ function CameraMove:LateUpdate(gameObject)
     end
 end
 
-
-
 --将距离远近值转化为相机Scale的Pos位置
 local function ValueTurnCameraScalePos(value)
     if value ~= nil then
@@ -148,7 +147,6 @@ function CameraMove:ScaleCamera()
         mainCameraTransform.localPosition = targetScalePos
     end
 end
-
 
 --点击到建筑[over]
 function CameraMove:TouchBuild()
@@ -185,8 +183,6 @@ function CameraMove:MoveConstructObj()
         end
     end
 end
-
-
 
 --拖动时更新相机位置
 function CameraMove:UpdateMove()
@@ -287,8 +283,6 @@ function CameraMove.IsClickDownOverUI()
     return false
 end
 
-
-
 --移动放大到某个指定建筑
 function CameraMove.MoveIntoUILayer(targetID)
     --相机状态切换至UIState
@@ -340,6 +334,12 @@ function CameraMove.MoveOutUILayer()
     FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil
+end
+
+function CameraMove.MoveCameraToPos(targetPos)
+    mainCameraCenterTransforms.position = targetPos
+    --调用地块刷新
+    Event.Brocast("CameraMoveTo", targetPos)
 end
 
 return CameraMove

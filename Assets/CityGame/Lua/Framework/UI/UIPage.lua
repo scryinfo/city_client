@@ -7,6 +7,7 @@
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
 UIType = {
+    Bubble = 0,     --气泡
     Normal =1 ,
     Fixed =2 ,
     PopUp =3 ,

@@ -26,9 +26,6 @@ function ConstructItem:_initData()
     itemNameRect.sizeDelta = Vector2.New(itemNameText.preferredWidth,itemNameRect.sizeDelta.y)
     --TODO:此处应该根据种类多少动态增加长度
     local type = ct.getType(UnityEngine.Sprite)
-    local tempBtnIcon
-    local texture
-    local tempBtn
     for i, tempBuildID in ipairs(data.prefabRoute) do
         --临时根据策划需求写死为只有3种大小建筑
         if i > 3 then
@@ -41,15 +38,15 @@ function ConstructItem:_initData()
         coroutine.www(www)
         tempBtnIcon.sprite = www.texture
         --]]
-        tempBtnIcon =  self.viewTrans:Find("Btn_".. i  .."/icon"):GetComponent("Image")
+        local tempBtnIcon =  self.viewTrans:Find("Btn_".. i  .."/icon"):GetComponent("Image")
         panelMgr:LoadPrefab_A(PlayerBuildingBaseData[tempBuildID]["imgPath"], type, nil, function(staticData, obj )
             if obj ~= nil then
-                texture = ct.InstantiatePrefab(obj)
+                local texture = ct.InstantiatePrefab(obj)
                 tempBtnIcon.sprite = texture
             end
         end)
         --添加点击事件
-        tempBtn =  self.viewTrans:Find("Btn_".. i):GetComponent("Button")
+        local tempBtn =  self.viewTrans:Find("Btn_".. i):GetComponent("Button")
         tempBtn.onClick:RemoveAllListeners();
         tempBtn.onClick:AddListener(function ()
             self:_clickConstructBtn(tempBuildID)

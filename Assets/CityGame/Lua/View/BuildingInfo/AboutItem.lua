@@ -6,16 +6,14 @@
 
 AboutItem = class('AboutItem')
 
-local fontPath="Atlas/GuidBook/main/button-"
+local fontPath="Assets/CityGame/Resources/Atlas/GuidBook/main/button-"
 ---初始化方法   数据（读配置表）
 function AboutItem:initialize(prefab,luabehaviour,name)
     self.name = name;
     self.Image=prefab.transform:GetComponent("Image")
     local path=split(name,",")
     local endPath=fontPath..path[2]
-    local texture=UnityEngine.Resources.Load(endPath)
-    --self.Image.sprite=
-
+    LoadSprite(endPath,self.Image)
     --self.nameText=prefab.transform:Find("Text"):GetComponent("Text");
     --Atlas/GuidBook/main/button-function
     --self.nameText.text=name

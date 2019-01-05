@@ -175,6 +175,7 @@ public static class CustomSettings
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),
         _GT(typeof(Scrollbar.ScrollEvent)),
+        _GT(typeof(Scrollbar)),
         _GT(typeof(Slider)),
         _GT(typeof(Slider.SliderEvent)),
 

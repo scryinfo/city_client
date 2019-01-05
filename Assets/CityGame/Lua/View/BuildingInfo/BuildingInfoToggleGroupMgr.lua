@@ -388,39 +388,39 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     ---折线图  左1
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
+
+
+    if not self.staffViewRect then
+        ---门票 --左3
+        local ticketView
+        ticketView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path, self.leftRect)
+        ticketView.gameObject.name = "TicketItem"
+        local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
+        self.leftData[3] = TicketItem
+
+        ---广告展示--右1
+        local advertisementViewRect
+        advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
+        advertisementViewRect.gameObject.name="Advertisement"
+        local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+        self.rightData[1] = AdvertisementShowItem
+
+        ---个人公园信息--中1
+        local ParkInfoRect
+        ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_ParkInfo_Path,self.toggleData.middleRootTran )
+        ParkInfoRect.gameObject.name="ParkInfo"
+        local newData={func=self._middleItem}
+        local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
+        local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
+        self.middleData[1]=ParkInfoItem
+        ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
+
+    end
     ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
     self.leftData[2] = self:_createStaff(staffToggleData)
-
-    ---门票 --左3
-    local ticketView
-    ticketView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path, self.leftRect)
-    ticketView.gameObject.name = "TicketItem"
-    local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
-    self.leftData[3] = TicketItem
-
-
-
-    ---广告展示--右1
-    local advertisementViewRect
-    advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
-    advertisementViewRect.gameObject.name="Advertisement"
-    local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-    local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
-    self.rightData[1] = AdvertisementShowItem
-
-
-    ---个人公园信息--中1
-    local ParkInfoRect
-    ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_ParkInfo_Path,self.toggleData.middleRootTran )
-    ParkInfoRect.gameObject.name="ParkInfo"
-    local newData={func=self._middleItem}
-    local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
-    local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
-    self.middleData[1]=ParkInfoItem
-    ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
-
 end
 ---研究所
 function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()

@@ -63,6 +63,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
         Event.Brocast("SmallPop","Success",300)
     end ,self)
 
+
 end
 
 

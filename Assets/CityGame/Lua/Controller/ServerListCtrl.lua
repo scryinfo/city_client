@@ -31,7 +31,6 @@ end
 
 function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     self.data = self.m_data
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);

@@ -28,7 +28,6 @@ function SignOnCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     panel=SignOnPanel
 
-    gameObject = obj;
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.OnClick_confirm,self);

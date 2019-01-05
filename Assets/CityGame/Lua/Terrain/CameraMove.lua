@@ -117,9 +117,11 @@ function CameraMove:LateUpdate(gameObject)
     elseif mCameraState == TouchStateType.UIState then
         return
     end
+    --[[
     if inputTools:GetIsPoint() then
         CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     end
+    --]]
 end
 
 --将距离远近值转化为相机Scale的Pos位置

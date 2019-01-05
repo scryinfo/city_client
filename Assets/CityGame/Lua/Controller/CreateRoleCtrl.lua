@@ -26,7 +26,6 @@ function CreateRoleCtrl:_initInsData()
 end
 function CreateRoleCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
 end

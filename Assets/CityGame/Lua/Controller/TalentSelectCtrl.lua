@@ -21,7 +21,6 @@ end
 --启动事件--
 function TalentSelectCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     --初始化
     self:_initData();
     TalentSelectBehaviour:AddClick(TalentSelectPanel.backBtn,self.OnBackBtn,self);

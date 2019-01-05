@@ -24,7 +24,6 @@ end
 --启动事件--
 function GameNoticeCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     self:_initData();
     self.NoticeMgr = NoticeMgr:new()
 

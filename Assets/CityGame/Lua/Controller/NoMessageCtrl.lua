@@ -21,7 +21,6 @@ end
 --启动事件--
 function NoMessageCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     self:_initData();
 
     NoMessageBehaviour = self.gameObject:GetComponent('LuaBehaviour');

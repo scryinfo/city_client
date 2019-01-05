@@ -17,7 +17,7 @@ end
 
 function ReminderCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    gameObject = obj;
+     ;
 end
 local LuaBehaviour
 local panel

@@ -21,7 +21,6 @@ end
 function MessageTooltipCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     self:_initData();
-    self.gameObject = obj;
     local messageTooltipBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     messageTooltipBehaviour:AddClick(MessageTooltipPanel.okBtn,self.c_OkBtn,self);
     messageTooltipBehaviour:AddClick(MessageTooltipPanel.xBtn,self.c_XBtn,self);

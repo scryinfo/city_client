@@ -21,7 +21,6 @@ end
 
 function SciencePopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    gameObject = obj;
 end
 
 function SciencePopCtrl:Awake(go)

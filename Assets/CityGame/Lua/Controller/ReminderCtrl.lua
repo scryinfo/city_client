@@ -17,7 +17,6 @@ end
 
 function ReminderCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-     ;
 end
 local LuaBehaviour
 local panel

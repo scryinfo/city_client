@@ -22,7 +22,6 @@ end
 --启动事件--
 function CityinfoSurveyCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-     ;
     close = nil
     CityinfoSurveyBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityinfoSurveyBehaviour:AddClick(CityinfoSurveyPanel.backBtn,self.OnBackBtn,self);

@@ -17,7 +17,6 @@ function TopBarCtrl:bundleName()
 end
 --function TopBarCtrl.OnCreate(obj ,self)
 --    UIPage.OnCreate(self,obj)
---     ;
 --    topBat = gameObject:GetComponent('LuaBehaviour');
 --end
 function TopBarCtrl:OnCreate(obj )

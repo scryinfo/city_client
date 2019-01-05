@@ -29,7 +29,6 @@ function TalentMiningCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     --初始化
     self:_initData();
-     ;
     TalentMiningBehaviour:AddClick(TalentMiningPanel.backBtn,self.OnBackBtn,self);
     TalentMiningBehaviour:AddClick(TalentMiningPanel.add,self.OnAddBtn,self);
 

@@ -21,8 +21,6 @@ end
 --启动事件--
 function ExpertCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-     ;
-
     ExpertBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     ExpertBehaviour:AddClick(ExpertPanel.backBtn,self.OnBackBtn,self);
 

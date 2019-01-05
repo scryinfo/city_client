@@ -21,7 +21,6 @@ end
 --启动事件--
 function CityInfoDataCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-     ;
     CityInfoDataCtrlBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityInfoDataCtrlBehaviour:AddClick(CityInfoDataPanel.btn,self.OnBtn,self);
     Event.AddListener("c_bacK",self.c_bacK,self)

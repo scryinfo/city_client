@@ -24,7 +24,6 @@ end
 --启动事件--
 function CityMaterialCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-     ;
     close = nil
     if  self.titlePrefabs ~= nil then
         prefab = self.titlePrefabs[1]

@@ -429,8 +429,6 @@ public class Packager {
         string[] patterns = { "*.png", "*.otf", "*.prefab" };
         AssetBundleBuild pkginfo;
         pkginfo.assetBundleName = null;
-        AddBuildMapOp(ref curPath, ref patterns);
-        curPath = "Assets/CityGame/Resources/Share1";
         AddBuildMapInOne(ref curPath, ref patterns);
 
         curPath = "Assets/CityGame/Resources/Atlas";

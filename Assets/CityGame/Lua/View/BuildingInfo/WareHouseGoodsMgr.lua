@@ -37,12 +37,8 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
         local uiTab = {}
         if math.floor(v.key.id / 100000) == materialKey then
             uiTab.name = Material[v.key.id].name
-            uiTab.name = Material[v.key.id].img
         elseif math.floor(v.key.id / 100000) == goodsKey then
             uiTab.name = Good[v.key.id].name
-            uiTab.name = Good[v.key.id].img
-            --uiTab.producerId = v.key.producerId
-            --uiTab.qty = v.key.qty
         end
         uiTab.number = v.n
         uiTab.itemId = v.key.id

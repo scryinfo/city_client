@@ -13,7 +13,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.timeText = self.prefab.transform:Find("Top/timeIcon/timeText"):GetComponent("Text");  --时间
     self.time_Slider = self.prefab.transform:Find("Top/time_Slider"):GetComponent("Slider");
     self.XBtn = self.prefab.transform:Find("Top/XBtn");
-    self.goodsIcon = self.prefab.transform:Find("goodsIcon");
+    self.goodsIcon = self.prefab.transform:Find("goodsIcon"):GetComponent("Image");
     self.bgBtn = self.prefab.transform:Find("bgBtn");
 
     self.tipsText = self.prefab.transform:Find("Productionbg/tipsText"):GetComponent("RectTransform");
@@ -32,6 +32,24 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
         self.timeText.text = "00:00:00"
         self.time_Slider.value = 0;
         self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums;
+
+        local materialKey,goodsKey = 21,22
+        local type = ct.getType(UnityEngine.Sprite)
+        if math.floor(self.itemId / 100000) == materialKey then
+            panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+                if obj ~= nil then
+                    local texture = ct.InstantiatePrefab(obj)
+                    self.goodsIcon.sprite = texture
+                end
+            end)
+        elseif math.floor(self.itemId / 100000) == goodsKey then
+            panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+                if obj ~= nil then
+                    local texture = ct.InstantiatePrefab(obj)
+                    self.goodsIcon.sprite = texture
+                end
+            end)
+        end
     else
         self:RefreshUiInfo(self.goodsDataInfo,i)
     end
@@ -52,13 +70,26 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 end
 --初始化UI信息
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
-    local materialKey,goodsKey = 21,22
     self.id = i
     self.itemId = infoTab.itemId
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
         self.nameText.text = Material[self.itemId].name
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
         self.nameText.text = Good[self.itemId].name
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
     end
     self.lineId = infoTab.id
     self.time_Slider.maxValue = 100;

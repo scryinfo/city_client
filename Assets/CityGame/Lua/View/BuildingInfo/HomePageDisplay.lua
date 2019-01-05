@@ -18,10 +18,23 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.moneyText = self.prefab.transform:Find("pricetag/MoneyText"):GetComponent("Text");
 
     local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
     if math.floor(homePageShelfInfo.k.id / 100000) == materialKey then
         self.nameText.text = Material[homePageShelfInfo.k.id].name
+        panelMgr:LoadPrefab_A(Material[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     elseif math.floor(homePageShelfInfo.k.id / 100000) == goodsKey then
         self.nameText.text = Good[homePageShelfInfo.k.id].name
+        panelMgr:LoadPrefab_A(Good[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.icon.sprite = texture
+            end
+        end)
     end
     self.numberText.text = homePageShelfInfo.n
     self.moneyText.text = getPriceString("E"..homePageShelfInfo.price..".0000",15,13)
@@ -37,10 +50,23 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");
 
     local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
     if math.floor(homePageProductionLineInfo.itemId / 100000) == materialKey then
         self.nameText.text = Material[homePageProductionLineInfo.itemId].name
+        panelMgr:LoadPrefab_A(Material[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     elseif math.floor(homePageProductionLineInfo.itemId / 100000) == goodsKey then
         self.nameText.text = Good[homePageProductionLineInfo.itemId].name
+        panelMgr:LoadPrefab_A(Good[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     end
     --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
     --self.timeText =

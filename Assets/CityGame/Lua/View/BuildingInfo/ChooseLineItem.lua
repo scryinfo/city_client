@@ -21,11 +21,21 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
+    self.houseIcon = self.prefab.transform:Find("transportDetails/houseIcon"):GetComponent("Image");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
     self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
     self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
     self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
+
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.houseIcon.sprite = texture
+        end
+    end)
+
     local n = 0
     if DataInfo.store.inHand == nil then
         n = 0

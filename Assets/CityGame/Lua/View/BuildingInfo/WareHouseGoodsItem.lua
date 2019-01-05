@@ -21,6 +21,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.qty = goodsDataInfo.qty
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
+    self.downBG = self.prefab.transform:Find("TransportItem/downBG"):GetComponent("Image");
     self.deleteBtn = self.prefab.transform:Find("WareHouseItem/Delete/DeleteButton").gameObject;
     self.select = self.prefab.transform:Find("TransportItem/Select").gameObject;
     self.select_while = self.prefab.transform:Find("TransportItem/Select/Select-white").gameObject;
@@ -28,6 +29,24 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.transportBG = self.prefab.transform:Find("TransportItem").gameObject;
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
+
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.downBG.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.downBG.sprite = texture
+            end
+        end)
+    end
 
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)

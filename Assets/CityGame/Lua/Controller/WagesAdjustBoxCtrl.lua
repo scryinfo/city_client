@@ -92,7 +92,7 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
                      --Event.Brocast("SmallPop","Success",300)
                    end
     ct.OpenCtrl("ReminderCtrl",data)
-
+  
 end
 
 function WagesAdjustBoxCtrl:_onClickClose(ins)

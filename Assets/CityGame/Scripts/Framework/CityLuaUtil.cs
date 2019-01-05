@@ -7,9 +7,10 @@ using System;
 using System.IO;
 using System.Text;
 using City;
+using LuaFramework;
 
 namespace City
-{
+{    
     public static class CityTest
     {
         public static void Test()
@@ -28,7 +29,11 @@ namespace City
         }
     }
     public static class CityLuaUtil
-    {
+    {   
+        public static System.Type getSpriteType()
+        {
+            return typeof(UnityEngine.Sprite) ;
+        }
         public static UIRoot GetUIRoot()
         {
             return UIRoot.Instance;

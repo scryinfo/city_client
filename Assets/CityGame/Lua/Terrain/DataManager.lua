@@ -159,7 +159,10 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                 if nil ~= RoadRootObj then
                     go.transform:SetParent(RoadRootObj.transform)
                 end
-                go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                --add height
+                local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                Vec.y = Vec.y + 0.01
+                go.transform.position = Vec
                 BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
             --如果没有道路数据，但原先有道路记录，则清除
             elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then

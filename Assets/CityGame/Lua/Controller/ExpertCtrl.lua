@@ -10,7 +10,7 @@ local ExpertBehaviour
 ExpertCtrl.static.Addition_PATH = "View/TalentCenterItem/PropertyItem"
 
 function  ExpertCtrl:bundleName()
-    return "ExpertPanel"
+    return "Assets/CityGame/Resources/View/ExpertPanel.prefab"
 end
 
 function ExpertCtrl:initialize()
@@ -21,8 +21,6 @@ end
 --启动事件--
 function ExpertCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
-
     ExpertBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     ExpertBehaviour:AddClick(ExpertPanel.backBtn,self.OnBackBtn,self);
 

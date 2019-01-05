@@ -16,7 +16,7 @@ function LabScientificLineCtrl:initialize()
 end
 
 function LabScientificLineCtrl:bundleName()
-    return "LabScientificLinePanel"
+    return "Assets/CityGame/Resources/View/LabScientificLinePanel.prefab"
 end
 
 function LabScientificLineCtrl:OnCreate(obj)

@@ -38,7 +38,8 @@ function HomeOtherPlayerShelfItem:initializeInfo(data)
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
         local prefabData={}
-        prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        prefabData.prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
         if not self.SmallShelfRateItemTab then
             self.SmallShelfRateItemTab = {}
@@ -80,12 +81,12 @@ function HomeOtherPlayerShelfItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeOtherPlayerShelfItem.static.TOP_H);
 end
 
---生成预制
-function HomeOtherPlayerShelfItem:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
-end
+----生成预制
+--function HomeOtherPlayerShelfItem:_creatGoods(path,parent)
+--    local prefab = UnityEngine.Resources.Load(path);
+--    local go = UnityEngine.GameObject.Instantiate(prefab);
+--    local rect = go.transform:GetComponent("RectTransform");
+--    go.transform:SetParent(parent.transform);
+--    rect.transform.localScale = Vector3.one;
+--    return go
+--end

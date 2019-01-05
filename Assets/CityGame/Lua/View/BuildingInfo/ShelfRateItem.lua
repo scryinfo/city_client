@@ -6,7 +6,7 @@ ShelfRateItem.static.TOTAL_H = 455  --整个Item的高度
 ShelfRateItem.static.CONTENT_H = 412  --显示内容的高度
 ShelfRateItem.static.TOP_H = 100  --top条的高度
 ShelfRateItem.static.Goods_PATH = "View/GoodsItem/SmallShelfRateItem"
---主页信息货架，生产线，只做显示，没实际用处
+--主页信息货架，生产线，只作显示
 ct.homePage =
 {
     shelf  = 0,  --货架
@@ -38,10 +38,11 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
         elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
+        elseif self.shelfData.buildingType == BuildingType.RetailShop then
+            ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
         end
     end);
     self:initializeInfo(self.shelfData.shelf.good)
-
 
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
@@ -87,13 +88,12 @@ function ShelfRateItem:initializeInfo(data)
     end
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
-        local prefabData={}
-        prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
-        if not self.SmallShelfRateItemTab then
-            self.SmallShelfRateItemTab = {}
-        end
-        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+        local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
+        --if not self.SmallShelfRateItemTab then
+        --    self.SmallShelfRateItemTab = {}
+        --end
+        --self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
 --刷新数据
@@ -102,16 +102,7 @@ function ShelfRateItem:shelfRefreshInfo(data)
         return;
     end
     local homePageType = ct.homePage.shelf
-    local prefabData={}
-    prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
-end
---生成预制
-function ShelfRateItem:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
+    --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+    local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
 end

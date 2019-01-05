@@ -11,6 +11,8 @@ ChooseLineItem = class('ChooseLineItem')
 function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.prefab = prefab;
     self.buildingId = DataInfo.info.id;
+    self._luabehaviour = inluabehaviour;
+    self.manager = mgr;
     self.posX =  DataInfo.info.pos.x
     self.posY =  DataInfo.info.pos.y
     self._luabehaviour = inluabehaviour;
@@ -58,6 +60,7 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
+    Event.Brocast("c_OnLinePanelBG",go.buildingId)
     if go.spareCapacity <  tonumber(CenterWareHousePanel.tipText.text) then
         Event.Brocast("SmallPop","仓库容量不足",300)
         return

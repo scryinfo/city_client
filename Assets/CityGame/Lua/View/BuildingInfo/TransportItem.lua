@@ -15,12 +15,16 @@ function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,ite
     self.closeBtn = self.prefab.transform:Find("closeBtn");
 
     self.inputNumber.text = 0;
-    self.inputNumber.characterLimit = string.len(goodsDataInfo.num)
+    self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
     self.numberScrollbar.value = 0;
     self.numberScrollbar.minValue = 0;
-    self.numberScrollbar.maxValue = goodsDataInfo.num
-    self.nameText.text = goodsDataInfo.name
-
+    self.numberScrollbar.maxValue = goodsDataInfo.n
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+    end
     self.numberScrollbar.onValueChanged:AddListener(function ()
         self:scrollbarInfo();
     end)

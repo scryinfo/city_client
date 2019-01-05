@@ -24,7 +24,7 @@ function ManageAdvertisementPosCtrl:initialize()
 end
 
 function ManageAdvertisementPosCtrl:bundleName()
-    return "ManageAdvertisementPosPanel";
+    return "Assets/CityGame/Resources/View/ManageAdvertisementPosPanel.prefab";
 end
 
 function ManageAdvertisementPosCtrl:OnCreate(obj)

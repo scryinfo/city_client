@@ -11,7 +11,7 @@ function ExchangeChooseWareHouseCtrl:initialize()
 end
 
 function ExchangeChooseWareHouseCtrl:bundleName()
-    return "ExchangeChooseWareHousePanel"
+    return "Assets/CityGame/Resources/View/ExchangeChooseWareHousePanel.prefab"
 end
 
 function ExchangeChooseWareHouseCtrl:OnCreate(obj)

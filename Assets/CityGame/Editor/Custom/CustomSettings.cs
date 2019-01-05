@@ -48,8 +48,7 @@ public static class CustomSettings
 
     //在这里添加你要导出注册到lua的类型列表
     public static BindType[] customTypeList =
-
-    {   
+    {                
         //------------------------为例子导出--------------------------------
         //_GT(typeof(TestEventListener)),
         //_GT(typeof(TestProtol)),
@@ -62,8 +61,7 @@ public static class CustomSettings
         //_GT(typeof(TestExport.Space)),
         //-------------------------------------------------------------------        
                         
-        _GT(typeof(Debugger)).SetNameSpace(null),
-        
+        _GT(typeof(Debugger)).SetNameSpace(null),          
 
 #if !USING_DOTWEENING
      
@@ -92,8 +90,7 @@ public static class CustomSettings
         _GT(typeof(Camera)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         _GT(typeof(AudioSource)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         //_GT(typeof(LineRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
-        //_GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)), 
-        
+        //_GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),    
 #else
                                          
         _GT(typeof(Component)),
@@ -115,6 +112,7 @@ public static class CustomSettings
         _GT(typeof(Physics)),
         _GT(typeof(Collider)),
         _GT(typeof(Time)),        
+        _GT(typeof(Sprite)),
         _GT(typeof(Texture)),
         _GT(typeof(Texture2D)),
         _GT(typeof(Shader)),        
@@ -166,7 +164,8 @@ public static class CustomSettings
         _GT(typeof(Resources)),     
         _GT(typeof(LuaProfiler)),
           
-        //for LuaFramework
+        //for LuaFramework   
+        _GT(typeof(LuaFramework.Sync_LoadData)),
         _GT(typeof(InputField.OnChangeEvent)),
         _GT(typeof(Toggle.ToggleEvent)),
         _GT(typeof(Button)),
@@ -175,11 +174,10 @@ public static class CustomSettings
         _GT(typeof(Text)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),
-        _GT(typeof(Scrollbar)),
         _GT(typeof(Scrollbar.ScrollEvent)),
+        _GT(typeof(Scrollbar)),
         _GT(typeof(Slider)),
         _GT(typeof(Slider.SliderEvent)),
-        _GT(typeof(VerticalWrapMode)),
 
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),
@@ -196,17 +194,15 @@ public static class CustomSettings
         _GT(typeof(ResourceManager)),
         _GT(typeof(BuildManager)),
         _GT(typeof(RayManager)),
-        _GT(typeof(GridSort)),
-        _GT(typeof(ChangePreferredHeight)),
 
         //City
         _GT(typeof(City.NetworkInterface)),
         _GT(typeof(City.MemoryStream)),
-        _GT(typeof(City.CityLuaUtil)),
+        _GT(typeof(City.CityLuaUtil)),        
         _GT(typeof(City.CityTest)),
         _GT(typeof(EasyJoystick)),
         _GT(typeof(MovingJoystick)),
-        _GT(typeof(EffectFlying)),
+        //_GT(typeof(EffectFlying)),
         _GT(typeof(PieChartGraph)),
         _GT(typeof(PieNeedData)),
         _GT(typeof(City.LineChart)),
@@ -214,7 +210,6 @@ public static class CustomSettings
         _GT(typeof(LoopScrollDataSource)),
         _GT(typeof(LuaComponent)),
         _GT(typeof(LoopDropfreshBar)),
-
         _GT(typeof(UnityEngine.EventSystems.EventSystem)),
         _GT(typeof(Battle.FOWLogic)),
         _GT(typeof(FOWSystem)),

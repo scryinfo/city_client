@@ -24,7 +24,7 @@ CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
 UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
-    return "CenterWareHousePanel"
+    return "Assets/CityGame/Resources/View/CenterWareHousePanel.prefab"
 end
 
 function CenterWareHouseCtrl:initialize()
@@ -103,6 +103,8 @@ function CenterWareHouseCtrl:c_OnTransportBG(go)
         goodsDataInfo.number = go.goodsDataInfo.number;
         goodsDataInfo.id = go.id;
         goodsDataInfo.itemId = go.itemId
+        goodsDataInfo.producerId = go.producerId
+        goodsDataInfo.qty = go.qty
         go.manager:_creatTransportGoods(goodsDataInfo);
         go.select_while:SetActive(false);
     else
@@ -191,7 +193,7 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
                 Event.Brocast("SmallPop","运输商品个数不能为0",300)
                 return
             else
-                 Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text)
+                 Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text,v.goodsDataInfo.producerId,v.goodsDataInfo.qty)
             end
         end
         CenterWareHouseCtrl:clearAllData()

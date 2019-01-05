@@ -1,16 +1,17 @@
 ShelfGoodsItem = class('ShelfGoodsItem')
 
 --初始化方法   数据（接受服务器）
-function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,state)
-    self.prefab = prefab;
-    self.goodsDataInfo = goodsDataInfo;
-    self.state = state
-    self._luabehaviour = inluabehaviour
-    self.manager = mgr
+function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,state,buildingId)
     self.id = id
-    self.itemId = goodsDataInfo.itemId
-    self.num = goodsDataInfo.number
-    self.name = goodsDataInfo.name
+    self.manager = mgr
+    self.state = state
+    self.prefab = prefab;
+    self.buildingId = buildingId
+    self.goodsDataInfo = goodsDataInfo;
+    self._luabehaviour = inluabehaviour
+    self.itemId = goodsDataInfo.k.id
+    self.num = goodsDataInfo.n
+    self.name = Material[self.itemId].name
     self.price = goodsDataInfo.price
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
@@ -23,9 +24,9 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,
     self.XBtn = self.prefab.transform:Find("XBtn");  --删除按钮
     self.detailsBtn = self.prefab.transform:Find("detailsBtn");  --点击商品查看详情
     --赋值
-    self.nameText.text = goodsDataInfo.name
-    self.numberText.text = goodsDataInfo.number
-    self.moneyText.text = goodsDataInfo.money
+    self.nameText.text = self.name
+    self.numberText.text = self.num
+    self.moneyText.text = self.price..".0000"
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
@@ -67,11 +68,11 @@ function ShelfGoodsItem:c_buyGoodsItemDelete()
 end
 --勾选物品
 function ShelfGoodsItem:OnClick_bgBtn(ins)
-    Event.Brocast("_selectedBuyGoods",ins.id,ins.itemId);
+    Event.Brocast("_selectedBuyGoods",ins);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
     Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
 end
@@ -96,8 +97,8 @@ function ShelfGoodsItem:RefreshData(data,id)
     self.id = id
     self.num = data.num
     self.name = data.name
-    self.itemId = data.itemId
     self.price = data.price
+    self.itemId = data.itemId
     --self.producerId = data.producerId
     --self.qty = data.qty
 end

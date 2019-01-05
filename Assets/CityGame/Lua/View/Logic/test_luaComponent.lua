@@ -15,7 +15,7 @@ function testLuaCom:Awake(gameObject)
     print("Awake");
     transform = gameObject.transform;
     --characterController = gameObject:GetComponent('CharacterController');
-    UnityEngine.GameObject.AddComponent(gameObject, LuaHelper.GetType("LuaFramework.LuaBehaviour")) --用这个LuaBehaviour组件是为了在要测试的lua脚本中执行UI回调行为
+    UnityEngine.GameObject.AddComponent(gameObject, ct.getType(LuaFramework.LuaBehaviour)) --用这个LuaBehaviour组件是为了在要测试的lua脚本中执行UI回调行为
     local topBar = gameObject:GetComponent('LuaBehaviour')
 
     local btn_notice = transform:Find("btn_notice").gameObject;

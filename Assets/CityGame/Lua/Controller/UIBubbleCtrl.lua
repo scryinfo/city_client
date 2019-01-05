@@ -15,7 +15,7 @@ function UIBubbleCtrl:initialize()
 end
 
 function UIBubbleCtrl:bundleName()
-    return "UIBubblePanel"
+    return "Assets/CityGame/Resources/View/UIBubblePanel.prefab"
 end
 
 function UIBubbleCtrl:OnCreate(obj)

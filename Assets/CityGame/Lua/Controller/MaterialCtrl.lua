@@ -7,7 +7,7 @@ function MaterialCtrl:initialize()
 end
 
 function MaterialCtrl:bundleName()
-    return "MaterialPanel";
+    return "Assets/CityGame/Resources/View/MaterialPanel.prefab";
 end
 
 function MaterialCtrl:OnCreate(obj)
@@ -18,8 +18,10 @@ function MaterialCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.materialBehaviour:AddClick(MaterialPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    self.materialBehaviour:AddClick(MaterialPanel.stopIconROOT.gameObject,self.OnClick_prepareOpen,self);
 
 end
 
@@ -37,6 +39,7 @@ end
 --刷新原料厂信息
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
@@ -52,7 +55,9 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
         --self.materialToggleGroup:updataInfo(self.m_data)
     end
 end
-
+function MaterialCtrl:OnClick_prepareOpen(ins)
+    Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
+end
 --更改名字
 function MaterialCtrl:OnClick_changeName()
     local data = {}

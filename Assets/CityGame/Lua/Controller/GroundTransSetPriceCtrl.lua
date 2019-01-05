@@ -11,13 +11,13 @@ function GroundTransSetPriceCtrl:initialize()
 end
 
 function GroundTransSetPriceCtrl:bundleName()
-    return "GroundTransSetPricePanel"
+    return "Assets/CityGame/Resources/View/GroundTransSetPricePanel.prefab"
 end
 
 function GroundTransSetPriceCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentIssueBtnTran.gameObject, self._rentIssueBtnFunc, self)

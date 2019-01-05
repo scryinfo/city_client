@@ -11,7 +11,7 @@ function CommonDialogCtrl:initialize()
 end
 
 function CommonDialogCtrl:bundleName()
-    return "Common/CommonDialogPanel"
+    return "Assets/CityGame/Resources/View/Common/CommonDialogPanel.prefab"
 end
 
 function CommonDialogCtrl:OnCreate(obj )

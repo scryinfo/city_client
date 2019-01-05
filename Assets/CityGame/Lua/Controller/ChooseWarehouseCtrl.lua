@@ -11,7 +11,7 @@ function ChooseWarehouseCtrl:initialize()
 end
 
 function ChooseWarehouseCtrl:bundleName()
-    return "ChooseWarehousePanel";
+    return "Assets/CityGame/Resources/View/ChooseWarehousePanel.prefab";
 end
 
 function ChooseWarehouseCtrl:OnCreate(obj)
@@ -148,9 +148,9 @@ function ChooseWarehouseCtrl:c_OnLinePanelBG(info)
 end
 
 --运输
-function ChooseWarehouseCtrl:c_Transport(src, itemId, n)
+function ChooseWarehouseCtrl:c_Transport(src, itemId, n,producerId,qty)
 
-    Event.Brocast("m_ReqTransport",src,buildingInfo.buildingId,itemId,n)
+    Event.Brocast("m_ReqTransport",src,buildingInfo.buildingId,itemId,n,producerId,qty)
 end
 
 --计算距离

@@ -20,7 +20,7 @@ function ScienceSellHallCtrl:initialize()
 end
 
 function ScienceSellHallCtrl:bundleName()
-    return "ScienceSellHallPanel";
+    return "Assets/CityGame/Resources/View/ScienceSellHallPanel.prefab";
 end
 
 function ScienceSellHallCtrl:OnCreate(obj)

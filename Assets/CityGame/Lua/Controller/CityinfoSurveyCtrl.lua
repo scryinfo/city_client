@@ -11,7 +11,7 @@ local close
 local data
 
 function  CityinfoSurveyCtrl:bundleName()
-    return "CityinfoSurveyPanel"
+    return "Assets/CityGame/Resources/View/CityinfoSurveyPanel.prefab"
 end
 
 function CityinfoSurveyCtrl:initialize()
@@ -22,7 +22,6 @@ end
 --启动事件--
 function CityinfoSurveyCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     close = nil
     CityinfoSurveyBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityinfoSurveyBehaviour:AddClick(CityinfoSurveyPanel.backBtn,self.OnBackBtn,self);

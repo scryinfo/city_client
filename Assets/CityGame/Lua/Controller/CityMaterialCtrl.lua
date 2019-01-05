@@ -13,7 +13,7 @@ local data
 local Sort = false
 
 function  CityMaterialCtrl:bundleName()
-    return "CityMaterialPanel"
+    return "Assets/CityGame/Resources/View/CityMaterialPanel.prefab"
 end
 
 function CityMaterialCtrl:initialize()
@@ -24,7 +24,6 @@ end
 --启动事件--
 function CityMaterialCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     close = nil
     if  self.titlePrefabs ~= nil then
         prefab = self.titlePrefabs[1]

@@ -12,7 +12,7 @@ function ExchangeDetailCtrl:initialize()
 end
 
 function ExchangeDetailCtrl:bundleName()
-    return "ExchangeDetailPanel"
+    return "Assets/CityGame/Resources/View/ExchangeDetailPanel.prefab"
 end
 
 function ExchangeDetailCtrl:OnCreate(obj)

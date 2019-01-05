@@ -30,7 +30,7 @@ local tempShow = nil;
 
 
 function  CityInfoCtrl:bundleName()
-    return "CityInfoPanel"
+    return "Assets/CityGame/Resources/View/CityInfoPanel.prefab"
 end
 
 function CityInfoCtrl:initialize()
@@ -41,7 +41,6 @@ end
 --启动事件--
 function CityInfoCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     CityInfoCtrlBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     CityInfoCtrlBehaviour:AddClick(CityInfoPanel.backBtn,self.OnBackBtn,self);
     CityInfoCtrlBehaviour:AddClick(CityInfoPanel.btn,self.OnBtn,self);

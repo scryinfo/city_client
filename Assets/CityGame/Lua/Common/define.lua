@@ -44,6 +44,7 @@ CtrlNames = {
 
 	Material = "MaterialCtrl", --原料厂
 	Processing = "ProcessingCtrl",  --加工厂
+	RetailStores = "RetailStoresCtrl",  --零售店
 	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
 	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
 	Exchange = "ExchangeCtrl",  --交易所
@@ -76,6 +77,7 @@ ModelNames = {
 	ServerList = "ServerListModel",--选服页面
 	CreateRole = "CreateRoleModel",--创角页面
 	Material = "MaterialModel",  --原料厂
+	RetailStores = "RetailStoresModel",  --零售店
 	Processing = "ProcessingModel",  --加工厂
 	Shelf = "ShelfModel",  --货架
 	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
@@ -192,7 +194,8 @@ BuildingType =
 	MunicipalManage = 3,--市政管理
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
-	TalentCenter = 6 ,--人才中心
+	RetailShop = 6,  --零售店
+	TalentCenter = 7,--人才中心
 }
 --建筑所属
 Buildingowner=
@@ -213,6 +216,7 @@ BuildingInType =
 	Warehouse = 1,  --仓库
 	Transport = 2,  --运输
 	ProductionLine = 3,  --生产线
+	RetailShelf = 4,  --零售店货架
 }
 
 --单输入框会响应的服务器协议类型

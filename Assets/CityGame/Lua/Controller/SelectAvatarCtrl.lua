@@ -16,13 +16,13 @@ end
 
 function SelectAvatarCtrl.Awake()
 	logWarn("SelectAvatarCtrl.Awake--->>");
-	panelMgr:CreatePanel('SelectAvatar', this.OnCreate, this);
+	panelMgr:LoadPrefab_A('SelectAvatar', nil, this, this.OnCreate);
 end
 
 --启动事件--
 function SelectAvatarCtrl.OnCreate(obj)
-	gameObject = obj;
-	transform = obj.transform;
+	gameObject = ct.InstantiatePrefab(obj);
+	transform = gameObject.transform;
 
 	selectAvatar = transform:GetComponent('LuaBehaviour');
 	logWarn("Start lua--->>"..gameObject.name);

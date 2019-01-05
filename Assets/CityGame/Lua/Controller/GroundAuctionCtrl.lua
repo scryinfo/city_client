@@ -11,13 +11,13 @@ function GroundAuctionCtrl:initialize()
 end
 
 function GroundAuctionCtrl:bundleName()
-    return "GroundAuctionPanel"
+    return "Assets/CityGame/Resources/View/GroundAuctionPanel.prefab"
 end
 
 function GroundAuctionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
 

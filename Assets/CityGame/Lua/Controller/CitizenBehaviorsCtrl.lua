@@ -12,7 +12,7 @@ local rightBg
 local supermaketConsumptionBg
 
 function  CitizenBehaviorsCtrl:bundleName()
-    return "CitizenBehaviorsPanel"
+    return "Assets/CityGame/Resources/View/CitizenBehaviorsPanel.prefab"
 end
 
 function CitizenBehaviorsCtrl:initialize()
@@ -23,7 +23,6 @@ end
 --启动事件--
 function CitizenBehaviorsCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     leftBg = CitizenBehaviorsPanel.adultMorningBg
     rightBg = CitizenBehaviorsPanel.homeBg
     supermaketConsumptionBg = CitizenBehaviorsPanel.food

@@ -33,14 +33,21 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
         return
     end
     for i, v in pairs(ServerListModel.inHand) do
+        local materialKey,goodsKey = 21,22
         local uiTab = {}
-        uiTab.name = Material[v.key.id].name
+        if math.floor(v.key.id / 100000) == materialKey then
+            uiTab.name = Material[v.key.id].name
+        elseif math.floor(v.key.id / 100000) == goodsKey then
+            uiTab.name = Good[v.key.id].name
+            --uiTab.producerId = v.key.producerId
+            --uiTab.qty = v.key.qty
+        end
         uiTab.number = v.n
         uiTab.itemId = v.key.id
---[[        uiTab.producerId = v.key.producerId
-        uiTab.qty = v.key.qty]]
+        uiTab.producerId = v.key.producerId
+        uiTab.qty = v.key.qty
         configTable[i] = uiTab
-        --预制的信息`
+        --预制的信息
         local prefabData={}
         prefabData.state = 'idel'
         prefabData.uiData = configTable[i]

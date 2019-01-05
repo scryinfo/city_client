@@ -10,7 +10,7 @@ function LaboratoryCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LaboratoryCtrl:bundleName()
-    return "LaboratoryPanel"
+    return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
 function LaboratoryCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)

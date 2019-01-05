@@ -11,13 +11,13 @@ function GroundTransSelfCheckInfoCtrl:initialize()
 end
 
 function GroundTransSelfCheckInfoCtrl:bundleName()
-    return "GroundTransSelfCheckInfoPanel"
+    return "Assets/CityGame/Resources/View/GroundTransSelfCheckInfoPanel.prefab"
 end
 
 function GroundTransSelfCheckInfoCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
 end

@@ -7,7 +7,7 @@ local Mails
 
 
 function  GameMainInterfaceCtrl:bundleName()
-    return "GameMainInterfacePanel"
+    return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
 
 function GameMainInterfaceCtrl:initialize()
@@ -18,7 +18,6 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
 

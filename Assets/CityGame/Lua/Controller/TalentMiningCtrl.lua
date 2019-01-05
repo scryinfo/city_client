@@ -11,7 +11,7 @@ local talentTypeLuaItem = {}
 TalentMiningCtrl.static.Building_PATH = "View/TalentCenterItem/BuildingTalentsItem"
 
 function  TalentMiningCtrl:bundleName()
-    return "TalentMiningPanel"
+    return "Assets/CityGame/Resources/View/TalentMiningPanel.prefab"
 end
 
 function TalentMiningCtrl:initialize()
@@ -29,7 +29,6 @@ function TalentMiningCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     --初始化
     self:_initData();
-    gameObject = obj;
     TalentMiningBehaviour:AddClick(TalentMiningPanel.backBtn,self.OnBackBtn,self);
     TalentMiningBehaviour:AddClick(TalentMiningPanel.add,self.OnAddBtn,self);
 

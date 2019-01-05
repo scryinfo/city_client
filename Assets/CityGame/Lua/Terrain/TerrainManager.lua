@@ -18,6 +18,8 @@ local CameraCollectionID = -1
 local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
+    --add height
+    Vec3.y =  Vec3.y + 0.01
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
@@ -154,9 +156,7 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     local oldCollectionList =  CalculationAOICollectionIDList(oldCollectionID)
     local newCollectionList =  CalculationAOICollectionIDList(newCollectionID)
     local willRemoveList = ComputingTheComplementSetOfBinA(oldCollectionList,newCollectionList)
-    ct.log("system","-----------------AOI---------------------")
     for i, tempDeteleCollectionID in pairs(willRemoveList) do
-        ct.log("system","删除的地块ID --》"..tempDeteleCollectionID)
         DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
     end
 end
@@ -172,7 +172,6 @@ function TerrainManager.SendMoveToServer(tempBlockID)
     local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
     local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-    ct.log("system","移动到地块集合--》  " .. lMsg.x .."   ".. lMsg.y)
 end
 
 --应该每帧调用传camera的位置

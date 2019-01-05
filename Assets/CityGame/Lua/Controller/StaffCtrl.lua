@@ -19,7 +19,6 @@ function StaffCtrl.Awake()
     StaffCtrl.Initialize();
 end
 function StaffCtrl.OnCreate(obj)
-    gameObject = obj;
 
     Staff = gameObject:GetComponent('LuaBehaviour');
     Staff:AddClick(StaffPanel.AjustBtn,this.OnAjust);

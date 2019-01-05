@@ -13,7 +13,7 @@ function ConstructSwitchCtrl:initialize()
 end
 
 function ConstructSwitchCtrl:bundleName()
-    return "ConstructSwitchPanel"
+    return "Assets/CityGame/Resources/View/ConstructSwitchPanel.prefab"
 end
 
 function ConstructSwitchCtrl:OnCreate(obj)

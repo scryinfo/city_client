@@ -14,7 +14,7 @@ function TestExchangeCtrl:initialize()
 end
 
 function TestExchangeCtrl:bundleName()
-    return "TestExchangePanel"
+    return "Assets/CityGame/Resources/View/TestExchangePanel.prefab"
 end
 
 function TestExchangeCtrl:OnCreate(obj)

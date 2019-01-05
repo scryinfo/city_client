@@ -18,6 +18,8 @@ local CameraCollectionID = -1
 local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
+    --add height
+    Vec3.y =  Vec3.y + 0.01
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then

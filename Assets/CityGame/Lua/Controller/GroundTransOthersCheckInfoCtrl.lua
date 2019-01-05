@@ -17,7 +17,7 @@ end
 function GroundTransOthersCheckInfoCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.AOwnerBtn.gameObject, self._ownerBtnFunc, self)

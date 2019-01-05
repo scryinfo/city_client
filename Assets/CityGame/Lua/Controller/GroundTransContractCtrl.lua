@@ -17,7 +17,7 @@ end
 function GroundTransContractCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.buyBottomBtn.gameObject, self._buyBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.rentBtn.gameObject, self._rentBtnFunc, self)

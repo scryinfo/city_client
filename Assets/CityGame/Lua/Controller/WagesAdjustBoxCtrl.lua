@@ -85,7 +85,7 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
     data.type="begin"
     data.mainText="Processing plant successfully opened"
     data.callback=function()
-                     Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,tonumber(inputValue))
+                     Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,100)
                      Event.Brocast("m_startBusiness",m_data.buildInfo.id)
                      Event.Brocast("mCloes")
                      --m_data:func()

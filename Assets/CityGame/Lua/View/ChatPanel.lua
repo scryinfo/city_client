@@ -68,7 +68,7 @@ function ChatPanel.InitPanel()
 
     -- 玩家信息显示及操作
     this.nameText = transform:Find("PlayerInfoRoot/NameText"):GetComponent("Text")
-    this.companyText = transform:Find("PlayerInfoRoot/CompanyBg/CompanyText"):GetComponent("Text")
+    this.companyText = transform:Find("PlayerInfoRoot/ShowCompanyBtn/CompanyText"):GetComponent("Text")
     this.shieldBtn = transform:Find("PlayerInfoRoot/ShieldBtn").gameObject
     this.addFriendsBtn = transform:Find("PlayerInfoRoot/AddFriendsBtn").gameObject
     this.chatBtn = transform:Find("PlayerInfoRoot/ChatBtn").gameObject
@@ -81,4 +81,8 @@ function ChatPanel.InitPanel()
     this.strangersScrollView = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.strangersContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/Viewport/Content")
     this.strangersVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
+
+    -- 玩家个人信息和公司信息显示按钮
+    this.showPersonalInfoBtn = transform:Find("PlayerInfoRoot/ShowPersonalInfoBtn").gameObject
+    this.showCompanyBtn = transform:Find("PlayerInfoRoot/ShowCompanyBtn").gameObject
 end

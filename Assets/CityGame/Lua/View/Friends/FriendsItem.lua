@@ -150,7 +150,8 @@ function FriendsItem:OnBg(go)
 end
 
 function FriendsItem:OnHead(go)
-    UIPage.ClosePage()
+    --UIPage.ClosePage()
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", go.data)
     ct.log("tina_w7_friends", "显示好友个人信息")
 end
 

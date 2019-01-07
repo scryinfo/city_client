@@ -51,6 +51,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.chatBtn, self.OnChat, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.shieldBtn, self.OnShield, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.friendsDeleteBtn, self.OnFriendsDelete, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showPersonalInfoBtn, self.OnShowPersonalInfo, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -451,6 +452,13 @@ end
 function ChatCtrl:OnFriendsDelete(go)
     --DataManager.SaveFriendsChat()
     DataManager.ReadFriendsChat()
+end
+
+-- 显示个人信息界面
+function ChatCtrl:OnShowPersonalInfo(go)
+    if ChatCtrl.static.chatMgr.activePlayerData then
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+    end
 end
 
 -- 屏蔽玩家

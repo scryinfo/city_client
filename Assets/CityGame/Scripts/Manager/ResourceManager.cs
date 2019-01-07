@@ -85,14 +85,6 @@ namespace LuaFramework {
 
         // Load AssetBundleManifest.
         public void Initialize(string manifestName, Action initOK) {
-            //测试{ 
-            Dictionary<string, string> userSessionLookupTable = new Dictionary<string, string>();
-            userSessionLookupTable["hahaKey"] = "hahavalue";
-            userSessionLookupTable["heheKey"] = "hehevalue";
-            Serialize(userSessionLookupTable, File.Open("data.bin", FileMode.Create));
-            Dictionary<string, string> deserializeObject = Deserialize<Dictionary<string, string>>(File.Open("data.bin", FileMode.Open));
-            //测试}
-
             m_BaseDownloadingURL = Util.GetRelativePath();
             LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs, AssetBundle ab) {
                 if (objs.Length > 0) {                    
@@ -102,38 +94,9 @@ namespace LuaFramework {
                     string resllistPath = Application.dataPath.ToLower() + "/StreamingAssets/" + "assetBundleList.bin";
                     m_ResourcesBundleInfo = Deserialize<Dictionary<string, string>>(File.Open(resllistPath, FileMode.Open));
 
-                    resInitCountAll = m_AllManifest.Length;
-
-                    if (initOK != null) initOK();
-
-                    /*for (int i = 0; i < m_AllManifest.Length; i++) {
-                        string bdname = m_AllManifest[i];
-
-                        if (bdname.Contains("lua/")) {
-                            resInitCountCur++;
-                            continue;                            
-                        }
-
-                        LoadAsset<AssetBundleManifest>(bdname, new string[] { bdname }, delegate (UObject[] objs1, AssetBundle ab1) {
-                            AssetBundle assetBundle = ab1;
-                            if (!m_LoadedAssetBundles.ContainsKey(bdname)) {
-                                m_LoadedAssetBundles[bdname] = new AssetBundleInfo(assetBundle);
-                            }
-                            
-                            string[] assetlist = ab1.GetAllAssetNames();
-                            for(int j = 0; j < assetlist.Length; ++j)
-                            {
-                                m_ResourcesBundleInfo[assetlist[j]] = bdname;
-                            }
-
-                            resInitCountCur++;
-
-                            if (resInitCountCur >= resInitCountAll) {
-                                if (initOK != null) initOK();
-                            }
-                        });
-                    }*/
+                    resInitCountAll = m_AllManifest.Length;                    
                 }
+                if (initOK != null) initOK();
             });
         }
 

@@ -6,12 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LuaFramework;
+using LuaInterface;
+using System;
+using UnityEngine.UI;
 
 public class Packager {
     public static string platform = string.Empty;
     static List<string> paths = new List<string>();
     static List<string> files = new List<string>();
     static List<AssetBundleBuild> maps = new List<AssetBundleBuild>();
+    static Dictionary<string, string> assetBundleList = new Dictionary<string, string>();
 
     ///-----------------------------------------------------------
     static string[] exts = { ".txt", ".xml", ".lua", ".assetbundle", ".json" };
@@ -165,6 +169,10 @@ public class Packager {
         string newFilePath = streamResPath + "/files.txt";
         if (File.Exists(newFilePath)) File.Delete(newFilePath);
 
+        //生成总表
+        string resllistPath = streamResPath + "assetBundleList.bin";
+        ResourceManager.Serialize(assetBundleList, File.Open(resllistPath, FileMode.Create));
+        files.Add(resllistPath);
         FileStream fs = new FileStream(newFilePath, FileMode.CreateNew);
         StreamWriter sw = new StreamWriter(fs);
         for (int i = 0; i < files.Count; i++)
@@ -251,6 +259,7 @@ public class Packager {
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 build.assetNames = new string[] { files[i] };
+                assetBundleList[files[i].ToLower()] = bundleName;
                 maps.Add(build);
             }
         }
@@ -276,6 +285,7 @@ public class Packager {
 
         for (int i = 0; i < files.Length; i++) {
             files[i] = files[i].Replace('\\', '/');
+            assetBundleList[files[i].ToLower()] = bundleName;
         }
         AssetBundleBuild build = new AssetBundleBuild();
         build.assetBundleName = bundleName;
@@ -371,6 +381,11 @@ public class Packager {
         string newFilePath = resPath + "/files.txt";
         if (File.Exists(newFilePath)) File.Delete(newFilePath);
 
+        //生成总表
+        string resllistPath = AppDataPath + "/StreamingAssets/" + "assetBundleList.bin";
+        ResourceManager.Serialize(assetBundleList, File.Open(resllistPath, FileMode.Create));
+        files.Add(resllistPath);
+
         FileStream fs = new FileStream(newFilePath, FileMode.CreateNew);
         StreamWriter sw = new StreamWriter(fs);
         for (int i = 0; i < files.Count; i++)
@@ -408,8 +423,9 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
+                    assetBundleList[files[j].ToLower()] = bundleName;
                 }
-                reslist.AddRange(files);
+                reslist.AddRange(files);                
             }
 
             build.assetNames = reslist.ToArray();

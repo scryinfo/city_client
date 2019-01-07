@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using LuaInterface;
 using UObject = UnityEngine.Object;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class AssetBundleInfo {
     public AssetBundle m_AssetBundle;
@@ -41,17 +42,71 @@ namespace LuaFramework {
             public Action<UObject[], AssetBundle> sharpFunc;
         }
 
+        public static void Serialize<Object>(Object dictionary, Stream stream)
+        {
+            try // try to serialize the collection to a file
+            {
+                using (stream)
+                {
+                    // create BinaryFormatter
+                    BinaryFormatter bin = new BinaryFormatter();
+                    // serialize the collection (EmployeeList1) to file (stream)
+                    bin.Serialize(stream, dictionary);
+                }
+            }
+            catch (IOException)
+            {
+            }
+        }
+
+        public static Object Deserialize<Object>(Stream stream) where Object : new()
+        {
+            Object ret = CreateInstance<Object>();
+            try
+            {
+                using (stream)
+                {
+                    // create BinaryFormatter
+                    BinaryFormatter bin = new BinaryFormatter();
+                    // deserialize the collection (Employee) from file (stream)
+                    ret = (Object)bin.Deserialize(stream);
+                }
+            }
+            catch (IOException)
+            {
+            }
+            return ret;
+        }
+        // function to create instance of T
+        public static Object CreateInstance<Object>() where Object : new()
+        {
+            return (Object)Activator.CreateInstance(typeof(Object));
+        }
+
         // Load AssetBundleManifest.
         public void Initialize(string manifestName, Action initOK) {
+            //测试{ 
+            Dictionary<string, string> userSessionLookupTable = new Dictionary<string, string>();
+            userSessionLookupTable["hahaKey"] = "hahavalue";
+            userSessionLookupTable["heheKey"] = "hehevalue";
+            Serialize(userSessionLookupTable, File.Open("data.bin", FileMode.Create));
+            Dictionary<string, string> deserializeObject = Deserialize<Dictionary<string, string>>(File.Open("data.bin", FileMode.Open));
+            //测试}
+
             m_BaseDownloadingURL = Util.GetRelativePath();
             LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs, AssetBundle ab) {
                 if (objs.Length > 0) {                    
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
                     m_AllManifest = m_AssetBundleManifest.GetAllAssetBundles();
                     string[] dependencies0 = m_AssetBundleManifest.GetAllDependencies(manifestName);
-                    int xx1 = 0;
+                    string resllistPath = Application.dataPath.ToLower() + "/StreamingAssets/" + "assetBundleList.bin";
+                    m_ResourcesBundleInfo = Deserialize<Dictionary<string, string>>(File.Open(resllistPath, FileMode.Open));
+
                     resInitCountAll = m_AllManifest.Length;
-                    for (int i = 0; i < m_AllManifest.Length; i++) {
+
+                    if (initOK != null) initOK();
+
+                    /*for (int i = 0; i < m_AllManifest.Length; i++) {
                         string bdname = m_AllManifest[i];
 
                         if (bdname.Contains("lua/")) {
@@ -77,7 +132,7 @@ namespace LuaFramework {
                                 if (initOK != null) initOK();
                             }
                         });
-                    }
+                    }*/
                 }
             });
         }

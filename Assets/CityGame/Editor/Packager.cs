@@ -259,7 +259,7 @@ public class Packager {
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 build.assetNames = new string[] { files[i] };
-                assetBundleList[files[i].ToLower()] = bundleName;
+                assetBundleList[files[i]] = bundleName;
                 maps.Add(build);
             }
         }
@@ -285,7 +285,7 @@ public class Packager {
 
         for (int i = 0; i < files.Length; i++) {
             files[i] = files[i].Replace('\\', '/');
-            assetBundleList[files[i].ToLower()] = bundleName;
+            assetBundleList[files[i]] = bundleName;
         }
         AssetBundleBuild build = new AssetBundleBuild();
         build.assetBundleName = bundleName;
@@ -423,7 +423,7 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
-                    assetBundleList[files[j].ToLower()] = bundleName;
+                    assetBundleList[files[j]] = bundleName;
                 }
                 reslist.AddRange(files);                
             }
@@ -450,11 +450,11 @@ public class Packager {
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapInOne(ref curPath, ref patterns);
 
-        curPath = "Assets/CityGame/Resources/Building";
+        curPath = "Assets/CityGame/Resources/Building_Res";
         AddBuildMapInOne(ref curPath, ref patterns);
         
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapOp(ref curPath, ref patterns);
+        AddBuildMapInOne(ref curPath, ref patterns);
 
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");

@@ -557,7 +557,10 @@ function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
     rentalData.buildingTypeId = self.toggleData.info.mId
     rentalData.rent = self.toggleData.rent
     rentalData.suggestRent = self.toggleData.rent
-    rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    --rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
+    local endStr = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
+    rentalData.effectiveDate = endStr
+
     rentalData.isOther = self.toggleData.isOther  --
     local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
     return rentalLuaItem

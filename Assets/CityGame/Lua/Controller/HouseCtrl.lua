@@ -50,9 +50,9 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     Event.Brocast("c_GetBuildingInfo", houseDetailData.info)
     if houseDetailData.info.state == "OPERATE" then
-        HousePanel.stopIconBtn.localScale = Vector3.zero
+        HousePanel.stopRootTran.localScale = Vector3.zero
     else
-        HousePanel.stopIconBtn.localScale = Vector3.one
+        HousePanel.stopRootTran.localScale = Vector3.one
     end
 
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName

@@ -53,12 +53,15 @@ end
 
 --关闭
 function RentalItem:closeToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Close
+    --temp
+    return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOTAL_H)
 
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-
-    return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOP_H)
+    --self.buildingInfoToggleState = BuildingInfoToggleState.Close
+    --
+    --self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    --self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    --
+    --return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOP_H)
 end
 
 --刷新数据

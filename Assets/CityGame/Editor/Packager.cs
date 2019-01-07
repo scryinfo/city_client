@@ -259,7 +259,7 @@ public class Packager {
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 build.assetNames = new string[] { files[i] };
-                assetBundleList[files[i]] = bundleName;
+                assetBundleList[files[i].ToLower()] = bundleName;
                 maps.Add(build);
             }
         }
@@ -285,7 +285,7 @@ public class Packager {
 
         for (int i = 0; i < files.Length; i++) {
             files[i] = files[i].Replace('\\', '/');
-            assetBundleList[files[i]] = bundleName;
+            assetBundleList[files[i].ToLower()] = bundleName;
         }
         AssetBundleBuild build = new AssetBundleBuild();
         build.assetBundleName = bundleName;
@@ -412,9 +412,10 @@ public class Packager {
         pos = path.LastIndexOf('/');
         if (pos >= 0)
         {
-            string bundleName = path.Remove(0, pos + 1);
-            build.assetBundleName = bundleName;
-            build.assetBundleName += AppConst.BundleExt;
+            string bundleName = path;
+            bundleName = bundleName.Replace("/", "_");
+
+            build.assetBundleName = bundleName + AppConst.BundleExt;
             List<string> reslist = new List<string>();
 
             for (int i = 0; i < patterns.Length; ++i)
@@ -423,7 +424,7 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
-                    assetBundleList[files[j]] = bundleName;
+                    assetBundleList[files[j]] = build.assetBundleName;
                 }
                 reslist.AddRange(files);                
             }
@@ -450,7 +451,7 @@ public class Packager {
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapInOne(ref curPath, ref patterns);
 
-        curPath = "Assets/CityGame/Resources/Building_Res";
+        curPath = "Assets/CityGame/Resources/Building";
         AddBuildMapInOne(ref curPath, ref patterns);
         
         curPath = "Assets/CityGame/Resources/View";

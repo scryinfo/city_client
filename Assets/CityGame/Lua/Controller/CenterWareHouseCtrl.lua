@@ -61,6 +61,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.AddListener("c_transport",self.c_transport,self);
+   -- Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
 
 end
 
@@ -88,9 +89,14 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         dataId.buildingId = buildingId
         dataId.id = go.itemId
         DataManager.DetailModelRpcNoRet(6, 'm_DeleteItem',dataId)
-        --go.manager:_deleteGoods(go.id)
+        go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
+end
+
+--删除物品回调
+function CenterWareHouseCtrl:c_DeleteItem(go)
+    go.manager:_deleteGoods(go.id)
 end
 
 --点击BG

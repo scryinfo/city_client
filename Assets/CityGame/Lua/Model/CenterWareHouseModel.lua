@@ -40,8 +40,9 @@ function CenterWareHouseModel:n_GsExtendBag(stream)
     Event.Brocast("c_GsExtendBag")
 end
 
+--删除回调
 function CenterWareHouseModel:n_GsDelItem(stream)
-    Event.Brocast("c_GsDelItem")
+    --Event.Brocast("c_GsDelItem")
 end
 
 --删除商品发包

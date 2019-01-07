@@ -29,7 +29,7 @@ namespace LuaFramework {
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                
         public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null,Action<UnityEngine.Object[], AssetBundle> csFunc = null)
         {
-            string assetName = releativePath.ToLower() ;
+            string assetName = releativePath;
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }

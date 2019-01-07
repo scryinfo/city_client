@@ -259,7 +259,7 @@ public class Packager {
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 build.assetNames = new string[] { files[i] };
-                assetBundleList[files[i].ToLower()] = bundleName;
+                assetBundleList[files[i]] = bundleName.ToLower();
                 maps.Add(build);
             }
         }
@@ -424,7 +424,7 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
-                    assetBundleList[files[j]] = build.assetBundleName;
+                    assetBundleList[files[j]] = build.assetBundleName.ToLower();
                 }
                 reslist.AddRange(files);                
             }

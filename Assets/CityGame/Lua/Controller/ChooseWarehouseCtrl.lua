@@ -1,6 +1,14 @@
 ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
 UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 
+--排序type
+ChooseWarehouseSortItemType = {
+    Name = 1,      --名字
+    Quantity = 2,  --数量
+    Price = 3,     --价格
+    Score = 4      --等级
+}
+
 local isShowList;
 local buildingInfo;
 local chooseWarehouse
@@ -171,16 +179,22 @@ end
 function ChooseWarehouseCtrl:OnClick_nameBtn()
     ChooseWarehousePanel.nowText.text = "By name";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
+    local type = ChooseWarehouseSortItemType.Name
+    --ChooseWarehouseCtrl:_getSortItems(type)
 end
 --根据数量排序
 function ChooseWarehouseCtrl:OnClick_quantityBtn()
     ChooseWarehousePanel.nowText.text = "By quantity";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
+    local type = ChooseWarehouseSortItemType.Quantity
+    --ChooseWarehouseCtrl:_getSortItems(type)
 end
 --根据价格排序
 function ChooseWarehouseCtrl:OnClick_priceBtn()
     ChooseWarehousePanel.nowText.text = "By price";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
+    local type = ChooseWarehouseSortItemType.Price
+    --ChooseWarehouseCtrl:_getSortItems(type)
 end
 --根据时间排序
 function ChooseWarehouseCtrl:OnClick_timeBtn()
@@ -201,4 +215,39 @@ function ChooseWarehouseCtrl:OnClick_OpenList(isShow)
         ChooseWarehousePanel.arrowBtn:DORotate(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     end
     isShowList = isShow;
+end
+
+--排序
+function ChooseWarehouseCtrl:_getSortItems(type)
+    if WareHouseGoodsMgr.ipaItems == nil then
+        return
+    end
+    if type == ChooseWarehouseSortItemType.Name then
+        table.sort(WareHouseGoodsMgr.ipaItems, function (m, n)
+            if m.sizeName == n.sizeName then
+                return
+            else
+                return m.sizeName < n.sizeName
+            end
+            end )
+        for i, v in ipairs(WareHouseGoodsMgr.ipaItems) do
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.rightContent.transform);
+        end
+    end
+    if type == ChooseWarehouseSortItemType.Price then
+        table.sort(WareHouseGoodsMgr.ipaItems, function (m, n) return m.price < n.price end )
+        for i, v in ipairs(WareHouseGoodsMgr.ipaItems) do
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.rightContent.transform);
+        end
+    end
+    if type == ChooseWarehouseSortItemType.Quantity then
+        table.sort(WareHouseGoodsMgr.ipaItems, function (m, n) return m.num < n.num end )
+        for i, v in ipairs(WareHouseGoodsMgr.ipaItems) do
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.scrollView.transform);
+            v.prefab.gameObject.transform:SetParent(ChooseWarehousePanel.rightContent.transform);
+        end
+    end
+
 end

@@ -529,7 +529,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagIds
-
+    --初始化自己的money
+    PersonDataStack.m_money = tempData.money
     --初始化自己的name
     PersonDataStack.m_name = tempData.name
 
@@ -642,6 +643,10 @@ end
 
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+function DataManager.GetMoney()
+    return PersonDataStack.m_money
 end
 
 function DataManager.GetName()

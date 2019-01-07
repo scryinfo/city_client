@@ -15,7 +15,6 @@ local switchIsShow;
 local isSelect;
 local itemId = {}
 local centerWareHousetBehaviour
-local newtotalCapacity
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
@@ -51,6 +50,9 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.quantityBtn,self.OnClick_OnNumber, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
+
+    CenterWareHousePanel.tipText.text = 0
+
     WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
     self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
@@ -61,6 +63,11 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_transport",self.c_transport,self);
 
 end
+
+function CenterWareHouseCtrl:Awake()
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+end
+
 --初始化
 function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
@@ -69,7 +76,7 @@ function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
---点击删除
+--点击删除物品
 function CenterWareHouseCtrl:c_OnDelete(go)
     local buildingId = PlayerTempModel.roleData.bagId
     local data = {}
@@ -81,7 +88,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         dataId.buildingId = buildingId
         dataId.id = go.itemId
         DataManager.DetailModelRpcNoRet(6, 'm_DeleteItem',dataId)
-        go.manager:_deleteGoods(go.id)
+        --go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
@@ -123,11 +130,11 @@ end
 function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
+
 function CenterWareHouseCtrl:Refresh()
     if self.m_data == nil then
         return
     end
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
     self.number = 0;--商品个数
     if self.m_data.bag.inHand ~= nil then
         for i, v in pairs(self.m_data.bag.inHand) do
@@ -142,14 +149,16 @@ end
 
 function CenterWareHouseCtrl:initInsData()
     DataManager.OpenDetailModel(CenterWareHouseModel,6)
-   -- DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
 end
 
-
 --扩容按钮
-
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
+    local money = DataManager.GetMoney()
+    if money<go.money then
+        Event.Brocast("SmallPop","扩容金额不足",300)
+    else
+        DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
+    end
 end
 
 function CenterWareHouseCtrl:c_GsExtendBag()
@@ -293,6 +302,9 @@ end
 
 --排序
 function CenterWareHouseCtrl:_getSortItems(type)
+    if WareHouseGoodsMgr.items == nil then
+        return
+    end
     if type == CenterWareHouseSortItemType.Name then
         table.sort(WareHouseGoodsMgr.items, function (m, n) return m.name < n.name end )
         for i, v in ipairs(WareHouseGoodsMgr.items) do

@@ -31,11 +31,15 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
     self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
 
+    self.sizeName =  self.size.text..self.name.text
+
     local distances
     distances = math.sqrt(math.pow((BagPosInfo[1].bagX-self.posX),2)+math.pow((BagPosInfo[1].bagY-self.posY),2))
     self.distance.text = math.floor(distances).."km"
     local moneys = tonumber(CenterWareHousePanel.tipText.text) * distances * BagPosInfo[1].postageCost
     self.money.text = "E"..math.floor(moneys)..".0000"
+
+    self.price = moneys
 
     local type = ct.getType(UnityEngine.Sprite)
     panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
@@ -54,6 +58,7 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
         end
     end
 
+    self.num = n
 
     self.warehouse_Slider.value = n
 
@@ -74,7 +79,7 @@ function ChooseLineItem:OnLinePanelBG(go)
         Event.Brocast("SmallPop","仓库容量不足",300)
         return
     end
-    CenterWareHousePanel.nameText.text = go.size.text .. go.name.text
+    CenterWareHousePanel.nameText.text = go.sizeName
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输
     go.manager:_onClick()

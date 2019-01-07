@@ -54,6 +54,8 @@ end
 --关闭
 function RentalItem:closeToggleItem(targetMovePos)
     --temp
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, RentalItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     return Vector2.New(targetMovePos.x, targetMovePos.y - RentalItem.static.TOTAL_H)
 
     --self.buildingInfoToggleState = BuildingInfoToggleState.Close

@@ -72,12 +72,12 @@ function ChatFriendsItem:_toggleValueChange(isOn)
         if self.data.index == 1 then
             ChatCtrl.static.chatMgr:DestroyContentChildren(2)
             ChatCtrl.static.chatMgr:ShowPlayerInfo(2, self.data)
-            DataManager.SetMyReadChatInfo(2, self.data.id)
+            --DataManager.SetMyReadChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
         else
             ChatCtrl.static.chatMgr:ShowPlayerInfo(3, self.data)
-            DataManager.SetMyReadChatInfo(3, self.data.id)
+            --DataManager.SetMyReadChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
         end

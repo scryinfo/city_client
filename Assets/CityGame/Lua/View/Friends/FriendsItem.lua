@@ -150,7 +150,8 @@ function FriendsItem:OnBg(go)
 end
 
 function FriendsItem:OnHead(go)
-    UIPage.ClosePage()
+    --UIPage.ClosePage()
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", go.data)
     ct.log("tina_w7_friends", "显示好友个人信息")
 end
 
@@ -199,6 +200,7 @@ function FriendsItem:OnAddFriends(go)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
+    data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_AddFriends", go.data.id, text)

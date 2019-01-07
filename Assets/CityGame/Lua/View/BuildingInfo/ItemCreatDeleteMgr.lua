@@ -40,6 +40,7 @@ function ItemCreatDeleteMgr:begin()
 
         UpdateBeat:Add(self._updateTime, self);
 end
+
 function ItemCreatDeleteMgr:Remove()
     UpdateBeat:Remove(self._updateTime,self)
 end

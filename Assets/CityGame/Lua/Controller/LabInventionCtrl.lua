@@ -88,7 +88,8 @@ function LabInventionCtrl:_initPanelData()
         self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
-        --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
+        LoadSprite(Material[self.m_data.itemId].img, LabInventionPanel.matIconImg,true)
+        LabInventionPanel.matIconImg:SetNativeSize()
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         local formularItem = FormularConfig[1][self.m_data.itemId]
@@ -117,7 +118,8 @@ function LabInventionCtrl:_initPanelData()
             LabInventionPanel.showLine(data)
             LabInventionPanel.goodRootTran.localScale = Vector3.one
             LabInventionPanel.rawRootTran.localScale = Vector3.zero
-            --LabInventionPanel.goodIconImg.mainTexture = Good[self.m_data.itemId].img
+            LoadSprite(Good[self.m_data.itemId].img, LabInventionPanel.goodIconImg,true)
+            LabInventionPanel.goodIconImg:SetNativeSize()
             LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
         end, formularItem.materials)
     end

@@ -23,14 +23,13 @@ namespace LuaFramework {
         }
         public string GetBundleName( ref string releativePath)
         {
-            string lstr = releativePath.ToLower();
-            return ResourceManager.getBundleName(ref lstr);
+            return ResourceManager.getBundleName(ref releativePath);
         }
 
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                
         public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null,Action<UnityEngine.Object[], AssetBundle> csFunc = null)
         {
-            string assetName = releativePath.ToLower() ;
+            string assetName = releativePath;
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }
@@ -52,8 +51,11 @@ namespace LuaFramework {
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
-                if (objs.Length == 0) return;                                
-                
+                if (objs.Length == 0) return;
+
+                //objs[0].name = "Assets/CityGame/Resources/"+
+                string test = objs[0].name;
+
                 if (func != null)
                 {
                     func.Call(objInstance, objs[0], ab);                    

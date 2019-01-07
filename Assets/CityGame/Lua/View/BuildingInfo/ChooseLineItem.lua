@@ -21,6 +21,7 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
+    self.houseIcon = self.prefab.transform:Find("transportDetails/houseIcon"):GetComponent("Image");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
     self.distance = self.prefab.transform:Find("transportDetails/distance/distanceText").gameObject:GetComponent("Text");
@@ -35,6 +36,14 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.distance.text = math.floor(distances).."km"
     local moneys = tonumber(CenterWareHousePanel.tipText.text) * distances * BagPosInfo[1].postageCost
     self.money.text = "E"..math.floor(moneys)..".0000"
+
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.houseIcon.sprite = texture
+        end
+    end)
 
     local n = 0
     if DataInfo.store.inHand == nil then

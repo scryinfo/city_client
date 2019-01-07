@@ -35,7 +35,7 @@ function PersonalHomeDialogPageCtrl:Refresh()
 end
 
 function PersonalHomeDialogPageCtrl:Close()
-    self:_removeListener()
+    --self:_removeListener()
 end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)

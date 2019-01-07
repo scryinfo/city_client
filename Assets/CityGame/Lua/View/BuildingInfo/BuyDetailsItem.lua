@@ -7,7 +7,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self._luabehaviour = inluabehaviour
     self.id = id;
     self.itemId = self.goodsDataInfo.k.id;
-    self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon");
+    self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon"):GetComponent("Image");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");
     self.numberScrollbar = self.prefab.transform:Find("numberScrollbar"):GetComponent("Slider");
@@ -15,7 +15,25 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.moneyText = self.prefab.transform:Find("buttombg/moneyImg/moneyText"):GetComponent("Text");
     self.closeBtn = self.prefab.transform:Find("closeBtn");
 
-    self.nameText.text = Material[self.itemId].name;
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    end
     self.inputNumber.text = 0;
     self.numberScrollbar.maxValue = self.goodsDataInfo.n;
     self.numberScrollbar.value = 0;

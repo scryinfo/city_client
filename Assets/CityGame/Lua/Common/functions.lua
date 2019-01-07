@@ -431,3 +431,14 @@ function split(input, delimiter)
 	table.insert(arr, string.sub(input, pos))
 	return arr
 end
+
+
+function LoadSprite(path,Icon)
+	local type = ct.getType(UnityEngine.Sprite)
+	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj )
+		if obj ~= nil then
+			local texture = ct.InstantiatePrefab(obj)
+			Icon.sprite = texture
+		end
+	end)
+end

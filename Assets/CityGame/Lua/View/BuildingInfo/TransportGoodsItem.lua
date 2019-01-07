@@ -17,12 +17,32 @@ function TransportGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i
     self.itemId = itemId
 
     self.name = self.prefab.transform:Find("nameText").gameObject:GetComponent("Text")
+    self.goodsIcon = self.prefab.transform:Find("goodsIcon"):GetComponent("Image");
     self.inputText = self.prefab.transform:Find("InputField").gameObject:GetComponent("InputField");
     self.scrollbar = self.prefab.transform:Find("Scrollbar").gameObject:GetComponent("Slider");
     self.xBtn = self.prefab.transform:Find("closeBtn").gameObject;
 
     self.name.text = self.goodsDataInfo.name;
     self.totalNumber = self.goodsDataInfo.number;
+
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    end
+
 
     self._luabehaviour:AddClick(self.xBtn,self.OnxBtn,self)
     self.scrollbar.maxValue =  self.totalNumber

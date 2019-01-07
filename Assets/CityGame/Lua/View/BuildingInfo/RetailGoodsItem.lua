@@ -30,6 +30,14 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
     self.qualityValue.text = self.goodsDataInfo.k.qty
     self.moneyText.text = "E"..self.goodsDataInfo.price..".0000"
 
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A(Good[self.goodsDataInfo.k.id].img,type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.goodsicon.sprite = texture
+        end
+    end)
+
     self:initializeUiState()
 end
 --初始化UI状态

@@ -52,8 +52,10 @@ namespace LuaFramework {
 
             string infile = resPath + "files.txt";
             string outfile = dataPath + "files.txt";
-            if (File.Exists(outfile)) File.Delete(outfile);
-
+            if (File.Exists(outfile))
+                File.Delete(outfile);
+            else
+                File.Create(outfile);
             string message = "正在解包文件:>files.txt";
             Debug.Log(infile);
             Debug.Log(outfile);

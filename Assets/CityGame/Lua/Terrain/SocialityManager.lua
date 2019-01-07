@@ -215,3 +215,8 @@ end
 function SocialityManager:GetUnread()
     return self.unread
 end
+
+-- 清空陌生人的聊天消息
+function SocialityManager:SetStrangersInfo(id)
+    self.m_chatByType[3][id] = nil
+end

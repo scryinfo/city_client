@@ -784,6 +784,11 @@ function DataManager.GetUnread()
     return PersonDataStack.socialityManager:GetUnread()
 end
 
+-- 清空聊天消息
+function DataManager.SetStrangersInfo(id)
+    return PersonDataStack.socialityManager:SetStrangersInfo(id)
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding

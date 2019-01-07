@@ -623,6 +623,7 @@ function ChatCtrl:c_OnReceiveAddBlacklist(roleInfo)
         end
     elseif strangersPlayerItem[roleInfo.id] then
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
+        DataManager.SetStrangersInfo(roleInfo.id)
         if activePlayerId == roleInfo.id then
             ChatCtrl.static.chatMgr:SetToggle()
             ChatCtrl.static.chatMgr:DestroyContentChildren(4)
@@ -649,6 +650,7 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
         end
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
+        DataManager.SetStrangersInfo(roleInfo.id)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
 end

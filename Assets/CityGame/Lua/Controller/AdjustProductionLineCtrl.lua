@@ -82,6 +82,9 @@ end
 
 --添加生产线
 function AdjustProductionLineCtrl:OnClick_determineBtn(ins)
+    if GoodsUnifyMgr.sendInfoTempTab == nil then
+        return;
+    end
     local number,steffNumber,itemid = GoodsUnifyMgr:getSendInfo()
     if number == "0" then
         Event.Brocast("SmallPop","目标产量不能为0",300)

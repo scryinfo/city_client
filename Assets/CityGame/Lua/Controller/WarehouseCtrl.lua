@@ -77,7 +77,7 @@ function WarehouseCtrl:OnClick_returnBtn(go)
 end
 function WarehouseCtrl:Hide()
     UIPage.Hide(self)
-    return {insId = self.m_data.info.id}
+    return {insId = self.m_data.info.id,self.m_data}
 end
 --搜索
 function WarehouseCtrl:OnClick_searchBtn(ins)

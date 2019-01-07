@@ -22,8 +22,15 @@ end
 
 --初始化
 function AddDetailItem:initData(data)
+    local type = ct.getType(UnityEngine.Sprite)
     if Material[data.itemId] then
         self.nameText.text = Material[data.itemId].name
+        panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     else
         self.nameText.text = Good[data.itemId].name
     end

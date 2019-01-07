@@ -41,8 +41,8 @@ end
 
 function ShelfCtrl:Refresh()
     shelf = self.gameObject:GetComponent('LuaBehaviour')
-    if self.m_data == nil then
-        return
+    if self.m_data[1] ~= nil then
+        self.m_data = self.m_data[1]
     end
     self.data = self.m_data
     self.luabehaviour = shelf
@@ -205,6 +205,7 @@ function ShelfCtrl:OnClick_createGoods(go)
     if go.data == nil then
         return
     end
+    go:deleteObjInfo();
     ct.OpenCtrl("WarehouseCtrl",go.data)
     --if go.data.buildingType == BuildingType.MaterialFactory then
     --    ct.OpenCtrl("WarehouseCtrl",go.data)

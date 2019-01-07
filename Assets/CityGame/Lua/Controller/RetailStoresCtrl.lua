@@ -1,13 +1,13 @@
 RetailStoresCtrl = class('RetailStoresCtrl',UIPage)
 UIPage:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
-
+local this
 --构建函数
 function RetailStoresCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function RetailStoresCtrl:bundleName()
-    return "RetailStoresPanel";
+    return "Assets/CityGame/Resources/View/RetailStoresPanel.prefab";
 end
 
 function RetailStoresCtrl:OnCreate(obj)
@@ -15,24 +15,28 @@ function RetailStoresCtrl:OnCreate(obj)
 end
 
 function RetailStoresCtrl:Awake(go)
+    this = self
     self.gameObject = go;
     self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconROOT.gameObject,self.OnClick_prepareOpen,self);
+    self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
 
 function RetailStoresCtrl:Refresh()
-    self:initializeData()
+    this:initializeData()
 end
 
 function RetailStoresCtrl:initializeData()
-    if self.m_data then
+    if self.m_data.insId then
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
+    else
+        DataManager.OpenDetailModel(RetailStoresModel,self.m_data.info.id)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.m_data.info.id)
     end
 end
 
@@ -48,6 +52,13 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
         self.m_data.isOther = false
         RetailStoresPanel.changeNameBtn.localScale = Vector3.one
     end
+
+    if self.m_data.info.state=="OPERATE" then
+        RetailStoresPanel.stopIconRoot.localScale=Vector3.zero
+    else
+        RetailStoresPanel.stopIconRoot.localScale=Vector3.one
+    end
+
     self.m_data.buildingType = BuildingType.RetailShop
     if not self.retailShopToggleGroup then
         self.retailShopToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.retailShopBehaviour, self.m_data)
@@ -55,7 +66,9 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
         --self.retailShopToggleGroup:updataInfo(self.m_data)
     end
 end
-
+function RetailStoresCtrl:OnClick_buildInfo(ins)
+    Event.Brocast("c_openBuildingInfo",ins.m_data.info)
+end
 function RetailStoresCtrl:OnClick_prepareOpen(ins)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end

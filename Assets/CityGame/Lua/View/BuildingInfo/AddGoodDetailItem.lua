@@ -4,7 +4,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.data = data
     self.toggle = viewRect:GetComponent("Toggle")
     self.toggle.group = toggleGroup
-
+    --self.itemId = data.itemId
     self.iconImg = viewRect:Find("iconImg"):GetComponent("Image")
     self.nameText = viewRect:Find("nameText"):GetComponent("Text")
     self.disableImg = viewRect:Find("disableImg"):GetComponent("Image")
@@ -22,10 +22,23 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     end
 
     local tempData
+    local type = ct.getType(UnityEngine.Sprite)
     if data.itemType == 0 then
         tempData = Material[data.itemId]
+        panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     else
         tempData = Good[data.itemId]
+        --panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
+        --    if obj ~= nil then
+        --        local texture = ct.InstantiatePrefab(obj)
+        --        self.iconImg.sprite = texture
+        --    end
+        --end)
     end
     self.nameText.text = tempData.name
 

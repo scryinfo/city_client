@@ -102,7 +102,8 @@ function LabResearchCtrl:_initPanelData()
         LabResearchPanel.showLine(data)
     end, formularItem.materials)
 
-    --LabResearchPanel.iconImg.mainTexture = Good[self.m_data.itemId].img
+    LoadSprite(Good[self.m_data.itemId].img, LabResearchPanel.iconImg,true)
+    LabResearchPanel.iconImg:SetNativeSize()
     LabResearchPanel.itemNameText.text = Good[self.m_data.itemId].name
 
     if not self.m_data.id then    --没有id则为临时添加的线

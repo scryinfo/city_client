@@ -69,6 +69,9 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.maleTran.localScale = Vector3.one
     end
     self.sayText.text = self.m_data.des
+    if self.m_data.des == nil then
+        self.sayText.text = "Everything i do i wanna put a shine on it, do it one more time, i gotta give it up."  --默认值
+    end
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 45, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
@@ -99,7 +102,14 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
 end
 --私聊
 function PersonalHomeDialogPageCtrl:_chatBtnFunc(ins)
-
+    -- 判断是否是自己的好友
+    local friendsBasicData = DataManager.GetMyFriends()
+    if friendsBasicData[ins.m_data.id] == nil then
+        ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
+    else
+        ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
+    end
+    ins:Hide()
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

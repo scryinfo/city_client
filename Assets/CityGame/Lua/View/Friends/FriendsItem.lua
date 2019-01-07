@@ -200,6 +200,7 @@ function FriendsItem:OnAddFriends(go)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
+    data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_AddFriends", go.data.id, text)

@@ -52,6 +52,10 @@ end
 
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
+    if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then
+        return
+    end
+
     local data = {workerNum=20,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
@@ -195,16 +199,25 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
     GameMainInterfacePanel.worldChatNoticeItem:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    local saveUnread = DataManager.GetUnread()
     for _, v in pairs(chatFriendsInfo) do
         if v.unreadNum and v.unreadNum > 0 then
             GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-            break
+            return
         end
     end
     for _, m in pairs(chatStrangersInfo) do
         if m.unreadNum and m.unreadNum > 0 then
             GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-            break
+            return
+        end
+    end
+    if saveUnread then
+        for _, n in pairs(saveUnread) do
+            if n and n[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                return
+            end
         end
     end
 end

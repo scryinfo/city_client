@@ -31,7 +31,7 @@ function FriendsModel.OnCreate()
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"),FriendsModel.n_OnReceiveAddFriendSucess)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","searchPlayer"),FriendsModel.n_OnReceiveSearchPlayerInfo)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),FriendsModel.n_OnReceiveDeleteFriend)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),FriendsModel.n_DeleteBlacklist)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),FriendsModel.n_DeleteBlacklist)
 end
 
 function FriendsModel.Close()
@@ -123,7 +123,7 @@ function FriendsModel.m_DeleteBlacklist(friendsId)
 end
 
 -- 解除屏蔽返回
-function FriendsModel.n_DeleteBlacklist(stream)
-    local friendsId = assert(pbl.decode("gs.Id", stream), "FriendsModel.n_DeleteBlacklist: stream == nil")
-    Event.Brocast("c_DeleteBlacklist", friendsId)
-end
+--function FriendsModel.n_DeleteBlacklist(stream)
+--    local friendsId = assert(pbl.decode("gs.Id", stream), "FriendsModel.n_DeleteBlacklist: stream == nil")
+--    Event.Brocast("c_DeleteBlacklist", friendsId)
+--end

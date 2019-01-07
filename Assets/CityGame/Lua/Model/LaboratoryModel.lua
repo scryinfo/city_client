@@ -197,11 +197,12 @@ end
 --员工数量改变
 function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
     local line = self.hashLineData[data.lineId]
-    self.remainWorker = self.remainWorker - line.workerNum
-    line.workerNum = data.n
     self.remainWorker = self.remainWorker + line.workerNum
+    line.workerNum = data.n
+    self.remainWorker = self.remainWorker - line.workerNum
 
-    line.totalTime = (line.finishTime - os.time()) / data.n  --重新计算
+    local oldTotalTime = line.totalTime
+    line.totalTime = (line.finishTime - os.time()) / data.n + line.totalTime  --重新计算
     line.finishTime = os.time() + line.totalTime
     Event.Brocast("c_LabLineWorkerNumChange", data.lineId, line.totalTime, line.finishTime, data.n)
     DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)

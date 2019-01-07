@@ -24,7 +24,7 @@ function ExchangeCtrl:initialize()
 end
 
 function ExchangeCtrl:bundleName()
-    return "ExchangePanel"
+    return "Assets/CityGame/Resources/View/ExchangePanel.prefab"
 end
 
 function ExchangeCtrl:OnCreate(obj)

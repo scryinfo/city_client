@@ -24,7 +24,14 @@ function AddLineCompositeItem:initialize(viewRect)
     end)
 end
 --初始化
-function AddLineCompositeItem:initData(data)
+function AddLineCompositeItem:initData(data, index)
+    if data == nil or data.itemId == nil then
+        return
+    end
+    self.data = data
+    if index then
+        self.index = index
+    end
     if Material[data.itemId] then
         self.nameText.text = Material[data.itemId].name
     else
@@ -52,14 +59,7 @@ function AddLineCompositeItem:initData(data)
 end
 --点击按钮
 function AddLineCompositeItem:_clickBtn()
-    --如果是已经选中了自己，再点击，则是切换路线
-    if self.selectSelf then
-
-    else
-        --如果是由其他item点击切换到自己，则显示默认
-
-        self.selectSelf = true
-    end
+    Event.Brocast("c_LabAddLineChangeMatLine", self.data.itemId, self.index)
 end
 --显示选中/未选中状态
 function AddLineCompositeItem:showSelectState(select)
@@ -75,5 +75,6 @@ function AddLineCompositeItem:setObjState(show)
         self.viewRect.localScale = Vector3.one
     else
         self.viewRect.localScale = Vector3.zero
+        self.index = nil
     end
 end

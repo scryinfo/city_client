@@ -1,14 +1,14 @@
 DetailsItem = class('DetailsItem')
 
 --初始化方法
-function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemId)
+function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.id = id;
-    self.itemId = itemId;
-    self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon");
+    self.itemId = goodsDataInfo.key.id;
+    self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon"):GetComponent("Image");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");
     self.numberScrollbar = self.prefab.transform:Find("numberScrollbar"):GetComponent("Slider");
@@ -18,11 +18,30 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemI
 
     self.inputPrice.text = 0;
     self.inputNumber.text = 0;
-    self.inputNumber.characterLimit = string.len(goodsDataInfo.num)
+    self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
     self.numberScrollbar.value = 0;
     self.numberScrollbar.minValue = 0;
-    self.numberScrollbar.maxValue = goodsDataInfo.num
-    self.nameText.text = goodsDataInfo.name
+    self.numberScrollbar.maxValue = goodsDataInfo.n
+
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    end
 
     self.numberScrollbar.onValueChanged:AddListener(function ()
         self:scrollbarInfo();

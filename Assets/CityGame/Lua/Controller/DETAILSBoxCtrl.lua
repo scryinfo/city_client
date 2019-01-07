@@ -6,7 +6,7 @@ function DETAILSBoxCtrl:initialize()
 end
 
 function DETAILSBoxCtrl:bundleName()
-    return "DETAILSBoxPanel";
+    return "Assets/CityGame/Resources/View/DETAILSBoxPanel.prefab";
 end
 
 function DETAILSBoxCtrl:OnCreate(obj)
@@ -34,41 +34,41 @@ function DETAILSBoxCtrl:OnClick_XBtn(obj)
 end
 
 function DETAILSBoxCtrl:Refresh()
-    self.obj = self.m_data
-    self.uiInfo = self.m_data.goodsDataInfo
-    self.itemId = self.uiInfo.itemId
-    DETAILSBoxPanel.nameText.text = self.uiInfo.name
-    DETAILSBoxPanel.numberInput.text = self.uiInfo.number
-    DETAILSBoxPanel.numberSlider.maxValue = self.uiInfo.number
-    DETAILSBoxPanel.numberSlider.value = self.uiInfo.number
-    DETAILSBoxPanel.priceInput.text = self.uiInfo.price
+    --self.obj = self.m_data
+    --self.uiInfo = self.m_data.goodsDataInfo
+    self.itemId = self.m_data.itemId
+    DETAILSBoxPanel.nameText.text = self.m_data.name
+    DETAILSBoxPanel.numberInput.text = self.m_data.num
+    DETAILSBoxPanel.numberSlider.maxValue = self.m_data.num
+    DETAILSBoxPanel.numberSlider.value = self.m_data.num
+    DETAILSBoxPanel.priceInput.text = self.m_data.price..".0000"
 end
 --修改数量价格
 function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
     local number = DETAILSBoxPanel.numberSlider.value
     local price = tonumber(DETAILSBoxPanel.priceInput.text)
 
-    if number ~= ins.uiInfo.number and price ~= ins.uiInfo.price then
-        local num = ins.uiInfo.number - number
-        Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,ins.itemId,num)
-        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,ins.itemId,number,price);
+    if number ~= ins.m_data.num and price ~= ins.m_data.price then
+        local num = ins.m_data.num - number
+        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
+        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         ins:Hide();
         Event.Brocast("SmallPop","修改成功",300)
         return;
     end
-    if number == ins.uiInfo.number and price == ins.uiInfo.price then
+    if number == ins.m_data.num and price == ins.m_data.price then
         ins:Hide();
         return;
     end
-    if number ~= ins.uiInfo.number and price == ins.uiInfo.price then
-        local num = ins.uiInfo.number - number
-        Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,ins.itemId,num)
+    if number ~= ins.m_data.num and price == ins.m_data.price then
+        local num = ins.m_data.num - number
+        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
         ins:Hide();
         Event.Brocast("SmallPop","数量修改成功",300)
         return;
     end
-    if number == ins.uiInfo.number and price ~= ins.uiInfo.price then
-        Event.Brocast("m_ReqModifyShelf",MaterialModel.buildingId,ins.itemId,number,price);
+    if number == ins.m_data.num and price ~= ins.m_data.price then
+        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         ins:Hide();
         Event.Brocast("SmallPop","价格修改成功",300)
         return;
@@ -89,6 +89,6 @@ function DETAILSBoxCtrl:numberSliderInfo()
 end
 --刷新UI显示
 function DETAILSBoxCtrl:refreshUiInfo(msg)
-    self.obj.moneyText.text = getPriceString("E"..msg.price..".0000",35,25)
-    self.obj.numberText.text = msg.item.n
+    self.moneyText.text = getPriceString("E"..msg.price..".0000",35,25)
+    self.numberText.text = msg.item.n
 end

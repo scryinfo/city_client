@@ -11,21 +11,31 @@ ChooseLineItem = class('ChooseLineItem')
 function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.prefab = prefab;
     self.buildingId = DataInfo.info.id;
+    self._luabehaviour = inluabehaviour;
+    self.manager = mgr;
     self.posX =  DataInfo.info.pos.x
     self.posY =  DataInfo.info.pos.y
     self._luabehaviour = inluabehaviour;
     self.manager = mgr;
-    self.isOnClick = false
 
-    self.bg = self.prefab.transform:Find("bg").gameObject
+    self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
+    self.houseIcon = self.prefab.transform:Find("transportDetails/houseIcon"):GetComponent("Image");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
-
     self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
     self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
     self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
+
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.houseIcon.sprite = texture
+        end
+    end)
+
     local n = 0
     if DataInfo.store.inHand == nil then
         n = 0
@@ -40,17 +50,25 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
 
     self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
 
-    self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
+    self.bg.onClick:AddListener(function()
+        self:OnLinePanelBG(self);
+    end)
+
+    --self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
+    Event.Brocast("c_OnLinePanelBG",go.buildingId)
     if go.spareCapacity <  tonumber(CenterWareHousePanel.tipText.text) then
         Event.Brocast("SmallPop","仓库容量不足",300)
         return
     end
     CenterWareHousePanel.nameText.text = go.size.text .. go.name.text
-    go.isOnClick = true
     go.manager:TransportConfirm(go.isOnClick )
+    -- [[  点击使其可以运输
+    go.manager:_onClick()
+    go.manager:TransportConfirm()
+    -- ]]
     local data = {}
     data.buildingId = go.buildingId
     data.posX = go.posX

@@ -12,7 +12,7 @@ local tempTag = nil;
 local Index = nil
 
 function  ServerListCtrl:bundleName()
-    return "ServerListPanel"
+    return "Assets/CityGame/Resources/View/ServerListPanel.prefab"
 end
 
 function ServerListCtrl:initialize()
@@ -31,7 +31,6 @@ end
 
 function ServerListCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     self.data = self.m_data
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);

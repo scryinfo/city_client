@@ -11,7 +11,7 @@ function PersonalHomeDialogPageCtrl:initialize()
 end
 
 function PersonalHomeDialogPageCtrl:bundleName()
-    return "PersonalHomeDialogPagePanel"
+    return "Assets/CityGame/Resources/View/PersonalHomeDialogPagePanel.prefab"
 end
 
 function PersonalHomeDialogPageCtrl:OnCreate(obj )
@@ -24,10 +24,10 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
-    self.luaBehaviour:AddClick(self.changeSayBtn, self._changeDesFunc, self)
-    self.luaBehaviour:AddClick(self.addFriendBtn, self._reqAddFriend, self)
-    self.luaBehaviour:AddClick(self.sendMessageBtn, self._chatBtnFunc, self)
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
+    self.luaBehaviour:AddClick(self.changeSayBtn.gameObject, self._changeDesFunc, self)
+    self.luaBehaviour:AddClick(self.addFriendBtn.gameObject, self._reqAddFriend, self)
+    self.luaBehaviour:AddClick(self.sendMessageBtn.gameObject, self._chatBtnFunc, self)
 end
 
 function PersonalHomeDialogPageCtrl:Refresh()
@@ -35,7 +35,7 @@ function PersonalHomeDialogPageCtrl:Refresh()
 end
 
 function PersonalHomeDialogPageCtrl:Close()
-    self:_removeListener()
+    --self:_removeListener()
 end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)
@@ -44,7 +44,7 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.changeSayBtn = go.transform:Find("root/sayRoot/changeBtn")
     self.nameText = go.transform:Find("root/infoRoot/name/nameText"):GetComponent("Text")
     self.famaleTran = go.transform:Find("root/infoRoot/name/nameText/famale")
-    self.maleTran = go.transform:Find("root/infoRoot/name/male")
+    self.maleTran = go.transform:Find("root/infoRoot/name/nameText/male")
     self.companyText = go.transform:Find("root/infoRoot/company/companyText"):GetComponent("Text")
 
     self.otherOpen = go.transform:Find("root/otherOpen")
@@ -55,10 +55,10 @@ end
 function PersonalHomeDialogPageCtrl:_initData()
     if self.m_data.id ~= DataManager.GetMyOwnerID() then
         self.otherOpen.localScale = Vector3.one
-        self.changeBtn.localScale = Vector3.zero
+        self.changeSayBtn.localScale = Vector3.zero
     else
         self.otherOpen.localScale = Vector3.zero
-        self.changeBtn.localScale = Vector3.one
+        self.changeSayBtn.localScale = Vector3.one
     end
 
     if self.m_data.male == false then

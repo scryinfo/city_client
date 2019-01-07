@@ -1,11 +1,11 @@
 SmallProductionLineItem = class('SmallProductionLineItem')
 
 --初始化方法
-function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,i)
+function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,i,manager)
     self.prefab = prefab;
+    self.manager = manager;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
-    self.manager = mgr;
     self.companyNameText = self.prefab.transform:Find("Top/companyNameText"):GetComponent("Text");  --品牌名字
     self.modificationBtn = self.prefab.transform:Find("Top/modificationBtn");  --修改名字
     self.minText = self.prefab.transform:Find("Top/minText"):GetComponent("Text");  --没分钟多少个
@@ -13,7 +13,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.timeText = self.prefab.transform:Find("Top/timeIcon/timeText"):GetComponent("Text");  --时间
     self.time_Slider = self.prefab.transform:Find("Top/time_Slider"):GetComponent("Slider");
     self.XBtn = self.prefab.transform:Find("Top/XBtn");
-    self.goodsIcon = self.prefab.transform:Find("goodsIcon");
+    self.goodsIcon = self.prefab.transform:Find("goodsIcon"):GetComponent("Image");
     self.bgBtn = self.prefab.transform:Find("bgBtn");
 
     self.tipsText = self.prefab.transform:Find("Productionbg/tipsText"):GetComponent("RectTransform");
@@ -32,12 +32,27 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
         self.timeText.text = "00:00:00"
         self.time_Slider.value = 0;
         self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums;
+
+        local materialKey,goodsKey = 21,22
+        local type = ct.getType(UnityEngine.Sprite)
+        if math.floor(self.itemId / 100000) == materialKey then
+            panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+                if obj ~= nil then
+                    local texture = ct.InstantiatePrefab(obj)
+                    self.goodsIcon.sprite = texture
+                end
+            end)
+        elseif math.floor(self.itemId / 100000) == goodsKey then
+            panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+                if obj ~= nil then
+                    local texture = ct.InstantiatePrefab(obj)
+                    self.goodsIcon.sprite = texture
+                end
+            end)
+        end
     else
         self:RefreshUiInfo(self.goodsDataInfo,i)
     end
-    --self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self)
-    Event.AddListener("refreshTimeText",self.refreshTimeText,self)
-
     self.pNumberScrollbar.onValueChanged:AddListener(function()
         self:pNumberScrollbarInfo();
     end)
@@ -47,30 +62,54 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.inputNumber.onValueChanged:AddListener(function()
         self:inputInfo();
     end)
-
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
+    --self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self)
+
+
+    Event.AddListener("refreshTimeText",self.refreshTimeText,self)
 end
 --初始化UI信息
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.id = i
-    self.nameText.text = infoTab[i].name
-    self.itemId = infoTab[i].itemId
-    self.lineId = infoTab[i].lineId
+    self.itemId = infoTab.itemId
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsIcon.sprite = texture
+            end
+        end)
+    end
+    self.lineId = infoTab.id
     self.time_Slider.maxValue = 100;
     self.time_Slider.value = 0;
-    self.time_Slider.maxValue = infoTab[i].targetCount;
-    self.time_Slider.value = infoTab[i].nowCount;
-    self.inputNumber.text = infoTab[i].targetCount;
-    self.pNumberScrollbar.value = infoTab[i].targetCount;
+    self.time_Slider.maxValue = infoTab.targetCount;
+    self.time_Slider.value = infoTab.nowCount;
+    self.inputNumber.text = infoTab.targetCount;
+    self.pNumberScrollbar.value = infoTab.targetCount;
     self.productionNumber.text = 0;     --右上角小房子
-    self.staffNumberText.text = infoTab[i].workerNum;  --最小不能设置5
-    self.sNumberScrollbar.maxValue = infoTab[i].workerNum + AdjustProductionLineCtrl.idleWorkerNums;
-    self.sNumberScrollbar.value = infoTab[i].workerNum;
+    self.staffNumberText.text = infoTab.workerNum;  --最小不能设置5
+    self.sNumberScrollbar.maxValue = infoTab.workerNum + AdjustProductionLineCtrl.idleWorkerNums;
+    self.sNumberScrollbar.value = infoTab.workerNum;
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqDeleteLine",MaterialModel.buildingId,go.lineId)
-    go.manager:_deleteProductionLine(go)
+    if not go.lineId then
+        go.manager:_deleteLine(go)
+    else
+        Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
+    end
 end
 --刷新滑动条
 function SmallProductionLineItem:pNumberScrollbarInfo()
@@ -107,19 +146,19 @@ function SmallProductionLineItem:refreshTimeText(msg)
         return;
     end
     for i,n in pairs(msg) do
-        local remainingNum = tonumber(self.time_Slider.maxValue) - msg.nowCount
-        local time = 1 / Material[self.itemId].numOneSec / tonumber(self.staffNumberText.text) * remainingNum
-        local timeTab = getTimeString(time)
-
         for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-            if AdjustProductionLineCtrl.materialProductionLine[k].lineId == msg.lineId then
-                AdjustProductionLineCtrl.materialProductionLine[k].timeText.text = timeTab
+            local remainingNum = tonumber(v.time_Slider.maxValue) - msg.nowCount
+            local time = 1 / Material[v.itemId].numOneSec / tonumber(v.staffNumberText.text) * remainingNum
+            local timeTab = getTimeString(time)
+
+            if v.lineId == msg.id then
+                v.timeText.text = timeTab
             end
-        end
-        if remainingNum > 0 then
-            self.timeText.text = timeTab
-        elseif remainingNum < 0 or remainingNum == 0 then
-            self.timeText.text = "00:00:00"
+            if remainingNum > 0 then
+                v.timeText.text = timeTab
+            elseif remainingNum < 0 or remainingNum == 0 then
+                v.timeText.text = "00:00:00"
+            end
         end
     end
 end

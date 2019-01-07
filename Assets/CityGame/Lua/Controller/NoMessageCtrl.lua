@@ -10,7 +10,7 @@ local NoMessageBehaviour
 
 
 function  NoMessageCtrl:bundleName()
-    return "NoMessagePanel"
+    return "Assets/CityGame/Resources/View/NoMessagePanel.prefab"
 end
 
 function NoMessageCtrl:initialize()
@@ -21,7 +21,6 @@ end
 --启动事件--
 function NoMessageCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     self:_initData();
 
     NoMessageBehaviour = self.gameObject:GetComponent('LuaBehaviour');

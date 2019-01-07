@@ -32,3 +32,10 @@ function GroundTransSetPricePanel.InitPanel()
     this.maxRentDayInput = transform:Find("root/rentRoot/maxRentDayInput"):GetComponent("InputField")
     this.rentalInput = transform:Find("root/rentRoot/rentalInput"):GetComponent("InputField")
 end
+
+function GroundTransSetPricePanel.cleanData()
+    this.minRentDayInput.text = ""
+    this.maxRentDayInput.text = ""
+    this.rentalInput.text = ""
+    this.sellInput.text = ""
+end

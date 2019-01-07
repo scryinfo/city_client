@@ -24,7 +24,7 @@ CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
 UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
-    return "CenterWareHousePanel"
+    return "Assets/CityGame/Resources/View/CenterWareHousePanel.prefab"
 end
 
 function CenterWareHouseCtrl:initialize()
@@ -103,6 +103,8 @@ function CenterWareHouseCtrl:c_OnTransportBG(go)
         goodsDataInfo.number = go.goodsDataInfo.number;
         goodsDataInfo.id = go.id;
         goodsDataInfo.itemId = go.itemId
+        goodsDataInfo.producerId = go.producerId
+        goodsDataInfo.qty = go.qty
         go.manager:_creatTransportGoods(goodsDataInfo);
         go.select_while:SetActive(false);
     else
@@ -135,6 +137,7 @@ function CenterWareHouseCtrl:Refresh()
     self.money = 1000;--扩容所需金额
     self:_initData();
     self:initInsData()
+    CenterWareHousePanel.tipText.text = 0
 end
 
 function CenterWareHouseCtrl:initInsData()
@@ -185,13 +188,14 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.total = n*1--总运费
     data.btnClick = function()
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
-            Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text)
-
+            if v.inputText.text == "0" then
+                Event.Brocast("SmallPop","运输商品个数不能为0",300)
+                return
+            else
+                 Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text,v.goodsDataInfo.producerId,v.goodsDataInfo.qty)
+            end
         end
         CenterWareHouseCtrl:clearAllData()
---[[        WareHouseGoodsMgr:ClearAll()
-        itemId = {}
-        WareHouseGoodsMgr:EnabledAll()]]
     end
     ct.OpenCtrl('TransportBoxCtrl',data)
 end
@@ -217,7 +221,6 @@ function CenterWareHouseCtrl:c_transport(msg)
     data.tipInfo = "可在运输线查看详情"
     ct.OpenCtrl('BtnDialogPageCtrl',data)
     CenterWareHousePanel.transportConfirm:SetActive(true);
-    CenterWareHousePanel.nameText.text = nil;
 end
 
 --关闭运输按钮
@@ -315,4 +318,5 @@ function CenterWareHouseCtrl:clearAllData()
     WareHouseGoodsMgr:ClearAll()
     itemId = {}
     WareHouseGoodsMgr:EnabledAll()
+    CenterWareHousePanel.transportConfirm:SetActive(true);
 end

@@ -15,7 +15,7 @@ DetailGuidCtrl.detailItem_Path="View/GoodsItem/detailItem"
 DetailGuidCtrl.detailItem1_Path="View/GoodsItem/detailItem1"
 
 function  DetailGuidCtrl:bundleName()
-    return "DetailGuidPanel"
+    return "Assets/CityGame/Resources/View/DetailGuidPanel.prefab"
 end
 
 function DetailGuidCtrl:initialize()

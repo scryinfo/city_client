@@ -127,7 +127,8 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 102900000, guid: 1740e45337d2b2a438b9aeb7f2e36405, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -260,7 +261,7 @@ PlayerSettings:
   m_BuildTargetIcons: []
   m_BuildTargetBatching:
   - m_BuildTarget: Android
-    m_StaticBatching: 0
+    m_StaticBatching: 1
     m_DynamicBatching: 0
   m_BuildTargetGraphicsAPIs: []
   m_BuildTargetVRSettings: []
@@ -555,7 +556,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG;AMPLIFY_SHADER_EDITOR
-    7: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG
+    7: ASYNC_MODE;LUA_BUNDEL;RES_BUNDEL;LUA_LOG;AMPLIFY_SHADER_EDITOR
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

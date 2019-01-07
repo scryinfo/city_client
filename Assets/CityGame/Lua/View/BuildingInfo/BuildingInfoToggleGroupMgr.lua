@@ -7,6 +7,7 @@ require 'View/BuildingInfo/OccupancyRateItem'
 require 'View/BuildingInfo/RentalItem'
 
 require 'View/BuildingInfo/LineChartRateItem'
+require 'View/BuildingInfo/AdLineChartItem'
 require 'View/BuildingInfo/StaffRateItem'
 require 'View/BuildingInfo/WarehouseRateItem'
 require 'View/BuildingInfo/ShelfRateItem'
@@ -39,12 +40,13 @@ BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER = "View/BuildingMainPageI
 BuildingInfoToggleGroupMgr.static.Staff_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --建筑员工
 
 BuildingInfoToggleGroupMgr.static.Municipal_Advertisement_Path="View/BuildingMainPageInfoItem/AdvertisementShowItem"--广告展示
+BuildingInfoToggleGroupMgr.static.Municipal_LineChart_Path = "View/BuildingMainPageInfoItem/AdLineChartItem"  --广告折线图
 BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--公园信息
 BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
 BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
 
 BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
-BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/TalentManagementItem"  --挖掘人才
+BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/ExcavateTalentsItem"  --挖掘人才
 
 
 --初始化
@@ -67,13 +69,15 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
+    elseif buildingData.buildingType == BuildingType.RetailShop then
+        self:_creatRetailShop()
     elseif buildingData.buildingType == BuildingType.TalentCenter then
         self:_creatTalentInfo()
     end
 
     --创建完之后调整item位置
-    self:_sortItems(1)
-    self:_sortRightItems()
+    self:_sortItems(1,1)
+    --self:_sortRightItems()
 end
 --刷新数据
 function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
@@ -114,8 +118,7 @@ function BuildingInfoToggleGroupMgr:_clickItemFunc(toggleData)
     elseif toggleData.pos == BuildingInfoTogglePos.Right then
         rightIndex = toggleData.index
     end
-
-    self:_sortItems(leftIndex, rightIndex)
+    self:_sortItems(leftIndex,rightIndex)
 end
 
 --通过预制创建view
@@ -147,14 +150,13 @@ function BuildingInfoToggleGroupMgr:_sortItems(leftOpenIndex, rightOpenIndex)
     if rightOpenIndex ~= nil and rightOpenIndex > 0 then
         local rightPos = BuildingInfoToggleGroupMgr.static.RIGHT_POS
         for key, toggleItem in pairs(self.rightData) do
-            if toggleItem:getToggleIndex() == leftOpenIndex then
+            if toggleItem:getToggleIndex() == rightOpenIndex then
                 rightPos = toggleItem:openToggleItem(rightPos)
             else
                 rightPos = toggleItem:closeToggleItem(rightPos)
             end
         end
     end
-
 end
 
 --排列右侧信息，只需要排一次，一直都处于打开状态
@@ -212,25 +214,25 @@ end
 
 --创建原料厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
-    ---营业额折线图Item --左边第一个
-    ---折线图  左1
+    --营业额折线图Item  左1
+    --折线图  左1
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
 
     if self.toggleData.isOther then
         --其他玩家进入
-        -----员工  左2
+        --员工  左2
         --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         --self.leftData[2] = self:_createStaff(staffToggleData)
 
-        -----仓库Item --左边第三个
+        --仓库Item --左边第三个
         --local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
         --warehouseView.gameObject.name = "WarehouseRateItem"
         --local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
         --local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
         --self.leftData[3] = warehouseLuaItem
 
-        ----生产线 --左边第四个
+        --生产线 --左边第四个
         --local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
         --shelfView.gameObject.name = "HomeOtherPlayerLineItem"
         --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
@@ -243,35 +245,32 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
         self.rightData[1] = prodictionLuaItem
-
-
     else
-        -----员工  左2
+        --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)
 
-        -----仓库Item --左边第三个
+        --仓库Item --左边第三个
         local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
         warehouseView.gameObject.name = "WarehouseRateItem"
         local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
         local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
         self.leftData[3] = warehouseLuaItem
 
-        ---货架 --左边第四个
+        --货架 --左边第四个
         local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
         shelfView.gameObject.name = "ShelfRateItem"
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         self.leftData[4] = shelfLuaItem
 
-        ---生长线 --右侧第一个
+        --生长线 --右侧第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
         prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         local prodictionLuaItem = HomeProductionLineItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
         self.rightData[1] = prodictionLuaItem
     end
-
 end
 --创建加工厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
@@ -284,24 +283,21 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
 
     if self.toggleData.isOther then
         --其他玩家进入
-        -----员工  左2
+        --员工  左2
         --local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         --self.leftData[2] = self:_createStaff(staffToggleData)
-        --
-        -----仓库Item --左边第三个
+        --仓库Item 左3
         --local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
         --warehouseView.gameObject.name = "WarehouseRateItem"
         --local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
         --local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
         --self.leftData[3] = warehouseLuaItem
-        --
-        ----生产线 --左边第四个
+        --生产线 --左4
         --local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTION_OTHER, self.leftRect)
         --shelfView.gameObject.name = "HomeOtherPlayerLineItem"
         --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         --local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         --self.leftData[4] = shelfLuaItem
-
         --货架 --右边第一个
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
         prodictionLineViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
@@ -309,25 +305,25 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
         self.rightData[1] = prodictionLuaItem
     else
-        -----员工  左2
+        --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)
 
-        -----仓库Item --左边第三个
+        --仓库Item 左3
         local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
         warehouseView.gameObject.name = "WarehouseRateItem"
         local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
         local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
         self.leftData[3] = warehouseLuaItem
 
-        ---货架 --左边第四个
+        --货架 左4
         local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
         shelfView.gameObject.name = "ShelfRateItem"
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         self.leftData[4] = shelfLuaItem
 
-        ---生产线 --右侧第一个
+        --生产线 --右1
         local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
         prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
         local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
@@ -335,6 +331,54 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         self.rightData[1] = prodictionLuaItem
     end
 
+end
+--创建零售店左右信息
+function BuildingInfoToggleGroupMgr:_creatRetailShop()
+    --营业额折线图Item  左1
+    local lineLeftData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineLeftData)
+
+    --营业额折线图Item 右1
+    local adLineChartData = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_LineChart_Path, self.rightRect)
+    adLineChartData.gameObject.name = "AdLineChartItem"
+    local LineChartToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
+    local AdLineChartItem = AdLineChartItem:new(nil, self._clickItemFunc, adLineChartData, self.mainPanelLuaBehaviour, LineChartToggleData, self)
+    self.rightData[1] = AdLineChartItem
+
+    if self.toggleData.isOther then
+        --其他人进入
+        --货架  左2
+        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+        shelfView.gameObject.name = "ShelfRateItem"
+        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+        self.leftData[2] = shelfLuaItem
+    else
+        --员工  左2
+        local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.leftData[2] = self:_createStaff(staffToggleData)
+
+        --仓库 左3
+        local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        warehouseView.gameObject.name = "WarehouseRateItem"
+        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        self.leftData[3] = warehouseLuaItem
+
+        --货架  左4
+        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+        shelfView.gameObject.name = "ShelfRateItem"
+        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+        local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+        self.leftData[4] = shelfLuaItem
+
+        ---广告展示--右1
+        --local advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
+        --advertisementViewRect.gameObject.name = "Advertisement"
+        --local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
+        --local AdvertisementShowItem = AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+        --self.rightData[2] = AdvertisementShowItem
+    end
 end
 --创建市镇设施左右信息
 function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
@@ -345,37 +389,38 @@ function BuildingInfoToggleGroupMgr:_creatMunicipalInfo()
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
 
+
+    if not self.staffViewRect then
+        ---门票 --左3
+        local ticketView
+        ticketView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path, self.leftRect)
+        ticketView.gameObject.name = "TicketItem"
+        local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
+        self.leftData[3] = TicketItem
+
+        ---广告展示--右1
+        local advertisementViewRect
+        advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
+        advertisementViewRect.gameObject.name="Advertisement"
+        local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
+        self.rightData[1] = AdvertisementShowItem
+
+        ---个人公园信息--中1
+        local ParkInfoRect
+        ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_ParkInfo_Path,self.toggleData.middleRootTran )
+        ParkInfoRect.gameObject.name="ParkInfo"
+        local newData={func=self._middleItem}
+        local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
+        local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
+        self.middleData[1]=ParkInfoItem
+        ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
+
+    end
     ---员工  左2
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
     self.leftData[2] = self:_createStaff(staffToggleData)
-
-    ---门票 --左3
-    local ticketView
-    ticketView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path, self.leftRect)
-    ticketView.gameObject.name = "TicketItem"
-    local ticketToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-    local TicketItem = TicketItem:new(nil, self._clickItemFunc, ticketView, self.mainPanelLuaBehaviour, ticketToggleData, self)
-    self.leftData[3] = TicketItem
-
-    ---广告展示--右1
-    local advertisementViewRect
-    advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
-    advertisementViewRect.gameObject.name="Advertisement"
-    local ToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-    local AdvertisementShowItem =AdvertisementShowItem:new(nil, self._clickItemFunc, advertisementViewRect, self.mainPanelLuaBehaviour, ToggleData, self)
-    --AdvertisementShowItem:openToggleItem(BuildingInfoToggleGroupMgr.static.RIGHT_POS)
-    self.rightData[1] = AdvertisementShowItem
-
-    ---个人公园信息--中1
-    local ParkInfoRect
-    ParkInfoRect=self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_ParkInfo_Path,self.toggleData.middleRootTran )
-    ParkInfoRect.gameObject.name="ParkInfo"
-    local newData={func=self._middleItem}
-    local ParkInfoData={pos=BuildingInfoTogglePos.Middle,index=1}
-    local ParkInfoItem=ParkInfoItem:new(newData,self._clickItemFunc,ParkInfoRect,self.mainPanelLuaBehaviour,ParkInfoData,self)
-    self.middleData[1]=ParkInfoItem
-    ParkInfoItem:closeToggleItem(BuildingInfoToggleGroupMgr.static.MIDDLE_POS)
-
 end
 ---研究所
 function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
@@ -397,22 +442,25 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
 end
 --人才中心
 function BuildingInfoToggleGroupMgr:_creatTalentInfo()
-    --员工  左1
-    local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
-    self.leftData[1] = self:_createStaff(staffToggleData)
+   -- 员工  左1
+   -- local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
+   -- self.leftData[1] = self:_createStaff(staffToggleData)
+
+    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
+    self.leftData[1] = self:_createLineChart(lineToggleData)
     --人才管理  左2
-    local management
-    management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
+    local management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
     management.gameObject.name = "TalentManagement"
     local managementToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local managementLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
+    local managementLuaItem = ManagementItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
     self.leftData[2] = managementLuaItem
+
     --挖掘人才
     local excavate
-    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.rightRect)
+    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path, self.rightRect)
     excavate.gameObject.name = "ExcavateTalents"
     local excavateToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
-    local excavateLuaItem = WarehouseRateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
+    local excavateLuaItem = ExcavateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
     self.rightData[1] = excavateLuaItem
 end
 

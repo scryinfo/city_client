@@ -13,24 +13,29 @@ function HouseCtrl:initialize()
 end
 
 function HouseCtrl:bundleName()
-    return "HousePanel"
+    return "Assets/CityGame/Resources/View/HousePanel.prefab"
 end
 
 function HouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 end
 
+local this
 function HouseCtrl:Awake(go)
+    this = self
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
     self.houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
+    self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
+    self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
 function HouseCtrl:Refresh()
-    self:_initData()
+    --self:_initData()
+    this:_initData()
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -43,11 +48,22 @@ function HouseCtrl:_initData()
 end
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
+    Event.Brocast("c_GetBuildingInfo", houseDetailData.info)
+    if houseDetailData.info.state == "OPERATE" then
+        HousePanel.stopIconBtn.localScale = Vector3.zero
+    else
+        HousePanel.stopIconBtn.localScale = Vector3.one
+    end
+
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
+    local insId = self.m_data.insId
     self.m_data = houseDetailData
+    self.m_data.insId = insId  --temp
+
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         HousePanel.changeNameBtn.localScale = Vector3.zero
+        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         HousePanel.changeNameBtn.localScale = Vector3.one
@@ -83,4 +99,17 @@ end
 ---更改名字成功
 function HouseCtrl:_updateName(name)
     HousePanel.nameText.text = name
+end
+
+--点击中间按钮的方法
+function HouseCtrl:_centerBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
+    end
+end
+--点击开业按钮方法
+function HouseCtrl:_openBuildingBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+    end
 end

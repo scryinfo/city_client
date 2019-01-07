@@ -8,7 +8,7 @@ local RoleManagerBehaviour
 local gameObject
 
 function  RoleManagerCtrl:bundleName()
-    return "RoleManagerPanel"
+    return "Assets/CityGame/Resources/View/RoleManagerPanel.prefab"
 end
 
 function RoleManagerCtrl:initialize()
@@ -18,7 +18,6 @@ end
 
 function RoleManagerCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     RoleManagerBehaviour =  self.gameObject:GetComponent('LuaBehaviour');
     RoleManagerBehaviour:AddClick(RoleManagerPanel.startRoleButton.gameObject,self.OnStartGame,self);
 end

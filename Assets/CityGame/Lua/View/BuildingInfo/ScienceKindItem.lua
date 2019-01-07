@@ -30,6 +30,7 @@ function ScienceKindItem:initialize(prefabData,prefab,inluabehaviour,mgr, itemid
     self.infoBtn=prefab.transform:Find("leftRoot/infoBtn")
     self.buyBtn=prefab.transform:Find("rightRoot/buyBg/Button")
 
+    LoadSprite(prefabData.table[prefabData.itemId].img,self.iconImage)
     self:InitData()
 
     self:AddClick()
@@ -48,7 +49,7 @@ end
 
 function ScienceKindItem:InitData()
     self.nameText.text=self.prefabData.name
-    self.ScoreText.text=self.itemid
+    --self.ScoreText.text=self.itemid
 end
 
 function ScienceKindItem:AddClick()

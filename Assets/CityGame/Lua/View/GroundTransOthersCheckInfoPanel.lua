@@ -22,13 +22,13 @@ function GroundTransOthersCheckInfoPanel.InitPanel()
     --A
     this.AOwnerBtn = transform:Find("root/infoRoot/partA/ownerBtn")
     this.APortraitImg = transform:Find("root/infoRoot/partA/ownerBtn/portraitImg"):GetComponent("Image")
-    this.ANameText = transform:Find("root/infoRoot/partA/nameText")
-    this.ACompanyText = transform:Find("root/infoRoot/partA/companyText")
+    this.ANameText = transform:Find("root/infoRoot/partA/nameText"):GetComponent("Text")
+    this.ACompanyText = transform:Find("root/infoRoot/partA/companyText"):GetComponent("Text")
     --B
     this.BRenterBtn = transform:Find("root/infoRoot/partB/ownerBtn")
     this.BPortraitImg = transform:Find("root/infoRoot/partB/ownerBtn/portraitImg"):GetComponent("Image")
-    this.BNameText = transform:Find("root/infoRoot/partB/nameText")
-    this.BCompanyText = transform:Find("root/infoRoot/partB/companyText")
+    this.BNameText = transform:Find("root/infoRoot/partB/nameText"):GetComponent("Text")
+    this.BCompanyText = transform:Find("root/infoRoot/partB/companyText"):GetComponent("Text")
 end
 --关闭所有状态
 function GroundTransOthersCheckInfoPanel.closeAllState()

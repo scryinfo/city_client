@@ -11,7 +11,7 @@ function InputDialogPageCtrl:initialize()
 end
 
 function InputDialogPageCtrl:bundleName()
-    return "Common/InputDialogPagePanel"
+    return "Assets/CityGame/Resources/View/Common/InputDialogPagePanel.prefab"
 end
 
 function InputDialogPageCtrl:OnCreate(obj )

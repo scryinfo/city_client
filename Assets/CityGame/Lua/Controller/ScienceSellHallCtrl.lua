@@ -20,7 +20,7 @@ function ScienceSellHallCtrl:initialize()
 end
 
 function ScienceSellHallCtrl:bundleName()
-    return "ScienceSellHallPanel";
+    return "Assets/CityGame/Resources/View/ScienceSellHallPanel.prefab";
 end
 
 function ScienceSellHallCtrl:OnCreate(obj)
@@ -86,6 +86,7 @@ function ScienceSellHallCtrl:Awake(go)
     ---Create item
     Mgr=ScienceSellHallModel.Mgr
     for configID, configdata in pairs(Material) do
+        configdata.table=Material
         Mgr:creatSciencehallItem(materialBehaviour,configdata)
         table.insert(materialOrderList,Mgr.materialInsList[configID])
         local data={}
@@ -102,6 +103,7 @@ function ScienceSellHallCtrl:Awake(go)
     end
 
     for configID, configdata in pairs(Good) do
+        configdata.table=Good
         Mgr:creatSciencehallItem1(materialBehaviour,configdata)
         table.insert(goodOrderList,Mgr.goodInsList[configID])
         local data={}

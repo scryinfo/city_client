@@ -26,18 +26,18 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        --PlayerTempModel.tempTestReqAddItem(2102001,99)
-        --PlayerTempModel.tempTestReqAddItem(2102002,99)
-        --PlayerTempModel.tempTestReqAddItem(2102003,99)
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
 
-        ct.OpenCtrl("GroundTransDetailCtrl", {blockId = 8006})
+        --ct.OpenCtrl("GroundTransDetailCtrl", {blockId = 8006})
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
         PlayerTempModel.tempTestReqAddMoney(9999999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2151001, 999)
+        --PlayerTempModel.tempTestReqAddItem(2151001, 999)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
         PlayerTempModel.tempTestAddGroung(31,31, 40,40)

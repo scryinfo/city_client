@@ -11,13 +11,13 @@ function GroundTransSetPriceCtrl:initialize()
 end
 
 function GroundTransSetPriceCtrl:bundleName()
-    return "GroundTransSetPricePanel"
+    return "Assets/CityGame/Resources/View/GroundTransSetPricePanel.prefab"
 end
 
 function GroundTransSetPriceCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentIssueBtnTran.gameObject, self._rentIssueBtnFunc, self)
@@ -36,11 +36,13 @@ function GroundTransSetPriceCtrl:Refresh()
 end
 
 function GroundTransSetPriceCtrl:Hide()
+    ct.log("cycle_w19_groundTrans", "调整价格_hide")
+
     UIPage.Hide(self)
 end
 
 function GroundTransSetPriceCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化
@@ -51,6 +53,7 @@ function GroundTransSetPriceCtrl:_initPanelData()
 end
 --根据状态显示界面
 function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPageType)
+    GroundTransSetPricePanel.cleanData()
     GroundTransSetPricePanel.sellRoot.localScale = Vector3.zero
     GroundTransSetPricePanel.rentRoot.localScale = Vector3.zero
     GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.zero
@@ -84,10 +87,11 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSetPriceCtrl:_closeBtnFunc()
-    --关闭所有界面
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()
+    ct.log("cycle_w19_groundTrans", "点击了返回按钮")
     UIPage:ClosePage()
 end
 
@@ -96,6 +100,9 @@ function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqSellGround(price)
+        Event.Brocast("SmallPop","Released", 300)
+
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --修改出售价格按钮
@@ -104,11 +111,17 @@ function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
         GroundTransModel.m_ReqSellGround(price)
+
+        Event.Brocast("SmallPop","Modified", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --取消出售
 function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
     GroundTransModel.m_ReqCancelSellGround()
+
+    Event.Brocast("SmallPop","Stop selling", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 
 --出租发布按钮
@@ -120,6 +133,9 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
         return
     end
     GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
+
+    Event.Brocast("SmallPop","Released", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --修改出租价格按钮
 function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
@@ -127,9 +143,19 @@ function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqCancelRentGround()
         ins:_rentIssueBtnFunc(ins)
+
+        Event.Brocast("SmallPop","Modified", 300)
+        GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
 --取消出租
 function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
     GroundTransModel.m_ReqCancelRentGround()
+    Event.Brocast("SmallPop","Stop renting", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
+end
+--返回主界面
+function GroundTransSetPriceCtrl._closeBackToMain()
+    UIPage:ClearAllPages()
+    ct.OpenCtrl("GameMainInterfaceCtrl")
 end

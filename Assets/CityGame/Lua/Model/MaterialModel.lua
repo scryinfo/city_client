@@ -8,6 +8,8 @@ function MaterialModel:initialize(insId)
 end
 
 function MaterialModel:OnCreate()
+    Event.AddListener("m_startBusiness", MaterialModel.m_startBusiness,self);--开业
+    Event.AddListener("m_ReqHouseSetSalary1",MaterialModel.m_ReqHouseSetSalary,self)
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
 
@@ -26,6 +28,13 @@ end
 --打开原料厂
 function MaterialModel:n_OnOpenMaterial(stream)
     DataManager.ControllerRpcNoRet(self.insId,"MaterialCtrl", 'refreshMaterialDataInfo',stream)
+end
+--开业发包
+function MaterialModel:m_startBusiness(buildingID)
+    DataManager.ModelSendNetMes("gscode.OpCode", "startBusiness","gs.Id",{ id = buildingID})
+end
+function MaterialModel:m_ReqHouseSetSalary(id, price)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
 end
 
 --[[

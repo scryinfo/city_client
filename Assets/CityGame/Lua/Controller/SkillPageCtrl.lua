@@ -17,7 +17,7 @@ function SkillPageCtrl:initialize()
 end
 
 function SkillPageCtrl:bundleName()
-    return "SkillPagePanel"
+    return "Assets/CityGame/Resources/View/SkillPagePanel.prefab"
 end
 
 function SkillPageCtrl:OnCreate(obj )

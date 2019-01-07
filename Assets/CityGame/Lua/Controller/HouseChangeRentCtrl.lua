@@ -11,7 +11,7 @@ function HouseChangeRentCtrl:initialize()
 end
 
 function HouseChangeRentCtrl:bundleName()
-    return "HouseChangeRentPanel"
+    return "Assets/CityGame/Resources/View/HouseChangeRentPanel.prefab"
 end
 
 function HouseChangeRentCtrl:OnCreate(obj )

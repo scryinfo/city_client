@@ -12,10 +12,10 @@ function TransportCtrl.New()
 end
 function TransportCtrl.Awake()
     logWarn("TransportCtrl.Awake--->>>");
-    panelMgr:CreatePanel('Transport',this.OnCreate);
+    panelMgr:LoadPrefab_A('Transport', nil, this,this.OnCreate);
 end
 function TransportCtrl.OnCreate(obj)
-    gameObject = obj;
+    gameObject = ct.InstantiatePrefab(obj);
 
     Transport = gameObject:GetComponent('LuaBehaviour');
     Transport:AddClick(TransportPanel.addBtn,this.OnAddBtn);

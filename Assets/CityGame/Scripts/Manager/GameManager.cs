@@ -52,8 +52,10 @@ namespace LuaFramework {
 
             string infile = resPath + "files.txt";
             string outfile = dataPath + "files.txt";
-            if (File.Exists(outfile)) File.Delete(outfile);
-
+            if (File.Exists(outfile))
+                File.Delete(outfile);
+            else
+                File.Create(outfile);
             string message = "正在解包文件:>files.txt";
             Debug.Log(infile);
             Debug.Log(outfile);
@@ -118,8 +120,10 @@ namespace LuaFramework {
             string dataPath = Util.DataPath;  //数据目录
             string url = AppConst.WebUrl;
             string message = string.Empty;
-            string random = DateTime.Now.ToString("yyyymmddhhmmss");
-            string listUrl = url + "files.txt?v=" + random;
+            //string random = DateTime.Now.ToString("yyyymmddhhmmss");
+            string random = "v=20181227";
+            //string listUrl = url + "files.txt?v=" + random;
+            string listUrl = url + "files.txt";
             Debug.LogWarning("LoadUpdate---->>>" + listUrl);
 
             WWW www = new WWW(listUrl); yield return www;
@@ -143,7 +147,7 @@ namespace LuaFramework {
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
                 }
-                string fileUrl = url + f + "?v=" + random;
+                string fileUrl = url + f ;
                 bool canUpdate = !File.Exists(localfile);
                 if (!canUpdate) {
                     string remoteMd5 = keyValue[1].Trim();

@@ -7,7 +7,7 @@ function ProcessingCtrl:initialize()
 end
 
 function ProcessingCtrl:bundleName()
-    return "ProcessingPanel";
+    return "Assets/CityGame/Resources/View/ProcessingPanel.prefab";
 end
 
 function ProcessingCtrl:OnCreate(obj)
@@ -18,8 +18,11 @@ function ProcessingCtrl:Awake(go)
     self.gameObject = go;
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.processingBehaviour:AddClick(ProcessingPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.stopIconROOT.gameObject,self.OnClick_prepareOpen,self);
+
 
 end
 function ProcessingCtrl:Refresh()
@@ -47,8 +50,11 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     if not self.processingToggleGroup then
         self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
     else
-        --self.processingToggleGroup:updataInfo(self.m_data)
+        --self.processingToggleGroup:updateInfo(self.m_data)
     end
+end
+function ProcessingCtrl:OnClick_prepareOpen(ins)
+    Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 
 --更改名字

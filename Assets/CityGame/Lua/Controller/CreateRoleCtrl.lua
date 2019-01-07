@@ -8,7 +8,7 @@ local createRoleBehaviour;
 local gameObject;
 
 function  CreateRoleCtrl:bundleName()
-    return "CreateRolePanel"
+    return "Assets/CityGame/Resources/View/CreateRolePanel.prefab"
 end
 
 function CreateRoleCtrl:initialize()
@@ -26,7 +26,6 @@ function CreateRoleCtrl:_initInsData()
 end
 function CreateRoleCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
 end

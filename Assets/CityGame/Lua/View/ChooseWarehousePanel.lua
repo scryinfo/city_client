@@ -22,7 +22,7 @@ function ChooseWarehousePanel.InitPanel()
     this.timeBtn = transform:Find("Right/SortingBtn/ListTable/List/timeBtn");
     --Mine
     this.faceImg = transform:Find("Left/mine/FriendsLineItem/face");
-    this.nameText = transform:Find("Left/mine/FriendsLineItem/name");
+    this.nameText = transform:Find("Left/mine/FriendsLineItem/name"):GetComponent("Text");
     this.boxImg = transform:Find("Left/mine/FriendsLineItem/box").gameObject;
     this.bgBtn = transform:Find("Left/mine/FriendsLineItem/bg");
     --Addresslist  ScrollView

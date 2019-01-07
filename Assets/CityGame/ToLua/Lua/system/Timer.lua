@@ -115,7 +115,7 @@ function FrameTimer:Update()
 		self.func()	
 		
 		if self.loop > 0 then
-			self.loop = self.loop - 1
+			--self.loop = self.loop - 1 --这个要注销，否则不能实现真正的循环，循环一旦打开，只有通过 Stop() 终止循环
 		end
 		
 		if self.loop == 0 then

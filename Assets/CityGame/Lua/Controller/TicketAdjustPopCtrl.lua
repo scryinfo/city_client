@@ -17,12 +17,11 @@ function TicketAdjustPopCtrl:initialize()
 end
 
 function TicketAdjustPopCtrl:bundleName()
-    return "TicketAdjustPopPanel";
+    return "Assets/CityGame/Resources/View/TicketAdjustPopPanel.prefab";
 end
 
 function TicketAdjustPopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    gameObject = obj;
     local WagesAdjustBox = gameObject:GetComponent('LuaBehaviour');
 end
 

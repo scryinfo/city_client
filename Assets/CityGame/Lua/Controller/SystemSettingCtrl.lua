@@ -4,7 +4,7 @@ UIPage:ResgisterOpen(SystemSettingCtrl) --注册打开的方法
 local LuaBehaviour;
 
 function  SystemSettingCtrl:bundleName()
-    return "SystemSettingPanel"
+    return "Assets/CityGame/Resources/View/SystemSettingPanel.prefab"
 end
 
 function SystemSettingCtrl:initialize()

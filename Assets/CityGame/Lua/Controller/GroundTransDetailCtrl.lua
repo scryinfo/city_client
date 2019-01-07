@@ -18,13 +18,13 @@ function GroundTransDetailCtrl:initialize()
 end
 
 function GroundTransDetailCtrl:bundleName()
-    return "GroundTransDetailPanel"
+    return "Assets/CityGame/Resources/View/GroundTransDetailPanel.prefab"
 end
 
 function GroundTransDetailCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour =  self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.rentBtnTran.gameObject, self._rentFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.sellBtnTran.gameObject, self._sellFunc, self)
@@ -40,7 +40,6 @@ function GroundTransDetailCtrl:Awake(go)
 end
 
 function GroundTransDetailCtrl:Refresh()
-    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     self:_initPanelData()
 end
 
@@ -95,7 +94,7 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             GroundTransDetailPanel.sellingBtnTran.localScale = Vector3.one
 
         elseif self.groundState == GroundTransState.Rent then
-            if groundInfo.renterId then  --是否已经租出去了
+            if groundInfo.rent.renterId then  --是否已经租出去了
                 GroundTransDetailPanel.selfCheckBtnTran.localScale = Vector3.one
                 return
             end
@@ -103,12 +102,17 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             tempPageType = GroundTransState.Rent
             GroundTransDetailPanel.rentingBtnTran.localScale = Vector3.one
         end
-        if tempPageType == nil then
-            return
+        if self.hasOpened == nil or self.hasOpened == false then
+            if tempPageType == nil then
+                return
+            end
+            local info = {groundInfo = groundInfo, groundState = self.groundState, showPageType = tempPageType}
+            --打开设置租金/售卖金额界面，参数为info
+            ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+            self.hasOpened = true
+            ct.log("cycle_w19_groundTrans", "打开调整价格界面")
         end
-        local info = {groundInfo = groundInfo, groundState = self.groundState, showPageType = tempPageType}
-        --打开设置租金/售卖金额界面，参数为info
-        ct.OpenCtrl("GroundTransSetPriceCtrl", info)
+
     else
         --判断状态
         if self.groundState == GroundTransState.None then
@@ -120,8 +124,8 @@ function GroundTransDetailCtrl:_setShowState(groundInfo)
             GroundTransDetailPanel.sellingBtnTran.localScale = Vector3.one
 
         elseif self.groundState == GroundTransState.Rent then
-            if groundInfo.renterId then
-                if groundInfo.renterId == DataManager.GetMyOwnerID() then  --如果自己是租房子的人
+            if groundInfo.rent.renterId then
+                if groundInfo.rent.renterId == DataManager.GetMyOwnerID() then  --如果自己是租房子的人
                     --显示查看状态
                     GroundTransDetailPanel.selfCheckBtnTran.localScale = Vector3.one
                 else
@@ -147,6 +151,7 @@ end
 ---按钮方法
 function GroundTransDetailCtrl:_closeBtnFunc(ins)
     -- hide
+    ins.hasOpened = false
     UIPage.ClosePage()
 end
 --owner出租按钮

@@ -14,7 +14,7 @@ end
 
 function ChatCtrl:bundleName()
     ct.log("tina_w9_friends", "ChatCtrl:bundleName")
-    return "ChatPanel"
+    return "Assets/CityGame/Resources/View/ChatPanel.prefab"
 end
 
 function ChatCtrl:OnCreate(go)

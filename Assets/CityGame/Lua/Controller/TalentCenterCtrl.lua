@@ -12,11 +12,12 @@ function TalentCenterCtrl:initialize()
 end
 
 function TalentCenterCtrl:bundleName()
-    return "TalentCenterPanel"
+    return "Assets/CityGame/Resources/View/TalentCenterPanel.prefab"
 end
 
 function TalentCenterCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
+    self:_receiveTanlentDetailInfo()
 end
 
 function TalentCenterCtrl:Awake(go)
@@ -28,27 +29,31 @@ function TalentCenterCtrl:Awake(go)
 end
 
 function TalentCenterCtrl:Refresh()
-    self:_initData()
+    --self:_initData()
+    --self:_receiveTanlentDetailInfo()
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function TalentCenterCtrl:_initData()
     if self.m_data then
         --向服务器请求建筑详情
---[[        DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)]]
+        DataManager.OpenDetailModel(TalentCenterModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
     end
 end
 
-function TalentCenterCtrl:_receiveTalentDetailInfo(talentDetailData)
-    TalentCenterPanel.buildingNameText.text = PlayerBuildingBaseData[talentDetailData.info.mId].sizeName..PlayerBuildingBaseData[talentDetailData.info.mId].typeName
-    self.m_data = talentDetailData
-    if talentDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
-        self.m_data.isOther = true
-        TalentCenterPanel.changeNameBtn.localScale = Vector3.zero
-    else
-        self.m_data.isOther = false
-        TalentCenterPanel.changeNameBtn.localScale = Vector3.one
+function TalentCenterCtrl:_receiveTanlentDetailInfo(talentDetailData)
+    --TalentCenterPanel.buildingNameText.text = PlayerBuildingBaseData[talentDetailData.info.mId].sizeName..PlayerBuildingBaseData[talentDetailData.info.mId].typeName
+    --self.m_data = talentDetailData
+    --if talentDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
+    --    self.m_data.isOther = true
+    --    TalentCenterPanel.changeNameBtn.localScale = Vector3.zero
+    --else
+    --    self.m_data.isOther = false
+    --    TalentCenterPanel.changeNameBtn.localScale = Vector3.one
+    --end
+    if self.m_data == nil then
+        return
     end
     self.m_data.buildingType = BuildingType.TalentCenter
     if not self.talentToggleGroup then

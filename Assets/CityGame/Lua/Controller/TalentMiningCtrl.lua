@@ -7,9 +7,11 @@ TalentMiningCtrl = class('TalentMiningCtrl',UIPage)
 UIPage:ResgisterOpen(TalentMiningCtrl) --注册打开的方法
 local gameObject;
 local TalentMiningBehaviour
+local talentTypeLuaItem = {}
+TalentMiningCtrl.static.Building_PATH = "View/TalentCenterItem/BuildingTalentsItem"
 
 function  TalentMiningCtrl:bundleName()
-    return "TalentMiningPanel"
+    return "Assets/CityGame/Resources/View/TalentMiningPanel.prefab"
 end
 
 function TalentMiningCtrl:initialize()
@@ -17,24 +19,25 @@ function TalentMiningCtrl:initialize()
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
+function TalentMiningCtrl:Awake()
+
+    TalentMiningBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+end
+
 --启动事件--
 function TalentMiningCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
-
-    TalentMiningBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    --初始化
+    self:_initData();
     TalentMiningBehaviour:AddClick(TalentMiningPanel.backBtn,self.OnBackBtn,self);
     TalentMiningBehaviour:AddClick(TalentMiningPanel.add,self.OnAddBtn,self);
-    TalentMiningBehaviour:AddClick(TalentMiningPanel.hint,self.OnHint,self);
 
 
 end
 
 function TalentMiningCtrl:Refresh()
-    --初始化
-    self:_initData();
     --打开通知Model
-    self:initializeData()
+   -- self:initializeData()
 end
 
 function TalentMiningCtrl:initializeData()
@@ -45,17 +48,43 @@ end
 
 --初始化
 function TalentMiningCtrl:_initData()
-
+    for i = 1, 5 do
+        --local prefab = self:_creatTalentLine(TalentMiningCtrl.static.Building_PATH,TalentMiningPanel.content)
+        --local talentTypeLuaItem = BuildingTalentItem:new(prefab,TalentMiningBehaviour)
+        self:_creatTalent(TalentMiningCtrl.static.Building_PATH,TalentMiningPanel.content,i)
+    end
 end
 
 --点击返回按钮
-function TalentMiningCtrl:TalentMiningPanel()
+function TalentMiningCtrl:OnBackBtn()
     UIPage.ClosePage()
 end
 
 --点击添加
 function TalentMiningCtrl:OnAddBtn()
-     --ct.OpenCtrl("TalentSelectPanel")
+     ct.OpenCtrl("TalentSelectCtrl")
+end
+
+--生成一条人才线
+function TalentMiningCtrl:_creatTalent(path,parent,id)
+    local prefab = self:_creatTalentLine(path,parent)
+    talentTypeLuaItem[id] = BuildingTalentItem:new(prefab,TalentMiningBehaviour,id)
+end
+
+--删除一条人才线
+function TalentMiningCtrl:_delTalent(id)
+    if talentTypeLuaItem[id] == nil then
+        return
+    end
+    destroy(talentTypeLuaItem[id].prefab.gameObject);
+    table.remove(talentTypeLuaItem, id)
+    local i = 1
+    for k,v in pairs(talentTypeLuaItem)  do
+       v:RefreshID(i)
+        i = i + 1
+    end
+    --删除主界面的lineItem
+    ExcavateItem:m_delTalents(id)
 end
 
 --生成预制

@@ -3,10 +3,11 @@ UIPage:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
 local gameObject;
+local Mails
 
 
 function  GameMainInterfaceCtrl:bundleName()
-    return "GameMainInterfacePanel"
+    return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
 
 function GameMainInterfaceCtrl:initialize()
@@ -17,7 +18,6 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
 
@@ -39,6 +39,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
+    Event.AddListener("c_AllMails",self.c_AllMails,self)
 
 end
 
@@ -53,6 +54,11 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
     local data = {workerNum=20,buildInfo= buildingInfo,func=func}
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
+
+    Event.AddListener("c_successBuilding",function ()
+        func()
+        Event.Brocast("SmallPop","Success",300)
+    end ,self)
 end
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
@@ -86,9 +92,13 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 
 end
 
+function GameMainInterfaceCtrl:Awake()
+
+end
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model
+     Mails = nil
     self:initInsData()
     self:_showFriendsNotice()
     self:_showWorldChatNoticeItem()
@@ -100,12 +110,26 @@ function GameMainInterfaceCtrl:initInsData()
 end
 
 --获取所有邮件
-function GameMainInterfaceCtrl:_receiveAllMails(DataInfo)
-     self.Mails = DataInfo
+function GameMainInterfaceCtrl:c_AllMails(DataInfo)
+     Mails = DataInfo
+    --判定红点是否显示
+    if Mails == nil then
+        GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        return
+    end
+    for i, v in pairs(Mails) do
+        if v.read == false then
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.one
+            return
+        else
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        end
+    end
 end
 --通知--
-function GameMainInterfaceCtrl.OnNotice()
-    if  NoticeMgr.notice ~= nil then
+
+function GameMainInterfaceCtrl.OnNotice(go)
+--[[    if  NoticeMgr.notice ~= nil then
         if  #NoticeMgr.notice == 0 then
             ct.OpenCtrl("NoMessageCtrl")
         else
@@ -117,13 +141,13 @@ function GameMainInterfaceCtrl.OnNotice()
         else
             ct.OpenCtrl('GameNoticeCtrl')
         end
-    end
+    end]]
 
---[[    if self.Mails == nil then
+    if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
-        ct.OpenCtrl('GameNoticeCtrl',self.Mails)
-    end]]
+        ct.OpenCtrl('GameNoticeCtrl',Mails)
+    end
 end
 
 --聊天--

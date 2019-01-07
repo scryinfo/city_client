@@ -11,7 +11,7 @@ function AddLineChooseItemCtrl:initialize()
 end
 
 function AddLineChooseItemCtrl:bundleName()
-    return "AddLineChooseItemPanel"
+    return "Assets/CityGame/Resources/View/AddLineChooseItemPanel.prefab"
 end
 
 function AddLineChooseItemCtrl:OnCreate(obj)
@@ -38,10 +38,12 @@ end
 function AddLineChooseItemCtrl:_addListener()
     Event.AddListener("c_leftSetCenter", self._leftSetCenter, self)
     Event.AddListener("c_rightSetCenter", self._rightSetCenter, self)
+    Event.AddListener("c_LabAddLineChangeMatLine", self._changeLineByItemId, self)
 end
 function AddLineChooseItemCtrl:_removeListener()
     Event.RemoveListener("c_leftSetCenter", self._leftSetCenter, self)
     Event.RemoveListener("c_rightSetCenter", self._rightSetCenter, self)
+    Event.RemoveListener("c_LabAddLineChangeMatLine", self._changeLineByItemId, self)
 end
 
 function AddLineChooseItemCtrl:_initData()
@@ -116,6 +118,7 @@ function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition = AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition + Vector2.New(174, 0)
 
     --tempData = Material[itemId]
+    self.selectItemId = itemId
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
@@ -140,6 +143,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
     AddLineChooseItemPanel.productionItem:initData(Good[itemId])
+    self.selectGoodId = itemId
 
     if enableShow then
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.zero
@@ -156,7 +160,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
 end
 
 --设置原料线的信息  根据个数显示位置
-function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
+function AddLineChooseItemCtrl:_setLineDetailInfo(datas, index)
     local lineCount = #datas
     if lineCount == 1 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(false)
@@ -165,7 +169,7 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.one
         AddLineChooseItemPanel.vLine.localScale = Vector3.zero
 
-        AddLineChooseItemPanel.centerItems[2]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[2]:initData(datas[1], index)
     elseif lineCount == 2 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(true)
         AddLineChooseItemPanel.centerItems[2]:setObjState(false)
@@ -173,7 +177,7 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.zero
         AddLineChooseItemPanel.vLine.localScale = Vector3.one
 
-        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1], index)
         AddLineChooseItemPanel.centerItems[3]:initData(datas[2])
     elseif lineCount == 3 then
         AddLineChooseItemPanel.centerItems[1]:setObjState(true)
@@ -182,8 +186,52 @@ function AddLineChooseItemCtrl:_setLineDetailInfo(datas)
         AddLineChooseItemPanel.hLine.localScale = Vector3.one
         AddLineChooseItemPanel.vLine.localScale = Vector3.one
 
-        AddLineChooseItemPanel.centerItems[1]:initData(datas[1])
+        AddLineChooseItemPanel.centerItems[1]:initData(datas[1], index)
         AddLineChooseItemPanel.centerItems[2]:initData(datas[2])
         AddLineChooseItemPanel.centerItems[3]:initData(datas[3])
+    end
+end
+
+function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
+    if index ~= nil then
+        index = index + 1
+        if index > #self.selectItemMatToGoodIds then
+            index = 1
+        end
+        local lineDatas = {}  --获取线的数据
+        local data = {}
+        local config = CompoundDetailConfig[self.selectItemMatToGoodIds[index]].goodsNeedMatData
+        for j, matData in ipairs(config) do
+            if matData.itemId ~= itemId then
+                lineDatas[#lineDatas + 1] = matData
+            else
+                data = matData
+            end
+        end
+        table.insert(lineDatas, 1, data)  --将item放在第一个位置
+        self:_setLineDetailInfo(lineDatas, index)
+        AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[index]])
+        AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[index])
+    else
+        self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
+        for i, goodsId in ipairs(self.selectItemMatToGoodIds) do
+            if goodsId ~= self.selectGoodId then
+                local lineDatas = {}  --获取线的数据
+                local data = {}
+                for j, matData in ipairs(CompoundDetailConfig[goodsId].goodsNeedMatData) do
+                    if matData.itemId ~= itemId then
+                        lineDatas[#lineDatas + 1] = matData
+                    else
+                        data = matData
+                    end
+                end
+                table.insert(lineDatas, 1, data)  --将item放在第一个位置
+                self:_setLineDetailInfo(lineDatas, i)
+                AddLineChooseItemPanel.productionItem:initData(Good[goodsId])
+                AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(goodsId)
+                return
+            end
+        end
+
     end
 end

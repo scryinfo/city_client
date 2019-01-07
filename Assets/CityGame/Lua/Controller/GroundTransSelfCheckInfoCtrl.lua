@@ -11,13 +11,13 @@ function GroundTransSelfCheckInfoCtrl:initialize()
 end
 
 function GroundTransSelfCheckInfoCtrl:bundleName()
-    return "GroundTransSelfCheckInfoPanel"
+    return "Assets/CityGame/Resources/View/GroundTransSelfCheckInfoPanel.prefab"
 end
 
 function GroundTransSelfCheckInfoCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
 end
@@ -34,7 +34,7 @@ function GroundTransSelfCheckInfoCtrl:Hide()
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()
-
+    UIPage.Hide(self)
 end
 
 ---初始化
@@ -47,7 +47,7 @@ end
 function GroundTransSelfCheckInfoCtrl:_setShowState(rent)
     GroundTransSelfCheckInfoPanel.rentalText.text = rent.rentPreDay
     GroundTransSelfCheckInfoPanel.tenancyText.text = rent.rentDays.."d"
-    local remainDay = math.floor(((rent.rentBeginTs + rent.rentDays * 86400) - os.time()) / 86400)
+    local remainDay = math.floor(((rent.rentBeginTs / 1000 + rent.rentDays * 86400) - os.time()) / 86400)
     GroundTransSelfCheckInfoPanel.remainDayText.text = remainDay.."d"
 end
 
@@ -55,6 +55,7 @@ end
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSelfCheckInfoCtrl:_closeBtnFunc()
     --关闭所有界面
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransSelfCheckInfoCtrl:_backBtnFunc()

@@ -22,7 +22,6 @@ end
 
 function TicketAdjustPopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local WagesAdjustBox = gameObject:GetComponent('LuaBehaviour');
 end
 
 function TicketAdjustPopCtrl:Awake(go)

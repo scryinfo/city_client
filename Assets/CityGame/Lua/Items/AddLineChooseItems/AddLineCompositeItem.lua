@@ -34,8 +34,12 @@ function AddLineCompositeItem:initData(data, index)
     end
     if Material[data.itemId] then
         self.nameText.text = Material[data.itemId].name
+        LoadSprite(Material[data.itemId].img, self.iconImg,true)
+        self.iconImg:SetNativeSize()
     else
         self.nameText.text = Good[data.itemId].name
+        LoadSprite(Good[data.itemId].img, self.iconImg,true)
+        self.iconImg:SetNativeSize()
     end
     if data.itemState == AddLineDetailItemState.InventIng then
         self.stateRoot.localScale = Vector3.one

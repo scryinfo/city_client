@@ -45,9 +45,9 @@ end
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
     else
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.one
+        LaboratoryPanel.stopRootTran.localScale = Vector3.one
     end
 
     self.hasOpened = true

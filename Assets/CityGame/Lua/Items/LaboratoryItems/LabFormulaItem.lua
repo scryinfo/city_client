@@ -37,7 +37,10 @@ function LabFormulaItem:showState(datas)
                 showStr = string.format("%d/%d", itemData.haveCount, itemData.matCount)
             end
             self.itemRects[i].matCountText.text = showStr
-            --self.itemRects[i].matImg = itemData.matId  --根据id读取图片
+            if Material[itemData.matId] then
+                LoadSprite(Material[itemData.matId].img, self.itemRects[i].matImg,true)
+                self.itemRects[i].matImg:SetNativeSize()
+            end
         end
     end
     if datas.backFunc then

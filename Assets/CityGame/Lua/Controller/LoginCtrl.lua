@@ -50,7 +50,7 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-	self.root=go.transform.root;
+	self.root=self.gameObject.transform.root;
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
 	--启用 c_AddClick_self 单元测试

@@ -411,7 +411,13 @@ function ct.file_saveString(filename, str)
 end
 
 function ct.file_readString(filename)
-	local file = assert(io.open(filename, "rb"))
+	--local file = assert(io.open(filename, "rb"))
+	local file, err
+	file, err = io.open(filename, "rb")
+	if file == nil then
+		error(("Unable to write '%s': %s"):format(filename, err))
+		return
+	end
 	local str = file:read("*all")
 	file:close()
 	return str
@@ -432,13 +438,16 @@ function split(input, delimiter)
 	return arr
 end
 
-
-function LoadSprite(path,Icon)
+--第三个参数为是否设置img为原图大小
+function LoadSprite(path, Icon, bSetNativeSize)
 	local type = ct.getType(UnityEngine.Sprite)
 	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj )
 		if obj ~= nil then
 			local texture = ct.InstantiatePrefab(obj)
 			Icon.sprite = texture
+			if bSetNativeSize == true then
+				Icon:SetNativeSize()
+			end
 		end
 	end)
 end

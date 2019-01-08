@@ -27,7 +27,8 @@ function LabBuildingResearchItem:_initData(data)
 
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
-    --self.iconImg.sprite =
+    LoadSprite(goodData.img, self.iconImg, true)
+    self.iconImg:SetNativeSize()
     self.levelText.text = "Lv"..tostring(DataManager.GetMyGoodLvByItemId(data.itemId))
     self.progressSlider.maxValue = 1
 

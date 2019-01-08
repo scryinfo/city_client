@@ -36,7 +36,11 @@ function GroundAuctionModel.OnCreate()
     Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
     Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
     Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
-    --Event.AddListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
+    Event.AddListener("c_UIBubbleLateUpdate", GroundAuctionModel.c_bubbleLateUpdate)  --temp
+end
+
+function GroundAuctionModel.c_bubbleLateUpdate()
+    UIBubbleCtrl._cameraLateUpdate()
 end
 
 

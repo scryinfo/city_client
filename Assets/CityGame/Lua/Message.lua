@@ -177,7 +177,8 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 				reader.expectSize = reader.expectMsgIdSize;
 			else
 				--c#传入的buffer至少包含长度和msid区段，否则就是网络异常，终止本次解析
-				break;
+					--不一定，如果是黏包的情况下，可能存在长度区段和id区段不完整，因为有可能正好传输的数据大于最小传输单位，所以这里不能丢掉这个包，而应等待后续数据的到来
+				--break;
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
 			if(length >= reader.expectSize) then
@@ -193,7 +194,10 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 				local msg = CityEngineLua.clientMessages[reader.msgid];
 				if not msg then
 					--这种情况可能是协议没注册，需要跳过当前数据段
-					CityLuaUtilExt.bufferToString(reader.stream, reader.msglen)
+					reader.stream:append(datas, totallen, reader.expectSize);
+					totallen = totallen + reader.expectSize;
+					length = length - reader.expectSize;
+					local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 					reader.expectSize = 4;
 					reader.state = CityEngineLua.READ_STATE_MSGLEN
 				else
@@ -207,7 +211,8 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 			else
 				--msid解析必须是成功的，否则也是网络异常，终止本次解析
 					--也就是说，服务器发送的包长度区段和msgid区段都是必须有的，这两个数据段6个字节，必定是小于最小传输单位的，所以如果这两个数据段不完整，必然是网络的问题
-				break;
+					--不一定，如果是黏包的情况下，可能存在长度区段和id区段不完整，因为有可能正好传输的数据大于最小传输单位，所以这里不能丢掉这个包，而应等待后续数据的到来
+					--break;
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
 			if(length >= reader.expectSize) then

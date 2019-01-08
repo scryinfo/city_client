@@ -208,7 +208,7 @@ namespace LuaFramework {
 #else
             for (int i = 0; i < assetNames.Length; i++)
             {
-                string realpath = AppConst.AssetDir_CloseBundleMode + "/" + assetNames[i];
+                string realpath = assetNames[i];
                 //同步加载
                 /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
                 if (prefab != null) {                

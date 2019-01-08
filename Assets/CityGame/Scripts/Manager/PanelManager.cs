@@ -33,12 +33,11 @@ namespace LuaFramework {
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }
-       
-            assetName = GetAssetName(ref releativePath);
-
-            string abName = GetBundleName(ref releativePath);
+            string abName = "";
 #if RES_BUNDEL
-            if(abName == "")
+            assetName = GetAssetName(ref releativePath);
+            abName = GetBundleName(ref releativePath);
+            if (abName == "")
             {
                 if (func != null)
                 {
@@ -46,7 +45,11 @@ namespace LuaFramework {
                     Debug.LogError("LoadPrefab_A::>> " + "abName"+ "is null ");
                     return;
                 }
-            }
+            }            
+#else
+            int pos = releativePath.LastIndexOf(".");
+            assetName = releativePath.Remove(pos);
+            assetName = assetName.Replace("Assets/CityGame/Resources/", "");
 #endif
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)

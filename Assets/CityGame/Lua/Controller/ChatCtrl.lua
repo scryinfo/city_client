@@ -142,7 +142,9 @@ function ChatCtrl:_refreshState()
     self:_closePlayerInfo()
     --self:_showChatNoticeItem()
     ChatPanel.expressionRoot:SetActive(false)
-
+    if self.isShowPersonalInfo then
+        return
+    end
     if self.m_data.toggleId == 1 then  -- 打开世界分页
         ChatPanel.worldToggle.isOn = true
         --self:_worldToggleValueChange(true)
@@ -461,6 +463,7 @@ end
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
     if ChatCtrl.static.chatMgr.activePlayerData then
+        go.isShowPersonalInfo = true
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
     end
 end

@@ -436,10 +436,10 @@ end
 function ChatCtrl:OnChat()
     local activePlayerData = ChatCtrl.static.chatMgr:GetActivePlayerData()
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
+    ChatPanel.strangersToggle.isOn = true
     if strangersPlayerItem[activePlayerData.id] then
         strangersPlayerItem[activePlayerData.id].toggle.isOn = true
     else
-        ChatPanel.strangersToggle.isOn = true
         ChatCtrl.static.chatMgr:CreatePlayerItem(2, activePlayerData)
 
         local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item[activePlayerData.id]

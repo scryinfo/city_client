@@ -33,11 +33,11 @@ namespace LuaFramework {
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }
-#if RES_BUNDEL            
+       
             assetName = GetAssetName(ref releativePath);
-#endif
-            string abName = GetBundleName(ref releativePath);
 
+            string abName = GetBundleName(ref releativePath);
+#if RES_BUNDEL
             if(abName == "")
             {
                 if (func != null)
@@ -47,7 +47,7 @@ namespace LuaFramework {
                     return;
                 }
             }
-
+#endif
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {

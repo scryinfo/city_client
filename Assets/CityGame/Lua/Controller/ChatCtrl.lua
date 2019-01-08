@@ -143,6 +143,7 @@ function ChatCtrl:_refreshState()
     --self:_showChatNoticeItem()
     ChatPanel.expressionRoot:SetActive(false)
     if self.isShowPersonalInfo then
+        self.isShowPersonalInfo = false
         return
     end
     if self.m_data.toggleId == 1 then  -- 打开世界分页

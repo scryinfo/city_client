@@ -21,6 +21,7 @@ function LaboratoryCtrl:Awake(go)
     self.gameObject = go
     self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
+    self.laboratoryBehaviour:AddClick(LaboratoryPanel.changeNameBtn.gameObject, self._changeName, self)
 
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.centerBtn.gameObject, self._centerBtnFunc, self)
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
@@ -51,6 +52,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     end
 
     self.hasOpened = true
+    LaboratoryPanel.nameText.text = info.name or "SRCY CITY"
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
     self.m_data.ownerId = info.ownerId
@@ -81,9 +83,7 @@ function LaboratoryCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        --ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
-
-        ---临时代码，直接改变名字
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeBuildingName', ins.m_data.insId, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)

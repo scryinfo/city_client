@@ -54,6 +54,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         HousePanel.stopRootTran.localScale = Vector3.one
     end
 
+    HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     local insId = self.m_data.insId
     self.m_data = houseDetailData
@@ -81,9 +82,7 @@ function HouseCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
-
-        ---临时代码，直接改变名字
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)

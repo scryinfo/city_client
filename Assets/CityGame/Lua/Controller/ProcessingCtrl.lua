@@ -40,6 +40,7 @@ end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     ProcessingPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
@@ -59,7 +60,7 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     if not self.processingToggleGroup then
         self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
     else
-        --self.processingToggleGroup:updateInfo(self.m_data)
+        self.processingToggleGroup:updateInfo(self.m_data)
     end
 end
 function ProcessingCtrl:OnClick_buildInfo(ins)
@@ -83,6 +84,7 @@ function ProcessingCtrl:OnClick_backBtn(ins)
     if ins.processingToggleGroup then
         ins.processingToggleGroup:cleanItems()
     end
+    Event.Brocast("mReqCloseProcessing",ins.buildingId)
     UIPage.ClosePage();
 end
 

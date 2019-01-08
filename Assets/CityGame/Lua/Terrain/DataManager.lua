@@ -528,7 +528,7 @@ function  DataManager.InitPersonDatas(tempData)
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
-    PersonDataStack.m_bagId = tempData.bagIds
+    PersonDataStack.m_bagId = tempData.bagId
     --初始化自己的money
     PersonDataStack.m_money = tempData.money
     --初始化自己的name

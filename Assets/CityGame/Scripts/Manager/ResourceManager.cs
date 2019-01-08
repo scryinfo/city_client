@@ -91,7 +91,7 @@ namespace LuaFramework {
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
                     m_AllManifest = m_AssetBundleManifest.GetAllAssetBundles();
                     string[] dependencies0 = m_AssetBundleManifest.GetAllDependencies(manifestName);
-                    string resllistPath = City.CityLuaUtil.getAssetsPath() + "/assetBundleList.bin";
+                    string resllistPath = City.CityLuaUtil.getLuaBundelPath() + "/assetBundleList.bin";
                     m_ResourcesBundleInfo = Deserialize<Dictionary<string, string>>(File.Open(resllistPath, FileMode.Open));
 
                     resInitCountAll = m_AllManifest.Length;                    

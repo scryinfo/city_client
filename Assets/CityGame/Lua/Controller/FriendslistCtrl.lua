@@ -194,7 +194,6 @@ end
 --end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)
-    DataManager.SetMyBlacklist({ id = friendsId.id })
     if friendsId.id then
         self:_showBlacklistNum()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)

@@ -23,23 +23,21 @@ namespace LuaFramework {
         }
         public string GetBundleName( ref string releativePath)
         {
-            string lstr = releativePath.ToLower();
-            return ResourceManager.getBundleName(ref lstr);
+            return ResourceManager.getBundleName(ref releativePath);
         }
 
         /// Lua中用的异步加载资源方法，必须传入Lua的回调                
         public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null,Action<UnityEngine.Object[], AssetBundle> csFunc = null)
         {
-            string assetName = releativePath.ToLower() ;
+            string assetName = releativePath;
             if (type == null) {
                 type = typeof(UnityEngine.Object);
             }
-#if RES_BUNDEL            
+            string abName = "";
+#if RES_BUNDEL
             assetName = GetAssetName(ref releativePath);
-#endif
-            string abName = GetBundleName(ref releativePath);
-
-            if(abName == "")
+            abName = GetBundleName(ref releativePath);
+            if (abName == "")
             {
                 if (func != null)
                 {
@@ -47,13 +45,20 @@ namespace LuaFramework {
                     Debug.LogError("LoadPrefab_A::>> " + "abName"+ "is null ");
                     return;
                 }
-            }
-
+            }            
+#else
+            int pos = releativePath.LastIndexOf(".");
+            assetName = releativePath.Remove(pos);
+            assetName = assetName.Replace("Assets/CityGame/Resources/", "");
+#endif
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
-                if (objs.Length == 0) return;                                
-                
+                if (objs.Length == 0) return;
+
+                //objs[0].name = "Assets/CityGame/Resources/"+
+                string test = objs[0].name;
+
                 if (func != null)
                 {
                     func.Call(objInstance, objs[0], ab);                    

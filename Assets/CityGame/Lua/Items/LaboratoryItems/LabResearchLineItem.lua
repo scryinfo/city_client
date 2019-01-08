@@ -50,7 +50,9 @@ function LabResearchLineItem:_initData(data)
     self.data = data
     local goodData = Good[data.itemId]
     self.nameText.text = goodData.name
-    --self.iconImg.sprite =
+    LoadSprite(goodData.img, self.iconImg,true)
+    self.iconImg:SetNativeSize()
+
     self.formularData = FormularConfig[0][data.itemId]
     self.staffText.text = tostring(data.workerNum)
     self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum

@@ -51,9 +51,9 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
     self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
-   -- Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
+    --Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
 end
---删除
+--删除物品
 function WareHouseGoodsItem:OnDelete(go)
     Event.Brocast("c_OnDelete",go)
 end
@@ -61,7 +61,8 @@ end
 --点击删除回调
 function WareHouseGoodsItem:c_GsDelItem()
 
-     self.manager:_deleteGoods(self.id)
+    Event.Brocast("c_DeleteItem",self)
+    -- self.manager:_deleteGoods(self)
 end
 
 --点击BG

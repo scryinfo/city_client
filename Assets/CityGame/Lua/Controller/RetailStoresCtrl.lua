@@ -7,7 +7,7 @@ function RetailStoresCtrl:initialize()
 end
 
 function RetailStoresCtrl:bundleName()
-    return "RetailStoresPanel";
+    return "Assets/CityGame/Resources/View/RetailStoresPanel.prefab";
 end
 
 function RetailStoresCtrl:OnCreate(obj)

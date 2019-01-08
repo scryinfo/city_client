@@ -34,7 +34,8 @@ function LabBuildingInventionItem:_initData(data)
     end
 
     self.nameText.text = itemInfo.name
-    --self.iconImg.sprite =
+    LoadSprite(itemInfo.img, self.iconImg,true)
+    self.iconImg:SetNativeSize()
     self.progressSlider.maxValue = 1
 
     if data.roll > 0 then

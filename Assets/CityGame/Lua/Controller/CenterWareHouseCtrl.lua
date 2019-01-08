@@ -15,7 +15,6 @@ local switchIsShow;
 local isSelect;
 local itemId = {}
 local centerWareHousetBehaviour
-local newtotalCapacity
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
@@ -51,6 +50,9 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.quantityBtn,self.OnClick_OnNumber, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.levelBtn,self.OnClick_OnlevelBtn, self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
+
+    CenterWareHousePanel.tipText.text = 0
+
     WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
     self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
@@ -59,8 +61,14 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.AddListener("c_transport",self.c_transport,self);
+   -- Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
 
 end
+
+function CenterWareHouseCtrl:Awake()
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+end
+
 --初始化
 function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
@@ -69,7 +77,7 @@ function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
---点击删除
+--点击删除物品
 function CenterWareHouseCtrl:c_OnDelete(go)
     local buildingId = PlayerTempModel.roleData.bagId
     local data = {}
@@ -84,6 +92,11 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
+end
+
+--删除物品回调
+function CenterWareHouseCtrl:c_DeleteItem(go)
+    go.manager:_deleteGoods(go.id)
 end
 
 --点击BG
@@ -123,11 +136,11 @@ end
 function CenterWareHouseCtrl:c_OnBackBtn()
     UIPage.ClosePage();
 end
+
 function CenterWareHouseCtrl:Refresh()
     if self.m_data == nil then
         return
     end
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
     self.number = 0;--商品个数
     if self.m_data.bag.inHand ~= nil then
         for i, v in pairs(self.m_data.bag.inHand) do
@@ -137,18 +150,21 @@ function CenterWareHouseCtrl:Refresh()
     self.money = 1000;--扩容所需金额
     self:_initData();
     self:initInsData()
-    CenterWareHousePanel.tipText.text = 0
+    --CenterWareHousePanel.tipText.text = 0
 end
 
 function CenterWareHouseCtrl:initInsData()
     DataManager.OpenDetailModel(CenterWareHouseModel,6)
-   -- DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
 end
-
 
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
+    local money = DataManager.GetMoney()
+    if money<go.money then
+        Event.Brocast("SmallPop","扩容金额不足",300)
+    else
+        DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
+    end
 end
 
 function CenterWareHouseCtrl:c_GsExtendBag()
@@ -176,16 +192,16 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.currentLocationName = "中心仓库"--起始地址
     data.targetLocationName =ChooseWarehouseCtrl:GetName()--目标地址
     local pos ={}
-    pos.x = 45
-    pos.y = 45
+    pos.x = BagPosInfo[1].bagX
+    pos.y = BagPosInfo[1].bagY
     data.distance = ChooseWarehouseCtrl:GetDistance(pos)--距离
     local n = 0
     for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
         n = n + v.inputText.text
     end
     data.number = n--数量
-    data.freight = n*1--运费
-    data.total = n*1--总运费
+    data.freight = n*data.distance*BagPosInfo[1].postageCost--运费
+    data.total = n*data.distance*BagPosInfo[1].postageCost--总运费
     data.btnClick = function()
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then
@@ -292,6 +308,9 @@ end
 
 --排序
 function CenterWareHouseCtrl:_getSortItems(type)
+    if WareHouseGoodsMgr.items == nil then
+        return
+    end
     if type == CenterWareHouseSortItemType.Name then
         table.sort(WareHouseGoodsMgr.items, function (m, n) return m.name < n.name end )
         for i, v in ipairs(WareHouseGoodsMgr.items) do

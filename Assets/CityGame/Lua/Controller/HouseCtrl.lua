@@ -26,7 +26,6 @@ function HouseCtrl:Awake(go)
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
-    self.houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
     self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)

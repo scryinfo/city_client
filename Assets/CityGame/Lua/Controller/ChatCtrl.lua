@@ -140,21 +140,24 @@ end
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
     self:_closePlayerInfo()
-    self:_showChatNoticeItem()
+    --self:_showChatNoticeItem()
     ChatPanel.expressionRoot:SetActive(false)
 
     if self.m_data.toggleId == 1 then  -- 打开世界分页
         ChatPanel.worldToggle.isOn = true
         --self:_worldToggleValueChange(true)
         self.channel = 0 -- 聊天频道
+        self:_showChatNoticeItem()
         self:_showWorldInfo()
     elseif self.m_data.toggleId == 2 then  -- 打开好友分页
         --self:_friendsToggleValueChange(true)
         self.channel = 1 -- 聊天频道
         ChatCtrl.static.isShowClickFriends = true
         if ChatPanel.friendsToggle.interactable then
+            self:_showChatNoticeItem()
             ChatPanel.friendsToggle.isOn = true
         else
+            self:_showChatNoticeItem()
             self:_queryFriendInfo()
         end
         ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
@@ -164,6 +167,7 @@ function ChatCtrl:_refreshState()
         self.channel = 3 -- 聊天频道
         ChatCtrl.static.isShowClickStrangers = true
         ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        self:_showChatNoticeItem()
         self:_showStrangersInfo()
     end
 end

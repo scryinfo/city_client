@@ -69,7 +69,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.maleTran.localScale = Vector3.one
     end
     self.sayText.text = self.m_data.des
-    if self.m_data.des == "" then
+    if self.m_data.des == nil or self.m_data.des == "" then
         self.sayText.text = "Everything i do i wanna put a shine on it, do it one more time, i gotta give it up."  --默认值
     end
     self.nameText.text = self.m_data.name

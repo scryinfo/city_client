@@ -91,7 +91,7 @@ namespace LuaFramework {
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
                     m_AllManifest = m_AssetBundleManifest.GetAllAssetBundles();
                     string[] dependencies0 = m_AssetBundleManifest.GetAllDependencies(manifestName);
-                    string resllistPath = Application.dataPath.ToLower() + "/StreamingAssets/" + "assetBundleList.bin";
+                    string resllistPath = City.CityLuaUtil.getAssetsPath() + "/assetBundleList.bin";
                     m_ResourcesBundleInfo = Deserialize<Dictionary<string, string>>(File.Open(resllistPath, FileMode.Open));
 
                     resInitCountAll = m_AllManifest.Length;                    
@@ -185,7 +185,10 @@ namespace LuaFramework {
             abName = GetRealAssetPath(abName);
 
             LoadAssetRequest request = new LoadAssetRequest();
-            request.assetType = typeof(T);
+            if(type != null)
+                request.assetType = type;
+            else
+                request.assetType = typeof(T);
             request.assetNames = assetNames;
             request.luaFunc = func;
             request.sharpFunc = action;
@@ -195,13 +198,13 @@ namespace LuaFramework {
             {
                 requests = new List<LoadAssetRequest>();
                 requests.Add(request);
-                m_LoadRequests.Add(abName, requests);
-                StartCoroutine(OnLoadAsset<T>(abName,type));
+                m_LoadRequests.Add(abName, requests);                
             }
             else
             {
                 requests.Add(request);
-            }        
+            }
+            StartCoroutine(OnLoadAsset<T>(abName, type));
 #else
             for (int i = 0; i < assetNames.Length; i++)
             {
@@ -359,6 +362,7 @@ namespace LuaFramework {
             }
             for (int i = 0; i < list.Count; i++) {
                 string[] assetNames = list[i].assetNames;
+                type = list[i].assetType;
                 List<UObject> result = new List<UObject>();
 
                 AssetBundle ab = bundleInfo.m_AssetBundle;

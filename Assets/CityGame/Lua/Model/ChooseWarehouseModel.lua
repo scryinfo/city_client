@@ -13,7 +13,7 @@ end
 
 function ChooseWarehouseModel:OnCreate()
 
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     --网络回调
     -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerBuildings"),ChooseWarehouseModel.n_OnQueryPlayerBuildings);

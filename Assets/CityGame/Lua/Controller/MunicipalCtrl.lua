@@ -40,6 +40,9 @@ function MunicipalCtrl:Awake(go)
         data.buildingType = BuildingType.Municipal
     BuildMgr=BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, data)
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
+
+
+
 end
 
 function MunicipalCtrl:OnCreate(obj)
@@ -57,14 +60,21 @@ function MunicipalCtrl:OnClick_prepareOpen(ins)
 end
 
 --更改名字
-function MunicipalCtrl:OnClick_changeName()
+function MunicipalCtrl:OnClick_changeName(ins)
     local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
+    data.titleInfo = "RENAME"
+    data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    ct.OpenCtrl("InputDialogPageCtrl",data)
+    data.btnCallBack = function(name)
+        ---临时代码，直接改变名字
+        ins:_updateName(name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
-
+---更改名字成功
+function MunicipalCtrl:_updateName(name)
+    MunicipalPanel.nameText.text = name
+end
 --返回
 function MunicipalCtrl:OnClick_backBtn()
     UIPage.ClosePage();
@@ -81,7 +91,9 @@ function MunicipalCtrl:OnClick_infoBtn()
 end
 
 function MunicipalCtrl:Refresh()
-   this:changeData()
+    this:changeData()
+
+
 end
 
 

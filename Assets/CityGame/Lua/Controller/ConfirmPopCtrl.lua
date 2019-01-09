@@ -22,7 +22,6 @@ end
 
 function ConfirmPopCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj);
-    local WagesAdjustBox = gameObject:GetComponent('LuaBehaviour');
 end
 
 function ConfirmPopCtrl:Awake(go)

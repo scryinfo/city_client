@@ -89,6 +89,7 @@ function MunicipalModel:n_adPutAdToSlot(lMsg)
         self.manger.adList[lMsg.a.metaId]={}
     end
     table.insert(self.manger.adList[lMsg.a.metaId],lMsg.a)
+
 end
 ---设置门票发包
 function MunicipalModel:m_Setticket(buildingId,price)

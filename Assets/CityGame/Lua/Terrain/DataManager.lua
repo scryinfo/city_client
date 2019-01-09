@@ -601,12 +601,6 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
-
-
-    ------------------------------------打开相机
-    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
-    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
 end
 
 --添加/修改自己所拥有土地
@@ -923,11 +917,9 @@ function DataManager.Init()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
-    ----研究所Model
-    --SystemDatas.LaboratoryModel  = LaboratoryModel.New()
-    --if SystemDatas.LaboratoryModel ~= nil then
-    --    SystemDatas.LaboratoryModel:Awake()
-    --end
+    ------------------------------------打开相机
+    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
+    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
 end
 
 function DataManager.Close()

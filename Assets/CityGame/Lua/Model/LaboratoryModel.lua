@@ -76,6 +76,10 @@ function LaboratoryModel:m_ReqLabRoll(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
     DataManager.ModelSendNetMes("gscode.OpCode", "labRoll","gs.LabRoll",lMsg)
 end
+--改变建筑名字
+function LaboratoryModel:m_ReqChangeBuildingName(id, name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
+end
 
 --- 回调 ---
 --研究所详情

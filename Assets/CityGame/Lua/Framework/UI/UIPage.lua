@@ -256,6 +256,18 @@ function  UIPage:ClearAllPages()
     UIPage.static.m_allPages = {}
 end
 
+--清空当前所有page
+function  UIPage:HideAllPages()
+    --清空当前page
+    UIPage.static.m_currentPageNodes = nil
+    UIPage.static.m_currentPageNodes = {};
+
+    --隐藏栈中所有UI资源
+    for k,v in pairs(UIPage.static.m_allPages) do
+        v:Hide();
+    end
+end
+
 function  UIPage:ShowPage(inClass,pageData)
     return UIPage:ShowPageByClass(inClass, pageData, true)
 end

@@ -455,7 +455,7 @@ public class Packager {
         AddBuildMapInOne(ref curPath, ref patterns);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapOp(ref curPath, ref patterns);
+        AddBuildMapInOne(ref curPath, ref patterns);
 
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");

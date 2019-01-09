@@ -39,6 +39,7 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
     Event.AddListener("c_Transport",self.c_Transport,self)
     Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
+    Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
     chooseWarehouse = self.gameObject:GetComponent('LuaBehaviour');
@@ -53,7 +54,7 @@ function ChooseWarehouseCtrl:Refresh()
     ChooseWarehousePanel.boxImg:SetActive(true)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
-    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings)  --创建运输线
+    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos)  --创建运输线
     self:initInsData()
     self:GetMyFriends()
 end
@@ -69,9 +70,8 @@ function ChooseWarehouseCtrl:_removeListener()
 end
 
 function ChooseWarehouseCtrl:c_OnReceivePlayerInfo(playerData)
-    self.data = {}   --好友信息
-    self.data = playerData.info
-    self:_creatAddressList()
+
+
 end
 
 --获取玩家好友列表
@@ -97,7 +97,7 @@ end
 --生成好友列表
 function ChooseWarehouseCtrl:_creatAddressList()
     local WareHouseGoodsMgr = WareHouseGoodsMgr:new()
-    WareHouseGoodsMgr:_creatAddressList(chooseWarehouse, self.data) --创建好友列表
+    WareHouseGoodsMgr:_creatAddressList(self.data) --创建好友列表
 end
 
 function ChooseWarehouseCtrl:initInsData()
@@ -118,15 +118,15 @@ function ChooseWarehouseCtrl:OnClick_searchBtn()
 end
 --点击ming BG
 function ChooseWarehouseCtrl:OnClick_bgBtn(go)
-    WareHouseGoodsMgr:_deleteLinePanel()
     if go.onClick then
+        WareHouseGoodsMgr:_deleteLinePanel()
         ChooseWarehousePanel.boxImg:SetActive(true)
         local item = go.WareHouseGoodsMgr:GetItem()
         if item ~= nil then
             item.box:SetActive(false)
             item.onClick = true
         end
-        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings)  --创建运输线
+        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos)  --创建运输线
     end
     go.onClick = false
 end
@@ -134,25 +134,38 @@ end
 --点击通讯录BG
 function ChooseWarehouseCtrl:c_OnAddressListBG(go)
     self.onClick = true
-    WareHouseGoodsMgr:_deleteLinePanel()
     if go.onClick then
+        WareHouseGoodsMgr:_deleteLinePanel()
         DataManager.DetailModelRpcNoRet(8, 'm_QueryPlayerBuildings',go.id)--查询玩家建筑详情
+        ChooseWarehousePanel.boxImg:SetActive(false)
+        go.manager:SelectBox(go)
     end
-    ChooseWarehousePanel.boxImg:SetActive(false)
     go.onClick = false  --第一次点击
-    go.manager:SelectBox(go)
-    --go.manager:TransportConfirm(true)
-    --CenterWareHousePanel.nameText.text = go.name;
+
 end
 
 --好友建筑详情回调
 function ChooseWarehouseCtrl:c_OnQueryPlayerBuildings(info)
-    WareHouseGoodsMgr:_creatFriendsLinePanel(info)
+    ChooseWarehouseCtrl:c_OnCreatFriendsLinePanel(info)
+end
+
+--创建好友运输线
+function ChooseWarehouseCtrl:c_OnCreatFriendsLinePanel(buysBuildings)
+    WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,self.m_data.pos)
 end
 
 --点击所运输的地方
 function ChooseWarehouseCtrl:c_OnLinePanelBG(info)
     buildingInfo = info
+    self:SelectWarehouseName(info.name)
+end
+
+--所选仓库名字
+function ChooseWarehouseCtrl:SelectWarehouseName(name)
+    if self.m_data.nameText == nil then
+        return
+    end
+    self.m_data.nameText.text = name
 end
 
 --运输
@@ -168,11 +181,18 @@ function ChooseWarehouseCtrl:GetDistance(pos)
     return distance
 end
 
---点击建筑的名字
+--获取建筑的名字
 function ChooseWarehouseCtrl:GetName()
     local name
     name = buildingInfo.name
     return name
+end
+
+--获取建筑容量
+function ChooseWarehouseCtrl:GetCapacity()
+    local Capacity
+    Capacity = buildingInfo.spareCapacity
+    return Capacity
 end
 
 --根据名字排序

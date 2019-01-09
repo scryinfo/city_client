@@ -30,7 +30,7 @@ end
 
 --初始化
 function NoMessageCtrl:_initData()
-    NoMessagePanel.content.text = "目前没有信息"
+    NoMessagePanel.content.text = "No message at present"
 end
 
 --点击空白背景

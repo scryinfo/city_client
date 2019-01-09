@@ -533,7 +533,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_money = tempData.money
     --初始化自己的name
     PersonDataStack.m_name = tempData.name
-
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -641,14 +640,17 @@ function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
 end
 
+--获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
 end
 
+--获取自己的money
 function DataManager.GetMoney()
     return PersonDataStack.m_money
 end
 
+--获取自己的名字
 function DataManager.GetName()
     return PersonDataStack.m_name
 end

@@ -60,7 +60,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         end
     end
     --刷新AOI内的数据
-    if CameraCollectionID ~= nil and CameraCollectionID == -1 then
+    if CameraCollectionID ~= nil and CameraCollectionID ~= -1 then
         for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
             DataManager.RefreshWaysByCollectionID( value)
         end

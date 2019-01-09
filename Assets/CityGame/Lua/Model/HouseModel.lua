@@ -20,8 +20,8 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.ByteNum",self.n_OnReceiveHouseSalaryChange)
 
     --本地的回调注册
-    Event.AddListener("m_ReqHouseChangeRent", HouseModel.m_ReqHouseChangeRent)
-    Event.AddListener("m_ReqHouseSetSalary", HouseModel.m_ReqHouseSetSalary)
+    Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
+    Event.AddListener("m_ReqHouseSetSalary", self.m_ReqHouseSetSalary, self)
 end
 
 
@@ -31,12 +31,22 @@ function HouseModel:m_ReqHouseDetailInfo(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailApartment","gs.Id",{ id = buildingId})
 end
 --改变房租
-function HouseModel.m_ReqHouseChangeRent(id, price)
+function HouseModel:m_ReqHouseChangeRent(id, price)
+    if id ~= self.insId then
+        return
+    end
     DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.ByteNum",{ id = id, num = price})
 end
 --改变员工工资
-function HouseModel.m_ReqHouseSetSalary(id, price)
+function HouseModel:m_ReqHouseSetSalary(id, price)
+    if id ~= self.insId then
+        return
+    end
     DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+end
+--改变建筑名字
+function HouseModel:m_ReqChangeHouseName(id, name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
 end
 
 --- 回调 ---
@@ -52,94 +62,3 @@ end
 function HouseModel:n_OnReceiveHouseSalaryChange(salaryData)
     Event.Brocast("c_onReceiveHouseSalaryChange", salaryData)
 end
-
-
---[[
-HouseModel = {};
-local this = HouseModel;
-local pbl = pbl
-
---构建函数--
-function HouseModel.New()
-    return this;
-end
-
-function HouseModel.Awake()
-    UpdateBeat:Add(this.Update, this);
-    this:OnCreate();
-end
-
-function HouseModel.Update()
-
-end
-
---启动事件--
-function HouseModel.OnCreate()
-    --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailApartment"), HouseModel.n_OnReceiveHouseDetailInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","setRent"), HouseModel.n_OnReceiveHouseRentChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","setSalary"), HouseModel.n_OnReceiveHouseSalaryChange)
-
-    --本地的回调注册
-    Event.AddListener("m_ReqHouseDetailInfo", this.m_ReqHouseDetailInfo)
-    Event.AddListener("m_ReqHouseChangeRent", this.m_ReqHouseChangeRent)
-    Event.AddListener("m_ReqHouseSetSalary", this.m_ReqHouseSetSalary)
-end
-
---关闭事件--
-function HouseModel.Close()
-    --Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
-end
-
---- 客户端请求 ---
---获取建筑详情
-function HouseModel.m_ReqHouseDetailInfo(buildingId)
-    local msgId = pbl.enum("gscode.OpCode", "detailApartment")
-    local lMsg = { id = buildingId}
-    local pMsg = assert(pbl.encode("gs.Id", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-end
---改变房租
-function HouseModel.m_ReqHouseChangeRent(id, price)
-    local msgId = pbl.enum("gscode.OpCode", "setRent")
-    local lMsg = { id = id, num = price}
-    local pMsg = assert(pbl.encode("gs.ByteNum", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-end
---改变员工工资
-function HouseModel.m_ReqHouseSetSalary(id, price)
-    local msgId = pbl.enum("gscode.OpCode", "setSalary")
-    local lMsg = { id = id, num = price}
-    local  pMsg = assert(pbl.encode("gs.ByteNum", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-end
-
---- 回调 ---
---住宅详情
-function HouseModel.n_OnReceiveHouseDetailInfo(stream)
-    local houseDetailInfo = assert(pbl.decode("gs.Apartment", stream), "HouseModel.n_OnReceiveHouseDetailInfo: stream == nil")
-    Event.Brocast("c_onReceiveHouseDetailInfo", houseDetailInfo)
-end
---房租改变
-function HouseModel.n_OnReceiveHouseRentChange(stream)
-    local rentData = assert(pbl.decode("gs.ByteNum", stream), "HouseModel.n_OnReceiveRentChange: stream == nil")
-    Event.Brocast("c_onReceiveHouseRentChange", rentData)
-end
---员工工资改变
-function HouseModel.n_OnReceiveHouseSalaryChange(stream)
-    local salaryData = assert(pbl.decode("gs.ByteNum", stream), "HouseModel.n_OnReceiveHouseSalaryChange: stream == nil")
-    Event.Brocast("c_onReceiveHouseSalaryChange", salaryData)
-end
-
-
---TestGroup.active_TestGroup("cycle_w5")
-UnitTest.TestBlockStart()---------------------------------------------------------
-UnitTest.Exec("cycle_w5", "test_loginctrl_tempTest",  function ()
-    local HouseModel = CtrlManager.GetModel(ModelNames.House);
-    if HouseModel ~= nil then
-        HouseModel:Awake();
-    end
-    ct.log("cycle_w5","[test_loginctrl_tempTest]  测试完毕")
-end)
-UnitTest.TestBlockEnd()-----------------------------------------------------------
---]]

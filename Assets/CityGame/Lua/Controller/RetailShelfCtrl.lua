@@ -11,7 +11,7 @@ function RetailShelfCtrl:initialize()
 end
 
 function RetailShelfCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/RetailShelfPanel"
+    return "Assets/CityGame/Resources/View/RetailShelfPanel.prefab"
 end
 
 function RetailShelfCtrl:OnCreate(obj)

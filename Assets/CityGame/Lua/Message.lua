@@ -194,7 +194,10 @@ function CityEngineLua.MessageReader.process(datas, offset, length)
 				local msg = CityEngineLua.clientMessages[reader.msgid];
 				if not msg then
 					--这种情况可能是协议没注册，需要跳过当前数据段
-					CityLuaUtilExt.bufferToString(reader.stream, reader.msglen)
+					reader.stream:append(datas, totallen, reader.expectSize);
+					totallen = totallen + reader.expectSize;
+					length = length - reader.expectSize;
+					local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 					reader.expectSize = 4;
 					reader.state = CityEngineLua.READ_STATE_MSGLEN
 				else

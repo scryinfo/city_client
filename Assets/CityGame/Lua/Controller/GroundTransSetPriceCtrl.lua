@@ -114,15 +114,18 @@ end
 --修改出售价格按钮
 function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
     local price = GroundTransSetPricePanel.sellInput.text
-    if price ~= "" and tonumber(price) > 0 then
-        GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
-        GroundTransModel.m_ReqSellGround(price)
-
-        Event.Brocast("SmallPop","Modified", 300)
-        GroundTransSetPriceCtrl._closeBackToMain()
-    else
+    if price == "" or tonumber(price) <= 0 then
         Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        return
     end
+    if tonumber(price) == ins.m_data.groundInfo.sell.price then
+        Event.Brocast("SmallPop","您输入的信息没有变化", 300)
+        return
+    end
+    GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
+    GroundTransModel.m_ReqSellGround(price)
+    Event.Brocast("SmallPop","Modified", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --取消出售
 function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
@@ -153,6 +156,10 @@ function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
     local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
     if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
         Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        return
+    end
+    if minDay == ins.m_data.groundInfo.rent.rentDaysMin or maxDay == ins.m_data.groundInfo.rent.rentDaysMax or dayRentalPrice == ins.m_data.groundInfo.rent.rentPreDay then
+        Event.Brocast("SmallPop","您输入的信息没有变化", 300)
         return
     end
     GroundTransModel.m_ReqCancelRentGround()

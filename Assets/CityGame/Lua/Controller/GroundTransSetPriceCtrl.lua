@@ -107,6 +107,8 @@ function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
         Event.Brocast("SmallPop","Released", 300)
 
         GroundTransSetPriceCtrl._closeBackToMain()
+    else
+        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
     end
 end
 --修改出售价格按钮
@@ -118,6 +120,8 @@ function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
 
         Event.Brocast("SmallPop","Modified", 300)
         GroundTransSetPriceCtrl._closeBackToMain()
+    else
+        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
     end
 end
 --取消出售
@@ -134,6 +138,7 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
     local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
     local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
     if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
+        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
         return
     end
     GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
@@ -143,14 +148,17 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
 end
 --修改出租价格按钮
 function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
-    local price = GroundTransSetPricePanel.sellInput.text
-    if price ~= "" and tonumber(price) > 0 then
-        GroundTransModel.m_ReqCancelRentGround()
-        ins:_rentIssueBtnFunc(ins)
-
-        Event.Brocast("SmallPop","Modified", 300)
-        GroundTransSetPriceCtrl._closeBackToMain()
+    local minDay = GroundTransSetPricePanel.minRentDayInput.text
+    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
+    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
+    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
+        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        return
     end
+    GroundTransModel.m_ReqCancelRentGround()
+    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
+    Event.Brocast("SmallPop","Modified", 300)
+    GroundTransSetPriceCtrl._closeBackToMain()
 end
 --取消出租
 function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)

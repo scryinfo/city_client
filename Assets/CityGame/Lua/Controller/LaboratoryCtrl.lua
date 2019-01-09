@@ -112,6 +112,8 @@ end
 --点击开业按钮方法
 function LaboratoryCtrl:_openBuildingBtnFunc(ins)
     if ins.m_data then
-        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, function()
+            DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
+        end)
     end
 end

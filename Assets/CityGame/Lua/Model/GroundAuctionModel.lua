@@ -227,7 +227,6 @@ end
 
 --- 回调 ---
 --收到拍卖中的土地信息
---[[
 function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     if stream == nil or stream == "" then
         return
@@ -246,7 +245,6 @@ function GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     end
     this._getOrderGroundDatas(this.groundAucDatas)
 end
-]]
 
 --当收到所有拍卖的土地信息
 function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)

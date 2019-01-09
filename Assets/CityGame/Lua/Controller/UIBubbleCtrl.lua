@@ -34,16 +34,17 @@ function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
     Event.AddListener("c_HideGroundBubble", self._hideAllItems, self)
     Event.AddListener("c_ShowGroundBubble", self._showAllItems, self)
+    Event.AddListener("c_UIBubbleLateUpdate", self._cameraLateUpdate, self)
 end
 function UIBubbleCtrl:_removeListener()
     Event.RemoveListener("c_RefreshItems", self._refreshItems, self)
     Event.RemoveListener("c_HideGroundBubble", self._hideAllItems, self)
     Event.RemoveListener("c_ShowGroundBubble", self._showAllItems, self)
+    Event.RemoveListener("c_UIBubbleLateUpdate", self._cameraLateUpdate, self)
 end
 
-function UIBubbleCtrl.static.RefreshLateUpdate()
-    --Event.Brocast("c_RefreshLateUpdate")
-    if not UIBubbleCtrl.startFlowCam then
+function UIBubbleCtrl:_cameraLateUpdate()
+    if UIBubbleCtrl.startFlowCam == false then
         return
     end
     Event.Brocast("c_RefreshLateUpdate")
@@ -85,7 +86,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         else
             go.transform.localScale = Vector3.one
         end
-        local data = bubbleData
+        local data = ct.deepCopy(bubbleData)
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
@@ -101,7 +102,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         else
             go.transform.localScale = Vector3.one
         end
-        local data = bubbleData
+        local data = ct.deepCopy(bubbleData)
         data.bubbleRect = go:GetComponent("RectTransform")
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
@@ -112,7 +113,7 @@ end
 function UIBubbleCtrl:_refreshItems(datas)
     for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
-        --destroyImmediate(item.data.groundObj.gameObject)  --删除场景中的预制
+        destroyImmediate(item.data.groundObj.gameObject)  --删除场景中的预制
         destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end

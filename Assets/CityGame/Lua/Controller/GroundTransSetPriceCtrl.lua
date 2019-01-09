@@ -70,6 +70,9 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
         elseif groundState == GroundTransState.Rent then
             --显示修改/取消状态
             GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.one
+            GroundTransSetPricePanel.minRentDayInput.text = groundInfo.rent.rentDaysMin
+            GroundTransSetPricePanel.maxRentDayInput.text = groundInfo.rent.rentDaysMax
+            GroundTransSetPricePanel.rentalInput.text = groundInfo.rent.rentPreDay
         end
     elseif showPageType == GroundTransState.Sell then
         GroundTransSetPricePanel.titleText.text = "SELL"
@@ -80,6 +83,7 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
         elseif groundState == GroundTransState.Sell then
             --显示修改/取消状态
             GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.one
+            GroundTransSetPricePanel.sellInput.text = groundInfo.sell.price
         end
     end
 end
@@ -156,6 +160,7 @@ function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
 end
 --返回主界面
 function GroundTransSetPriceCtrl._closeBackToMain()
-    UIPage:ClearAllPages()
+    UIPage:HideAllPages()
     ct.OpenCtrl("GameMainInterfaceCtrl")
+    --ct.OpenCtrl("UIBubbleCtrl")
 end

@@ -206,8 +206,8 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
-        if GameMainInterfacePanel.worldChatContent.childCount >= 5 then
-            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 4 do
+        if GameMainInterfacePanel.worldChatContent.childCount >= 4 then
+            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 3 do
                 UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
             end
         end

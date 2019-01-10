@@ -69,9 +69,17 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     if nodeID == nil then
         nodeID = -1
     end
+    if  BuildDataStack[collectionID] == nil then
+        BuildDataStack[collectionID] = {}
+    end
+    if BuildDataStack[collectionID].BlockDatas == nil then
+        BuildDataStack[collectionID].BlockDatas = {}
+    end
+    BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
+    --[[
     if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
         BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    end
+    end--]]
 end
 
 --刷新原子地块集合的基本信息
@@ -449,6 +457,10 @@ function DataManager.ModelSendNetMes(protoNameStr,protoNumStr,protoEncodeStr,Msg
         local pMsg = assert(pbl.encode(protoEncodeStr, Msgtable))
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
     end
+end
+
+function DataManager.RegisterNetMsg(protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
+
 end
 
 --DetailModel 注册消息回调

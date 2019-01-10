@@ -10,7 +10,7 @@ Version: 3.2
 ]]--
 
 require("math")
-require ('ImpTestGroup')
+require ('TestGroup')
 
 local M={}
 local log = log

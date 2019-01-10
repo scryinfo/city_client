@@ -2,7 +2,7 @@ require('Common.define')
 require('LuaUtil')
 local CityLuaUtil = CityLuaUtil
 require("Dbg")
-require('ImpTestGroup')
+require('TestGroup')
 local protoc = require ("Framework/pbl/protoc")
 
 function OnInitProto()

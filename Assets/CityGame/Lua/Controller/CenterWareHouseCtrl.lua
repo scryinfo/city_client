@@ -130,6 +130,11 @@ end
 function CenterWareHouseCtrl:c_OnxBtn(go)
     go.manager:_deleteTspGoods(go.id);
     itemId[go.id] = nil
+    local n = 0
+    for i, v in pairs(self. WareHouseGoodsMgr.allTspItem) do
+        n = n + tonumber(v.inputText.text)
+    end
+    CenterWareHousePanel.tipText.text = n
 end
 
 --返回按钮

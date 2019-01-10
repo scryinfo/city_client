@@ -256,14 +256,11 @@ end
 
 --关闭运输按钮
 function CenterWareHouseCtrl:c_transportCloseBtn()
-    CenterWareHousePanel.addItem:SetActive(true);
+    --CenterWareHousePanel.addItem:SetActive(true);
     isSelect = true;
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
     CenterWareHouseCtrl:clearAllData()
---[[    WareHouseGoodsMgr:ClearAll()
-    itemId = {}
-    WareHouseGoodsMgr:EnabledAll()]]
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)

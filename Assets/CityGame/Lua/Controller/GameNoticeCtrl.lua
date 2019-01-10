@@ -65,6 +65,7 @@ end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
+    NoticeMgr:_dleNotice()
     UIPage.ClosePage();
 end
 

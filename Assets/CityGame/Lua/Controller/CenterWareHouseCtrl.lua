@@ -183,7 +183,12 @@ end
 
 --选择仓库按钮
 function CenterWareHouseCtrl:c_transportopenBtn()
-    ct.OpenCtrl('ChooseWarehouseCtrl');
+    local data = {}
+    data.pos = {}
+    data.pos.x = BagPosInfo[1].bagX
+    data.pos.y =BagPosInfo[1].bagY
+    data.nameText = CenterWareHousePanel.nameText
+    ct.OpenCtrl('ChooseWarehouseCtrl',data);
 end
 
 --开始运输按钮
@@ -202,6 +207,11 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.number = n--数量
     data.freight = n*data.distance*BagPosInfo[1].postageCost--运费
     data.total = n*data.distance*BagPosInfo[1].postageCost--总运费
+    data.capacity = ChooseWarehouseCtrl:GetCapacity()   --所选仓库容量
+    if data.capacity < tonumber(CenterWareHousePanel.tipText.text) then
+        Event.Brocast("SmallPop","所选建筑仓库容量不足",300)
+        return
+    end
     data.btnClick = function()
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then

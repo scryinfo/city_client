@@ -73,7 +73,7 @@ function ChooseWarehouseModel.n_OnDetailMaterialFactory(stream)
     local i = 1
     detailInfo[i] = lMsg
     if lMsg ~= nil then
-        WareHouseGoodsMgr:_creatFriendsLinePanel(detailInfo)
+        Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
 function ChooseWarehouseModel.n_OnDetailProduceDepartment(stream)
@@ -82,7 +82,7 @@ function ChooseWarehouseModel.n_OnDetailProduceDepartment(stream)
     local i = 1
     detailInfo[i] = lMsg
     if lMsg ~= nil then
-        WareHouseGoodsMgr:_creatFriendsLinePanel(detailInfo)
+        Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
 function ChooseWarehouseModel.n_OnDetailRetailShop(stream)
@@ -91,7 +91,7 @@ function ChooseWarehouseModel.n_OnDetailRetailShop(stream)
     local i = 1
     detailInfo[i] = lMsg
     if lMsg ~= nil then
-        WareHouseGoodsMgr:_creatFriendsLinePanel(detailInfo)
+        Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
 function ChooseWarehouseModel.n_OnDetailLaboratory(stream)
@@ -100,7 +100,7 @@ function ChooseWarehouseModel.n_OnDetailLaboratory(stream)
     local i = 1
     detailInfo[i] = lMsg
     if lMsg ~= nil then
-        WareHouseGoodsMgr:_creatFriendsLinePanel(detailInfo)
+        Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
 

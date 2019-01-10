@@ -206,10 +206,6 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     ---入住率  右1
     local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     self.rightData[1] = self:_creatOccupancy(occToggleData)
-
-    ---租金 --右2
-    local rentalToggleData = { pos = BuildingInfoTogglePos.Right, index = 2}
-    self.rightData[2] = self:_creatRental(rentalToggleData)
 end
 
 --创建原料厂主页左右信息
@@ -537,7 +533,11 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     occData.buildingTypeId = self.toggleData.info.mId
     occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
     occData.renter = self.toggleData.renter
-    occData.isOther = self.toggleData.isOther  --
+    occData.isOther = self.toggleData.isOther
+
+    occData.rent = self.toggleData.rent
+    occData.effectiveDate = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
+
     local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return occupancyLuaItem
 end

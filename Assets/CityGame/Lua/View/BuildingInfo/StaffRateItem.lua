@@ -29,7 +29,13 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close")
     self.closeOpenBtn = self.viewRect.transform:Find("topRoot/close/openBtn")
 
-    self.openToDoBtn.localScale = Vector3.zero  --暂时不显示打开按钮
+    if staffData.isOther then
+        self.openToDoBtn.localScale = Vector3.zero
+    else
+        self.openToDoBtn.localScale = Vector3.one
+        mainPanelLuaBehaviour:AddClick(self.openToDoBtn.gameObject, self._clickToDoBtn, self)
+    end
+
     mainPanelLuaBehaviour:AddClick(self.closeOpenBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
@@ -109,10 +115,8 @@ end
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn(ins)
     --打开工资调整界面
-    --local value = {dayWage = self.staffData.dayWage, workerNum = self.m_data.totalStaffCount, callBackFunc = function ()
-    --    --xxx
-    --end}
-    --ct.OpenCtrl("WagesAdjustBoxCtrl", value)
+    local value = {dayWage = ins.staffData.dayWage, workerNum = ins.staffData.totalStaffCount}
+    ct.OpenCtrl("WagesAdjustBoxCtrl", value)
 end
 
 --打开

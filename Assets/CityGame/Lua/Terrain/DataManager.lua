@@ -413,7 +413,7 @@ function DataManager.DetailModelRpc(insId,modelMethord,callBackMethord,...)
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel == nil and tempDetailModel[modelMethord] == nil then
+    if tempDetailModel ~= nil and tempDetailModel[modelMethord] ~= nil then
         callBackMethord(tempDetailModel[modelMethord](tempDetailModel,...))
     end
 end
@@ -429,7 +429,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController == nil and tempController[modelMethord] == nil ) and tempController.m_data and tempController.m_data.insId == insId  then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -447,7 +447,7 @@ function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethor
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController == nil and tempController[modelMethord] == nil ) and tempController.insId == insId then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.insId == insId then
         callBackMethord(tempController[modelMethord](tempController,...))
     end
 end

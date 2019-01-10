@@ -43,7 +43,7 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     end
 
     if self.data.channel == "WORLD" then
-        transform.sizeDelta = Vector2.New(1120, transformSizeDelta.y)
+        transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
         ChatCtrl.static.luaBehaviour:AddClick(self.headBtn, self.OnHeadClick, self)
     end
 end

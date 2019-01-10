@@ -214,16 +214,12 @@ function ManageAdvertisementPosCtrl:c_ScreenOutAd()
                 buildBtn[typeName].small=buildBtn[typeName].small+1
             end
         end
-
-
-
-
     end
 
     local AllGoods=DataManager.GetMyGoodLv()
     for i, v in pairs(AllGoods) do
 
-         local t=self
+
     end
 
 

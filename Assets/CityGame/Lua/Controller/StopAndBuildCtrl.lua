@@ -49,6 +49,7 @@ end
 function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
     UIPage.ClosePage()
+    UIPage.ClosePage()
 end
 
 

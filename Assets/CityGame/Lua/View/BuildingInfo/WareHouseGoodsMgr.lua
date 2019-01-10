@@ -95,12 +95,11 @@ function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
 end
 
 --创建通讯录
-function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
-    AddressListIns =insluabehaviour
+function WareHouseGoodsMgr:_creatAddressList(data)
     self.lastBox =nil;
     for i, v in ipairs(data) do
         local addressList_prefab = self:_creatGoods(WareHouseGoodsMgr.static.AddressList_PATH,ChooseWarehousePanel.leftcontent)
-        local AddressListLuaItem = AddressListItem:new(v,addressList_prefab,AddressListIns,self)
+        local AddressListLuaItem = AddressListItem:new(v,addressList_prefab,self)
         if not self.AddressItems then
             self.AddressItems = {}
         end
@@ -111,7 +110,7 @@ function WareHouseGoodsMgr:_creatAddressList(insluabehaviour,data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(buysBuildings)
+function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data)
     if buysBuildings ==nil then
         return
     end
@@ -119,7 +118,7 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings)
         for k, z in pairs(v) do
             if z.store ~= nil then
                 local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,AddressListIns,self,z)
+                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
                 if not self.ipaItems then
                     self.ipaItems = {}
                 end
@@ -132,15 +131,14 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings)
 end
 
 --创建好友路线面板
-function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings)
+function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data)
     if buysBuildings == nil then
         return
     end
-    --local line_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
     for i, v in pairs(buysBuildings) do
         if v.store ~= nil then
             local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-            local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,AddressListIns,self,v)
+            local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,v,data)
             if not self.ipaItems then
                 self.ipaItems = {}
             end

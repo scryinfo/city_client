@@ -694,6 +694,11 @@ function DataManager.GetMyPersonalHomepageInfo()
     return PersonDataStack.m_roleInfo
 end
 
+--设置主页需要的显示信息--个人描述
+function DataManager.SetMyPersonalHomepageDesInfo(des)
+    PersonDataStack.m_roleInfo.des = des
+end
+
 --刷新自己所拥有商品科技等级
 --参数： tempData==>  IntNum
 function DataManager.SetMyGoodLv(tempData)

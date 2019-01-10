@@ -4,13 +4,9 @@
 --- DateTime: 2018/10/05 11:00
 ---
 StaffRateItem = class('StaffRateItem')
-StaffRateItem.static.TOTAL_NotAll_H = 418  --整个Item的高度，员工有未找到住所的
-StaffRateItem.static.TOTAL_ALLRIGHT_H = 418  --整个Item的高度，员工都有住所
-StaffRateItem.static.CONTENT_NotAll_H = 350  --显示内容的高度，员工有未找到住所的
-StaffRateItem.static.CONTENT_ALLRIGHT_H = 350  --显示内容的高度，员工都有住所
+StaffRateItem.static.TOTAL_ALLRIGHT_H = 345  --整个Item的高度，员工都有住所
+StaffRateItem.static.CONTENT_ALLRIGHT_H = 276  --显示内容的高度，员工都有住所
 StaffRateItem.static.TOP_H = 100  --top条的高度
-
-StaffRateItem.static.ROOTRECT_H = 66  --员工未找到住所的UI的高度
 
 --初始化方法  --数据需要接受服务器发送的数据
 function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
@@ -42,8 +38,6 @@ end
 
 --初始化界面
 function StaffRateItem:_initData()
-    --self.statisfactionText.text = (self.staffData.satisfaction * 100).."%"
-    --self.statisfactionSlider.value = self.staffData.satisfaction
     self.perCapitaWageText.text = self.staffData.dayWage
     --self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
@@ -59,43 +53,37 @@ function StaffRateItem:_checkWorkTime()
     self.restingTimeText.transform.localScale = Vector3.zero
 
     if self.staffData.buildingTypeId~=1 then
-
-
-
-
-
-    local timeTable = getFormatUnixTime(os.time())
-    local time = timeTable.year..timeTable.month..timeTable.day
-    if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
-        self.working.localScale = Vector3.one
-        self.resting.localScale = Vector3.zero
-        local workTime = PlayerBuildingBaseData[self.staffData.buildingTypeId].workTime
-        if #workTime == 0 then
-            return
-        end
-        if #workTime == 1 then
-            self.workingTimeText.transform.localScale = Vector3.one
-            self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(workTime[1][1]), self:_getTimeFormat(workTime[1][2]))
-        else
-            self.workingTimeText.transform.localScale = Vector3.one
-            --
-            for i, timeData in pairs(workTime) do
-                local temp = timeData[1] + timeData[2]
-                if tonumber(timeTable.hour) >= timeData[1] and tonumber(timeTable.hour) < temp then  --在工作时间内
-                    self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(timeData[1]), self:_getTimeFormat(temp))
-                    return
-                end
+        local timeTable = getFormatUnixTime(os.time())
+        local time = timeTable.year..timeTable.month..timeTable.day
+        if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
+            self.working.localScale = Vector3.one
+            self.resting.localScale = Vector3.zero
+            local workTime = PlayerBuildingBaseData[self.staffData.buildingTypeId].workTime
+            if #workTime == 0 then
+                return
             end
+            if #workTime == 1 then
+                self.workingTimeText.transform.localScale = Vector3.one
+                self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(workTime[1][1]), self:_getTimeFormat(workTime[1][2]))
+            else
+                self.workingTimeText.transform.localScale = Vector3.one
+                --
+                for i, timeData in pairs(workTime) do
+                    local temp = timeData[1] + timeData[2]
+                    if tonumber(timeTable.hour) >= timeData[1] and tonumber(timeTable.hour) < temp then  --在工作时间内
+                        self.workingTimeText.text = string.format("%s:00-%s:00", self:_getTimeFormat(timeData[1]), self:_getTimeFormat(temp))
+                        return
+                    end
+                end
+                self.working.localScale = Vector3.zero
+                self.resting.localScale = Vector3.one
+                self.restingTimeText.transform.localScale = Vector3.zero
+            end
+        else
             self.working.localScale = Vector3.zero
             self.resting.localScale = Vector3.one
             self.restingTimeText.transform.localScale = Vector3.zero
         end
-    else
-        self.working.localScale = Vector3.zero
-        self.resting.localScale = Vector3.one
-        self.restingTimeText.transform.localScale = Vector3.zero
-    end
-
     end
 end
 

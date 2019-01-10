@@ -65,21 +65,21 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
+    if blockID == nil then
+        return
+    end
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     if nodeID == nil then
         nodeID = -1
     end
-    if  BuildDataStack[collectionID] == nil then
+    if nil == BuildDataStack[collectionID] then
         BuildDataStack[collectionID] = {}
     end
-    if BuildDataStack[collectionID].BlockDatas == nil then
-        BuildDataStack[collectionID].BlockDatas = {}
+    if  BuildDataStack[collectionID].BlockDatas == nil then
+    --初始化地块集合
+        CreateBlockDataTable(collectionID)
     end
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    --[[
-    if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
-        BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    end--]]
 end
 
 --刷新原子地块集合的基本信息
@@ -299,8 +299,22 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
     end
     --删除所有地块建筑覆盖信息（BlockDatas）
     if BuildDataStack[tempCollectionID].BlockDatas ~= nil then
-        --其实无意义，此句可删除
-        BuildDataStack[tempCollectionID].BlockDatas = nil
+        local isClearBlock = true
+        --计算需要删除的地块里面有没有跨地块的建筑，如果有-->BaseBlockData不删除
+        for key, value in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
+            --判断是否有建筑跨地块
+            if value ~= -1 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
+                --需要判断该建筑是否在AOI范围内
+                local attributeCollectionID = TerrainManager.BlockIDTurnCollectionID(value)
+                if TerrainManager.IsBelongToCameraCollectionIDAOIList(attributeCollectionID)  then
+                    isClearBlock = false
+                    break
+                end
+            end
+        end
+        if isClearBlock then
+            BuildDataStack[tempCollectionID].BlockDatas = nil
+        end
     end
     --删除所有道路信息数据（RoteDatas）
     DataManager.RemoveWaysByCollectionID(tempCollectionID)
@@ -309,7 +323,6 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
             value:Close()
         end
-        --其实无意义，此句可删除
         BuildDataStack[tempCollectionID].GroundDatas = nil
     end
     --删除所有基础数据BaseBuildModel（BaseBuildDatas）
@@ -317,11 +330,10 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
             value:Close()
         end
-        --其实无意义，此句可删除
         BuildDataStack[tempCollectionID].BaseBuildDatas = nil
     end
-    --清空这个节点（这个才有意义）
-    BuildDataStack[tempCollectionID] = nil
+    --清空这个节点
+    --BuildDataStack[tempCollectionID] = nil
 end
 
 --获取建筑基础数据

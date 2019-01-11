@@ -277,11 +277,12 @@ function WareHouseGoodsMgr:TransportConfirm()
             n = n + 1
         end
     end
-    
-    if n>0 and OnClick then
-        CenterWareHousePanel.transportConfirm:SetActive(false);
-    else
-        CenterWareHousePanel.transportConfirm:SetActive(true)
+    if CenterWareHousePanel.transportConfirm ~= nil then
+        if n>0 and OnClick then
+            CenterWareHousePanel.transportConfirm:SetActive(false);
+        else
+            CenterWareHousePanel.transportConfirm:SetActive(true)
+        end
     end
 end
 

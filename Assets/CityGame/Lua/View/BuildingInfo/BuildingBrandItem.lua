@@ -54,7 +54,6 @@ end
 
 --刷新数据
 function BuildingBrandItem:updateInfo(data)
-    if self.rentalData.buildingId ~= data.id then
-        return
-    end
+    self.data = data
+    self:_initTopInfo()
 end

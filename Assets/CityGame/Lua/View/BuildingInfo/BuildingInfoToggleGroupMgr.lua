@@ -79,7 +79,7 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
     end
 
     --创建完之后调整item位置
-    self:_sortItems(1,1)
+    self:_sortItems(1, 1)
     --self:_sortRightItems()
 end
 --刷新数据
@@ -111,6 +111,7 @@ function BuildingInfoToggleGroupMgr:cleanItems()
     for i, item in ipairs(self.middleData) do
         item = nil
     end
+    self.brandItem = nil
 end
 
 --每次打开一个Item，都要刷新位置

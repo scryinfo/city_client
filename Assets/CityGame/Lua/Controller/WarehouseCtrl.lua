@@ -200,9 +200,37 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     if not GoodsUnifyMgr.transportPanelItem then
         return;
     end
+    local btransportListing = {}
+    btransportListing.currentLocationName = MaterialPanel.nameText.text.."仓库"
+    btransportListing.targetLocationName = ChooseWarehouseCtrl:GetName().."仓库"
+    local pos = {}
+    pos.x = go.m_data.info.pos.x
+    pos.y = go.m_data.info.pos.y
+    btransportListing.distance = ChooseWarehouseCtrl:GetDistance(pos)
+    local number = 0
     for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
-        Event.Brocast("m_ReqTransport",go.m_data.info.id,ServerListModel.bagId,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+        number = number + v.numberScrollbar.value
     end
+    btransportListing.number = number
+    btransportListing.freight = number * btransportListing.distance * BagPosInfo[1].postageCost
+    btransportListing.total = number * btransportListing.distance * BagPosInfo[1].postageCost
+    btransportListing.capacity = ChooseWarehouseCtrl:GetCapacity()
+    if number > btransportListing.capacity then
+        Event.Brocast("SmallPop","所选建筑仓库容量不足",300)
+        return
+    end
+    btransportListing.btnClick = function ()
+        if number == 0 then
+            Event.Brocast("SmallPop","运输商品个数不能为0",300)
+            return
+        else
+            for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
+                Event.Brocast("c_Transport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                --Event.Brocast("m_ReqTransport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+            end
+        end
+    end
+    ct.OpenCtrl("TransportBoxCtrl",btransportListing);
 end
 --运输回调执行
 function WarehouseCtrl:n_transports(Data)
@@ -216,13 +244,15 @@ function WarehouseCtrl:n_transports(Data)
                    self:isShowDetermineBtn()
                 end
             else
-                v.numberText.text = v.goodsDataInfo.num - Data.item.n;
-                v.goodsDataInfo.num = v.numberText.text
+                v.numberText.text = v.goodsDataInfo.n - Data.item.n;
+                v.goodsDataInfo.n = v.numberText.text
                 for i in pairs(WarehouseCtrl.temporaryItems) do
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
             end
         end
+        WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
+        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     end
 end
 --刷新运输确定按钮

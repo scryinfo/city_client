@@ -42,6 +42,7 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
+    self.insId = OpenModelInsID.ChooseWarehouseCtrl
     chooseWarehouse = self.gameObject:GetComponent('LuaBehaviour');
     self.gameObject = go;
     self:_addListener()
@@ -91,7 +92,7 @@ end
 
 --获取好友信息
 function ChooseWarehouseCtrl:GetMyFriendsInfo(friendsIds)
-    DataManager.DetailModelRpcNoRet(8, 'm_GetMyFriendsInfo',friendsIds)--获取好友信息
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetMyFriendsInfo',friendsIds)--获取好友信息
 end
 
 --生成好友列表
@@ -101,7 +102,7 @@ function ChooseWarehouseCtrl:_creatAddressList()
 end
 
 function ChooseWarehouseCtrl:initInsData()
-    DataManager.OpenDetailModel(ChooseWarehouseModel,8)
+    DataManager.OpenDetailModel(ChooseWarehouseModel,self.insId )
 end
 
 
@@ -136,7 +137,7 @@ function ChooseWarehouseCtrl:c_OnAddressListBG(go)
     self.onClick = true
     if go.onClick then
         WareHouseGoodsMgr:_deleteLinePanel()
-        DataManager.DetailModelRpcNoRet(8, 'm_QueryPlayerBuildings',go.id)--查询玩家建筑详情
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_QueryPlayerBuildings',go.id)--查询玩家建筑详情
         ChooseWarehousePanel.boxImg:SetActive(false)
         go.manager:SelectBox(go)
     end

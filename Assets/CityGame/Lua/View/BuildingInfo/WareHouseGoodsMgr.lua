@@ -167,8 +167,9 @@ function WareHouseGoodsMgr:_deleteTspGoods(id)
         UpdateBeat:Remove(self._update, self);
     end
     self.items[id].select_while:SetActive(true);
-    destroy(self.allTspItem[id].prefab.gameObject);
+    destroy(self.allTspItem[id].prefab);
    self.allTspItem[id] = nil;
+    WareHouseGoodsMgr:TransportConfirm()
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
@@ -259,19 +260,28 @@ end
 
 --显示运输按钮使其可以点击
 function WareHouseGoodsMgr:TransportConfirm()
---[[    local isTransport = false
-    if self.allTspItem == nil then
-        return
-    end
-    for i, v in pairs(self.allTspItem) do
-        if v.inputText.text == "0" then
-            isTransport = false
-        else
-            isTransport = true
+    --[[    local isTransport = false
+        if self.allTspItem == nil then
+            return
         end
-    end]]
-    if CenterWareHousePanel.tspContent.childCount>=1 and OnClick then
+        for i, v in pairs(self.allTspItem) do
+            if v.inputText.text == "0" then
+                isTransport = false
+            else
+                isTransport = true
+            end
+        end]]
+    local n = 0
+    if self.allTspItem ~= nil then
+        for i, v in pairs(self.allTspItem) do
+            n = n + 1
+        end
+    end
+    
+    if n>0 and OnClick then
         CenterWareHousePanel.transportConfirm:SetActive(false);
+    else
+        CenterWareHousePanel.transportConfirm:SetActive(true)
     end
 end
 

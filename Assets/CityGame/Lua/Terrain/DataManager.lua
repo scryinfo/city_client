@@ -476,39 +476,37 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
-            if protoData then
-                local protoID = nil
+            local protoID = nil
+            if protoData ~= nil then
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
                 elseif protoData.buildingId then
                     protoID = protoData.buildingId
                 end
-                if protoID ~= nil then--服务器返回的数据有唯一ID
-                    for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
-                        if key == protoID then
-                            for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
-                                if BuildDataStack.DetailModelStack[protoID] then
-                                    func(BuildDataStack.DetailModelStack[protoID],protoData)
-                                else
-                                    func(protoData)
-                                end
-                            end
-                            return
-                        end
-                    end
-                else--服务器返回的数据没有唯一ID
-                    if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                        for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
-                            if funcTable.self ~= nil then
-                                funcTable.func(funcTable.self,protoData)
+            end
+            if protoID ~= nil then--服务器返回的数据有唯一ID
+                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                    if key == protoID then
+                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
+                            if BuildDataStack.DetailModelStack[protoID] then
+                                func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
-                                funcTable.func(protoData)
+                                func(protoData)
                             end
+                        end
+                        return
+                    end
+                end
+            else--服务器返回的数据没有唯一ID
+                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                        if funcTable.self ~= nil then
+                            funcTable.func(funcTable.self,protoData)
+                        else
+                            funcTable.func(protoData)
                         end
                     end
                 end
-            else
-                ct.log("System","解析服务器返回的建筑详情中数据失败")
             end
             ct.log("System","没有找到对应的建筑详情Model类的回调函数")
         end)

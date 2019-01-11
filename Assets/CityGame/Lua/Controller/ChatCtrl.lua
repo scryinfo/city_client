@@ -77,7 +77,12 @@ end
 -- 刷新
 function ChatCtrl:Refresh()
     ct.log("tina_w9_friends", "ChatCtrl:Refresh")
+    self:initInsData()
     self:_addListener()
+end
+
+function ChatCtrl:initInsData()
+    DataManager.OpenDetailModel(ChatModel, OpenModelInsID.ChatCtrl)
 end
 
 function ChatCtrl:Close()
@@ -482,8 +487,6 @@ function ChatCtrl:OnShowPersonalInfo(go)
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
     end
 end
-
-
 
 -- 删除聊天记录
 function ChatCtrl:OnDeleteChatRecords(go)

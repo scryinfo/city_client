@@ -15,13 +15,17 @@ function ChooseWarehouseModel:OnCreate()
 
     --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     --网络回调
-    -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerBuildings"),ChooseWarehouseModel.n_OnQueryPlayerBuildings);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerBuildings"),ChooseWarehouseModel.n_OnQueryPlayerBuildings);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),ChooseWarehouseModel.n_OnDetailMaterialFactory);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailProduceDepartment"),ChooseWarehouseModel.n_OnDetailProduceDepartment);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailRetailShop"),ChooseWarehouseModel.n_OnDetailRetailShop);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailLaboratory"),ChooseWarehouseModel.n_OnDetailLaboratory);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerBuildings","gs.BuildingInfos",self.n_OnQueryPlayerBuildings,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnDetailMaterialFactory,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnDetailProduceDepartment,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnDetailLaboratory,self)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerBuildings"),ChooseWarehouseModel.n_OnQueryPlayerBuildings);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerBuildings"),ChooseWarehouseModel.n_OnQueryPlayerBuildings);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),ChooseWarehouseModel.n_OnDetailMaterialFactory);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailProduceDepartment"),ChooseWarehouseModel.n_OnDetailProduceDepartment);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailRetailShop"),ChooseWarehouseModel.n_OnDetailRetailShop);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailLaboratory"),ChooseWarehouseModel.n_OnDetailLaboratory);
 
 end
 
@@ -60,15 +64,15 @@ end
 
 --服务器回调--
 --获取玩家建筑回调
-function ChooseWarehouseModel.n_OnQueryPlayerBuildings(stream)
+function ChooseWarehouseModel:n_OnQueryPlayerBuildings(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllMails',stream)
-    local lMsg = assert(pbl.decode("gs.BuildingInfos", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+   -- local lMsg = assert(pbl.decode("gs.BuildingInfos", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     ChooseWarehouseModel:m_DetailBuilding(lMsg.info)
     --Event.Brocast("c_OnQueryPlayerBuildings",lMsg.info)
 end
 
-function ChooseWarehouseModel.n_OnDetailMaterialFactory(stream)
-    local lMsg = assert(pbl.decode("gs.MaterialFactory", stream))
+function ChooseWarehouseModel:n_OnDetailMaterialFactory(lMsg)
+    --local lMsg = assert(pbl.decode("gs.MaterialFactory", stream))
     local detailInfo = {} --好友建筑详情
     local i = 1
     detailInfo[i] = lMsg
@@ -76,8 +80,8 @@ function ChooseWarehouseModel.n_OnDetailMaterialFactory(stream)
         Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
-function ChooseWarehouseModel.n_OnDetailProduceDepartment(stream)
-    local lMsg = assert(pbl.decode("gs.ProduceDepartment", stream))
+function ChooseWarehouseModel:n_OnDetailProduceDepartment(lMsg)
+    --local lMsg = assert(pbl.decode("gs.ProduceDepartment", stream))
     local detailInfo = {} --好友建筑详情
     local i = 1
     detailInfo[i] = lMsg
@@ -85,8 +89,8 @@ function ChooseWarehouseModel.n_OnDetailProduceDepartment(stream)
         Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
-function ChooseWarehouseModel.n_OnDetailRetailShop(stream)
-    local lMsg = assert(pbl.decode("gs.RetailShop", stream))
+function ChooseWarehouseModel:n_OnDetailRetailShop(lMsg)
+    --local lMsg = assert(pbl.decode("gs.RetailShop", stream))
     local detailInfo = {} --好友建筑详情
     local i = 1
     detailInfo[i] = lMsg
@@ -94,8 +98,8 @@ function ChooseWarehouseModel.n_OnDetailRetailShop(stream)
         Event.Brocast("c_OnCreatFriendsLinePanel",detailInfo)
     end
 end
-function ChooseWarehouseModel.n_OnDetailLaboratory(stream)
-    local lMsg = assert(pbl.decode("gs.Laboratory", stream))
+function ChooseWarehouseModel:n_OnDetailLaboratory(lMsg)
+    --local lMsg = assert(pbl.decode("gs.Laboratory", stream))
     local detailInfo = {} --好友建筑详情
     local i = 1
     detailInfo[i] = lMsg

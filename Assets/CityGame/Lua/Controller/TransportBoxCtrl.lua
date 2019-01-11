@@ -36,7 +36,7 @@ function TransportBoxCtrl:refreshUiInfo()
         TransportBoxPanel.goodsObj.localScale = Vector3.zero
         TransportBoxPanel.transportObj.localScale = Vector3.zero
         TransportBoxPanel.transportsObj.localScale = Vector3.one
-        TransportBoxPanel.transportMoney.text = self.m_data.freight
+        TransportBoxPanel.transportsMoney.text =  "E"..math.floor(self.m_data.freight)..".0000";
     else
         TransportBoxPanel.goodsObj.localScale = Vector3.one
         TransportBoxPanel.transportObj.localScale = Vector3.one

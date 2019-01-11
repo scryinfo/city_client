@@ -12,7 +12,7 @@ function NoticeMgr:initialize()
 
 end
 
---创建商品
+--创建郵件
 function NoticeMgr:_createNotice(insluabehaviour,MailsData)
     self.behaviour = insluabehaviour
     --测试数据
@@ -44,6 +44,14 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         NoticeMgr.notice[v.id] = self.notice[v.id]
         --self.items  存的是Lua实例
     end
+end
+
+--清空邮件
+function NoticeMgr:_dleNotice()
+    for i, v in pairs(self.notice) do
+        destroy(v.prefab.gameObject)
+    end
+    self.notice = {}
 end
 
 --生成预制

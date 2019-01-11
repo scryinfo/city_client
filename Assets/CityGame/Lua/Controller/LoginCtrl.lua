@@ -21,6 +21,7 @@ end
 function LoginCtrl:Awake(go)
 	ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
 	self.gameObject = go
+	self.insId = OpenModelInsID.LoginCtrl
 end
 
 function LoginCtrl:Refresh()
@@ -32,7 +33,7 @@ function LoginCtrl:Refresh()
 end
 
 function LoginCtrl:_initData()
-	DataManager.OpenDetailModel(LoginModel,1)
+	DataManager.OpenDetailModel(LoginModel,self.insId)
 end
 --启动事件--
 function LoginCtrl:OnCreate(go)

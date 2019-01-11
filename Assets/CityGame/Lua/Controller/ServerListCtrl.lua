@@ -20,12 +20,16 @@ function ServerListCtrl:initialize()
     --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
+function ServerListCtrl:Awake()
+    self.insId = OpenModelInsID.ServerListCtrl
+end
+
 function ServerListCtrl:Refresh()
     self:_initInsData()
 end
 
 function ServerListCtrl:_initInsData()
-    DataManager.OpenDetailModel(ServerListModel,2)
+    DataManager.OpenDetailModel(ServerListModel,self.insId )
 
 end
 
@@ -76,7 +80,7 @@ function ServerListCtrl:c_OnOK(go)
     local data = {}
     data.Index = Index
     data.serinofs = go.data
-    DataManager.DetailModelRpcNoRet(2, 'm_chooseGameServer',data)
+    DataManager.DetailModelRpcNoRet(go.insId , 'm_chooseGameServer',data)
 end
 
 function ServerListCtrl:c_GsCreateRole()

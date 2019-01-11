@@ -16,29 +16,18 @@ end
 function LoginModel:OnCreate()
     --注册本地UI事件
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
-   -- Event.AddListener("m_Gslogin", this.m_Gslogin);
-    --Event.AddListener("m_chooseGameServer", this.m_chooseGameServer);
     Event.AddListener("m_onConnectionState", self.m_onConnectionState);
     Event.AddListener("m_onDisconnect", self.m_onDisconnect);
     --注册 AccountServer 消息
-   -- DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","login","as.Login",self.n_AsLogin)--新版model网络注册
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),ServerListModel.n_AllGameServerInfo);
-   -- DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","getServerList","as.AllGameServerInfo",self.n_AllGameServerInfo)
-    LoginModel.registerAsNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",self.n_AsLogin,self)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","getServerList","as.AllGameServerInfo",self.n_AllGameServerInfo,self)
 end
 --关闭事件--
 function LoginModel.Close()
     --清空本地UI事件
     Event.RemoveListener("m_OnAsLogin", self.OnLogin);
-   -- Event.RemoveListener("m_Gslogin", this.m_Gslogin);
-    --Event.RemoveListener("m_chooseGameServer", this.m_chooseGameServer);
     Event.RemoveListener("m_onConnectionState", self.m_onConnectionState);
     Event.RemoveListener("m_onDisconnect", self.m_onDisconnect);
-end
-function LoginModel.registerAsNetMsg()
-    --as网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","login"),LoginModel.n_AsLogin);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","getServerList"),LoginModel.n_AllGameServerInfo);
 end
 
 --点击登录
@@ -50,8 +39,8 @@ function LoginModel.m_OnAsLogin( username, password, data )
 end
 
 --返回服务器列表回调
-function LoginModel.n_AllGameServerInfo( stream )
-    local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
+function LoginModel:n_AllGameServerInfo( msgAllGameServerInfo )
+    --local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     if #msgAllGameServerInfo.infos ~= 0 then
         local serinofs = msgAllGameServerInfo.infos
         ct.OpenCtrl("ServerListCtrl", serinofs)

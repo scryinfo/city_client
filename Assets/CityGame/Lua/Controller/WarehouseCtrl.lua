@@ -53,26 +53,32 @@ function WarehouseCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
-end
-function WarehouseCtrl:Refresh()
     --初始化物品上架还是运输
     self.operation = nil;
-
+end
+function WarehouseCtrl:Refresh()
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     self.store = self.m_data.store
     self.store.type = BuildingInType.Warehouse
     self.luabehaviour = warehouse
     WarehouseCtrl.playerId = self.m_data.info.id
-
-    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
     local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.value = numText;
     WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    self:isShowDetermineBtn()
+    if WarehousePanel.Content.childCount <= 0 then
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
+    else
+        return
+    end
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     go:deleteObjInfo()
     UIPage.ClosePage();
+    if switchIsShow then
+        go:OnClick_rightInfo(not switchIsShow,1)
+    end
 end
 function WarehouseCtrl:Hide()
     UIPage.Hide(self)
@@ -90,6 +96,7 @@ function WarehouseCtrl:_selectedGoods(insData)
             self.GoodsUnifyMgr:_creatShelfGoods(insData,self.luabehaviour)
         elseif self.operation == ct.goodsState.transport then
             self.GoodsUnifyMgr:_creatTransportGoods(insData,self.luabehaviour)
+            self:isShowDetermineBtn()
         end
         self.GoodsUnifyMgr.warehouseLuaTab[insData.id].circleTickImg.transform.localScale = Vector3.one
     else
@@ -99,6 +106,7 @@ function WarehouseCtrl:_selectedGoods(insData)
             self.GoodsUnifyMgr:_deleteShelfItem(insData.id);
         elseif self.operation == ct.goodsState.transport then
             self.GoodsUnifyMgr:_deleteTransportItem(insData.id);
+            self:isShowDetermineBtn()
         end
     end
 end
@@ -110,6 +118,7 @@ function WarehouseCtrl:c_temporaryifNotGoods(id)
         self.GoodsUnifyMgr:_deleteShelfItem(id);
     elseif self.operation == ct.goodsState.transport then
         self.GoodsUnifyMgr:_deleteTransportItem(id);
+        self:isShowDetermineBtn()
     end
 end
 --获取仓库总数量
@@ -149,8 +158,13 @@ function WarehouseCtrl:OnClick_OnNumber(ins)
 end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(go)
-    go:deleteObjInfo()
-    ct.OpenCtrl("ChooseWarehouseCtrl")
+    --go:deleteObjInfo()
+    local data = {}
+    data.pos = {}
+    data.pos.x = go.m_data.info.pos.x
+    data.pos.y = go.m_data.info.pos.y
+    data.nameText = WarehousePanel.nameText
+    ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --确定上架
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
@@ -183,13 +197,11 @@ function WarehouseCtrl:n_shelfAdd(msg)
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
-    if not go.GoodsUnifyMgr.transportPanelItem then
+    if not GoodsUnifyMgr.transportPanelItem then
         return;
     end
-    --local targetBuildingId = DataManager.GetMyOwnerID()
-    for i,v in pairs(go.GoodsUnifyMgr.transportPanelItem) do
+    for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
         Event.Brocast("m_ReqTransport",go.m_data.info.id,ServerListModel.bagId,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-    --    Event.Brocast("c_Transport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.producerId,v.qty)
     end
 end
 --运输回调执行
@@ -201,6 +213,7 @@ function WarehouseCtrl:n_transports(Data)
                 self.GoodsUnifyMgr:_WarehousedeleteGoods(i)
                 for i,v in pairs(WarehouseCtrl.temporaryItems) do
                    self.GoodsUnifyMgr:_deleteTransportItem(v)
+                   self:isShowDetermineBtn()
                 end
             else
                 v.numberText.text = v.goodsDataInfo.num - Data.item.n;
@@ -210,6 +223,26 @@ function WarehouseCtrl:n_transports(Data)
                 end
             end
         end
+    end
+end
+--刷新运输确定按钮
+function WarehouseCtrl:isShowDetermineBtn()
+    if not self.GoodsUnifyMgr then
+        return
+    end
+    if not self.GoodsUnifyMgr.transportPanelItem then
+        return
+    end
+    local num = 0
+    for i,v in pairs(self.GoodsUnifyMgr.transportPanelItem) do
+        num = num + i
+    end
+    if num ~= 0 and WarehousePanel.nameText.text ~= "请选择仓库" then
+        WarehousePanel.transportConfirmBtn.localScale = Vector3.one
+        WarehousePanel.transportUncheckBtn.localScale = Vector3.zero
+    else
+        WarehousePanel.transportConfirmBtn.localScale = Vector3.zero
+        WarehousePanel.transportUncheckBtn.localScale = Vector3.one
     end
 end
 function WarehouseCtrl:OnClick_OnSorting(ins)
@@ -235,6 +268,9 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             self.operation = ct.goodsState.shelf;
         else
             WarehousePanel.transport:SetActive(true);
+            WarehousePanel.nameText.text = "请选择仓库"
+            WarehousePanel.transportUncheckBtn.localScale = Vector3.one
+            WarehousePanel.transportConfirmBtn.localScale = Vector3.zero
             self.operation = ct.goodsState.transport;
         end
         if self.GoodsUnifyMgr.warehouseLuaTab ~= nil then
@@ -251,6 +287,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             self.operation = nil;
         else
             WarehousePanel.transport:SetActive(false);
+            WarehousePanel.nameText.text = "请选择仓库"
             for i in pairs(WarehouseCtrl.temporaryItems) do
                 Event.Brocast("c_temporaryifNotGoods", i)
             end

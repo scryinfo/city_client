@@ -134,15 +134,15 @@ function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
     local transportLuaItem = TransportItem:new(id.goodsDataInfo,prefabData._prefab,luabehaviour,self,id.id,id.itemId);
 
-    if not self.transportPanelItem then
-        self.transportPanelItem = {}
+    if not GoodsUnifyMgr.transportPanelItem then
+        GoodsUnifyMgr.transportPanelItem = {}
     end
-    self.transportPanelItem[id.id] = transportLuaItem
+    GoodsUnifyMgr.transportPanelItem[id.id] = transportLuaItem
 end
 --仓库右侧删除运输
 function GoodsUnifyMgr:_deleteTransportItem(id)
-    destroy(self.transportPanelItem[id].prefab.gameObject);
-    self.transportPanelItem[id] = nil;
+    destroy(GoodsUnifyMgr.transportPanelItem[id].prefab.gameObject);
+    GoodsUnifyMgr.transportPanelItem[id] = nil;
     WarehouseCtrl.temporaryItems[id] = nil;
 end
 --货架购买暂用这个(后边修改物品上架，运输，购买)

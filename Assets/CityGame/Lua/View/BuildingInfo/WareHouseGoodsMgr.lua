@@ -259,22 +259,44 @@ end
 
 --显示运输按钮使其可以点击
 function WareHouseGoodsMgr:TransportConfirm()
---[[    local isTransport = false
-    if self.allTspItem == nil then
-        return
-    end
-    for i, v in pairs(self.allTspItem) do
-        if v.inputText.text == "0" then
-            isTransport = false
-        else
-            isTransport = true
+    --[[    local isTransport = false
+        if self.allTspItem == nil then
+            return
         end
-    end]]
-    if CenterWareHousePanel.tspContent.childCount>=1 and OnClick then
-        CenterWareHousePanel.transportConfirm:SetActive(false);
-    end
-end
+        for i, v in pairs(self.allTspItem) do
+            if v.inputText.text == "0" then
+                isTransport = false
+            else
+                isTransport = true
+            end
+        end]]
 
+    local n = 0
+    if self.allTspItem ~= nil then
+        for i, v in pairs(self.allTspItem) do
+            n = n + 1
+        end
+    end
+    if CenterWareHousePanel.transportConfirm ~= nil then
+        if n>0 and OnClick then
+            CenterWareHousePanel.transportConfirm:SetActive(false);
+        else
+            CenterWareHousePanel.transportConfirm:SetActive(true)
+        end
+    end
+
+    --if CenterWareHousePanel.tspContent ~= nil then
+    --    if CenterWareHousePanel.tspContent.childCount>= 1 and OnClick then
+    --        CenterWareHousePanel.transportConfirm:SetActive(false);
+    --    end
+    --end
+    --if WarehousePanel.transportContent ~= nil then
+    --    if WarehousePanel.transportContent.childCount >= 1 and OnClick then
+    --        WarehousePanel.transportUncheckBtn.localScale = Vector3.zero
+    --        WarehousePanel.transportConfirmBtn.localScale = Vector3.one
+    --    end
+    --end
+end
 --改变点击状态
 function WareHouseGoodsMgr:_onClick()
     OnClick = true

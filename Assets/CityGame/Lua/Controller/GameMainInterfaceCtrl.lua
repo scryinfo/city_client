@@ -20,14 +20,12 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
 
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.exchangeButton.gameObject,self.OnExchange,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.houseButton.gameObject,self.OnHouse,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rawMaterialFactory.gameObject,self.OnRawMaterialFactory,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
@@ -96,20 +94,41 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Awake()
-
+    local info = DataManager.GetMyPersonalHomepageInfo()
+    self.name = info.name
+    self.gender = info.male
+    local gold = DataManager.GetMoney()
+    self.money = getPriceString("E"..gold..".0000",24,20)
 end
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model
-     Mails = nil
+    Mails = nil
     self:initInsData()
     self:_showFriendsNotice()
     self:_showWorldChatNoticeItem()
 end
 
 function GameMainInterfaceCtrl:initInsData()
-        DataManager.OpenDetailModel(GameMainInterfaceModel,4)
-        DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
+    DataManager.OpenDetailModel(GameMainInterfaceModel,4)
+    DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
+    --初始化姓名,性别,金币
+    GameMainInterfacePanel.name.text = self.name
+    GameMainInterfacePanel.money.text = self.money
+    UpdateBeat:Add(self._update, self);
+
+    if self.gender then
+        GameMainInterfacePanel.male.localScale = Vector3.one
+        GameMainInterfacePanel.woman.localScale = Vector3.zero
+    else
+        GameMainInterfacePanel.male.localScale = Vector3.zero
+        GameMainInterfacePanel.woman.localScale = Vector3.one
+    end
+end
+
+function GameMainInterfaceCtrl:_update()
+    GameMainInterfacePanel.time.text = os.date("%H:%M");
+    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a");
 end
 
 --获取所有邮件
@@ -129,9 +148,18 @@ function GameMainInterfaceCtrl:c_AllMails(DataInfo)
         end
     end
 end
+
+--点击头像
+function GameMainInterfaceCtrl:OnHead()
+   local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
+
+end
+
 --通知--
 
 function GameMainInterfaceCtrl.OnNotice(go)
+    GameMainInterfaceCtrl:RemoveUpdata()
 --[[    if  NoticeMgr.notice ~= nil then
         if  #NoticeMgr.notice == 0 then
             ct.OpenCtrl("NoMessageCtrl")
@@ -155,7 +183,7 @@ end
 
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
-    ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
@@ -223,54 +251,40 @@ end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
-    ct.log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
-    ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
     CameraMove.ChangeCameraState(TouchStateType.ConstructState)
 end
 
---交易所--
-function GameMainInterfaceCtrl.OnExchange()
-    ct.log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
-    --UIPage:ShowPage(ExchangeCtrl)
-    ct.OpenCtrl('ExchangeCtrl')
-end
-
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
-    ct.log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData.info.id)
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    --ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
-    ----UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    --Event.Brocast('m_ReqOpenMaterial',buildingId)
-    --ct.OpenCtrl('MaterialCtrl')
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ScienceSellHallCtrl")
 
 end
 
---加工厂--
-function GameMainInterfaceCtrl.OnSourceMill()
-    --ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
-    --local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
-    --Event.Brocast('m_ReqOpenProcessing',buildingId)
-    --ct.OpenCtrl('ProcessingCtrl')
+--指南书--
+function GameMainInterfaceCtrl.OnGuideBool()
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
 --广告设施
 function GameMainInterfaceCtrl:OnAdvertisFacilitie()
-    ct.log("rodger_w8_GameMainInterface","[test_OnAdvertisFacilitie]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("MunicipalCtrl")
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
@@ -278,7 +292,15 @@ end
 --中心仓库
 function GameMainInterfaceCtrl:OncenterWareHouse()
     --Event.Brocast("m_opCenterWareHouse")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
+end
+
+--关闭updata
+function GameMainInterfaceCtrl:RemoveUpdata()
+    if UpdateBeat then
+        UpdateBeat:Remove(self._update, self);
+    end
 end
 
 

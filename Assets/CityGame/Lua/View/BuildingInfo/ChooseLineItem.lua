@@ -8,14 +8,12 @@ require('Framework/UI/UIPage')
 ChooseLineItem = class('ChooseLineItem')
 
 --初始化方法   数据（读配置表）
-function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
+function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.prefab = prefab;
     self.buildingId = DataInfo.info.id;
-    self._luabehaviour = inluabehaviour;
     self.manager = mgr;
     self.posX =  DataInfo.info.pos.x
     self.posY =  DataInfo.info.pos.y
-    self._luabehaviour = inluabehaviour;
     self.manager = mgr;
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
@@ -34,9 +32,9 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.sizeName =  self.size.text..self.name.text
 
     local distances
-    distances = math.sqrt(math.pow((BagPosInfo[1].bagX-self.posX),2)+math.pow((BagPosInfo[1].bagY-self.posY),2))
+    distances = math.sqrt(math.pow((pos.x-self.posX),2)+math.pow((pos.y-self.posY),2))
     self.distance.text = math.floor(distances).."km"
-    local moneys = tonumber(CenterWareHousePanel.tipText.text) * distances * BagPosInfo[1].postageCost
+    local moneys = distances * BagPosInfo[1].postageCost
     self.money.text = "E"..math.floor(moneys)..".0000"
 
     self.price = moneys
@@ -69,17 +67,9 @@ function ChooseLineItem:initialize(prefab,inluabehaviour,mgr,DataInfo)
     self.bg.onClick:AddListener(function()
         self:OnLinePanelBG(self);
     end)
-
-    --self._luabehaviour:AddClick(self.bg,self.OnLinePanelBG,self)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
-    Event.Brocast("c_OnLinePanelBG",go.buildingId)
-    if go.spareCapacity <  tonumber(CenterWareHousePanel.tipText.text) then
-        Event.Brocast("SmallPop","仓库容量不足",300)
-        return
-    end
-    CenterWareHousePanel.nameText.text = go.sizeName
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输
     go.manager:_onClick()
@@ -90,6 +80,7 @@ function ChooseLineItem:OnLinePanelBG(go)
     data.posX = go.posX
     data.posY = go.posY
     data.name =  go.size.text .. go.name.text
+    data.spareCapacity = go.spareCapacity
     Event.Brocast("c_OnLinePanelBG",data)
     ChooseWarehouseCtrl:OnClick_returnBtn()
 end

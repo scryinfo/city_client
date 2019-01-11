@@ -34,17 +34,15 @@ function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
     Event.AddListener("c_HideGroundBubble", self._hideAllItems, self)
     Event.AddListener("c_ShowGroundBubble", self._showAllItems, self)
-    Event.AddListener("c_UIBubbleLateUpdate", self._cameraLateUpdate, self)
 end
 function UIBubbleCtrl:_removeListener()
     Event.RemoveListener("c_RefreshItems", self._refreshItems, self)
     Event.RemoveListener("c_HideGroundBubble", self._hideAllItems, self)
     Event.RemoveListener("c_ShowGroundBubble", self._showAllItems, self)
-    Event.RemoveListener("c_UIBubbleLateUpdate", self._cameraLateUpdate, self)
 end
 
-function UIBubbleCtrl:_cameraLateUpdate()
-    if UIBubbleCtrl.startFlowCam == false then
+function UIBubbleCtrl._cameraLateUpdate()
+    if UIBubbleCtrl.startFlowCam == nil or UIBubbleCtrl.startFlowCam == false then
         return
     end
     Event.Brocast("c_RefreshLateUpdate")

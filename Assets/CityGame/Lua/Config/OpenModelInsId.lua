@@ -11,4 +11,6 @@ OpenModelInsID = {
     ["CenterWareHouseCtrl"] = 5,
     ["ChooseWarehouseCtrl"] = 6,
     ["GameNoticeCtrl"] = 7,
+    ["ChatCtrl"] = 8,
+    ["FriendsCtrl"] = 9,
 }

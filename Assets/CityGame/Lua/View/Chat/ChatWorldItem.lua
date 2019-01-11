@@ -5,26 +5,27 @@
 ---
 
 ChatWorldItem = class('ChatWorldItem')
+ChatWorldItem.static.NAME_COLOR = "#8EADFF"  -- 名字的颜色
+ChatWorldItem.static.MSG_COLOR = "#F0F0F0"  -- 聊天内容的颜色
 
 -- 初始化
 function ChatWorldItem:initialize(prefab, data)
     self.prefab = prefab
     self.data = data
-    self.data.itemId = itemId
 
     local transform = prefab.transform
-    -- 说话人的名字
-    self.nameText = transform:Find("NameImage/NameText"):GetComponent("Text")
     -- 聊天的内容
     self.chatText = transform:Find("ChatText"):GetComponent("Text")
-    self.nameText.text = self.data.name
-    self.chatText.text = self.data.msg
+    self.chatText.text = string.format("<color=%s><b>[%s]:</b></color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
 
-    local chatTextPreferredWidth = self.chatText.preferredWidth
-    if chatTextPreferredWidth > 345 then
-        local chatTextPreferredHeight = self.chatText.preferredHeight
-        self.chatText.transform.sizeDelta = Vector2.New(345, chatTextPreferredHeight)
-    else
-        self.chatText.transform.sizeDelta = Vector2.New(345, 18)
-    end
+    local chatTextPreferredHeight = self.chatText.preferredHeight
+    transform.sizeDelta = Vector2.New(490, chatTextPreferredHeight)
+
+    --local chatTextPreferredWidth = self.chatText.preferredWidth
+    --if chatTextPreferredWidth > 345 then
+    --    local chatTextPreferredHeight = self.chatText.preferredHeight
+    --    self.chatText.transform.sizeDelta = Vector2.New(345, chatTextPreferredHeight)
+    --else
+    --    self.chatText.transform.sizeDelta = Vector2.New(345, 18)
+    --end
 end

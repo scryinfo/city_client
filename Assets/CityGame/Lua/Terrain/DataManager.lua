@@ -836,6 +836,16 @@ function DataManager.SetStrangersInfo(id)
     return PersonDataStack.socialityManager:SetStrangersInfo(id)
 end
 
+-- 获得好友所有聊天纪录
+function DataManager.GetChatRecords()
+    return PersonDataStack.socialityManager:GetChatRecords()
+end
+
+-- 删除好友所有聊天纪录
+function DataManager.SetChatRecords(index)
+    return PersonDataStack.socialityManager:SetChatRecords(index)
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding

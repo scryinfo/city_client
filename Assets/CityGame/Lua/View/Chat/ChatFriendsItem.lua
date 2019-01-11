@@ -71,6 +71,8 @@ function ChatFriendsItem:_toggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetToggle(self.toggle)
         if self.data.index == 1 then
             ChatCtrl.static.chatMgr:DestroyContentChildren(2)
+            ChatPanel.chatRecordsBtn:SetActive(true)
+            ChatPanel.chatRecordsRoot:SetActive(false)
             ChatCtrl.static.chatMgr:ShowPlayerInfo(2, self.data)
             --DataManager.SetMyReadChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)

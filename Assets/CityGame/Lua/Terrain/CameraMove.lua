@@ -343,6 +343,11 @@ function CameraMove.MoveCameraToPos(targetPos)
     Event.Brocast("CameraMoveTo", targetPos)
 end
 
+function CameraMove.MoveCameraToPosSmooth(targetPos,smoothTime)
+    mainCameraCenterTransforms:DOMove(targetPos,smoothTime)
+    Event.Brocast("CameraMoveTo", targetPos)
+end
+
 return CameraMove
 
 

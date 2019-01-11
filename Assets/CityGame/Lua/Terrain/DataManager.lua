@@ -69,9 +69,17 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     if nodeID == nil then
         nodeID = -1
     end
+    if  BuildDataStack[collectionID] == nil then
+        BuildDataStack[collectionID] = {}
+    end
+    if BuildDataStack[collectionID].BlockDatas == nil then
+        BuildDataStack[collectionID].BlockDatas = {}
+    end
+    BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
+    --[[
     if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
         BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    end
+    end--]]
 end
 
 --刷新原子地块集合的基本信息
@@ -458,7 +466,8 @@ end
 --protoNumStr:  protobuf协议号
 --protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
-function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
+--InstantiateSelf: 仅针对非建筑详情Model使用，传入对应的ID值
+function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf)
     if not ModelNetMsgStack[protoNameStr] then
         ModelNetMsgStack[protoNameStr] = {}
     end
@@ -467,34 +476,59 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
-            if protoData then
-                local protoID = nil
+            local protoID = nil
+            if protoData ~= nil then
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
                 elseif protoData.buildingId then
                     protoID = protoData.buildingId
                 end
-                if protoID then
-                    for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
-                        if key == protoID then
+            end
+            if protoID ~= nil then--服务器返回的数据有唯一ID
+                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                    if key == protoID then
+                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
                             if BuildDataStack.DetailModelStack[protoID] then
-                                call(BuildDataStack.DetailModelStack[protoID],protoData)
+                                func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
-                                call(protoData)
+                                func(protoData)
                             end
-                            return
+                        end
+                        return
+                    end
+                end
+            else--服务器返回的数据没有唯一ID
+                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                        if funcTable.self ~= nil then
+                            funcTable.func(funcTable.self,protoData)
+                        else
+                            funcTable.func(protoData)
                         end
                     end
-                else
-                    ct.log("System","服务器返回的建筑详情中数据没有唯一ID")
                 end
-            else
-                ct.log("System","解析服务器返回的建筑详情中数据失败")
             end
             ct.log("System","没有找到对应的建筑详情Model类的回调函数")
         end)
     end
-    ModelNetMsgStack[protoNameStr][protoNumStr][insId] = callBackMethord
+    --依据有无唯一ID，存储回调方法
+    if  insId ~= nil then --若有唯一ID，则将方法写到唯一ID对应的table中
+        if ModelNetMsgStack[protoNameStr][protoNumStr][insId] == nil then
+            ModelNetMsgStack[protoNameStr][protoNumStr][insId] = {}
+        end
+        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr][insId],callBackMethord)
+    else--若无唯一ID，则将方法写到"NoParameters"对应的table中
+        if  ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] == nil then
+            ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] = {}
+        end
+        local funcTable = {}
+        funcTable.func = callBackMethord
+        if InstantiateSelf ~= nil then
+            funcTable.self = InstantiateSelf
+        end
+        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"],funcTable)
+
+    end
 end
 
 --移除 消息回调

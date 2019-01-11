@@ -31,6 +31,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
 
 
+
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
@@ -95,6 +96,7 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Awake()
+    self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.gender = info.male
@@ -111,8 +113,8 @@ function GameMainInterfaceCtrl:Refresh()
 end
 
 function GameMainInterfaceCtrl:initInsData()
-    DataManager.OpenDetailModel(GameMainInterfaceModel,4)
-    DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
+    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     --初始化姓名,性别,金币
     GameMainInterfacePanel.name.text = self.name
     GameMainInterfacePanel.money.text = self.money

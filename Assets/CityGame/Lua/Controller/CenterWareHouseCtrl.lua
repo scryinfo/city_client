@@ -66,6 +66,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
 end
 
 function CenterWareHouseCtrl:Awake()
+    self.insId = OpenModelInsID.CenterWareHouseCtrl
     self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
 end
 
@@ -88,7 +89,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         local dataId = {}
         dataId.buildingId = buildingId
         dataId.id = go.itemId
-        DataManager.DetailModelRpcNoRet(6, 'm_DeleteItem',dataId)
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_DeleteItem',dataId)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
@@ -130,10 +131,18 @@ end
 function CenterWareHouseCtrl:c_OnxBtn(go)
     go.manager:_deleteTspGoods(go.id);
     itemId[go.id] = nil
+    local n = 0
+    for i, v in pairs(self. WareHouseGoodsMgr.allTspItem) do
+        n = n + tonumber(v.inputText.text)
+    end
+    CenterWareHousePanel.tipText.text = n
 end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
+    if not isSelect then
+        CenterWareHouseCtrl:c_transportCloseBtn()
+    end
     UIPage.ClosePage();
 end
 
@@ -154,7 +163,7 @@ function CenterWareHouseCtrl:Refresh()
 end
 
 function CenterWareHouseCtrl:initInsData()
-    DataManager.OpenDetailModel(CenterWareHouseModel,6)
+    DataManager.OpenDetailModel(CenterWareHouseModel,self.insId )
 end
 
 --扩容按钮
@@ -163,7 +172,7 @@ function CenterWareHouseCtrl:c_OnAddBtn(go)
     if money<go.money then
         Event.Brocast("SmallPop","扩容金额不足",300)
     else
-        DataManager.DetailModelRpcNoRet(6, 'm_ExtendBag')
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_ExtendBag')
     end
 end
 
@@ -251,14 +260,11 @@ end
 
 --关闭运输按钮
 function CenterWareHouseCtrl:c_transportCloseBtn()
-    CenterWareHousePanel.addItem:SetActive(true);
+    --CenterWareHousePanel.addItem:SetActive(true);
     isSelect = true;
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);
     CenterWareHouseCtrl:clearAllData()
---[[    WareHouseGoodsMgr:ClearAll()
-    itemId = {}
-    WareHouseGoodsMgr:EnabledAll()]]
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)
@@ -341,6 +347,7 @@ function CenterWareHouseCtrl:_getSortItems(type)
     end
 
 end
+
 --清空运输框里的内容
 function CenterWareHouseCtrl:clearAllData()
     CenterWareHousePanel.tipText.text = 0

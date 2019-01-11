@@ -12,8 +12,8 @@ function ServerListModel:OnCreate()
     --注册本地事件
     Event.AddListener("m_loginRole", self.loginRole,self);
     ----注册 AccountServer 消息
-    ServerListModel.registerAsNetMsg()
-    --DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer)
+   -- ServerListModel.registerAsNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer,self)
 end
 --关闭事件--
 function ServerListModel.Close()
@@ -43,9 +43,9 @@ function ServerListModel:m_chooseGameServer( data )
     DataManager.ModelSendNetMes("ascode.OpCode", "chooseGameServer","as.ChoseGameServer",{ serverId = sid})
 end
 --选择游戏服务器后回调, 发送登录游戏服务器的请求
-function ServerListModel.n_ChooseGameServer( stream )
+function ServerListModel:n_ChooseGameServer( msg )
     ----反序列化，取出数据
-    local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
+    --local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
     ----处理数据：缓存服务器返回的 token
     CityEngineLua.token = msg.code
     ServerListModel.isClick = true

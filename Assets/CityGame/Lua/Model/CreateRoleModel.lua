@@ -22,7 +22,8 @@ end
 
 function CreateRoleModel:registerGsNetMsg()
     --gs网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",self.n_CreateNewRole,self)--新版model网络注册
+   -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
 end
 
 --创角发包
@@ -32,16 +33,10 @@ function CreateRoleModel.m_createNewRole()
 end
 
 --创角回调
-function CreateRoleModel.n_CreateNewRole(stream)
+function CreateRoleModel:n_CreateNewRole(pMsg)
     --message Role {
 
     --    required bytes id = 1;
-    if stream == nil then
-        ct.log("system", "[LoginModel.n_CreateNewRole] stream = nil")
-        return
-    end
-
-    local pMsg =assert(pbl.decode("gs.RoleInfo",stream),"LoginModel.n_CreateNewRole : stream == nil")
     logDebug(pMsg.id)
     logDebug(pMsg.name)
     --角色登录

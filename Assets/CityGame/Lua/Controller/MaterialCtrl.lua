@@ -29,6 +29,7 @@ end
 
 function MaterialCtrl:Refresh()
     this:initializeData()
+
 end
 
 function MaterialCtrl:initializeData()

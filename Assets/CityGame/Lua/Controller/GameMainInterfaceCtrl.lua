@@ -49,7 +49,6 @@ function GameMainInterfaceCtrl:SaveData(ownerData)
     end
 end
 
-
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
     if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then

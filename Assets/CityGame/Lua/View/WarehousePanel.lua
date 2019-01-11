@@ -12,7 +12,7 @@ function WarehousePanel.Awake(obj)
 end
 function WarehousePanel.InitPanel()
     --Button
-    this.searchBtn = transform:Find("Button/searchBtn");
+    --this.searchBtn = transform:Find("Button/searchBtn");
     this.returnBtn = transform:Find("Button/ReturnBtn");
     --this.openBtn = transform:Find("Button/SortingBtn/OpenBtn").gameObject;
     this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表

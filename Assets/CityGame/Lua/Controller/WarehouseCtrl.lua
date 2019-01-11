@@ -40,7 +40,7 @@ function WarehouseCtrl:OnCreate(obj)
     warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.OnClick_transportBtn,self);
     warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self);
     warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self);
-    warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
+    --warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
@@ -69,7 +69,6 @@ function WarehouseCtrl:Refresh()
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.value = numText;
     WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
-
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     go:deleteObjInfo()
@@ -79,10 +78,10 @@ function WarehouseCtrl:Hide()
     UIPage.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
---搜索
-function WarehouseCtrl:OnClick_searchBtn(ins)
-
-end
+----搜索
+--function WarehouseCtrl:OnClick_searchBtn(ins)
+--
+--end
 --选中物品
 function WarehouseCtrl:_selectedGoods(insData)
     if self.temporaryItems[insData.id] == nil then

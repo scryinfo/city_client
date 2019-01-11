@@ -21,13 +21,13 @@ function AdjustProductionLineCtrl:OnCreate(obj)
 
     adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
-    adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
-    --adjustLine:AddClick(AdjustProductionLinePanel.modifyBtn.gameObject,self.OnClick_modifyBtn,self);
+    --adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
 
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
+    Event.AddListener("refreshNowTime",self.refreshNowTime,self)
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -40,22 +40,23 @@ function AdjustProductionLineCtrl:Refresh()
     end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     self.luabehaviour = adjustLine
-    if self.m_data.line then
-        self.productionLine = self.m_data.line
-        self.productionLine.type = BuildingInType.ProductionLine
-        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
-    end
-    self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
+    --剩余容量
+    AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)
+    self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+    if self.m_data.line then
+        self.productionLine = self.m_data.line
+        self.productionLine.buildingId = self.m_data.info.id
+        self.productionLine.type = BuildingInType.ProductionLine
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
+    end
     self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
-
-    self:refreshWorkerNum()
-
+    --self:refreshWorkerNum()0
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
@@ -76,36 +77,13 @@ end
 function AdjustProductionLineCtrl:calculateTime(msg)
     local time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
     local timeTab = getTimeString(time)
-    GoodsUnifyMgr.sendInfoTempTab[msg.line.itemId].timeText.text = timeTab
-    GoodsUnifyMgr.sendInfoTempTab = nil
+    self.GoodsUnifyMgr.tempLineItem[msg.line.itemId].timeText.text = timeTab
+    self.GoodsUnifyMgr.tempLineItem = nil
 end
-
---添加生产线
-function AdjustProductionLineCtrl:OnClick_determineBtn(ins)
-    if GoodsUnifyMgr.sendInfoTempTab == nil then
-        return;
-    end
-    local number,steffNumber,itemid = GoodsUnifyMgr:getSendInfo()
-    if number == "0" then
-        Event.Brocast("SmallPop","目标产量不能为0",300)
-        return;
-    end
-    if steffNumber == "0" then
-        Event.Brocast("SmallPop","员工人数不能为0",300)
-        return;
-    end
-    if steffNumber ~= nil then
-        if tonumber(steffNumber) < 5 then
-            Event.Brocast("SmallPop","员工人数不足",300)
-            return;
-        end
-    end
-    Event.Brocast("m_ReqAddLine",ins.data.info.id,number,steffNumber,itemid);
-end
---修改生产线
-function AdjustProductionLineCtrl:OnClick_modifyBtn()
-    Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
-end
+----修改生产线
+--function AdjustProductionLineCtrl:OnClick_modifyBtn()
+--    Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
+--end
 --删除生产中或生产完的生产线
 function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     if not msg then
@@ -138,24 +116,26 @@ function AdjustProductionLineCtrl:getWorkerNum()
         return workerNum
     end
 end
---刷新一条线可用的员工数量
-function AdjustProductionLineCtrl:refreshWorkerNum()
-    if not AdjustProductionLineCtrl.materialProductionLine then
-        return;
-    else
-        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-            v.sNumberScrollbar.maxValue = self.idleWorkerNum
-        end
-    end
-end
+----刷新一条线可用的员工数量
+--function AdjustProductionLineCtrl:refreshWorkerNum()
+--    if not AdjustProductionLineCtrl.materialProductionLine then
+--        return;
+--    else
+--        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+--            --v.sNumberScrollbar.maxValue = self.idleWorkerNum
+--        end
+--    end
+--end
 --添加生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
+    AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 --删除生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
-    self.idleWorkerNum = self.idleWorkerNum + number
+    self.idleWorkerNum = self.idleWorkerNum + number * 5
+    AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
@@ -178,6 +158,33 @@ function AdjustProductionLineCtrl:refreshTime(infoTab)
             AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
         elseif remainingNum < 0 or remainingNum == 0 then
             AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
+        end
+    end
+end
+--接收回调刷新时间
+function AdjustProductionLineCtrl:refreshNowTime(msg)
+    if not msg then
+        return;
+    end
+    for i,k in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if msg.id == k.lineId then
+            local materialKey,goodsKey = 21,22
+            local time = 0
+            local remainingNum = k.inputNumber.text - msg.nowCount
+            if math.floor(k.itemId / 100000) == materialKey then
+                time = 1 / Material[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
+            elseif math.floor(k.itemId / 100000) == goodsKey then
+                time = 1 / Good[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
+            end
+            if time < 0 or time == 0 then
+                k.timeText.text = "00:00:00"
+            else
+                local timeTab = getTimeBySec(time)
+                local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
+                k.timeText.text = timeStr
+                k.time_Slider.value = msg.nowCount
+                --k.pNumberScrollbar.value = k.inputNumber.text - msg.nowCount
+            end
         end
     end
 end

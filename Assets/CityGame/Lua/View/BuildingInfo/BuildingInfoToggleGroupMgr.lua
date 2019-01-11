@@ -43,17 +43,20 @@ BuildingInfoToggleGroupMgr.static.Municipal_Advertisement_Path="View/BuildingMai
 BuildingInfoToggleGroupMgr.static.Municipal_LineChart_Path = "View/BuildingMainPageInfoItem/AdLineChartItem"  --广告折线图
 BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPageInfoItem/ParkInfoItem"--公园信息
 BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
-BuildingInfoToggleGroupMgr.static.Laboratory_Path="View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
+BuildingInfoToggleGroupMgr.static.Laboratory_Path = "View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
+BuildingInfoToggleGroupMgr.static.BuildingBrand_Path = "View/BuildingMainPageInfoItem/BuildingBrandItem"  --品牌品质
 
 BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
 BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/ExcavateTalentsItem"  --挖掘人才
 
 
 --初始化
-function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData)
+--最后一个参数是品牌品质的父物体，可有可无
+function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLuaBehaviour, buildingData, topBrandRect)
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     self.leftRect = leftRect
     self.rightRect = rightRect
+    self.topBrandRect = topBrandRect
     self.toggleData = buildingData
     self.leftData = {}
     self.rightData = {}
@@ -206,6 +209,9 @@ function BuildingInfoToggleGroupMgr:_creatHouseInfo()
     ---入住率  右1
     local occToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     self.rightData[1] = self:_creatOccupancy(occToggleData)
+
+    ---品牌品质
+    self.brandItem = self:_createBrand(self.toggleData)
 end
 
 --创建原料厂主页左右信息
@@ -514,6 +520,29 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         return staffLuaItem
     end
 end
+--品牌品质
+function BuildingInfoToggleGroupMgr:_createBrand(detailData)
+    if self.brandItem ~= nil then
+        local data = {}
+        data.brand = detailData.brand or 100
+        data.qty = detailData.qty or 100
+        self.brandItem:updateInfo(data)
+    else
+        if self.brandItemViewRect == nil then
+            if self.topBrandRect == nil then
+                return
+            end
+            self.brandItemViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.BuildingBrand_Path, self.topBrandRect)
+            self.brandItemViewRect.gameObject.name = "BuildingBrand"
+        end
+
+        local data = {}
+        data.brand = detailData.brand or 100
+        data.qty = detailData.qty or 100
+        self.brandItem = BuildingBrandItem:new(data, self.brandItemViewRect)
+    end
+    return self.brandItem
+end
 
 ---住宅部分
 --入住率
@@ -536,7 +565,7 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     occData.isOther = self.toggleData.isOther
 
     occData.rent = self.toggleData.rent
-    occData.effectiveDate = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
+    --occData.effectiveDate = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
 
     local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return occupancyLuaItem

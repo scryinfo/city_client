@@ -70,7 +70,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
     self.m_data.buildingType = BuildingType.House
     if not self.houseToggleGroup then
-        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data, HousePanel.brandRootTran)
     else
         self.houseToggleGroup:updateInfo(self.m_data)
     end

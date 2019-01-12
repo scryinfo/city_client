@@ -33,7 +33,7 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
         mainPanelLuaBehaviour:AddClick(self.openToDoBtn.gameObject, self._clickToDoBtn, self)
     end
 
-    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self)
+    Event.AddListener("c_onReceiveHouseRentChange", self._rentPriceChange, self)
 end
 
 --获取是第几个点击了
@@ -51,9 +51,6 @@ function OccupancyRateItem:openToggleItem(targetMovePos)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
-    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
-    --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
-
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOTAL_H)
 end
 
@@ -69,20 +66,29 @@ end
 
 --刷新数据
 function OccupancyRateItem:updateInfo(data)
-    self.occupancyData = data
-
     if not self.viewRect.gameObject.activeSelf then
         return
     end
-
+    self.occupancyData = data
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = string.format("%d<color=%s>/%d</color>", self.occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, self.occupancyData.totalCount)
     self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
 end
+--房租改变
+function OccupancyRateItem:_rentPriceChange(data)
+    if self.occupancyData.buildingId ~= data.id then
+        return
+    end
+
+    self.occupancyData.rent = data.num
+    if not self.viewRect.gameObject.activeSelf then
+        return
+    end
+    self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+end
 
 function OccupancyRateItem:_clickToDoBtn(ins)
-    --local value = {dayWage = ins.staffData.dayWage, workerNum = ins.m_data.totalStaffCount}
-    --ct.OpenCtrl("WagesAdjustBoxCtrl", value)
+    ct.OpenCtrl("HouseSetRentalDialogPageCtrl", ins.occupancyData)
 end
 
 function OccupancyRateItem:destory()

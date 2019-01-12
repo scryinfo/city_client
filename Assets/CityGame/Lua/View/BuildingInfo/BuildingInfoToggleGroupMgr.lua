@@ -548,6 +548,20 @@ end
 ---住宅部分
 --入住率
 function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
+    if self.occupancyLuaItem ~= nil then
+        local occData = {}
+        occData.qty = self.toggleData.qty
+        occData.buildingId = self.toggleData.info.id
+        occData.buildingTypeId = self.toggleData.info.mId
+        occData.totalCount = PlayerBuildingBaseData[occData.buildingTypeId].npc
+        occData.renter = self.toggleData.renter
+        occData.isOther = self.toggleData.isOther
+        occData.rent = self.toggleData.rent
+        self.occupancyLuaItem:updateInfo(occData)
+    else
+
+    end
+
     if not self.occupancyViewRect then
         if occToggleData.pos == BuildingInfoTogglePos.Left then
             --self.occupancyViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH, self.leftRect)
@@ -568,8 +582,8 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
     occData.rent = self.toggleData.rent
     --occData.effectiveDate = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
 
-    local occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
-    return occupancyLuaItem
+    self.occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
+    return self.occupancyLuaItem
 end
 --租金
 function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)

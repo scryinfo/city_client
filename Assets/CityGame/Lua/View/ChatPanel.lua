@@ -99,4 +99,11 @@ function ChatPanel.InitPanel()
     this.nextClose = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn/CloseImage").gameObject
     this.nextOpen = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn/OpenImage").gameObject
     this.nextButton = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn"):GetComponent("Button")
+
+    -- 没内容小狐狸提示
+    this.worldNoContentRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot/NoContentRoot").gameObject
+    this.friendsNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
+    this.friendsChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/NoContentRoot").gameObject
+    this.strangersNoContentRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/NoContentRoot").gameObject
+    this.strangersChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/NoContentRoot").gameObject
 end

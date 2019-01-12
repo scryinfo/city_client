@@ -34,6 +34,15 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
         local passTime=os.time()-beginTs
         self.dayText.text=string.sub(getFormatUnixTime(passTime).day,2,2).."d"
     end
+
+    if prefabData.name then
+       self.nameText.text=prefabData.personName
+       LoadSprite(prefabData.path,self.iconIma,true)
+       self.adNameText.text=prefabData.name
+    end
+
+
+
 end
 ---删除
 function outAdvertisementItem:OnClicl_XBtn(go)

@@ -24,7 +24,7 @@ function AddProductionLineCtrl:Awake(go)
     end,self)
     self.luabehaviour:AddClick(AddProductionLinePanel.leftBtn.gameObject,function()
         --ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
-        GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
+        GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
         self:Hide();
         --UIPage.ClosePage();
     end,self)
@@ -51,7 +51,7 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             self:Hide();
             --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
 
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
@@ -63,7 +63,7 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             self:Hide();
             --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId)
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
         end)
     end
 

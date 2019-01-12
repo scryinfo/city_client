@@ -126,7 +126,7 @@ function StaffRateItem:openToggleItem(targetMovePos)
     self.closeStateTran.localScale = Vector3.zero
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, self.currentContentH), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH)
+    return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH-5)
 end
 
 --关闭
@@ -136,7 +136,7 @@ function StaffRateItem:closeToggleItem(targetMovePos)
     self.closeStateTran.localScale = Vector3.one
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    return Vector2.New(targetMovePos.x,targetMovePos.y - StaffRateItem.static.TOP_H)
+    return Vector2.New(targetMovePos.x,targetMovePos.y - StaffRateItem.static.TOP_H-5)
 end
 
 --刷新数据

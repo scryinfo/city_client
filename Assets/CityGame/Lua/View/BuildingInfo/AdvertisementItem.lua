@@ -29,7 +29,13 @@ function AdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.ownerIma=prefab.transform:Find("bg/head/owner")
     self.dayText=prefab.transform:Find("bg/day (1)/dayText"):GetComponent("Text");
     self.peopleCountText=prefab.transform:Find("showPanel/peoplecount/peoplecountText"):GetComponent("Text");
+    self.adName=prefab.transform:Find("showPanel/nameImage/nameText"):GetComponent("Text");
 
+    if prefabData.personName then
+        self.nameText.text=prefabData.personName
+        LoadSprite(prefabData.path,self.icon,true)
+        self.adName.text=prefabData.name
+    end
 
     if prefabData.count then
         self.countText.text=prefabData.count;
@@ -44,8 +50,6 @@ function AdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
         local passTime=os.time()-beginTs
         self.dayText.text=string.sub(getFormatUnixTime(passTime).day,2,2).."d"
     end
-
-
 
 end
 ---删除

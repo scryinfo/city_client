@@ -13,7 +13,8 @@ end
 
 function ChatModel:OnCreate()
     -- 注册事件
-    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat)
+
+
     Event.AddListener("m_RoleCommunication", self.m_RoleCommunication)
     Event.AddListener("m_ChatAddFriends", self.m_ChatAddFriends)
     Event.AddListener("m_ChatAddBlacklist", self.m_ChatAddBlacklist)
@@ -26,10 +27,7 @@ function ChatModel.Close()
     -- 清空事件
 end
 
--- 向服务器查询好友信息
-function ChatModel.m_QueryPlayerInfoChat(friendsIds)
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
-end
+
 
 -- 向服务器发送聊天消息
 function ChatModel.m_RoleCommunication(chatData)

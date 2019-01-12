@@ -36,6 +36,7 @@ function AdvertisementPosPanel.InitPanel()
     this.qunayityInp=transform:Find("rightRoot/resize/bg/body/quantity/InputField"):GetComponent("InputField")
     this.leaseInp=transform:Find("rightRoot/resize/bg/body/lease/InputField"):GetComponent("InputField")
     this.rentInp=transform:Find("rightRoot/resize/bg/body/rent/InputField"):GetComponent("InputField")
+    this.deposit=transform:Find("rightRoot/resize/bg/body/dot/NUMBER"):GetComponent("Text")
     this.adAllday="0"
 
     --他人进入
@@ -49,6 +50,7 @@ function AdvertisementPosPanel.InitPanel()
     this.rentText=transform:Find("rightRoot/Buy/body/dotRent/NUMBER"):GetComponent("Text")
     this.dotText=transform:Find("rightRoot/Buy/body/dot/NUMBER"):GetComponent("Text")
     this.totalText=transform:Find("rightRoot/Buy/body/total/NUMBER"):GetComponent("Text")
+
 
     this.hasPos=this.manageBtn.parent:GetComponent("RectTransform").anchoredPosition
     local temp=Vector2.New(this.hasPos.x,this.hasPos.y+145)

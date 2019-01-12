@@ -23,6 +23,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["salary"] = 55
     },
     [1100002] ={
         ["sizeName"] ="中型",
@@ -47,6 +48,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["salary"] = 55
     },
     [1100003] ={
         ["sizeName"] ="大型",
@@ -71,6 +73,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["salary"] = 55
     },
     [1200001] ={
         ["sizeName"] ="小型",
@@ -95,6 +98,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["salary"] = 55
     },
     [1200002] ={
         ["sizeName"] ="中型",
@@ -119,6 +123,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["salary"] = 55
     },
     [1200003] ={
         ["sizeName"] ="大型",
@@ -143,6 +148,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["salary"] = 55
     },
     [1300001] ={
         ["sizeName"] ="小型",
@@ -167,6 +173,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["isAd"]=true
+    ,["AdmId"]=13
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png"
+    ,["salary"] = 55
     },
     [1300002] ={
         ["sizeName"] ="中型",
@@ -191,6 +201,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["isAd"]=true
+    ,["AdmId"]=13
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png"
+    ,["salary"] = 55
     },
     [1300003] ={
         ["sizeName"] ="大型",
@@ -215,6 +229,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["isAd"]=true
+    ,["AdmId"]=13
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png"
+    ,["salary"] = 55
     },
     [1400001] ={
         ["sizeName"] ="小型",
@@ -239,6 +257,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["isAd"]=true
+    ,["AdmId"]=14
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png"
+    ,["salary"] = 55
     },
     [1400002] ={
         ["sizeName"] ="中型",
@@ -263,6 +285,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["isAd"]=true
+    ,["AdmId"]=14
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png"
+    ,["salary"] = 55
     },
     [1400003] ={
         ["sizeName"] ="大型",
@@ -287,6 +313,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["isAd"]=true
+    ,["AdmId"]=14
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png"
+    ,["salary"] = 55
     },
     [1500001] ={
         ["sizeName"] ="小型",
@@ -311,6 +341,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["salary"] = 55
     },
     [1500002] ={
         ["sizeName"] ="中型",
@@ -335,6 +366,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["salary"] = 55
     },
     [1500003] ={
         ["sizeName"] ="大型",
@@ -359,6 +391,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["salary"] = 55
     },
     [1600001] ={
         ["sizeName"] ="小型",
@@ -383,6 +416,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["isAd"]=true
+    ,["AdmId"]=16
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/park-s.png"
+    ,["salary"] = 55
     },
     [1600002] ={
         ["sizeName"] ="中型",
@@ -407,6 +444,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["isAd"]=true
+    ,["AdmId"]=16
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/park-s.png"
+    ,["salary"] = 55
     },
     [1600003] ={
         ["sizeName"] ="大型",
@@ -431,6 +472,10 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["isAd"]=true
+    ,["AdmId"]=16
+    ,["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/park-s.png"
+    ,["salary"] = 55
     },
 	[1800001] ={
         ["sizeName"] ="小型",
@@ -455,6 +500,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4}
+    ,["salary"] = 55
     },
     [1800002] ={
         ["sizeName"] ="中型",
@@ -479,6 +525,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5}
+    ,["salary"] = 55
     },
     [1800003] ={
         ["sizeName"] ="大型",
@@ -503,8 +550,21 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6}
+    ,["salary"] = 55
     },
     [4000001] ={
         ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块
     },
+    [13] ={
+        ["typeName"] ="Supermarket",
+        ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png"
+    },
+    [14] ={
+        ["typeName"] ="House",
+        ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png"
+    },
+    [16] ={
+        ["typeName"] ="Park",
+        ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/park-s.png"
+    }
 }

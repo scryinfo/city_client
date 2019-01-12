@@ -6,7 +6,7 @@
 
 Language_English={
     [1000001]="SYSTEM SETTINGS",
-    [1000002]="Log out",
+    [1000002]="LOG OUT",
     [1000003]="Music",
     [1000004]="Sound effect",
     [1000005]="Language",

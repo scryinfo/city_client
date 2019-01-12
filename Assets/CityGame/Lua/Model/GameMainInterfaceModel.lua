@@ -12,6 +12,7 @@ function GameMainInterfaceModel:initialize(insId)
 end
 
 function GameMainInterfaceModel:OnCreate()
+    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
@@ -47,6 +48,10 @@ end
 --改变员工工资
 function GameMainInterfaceModel.m_ReqHouseSetSalary(self,id, price)
     DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+end
 
+-- 向服务器查询好友信息
+function GameMainInterfaceModel.m_QueryPlayerInfoChat(ins,friendsIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
 end
 

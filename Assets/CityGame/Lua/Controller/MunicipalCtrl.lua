@@ -50,12 +50,10 @@ function MunicipalCtrl:OnCreate(obj)
 end
 
 function MunicipalCtrl:OnClick_buildInfo()
-
     Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
 end
 
 function MunicipalCtrl:OnClick_prepareOpen(ins)
-
     Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 

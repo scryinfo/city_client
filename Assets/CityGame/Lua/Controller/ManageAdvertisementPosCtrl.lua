@@ -34,6 +34,7 @@ end
 local materialBehaviours
 local MunicipalModel
 local manger
+local AllGoods={}
 function ManageAdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
@@ -55,9 +56,33 @@ function ManageAdvertisementPosCtrl:Awake(go)
     -----创建广告管理
     self.ItemCreatDeleteMgr=MunicipalModel.manger
 
+    self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.loopScrollDataSource.mProvideData =self.ReleaseData
+    self.loopScrollDataSource.mClearData = self.CollectClearData
+    local temp=DataManager.GetMyGoodLv()
 
+    for i, v in pairs(temp) do
+         local data={}
+        data.mId=i
+        table.insert(AllGoods,data)
+    end
+    ManageAdvertisementPosPanel.loopScroll:ActiveLoopScroll(self.loopScrollDataSource, #AllGoods)
 
     Event.AddListener("c_FirstCreate",ManageAdvertisementPosCtrl.c_FirstCreate,self)
+end
+
+function ManageAdvertisementPosCtrl.ReleaseData(transform, idx)
+    idx = idx + 1
+    local data=Material[AllGoods[idx].mId] or  Good[AllGoods[idx].mId]
+    if not data then
+        return
+    end
+    local collectItem = GoodsItem:new(data, transform,materialBehaviours,MunicipalModel.manger,idx)
+    MunicipalModel.manger.insList[AllGoods[idx].mId] = collectItem
+end
+
+function ManageAdvertisementPosCtrl.CollectClearData(transform)
+
 end
 
 
@@ -148,6 +173,7 @@ function ManageAdvertisementPosCtrl:Refresh()
             data.name=name
             self.ItemCreatDeleteMgr:_creatbuildingItem(data);
         end
+
     end
 
     --是否打开第一个槽位
@@ -162,8 +188,6 @@ function ManageAdvertisementPosCtrl:Refresh()
             end
         end
     end
-
-
 
 
     --全部复原
@@ -192,36 +216,32 @@ function ManageAdvertisementPosCtrl:c_ScreenOutAd()
     local goodsBtn={}
 
     for i, buildingDetails in pairs(AllBuildingDetail) do
-        local tempInfo=buildingDetails[1].info
-        --可以广告
-        local configData=PlayerBuildingBaseData[tempInfo.mId]
-        local typeName=configData.typeName
-        if configData.isAd then
-            local table=buildBtn[typeName]
-            if not table then
-                buildBtn[typeName]={}
-                buildBtn[typeName].small=0
-                buildBtn[typeName].medium=0
-                buildBtn[typeName].large=0
-                buildBtn[typeName].mId=configData.AdmId
+
+        for k, tempInfo in ipairs(buildingDetails) do
+            --可以广告
+            local configData=PlayerBuildingBaseData[tempInfo.info.mId]
+            local typeName=configData.typeName
+            if configData.isAd then
+                local table=buildBtn[typeName]
+                if not table then
+                    buildBtn[typeName]={}
+                    buildBtn[typeName].small=0
+                    buildBtn[typeName].medium=0
+                    buildBtn[typeName].large=0
+                    buildBtn[typeName].mId=configData.AdmId
+                end
+
+                if configData.sizeName=="大型" then
+                    buildBtn[typeName].large=buildBtn[typeName].large+1
+                elseif configData.sizeName=="中型" then
+                    buildBtn[typeName].medium=buildBtn[typeName].medium+1
+                else
+                    buildBtn[typeName].small=buildBtn[typeName].small+1
+                end
             end
 
-            if configData.sizeName=="大型" then
-                buildBtn[typeName].large=buildBtn[typeName].large+1
-            elseif configData.sizeName=="中型" then
-                buildBtn[typeName].medium=buildBtn[typeName].medium+1
-            else
-                buildBtn[typeName].small=buildBtn[typeName].small+1
-            end
         end
     end
-
-    local AllGoods=DataManager.GetMyGoodLv()
-    for i, v in pairs(AllGoods) do
-
-
-    end
-
 
     return buildBtn ,goodsBtn
 end

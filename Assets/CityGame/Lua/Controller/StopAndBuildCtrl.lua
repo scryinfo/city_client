@@ -26,7 +26,7 @@ function StopAndBuildCtrl:Awake(go)
     self.materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(panel.stopBtn.gameObject,self.OnClick_stop,self);
     self.materialBehaviour:AddClick(panel.removeBtn.gameObject,self.OnClick_remove,self);
-    self.materialBehaviour:AddClick(panel.backBtn1.gameObject,self.OnClick_backBtn,self);
+    self.materialBehaviour:AddClick(panel.backBtn1.gameObject,self.OnClick_backBtn1,self);
 
       self.materialBehaviour:AddClick((panel.greenBtn1).gameObject,self.OnClick_greenBtn1,self);
       self.materialBehaviour:AddClick((panel.greenBtn2).gameObject,self.OnClick_greenBtn2,self);
@@ -52,7 +52,11 @@ function StopAndBuildCtrl:OnClick_backBtn()
     UIPage.ClosePage()
 end
 
-
+--返回
+function StopAndBuildCtrl:OnClick_backBtn1()
+    panel:CloseBtn()
+    UIPage.ClosePage()
+end
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
     local data={}

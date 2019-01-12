@@ -29,32 +29,14 @@ function GoodsItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.mediumText=prefab.transform:Find("Body/Image (8)/Text"):GetComponent("Text")
     self.largeText=prefab.transform:Find("Body/Image (11)/Text"):GetComponent("Text")
 
-    --local path, name =nil
-    --if prefabData.name=="公园" then
-    --    path=fontPatn.."park-s.png"
-    --    name="Park"
-    --    self.nameText.text="Park"
-    --    LoadSprite(path,self.iconImg,true)
-    --elseif  prefabData.name=="住宅" then
-    --    name="House"
-    --    path=fontPatn.."HomeHouse-s.png"
-    --    self.nameText.text="House"
-    --    LoadSprite(fontPatn.."HomeHouse-s.png",self.iconImg,true)
-    --else
-    --    name="Supermarket"
-    --    path=fontPatn.."supermarket-s.png"
-    --    self.nameText.text="Supermarket"
-    --    LoadSprite(fontPatn.."supermarket-s.png",self.iconImg,true)
-    --end
-    --
-    --self.smallText.text=prefabData.small
-    --self.mediumText.text=prefabData.medium
-    --self.largeText.text=prefabData.large
-    --
-    --self.name=name
-    --self.path=path
-    --self.itemId=prefabData.mId
-    self._luabehaviour:AddClick(self.prefab, self.OnClick_Add, self);
+    LoadSprite(prefabData.img,self.iconImg,true)
+    self.nameText.text=prefabData.name
+
+
+    self.name=prefabData.name
+    self.path=prefabData.img
+    self.itemId=prefabData.itemId
+    self._luabehaviour:AddClick(prefab.gameObject, self.OnClick_Add, self);
 
 end
 ---添加

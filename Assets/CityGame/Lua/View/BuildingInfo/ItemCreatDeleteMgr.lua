@@ -146,8 +146,15 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.adList=adList
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
-            ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
-            ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
             ads[1].personName=DataManager.GetName()
             ads[1]["count"]=#ads
             ads[1].personId=personId
@@ -167,8 +174,17 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         end
         self.adList=adList
         for metaId, ads in pairs(adList) do
-            ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
-            ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
+
             ads[1].personName=DataManager.GetName()
             ads[1]["count"]=#ads
             ads[1].ads=ads
@@ -178,8 +194,15 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     else---创建外部广告
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
-            ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
-            ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
             ads[1].personName=DataManager.GetName()
             ads[1].personId=personId
             self:_creatoutItem(ads[1])

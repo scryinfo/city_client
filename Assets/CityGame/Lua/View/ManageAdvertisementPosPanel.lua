@@ -29,6 +29,8 @@ function ManageAdvertisementPosPanel.InitPanel()
     this.greyBtn=transform:Find("rightRoot/choose/grey")
     this.goodsScroll=transform:Find("rightRoot/choose/goodsScroll View");
     this.buildingScroll=transform:Find("rightRoot/choose/buildingScroll View");
+    this.loopScroll=transform:Find("rightRoot/choose/goodsScroll View"):GetComponent("ActiveLoopScrollRect")
+
 
     this.goodsBtn=transform:Find("rightRoot/choose/head/Button")
     this.goodsBtn1=transform:Find("rightRoot/choose/head/Button (2)")

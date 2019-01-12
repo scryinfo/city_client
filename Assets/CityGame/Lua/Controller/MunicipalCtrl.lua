@@ -99,8 +99,6 @@ function MunicipalCtrl:changeData()
     else
         DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
-        --self.m_data = {}
-        --self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 
@@ -117,8 +115,7 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     else
         MunicipalPanel.stopIconRoot.localScale=Vector3.one
     end
-    ---刷新门票
-    Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
+
     ---是否可以改名
     if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--他人
     MunicipalPanel.changeNameBtn.localScale=Vector3.zero
@@ -142,7 +139,14 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     --跟新左右
     lMsg.buildingType=BuildingType.Municipal
     BuildMgr:updateInfo(lMsg)
-
+    ---刷新门票
+    Event.Brocast("c_TicketValueChange", model.buildingOwnerId,parkData.visitorCount)
+    ---刷新showItem
+    if #model.SlotList>0 then
+        Event.Brocast("c_ShowItemValueChange", model.SlotList[1].rentPreDay,#model.SlotList,model.SlotList[1].maxDayToRent)
+    else
+        Event.Brocast("c_ShowItemValueChange", 0,0,0)
+    end
 end
 
 function MunicipalCtrl:ClearData(manger)

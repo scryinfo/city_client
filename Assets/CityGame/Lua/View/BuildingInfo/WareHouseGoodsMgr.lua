@@ -167,8 +167,9 @@ function WareHouseGoodsMgr:_deleteTspGoods(id)
         UpdateBeat:Remove(self._update, self);
     end
     self.items[id].select_while:SetActive(true);
-    destroy(self.allTspItem[id].prefab.gameObject);
+    destroy(self.allTspItem[id].prefab);
    self.allTspItem[id] = nil;
+    WareHouseGoodsMgr:TransportConfirm()
 end
 
 function WareHouseGoodsMgr:_setActiva(isSelect)
@@ -270,7 +271,6 @@ function WareHouseGoodsMgr:TransportConfirm()
                 isTransport = true
             end
         end]]
-
     local n = 0
     if self.allTspItem ~= nil then
         for i, v in pairs(self.allTspItem) do

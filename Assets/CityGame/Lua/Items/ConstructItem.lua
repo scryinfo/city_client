@@ -43,6 +43,8 @@ function ConstructItem:_initData()
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
                 tempBtnIcon.sprite = texture
+                --显示图片
+                tempBtnIcon.transform.localScale = Vector3.one
             end
         end)
         --添加点击事件

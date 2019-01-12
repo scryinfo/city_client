@@ -19,24 +19,41 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        layerTempModel.tempTestReqAddItem(2102001,1000)
-        PlayerTempModel.tempTestReqAddItem(2102002,1000)
-        PlayerTempModel.tempTestReqAddItem(2102003,1000)
-        PlayerTempModel.tempTestReqAddItem(2102004,1000)
+        --PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
+        PlayerTempModel.tempTestReqAddGroung(21,21,30,30)  --小蒲
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
+        PlayerTempModel.tempTestReqAddItem(2102004,99)
 
-        PlayerTempModel.tempTestReqAddItem(2101001,1000)
-        PlayerTempModel.tempTestReqAddItem(2101002,1000)
-        PlayerTempModel.tempTestReqAddItem(2101003,1000)
-        PlayerTempModel.tempTestReqAddItem(2101004,1000)
+        PlayerTempModel.tempTestReqAddItem(2101001,99)
+        PlayerTempModel.tempTestReqAddItem(2101002,99)
+        PlayerTempModel.tempTestReqAddItem(2101003,99)
+        PlayerTempModel.tempTestReqAddItem(2101004,99)
 
-        PlayerTempModel.tempTestReqAddItem(2103001,1000)
-        PlayerTempModel.tempTestReqAddItem(2103002,1000)
-        PlayerTempModel.tempTestReqAddItem(2103003,1000)
-        PlayerTempModel.tempTestReqAddItem(2103004,1000)
+        PlayerTempModel.tempTestReqAddItem(2103001,99)
+        PlayerTempModel.tempTestReqAddItem(2103002,99)
+        PlayerTempModel.tempTestReqAddItem(2103003,99)
+        PlayerTempModel.tempTestReqAddItem(2103004,99)
     end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        PlayerTempModel.tempTestReqAddGroung(0,0,10,10)
+        PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
+        PlayerTempModel.tempTestReqAddItem(2102001,99)
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
+        PlayerTempModel.tempTestReqAddItem(2102004,99)
+
+        PlayerTempModel.tempTestReqAddItem(2101001,99)
+        PlayerTempModel.tempTestReqAddItem(2101002,99)
+        PlayerTempModel.tempTestReqAddItem(2101003,99)
+        PlayerTempModel.tempTestReqAddItem(2101004,99)
+
+        PlayerTempModel.tempTestReqAddItem(2103001,99)
+        PlayerTempModel.tempTestReqAddItem(2103002,99)
+        PlayerTempModel.tempTestReqAddItem(2103003,99)
+        PlayerTempModel.tempTestReqAddItem(2103004,99)
     end
+
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
         PlayerTempModel.tempTestReqAddItem(2102001,99)

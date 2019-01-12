@@ -2,8 +2,11 @@ require('Controller/WarehouseCtrl')
 
 
 WarehouseRateItem = class('WarehouseRateItem');
-WarehouseRateItem.static.TOTAL_H = 475  --整个Item的高度
-WarehouseRateItem.static.CONTENT_H = 410  --显示内容的高度
+--WarehouseRateItem.static.TOTAL_H = 475  --整个Item的高度
+--WarehouseRateItem.static.CONTENT_H = 410  --显示内容的高度
+--WarehouseRateItem.static.TOP_H = 100  --top条的高度
+WarehouseRateItem.static.TOTAL_H = 200  --整个Item的高度
+WarehouseRateItem.static.CONTENT_H = 136  --显示内容的高度
 WarehouseRateItem.static.TOP_H = 100  --top条的高度
 
 --初始化方法   数据需要接受服务器发送的数据

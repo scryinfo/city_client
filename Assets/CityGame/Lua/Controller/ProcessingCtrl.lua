@@ -39,7 +39,10 @@ function ProcessingCtrl:initializeData()
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
-    ProcessingPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    local companyName = DataManager.GetMyPersonalHomepageInfo()
+    ProcessingPanel.nameText.text = companyName.companyName
+    ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+
     self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then

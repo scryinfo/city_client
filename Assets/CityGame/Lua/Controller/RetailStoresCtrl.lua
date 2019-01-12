@@ -42,7 +42,9 @@ end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
-    RetailStoresPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    local companyName = DataManager.GetMyPersonalHomepageInfo()
+    RetailStoresPanel.nameText.text = companyName.companyName
+    RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then

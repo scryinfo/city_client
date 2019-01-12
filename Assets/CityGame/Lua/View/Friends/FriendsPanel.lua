@@ -52,4 +52,7 @@ function FriendsPanel.InitPanel()
     --群按钮群组（管理、发起群聊）
     --this.groupManageBtn = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/BtnRoot/ManageBtn").gameObject
     --this.startGroupBtn = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/BtnRoot/StartGroupBtn").gameObject
+
+    -- 没有好友的小狐狸显示
+    this.friendsNoContentRoot = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
 end

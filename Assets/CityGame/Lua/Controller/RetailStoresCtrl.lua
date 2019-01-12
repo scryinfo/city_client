@@ -32,11 +32,13 @@ end
 
 function RetailStoresCtrl:initializeData()
     if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
     else
-        DataManager.OpenDetailModel(RetailStoresModel,self.m_data.info.id)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.m_data.info.id)
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(RetailStoresModel,self.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
     end
 end
 
@@ -60,6 +62,8 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     else
         RetailStoresPanel.stopIconRoot.localScale=Vector3.one
     end
+
+    Event.Brocast("c_GetBuildingInfo",DataInfo.info)
 
     self.m_data.buildingType = BuildingType.RetailShop
     if not self.retailShopToggleGroup then

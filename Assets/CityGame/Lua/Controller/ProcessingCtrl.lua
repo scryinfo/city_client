@@ -30,9 +30,11 @@ end
 
 function ProcessingCtrl:initializeData()
     if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
     else
+        self.m_data.insId=self.insId
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
         DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
@@ -42,6 +44,7 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     local companyName = DataManager.GetMyPersonalHomepageInfo()
     ProcessingPanel.nameText.text = companyName.companyName
     ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+
 
     self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
@@ -58,6 +61,8 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     else
         ProcessingPanel.stopIconRoot.localScale=Vector3.one
     end
+
+    Event.Brocast("c_GetBuildingInfo",DataInfo.info)
 
     self.m_data.buildingType = BuildingType.ProcessingFactory
     if not self.processingToggleGroup then

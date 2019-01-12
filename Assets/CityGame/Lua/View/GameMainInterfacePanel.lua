@@ -18,6 +18,7 @@ end
 function GameMainInterfacePanel.InitPanel()
 
     this.head = transform:Find("LeftUpPanel/head").gameObject --头像
+    this.headItem = transform:Find("LeftUpPanel/head/headItem"):GetComponent("Image") --头像
     this.name = transform:Find("LeftUpPanel/name"):GetComponent("Text");
     this.male = transform:Find("LeftUpPanel/name/male");
     this.woman = transform:Find("LeftUpPanel/name/woman");

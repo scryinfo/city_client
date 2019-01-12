@@ -41,6 +41,16 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
 
+    --local headId = DataManager.GetHeadId()
+    --local path = PlayerHead[headId].MainPath
+    --local type = ct.getType(UnityEngine.Sprite)
+    --panelMgr:LoadPrefab_A(path,type,nil,function(goodData,obj)
+    --    if obj ~= nil then
+    --        local texture = ct.InstantiatePrefab(obj)
+    --        GameMainInterfacePanel.headItem.sprite = texture
+    --    end
+    --end)
+
 end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)

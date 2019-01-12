@@ -14,6 +14,8 @@ end
 function GameMainInterfaceModel:OnCreate()
     Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
+    Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
@@ -55,3 +57,7 @@ function GameMainInterfaceModel.m_QueryPlayerInfoChat(ins,friendsIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
 end
 
+--停止推送消息
+function GameMainInterfaceModel.m_stopListenBuildingDetailInform(ins,buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "stopListenBuildingDetailInform","gs.Id",{ id = buildingId })
+end

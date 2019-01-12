@@ -78,7 +78,7 @@ function MunicipalCtrl:OnClick_backBtn()
     UIPage.ClosePage();
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
-        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+        Event.Brocast("m_stopListenBuildingDetailInform",MunicipalPanel.buildingId)
     end
 
 end

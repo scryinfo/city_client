@@ -75,6 +75,7 @@ function ManageAdvertisementPosCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=Material[AllGoods[idx].mId] or  Good[AllGoods[idx].mId]
     if not data then
+        destroy(transform.gameObject)
         return
     end
     local collectItem = GoodsItem:new(data, transform,materialBehaviours,MunicipalModel.manger,idx)

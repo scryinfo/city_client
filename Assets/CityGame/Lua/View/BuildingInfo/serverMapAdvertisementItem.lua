@@ -72,8 +72,6 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
             self.bdName.text=prefabData.name
      end
 
-
-
 end
 
 ---添加

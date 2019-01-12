@@ -302,7 +302,7 @@ end
 function GameMainInterfaceCtrl:OncenterWareHouse()
     --Event.Brocast("m_opCenterWareHouse")
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("ScienceSellHallCtrl",PlayerTempModel.roleData)
+    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
 end
 
 --关闭updata

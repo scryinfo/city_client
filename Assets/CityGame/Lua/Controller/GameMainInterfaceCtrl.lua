@@ -54,14 +54,21 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then
         return
     end
+    local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
+    local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
 
-    local data = {workerNum=20,buildInfo= buildingInfo,func=func}
+    local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()
+            Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)
+            Event.Brocast("m_startBusiness",buildingInfo.id)
+    end}
+
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
     Event.AddListener("c_successBuilding",function ()
         func()
         Event.Brocast("SmallPop","Success",300)
     end ,self)
+
 end
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
@@ -85,13 +92,13 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
     for i, groundData in ipairs(self.groundDatas) do
         local Ids={}
         table.insert(Ids,groundData.Data.ownerId)
-        Event.Brocast("m_QueryPlayerInfo",Ids)
+        Event.Brocast("m_QueryPlayerInfoChat",Ids)
     end
 
     --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
-    Event.Brocast("m_QueryPlayerInfo",ids)
+    Event.Brocast("m_QueryPlayerInfoChat",ids)
 
 end
 
@@ -296,7 +303,7 @@ end
 function GameMainInterfaceCtrl:OncenterWareHouse()
     --Event.Brocast("m_opCenterWareHouse")
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
+    ct.OpenCtrl("ScienceSellHallCtrl",PlayerTempModel.roleData)
 end
 
 --关闭updata

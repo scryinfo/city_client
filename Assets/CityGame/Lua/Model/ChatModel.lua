@@ -4,36 +4,26 @@
 --- DateTime: 2018/12/14 10:06
 ---
 
-local pbl = pbl
+ChatModel = class("ChatModel",ModelBase)
 
-ChatModel = {}
-local this = ChatModel
-
-function ChatModel.New()
-    return this
+function ChatModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
 end
 
-function ChatModel.Awake()
-    this:OnCreate()
-end
-
-function ChatModel.OnCreate()
+function ChatModel:OnCreate()
     -- 注册事件
-    Event.AddListener("m_QueryPlayerInfoChat", this.m_QueryPlayerInfoChat)
-    Event.AddListener("m_RoleCommunication", this.m_RoleCommunication)
-    Event.AddListener("m_ChatAddFriends", this.m_ChatAddFriends)
-    Event.AddListener("m_ChatAddBlacklist", this.m_ChatAddBlacklist)
+    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat)
+    Event.AddListener("m_RoleCommunication", self.m_RoleCommunication)
+    Event.AddListener("m_ChatAddFriends", self.m_ChatAddFriends)
+    Event.AddListener("m_ChatAddBlacklist", self.m_ChatAddBlacklist)
 
     -- 网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBlacklist"),ChatModel.n_OnReceiveAddBlacklist)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addBlacklist","gs.RoleInfo", self.n_OnReceiveAddBlacklist, self)
 end
 
 function ChatModel.Close()
     -- 清空事件
-    Event.RemoveListener("m_QueryPlayerInfoChat", this.m_QueryPlayerInfoChat)
-    Event.RemoveListener("m_RoleCommunication", this.m_RoleCommunication)
-    Event.RemoveListener("m_ChatAddFriends", this.m_ChatAddFriends)
-    Event.RemoveListener("m_ChatAddBlacklist", this.m_ChatAddBlacklist)
 end
 
 -- 向服务器查询好友信息
@@ -57,7 +47,6 @@ function ChatModel.m_ChatAddBlacklist(friendsId)
 end
 
 -- 加黑名单成功服务器返回
-function ChatModel.n_OnReceiveAddBlacklist(stream)
-    local roleInfo = assert(pbl.decode("gs.RoleInfo", stream), "ChatModel.n_OnReceiveAddBlacklist: stream == nil")
+function ChatModel:n_OnReceiveAddBlacklist(roleInfo)
     Event.Brocast("c_OnReceiveAddBlacklist", roleInfo)
 end

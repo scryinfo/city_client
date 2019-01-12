@@ -41,6 +41,6 @@ function ChatRightItem:initialize(itemId, prefab, data)
     end
 
     if self.data.channel == "WORLD" then
-        transform.sizeDelta = Vector2.New(1120, transformSizeDelta.y)
+        transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
     end
  end

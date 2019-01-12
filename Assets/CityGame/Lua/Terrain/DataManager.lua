@@ -65,21 +65,21 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
+    if blockID == nil then
+        return
+    end
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     if nodeID == nil then
         nodeID = -1
     end
-    if  BuildDataStack[collectionID] == nil then
+    if nil == BuildDataStack[collectionID] then
         BuildDataStack[collectionID] = {}
     end
-    if BuildDataStack[collectionID].BlockDatas == nil then
-        BuildDataStack[collectionID].BlockDatas = {}
+    if  BuildDataStack[collectionID].BlockDatas == nil then
+    --初始化地块集合
+        CreateBlockDataTable(collectionID)
     end
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    --[[
-    if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
-        BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
-    end--]]
 end
 
 --刷新原子地块集合的基本信息
@@ -146,37 +146,40 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
         BuildDataStack[tempCollectionID].RoteDatas = {}
     end
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
-        if itemNodeID == -1 then
-            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
-            --如果有道路数据
-            if roadNum > 0 and roadNum < #RoadNumConfig  then
-                if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
-                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
-                else
-                    if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
-                        break
+        while true do
+            if itemNodeID == -1 then
+                local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+                --如果有道路数据
+                if roadNum > 0 and roadNum < #RoadNumConfig  then
+                    if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
+                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
                     else
-                        --删除之前的道路Obj
-                        destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
-                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                        if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
+                            break
+                        else
+                            --删除之前的道路Obj
+                            destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                            BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                        end
                     end
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
+                    local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
+                    local go = UnityEngine.GameObject.Instantiate(prefab)
+                    if nil ~= RoadRootObj then
+                        go.transform:SetParent(RoadRootObj.transform)
+                    end
+                    --add height
+                    local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                    Vec.y = Vec.y + 0.01
+                    go.transform.position = Vec
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
+                    --如果没有道路数据，但原先有道路记录，则清除
+                elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                    destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
                 end
-                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
-                local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
-                local go = UnityEngine.GameObject.Instantiate(prefab)
-                if nil ~= RoadRootObj then
-                    go.transform:SetParent(RoadRootObj.transform)
-                end
-                --add height
-                local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
-                Vec.y = Vec.y + 0.01
-                go.transform.position = Vec
-                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
-            --如果没有道路数据，但原先有道路记录，则清除
-            elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
-                destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
-                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
             end
+            break
         end
     end
 end
@@ -267,14 +270,11 @@ function DataManager.RefreshBaseBuildData(data)
     if nil == BuildDataStack[collectionID] then
         BuildDataStack[collectionID] = {}
         --初始化地块集合
-        BuildDataStack[collectionID].BaseBuildDatas = {}
         CreateBlockDataTable(collectionID)
     end
-    --TODO:检查数据初始化
+    --检查数据初始化
     if BuildDataStack[collectionID].BaseBuildDatas == nil then
-        --初始化地块集合
         BuildDataStack[collectionID].BaseBuildDatas = {}
-        CreateBlockDataTable(collectionID)
     end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
@@ -299,8 +299,22 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
     end
     --删除所有地块建筑覆盖信息（BlockDatas）
     if BuildDataStack[tempCollectionID].BlockDatas ~= nil then
-        --其实无意义，此句可删除
-        BuildDataStack[tempCollectionID].BlockDatas = nil
+        local isClearBlock = true
+        --计算需要删除的地块里面有没有跨地块的建筑，如果有-->BaseBlockData不删除
+        for key, value in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
+            --判断是否有建筑跨地块
+            if value ~= -1 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
+                --需要判断该建筑是否在AOI范围内
+                local attributeCollectionID = TerrainManager.BlockIDTurnCollectionID(value)
+                if TerrainManager.IsBelongToCameraCollectionIDAOIList(attributeCollectionID)  then
+                    isClearBlock = false
+                    break
+                end
+            end
+        end
+        if isClearBlock then
+            BuildDataStack[tempCollectionID].BlockDatas = nil
+        end
     end
     --删除所有道路信息数据（RoteDatas）
     DataManager.RemoveWaysByCollectionID(tempCollectionID)
@@ -309,7 +323,6 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
             value:Close()
         end
-        --其实无意义，此句可删除
         BuildDataStack[tempCollectionID].GroundDatas = nil
     end
     --删除所有基础数据BaseBuildModel（BaseBuildDatas）
@@ -317,11 +330,10 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
             value:Close()
         end
-        --其实无意义，此句可删除
         BuildDataStack[tempCollectionID].BaseBuildDatas = nil
     end
-    --清空这个节点（这个才有意义）
-    BuildDataStack[tempCollectionID] = nil
+    --清空这个节点
+    --BuildDataStack[tempCollectionID] = nil
 end
 
 --获取建筑基础数据
@@ -379,11 +391,11 @@ end
 --2：model中self方法名
 function DataManager.DetailModelRpcNoRet(insId,modelMethord,...)
     --参数验证
-    if not BuildDataStack.DetailModelStack or not insId or not modelMethord  then
+    if BuildDataStack.DetailModelStack == nil or insId == nil or modelMethord == nil then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel or tempDetailModel[modelMethord] then
+    if tempDetailModel ~= nil and tempDetailModel[modelMethord] ~= nil then
         tempDetailModel[modelMethord](tempDetailModel,...)
     end
 end
@@ -397,11 +409,11 @@ end
 --4：... model中方法参数
 function DataManager.DetailModelRpc(insId,modelMethord,callBackMethord,...)
     --参数验证
-    if not BuildDataStack.DetailModelStack or not insId or not modelMethord or not callBackMethord then
+    if BuildDataStack.DetailModelStack == nil or insId == nil or modelMethord == nil or callBackMethord == nil then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel or tempDetailModel[modelMethord] then
+    if tempDetailModel ~= nil and tempDetailModel[modelMethord] ~= nil then
         callBackMethord(tempDetailModel[modelMethord](tempDetailModel,...))
     end
 end
@@ -413,11 +425,11 @@ end
 --2：ontroller中self方法名
 function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
     --参数验证
-    if not UIPage.static.m_allPages or  not insId or not modelMethord  then
+    if UIPage.static.m_allPages == nil or insId == nil or modelMethord == nil then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.m_data and tempController.m_data.insId == insId  then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -431,11 +443,11 @@ end
 --4：... Controller中方法参数
 function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethord, ...)
     --参数验证
-    if not UIPage.static.m_allPages or  not insId or not ctrlName or not modelMethord or not callBackMethord then
+    if UIPage.static.m_allPages == nil or insId == nil or ctrlName == nil or modelMethord == nil or callBackMethord == nil then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.insId == insId then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.insId == insId then
         callBackMethord(tempController[modelMethord](tempController,...))
     end
 end
@@ -476,39 +488,37 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
-            if protoData then
-                local protoID = nil
+            local protoID = nil
+            if protoData ~= nil then
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
                 elseif protoData.buildingId then
                     protoID = protoData.buildingId
                 end
-                if protoID ~= nil then--服务器返回的数据有唯一ID
-                    for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
-                        if key == protoID then
-                            for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
-                                if BuildDataStack.DetailModelStack[protoID] then
-                                    func(BuildDataStack.DetailModelStack[protoID],protoData)
-                                else
-                                    func(protoData)
-                                end
-                            end
-                            return
-                        end
-                    end
-                else--服务器返回的数据没有唯一ID
-                    if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                        for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
-                            if funcTable.self ~= nil then
-                                funcTable.func(funcTable.self,protoData)
+            end
+            if protoID ~= nil then--服务器返回的数据有唯一ID
+                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                    if key == protoID then
+                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
+                            if BuildDataStack.DetailModelStack[protoID] then
+                                func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
-                                funcTable.func(protoData)
+                                func(protoData)
                             end
+                        end
+                        return
+                    end
+                end
+            else--服务器返回的数据没有唯一ID
+                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                        if funcTable.self ~= nil then
+                            funcTable.func(funcTable.self,protoData)
+                        else
+                            funcTable.func(protoData)
                         end
                     end
                 end
-            else
-                ct.log("System","解析服务器返回的建筑详情中数据失败")
             end
             ct.log("System","没有找到对应的建筑详情Model类的回调函数")
         end)
@@ -831,6 +841,16 @@ function DataManager.SetStrangersInfo(id)
     return PersonDataStack.socialityManager:SetStrangersInfo(id)
 end
 
+-- 获得好友所有聊天纪录
+function DataManager.GetChatRecords()
+    return PersonDataStack.socialityManager:GetChatRecords()
+end
+
+-- 删除好友所有聊天纪录
+function DataManager.SetChatRecords(index)
+    return PersonDataStack.socialityManager:SetChatRecords(index)
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding
@@ -1020,7 +1040,7 @@ function DataManager.n_OnReceiveUnitRemove(stream)
             --TODO：计算在当前AOI所有地块中 需要刷新的地块
             --刷新需要刷新的地块
             for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
-                DataManager.RefreshWaysByCollectionID( value)
+                DataManager.RefreshWaysByCollectionID(value)
             end
         end
     end

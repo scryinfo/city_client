@@ -69,7 +69,7 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     if not self.materialToggleGroup then
         self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, self.materialBehaviour, self.m_data)
     else
-        --self.materialToggleGroup:updataInfo(self.m_data)
+        self.materialToggleGroup:updateInfo(self.m_data)
     end
 end
 function MaterialCtrl:OnClick_buildInfo(ins)

@@ -21,7 +21,7 @@ GoodsUnifyMgr.static.SmallProductionLineItem_PATH = "View/GoodsItem/SmallProduct
 function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     self.behaviour = insluabehaviour
     if buildingData.type == BuildingInType.Warehouse then
-        self:_creatWarehouseItemGoods(buildingData.inHand)
+        self:_creatWarehouseItemGoods(buildingData.inHand,buildingData.buildingId)
     elseif buildingData.type == BuildingInType.Shelf then
         self:_creatStaffItemGoods(buildingData.good,buildingData.isOther,buildingData.buildingId)
     elseif buildingData.type == BuildingInType.ProductionLine then
@@ -34,14 +34,14 @@ function GoodsUnifyMgr:initialize(insluabehaviour, buildingData)
     end
 end
 --仓库
-function GoodsUnifyMgr:_creatWarehouseItemGoods(storeData)
+function GoodsUnifyMgr:_creatWarehouseItemGoods(storeData,buildingId)
     if not storeData then
         return;
     end
     self.warehouseLuaTab = {}
     for i,v in pairs(storeData) do
         local prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_PATH,WarehousePanel.Content)
-        local warehouseLuaItem = WarehouseItem:new(v,prefab,self.behaviour,self,i)
+        local warehouseLuaItem = WarehouseItem:new(v,prefab,self.behaviour,self,i,buildingId)
         self.warehouseLuaTab[i] = warehouseLuaItem
     end
 end
@@ -179,8 +179,13 @@ function GoodsUnifyMgr:_deleteLine(ins)
 end
 --仓库删除
 function GoodsUnifyMgr:_WarehousedeleteGoods(id)
-    destroy(self.warehouseLuaTab[id].prefab.gameObject);
-    table.remove(self.warehouseLuaTab,id);
+    for i,v in pairs(self.warehouseLuaTab) do
+        if i == id then
+            v:closeEvent()
+            destroy(v.prefab.gameObject);
+            table.remove(self.warehouseLuaTab,id);
+        end
+    end
     local i = 1
     for k,v in pairs(self.warehouseLuaTab) do
         self.warehouseLuaTab[i]:RefreshID(i)

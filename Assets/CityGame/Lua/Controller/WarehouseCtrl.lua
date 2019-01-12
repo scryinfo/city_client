@@ -47,6 +47,7 @@ function WarehouseCtrl:OnCreate(obj)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    Event.AddListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
 
 end
 function WarehouseCtrl:Awake(go)
@@ -60,6 +61,7 @@ function WarehouseCtrl:Refresh()
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
     self.store = self.m_data.store
     self.store.type = BuildingInType.Warehouse
+    self.store.buildingId = self.m_data.info.id
     self.luabehaviour = warehouse
     WarehouseCtrl.playerId = self.m_data.info.id
     local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
@@ -237,7 +239,7 @@ function WarehouseCtrl:n_transports(Data)
     local table = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(table) do
         if v.itemId == Data.item.key.id then
-            if v.goodsDataInfo.num == Data.item.n then
+            if v.goodsDataInfo.n == Data.item.n then
                 self.GoodsUnifyMgr:_WarehousedeleteGoods(i)
                 for i,v in pairs(WarehouseCtrl.temporaryItems) do
                    self.GoodsUnifyMgr:_deleteTransportItem(v)
@@ -250,10 +252,28 @@ function WarehouseCtrl:n_transports(Data)
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
             end
+            WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
+            WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
         end
-        WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
-        WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
     end
+end
+--删除仓库物品
+function WarehouseCtrl:warehousedeleteGoods(msg)
+    if not msg then
+        return
+    end
+    --for i,v in pairs(self.warehouseLuaTab) do
+    --    if i == id then
+    --        v:closeEvent()
+    --        destroy(v.prefab.gameObject);
+    --        table.remove(self.warehouseLuaTab,id);
+    --    end
+    --end
+    --local i = 1
+    --for k,v in pairs(self.warehouseLuaTab) do
+    --    self.warehouseLuaTab[i]:RefreshID(i)
+    --    i = i + 1
+    --end
 end
 --刷新运输确定按钮
 function WarehouseCtrl:isShowDetermineBtn()
@@ -351,6 +371,7 @@ function WarehouseCtrl:_getSortItems(type,sortingTable)
         end
     end
 end
+
 --关闭面板时清空UI信息，以备其他模块调用
 function WarehouseCtrl:deleteObjInfo()
     if not self.GoodsUnifyMgr.warehouseLuaTab then

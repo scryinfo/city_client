@@ -250,26 +250,17 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)
 
-        --仓库Item --左边第三个
-        local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-        warehouseView.gameObject.name = "WarehouseRateItem"
-        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-        local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-        self.leftData[3] = warehouseLuaItem
+        --仓库Item 左3
+        local warehouseToggleData = {pos = BuildingInfoTogglePos.Left, index = 3}   --处于toggleMgr的位置
+        self.leftData[3] = self:creatRefreshWarehouse(warehouseToggleData)
 
-        --货架 --左边第四个
-        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
-        shelfView.gameObject.name = "ShelfRateItem"
+        --货架 左4
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
-        self.leftData[4] = shelfLuaItem
+        self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
 
-        --生长线 --右侧第一个
-        local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_PRODUCTIONLINE, self.rightRect)
-        prodictionLineViewRect.gameObject.name = "HomeProductionLineItem";
-        local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        local prodictionLuaItem = HomeProductionLineItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
-        self.rightData[1] = prodictionLuaItem
+        --生产线 --右1
+        local productionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        self.rightData[1] = self:creatRefreshProductionLine(productionToggleData)
     end
 end
 --创建加工厂主页左右信息
@@ -403,18 +394,18 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
     local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
     self.leftData[1] = self:_createStaff(staffToggleData)
     -----仓库  左2
-    --if self.warehouseLuaItem == nil then
-    --    local warehouseView
-    --    warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-    --    warehouseView.gameObject.name = "WarehouseRateItem"
-    --    local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    --    self.warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-    --    self.leftData[2] = self.warehouseLuaItem
-    --end
+    if self.warehouseLuaItem == nil then
+        local warehouseView
+        warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        warehouseView.gameObject.name = "WarehouseRateItem"
+        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        self.warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        self.leftData[2] = self.warehouseLuaItem
+    end
 
-    --仓库Item 左2
-    local warehouseToggleData = {pos = BuildingInfoTogglePos.Left, index = 2}   --处于toggleMgr的位置
-    self.leftData[2] = self:creatRefreshWarehouse(warehouseToggleData)
+    ----仓库Item 左2
+    --local warehouseToggleData = {pos = BuildingInfoTogglePos.Left, index = 2}   --处于toggleMgr的位置
+    --self.leftData[2] = self:creatRefreshWarehouse(warehouseToggleData)
 
     ---研究线 --右1
     local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}

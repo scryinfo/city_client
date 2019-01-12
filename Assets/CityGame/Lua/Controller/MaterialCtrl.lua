@@ -29,16 +29,17 @@ end
 
 function MaterialCtrl:Refresh()
     this:initializeData()
-
 end
 
 function MaterialCtrl:initializeData()
     if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
     else
-        DataManager.OpenDetailModel(MaterialModel,self.m_data.info.id)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenMaterial',self.m_data.info.id)
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(MaterialModel,self.insId)
+        DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
 end
 
@@ -72,6 +73,7 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
         self.materialToggleGroup:updateInfo(self.m_data)
     end
 end
+
 function MaterialCtrl:OnClick_buildInfo(ins)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end

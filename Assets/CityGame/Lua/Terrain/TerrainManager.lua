@@ -161,6 +161,15 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     end
 end
 
+function TerrainManager.IsBelongToCameraCollectionIDAOIList(tempCollectionID)
+    for i, value in pairs(CalculationAOICollectionIDList(CameraCollectionID)) do
+        if value == tempCollectionID then
+            return true
+        end
+    end
+    return false
+end
+
 --获取当前AOI的地块们
 function TerrainManager.GetCameraCollectionIDAOIList()
     return CalculationAOICollectionIDList(CameraCollectionID)

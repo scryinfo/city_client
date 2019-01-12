@@ -192,6 +192,9 @@ function SocialityManager:ReadFriendsChat()
             if v.id == DataManager.GetMyOwnerID() then
                 self.idIndex = i
                 self.mySaveRoleCom = v
+                if not self.mySaveRoleCom.readCommunication then
+                    self.mySaveRoleCom.readCommunication = {}
+                end
                 if v.unreadCommunication then
                     for _, m in ipairs(v.unreadCommunication) do
                         local dataId = m.id
@@ -219,4 +222,14 @@ end
 -- 清空陌生人的聊天消息
 function SocialityManager:SetStrangersInfo(id)
     self.m_chatByType[3][id] = nil
+end
+
+-- 获得好友所有聊天纪录
+function SocialityManager:GetChatRecords()
+    return self.mySaveRoleCom.readCommunication
+end
+
+-- 删除聊天记录
+function SocialityManager:SetChatRecords(index)
+    table.remove(self.mySaveRoleCom.readCommunication, index)
 end

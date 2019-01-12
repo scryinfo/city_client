@@ -121,15 +121,15 @@ function Game.OnPostInitOK()
         tempTransportModel:Awake();
     end
 
-    local friendsModel = CtrlManager.GetModel(ModelNames.friends);
-    if friendsModel ~= nil then
-        friendsModel:Awake();
-    end
+    --local friendsModel = CtrlManager.GetModel(ModelNames.friends);
+    --if friendsModel ~= nil then
+    --    friendsModel:Awake();
+    --end
 
-    local chatModel = CtrlManager.GetModel(ModelNames.Chat);
-    if chatModel ~= nil then
-        chatModel:Awake();
-    end
+    --local chatModel = CtrlManager.GetModel(ModelNames.Chat);
+    --if chatModel ~= nil then
+    --    chatModel:Awake();
+    --end
     --开业停业
     StopAndBuildModel:Awake()
     --单元测试入口

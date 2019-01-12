@@ -56,11 +56,11 @@ function ChatPanel.InitPanel()
     this.worldContent = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View/Viewport/Content")
     this.worldVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/WorldRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
-    -- 好友聊天节点、滑动条
+    -- 好友聊天节点、滑动条、查看聊天记录
     this.friendsScrollView = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.friendsContent = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/Viewport/Content")
     this.friendsVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
-    this.friendsDeleteBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/DeleteBtn").gameObject
+    this.chatRecordsBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/ChatRecordsBtn").gameObject
 
     -- 输入、发送消息
     this.chatInputField = transform:Find("LeftRoot/BottomRoot/InputField"):GetComponent("InputField")
@@ -85,4 +85,18 @@ function ChatPanel.InitPanel()
     -- 玩家个人信息和公司信息显示按钮
     this.showPersonalInfoBtn = transform:Find("PlayerInfoRoot/ShowPersonalInfoBtn").gameObject
     this.showCompanyBtn = transform:Find("PlayerInfoRoot/ShowCompanyBtn").gameObject
+
+    -- 聊天记录
+    this.chatRecordsRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot").gameObject
+    this.deleteChatRecordsBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/DeleteBtn").gameObject
+    this.chatRecordsContent = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/Scroll View/Viewport/Content")
+    this.pageText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PageText"):GetComponent("Text")
+    this.prevBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PrevBtn").gameObject
+    this.prevClose = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PrevBtn/CloseImage").gameObject
+    this.prevOpen = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PrevBtn/OpenImage").gameObject
+    this.prevButton = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PrevBtn"):GetComponent("Button")
+    this.nextBtn = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn").gameObject
+    this.nextClose = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn/CloseImage").gameObject
+    this.nextOpen = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn/OpenImage").gameObject
+    this.nextButton = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn"):GetComponent("Button")
 end

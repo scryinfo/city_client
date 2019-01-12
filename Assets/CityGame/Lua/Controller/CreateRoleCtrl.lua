@@ -20,8 +20,12 @@ function CreateRoleCtrl:Refresh()
     self:_initInsData()
 end
 
+function CreateRoleCtrl:Awake()
+    self.insId = OpenModelInsID.CreateRoleCtrl
+end
+
 function CreateRoleCtrl:_initInsData()
-    DataManager.OpenDetailModel(CreateRoleModel,3)
+    DataManager.OpenDetailModel(CreateRoleModel,self.insId )
 
 end
 function CreateRoleCtrl:OnCreate(obj)
@@ -31,7 +35,7 @@ function CreateRoleCtrl:OnCreate(obj)
 end
 
 --创建角色
-function CreateRoleCtrl:OnCreateRole()
+function CreateRoleCtrl:OnCreateRole(go)
    --Event.Brocast("m_createNewRole")
-    DataManager.DetailModelRpcNoRet(3, 'm_createNewRole')
+    DataManager.DetailModelRpcNoRet(go.insId , 'm_createNewRole')
 end

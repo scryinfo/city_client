@@ -36,6 +36,11 @@ function LabInventionCtrl:Awake(go)
 
             self.m_data.bulbState = LabInventionBulbItemState.Empty
             LabInventionPanel.setBulbState(self.m_data.bulbState)
+            if self.enough then
+                self:_setInventBtnState(LabResearchBtnState.EnableClick)
+            else
+                self:_setInventBtnState(LabResearchBtnState.NotEnough)
+            end
         end
     end)
     UpdateBeat:Add(self._update, self)

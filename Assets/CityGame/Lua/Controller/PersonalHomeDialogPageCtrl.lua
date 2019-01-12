@@ -86,6 +86,7 @@ function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
         if str ~= "" and str ~= nil then
             ins:_reqChangeDesToServer(str)
             ins.sayText.text = str
+            DataManager.SetMyPersonalHomepageDesInfo(str)
         end
     end})
 end
@@ -113,7 +114,7 @@ function PersonalHomeDialogPageCtrl:_chatBtnFunc(ins)
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)
-    local msgId = pbl.enum("gsCode.OpCode","setRoleDescription")
+    local msgId = pbl.enum("gscode.OpCode","setRoleDescription")
     local lMsg = {str = str}
     local pMsg = assert(pbl.encode("gs.Str", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)

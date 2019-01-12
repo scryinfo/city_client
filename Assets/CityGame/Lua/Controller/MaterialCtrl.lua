@@ -1,6 +1,7 @@
 MaterialCtrl = class('MaterialCtrl',UIPage)
 UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
 
+local this
 --构建函数
 function MaterialCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -15,30 +16,38 @@ function MaterialCtrl:OnCreate(obj)
 end
 
 function MaterialCtrl:Awake(go)
+    this = self
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
-    self.materialBehaviour:AddClick(MaterialPanel.stopIconROOT.gameObject,self.OnClick_prepareOpen,self);
+    self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
 
 function MaterialCtrl:Refresh()
-    self:initializeData()
+    this:initializeData()
 end
 
 function MaterialCtrl:initializeData()
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(MaterialModel,self.insId)
+        DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
 end
 
 --刷新原料厂信息
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
-    MaterialPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    local companyName = DataManager.GetMyPersonalHomepageInfo()
+    MaterialPanel.nameText.text = companyName.companyName
+    MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -48,12 +57,25 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
         self.m_data.isOther = false
         MaterialPanel.changeNameBtn.localScale = Vector3.one
     end
+
+    if self.m_data.info.state=="OPERATE" then
+        MaterialPanel.stopIconRoot.localScale=Vector3.zero
+    else
+        MaterialPanel.stopIconRoot.localScale=Vector3.one
+    end
+
+    Event.Brocast("c_GetBuildingInfo",DataInfo.info)
+
     self.m_data.buildingType = BuildingType.MaterialFactory
     if not self.materialToggleGroup then
         self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, self.materialBehaviour, self.m_data)
     else
-        --self.materialToggleGroup:updataInfo(self.m_data)
+        self.materialToggleGroup:updateInfo(self.m_data)
     end
+end
+
+function MaterialCtrl:OnClick_buildInfo(ins)
+    Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function MaterialCtrl:OnClick_prepareOpen(ins)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)

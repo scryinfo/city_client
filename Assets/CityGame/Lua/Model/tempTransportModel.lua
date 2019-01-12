@@ -53,6 +53,10 @@ end
 --运输物品
 function tempTransportModel.n_OnTransportInfo(stream)
     local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
-    Event.Brocast("c_transport",msgTransportInfo)
-    Event.Brocast("n_transports",msgTransportInfo)
+    local bagId = DataManager.GetBagId()
+    if bagId == msgTransportInfo.src then
+        Event.Brocast("c_transport",msgTransportInfo)
+    else
+        Event.Brocast("n_transports",msgTransportInfo)
+    end
 end

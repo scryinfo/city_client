@@ -23,6 +23,9 @@ function TicketItem:initialize(warehouseData, clickOpenFunc, viewRect, mainPanel
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
     self.openBtn = self.viewRect.transform:Find("topRoot/close/openBtn");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/toDoBtn");  --跳转页面
+    self.slider=self.viewRect.transform:Find("contentRoot/Slider"):GetComponent("Slider") --跳转页面
+
+
 
    self.wageText=self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text");
     mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
@@ -68,26 +71,26 @@ end
 
 --刷新数据
 function TicketItem:updateInfo(buildingOwnerId,ticketPrice)
-    if DataManager.GetMyOwnerID()~=buildingOwnerId then
+
         self.toDoBtn.localScale=Vector3.zero
-    else
-        self.toDoBtn.localScale=Vector3.one
-    end
-   self.wageText.text=getPriceString(ticketPrice..".0000",30,24)
+
+   self.wageText.text=getColorString(ticketPrice,100,"blue","white")
+    self.slider.value=ticketPrice/100
 end
 
 
 function TicketItem:OntoDoBtn(ins)
-    ct.OpenCtrl("TicketAdjustPopCtrl",ins)
+    --ct.OpenCtrl("TicketAdjustPopCtrl",ins)
 end
 
 
 function TicketItem:callback()
-    if TicketAdjustPopPanel. ticketInp.text=="" then
-        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,0)
-        self.wageText.text=0;
-    else
-        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,tonumber(TicketAdjustPopPanel. ticketInp.text))
-        self.wageText.text=getPriceString(TicketAdjustPopPanel.ticketInp.text..".0000",30,24)
-    end
+
+    --if TicketAdjustPopPanel. ticketInp.text=="" then
+    --    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,0)
+    --    self.wageText.text=0;
+    --else
+    --    DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_Setticket',MunicipalPanel.buildingId,tonumber(TicketAdjustPopPanel. ticketInp.text))
+    --    self.wageText.text=getPriceString(TicketAdjustPopPanel.ticketInp.text..".0000",30,24)
+    --end
 end

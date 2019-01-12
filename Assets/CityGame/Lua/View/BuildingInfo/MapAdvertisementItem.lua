@@ -18,10 +18,17 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
     self.manager=mgr
     self.index=index
 
+
     self.plusBtn=prefab.transform:Find("bg/numImage/plusBtn");
     self.cutBtnBtn=prefab.transform:Find("bg/numImage/cutBtn");
     self.numtext=prefab.transform:Find("bg/numImage/Text"):GetComponent("Text");
+    self.personNameText=prefab.transform:Find("nameImage/Text"):GetComponent("Text");
+    self.icon=prefab.transform:Find("icon"):GetComponent("Image");
+    self.bdName=prefab.transform:Find("icon/nameImage/nameText"):GetComponent("Text");
 
+    self.personNameText.text=prefabData.personName
+    LoadSprite(prefabData.path,self.icon,true)
+    self.bdName.text=prefabData.name
 
     self._luabehaviour:AddClick(self.cutBtnBtn.gameObject, self.OnClick_cut, self);
     self._luabehaviour:AddClick(self.plusBtn.gameObject, self.OnClick_Plus, self);
@@ -30,6 +37,11 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
         self.numtext.text=prefabData.count
     end
 
+    self.personName=prefabData.personName
+    self.path=prefabData.path
+    self.name=prefabData.name
+    self.type=prefabData.type
+    self.itemId=prefabData.metaId
 end
 
 ---添加
@@ -48,7 +60,7 @@ function MapAdvertisementItem:OnClick_cut(go)
             return
         end
         go.numtext.text=go.numtext.text-1
-        go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001,metaId=Good[2251001].itemId}
+        go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=go.type,name=go.name,metaId=go.itemId,personName=go.personName,path=go.path}
 
 
     else--他人进入
@@ -67,7 +79,8 @@ function MapAdvertisementItem:OnClick_cut(go)
             return
         end
         go.numtext.text=go.numtext.text-1
-        go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=0,ADperson=1001,metaId=Good[2251001].itemId,slots=go.manager.current.slots}
+        go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=go.type,name=go.name,metaId=go.itemId,slots=go.manager.current.slots
+        ,personName=go.personName,path=go.path}
         ---处理添加文本显示
         go.manager.current.numText.text=go.manager.current.numText.text+1
         go.manager.current.prefab:SetActive(true)
@@ -78,14 +91,15 @@ function MapAdvertisementItem:OnClick_Plus(ins)
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
         ins.numtext.text=ins.numtext.text+1
-        ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001,metaId=Good[2251001].itemId}
+        ins.manager.AdvertisementDataList[ins.index]={count=ins.numtext.text,type=ins.type,name=ins.name,metaId=ins.itemId,personName=ins.personName,path=ins.path}
 
     else--他人进入
         if tonumber(ins.numtext.text)>=ins.manager.current.selfAcount then
               return
         end
         ins.numtext.text=ins.numtext.text+1
-        ins.manager.AdvertisementDataList[ins.index]={ count=ins.numtext.text,type=0,ADperson=1001,metaId=Good[2251001].itemId,slots=ins.manager.current.slots}
+        ins.manager.AdvertisementDataList[ins.index]={count=ins.numtext.text,type=ins.type,name=ins.name,metaId=ins.itemId,slots=ins.manager.current.slots
+        ,personName=ins.personName,path=ins.path}
         ---处理添加文本显示
         ins.manager.current.numText.text=ins.manager.current.numText.text-1
         if ins.manager.current.numText.text=="0" then

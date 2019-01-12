@@ -152,8 +152,8 @@ function MobileInput:Update()
             self.m_oldTouch1Pos = currentPosition1;
             self.m_Zoomed = true;
         end
-        local newDis = Vector3.Distance(currentPosition0, currentPosition1)
-        local oldDis = Vector3.Distance(self.m_oldTouch0Pos, self.m_oldTouch1Pos)
+        local newDis = Vector2.Distance(currentPosition0, currentPosition1)
+        local oldDis = Vector2.Distance(self.m_oldTouch0Pos, self.m_oldTouch1Pos)
         self.m_zoomValue = (newDis - oldDis)
         self.m_oldTouch0Pos = currentPosition0
         self.m_oldTouch1Pos = currentPosition1

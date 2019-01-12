@@ -40,6 +40,7 @@ function GameNoticeCtrl:OnCreate(obj)
 end
 
 function GameNoticeCtrl:Awake()
+    self.insId = OpenModelInsID.GameNoticeCtrl
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 end
 
@@ -51,7 +52,7 @@ end
 
 function GameNoticeCtrl:initializeData()
     if self.m_data then
-        DataManager.OpenDetailModel(GameNoticeModel,7)
+        DataManager.OpenDetailModel(GameNoticeModel,self.insId )
     end
 end
 
@@ -65,13 +66,14 @@ end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
+    NoticeMgr:_dleNotice()
     UIPage.ClosePage();
 end
 
 --读取邮件
 function GameNoticeCtrl:c_onBg(go)
     if go.state == false then
-        DataManager.DetailModelRpcNoRet(7, 'm_mailRead',go.id)
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_mailRead',go.id)
     else
         GameNoticeCtrl:c_OnMailRead(go)
     end
@@ -117,7 +119,7 @@ function GameNoticeCtrl:OnXBtn(go)
     data.contentInfo = "Delete the message?"
     data.tipInfo = ""
     data.btnCallBack = function ()
-        DataManager.DetailModelRpcNoRet(7, 'm_delMail',goId)
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
         --GameNoticeCtrl:c_OnDeleMails(go)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)

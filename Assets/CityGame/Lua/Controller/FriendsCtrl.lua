@@ -110,7 +110,12 @@ end
 
 -- 刷新
 function FriendsCtrl:Refresh()
+    self:initInsData()
     self:_addListener()
+end
+
+function FriendsCtrl:initInsData()
+    DataManager.OpenDetailModel(FriendsModel, OpenModelInsID.FriendsCtrl)
 end
 
 function FriendsCtrl:Close()

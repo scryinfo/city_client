@@ -34,6 +34,7 @@ function GameMainInterfacePanel.InitPanel()
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
+    this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--
 
     this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
     this.worldChatContent = transform:Find("WorldChatPanel/Content")--世界内容--

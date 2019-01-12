@@ -67,7 +67,7 @@ end
 
 --点击BG
 function WareHouseGoodsItem:OnBGItem()
-    Event.Brocast("c_OnBGItem")
+    --Event.Brocast("c_OnBGItem")
 end
 
 --点击运输后的BG

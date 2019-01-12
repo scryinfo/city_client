@@ -8,6 +8,9 @@ GroundAuctionModel= {}
 local this = GroundAuctionModel
 local pbl = pbl
 
+GroundAuctionModel.StartAucPath = "View/Building/AuctionPlanes"
+GroundAuctionModel.WillAucPath = "View/Building/AuctionWillPlanes"
+
 --构建函数--
 function GroundAuctionModel.New()
     return this
@@ -123,17 +126,16 @@ end
 
 --预先加载两个预制
 function GroundAuctionModel._preLoadGroundAucObj()
-    --this.groundAucNowObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000001].prefabRoute)  --已经拍卖
-    --this.groundAucSoonObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[3000002].prefabRoute)  --即将拍卖
-
-    this.groundAucNowObj = GameObject.New()  --临时数据
-    this.groundAucSoonObj = GameObject.New()
+    this.groundAucNowObj = UnityEngine.Resources.Load(GroundAuctionModel.StartAucPath)  --已经拍卖
+    this.groundAucSoonObj = UnityEngine.Resources.Load(GroundAuctionModel.WillAucPath)  --即将拍卖
 end
 
 --拍卖信息更新
-function GroundAuctionModel._updateAucBidInfo(data)
+function GroundAuctionModel._updateAucBidInfo(aucData)
+    local data = {id = aucData.targetId, num = aucData.nowPrice, biderId = aucData.biderId}
     if this.groundAucDatas[data.id] then
         this.groundAucDatas[data.id].price = data.num
+        this.groundAucDatas[data.id].biderId = data.biderId
 
         Event.Brocast("c_BidInfoUpdate", data)
     end
@@ -148,10 +150,36 @@ function GroundAuctionModel._getOrderGroundDatas(groundData)
     end
     table.sort(this.orderAucDatas, function (m, n) return m.beginTime < n.beginTime end)  --按照时间顺序排序
 
+    --测试
+    --for i, v in ipairs(this.orderAucDatas[1].area) do
+    --    local go = GameObject.New()
+    --    go.name = "obj"..i
+    --    go.transform.position = Vector3.New(v.x, 0, v.y)
+    --end
+
     this._checkNowAndSoonData()
 
     --创建气泡  --最多只有两个状态的气泡
     ct.OpenCtrl("UIBubbleCtrl", {this.nowAucGroundData, this.soonAucGroundData})
+end
+
+--获取有效的开始拍卖的土地预制
+function GroundAuctionModel._getValuableStartAucObj()
+    if GroundAuctionModel.valuableStartAucObj == nil then
+        GroundAuctionModel.valuableStartAucObj = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+    end
+    GroundAuctionModel.valuableStartAucObj.transform.localScale = Vector3.one
+    GroundAuctionModel.valuableStartAucObj.gameObject.name = "拍卖中"
+    return GroundAuctionModel.valuableStartAucObj
+end
+--获取有效的即将拍卖的土地预制
+function GroundAuctionModel._getValuableWillAucObj()
+    if GroundAuctionModel.valuableWillAucObj == nil then
+        GroundAuctionModel.valuableWillAucObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
+    end
+    GroundAuctionModel.valuableWillAucObj.transform.localScale = Vector3.one
+    GroundAuctionModel.valuableWillAucObj.gameObject.name = "即将拍卖"
+    return GroundAuctionModel.valuableWillAucObj
 end
 
 --确认数据
@@ -166,29 +194,17 @@ function GroundAuctionModel._checkNowAndSoonData()
         --如果已经开始拍卖
         if groundAucItem.beginTime <= os.time() then
             groundAucItem.isStartAuc = true
-
-            local groundObj = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)  --已经拍卖
-            groundObj.transform.localScale = Vector3.one
-            groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --temp 1x1
-            groundObj.name = "拍卖中"
-            groundAucItem.groundObj = groundObj
-
+            groundAucItem.groundObj = GroundAuctionModel._getValuableStartAucObj()
+            groundAucItem.groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --第二个地块为左上角的位置
             this.nowAucGroundData = groundAucItem
         else
             if showFirstWait then
                 if groundAucItem.beginTime <= os.time() then
-                    ct.log("cycle_w6_GroundAuc", "-----------时间有问题")
                     return
                 end
-
                 groundAucItem.isStartAuc = false
-
-                local groundObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)  --已经拍卖
-                groundObj.transform.localScale = Vector3.one
-                groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --temp 1x1
-                groundObj.name = "即将拍卖"
-                groundAucItem.groundObj = groundObj
-
+                groundAucItem.groundObj = GroundAuctionModel._getValuableWillAucObj()
+                groundAucItem.groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)
                 this.soonAucGroundData = groundAucItem
                 return
             end
@@ -256,12 +272,12 @@ function GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
         return
     end
     local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
-    if not auctionInfo or #auctionInfo.auction == 0 then
+    if auctionInfo == nil or #auctionInfo.auction == 0 then
         return
     end
 
     --填充数据
-    if not this.groundAucDatas then
+    if this.groundAucDatas == nil then
         this.groundAucDatas = {}
     end
     for i, item in ipairs(auctionInfo.auction) do
@@ -281,8 +297,6 @@ function GroundAuctionModel.n_OnReceiveBindGround(stream)
     if auctionInfo then
         this._updateAucBidInfo(auctionInfo)
 
-        --ct.log("cycle_w6_GroundAuc", "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"..auctionInfo.id)
-        GroundAuctionPanel.ChangeBidInfo(auctionInfo)
         local info = {}
         info.titleInfo = "CONGRATULATION"
         info.contentInfo = "Successful participation in auction"
@@ -301,7 +315,7 @@ function GroundAuctionModel.n_OnReceiveBidChangeInfor(stream)
         return
     end
 
-    local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
+    local bidInfo = assert(pbl.decode("gs.BidChange", stream), "GroundAuctionModel.n_OnReceiveBidChangeInfor: stream == nil")
     if bidInfo then
         this._updateAucBidInfo(bidInfo)
     end

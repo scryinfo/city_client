@@ -70,6 +70,9 @@ function ChatFriendsItem:_toggleValueChange(isOn)
         self.noticeImage:SetActive(false)
         ChatCtrl.static.chatMgr:SetToggle(self.toggle)
         if self.data.index == 1 then
+            if ChatPanel.friendsChatNoContentRoot.activeSelf then
+                ChatPanel.friendsChatNoContentRoot:SetActive(false)
+            end
             ChatCtrl.static.chatMgr:DestroyContentChildren(2)
             ChatPanel.chatRecordsBtn:SetActive(true)
             ChatPanel.chatRecordsRoot:SetActive(false)
@@ -78,6 +81,10 @@ function ChatFriendsItem:_toggleValueChange(isOn)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
         else
+            if ChatPanel.strangersChatNoContentRoot.activeSelf then
+                ChatPanel.strangersChatNoContentRoot:SetActive(false)
+            end
+            ChatCtrl.static.chatMgr:DestroyContentChildren(4)
             ChatCtrl.static.chatMgr:ShowPlayerInfo(3, self.data)
             --DataManager.SetMyReadChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(3, self.data.id)

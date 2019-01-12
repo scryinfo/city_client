@@ -7,6 +7,10 @@ function  SystemSettingCtrl:bundleName()
     return "Assets/CityGame/Resources/View/SystemSettingPanel.prefab"
 end
 
+function  SystemSettingCtrl:Awake(go)
+    self.gameObject = go;
+end
+
 function SystemSettingCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
@@ -27,7 +31,8 @@ function SystemSettingCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(panel.MusicBtngrey.gameObject,self.c_OnClickMusic,self);
     LuaBehaviour:AddClick(panel.MusicEffectBtngrey.gameObject,self.c_OnClickMusicEffect,self);
     LuaBehaviour:AddClick(panel.outBtn.gameObject,self.c_OnClickout,self);
-
+    LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn,self);
+    LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn,self);
 
 end
 
@@ -38,15 +43,11 @@ function SystemSettingCtrl:Refresh()
     elseif Languagenum==1 then
         panel:InitDate(GetLanguage(1000007))
     end
-
-
-
 end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
     UIPage.ClosePage();
     ct.OpenCtrl("LoginCtrl")
-
 end
 --开音乐
 function SystemSettingCtrl:c_OnClickMusic(ins)

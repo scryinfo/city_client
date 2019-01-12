@@ -284,8 +284,19 @@ function WareHouseGoodsMgr:TransportConfirm()
             CenterWareHousePanel.transportConfirm:SetActive(true)
         end
     end
-end
 
+    --if CenterWareHousePanel.tspContent ~= nil then
+    --    if CenterWareHousePanel.tspContent.childCount>= 1 and OnClick then
+    --        CenterWareHousePanel.transportConfirm:SetActive(false);
+    --    end
+    --end
+    --if WarehousePanel.transportContent ~= nil then
+    --    if WarehousePanel.transportContent.childCount >= 1 and OnClick then
+    --        WarehousePanel.transportUncheckBtn.localScale = Vector3.zero
+    --        WarehousePanel.transportConfirmBtn.localScale = Vector3.one
+    --    end
+    --end
+end
 --改变点击状态
 function WareHouseGoodsMgr:_onClick()
     OnClick = true

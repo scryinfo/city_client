@@ -55,7 +55,8 @@ namespace LuaFramework {
             if (buttons.ContainsKey(eventName)) {
                 return;                    
             }
-            buttons.Add(eventName, pair);            
+            buttons.Add(eventName, pair);
+            go.GetComponent<Button>().onClick.RemoveAllListeners();
             go.GetComponent<Button>().onClick.AddListener(pair._CsharpFun);
         }
         

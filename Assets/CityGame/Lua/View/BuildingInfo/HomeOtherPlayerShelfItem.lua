@@ -80,7 +80,6 @@ function HomeOtherPlayerShelfItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeOtherPlayerShelfItem.static.TOP_H);
 end
-
 ----生成预制
 --function HomeOtherPlayerShelfItem:_creatGoods(path,parent)
 --    local prefab = UnityEngine.Resources.Load(path);

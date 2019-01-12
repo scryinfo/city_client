@@ -12,6 +12,7 @@ end
 --主页货架
 function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.prefab = prefab;
+    self.itemId = homePageShelfInfo.k.id
     self.iconImg = self.prefab.transform:Find("iconImg"):GetComponent("Image");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");
@@ -42,7 +43,8 @@ end
 --主页生产线
 function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefab)
     self.prefab = prefab;
-    self.iconImg = self.prefab.transform:Find("iconImg"):GetComponent("Image");
+    self.id = homePageProductionLineInfo.id
+    self.iconIcon = self.prefab.transform:Find("iconmg/iconIcon"):GetComponent("Image");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.timeText = self.prefab.transform:Find("timeImg/timeText"):GetComponent("Text");
     self.productionText = self.prefab.transform:Find("productionText"):GetComponent("Text");
@@ -56,7 +58,7 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
         panelMgr:LoadPrefab_A(Material[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
+                self.iconIcon.sprite = texture
             end
         end)
     elseif math.floor(homePageProductionLineInfo.itemId / 100000) == goodsKey then
@@ -64,12 +66,12 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
         panelMgr:LoadPrefab_A(Good[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
+                self.iconIcon.sprite = texture
             end
         end)
     end
     --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
-    --self.timeText =
+    self.timeText.text = "00:00:00"
     --self.productionText =
     self.productionSlider.maxValue = homePageProductionLineInfo.targetCount
     self.productionSlider.value = homePageProductionLineInfo.nowCount

@@ -29,7 +29,13 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close")
     self.closeOpenBtn = self.viewRect.transform:Find("topRoot/close/openBtn")
 
-    self.openToDoBtn.localScale = Vector3.zero  --暂时不显示打开按钮
+    if staffData.isOther then
+        self.openToDoBtn.localScale = Vector3.zero
+    else
+        self.openToDoBtn.localScale = Vector3.one
+        mainPanelLuaBehaviour:AddClick(self.openToDoBtn.gameObject, self._clickToDoBtn, self)
+    end
+
     mainPanelLuaBehaviour:AddClick(self.closeOpenBtn.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
@@ -109,10 +115,8 @@ end
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn(ins)
     --打开工资调整界面
-    --local value = {dayWage = self.staffData.dayWage, workerNum = self.m_data.totalStaffCount, callBackFunc = function ()
-    --    --xxx
-    --end}
-    --ct.OpenCtrl("WagesAdjustBoxCtrl", value)
+    local value = {dayWage = ins.staffData.dayWage, workerNum = ins.staffData.totalStaffCount}
+    ct.OpenCtrl("WagesAdjustBoxCtrl", value)
 end
 
 --打开
@@ -122,7 +126,7 @@ function StaffRateItem:openToggleItem(targetMovePos)
     self.closeStateTran.localScale = Vector3.zero
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, self.currentContentH), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH)
+    return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH-5)
 end
 
 --关闭
@@ -132,7 +136,7 @@ function StaffRateItem:closeToggleItem(targetMovePos)
     self.closeStateTran.localScale = Vector3.one
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    return Vector2.New(targetMovePos.x,targetMovePos.y - StaffRateItem.static.TOP_H)
+    return Vector2.New(targetMovePos.x,targetMovePos.y - StaffRateItem.static.TOP_H-5)
 end
 
 --刷新数据

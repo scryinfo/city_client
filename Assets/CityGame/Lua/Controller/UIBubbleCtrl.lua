@@ -74,7 +74,7 @@ end
 function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
     if bubbleData.isStartAuc then
         --已经开始拍卖
-        if not self.groundAucNowObj then
+        if self.groundAucNowObj == nil then
             self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucNowObjPath)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
@@ -85,12 +85,13 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
             go.transform.localScale = Vector3.one
         end
         local data = ct.deepCopy(bubbleData)
+        data.groundObj.transform.localScale = Vector3.one
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
     else
         --即将拍卖
-        if not self.groundAucSoonObj then
+        if nil == self.groundAucSoonObj then
             self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucSoonObjPath)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
@@ -101,6 +102,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
             go.transform.localScale = Vector3.one
         end
         local data = ct.deepCopy(bubbleData)
+        data.groundObj.transform.localScale = Vector3.one
         data.bubbleRect = go:GetComponent("RectTransform")
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
@@ -111,7 +113,7 @@ end
 function UIBubbleCtrl:_refreshItems(datas)
     for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
-        destroyImmediate(item.data.groundObj.gameObject)  --删除场景中的预制
+        item.data.groundObj.gameObject.transform.localScale = Vector3.zero  --删除场景中的预制
         destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end

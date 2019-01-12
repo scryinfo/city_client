@@ -44,8 +44,9 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     end);
     self:initializeInfo(self.shelfData.shelf.good)
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
+    Event.AddListener("delGoodRefreshInfo",self.delGoodRefreshInfo,self)
 end
 
 --获取是第几个点击了
@@ -90,19 +91,39 @@ function ShelfRateItem:initializeInfo(data)
         local homePageType = ct.homePage.shelf
         local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        --if not self.SmallShelfRateItemTab then
-        --    self.SmallShelfRateItemTab = {}
-        --end
-        --self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
+        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
---刷新数据
+--货架添加时添加
 function ShelfRateItem:shelfRefreshInfo(data)
     if not data then
         return;
     end
     local homePageType = ct.homePage.shelf
-    --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
     local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
     local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
+    self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
+    --if not self.tempShowTable then
+    --    self.tempShowTable = {}
+    --end
+    --self.tempShowTable[data.k.id] = SmallShelfRateItem
+end
+--货架下架时删除
+function ShelfRateItem:delGoodRefreshInfo(data)
+    if not data then
+        return
+    end
+    for i,v in pairs(self.SmallShelfRateItemTab) do
+        if v.itemId == data.item.key.id then
+            destroy(v.prefab.gameObject)
+        end
+    end
+end
+--刷新数据
+function ShelfRateItem:updateInfo(data)
+    self.shelfData.shelf.good = data.shelf.good
+    self:initializeInfo()
 end

@@ -52,7 +52,7 @@ function ScienceSellHallCtrl:Awake(go)
 
     materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
-    materialBehaviour:AddClick(panel.searchBtn.gameObject,self.OnClick_search,self);
+   -- materialBehaviour:AddClick(panel.searchBtn.gameObject,self.OnClick_search,self);
     materialBehaviour:AddClick(panel.goodsBtn.gameObject,self.OnClick_goods,self);
     materialBehaviour:AddClick(panel.materialBtn.gameObject,self.OnClick_material,self);
 

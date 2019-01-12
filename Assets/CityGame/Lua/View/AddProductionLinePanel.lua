@@ -9,7 +9,6 @@ end
 
 function AddProductionLinePanel.InitPanel()
     this.returnBtn = transform:Find("Button/returnBtn")
-    this.findBtn = transform:Find("Button/findBtn")
     this.leftBtnParent = transform:Find("leftBtnParent"):GetComponent("RectTransform")
     this.leftBtn = transform:Find("leftBtnParent/leftBtn")
     this.leftDisableImg = transform:Find("leftBtnParent/disableImg")

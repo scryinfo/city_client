@@ -22,7 +22,6 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
     --adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
-
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     Event.AddListener("refreshTime",self.refreshTime,self)
@@ -76,9 +75,15 @@ end
 --计算一条生产线总时间
 function AdjustProductionLineCtrl:calculateTime(msg)
     local time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    local timeTab = getTimeString(time)
-    self.GoodsUnifyMgr.tempLineItem[msg.line.itemId].timeText.text = timeTab
-    self.GoodsUnifyMgr.tempLineItem = nil
+    local timeTab = getTimeBySec(time)
+    local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.itemId == msg.line.itemId then
+            v.timeText.text = timeStr
+        end
+    end
+    --self.GoodsUnifyMgr.tempLineItem[msg.line.itemId].timeText.text = timeTab
+    --self.GoodsUnifyMgr.tempLineItem = nil
 end
 ----修改生产线
 --function AdjustProductionLineCtrl:OnClick_modifyBtn()
@@ -93,6 +98,7 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
         if v.buildingId == msg.buildingId and v.lineId == msg.lineId then
             self:refreshAddWorkerNum(tonumber(v.sNumberScrollbar.value))
             destroy(v.prefab.gameObject);
+            table.remove(AdjustProductionLineCtrl.materialProductionLine,i)
         end
     end
     local i = 1
@@ -190,7 +196,7 @@ function AdjustProductionLineCtrl:refreshNowTime(msg)
 end
 --关闭面板时清空UI信息，以备其他模块调用
 function AdjustProductionLineCtrl:deleteObjInfo()
-    if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == nil then
+    if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
         return;
     else
         for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do

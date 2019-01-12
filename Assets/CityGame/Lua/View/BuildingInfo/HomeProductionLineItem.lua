@@ -31,8 +31,9 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
 
     self:initializeInfo(self.productionData.line);
 
-    Event.AddListener("c_onOccupancyValueChange",self.up0dateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
+    Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
 end
 
 --获取是第几次点击了
@@ -76,13 +77,13 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         local homePageType = ct.homePage.productionLine
         local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
         local SmallLineRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        --if not self.SmallLineRateItemTab then
-        --    self.SmallLineRateItemTab = {}
-        --end
-        --self.SmallLineRateItemTab[i] = SmallLineRateItem
+        if not self.SmallLineRateItemTab then
+            self.SmallLineRateItemTab = {}
+        end
+        self.SmallLineRateItemTab[i] = SmallLineRateItem
     end
 end
---刷新数据
+--生产线添加时添加
 function HomeProductionLineItem:productionRefreshInfo(data)
     if not data then
         return;
@@ -90,4 +91,26 @@ function HomeProductionLineItem:productionRefreshInfo(data)
     local homePageType = ct.homePage.productionLine
     local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
     local SmallLineRateItem = HomePageDisplay:new(homePageType,data.line,prefab)
+    if not self.SmallLineRateItemTab then
+        self.SmallLineRateItemTab = {}
+        self.SmallLineRateItemTab[1] = SmallLineRateItem
+    else
+        self.SmallLineRateItemTab[#self.SmallLineRateItemTab] = SmallLineRateItem
+    end
+end
+--删除生产线时添加
+function HomeProductionLineItem:delLineRefreshInfo(data)
+    if not data then
+        return
+    end
+    for i,v in pairs(self.SmallLineRateItemTab) do
+        if v.id == data.lineId then
+            destroy(v.prefab.gameObject)
+        end
+    end
+end
+--刷新数据
+function HomeProductionLineItem:updateInfo(data)
+    self.productionData.line = data.line
+    self:initializeInfo()
 end

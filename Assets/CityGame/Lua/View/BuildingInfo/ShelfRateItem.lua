@@ -46,7 +46,7 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
 
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
-    Event.AddListener("delRefreshInfo",self.delRefreshInfo,self)
+    Event.AddListener("delGoodRefreshInfo",self.delGoodRefreshInfo,self)
 end
 
 --获取是第几个点击了
@@ -91,10 +91,10 @@ function ShelfRateItem:initializeInfo(data)
         local homePageType = ct.homePage.shelf
         local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        --if not self.SmallShelfRateItemTab then
-        --    self.SmallShelfRateItemTab = {}
-        --end
-        --self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
+        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
 --货架添加时添加
@@ -105,18 +105,19 @@ function ShelfRateItem:shelfRefreshInfo(data)
     local homePageType = ct.homePage.shelf
     local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
     local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
-    if not self.tempShowTable then
-        self.tempShowTable = {}
-    end
-    self.tempShowTable[data.k.id] = SmallShelfRateItem
+    self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
+    --if not self.tempShowTable then
+    --    self.tempShowTable = {}
+    --end
+    --self.tempShowTable[data.k.id] = SmallShelfRateItem
 end
 --货架下架时删除
-function ShelfRateItem:delRefreshInfo(data)
+function ShelfRateItem:delGoodRefreshInfo(data)
     if not data then
         return
     end
-    for i,v in pairs(self.tempShowTable) do
-        if i == data.item.key.id then
+    for i,v in pairs(self.SmallShelfRateItemTab) do
+        if v.itemId == data.item.key.id then
             destroy(v.prefab.gameObject)
         end
     end

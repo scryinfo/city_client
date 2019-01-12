@@ -78,6 +78,7 @@ function AdjustProductionLineModel.nGsDeleteLine(stream)
     local msgProductionLine = assert(pbl.decode("gs.DelLine",stream),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
     Event.Brocast("SmallPop","删除成功",300)
     Event.Brocast("_deleteProductionLine",msgProductionLine)
+    Event.Brocast("delLineRefreshInfo",msgProductionLine)
 end
 --生产线变化推送
 function AdjustProductionLineModel.n_GsLineChangeInform(stream)

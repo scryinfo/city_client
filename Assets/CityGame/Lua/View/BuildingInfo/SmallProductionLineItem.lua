@@ -125,6 +125,16 @@ end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
+    --local time = 0
+    --local materialKey,goodsKey = 21,22
+    --if math.floor(go.itemId / 100000) == materialKey then
+    --    time = 1 / Material[go.itemId].numOneSec / tonumber(go.staffNumberText.text) * tonumber(go.inputNumber.text)
+    --elseif math.floor(go.itemId / 100000) == goodsKey then
+    --    time = 1 / Good[go.itemId].numOneSec / tonumber(go.staffNumberText.text) * tonumber(go.inputNumber.text)
+    --end
+    --local timeTable = getTimeBySec(time)
+    --local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    --self.timeText.text = timeStr
     go.adjustmentTop.localScale = Vector3.zero
 end
 --点击删除

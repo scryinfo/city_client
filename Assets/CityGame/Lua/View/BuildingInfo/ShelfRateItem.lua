@@ -44,8 +44,9 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     end);
     self:initializeInfo(self.shelfData.shelf.good)
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
+    Event.AddListener("delRefreshInfo",self.delRefreshInfo,self)
 end
 
 --获取是第几个点击了
@@ -96,13 +97,32 @@ function ShelfRateItem:initializeInfo(data)
         --self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
---刷新数据
+--货架添加时添加
 function ShelfRateItem:shelfRefreshInfo(data)
     if not data then
         return;
     end
     local homePageType = ct.homePage.shelf
-    --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
     local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
     local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
+    if not self.tempShowTable then
+        self.tempShowTable = {}
+    end
+    self.tempShowTable[data.k.id] = SmallShelfRateItem
+end
+--货架下架时删除
+function ShelfRateItem:delRefreshInfo(data)
+    if not data then
+        return
+    end
+    for i,v in pairs(self.tempShowTable) do
+        if i == data.item.key.id then
+            destroy(v.prefab.gameObject)
+        end
+    end
+end
+--刷新数据
+function ShelfRateItem:updateInfo(data)
+    self.shelfData.shelf.good = data.shelf.good
+    self:initializeInfo()
 end

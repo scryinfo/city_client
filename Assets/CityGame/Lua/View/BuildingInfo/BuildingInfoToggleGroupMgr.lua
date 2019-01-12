@@ -324,19 +324,25 @@ function BuildingInfoToggleGroupMgr:_creatRetailShop()
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)
 
-        --仓库 左3
-        local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
-        warehouseView.gameObject.name = "WarehouseRateItem"
-        local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
-        local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
-        self.leftData[3] = warehouseLuaItem
+        ----仓库 左3
+        --local warehouseView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH, self.leftRect)
+        --warehouseView.gameObject.name = "WarehouseRateItem"
+        --local warehouseToggleData = { pos = BuildingInfoTogglePos.Left, index = 3}  --处于toggleMgr的位置
+        --local warehouseLuaItem = WarehouseRateItem:new(self.toggleData, self._clickItemFunc, warehouseView, self.mainPanelLuaBehaviour, warehouseToggleData, self)
+        --self.leftData[3] = warehouseLuaItem
+        local warehouseToggleData = {pos = BuildingInfoTogglePos.Left, index = 3}   --处于toggleMgr的位置
+        self.leftData[3] = self:creatRefreshWarehouse(warehouseToggleData)
 
-        --货架  左4
-        local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
-        shelfView.gameObject.name = "ShelfRateItem"
+        ----货架  左4
+        --local shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)
+        --shelfView.gameObject.name = "ShelfRateItem"
+        --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+        --local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
+        --self.leftData[4] = shelfLuaItem
+
+        --货架 左4
         local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        local shelfLuaItem = ShelfRateItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
-        self.leftData[4] = shelfLuaItem
+        self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
 
         ---广告展示--右1
         --local advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
@@ -580,7 +586,7 @@ end
 function BuildingInfoToggleGroupMgr:creatRefreshShelf(shelfToggleData)
     --如果已经存在则直接刷新数据，否则重新生成
     if self.shelfRateItem then
-
+        self.shelfRateItem:updateInfo(self.toggleData)
     else
         if not self.shelfView then
             self.shelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH, self.leftRect)

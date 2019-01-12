@@ -37,13 +37,13 @@ function WarehouseModel.m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
     if producerId == nil and qty == nil then
         ct.log("system",buildingId,Id,num,price)
         local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-        local lMsg = {buildingId = buildingId, item = {key = {id = Id},n = num}, price = price}
+        local lMsg = {buildingId = buildingId, item = {key = {id = Id},n = tonumber(num)}, price = tonumber(price)}
         local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     else
         ct.log("system",buildingId,Id,num,price,producerId,qty)
         local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-        local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = num}, price = price}
+        local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
         local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     end
@@ -78,7 +78,7 @@ function WarehouseModel.n_OnShelfAddInfo(stream)
     local msgShelfAddInfo = assert(pbl.decode("gs.Shelf.Content",stream),"WarehouseModel.n_OnShelfAddInfo")
     Event.Brocast("n_shelfAdd",msgShelfAddInfo)
     Event.Brocast("SmallPop","上架成功",300)
-    --Event.Brocast("shelfRefreshInfo",msgShelfAddInfo)
+    Event.Brocast("shelfRefreshInfo",msgShelfAddInfo)
     --Event.Brocast("refreshShelfInfo",msgShelfAddInfo)
 end
 --修改货架数量或价格

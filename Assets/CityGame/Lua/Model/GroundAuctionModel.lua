@@ -158,9 +158,16 @@ function GroundAuctionModel._getOrderGroundDatas(groundData)
     --end
 
     this._checkNowAndSoonData()
+    this._moveToAucPos()
 
     --创建气泡  --最多只有两个状态的气泡
     ct.OpenCtrl("UIBubbleCtrl", {this.nowAucGroundData, this.soonAucGroundData})
+end
+--移动到即将拍卖的位置
+function GroundAuctionModel._moveToAucPos()
+    if GroundAuctionModel.valuableWillAucObj ~= nil then
+        CameraMove.MoveCameraToPos(GroundAuctionModel.valuableWillAucObj.transform.position)
+    end
 end
 
 --获取有效的开始拍卖的土地预制

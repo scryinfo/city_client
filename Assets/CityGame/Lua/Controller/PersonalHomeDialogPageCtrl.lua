@@ -25,6 +25,7 @@ function PersonalHomeDialogPageCtrl:Awake(go)
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
+    self.luaBehaviour:AddClick(self.bgCloseBtn.gameObject, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.changeSayBtn.gameObject, self._changeDesFunc, self)
     self.luaBehaviour:AddClick(self.addFriendBtn.gameObject, self._reqAddFriend, self)
     self.luaBehaviour:AddClick(self.sendMessageBtn.gameObject, self._chatBtnFunc, self)
@@ -40,6 +41,7 @@ end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/topBg/closeBtn")
+    self.bgCloseBtn = go.transform:Find("bgCloseBtn")
     self.sayText = go.transform:Find("root/sayRoot/sayText"):GetComponent("Text")
     self.changeSayBtn = go.transform:Find("root/sayRoot/changeBtn")
     self.nameText = go.transform:Find("root/infoRoot/name/nameText"):GetComponent("Text")

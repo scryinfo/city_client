@@ -43,7 +43,7 @@ end
 
 --服务器回调--
 --获取所有邮件
-function GameMainInterfaceModel.n_OnGetAllMails(lMsg)
+function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     Event.Brocast("c_AllMails",lMsg.mail)
 end

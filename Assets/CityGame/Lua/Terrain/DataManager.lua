@@ -39,6 +39,7 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
+--local HeadId                  --头像的ID
 
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
@@ -941,6 +942,7 @@ local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
    -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
+   -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
 end
 
 --注册所有网络消息回调
@@ -1188,3 +1190,10 @@ function DataManager.n_DeleteBlacklist(stream)
     Event.Brocast("c_DeleteBlacklist", friendsId)
 end
 ----------
+--function DataManager.m_SetHeadId(id)
+--    HeadId = id
+--end
+----获取头像的Id
+--function DataManager.GetHeadId()
+--    return HeadId
+--end

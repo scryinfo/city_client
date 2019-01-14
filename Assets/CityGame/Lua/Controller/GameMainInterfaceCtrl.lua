@@ -29,6 +29,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
 
 
 
@@ -39,6 +40,16 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
+
+    --local headId = DataManager.GetHeadId()
+    --local path = PlayerHead[headId].MainPath
+    --local type = ct.getType(UnityEngine.Sprite)
+    --panelMgr:LoadPrefab_A(path,type,nil,function(goodData,obj)
+    --    if obj ~= nil then
+    --        local texture = ct.InstantiatePrefab(obj)
+    --        GameMainInterfacePanel.headItem.sprite = texture
+    --    end
+    --end)
 
 end
 
@@ -270,6 +281,11 @@ function GameMainInterfaceCtrl.OnBuild()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
     CameraMove.ChangeCameraState(TouchStateType.ConstructState)
+end
+
+--拍卖
+function GameMainInterfaceCtrl:OnAuction()
+
 end
 
 --住宅--

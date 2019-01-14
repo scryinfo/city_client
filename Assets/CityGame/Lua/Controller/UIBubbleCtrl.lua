@@ -50,6 +50,11 @@ end
 
 --生成拍卖气泡
 function UIBubbleCtrl:_initGroundAucBubbles()
+    -------------------
+    local pie = PieChart.New()
+    pie.CreatePie(self.gameObject.transform:GetComponent("RectTransform"))
+    -------------------
+
     if not self.m_data then
         return
     end
@@ -89,6 +94,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
+        UIBubbleCtrl.nowItem = groundAucNowItem
     else
         --即将拍卖
         if nil == self.groundAucSoonObj then
@@ -106,6 +112,7 @@ function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
         data.bubbleRect = go:GetComponent("RectTransform")
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
         self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
+        UIBubbleCtrl.soonItem = groundAucSoonItem
     end
 end
 
@@ -117,6 +124,8 @@ function UIBubbleCtrl:_refreshItems(datas)
         destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end
+    UIBubbleCtrl.nowItem = nil
+    UIBubbleCtrl.soonItem = nil
 
     self.groundAucLuaItems = {}
     local auction = datas
@@ -146,4 +155,21 @@ function UIBubbleCtrl:_showAllItems()
             item.data.bubbleRect.transform.localScale = Vector3.one
         end
     end
+end
+
+--
+function UIBubbleCtrl._openGroundAucCtrl(index)
+    if index == 1 then
+        if UIBubbleCtrl.nowItem ~= nil then
+            UIBubbleCtrl.nowItem:_openGroundAucFunc()
+        end
+        return
+    end
+    if index == 0 then
+        if UIBubbleCtrl.soonItem ~= nil then
+            UIBubbleCtrl.soonItem:_openGroundAucFunc()
+        end
+        return
+    end
+    ct.log("", "错误")
 end

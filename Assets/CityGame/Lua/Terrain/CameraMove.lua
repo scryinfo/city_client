@@ -162,6 +162,13 @@ function CameraMove:TouchBuild()
                 return
             end
         end
+        --判断是否点击在拍卖中的地块上
+        local click, index = GroundAuctionModel.getIsClickAucGround(blockID)
+        if click then
+            UIBubbleCtrl._openGroundAucCtrl(index)
+            return
+        end
+
         --判断是否是地块 --->是则打开
         if DataManager.GetGroundDataByID(blockID) ~= nil then
             ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})

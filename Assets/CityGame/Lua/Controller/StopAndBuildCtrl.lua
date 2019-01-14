@@ -177,7 +177,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
     panel.nameInp.text=personData.name
     panel.commanyInp.text=personData.companyName
     --- ******************** ---
-    if groundData.Data.Rent then
+    if groundData  and  groundData.Data and  groundData.Data.Rent then
         panel.date.transform.parent.parent.localScale=Vector3.one
         local time=getFormatUnixTime(string.sub(groundData.Data.Rent.rentBeginTs,1,10))
         panel.date.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.Rent.rentDays)

@@ -18,6 +18,7 @@ function GameMainInterfaceModel:OnCreate()
 
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
 end
 
@@ -60,4 +61,10 @@ end
 --停止推送消息
 function GameMainInterfaceModel.m_stopListenBuildingDetailInform(ins,buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "stopListenBuildingDetailInform","gs.Id",{ id = buildingId })
+end
+
+--金币改变回调
+function GameMainInterfaceModel:n_GsExtendBag(lMsg)
+
+    Event.Brocast("c_ChangeMoney",lMsg.money)
 end

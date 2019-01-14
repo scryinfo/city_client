@@ -22,4 +22,5 @@ function CreateRolePanel.InitPanel()
     this.companyname = transform:Find("InputField_Companyname").gameObject;
     this.maleScl = transform:Find("male/select");
     this.femaleScl = transform:Find("female/select");
+    this.duplicate = transform:Find("InputField_Nickname/Duplicate");
 end

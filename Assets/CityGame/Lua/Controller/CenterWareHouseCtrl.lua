@@ -35,7 +35,6 @@ function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     isShowList = false;
     switchIsShow = false;
-    isSelect = true;
 
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
@@ -52,7 +51,6 @@ function CenterWareHouseCtrl:OnCreate(obj)
 
     CenterWareHousePanel.tipText.text = 0
 
-    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
@@ -65,6 +63,8 @@ end
 
 function CenterWareHouseCtrl:Awake()
     centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    isSelect = true;
+    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     self.insId = OpenModelInsID.CenterWareHouseCtrl
     self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
 end

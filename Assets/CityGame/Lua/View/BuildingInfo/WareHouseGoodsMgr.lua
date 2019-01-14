@@ -58,7 +58,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
-       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
+        WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -257,7 +257,7 @@ function WareHouseGoodsMgr:ClearAllItem()
     for i, v in pairs(self.items) do
         destroy(v.prefab.gameObject)
     end
-    self.items = {}
+    self.items = nil
 end
 
 --显示所有商品BG,使其都能点击

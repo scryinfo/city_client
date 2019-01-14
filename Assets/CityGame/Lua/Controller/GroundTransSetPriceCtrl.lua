@@ -177,5 +177,5 @@ end
 function GroundTransSetPriceCtrl._closeBackToMain()
     UIPage:HideAllPages()
     ct.OpenCtrl("GameMainInterfaceCtrl")
-    --ct.OpenCtrl("UIBubbleCtrl")
+    ct.OpenCtrl("UIBubbleCtrl")
 end

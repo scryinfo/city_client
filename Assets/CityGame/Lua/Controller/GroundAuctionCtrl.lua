@@ -226,6 +226,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
     GroundAuctionPanel.currentPriceText.text = tostring(self.highestPrice)
     self.biderId = data.biderId
+    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
 end
 --拍卖结束
 function GroundAuctionCtrl:_bidEnd(id)
@@ -258,7 +259,10 @@ function GroundAuctionCtrl:_bidStart(groundData)
 end
 --点击头像
 function GroundAuctionCtrl:_clickProtait(ins)
-    --if ins.biderId ~= nil then
-    --
-    --end
+    if ins.biderId == nil then
+        return
+    end
+    if ins.gameObject.activeSelf then
+
+    end
 end

@@ -35,6 +35,8 @@ function CreateRoleCtrl:OnCreate(obj)
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
     createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
     createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+
+    Event.AddListener("c_SameName",self.c_SameName,self)
 end
 
 --创建角色
@@ -70,4 +72,10 @@ function CreateRoleCtrl:OnFemale()
     CreateRolePanel.male:GetComponent("Image").color =getColorByInt(215,215,215,255)
     CreateRolePanel.maleScl.localScale = Vector3.zero
     CreateRolePanel.femaleScl.localScale = Vector3.one
+end
+
+--重名
+function CreateRoleCtrl:c_SameName()
+    CreateRolePanel.duplicate.localScale = Vector3.one
+    Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
 end

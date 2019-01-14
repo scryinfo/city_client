@@ -576,6 +576,12 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagId
+    --初始化自己中心仓库的数据
+    if tempData.bag ~= nil then
+        local inHand = tempData.bag.inHand
+        PersonDataStack.m_inHand = ct.deepCopy( inHand)
+    end
+    PersonDataStack.m_bag = tempData.bag
     --初始化自己的money
     PersonDataStack.m_money = tempData.money
     --初始化自己的name
@@ -684,6 +690,11 @@ end
 --获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+--获取中心仓库信息
+function DataManager.GetBagInfo()
+    return PersonDataStack.m_inHand
 end
 
 --获取自己的money
@@ -943,6 +954,7 @@ local function InitialEvents()
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
    -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
    -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
+    Event.AddListener("c_RefreshBagInfo",DataManager.c_RefreshBagInfo)
 end
 
 --注册所有网络消息回调
@@ -1197,3 +1209,24 @@ end
 --function DataManager.GetHeadId()
 --    return HeadId
 --end
+
+function DataManager.c_RefreshBagInfo(itemId,n)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    local newInHand = false
+    --local bagInHand = ct.deepCopy( PersonDataStack.m_inHand)
+    for i, v in ipairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            v.n = v.n + n
+            newInHand = false
+            break
+        else
+            newInHand = true
+        end
+    end
+    if newInHand then
+        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId},n = n}
+    end
+    local a = PersonDataStack.m_inHand
+end

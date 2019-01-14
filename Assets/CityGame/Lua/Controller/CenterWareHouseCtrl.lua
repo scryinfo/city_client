@@ -35,9 +35,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     isShowList = false;
     switchIsShow = false;
-    isSelect = true;
 
-    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportBtn,self.c_TransportBtn,self);
@@ -53,8 +51,6 @@ function CenterWareHouseCtrl:OnCreate(obj)
 
     CenterWareHousePanel.tipText.text = 0
 
-    WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
-    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
@@ -66,6 +62,9 @@ function CenterWareHouseCtrl:OnCreate(obj)
 end
 
 function CenterWareHouseCtrl:Awake()
+    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    isSelect = true;
+    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     self.insId = OpenModelInsID.CenterWareHouseCtrl
     self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
 end
@@ -143,6 +142,7 @@ function CenterWareHouseCtrl:c_OnBackBtn()
     if not isSelect then
         CenterWareHouseCtrl:c_transportCloseBtn()
     end
+    WareHouseGoodsMgr:ClearAllItem()
     UIPage.ClosePage();
 end
 
@@ -157,6 +157,9 @@ function CenterWareHouseCtrl:Refresh()
         end
     end
     self.money = 1000;--扩容所需金额
+    if WareHouseGoodsMgr.items == nil then
+        WareHouseGoodsMgr:_creatItemGoods(centerWareHousetBehaviour,isSelect);
+    end
     self:_initData();
     self:initInsData()
     --CenterWareHousePanel.tipText.text = 0
@@ -227,7 +230,8 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
                 Event.Brocast("SmallPop","运输商品个数不能为0",300)
                 return
             else
-                 Event.Brocast("c_Transport", ServerListModel.bagId,v.itemId,v.inputText.text,v.goodsDataInfo.producerId,v.goodsDataInfo.qty)
+                local bagId = DataManager.GetBagId()
+                Event.Brocast("c_Transport", bagId,v.itemId,v.inputText.text,v.goodsDataInfo.producerId,v.goodsDataInfo.qty)
             end
         end
         CenterWareHouseCtrl:clearAllData()
@@ -250,11 +254,11 @@ function CenterWareHouseCtrl:c_transport(msg)
             end
         end
     end
-    local data = {}
-    data.titleInfo = "提示"
-    data.contentInfo = "商品开始运输"
-    data.tipInfo = "可在运输线查看详情"
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    --local data = {}
+    --data.titleInfo = "提示"
+    --data.contentInfo = "商品开始运输"
+    --data.tipInfo = "可在运输线查看详情"
+    --ct.OpenCtrl('BtnDialogPageCtrl',data)
     CenterWareHousePanel.transportConfirm:SetActive(true);
 end
 

@@ -58,5 +58,10 @@ function tempTransportModel.n_OnTransportInfo(stream)
         Event.Brocast("c_transport",msgTransportInfo)
     else
         Event.Brocast("n_transports",msgTransportInfo)
+        if msgTransportInfo.dst == bagId then
+            local itemId = msgTransportInfo.item.key.id
+            local n = msgTransportInfo.item.n
+            Event.Brocast("c_RefreshBagInfo",itemId,n)
+        end
     end
 end

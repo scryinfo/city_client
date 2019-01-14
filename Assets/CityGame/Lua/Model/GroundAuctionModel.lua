@@ -219,6 +219,27 @@ function GroundAuctionModel._checkNowAndSoonData()
     end
 end
 
+--判断是否点击到拍卖的地块
+function GroundAuctionModel.getIsClickAucGround(blockId)
+    if this.nowAucGroundData ~= nil then
+        for i, pos in pairs(this.nowAucGroundData.area) do
+            local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
+            if tempBlockId == blockId then
+                return true, 1
+            end
+        end
+    end
+    if this.soonAucGroundData ~= nil then
+        for i, pos in pairs(this.soonAucGroundData.area) do
+            local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
+            if tempBlockId == blockId then
+                return true, 0
+            end
+        end
+    end
+    return false
+end
+
 --- 客户端请求 ---
 --请求即将拍卖的土地信息
 function GroundAuctionModel.m_ReqQueryGroundAuction()

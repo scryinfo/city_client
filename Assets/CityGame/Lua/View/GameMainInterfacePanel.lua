@@ -18,6 +18,7 @@ end
 function GameMainInterfacePanel.InitPanel()
 
     this.head = transform:Find("LeftUpPanel/head").gameObject --头像
+    this.headItem = transform:Find("LeftUpPanel/head/headItem"):GetComponent("Image") --头像
     this.name = transform:Find("LeftUpPanel/name"):GetComponent("Text");
     this.male = transform:Find("LeftUpPanel/name/male");
     this.woman = transform:Find("LeftUpPanel/name/woman");
@@ -34,6 +35,7 @@ function GameMainInterfacePanel.InitPanel()
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
+    this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--
 
     this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
     this.worldChatContent = transform:Find("WorldChatPanel/Content")--世界内容--

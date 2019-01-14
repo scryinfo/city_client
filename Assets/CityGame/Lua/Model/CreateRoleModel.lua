@@ -23,23 +23,21 @@ end
 function CreateRoleModel:registerGsNetMsg()
     --gs网络回调注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",self.n_CreateNewRole,self)--新版model网络注册
-   -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
 end
 
 --创角发包
-function CreateRoleModel.m_createNewRole()
+function CreateRoleModel:m_createNewRole(data)
     DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
-            { male = true ,name = CityEngineLua.username.."_role1",companyName = CityEngineLua.username.."_company"})
+            { male = data.gender ,name =data.nickname ,companyName =data.companyname })
 end
 
 --创角回调
 function CreateRoleModel:n_CreateNewRole(pMsg)
-    --message Role {
-
-    --    required bytes id = 1;
     logDebug(pMsg.id)
     logDebug(pMsg.name)
     --角色登录
-    Event.Brocast("m_loginRole",pMsg)
+    ct.OpenCtrl("SelectHeadCtrl",pMsg)
+  --  Event.Brocast("m_loginRole",pMsg)
 end
 

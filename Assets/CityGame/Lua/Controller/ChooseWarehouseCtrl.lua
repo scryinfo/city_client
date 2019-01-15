@@ -40,24 +40,30 @@ function ChooseWarehouseCtrl:OnCreate(obj)
     Event.AddListener("c_Transport",self.c_Transport,self)
     Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
     Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
+    Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
     self.insId = OpenModelInsID.ChooseWarehouseCtrl
     chooseWarehouse = self.gameObject:GetComponent('LuaBehaviour');
     self.gameObject = go;
     self:_addListener()
-    self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
+    --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
     isShowList = false;
 end
 
 function ChooseWarehouseCtrl:Refresh()
+    self:initInsData()
+    self:GetMyFriends()
     WareHouseGoodsMgr:_clear()
     ChooseWarehousePanel.boxImg:SetActive(true)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
-    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos)  --创建运输线
-    self:initInsData()
-    self:GetMyFriends()
+
+end
+
+function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
+    self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
+    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId)  --创建运输线
 end
 
 -- 监听Model层网络回调
@@ -71,8 +77,8 @@ function ChooseWarehouseCtrl:_removeListener()
 end
 
 function ChooseWarehouseCtrl:c_OnReceivePlayerInfo(playerData)
-
-
+     self.data = playerData.info
+    self:_creatAddressList()
 end
 
 --获取玩家好友列表
@@ -103,6 +109,7 @@ end
 
 function ChooseWarehouseCtrl:initInsData()
     DataManager.OpenDetailModel(ChooseWarehouseModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')--获取自己的建筑详情
 end
 
 
@@ -127,7 +134,7 @@ function ChooseWarehouseCtrl:OnClick_bgBtn(go)
             item.box:SetActive(false)
             item.onClick = true
         end
-        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos)  --创建运输线
+        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos,go.m_data.buildingId)  --创建运输线
     end
     go.onClick = false
 end

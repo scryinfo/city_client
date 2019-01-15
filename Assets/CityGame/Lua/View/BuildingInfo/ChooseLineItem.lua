@@ -25,45 +25,51 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.distance = self.prefab.transform:Find("transportDetails/distance/distanceText").gameObject:GetComponent("Text");
     self.money = self.prefab.transform:Find("transportDetails/money/moneyText").gameObject:GetComponent("Text");
 
-    self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
-    self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
-    self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
+    local n = 0
+    if DataInfo.info.mId == nil then
+        self.size.text = BagPosInfo[1].sizeName
+        self.name.text = BagPosInfo[1].typeName
+        local bagCapacity = DataManager.GetBagCapacity()  --仓库总容量
+        self.warehouse_Slider.maxValue = bagCapacity
+        n = DataManager.GetBagNum()      --仓库内物品数量
+        self.spareCapacity = bagCapacity - n --剩余容量
+        self.number.text = n .. "/" .. bagCapacity
+    else
+        self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
+        self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
+        self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
+        if DataInfo.store.inHand == nil then
+            n = 0
+        else
+            for i, v in pairs(DataInfo.store.inHand) do
+                n = n + v.n
+            end
+        end
+        self.spareCapacity = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity - n --剩余容量
+        self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
+    end
 
     self.sizeName =  self.size.text..self.name.text
 
     local distances
-    distances = math.sqrt(math.pow((pos.x-self.posX),2)+math.pow((pos.y-self.posY),2))
+    distances = math.sqrt(math.pow((pos.x-self.posX),2) + math.pow((pos.y-self.posY),2))
     self.distance.text = math.floor(distances).."km"
     local moneys = distances * BagPosInfo[1].postageCost
     self.money.text = "E"..math.floor(moneys)..".0000"
 
     self.price = moneys
 
-    local type = ct.getType(UnityEngine.Sprite)
-    panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
-        if obj ~= nil then
-            local texture = ct.InstantiatePrefab(obj)
-            self.houseIcon.sprite = texture
-        end
-    end)
-
-    local n = 0
-    if DataInfo.store.inHand == nil then
-        n = 0
-    else
-        for i, v in pairs(DataInfo.store.inHand) do
-            n = n + v.n
-        end
-    end
+    --图片
+    --local type = ct.getType(UnityEngine.Sprite)
+    --panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
+    --    if obj ~= nil then
+    --        local texture = ct.InstantiatePrefab(obj)
+    --        self.houseIcon.sprite = texture
+    --    end
+    --end)
 
     self.num = n
-
     self.warehouse_Slider.value = n
-
-    self.spareCapacity = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity - n --剩余容量
-
-    self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
-
     self.bg.onClick:AddListener(function()
         self:OnLinePanelBG(self);
     end)

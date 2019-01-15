@@ -1,7 +1,9 @@
 BagPosInfo ={
     [1] = {
-		bagX = 45,  --中心仓库位置
-		bagY = 45,
-		postageCost = 10;  --运费 每公里
+		sizeName ="中心",
+        typeName ="仓库",
+		bagX = 51,
+		bagY = 51,
+		postageCost = 1000;
 	}
 }

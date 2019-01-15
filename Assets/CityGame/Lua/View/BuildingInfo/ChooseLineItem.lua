@@ -18,12 +18,16 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
+    self.factory = self.prefab.transform:Find("factory").gameObject:GetComponent("Text");
     self.size = self.prefab.transform:Find("smallbg/small").gameObject:GetComponent("Text");
     self.houseIcon = self.prefab.transform:Find("transportDetails/houseIcon"):GetComponent("Image");
     self.warehouse_Slider = self.prefab.transform:Find("icon/Warehouse_Slider"):GetComponent("Slider");
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
     self.distance = self.prefab.transform:Find("transportDetails/distance/distanceText").gameObject:GetComponent("Text");
     self.money = self.prefab.transform:Find("transportDetails/money/moneyText").gameObject:GetComponent("Text");
+
+    local companyName = DataManager.GetCompanyName()
+    self.factory.text = companyName
 
     local n = 0
     if DataInfo.info.mId == nil then

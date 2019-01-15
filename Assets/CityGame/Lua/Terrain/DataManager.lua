@@ -588,6 +588,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_bagCapacity = tempData.bagCapacity
     --初始化自己的name
     PersonDataStack.m_name = tempData.name
+    --初始化自己的公司名字
+    PersonDataStack.m_companyName = tempData.companyName
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -712,6 +714,11 @@ end
 --获取自己的名字
 function DataManager.GetName()
     return PersonDataStack.m_name
+end
+
+--获取自己的公司名字
+function DataManager.GetCompanyName()
+    return PersonDataStack.m_companyName
 end
 
 function DataManager.GetMyPersonData()

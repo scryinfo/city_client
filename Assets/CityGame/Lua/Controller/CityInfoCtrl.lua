@@ -150,10 +150,10 @@ function CityInfoCtrl:c_cityInfoBg(go)
         CityInfoPanel.basicInfo:SetActive(true)
         CityInfoPanel.citizen:SetActive(false)
         Event.Brocast("c_bacK")
-    else
-        CityInfoPanel.basicInfo:SetActive(false)
-        CityInfoPanel.citizen:SetActive(true)
-        Event.Brocast("c_bacK")
+    --else
+    --    CityInfoPanel.basicInfo:SetActive(false)
+    --    CityInfoPanel.citizen:SetActive(true)
+    --    Event.Brocast("c_bacK")
     end
 end
 

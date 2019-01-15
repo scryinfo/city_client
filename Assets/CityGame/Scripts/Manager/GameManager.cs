@@ -17,7 +17,10 @@ namespace LuaFramework {
         /// </summary>
         void Awake() {
             Init();
-            LoadHotFixPanel();
+            if (AppConst.UpdateMode)
+            {
+                LoadHotFixPanel();
+            }
         }
 
         private Text content;

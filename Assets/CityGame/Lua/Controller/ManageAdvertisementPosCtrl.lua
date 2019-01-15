@@ -75,7 +75,7 @@ function ManageAdvertisementPosCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=Material[AllGoods[idx].mId] or  Good[AllGoods[idx].mId]
     if not data then
-        destroy(transform.gameObject)
+        --transform.gameObject:SetActive(false)
         return
     end
     local collectItem = GoodsItem:new(data, transform,materialBehaviours,MunicipalModel.manger,idx)
@@ -512,6 +512,7 @@ function ManageAdvertisementPosCtrl:OtherCallback()
     ----发送请求
     for i, data in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
         data.personId=DataManager.GetMyOwnerID()
+
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(data)
         self.ItemCreatDeleteMgr:_creatoutItem(data)
         for i = 1, data.count do

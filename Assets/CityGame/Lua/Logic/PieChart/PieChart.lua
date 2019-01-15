@@ -20,7 +20,7 @@ function PieChart.CreatePie(pieParent)
     tempData.piePercent = 75  --对应的值[可以相加不等于100]
     tempData.pieName = "原料厂1"
     local color = Vector3(231, 132, 132)  --每块对应的颜色
-    tempData.showColor = PieChartGraph.GetColor(color.x, color.y, color.z)
+    tempData.showColor = getColorByInt(color.x, color.y, color.z)
     tempData.hideLine = true  --是否隐藏线的信息
     data[1] = tempData
 
@@ -28,7 +28,7 @@ function PieChart.CreatePie(pieParent)
     tempData1.piePercent = 25
     tempData1.pieName = "原料厂2"
     local color2 = Vector3(255, 132, 132)
-    tempData1.showColor = PieChartGraph.GetColor(color2.x, color2.y, color2.z)
+    tempData1.showColor = getColorByInt(color2.x, color2.y, color2.z)
     tempData1.hideLine = true
     data[2] = tempData1
 

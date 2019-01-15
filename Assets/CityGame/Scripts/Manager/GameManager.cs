@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using LuaInterface;
 using System.Reflection;
 using System.IO;
-
+using UnityEngine.UI;
 
 namespace LuaFramework {
     public class GameManager : Manager {
@@ -17,6 +17,20 @@ namespace LuaFramework {
         /// </summary>
         void Awake() {
             Init();
+            if (AppConst.UpdateMode)
+            {
+                LoadHotFixPanel();
+            }
+        }
+
+        private Text content;
+        private Slider slider;
+        private GameObject panel;
+       void LoadHotFixPanel()
+       {
+         panel= Instantiate(Resources.Load<GameObject>("View/HotfixPanel"));
+            content = FindObjectOfType<Text>();
+            slider = FindObjectOfType<Slider>();
         }
 
         /// <summary>
@@ -52,10 +66,8 @@ namespace LuaFramework {
 
             string infile = resPath + "files.txt";
             string outfile = dataPath + "files.txt";
-            if (File.Exists(outfile))
-                File.Delete(outfile);
-            else
-                File.Create(outfile);
+            if (File.Exists(outfile)) File.Delete(outfile);
+
             string message = "正在解包文件:>files.txt";
             Debug.Log(infile);
             Debug.Log(outfile);
@@ -137,7 +149,7 @@ namespace LuaFramework {
             File.WriteAllBytes(dataPath + "files.txt", www.bytes);
             string filesText = www.text;
             string[] files = filesText.Split('\n');
-
+            List<m_boject> m_ojects = new List<m_boject>();
             for (int i = 0; i < files.Length; i++) {
                 if (string.IsNullOrEmpty(files[i])) continue;
                 string[] keyValue = files[i].Split('|');
@@ -156,7 +168,7 @@ namespace LuaFramework {
                     if (canUpdate) File.Delete(localfile);
                 }
                 if (canUpdate) {   //本地缺少文件
-                    Debug.Log(fileUrl);
+                   // Debug.Log(fileUrl);
                     message = "downloading>>" + fileUrl;
                     facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
                     /*
@@ -167,17 +179,40 @@ namespace LuaFramework {
                     }
                     File.WriteAllBytes(localfile, www.bytes);
                      */
-                    //这里都是资源文件，用线程下载
-                    BeginDownload(fileUrl, localfile);
-                    while (!(IsDownOK(localfile))) { yield return new WaitForEndOfFrame(); }
+                    //这里都是资源文件
+                    m_ojects.Add(new m_boject(fileUrl, localfile));
+                   // BeginDownload(fileUrl, localfile);
+             
+                   // while (!(IsDownOK(m_ojects[i].localfile))) { yield return new WaitForEndOfFrame(); }
                 }
             }
             yield return new WaitForEndOfFrame();
+           // 这里都是资源文件，用线程下载
+            float num = 0;
+            for (int i = 0; i < m_ojects.Count; i++)
+            {
+                
+                BeginDownload(m_ojects[i].fileUrl, m_ojects[i].localfile);
+                //print("下载中"+">>>"+ m_ojects[i].localfile);
 
-            message = "更新完成!!";
-            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+                while (!(IsDownOK(m_ojects[i].localfile)))
+                { 
+                  yield return new WaitForEndOfFrame();
+                }
 
+                num = i;
+                content.text = m_ojects[i].localfile;
+                slider.value = num / m_ojects.Count;
+            }
+            yield return new WaitForEndOfFrame();
+          
+           
+            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, "更新完成!!");
+            slider.value = 1;
+            
             OnResourceInited();
+            yield return new WaitForSeconds(1.2f);
+            Destroy(panel);
         }
 
         void OnUpdateFailed(string file) {
@@ -264,3 +299,17 @@ namespace LuaFramework {
         }
     }
 }
+
+ class m_boject {
+
+    public string fileUrl;
+    public string localfile;
+   public m_boject(string f,string l)
+    {
+        fileUrl = f;
+        localfile = l;
+
+    }
+
+}
+

@@ -67,10 +67,6 @@ function UIBubbleCtrl:_initFunc()
     end
 end
 
---function UIBubbleCtrl.createGroundAucData(groundAucDatas)
---    UIBubbleCtrl:_initGroundAucBubbles(groundAucDatas)
---end
-
 --生成拍卖气泡
 function UIBubbleCtrl:_initGroundAucBubbles(groundAucDatas)
     if self.groundAucLuaItems == nil then

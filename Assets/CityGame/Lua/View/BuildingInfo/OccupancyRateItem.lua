@@ -76,11 +76,11 @@ function OccupancyRateItem:updateInfo(data)
 end
 --房租改变
 function OccupancyRateItem:_rentPriceChange(data)
-    if self.occupancyData.buildingId ~= data.id then
+    if self.occupancyData.buildingId ~= data.buildingId then
         return
     end
 
-    self.occupancyData.rent = data.num
+    self.occupancyData.rent = data.rent
     if not self.viewRect.gameObject.activeSelf then
         return
     end

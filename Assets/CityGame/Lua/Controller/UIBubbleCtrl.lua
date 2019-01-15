@@ -10,6 +10,14 @@ UIBubbleCtrl.static.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBub
 UIBubbleCtrl.static.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleCtrl.static.NpcFlowObjPath = "View/Items/BuildingBubbleItems/UIBubbleNpcFlowItem"  --人流量
 
+--气泡类型
+UIBubbleType =
+{
+    GroundAuc = 1,
+    GroundTrans = 2,
+    BuildingSelf = 3,
+}
+
 function UIBubbleCtrl:initialize()
     UIPage.initialize(self, UIType.Fixed, UIMode.HideOther, UICollider.None)
 end
@@ -28,7 +36,8 @@ function UIBubbleCtrl:Awake(go)
 end
 
 function UIBubbleCtrl:Refresh()
-    self:_initGroundAucBubbles()  --temp
+    self:_initFunc()
+    --self:_initGroundAucBubbles()
 end
 function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
@@ -48,16 +57,22 @@ function UIBubbleCtrl._cameraLateUpdate()
     Event.Brocast("c_RefreshLateUpdate")
 end
 
---生成拍卖气泡
-function UIBubbleCtrl:_initGroundAucBubbles()
-    if not self.m_data then
+function UIBubbleCtrl:_initFunc()
+    if self.m_data == nil then
         return
     end
 
-    if not self.groundAucLuaItems then
+    if self.m_data.bubbleType == UIBubbleType.GroundAuc then
+        self:_initGroundAucBubbles(self.m_data)
+    end
+end
+
+--生成拍卖气泡
+function UIBubbleCtrl:_initGroundAucBubbles(groundAucDatas)
+    if self.groundAucLuaItems == nil then
         self.groundAucLuaItems = {}
     end
-    local auction = self.m_data
+    local auction = groundAucDatas.aucInfo
     for i, data in pairs(auction) do
         if data then
             UIBubbleCtrl.startFlowCam = true
@@ -152,7 +167,7 @@ function UIBubbleCtrl:_showAllItems()
     end
 end
 
---
+--打开拍卖界面
 function UIBubbleCtrl._openGroundAucCtrl(index)
     if index == 1 then
         if UIBubbleCtrl.nowItem ~= nil then
@@ -167,4 +182,17 @@ function UIBubbleCtrl._openGroundAucCtrl(index)
         return
     end
     ct.log("", "错误")
+end
+
+----
+--通过类型获取一个气泡
+function UIBubbleCtrl.getBubbleByType(type)
+    local bubbleItem
+    if type == UIBubbleType.GroundTrans then
+
+    elseif type == UIBubbleType.BuildingSelf then
+
+    end
+
+    return
 end

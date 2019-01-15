@@ -23,8 +23,8 @@ ConstructConfig ={
         buildName = "公园",
         prefabRoute = {1600001, 1600002,1600003},
 	},
-    [7] = {
+	[7] = {
         buildName = "人才中心",
-        prefabRoute = {1800001, 1800002,1800003},
-    }
+        prefabRoute = {1700001, 1700002,1700003},
+	}
 }

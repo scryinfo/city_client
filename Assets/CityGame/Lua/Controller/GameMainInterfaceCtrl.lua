@@ -320,6 +320,7 @@ function GameMainInterfaceCtrl:OnAdvertisFacilitie()
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
+
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
     ct.OpenCtrl("CenterBuildingCtrl")

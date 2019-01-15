@@ -200,6 +200,7 @@ function CenterWareHouseCtrl:c_transportopenBtn()
     data.pos.x = BagPosInfo[1].bagX
     data.pos.y =BagPosInfo[1].bagY
     data.nameText = CenterWareHousePanel.nameText
+    data.buildingId = DataManager.GetBagId()
     ct.OpenCtrl('ChooseWarehouseCtrl',data);
 end
 
@@ -229,10 +230,11 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
             if v.inputText.text == "0" then
                 Event.Brocast("SmallPop","运输商品个数不能为0",300)
                 return
-            else
+            end
+        end
+        for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
                 local bagId = DataManager.GetBagId()
                 Event.Brocast("c_Transport", bagId,v.itemId,v.inputText.text,v.goodsDataInfo.producerId,v.goodsDataInfo.qty)
-            end
         end
         CenterWareHouseCtrl:clearAllData()
     end

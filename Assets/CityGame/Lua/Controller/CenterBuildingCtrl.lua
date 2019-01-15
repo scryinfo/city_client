@@ -33,7 +33,7 @@ end
 
 --点击城市信息
 function CenterBuildingCtrl:OnCityInfo()
-
+    ct.OpenCtrl("CityInfoCtrl")
 end
 
 --点击中心仓库
@@ -41,7 +41,7 @@ function CenterBuildingCtrl:OnCenterWarehouse()
     ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
 end
 
---点击人才建筑
+--点击待定
 function CenterBuildingCtrl:OnTechnology()
 
 end

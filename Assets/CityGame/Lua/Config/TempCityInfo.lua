@@ -7,8 +7,8 @@
 --模拟服务器发来的数据
 CityInfoInHand = {
     [1] = {["name"] = "总览",},
-    [2] =  {["name"] = "市民",},
-    [3] = {["name"] = "转卖",["layout"] = {
+    --[2] =  {["name"] = "市民",},
+--[[    [3] = {["name"] = "转卖",["layout"] = {
         ["name"] = {
             [1] = {
                 ["data"] = "原料利润",
@@ -1945,7 +1945,7 @@ CityInfoInHand = {
                             ["itemPath"] = "",
                             ["itemColor"] = { r = 255, b = 255, g = 255, a = 255 },
                         },
---[[                        [8] = {
+]]--[[                        [8] = {
                             ["data"] = "科技交易利润增量",
                             ["space"] = 2,
                             ["size"] = 30,
@@ -1954,7 +1954,7 @@ CityInfoInHand = {
                             ["color"] = { r = 204, b = 204, g = 204, a = 255 },
                             ["itemPath"] = "",
                             ["itemColor"] = { r = 255, b = 255, g = 255, a = 255 },
-                        },]]
+                        },]]--[[
                     },
                 },
             }
@@ -3028,7 +3028,7 @@ CityInfoInHand = {
             }
 
         }
-    }},
+    }},]]
 }
 --城市信息原料
 CityinfoMaterial = {

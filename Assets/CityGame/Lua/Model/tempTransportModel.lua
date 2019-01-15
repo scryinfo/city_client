@@ -54,14 +54,17 @@ end
 function tempTransportModel.n_OnTransportInfo(stream)
     local msgTransportInfo = assert(pbl.decode("gs.TransferItem",stream),"tempTransportModel.n_OnTransportInfo")
     local bagId = DataManager.GetBagId()
+
+    local itemId = msgTransportInfo.item.key.id
+    local n = msgTransportInfo.item.n
     if bagId == msgTransportInfo.src then
         Event.Brocast("c_transport",msgTransportInfo)
+
+        Event.Brocast("c_DelBagInfo",itemId,n)
     else
         Event.Brocast("n_transports",msgTransportInfo)
         if msgTransportInfo.dst == bagId then
-            local itemId = msgTransportInfo.item.key.id
-            local n = msgTransportInfo.item.n
-            Event.Brocast("c_RefreshBagInfo",itemId,n)
+            Event.Brocast("c_AddBagInfo",itemId,n)
         end
     end
 end

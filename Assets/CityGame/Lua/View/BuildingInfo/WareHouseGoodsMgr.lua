@@ -111,20 +111,40 @@ function WareHouseGoodsMgr:_creatAddressList(data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data)
+function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
+    local bagId = DataManager.GetBagId()
+    if bagId ~= buildingId then
+        local dataInfo = {}
+        dataInfo.info = {}
+        dataInfo.info.id = bagId
+        dataInfo.info.pos = {}
+        dataInfo.info.pos.x = BagPosInfo[1].bagX
+        dataInfo.info.pos.y = BagPosInfo[1].bagY
+        dataInfo.info.mId = nil
+        local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+        local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,dataInfo,data)
+        if not self.ipaItems then
+            self.ipaItems = {}
+        end
+        self.ipaItems[index] = LinePaneltLuaItem
+        index = index + 1
+    end
+
     if buysBuildings ==nil then
         return
     end
     for i, v in pairs(buysBuildings) do
         for k, z in pairs(v) do
             if z.store ~= nil then
-                local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
-                if not self.ipaItems then
-                    self.ipaItems = {}
+                if z.info.id ~= buildingId then
+                    local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+                    local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
+                    if not self.ipaItems then
+                        self.ipaItems = {}
+                    end
+                    self.ipaItems[index] = LinePaneltLuaItem
+                    index = index + 1
                 end
-                self.ipaItems[index] = LinePaneltLuaItem
-                index = index + 1
             end
         end
     end

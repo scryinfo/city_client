@@ -6,7 +6,7 @@ UIPage:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
 local gameObject;
-local gender;
+local gender = nil;
 
 function  CreateRoleCtrl:bundleName()
     return "Assets/CityGame/Resources/View/CreateRolePanel.prefab"
@@ -45,7 +45,7 @@ function CreateRoleCtrl:OnCreateRole(go)
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
         Event.Brocast("SmallPop"," 用户名或公司名为空",300)
-    elseif gender ==nickname  then
+    elseif gender == nil  then
         Event.Brocast("SmallPop"," 请选择性别",300)
     else
         local data = {}

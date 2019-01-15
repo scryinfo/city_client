@@ -120,6 +120,7 @@ end
 
 --角色登录成功之后请求拍卖的信息
 function GroundAuctionModel.m_RoleLoginReqGroundAuction()
+    --ct.OpenCtrl("UIBubbleCtrl")  --打开气泡界面，但是不做任何数据处理
     this.m_ReqRueryMetaGroundAuction()
     this.m_ReqQueryGroundAuction()
 end
@@ -161,7 +162,8 @@ function GroundAuctionModel._getOrderGroundDatas(groundData)
     this._moveToAucPos()
 
     --创建气泡  --最多只有两个状态的气泡
-    ct.OpenCtrl("UIBubbleCtrl", {this.nowAucGroundData, this.soonAucGroundData})
+    ct.OpenCtrl("UIBubbleCtrl", {bubbleType = UIBubbleType.GroundAuc, aucInfo = {this.nowAucGroundData, this.soonAucGroundData}})
+    --UIBubbleCtrl.createGroundAucData({bubbleType = UIBubbleType.GroundAuc, aucInfo = {this.nowAucGroundData, this.soonAucGroundData}})
 end
 --移动到即将拍卖的位置
 function GroundAuctionModel._moveToAucPos()

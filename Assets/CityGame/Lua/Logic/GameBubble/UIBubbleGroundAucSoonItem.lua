@@ -14,7 +14,7 @@ function UIBubbleGroundAucSoonItem:initialize(data)
 
     self.bgBtn.onClick:RemoveAllListeners()
     self.bgBtn.onClick:AddListener(function ()
-        self:_clickBtn()
+        self:_openGroundAucFunc()
     end)
 
     self.currentTime = os.time()
@@ -26,7 +26,7 @@ function UIBubbleGroundAucSoonItem:initialize(data)
 end
 
 --打开拍卖界面，即将拍卖
-function UIBubbleGroundAucSoonItem:_clickBtn()
+function UIBubbleGroundAucSoonItem:_openGroundAucFunc()
     --self.soonTimeText.text
     ct.OpenCtrl("GroundAuctionCtrl", self.data)
 end

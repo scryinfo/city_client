@@ -19,6 +19,7 @@ public class PieNeedData
 public static class PieChartGraph
 {
     private static PieChart m_pieChart = null;
+    private static GameObject m_piePrefab = null;  //预制
 
     /// <summary>
     /// 创建饼状图
@@ -27,22 +28,25 @@ public static class PieChartGraph
     /// <param name="showArea">需要显示的父物体的宽高</param>
     public static void CratePieChartFunc(GameObject pieChartPrefab, PieNeedData[] dataList, RectTransform parentRect)
     {
-        GameObject pieTest = GameObject.Instantiate(pieChartPrefab);
+        GameObject pieTest = null;
+        if (m_piePrefab == null)
+        {
+            pieTest = GameObject.Instantiate(pieChartPrefab);
+            m_piePrefab = pieTest;
+        }
+
         pieTest.transform.SetParent(parentRect);
         pieTest.transform.localScale = Vector3.one;
         pieTest.transform.localPosition = Vector3.zero;
-
         PieChart pieChart = pieTest.GetComponent<PieChart>();
         if (pieChart != null)
         {
             m_pieChart = pieChart;
-
-            int maxCount = (int)(parentRect.sizeDelta.y / 30);
+            int maxCount = (int)(parentRect.rect.size.y / 30);
             dataList = GetFixedList(dataList, maxCount);
 
-            pieChart.Radius = parentRect.sizeDelta.y / 3.5f;
-
-            pieChart.StraightLineLength = (parentRect.sizeDelta.x / 2 - pieChart.Radius) / 3;
+            pieChart.Radius = parentRect.rect.size.y / 3.5f;
+            pieChart.StraightLineLength = (parentRect.rect.size.x / 2 - pieChart.Radius) / 3;
             float length = Mathf.Clamp(pieChart.StraightLineLength, pieChart.Radius * 0.3f, pieChart.Radius);
             for (int i = 0; i < dataList.Length; i++)
             {
@@ -51,6 +55,43 @@ public static class PieChartGraph
             }
         }
     }
+
+    //设置饼图的旋转量
+    public static void SetStartAngle(float angle)
+    {
+        if (m_pieChart != null)
+        {
+            m_pieChart.StartAngle = angle;
+        }
+    }
+    
+    //设置块的偏移量
+    public static void SetExtrusion(float value)
+    {
+        if (m_pieChart != null)
+        {
+            m_pieChart.Extrusion = value;
+        }
+    }
+
+    //刷新饼图数据
+    public static void RefreshPieChart(PieNeedData[] dataList, RectTransform parentRect)
+    {
+        m_pieChart.DataSource.Clear();
+
+        int maxCount = (int)(parentRect.rect.size.y / 30);
+        dataList = GetFixedList(dataList, maxCount);
+        for (int i = 0; i < dataList.Length; i++)
+        {
+            m_pieChart.DataSource.AddCategory(dataList[i].pieName, null, dataList[i].showColor, dataList[i].hideLine);
+            m_pieChart.DataSource.SetValue(dataList[i].pieName, dataList[i].piePercent);
+        }
+    }
+
+    ////public static void TweeningPie(float time)
+    ////{
+    ////    float temp = Vector2.Lerp(Vector2.zero, new Vector2(360, 0), time).x;
+    ////}
 
     //销毁饼状图
     public static void DestoryPieChart()

@@ -193,7 +193,7 @@ namespace LuaFramework {
                 //print("下载中"+">>>"+ m_ojects[i].localfile);
 
                 while (!(IsDownOK(m_ojects[i].localfile)))
-                { print("卡住了");
+                { 
                   yield return new WaitForEndOfFrame();
                 }
 

@@ -27,9 +27,9 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
 
 
 
@@ -40,6 +40,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
+    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
 
     --local headId = DataManager.GetHeadId()
     --local path = PlayerHead[headId].MainPath
@@ -51,6 +52,11 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     --    end
     --end)
 
+end
+
+--金币改变
+function GameMainInterfaceCtrl:c_ChangeMoney(money)
+    self.money = getPriceString("E"..money..".0000",24,20)
 end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)
@@ -314,11 +320,10 @@ function GameMainInterfaceCtrl:OnAdvertisFacilitie()
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
---中心仓库
-function GameMainInterfaceCtrl:OncenterWareHouse()
-    --Event.Brocast("m_opCenterWareHouse")
-    GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("CityInfoCtrl",PlayerTempModel.roleData)
+
+--中心建筑
+function GameMainInterfaceCtrl:OnCenterBuilding()
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --关闭updata

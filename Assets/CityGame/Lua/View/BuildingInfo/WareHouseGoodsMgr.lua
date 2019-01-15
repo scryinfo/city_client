@@ -29,10 +29,11 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if ServerListModel.inHand == nil then
+    local inHand = DataManager.GetBagInfo()
+    if inHand == nil then
         return
     end
-    for i, v in pairs(ServerListModel.inHand) do
+    for i, v in pairs(inHand) do
         local materialKey,goodsKey = 21,22
         local uiTab = {}
         if math.floor(v.key.id / 100000) == materialKey then
@@ -57,7 +58,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
-       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
+        WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -246,6 +247,17 @@ function WareHouseGoodsMgr:ClearAll()
         destroy(self.allTspItem[i].prefab.gameObject)
     end
     self.allTspItem = {};
+end
+
+--清空仓库item
+function WareHouseGoodsMgr:ClearAllItem()
+    if self.items == nil then
+        return
+    end
+    for i, v in pairs(self.items) do
+        destroy(v.prefab.gameObject)
+    end
+    self.items = nil
 end
 
 --显示所有商品BG,使其都能点击

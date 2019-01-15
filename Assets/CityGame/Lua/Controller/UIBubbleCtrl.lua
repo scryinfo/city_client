@@ -51,8 +51,7 @@ end
 --生成拍卖气泡
 function UIBubbleCtrl:_initGroundAucBubbles()
     -------------------
-    local pie = PieChart.New()
-    pie.CreatePie(self.gameObject.transform:GetComponent("RectTransform"))
+
     -------------------
 
     if not self.m_data then

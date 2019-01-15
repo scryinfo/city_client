@@ -73,7 +73,7 @@ end
 --读取邮件
 function GameNoticeCtrl:c_onBg(go)
     if go.state == false then
-        DataManager.DetailModelRpcNoRet(go.insId , 'm_mailRead',go.id)
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_mailRead',go.id)
     else
         GameNoticeCtrl:c_OnMailRead(go)
     end

@@ -16,8 +16,8 @@ end
 function HouseModel:OnCreate()
     --网络回调注册
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnReceiveHouseDetailInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.ByteNum",self.n_OnReceiveHouseRentChange)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.ByteNum",self.n_OnReceiveHouseSalaryChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.SetRent",self.n_OnReceiveHouseRentChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
@@ -35,14 +35,14 @@ function HouseModel:m_ReqHouseChangeRent(id, price)
     if id ~= self.insId then
         return
     end
-    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.ByteNum",{ id = id, num = price})
+    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = id, rent = price})
 end
 --改变员工工资
 function HouseModel:m_ReqHouseSetSalary(id, price)
     if id ~= self.insId then
         return
     end
-    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
+    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.SetSalary",{ buildingId = id, salary = price})
 end
 --改变建筑名字
 function HouseModel:m_ReqChangeHouseName(id, name)

@@ -63,7 +63,7 @@ function UIBubbleCtrl:_initFunc()
     end
 
     if self.m_data.bubbleType == UIBubbleType.GroundAuc then
-        self:_initGroundAucBubbles()
+        self:_initGroundAucBubbles(self.m_data)
     end
 end
 

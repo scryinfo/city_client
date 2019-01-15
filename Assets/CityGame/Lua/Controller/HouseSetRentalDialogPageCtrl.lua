@@ -54,7 +54,7 @@ function HouseSetRentalDialogPageCtrl:_initData()
     self.scoreText.text = self:_getValuableScore(self.m_data.rent, self.m_data.buildingTypeId)
 
     self.roomCountText.text = string.format("%d<color=%s>/%d</color>", self.m_data.renter, HouseSetRentalDialogPageCtrl.static.BlackColor, self.m_data.totalCount)
-    local trueTextW = self.roomDesTextRect.preferredWidth
+    local trueTextW = self.roomDesTextRect.preferredWidth + 8
     self.roomDesTextRect.rectTransform.sizeDelta = Vector2.New(trueTextW, self.roomDesTextRect.rectTransform.sizeDelta.y)
 end
 

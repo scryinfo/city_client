@@ -22,10 +22,18 @@ local function JudgeIsRightTimeOffset()
     return false
 end
 
---获取服务器的当前时间
+--获取服务器的当前时间(毫秒)
 function TimeSynchronized.GetTheCurrentServerTime()
     if JudgeIsRightTimeOffset() == true then
         return os.time() * 1000 + m_TimeOffset
+    end
+    return nil
+end
+
+--获取与服务器同步的当前时间(秒)
+function TimeSynchronized.GetTheCurrentTime()
+    if JudgeIsRightTimeOffset() == true then
+        return (os.time() * 1000 + m_TimeOffset) / 1000
     end
     return nil
 end

@@ -20,9 +20,11 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        if self.productionData.buildingType == BuildingType.MaterialFactory then
-            ct.OpenCtrl("ShelfCtrl",self.productionData)
-        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+        if self.productionData.buildingType == BuildingType.RetailShop then
+            ct.OpenCtrl("RetailShelfCtrl",self.productionData)
+            --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+            --    ct.OpenCtrl("ShelfCtrl",self.productionData)
+        else
             ct.OpenCtrl("ShelfCtrl",self.productionData)
         end
     end);
@@ -38,7 +40,6 @@ function HomeOtherPlayerShelfItem:initializeInfo(data)
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
         local prefabData={}
-        --prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         prefabData.prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
         if not self.SmallShelfRateItemTab then
@@ -80,12 +81,8 @@ function HomeOtherPlayerShelfItem:closeToggleItem(targetMovePos)
 
     return Vector2.New(targetMovePos.x,targetMovePos.y - HomeOtherPlayerShelfItem.static.TOP_H);
 end
-----生成预制
---function HomeOtherPlayerShelfItem:_creatGoods(path,parent)
---    local prefab = UnityEngine.Resources.Load(path);
---    local go = UnityEngine.GameObject.Instantiate(prefab);
---    local rect = go.transform:GetComponent("RectTransform");
---    go.transform:SetParent(parent.transform);
---    rect.transform.localScale = Vector3.one;
---    return go
---end
+--刷新数据
+function HomeOtherPlayerShelfItem:updateInfo(data)
+    self.productionData.shelf.good = data.shelf.good
+    self:initializeInfo()
+end

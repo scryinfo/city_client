@@ -31,7 +31,7 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
 
     self:initializeInfo(self.productionData.line);
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
     Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
 end
@@ -111,6 +111,7 @@ function HomeProductionLineItem:delLineRefreshInfo(data)
 end
 --刷新数据
 function HomeProductionLineItem:updateInfo(data)
+    self.productionData = data
     self.productionData.line = data.line
     self:initializeInfo()
 end

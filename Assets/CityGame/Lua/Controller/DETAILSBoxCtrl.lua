@@ -37,7 +37,33 @@ function DETAILSBoxCtrl:Refresh()
     --self.obj = self.m_data
     --self.uiInfo = self.m_data.goodsDataInfo
     self.itemId = self.m_data.itemId
-    DETAILSBoxPanel.nameText.text = self.m_data.name
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.zero
+        DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.one
+        DETAILSBoxPanel.materialNameText.text = self.m_data.name
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                DETAILSBoxPanel.materialIcon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.one
+        DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.zero
+        DETAILSBoxPanel.GoodNameText.text = Good[self.itemId].name
+        --DETAILSBoxPanel.playerName.text =
+        --DETAILSBoxPanel.companyNameText.text =
+        --DETAILSBoxPanel.headImg =
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                DETAILSBoxPanel.goodsIcon.sprite = texture
+            end
+        end)
+    end
+    DETAILSBoxPanel.GoodNameText.text = self.m_data.name
     DETAILSBoxPanel.numberInput.text = self.m_data.num
     DETAILSBoxPanel.numberSlider.maxValue = self.m_data.num
     DETAILSBoxPanel.numberSlider.value = self.m_data.num

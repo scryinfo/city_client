@@ -17,6 +17,11 @@ function BaseBuildModel:Refresh(data)
         self.Data[key] = value
     end
     DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
+    if data.ownerId == DataManager.GetMyOwnerID() then
+        if self.bubbleItem == nil then
+            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y})
+        end
+    end
 end
 
 --打开界面
@@ -51,6 +56,10 @@ function BaseBuildModel:Close()
     --清除建筑GameObject
     if self.go ~= nil then
         destroy(self.go)
+    end
+    if self.bubbleItem ~= nil then
+        self.bubbleItem:Close()
+        self.bubbleItem = nil
     end
     self = nil
 end

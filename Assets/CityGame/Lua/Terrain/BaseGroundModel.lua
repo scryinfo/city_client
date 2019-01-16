@@ -21,11 +21,37 @@ function BaseGroundModel:Refresh(data)
     --    self.Data[key] = value
     --end
     self.Data = data
+
+    --判断是否应该有气泡
+    if data.rent ~= nil and data.rent.renterId == nil then
+        if self.bubbleItem == nil then
+            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Rent, {x = data.x, y = data.y})
+            return
+        end
+        self.bubbleItem:_setBubbleState(GroundTransState.Rent)
+        return
+    end
+    if data.sell ~= nil then
+        if self.bubbleItem == nil then
+            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Sell, {x = data.x, y = data.y})
+            return
+        end
+        self.bubbleItem:_setBubbleState(GroundTransState.Sell)
+        return
+    end
+    --如果之前有气泡则直接干掉实例
+    if self.bubbleItem ~= nil then
+        self.bubbleItem:Close()
+        self.bubbleItem = nil
+    end
 end
 
 function BaseGroundModel:Close()
     for key, value in pairs(self.Data) do
         value = nil
+    end
+    if self.bubbleItem ~= nil then
+        self.bubbleItem:Close()
     end
     self = nil
 end

@@ -69,7 +69,7 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     if not self.retailShopToggleGroup then
         self.retailShopToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.retailShopBehaviour, self.m_data)
     else
-        --self.retailShopToggleGroup:updataInfo(self.m_data)
+        self.retailShopToggleGroup:updateInfo(self.m_data)
     end
 end
 function RetailStoresCtrl:OnClick_buildInfo(ins)

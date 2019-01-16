@@ -97,9 +97,13 @@ end
 
 --点击添加按钮Add
 function RetailShelfCtrl:OnClick_addBtn(go)
-    local data = {}
-    data.buildingData = BuildingType.RetailShop;
-    go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
+    --local data = {}
+    --data.buildingData = BuildingType.RetailShop;
+    --go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
+    if go.m_data == nil then
+        return
+    end
+    --go:
 end
 --其他玩家购买窗口
 function RetailShelfCtrl:OnClick_playerBuy(go)

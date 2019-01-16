@@ -97,6 +97,8 @@ function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
         self:_creatResearchLineInfo()
     elseif buildingData.buildingType == BuildingType.TalentCenter then
         self:_creatTalentInfo()
+    elseif buildingData.buildingType == BuildingType.RetailShop then
+        self:_creatRetailShop()
     end
 end
 

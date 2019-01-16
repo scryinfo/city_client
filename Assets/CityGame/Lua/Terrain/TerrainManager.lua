@@ -14,12 +14,13 @@ local blockRange = Vector2.New(20, 20)
 local CameraPosition
 local CameraCollectionID = -1
 
+
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
     --add height
-    Vec3.y =  Vec3.y + 0.01
+    Vec3.y =  Vec3.y + 0.02
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
@@ -267,7 +268,10 @@ local function CreateConstructBuildSuccess(go,table)
     end
     DataManager.TempDatas.constructID  = table[1]
     DataManager.TempDatas.constructObj = go
-    DataManager.TempDatas.constructObj.transform.position = table[2]
+    local Vec3 = table[2]
+    --add height
+    Vec3.y =  Vec3.y + 0.02
+    DataManager.TempDatas.constructObj.transform.position = Vec3
     DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
     --一定要放在数据刷新完后打开
     ct.OpenCtrl('ConstructSwitchCtrl')

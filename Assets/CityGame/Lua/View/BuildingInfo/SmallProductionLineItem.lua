@@ -60,6 +60,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.timeText.text = "00:00:00"
     self.time_Slider.value = 0;
     self.staffNumberText.text = "0";
+    self.productionNumber.text = AdjustProductionLineCtrl.getGoodInventoryNum(self.itemId)
     self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums / 5;
     self.sNumberScrollbar.value = 0
     local materialKey,goodsKey = 21,22
@@ -96,7 +97,7 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.inputNumber.text = infoTab.targetCount
     self.pNumberScrollbar.maxValue = AdjustProductionLineCtrl.residualCapacity
     self.pNumberScrollbar.value = infoTab.targetCount
-    self.productionNumber.text = 0;     --右上角小房子
+    self.productionNumber.text = AdjustProductionLineCtrl.getGoodInventoryNum(self.itemId);     --右上角小房子
     self.staffNumberText.text = tostring(infoTab.workerNum)
     self.sNumberScrollbar.maxValue = (AdjustProductionLineCtrl.idleWorkerNums + infoTab.workerNum) / 5
     self.sNumberScrollbar.value = infoTab.workerNum / 5;
@@ -125,16 +126,6 @@ end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
-    --local time = 0
-    --local materialKey,goodsKey = 21,22
-    --if math.floor(go.itemId / 100000) == materialKey then
-    --    time = 1 / Material[go.itemId].numOneSec / tonumber(go.staffNumberText.text) * tonumber(go.inputNumber.text)
-    --elseif math.floor(go.itemId / 100000) == goodsKey then
-    --    time = 1 / Good[go.itemId].numOneSec / tonumber(go.staffNumberText.text) * tonumber(go.inputNumber.text)
-    --end
-    --local timeTable = getTimeBySec(time)
-    --local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
-    --self.timeText.text = timeStr
     go.adjustmentTop.localScale = Vector3.zero
 end
 --点击删除

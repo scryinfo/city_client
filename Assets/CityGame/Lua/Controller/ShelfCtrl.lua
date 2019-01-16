@@ -27,6 +27,7 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
+    --shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
 
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
@@ -76,6 +77,15 @@ function ShelfCtrl:c_tempTabNotGoods(id)
     self.temporaryItems[id] = nil
     self.GoodsUnifyMgr.shelfLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
     self.GoodsUnifyMgr:_deleteBuyGoods(id);
+end
+--跳转选择仓库界面
+function ShelfCtrl:OnClick_openBtn(go)
+    local data = {}
+    data.pos = {}
+    data.pos.x = go.m_data.info.pos.x
+    data.pos.y = go.m_data.info.pos.y
+    data.nameText = ShelfPanel.nameText
+    ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --购买物品
 function ShelfCtrl:OnClcik_buyConfirmBtn(ins)

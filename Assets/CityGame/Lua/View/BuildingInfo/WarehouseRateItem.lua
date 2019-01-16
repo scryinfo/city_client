@@ -51,13 +51,22 @@ end
 
 function WarehouseRateItem:getWarehouseCapacity(table)
     local warehouseCapacity = 0
+    local locked = 0
     if not table.inHand then
-        warehouseCapacity = 0
+        warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity;
     else
         for k,v in pairs(table.inHand) do
             warehouseCapacity = warehouseCapacity + v.n
         end
+        if not table.locked then
+            locked = 0
+        else
+            for i,t in pairs(table.locked) do
+                locked = locked + t.n
+            end
+        end
+        warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
     end
 end
@@ -95,6 +104,7 @@ end
 
 --刷新数据
 function WarehouseRateItem:updateInfo(data)
+    self.warehouseData = data
     self.warehouseData.store = data.store
     self:initData();
 end

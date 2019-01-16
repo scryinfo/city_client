@@ -55,7 +55,7 @@ function AdjustProductionLineCtrl:Refresh()
     end
     self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
-    --self:refreshWorkerNum()0
+    AdjustProductionLineCtrl.store = self.data.store
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
@@ -82,8 +82,6 @@ function AdjustProductionLineCtrl:calculateTime(msg)
             v.timeText.text = timeStr
         end
     end
-    --self.GoodsUnifyMgr.tempLineItem[msg.line.itemId].timeText.text = timeTab
-    --self.GoodsUnifyMgr.tempLineItem = nil
 end
 ----修改生产线
 --function AdjustProductionLineCtrl:OnClick_modifyBtn()
@@ -122,16 +120,6 @@ function AdjustProductionLineCtrl:getWorkerNum()
         return workerNum
     end
 end
-----刷新一条线可用的员工数量
---function AdjustProductionLineCtrl:refreshWorkerNum()
---    if not AdjustProductionLineCtrl.materialProductionLine then
---        return;
---    else
---        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
---            --v.sNumberScrollbar.maxValue = self.idleWorkerNum
---        end
---    end
---end
 --添加生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
@@ -144,7 +132,28 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
-
+--获取仓库某种商品或原料有的库存
+function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
+    if itemId then
+        if AdjustProductionLineCtrl.store then
+            if AdjustProductionLineCtrl.store.inHand == nil then
+                local num = 0
+                return num
+            end
+            for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+                if v.key.id == itemId then
+                    return v.n
+                else
+                    local num = 0
+                    return num
+                end
+            end
+        else
+            local num = 0
+            return num
+        end
+    end
+end
 --读取生产线，初始化时间
 function AdjustProductionLineCtrl:refreshTime(infoTab)
     if not infoTab then

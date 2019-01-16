@@ -42,9 +42,10 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
         end
     end);
+    self.SmallShelfRateItemTab = {}
     self:initializeInfo(self.shelfData.shelf.good)
 
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
+    --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
     Event.AddListener("delGoodRefreshInfo",self.delGoodRefreshInfo,self)
 end
@@ -87,13 +88,11 @@ function ShelfRateItem:initializeInfo(data)
     if not data then
         return;
     end
+
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
         local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        if not self.SmallShelfRateItemTab then
-            self.SmallShelfRateItemTab = {}
-        end
         self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
@@ -102,14 +101,27 @@ function ShelfRateItem:shelfRefreshInfo(data)
     if not data then
         return;
     end
-    local homePageType = ct.homePage.shelf
-    local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
-    self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
-    --if not self.tempShowTable then
-    --    self.tempShowTable = {}
-    --end
-    --self.tempShowTable[data.k.id] = SmallShelfRateItem
+    local isShow = false
+    if #self.SmallShelfRateItemTab == 0 then
+        isShow = true
+    else
+        for i,v in pairs(self.SmallShelfRateItemTab) do
+            if v.itemId == data.k.id then
+                v.numberText.text = data.n
+                v.moneyText.text = "E"..data.price..".0000"
+                isShow = false
+                break
+            else
+                isShow = true
+            end
+        end
+    end
+    if isShow == true then
+        local homePageType = ct.homePage.shelf
+        local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
+        self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
+    end
 end
 --货架下架时删除
 function ShelfRateItem:delGoodRefreshInfo(data)
@@ -119,11 +131,13 @@ function ShelfRateItem:delGoodRefreshInfo(data)
     for i,v in pairs(self.SmallShelfRateItemTab) do
         if v.itemId == data.item.key.id then
             destroy(v.prefab.gameObject)
+            --table.remove(self.SmallShelfRateItemTa,i)
         end
     end
 end
 --刷新数据
 function ShelfRateItem:updateInfo(data)
+    self.shelfData = data
     self.shelfData.shelf.good = data.shelf.good
     self:initializeInfo()
 end

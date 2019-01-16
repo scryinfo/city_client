@@ -242,12 +242,16 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         --local shelfLuaItem = HomeOtherPlayerLineItem:new(self.toggleData, self._clickItemFunc, shelfView, self.mainPanelLuaBehaviour, shelfToggleData, self)
         --self.leftData[4] = shelfLuaItem
 
-        --货架 --右边第一个
-        local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
-        prodictionLineViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
-        local prodictionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, prodictionToggleData, self)
-        self.rightData[1] = prodictionLuaItem
+        ----货架 --右边第一个
+        --local prodictionLineViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
+        --prodictionLineViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
+        --local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        --local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
+        --self.rightData[1] = prodictionLuaItem
+
+        --购买货架
+        local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
     else
         --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
@@ -638,4 +642,17 @@ function BuildingInfoToggleGroupMgr:creatRefreshProductionLine(productionToggleD
         self.productionRateItem = HomeProductionLineItem:new(self.toggleData, self._clickItemFunc, self.productionView, self.mainPanelLuaBehaviour, productionToggleData, self)
     end
     return self.productionRateItem
+end
+--其他玩家购买货架
+function BuildingInfoToggleGroupMgr:creatOtherPlayerShelf(otherShelfToggleData)
+    if self.otherShelfRateItem then
+        self.otherShelfRateItem:updateInfo(self.toggleData)
+    else
+        if not self.otherShelfView then
+            self.otherShelfView = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
+            self.otherShelfView.gameObject.name = "HomeOtherPlayerShelfItem"
+        end
+        self.otherShelfRateItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, self.otherShelfView, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
+    end
+    return self.otherShelfRateItem
 end

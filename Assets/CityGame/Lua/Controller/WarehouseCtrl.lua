@@ -59,10 +59,10 @@ function WarehouseCtrl:Awake(go)
 end
 function WarehouseCtrl:Refresh()
     warehouse = self.gameObject:GetComponent('LuaBehaviour');
+    self.luabehaviour = warehouse
     self.store = self.m_data.store
     self.store.type = BuildingInType.Warehouse
     self.store.buildingId = self.m_data.info.id
-    self.luabehaviour = warehouse
     WarehouseCtrl.playerId = self.m_data.info.id
     local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
@@ -126,16 +126,26 @@ end
 --获取仓库总数量
 function WarehouseCtrl:getWarehouseCapacity(table)
     local warehouseCapacity = 0
+    local locked = 0
     if not table.inHand then
-        warehouseCapacity = 0
+        warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity;
     else
         for k,v in pairs(table.inHand) do
             warehouseCapacity = warehouseCapacity + v.n
         end
+        if not table.locked then
+            locked = 0
+        else
+            for i,t in pairs(table.locked) do
+                locked = locked + t.n
+            end
+        end
+        warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
     end
 end
+
 --Open shelf
 function WarehouseCtrl:OnClick_shelfBtn(go)
     go:OnClick_rightInfo(not switchIsShow,0)

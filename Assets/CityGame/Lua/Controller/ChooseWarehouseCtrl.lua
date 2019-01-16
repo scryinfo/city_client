@@ -12,7 +12,7 @@ ChooseWarehouseSortItemType = {
 local isShowList;
 local buildingInfo;
 local chooseWarehouse
-local onClick = true
+local hide
 
 function ChooseWarehouseCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -52,9 +52,10 @@ function ChooseWarehouseCtrl:Awake(go)
 end
 
 function ChooseWarehouseCtrl:Refresh()
+   -- WareHouseGoodsMgr:_clear()
+    hide = true
     self:initInsData()
     self:GetMyFriends()
-    WareHouseGoodsMgr:_clear()
     ChooseWarehousePanel.boxImg:SetActive(true)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
@@ -77,8 +78,10 @@ function ChooseWarehouseCtrl:_removeListener()
 end
 
 function ChooseWarehouseCtrl:c_OnReceivePlayerInfo(playerData)
-     self.data = playerData.info
-    self:_creatAddressList()
+    if hide then
+        self.data = playerData.info
+        self:_creatAddressList()
+    end
 end
 
 --获取玩家好友列表
@@ -115,6 +118,7 @@ end
 
 --返回
 function ChooseWarehouseCtrl:OnClick_returnBtn()
+    hide = false
     ChooseWarehouseCtrl:_removeListener()
     WareHouseGoodsMgr:_clear()
 

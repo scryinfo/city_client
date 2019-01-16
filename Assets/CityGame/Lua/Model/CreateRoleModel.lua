@@ -11,7 +11,7 @@ end
 --启动事件--
 function CreateRoleModel:OnCreate()
     --注册本地事件
-
+    Event.AddListener("m_createNewRole",self.m_createNewRole,self)
     --注册gs的网络回调
     CreateRoleModel:registerGsNetMsg()
 end
@@ -24,13 +24,12 @@ function CreateRoleModel:registerGsNetMsg()
     --gs网络回调注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",self.n_CreateNewRole,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"common.OpCode","error","common.Fail",self.n_Error,self)--新版model网络注册
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
 end
 
 --创角发包
 function CreateRoleModel:m_createNewRole(data)
     DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
-            { male = data.gender ,name =data.nickname ,companyName =data.companyname })
+            { male = data.gender ,name =data.nickname ,companyName =data.companyname ,faceId = data.faceId })
 end
 
 --创角回调
@@ -38,13 +37,11 @@ function CreateRoleModel:n_CreateNewRole(pMsg)
     logDebug(pMsg.id)
     logDebug(pMsg.name)
     --角色登录
-    ct.OpenCtrl("SelectHeadCtrl",pMsg)
-  --  Event.Brocast("m_loginRole",pMsg)
+    Event.Brocast("m_loginRole",pMsg)
 end
 
 --重名回调
 function CreateRoleModel:n_Error(pMsg)
-    local a = pMsg
     Event.Brocast("c_SameName")
 end
 

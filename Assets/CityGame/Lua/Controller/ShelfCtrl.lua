@@ -93,6 +93,7 @@ function ShelfCtrl:OnClick_openBtn(go)
     data.pos.x = go.m_data.info.pos.x
     data.pos.y = go.m_data.info.pos.y
     data.nameText = ShelfPanel.nameText
+    data.buildingId = go.m_data.info.id
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --购买物品

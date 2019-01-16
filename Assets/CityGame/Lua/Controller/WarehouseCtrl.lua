@@ -176,6 +176,7 @@ function WarehouseCtrl:OnClick_transportopenBtn(go)
     data.pos.x = go.m_data.info.pos.x
     data.pos.y = go.m_data.info.pos.y
     data.nameText = WarehousePanel.nameText
+    data.buildingId = go.m_data.info.id
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --确定上架

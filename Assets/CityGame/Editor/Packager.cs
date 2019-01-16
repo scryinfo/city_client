@@ -34,7 +34,8 @@ public class Packager {
 #else
         target = BuildTarget.iOS;
 #endif
-        BuildAssetResource(target);
+        //BuildAssetResource(target);
+        CityBuild.Build();
     }
 
     [MenuItem("LuaFramework/Build Android Resource", false, 101)]

@@ -81,8 +81,8 @@ end
 function UIBubbleMgr:_refreshItems(datas)
     for key, item in pairs(self.groundAucLuaItems) do
         item:Close()
-        item.data.groundObj.gameObject.transform.localScale = Vector3.zero  --删除场景中的预制
-        destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
+        --item.data.groundObj.transform.localScale = Vector3.zero  --删除场景中的预制
+        --destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
         self.groundAucLuaItems[key] = nil
     end
     self.nowItem = nil

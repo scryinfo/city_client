@@ -279,6 +279,7 @@ function DataManager.RefreshBaseBuildData(data)
     end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
+        BuildDataStack[collectionID].BaseBuildDatas[blockID]:CheckBubbleState()
         return false
     else
         --具体Model可根据建筑类型typeID重写BaseBuildModel
@@ -1183,6 +1184,7 @@ function DataManager.n_OnReceiveGroundChange(stream)
             --刷新/创建地块信息Model
             if BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID] ~= nil then
                 BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]:Refresh(value)
+                BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]:CheckBubbleState()
             else
                 BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]  = BaseGroundModel:new(value)
             end

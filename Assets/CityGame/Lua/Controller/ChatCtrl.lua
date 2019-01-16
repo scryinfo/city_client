@@ -56,6 +56,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -462,6 +463,7 @@ function ChatCtrl:OnAddFriends(go)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
+    data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
@@ -508,6 +510,10 @@ function ChatCtrl:OnShowPersonalInfo(go)
         go.isShowPersonalInfo = true
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
     end
+end
+
+function ChatCtrl:OnShowCompany(go)
+    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
 end
 
 -- 删除聊天记录

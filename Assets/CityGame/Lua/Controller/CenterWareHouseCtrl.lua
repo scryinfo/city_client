@@ -79,7 +79,7 @@ end
 
 --点击删除物品
 function CenterWareHouseCtrl:c_OnDelete(go)
-    local buildingId = PlayerTempModel.roleData.bagId
+    local buildingId = DataManager.GetBagId()
     local data = {}
     data.titleInfo = "提示"
     data.contentInfo = "确认销毁吗"
@@ -88,7 +88,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         local dataId = {}
         dataId.buildingId = buildingId
         dataId.id = go.itemId
-        DataManager.DetailModelRpcNoRet(go.insId , 'm_DeleteItem',dataId)
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_DeleteItem',dataId)
         go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)

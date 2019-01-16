@@ -5,7 +5,47 @@
 ---玩家头像路径
 PlayerHead = {
     [1] = {
-        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/BoxerB.png",
-        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatra.png"
-    }
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_01-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatar_01-m.png"
+    },
+    [2] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_02-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatar_02.png"
+    },
+    [3] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_03-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatar_03.png"
+    },
+    [4] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_04-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatar_04.png"
+    },
+    [5] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_05-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/avatar_05.png"
+    },
+    [6] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_01-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/Avatar_girl_01.png"
+    },
+    [7] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_02-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/Avatar_girl_02.png"
+    },
+    [8] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_03-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/Avatar_girl_03.png"
+    },
+    [9] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_04-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/Avatar_girl_04.png"
+    },
+    [10] = {
+        SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_05-m.png",
+        MainPath = "Assets/CityGame/Resources/Atlas/PlayerHead/small/Avatar_girl_05.png"
+    },
+
+
+
+
 }

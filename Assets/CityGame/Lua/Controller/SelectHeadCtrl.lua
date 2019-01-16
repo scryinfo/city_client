@@ -9,7 +9,7 @@ SelectHeadCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local selectHeadBehaviour;
 local gameObject;
-local headId
+local headId = nil
 
 function  SelectHeadCtrl:bundleName()
     return "Assets/CityGame/Resources/View/SelectHeadPanel.prefab"
@@ -33,13 +33,17 @@ function SelectHeadCtrl:initData()
         local prefab = creatGoods(SelectHeadCtrl.static.Head_PATH,SelectHeadPanel.content)
         local roleHeadItem = RoleHeadItem:new(prefab,v.SelectRolePath,i)
     end
-
 end
 
 --点击确定
 function SelectHeadCtrl:OnOkBtn(go)
-     Event.Brocast("m_loginRole",go.m_data)
-    -- Event.Brocast("m_SetHeadId",headId)
+    if headId ~= nil then
+        local data = go.m_data
+        data.faceId = headId
+        Event.Brocast("m_createNewRole",data)
+    else
+        Event.Brocast("SmallPop"," 请选择头像",300)
+    end
 end
 
 function SelectHeadCtrl:SetHeadId(id)

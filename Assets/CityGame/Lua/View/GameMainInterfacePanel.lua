@@ -33,6 +33,7 @@ function GameMainInterfacePanel.InitPanel()
     this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
     this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
+    this.weather = transform:Find("Info/weather"):GetComponent("Image");   --天气
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
     this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--

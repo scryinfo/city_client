@@ -119,6 +119,9 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Awake()
+    --头像
+    local faceId = DataManager.GetFaceId()
+    LoadSprite(PlayerHead[faceId].MainPath, GameMainInterfacePanel.headItem, true)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
@@ -155,6 +158,13 @@ end
 function GameMainInterfaceCtrl:_update()
     GameMainInterfacePanel.time.text = os.date("%H:%M");
     GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a");
+    local date = tonumber(os.date("%Y%m%d"))
+    local hour = tonumber(os.date("%H"))
+    for i, v in pairs(WeatherConfig[date].weather) do
+        if i == hour then
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..v, GameMainInterfacePanel.weather,true)
+        end
+    end
 end
 
 --获取所有邮件

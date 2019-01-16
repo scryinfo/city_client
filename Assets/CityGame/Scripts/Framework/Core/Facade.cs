@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using LuaFramework;
 
 /// <summary>
 /// 事件命令
@@ -34,6 +35,10 @@ public class Facade {
     protected virtual void InitFramework() {
         if (m_controller != null) return;
         m_controller = Controller.Instance;
+    }
+    public static void createGameManager()
+    {
+        m_GameManager = new GameObject() ;
     }
 
     public virtual void RegisterCommand(string commandName, Type commandType) {

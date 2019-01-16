@@ -1202,6 +1202,7 @@ function DataManager.n_OnReceiveAddFriendSucess(stream)
     friend.b = true
     DataManager.SetMyFriends(friend)
     DataManager.SetMyFriendsApply({id = friend.id})
+    DataManager.SetStrangersInfo(friend.id)
     Event.Brocast("c_OnReceiveAddFriendSucess", friend)
 end
 

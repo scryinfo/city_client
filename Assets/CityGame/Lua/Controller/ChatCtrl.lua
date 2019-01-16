@@ -743,7 +743,7 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
         end
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
-        DataManager.SetStrangersInfo(roleInfo.id)
+        --DataManager.SetStrangersInfo(roleInfo.id)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
 end

@@ -9,8 +9,7 @@ public class CityBuild : Editor
 
     [MenuItem("Tool/APKBuild")]
     public static void Build()
-    {
-        Packager.BuildAndroidResource();
+    {        
         Debug.Log("Unit start Build");
         BuildTarget buildTarget = BuildTarget.Android;
         // 切换到 Android 平台        
@@ -40,5 +39,6 @@ public class CityBuild : Editor
         string res = BuildPipeline.BuildPlayer(levels.ToArray(), apkName, buildTarget, BuildOptions.None);
         Debug.Log("apk build successfully, location = "+res);
         AssetDatabase.Refresh();
+        Packager.BuildAndroidResource();
     }
 }

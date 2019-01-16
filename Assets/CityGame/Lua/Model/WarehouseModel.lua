@@ -59,7 +59,7 @@ end
 function WarehouseModel.mReqDelItem(buildingId,id,producerId,qty)
     if producerId == nil and qty == nil then
         local msgId = pbl.enum("gscode.OpCode","delItem")
-        local lMsg = {buildingId = buildingId, item = {key = {id = id}}}
+        local lMsg = {buildingId = buildingId, item = {id = id}}
         local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     else

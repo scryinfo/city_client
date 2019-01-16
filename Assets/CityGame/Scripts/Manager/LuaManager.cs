@@ -32,9 +32,13 @@ namespace LuaFramework {
 
         public static bool generate_RequireRT()
         {
-            AppFacade.Instance.RemoveManager(ManagerName.Lua);
-            AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);            
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
+            if (AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua) == null) {
+                AppFacade.Instance.RemoveManager(ManagerName.Lua);
+                AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
+                luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
+            }            
+            
             if(luaMgr == null)
             {
                 return false;

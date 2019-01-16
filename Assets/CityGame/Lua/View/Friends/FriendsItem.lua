@@ -45,7 +45,10 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
 
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
-    self.signatureText.text = self.data.sign
+    if self.data.des == nil or self.data.des == "" then
+        self.data.des = "Everything i do i wanna put a shine on it, do it one more time."  --默认值
+    end
+    self.signatureText.text = self.data.des
     if self.data.desc then
         self.validationMsgText.text = self.data.desc
     end

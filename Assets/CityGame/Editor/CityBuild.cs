@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using LuaFramework;
 
 
 public class CityBuild : Editor
@@ -37,8 +38,11 @@ public class CityBuild : Editor
         string apkName = string.Format("./{0}.apk", "Test");
         // 执行打包
         string res = BuildPipeline.BuildPlayer(levels.ToArray(), apkName, buildTarget, BuildOptions.None);
-        Debug.Log("apk build successfully, location = "+res);
+        Debug.Log("apk build successfully, file location = "+res);
         AssetDatabase.Refresh();
+        AppFacade.createGameManager();
+        AppFacade.Instance.AddManager<GameManager>(ManagerName.Game);
+        GameManager gmgr = AppFacade.Instance.GetManager<GameManager>(ManagerName.Game);        
         Packager.BuildAndroidResource();
     }
 }

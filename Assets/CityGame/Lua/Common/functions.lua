@@ -451,3 +451,13 @@ function LoadSprite(path, Icon, bSetNativeSize)
 		end
 	end)
 end
+
+
+--屏幕坐标转化为真实坐标
+function ScreenPosTurnActualPos(targetScreenPos)
+	local ActualPos = Vector2.New(  targetScreenPos.x * Game.ScreenRatio ,targetScreenPos.y * Game.ScreenRatio)
+	return ActualPos
+end
+
+
+

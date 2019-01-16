@@ -57,7 +57,7 @@ end
 
 --点击气泡
 function UIBubbleTransAndBuildingItem:_openBubbleFunc()
-    ct.OpenCtrl("GroundTransDetailCtrl", self.data.blockId)
+    ct.OpenCtrl("GroundTransDetailCtrl", {blockId = self.data.blockId})
 end
 
 function UIBubbleTransAndBuildingItem:Close()
@@ -66,6 +66,7 @@ function UIBubbleTransAndBuildingItem:Close()
     if self.gameObject ~= nil then
         destroyImmediate(self.gameObject)
     end
+    self = nil
 end
 
 function UIBubbleTransAndBuildingItem:LateUpdate()

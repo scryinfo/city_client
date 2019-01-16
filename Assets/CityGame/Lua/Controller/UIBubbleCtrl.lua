@@ -6,6 +6,8 @@
 UIBubbleCtrl = class('UIBubbleCtrl',UIPage)
 UIPage:ResgisterOpen(UIBubbleCtrl)
 
+UIBubbleCtrl.static.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
+
 function UIBubbleCtrl:initialize()
     UIPage.initialize(self, UIType.Fixed, UIMode.HideOther, UICollider.None)
 end
@@ -23,7 +25,7 @@ function UIBubbleCtrl:Awake(go)
 end
 
 function UIBubbleCtrl:Refresh()
-    --self:_initFunc()
+    self:_initFunc()
 end
 function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
@@ -43,19 +45,41 @@ function UIBubbleCtrl._cameraLateUpdate()
     Event.Brocast("c_RefreshLateUpdate")
 end
 
---拍卖气泡
-function UIBubbleCtrl.createGroundAucData(data)
+function UIBubbleCtrl:_initFunc()
+    if self.m_data == nil then
+        return
+    end
+
+    self:createGroundAucData(self.m_data)
+end
+
+function UIBubbleCtrl:createGroundAucData(data)
     if data == nil then
         return
     end
-    if UIBubbleCtrl.bubbleMgr == nil then
-        UIBubbleCtrl.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
+    if self.bubbleMgr == nil then
+        self.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
+        UIBubbleCtrl.bubbleMgr = self.bubbleMgr
     end
 
     if data.bubbleType == UIBubbleType.GroundAuc then
-        UIBubbleCtrl.bubbleMgr:initGroundAucBubbles(data)
+        self.bubbleMgr:initGroundAucBubbles(data)
     end
 end
+
+--拍卖气泡
+--function UIBubbleCtrl.createGroundAucData(data)
+--    if data == nil then
+--        return
+--    end
+--    if UIBubbleCtrl.bubbleMgr == nil then
+--        UIBubbleCtrl.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
+--    end
+--
+--    if data.bubbleType == UIBubbleType.GroundAuc then
+--        UIBubbleCtrl.bubbleMgr:initGroundAucBubbles(data)
+--    end
+--end
 
 --更新数据
 function UIBubbleCtrl:_refreshItems(datas)
@@ -75,14 +99,14 @@ end
 --打开拍卖界面
 function UIBubbleCtrl._openGroundAucCtrl(index)
     if index == 1 then
-        if self.bubbleMgr:getNowItem() ~= nil then
-            self.bubbleMgr:getNowItem():_openGroundAucFunc()
+        if UIBubbleCtrl.bubbleMgr:getNowItem() ~= nil then
+            UIBubbleCtrl.bubbleMgr:getNowItem():_openGroundAucFunc()
         end
         return
     end
     if index == 0 then
-        if self.bubbleMgr:getSoonItem() ~= nil then
-            self.bubbleMgr:getSoonItem():_openGroundAucFunc()
+        if UIBubbleCtrl.bubbleMgr:getSoonItem() ~= nil then
+            UIBubbleCtrl.bubbleMgr:getSoonItem():_openGroundAucFunc()
         end
         return
     end
@@ -91,7 +115,7 @@ end
 function UIBubbleCtrl.getBubbleByType(bubbleType, groundState, serverPos)
     if bubbleType == UIBubbleType.GroundTrans or bubbleType == UIBubbleType.BuildingSelf then
         local data = {bubbleType = bubbleType, groundState = groundState}
-        local obj = UIBubbleCtrl._getBubbleObj(bubbleType)
+        local obj = UIBubbleCtrl.getBubbleObj(bubbleType)
         if serverPos ~= nil then
             data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
             obj.name = "bubble "..serverPos.x..serverPos.y
@@ -100,7 +124,7 @@ function UIBubbleCtrl.getBubbleByType(bubbleType, groundState, serverPos)
         return bubbleItem
     end
 end
-function UIBubbleCtrl._getBubbleObj(type)
+function UIBubbleCtrl.getBubbleObj(type)
     local go
     if type == UIBubbleType.GroundTrans or type == UIBubbleType.BuildingSelf then
         if UIBubbleCtrl.static.sellRentPrefab == nil then

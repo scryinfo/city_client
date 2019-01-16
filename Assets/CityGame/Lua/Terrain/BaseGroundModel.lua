@@ -8,6 +8,8 @@ BaseGroundModel = class('BaseGroundModel')
 function BaseGroundModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
+
+    Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
 
 --刷新数据
@@ -21,8 +23,11 @@ function BaseGroundModel:Refresh(data)
     --    self.Data[key] = value
     --end
     self.Data = data
+end
 
-    --判断是否应该有气泡
+--判断是否应该有气泡
+function BaseGroundModel:CheckBubbleState()
+    local data = self.Data
     if data.rent ~= nil and data.rent.renterId == nil then
         if self.bubbleItem == nil then
             self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Rent, {x = data.x, y = data.y})

@@ -7,7 +7,6 @@ UIBubbleMgr = class('UIBubbleMgr')
 UIBubbleMgr.static.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
 UIBubbleMgr.static.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleMgr.static.NpcFlowObjPath = "View/Items/BuildingBubbleItems/UIBubbleNpcFlowItem"  --人流量
-UIBubbleMgr.static.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
 
 --气泡类型
 UIBubbleType =

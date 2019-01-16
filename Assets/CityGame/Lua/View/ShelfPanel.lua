@@ -30,7 +30,8 @@ function ShelfPanel.InitPanel()
     --RightInformation  --Text Button
     this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.closeBtn = transform:Find("RightInformation/bg/buy/closeBtn").gameObject;
-    this.confirmBtn = transform:Find("RightInformation/bg/buy/confirmBtn").gameObject;
+    this.confirmBtn = transform:Find("RightInformation/bg/buy/confirmBtn");
+    this.uncheckBtn = transform:Find("RightInformation/bg/buy/uncheckBtn")
     this.priceText = transform:Find("RightInformation/bg/buy/priceText"):GetComponent("RectTransform");
     this.nameText = transform:Find("RightInformation/bg/buy/warehouseName/nameText"):GetComponent("Text");
     this.openBtn = transform:Find("RightInformation/bg/buy/warehouseName/openBtn").gameObject;

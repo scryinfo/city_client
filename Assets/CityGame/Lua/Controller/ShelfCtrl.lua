@@ -26,7 +26,7 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.addBtn,self.OnClick_createGoods, self);
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
-    shelf:AddClick(ShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
+    shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self);
     shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
 
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
@@ -51,6 +51,7 @@ function ShelfCtrl:Refresh()
     self.shelf.type = BuildingInType.Shelf
     self.shelf.isOther = self.m_data.isOther
     self.shelf.buildingId = self.m_data.info.id
+    self:isShowDetermineBtn()
     if ShelfPanel.Content.childCount <= 1 then
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
     end
@@ -62,11 +63,6 @@ function ShelfCtrl:Refresh()
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
 
-    --if ShelfPanel.Content.childCount <= 0 then
-    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
-    --else
-    --    return
-    --end
 end
 --选中物品
 function ShelfCtrl:_selectedBuyGoods(ins)
@@ -79,12 +75,14 @@ function ShelfCtrl:_selectedBuyGoods(ins)
         self.GoodsUnifyMgr.shelfLuaTab[ins.id].circleTickImg.transform.localScale = Vector3.zero
         self.GoodsUnifyMgr:_deleteBuyGoods(ins.id);
     end
+    self:isShowDetermineBtn()
 end
 --临时表里是否有这个物品
 function ShelfCtrl:c_tempTabNotGoods(id)
     self.temporaryItems[id] = nil
     self.GoodsUnifyMgr.shelfLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
     self.GoodsUnifyMgr:_deleteBuyGoods(id);
+    self:isShowDetermineBtn()
 end
 --跳转选择仓库界面
 function ShelfCtrl:OnClick_openBtn(go)
@@ -190,6 +188,8 @@ function ShelfCtrl:openPlayerBuy(isShow)
         ShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         Event.Brocast("c_buyGoodsItemChoose")
         ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
+        ShelfPanel.confirmBtn.localScale = Vector3.zero
+        ShelfPanel.uncheckBtn.localScale = Vector3.one
         ShelfPanel.nameText.text = "请选择仓库";
         --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
@@ -217,6 +217,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
                 self.GoodsUnifyMgr:_deleteGoods(v)
                 for i,v in pairs(ShelfCtrl.temporaryItems) do
                     self.GoodsUnifyMgr:_deleteBuyGoods(v)
+                    self:isShowDetermineBtn()
                 end
             else
                 v.numberText.text = v.goodsDataInfo.number - Data.item.n;
@@ -240,6 +241,26 @@ function ShelfCtrl:OnClick_createGoods(go)
     --elseif go.data.buildingType == BuildingType.ProcessingFactory then
     --    ct.OpenCtrl("WarehouseCtrl",go.data)
     --end
+end
+--刷新购买确定按钮
+function ShelfCtrl:isShowDetermineBtn()
+    if not self.GoodsUnifyMgr then
+        return
+    end
+    if not self.GoodsUnifyMgr.shelfBuyGoodslItems then
+        return
+    end
+    local num = 0
+    for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
+        num = num + i
+    end
+    if num ~= 0 and ShelfPanel.nameText.text ~= "请选择仓库" then
+        ShelfPanel.confirmBtn.localScale = Vector3.one
+        ShelfPanel.uncheckBtn.localScale = Vector3.zero
+    else
+        ShelfPanel.confirmBtn.localScale = Vector3.zero
+        ShelfPanel.uncheckBtn.localScale = Vector3.one
+    end
 end
 --架子隐藏和显示
 function ShelfCtrl:shelfImgSetActive(table,num)

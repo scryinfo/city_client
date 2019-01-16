@@ -7,7 +7,7 @@ local m_TimeOffset = nil
 
 --同步服务器时间
 function  TimeSynchronized.SynchronizationServerTime(ServerTime)
-    m_TimeOffset = ServerTime - os.time()
+    m_TimeOffset = ServerTime - os.time() * 1000
 end
 
 --本地判断时间是否同步
@@ -25,7 +25,7 @@ end
 --获取服务器的当前时间
 function TimeSynchronized.GetTheCurrentServerTime()
     if JudgeIsRightTimeOffset() == true then
-        return os.time() + m_TimeOffset
+        return os.time() * 1000 + m_TimeOffset
     end
     return nil
 end
@@ -34,7 +34,7 @@ end
 --若大于0则表示时间未到
 function TimeSynchronized.GetTheDifferenceFromTheCurrentTime(targetTime)
     if JudgeIsRightTimeOffset() == true then
-        return targetTime - (os.time() + m_TimeOffset)
+        return targetTime - (os.time() * 1000 + m_TimeOffset)
     end
     return nil
 end

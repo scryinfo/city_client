@@ -81,16 +81,32 @@ UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
         end
         DataManager.TempDatas.myGroundObj = {}
         local myPersonData = DataManager.GetMyPersonData()
+        local myGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[4000001].prefabRoute)
         if myPersonData.m_groundInfos then
             for key, value in pairs(myPersonData.m_groundInfos) do
-                local myGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[4000001].prefabRoute)  --已经拍卖
-                local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)  --已经拍卖
-                tempObj.transform.position =Vector3.New(value.x,0,value.y)
-                tempObj.transform.localScale = Vector3.one
-                table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+                if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                    local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)
+                    tempObj.transform.position =Vector3.New(value.x,0,value.y)
+                    tempObj.transform.localScale = Vector3.one
+                    tempObj.name = "My_OwnGround"
+                    table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+                end
             end
         else
             myPersonData.m_groundInfos = {}
+        end
+        if  myPersonData.m_rentGroundInfos then
+            for key, value in pairs(myPersonData.m_rentGroundInfos) do
+                if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                    local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)
+                    tempObj.transform.position =Vector3.New(value.x,0,value.y)
+                    tempObj.transform.localScale = Vector3.one
+                    tempObj.name = "My_RentGround"
+                    table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+                end
+            end
+        else
+            myPersonData.m_rentGroundInfos = {}
         end
     end)
 end)

@@ -17,19 +17,19 @@ function PieChart.CreatePie(pieParent)
     local data = {}
 
     local tempData = PieNeedData.New()
-    tempData.piePercent = 50
+    tempData.piePercent = 75  --对应的值[可以相加不等于100]
     tempData.pieName = "原料厂1"
-    local color = Vector3(231, 132, 132)
-    tempData.showColor = PieChartGraph.GetColor(color.x, color.y, color.z)
-    tempData.hideLine = false
+    local color = Vector3(231, 132, 132)  --每块对应的颜色
+    tempData.showColor = getColorByInt(color.x, color.y, color.z)
+    tempData.hideLine = true  --是否隐藏线的信息
     data[1] = tempData
 
     local tempData1 = PieNeedData.New()
-    tempData1.piePercent = 50
+    tempData1.piePercent = 25
     tempData1.pieName = "原料厂2"
-    local color = Vector3(231, 132, 132)
-    tempData1.showColor = PieChartGraph.GetColor(color.x, color.y, color.z)
-    tempData1.hideLine = false
+    local color2 = Vector3(255, 132, 132)
+    tempData1.showColor = getColorByInt(color2.x, color2.y, color2.z)
+    tempData1.hideLine = true
     data[2] = tempData1
 
     local pieObj = UnityEngine.Resources.Load("Prefab/PieChart/PieCanvas")

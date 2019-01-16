@@ -6,7 +6,7 @@ UIPage:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
 local gameObject;
-local gender;
+local gender = nil;
 
 function  CreateRoleCtrl:bundleName()
     return "Assets/CityGame/Resources/View/CreateRolePanel.prefab"
@@ -35,6 +35,8 @@ function CreateRoleCtrl:OnCreate(obj)
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
     createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
     createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+
+    Event.AddListener("c_SameName",self.c_SameName,self)
 end
 
 --创建角色
@@ -43,7 +45,7 @@ function CreateRoleCtrl:OnCreateRole(go)
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
         Event.Brocast("SmallPop"," 用户名或公司名为空",300)
-    elseif gender ==nickname  then
+    elseif gender == nil  then
         Event.Brocast("SmallPop"," 请选择性别",300)
     else
         local data = {}
@@ -70,4 +72,10 @@ function CreateRoleCtrl:OnFemale()
     CreateRolePanel.male:GetComponent("Image").color =getColorByInt(215,215,215,255)
     CreateRolePanel.maleScl.localScale = Vector3.zero
     CreateRolePanel.femaleScl.localScale = Vector3.one
+end
+
+--重名
+function CreateRoleCtrl:c_SameName()
+    CreateRolePanel.duplicate.localScale = Vector3.one
+    Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
 end

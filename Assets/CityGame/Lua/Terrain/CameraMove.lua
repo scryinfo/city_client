@@ -75,11 +75,15 @@ function CameraMove:LateUpdate(gameObject)
         --点击在UI上
         if self.IsTouchUI then
             self.IsTouchUI = false
+            --cycle需要的每帧调用接口
+            Event.Brocast("c_UIBubbleLateUpdate")
             return
         end
     end
     --如果是点击到UI状态，则不做接下来的判定
     if self.IsTouchUI then
+        --cycle需要的每帧调用接口
+        Event.Brocast("c_UIBubbleLateUpdate")
         return
     end
     --如果检测到按下
@@ -115,8 +119,11 @@ function CameraMove:LateUpdate(gameObject)
             self:SmoothCameraView()
         end
     elseif mCameraState == TouchStateType.UIState then
+        --cycle需要的每帧调用接口
+        Event.Brocast("c_UIBubbleLateUpdate")
         return
     end
+    --cycle需要的每帧调用接口
     Event.Brocast("c_UIBubbleLateUpdate")
 end
 
@@ -162,6 +169,13 @@ function CameraMove:TouchBuild()
                 return
             end
         end
+        --判断是否点击在拍卖中的地块上
+        local click, index = GroundAuctionModel.getIsClickAucGround(blockID)
+        if click then
+            UIBubbleCtrl._openGroundAucCtrl(index)
+            return
+        end
+
         --判断是否是地块 --->是则打开
         if DataManager.GetGroundDataByID(blockID) ~= nil then
             ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})

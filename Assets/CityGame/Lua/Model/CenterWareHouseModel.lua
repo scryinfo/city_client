@@ -18,7 +18,7 @@ function CenterWareHouseModel:OnCreate()
     Event.AddListener("m_opCenterWareHouse",self.m_opCenterWareHouse,self)
     Event.AddListener("m_DeleteItem",self.m_DeleteItem,self)
     --as网络回调注册
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
+   -- DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",self.n_GsDelItem,self)--新版model网络注册
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),CenterWareHouseModel.n_GsDelItem);
@@ -39,6 +39,7 @@ end
 
 --扩容回调
 function CenterWareHouseModel:n_GsExtendBag(stream)
+    local a = stream
     Event.Brocast("c_GsExtendBag")
 end
 

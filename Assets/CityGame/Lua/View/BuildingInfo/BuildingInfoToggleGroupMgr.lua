@@ -488,7 +488,7 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         staffData.buildingId = self.toggleData.info.id
         staffData.buildingTypeId = self.toggleData.info.mId
         staffData.satisfaction = self.toggleData.info.happy
-        staffData.dayWage = self.toggleData.info.salary
+        staffData.dayWage = self.toggleData.info.salary / 100 * PlayerBuildingBaseData[staffData.buildingTypeId].salary
         staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
         staffData.noDomicileCount = 0
         staffData.isOther = self.toggleData.isOther  --判断是自己还是别人打开了界面

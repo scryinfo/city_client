@@ -42,6 +42,6 @@ function GameMainInterfacePanel.InitPanel()
     this.worldChatNoticeItem = transform:Find("WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
     
     this.advertisFacilitie = transform:Find("DownCreatePanel/AdvertisingFacilitie").gameObject;--广告设施--
-    this.centerWareHouse = transform:Find("DownCreatePanel/CnterWareHouseButton").gameObject; --中心仓库--
     this.guideBool = transform:Find("GuideBoolButton").gameObject; --指南书--
+    this.centerBuilding = transform:Find("CenterBuildingButton").gameObject; --中心建筑
 end

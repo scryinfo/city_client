@@ -29,10 +29,11 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
     self.ModelDataList={}
     --配置表数据模拟
     local configTable = {}
-    if ServerListModel.inHand == nil then
+    local inHand = DataManager.GetBagInfo()
+    if inHand == nil then
         return
     end
-    for i, v in pairs(ServerListModel.inHand) do
+    for i, v in pairs(inHand) do
         local materialKey,goodsKey = 21,22
         local uiTab = {}
         if math.floor(v.key.id / 100000) == materialKey then
@@ -57,7 +58,7 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
             self.items = {}
         end
         self.items[i] = WareHouseLuaItem
-       -- WareHouseGoodsMgr.items[i] = WareHouseLuaItem
+        WareHouseGoodsMgr.items[i] = WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -110,20 +111,40 @@ function WareHouseGoodsMgr:_creatAddressList(data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data)
+function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
+    local bagId = DataManager.GetBagId()
+    if bagId ~= buildingId then
+        local dataInfo = {}
+        dataInfo.info = {}
+        dataInfo.info.id = bagId
+        dataInfo.info.pos = {}
+        dataInfo.info.pos.x = BagPosInfo[1].bagX
+        dataInfo.info.pos.y = BagPosInfo[1].bagY
+        dataInfo.info.mId = nil
+        local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+        local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,dataInfo,data)
+        if not self.ipaItems then
+            self.ipaItems = {}
+        end
+        self.ipaItems[index] = LinePaneltLuaItem
+        index = index + 1
+    end
+
     if buysBuildings ==nil then
         return
     end
     for i, v in pairs(buysBuildings) do
         for k, z in pairs(v) do
             if z.store ~= nil then
-                local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-                local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
-                if not self.ipaItems then
-                    self.ipaItems = {}
+                if z.info.id ~= buildingId then
+                    local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
+                    local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
+                    if not self.ipaItems then
+                        self.ipaItems = {}
+                    end
+                    self.ipaItems[index] = LinePaneltLuaItem
+                    index = index + 1
                 end
-                self.ipaItems[index] = LinePaneltLuaItem
-                index = index + 1
             end
         end
     end
@@ -246,6 +267,17 @@ function WareHouseGoodsMgr:ClearAll()
         destroy(self.allTspItem[i].prefab.gameObject)
     end
     self.allTspItem = {};
+end
+
+--清空仓库item
+function WareHouseGoodsMgr:ClearAllItem()
+    if self.items == nil then
+        return
+    end
+    for i, v in pairs(self.items) do
+        destroy(v.prefab.gameObject)
+    end
+    self.items = nil
 end
 
 --显示所有商品BG,使其都能点击

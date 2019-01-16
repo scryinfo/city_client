@@ -572,4 +572,10 @@ UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function (
     end
 end)
 
+UnitTest.Exec("cycle_w22_pieTest", "test_cycle_w22_pieTest",  function ()
+    --local pie = PieChart.New()
+    --pie.CreatePie()
+end)
+
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -576,10 +576,20 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
     PersonDataStack.m_bagId = tempData.bagId
-    --初始化自己的money
+    --初始化自己中心仓库的数据
+    if tempData.bag ~= nil then
+        local inHand = tempData.bag.inHand
+        PersonDataStack.m_inHand = ct.deepCopy( inHand)
+    end
+    PersonDataStack.m_bag = tempData.bag
+    --初始化自己的moneys
     PersonDataStack.m_money = tempData.money
+    --初始化中心仓库容量
+    PersonDataStack.m_bagCapacity = tempData.bagCapacity
     --初始化自己的name
     PersonDataStack.m_name = tempData.name
+    --初始化自己的公司名字
+    PersonDataStack.m_companyName = tempData.companyName
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -686,6 +696,16 @@ function DataManager.GetBagId()
     return PersonDataStack.m_bagId
 end
 
+--获取中心仓库信息
+function DataManager.GetBagInfo()
+    return PersonDataStack.m_inHand
+end
+
+--获取中心仓库容量
+function DataManager.GetBagCapacity()
+    return PersonDataStack.m_bagCapacity
+end
+
 --获取自己的money
 function DataManager.GetMoney()
     return PersonDataStack.m_money
@@ -694,6 +714,11 @@ end
 --获取自己的名字
 function DataManager.GetName()
     return PersonDataStack.m_name
+end
+
+--获取自己的公司名字
+function DataManager.GetCompanyName()
+    return PersonDataStack.m_companyName
 end
 
 function DataManager.GetMyPersonData()
@@ -943,6 +968,8 @@ local function InitialEvents()
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
    -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
    -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
+    Event.AddListener("c_AddBagInfo",DataManager.c_AddBagInfo)
+    Event.AddListener("c_DelBagInfo",DataManager.c_DelBagInfo)
 end
 
 --注册所有网络消息回调
@@ -963,6 +990,7 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),DataManager.n_DeleteBlacklist)
+
 end
 
 --清除所有消息回调
@@ -1197,3 +1225,61 @@ end
 --function DataManager.GetHeadId()
 --    return HeadId
 --end
+
+--增加中心仓库物品
+function DataManager.c_AddBagInfo(itemId,n)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    local newInHand = false
+    for i, v in ipairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            v.n = v.n + n
+            newInHand = false
+            break
+        else
+            newInHand = true
+        end
+    end
+    if newInHand then
+        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId},n = n}
+    end
+end
+
+--减少中心仓库物品
+function DataManager.c_DelBagInfo(itemId,n)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    local newInHand = false
+        for i, v in pairs(PersonDataStack.m_inHand) do
+            if v.key.id == itemId then
+                if v.n > n then
+                    v.n = v.n - n
+                    newInHand = false
+                elseif v.n == n then
+                    table.remove(PersonDataStack.m_inHand,i)
+                    newInHand = true
+                end
+            end
+        end
+    --刷新ID
+    --if newInHand then
+    --    for i = 1, #PersonDataStack.m_inHand do
+    --        PersonDataStack.m_inHand[i]
+    --    end
+    --end
+
+end
+
+--获取中心仓库物品数量
+function DataManager.GetBagNum()
+    local n = 0
+    if PersonDataStack.m_inHand == nil then
+        return n
+    end
+    for i, v in pairs(PersonDataStack.m_inHand) do
+        n = n + v.n
+    end
+    return n
+end

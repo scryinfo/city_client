@@ -120,6 +120,7 @@ end
 
 --角色登录成功之后请求拍卖的信息
 function GroundAuctionModel.m_RoleLoginReqGroundAuction()
+    --ct.OpenCtrl("UIBubbleCtrl")  --打开气泡界面，但是不做任何数据处理
     this.m_ReqRueryMetaGroundAuction()
     this.m_ReqQueryGroundAuction()
 end
@@ -161,7 +162,8 @@ function GroundAuctionModel._getOrderGroundDatas(groundData)
     this._moveToAucPos()
 
     --创建气泡  --最多只有两个状态的气泡
-    ct.OpenCtrl("UIBubbleCtrl", {this.nowAucGroundData, this.soonAucGroundData})
+    ct.OpenCtrl("UIBubbleCtrl", {bubbleType = UIBubbleType.GroundAuc, aucInfo = {this.nowAucGroundData, this.soonAucGroundData}})
+    --UIBubbleCtrl.createGroundAucData({bubbleType = UIBubbleType.GroundAuc, aucInfo = {this.nowAucGroundData, this.soonAucGroundData}})
 end
 --移动到即将拍卖的位置
 function GroundAuctionModel._moveToAucPos()
@@ -217,6 +219,27 @@ function GroundAuctionModel._checkNowAndSoonData()
             end
         end
     end
+end
+
+--判断是否点击到拍卖的地块
+function GroundAuctionModel.getIsClickAucGround(blockId)
+    if this.nowAucGroundData ~= nil then
+        for i, pos in pairs(this.nowAucGroundData.area) do
+            local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
+            if tempBlockId == blockId then
+                return true, 1
+            end
+        end
+    end
+    if this.soonAucGroundData ~= nil then
+        for i, pos in pairs(this.soonAucGroundData.area) do
+            local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
+            if tempBlockId == blockId then
+                return true, 0
+            end
+        end
+    end
+    return false
 end
 
 --- 客户端请求 ---

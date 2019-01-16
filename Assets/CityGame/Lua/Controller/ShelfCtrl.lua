@@ -27,7 +27,7 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
     shelf:AddClick(ShelfPanel.confirmBtn,self.OnClcik_buyConfirmBtn,self);
-    --shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
+    shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
 
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
@@ -51,7 +51,9 @@ function ShelfCtrl:Refresh()
     self.shelf.type = BuildingInType.Shelf
     self.shelf.isOther = self.m_data.isOther
     self.shelf.buildingId = self.m_data.info.id
-    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
+    if ShelfPanel.Content.childCount <= 1 then
+        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
+    end
     if self.m_data.isOther then
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
         ShelfPanel.shelfAddItem.gameObject:SetActive(false)
@@ -59,6 +61,12 @@ function ShelfCtrl:Refresh()
     else
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
+
+    --if ShelfPanel.Content.childCount <= 0 then
+    --    self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
+    --else
+    --    return
+    --end
 end
 --选中物品
 function ShelfCtrl:_selectedBuyGoods(ins)
@@ -127,6 +135,9 @@ end
 function ShelfCtrl:OnClick_return_Btn(go)
     go:deleteObjInfo();
     UIPage.ClosePage();
+    if switchIsShow then
+        go:openPlayerBuy(not switchIsShow)
+    end
 end
 function ShelfCtrl:Hide()
     UIPage.Hide(self)
@@ -178,6 +189,7 @@ function ShelfCtrl:openPlayerBuy(isShow)
         ShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         Event.Brocast("c_buyGoodsItemChoose")
         ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
+        ShelfPanel.nameText.text = "请选择仓库";
         --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
     else
@@ -185,6 +197,11 @@ function ShelfCtrl:openPlayerBuy(isShow)
         Event.Brocast("c_buyGoodsItemDelete")
         ShelfPanel.Content.offsetMax = Vector2.New(0,0);
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
+        if self.GoodsUnifyMgr.shelfBuyGoodslItems ~= nil then
+            for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
+                self:c_tempTabNotGoods(i)
+            end
+        end
     end
     switchIsShow = isShow
 end

@@ -79,14 +79,21 @@ function ProcessingCtrl:OnClick_prepareOpen(ins)
 end
 
 --更改名字
-function ProcessingCtrl:OnClick_changeName()
+function ProcessingCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    UIPage:ShowPage(InputDialogPageCtrl, data)
+    data.btnCallBack = function(name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeProcessingName', ins.m_data.insId, name)
+        ins:_updateName(name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
-
+--更改名字成功
+function ProcessingCtrl:_updateName(name)
+    ProcessingPanel.nameText.text = name
+end
 --返回
 function ProcessingCtrl:OnClick_backBtn(ins)
     if ins.processingToggleGroup then

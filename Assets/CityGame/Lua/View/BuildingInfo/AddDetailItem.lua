@@ -12,6 +12,8 @@ function AddDetailItem:initialize(viewRect)
     self.stateRoot = viewRect:Find("stateRoot")
     self.stateText = viewRect:Find("stateRoot/stateText"):GetComponent("Text")
     self.countText = viewRect:Find("Image/countText"):GetComponent("Text")
+    self.numberText = viewRect:Find("inventory/numberText"):GetComponent("Text")
+
 
     self.selectSelf = false
     self.btn.onClick:RemoveAllListeners()
@@ -49,7 +51,7 @@ function AddDetailItem:initData(data)
     --elseif data.itemState == AddLineDetailItemState.Default then
     --    self.stateRoot.localScale = Vector3.zero
     --end
-
+    self.numberText.text = AdjustProductionLineCtrl.getGoodInventoryNum(data.itemId)
     self.countText.text = data.num
     self:setObjState(true)
     self:showSelectState(false)

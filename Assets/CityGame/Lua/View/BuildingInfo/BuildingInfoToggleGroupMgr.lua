@@ -282,11 +282,15 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
     if self.toggleData.isOther then
         --其他玩家进入
         --货架 --右边第一个
-        local otherShelfViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
-        otherShelfViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
+        --local otherShelfViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
+        --otherShelfViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
+        --local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        --local otherShelfLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, otherShelfViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
+        --self.rightData[1] = otherShelfLuaItem
+
+        --购买货架
         local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        local otherShelfLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, otherShelfViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
-        self.rightData[1] = otherShelfLuaItem
+        self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
     else
         --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
@@ -320,10 +324,13 @@ function BuildingInfoToggleGroupMgr:_creatRetailShop()
 
     if self.toggleData.isOther then
         --其他人进入
-
-        --货架 左2
-        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-        self.leftData[2] = self:creatRefreshShelf(shelfToggleData)
+        --
+        ----货架 左2
+        --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
+        --self.leftData[2] = self:creatRefreshShelf(shelfToggleData)
+        --购买货架
+        local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
     else
         --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
@@ -334,9 +341,11 @@ function BuildingInfoToggleGroupMgr:_creatRetailShop()
         self.leftData[3] = self:creatRefreshWarehouse(warehouseToggleData)
 
         --货架 左4
-        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
+        --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
+        --self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
 
+        local shelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        self.rightData[1] = self:creatOtherPlayerShelf(shelfToggleData)
         ---广告展示--右1
         --local advertisementViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.Municipal_Advertisement_Path, self.rightRect)
         --advertisementViewRect.gameObject.name = "Advertisement"

@@ -32,7 +32,7 @@ function ShelfPanel.InitPanel()
     this.closeBtn = transform:Find("RightInformation/bg/buy/closeBtn").gameObject;
     this.confirmBtn = transform:Find("RightInformation/bg/buy/confirmBtn").gameObject;
     this.priceText = transform:Find("RightInformation/bg/buy/priceText"):GetComponent("RectTransform");
-    this.nameText = transform:Find("RightInformation/bg/buy/warehouseName/nameText"):GetComponent("RectTransform");
+    this.nameText = transform:Find("RightInformation/bg/buy/warehouseName/nameText"):GetComponent("Text");
     this.openBtn = transform:Find("RightInformation/bg/buy/warehouseName/openBtn").gameObject;
     this.buyContent = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content");
 end

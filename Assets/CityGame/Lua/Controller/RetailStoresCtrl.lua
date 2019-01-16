@@ -79,14 +79,21 @@ function RetailStoresCtrl:OnClick_prepareOpen(ins)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
-function RetailStoresCtrl:OnClick_changeName()
+function RetailStoresCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    UIPage:ShowPage(InputDialogPageCtrl, data)
+    data.btnCallBack = function(name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeRetailName', ins.m_data.insId, name)
+        ins:_updateName(name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
-
+--更改名字成功
+function RetailStoresCtrl:_updateName(name)
+    RetailStoresPanel.nameText.text = name
+end
 --返回
 function RetailStoresCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then

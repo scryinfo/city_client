@@ -47,6 +47,7 @@ function AdjustProductionLineCtrl:Refresh()
     self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+    AdjustProductionLineCtrl.store = self.data.store
     if self.m_data.line then
         self.productionLine = self.m_data.line
         self.productionLine.buildingId = self.m_data.info.id
@@ -55,7 +56,6 @@ function AdjustProductionLineCtrl:Refresh()
     end
     self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
-    AdjustProductionLineCtrl.store = self.data.store
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
@@ -80,6 +80,22 @@ function AdjustProductionLineCtrl:calculateTime(msg)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
             v.timeText.text = timeStr
+        end
+    end
+end
+--计算一条线每分钟的产量
+function AdjustProductionLineCtrl:calculateMinuteNum(msg)
+    local number = 0
+    local materialKey,goodsKey = 21,22
+    if math.floor(msg.line.itemId / 100000) == materialKey then
+        number = Material[msg.line.itemId].numOneSec * msg.line.workerNum * 60
+    elseif math.floor(msg.line.itemId / 100000) == goodsKey then
+        number = Good[msg.line.itemId].numOneSec * msg.line.workerNum * 60
+    end
+    local numStr = math.floor(number).."/min"
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.itemId == msg.line.itemId then
+            v.minText.text = numStr
         end
     end
 end
@@ -132,7 +148,7 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
---获取仓库某种商品或原料有的库存
+--添加界面获取仓库库存数量
 function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
     if itemId then
         if AdjustProductionLineCtrl.store then

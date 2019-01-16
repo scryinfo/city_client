@@ -20,9 +20,11 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        if self.productionData.buildingType == BuildingType.MaterialFactory then
-            ct.OpenCtrl("ShelfCtrl",self.productionData)
-        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+        if self.productionData.buildingType == BuildingType.RetailShop then
+            ct.OpenCtrl("RetailShelfCtrl",self.productionData)
+            --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+            --    ct.OpenCtrl("ShelfCtrl",self.productionData)
+        else
             ct.OpenCtrl("ShelfCtrl",self.productionData)
         end
     end);

@@ -107,6 +107,7 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     MunicipalPanel.lMsg=lMsg
 
     Event.Brocast("c_GetBuildingInfo",MunicipalPanel.lMsg.info)
+    Event.Brocast("c_onParkInfoValueChange",DataManager.GetMyBuildingBrands(),parkData.qty)
 
     if lMsg.info.state=="OPERATE" then
         MunicipalPanel.stopIconRoot.localScale=Vector3.zero

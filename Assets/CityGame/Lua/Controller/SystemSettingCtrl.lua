@@ -2,7 +2,7 @@ SystemSettingCtrl = class('SystemSettingCtrl',UIPage)
 UIPage:ResgisterOpen(SystemSettingCtrl) --注册打开的方法
 
 local LuaBehaviour;
-
+local CityEngineLua=CityEngineLua
 function  SystemSettingCtrl:bundleName()
     return "Assets/CityGame/Resources/View/SystemSettingPanel.prefab"
 end
@@ -31,8 +31,8 @@ function SystemSettingCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(panel.MusicBtngrey.gameObject,self.c_OnClickMusic,self);
     LuaBehaviour:AddClick(panel.MusicEffectBtngrey.gameObject,self.c_OnClickMusicEffect,self);
     LuaBehaviour:AddClick(panel.outBtn.gameObject,self.c_OnClickout,self);
-    LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn,self);
-    LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn,self);
+    LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn1,self);
+    LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn1,self);
 
 end
 
@@ -46,9 +46,19 @@ function SystemSettingCtrl:Refresh()
 end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
-    UIPage.ClosePage();
-    ct.OpenCtrl("LoginCtrl")
+    CityEngineLua:reset()
+ --   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
+    UIPage.ClearAllPages()
+   -- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+    CityEngineLua.currserver = "";
+    CityEngineLua.currstate = "";
+    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end
+
+function SystemSettingCtrl:onConnectTo_loginapp_callback()
+
+end
+
 --开音乐
 function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
@@ -83,6 +93,14 @@ function SystemSettingCtrl:c_OnClick_backBtn()
     UIPage.ClosePage();
 end
 
+--返回
+function SystemSettingCtrl:c_OnClick_backBtn1()
+    if panel.LanguagePanel.localScale.x==1 then
+        panel.LanguagePanel.localScale=Vector3.zero
+        return
+    end
+    UIPage.ClosePage();
+end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     panel.LanguagePanel.localScale=Vector3.one

@@ -9,7 +9,6 @@ public class CityBuild : Editor
 {
     static void BuildResourceBundle()
     {
-        System.Threading.Thread.Sleep(5);
         AppFacade.createGameManager();
         AppFacade.Instance.AddManager<PanelManager>(ManagerName.Panel);
         AppFacade.Instance.AddManager<SoundManager>(ManagerName.Sound);
@@ -24,7 +23,6 @@ public class CityBuild : Editor
         LuaManager luemgr = AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
         Packager.BuildAndroidResource();
-        //Packager.BuildAndroidLua();
         AssetDatabase.Refresh();
     }
 

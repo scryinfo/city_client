@@ -23,7 +23,10 @@ end
 function MaterialModel:m_ReqOpenMaterial(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
-
+--改变建筑名字
+function MaterialModel:m_ReqChangeMaterialName(buildingId,name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+end
 --服务器回调--
 --打开原料厂
 function MaterialModel:n_OnOpenMaterial(stream)

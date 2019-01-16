@@ -20,7 +20,10 @@ end
 function RetailStoresModel:m_ReqOpenRetailShop(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailRetailShop","gs.Id",{id = buildingId})
 end
-
+--改变建筑名字
+function RetailStoresModel:m_ReqChangeRetailName(buildingId, name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+end
 --服务器回调--
 --打开零售店
 function RetailStoresModel:n_OnOpenRetailShop(stream)

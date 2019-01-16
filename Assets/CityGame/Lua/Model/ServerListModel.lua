@@ -81,6 +81,12 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
         Event.Brocast("m_loginRole",lMsg.info[1])
     end
     --cache data
+    --同步服务器时间
+    if lMsg.ts ~= nil then
+        TimeSynchronized.SynchronizationServerTime(lMsg.ts)
+    else
+        ct.log("system","Error:登录服务器没有同步时间")
+    end
 end
 
 --登录gs发包

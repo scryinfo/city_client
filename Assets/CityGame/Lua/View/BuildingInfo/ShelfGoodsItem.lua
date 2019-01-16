@@ -124,10 +124,3 @@ function ShelfGoodsItem:RefreshData(data,id)
     --self.producerId = data.producerId
     --self.qty = data.qty
 end
-----刷新数据
---function ShelfGoodsItem:refreshInfo(data,prefab)
---    self.prefab = prefab
---    self.prefab.nameText.text = Material[data.k.id].name
---    self.prefab.numberText.text = data.n
---    self.prefab.moneyText.text = data.price
---end

@@ -557,6 +557,29 @@ function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaSt
 end
 
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
+local updataTimer = 0
+
+--计算自己租的地中有没有到期
+local function CalculateTheExpirationDateOfMyRentGroundInfo()
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        local currentTime = TimeSynchronized.GetTheCurrentServerTime()
+        if currentTime ~= nil then
+            for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+                if value.rent.rentDueTime == nil  or value.rent.rentDueTime <= currentTime  then
+                    table.remove(PersonDataStack.m_rentGroundInfos,key)
+                end
+            end
+        end
+    end
+end
+
+local function DataManager_Update()
+    updataTimer = updataTimer + UnityEngine.Time.deltaTime
+    if updataTimer > 1 then
+        CalculateTheExpirationDateOfMyRentGroundInfo()
+        updataTimer = 0
+    end
+end
 
 --土地集合
 --参数： tempData  ===》    gs.Role
@@ -572,6 +595,14 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_groundInfos = tempData.ground
+    --初始化自己所租赁地块集合
+    --PersonDataStack.m_rentGroundInfos = tempData.rentGround
+    if tempData.rentGround ~= nil then
+        for i, groundInfoData in pairs(tempData.rentGround) do
+            DataManager.AddMyRentGroundInfo(groundInfoData)
+        end
+    end
+
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
@@ -590,6 +621,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_name = tempData.name
     --初始化自己的公司名字
     PersonDataStack.m_companyName = tempData.companyName
+    --初始化自己的头像ID
+    PersonDataStack.m_faceId = tempData.faceId
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -658,6 +691,7 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
+    UpdateBeat:Add(DataManager_Update, this)
 end
 
 --添加/修改自己所拥有土地
@@ -676,9 +710,28 @@ function DataManager.AddMyGroundInfo(groundInfoData)
     table.insert(PersonDataStack.m_groundInfos,groundInfoData)
 end
 
+--添加/修改自己所租赁土地
+function DataManager.AddMyRentGroundInfo(groundInfoData)
+    --检查自己所租赁地块集合有没有该地块
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData .y and groundInfoData.rent ~= nil then
+                table.remove(PersonDataStack.m_rentGroundInfos,key)
+                break
+            end
+        end
+    else
+        PersonDataStack.m_rentGroundInfos = {}
+    end
+    if groundInfoData.rent ~= nil and groundInfoData.rent.rentBeginTs ~= nil and groundInfoData.rent.rentDays ~= nil then
+        groundInfoData.rent.rentDueTime = groundInfoData.rent.rentBeginTs + groundInfoData.rent.rentDays * 24 * 60 * 60 * 1000
+    end
+    table.insert(PersonDataStack.m_rentGroundInfos,groundInfoData)
+end
+
 --删除自己所拥有土地
 function DataManager.RemoveMyGroundInfo(groundInfoData)
-    if PersonDataStack.m_groundInfos then
+    if PersonDataStack.m_groundInfos ~= nil then
         for key, value in ipairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
                 table.remove(PersonDataStack.m_groundInfos,key)
@@ -686,6 +739,19 @@ function DataManager.RemoveMyGroundInfo(groundInfoData)
         end
     end
 end
+
+--删除自己所租赁土地
+--暂时没有用到
+function DataManager.RemoveMyRentGroundInfo(groundInfoData)
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData .y then
+                table.remove(PersonDataStack.m_rentGroundInfos,key)
+            end
+        end
+    end
+end
+
 
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
@@ -719,6 +785,11 @@ end
 --获取自己的公司名字
 function DataManager.GetCompanyName()
     return PersonDataStack.m_companyName
+end
+
+--获取头像ID
+function DataManager.GetFaceId()
+    return  PersonDataStack.m_faceId
 end
 
 function DataManager.GetMyPersonData()
@@ -903,13 +974,24 @@ function DataManager.RemoveMyBuildingDetailByBuildID(tempbuildID)
     return false
 end
 
-
---判断该地块是不是自己的
+--判断该地块是不是自己可以用的（包含自己拥有和租的）
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
-    for key, value in pairs(PersonDataStack.m_groundInfos) do
-        if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
-            return true
+    --在自己拥有的的地中判断
+    if PersonDataStack.m_groundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_groundInfos) do
+            --一定要判断自己的地没有租出去
+            if value.x == tempGridIndex.x and value.y == tempGridIndex.y and value.rent == nil  then
+                return true
+            end
+        end
+    end
+    --在自己租的地中判断
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
+                return true
+            end
         end
     end
     return false
@@ -1085,6 +1167,10 @@ function DataManager.n_OnReceiveGroundChange(stream)
             if nil ~= PersonDataStack.m_owner and value.ownerId  == PersonDataStack.m_owner then
                 DataManager.AddMyGroundInfo(value)
             end
+            --如果地块足令人是自己的话  写进自己所租赁地块集合
+            if nil ~= PersonDataStack.m_owner and nil ~= value.Rent and value.Rent.renterId  == PersonDataStack.m_owner then
+                DataManager.AddMyRentGroundInfo(value)
+            end
             local tempGroundBlockID  = TerrainManager.GridIndexTurnBlockID(value)
             local tempGroundCollectionID  = TerrainManager.BlockIDTurnCollectionID(tempGroundBlockID)
             --判空处理
@@ -1218,13 +1304,6 @@ function DataManager.n_DeleteBlacklist(stream)
     Event.Brocast("c_DeleteBlacklist", friendsId)
 end
 ----------
---function DataManager.m_SetHeadId(id)
---    HeadId = id
---end
-----获取头像的Id
---function DataManager.GetHeadId()
---    return HeadId
---end
 
 --增加中心仓库物品
 function DataManager.c_AddBagInfo(itemId,n)

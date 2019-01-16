@@ -6,12 +6,6 @@
 UIBubbleCtrl = class('UIBubbleCtrl',UIPage)
 UIPage:ResgisterOpen(UIBubbleCtrl)
 
-UIBubbleCtrl.static.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
-UIBubbleCtrl.static.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
-UIBubbleCtrl.static.NpcFlowObjPath = "View/Items/BuildingBubbleItems/UIBubbleNpcFlowItem"  --人流量
-UIBubbleCtrl.static.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
-UIBubbleCtrl.static.Trans = nil
-
 function UIBubbleCtrl:initialize()
     UIPage.initialize(self, UIType.Fixed, UIMode.HideOther, UICollider.None)
 end
@@ -25,8 +19,6 @@ function UIBubbleCtrl:OnCreate(obj)
 end
 
 function UIBubbleCtrl:Awake(go)
-    --self.gameObject = go
-    UIBubbleCtrl.static.Trans = self.gameObject
     self:_addListener()
 end
 
@@ -57,7 +49,7 @@ function UIBubbleCtrl.createGroundAucData(data)
         return
     end
     if UIBubbleCtrl.bubbleMgr == nil then
-        UIBubbleCtrl.bubbleMgr = UIBubbleMgr:new(UIBubbleCtrl.static.Trans)
+        UIBubbleCtrl.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
     end
 
     if data.bubbleType == UIBubbleType.GroundAuc then
@@ -118,8 +110,7 @@ function UIBubbleCtrl._getBubbleObj(type)
     else
         --拍卖类型的预制
     end
-    local temp = UIBubbleCtrl.static.Trans
-    go.transform:SetParent(temp)
+    go.transform:SetParent(UIBubblePanel.root.transform)
     go.transform.localScale = Vector3.one
     return go
 end

@@ -17,11 +17,11 @@ UIBubbleType =
     BuildingSelf = 3,
 }
 
-function UIBubbleMgr:initialize(obj)
-    self.gameObject = obj
+function UIBubbleMgr:initialize(trans)
+    self.trans = trans
 end
 
---生成拍卖气泡
+--生成拍卖气泡`
 function UIBubbleMgr:initGroundAucBubbles(groundAucDatas)
     if self.groundAucLuaItems == nil then
         self.groundAucLuaItems = {}
@@ -45,7 +45,7 @@ function UIBubbleMgr:_creatGroundAucBubbleItem(bubbleData)
             self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleMgr.static.GroundAucNowObjPath)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
-        go.transform:SetParent(self.gameObject.transform)
+        go.transform:SetParent(self.trans)
         if self.hide then
             go.transform.localScale = Vector3.zero
         else
@@ -63,7 +63,7 @@ function UIBubbleMgr:_creatGroundAucBubbleItem(bubbleData)
             self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleMgr.static.GroundAucSoonObjPath)
         end
         local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
-        go.transform:SetParent(self.gameObject.transform)
+        go.transform:SetParent(self.trans)
         if self.hide then
             go.transform.localScale = Vector3.zero
         else

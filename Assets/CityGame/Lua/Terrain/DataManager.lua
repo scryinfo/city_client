@@ -581,6 +581,14 @@ local function DataManager_Update()
     end
 end
 
+--登录成功，游戏开始
+local function LoginSuccessAndGameStart()
+    --初始化中心建筑
+    TerrainManager.CreateCenterBuilding()
+    --打开循环判断自己的租地是否到期
+    UpdateBeat:Add(DataManager_Update, this)
+end
+
 --土地集合
 --参数： tempData  ===》    gs.Role
 function  DataManager.InitPersonDatas(tempData)
@@ -682,7 +690,6 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
     PersonDataStack.socialityManager = SocialityManager:new()
     if tempData.friends then
         for _, value in pairs(tempData.friends) do
@@ -691,8 +698,10 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-    UpdateBeat:Add(DataManager_Update, this)
+    LoginSuccessAndGameStart()
 end
+
+
 
 --添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)

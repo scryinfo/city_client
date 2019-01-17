@@ -48,6 +48,10 @@ function GameNoticeCtrl:Refresh()
     --打开通知Model
     self:initializeData()
     NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
+    if goId ~= nil then
+        NoticeMgr.notice[goId].newBg:SetActive(true)
+        bg =  NoticeMgr.notice[goId].newBg
+    end
 end
 
 function GameNoticeCtrl:initializeData()
@@ -66,6 +70,7 @@ end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
+    bg = nil
     NoticeMgr:_dleNotice()
     UIPage.ClosePage();
 end

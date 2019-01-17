@@ -19,6 +19,19 @@ local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
 
+--屏幕坐标缩放尺寸
+Game.ScreenRatio = 1
+
+local function InitScreenRatio()
+    local m_AspectRatio = UnityEngine.Screen.width / UnityEngine.Screen.height
+    local ActualAspectRatio = 1920 / 1080
+    if m_AspectRatio < ActualAspectRatio then
+        Game.ScreenRatio = 1920 / UnityEngine.Screen.width
+    else
+        Game.ScreenRatio = 1080 / UnityEngine.Screen.height
+    end
+end
+
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     --注册LuaView--
@@ -27,7 +40,7 @@ function Game.OnInitOK()
     if ctrl ~= nil then
         ctrl:Awake();
     end
-
+    InitScreenRatio()
     World.init();
 end
 

@@ -107,6 +107,7 @@ function CameraMove:LateUpdate(gameObject)
     elseif mCameraState == TouchStateType.ConstructState then
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
+            TerrainManager.MoveTempConstructObj()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             if nil ~= DataManager.TempDatas.constructPosID and  DataManager.IsInTheRange(DataManager.TempDatas.constructPosID,PlayerBuildingBaseData[DataManager.TempDatas.constructID]["x"],self.touchBeginBlockID) then
                 self:MoveConstructObj()

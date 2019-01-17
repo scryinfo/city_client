@@ -621,6 +621,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_name = tempData.name
     --初始化自己的公司名字
     PersonDataStack.m_companyName = tempData.companyName
+    --初始化自己的头像ID
+    PersonDataStack.m_faceId = tempData.faceId
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -783,6 +785,11 @@ end
 --获取自己的公司名字
 function DataManager.GetCompanyName()
     return PersonDataStack.m_companyName
+end
+
+--获取头像ID
+function DataManager.GetFaceId()
+    return  PersonDataStack.m_faceId
 end
 
 function DataManager.GetMyPersonData()
@@ -1298,13 +1305,6 @@ function DataManager.n_DeleteBlacklist(stream)
     Event.Brocast("c_DeleteBlacklist", friendsId)
 end
 ----------
---function DataManager.m_SetHeadId(id)
---    HeadId = id
---end
-----获取头像的Id
---function DataManager.GetHeadId()
---    return HeadId
---end
 
 --增加中心仓库物品
 function DataManager.c_AddBagInfo(itemId,n)

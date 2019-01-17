@@ -572,4 +572,11 @@ UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function (
     end
 end)
 
+UnitTest.Exec("abel_w24_deepcopy", "abel_w24_deepcopy",  function ()
+    local tb = {}
+    tb.root = UIRoot
+    local tbn = ct.deepCopy(tb)
+    local a = 0
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

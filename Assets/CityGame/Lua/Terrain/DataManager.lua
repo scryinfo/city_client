@@ -581,6 +581,14 @@ local function DataManager_Update()
     end
 end
 
+--登录成功，游戏开始
+local function LoginSuccessAndGameStart()
+    --初始化中心建筑
+    TerrainManager.CreateCenterBuilding()
+    --打开循环判断自己的租地是否到期
+    UpdateBeat:Add(DataManager_Update, this)
+end
+
 --土地集合
 --参数： tempData  ===》    gs.Role
 function  DataManager.InitPersonDatas(tempData)
@@ -590,6 +598,12 @@ function  DataManager.InitPersonDatas(tempData)
     if not tempData then
         ct.log("System","登录成功RoleLogin返回信息为空")
         return
+    end
+    --初始化建筑评分
+    if tempData.buildingBrands then
+        PersonDataStack.m_buildingBrands=tempData.buildingBrands
+    else
+        PersonDataStack.m_buildingBrands=0
     end
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
@@ -610,7 +624,7 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己中心仓库的数据
     if tempData.bag ~= nil then
         local inHand = tempData.bag.inHand
-        PersonDataStack.m_inHand = ct.deepCopy( inHand)
+        PersonDataStack.m_inHand = ct.deepCopy( inHand )
     end
     PersonDataStack.m_bag = tempData.bag
     --初始化自己的moneys
@@ -682,7 +696,6 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
     PersonDataStack.socialityManager = SocialityManager:new()
     if tempData.friends then
         for _, value in pairs(tempData.friends) do
@@ -691,8 +704,10 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-    UpdateBeat:Add(DataManager_Update, this)
+    LoginSuccessAndGameStart()
 end
+
+
 
 --添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)
@@ -752,7 +767,12 @@ function DataManager.RemoveMyRentGroundInfo(groundInfoData)
     end
 end
 
+--获取自已的所有的建筑评分
+function DataManager.GetMyBuildingBrands()
+    return PersonDataStack.m_buildingBrands
+end
 
+--获取自已的Id
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
 end

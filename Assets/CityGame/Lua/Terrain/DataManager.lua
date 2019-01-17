@@ -599,6 +599,12 @@ function  DataManager.InitPersonDatas(tempData)
         ct.log("System","登录成功RoleLogin返回信息为空")
         return
     end
+    --初始化建筑评分
+    if tempData.buildingBrands then
+        PersonDataStack.m_buildingBrands=tempData.buildingBrands
+    else
+        PersonDataStack.m_buildingBrands=0
+    end
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
@@ -618,7 +624,7 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己中心仓库的数据
     if tempData.bag ~= nil then
         local inHand = tempData.bag.inHand
-        PersonDataStack.m_inHand = ct.deepCopy( inHand)
+        PersonDataStack.m_inHand = ct.deepCopy( inHand )
     end
     PersonDataStack.m_bag = tempData.bag
     --初始化自己的moneys
@@ -761,7 +767,12 @@ function DataManager.RemoveMyRentGroundInfo(groundInfoData)
     end
 end
 
+--获取自已的所有的建筑评分
+function DataManager.GetMyBuildingBrands()
+    return PersonDataStack.m_buildingBrands
+end
 
+--获取自已的Id
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
 end

@@ -174,25 +174,25 @@ end
 local num=1  local temp=nil
 function BuildingInfoToggleGroupMgr:_middleItem(toggleData)
 
-    for i, item in pairs(self.middleData) do
-        if(item:getToggleIndex()==toggleData.index)then
-
-            if item==temp then
-                if num%2==1 then
-                    item:openToggleItem()
-                    num=num+1
-                else
-                    item:closeToggleItem()
-                    num=num+1
-                end
-            else
-                num=1
-                item:openToggleItem()
-                num=num+1
-                temp=item
-            end
-        end
-    end
+    --for i, item in pairs(self.middleData) do
+    --    if(item:getToggleIndex()==toggleData.index)then
+    --
+    --        if item==temp then
+    --            if num%2==1 then
+    --                item:openToggleItem()
+    --                num=num+1
+    --            else
+    --                item:closeToggleItem()
+    --                num=num+1
+    --            end
+    --        else
+    --            num=1
+    --            item:openToggleItem()
+    --            num=num+1
+    --            temp=item
+    --        end
+    --    end
+    --end
 end
 
 

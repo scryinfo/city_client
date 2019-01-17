@@ -15,6 +15,8 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.moneyText = self.prefab.transform:Find("buttombg/moneyImg/moneyText"):GetComponent("Text");
     self.closeBtn = self.prefab.transform:Find("closeBtn");
 
+    self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
+
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then

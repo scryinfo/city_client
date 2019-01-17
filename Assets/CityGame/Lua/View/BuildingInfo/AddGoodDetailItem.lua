@@ -11,6 +11,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.stateRoot = viewRect:Find("stateRoot")
     self.stateText = viewRect:Find("stateRoot/stateText"):GetComponent("Text")
     self.infoBtn = viewRect:Find("infoBtn")
+    self.numberText = viewRect:Find("inventory/numberText"):GetComponent("Text")
     self.chooseImgTran = viewRect:Find("chooseImg")
 
     local stateData = AddProductionLineCtrl.GetItemState(data.itemId)
@@ -33,14 +34,15 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
         end)
     else
         tempData = Good[data.itemId]
-        --panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
-        --    if obj ~= nil then
-        --        local texture = ct.InstantiatePrefab(obj)
-        --        self.iconImg.sprite = texture
-        --    end
-        --end)
+        panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
     end
     self.nameText.text = tempData.name
+    self.numberText.text = AdjustProductionLineCtrl.getGoodInventoryNum(data.itemId)
 
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)

@@ -107,6 +107,7 @@ function CameraMove:LateUpdate(gameObject)
     elseif mCameraState == TouchStateType.ConstructState then
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
+            TerrainManager.MoveTempConstructObj()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             if nil ~= DataManager.TempDatas.constructPosID and  DataManager.IsInTheRange(DataManager.TempDatas.constructPosID,PlayerBuildingBaseData[DataManager.TempDatas.constructID]["x"],self.touchBeginBlockID) then
                 self:MoveConstructObj()
@@ -159,6 +160,10 @@ function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        --判断是否是中心建筑 --->是则打开
+        if TerrainManager.IsTouchCentralBuilding(blockID) then
+            ct.OpenCtrl("CenterBuildingCtrl")
+        end
         --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
         if tempNodeID ~= nil and tempNodeID ~= -1 then

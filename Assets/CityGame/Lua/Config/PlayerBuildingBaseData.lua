@@ -552,8 +552,15 @@ PlayerBuildingBaseData=
         ["deviationPos"] = {0.13,1.2,0.75},
 		["workTime"] = {[1]={8,4},[2]={14,4}},
         ["UICenterPos"] = {1,0,2},
-        ["ScalePos"] = {6,6,-6}
-    ,["salary"] = 55
+        ["ScalePos"] = {6,6,-6},
+        ["salary"] = 55
+    },
+    [2000000] = {
+        ["typeName"] ="中心建筑",
+        ["des"] ="中心建筑的说明",
+        ["prefabRoute"] = "View/Building/Centralbuilding",
+        ["x"] = 5 ,
+        ["y"] = 5 ,
     },
     [4000001] ={
         ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块

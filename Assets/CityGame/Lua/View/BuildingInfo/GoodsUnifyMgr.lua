@@ -174,8 +174,12 @@ function GoodsUnifyMgr:_deleteGoods(ins)
 end
 --删除刚添加的生产线
 function GoodsUnifyMgr:_deleteLine(ins)
-    destroy(AdjustProductionLineCtrl.materialProductionLine[ins.itemId].prefab.gameObject);
-    AdjustProductionLineCtrl.materialProductionLine[ins.itemId] = nil
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.itemId == ins.itemId then
+            destroy(v.prefab.gameObject);
+            AdjustProductionLineCtrl.materialProductionLine[i] = nil
+        end
+    end
 end
 --仓库删除
 function GoodsUnifyMgr:_WarehousedeleteGoods(id)

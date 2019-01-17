@@ -59,7 +59,7 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     tempPos.z =  tempPos.z + PlayerBuildingBaseData[DataManager.TempDatas.constructID]["deviationPos"][3]
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
-    ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
+    ConstructSwitchPanel.BtnNode.anchoredPosition = ScreenPosTurnActualPos(nodePosition)
     local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
     local tempSize = PlayerBuildingBaseData[DataManager.TempDatas.constructID].x
     if DataManager.IsAllOwnerGround(blockID,tempSize) and DataManager.IsALlEnableChangeGround(blockID,tempSize) then

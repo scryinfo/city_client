@@ -47,6 +47,7 @@ function AdjustProductionLineCtrl:Refresh()
     self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     self.idleWorkerNum = self:getWorkerNum()
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+    AdjustProductionLineCtrl.store = self.data.store
     if self.m_data.line then
         self.productionLine = self.m_data.line
         self.productionLine.buildingId = self.m_data.info.id
@@ -55,7 +56,6 @@ function AdjustProductionLineCtrl:Refresh()
     end
     self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
-    --self:refreshWorkerNum()0
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
@@ -82,8 +82,22 @@ function AdjustProductionLineCtrl:calculateTime(msg)
             v.timeText.text = timeStr
         end
     end
-    --self.GoodsUnifyMgr.tempLineItem[msg.line.itemId].timeText.text = timeTab
-    --self.GoodsUnifyMgr.tempLineItem = nil
+end
+--计算一条线每分钟的产量
+function AdjustProductionLineCtrl:calculateMinuteNum(msg)
+    local number = 0
+    local materialKey,goodsKey = 21,22
+    if math.floor(msg.line.itemId / 100000) == materialKey then
+        number = Material[msg.line.itemId].numOneSec * msg.line.workerNum * 60
+    elseif math.floor(msg.line.itemId / 100000) == goodsKey then
+        number = Good[msg.line.itemId].numOneSec * msg.line.workerNum * 60
+    end
+    local numStr = math.floor(number).."/min"
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.itemId == msg.line.itemId then
+            v.minText.text = numStr
+        end
+    end
 end
 ----修改生产线
 --function AdjustProductionLineCtrl:OnClick_modifyBtn()
@@ -122,16 +136,6 @@ function AdjustProductionLineCtrl:getWorkerNum()
         return workerNum
     end
 end
-----刷新一条线可用的员工数量
---function AdjustProductionLineCtrl:refreshWorkerNum()
---    if not AdjustProductionLineCtrl.materialProductionLine then
---        return;
---    else
---        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
---            --v.sNumberScrollbar.maxValue = self.idleWorkerNum
---        end
---    end
---end
 --添加生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
@@ -144,7 +148,28 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
-
+--添加界面获取仓库库存数量
+function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
+    if itemId then
+        if AdjustProductionLineCtrl.store then
+            if AdjustProductionLineCtrl.store.inHand == nil then
+                local num = 0
+                return num
+            end
+            for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+                if v.key.id == itemId then
+                    return v.n
+                else
+                    local num = 0
+                    return num
+                end
+            end
+        else
+            local num = 0
+            return num
+        end
+    end
+end
 --读取生产线，初始化时间
 function AdjustProductionLineCtrl:refreshTime(infoTab)
     if not infoTab then

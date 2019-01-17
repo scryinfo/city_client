@@ -14,12 +14,13 @@ local blockRange = Vector2.New(20, 20)
 local CameraPosition
 local CameraCollectionID = -1
 
+
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
     --add height
-    Vec3.y =  Vec3.y + 0.01
+    Vec3.y =  Vec3.y + 0.02
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
@@ -267,7 +268,10 @@ local function CreateConstructBuildSuccess(go,table)
     end
     DataManager.TempDatas.constructID  = table[1]
     DataManager.TempDatas.constructObj = go
-    DataManager.TempDatas.constructObj.transform.position = table[2]
+    local Vec3 = table[2]
+    --add height
+    Vec3.y =  Vec3.y + 0.02
+    DataManager.TempDatas.constructObj.transform.position = Vec3
     DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
     --一定要放在数据刷新完后打开
     ct.OpenCtrl('ConstructSwitchCtrl')
@@ -300,7 +304,7 @@ function TerrainManager.ConstructBuild(buildId,buildPos)
     buildMgr:CreateBuild(PlayerBuildingBaseData[buildId]["prefabRoute"],CreateConstructBuildSuccess,{buildId, buildPos})
 end
 
---点击3D场景
+--点击3D场景【旧的，被CameraMove:TouchBuild取代】
 --若点击到3D建筑所占地块
 function TerrainManager.TouchBuild(MousePos)
     local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
@@ -313,6 +317,39 @@ function TerrainManager.TouchBuild(MousePos)
         end
     end
 end
+
+local CentralBuildingBlockList = nil
+local CentralBuildingObj = nil
+--创建中心建筑
+function TerrainManager.CreateCenterBuilding()
+    if CentralBuildingObj == nil then
+        local CentralBuildingMes = TerrainConfig.CentralBuilding
+        if CentralBuildingMes.CenterNodePos ~= nil and CentralBuildingMes.BuildingType ~= nil and PlayerBuildingBaseData[CentralBuildingMes.BuildingType] ~= nil then
+            local myCenterGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute)
+            CentralBuildingObj = UnityEngine.GameObject.Instantiate(myCenterGroundObj)
+            CentralBuildingObj.transform.position = CentralBuildingMes.CenterNodePos
+            CentralBuildingObj.transform.localScale = Vector3.one
+            CentralBuildingObj.name = "CentralBuilding"
+            --写入覆盖范围
+            local CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
+            CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID,PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
+        end
+    end
+end
+
+--判断是否点击到中心建筑
+function TerrainManager.IsTouchCentralBuilding(blockID)
+    if  CentralBuildingBlockList ~= nil then
+        for key, value in pairs(CentralBuildingBlockList) do
+            if blockID == value then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
 
 UnitTest.TestBlockStart()
 

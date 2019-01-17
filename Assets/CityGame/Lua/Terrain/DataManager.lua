@@ -777,6 +777,11 @@ function DataManager.GetMoney()
     return PersonDataStack.m_money
 end
 
+--刷新自己的money
+function DataManager.SetMoney(money)
+    PersonDataStack.m_money = money
+end
+
 --获取自己的名字
 function DataManager.GetName()
     return PersonDataStack.m_name
@@ -1052,6 +1057,7 @@ local function InitialEvents()
    -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
     Event.AddListener("c_AddBagInfo",DataManager.c_AddBagInfo)
     Event.AddListener("c_DelBagInfo",DataManager.c_DelBagInfo)
+    Event.AddListener("c_DelBagItem",DataManager.c_DelBagItem)
 end
 
 --注册所有网络消息回调
@@ -1342,13 +1348,18 @@ function DataManager.c_DelBagInfo(itemId,n)
                 end
             end
         end
-    --刷新ID
-    --if newInHand then
-    --    for i = 1, #PersonDataStack.m_inHand do
-    --        PersonDataStack.m_inHand[i]
-    --    end
-    --end
+end
 
+--删除中心仓库物品
+function DataManager.c_DelBagItem(itemId)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    for i, v in pairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            table.remove(PersonDataStack.m_inHand,i)
+        end
+    end
 end
 
 --获取中心仓库物品数量

@@ -73,11 +73,9 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role
-    ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg.info)
     if lMsg.info == nil then
         Event.Brocast("c_GsCreateRole")
     else
-        --ServerListModel.loginRole(lMsg.info)
         Event.Brocast("m_loginRole",lMsg.info[1])
     end
     --cache data

@@ -64,12 +64,14 @@ end
 --初始化
 function CityInfoCtrl:_initData()
     --CityInfoCtrl:_createCityInfo(CityInfoPathType[1],CityInfoPanel.right,1)
+    --CityInfoPanel.cityFund.text = getColorString("E","0000000.0000","brown","black")
+    CityInfoPanel.cityFund.text = "<color=brown>E</color>/<color=black>0000000.0000</color>"
     CityInfoPanel.cityName.text = CityInfoData[1].cityName;
     CityInfoPanel.citySize.text = CityInfoData[1].cityScale;
     CityInfoPanel.citizenNum.text = CityInfoData[1].citizenNum;
     CityInfoPanel.man.text = CityInfoData[1].man;
     CityInfoPanel.woMan.text = CityInfoData[1].woMan;
-    CityInfoPanel.cityFund.text = CityInfoData[1].cityFund;
+    --CityInfoPanel.cityFund.text = CityInfoData[1].cityFund;
     for i, v in ipairs(CityInfoInHand) do
         --local cityInfo_prefab = self:_createCityInfoPab(CityInfoCtrl.static.CityInfo_PATH,CityInfoPanel.content)
         local cityInfo_prefab = CityInfoPanel.content:GetChild(i-1).gameObject;

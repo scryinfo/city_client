@@ -52,8 +52,8 @@ function CreateRoleCtrl:OnCreateRole(go)
         data.nickname = nickname
         data.companyname = companyname
         data.gender = gender
-        --DataManager.DetailModelRpcNoRet(go.insId , 'm_createNewRole',data)
-        ct.OpenCtrl("SelectHeadCtrl",data)
+        data.faceId = go.m_data
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_createNewRole',data)
     end
 end
 

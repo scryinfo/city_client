@@ -6,9 +6,10 @@
 UIBubbleGroundAucNowItem = class('UIBubbleGroundAucNowItem')
 function UIBubbleGroundAucNowItem:initialize(data)
     self.data = data
-    self.bubbleRect = data.bubbleRect
+    self.bubbleRect = data.bubbleObj:GetComponent("RectTransform")
+    self.bubbleObj = data.bubbleObj
 
-    local viewTrans = self.bubbleRect.transform
+    local viewTrans = self.bubbleObj.transform
     self.nowTimeText = viewTrans:Find("bgBtn/timeDownRoot/nowTimeText"):GetComponent("Text")
     self.bgBtn = viewTrans:Find("bgBtn"):GetComponent("Button")
 
@@ -22,19 +23,31 @@ function UIBubbleGroundAucNowItem:initialize(data)
     self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    --UpdateBeat:Add(self.Update, self)
-    --LateUpdateBeat:Add(self.LateUpdate, self)
+    Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
+    Event.AddListener("c_BubbleAllShow", self._showFunc, self)
+
 end
 
 --打开拍卖界面，即将拍卖
 function UIBubbleGroundAucNowItem:_openGroundAucFunc()
-    ct.OpenCtrl("GroundAuctionCtrl", self.data)
+    ct.OpenCtrl("GroundAuctionCtrl", self.data.aucInfo)
 end
 
 --信息更新
 function UIBubbleGroundAucNowItem:_bidInfoUpdate(data)
-    if data.id == self.data.id then
-        self.data.price = data.num
+    if data.aucInfo.id == self.data.aucInfo.id then
+        self.data = data
+    end
+end
+
+function UIBubbleGroundAucNowItem:_hideFunc()
+    if self.bubbleObj ~= nil then
+        self.bubbleObj.transform.localScale = Vector3.zero
+    end
+end
+function UIBubbleGroundAucNowItem:_showFunc()
+    if self.bubbleObj ~= nil then
+        self.bubbleObj.transform.localScale = Vector3.one
     end
 end
 
@@ -42,26 +55,28 @@ function UIBubbleGroundAucNowItem:Close()
     self.timeDown = false
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    destroyImmediate(self.bubbleRect.gameObject)
-    self.data.groundObj.transform.localScale = Vector3.zero
-    self.bubbleRect = nil
+    Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
+    Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
+    destroyImmediate(self.bubbleObj.gameObject)
+    --self.data.groundObj.transform.localScale = Vector3.zero
+    self.bubbleObj = nil
     self = nil
 end
 
 function UIBubbleGroundAucNowItem:LateUpdate()
-    if not self.timeDown then
+    if self.timeDown == false then
         return
     end
-    if self.data.groundObj and self.bubbleRect then
+    if self.bubbleObj then
         --update 预制与ui item 之间的位置
-        self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.groundObj.transform.position + Vector3.New(0.5, 0.5, 0.05))
+        self.bubbleRect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0.5, 0.05))
     else
         ct.log("cycle_w6_GroundAuc", "---------------")
     end
     --倒计时
-    if self.startTimeDown then
+    if self.startTimeDown == true then
         --倒计时
-        local finishTime = self.data.beginTime + self.data.durationSec
+        local finishTime = self.data.aucInfo.beginTime + self.data.aucInfo.durationSec
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
 
         local remainTime = finishTime - self.currentTime

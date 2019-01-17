@@ -3,10 +3,36 @@
 --- Created by xuyafang.
 --- DateTime: 2019/1/16 17:47
 ---UIBubbleMgr
-UIBubbleMgr = class('UIBubbleMgr')
-UIBubbleMgr.static.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
-UIBubbleMgr.static.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
-UIBubbleMgr.static.NpcFlowObjPath = "View/Items/BuildingBubbleItems/UIBubbleNpcFlowItem"  --人流量
+
+UIBubbleMgr= {}
+local this = UIBubbleMgr
+local pbl = pbl
+
+UIBubbleMgr.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
+UIBubbleMgr.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
+UIBubbleMgr.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
+
+--构建函数--
+function UIBubbleMgr.New()
+    return this
+end
+
+function UIBubbleMgr.Awake()
+    this:OnCreate()
+    this._preLoadGroundAucObj()
+    this.startFlowCam = false
+end
+
+--启动事件--
+function UIBubbleMgr.OnCreate()
+    --网络回调注册
+    Event.AddListener("c_BidEnd", this.bidEnd)
+end
+
+function UIBubbleMgr._preLoadGroundAucObj()
+    local prefab = UnityEngine.Resources.Load(UIBubbleMgr.BubbleParentObjPath)
+    this.BubbleParent = UnityEngine.GameObject.Instantiate(prefab)
+end
 
 --气泡类型
 UIBubbleType =
@@ -16,115 +42,134 @@ UIBubbleType =
     BuildingSelf = 3,
 }
 
-function UIBubbleMgr:initialize(trans)
-    self.trans = trans
+function UIBubbleMgr._cameraLateUpdate()
+    if this.startFlowCam == nil or this.startFlowCam == false then
+        return
+    end
+    Event.Brocast("c_RefreshLateUpdate")
 end
 
---生成拍卖气泡`
-function UIBubbleMgr:initGroundAucBubbles(groundAucDatas)
-    if self.groundAucLuaItems == nil then
-        self.groundAucLuaItems = {}
-    end
-    local auction = groundAucDatas.aucInfo
-    for i, data in pairs(auction) do
-        if data then
-            UIBubbleMgr.startFlowCam = true
-        end
-
-        if data then
-            self:_creatGroundAucBubbleItem(data)
-        end
+--设置打开气泡模式
+function UIBubbleMgr.startBubble()
+    if this.startFlowCam == false then
+        this.startFlowCam = true
+        this.BubbleParent:SetParent(UIRoot.getFixedRoot().transform)
     end
 end
+--拍卖结束
+function UIBubbleMgr.bidEnd(endId)
+    this.nowItem:Close()
+    this.nowItem = nil
+end
 
-function UIBubbleMgr:_creatGroundAucBubbleItem(bubbleData)
-    if bubbleData.isStartAuc then
+--生成即将拍卖气泡
+function UIBubbleMgr.createSoonAucBubble(aucData)
+    if this.startFlowCam == false then
+        ct.log("", "尚未打开气泡模式")
+        return
+    end
+
+    if this.aucSoonItem ~= nil then
+        this.aucSoonItem = {}
+    end
+    this._creatGroundAucBubbleItem(aucData, 0)
+end
+
+--生成拍卖气泡
+function UIBubbleMgr.createNowAucBubble(aucData)
+    if this.startFlowCam == false then
+        ct.log("", "尚未打开气泡模式")
+        return
+    end
+
+    if this.aucNowItem ~= nil then
+        this.aucNowItem = {}
+    end
+    this._creatGroundAucBubbleItem(aucData, 1)
+end
+--拍卖刷新信息
+function UIBubbleMgr.updateAucData(data)
+    if this.nowItem == nil then
+        return
+    end
+    this.nowItem:_bidInfoUpdate(data)
+end
+
+function UIBubbleMgr._creatGroundAucBubbleItem(bubbleData, index)
+    if index == 1 then
         --已经开始拍卖
-        if self.groundAucNowObj == nil then
-            self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleMgr.static.GroundAucNowObjPath)
+        if this.groundAucNowObj == nil then
+            this.groundAucNowObj = UnityEngine.Resources.Load(this.GroundAucNowObjPath)
         end
-        local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
-        go.transform:SetParent(self.trans)
-        if self.hide then
+        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+        go.transform:SetParent(this.BubbleParent.transform)
+        if this.hide then
             go.transform.localScale = Vector3.zero
         else
             go.transform.localScale = Vector3.one
         end
-        local data = ct.deepCopy(bubbleData)
-        data.groundObj.transform.localScale = Vector3.one
-        data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
+        --local data = ct.deepCopy(bubbleData)
+        local data = bubbleData
+        --data.groundObj.transform.localScale = Vector3.one
+        data.bubbleObj = go  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
-        self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
-        self.nowItem = groundAucNowItem
-    else
+        this.aucNowItem = groundAucNowItem
+
+    elseif index == 0 then
         --即将拍卖
-        if nil == self.groundAucSoonObj then
-            self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleMgr.static.GroundAucSoonObjPath)
+        if nil == this.groundAucSoonObj then
+            this.groundAucSoonObj = UnityEngine.Resources.Load(this.GroundAucSoonObjPath)
         end
-        local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
-        go.transform:SetParent(self.trans)
-        if self.hide then
+        local go = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)  --气泡预制
+        go.transform:SetParent(this.BubbleParent.transform)
+        if this.hide then
             go.transform.localScale = Vector3.zero
         else
             go.transform.localScale = Vector3.one
         end
-        local data = ct.deepCopy(bubbleData)
-        data.groundObj.transform.localScale = Vector3.one
-        data.bubbleRect = go:GetComponent("RectTransform")
+        local data = bubbleData
+        --data.groundObj.transform.localScale = Vector3.one  --地块
+        data.bubbleObj = go
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
-        self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
-        self.soonItem = groundAucSoonItem
+        this.aucSoonItem = groundAucSoonItem
     end
 end
 
 --更新数据
-function UIBubbleMgr:_refreshItems(datas)
-    for key, item in pairs(self.groundAucLuaItems) do
-        item:Close()
-        --item.data.groundObj.transform.localScale = Vector3.zero  --删除场景中的预制
-        --destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
-        self.groundAucLuaItems[key] = nil
-    end
-    self.nowItem = nil
-    self.soonItem = nil
+function UIBubbleMgr._refreshItems(datas)
+    this.nowItem:Close()
+    this.soonItem:Close()
 
-    self.groundAucLuaItems = {}
-    local auction = datas
-    for i, data in pairs(auction) do
-        if data then
-            self:_creatGroundAucBubbleItem(data)
-        end
+    this.nowItem = nil
+    this.soonItem = nil
+
+    if datas.nowData ~= nil then
+        this._creatGroundAucBubbleItem(datas.nowData, 1)
+    end
+    if datas.soonData ~= nil then
+        this._creatGroundAucBubbleItem(datas.soonData, 0)
     end
 end
 
 --隐藏所有气泡
-function UIBubbleMgr:_hideAllItems()
-    self.hide = true
-    for key, item in pairs(self.groundAucLuaItems) do
-        if item.data.bubbleRect then
-            item.data.bubbleRect.transform.localScale = Vector3.zero
-        end
-    end
+function UIBubbleMgr._hideAllItems()
+    UIBubbleMgr.hide = true
+    Event.Brocast("c_BubbleAllHide")
+
+    --for key, item in pairs(UIBubbleMgr.groundAucLuaItems) do
+    --    if item.data.bubbleRect then
+    --        item.data.bubbleRect.transform.localScale = Vector3.zero
+    --    end
+    --end
 end
 --显示所有气泡
-function UIBubbleMgr:_showAllItems()
-    self.hide = false
-    for key, item in pairs(self.groundAucLuaItems) do
-        if item.data.bubbleRect then
-            item.data.bubbleRect.transform.localScale = Vector3.one
-        end
-    end
-end
+function UIBubbleMgr._showAllItems()
+    UIBubbleMgr.hide = false
+    Event.Brocast("c_BubbleAllShow")
 
-function UIBubbleMgr:getSoonItem()
-    if self.soonItem ~= nil then
-        return self.soonItem
-    end
-    return nil
-end
-function UIBubbleMgr:getNowItem()
-    if self.nowItem ~= nil then
-        return self.nowItem
-    end
-    return nil
+    --for key, item in pairs(UIBubbleMgr.groundAucLuaItems) do
+    --    if item.data.bubbleRect then
+    --        item.data.bubbleRect.transform.localScale = Vector3.one
+    --    end
+    --end
 end

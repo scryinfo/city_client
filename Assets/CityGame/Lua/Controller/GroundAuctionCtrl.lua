@@ -110,7 +110,7 @@ end
 function GroundAuctionCtrl:_waitForBidTimeDown()
     if self.startTimeDownForStart then
         local finishTime = self.m_data.beginTime
-        self.currentTime = self.currentTime or os.time()
+        self.currentTime = self.currentTime or TimeSynchronized.GetTheCurrentTime()
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
 
         local remainTime = finishTime - self.currentTime
@@ -136,7 +136,7 @@ end
 function GroundAuctionCtrl:_bidFinishTimeDown()
     if self.startTimeDownForFinish then
         local finishTime = self.m_data.beginTime + self.m_data.durationSec
-        self.currentTime = self.currentTime or os.time()
+        self.currentTime = self.currentTime or TimeSynchronized.GetTheCurrentTime()
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
 
         local remainTime = finishTime - self.currentTime
@@ -243,7 +243,7 @@ end
 function GroundAuctionCtrl:_bidStart(groundData)
     self.beginTime = self.m_data.beginTime
     self.durationSec = self.m_data.durationSec
-    self.currentTime = os.time()
+    self.currentTime = TimeSynchronized.GetTheCurrentTime()
 
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one

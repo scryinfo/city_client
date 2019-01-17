@@ -6,21 +6,66 @@
 
 MusicManger={}
 
+---生成预制
+local function creatGood(path)
+     local prefab = UnityEngine.Resources.Load(path);
+     local go = UnityEngine.GameObject.Instantiate(prefab);
+     return go
+end
 
+local music
+local musicEffect
+local sounds={}
 function MusicManger:Awake()
 
-     local go= GameObject.New()
+     for key, name in pairs(MusicConfig) do
+          sounds[key]=UnityEngine.Resources.Load("Sounds/"..name)
+     end
+
+     music=self:CreatedMusic(true)
+     PlayMus(1001)
+     musicEffect=self:CreatedMusic(false)
 
 end
 
+function MusicManger:CreatedMusic(isLoop)
+     local  music=creatGood("View/GameObject").transform:GetComponent("AudioSource")
+     music.loop=isLoop
+     return music
+end
 
 
+function PlayMus(key)
+     if UnityEngine.PlayerPrefs.GetInt("Music")==1 then
+          music:Stop()
+          return
+     end
 
+     if sounds[key] then
+          music.clip=sounds[key]
+     end
+     music:Play()
+end
 
+function PlayMusEff(key)
+     if UnityEngine.PlayerPrefs.GetInt("MusicEffect")==1 then
+          musicEffect:Stop()
+          return
+     end
 
+     if sounds[key] then
+          musicEffect.clip=sounds[key]
+     end
+     musicEffect:Play()
+end
 
-
-
+function MusicManger:ClearData()
+     for i, sound in pairs(sounds) do
+          sound=nil
+     end
+     destroy(music.transform.gameObject)
+     destroy(musicEffect.transform.gameObject)
+end
 
 
 

@@ -5,12 +5,12 @@
 ---
 
 MusicConfig={
-    [001]="beijingyinyue",
-    [002]="dianjiyinxiao",
-    [003]="jianzaochenggong",
-    [004]="kaishishengchan",
-    [005]="paimaichujia",
-    [006]="tongzhi",
+    [1001]="beijingyinyue",
+    [1002]="dianjiyinxiao",
+    [1003]="jianzaochenggong",
+    [1004]="kaishishengchan",
+    [1005]="paimaichujia",
+    [1006]="tongzhi",
 }
 
 

@@ -23,7 +23,9 @@ function SystemSettingCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(panel.backBtn.gameObject,self.c_OnClick_backBtn,self);
+
     LuaBehaviour:AddClick(panel.LanguageBtn.gameObject,self.c_OnClick_changeLanguage,self);
+
     LuaBehaviour:AddClick(panel.chineseBtn.gameObject,self.c_OnClick_chinese,self);
     LuaBehaviour:AddClick(panel.englishBtn.gameObject,self.c_OnClick_english,self);
     LuaBehaviour:AddClick(panel.MusicBtnyellosw.gameObject,self.c_OnClick_Music,self);
@@ -53,6 +55,8 @@ function SystemSettingCtrl:c_OnClickout(ins)
     CityEngineLua.currserver = "";
     CityEngineLua.currstate = "";
     ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+    PlayMusEff(1002)
+
 end
 
 function SystemSettingCtrl:onConnectTo_loginapp_callback()
@@ -63,8 +67,8 @@ end
 function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtnyellosw.localScale=Vector3.one
-    ins.Music:Play()
     UnityEngine.PlayerPrefs.SetInt("Music",0)
+    PlayMus(1001)
 end
 --开音效
 function SystemSettingCtrl:c_OnClickMusicEffect(ins)
@@ -72,25 +76,29 @@ function SystemSettingCtrl:c_OnClickMusicEffect(ins)
     panel.MusicEffectBtnyellow.localScale=Vector3.one
     ins.MusicEffect:Play()
     UnityEngine.PlayerPrefs.SetInt("MusicEffect",0)
+    PlayMusEff(1002)
 end
 --音乐
 function SystemSettingCtrl:c_OnClick_Music(ins)
-        self.transform.localScale=Vector3.zero
-        panel.MusicBtngrey.localScale=Vector3.one
-        ins.Music:Stop();
+    self.transform.localScale=Vector3.zero
+    panel.MusicBtngrey.localScale=Vector3.one
     UnityEngine.PlayerPrefs.SetInt("Music",1)
+    PlayMus(1001)
 end
 --音效
 function SystemSettingCtrl:c_OnClick_MusicEffect(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicEffectBtngrey.localScale=Vector3.one
-    ins.MusicEffect:Stop();
+    ins.MusicEffect:Stop()
     UnityEngine.PlayerPrefs.SetInt("MusicEffect",1)
+    PlayMusEff(1002)
 end
 
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn()
     UIPage.ClosePage();
+    PlayMusEff(1002)
+
 end
 
 --返回
@@ -100,20 +108,28 @@ function SystemSettingCtrl:c_OnClick_backBtn1()
         return
     end
     UIPage.ClosePage();
+    PlayMusEff(1002)
+
 end
+
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
+    PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.one
 end
 
 --中文
 function SystemSettingCtrl:c_OnClick_chinese()
+    PlayMusEff(1002)
+
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
     panel:InitDate(GetLanguage(1000007))
 end
 --英文
 function SystemSettingCtrl:c_OnClick_english()
+    PlayMusEff(1002)
+
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(1000008))

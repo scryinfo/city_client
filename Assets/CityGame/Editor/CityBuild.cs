@@ -28,12 +28,12 @@ public class CityBuild : Editor
 
     static void _genWrapFiles()
     {
-        ToLuaMenu.GenLuaAll();
-        AssetDatabase.Refresh();
+        //ToLuaMenu.GenLuaAll();
+        //AssetDatabase.Refresh();
         ToLuaMenu.GenLuaWrapBinder();
         AssetDatabase.Refresh();
-        ToLuaMenu.autoGen();
-        AssetDatabase.Refresh();
+        //ToLuaMenu.autoGen();
+        //AssetDatabase.Refresh();
     }
 
     [MenuItem("Tool/APKBuild")]

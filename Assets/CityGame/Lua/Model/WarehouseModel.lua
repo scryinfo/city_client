@@ -24,7 +24,8 @@ function WarehouseModel.registerAsNetMsg()
     --网络回调注册 n开头
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_OnDelItem)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_GsDelItem);
+
 end
 --关闭事件
 function WarehouseModel.Close()
@@ -87,10 +88,7 @@ function WarehouseModel.n_OnModifyShelfInfo(stream)
     Event.Brocast("refreshUiInfo",msgModifyShelfInfo)
 end
 --删除仓库物品
-function WarehouseModel:n_OnDelItem(stream)
-    if stream == nil then
-        return
-    end
-    local msgGoodItemInfo = assert(pbl.decode("gs.DelItem",stream),"WarehouseModel:n_OnDelItem")
-    Event.Brocast("warehousedeleteGoods",msgGoodItemInfo)
+function WarehouseModel.n_GsDelItem(stream)
+    local pMsg = assert(pbl.decode("gs.DelItem",stream),"WarehouseModel.n_GsDelItem")
+    --Event.Brocast("warehousedeleteGoods",msgGoodItemInfo)
 end

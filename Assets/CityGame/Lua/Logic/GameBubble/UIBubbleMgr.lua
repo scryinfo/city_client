@@ -53,7 +53,9 @@ end
 function UIBubbleMgr.startBubble()
     if this.startFlowCam == false then
         this.startFlowCam = true
-        this.BubbleParent:SetParent(UIRoot.getFixedRoot().transform)
+        this.BubbleParent.transform:SetParent(UIRoot.getFixedRoot().transform)
+        this.BubbleParent.transform.localScale = Vector3.one
+        this.BubbleParent.transform:GetComponent("RectTransform").anchoredPosition = Vector2.zero
     end
 end
 --拍卖结束
@@ -72,6 +74,9 @@ function UIBubbleMgr.createSoonAucBubble(aucData)
     if this.aucSoonItem ~= nil then
         this.aucSoonItem = {}
     end
+    if aucData == nil then
+        return
+    end
     this._creatGroundAucBubbleItem(aucData, 0)
 end
 
@@ -82,6 +87,9 @@ function UIBubbleMgr.createNowAucBubble(aucData)
         return
     end
 
+    if aucData == nil then
+        return
+    end
     if this.aucNowItem ~= nil then
         this.aucNowItem = {}
     end
@@ -172,4 +180,48 @@ function UIBubbleMgr._showAllItems()
     --        item.data.bubbleRect.transform.localScale = Vector3.one
     --    end
     --end
+end
+
+----
+--打开拍卖界面
+function UIBubbleMgr._openGroundAucCtrl(index)
+    if index == 1 then
+        if UIBubbleMgr.nowItem ~= nil then
+            UIBubbleMgr.nowItem:_openGroundAucFunc()
+        end
+        return
+    end
+    if index == 0 then
+        if UIBubbleMgr.soonItem ~= nil then
+            UIBubbleMgr.soonItem:_openGroundAucFunc()
+        end
+        return
+    end
+end
+--通过类型获取一个气泡
+function UIBubbleMgr.getBubbleByType(bubbleType, groundState, serverPos, uiCenterPos)
+    if bubbleType == UIBubbleType.GroundTrans or bubbleType == UIBubbleType.BuildingSelf then
+        local data = {bubbleType = bubbleType, groundState = groundState, uiCenterPos = uiCenterPos}
+        local obj = UIBubbleMgr.getBubbleObj(bubbleType)
+        if serverPos ~= nil then
+            data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
+            obj.name = "bubble "..serverPos.x..serverPos.y
+        end
+        local bubbleItem = UIBubbleTransAndBuildingItem:new(data, obj)
+        return bubbleItem
+    end
+end
+function UIBubbleMgr.getBubbleObj(type)
+    local go
+    if type == UIBubbleType.GroundTrans or type == UIBubbleType.BuildingSelf then
+        if UIBubbleMgr.sellRentPrefab == nil then
+            UIBubbleMgr.sellRentPrefab = UnityEngine.Resources.Load(UIBubbleMgr.SellRentObjPath)
+        end
+        go = UnityEngine.GameObject.Instantiate(UIBubbleMgr.sellRentPrefab)
+        go.transform:SetParent(this.BubbleParent.transform)
+        go.transform.localScale = Vector3.one
+        return go
+    else
+        --拍卖类型的预制
+    end
 end

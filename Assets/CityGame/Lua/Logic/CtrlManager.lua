@@ -66,7 +66,7 @@ function CtrlManager.Init()
 
 	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
-
+	UIBubbleMgr.Awake() --temp
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
 	--ctrlList[CtrlNames.Wages] = WagesAdjustBoxCtrl.New();
 	--测试

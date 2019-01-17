@@ -70,8 +70,8 @@ function GroundAuctionModel._soonTimeDown()
     end
     local beginTime = this.soonAucGroundData.aucInfo.beginTime
     if beginTime <= TimeSynchronized.GetTheCurrentTime() then
-        Event.Brocast("c_BidStart", ct.deepCopy(this.soonAucGroundData.aucInfo))
-        this._checkNowData(ct.deepCopy(this.soonAucGroundData.aucInfo))
+        Event.Brocast("c_BidStart", this.soonAucGroundData.aucInfo)
+        this._checkNowData(this.soonAucGroundData.aucInfo)
         this._checkSoonData()  --得到即将拍卖的信息
 
         Event.Brocast("c_RefreshItems", {nowData = this.nowAucGroundData, soonData = this.soonAucGroundData})
@@ -84,8 +84,8 @@ function GroundAuctionModel._soonTimeDown()
     if remainTime < 0 then
         --重新确认下一个拍卖的数据
         if this.soonAucGroundData.aucInfo.beginTime < TimeSynchronized.GetTheCurrentTime() then
-            Event.Brocast("c_BidStart", ct.deepCopy(this.soonAucGroundData.aucInfo))
-            this._checkNowData(ct.deepCopy(this.soonAucGroundData.aucInfo))
+            Event.Brocast("c_BidStart", this.soonAucGroundData.aucInfo)
+            this._checkNowData(this.soonAucGroundData.aucInfo)
             this._checkSoonData()  --得到即将拍卖的信息
 
             Event.Brocast("c_RefreshItems", {nowData = this.nowAucGroundData, soonData = this.soonAucGroundData})
@@ -147,8 +147,10 @@ function GroundAuctionModel.getNowAucDataFunc(msgGroundAuc)
             GroundAuctionModel._checkNowData(this.groundAucDatas[item.id])
             if UIBubbleMgr.nowItem == nil then
                 UIBubbleMgr.createNowAucBubble(this.nowAucGroundData)
+                return
             end
             UIBubbleMgr.updateAucData(this.nowAucGroundData)
+            return
         end
     end
 end
@@ -223,6 +225,7 @@ function GroundAuctionModel._checkSoonData()
                 if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
                     return
                 end
+                this.soonAucGroundData = {}
                 this.soonAucGroundData.isStartAuc = false
                 local groundObj = GroundAuctionModel._getValuableWillAucObj()
                 groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)
@@ -235,11 +238,12 @@ function GroundAuctionModel._checkSoonData()
         end
     end
 end
---确认拍卖汇总的数据
+--确认拍卖的数据
 function GroundAuctionModel._checkNowData(groundAucItem)
     this.nowAucGroundData = nil
     this.tempSoonCurrentTime = TimeSynchronized.GetTheCurrentTime()
-    if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
+    if groundAucItem.beginTime + groundAucItem.durationSec >= TimeSynchronized.GetTheCurrentTime() then
+        this.nowAucGroundData = {}
         this.nowAucGroundData.isStartAuc = true
         local groundObj = GroundAuctionModel._getValuableStartAucObj()
         groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --第二个地块为左上角的位置
@@ -252,7 +256,7 @@ end
 --判断是否点击到拍卖的地块
 function GroundAuctionModel.getIsClickAucGround(blockId)
     if this.nowAucGroundData ~= nil then
-        for i, pos in pairs(this.nowAucGroundData.area) do
+        for i, pos in pairs(this.nowAucGroundData.aucInfo.area) do
             local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
             if tempBlockId == blockId then
                 return true, 1
@@ -260,7 +264,7 @@ function GroundAuctionModel.getIsClickAucGround(blockId)
         end
     end
     if this.soonAucGroundData ~= nil then
-        for i, pos in pairs(this.soonAucGroundData.area) do
+        for i, pos in pairs(this.soonAucGroundData.aucInfo.area) do
             local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
             if tempBlockId == blockId then
                 return true, 0

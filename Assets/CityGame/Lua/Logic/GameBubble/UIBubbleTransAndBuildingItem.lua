@@ -37,6 +37,11 @@ function UIBubbleTransAndBuildingItem:_initFunc(data)
         self:_setBubbleState(data.bubbleType)
     end
     self.pos = TerrainManager.BlockIDTurnPosition(data.blockId)
+    if data.uiCenterPos == nil then
+        self.data.uiCenterPos = Vector3.zero
+    else
+        self.data.uiCenterPos = Vector3.New(self.data.uiCenterPos[1], self.data.uiCenterPos[2], self.data.uiCenterPos[3])
+    end
 end
 
 function UIBubbleTransAndBuildingItem:_setBubbleState(state)
@@ -71,6 +76,6 @@ end
 
 function UIBubbleTransAndBuildingItem:LateUpdate()
     if self.pos ~= nil then
-        self.rect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.pos + Vector3.New(0.5, 0.5, 0.05))
+        self.rect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos)
     end
 end

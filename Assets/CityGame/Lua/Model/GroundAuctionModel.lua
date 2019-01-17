@@ -75,7 +75,7 @@ function GroundAuctionModel._nowTimeDown()
     if remainTime < 0 then
         --拍卖结束
         --重新确认下一个即将拍卖的数据
-        if this.nowAucGroundData.beginTime < os.time() then
+        if this.nowAucGroundData.beginTime < TimeSynchronized.GetTheCurrentTime() then
             Event.Brocast("c_BidEnd", this.nowAucGroundData.id)  --关闭界面
 
             table.remove(this.orderAucDatas, 1)
@@ -95,7 +95,7 @@ function GroundAuctionModel._soonTimeDown()
     local beginTime = this.soonAucGroundData.beginTime
     local finishTime = this.soonAucGroundData.beginTime + this.soonAucGroundData.durationSec
     --判定，数据是否正确
-    if finishTime <= os.time() or beginTime <= os.time() then
+    if finishTime <= TimeSynchronized.GetTheCurrentTime() or beginTime <= TimeSynchronized.GetTheCurrentTime() then
         Event.Brocast("c_BidStart", this.soonAucGroundData)
         this._checkNowAndSoonData()
         Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
@@ -108,7 +108,7 @@ function GroundAuctionModel._soonTimeDown()
     if remainTime < 0 then
         --即将拍卖
         --重新确认下一个拍卖的数据
-        if this.soonAucGroundData.beginTime < os.time() then
+        if this.soonAucGroundData.beginTime < TimeSynchronized.GetTheCurrentTime() then
             --table.remove(this.orderAucDatas, 1)
             Event.Brocast("c_BidStart", this.soonAucGroundData)
             this._checkNowAndSoonData()
@@ -195,19 +195,19 @@ function GroundAuctionModel._checkNowAndSoonData()
     local showFirstWait = true
     this.soonAucGroundData = nil
     this.nowAucGroundData = nil
-    this.tempNowCurrentTime = os.time()
-    this.tempSoonCurrentTime = os.time()
+    this.tempNowCurrentTime = TimeSynchronized.GetTheCurrentTime()
+    this.tempSoonCurrentTime = TimeSynchronized.GetTheCurrentTime()
 
     for i, groundAucItem in ipairs(this.orderAucDatas) do
         --如果已经开始拍卖
-        if groundAucItem.beginTime <= os.time() then
+        if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
             groundAucItem.isStartAuc = true
             groundAucItem.groundObj = GroundAuctionModel._getValuableStartAucObj()
             groundAucItem.groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --第二个地块为左上角的位置
             this.nowAucGroundData = groundAucItem
         else
             if showFirstWait then
-                if groundAucItem.beginTime <= os.time() then
+                if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
                     return
                 end
                 groundAucItem.isStartAuc = false

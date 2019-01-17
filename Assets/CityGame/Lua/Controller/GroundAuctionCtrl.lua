@@ -60,7 +60,7 @@ function GroundAuctionCtrl:_initPanelData()
 
     self.beginTime = self.m_data.beginTime
     self.durationSec = self.m_data.durationSec
-    self.currentTime = os.time()
+    self.currentTime = TimeSynchronized.GetTheCurrentTime()
     self.id = self.m_data.id
 
     GroundAuctionPanel.bidInput.text = ""
@@ -187,6 +187,11 @@ function GroundAuctionCtrl:BidGround(ins)
         showData.contentInfo = "Please enter right price "
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
+        return
+    end
+
+    if tonumber(bidPrice) < DataManager.GetMoney() then
+        Event.Brocast("SmallPop", "您的资金不足", 300)
         return
     end
 

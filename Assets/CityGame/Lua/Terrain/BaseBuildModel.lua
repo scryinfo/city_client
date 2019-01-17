@@ -49,7 +49,8 @@ function BaseBuildModel:CheckBubbleState()
     local data = self.Data
     if data.ownerId == DataManager.GetMyOwnerID() then
         if self.bubbleItem == nil then
-            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y})
+            local uiCenterPos = PlayerBuildingBaseData[data.buildingID].UICenterPos
+            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y}, uiCenterPos)
             return
         end
     end

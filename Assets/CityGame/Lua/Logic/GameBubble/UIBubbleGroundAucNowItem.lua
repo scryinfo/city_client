@@ -17,7 +17,7 @@ function UIBubbleGroundAucNowItem:initialize(data)
         self:_openGroundAucFunc()
     end)
 
-    self.currentTime = os.time()
+    self.currentTime = TimeSynchronized.GetTheCurrentTime()
     self.startTimeDown = true
     self.timeDown = true
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
@@ -42,6 +42,10 @@ function UIBubbleGroundAucNowItem:Close()
     self.timeDown = false
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    destroyImmediate(self.bubbleRect.gameObject)
+    self.data.groundObj.transform.localScale = Vector3.zero
+    self.bubbleRect = nil
+    self = nil
 end
 
 function UIBubbleGroundAucNowItem:LateUpdate()

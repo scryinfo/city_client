@@ -112,9 +112,9 @@ function UIBubbleCtrl._openGroundAucCtrl(index)
     end
 end
 --通过类型获取一个气泡
-function UIBubbleCtrl.getBubbleByType(bubbleType, groundState, serverPos)
+function UIBubbleCtrl.getBubbleByType(bubbleType, groundState, serverPos, uiCenterPos)
     if bubbleType == UIBubbleType.GroundTrans or bubbleType == UIBubbleType.BuildingSelf then
-        local data = {bubbleType = bubbleType, groundState = groundState}
+        local data = {bubbleType = bubbleType, groundState = groundState, uiCenterPos = uiCenterPos}
         local obj = UIBubbleCtrl.getBubbleObj(bubbleType)
         if serverPos ~= nil then
             data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
@@ -131,10 +131,10 @@ function UIBubbleCtrl.getBubbleObj(type)
             UIBubbleCtrl.static.sellRentPrefab = UnityEngine.Resources.Load(UIBubbleCtrl.static.SellRentObjPath)
         end
         go = UnityEngine.GameObject.Instantiate(UIBubbleCtrl.static.sellRentPrefab)
+        go.transform:SetParent(UIBubblePanel.root.transform)
+        go.transform.localScale = Vector3.one
+        return go
     else
         --拍卖类型的预制
     end
-    go.transform:SetParent(UIBubblePanel.root.transform)
-    go.transform.localScale = Vector3.one
-    return go
 end

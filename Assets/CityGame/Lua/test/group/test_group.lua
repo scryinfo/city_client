@@ -4,6 +4,8 @@
 --- DateTime: 2018/10/27 10:37
 ---
 TestGroup.active_TestGroup("abel_w11_showFps")
+TestGroup.active_TestGroup("wk24_abel_mutiConnect")
+TestGroup.active_TestGroup("wk24_abel_mutiConnect_revMsg")
 --TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --强制卸载bundle中所有资源
 --TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --强制卸载bundle中所有资源
 --TestGroup.active_TestGroup("abel_w17_load_AS_unload_No_force_s160_mem") --卸载bundle，手动卸载其中有资源

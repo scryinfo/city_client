@@ -61,5 +61,15 @@ UnitTest.Exec("abel_w6_UIFrame", "test_oo",  function ()
     Event.Brocast("class_cb", 100);
 end )
 
+UnitTest.Exec("abel_w24_deepcopy", "abel_w24_deepcopy",  function ()
+    local tb = {}
+    tb.root = AgedPerson:new('Luke Skywalker', 21)
+    tb.root:speak()
+    local tbn = ct.deepCopy(tb)
+    tbn.root.age = 1
+    tbn.root.name = "haha"
+    tbn.root:speak()
+    local a = 0
+end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

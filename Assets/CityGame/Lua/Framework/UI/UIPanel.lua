@@ -174,7 +174,7 @@ end
 --打开页面实例，调用DoShow【不修改】
 function UIPanel:Show(path, callback)
     if self.gameObject == nil then
-        panelMgr:CreatePanel(path, callback, self);
+        panelMgr:LoadPrefab_A(path, nil, self, callback)
     else
         self:DoShow()
     end
@@ -229,6 +229,8 @@ function UIPanel:AnchorUIGameObject(ui)
         ui.transform:SetParent(UIRoot.getNormalRoot())
     elseif self.type == UIType.PopUp then
         ui.transform:SetParent(UIRoot.getPopupRoot())
+    elseif self.type == UIType.Bubble then
+        ui.transform:SetParent(UIRoot.getBubbleRoot())
     end
 
 

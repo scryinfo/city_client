@@ -14,7 +14,7 @@ end
 
 function FriendsCtrl:bundleName()
     ct.log("tina_w7_friends", "FriendsCtrl:bundleName")
-    return "FriendsPanel"
+    return "Assets/CityGame/Resources/View/FriendsPanel.prefab"
 end
 
 function FriendsCtrl:Awake(go)
@@ -110,7 +110,12 @@ end
 
 -- 刷新
 function FriendsCtrl:Refresh()
+    self:initInsData()
     self:_addListener()
+end
+
+function FriendsCtrl:initInsData()
+    DataManager.OpenDetailModel(FriendsModel, OpenModelInsID.FriendsCtrl)
 end
 
 function FriendsCtrl:Close()
@@ -153,9 +158,11 @@ function FriendsCtrl:_refreshData()
     if friendsId[1] then
         Event.Brocast("m_QueryPlayerInfo", friendsId)
         FriendsPanel.friendsNumberText.text = #friendsId
+        FriendsPanel.friendsNoContentRoot:SetActive(false)
         --FriendsPanel.groupNumberText.text = "5"
     else
         FriendsPanel.friendsNumberText.text = "0"
+        FriendsPanel.friendsNoContentRoot:SetActive(true)
         --FriendsPanel.groupNumberText.text = "0"
         self:_showFriends()
     end
@@ -194,6 +201,9 @@ function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
             table.remove(FriendsCtrl.friendInfo, i)
             break
         end
+    end
+    if #FriendsCtrl.friendInfo <= 0 then
+        FriendsPanel.friendsNoContentRoot:SetActive(true)
     end
     FriendsPanel.friendsNumberText.text = tostring(tonumber(#FriendsCtrl.friendInfo))
     self:_showFriends()
@@ -299,6 +309,9 @@ function FriendsCtrl:c_OnReceivePlayerInfo(friendsData)
 end
 
 function FriendsCtrl:c_OnReceiveAddFriendSucess(friend)
+    if FriendsPanel.friendsNoContentRoot.activeSelf then
+        FriendsPanel.friendsNoContentRoot:SetActive(false)
+    end
     table.insert(FriendsCtrl.friendInfo, friend)
     FriendsPanel.friendsNumberText.text = tostring(tonumber(#FriendsCtrl.friendInfo))
     self:_showFriends()

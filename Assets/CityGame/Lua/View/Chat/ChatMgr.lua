@@ -10,6 +10,8 @@ ChatMgr.static.ChatRightItemPath = "View/Chat/ChatRightItem"
 ChatMgr.static.ChatLeftItemPath = "View/Chat/ChatLeftItem"
 ChatMgr.static.ChatTimeItemPath = "View/Chat/ChatTimeItem"
 ChatMgr.static.ChatFriendsItemPath = "View/Chat/ChatFriendsItem"
+ChatMgr.static.ChatRecordsItemPath = "View/Chat/ChatRecordsItem"
+ChatMgr.static.ChatRecordsTimeItemPath = "View/Chat/ChatRecordsTimeItem"
 
 function ChatMgr:initialize()
     ct.log("tina_w9_friends", "FriendsMgr:initialize")
@@ -17,6 +19,7 @@ function ChatMgr:initialize()
 end
 
 function ChatMgr:initData()
+    self.ownerId = DataManager.GetMyOwnerID()
     self.worldItem = {} -- 世界聊天Item
     self.friendsItem = {} -- 好友聊天Item
     self.friendsTimeItem = {} -- 好友聊天时间显示Item
@@ -30,6 +33,8 @@ function ChatMgr:initData()
     }
     --self.nowShowChatInfoNum = 0 -- 当前显示的index索引
     --self.isShowChatInfo = false
+    self.chatRecordsItemTab = {} -- 保存聊天记录的Item们
+    self.chatRecordsTimeItemTab = {} -- 保存聊天记录的时间Item们
 end
 
 -- 设置活动滑动条
@@ -84,6 +89,11 @@ end
 -- 获得陌生人列表Item
 function ChatMgr:GetStrangersPlayer()
     return self.playerChoice[2]
+end
+
+-- 获得陌生人列表Item
+function ChatMgr:GetCurrentPage()
+    return self.currentPage
 end
 
 -- 删除单个Item
@@ -170,7 +180,7 @@ end
 
 --创建聊天Item
 function ChatMgr:CreateChatItem(chatData, isOthers)
-    if DataManager.GetMyOwnerID() == chatData.id then
+    if self.ownerId == chatData.id then
         if chatData.channel == "WORLD" then -- 代表世界频道
             local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.worldContent)
             local chatRightItem = ChatRightItem:new(#self.worldItem + 1, prefab, chatData)
@@ -310,14 +320,27 @@ end
 
 -- 显示已有的聊天记录
 function ChatMgr:ShowAllChatInfo(index, id)
-    if not DataManager.GetMyChatInfo(index)[id] then
-        return
+    local chatInfo = {}
+    local saveUnread = DataManager.GetUnread()
+    if index == 2 then
+        if saveUnread and saveUnread[id] then
+            for _, a in pairs(saveUnread[id]) do
+                table.insert(chatInfo, a)
+            end
+        end
     end
-    local chatInfo = DataManager.GetMyChatInfo(index)[id].chatInfo
-    local firendsInfoAllNum = #chatInfo
+    if DataManager.GetMyChatInfo(index)[id] then
+        local onlineChatInfo = DataManager.GetMyChatInfo(index)[id].chatInfo
+        for _, b in pairs(onlineChatInfo) do
+            table.insert(chatInfo, b)
+        end
+    end
+
     for _, v in ipairs(chatInfo) do
         self:CreateChatItem(v)
     end
+
+    --local firendsInfoAllNum = #chatInfo
     --if firendsInfoAllNum <= 0 then
     --    return
     --end
@@ -361,6 +384,111 @@ end
 --        self.isShowChatInfo = false
 --    end
 --end
+
+-- 查看聊天记录、获得好友聊天记录的数据
+function ChatMgr:ShowChatRecords()
+    self.chatRecordsId = self.activePlayerData.id -- 当前显示的那位玩家的聊天记录
+    self.chatRecordsInfo = {} -- 某个好友的聊天数据
+    self.chatRecordsIndex = {} -- 某个好友的聊天数据ID
+    self.chatRecordsTime = nil
+
+    local allFriendsInfo = DataManager.GetChatRecords()
+    if allFriendsInfo then
+        for i, v in ipairs(allFriendsInfo) do
+            if self.chatRecordsId == v.id then
+                table.insert(self.chatRecordsInfo, v)
+                table.insert(self.chatRecordsIndex, i)
+            elseif self.chatRecordsId == v.channelId then
+                table.insert(self.chatRecordsInfo, v)
+                table.insert(self.chatRecordsIndex, i)
+            end
+        end
+        self.totalPage =  math.ceil(#self.chatRecordsInfo/ChatCtrl.CHAT_RECORDS_SHOW_NUM)
+        self:ShowPageInfo(self.totalPage)
+    end
+end
+
+-- 清空聊天记录的Item
+function ChatMgr:DestroyChatRecordsItem()
+    for _, a in ipairs(self.chatRecordsItemTab) do
+        UnityEngine.GameObject.Destroy(a.prefab)
+    end
+    self.chatRecordsItemTab = {}
+
+    for _, b in ipairs(self.chatRecordsTimeItemTab) do
+        UnityEngine.GameObject.Destroy(b.prefab)
+    end
+    self.chatRecordsTimeItemTab = {}
+    ChatPanel.pageText.text = ""
+end
+
+-- 显示某一页的数据
+function ChatMgr:ShowPageInfo(page)
+    self:DestroyChatRecordsItem()
+
+    if page == 1 then
+        ChatPanel.prevButton.interactable = false
+        ChatPanel.prevClose:SetActive(true)
+        ChatPanel.prevOpen:SetActive(false)
+        if self.totalPage == 1 then
+            ChatPanel.nextButton.interactable = false
+            ChatPanel.nextClose:SetActive(true)
+            ChatPanel.nextOpen:SetActive(false)
+        else
+            ChatPanel.nextButton.interactable = true
+            ChatPanel.nextClose:SetActive(false)
+            ChatPanel.nextOpen:SetActive(true)
+        end
+    elseif  page == self.totalPage then
+        ChatPanel.prevButton.interactable = true
+        ChatPanel.prevClose:SetActive(false)
+        ChatPanel.prevOpen:SetActive(true)
+        ChatPanel.nextButton.interactable = false
+        ChatPanel.nextClose:SetActive(true)
+        ChatPanel.nextOpen:SetActive(false)
+    else
+        ChatPanel.prevButton.interactable = true
+        ChatPanel.prevClose:SetActive(false)
+        ChatPanel.prevOpen:SetActive(true)
+        ChatPanel.nextButton.interactable = true
+        ChatPanel.nextClose:SetActive(false)
+        ChatPanel.nextOpen:SetActive(true)
+    end
+
+    self.currentPage = page
+    ChatPanel.pageText.text = string.format("%s/%s", self.currentPage, self.totalPage)
+    for i = #self.chatRecordsInfo - (self.totalPage - self.currentPage + 1) * ChatCtrl.CHAT_RECORDS_SHOW_NUM + 1, #self.chatRecordsInfo - (self.totalPage - self.currentPage) * ChatCtrl.CHAT_RECORDS_SHOW_NUM do
+        if self.chatRecordsInfo[i] then
+            self:CreateChatRecordsItem(self.chatRecordsInfo[i])
+        end
+    end
+end
+
+-- 创建聊天记录的聊天
+function ChatMgr:CreateChatRecordsItem(chatData)
+    if self.chatRecordsTime and chatData.time - self.chatRecordsTime > 60000 then
+        local prefab = self:_createNoticePab(ChatMgr.static.ChatRecordsTimeItemPath, ChatPanel.chatRecordsContent)
+        local chatRecordsTimeItem = ChatRecordsTimeItem:new(prefab, chatData.time)
+        table.insert(self.chatRecordsTimeItemTab, chatRecordsTimeItem)
+    end
+    local isSelf = false
+    if self.ownerId == chatData.id then
+        isSelf = true
+    end
+    local prefab = self:_createNoticePab(ChatMgr.static.ChatRecordsItemPath, ChatPanel.chatRecordsContent)
+    self.chatRecordsTime = chatData.time
+    local chatRecordsItem = ChatRecordsItem:new(isSelf, prefab, chatData)
+    table.insert(self.chatRecordsItemTab, chatRecordsItem)
+end
+
+-- 删除聊天记录
+function ChatMgr:DeleteChatRecords()
+    for i = #self.chatRecordsIndex, 1, -1 do
+        DataManager.SetChatRecords(self.chatRecordsIndex[i])
+    end
+    DataManager.SaveFriendsChat()
+    self:DestroyChatRecordsItem()
+end
 
 --滑动到底部
 function ChatMgr:_scrollBottom()

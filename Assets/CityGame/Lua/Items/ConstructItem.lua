@@ -25,6 +25,7 @@ function ConstructItem:_initData()
     --设置名字宽度（设置说明按钮位置）
     itemNameRect.sizeDelta = Vector2.New(itemNameText.preferredWidth,itemNameRect.sizeDelta.y)
     --TODO:此处应该根据种类多少动态增加长度
+    local type = ct.getType(UnityEngine.Sprite)
     for i, tempBuildID in ipairs(data.prefabRoute) do
         --临时根据策划需求写死为只有3种大小建筑
         if i > 3 then
@@ -37,6 +38,15 @@ function ConstructItem:_initData()
         coroutine.www(www)
         tempBtnIcon.sprite = www.texture
         --]]
+        local tempBtnIcon =  self.viewTrans:Find("Btn_".. i  .."/icon"):GetComponent("Image")
+        panelMgr:LoadPrefab_A(PlayerBuildingBaseData[tempBuildID]["imgPath"], type, nil, function(staticData, obj )
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                tempBtnIcon.sprite = texture
+                --显示图片
+                tempBtnIcon.transform.localScale = Vector3.one
+            end
+        end)
         --添加点击事件
         local tempBtn =  self.viewTrans:Find("Btn_".. i):GetComponent("Button")
         tempBtn.onClick:RemoveAllListeners();
@@ -54,5 +64,5 @@ end
 
 function  ConstructItem:Close()
     self.data = nil
-    self = nil
+    --self = nil
 end

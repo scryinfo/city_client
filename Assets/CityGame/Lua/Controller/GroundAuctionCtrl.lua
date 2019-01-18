@@ -11,17 +11,15 @@ function GroundAuctionCtrl:initialize()
 end
 
 function GroundAuctionCtrl:bundleName()
-    return "GroundAuctionPanel"
+    return "Assets/CityGame/Resources/View/GroundAuctionPanel.prefab"
 end
 
 function GroundAuctionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
 
-    local groundAuctionBehaviour = obj:GetComponent('LuaBehaviour')
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
-
-    --self:_initPanelData()
 end
 
 function GroundAuctionCtrl:Awake(go)
@@ -49,8 +47,7 @@ function GroundAuctionCtrl:Hide()
 end
 
 function GroundAuctionCtrl:Close()
-    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+
 end
 
 ---初始化界面
@@ -75,11 +72,13 @@ function GroundAuctionCtrl:_initPanelData()
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
 
         if self.m_data.price > self.m_data.basePrice then
+            GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
+            GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
             GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
-            GroundAuctionPanel.priceDesText.text = "Top price"
         else
-            GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.basePrice, 30, 24)
-            GroundAuctionPanel.priceDesText.text = "Floor price"
+            GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
+            GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
+            GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
         end
 
         self.startTimeDownForFinish = true  --拍卖结束倒计时
@@ -223,8 +222,11 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
 
     self.highestPrice = data.num
     GroundAuctionPanel.currentPriceText.text = getPriceString(data.num, 30, 24)
-    GroundAuctionPanel.priceDesText.text = "Top price"
-    GroundAuctionPanel.ChangeBidInfo(data)
+    GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
+    GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
+    GroundAuctionPanel.currentPriceText.text = tostring(self.highestPrice)
+    self.biderId = data.biderId
+    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
 end
 --拍卖结束
 function GroundAuctionCtrl:_bidEnd(id)
@@ -244,12 +246,23 @@ function GroundAuctionCtrl:_bidStart(groundData)
     self.m_data = groundData
 
     if self.m_data.biderId then
+        GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
+        GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
         GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
-        GroundAuctionPanel.priceDesText.text = "Top price"
     else
-        GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.basePrice, 30, 24)
-        GroundAuctionPanel.priceDesText.text = "Floor price"
+        GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
+        GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
+        GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
     end
 
     self.startTimeDownForFinish = true  --拍卖结束倒计时
+end
+--点击头像
+function GroundAuctionCtrl:_clickProtait(ins)
+    if ins.biderId == nil then
+        return
+    end
+    if ins.gameObject.activeSelf then
+
+    end
 end

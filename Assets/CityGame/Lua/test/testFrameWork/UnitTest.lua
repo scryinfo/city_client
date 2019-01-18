@@ -158,4 +158,50 @@ function UnitTest.Exec_now(groupid, event,...)
     Event.Brocast(event,...);
 end
 
+
+AsyncSequenceTester = class('AsyncSequenceTester')
+AsyncSequenceTester.static.testers = nil
+
+function AsyncSequenceTester.recordTester(newTester)
+    AsyncSequenceTester.static.testers = newTester
+end
+
+function AsyncSequenceTester.Tester()
+    return AsyncSequenceTester.static.testers
+end
+
+function AsyncSequenceTester:resetData()
+end
+
+function AsyncSequenceTester:initialize()
+    self:resetData()
+end
+
+function AsyncSequenceTester:excute()
+    local curSeq = self:getCurSeq()
+    if curSeq == nil then
+        return
+    end
+    if curSeq.prefun ~= nil then
+        curSeq:prefun()
+    end
+    self.startTime = os.clock()
+    if curSeq then
+        curSeq.fun(self,curSeq)
+    end
+end
+
+function AsyncSequenceTester:printExcuteTime()
+    for i, v in pairs(self.testSquence) do
+        ct.log('system',v.msg..v.excutetime)
+    end
+end
+
+function AsyncSequenceTester:getCurSeq()
+    return self.testSquence[self.curPos]
+end
+function AsyncSequenceTester:Nextfun()
+    self.curPos = self.curPos + 1
+end
+
 return UnitTest

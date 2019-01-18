@@ -11,7 +11,7 @@ function StopAndBuildCtrl:initialize()
 end
 
 function StopAndBuildCtrl:bundleName()
-    return "StopAndBuildPanel"
+    return "Assets/CityGame/Resources/View/StopAndBuildPanel.prefab"
 end
 
 function StopAndBuildCtrl:OnCreate(obj)
@@ -26,7 +26,7 @@ function StopAndBuildCtrl:Awake(go)
     self.materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(panel.stopBtn.gameObject,self.OnClick_stop,self);
     self.materialBehaviour:AddClick(panel.removeBtn.gameObject,self.OnClick_remove,self);
-    self.materialBehaviour:AddClick(panel.backBtn1.gameObject,self.OnClick_backBtn,self);
+    self.materialBehaviour:AddClick(panel.backBtn1.gameObject,self.OnClick_backBtn1,self);
 
       self.materialBehaviour:AddClick((panel.greenBtn1).gameObject,self.OnClick_greenBtn1,self);
       self.materialBehaviour:AddClick((panel.greenBtn2).gameObject,self.OnClick_greenBtn2,self);
@@ -49,9 +49,14 @@ end
 function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
     UIPage.ClosePage()
+    UIPage.ClosePage()
 end
 
-
+--返回
+function StopAndBuildCtrl:OnClick_backBtn1()
+    panel:CloseBtn()
+    UIPage.ClosePage()
+end
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
     local data={}
@@ -172,7 +177,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
     panel.nameInp.text=personData.name
     panel.commanyInp.text=personData.companyName
     --- ******************** ---
-    if groundData.Data.Rent then
+    if groundData  and  groundData.Data and  groundData.Data.Rent then
         panel.date.transform.parent.parent.localScale=Vector3.one
         local time=getFormatUnixTime(string.sub(groundData.Data.Rent.rentBeginTs,1,10))
         panel.date.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.Rent.rentDays)

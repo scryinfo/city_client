@@ -10,7 +10,7 @@ Version: 3.2
 ]]--
 
 require("math")
-require ('TestGroup')
+require ('ImpTestGroup')
 
 local M={}
 local log = log
@@ -91,10 +91,12 @@ Options:
 ]]
 
 local UnitTestGroup={}
+local UnitTestGroupByTime={}
 local ActiveUnitTestGroup={}
 
 function addToTestGropu(f,groupid)
     UnitTestGroup[f] = groupid
+    UnitTestGroupByTime[#UnitTestGroupByTime+1] = f --这个是按注册先后来的
 end
 
 function checkActive(f)
@@ -2229,7 +2231,8 @@ end
     function M.LuaUnit.collectTests()
         -- return a list of all test names in the global namespace
         -- that match LuaUnit.isTestName
-
+        --[[
+        --这个是原来的实现，缺点是效率低，而且不按预期的顺序执行测试
         local testNames = {}
         for k, _ in pairs(_G) do
             if type(k) == "string" and M.LuaUnit.isTestName( k ) and checkActive(k) then
@@ -2238,6 +2241,9 @@ end
         end
         table.sort( testNames )
         return testNames
+        --]]
+        --这个是按预期顺序来的，可以保证同一个文件中的 exec 按顺序执行，不同文件之间的顺序就不能保证了
+        return UnitTestGroupByTime;
     end
 
     function M.LuaUnit.parseCmdLine( cmdLine )
@@ -2847,8 +2853,7 @@ end
         for i,v in ipairs( filteredList ) do
             local name, instance = v[1], v[2]
             if M.LuaUnit.asFunction(instance) then
-                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                ct.log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "测试开始==================================================================================================================================================================================")
                 local startTime = os.clock()
                 self:execOneFunction( nil, name, nil, instance )
                 local endTime = os.clock()
@@ -2861,8 +2866,7 @@ end
                 assert( className ~= nil )
                 local methodInstance = instance[methodName]
                 assert(methodInstance ~= nil)
-                ct.log("system","["..name.."]", "--------------------------------------------------------------------------- ")
-                ct.log("system","["..name.."]", "开始执行")
+                ct.log("system","["..name.."]", "测试开始==================================================================================================================================================================================")
                 local startTime = os.clock()
                 self:execOneFunction( className, methodName, instance, methodInstance )
                 local endTime = os.clock()

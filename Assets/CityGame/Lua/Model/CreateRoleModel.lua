@@ -11,7 +11,7 @@ end
 --启动事件--
 function CreateRoleModel:OnCreate()
     --注册本地事件
-
+    Event.AddListener("m_createNewRole",self.m_createNewRole,self)
     --注册gs的网络回调
     CreateRoleModel:registerGsNetMsg()
 end
@@ -22,29 +22,27 @@ end
 
 function CreateRoleModel:registerGsNetMsg()
     --gs网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),CreateRoleModel.n_CreateNewRole);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",self.n_CreateNewRole,self)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"common.OpCode","error","common.Fail",self.n_Error,self)--新版model网络注册
 end
 
 --创角发包
-function CreateRoleModel.m_createNewRole()
+function CreateRoleModel:m_createNewRole(data)
     DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
-            { male = true ,name = CityEngineLua.username.."_role1",companyName = CityEngineLua.username.."_company"})
+            { male = data.gender ,name =data.nickname ,companyName =data.companyname ,faceId = data.faceId })
 end
 
 --创角回调
-function CreateRoleModel.n_CreateNewRole(stream)
-    --message Role {
-
-    --    required bytes id = 1;
-    if stream == nil then
-        ct.log("system", "[LoginModel.n_CreateNewRole] stream = nil")
-        return
-    end
-
-    local pMsg =assert(pbl.decode("gs.RoleInfo",stream),"LoginModel.n_CreateNewRole : stream == nil")
+function CreateRoleModel:n_CreateNewRole(pMsg)
     logDebug(pMsg.id)
     logDebug(pMsg.name)
-    --角色登录
+    --登录
     Event.Brocast("m_loginRole",pMsg)
 end
+
+--重名回调
+function CreateRoleModel:n_Error(pMsg)
+    Event.Brocast("c_SameName")
+end
+
 

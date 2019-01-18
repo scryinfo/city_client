@@ -39,6 +39,7 @@ require"Model/ManageAdvertisementPosModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
 require "Model/MaterialModel"
+require "Model/RetailStoresModel"
 require "Model/ProcessingModel"
 require "Model/ShelfModel"
 require "Model/AdjustProductionLineModel"
@@ -62,7 +63,7 @@ function CtrlManager.Init()
 	--默认显示登录界面
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
-
+	MusicManger:Awake()
 	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
@@ -110,8 +111,8 @@ function CtrlManager.Init()
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
-	modelList[ModelNames.friends] = FriendsModel.New();
-	modelList[ModelNames.Chat] = ChatModel.New();
+	--modelList[ModelNames.friends] = FriendsModel.New();
+	--modelList[ModelNames.Chat] = ChatModel.New();
 
 	return this;
 end

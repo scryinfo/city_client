@@ -22,7 +22,7 @@ function AdvertisementPosCtrl:initialize()
 end
 
 function AdvertisementPosCtrl:bundleName()
-    return "AdvertisementPosPanel";
+    return "Assets/CityGame/Resources/View/AdvertisementPosPanel.prefab";
 end
 
 function AdvertisementPosCtrl:OnCreate(obj)
@@ -92,13 +92,6 @@ function AdvertisementPosCtrl:Awake(go)
             panel.totalText.text=getPriceString(self.totalPrice..".0000",30,24)
         end
     end)
-
-    --
-    -------创建广告
-    --local creatData={model=MunicipalModel,buildingType=BuildingType.Municipal,lMsg=MunicipalModel.lMsg}
-    --self.ItemCreatDeleteMgr=MunicipalModel.manger
-    --self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
-
     text=panel.manageText.text
 end
 
@@ -108,11 +101,11 @@ function AdvertisementPosCtrl:OnClick_backBtn()
     UIPage.ClosePage();
 end
 
-local num=0
+
 function AdvertisementPosCtrl:Refresh()
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
-    ---创建外部广告
+    ---创建广告
     if MunicipalPanel.buildingId~=AdvertisementPosPanel.currentBuildingId then
         local temp=MunicipalPanel.buildingId
         local creatData={model=MunicipalModel,buildingType=BuildingType.Municipal,lMsg=MunicipalPanel.lMsg}
@@ -125,12 +118,14 @@ function AdvertisementPosCtrl:Refresh()
         panel.qunayityInp.text=#MunicipalModel.SlotList
         panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
         panel.rentInp.text=MunicipalModel.SlotList[1].rentPreDay
+        panel.deposit.text=getPriceString(3*MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
         panel.adAllday=panel.qunayityInp.text
         panel.grey.gameObject:SetActive(true);
        else
         panel.qunayityInp.text= 0
         panel.leaseInp.text=0
         panel.rentInp.text= 0
+        panel.deposit.text=0
         panel.adAllday= 0
         panel.grey.gameObject:SetActive(true);
        end
@@ -190,8 +185,12 @@ end
 function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     local buildingID=MunicipalPanel.buildingId
     --主人点击确认按钮
-    Event.Brocast("SmallPop","Successful adjustment",47)
-    panel.grey.gameObject:SetActive(true);
+    if panel.qunayityInp.text==""  or tonumber(panel.qunayityInp.text)==0 or
+       panel.leaseInp.text==""  or tonumber(panel.leaseInp.text)==0 or
+       panel.rentInp.text==""  or tonumber(panel.rentInp.text)==0 then
+
+        return
+    end
     -----发送网络消息
     if tonumber(panel.qunayityInp.text)>tonumber(panel.adAllday) then---添加槽位
         for i = 1, panel.qunayityInp.text-panel.adAllday do
@@ -214,6 +213,10 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
         --Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),1,tonumber(panel.leaseInp.text))
         end
     end
+    panel.deposit.text=getPriceString(3*tonumber(panel.rentInp.text)..".0000",30,24)
+    Event.Brocast("c_ShowItemValueChange", panel.rentInp.text,panel.qunayityInp.text,panel.leaseInp.text)
+    Event.Brocast("SmallPop","Successful adjustment",47)
+    panel.grey.gameObject:SetActive(true);
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm(ins)

@@ -19,7 +19,7 @@ function ScienceSellPopCtrl:initialize()
 end
 
 function ScienceSellPopCtrl:bundleName()
-    return "ScienceSellPopPanel";
+    return "Assets/CityGame/Resources/View/ScienceSellPopPanel.prefab";
 end
 
 function ScienceSellPopCtrl:OnCreate(obj)
@@ -39,8 +39,8 @@ function ScienceSellPopCtrl:Awake(go)
 end
 
 ---close
-function ScienceSellPopCtrl:OnClick_backBtn(obj)
-    obj:Hide()
+function ScienceSellPopCtrl:OnClick_backBtn(ins)
+    ins:Hide()
 end
 
 ---cut
@@ -65,8 +65,13 @@ end
 
 ---confirm
 function ScienceSellPopCtrl:OnClick_confirm(ins)
+    if panel.levleInp.text=="" or tonumber(panel.levleInp.text) <0 or
+      panel.priceInp.text=="" or tonumber(panel.priceInp.text) <=0    then
+       return
+    end
+
     Mgr.scienceInsList[1].levelText.text =panel.levleInp.text
-   Mgr.scienceInsList[1].priceText.text = getPriceString(panel.priceInp.text..".0000",30,24)
+    Mgr.scienceInsList[1].priceText.text = getPriceString(panel.priceInp.text..".0000",30,24)
     Mgr.scienceItemList[1]:SetActive(true)
 
     Event.Brocast("SmallPop","Success",257)
@@ -80,6 +85,8 @@ end
 function ScienceSellPopCtrl:Refresh()
 
     panel.iconImage.sprite=self.m_data.iconImage.sprite
+    panel.iconImage:SetNativeSize()
+
 
 end
 

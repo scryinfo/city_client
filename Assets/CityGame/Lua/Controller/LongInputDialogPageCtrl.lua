@@ -11,7 +11,7 @@ function LongInputDialogPageCtrl:initialize()
 end
 
 function LongInputDialogPageCtrl:bundleName()
-    return "Common/LongInputDialogPagePanel"
+    return "Assets/CityGame/Resources/View/Common/LongInputDialogPagePanel.prefab"
 end
 
 function LongInputDialogPageCtrl:OnCreate(obj)
@@ -35,6 +35,7 @@ function LongInputDialogPageCtrl:_getComponent(go)
     self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
     self.closeBtn = go.transform:Find("root/closeBtn")
     self.confirmBtn = go.transform:Find("root/confirmBtn")
+    self.input = go.transform:Find("root/input"):GetComponent("InputField")
 end
 ---初始化
 function LongInputDialogPageCtrl:_initData()
@@ -45,7 +46,9 @@ end
 
 function LongInputDialogPageCtrl:_onClickConfim(ins)
     if ins.m_data.btnCallBack then
-        ins.m_data.btnCallBack()
+        if ins.input.text ~= nil and ins.input.text ~= "" then
+            ins.m_data.btnCallBack(ins.input.text)
+        end
         ins.m_data.btnCallBack = nil
     end
     ins:_onClickClose(ins)

@@ -48,6 +48,8 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
         tempData = Good[data.itemId]
     end
     self.nameText.text = tempData.name
+    LoadSprite(tempData.img, self.iconImg,true)
+    self.iconImg:SetNativeSize()
 
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)

@@ -22,12 +22,40 @@ function AdvertisementShowItem:initialize(itemlData, clickOpenFunc, itemRect, ma
     self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
     self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
 
+    --todo:文本赋值
+    self.price = itemRect:Find("contentRoot/head/Text/numText"):GetComponent("Text")
+    self.acount = itemRect:Find("contentRoot/head/Text (1)/numText"):GetComponent("Text")
+    self.day = itemRect:Find("contentRoot/head/Text (2)/numText"):GetComponent("Text")
+
+    --todo:多语言赋值
+    self.topicText = itemRect:Find("contentRoot/head/toptic/Text"):GetComponent("Text")
+    self.priceText = itemRect:Find("contentRoot/head/Text"):GetComponent("Text")
+    self.acountText = itemRect:Find("contentRoot/head/Text (1)"):GetComponent("Text")
+    self.dayText = itemRect:Find("contentRoot/head/Text (2)"):GetComponent("Text")
+
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
         clickOpenFunc(mgrTable, self.toggleData)
     end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtn.gameObject,self.OntodoBtn)
 
     Event.AddListener("c_AdvertisementShowValueChange", self.updateInfo, self);
+    Event.AddListener("c_ShowItemValueChange", self.c_ShowItemValueChange, self);
+    Event.AddListener("c_ShowItemTextChange", self.c_ShowItemTextChange, self);
+
+end
+
+--文本赋值
+function AdvertisementShowItem:c_ShowItemValueChange(price,acount,day)
+    self.price.text = price
+    self.acount .text= acount
+    self.day.text = day.."(day)"
+end
+--多语言赋值
+function AdvertisementShowItem:c_ShowItemTextChange()
+    --self.topicText = itemRect:Find("contentRoot/head/toptic/Text"):GetComponent("Text")
+    --self.priceText = itemRect:Find("contentRoot/head/Text"):GetComponent("Text")
+    --self.acountText = itemRect:Find("contentRoot/head/Text (1)"):GetComponent("Text")
+    --self.dayText = itemRect:Find("contentRoot/head/Text (2)"):GetComponent("Text")
 end
 
 --获取是第几个点击了

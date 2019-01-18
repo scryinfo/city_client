@@ -3,10 +3,11 @@ UIPage:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
 local gameObject;
+local Mails
 
 
 function  GameMainInterfaceCtrl:bundleName()
-    return "GameMainInterfacePanel"
+    return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
 
 function GameMainInterfaceCtrl:initialize()
@@ -17,20 +18,19 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
 
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.exchangeButton.gameObject,self.OnExchange,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.houseButton.gameObject,self.OnHouse,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rawMaterialFactory.gameObject,self.OnRawMaterialFactory,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.sourceMill.gameObject,self.OnSourceMill,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerWareHouse.gameObject,self.OncenterWareHouse,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
+
 
 
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
@@ -39,7 +39,24 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
+    Event.AddListener("c_AllMails",self.c_AllMails,self)
+    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
 
+    --local headId = DataManager.GetHeadId()
+    --local path = PlayerHead[headId].MainPath
+    --local type = ct.getType(UnityEngine.Sprite)
+    --panelMgr:LoadPrefab_A(path,type,nil,function(goodData,obj)
+    --    if obj ~= nil then
+    --        local texture = ct.InstantiatePrefab(obj)
+    --        GameMainInterfacePanel.headItem.sprite = texture
+    --    end
+    --end)
+
+end
+
+--金币改变
+function GameMainInterfaceCtrl:c_ChangeMoney(money)
+    self.money = getPriceString("E"..money..".0000",24,20)
 end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)
@@ -48,14 +65,19 @@ function GameMainInterfaceCtrl:SaveData(ownerData)
     end
 end
 
-
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     -- TODO:ct.log("system","重新开业")
-    if buildingInfo.ownerId~=DataManager.GetMyOwnerID() then
+    if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then
         return
     end
     local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
-    local data = {workerNum=20,buildInfo= buildingInfo,func=func}
+    local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
+
+    local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()
+            Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)
+            Event.Brocast("m_startBusiness",buildingInfo.id)
+    end}
+
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
     Event.AddListener("c_successBuilding",function ()
@@ -64,8 +86,6 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     end ,self)
 
 end
-
-
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
     --打开界面
@@ -88,36 +108,97 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
     for i, groundData in ipairs(self.groundDatas) do
         local Ids={}
         table.insert(Ids,groundData.Data.ownerId)
-        Event.Brocast("m_QueryPlayerInfo",Ids)
+        Event.Brocast("m_QueryPlayerInfoChat",Ids)
     end
 
     --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
-    Event.Brocast("m_QueryPlayerInfo",ids)
+    Event.Brocast("m_QueryPlayerInfoChat",ids)
 
 end
 
+function GameMainInterfaceCtrl:Awake()
+    --獎金池
+
+    --头像
+    local faceId = DataManager.GetFaceId()
+    LoadSprite(PlayerHead[faceId].MainPath, GameMainInterfacePanel.headItem, true)
+    self.insId = OpenModelInsID.GameMainInterfaceCtrl
+    local info = DataManager.GetMyPersonalHomepageInfo()
+    self.name = info.name
+    self.gender = info.male
+    local gold = DataManager.GetMoney()
+    self.money = getPriceString("E"..gold..".0000",24,20)
+end
 
 function GameMainInterfaceCtrl:Refresh()
     --打开主界面Model
+    Mails = nil
     self:initInsData()
     self:_showFriendsNotice()
     self:_showWorldChatNoticeItem()
 end
 
 function GameMainInterfaceCtrl:initInsData()
-        DataManager.OpenDetailModel(GameMainInterfaceModel,4)
-        DataManager.DetailModelRpcNoRet(4, 'm_GetAllMails')
+    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
+    --初始化姓名,性别,金币
+    GameMainInterfacePanel.name.text = self.name
+    GameMainInterfacePanel.money.text = self.money
+    UpdateBeat:Add(self._update, self);
+
+    if self.gender then
+        GameMainInterfacePanel.male.localScale = Vector3.one
+        GameMainInterfacePanel.woman.localScale = Vector3.zero
+    else
+        GameMainInterfacePanel.male.localScale = Vector3.zero
+        GameMainInterfacePanel.woman.localScale = Vector3.one
+    end
+end
+
+function GameMainInterfaceCtrl:_update()
+    GameMainInterfacePanel.time.text = os.date("%H:%M");
+    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a");
+    local date = tonumber(os.date("%Y%m%d"))
+    local hour = tonumber(os.date("%H"))
+    for i, v in pairs(WeatherConfig[date].weather) do
+        if i == hour then
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..v, GameMainInterfacePanel.weather,true)
+        end
+    end
 end
 
 --获取所有邮件
-function GameMainInterfaceCtrl:_receiveAllMails(DataInfo)
-     self.Mails = DataInfo
+function GameMainInterfaceCtrl:c_AllMails(DataInfo)
+     Mails = DataInfo
+    --判定红点是否显示
+    if Mails == nil then
+        GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        return
+    end
+    for i, v in pairs(Mails) do
+        if v.read == false then
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.one
+            return
+        else
+            GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
+        end
+    end
 end
+
+--点击头像
+function GameMainInterfaceCtrl:OnHead()
+   local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
+
+end
+
 --通知--
-function GameMainInterfaceCtrl.OnNotice()
-    if  NoticeMgr.notice ~= nil then
+
+function GameMainInterfaceCtrl.OnNotice(go)
+    GameMainInterfaceCtrl:RemoveUpdata()
+--[[    if  NoticeMgr.notice ~= nil then
         if  #NoticeMgr.notice == 0 then
             ct.OpenCtrl("NoMessageCtrl")
         else
@@ -129,18 +210,18 @@ function GameMainInterfaceCtrl.OnNotice()
         else
             ct.OpenCtrl('GameNoticeCtrl')
         end
-    end
+    end]]
 
---[[    if self.Mails == nil then
+    if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
-        ct.OpenCtrl('GameNoticeCtrl',self.Mails)
-    end]]
+        ct.OpenCtrl('GameNoticeCtrl',Mails)
+    end
 end
 
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
-    ct.log("rodger_w8_GameMainInterface","[test_OnChat]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
@@ -162,8 +243,8 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
-        if GameMainInterfacePanel.worldChatContent.childCount >= 5 then
-            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 4 do
+        if GameMainInterfacePanel.worldChatContent.childCount >= 4 then
+            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 3 do
                 UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
             end
         end
@@ -183,78 +264,85 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
     GameMainInterfacePanel.worldChatNoticeItem:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    local saveUnread = DataManager.GetUnread()
     for _, v in pairs(chatFriendsInfo) do
         if v.unreadNum and v.unreadNum > 0 then
             GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-            break
+            return
         end
     end
     for _, m in pairs(chatStrangersInfo) do
         if m.unreadNum and m.unreadNum > 0 then
             GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
-            break
+            return
+        end
+    end
+    if saveUnread then
+        for _, n in pairs(saveUnread) do
+            if n and n[1] then
+                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                return
+            end
         end
     end
 end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
-    ct.log("rodger_w8_GameMainInterface","[test_Onset]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
-    ct.log("rodger_w8_GameMainInterface","[test_OnBuild]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
     CameraMove.ChangeCameraState(TouchStateType.ConstructState)
 end
 
---交易所--
-function GameMainInterfaceCtrl.OnExchange()
-    ct.log("rodger_w8_GameMainInterface","[test_OnExchange]  测试完毕")
-    --UIPage:ShowPage(ExchangeCtrl)
-    ct.OpenCtrl('ExchangeCtrl')
+--拍卖
+function GameMainInterfaceCtrl:OnAuction()
+
 end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
-    ct.log("rodger_w8_GameMainInterface","[test_OnHouse]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData.info.id)
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    --ct.log("rodger_w8_GameMainInterface","[test_OnRawMaterialFactory]  测试完毕")
-    ----UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-    --local buildingId = PlayerTempModel.roleData.buys.materialFactory[1].info.id
-    --Event.Brocast('m_ReqOpenMaterial',buildingId)
-    --ct.OpenCtrl('MaterialCtrl')
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ScienceSellHallCtrl")
 
 end
 
---加工厂--
-function GameMainInterfaceCtrl.OnSourceMill()
-    --ct.log("rodger_w8_GameMainInterface","[test_OnSourceMill]  测试完毕")
-    --local buildingId = PlayerTempModel.roleData.buys.produceDepartment[1].info.id
-    --Event.Brocast('m_ReqOpenProcessing',buildingId)
-    --ct.OpenCtrl('ProcessingCtrl')
+--指南书--
+function GameMainInterfaceCtrl.OnGuideBool()
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
 --广告设施
 function GameMainInterfaceCtrl:OnAdvertisFacilitie()
-    ct.log("rodger_w8_GameMainInterface","[test_OnAdvertisFacilitie]  测试完毕")
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("MunicipalCtrl")
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
---中心仓库
-function GameMainInterfaceCtrl:OncenterWareHouse()
-    --Event.Brocast("m_opCenterWareHouse")
-    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
+
+--中心建筑
+function GameMainInterfaceCtrl:OnCenterBuilding()
+    ct.OpenCtrl("CenterBuildingCtrl")
+end
+
+--关闭updata
+function GameMainInterfaceCtrl:RemoveUpdata()
+    if UpdateBeat then
+        UpdateBeat:Remove(self._update, self);
+    end
 end
 
 

@@ -9,6 +9,9 @@ DataManager = {}
 --          ==>> 根据相机位置刷新，从服务器同步一整个BlockCollectionDatas，实时接收服务器数据刷新内部数据，当相机移走时数据清除
 --  d.DetailBuildDatas 商业建筑的详细数据（key = NodeID ，value = Model ）具体Model可根据建筑类型作为参数传入
 --          ==>> 打开建筑UI时，判断是否自己建筑，是->转到2c读取信息，否->从服务器读取数据并存储，退出界面时数据清除（后期可改为一定大小内存缓存机制）
+--        BuildDataStack 包含：BlockDatas(地块建筑覆盖信息)/GroundDatas（地块所属人信息）/RoteDatas（道路信息）/BaseBuildDatas（商业建筑基础信息）
+--
+
 --2.用户信息（登录时同步服务器，实时同步）
 --  a.用户基础数据（table={ userID , Name ， Sex ，Avatar ， CompanyID ，CompanyName }）
 --  b.用户自己所拥有的地块集合（key = BlockID ，value = nodeID）可修建为 -1  有建筑覆盖则记录节点ID
@@ -36,6 +39,7 @@ local SystemDatas = {}          --系统信息集合
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
+--local HeadId                  --头像的ID
 
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
@@ -62,13 +66,21 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshBlockData(blockID,nodeID)
+    if blockID == nil then
+        return
+    end
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     if nodeID == nil then
         nodeID = -1
     end
-    if  BuildDataStack[collectionID] ~= nil and   BuildDataStack[collectionID].BlockDatas~= nil then
-        BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
+    if nil == BuildDataStack[collectionID] then
+        BuildDataStack[collectionID] = {}
     end
+    if  BuildDataStack[collectionID].BlockDatas == nil then
+    --初始化地块集合
+        CreateBlockDataTable(collectionID)
+    end
+    BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
 --刷新原子地块集合的基本信息
@@ -135,29 +147,40 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
         BuildDataStack[tempCollectionID].RoteDatas = {}
     end
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
-        if itemNodeID == -1 then
-            local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
-            if roadNum > 0 and roadNum < #RoadNumConfig  then
-                if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
-                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
-                else
-                    if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
-                        break
+        while true do
+            if itemNodeID == -1 then
+                local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
+                --如果有道路数据
+                if roadNum > 0 and roadNum < #RoadNumConfig  then
+                    if not BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] then
+                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ={}
                     else
-                        --删除之前的道路Obj
-                        destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
-                        BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                        if BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum ==  roadNum then
+                            break
+                        else
+                            --删除之前的道路Obj
+                            destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                            BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = nil
+                        end
                     end
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
+                    local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
+                    local go = UnityEngine.GameObject.Instantiate(prefab)
+                    if nil ~= RoadRootObj then
+                        go.transform:SetParent(RoadRootObj.transform)
+                    end
+                    --add height
+                    local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
+                    Vec.y = Vec.y + 0.01
+                    go.transform.position = Vec
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
+                    --如果没有道路数据，但原先有道路记录，则清除
+                elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                    destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
                 end
-                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadNum = roadNum
-                local prefab = UnityEngine.Resources.Load(RoadPrefabConfig[RoadNumConfig[roadNum]])
-                local go = UnityEngine.GameObject.Instantiate(prefab)
-                if nil ~= RoadRootObj then
-                    go.transform:SetParent(RoadRootObj.transform)
-                end
-                go.transform.position = TerrainManager.BlockIDTurnPosition(itemBlockID)
-                BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
             end
+            break
         end
     end
 end
@@ -167,7 +190,7 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RemoveWaysByCollectionID(tempCollectionID)
-    if BuildDataStack[tempCollectionID] == nil and BuildDataStack[tempCollectionID].RoteDatas == nil then
+    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].RoteDatas == nil then
         return
     end
     for key, value in pairs(BuildDataStack[tempCollectionID].RoteDatas) do
@@ -248,14 +271,11 @@ function DataManager.RefreshBaseBuildData(data)
     if nil == BuildDataStack[collectionID] then
         BuildDataStack[collectionID] = {}
         --初始化地块集合
-        BuildDataStack[collectionID].BaseBuildDatas = {}
         CreateBlockDataTable(collectionID)
     end
-    --TODO:检查数据初始化
+    --检查数据初始化
     if BuildDataStack[collectionID].BaseBuildDatas == nil then
-        --初始化地块集合
         BuildDataStack[collectionID].BaseBuildDatas = {}
-        CreateBlockDataTable(collectionID)
     end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
@@ -268,24 +288,66 @@ function DataManager.RefreshBaseBuildData(data)
 end
 
 --功能
---  删除整个地块集合数据
---      相机移动时触发
+--  删除某个地块集合数据BuildDataStack
+--  相机移动时触发
+--BuildDataStack 包含：BlockDatas(地块建筑覆盖信息)/GroundDatas（地块所属人信息）/RoteDatas（道路信息）/BaseBuildDatas（商业建筑基础信息）
 --参数
 --  tempCollectionID：删除地块的ID
-function DataManager.RemoveCollectionDatas(tempCollectionID)
-    --删除 BlockDatas 和 BaseBuildDatas 对应的数据
-    --关闭所有基础数据Model
-    for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
-        value:Close()
+function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
+    --判断是否不需要执行数据清理
+    if tempCollectionID == nil or BuildDataStack[tempCollectionID] == nil then
+        return
     end
-    BuildDataStack[tempCollectionID] = nil
+    --删除所有地块建筑覆盖信息（BlockDatas）
+    if BuildDataStack[tempCollectionID].BlockDatas ~= nil then
+        local isClearBlock = true
+        --计算需要删除的地块里面有没有跨地块的建筑，如果有-->BaseBlockData不删除
+        for key, value in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
+            --判断是否有建筑跨地块
+            if value ~= -1 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
+                --需要判断该建筑是否在AOI范围内
+                local attributeCollectionID = TerrainManager.BlockIDTurnCollectionID(value)
+                if TerrainManager.IsBelongToCameraCollectionIDAOIList(attributeCollectionID)  then
+                    isClearBlock = false
+                    break
+                end
+            end
+        end
+        if isClearBlock then
+            BuildDataStack[tempCollectionID].BlockDatas = nil
+        end
+    end
+    --删除所有道路信息数据（RoteDatas）
+    DataManager.RemoveWaysByCollectionID(tempCollectionID)
+    --删除所有地块信息BaseGroundModel（GroundDatas）
+    if BuildDataStack[tempCollectionID].GroundDatas ~= nil  then
+        for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
+            value:Close()
+        end
+        BuildDataStack[tempCollectionID].GroundDatas = nil
+    end
+    --删除所有基础数据BaseBuildModel（BaseBuildDatas）
+    if BuildDataStack[tempCollectionID].BaseBuildDatas ~= nil  then
+        for key, value in pairs(BuildDataStack[tempCollectionID].BaseBuildDatas) do
+            value:Close()
+        end
+        BuildDataStack[tempCollectionID].BaseBuildDatas = nil
+    end
+    --清空这个节点
+    --BuildDataStack[tempCollectionID] = nil
 end
 
+--获取建筑基础数据
 --建筑根节点的唯一ID
 function DataManager.GetBaseBuildDataByID(blockID)
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
-    return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+    if BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas[blockID]
+    else
+        return nil
+    end
 end
+
 ---------------------------------------------------------------------------------- 建筑详情数据---------------------------------------------------------------------------------
 ModelBase = class('ModelBase')
 
@@ -330,11 +392,11 @@ end
 --2：model中self方法名
 function DataManager.DetailModelRpcNoRet(insId,modelMethord,...)
     --参数验证
-    if not BuildDataStack.DetailModelStack or not insId or not modelMethord  then
+    if BuildDataStack.DetailModelStack == nil or insId == nil or modelMethord == nil then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel or tempDetailModel[modelMethord] then
+    if tempDetailModel ~= nil and tempDetailModel[modelMethord] ~= nil then
         tempDetailModel[modelMethord](tempDetailModel,...)
     end
 end
@@ -348,11 +410,11 @@ end
 --4：... model中方法参数
 function DataManager.DetailModelRpc(insId,modelMethord,callBackMethord,...)
     --参数验证
-    if not BuildDataStack.DetailModelStack or not insId or not modelMethord or not callBackMethord then
+    if BuildDataStack.DetailModelStack == nil or insId == nil or modelMethord == nil or callBackMethord == nil then
         return
     end
     local tempDetailModel = BuildDataStack.DetailModelStack[insId]
-    if tempDetailModel or tempDetailModel[modelMethord] then
+    if tempDetailModel ~= nil and tempDetailModel[modelMethord] ~= nil then
         callBackMethord(tempDetailModel[modelMethord](tempDetailModel,...))
     end
 end
@@ -364,11 +426,11 @@ end
 --2：ontroller中self方法名
 function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
     --参数验证
-    if not UIPage.static.m_allPages or  not insId or not modelMethord  then
+    if UIPage.static.m_allPages == nil or insId == nil or modelMethord == nil then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.m_data and tempController.m_data.insId == insId  then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -382,11 +444,11 @@ end
 --4：... Controller中方法参数
 function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethord, ...)
     --参数验证
-    if not UIPage.static.m_allPages or  not insId or not ctrlName or not modelMethord or not callBackMethord then
+    if UIPage.static.m_allPages == nil or insId == nil or ctrlName == nil or modelMethord == nil or callBackMethord == nil then
         return
     end
     local tempController = UIPage.static.m_allPages[ctrlName]
-    if (tempController or tempController[modelMethord]) and tempController.insId == insId then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.insId == insId then
         callBackMethord(tempController[modelMethord](tempController,...))
     end
 end
@@ -417,7 +479,8 @@ end
 --protoNumStr:  protobuf协议号
 --protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
-function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord)
+--InstantiateSelf: 仅针对非建筑详情Model使用，传入对应的ID值
+function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf)
     if not ModelNetMsgStack[protoNameStr] then
         ModelNetMsgStack[protoNameStr] = {}
     end
@@ -426,34 +489,59 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         --注册分发函数
         CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
-            if protoData then
-                local protoID = nil
+            local protoID = nil
+            if protoData ~= nil then
                 if (protoData.info and protoData.info.id )then
                     protoID = protoData.info.id
                 elseif protoData.buildingId then
                     protoID = protoData.buildingId
                 end
-                if protoID then
-                    for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
-                        if key == protoID then
+            end
+            if protoID ~= nil then--服务器返回的数据有唯一ID
+                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                    if key == protoID then
+                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
                             if BuildDataStack.DetailModelStack[protoID] then
-                                call(BuildDataStack.DetailModelStack[protoID],protoData)
+                                func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
-                                call(protoData)
+                                func(protoData)
                             end
-                            return
+                        end
+                        return
+                    end
+                end
+            else--服务器返回的数据没有唯一ID
+                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                        if funcTable.self ~= nil then
+                            funcTable.func(funcTable.self,protoData)
+                        else
+                            funcTable.func(protoData)
                         end
                     end
-                else
-                    ct.log("System","服务器返回的建筑详情中数据没有唯一ID")
                 end
-            else
-                ct.log("System","解析服务器返回的建筑详情中数据失败")
             end
             ct.log("System","没有找到对应的建筑详情Model类的回调函数")
         end)
     end
-    ModelNetMsgStack[protoNameStr][protoNumStr][insId] = callBackMethord
+    --依据有无唯一ID，存储回调方法
+    if  insId ~= nil then --若有唯一ID，则将方法写到唯一ID对应的table中
+        if ModelNetMsgStack[protoNameStr][protoNumStr][insId] == nil then
+            ModelNetMsgStack[protoNameStr][protoNumStr][insId] = {}
+        end
+        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr][insId],callBackMethord)
+    else--若无唯一ID，则将方法写到"NoParameters"对应的table中
+        if  ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] == nil then
+            ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] = {}
+        end
+        local funcTable = {}
+        funcTable.func = callBackMethord
+        if InstantiateSelf ~= nil then
+            funcTable.self = InstantiateSelf
+        end
+        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"],funcTable)
+
+    end
 end
 
 --移除 消息回调
@@ -469,6 +557,37 @@ function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaSt
 end
 
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
+local updataTimer = 0
+
+--计算自己租的地中有没有到期
+local function CalculateTheExpirationDateOfMyRentGroundInfo()
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        local currentTime = TimeSynchronized.GetTheCurrentServerTime()
+        if currentTime ~= nil then
+            for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+                if value.rent.rentDueTime == nil  or value.rent.rentDueTime <= currentTime  then
+                    table.remove(PersonDataStack.m_rentGroundInfos,key)
+                end
+            end
+        end
+    end
+end
+
+local function DataManager_Update()
+    updataTimer = updataTimer + UnityEngine.Time.deltaTime
+    if updataTimer > 1 then
+        CalculateTheExpirationDateOfMyRentGroundInfo()
+        updataTimer = 0
+    end
+end
+
+--登录成功，游戏开始
+local function LoginSuccessAndGameStart()
+    --初始化中心建筑
+    TerrainManager.CreateCenterBuilding()
+    --打开循环判断自己的租地是否到期
+    UpdateBeat:Add(DataManager_Update, this)
+end
 
 --土地集合
 --参数： tempData  ===》    gs.Role
@@ -480,15 +599,44 @@ function  DataManager.InitPersonDatas(tempData)
         ct.log("System","登录成功RoleLogin返回信息为空")
         return
     end
+    --初始化建筑评分
+    if tempData.buildingBrands then
+        PersonDataStack.m_buildingBrands=tempData.buildingBrands
+    else
+        PersonDataStack.m_buildingBrands=0
+    end
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
     PersonDataStack.m_groundInfos = tempData.ground
+    --初始化自己所租赁地块集合
+    --PersonDataStack.m_rentGroundInfos = tempData.rentGround
+    if tempData.rentGround ~= nil then
+        for i, groundInfoData in pairs(tempData.rentGround) do
+            DataManager.AddMyRentGroundInfo(groundInfoData)
+        end
+    end
+
     --获取自己所有的建筑详情
     PersonDataStack.m_buysBuilding = tempData.buys or {}
     --初始化自己中心仓库的建筑ID
-    PersonDataStack.m_bagId = tempData.bagIds
-
+    PersonDataStack.m_bagId = tempData.bagId
+    --初始化自己中心仓库的数据
+    if tempData.bag ~= nil then
+        local inHand = tempData.bag.inHand
+        PersonDataStack.m_inHand = ct.deepCopy( inHand )
+    end
+    PersonDataStack.m_bag = tempData.bag
+    --初始化自己的moneys
+    PersonDataStack.m_money = tempData.money
+    --初始化中心仓库容量
+    PersonDataStack.m_bagCapacity = tempData.bagCapacity
+    --初始化自己的name
+    PersonDataStack.m_name = tempData.name
+    --初始化自己的公司名字
+    PersonDataStack.m_companyName = tempData.companyName
+    --初始化自己的头像ID
+    PersonDataStack.m_faceId = tempData.faceId
     --初始化自己所拥有建筑（购买的土地）
     PersonDataStack.m_buysBuild = tempData.buys
     --初始化自己所拥有建筑（租赁的土地）
@@ -548,7 +696,6 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
     PersonDataStack.socialityManager = SocialityManager:new()
     if tempData.friends then
         for _, value in pairs(tempData.friends) do
@@ -557,14 +704,10 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
-
-
-    ------------------------------------打开相机
-    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
-    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
-
+    LoginSuccessAndGameStart()
 end
+
+
 
 --添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)
@@ -582,9 +725,28 @@ function DataManager.AddMyGroundInfo(groundInfoData)
     table.insert(PersonDataStack.m_groundInfos,groundInfoData)
 end
 
+--添加/修改自己所租赁土地
+function DataManager.AddMyRentGroundInfo(groundInfoData)
+    --检查自己所租赁地块集合有没有该地块
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData .y and groundInfoData.rent ~= nil then
+                table.remove(PersonDataStack.m_rentGroundInfos,key)
+                break
+            end
+        end
+    else
+        PersonDataStack.m_rentGroundInfos = {}
+    end
+    if groundInfoData.rent ~= nil and groundInfoData.rent.rentBeginTs ~= nil and groundInfoData.rent.rentDays ~= nil then
+        groundInfoData.rent.rentDueTime = groundInfoData.rent.rentBeginTs + groundInfoData.rent.rentDays * 24 * 60 * 60 * 1000
+    end
+    table.insert(PersonDataStack.m_rentGroundInfos,groundInfoData)
+end
+
 --删除自己所拥有土地
 function DataManager.RemoveMyGroundInfo(groundInfoData)
-    if PersonDataStack.m_groundInfos then
+    if PersonDataStack.m_groundInfos ~= nil then
         for key, value in ipairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
                 table.remove(PersonDataStack.m_groundInfos,key)
@@ -593,12 +755,66 @@ function DataManager.RemoveMyGroundInfo(groundInfoData)
     end
 end
 
+--删除自己所租赁土地
+--暂时没有用到
+function DataManager.RemoveMyRentGroundInfo(groundInfoData)
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == groundInfoData.x and value.y == groundInfoData .y then
+                table.remove(PersonDataStack.m_rentGroundInfos,key)
+            end
+        end
+    end
+end
+
+--获取自已的所有的建筑评分
+function DataManager.GetMyBuildingBrands()
+    return PersonDataStack.m_buildingBrands
+end
+
+--获取自已的Id
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
 end
 
+--获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+--获取中心仓库信息
+function DataManager.GetBagInfo()
+    return PersonDataStack.m_inHand
+end
+
+--获取中心仓库容量
+function DataManager.GetBagCapacity()
+    return PersonDataStack.m_bagCapacity
+end
+
+--获取自己的money
+function DataManager.GetMoney()
+    return PersonDataStack.m_money
+end
+
+--刷新自己的money
+function DataManager.SetMoney(money)
+    PersonDataStack.m_money = money
+end
+
+--获取自己的名字
+function DataManager.GetName()
+    return PersonDataStack.m_name
+end
+
+--获取自己的公司名字
+function DataManager.GetCompanyName()
+    return PersonDataStack.m_companyName
+end
+
+--获取头像ID
+function DataManager.GetFaceId()
+    return  PersonDataStack.m_faceId
 end
 
 function DataManager.GetMyPersonData()
@@ -644,6 +860,11 @@ end
 --获取主页需要的显示信息
 function DataManager.GetMyPersonalHomepageInfo()
     return PersonDataStack.m_roleInfo
+end
+
+--设置主页需要的显示信息--个人描述
+function DataManager.SetMyPersonalHomepageDesInfo(des)
+    PersonDataStack.m_roleInfo.des = des
 end
 
 --刷新自己所拥有商品科技等级
@@ -722,6 +943,36 @@ function DataManager.SetMyReadChatInfo(index, id)
     PersonDataStack.socialityManager:SetMyReadChatInfo(index, id)
 end
 
+-- 本地保存聊天消息
+function DataManager.SaveFriendsChat()
+    PersonDataStack.socialityManager:SaveFriendsChat()
+end
+
+-- 读取保存聊天消息
+function DataManager.ReadFriendsChat()
+    PersonDataStack.socialityManager:ReadFriendsChat()
+end
+
+-- 读取保存聊天消息
+function DataManager.GetUnread()
+    return PersonDataStack.socialityManager:GetUnread()
+end
+
+-- 清空聊天消息
+function DataManager.SetStrangersInfo(id)
+    return PersonDataStack.socialityManager:SetStrangersInfo(id)
+end
+
+-- 获得好友所有聊天纪录
+function DataManager.GetChatRecords()
+    return PersonDataStack.socialityManager:GetChatRecords()
+end
+
+-- 删除好友所有聊天纪录
+function DataManager.SetChatRecords(index)
+    return PersonDataStack.socialityManager:SetChatRecords(index)
+end
+
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding
@@ -748,13 +999,24 @@ function DataManager.RemoveMyBuildingDetailByBuildID(tempbuildID)
     return false
 end
 
-
---判断该地块是不是自己的
+--判断该地块是不是自己可以用的（包含自己拥有和租的）
 function DataManager.IsOwnerGround(tempPos)
     local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
-    for key, value in pairs(PersonDataStack.m_groundInfos) do
-        if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
-            return true
+    --在自己拥有的的地中判断
+    if PersonDataStack.m_groundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_groundInfos) do
+            --一定要判断自己的地没有租出去
+            if value.x == tempGridIndex.x and value.y == tempGridIndex.y and value.rent == nil  then
+                return true
+            end
+        end
+    end
+    --在自己租的地中判断
+    if PersonDataStack.m_rentGroundInfos ~= nil then
+        for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
+            if value.x == tempGridIndex.x and value.y == tempGridIndex.y then
+                return true
+            end
         end
     end
     return false
@@ -812,6 +1074,10 @@ local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
     --Event.AddListener("c_GroundInfoChange", DataManager.InitPersonDatas)
    -- Event.AddListener("m_QueryPlayerInfo", this.m_QueryPlayerInfo)
+   -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
+    Event.AddListener("c_AddBagInfo",DataManager.c_AddBagInfo)
+    Event.AddListener("c_DelBagInfo",DataManager.c_DelBagInfo)
+    Event.AddListener("c_DelBagItem",DataManager.c_DelBagItem)
 end
 
 --注册所有网络消息回调
@@ -831,6 +1097,8 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),DataManager.n_DeleteBlacklist)
+
 end
 
 --清除所有消息回调
@@ -848,11 +1116,9 @@ function DataManager.Init()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
-    ----研究所Model
-    --SystemDatas.LaboratoryModel  = LaboratoryModel.New()
-    --if SystemDatas.LaboratoryModel ~= nil then
-    --    SystemDatas.LaboratoryModel:Awake()
-    --end
+    ------------------------------------打开相机
+    local cameraCenter = UnityEngine.GameObject.New("CameraTool")
+    local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
 end
 
 function DataManager.Close()
@@ -909,7 +1175,11 @@ function DataManager.n_OnReceiveUnitRemove(stream)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
         if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
             BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
-            DataManager.RefreshWaysByCollectionID(tempCollectionID)
+            --TODO：计算在当前AOI所有地块中 需要刷新的地块
+            --刷新需要刷新的地块
+            for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+                DataManager.RefreshWaysByCollectionID(value)
+            end
         end
     end
 end
@@ -922,6 +1192,10 @@ function DataManager.n_OnReceiveGroundChange(stream)
             --如果地块所有人是自己的话，写进自己所拥有地块集合
             if nil ~= PersonDataStack.m_owner and value.ownerId  == PersonDataStack.m_owner then
                 DataManager.AddMyGroundInfo(value)
+            end
+            --如果地块足令人是自己的话  写进自己所租赁地块集合
+            if nil ~= PersonDataStack.m_owner and nil ~= value.Rent and value.Rent.renterId  == PersonDataStack.m_owner then
+                DataManager.AddMyRentGroundInfo(value)
             end
             local tempGroundBlockID  = TerrainManager.GridIndexTurnBlockID(value)
             local tempGroundCollectionID  = TerrainManager.BlockIDTurnCollectionID(tempGroundBlockID)
@@ -1048,4 +1322,74 @@ function DataManager.n_OnReceiveDeleteFriend(stream)
     DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     Event.Brocast("c_OnReceiveDeleteFriend", friendsId)
 end
+
+-- 解除屏蔽返回
+function DataManager.n_DeleteBlacklist(stream)
+    local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_DeleteBlacklist: stream == nil")
+    DataManager.SetMyBlacklist({ id = friendsId.id })
+    Event.Brocast("c_DeleteBlacklist", friendsId)
+end
 ----------
+
+--增加中心仓库物品
+function DataManager.c_AddBagInfo(itemId,n)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    local newInHand = false
+    for i, v in ipairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            v.n = v.n + n
+            newInHand = false
+            break
+        else
+            newInHand = true
+        end
+    end
+    if newInHand then
+        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId},n = n}
+    end
+end
+
+--减少中心仓库物品
+function DataManager.c_DelBagInfo(itemId,n)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    local newInHand = false
+        for i, v in pairs(PersonDataStack.m_inHand) do
+            if v.key.id == itemId then
+                if v.n > n then
+                    v.n = v.n - n
+                    newInHand = false
+                elseif v.n == n then
+                    table.remove(PersonDataStack.m_inHand,i)
+                    newInHand = true
+                end
+            end
+        end
+end
+
+--删除中心仓库物品
+function DataManager.c_DelBagItem(itemId)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    for i, v in pairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            table.remove(PersonDataStack.m_inHand,i)
+        end
+    end
+end
+
+--获取中心仓库物品数量
+function DataManager.GetBagNum()
+    local n = 0
+    if PersonDataStack.m_inHand == nil then
+        return n
+    end
+    for i, v in pairs(PersonDataStack.m_inHand) do
+        n = n + v.n
+    end
+    return n
+end

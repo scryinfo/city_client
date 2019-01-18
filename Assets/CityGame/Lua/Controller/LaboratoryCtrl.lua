@@ -10,7 +10,7 @@ function LaboratoryCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LaboratoryCtrl:bundleName()
-    return "LaboratoryPanel"
+    return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
 function LaboratoryCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
@@ -21,6 +21,7 @@ function LaboratoryCtrl:Awake(go)
     self.gameObject = go
     self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
+    self.laboratoryBehaviour:AddClick(LaboratoryPanel.changeNameBtn.gameObject, self._changeName, self)
 
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.centerBtn.gameObject, self._centerBtnFunc, self)
     self.laboratoryBehaviour:AddClick(LaboratoryPanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
@@ -28,10 +29,6 @@ end
 function LaboratoryCtrl:Refresh()
     --self:_initData()
     this:_initData()
-end
-function LaboratoryCtrl:Hide()
-    self.gameObject:SetActive(false)
-    self.isActived = false
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -49,12 +46,13 @@ end
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
     else
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.one
+        LaboratoryPanel.stopRootTran.localScale = Vector3.one
     end
 
     self.hasOpened = true
+    LaboratoryPanel.nameText.text = info.name or "SRCY CITY"
     LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
     self.m_data.ownerId = info.ownerId
@@ -65,6 +63,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
     if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         LaboratoryPanel.changeNameBtn.localScale = Vector3.one
@@ -84,9 +83,7 @@ function LaboratoryCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        --ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
-
-        ---临时代码，直接改变名字
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeBuildingName', ins.m_data.insId, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -115,6 +112,8 @@ end
 --点击开业按钮方法
 function LaboratoryCtrl:_openBuildingBtnFunc(ins)
     if ins.m_data then
-        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, function()
+            DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
+        end)
     end
 end

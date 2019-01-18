@@ -16,28 +16,33 @@ end
 
 --初始化面板--
 function GameMainInterfacePanel.InitPanel()
-    this.usernameText = transform:Find("LeftUpPanel/UserNameBG/UserName").gameObject;
-    this.monetText = transform:Find("LeftUpPanel/MoneyBG/Money").gameObject
-    this.earningText = transform:Find("LeftUpPanel/EarningBG/Earning").gameObject--收益--
 
-    this.noticeButton = transform:Find("LeftDownPanel/NoticeButton").gameObject;
-    this.noticeItem = transform:Find("LeftDownPanel/NoticeButton/noticeItem").gameObject;
-    this.friendsButton = transform:Find("LeftDownPanel/FriendsButton").gameObject --好友
-    this.friendsNotice = transform:Find("LeftDownPanel/FriendsButton/NoticeItem").gameObject --好友红点提示
-    this.setButton = transform:Find("LeftDownPanel/SetButton").gameObject;
+    this.head = transform:Find("LeftUpPanel/head").gameObject --头像
+    this.headItem = transform:Find("LeftUpPanel/head/headItem"):GetComponent("Image") --头像
+    this.name = transform:Find("LeftUpPanel/name"):GetComponent("Text");
+    this.male = transform:Find("LeftUpPanel/name/male");
+    this.woman = transform:Find("LeftUpPanel/name/woman");
+    this.money = transform:Find("LeftUpPanel/gold/money"):GetComponent("Text");
 
-    this.buildButton = transform:Find("RightDownPanel/BuildButton").gameObject;--建筑--
+    this.noticeButton = transform:Find("NoticeButton").gameObject;
+    this.noticeItem = transform:Find("NoticeButton/noticeItem"); --通知红点
+    this.friendsButton = transform:Find("FriendsButton").gameObject --好友
+    this.friendsNotice = transform:Find("FriendsButton/NoticeItem").gameObject --好友红点提示
+    this.setButton = transform:Find("SetButton").gameObject;
 
-    this.bonusPoolText = transform:Find("RightUpPanel/BonusPool/BonusPoolText").gameObject;--奖金池--
-    this.messageText = transform:Find("RightUpPanel/Message/MessageText").gameObject;--信息--
-    this.worldChatPanel = transform:Find("RightUpPanel/WorldChatPanel").gameObject;--世界聊天--
-    this.worldChatContent = transform:Find("RightUpPanel/WorldChatPanel/Content")--世界内容--
-    this.worldChatNoticeItem = transform:Find("RightUpPanel/WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
+    this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
+    this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
+    this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
+    this.weather = transform:Find("Info/weather"):GetComponent("Image");   --天气
 
-    this.exchangeButton = transform:Find("DownCreatePanel/ExchangeButton").gameObject;--交易所--
-    this.houseButton = transform:Find("DownCreatePanel/HouseButton").gameObject;--住宅--
-    this.rawMaterialFactory = transform:Find("DownCreatePanel/RawMaterialFactoryButton").gameObject;--原料厂--
-    this.sourceMill = transform:Find("DownCreatePanel/SourceMillButton").gameObject;--加工厂--
+    this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
+    this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--
+
+    this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
+    this.worldChatContent = transform:Find("WorldChatPanel/Content")--世界内容--
+    this.worldChatNoticeItem = transform:Find("WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
+    
     this.advertisFacilitie = transform:Find("DownCreatePanel/AdvertisingFacilitie").gameObject;--广告设施--
-    this.centerWareHouse = transform:Find("DownCreatePanel/CnterWareHouseButton").gameObject; --中心仓库--
+    this.guideBool = transform:Find("GuideBoolButton").gameObject; --指南书--
+    this.centerBuilding = transform:Find("CenterBuildingButton").gameObject; --中心建筑
 end

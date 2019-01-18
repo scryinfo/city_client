@@ -5,21 +5,21 @@ local mainCameraCenterTransforms = nil  --相机Root点的TransForm
 local inputTools = nil                  --接受输入脚本实例
 local mCameraState = nil                --相机脚本
 
-local m_CameraScaleValueMin = 7     --缩放最近距离
-local m_CameraScaleValueMax = 20    --缩放最远距离
-local m_ScaleFactor = 100;          --缩放速度
+local m_CameraScaleValueMin = 5     --缩放最近距离
+local m_CameraScaleValueMax = 10    --缩放最远距离
 
 local m_CameraRootXMin = 0      --相机root节点X轴移动范围最小值
 local m_CameraRootXMax = 1000   --相机root节点X轴移动范围最大值
 local m_CameraRootZMin = 0      --相机root节点Z轴移动范围最小值
 local m_CameraRootZMax = 1000   --相机root节点Z轴移动范围最大值
 
-local m_IntoDurationtime = 0.6          --相机切到UI层所需时间
-local m_OutDurationtime = 0.8           --相机切出UI层所需时间
+local m_IntoDurationtime = 0.4          --相机切到UI层所需时间
+local m_OutDurationtime = 0.6           --相机切出UI层所需时间
 
 local NormalStateCameraPos = nil       --记录正常状态相机的位置
 local NormalStateCameraScalePos = nil  --记录正常状态相机的远近(即相机真正的坐标位置)
 
+local ScaleRadius = nil  --相机缩放的宽高比（ScaleRadius * x = y ）
 
 function CameraMove:Start(gameObject)
     if nil ~= mObj then
@@ -46,19 +46,41 @@ function CameraMove:Start(gameObject)
     self.touchBeginPosition = nil
     self.touchBeginBlockID = nil
     self:InitParameters()
+    --初始化相机位置
+    CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
 end
 
 --初始化相机参数
 function CameraMove:InitParameters()
-    m_CameraScaleValueMin = 7
-    m_CameraScaleValueMax = 20
-    m_ScaleFactor = 100;
-    m_CameraRootXMin = 0
-    m_CameraRootXMax = 1000
-    m_CameraRootZMin = 0
-    m_CameraRootZMax = 1000
-    m_IntoDurationtime = 0.6
-    m_OutDurationtime = 0.8
+    local cameraAttribute =  TerrainConfig.TerrainAttribute
+    if cameraAttribute ~= nil then
+        if cameraAttribute.CameraScaleValueMin ~= nil then
+            m_CameraScaleValueMin = cameraAttribute.CameraScaleValueMin
+        end
+        if cameraAttribute.CameraScaleValueMax ~= nil then
+            m_CameraScaleValueMax = cameraAttribute.CameraScaleValueMax
+        end
+        if cameraAttribute.CameraRootXMin ~= nil then
+            m_CameraRootXMin = cameraAttribute.CameraRootXMin
+        end
+        if cameraAttribute.CameraRootXMax ~= nil then
+            m_CameraRootXMax = cameraAttribute.CameraRootXMax
+        end
+        if cameraAttribute.CameraRootZMin ~= nil then
+            m_CameraRootZMin = cameraAttribute.CameraRootZMin
+        end
+        if cameraAttribute.CameraRootZMax ~= nil then
+            m_CameraRootZMax = cameraAttribute.CameraRootZMax
+        end
+        if cameraAttribute.CameraIntoDurationtime ~= nil then
+            m_IntoDurationtime = cameraAttribute.CameraIntoDurationtime
+        end
+        if cameraAttribute.CameraOutDurationtime ~= nil then
+            m_OutDurationtime = cameraAttribute.CameraOutDurationtime
+        end
+    end
+    --根号2
+    ScaleRadius = math.sqrt(2)
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil
 end
@@ -75,11 +97,15 @@ function CameraMove:LateUpdate(gameObject)
         --点击在UI上
         if self.IsTouchUI then
             self.IsTouchUI = false
+            --cycle需要的每帧调用接口
+            Event.Brocast("c_UIBubbleLateUpdate")
             return
         end
     end
     --如果是点击到UI状态，则不做接下来的判定
     if self.IsTouchUI then
+        --cycle需要的每帧调用接口
+        Event.Brocast("c_UIBubbleLateUpdate")
         return
     end
     --如果检测到按下
@@ -103,6 +129,7 @@ function CameraMove:LateUpdate(gameObject)
     elseif mCameraState == TouchStateType.ConstructState then
         if inputTools:GetIsZoom() then           --如果是缩放状态
             self:ScaleCamera()
+            TerrainManager.MoveTempConstructObj()
         elseif inputTools:GetIsDragging() then  --如果是拖拽状态
             if nil ~= DataManager.TempDatas.constructPosID and  DataManager.IsInTheRange(DataManager.TempDatas.constructPosID,PlayerBuildingBaseData[DataManager.TempDatas.constructID]["x"],self.touchBeginBlockID) then
                 self:MoveConstructObj()
@@ -115,16 +142,15 @@ function CameraMove:LateUpdate(gameObject)
             self:SmoothCameraView()
         end
     elseif mCameraState == TouchStateType.UIState then
+        --cycle需要的每帧调用接口
+        Event.Brocast("c_UIBubbleLateUpdate")
         return
     end
-    if inputTools:GetIsPoint() then
-        CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
-    end
+    --cycle需要的每帧调用接口
+    Event.Brocast("c_UIBubbleLateUpdate")
 end
 
-
-
---将距离远近值转化为相机Scale的Pos位置
+--将距离远近值转化为相机Scale的Pos位置【过时】
 local function ValueTurnCameraScalePos(value)
     if value ~= nil then
         return Vector3.New(value,value,-value)
@@ -132,29 +158,43 @@ local function ValueTurnCameraScalePos(value)
     return nil
 end
 
+--将距离远近值转化为相机Scale的Pos位置
+--通过高度获取相机远近的位置
+--tempHeight：Y值高度
+local function GetCameraScalePosByHeight(tempHeight)
+    if ScaleRadius == nil then
+        ScaleRadius = math.sqrt(2)
+    end
+    local tempXZ = tempHeight / ScaleRadius
+    return Vector3.New(tempXZ , tempHeight ,-tempXZ)
+end
+
 --缩放相机距离远近
 function CameraMove:ScaleCamera()
-    local tempValue =  inputTools:GetZoomValue() * UnityEngine.Time.deltaTime * m_ScaleFactor
-    local nowScaleValue = mainCameraTransform.localPosition.x - tempValue
+    local tempValue =  inputTools:GetZoomValue() * UnityEngine.Time.deltaTime
+    local nowScaleValue = mainCameraTransform.localPosition.y - tempValue
     local targetScalePos = nil
     if nowScaleValue < m_CameraScaleValueMin then
-        targetScalePos  = ValueTurnCameraScalePos(m_CameraScaleValueMin)
+        targetScalePos  = GetCameraScalePosByHeight(m_CameraScaleValueMin)
     elseif nowScaleValue > m_CameraScaleValueMax then
-        targetScalePos  = ValueTurnCameraScalePos(m_CameraScaleValueMax)
+        targetScalePos  = GetCameraScalePosByHeight(m_CameraScaleValueMax)
     else
-        targetScalePos  = ValueTurnCameraScalePos(nowScaleValue)
+        targetScalePos  = GetCameraScalePosByHeight(nowScaleValue)
     end
     if  targetScalePos ~= nil then
         mainCameraTransform.localPosition = targetScalePos
     end
 end
 
-
 --点击到建筑[over]
 function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
+        --判断是否是中心建筑 --->是则打开
+        if TerrainManager.IsTouchCentralBuilding(blockID) then
+            ct.OpenCtrl("CenterBuildingCtrl")
+        end
         --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
         if tempNodeID ~= nil and tempNodeID ~= -1 then
@@ -165,6 +205,13 @@ function CameraMove:TouchBuild()
                 return
             end
         end
+        --判断是否点击在拍卖中的地块上
+        local click, index = GroundAuctionModel.getIsClickAucGround(blockID)
+        if click then
+            UIBubbleCtrl._openGroundAucCtrl(index)
+            return
+        end
+
         --判断是否是地块 --->是则打开
         if DataManager.GetGroundDataByID(blockID) ~= nil then
             ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockID})
@@ -179,14 +226,14 @@ function CameraMove:MoveConstructObj()
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
         if blockID ~= self.touchBeginBlockID then
             local targetID= DataManager.TempDatas.constructPosID + blockID - self.touchBeginBlockID
-            DataManager.TempDatas.constructObj.transform.position = TerrainManager.BlockIDTurnPosition(targetID)
+            local targetPos = TerrainManager.BlockIDTurnPosition(targetID)
+            targetPos.y = targetPos.y + 0.01
+            DataManager.TempDatas.constructObj.transform.position = targetPos
             DataManager.TempDatas.constructPosID = targetID
             self.touchBeginBlockID = blockID
         end
     end
 end
-
-
 
 --拖动时更新相机位置
 function CameraMove:UpdateMove()
@@ -287,8 +334,6 @@ function CameraMove.IsClickDownOverUI()
     return false
 end
 
-
-
 --移动放大到某个指定建筑
 function CameraMove.MoveIntoUILayer(targetID)
     --相机状态切换至UIState
@@ -301,7 +346,7 @@ function CameraMove.MoveIntoUILayer(targetID)
     local tempBuildModel =  DataManager.GetBaseBuildDataByID(DataManager.GetBlockDataByID(targetID))
     local OffsetPos = Vector3.zero
     local buildSize = 2
-    local tempBuildScalePos = Vector3.New(5,5,-5)
+    local tempBuildScalePos = Vector3.New(5,7.07,-5)
     if tempBuildModel and tempBuildModel.Data and tempBuildModel.Data.buildingID then
         local tempBuildType = tempBuildModel.Data.buildingID
         if PlayerBuildingBaseData[tempBuildType].UICenterPos ~= nil then
@@ -311,10 +356,9 @@ function CameraMove.MoveIntoUILayer(targetID)
             buildSize = PlayerBuildingBaseData[tempBuildType].x + 1
         end
         if PlayerBuildingBaseData[tempBuildType].ScalePos ~= nil then
-            tempBuildScalePos =  Vector3.New( PlayerBuildingBaseData[tempBuildType]["ScalePos"][1],PlayerBuildingBaseData[tempBuildType]["ScalePos"][2],PlayerBuildingBaseData[tempBuildType]["ScalePos"][3])
+            tempBuildScalePos =GetCameraScalePosByHeight(PlayerBuildingBaseData[tempBuildType]["ScalePos"][1])
         end
     end
-
     --
     local tempPos = TerrainManager.BlockIDTurnPosition(targetID) + OffsetPos --偏移量
     mainCameraCenterTransforms:DOMove(tempPos,m_IntoDurationtime)
@@ -340,6 +384,17 @@ function CameraMove.MoveOutUILayer()
     FOWManager.BackToMaxFowRange()
     NormalStateCameraPos = nil
     NormalStateCameraScalePos = nil
+end
+
+function CameraMove.MoveCameraToPos(targetPos)
+    mainCameraCenterTransforms.position = targetPos
+    --调用地块刷新
+    Event.Brocast("CameraMoveTo", targetPos)
+end
+
+function CameraMove.MoveCameraToPosSmooth(targetPos,smoothTime)
+    mainCameraCenterTransforms:DOMove(targetPos,smoothTime)
+    Event.Brocast("CameraMoveTo", targetPos)
 end
 
 return CameraMove

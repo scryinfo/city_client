@@ -3,6 +3,7 @@
 --- Created by Tina.
 --- DateTime: 2018/12/1 17:00
 ---
+
 CommonDialogCtrl = class('CommonDialogCtrl',UIPage)
 UIPage:ResgisterOpen(CommonDialogCtrl) --注册打开的方法
 
@@ -11,7 +12,7 @@ function CommonDialogCtrl:initialize()
 end
 
 function CommonDialogCtrl:bundleName()
-    return "Common/CommonDialogPanel"
+    return "Assets/CityGame/Resources/View/Common/CommonDialogPanel.prefab"
 end
 
 function CommonDialogCtrl:OnCreate(obj )
@@ -39,7 +40,7 @@ end
 function CommonDialogCtrl:Close()
 end
 
----寻找组件
+--寻找组件
 function CommonDialogCtrl:_getComponent(go)
     self.titleText = go.transform:Find("Root/TitleText").gameObject:GetComponent("Text")
     self.closeBtn = go.transform:Find("Root/CloseBtn").gameObject
@@ -47,13 +48,16 @@ function CommonDialogCtrl:_getComponent(go)
     self.input = go.transform:Find("Root/Input").gameObject:GetComponent("InputField")
     self.tipsText = go.transform:Find("Root/TipsText"):GetComponent("Text")
 end
----初始化
+--初始化
 function CommonDialogCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
+    if self.m_data.inputInfo then
+        self.input.text = self.m_data.inputInfo
+    end
 end
 
----点击确认按钮
+--点击确认按钮
 function CommonDialogCtrl:_onClickConfim(ins)
     ---在这的self 是传进来的btn组件，table才是实例
     local inputValue = ins.input.text
@@ -68,7 +72,7 @@ function CommonDialogCtrl:_onClickConfim(ins)
     ins:_onClickClose(ins)
 end
 
----点击关闭按钮
+--点击关闭按钮
 function CommonDialogCtrl:_onClickClose(ins)
     --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
     ins.input.text = ""

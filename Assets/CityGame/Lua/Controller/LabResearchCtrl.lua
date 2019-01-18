@@ -19,7 +19,7 @@ function LabResearchCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabResearchCtrl:bundleName()
-    return "LabResearchPanel"
+    return "Assets/CityGame/Resources/View/LabResearchPanel.prefab"
 end
 function LabResearchCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
@@ -43,6 +43,11 @@ function LabResearchCtrl:Awake(go)
 
             self.m_data.bulbState = LabInventionBulbItemState.Empty
             LabResearchPanel.setBulbState(self.m_data.bulbState)
+            if self.enough then
+                self:_setResearchBtnState(LabResearchBtnState.EnableClick)
+            else
+                self:_setResearchBtnState(LabResearchBtnState.NotEnough)
+            end
         end
     end)
     UpdateBeat:Add(self._update, self)
@@ -102,7 +107,8 @@ function LabResearchCtrl:_initPanelData()
         LabResearchPanel.showLine(data)
     end, formularItem.materials)
 
-    --LabResearchPanel.iconImg.mainTexture = Good[self.m_data.itemId].img
+    LoadSprite(Good[self.m_data.itemId].img, LabResearchPanel.iconImg,true)
+    LabResearchPanel.iconImg:SetNativeSize()
     LabResearchPanel.itemNameText.text = Good[self.m_data.itemId].name
 
     if not self.m_data.id then    --没有id则为临时添加的线

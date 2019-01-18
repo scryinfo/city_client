@@ -12,10 +12,14 @@ function GameMainInterfaceModel:initialize(insId)
 end
 
 function GameMainInterfaceModel:OnCreate()
+    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
+    Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+
     --网络回调
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
+   -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
 end
 
 function GameMainInterfaceModel:Close()
@@ -39,15 +43,28 @@ end
 
 --服务器回调--
 --获取所有邮件
-function GameMainInterfaceModel.n_OnGetAllMails(stream)
+function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
-    local lMsg = assert(pbl.decode("gs.Mails", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    local a= lMsg
+    Event.Brocast("c_AllMails",lMsg.mail)
 end
 
 --改变员工工资
 function GameMainInterfaceModel.m_ReqHouseSetSalary(self,id, price)
     DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
-
 end
 
+-- 向服务器查询好友信息
+function GameMainInterfaceModel.m_QueryPlayerInfoChat(ins,friendsIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
+end
+
+--停止推送消息
+function GameMainInterfaceModel.m_stopListenBuildingDetailInform(ins,buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "stopListenBuildingDetailInform","gs.Id",{ id = buildingId })
+end
+
+--金币改变回调
+function GameMainInterfaceModel:n_GsExtendBag(lMsg)
+    DataManager.SetMoney(lMsg.money)
+    Event.Brocast("c_ChangeMoney",lMsg.money)
+end

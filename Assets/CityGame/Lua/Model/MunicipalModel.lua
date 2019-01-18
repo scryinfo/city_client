@@ -59,7 +59,7 @@ function MunicipalModel:n_getdetailPublicFacility(lMsg)
         model.manger.isFirst=false
     end
     DataManager.ControllerRpcNoRet(self.insId,"MunicipalCtrl", 'c_receiveParkData',lMsg)
-
+    Event.Brocast("OnClick_backBtn")
 end
 ---添加槽位发包
 function MunicipalModel:m_addSlot(buildingID,minDayToRent,maxDayToRent,rentPreDay)
@@ -124,6 +124,7 @@ end
 function MunicipalModel:n_getBuySlot(stream)
     ---购买槽位成功
     Event.Brocast("SmallPop","Successful adjustment",57)
+
 end
 
 

@@ -13,7 +13,7 @@ end
 
 function FriendslistCtrl:bundleName()
     ct.log("tina_w7_friends", "FriendslistCtrl:bundleName")
-    return "FriendslistPanel"
+    return "Assets/CityGame/Resources/View/FriendslistPanel.prefab"
 end
 
 function FriendslistCtrl:Awake(go)
@@ -194,7 +194,6 @@ end
 --end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)
-    DataManager.SetMyBlacklist({ id = friendsId.id })
     if friendsId.id then
         self:_showBlacklistNum()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)

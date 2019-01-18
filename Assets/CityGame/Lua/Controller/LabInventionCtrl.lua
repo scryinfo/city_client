@@ -11,7 +11,7 @@ function LabInventionCtrl:initialize()
     UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabInventionCtrl:bundleName()
-    return "LabInventionPanel"
+    return "Assets/CityGame/Resources/View/LabInventionPanel.prefab"
 end
 function LabInventionCtrl:OnCreate(obj)
     UIPage.OnCreate(self, obj)
@@ -36,6 +36,11 @@ function LabInventionCtrl:Awake(go)
 
             self.m_data.bulbState = LabInventionBulbItemState.Empty
             LabInventionPanel.setBulbState(self.m_data.bulbState)
+            if self.enough then
+                self:_setInventBtnState(LabResearchBtnState.EnableClick)
+            else
+                self:_setInventBtnState(LabResearchBtnState.NotEnough)
+            end
         end
     end)
     UpdateBeat:Add(self._update, self)
@@ -88,7 +93,8 @@ function LabInventionCtrl:_initPanelData()
         self.enough = true
         LabInventionPanel.goodRootTran.localScale = Vector3.zero
         LabInventionPanel.rawRootTran.localScale = Vector3.one
-        --LabInventionPanel.matIconImg.mainTexture = Good[self.m_data.itemId].img
+        LoadSprite(Material[self.m_data.itemId].img, LabInventionPanel.matIconImg,true)
+        LabInventionPanel.matIconImg:SetNativeSize()
         LabInventionPanel.itemNameText.text = Material[self.m_data.itemId].name
     else
         local formularItem = FormularConfig[1][self.m_data.itemId]
@@ -117,7 +123,8 @@ function LabInventionCtrl:_initPanelData()
             LabInventionPanel.showLine(data)
             LabInventionPanel.goodRootTran.localScale = Vector3.one
             LabInventionPanel.rawRootTran.localScale = Vector3.zero
-            --LabInventionPanel.goodIconImg.mainTexture = Good[self.m_data.itemId].img
+            LoadSprite(Good[self.m_data.itemId].img, LabInventionPanel.goodIconImg,true)
+            LabInventionPanel.goodIconImg:SetNativeSize()
             LabInventionPanel.itemNameText.text = Good[self.m_data.itemId].name
         end, formularItem.materials)
     end

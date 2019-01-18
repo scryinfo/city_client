@@ -1,13 +1,13 @@
 ProcessingCtrl = class('ProcessingCtrl',UIPage)
 UIPage:ResgisterOpen(ProcessingCtrl) --注册打开的方法
-
+local this
 --构建函数
 function ProcessingCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ProcessingCtrl:bundleName()
-    return "ProcessingPanel";
+    return "Assets/CityGame/Resources/View/ProcessingPanel.prefab";
 end
 
 function ProcessingCtrl:OnCreate(obj)
@@ -15,26 +15,38 @@ function ProcessingCtrl:OnCreate(obj)
 end
 
 function ProcessingCtrl:Awake(go)
+    this = self
     self.gameObject = go;
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.processingBehaviour:AddClick(ProcessingPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
-
+    self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    self.processingBehaviour:AddClick(ProcessingPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 end
 function ProcessingCtrl:Refresh()
-    self:initializeData()
+    this:initializeData()
 end
 
 function ProcessingCtrl:initializeData()
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
-    ProcessingPanel.nameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    local companyName = DataManager.GetMyPersonalHomepageInfo()
+    ProcessingPanel.nameText.text = companyName.companyName
+    ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+
+
+    self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
@@ -43,28 +55,51 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
         self.m_data.isOther = false
         ProcessingPanel.changeNameBtn.localScale = Vector3.one
     end
+
+    if self.m_data.info.state=="OPERATE" then
+        ProcessingPanel.stopIconRoot.localScale=Vector3.zero
+    else
+        ProcessingPanel.stopIconRoot.localScale=Vector3.one
+    end
+
+    Event.Brocast("c_GetBuildingInfo",DataInfo.info)
+
     self.m_data.buildingType = BuildingType.ProcessingFactory
     if not self.processingToggleGroup then
         self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
     else
-        --self.processingToggleGroup:updataInfo(self.m_data)
+        self.processingToggleGroup:updateInfo(self.m_data)
     end
+end
+function ProcessingCtrl:OnClick_buildInfo(ins)
+    Event.Brocast("c_openBuildingInfo",ins.m_data.info)
+end
+function ProcessingCtrl:OnClick_prepareOpen(ins)
+    Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 
 --更改名字
-function ProcessingCtrl:OnClick_changeName()
+function ProcessingCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    UIPage:ShowPage(InputDialogPageCtrl, data)
+    data.btnCallBack = function(name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeProcessingName', ins.m_data.insId, name)
+        ins:_updateName(name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
-
+--更改名字成功
+function ProcessingCtrl:_updateName(name)
+    ProcessingPanel.nameText.text = name
+end
 --返回
 function ProcessingCtrl:OnClick_backBtn(ins)
     if ins.processingToggleGroup then
         ins.processingToggleGroup:cleanItems()
     end
+    Event.Brocast("mReqCloseProcessing",ins.buildingId)
     UIPage.ClosePage();
 end
 

@@ -10,7 +10,7 @@ function TransportBoxCtrl:initialize()
 end
 
 function TransportBoxCtrl:bundleName()
-    return "TransportBoxPanel";
+    return "Assets/CityGame/Resources/View/TransportBoxPanel.prefab";
 end
 
 function TransportBoxCtrl:OnCreate(obj)
@@ -23,8 +23,8 @@ end
 
 function TransportBoxCtrl:Refresh()
     transportbox = self.gameObject:GetComponent('LuaBehaviour');
-    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
+    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     if self.m_data == nil then
         return;
     end
@@ -36,13 +36,14 @@ function TransportBoxCtrl:refreshUiInfo()
         TransportBoxPanel.goodsObj.localScale = Vector3.zero
         TransportBoxPanel.transportObj.localScale = Vector3.zero
         TransportBoxPanel.transportsObj.localScale = Vector3.one
-        TransportBoxPanel.transportsMoney.text = "E"..math.floor(self.m_data.freight)..".0000";
+        TransportBoxPanel.transportsMoney.text =  "E"..math.floor(self.m_data.freight)..".0000";
     else
         TransportBoxPanel.goodsObj.localScale = Vector3.one
         TransportBoxPanel.transportObj.localScale = Vector3.one
         TransportBoxPanel.transportsObj.localScale = Vector3.zero
-        TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
         TransportBoxPanel.transportMoney.text = "E"..math.floor(self.m_data.freight)..".0000";
+        TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
+
     end
     --self.buildingId = self.m_data.buildingId;
     --self.buyGood = self.m_data.good;
@@ -53,8 +54,8 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)
-    transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
+    transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     --ins.m_data = nil;
     ins:Hide();
 end

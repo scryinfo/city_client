@@ -16,7 +16,7 @@ local gameObject;
 
 
 function  SignOnCtrl:bundleName()
-    return "SignOnPanel"
+    return "Assets/CityGame/Resources/View/SignOnPanel.prefab"
 end
 
 function SignOnCtrl:initialize()
@@ -28,7 +28,6 @@ function SignOnCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     panel=SignOnPanel
 
-    gameObject = obj;
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.OnClick_confirm,self);
@@ -37,6 +36,7 @@ end
 
 local MunicipalModel
 function SignOnCtrl:Refresh()
+    Event.AddListener("OnClick_backBtn",self.OnClick_backBtn,self)
     local data=self.m_data
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
@@ -44,11 +44,13 @@ function SignOnCtrl:Refresh()
     SignOnPanel.dayilyRentnumText.text=getPriceString("E"..(3*MunicipalModel.SlotList[1].rentPreDay)..".0000",30,30)
     SignOnPanel.totalnumText.text=getPriceString("E"..data.totalPrice..".0000",48,36)
 
+
 end
 
 --返回
 function SignOnCtrl:OnClick_backBtn()
     UIPage.ClosePage();
+    Event.RemoveListener("OnClick_backBtn",self.OnClick_backBtn,self)
 end
 
 function SignOnCtrl:OnClick_confirm(ins)
@@ -60,5 +62,4 @@ function SignOnCtrl:OnClick_confirm(ins)
     end
     DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
 
-    UIPage.ClosePage();
 end

@@ -24,7 +24,7 @@ function ManageAdvertisementPosCtrl:initialize()
 end
 
 function ManageAdvertisementPosCtrl:bundleName()
-    return "ManageAdvertisementPosPanel";
+    return "Assets/CityGame/Resources/View/ManageAdvertisementPosPanel.prefab";
 end
 
 function ManageAdvertisementPosCtrl:OnCreate(obj)
@@ -33,6 +33,8 @@ function ManageAdvertisementPosCtrl:OnCreate(obj)
 end
 local materialBehaviours
 local MunicipalModel
+local manger
+local AllGoods={}
 function ManageAdvertisementPosCtrl:Awake(go)
     self.gameObject = go;
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
@@ -54,9 +56,34 @@ function ManageAdvertisementPosCtrl:Awake(go)
     -----创建广告管理
     self.ItemCreatDeleteMgr=MunicipalModel.manger
 
+    self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.loopScrollDataSource.mProvideData =self.ReleaseData
+    self.loopScrollDataSource.mClearData = self.CollectClearData
+    local temp=DataManager.GetMyGoodLv()
 
+    for i, v in pairs(temp) do
+         local data={}
+        data.mId=i
+        table.insert(AllGoods,data)
+    end
+    ManageAdvertisementPosPanel.loopScroll:ActiveLoopScroll(self.loopScrollDataSource, #AllGoods)
 
     Event.AddListener("c_FirstCreate",ManageAdvertisementPosCtrl.c_FirstCreate,self)
+end
+
+function ManageAdvertisementPosCtrl.ReleaseData(transform, idx)
+    idx = idx + 1
+    local data=Material[AllGoods[idx].mId] or  Good[AllGoods[idx].mId]
+    if not data then
+        --transform.gameObject:SetActive(false)
+        return
+    end
+    local collectItem = GoodsItem:new(data, transform,materialBehaviours,MunicipalModel.manger,idx)
+    MunicipalModel.manger.insList[AllGoods[idx].mId] = collectItem
+end
+
+function ManageAdvertisementPosCtrl.CollectClearData(transform)
+
 end
 
 
@@ -132,15 +159,22 @@ end
 function ManageAdvertisementPosCtrl:Refresh()
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
     self.ItemCreatDeleteMgr=MunicipalModel.manger
-
+    manger=MunicipalModel.manger
     if MunicipalPanel.buildingId~=ManageAdvertisementPosPanel.currentBuildingId then
         local temp=MunicipalPanel.buildingId
         local creatData={model=MunicipalModel,buildingType=BuildingType.MunicipalManage,lMsg=MunicipalPanel.lMsg}
         self.ItemCreatDeleteMgr:creat(materialBehaviours,creatData)
         ManageAdvertisementPosPanel.currentBuildingId=temp
         self.ItemCreatDeleteMgr:_creataddItem();
-        self.ItemCreatDeleteMgr:_creatgoodsItem();
-        self.ItemCreatDeleteMgr:_creatbuildingItem();
+        local buildBtnList , goodsBtnList=self:c_ScreenOutAd()
+
+       -- self.ItemCreatDeleteMgr:_creatgoodsItem();
+
+        for name, data in pairs(buildBtnList) do
+            data.name=name
+            self.ItemCreatDeleteMgr:_creatbuildingItem(data);
+        end
+
     end
 
     --是否打开第一个槽位
@@ -156,6 +190,61 @@ function ManageAdvertisementPosCtrl:Refresh()
         end
     end
 
+
+    --全部复原
+    for mId, buildIns in pairs(manger.insList) do
+            buildIns.prefab.transform:GetComponent("Image").raycastTarget=true;
+    end
+
+
+    --todo:处理已经打的广告的按钮
+    for metaId, ins in pairs(manger.serverMapAdvertisementINSList) do
+        for mId, buildIns in pairs(manger.insList) do
+            if metaId ==mId then
+                buildIns.prefab.transform:GetComponent("Image").raycastTarget=false;
+                break
+            end
+        end
+    end
+
+
+end
+
+function ManageAdvertisementPosCtrl:c_ScreenOutAd()
+    local AllBuildingDetail=DataManager.GetMyAllBuildingDetail()
+    --TODO:甩选出建筑广告
+    local buildBtn={}
+    local goodsBtn={}
+
+    for i, buildingDetails in pairs(AllBuildingDetail) do
+
+        for k, tempInfo in ipairs(buildingDetails) do
+            --可以广告
+            local configData=PlayerBuildingBaseData[tempInfo.info.mId]
+            local typeName=configData.typeName
+            if configData.isAd then
+                local table=buildBtn[typeName]
+                if not table then
+                    buildBtn[typeName]={}
+                    buildBtn[typeName].small=0
+                    buildBtn[typeName].medium=0
+                    buildBtn[typeName].large=0
+                    buildBtn[typeName].mId=configData.AdmId
+                end
+
+                if configData.sizeName=="大型" then
+                    buildBtn[typeName].large=buildBtn[typeName].large+1
+                elseif configData.sizeName=="中型" then
+                    buildBtn[typeName].medium=buildBtn[typeName].medium+1
+                else
+                    buildBtn[typeName].small=buildBtn[typeName].small+1
+                end
+            end
+
+        end
+    end
+
+    return buildBtn ,goodsBtn
 end
 
 function ManageAdvertisementPosCtrl:c_ScreenOut(slotList)
@@ -346,9 +435,7 @@ function ManageAdvertisementPosCtrl:Mastercallback()
     for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
         destroy(v);
     end
-    for i, v in pairs(self.ItemCreatDeleteMgr.selectItemList) do
-        v:GetComponent("Image").raycastTarget=true;
-    end
+
     local buildingId=MunicipalPanel.buildingId
     ---从无到有的打广告
     for i, v in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
@@ -365,8 +452,8 @@ function ManageAdvertisementPosCtrl:Mastercallback()
                 return
             end
         end
-        local data={metaId=v.metaId,count=v.count}
-        self.ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(data)
+        --local data={metaId=v.metaId,count=v.count}
+        self.ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(v)
     end
 
     self.ItemCreatDeleteMgr.AdvertisementDataList={}
@@ -393,6 +480,7 @@ function ManageAdvertisementPosCtrl:Mastercallback()
                     self.ItemCreatDeleteMgr.adList[v.metaId]=nil
                     destroy(self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId].prefab)
                     self.ItemCreatDeleteMgr.outAdvertisementINSList[v.metaId]=nil
+                    self.ItemCreatDeleteMgr.serverMapAdvertisementINSList[v.metaId]=nil
                 end
             end
             end
@@ -424,6 +512,7 @@ function ManageAdvertisementPosCtrl:OtherCallback()
     ----发送请求
     for i, data in pairs(self.ItemCreatDeleteMgr.AdvertisementDataList) do
         data.personId=DataManager.GetMyOwnerID()
+
         self.ItemCreatDeleteMgr:_creatAdvertisementItem(data)
         self.ItemCreatDeleteMgr:_creatoutItem(data)
         for i = 1, data.count do

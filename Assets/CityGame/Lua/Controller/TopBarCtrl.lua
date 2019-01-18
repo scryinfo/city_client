@@ -13,16 +13,14 @@ function TopBarCtrl:initialize()
     UIPage.initialize(self,UIType.Fixed,UIMode.HideOther,UICollider.None)
 end
 function TopBarCtrl:bundleName()
-    return "TopbarPanel"
+    return "Assets/CityGame/Resources/View/TopbarPanel.prefab"
 end
 --function TopBarCtrl.OnCreate(obj ,self)
 --    UIPage.OnCreate(self,obj)
---    gameObject = obj;
 --    topBat = gameObject:GetComponent('LuaBehaviour');
 --end
 function TopBarCtrl:OnCreate(obj )
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     local topBat = self.gameObject:GetComponent('LuaBehaviour')
     topBat:AddClick(TopBarPanel.btn_notice, self.OnClick_notice, self);
     topBat:AddClick(TopBarPanel.btn_back, self.OnClick_back, self);

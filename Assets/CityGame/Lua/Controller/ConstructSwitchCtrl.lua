@@ -13,7 +13,7 @@ function ConstructSwitchCtrl:initialize()
 end
 
 function ConstructSwitchCtrl:bundleName()
-    return "ConstructSwitchPanel"
+    return "Assets/CityGame/Resources/View/ConstructSwitchPanel.prefab"
 end
 
 function ConstructSwitchCtrl:OnCreate(obj)
@@ -23,7 +23,8 @@ function ConstructSwitchCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_confirm.gameObject, function()
         --TODO：确认建造
         ct.log("Allen_wk13","确认建造")
-        ct.OpenCtrl('ConstructDialogPageCtrl')
+        Event.Brocast("m_constructBuildConfirm")
+        Event.Brocast("m_abolishConstructBuild")
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
         --TODO：取消建造
@@ -36,6 +37,7 @@ function ConstructSwitchCtrl:Awake(go)
     self.gameObject = go
     Event.AddListener("m_abolishConstructBuild", self.Hide, self);
     Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self);
+    Event.AddListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self);
 end
 
 function ConstructSwitchCtrl:Refresh()
@@ -57,7 +59,7 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
     tempPos.z =  tempPos.z + PlayerBuildingBaseData[DataManager.TempDatas.constructID]["deviationPos"][3]
     --3D坐标转2D坐标
     local nodePosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPos)
-    ConstructSwitchPanel.BtnNode.anchoredPosition = Vector2.New(nodePosition.x, nodePosition.y)
+    ConstructSwitchPanel.BtnNode.anchoredPosition = ScreenPosTurnActualPos(nodePosition)
     local blockID = TerrainManager.PositionTurnBlockID(DataManager.TempDatas.constructObj.transform.position)
     local tempSize = PlayerBuildingBaseData[DataManager.TempDatas.constructID].x
     if DataManager.IsAllOwnerGround(blockID,tempSize) and DataManager.IsALlEnableChangeGround(blockID,tempSize) then
@@ -70,4 +72,13 @@ end
 function ConstructSwitchCtrl:Hide()
     UIPage.Hide(self)
     TerrainManager.AbolishConstructBuild()
+end
+
+--确认建造建筑
+function ConstructSwitchCtrl:ConstructBuildConfirm()
+    --TODO：向服务器发送建造数据
+    if DataManager.TempDatas.constructID ~= nil then
+        local tempPos = DataManager.TempDatas.constructObj.transform.position
+        PlayerTempModel.m_ReqAddBuilding(DataManager.TempDatas.constructID, math.floor(tempPos.x) ,  math.floor(tempPos.z))
+    end
 end

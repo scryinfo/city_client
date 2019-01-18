@@ -15,12 +15,13 @@ function LoginCtrl:initialize()
 end
 
 function LoginCtrl:bundleName()
-	return "LoginPanel"
+	return "Assets/CityGame/Resources/View/LoginPanel.prefab"
 end
 
 function LoginCtrl:Awake(go)
 	ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
 	self.gameObject = go
+	self.insId = OpenModelInsID.LoginCtrl
 end
 
 function LoginCtrl:Refresh()
@@ -32,7 +33,7 @@ function LoginCtrl:Refresh()
 end
 
 function LoginCtrl:_initData()
-	DataManager.OpenDetailModel(LoginModel,1)
+	DataManager.OpenDetailModel(LoginModel,self.insId)
 end
 --启动事件--
 function LoginCtrl:OnCreate(go)
@@ -50,7 +51,7 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-	self.root=go.transform.root;
+	self.root=self.gameObject.transform.root;
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
 	--启用 c_AddClick_self 单元测试
@@ -141,8 +142,10 @@ end
 
 function LoginCtrl:c_LoginSuccessfully( success )
 	if success then
-		LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
-		self.logined = true
+		if LoginPanel.textStatus:GetComponent('Text') ~= nil then
+			LoginPanel.textStatus:GetComponent('Text').text = "登录成功";
+			self.logined = true
+		end
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "登录失败";
 	end

@@ -11,7 +11,7 @@ function AddLineChooseItemCtrl:initialize()
 end
 
 function AddLineChooseItemCtrl:bundleName()
-    return "AddLineChooseItemPanel"
+    return "Assets/CityGame/Resources/View/AddLineChooseItemPanel.prefab"
 end
 
 function AddLineChooseItemCtrl:OnCreate(obj)
@@ -71,7 +71,7 @@ function AddLineChooseItemCtrl:_initData()
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
             self:Hide()
-            ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
+            ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseRightInventItemId})
         end)
 
         DataManager.DetailModelRpc(buildingId, 'm_GetInventingItem', function (tables)
@@ -152,7 +152,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
                 self.chooseResearchItemId = itemId
             end
         else
-            self.chooseInventItemId = itemId
+            self.chooseRightInventItemId = itemId
         end
     else
         AddLineChooseItemPanel.rightDisableImg.localScale = Vector3.one

@@ -6,7 +6,7 @@ ShelfRateItem.static.TOTAL_H = 455  --整个Item的高度
 ShelfRateItem.static.CONTENT_H = 412  --显示内容的高度
 ShelfRateItem.static.TOP_H = 100  --top条的高度
 ShelfRateItem.static.Goods_PATH = "View/GoodsItem/SmallShelfRateItem"
---主页信息货架，生产线，只做显示，没实际用处
+--主页信息货架，生产线，只作显示
 ct.homePage =
 {
     shelf  = 0,  --货架
@@ -38,13 +38,16 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
         elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
             ct.OpenCtrl("ShelfCtrl",self.shelfData)
+        elseif self.shelfData.buildingType == BuildingType.RetailShop then
+            ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
         end
     end);
+    self.SmallShelfRateItemTab = {}
     self:initializeInfo(self.shelfData.shelf.good)
 
-
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("shelfRefreshInfo",self.shelfRefreshInfo,self)
+    Event.AddListener("delGoodRefreshInfo",self.delGoodRefreshInfo,self)
 end
 
 --获取是第几个点击了
@@ -85,33 +88,56 @@ function ShelfRateItem:initializeInfo(data)
     if not data then
         return;
     end
+
     for i,v in pairs(data) do
         local homePageType = ct.homePage.shelf
-        local prefabData={}
-        prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
-        if not self.SmallShelfRateItemTab then
-            self.SmallShelfRateItemTab = {}
-        end
+        local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
         self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
 end
---刷新数据
+--货架添加时添加
 function ShelfRateItem:shelfRefreshInfo(data)
     if not data then
         return;
     end
-    local homePageType = ct.homePage.shelf
-    local prefabData={}
-    prefabData.prefab = self:_creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-    local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefabData.prefab)
+    local isShow = false
+    if #self.SmallShelfRateItemTab == 0 then
+        isShow = true
+    else
+        for i,v in pairs(self.SmallShelfRateItemTab) do
+            if v.itemId == data.k.id then
+                v.numberText.text = data.n
+                v.moneyText.text = "E"..data.price..".0000"
+                isShow = false
+                break
+            else
+                isShow = true
+            end
+        end
+    end
+    if isShow == true then
+        local homePageType = ct.homePage.shelf
+        local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
+        self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
+    end
 end
---生成预制
-function ShelfRateItem:_creatGoods(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
+--货架下架时删除
+function ShelfRateItem:delGoodRefreshInfo(data)
+    if not data then
+        return
+    end
+    for i,v in pairs(self.SmallShelfRateItemTab) do
+        if v.itemId == data.item.key.id then
+            destroy(v.prefab.gameObject)
+            --table.remove(self.SmallShelfRateItemTa,i)
+        end
+    end
+end
+--刷新数据
+function ShelfRateItem:updateInfo(data)
+    self.shelfData = data
+    self.shelfData.shelf.good = data.shelf.good
+    self:initializeInfo()
 end

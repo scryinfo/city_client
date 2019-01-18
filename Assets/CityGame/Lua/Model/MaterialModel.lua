@@ -8,6 +8,8 @@ function MaterialModel:initialize(insId)
 end
 
 function MaterialModel:OnCreate()
+
+
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
 
@@ -21,12 +23,16 @@ end
 function MaterialModel:m_ReqOpenMaterial(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
-
+--改变建筑名字
+function MaterialModel:m_ReqChangeMaterialName(buildingId,name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+end
 --服务器回调--
 --打开原料厂
 function MaterialModel:n_OnOpenMaterial(stream)
     DataManager.ControllerRpcNoRet(self.insId,"MaterialCtrl", 'refreshMaterialDataInfo',stream)
 end
+
 
 --[[
 local pbl = pbl

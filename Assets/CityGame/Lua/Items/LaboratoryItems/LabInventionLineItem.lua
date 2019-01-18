@@ -59,7 +59,9 @@ function LabInventionLineItem:_initData(data)
     end
     self.data.itemInfo = itemInfo
     self.nameText.text = itemInfo.name
-    --self.iconImg.sprite =
+    LoadSprite(itemInfo.img, self.iconImg,true)
+    self.iconImg:SetNativeSize()
+
     self.staffText.text = tostring(data.workerNum)
     self.formularData = FormularConfig[1][data.itemId]
     self.staffSlider.maxValue = LaboratoryCtrl.static.buildingBaseData.maxWorkerNum

@@ -11,7 +11,7 @@ MessageTooltipCtrl = class('MessageTooltipCtrl',UIPage)
 UIPage:ResgisterOpen(MessageTooltipCtrl) --注册打开的方法
 
 function  MessageTooltipCtrl:bundleName()
-    return "MessageTooltipPanel"
+    return "Assets/CityGame/Resources/View/MessageTooltipPanel.prefab"
 end
 
 function MessageTooltipCtrl:initialize()
@@ -21,7 +21,6 @@ end
 function MessageTooltipCtrl:OnCreate(obj)
     UIPage.OnCreate(self,obj)
     self:_initData();
-    self.gameObject = obj;
     local messageTooltipBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     messageTooltipBehaviour:AddClick(MessageTooltipPanel.okBtn,self.c_OkBtn,self);
     messageTooltipBehaviour:AddClick(MessageTooltipPanel.xBtn,self.c_XBtn,self);

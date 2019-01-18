@@ -11,7 +11,7 @@ function BtnDialogPageCtrl:initialize()
 end
 
 function BtnDialogPageCtrl:bundleName()
-    return "Common/BtnDialogPagePanel"
+    return "Assets/CityGame/Resources/View/Common/BtnDialogPagePanel.prefab"
 end
 
 function BtnDialogPageCtrl:OnCreate(obj)

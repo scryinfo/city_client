@@ -268,7 +268,7 @@ UnitTest.Exec("abel_w9_AddComponent_MonoBehaviour", "test_abel_w9_AddComponent_M
     end
 
     --绑定脚本,使用 LuaHelper.GetType
-    UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+    UnityEngine.GameObject.AddComponent(go, ct.getType(LuaFramework.LuaBehaviour))
     local topBarBehaviour = go:GetComponent('LuaBehaviour')
     if topBarBehaviour == nil then
         ct.log("abel_w9_AddComponent_MonoBehaviour","[abel_w9_AddComponent_MonoBehaviour]  not find resource: "..path)
@@ -358,6 +358,12 @@ UnitTest.Exec("cycle_w12_hosueServer", "test_cycle_w12_hosueServer",  function (
     if HouseModel ~= nil then
         HouseModel:Awake()
     end
+end)
+
+UnitTest.Exec("abel_w18_fmod_modf", "abel_w18_fmod_modf",  function ()
+    local x = math.fmod( 7, 5 )
+    local y,z = math.modf( 7 / 5 )
+    local xx = x
 end)
 
 UnitTest.Exec("abel_w11_uuid", "test_w11_uuid",  function ()
@@ -565,5 +571,11 @@ UnitTest.Exec("cycle_w19_groundTrans", "test_cycle_w19_groundTrans",  function (
         --groundTransModel:Awake()
     end
 end)
+
+UnitTest.Exec("cycle_w22_pieTest", "test_cycle_w22_pieTest",  function ()
+    --local pie = PieChart.New()
+    --pie.CreatePie()
+end)
+
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

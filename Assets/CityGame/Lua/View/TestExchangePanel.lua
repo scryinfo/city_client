@@ -18,4 +18,5 @@ end
 
 function TestExchangePanel.InitPanel()
     this.loopScroll = transform:Find("root/LoopScroll"):GetComponent("ActiveLoopScrollRect");
+    local xxx = 0
 end

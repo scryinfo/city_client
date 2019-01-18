@@ -7,11 +7,14 @@
 SocialityManager = class('SocialityManager')
 
 function SocialityManager:initialize()
+    self.path = CityLuaUtil.getAssetsPath().."/client.data"
     self.m_friends = {}
     self.m_chatInfo = {}
     self.m_chatByType = {{}, {}, {}}
     self.m_friendsApply = {}
     self.m_blacklist = {}
+    self.mySaveRoleCom = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
+    self:ReadFriendsChat()
 end
 
 function SocialityManager:SetMyFriends(friendsData)
@@ -54,7 +57,13 @@ function SocialityManager:SetMyChatInfo(chatData)
                 self.m_chatByType[2][dataId].unreadNum = 1
             end
         end
+        if not self.m_chatByType[2][dataId].unreadChatInfo then
+            self.m_chatByType[2][dataId].unreadChatInfo = {}
+        end
+        table.insert(self.m_chatByType[2][dataId].unreadChatInfo, chatData)
         table.insert(self.m_chatByType[2][dataId].chatInfo, chatData)
+        table.insert(self.mySaveRoleCom.readCommunication, chatData)
+        self:SaveFriendsChat()
     elseif chatData.channel == "UNKNOWN" then
         local dataId
         if DataManager.GetMyOwnerID() == chatData.id then
@@ -80,10 +89,18 @@ function SocialityManager:SetMyChatInfo(chatData)
 end
 
 function SocialityManager:SetMyReadChatInfo(index, id)
-    if not self.m_chatByType[index][id] then
-        return
+    if self.m_chatByType[index][id] then
+        self.m_chatByType[index][id].unreadNum = 0
+        if index == 2 then
+            self.m_chatByType[2][id].unreadChatInfo = {}
+        end
     end
-    self.m_chatByType[index][id].unreadNum = 0
+    if index == 2 then
+        if self.unread and self.unread[id] and self.unread[id][1] then
+            self.unread[id] = nil
+        end
+        self:SaveFriendsChat()
+    end
 end
 
 --1 获取世界消息 2 获取好友消息 3 获取陌生人消息
@@ -131,4 +148,88 @@ function SocialityManager:SetMyBlacklist(tempData)
             end
         end
     end
+end
+
+-- 保存聊天记录
+function SocialityManager:SaveFriendsChat()
+    local tempUnreadCommunication = {}
+    if self.unread then
+        for _, a in pairs(self.unread) do
+            for _, c in ipairs(a) do
+                table.insert(tempUnreadCommunication, c)
+            end
+        end
+    end
+    for _, n in pairs(self.m_chatByType[2]) do
+        if n.unreadChatInfo then
+            for _, b in ipairs(n.unreadChatInfo) do
+                table.insert(tempUnreadCommunication, b)
+            end
+        end
+    end
+    self.mySaveRoleCom.unreadCommunication = tempUnreadCommunication
+    if self.saveRoleCom then
+        if self.idIndex then
+            self.saveRoleCom.allRoleCom[self.idIndex] = self.mySaveRoleCom
+        else
+            table.insert(self.saveRoleCom.allRoleCom, self.mySaveRoleCom)
+            self.idIndex = #self.saveRoleCom.allRoleCom
+        end
+    else
+        self.saveRoleCom = {allRoleCom = {self.mySaveRoleCom}}
+        self.idIndex = 1
+    end
+    local pMsg = assert(pbl.encode("client.AllRoleCommunication", self.saveRoleCom))
+    ct.file_saveString(self.path,pMsg)
+end
+
+-- 上线时读取，聊天记录
+function SocialityManager:ReadFriendsChat()
+    local str = ct.file_readString(self.path)
+    if str ~= nil then
+        self.saveRoleCom = assert(pbl.decode("client.AllRoleCommunication", str), "pbl.decode decode failed")
+        for i, v in ipairs(self.saveRoleCom.allRoleCom) do
+            if v.id == DataManager.GetMyOwnerID() then
+                self.idIndex = i
+                self.mySaveRoleCom = v
+                if not self.mySaveRoleCom.readCommunication then
+                    self.mySaveRoleCom.readCommunication = {}
+                end
+                if v.unreadCommunication then
+                    for _, m in ipairs(v.unreadCommunication) do
+                        local dataId = m.id
+                        if not self.unread then
+                            self.unread = {}
+                        end
+                        if not self.unread[dataId] then
+                            self.unread[dataId] = {}
+                        end
+                        table.insert(self.unread[dataId], m)
+                    end
+                end
+                break
+            end
+        end
+    end
+    --local cRoleCommunication = msg.allRoleCom[1].cRoleCommunication[1].readCommunication[1].name
+end
+
+-- 查找上次未读信息
+function SocialityManager:GetUnread()
+    return self.unread
+end
+
+-- 清空陌生人的聊天消息
+function SocialityManager:SetStrangersInfo(id)
+    self.m_chatByType[3][id] = nil
+end
+
+-- 获得好友所有聊天纪录
+function SocialityManager:GetChatRecords()
+    return self.mySaveRoleCom.readCommunication
+end
+
+-- 删除聊天记录
+function SocialityManager:SetChatRecords(index)
+    table.remove(self.mySaveRoleCom.readCommunication, index)
 end

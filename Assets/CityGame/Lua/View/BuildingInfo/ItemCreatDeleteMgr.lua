@@ -40,6 +40,7 @@ function ItemCreatDeleteMgr:begin()
 
         UpdateBeat:Add(self._updateTime, self);
 end
+
 function ItemCreatDeleteMgr:Remove()
     UpdateBeat:Remove(self._updateTime,self)
 end
@@ -67,7 +68,10 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.outAdvertisementItemList={}
         self.AdvertisementItemList={}
         self.buildItemList={}
+        self.serverMapAdvertisementINSList={}
         self.goodsItemList={}
+        self.insList={}
+
         self.addItemList={}
         self.addItemInSList={}
         self.AddItemID=0
@@ -76,6 +80,8 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
 
     self.behaviour = luabehaviour
     self.buildingData=creatData
+
+
 
     idList={}
     typelist={}
@@ -127,6 +133,8 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         end
     end
 
+
+
     if creatData.buildingType == BuildingType.Municipal then---创建广告
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
@@ -138,6 +146,16 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         self.adList=adList
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
+            ads[1].personName=DataManager.GetName()
             ads[1]["count"]=#ads
             ads[1].personId=personId
             self:_creatAdvertisementItem(ads[1])
@@ -156,15 +174,36 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
         end
         self.adList=adList
         for metaId, ads in pairs(adList) do
+
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
+
+            ads[1].personName=DataManager.GetName()
             ads[1]["count"]=#ads
             ads[1].ads=ads
             self:_creatserverMapAdvertisementItem(ads[1])
-            --self:_creataddItem();
         end
 
     else---创建外部广告
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
+            if PlayerBuildingBaseData[ads[1].metaId] then
+                ads[1].name=PlayerBuildingBaseData[ads[1].metaId].typeName
+                ads[1].path=PlayerBuildingBaseData[ads[1].metaId].AdIma
+            else
+                local data=Material[ads[1].metaId] or  Good[ads[1].metaId]
+                ads[1].name=data.name
+                ads[1].path=data.img
+            end
+
+            ads[1].personName=DataManager.GetName()
             ads[1].personId=personId
             self:_creatoutItem(ads[1])
         end
@@ -172,12 +211,12 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     end
 end
 
+
+
 ---创建服务器映射广告
 local ServerMapAdvertisementItemID=0
 function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
-    if( not self.serverMapAdvertisementINSList ) then
-        self.serverMapAdvertisementINSList={}
-    end
+
 
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.serverMapAdvertisementItemList[prefabData.metaId]=item
@@ -263,19 +302,20 @@ function ItemCreatDeleteMgr:_creatgoodsItem(goodsPrebData)
     local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
     self.goodsItemList[goodsItemID]=goods
     --- ---给预制赋值数据
-    GoodsItem:new(goodsPrebData,goods,self.behaviour,self,goodsItemID)
+    local ins =GoodsItem:new(goodsPrebData,goods,self.behaviour,self,goodsItemID)
+    self.insList[goodsPrebData.metaId]=ins
     goodsItemID=goodsItemID+1
 end
 ---创建建筑广告
 local buildItemID=0
 function ItemCreatDeleteMgr:_creatbuildingItem(buildingPrebData)
 
-
     ---创建预制
     local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
     self.buildItemList[buildItemID]=buildings
     --- ---给预制赋值数据
-    BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,buildItemID)
+    local ins =BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,buildItemID)
+    self.insList[buildingPrebData.mId]=ins
     buildItemID=buildItemID+1
 end
 

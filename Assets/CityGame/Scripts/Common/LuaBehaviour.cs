@@ -55,7 +55,8 @@ namespace LuaFramework {
             if (buttons.ContainsKey(eventName)) {
                 return;                    
             }
-            buttons.Add(eventName, pair);            
+            buttons.Add(eventName, pair);
+            go.GetComponent<Button>().onClick.RemoveAllListeners();
             go.GetComponent<Button>().onClick.AddListener(pair._CsharpFun);
         }
         
@@ -92,11 +93,6 @@ namespace LuaFramework {
         //-----------------------------------------------------------------
         protected void OnDestroy() {
             ClearClick();
-#if ASYNC_MODE && RES_BUNDEL
-            /*string abName = name.ToLower().Replace("panel", "");
-            ResManager.UnloadAssetBundle(abName + AppConst.BundleExt);*/
-            ResManager.UnloadAssetBundle(name + AppConst.BundleExt);
-#endif
             Util.ClearMemory();
             Debug.Log("~" + name + " was destroy!");
         }

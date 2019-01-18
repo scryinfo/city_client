@@ -19,6 +19,19 @@ local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
 
+--屏幕坐标缩放尺寸
+Game.ScreenRatio = 1
+
+local function InitScreenRatio()
+    local m_AspectRatio = UnityEngine.Screen.width / UnityEngine.Screen.height
+    local ActualAspectRatio = 1920 / 1080
+    if m_AspectRatio < ActualAspectRatio then
+        Game.ScreenRatio = 1920 / UnityEngine.Screen.width
+    else
+        Game.ScreenRatio = 1080 / UnityEngine.Screen.height
+    end
+end
+
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     --注册LuaView--
@@ -27,7 +40,7 @@ function Game.OnInitOK()
     if ctrl ~= nil then
         ctrl:Awake();
     end
-
+    InitScreenRatio()
     World.init();
 end
 
@@ -96,7 +109,7 @@ function Game.OnPostInitOK()
     --调整生产线
     local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
     if AdjustProductionLineModel ~= nil then
-      --  AdjustProductionLineModel:Awake();
+        AdjustProductionLineModel:Awake();
     end
     --科技交易所
     local ScienceSellHallModel = CtrlManager.GetModel(ModelNames.ScienceSellHall);
@@ -121,15 +134,15 @@ function Game.OnPostInitOK()
         tempTransportModel:Awake();
     end
 
-    local friendsModel = CtrlManager.GetModel(ModelNames.friends);
-    if friendsModel ~= nil then
-        friendsModel:Awake();
-    end
+    --local friendsModel = CtrlManager.GetModel(ModelNames.friends);
+    --if friendsModel ~= nil then
+    --    friendsModel:Awake();
+    --end
 
-    local chatModel = CtrlManager.GetModel(ModelNames.Chat);
-    if chatModel ~= nil then
-        chatModel:Awake();
-    end
+    --local chatModel = CtrlManager.GetModel(ModelNames.Chat);
+    --if chatModel ~= nil then
+    --    chatModel:Awake();
+    --end
     --开业停业
     StopAndBuildModel:Awake()
     --单元测试入口

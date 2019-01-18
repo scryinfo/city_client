@@ -13,7 +13,7 @@ function HouseCtrl:initialize()
 end
 
 function HouseCtrl:bundleName()
-    return "HousePanel"
+    return "Assets/CityGame/Resources/View/HousePanel.prefab"
 end
 
 function HouseCtrl:OnCreate(obj)
@@ -26,7 +26,6 @@ function HouseCtrl:Awake(go)
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
-    self.houseBehaviour:AddClick(HousePanel.infoBtn.gameObject, self._openInfo, self)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
 
     self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
@@ -50,11 +49,12 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     Event.Brocast("c_GetBuildingInfo", houseDetailData.info)
     if houseDetailData.info.state == "OPERATE" then
-        HousePanel.stopIconBtn.localScale = Vector3.zero
+        HousePanel.stopRootTran.localScale = Vector3.zero
     else
-        HousePanel.stopIconBtn.localScale = Vector3.one
+        HousePanel.stopRootTran.localScale = Vector3.one
     end
 
+    HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
     HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
     local insId = self.m_data.insId
     self.m_data = houseDetailData
@@ -63,13 +63,14 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
         HousePanel.changeNameBtn.localScale = Vector3.zero
+        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
         HousePanel.changeNameBtn.localScale = Vector3.one
     end
     self.m_data.buildingType = BuildingType.House
     if not self.houseToggleGroup then
-        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data)
+        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data, HousePanel.brandRootTran)
     else
         self.houseToggleGroup:updateInfo(self.m_data)
     end
@@ -81,9 +82,7 @@ function HouseCtrl:_changeName(ins)
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        ct.log("cycle_w12_hosueServer", "向服务器发送请求更改名字的协议")
-
-        ---临时代码，直接改变名字
+        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)

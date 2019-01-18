@@ -1,20 +1,21 @@
 ShelfGoodsItem = class('ShelfGoodsItem')
 
 --初始化方法   数据（接受服务器）
-function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,state)
-    self.prefab = prefab;
-    self.goodsDataInfo = goodsDataInfo;
-    self.state = state
-    self._luabehaviour = inluabehaviour
-    self.manager = mgr
+function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,state,buildingId)
     self.id = id
-    self.itemId = goodsDataInfo.itemId
-    self.num = goodsDataInfo.number
-    self.name = goodsDataInfo.name
+    self.manager = mgr
+    self.state = state
+    self.prefab = prefab;
+    self.buildingId = buildingId
+    self.goodsDataInfo = goodsDataInfo;
+    self._luabehaviour = inluabehaviour
+    self.itemId = goodsDataInfo.k.id
+    self.num = goodsDataInfo.n
+    self.name = Material[self.itemId].name
     self.price = goodsDataInfo.price
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
-    self.goodsicon = self.prefab.transform:Find("details/goodsicon");  --物品Icon
+    self.goodsicon = self.prefab.transform:Find("details/goodsicon"):GetComponent("Image");  --物品Icon
     self.circleGreayImg = self.prefab.transform:Find("circleGreayImg"):GetComponent("RectTransform");  --圆
     self.circleTickImg = self.prefab.transform:Find("circleGreayImg/circleTickImg"):GetComponent("RectTransform");  --勾选
     self.nameText = self.prefab.transform:Find("details/nameText"):GetComponent("Text");  --物品名字
@@ -22,10 +23,32 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,
     self.moneyText = self.prefab.transform:Find("moneyImg/moneyText"):GetComponent("Text");  --物品价格
     self.XBtn = self.prefab.transform:Find("XBtn");  --删除按钮
     self.detailsBtn = self.prefab.transform:Find("detailsBtn");  --点击商品查看详情
+
+    local materialKey,goodsKey = 21,22
+    local type = ct.getType(UnityEngine.Sprite)
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.nameText.text = Material[self.itemId].name;
+        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsicon.sprite = texture
+            end
+        end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.nameText.text = Good[self.itemId].name;
+        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.goodsicon.sprite = texture
+            end
+        end)
+    end
+
     --赋值
-    self.nameText.text = goodsDataInfo.name
-    self.numberText.text = goodsDataInfo.number
-    self.moneyText.text = goodsDataInfo.money
+    --self.nameText.text = self.name
+    self.numberText.text = self.num
+    self.moneyText.text = self.price..".0000"
+
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
@@ -67,11 +90,11 @@ function ShelfGoodsItem:c_buyGoodsItemDelete()
 end
 --勾选物品
 function ShelfGoodsItem:OnClick_bgBtn(ins)
-    Event.Brocast("_selectedBuyGoods",ins.id,ins.itemId);
+    Event.Brocast("_selectedBuyGoods",ins);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
-    Event.Brocast("m_ReqShelfDel",MaterialModel.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
     Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
 end
@@ -96,15 +119,8 @@ function ShelfGoodsItem:RefreshData(data,id)
     self.id = id
     self.num = data.num
     self.name = data.name
-    self.itemId = data.itemId
     self.price = data.price
+    self.itemId = data.itemId
     --self.producerId = data.producerId
     --self.qty = data.qty
 end
-----刷新数据
---function ShelfGoodsItem:refreshInfo(data,prefab)
---    self.prefab = prefab
---    self.prefab.nameText.text = Material[data.k.id].name
---    self.prefab.numberText.text = data.n
---    self.prefab.moneyText.text = data.price
---end

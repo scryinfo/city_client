@@ -76,6 +76,10 @@ function LaboratoryModel:m_ReqLabRoll(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
     DataManager.ModelSendNetMes("gscode.OpCode", "labRoll","gs.LabRoll",lMsg)
 end
+--改变建筑名字
+function LaboratoryModel:m_ReqChangeBuildingName(id, name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
+end
 
 --- 回调 ---
 --研究所详情
@@ -197,11 +201,12 @@ end
 --员工数量改变
 function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
     local line = self.hashLineData[data.lineId]
-    self.remainWorker = self.remainWorker - line.workerNum
-    line.workerNum = data.n
     self.remainWorker = self.remainWorker + line.workerNum
+    line.workerNum = data.n
+    self.remainWorker = self.remainWorker - line.workerNum
 
-    line.totalTime = (line.finishTime - os.time()) / data.n  --重新计算
+    local oldTotalTime = line.totalTime
+    line.totalTime = (line.finishTime - os.time()) / data.n + line.totalTime  --重新计算
     line.finishTime = os.time() + line.totalTime
     Event.Brocast("c_LabLineWorkerNumChange", data.lineId, line.totalTime, line.finishTime, data.n)
     DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)

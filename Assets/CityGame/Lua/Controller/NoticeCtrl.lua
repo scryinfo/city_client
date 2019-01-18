@@ -18,12 +18,11 @@ function NoticeCtrl:initialize()
 end
 
 function NoticeCtrl:bundleName()
-    return "NoticePanel"
+    return "Assets/CityGame/Resources/View/NoticePanel.prefab"
 end
 
 function NoticeCtrl:OnCreate(obj )
     UIPage.OnCreate(self,obj)
-    gameObject = obj;
     local Notice = gameObject:GetComponent('LuaBehaviour');
 end
 

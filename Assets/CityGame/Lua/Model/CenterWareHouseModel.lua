@@ -14,12 +14,13 @@ end
 --启动事件--
 function CenterWareHouseModel:OnCreate()
     --注册本地UI事件
-  --  Event.AddListener("m_extendBag", self.m_ExtendBag,self);
     Event.AddListener("m_bagCapacity",self.m_bagCapacity,self)
     Event.AddListener("m_opCenterWareHouse",self.m_opCenterWareHouse,self)
     Event.AddListener("m_DeleteItem",self.m_DeleteItem,self)
     --as网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
+   -- DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",self.n_GsDelItem,self)--新版model网络注册
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),CenterWareHouseModel.n_GsDelItem);
 end
 
@@ -36,15 +37,18 @@ function CenterWareHouseModel:m_ExtendBag()
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
 end
 
+--扩容回调
 function CenterWareHouseModel:n_GsExtendBag(stream)
-    --ct.log("rodger_w8_GameMainInterface","[test_n_GsExtendBag]  测试完毕",stream)
+
+    local a = stream
     Event.Brocast("c_GsExtendBag")
 end
 
-function CenterWareHouseModel:n_GsDelItem(stream)
-   -- local pMsg =assert(pbl.decode("gs.DelItem",stream),"CenterWareHouseModel:n_GsDelItem stream = nil")
-    --ct.log("rodger_w8_GameMainInterface","[test_n_GsDelItem]  测试完毕",stream)
-   -- Event.Brocast("c_GsDelItem")
+--删除回调
+function CenterWareHouseModel.n_GsDelItem(stream)
+    local pMsg = assert(pbl.decode("gs.DelItem",stream),"tempTransportModel.n_OnTransportInfo")
+    --Event.Brocast("c_GsDelItem")
+    Event.Brocast("c_DelBagItem",pMsg.item.id)
 end
 
 --删除商品发包

@@ -19,7 +19,7 @@ function AdvertisementPopCtrl:initialize()
 end
 
 function AdvertisementPopCtrl:bundleName()
-    return "AdvertisementPopPanel";
+    return "Assets/CityGame/Resources/View/AdvertisementPopPanel.prefab";
 end
 
 function AdvertisementPopCtrl:OnCreate(obj)

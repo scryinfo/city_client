@@ -457,4 +457,45 @@ UnitTest.Exec("abel_w13_abel_sort_tb_eq", "test_abel_sort_tb_eq",  function ()
 
     --注意： <= 和 >= 的测试会失败， 排序的条件不能有等于的情况，要么大于，要么小于
 end)
+
+UnitTest.Exec("abel_w18_tableDestroy", "abel_w18_tableDestroy",  function ()
+    local testcount = 100000  --资源加载数量
+    local ResPathList = {}  --资源路径
+    local resLoad  = resMgr:LoadRes_S('TempIcon/A'..1, ct.getType(UnityEngine.Sprite))
+    local objIns = {}
+
+    local initialData = function()
+        for i = 1, testcount do
+            objIns[#objIns+1] = UnityEngine.GameObject.Instantiate(resLoad._asset);
+        end
+    end
+
+    initialData()
+    UnitTest.PerformanceTest("abel_w18_tableDestroy","[使用 pairs 遍历table并destroy]", function()
+        for i, v in pairs(objIns) do
+            GameObject.DestroyImmediate(objIns[#objIns], true)
+        end
+        objIns = {}
+    end)
+
+    collectgarbage("collect")
+
+    initialData()
+    UnitTest.PerformanceTest("abel_w18_tableDestroy","[倒序destroy]", function()
+        --table销毁不要使用 pairs 遍历，虽然不会出错，但是效率是不高的，所以直接从最后一个元素开始删除
+        while #objIns > 0 do
+            GameObject.DestroyImmediate(objIns[#objIns], true)
+            objIns[#objIns] = nil --这里必须赋值nil，否则就是死循环
+        end
+    end)
+
+    --[[
+    测试结果
+        [abel_w18_tableDestroy][使用 pairs 遍历table并destroy]    执行时间:     0.039999999999964
+        [abel_w18_tableDestroy][倒序destroy]                      执行时间:     0.39799999999991
+        * 迭代器遍历效率的确高很多
+    --]]
+
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -5,8 +5,10 @@
 ---
 
 require('Framework/UI/UIRoot')
+local typeof = tolua.typeof
 local UIRoot = UIRoot
 UIType = {
+    Bubble = 0,     --气泡
     Normal =1 ,
     Fixed =2 ,
     PopUp =3 ,
@@ -74,10 +76,16 @@ function UIPage:Active()
     self.isActived = true;
 end
 
-function UIPage:OnCreate(go)
+function UIPage:OnCreate(obj)
     if self.gameObject == nil then
+        --把C#中的 LoadPrefab_A 中实例化相关的处理剥离到lua中来，LoadPrefab_A只处理资源加载，
+        --这里传入的prefab就是 LoadPrefab_A 加载的原始资源，不能直接使用，需要实例化，否则
+        --对它的任何改动都会影响到所有引用该资源的地方
+        ------{
+        local go = ct.InstantiatePrefab(obj);
+        ------}
         go.layer = LayerMask.NameToLayer("UI");
-        UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+        UnityEngine.GameObject.AddComponent(go, typeof(LuaFramework.LuaBehaviour))
         self.gameObject = go;
         assert(go, "system","[UIPage.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
@@ -106,8 +114,8 @@ function UIPage:Show(path, callback)
         --else
         --    go = Resources.Load(uiPath)
         --end
-        --panelMgr:CreatePanel(path, callback, self);
-        panelMgr:CreatePanel(path, callback, self);
+        --panelMgr:LoadPrefab_A(path, callback, self);
+        panelMgr:LoadPrefab_A(path, nil, self, callback);
     else
         self:DoShow()
     end
@@ -248,6 +256,18 @@ function  UIPage:ClearAllPages()
     UIPage.static.m_allPages = {}
 end
 
+--清空当前所有page
+function  UIPage:HideAllPages()
+    --清空当前page
+    UIPage.static.m_currentPageNodes = nil
+    UIPage.static.m_currentPageNodes = {};
+
+    --隐藏栈中所有UI资源
+    for k,v in pairs(UIPage.static.m_allPages) do
+        v:Hide();
+    end
+end
+
 function  UIPage:ShowPage(inClass,pageData)
     return UIPage:ShowPageByClass(inClass, pageData, true)
 end
@@ -310,10 +330,9 @@ function UIPage:ClosePage()
     --//TODO:Sub pages.belong to root node.
     if #pageNodes > 0 then
         local page = pageNodes[#pageNodes];
-        if page.isAsyncUI == ture then
-            UIPage:ShowPageInstance(page,function()
-                closePage:Hide();
-            end);
+        if page.isAsyncUI == false then
+            local data = closePage:Hide()
+            UIPage:ShowPageInstance(page,data)
         else
             UIPage:ShowPageInstance(page)
             closePage:Hide();
@@ -383,7 +402,6 @@ end
 --ctrlRpc是有返回值的rpc
 function ct.ctrlRpc(ctrlName, modelMethord, ...)
     local arg = {...}
-    --优化版本
     local ctrl = UIPage.static.m_allPages[ctrlName]
     if arg[#arg] ~= nil then
         arg[#arg](ctrl[modelMethord](ctrl,...))
@@ -393,8 +411,6 @@ function ct.ctrlRpc(ctrlName, modelMethord, ...)
 end
 --ctrlRpcNoRet 是没有返回值的rpc
 function ct.ctrlRpcNoRet(ctrlName, modelMethord, ...)
-    --优化版本
-    local arg = {...}
     local ctrl = UIPage.static.m_allPages[ctrlName]
     ctrl[modelMethord](ctrl,...)
 end

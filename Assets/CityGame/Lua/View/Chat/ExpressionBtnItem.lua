@@ -9,9 +9,14 @@ ExpressionBtnItem = class('ExpressionBtnItem')
 -- 初始化
 function ExpressionBtnItem:initialize(id, prefab)
     --prefab:GetComponent("Image").sprite = UnityEngine.Resources.Load("1")
+    self.id = id
+    self.path = "Assets/CityGame/Resources/Atlas/Chat/EmojiLarge/" .. tostring(id) .. ".png"
+    LoadSprite(self.path, prefab.transform:GetComponent("Image"))
+
     ChatCtrl.static.luaBehaviour:AddClick(prefab, self.OnExpressionBtn, self)
 end
 
-function ExpressionBtnItem:OnExpressionBtn()
+function ExpressionBtnItem:OnExpressionBtn(go)
     ct.log("tina_w9_friends", "ExpressionBtnItem:OnExpressionBtn")
+    ChatPanel.chatInputField.text = ChatPanel.chatInputField.text .. tostring(go.id)
 end

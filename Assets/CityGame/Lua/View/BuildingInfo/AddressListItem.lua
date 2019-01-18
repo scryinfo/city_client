@@ -8,20 +8,23 @@ require('Framework/UI/UIPage')
 AddressListItem = class('AddressListItem')
 
 --初始化方法   数据（读配置表）
-function AddressListItem:initialize(DataInfo,prefab,inluabehaviour,mgr)
+function AddressListItem:initialize(DataInfo,prefab,mgr)
     self.prefab = prefab;
     self.dataInfo = DataInfo;
-    self._luabehaviour = inluabehaviour;
     self.manager = mgr;
+    self.id = DataInfo.id
+    self.onClick = true  --第一次点击
 
-    self.bg = self.prefab.transform:Find("bg").gameObject
+    self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("name").gameObject:GetComponent("Text");
     self.box = self.prefab.transform:Find("box").gameObject;
 
-    self.name = "Addy-polly"
+    self.name.text = DataInfo.name
 
     self.box:SetActive(false);
-    self._luabehaviour:AddClick(self.bg,self.OnAddressListBG,self)
+    self.bg.onClick:AddListener(function()
+        self:OnAddressListBG(self);
+    end)
 end
 
 function AddressListItem:OnAddressListBG(go)

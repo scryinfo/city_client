@@ -21,7 +21,7 @@ function MunicipalCtrl:initialize()
 end
 
 function MunicipalCtrl:bundleName()
-    return "MunicipalPanel";
+    return "Assets/CityGame/Resources/View/MunicipalPanel.prefab";
 end
 
 local BuildMgr
@@ -31,7 +31,7 @@ function MunicipalCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
     self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
@@ -40,6 +40,9 @@ function MunicipalCtrl:Awake(go)
         data.buildingType = BuildingType.Municipal
     BuildMgr=BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, data)
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
+
+
+
 end
 
 function MunicipalCtrl:OnCreate(obj)
@@ -47,41 +50,43 @@ function MunicipalCtrl:OnCreate(obj)
 end
 
 function MunicipalCtrl:OnClick_buildInfo()
-
     Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
 end
 
 function MunicipalCtrl:OnClick_prepareOpen(ins)
-
     Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 
 --更改名字
-function MunicipalCtrl:OnClick_changeName()
+function MunicipalCtrl:OnClick_changeName(ins)
     local data = {}
-    data.titleInfo = "RENAME";
-    data.tipInfo = "Modified every seven days";
+    data.titleInfo = "RENAME"
+    data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    ct.OpenCtrl("InputDialogPageCtrl",data)
+    data.btnCallBack = function(name)
+        ---临时代码，直接改变名字
+        ins:_updateName(name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
-
+---更改名字成功
+function MunicipalCtrl:_updateName(name)
+    MunicipalPanel.nameText.text = name
+end
 --返回
 function MunicipalCtrl:OnClick_backBtn()
     UIPage.ClosePage();
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
-        DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
+        Event.Brocast("m_stopListenBuildingDetailInform",MunicipalPanel.buildingId)
     end
 
 end
 
---打开信息界面
-function MunicipalCtrl:OnClick_infoBtn()
-   
-end
+
 
 function MunicipalCtrl:Refresh()
-   this:changeData()
+    this:changeData()
 end
 
 
@@ -92,8 +97,6 @@ function MunicipalCtrl:changeData()
     else
         DataManager.OpenDetailModel(MunicipalModel,MunicipalPanel.buildingId)
         DataManager.DetailModelRpcNoRet(MunicipalPanel.buildingId, 'm_detailPublicFacility',MunicipalPanel.buildingId)
-        --self.m_data = {}
-        --self.m_data.insId = MunicipalPanel.buildingId
     end
 end
 
@@ -104,14 +107,14 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     MunicipalPanel.lMsg=lMsg
 
     Event.Brocast("c_GetBuildingInfo",MunicipalPanel.lMsg.info)
+    Event.Brocast("c_onParkInfoValueChange",DataManager.GetMyBuildingBrands(),parkData.qty)
 
     if lMsg.info.state=="OPERATE" then
         MunicipalPanel.stopIconRoot.localScale=Vector3.zero
     else
         MunicipalPanel.stopIconRoot.localScale=Vector3.one
     end
-    ---刷新门票
-    Event.Brocast("c_TicketValueChange", model.buildingOwnerId,model.ticket)
+
     ---是否可以改名
     if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--他人
     MunicipalPanel.changeNameBtn.localScale=Vector3.zero
@@ -135,7 +138,14 @@ function MunicipalCtrl:c_receiveParkData(parkData)
     --跟新左右
     lMsg.buildingType=BuildingType.Municipal
     BuildMgr:updateInfo(lMsg)
-
+    ---刷新门票
+    Event.Brocast("c_TicketValueChange", model.buildingOwnerId,parkData.visitorCount)
+    ---刷新showItem
+    if #model.SlotList>0 then
+        Event.Brocast("c_ShowItemValueChange", model.SlotList[1].rentPreDay,#model.SlotList,model.SlotList[1].maxDayToRent)
+    else
+        Event.Brocast("c_ShowItemValueChange", 0,0,0)
+    end
 end
 
 function MunicipalCtrl:ClearData(manger)

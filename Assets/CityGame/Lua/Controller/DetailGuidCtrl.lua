@@ -15,7 +15,7 @@ DetailGuidCtrl.detailItem_Path="View/GoodsItem/detailItem"
 DetailGuidCtrl.detailItem1_Path="View/GoodsItem/detailItem1"
 
 function  DetailGuidCtrl:bundleName()
-    return "DetailGuidPanel"
+    return "Assets/CityGame/Resources/View/DetailGuidPanel.prefab"
 end
 
 function DetailGuidCtrl:initialize()
@@ -36,8 +36,10 @@ function DetailGuidCtrl:Awake(obj)
     luaBehaviour = obj:GetComponent('LuaBehaviour');
     luaBehaviour:AddClick(panel.backBtn.gameObject,self.Close,self);
     luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self);
-
+    luaBehaviour:AddClick(obj,function ()  panel.scroll.localScale=Vector3.zero   end,self);
 end
+
+
 
 function DetailGuidCtrl:Refresh()
     local data=self.m_data
@@ -55,7 +57,6 @@ end
 
 function DetailGuidCtrl:Close()
     UIPage.ClosePage();
-
 end
 ---刷新按钮
 function DetailGuidCtrl:updateItem(names)

@@ -3,33 +3,37 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 17:03
 ---
-
-
 OccupancyRateItem = class('OccupancyRateItem')
 OccupancyRateItem.static.TOTAL_H = 345  --整个Item的高度
 OccupancyRateItem.static.CONTENT_H = 276  --显示内容的高度
 OccupancyRateItem.static.TOP_H = 100  --top条的高度
+OccupancyRateItem.static.OccupancyTextColor = "#FFFFFF"
 
---初始化方法 --数据需要住宅容量（读配置表）以及当前入住人数
+--初始化方法
 function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect
     self.occupancyData = occupancyData
     self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
-    self.brandText = self.viewRect.transform:Find("contentRoot/brandText"):GetComponent("Text")  -- 品牌值
-    self.qualityText = self.viewRect.transform:Find("contentRoot/qualityText"):GetComponent("Text")  -- 品质
+    self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text")
     self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider")  -- slider
-    self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancySlider/Text"):GetComponent("Text")  -- slider显示的值
+    self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancyText"):GetComponent("Text")
 
-    self.occupancySlider.maxValue = occupancyData.totalCount  --暂时不知道这个字段叫什么，从配置表中读取
+    self.rentalValueText.text = getPriceString(occupancyData.rent, 30, 24).."/D"
+    self.occupancySlider.maxValue = occupancyData.totalCount
     self.occupancySlider.value = occupancyData.renter
-    self.occupancyText.text = occupancyData.renter.."/"..occupancyData.totalCount
-    local brands = DataManager.GetMyBuildingBrands()
-    self.brandText.text = brands[occupancyData.mId] or 0
-    self.qualityText.text = occupancyData.qty
+    self.occupancyText.text = string.format("%d<color=%s>/%d</color>", occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, occupancyData.totalCount)
 
-    Event.AddListener("c_onOccupancyValueChange", self.updateInfo, self)
+    self.openToDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn")
+    if occupancyData.isOther then
+        self.openToDoBtn.localScale = Vector3.zero
+    else
+        self.openToDoBtn.localScale = Vector3.one
+        mainPanelLuaBehaviour:AddClick(self.openToDoBtn.gameObject, self._clickToDoBtn, self)
+    end
+
+    Event.AddListener("c_onReceiveHouseRentChange", self._rentPriceChange, self)
 end
 
 --获取是第几个点击了
@@ -47,9 +51,6 @@ function OccupancyRateItem:openToggleItem(targetMovePos)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
-    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
-    --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
-
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOTAL_H)
 end
 
@@ -65,17 +66,29 @@ end
 
 --刷新数据
 function OccupancyRateItem:updateInfo(data)
-    self.occupancyData = data
-
     if not self.viewRect.gameObject.activeSelf then
         return
     end
-
+    self.occupancyData = data
     self.occupancySlider.value = self.occupancyData.renter
-    self.occupancyText.text = self.occupancyData.renter.."/"..self.occupancyData.totalCount
-    local brands = DataManager.GetMyBuildingBrands()
-    self.brandText.text = brands[self.occupancyData.mId] or 0
-    self.qualityText.text = self.occupancyData.qty
+    self.occupancyText.text = string.format("%d<color=%s>/%d</color>", self.occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, self.occupancyData.totalCount)
+    self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+end
+--房租改变
+function OccupancyRateItem:_rentPriceChange(data)
+    if self.occupancyData.buildingId ~= data.buildingId then
+        return
+    end
+
+    self.occupancyData.rent = data.rent
+    if not self.viewRect.gameObject.activeSelf then
+        return
+    end
+    self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+end
+
+function OccupancyRateItem:_clickToDoBtn(ins)
+    ct.OpenCtrl("HouseSetRentalDialogPageCtrl", ins.occupancyData)
 end
 
 function OccupancyRateItem:destory()

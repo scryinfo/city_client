@@ -14,7 +14,7 @@ end
 
 function ChatCtrl:bundleName()
     ct.log("tina_w9_friends", "ChatCtrl:bundleName")
-    return "ChatPanel"
+    return "Assets/CityGame/Resources/View/ChatPanel.prefab"
 end
 
 function ChatCtrl:OnCreate(go)
@@ -29,8 +29,9 @@ function ChatCtrl:Awake(go)
 
     --初始化管理器
     ChatCtrl.static.chatMgr = ChatMgr:new()
-    ChatCtrl.WORLD_SHOW_NUM = 50
-    ChatCtrl.FRIENDS_SHOW_NUM = 5
+    ChatCtrl.WORLD_SHOW_NUM = 50 -- 世界聊天显示条数
+    ChatCtrl.FRIENDS_SHOW_NUM = 5 -- 好友聊天显示条数
+    ChatCtrl.CHAT_RECORDS_SHOW_NUM = 20 -- 聊天记录显示条数
 
     --添加UI事件点击监听
     ChatCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
@@ -50,6 +51,11 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.addFriendsBtn, self.OnAddFriends, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.chatBtn, self.OnChat, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.shieldBtn, self.OnShield, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.chatRecordsBtn, self.OnChatRecords, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showPersonalInfoBtn, self.OnShowPersonalInfo, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -71,7 +77,12 @@ end
 -- 刷新
 function ChatCtrl:Refresh()
     ct.log("tina_w9_friends", "ChatCtrl:Refresh")
+    self:initInsData()
     self:_addListener()
+end
+
+function ChatCtrl:initInsData()
+    DataManager.OpenDetailModel(ChatModel, OpenModelInsID.ChatCtrl)
 end
 
 function ChatCtrl:Close()
@@ -137,22 +148,28 @@ end
 
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
+    if self.isShowPersonalInfo then
+        self.isShowPersonalInfo = false
+        return
+    end
     self:_closePlayerInfo()
-    self:_showChatNoticeItem()
     ChatPanel.expressionRoot:SetActive(false)
-
+    self:_showWorldInfo()
     if self.m_data.toggleId == 1 then  -- 打开世界分页
         ChatPanel.worldToggle.isOn = true
         --self:_worldToggleValueChange(true)
         self.channel = 0 -- 聊天频道
-        self:_showWorldInfo()
+        self:_showChatNoticeItem()
     elseif self.m_data.toggleId == 2 then  -- 打开好友分页
         --self:_friendsToggleValueChange(true)
         self.channel = 1 -- 聊天频道
         ChatCtrl.static.isShowClickFriends = true
         if ChatPanel.friendsToggle.interactable then
+            self:_showChatNoticeItem()
             ChatPanel.friendsToggle.isOn = true
         else
+            self:_showChatNoticeItem()
+            ChatPanel.chatRecordsRoot:SetActive(false)
             self:_queryFriendInfo()
         end
         ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
@@ -162,6 +179,7 @@ function ChatCtrl:_refreshState()
         self.channel = 3 -- 聊天频道
         ChatCtrl.static.isShowClickStrangers = true
         ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        self:_showChatNoticeItem()
         self:_showStrangersInfo()
     end
 end
@@ -177,6 +195,7 @@ function ChatCtrl._showChatNoticeItem()
     ChatPanel.strangersNoticeImage:SetActive(false)
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+    local saveUnread = DataManager.GetUnread()
     if ChatPanel.friendsToggle.interactable then
         for _, v in pairs(chatFriendsInfo) do
             if v.unreadNum and v.unreadNum > 0 then
@@ -191,6 +210,14 @@ function ChatCtrl._showChatNoticeItem()
             if m.unreadNum and m.unreadNum > 0 then
                 ChatPanel.strangersNoticeImage:SetActive(true)
                 break
+            end
+        end
+    end
+    if saveUnread then
+        for _, n in pairs(saveUnread) do
+            if n and n[1] then
+                ChatPanel.friendsNoticeImage:SetActive(true)
+                return
             end
         end
     end
@@ -220,6 +247,7 @@ function ChatCtrl:_worldToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatCtrl.static.chatMgr:SetActivePlayerData({})
         ChatPanel.playerInfoRoot:SetActive(false)
+        ChatCtrl.static.chatMgr:StartScrollBottom()
     end
 end
 
@@ -228,18 +256,26 @@ function ChatCtrl:_showWorldInfo()
     local data = DataManager.GetMyChatInfo(1)
     ChatCtrl.worldInfo = {}
     local worldInfoAllNum = #data
+
+    if worldInfoAllNum <= 0 then
+        ChatPanel.worldNoContentRoot:SetActive(true)
+        return
+    end
+
     if worldInfoAllNum <= ChatCtrl.WORLD_SHOW_NUM then
+        ChatPanel.worldNoContentRoot:SetActive(false)
         for _, v in ipairs(data) do
             table.insert(ChatCtrl.worldInfo, v)
             ChatCtrl.static.chatMgr:CreateChatItem(v)
         end
-        ChatCtrl.static.chatMgr:StartScrollBottom()
+        --ChatCtrl.static.chatMgr:StartScrollBottom()
     else
+        ChatPanel.worldNoContentRoot:SetActive(false)
         for i = worldInfoAllNum - ChatCtrl.WORLD_SHOW_NUM , worldInfoAllNum do
             table.insert(ChatCtrl.worldInfo, data[i])
             ChatCtrl.static.chatMgr:CreateChatItem(data[i])
         end
-        ChatCtrl.static.chatMgr:StartScrollBottom()
+        --ChatCtrl.static.chatMgr:StartScrollBottom()
     end
 end
 
@@ -251,9 +287,12 @@ function ChatCtrl:_queryFriendInfo()
         table.insert(idTemp, id)
     end
     if idTemp[1] then
+        ChatPanel.friendsNoContentRoot:SetActive(false)
+        ChatPanel.friendsChatNoContentRoot:SetActive(true)
         Event.Brocast("m_QueryPlayerInfoChat", idTemp)
     else
         ChatPanel.friendsNum.text = "0"
+        ChatPanel.friendsNoContentRoot:SetActive(true)
     end
 end
 
@@ -280,16 +319,25 @@ function ChatCtrl:_friendsToggleValueChange(isOn)
         ChatPanel.friendsNoticeImage:SetActive(false)
         ChatCtrl.static.chatMgr:SetActivePlayerData({})
         ChatPanel.playerInfoRoot:SetActive(false)
+        ChatPanel.chatRecordsBtn:SetActive(false)
+        ChatPanel.chatRecordsRoot:SetActive(false)
+
         self:_queryFriendInfo()
     end
 end
 
 -- 显示陌生人信息
 function ChatCtrl:_showStrangersInfo()
+    ChatPanel.strangersNoContentRoot:SetActive(true)
+    ChatPanel.strangersChatNoContentRoot:SetActive(true)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
     local friendsBasicData = DataManager.GetMyFriends()
     for m, n in pairs(strangersPlayerItem) do
+        --ChatPanel.strangersNoContentRoot:SetActive(false)
+        if ChatPanel.strangersNoContentRoot.activeSelf then
+            ChatPanel.strangersNoContentRoot:SetActive(false)
+        end
         if friendsBasicData[m] ~= nil then
             ChatCtrl.static.chatMgr:DestroyItem(2, m)
         end
@@ -298,6 +346,7 @@ function ChatCtrl:_showStrangersInfo()
     local strangersId = {}
     local isExitStrangers = true
     for k, v in pairs(chatStrangersInfo) do
+        ChatPanel.strangersNoContentRoot:SetActive(false)
         if strangersPlayerItem[k] then
             strangersPlayerItem[k]:SetNoticeText(v.unreadNum)
             if ChatCtrl.static.isShowClickStrangers and k == self.m_data.id then
@@ -331,6 +380,7 @@ function ChatCtrl:_showStrangersInfo()
         end
     end
     if strangersId[1] then
+        ChatPanel.strangersNoContentRoot:SetActive(false)
         Event.Brocast("m_QueryPlayerInfoChat", strangersId)
     end
     ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
@@ -425,16 +475,63 @@ end
 function ChatCtrl:OnChat()
     local activePlayerData = ChatCtrl.static.chatMgr:GetActivePlayerData()
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
+    ChatPanel.strangersToggle.isOn = true
+    if ChatPanel.strangersNoContentRoot.activeSelf then
+        ChatPanel.strangersNoContentRoot:SetActive(false)
+    end
     if strangersPlayerItem[activePlayerData.id] then
         strangersPlayerItem[activePlayerData.id].toggle.isOn = true
     else
-        ChatPanel.strangersToggle.isOn = true
         ChatCtrl.static.chatMgr:CreatePlayerItem(2, activePlayerData)
 
         local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item[activePlayerData.id]
         strangersPlayerItem.toggle.isOn = true
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
+end
+
+-- 查看聊天记录
+function ChatCtrl:OnChatRecords(go)
+    if ChatPanel.chatRecordsRoot.activeSelf then
+        ChatPanel.chatRecordsRoot:SetActive(false)
+        ChatPanel.playerInfoRoot:SetActive(true)
+    else
+        ChatPanel.chatRecordsRoot:SetActive(true)
+        ChatPanel.playerInfoRoot:SetActive(false)
+        ChatCtrl.static.chatMgr:ShowChatRecords()
+    end
+end
+
+-- 显示个人信息界面
+function ChatCtrl:OnShowPersonalInfo(go)
+    if ChatCtrl.static.chatMgr.activePlayerData then
+        go.isShowPersonalInfo = true
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+    end
+end
+
+-- 删除聊天记录
+function ChatCtrl:OnDeleteChatRecords(go)
+    --ChatCtrl.static.chatMgr:ShowPageInfo()
+    --打开弹框
+    local data = {}
+    data.titleInfo = "WARNING"
+    data.contentInfo = "Are you sure to empty the chat records?"
+    data.tipInfo = "(The production schedule will be empty!)"
+    data.btnCallBack = function()
+        ChatCtrl.static.chatMgr:DeleteChatRecords()
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", data)
+end
+
+-- 显示前一页
+function ChatCtrl:OnPrev(go)
+    ChatCtrl.static.chatMgr:ShowPageInfo(ChatCtrl.static.chatMgr:GetCurrentPage() - 1)
+end
+
+-- 显示后一页
+function ChatCtrl:OnNext(go)
+    ChatCtrl.static.chatMgr:ShowPageInfo(ChatCtrl.static.chatMgr:GetCurrentPage() + 1)
 end
 
 -- 屏蔽玩家
@@ -495,13 +592,17 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
 
             local chatFriendsInfo = DataManager.GetMyChatInfo(2)
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
+            local saveUnread = DataManager.GetUnread()
             for _, m in ipairs(playerData.info) do
                 if m.id ~= ChatCtrl.static.chatMgr:GetActivePlayerId() then
-                    if chatFriendsInfo[m.id] then
-                        friendsPlayerItem[m.id]:SetNoticeText(chatFriendsInfo[m.id].unreadNum)
-                    else
-                        friendsPlayerItem[m.id]:SetNoticeText(0)
+                    local noticeNum = 0
+                    if saveUnread and saveUnread[m.id] then
+                        noticeNum = #saveUnread[m.id]
                     end
+                    if chatFriendsInfo[m.id] then
+                        noticeNum = noticeNum + chatFriendsInfo[m.id].unreadNum
+                    end
+                    friendsPlayerItem[m.id]:SetNoticeText(noticeNum)
                 end
             end
         end
@@ -541,19 +642,29 @@ end
 
 -- 聊天
 function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
-    if chatData.channel == "WORLD" and ChatPanel.worldToggle.isOn then
+    if chatData.channel == "WORLD" then
+        if ChatPanel.worldNoContentRoot.activeSelf then
+            ChatPanel.worldNoContentRoot:SetActive(false)
+        end
         ChatCtrl.static.chatMgr:CreateChatItem(chatData)
-        ChatCtrl.static.chatMgr:StartScrollBottom()
+        if ChatPanel.worldToggle.isOn then
+            ChatCtrl.static.chatMgr:StartScrollBottom()
+        end
     elseif chatData.channel == "FRIEND"then
         if ChatPanel.friendsToggle.isOn then
             if chatData.id == ChatCtrl.static.chatMgr:GetActivePlayerId() or chatData.id == DataManager.GetMyOwnerID() then
                 ChatCtrl.static.chatMgr:CreateChatItem(chatData)
                 ChatCtrl.static.chatMgr:StartScrollBottom()
             else
-                local chatStrangersInfo = DataManager.GetMyChatInfo(2)
+                local chatFriendsInfo = DataManager.GetMyChatInfo(2)
                 local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
                 if friendsPlayerItem[chatData.id] then
-                    friendsPlayerItem[chatData.id]:SetNoticeText(chatStrangersInfo[chatData.id].unreadNum)
+                    local saveUnread = DataManager.GetUnread()
+                    local noticeNum = chatFriendsInfo[chatData.id].unreadNum
+                    if saveUnread and saveUnread[chatData.id] then
+                        noticeNum = noticeNum + #saveUnread[chatData.id]
+                    end
+                    friendsPlayerItem[chatData.id]:SetNoticeText(noticeNum)
                 end
             end
         else
@@ -596,6 +707,7 @@ function ChatCtrl:c_OnReceiveAddBlacklist(roleInfo)
         end
     elseif strangersPlayerItem[roleInfo.id] then
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
+        DataManager.SetStrangersInfo(roleInfo.id)
         if activePlayerId == roleInfo.id then
             ChatCtrl.static.chatMgr:SetToggle()
             ChatCtrl.static.chatMgr:DestroyContentChildren(4)
@@ -614,6 +726,9 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
         table.insert(ChatCtrl.friendInfo, roleInfo)
         ChatCtrl.static.chatMgr:CreatePlayerItem(1, roleInfo, true)
         ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
+        if ChatPanel.friendsNoContentRoot.activeSelf then
+            ChatPanel.friendsNoContentRoot:SetActive(false)
+        end
     elseif ChatPanel.strangersToggle.isOn then
         local activePlayerId = ChatCtrl.static.chatMgr:GetActivePlayerId()
         if activePlayerId == roleInfo.id then
@@ -622,6 +737,7 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
         end
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
+        DataManager.SetStrangersInfo(roleInfo.id)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
 end

@@ -12,8 +12,8 @@ function ServerListModel:OnCreate()
     --注册本地事件
     Event.AddListener("m_loginRole", self.loginRole,self);
     ----注册 AccountServer 消息
-    ServerListModel.registerAsNetMsg()
-    --DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer)
+   -- ServerListModel.registerAsNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer,self)
 end
 --关闭事件--
 function ServerListModel.Close()
@@ -43,9 +43,9 @@ function ServerListModel:m_chooseGameServer( data )
     DataManager.ModelSendNetMes("ascode.OpCode", "chooseGameServer","as.ChoseGameServer",{ serverId = sid})
 end
 --选择游戏服务器后回调, 发送登录游戏服务器的请求
-function ServerListModel.n_ChooseGameServer( stream )
+function ServerListModel:n_ChooseGameServer( msg )
     ----反序列化，取出数据
-    local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
+    --local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
     ----处理数据：缓存服务器返回的 token
     CityEngineLua.token = msg.code
     ServerListModel.isClick = true
@@ -73,14 +73,18 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role
-    ct.log("rodger_w8_GameMainInterface","[test_n_GsLoginSuccessfully] ",lMsg.info)
     if lMsg.info == nil then
         Event.Brocast("c_GsCreateRole")
     else
-        --ServerListModel.loginRole(lMsg.info)
         Event.Brocast("m_loginRole",lMsg.info[1])
     end
     --cache data
+    --同步服务器时间
+    if lMsg.ts ~= nil then
+        TimeSynchronized.SynchronizationServerTime(lMsg.ts)
+    else
+        ct.log("system","Error:登录服务器没有同步时间")
+    end
 end
 
 --登录gs发包
@@ -94,7 +98,9 @@ function ServerListModel.n_OnRoleLogin(stream)
     --}
     if(stream) then
         local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
-        ServerListModel.inHand = pMsg.bag.inHand
+        if pMsg.bag ~= nil then
+            ServerListModel.inHand = pMsg.bag.inHand
+        end
         ServerListModel.bagId = pMsg.bagId
 
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")

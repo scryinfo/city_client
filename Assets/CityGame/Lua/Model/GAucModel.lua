@@ -138,7 +138,7 @@ function GAucModel.getNowAucDataFunc(msgGroundAuc)
 end
 --拍卖结束
 function GAucModel.bindEndFunc(endId)
-    --Event.Brocast("c_BidEnd", endId)  --关闭界面
+    Event.Brocast("c_BidEnd", endId)  --关闭界面
 end
 
 --获取当前soon And now AucGround，生成气泡

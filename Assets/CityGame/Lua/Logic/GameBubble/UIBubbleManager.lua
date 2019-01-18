@@ -37,16 +37,12 @@ function UIBubbleManager._preLoadGroundAucObj()
 end
 
 function UIBubbleManager._addListener()
-    Event.AddListener("c_RefreshItems", this._refreshItems, self)
     Event.AddListener("c_HideGroundBubble", this._hideAllItems, self)
     Event.AddListener("c_ShowGroundBubble", this._showAllItems, self)
-    Event.AddListener("c_BidEnd", this.bidEnd)
 end
 function UIBubbleManager._removeListener()
-    Event.RemoveListener("c_RefreshItems", this._refreshItems, self)
     Event.RemoveListener("c_HideGroundBubble", this._hideAllItems, self)
     Event.RemoveListener("c_ShowGroundBubble", this._showAllItems, self)
-    Event.RemoveListener("c_BidEnd", this.bidEnd)
 end
 
 --气泡类型
@@ -75,16 +71,16 @@ function UIBubbleManager.startBubble()
 end
 
 --生成拍卖气泡
-function UIBubbleManager.createAucBubble(aucData)
-    if this.startFlowCam == false then
-        ct.log("", "尚未打开气泡模式")
-        return
-    end
-    if aucData == nil then
-        return
-    end
-    this._creatGroundAucBubbleItem(aucData)
-end
+--function UIBubbleManager.createAucBubble(aucData)
+--    if this.startFlowCam == false then
+--        ct.log("", "尚未打开气泡模式")
+--        return
+--    end
+--    if aucData == nil then
+--        return
+--    end
+--    this._creatGroundAucBubbleItem(aucData)
+--end
 
 --拍卖刷新信息
 function UIBubbleManager.updateAucData(data)

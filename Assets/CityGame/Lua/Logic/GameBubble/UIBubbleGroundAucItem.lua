@@ -45,9 +45,9 @@ end
 
 --打开拍卖界面，即将拍卖
 function UIBubbleGroundAucItem:_openGroundAucFunc()
-    if self.data.aucInfo == nil then
-        return
-    end
+    --if self.data.aucInfo == nil then
+    --    return
+    --end
     ct.OpenCtrl("GroundAuctionCtrl", self.data.aucInfo)
 end
 

@@ -19,7 +19,7 @@ function BaseBuildModel:Refresh(data)
         self.Data[key] = value
     end
     DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
-    --UIBubbleMgr.startBubble()
+    --UIBubbleManager.startBubble()
     --self:CheckBubbleState()
 end
 
@@ -52,7 +52,7 @@ function BaseBuildModel:CheckBubbleState()
     if data.ownerId == DataManager.GetMyOwnerID() then
         if self.bubbleItem == nil then
             local uiCenterPos = PlayerBuildingBaseData[data.buildingID].UICenterPos
-            self.bubbleItem = UIBubbleMgr.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y}, uiCenterPos)
+            self.bubbleItem = UIBubbleManager.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y}, uiCenterPos)
             return
         end
     end

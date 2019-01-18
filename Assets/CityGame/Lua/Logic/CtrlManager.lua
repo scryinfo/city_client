@@ -65,7 +65,7 @@ function CtrlManager.Init()
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	MusicManger:Awake()
 	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-	UIBubbleMgr.Awake() --temp
+	UIBubbleManager.Awake() --temp
 
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 

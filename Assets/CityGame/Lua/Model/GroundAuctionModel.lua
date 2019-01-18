@@ -24,22 +24,22 @@ end
 
 --启动事件--
 function GroundAuctionModel.OnCreate()
-    --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GroundAuctionModel.n_OnReceiveBindGround)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GroundAuctionModel.n_OnReceiveWinBid)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GroundAuctionModel.n_OnReceiveFailBid)
-
-    --本地的回调注册
-    Event.AddListener("m_PlayerBidGround", this.m_BidGround)
-    Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
-    Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
-    Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
-    Event.AddListener("c_UIBubbleLateUpdate", GroundAuctionModel.c_bubbleLateUpdate)  --temp
+    ----网络回调注册
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GroundAuctionModel.n_OnReceiveQueryGroundAuctionInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GroundAuctionModel.n_OnReceiveBindGround)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GroundAuctionModel.n_OnReceivequeryMetaGroundAuctionInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GroundAuctionModel.n_OnReceiveBidChangeInfor)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GroundAuctionModel.n_OnReceiveAuctionEnd)
+    ----CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","metaGroundAuctionAddInform"), GroundAuctionModel.n_OnReceiveAddInform)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GroundAuctionModel.n_OnReceiveWinBid)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GroundAuctionModel.n_OnReceiveFailBid)
+    --
+    ----本地的回调注册
+    --Event.AddListener("m_PlayerBidGround", this.m_BidGround)
+    --Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
+    --Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
+    --Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
+    --Event.AddListener("c_UIBubbleLateUpdate", GroundAuctionModel.c_bubbleLateUpdate)  --temp
 end
 
 function GroundAuctionModel.c_bubbleLateUpdate()

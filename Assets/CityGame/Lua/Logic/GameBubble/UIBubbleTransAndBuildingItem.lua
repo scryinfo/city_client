@@ -71,6 +71,7 @@ function UIBubbleTransAndBuildingItem:Close()
     if self.gameObject ~= nil then
         destroyImmediate(self.gameObject)
     end
+    self.pos = nil
     self = nil
 end
 

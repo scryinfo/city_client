@@ -185,9 +185,6 @@ end
 
 --出价
 function GroundAuctionCtrl:BidGround(ins)
-    --if ins.basePrice == nil then
-    --    return
-    --end
     local bidPrice = GroundAuctionPanel.bidInput.text
     if bidPrice == "" then
         --打开弹框

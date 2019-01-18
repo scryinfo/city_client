@@ -1113,7 +1113,7 @@ function DataManager.Init()
     InitialEvents()
     InitialNetMessages()
     --土地拍卖Model
-    SystemDatas.GroundAuctionModel  = GroundAuctionModel.New()
+    SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end

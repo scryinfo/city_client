@@ -206,9 +206,8 @@ function CameraMove:TouchBuild()
             end
         end
         --判断是否点击在拍卖中的地块上
-        local click, index = GroundAuctionModel.getIsClickAucGround(blockID)
+        local click = UIBubbleManager.getIsClickAucGround(blockID)
         if click then
-            UIBubbleMgr._openGroundAucCtrl(index)
             return
         end
 

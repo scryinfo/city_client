@@ -19,8 +19,8 @@ function BaseBuildModel:Refresh(data)
         self.Data[key] = value
     end
     DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
-    --UIBubbleManager.startBubble()
-    --self:CheckBubbleState()
+    UIBubbleManager.startBubble()
+    self:CheckBubbleState()
 end
 
 --打开界面

@@ -22,9 +22,9 @@ function BaseGroundModel:Refresh(data)
     --for key, value in pairs(data) do
     --    self.Data[key] = value
     --end
-    --UIBubbleManager.startBubble()
-    --self:CheckBubbleState(data)
     --self:CheckGroundTransSuccess(data)
+    UIBubbleManager.startBubble()
+    self:CheckBubbleState(data)
     self.Data = data
 end
 

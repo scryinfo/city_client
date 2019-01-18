@@ -149,10 +149,6 @@ end
 
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
-    if self.isShowPersonalInfo then
-        self.isShowPersonalInfo = false
-        return
-    end
     self:_closePlayerInfo()
     ChatPanel.expressionRoot:SetActive(false)
     self:_showWorldInfo()
@@ -507,8 +503,8 @@ end
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
     if ChatCtrl.static.chatMgr.activePlayerData then
-        go.isShowPersonalInfo = true
-        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+        local isOpenChat = true
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData, isOpenChat)
     end
 end
 

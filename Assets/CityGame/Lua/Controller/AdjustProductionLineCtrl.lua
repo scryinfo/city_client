@@ -168,9 +168,6 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
             for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
                 if v.key.id == itemId then
                     return v.n
-                else
-                    local num = 0
-                    return num
                 end
             end
         else

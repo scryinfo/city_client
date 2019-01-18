@@ -136,6 +136,7 @@ function SmallProductionLineItem:OnClicl_addBtn(go)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
     go.adjustmentTop.localScale = Vector3.zero
 end
+
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
     if not go.lineId then

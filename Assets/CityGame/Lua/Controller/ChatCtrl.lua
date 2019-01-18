@@ -56,7 +56,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
-    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
+    --ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -508,9 +508,9 @@ function ChatCtrl:OnShowPersonalInfo(go)
     end
 end
 
-function ChatCtrl:OnShowCompany(go)
-    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
-end
+--function ChatCtrl:OnShowCompany(go)
+--    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+--end
 
 -- 删除聊天记录
 function ChatCtrl:OnDeleteChatRecords(go)

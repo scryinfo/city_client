@@ -33,6 +33,7 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     self.noticeImage:SetActive(false)
+    LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.friendsImage, false)
 
     self.toggle.onValueChanged:AddListener(function (isOn)
         self:_toggleValueChange(isOn)

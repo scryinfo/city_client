@@ -1296,6 +1296,8 @@ function DataManager.n_OnReceiveErrorCode(stream)
             elseif data.reason == "notAllow" then
                 Event.Brocast("SmallPop","Has been shielded.",60)
             end
+        elseif data.opcode == 10000 then  -- 获取交易信息失败
+            Event.Brocast("c_OnReceivePlayerEconomy")
         end
     end
 end

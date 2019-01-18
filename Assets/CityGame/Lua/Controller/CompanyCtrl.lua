@@ -32,25 +32,28 @@ function CompanyCtrl:Awake()
     self.businessRecordsSource.mProvideData = CompanyCtrl.static.businessRecordsData
     self.businessRecordsSource.mClearData = CompanyCtrl.static.businessRecordsClearData
 
-    self:_allItemType()
+
 
     --this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil)
 end
 
 function CompanyCtrl:_allItemType()
-    CompanyCtrl.static.AllItem = {}
-    for _, v in pairs(Material) do
-        table.insert(CompanyCtrl.static.AllItem, v)
+    CompanyCtrl.static.AllItem = {
+        SELL_GROUND = {itemId = 1000, income = 0, expenses = 0}, -- 土地买卖
+        RENT_GROUND = {itemId = 1001, income = 0, expenses = 0}, -- 土地租赁
+        TRANSFER = {itemId = 1002, expenses = 0}, -- 运输费用
+        SALARY = {itemId = 1003, expenses = 0}, -- 员工工资
+        RENT_ROOM = {itemId = 1004, income = 0} -- 住宅房租
+    }
+    CompanyCtrl.static.AllItemId = {"SELL_GROUND", "RENT_GROUND", "TRANSFER","SALARY","RENT_ROOM",}
+    for k, v in pairs(Material) do
+        CompanyCtrl.static.AllItem[k] = {itemId = v.itemId, name = v.name, income = 0, expenses = 0}
+        table.insert(CompanyCtrl.static.AllItemId, k)
     end
-    for _, k in pairs(Good) do
-        table.insert(CompanyCtrl.static.AllItem, k)
+    for i, j in pairs(Good) do
+        CompanyCtrl.static.AllItem[i] = {itemId = j.itemId, name = j.name, income = 0, expenses = 0}
+        table.insert(CompanyCtrl.static.AllItemId, i)
     end
-
-    table.insert(CompanyCtrl.static.AllItem, {itemId = 1000, income = "0", expenses = "0"})
-    table.insert(CompanyCtrl.static.AllItem, {itemId = 1001, income = "0", expenses = "0"})
-    table.insert(CompanyCtrl.static.AllItem, {itemId = 1002, income = "0"})
-    table.insert(CompanyCtrl.static.AllItem, {itemId = 1003, expenses = "0"})
-    table.insert(CompanyCtrl.static.AllItem, {itemId = 1004, expenses = "0"})
 end
 
 function CompanyCtrl:OnBack(go)
@@ -59,6 +62,7 @@ function CompanyCtrl:OnBack(go)
 end
 
 function CompanyCtrl:Refresh()
+    self:_allItemType()
     self:_addListener()
     self:_updateData()
 end
@@ -75,7 +79,7 @@ end
 
 function CompanyCtrl:initInsData()
     DataManager.OpenDetailModel(CompanyModel, OpenModelInsID.CompanyCtrl)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryPlayerEconomy', self.m_data.id)--获取自己的建筑详情
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryPlayerEconomy', self.m_data.id)
 end
 
 function CompanyCtrl:_updateData()
@@ -87,11 +91,14 @@ function CompanyCtrl:_updateData()
         CompanyPanel.titleText.text = "COMPANY"
         CompanyPanel.coinBg:SetActive(false)
     end
+    LoadSprite(PlayerHead[self.m_data.faceId].MainPath, CompanyPanel.headImage, true)
     CompanyPanel.companyText.text = self.m_data.companyName
     CompanyPanel.nameText.text = self.m_data.name
+    local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
+    CompanyPanel.foundingTimeText.text = string.format("founding time:%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
     CompanyPanel.businessRecordsScroll:RefillCells()
-    CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItem)
+    --CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItemId)
 
     self:initInsData()
 end
@@ -103,7 +110,7 @@ end
 -- 交易记录
 CompanyCtrl.static.businessRecordsData = function(transform, idx)
     idx = idx + 1
-    local item = BusinessRecordsItem:new(transform, CompanyCtrl.static.AllItem[idx])
+    local item = BusinessRecordsItem:new(transform, CompanyCtrl.static.AllItem[CompanyCtrl.static.AllItemId[idx]])
     --ExchangeCtrl.quoteItems[idx] = item
 end
 
@@ -112,4 +119,38 @@ end
 
 -- 网络回调
 function CompanyCtrl:c_OnReceivePlayerEconomy(economyInfos)
+    if economyInfos then
+        CompanyPanel.tipsText:SetActive(false)
+        local allIncome = 0
+        local allExpenses = 0
+        for _, v in ipairs(economyInfos.infos) do
+            if v.type == "MATERIAL" or v.type == "GOODS" then
+                if v.income then
+                    CompanyCtrl.static.AllItem[v.id].income = v.income
+                    allIncome = allIncome + v.income
+                end
+                if v.pay then
+                    CompanyCtrl.static.AllItem[v.id].expenses = v.pay
+                    allExpenses = allExpenses + v.pay
+                end
+            else
+                if v.income then
+                    CompanyCtrl.static.AllItem[v.type].income = v.income
+                    allIncome = allIncome + v.income
+                end
+                if v.pay then
+                    CompanyCtrl.static.AllItem[v.type].expenses = v.pay
+                    allExpenses = allExpenses + v.pay
+                end
+            end
+        end
+        CompanyPanel.incomeText.text = tostring(allIncome)
+        CompanyPanel.expenditureText.text = tostring(allExpenses)
+        CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItemId)
+    else
+        CompanyPanel.incomeText.text = "0"
+        CompanyPanel.expenditureText.text = "0"
+        CompanyPanel.tipsText:SetActive(true)
+        CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, 0)
+    end
 end

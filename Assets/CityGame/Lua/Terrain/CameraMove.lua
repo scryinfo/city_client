@@ -246,7 +246,7 @@ function CameraMove:UpdateMove()
         return
     end
     local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
-    if tempPos  then
+    if tempPos ~= nil then
         local OffsetVec  = tempPos - self.touchBeginPosition
         local tempPosition = self.touchBeginCameraPos - OffsetVec
         --范围限制

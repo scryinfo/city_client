@@ -28,11 +28,12 @@ end
 function ConstructCtrl:Awake(go)
     self.gameObject = go
     self.contentTrans = self.gameObject.transform:Find("bottomScroll/Viewport/Content")
+    self:_initPanelData()
 end
 
 function ConstructCtrl:Refresh()
-    self:ClearAllItem()
-    self:_initPanelData()
+    --self:ClearAllItem()
+    --self:_initPanelData()
 
     ct.log("Allen_wk14_MyGround","临时生成我的地块")
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_CreateMyGrounds",self)
@@ -43,7 +44,7 @@ function ConstructCtrl:ClearAllItem()
         for i = 0, self.contentTrans.childCount - 1 do
             destroy(self.contentTrans:GetChild(i).gameObject)
         end
-        ConstructCtrl:ClearItemData()
+        --ConstructCtrl:ClearItemData()
     end
 end
 

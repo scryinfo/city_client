@@ -1707,6 +1707,8 @@ CityEngineLua.login_loginapp = function( noconnect )
 		local pb_login = assert(pbl.encode("as.Login", msglogion))
 		--发包
 		CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+		--多连接测试
+		UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 	end
 end
 
@@ -1790,7 +1792,8 @@ CityEngineLua.login_tradeapp = function(noconnect)
 		this._tradeNetworkInterface1 = City.NetworkInterface.New();
 		this._tradeNetworkInterface1:connectTo(this.tradeappIP, this.tradeappPort, this.onConnectTo_tradeapp_callback, nil);
 	else
-		----gs 登录
+		UnitTest.Exec_now("wk24_abel_mutiConnect_revMsg", "c_wk24_abel_mutiConnect_revMsg",self)
+		----ss 登录
 		----1、 获取协议id
 		--local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
 		----2、 填充 protobuf 内部协议数据
@@ -1813,7 +1816,7 @@ CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, userDa
 
 	logDebug("City::login_tradeapp(): connect "..ip..":"..port.." is successfully!");
 	--Event.Brocast("c_GsConnected", true );
-	--this.login_tradeapp(false)
+	this.login_tradeapp(false)
 end
 
 CityEngineLua.hello = function()
@@ -2186,7 +2189,11 @@ end
 CityEngineLua.process = function()
 	-- 处理网络
 	this._networkInterface:process();
-	
+
+	if this._tradeNetworkInterface1 then
+		this._tradeNetworkInterface1:process();
+	end
+
 	-- 向服务端发送心跳以及同步角色信息到服务端
     this.sendTick();
 end

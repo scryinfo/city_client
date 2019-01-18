@@ -54,7 +54,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClicl_closeBtn,self);
     self._luabehaviour:AddClick(self.addBtn.gameObject,self.OnClicl_addBtn,self);
-
+    --Event.AddListener("c_refreshTime",self.refreshTime,self)
 end
 --新加线
 function SmallProductionLineItem:initUiInfo(infoData)
@@ -90,6 +90,20 @@ function SmallProductionLineItem:initUiInfo(infoData)
         end)
     end
 end
+----刷新时间
+--function SmallProductionLineItem:refreshTime(data)
+--    local remainingNum = data.targetCount - data.nowCount
+--    local materialKey,goodsKey = 21,22
+--    self.time = 0
+--    if math.floor(data.itemId / 100000) == materialKey then
+--        self.time = 1 / Material[data.itemId].numOneSec / data.workerNum * remainingNum
+--    elseif math.floor(data.itemId / 100000) == goodsKey then
+--        self.time = 1 / Good[data.itemId].numOneSec / data.workerNum * remainingNum
+--    end
+--    --self.time = self.time + UnityEngine.Time.unscaledDeltaTime
+--    self.remainingTime = self.time
+--    UpdateBeat:Add(self.Update,self)
+--end
 --读到线
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.adjustmentTop.localScale = Vector3.zero
@@ -128,8 +142,8 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
             end
         end)
     end
-    self.timeText.text = self:getTimeNumber(self.goodsDataInfo)
-    self.minText.text = self:getMinuteNum(self.goodsDataInfo)
+    self.timeText.text = self:getTimeNumber(infoTab)
+    self.minText.text = self:getMinuteNum(infoTab)
 end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)

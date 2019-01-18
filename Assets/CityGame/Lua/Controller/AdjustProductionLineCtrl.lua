@@ -77,18 +77,19 @@ function AdjustProductionLineCtrl:calculateTime(msg)
     if not msg then
         return
     end
-    local materialKey,goodsKey = 21,22
-    local time = 0
-    if math.floor(msg.line.itemId / 100000) == materialKey then
-        time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    elseif math.floor(msg.line.itemId / 100000) == goodsKey then
-        time = 1 / Good[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    end
-    local timeTab = getTimeBySec(time)
-    local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
+    --local materialKey,goodsKey = 21,22
+    --local time = 0
+    --if math.floor(msg.line.itemId / 100000) == materialKey then
+    --    time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    --elseif math.floor(msg.line.itemId / 100000) == goodsKey then
+    --    time = 1 / Good[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    --end
+    --local timeTab = getTimeBySec(time)
+    --local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
-            v.timeText.text = timeStr
+            --v.timeText.text = timeStr.
+            v:getTimeNumber(msg.line)
         end
     end
 end
@@ -120,6 +121,7 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.buildingId == msg.buildingId and v.lineId == msg.lineId then
             self:refreshAddWorkerNum(tonumber(v.sNumberScrollbar.value))
+            v:closeUpdate()
             destroy(v.prefab.gameObject);
             table.remove(AdjustProductionLineCtrl.materialProductionLine,i)
         end
@@ -231,8 +233,6 @@ function AdjustProductionLineCtrl:deleteTempTable()
         for i,v in pairs(GoodsUnifyMgr.tempLineItem) do
             destroy(v.prefab.gameObject)
         end
-        --GoodsUnifyMgr.tempLineUIInfo = {};
-        --GoodsUnifyMgr.tempLinePrefab = {};
         GoodsUnifyMgr.tempLineItem = {};
     end
 end

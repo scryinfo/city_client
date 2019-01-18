@@ -60,6 +60,9 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
 end
 --获取是否点击到对应地块
 function UIBubbleGroundAucItem:_checkIsClickGround(blockId)
+    if self.data == nil then
+        return false
+    end
     for i, pos in pairs(self.data.aucInfo.area) do
         local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
         if tempBlockId == blockId then

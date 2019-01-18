@@ -128,25 +128,6 @@ function UIBubbleManager.getIsClickAucGround(blockId)
     return false
 end
 
---更新数据
-function UIBubbleManager._refreshItems(datas)
-    if this.nowItem ~= nil then
-        this.nowItem:Close()
-    end
-    if this.soonItem ~= nil then
-        this.soonItem:Close()
-    end
-    this.nowItem = nil
-    this.soonItem = nil
-
-    if datas.nowData ~= nil then
-        --this._creatGroundAucBubbleItem(datas.nowData, 1)
-    end
-    if datas.soonData ~= nil then
-        --this._creatGroundAucBubbleItem(datas.soonData, 0)
-    end
-end
-
 --隐藏所有气泡
 function UIBubbleManager._hideAllItems()
     UIBubbleManager.hide = true
@@ -205,4 +186,7 @@ end
 --回收item
 function UIBubbleManager.closeItem(item)
     item:Close()
+    if this.aucItemsTable[item.data.aucInfo.id] ~= nil then
+        this.aucItemsTable[item.data.aucInfo.id] = nil
+    end
 end

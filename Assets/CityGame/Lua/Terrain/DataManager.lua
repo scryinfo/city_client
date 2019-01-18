@@ -1263,6 +1263,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
 
     Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
+    Event.Brocast("c_GetBiderInfo", playerData)  --拍卖请求出价者id
 
 end
 

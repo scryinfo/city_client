@@ -20,6 +20,7 @@ function GroundAuctionCtrl:OnCreate(obj)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
+    groundAuctionBehaviour:AddClick(GroundAuctionPanel.biderProtaitBtn.gameObject, self._clickProtait, self)
 end
 
 function GroundAuctionCtrl:Awake(go)
@@ -31,6 +32,8 @@ function GroundAuctionCtrl:Refresh()
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
     Event.AddListener("c_BidStart", self._bidStart, self)  --拍卖开始
+    Event.AddListener("c_GetBiderInfo", self._getBiderInfo, self)
+
     self:_initPanelData()
 end
 
@@ -43,6 +46,7 @@ function GroundAuctionCtrl:Hide()
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
     Event.RemoveListener("c_BidStart", self._bidStart, self)
+    Event.RemoveListener("c_GetBiderInfo", self._getBiderInfo, self)
     UIPage.Hide(self)
 end
 
@@ -63,9 +67,12 @@ function GroundAuctionCtrl:_initPanelData()
     GroundAuctionPanel.personAverageText.text = 0
     --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
     if self.m_data.isStartAuc then
+        GAucModel.m_ReqQueryGroundAuction()
+
         Event.Brocast("m_RegistGroundBidInfor")
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
+        GroundAuctionPanel.nameText.text = "Floor price :"
 
         if self.m_data.price == nil then
             GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
@@ -211,17 +218,45 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         return
     end
 
-    self.highestPrice = data.num
-    GroundAuctionPanel.currentPriceText.text = getPriceString(data.num, 30, 24)
+    self.highestPrice = data.price
+    GroundAuctionPanel.currentPriceText.text = getPriceString(data.price, 30, 24)
     GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
     GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
     GroundAuctionPanel.currentPriceText.text = tostring(self.highestPrice)
     self.biderId = data.biderId
-    --DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
+
+    if self.biderId == DataManager.GetMyOwnerID() then
+        self.biderInfo = DataManager.GetMyPersonalHomepageInfo()
+        self:_setUIInfo(self.biderInfo)
+        return
+    end
+    if self.biderInfo == nil then
+        --请求信息
+        GAucModel.m_ReqPlayersInfo({[1] = data.id})
+    else
+        if self.biderInfo.id == data.id then
+            --请求信息
+            GAucModel.m_ReqPlayersInfo({[1] = data.id})
+        end
+    end
 end
+--得到消息
+function GroundAuctionCtrl:_getBiderInfo(playerData)
+    if playerData.info ~= nil and #playerData.info == 1 and playerData.info[1].id == self.biderId then
+        self.biderInfo = playerData.info[1]
+        self:_setUIInfo(self.biderInfo)
+    end
+end
+--
+function GroundAuctionCtrl:_setUIInfo(playerData)
+    GroundAuctionPanel.nameText.text = self.biderInfo.name
+    --GroundAuctionPanel.biderProtaitImg
+end
+
 --拍卖结束
 function GroundAuctionCtrl:_bidEnd(id)
     if id == self.id then
+        self.biderInfo = nil
         UIPage.ClosePage()
     end
 end
@@ -248,10 +283,8 @@ function GroundAuctionCtrl:_bidStart(groundData)
 end
 --点击头像
 function GroundAuctionCtrl:_clickProtait(ins)
-    if ins.biderId == nil then
+    if ins.biderInfo == nil then
         return
     end
-    if ins.gameObject.activeSelf then
-
-    end
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.biderInfo)
 end

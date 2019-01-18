@@ -94,7 +94,7 @@ end
 
 --拍卖信息更新
 function GAucModel._updateAucBidInfo(aucData)
-    local data = {id = aucData.targetId, num = aucData.nowPrice, biderId = aucData.biderId}
+    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
@@ -117,8 +117,6 @@ function GAucModel.getMataGroundDataFunc(auctionInfo)
     this.getFirstNowData()  --创建拍卖中的item
     this._checkSoonData()  --创建即将拍卖item
     this._moveToAucPos()
-
-    --this.m_ReqQueryGroundAuction()  --请求拍卖中的气泡
 end
 
 --收到拍卖中的数据之后的操作
@@ -130,8 +128,10 @@ function GAucModel.getNowAucDataFunc(msgGroundAuc)
             this.groundAucDatas[item.id].price = item.price
 
             if item.biderId ~= nil then
-                local data = {id = item.id, num = item.price, biderId = item.biderId}
+                local data = {id = item.id, price = item.price, biderId = item.biderId}
                 Event.Brocast("c_BidInfoUpdate", data)
+                --
+                return
             end
         end
     end
@@ -235,7 +235,7 @@ function GAucModel.getFirstNowData()
 end
 
 --- 客户端请求 ---
---请求即将拍卖的土地信息
+--请求拍卖中的土地信息
 function GAucModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
@@ -265,6 +265,13 @@ end
 function GAucModel.m_UnRegistGroundBidInfor()
     local msgId = pbl.enum("gscode.OpCode","unregistGroundBidInform")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
+--请求玩家信息
+function GAucModel.m_ReqPlayersInfo(ids)
+    local msgId = pbl.enum("gscode.OpCode","queryPlayerInfo")
+    local pMsg = assert(pbl.encode("gs.Bytes", { ids = ids}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
 --- 回调 ---

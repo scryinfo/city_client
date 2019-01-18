@@ -54,7 +54,7 @@ end
 --信息更新
 function UIBubbleGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.aucInfo.id then
-        self.data.aucInfo.price = data.num
+        self.data.aucInfo.price = data.price
         self.data.aucInfo.biderId = data.biderId
     end
 end

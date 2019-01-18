@@ -57,8 +57,33 @@ end
 ---一直检测拍卖的状态信息
 function GroundAuctionModel._update()
     if this.orderAucDatas ~= nil and #this.orderAucDatas > 0 then
-        --this._nowTimeDown()
+        this._nowTimeDown()
         this._soonTimeDown()
+    end
+end
+
+--拍卖中，拍卖结束倒计时
+function GroundAuctionModel._nowTimeDown()
+    if this.nowAucGroundData  == nil then
+        return
+    end
+    local finishTime = this.nowAucGroundData.aucInfo.beginTime + this.nowAucGroundData.aucInfo.durationSec
+    this.tempNowCurrentTime = this.tempNowCurrentTime + UnityEngine.Time.unscaledDeltaTime
+    local remainTime = finishTime - this.tempNowCurrentTime
+
+    if remainTime < 0 then
+        --拍卖结束
+        --重新确认下一个即将拍卖的数据
+        if finishTime < TimeSynchronized.GetTheCurrentTime() then
+            Event.Brocast("c_BidEnd", this.nowAucGroundData.aucInfo.id)  --关闭界面
+
+            --table.remove(this.orderAucDatas, 1)
+            --if #this.orderAucDatas == 0 then
+            --    return
+            --end
+            --this._checkNowAndSoonData()
+            --Event.Brocast("c_RefreshItems", {this.nowAucGroundData, this.soonAucGroundData})
+        end
     end
 end
 

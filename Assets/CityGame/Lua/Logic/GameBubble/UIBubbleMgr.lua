@@ -11,6 +11,7 @@ local pbl = pbl
 UIBubbleMgr.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
 UIBubbleMgr.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleMgr.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
+UIBubbleCtrl.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
 
 --构建函数--
 function UIBubbleMgr.New()
@@ -129,8 +130,8 @@ function UIBubbleMgr._creatGroundAucBubbleItem(bubbleData, index)
         else
             go.transform.localScale = Vector3.one
         end
-        local data = ct.deepCopy(bubbleData)
-        --local data = bubbleData
+        --local data = ct.deepCopy(bubbleData)
+        local data = bubbleData
         --data.groundObj.transform.localScale = Vector3.one
         data.bubbleObj = go  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
@@ -148,8 +149,8 @@ function UIBubbleMgr._creatGroundAucBubbleItem(bubbleData, index)
         else
             go.transform.localScale = Vector3.one
         end
-        --local data = bubbleData
-        local data = ct.deepCopy(bubbleData)
+        local data = bubbleData
+        --local data = ct.deepCopy(bubbleData)
         --data.groundObj.transform.localScale = Vector3.one  --地块
         data.bubbleObj = go
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)

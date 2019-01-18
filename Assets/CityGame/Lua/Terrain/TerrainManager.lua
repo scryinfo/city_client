@@ -267,6 +267,10 @@ local function CreateConstructBuildSuccess(go,table)
         return;
     end
     DataManager.TempDatas.constructID  = table[1]
+    --防止加载太慢
+    if DataManager.TempDatas.constructObj ~= nil then
+        destroy(DataManager.TempDatas.constructObj)
+    end
     DataManager.TempDatas.constructObj = go
     local Vec3 = table[2]
     --add height

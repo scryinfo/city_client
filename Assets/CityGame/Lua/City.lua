@@ -77,6 +77,10 @@ CityEngineLua.baseappIP = "";
 CityEngineLua.baseappPort = nil;
 CityEngineLua.token = ""
 
+-- 交易服务器的地址
+CityEngineLua.tradeappIP = "";
+CityEngineLua.tradeappPort = nil;
+
 CityEngineLua._serverdatas = {};
 CityEngineLua._clientdatas = {};
 
@@ -121,6 +125,7 @@ CityEngineLua._lastUpdateToServerTime = os.clock();
 
 --网络接口
 CityEngineLua._networkInterface = nil;
+CityEngineLua._tradeNetworkInterface1 = nil;
 
 CityEngineLua.deg2rad = Mathf.PI / 180;
 
@@ -1777,6 +1782,38 @@ CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userDat
 	logDebug("City::login_baseapp(): connect "..ip..":"..port.." is successfully!");
 	Event.Brocast("c_GsConnected", true );
 	this.login_baseapp(false);
+end
+
+--登录到服务端，登录到交易服务器
+CityEngineLua.login_tradeapp = function(noconnect)
+	if(noconnect) then
+		this._tradeNetworkInterface1 = City.NetworkInterface.New();
+		this._tradeNetworkInterface1:connectTo(this.tradeappIP, this.tradeappPort, this.onConnectTo_tradeapp_callback, nil);
+	else
+		----gs 登录
+		----1、 获取协议id
+		--local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
+		----2、 填充 protobuf 内部协议数据
+		--local lMsg = { id = "123"}
+		--local pMsg = assert(pbl.encode("ss.Id", lMsg))
+		----3、 创建包，填入数据并发包
+		--CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, this._tradeNetworkInterface1);
+	end
+end
+
+CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, userData)
+	this._lastTickCBTime = os.clock();
+	if not success then
+		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
+		return;
+	end
+
+	--this.currserver = "baseapp";
+	--this.currstate = "";
+
+	logDebug("City::login_tradeapp(): connect "..ip..":"..port.." is successfully!");
+	--Event.Brocast("c_GsConnected", true );
+	--this.login_tradeapp(false)
 end
 
 CityEngineLua.hello = function()

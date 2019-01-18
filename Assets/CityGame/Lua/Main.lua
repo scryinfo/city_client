@@ -24,6 +24,8 @@ function OnInitProto()
 	assert(protoc:loadfile ("gsCode.proto"))
 	assert(protoc:loadfile ("metadata.proto"))
 	assert(protoc:loadfile ("client.proto"))
+	assert(protoc:loadfile ("ss.proto"))
+	assert(protoc:loadfile ("sscode.proto"))
 end
 
 --主入口函数。从这里开始lua逻辑

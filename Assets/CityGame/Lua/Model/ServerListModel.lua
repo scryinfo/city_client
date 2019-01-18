@@ -38,6 +38,11 @@ function ServerListModel:m_chooseGameServer( data )
     --缓存选择的服务器信息
     CityEngineLua.baseappIP = ip;
     CityEngineLua.baseappPort = tostring(port);
+
+    -- 保存交易服务器的信息
+    CityEngineLua.tradeappIP = data.serinofs[serverIndex].ssIp
+    CityEngineLua.tradeappPort = tostring(data.serinofs[serverIndex].ssPort)
+
     --serverinfo.serverId
     --更新服务器数据到UI，UI实现中缓存服务器数据，比如 serverId ，以备后用
     DataManager.ModelSendNetMes("ascode.OpCode", "chooseGameServer","as.ChoseGameServer",{ serverId = sid})
@@ -59,6 +64,7 @@ function ServerListModel:m_GsOK()
     ServerListModel:registerGsNetMsg()
     --连接gs
     CityEngineLua.login_baseapp(true)
+    CityEngineLua.login_tradeapp(true)
 end
 function ServerListModel:registerGsNetMsg()
     --gs网络回调注册

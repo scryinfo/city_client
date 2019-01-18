@@ -119,6 +119,8 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Awake()
+    --獎金池
+
     --头像
     local faceId = DataManager.GetFaceId()
     LoadSprite(PlayerHead[faceId].MainPath, GameMainInterfacePanel.headItem, true)

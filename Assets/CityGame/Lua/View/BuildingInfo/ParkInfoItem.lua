@@ -20,11 +20,16 @@ function ParkInfoItem:initialize(itemData, clickOpenFunc, itemRect, LuaBehaviour
     self.openStateTran = self.itemRect.transform:Find("topRoot/open");  --打开状态
     self.toDoBtn = self.itemRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
 
+    self.brandText=itemRect:Find("topRoot/iconImg/numText"):GetComponent("Text");
+    self.qtyText=itemRect:Find("topRoot/iconImg1/numText"):GetComponent("Text");
+
+
     LuaBehaviour:AddClick(self.toDoBtn.gameObject,function()
         itemData.func(mgrTable,toggleData)
     end)
 
-    Event.AddListener("c_onParkInfoValueChange", self.updateInfo, self);
+    Event.AddListener("c_onParkInfoValueChange", self.updateBrandQty, self);
+
 
 end
 
@@ -60,10 +65,13 @@ function ParkInfoItem:OntoDOBtn()
 
 
 end
----刷新数据
-function ParkInfoItem:updateInfo()
 
 
+---刷新数品牌和得分
+function ParkInfoItem:updateBrandQty( Brand,qty )
+
+    self.brandText.text=Brand
+    self.qtyText.text=qty
 
 end
 

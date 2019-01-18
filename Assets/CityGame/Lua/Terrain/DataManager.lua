@@ -582,6 +582,14 @@ local function DataManager_Update()
     end
 end
 
+--登录成功，游戏开始
+local function LoginSuccessAndGameStart()
+    --初始化中心建筑
+    TerrainManager.CreateCenterBuilding()
+    --打开循环判断自己的租地是否到期
+    UpdateBeat:Add(DataManager_Update, this)
+end
+
 --土地集合
 --参数： tempData  ===》    gs.Role
 function  DataManager.InitPersonDatas(tempData)
@@ -591,6 +599,12 @@ function  DataManager.InitPersonDatas(tempData)
     if not tempData then
         ct.log("System","登录成功RoleLogin返回信息为空")
         return
+    end
+    --初始化建筑评分
+    if tempData.buildingBrands then
+        PersonDataStack.m_buildingBrands=tempData.buildingBrands
+    else
+        PersonDataStack.m_buildingBrands=0
     end
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
@@ -611,7 +625,7 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化自己中心仓库的数据
     if tempData.bag ~= nil then
         local inHand = tempData.bag.inHand
-        PersonDataStack.m_inHand = ct.deepCopy( inHand)
+        PersonDataStack.m_inHand = ct.deepCopy( inHand )
     end
     PersonDataStack.m_bag = tempData.bag
     --初始化自己的moneys
@@ -683,7 +697,6 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-
     PersonDataStack.socialityManager = SocialityManager:new()
     if tempData.friends then
         for _, value in pairs(tempData.friends) do
@@ -692,8 +705,10 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
-    UpdateBeat:Add(DataManager_Update, this)
+    LoginSuccessAndGameStart()
 end
+
+
 
 --添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)
@@ -753,7 +768,12 @@ function DataManager.RemoveMyRentGroundInfo(groundInfoData)
     end
 end
 
+--获取自已的所有的建筑评分
+function DataManager.GetMyBuildingBrands()
+    return PersonDataStack.m_buildingBrands
+end
 
+--获取自已的Id
 function DataManager.GetMyOwnerID()
     return PersonDataStack.m_owner
 end
@@ -776,6 +796,11 @@ end
 --获取自己的money
 function DataManager.GetMoney()
     return PersonDataStack.m_money
+end
+
+--刷新自己的money
+function DataManager.SetMoney(money)
+    PersonDataStack.m_money = money
 end
 
 --获取自己的名字
@@ -1053,6 +1078,7 @@ local function InitialEvents()
    -- Event.AddListener("m_SetHeadId",DataManager.m_SetHeadId)
     Event.AddListener("c_AddBagInfo",DataManager.c_AddBagInfo)
     Event.AddListener("c_DelBagInfo",DataManager.c_DelBagInfo)
+    Event.AddListener("c_DelBagItem",DataManager.c_DelBagItem)
 end
 
 --注册所有网络消息回调
@@ -1344,13 +1370,18 @@ function DataManager.c_DelBagInfo(itemId,n)
                 end
             end
         end
-    --刷新ID
-    --if newInHand then
-    --    for i = 1, #PersonDataStack.m_inHand do
-    --        PersonDataStack.m_inHand[i]
-    --    end
-    --end
+end
 
+--删除中心仓库物品
+function DataManager.c_DelBagItem(itemId)
+    if not PersonDataStack.m_inHand then
+        return
+    end
+    for i, v in pairs(PersonDataStack.m_inHand) do
+        if v.key.id == itemId then
+            table.remove(PersonDataStack.m_inHand,i)
+        end
+    end
 end
 
 --获取中心仓库物品数量

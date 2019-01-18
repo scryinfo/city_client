@@ -247,6 +247,8 @@ function GroundAuctionCtrl:_bidEnd(id)
 end
 --开始拍卖
 function GroundAuctionCtrl:_bidStart(groundData)
+    Event.Brocast("m_RegistGroundBidInfor")
+
     self.beginTime = self.m_data.beginTime
     self.durationSec = self.m_data.durationSec
     self.currentTime = TimeSynchronized.GetTheCurrentTime()

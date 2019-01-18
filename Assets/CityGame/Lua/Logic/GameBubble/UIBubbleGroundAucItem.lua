@@ -94,7 +94,6 @@ function UIBubbleGroundAucItem:Close()
     GAucModel.valuableStartAucObj.transform.localScale = Vector3.zero
 
     self.bubbleObj = nil
-    self.data = nil
     self = nil
 end
 
@@ -124,7 +123,7 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
         if remainTime <= 0 then
             self.timeDown = false
             --拍卖结束
-            UIBubbleManager.closeItem(self)
+            UIBubbleManager.closeItem(self, self.data.aucInfo.id)
             return
         end
 
@@ -141,7 +140,6 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
         if remainTime <= 0 then
             self.data.isStartAuc = true
             self.data.aucInfo.isStartAuc = true
-            --ct.log("", "即将拍卖"..self.data.aucInfo.)
             --开始拍卖
             self.now.transform.localScale = Vector3.one
             self.soon.transform.localScale = Vector3.zero

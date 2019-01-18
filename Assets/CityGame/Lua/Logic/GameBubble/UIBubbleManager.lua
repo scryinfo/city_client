@@ -184,9 +184,11 @@ function UIBubbleManager.getBubbleObj(type)
 end
 
 --回收item
-function UIBubbleManager.closeItem(item)
+function UIBubbleManager.closeItem(item, id)
     item:Close()
-    if this.aucItemsTable[item.data.aucInfo.id] ~= nil then
-        this.aucItemsTable[item.data.aucInfo.id] = nil
+    if id ~= nil then
+        if this.aucItemsTable[id] ~= nil then
+            this.aucItemsTable[id] = nil
+        end
     end
 end

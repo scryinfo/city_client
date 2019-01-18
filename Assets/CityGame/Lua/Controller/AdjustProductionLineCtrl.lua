@@ -24,7 +24,7 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     --adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
-    Event.AddListener("refreshTime",self.refreshTime,self)
+    --Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.AddListener("refreshNowConte",self.refreshNowConte,self)
 end
@@ -54,7 +54,7 @@ function AdjustProductionLineCtrl:Refresh()
         self.productionLine.type = BuildingInType.ProductionLine
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
-    self:refreshTime(self.data.line)
+    --self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
@@ -179,28 +179,28 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
         end
     end
 end
---读取生产线，初始化时间
-function AdjustProductionLineCtrl:refreshTime(infoTab)
-    if not infoTab then
-        return
-    end
-    for i,v in pairs(infoTab) do
-        local remainingNum = v.targetCount - v.nowCount
-        local materialKey,goodsKey = 21,22
-        local time = 0
-        if math.floor(v.itemId / 100000) == materialKey then
-            time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
-        elseif math.floor(v.itemId / 100000) == goodsKey then
-            time = 1 / Good[v.itemId].numOneSec / v.workerNum * remainingNum
-        end
-        local timeTab = getTimeString(time)
-        if remainingNum > 0 then
-            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
-        elseif remainingNum < 0 or remainingNum == 0 then
-            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
-        end
-    end
-end
+----读取生产线，初始化时间
+--function AdjustProductionLineCtrl:refreshTime(infoTab)
+--    if not infoTab then
+--        return
+--    end
+--    for i,v in pairs(infoTab) do
+--        local remainingNum = v.targetCount - v.nowCount
+--        local materialKey,goodsKey = 21,22
+--        local time = 0
+--        if math.floor(v.itemId / 100000) == materialKey then
+--            time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
+--        elseif math.floor(v.itemId / 100000) == goodsKey then
+--            time = 1 / Good[v.itemId].numOneSec / v.workerNum * remainingNum
+--        end
+--        local timeTab = getTimeString(time)
+--        if remainingNum > 0 then
+--            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
+--        elseif remainingNum < 0 or remainingNum == 0 then
+--            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
+--        end
+--    end
+--end
 --接收回调刷新产量
 function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then

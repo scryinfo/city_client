@@ -211,7 +211,6 @@ function SmallProductionLineItem:getTimeNumber(infoData)
         return;
     end
     --还有多少个没有生产
-
     local remainingNum = tonumber(infoData.targetCount) - tonumber(infoData.nowCount)
     if remainingNum == 0 then
         return "00:00:00"

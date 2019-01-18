@@ -48,12 +48,12 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     if self.data.channel == "WORLD" then
         transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
         ChatCtrl.static.luaBehaviour:AddClick(self.headBtn, self.OnHeadClick, self)
-        LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, false)
+        LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
     else
         if self.data.id == DataManager.GetMyOwnerID() then
-            LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, false)
+            LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
         else
-            LoadSprite(PlayerHead[ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id)].ChatPath, self.headImage, false)
+            LoadSprite(PlayerHead[ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id)].ChatPath, self.headImage, true)
         end
     end
 end

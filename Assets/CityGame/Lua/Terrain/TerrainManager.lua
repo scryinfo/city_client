@@ -11,7 +11,6 @@ local ArchitectureStack = {}
 local TerrainRange = Vector2.New(1000 , 1000)    --地图大小范围
 local blockRange = Vector2.New(20, 20)
 --以下数据应当初始化
-local CameraPosition
 local CameraCollectionID = -1
 
 
@@ -59,6 +58,9 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         if isCreate then
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
+    end
+    for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+        TerrainManager.IsIncludeCentralBuilding(value)
     end
     --刷新AOI内的数据
     if CameraCollectionID ~= nil and CameraCollectionID ~= -1 then
@@ -324,6 +326,8 @@ end
 
 local CentralBuildingBlockList = nil
 local CentralBuildingObj = nil
+local CentralBuildingBlockID = nil
+local CentralBuildingCollectionID = nil
 --创建中心建筑
 function TerrainManager.CreateCenterBuilding()
     if CentralBuildingObj == nil then
@@ -331,12 +335,16 @@ function TerrainManager.CreateCenterBuilding()
         if CentralBuildingMes.CenterNodePos ~= nil and CentralBuildingMes.BuildingType ~= nil and PlayerBuildingBaseData[CentralBuildingMes.BuildingType] ~= nil then
             local myCenterGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute)
             CentralBuildingObj = UnityEngine.GameObject.Instantiate(myCenterGroundObj)
-            CentralBuildingObj.transform.position = CentralBuildingMes.CenterNodePos
+            --临时提高一些
+            local TargetPos =CentralBuildingMes.CenterNodePos
+            TargetPos.y = TargetPos.y + 0.02
+            CentralBuildingObj.transform.position = TargetPos
             CentralBuildingObj.transform.localScale = Vector3.one
             CentralBuildingObj.name = "CentralBuilding"
             --写入覆盖范围
-            local CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
-            CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID,PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
+            CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
+            CentralBuildingCollectionID = TerrainManager.BlockIDTurnCollectionID(CentralBuildingBlockID)
+            CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID, PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
         end
     end
 end
@@ -351,6 +359,16 @@ function TerrainManager.IsTouchCentralBuilding(blockID)
         end
     end
     return false
+end
+
+--判断AOI地块是否包含中心建筑
+--
+function TerrainManager.IsIncludeCentralBuilding(CollectionID)
+    local BuildingType = TerrainConfig.CentralBuilding.BuildingType
+    if CentralBuildingCollectionID == CollectionID then
+        --写入覆盖范围
+        DataManager.RefreshBlockDataWhenNodeChange(CentralBuildingBlockID,PlayerBuildingBaseData[BuildingType].x,BuildingType)
+    end
 end
 
 

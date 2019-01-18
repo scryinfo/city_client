@@ -651,6 +651,7 @@ function  DataManager.InitPersonDatas(tempData)
         companyName = tempData.companyName,
         male = tempData.male,
         des = tempData.des,
+        faceId = tempData.faceId,
     }
 
     --初始化自己所拥有建筑品牌值

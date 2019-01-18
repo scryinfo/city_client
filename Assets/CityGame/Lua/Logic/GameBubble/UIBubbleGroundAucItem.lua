@@ -38,7 +38,7 @@ function UIBubbleGroundAucItem:initialize(data)
     self.timeDown = true
     self.intTime = 1
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
 end

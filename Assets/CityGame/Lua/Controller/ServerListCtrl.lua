@@ -85,7 +85,7 @@ end
 
 function ServerListCtrl:c_GsCreateRole()
     UIPage:ClearAllPages()
-    ct.OpenCtrl("CreateRoleCtrl")
+    ct.OpenCtrl("SelectHeadCtrl")
 end
 function ServerListCtrl:c_GsLoginSuccess(playerId)
     UIPage:ClearAllPages()---------------------

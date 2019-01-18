@@ -8,7 +8,6 @@ UIPage:ResgisterOpen(SelectHeadCtrl)
 SelectHeadCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local selectHeadBehaviour;
-local gameObject;
 local headId = nil
 
 function  SelectHeadCtrl:bundleName()
@@ -38,9 +37,7 @@ end
 --点击确定
 function SelectHeadCtrl:OnOkBtn(go)
     if headId ~= nil then
-        local data = go.m_data
-        data.faceId = headId
-        Event.Brocast("m_createNewRole",data)
+        ct.OpenCtrl("CreateRoleCtrl",headId)
     else
         Event.Brocast("SmallPop"," 请选择头像",300)
     end

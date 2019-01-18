@@ -18,13 +18,7 @@ function RoleHeadItem:initialize(prefab,path,id)
     self.select = self.prefab.transform:Find("select");
     self.btn = self.prefab.transform:Find("btn"):GetComponent("Button");
 
-    local type = ct.getType(UnityEngine.Sprite)
-        panelMgr:LoadPrefab_A(path,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.head.sprite = texture
-            end
-        end)
+    LoadSprite(path, self.head, true)
     self.btn.onClick:AddListener(function ()
         self:OnBtn(self)
     end)

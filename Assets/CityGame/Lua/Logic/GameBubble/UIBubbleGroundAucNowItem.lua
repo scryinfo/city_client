@@ -6,6 +6,7 @@
 UIBubbleGroundAucNowItem = class('UIBubbleGroundAucNowItem')
 function UIBubbleGroundAucNowItem:initialize(data)
     self.data = data
+    self.data.aucInfo.isStartAuc = data.isStartAuc
     self.bubbleRect = data.bubbleObj:GetComponent("RectTransform")
     self.bubbleObj = data.bubbleObj
 

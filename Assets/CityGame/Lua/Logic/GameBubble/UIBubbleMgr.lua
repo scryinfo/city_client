@@ -26,12 +26,25 @@ end
 --启动事件--
 function UIBubbleMgr.OnCreate()
     --网络回调注册
-    Event.AddListener("c_BidEnd", this.bidEnd)
+    this._addListener()
 end
 
 function UIBubbleMgr._preLoadGroundAucObj()
     local prefab = UnityEngine.Resources.Load(UIBubbleMgr.BubbleParentObjPath)
     this.BubbleParent = UnityEngine.GameObject.Instantiate(prefab)
+end
+
+function UIBubbleMgr._addListener()
+    Event.AddListener("c_RefreshItems", this._refreshItems, self)
+    Event.AddListener("c_HideGroundBubble", this._hideAllItems, self)
+    Event.AddListener("c_ShowGroundBubble", this._showAllItems, self)
+    Event.AddListener("c_BidEnd", this.bidEnd)
+end
+function UIBubbleMgr._removeListener()
+    Event.RemoveListener("c_RefreshItems", this._refreshItems, self)
+    Event.RemoveListener("c_HideGroundBubble", this._hideAllItems, self)
+    Event.RemoveListener("c_ShowGroundBubble", this._showAllItems, self)
+    Event.RemoveListener("c_BidEnd", this.bidEnd)
 end
 
 --气泡类型
@@ -116,12 +129,12 @@ function UIBubbleMgr._creatGroundAucBubbleItem(bubbleData, index)
         else
             go.transform.localScale = Vector3.one
         end
-        --local data = ct.deepCopy(bubbleData)
-        local data = bubbleData
+        local data = ct.deepCopy(bubbleData)
+        --local data = bubbleData
         --data.groundObj.transform.localScale = Vector3.one
         data.bubbleObj = go  --将obj引用到lua中
         local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
-        this.aucNowItem = groundAucNowItem
+        this.nowItem = groundAucNowItem
 
     elseif index == 0 then
         --即将拍卖
@@ -135,19 +148,23 @@ function UIBubbleMgr._creatGroundAucBubbleItem(bubbleData, index)
         else
             go.transform.localScale = Vector3.one
         end
-        local data = bubbleData
+        --local data = bubbleData
+        local data = ct.deepCopy(bubbleData)
         --data.groundObj.transform.localScale = Vector3.one  --地块
         data.bubbleObj = go
         local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
-        this.aucSoonItem = groundAucSoonItem
+        this.soonItem = groundAucSoonItem
     end
 end
 
 --更新数据
 function UIBubbleMgr._refreshItems(datas)
-    this.nowItem:Close()
-    this.soonItem:Close()
-
+    if this.nowItem ~= nil then
+        this.nowItem:Close()
+    end
+    if this.soonItem ~= nil then
+        this.soonItem:Close()
+    end
     this.nowItem = nil
     this.soonItem = nil
 

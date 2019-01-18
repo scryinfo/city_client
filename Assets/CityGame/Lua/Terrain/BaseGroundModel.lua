@@ -22,6 +22,7 @@ function BaseGroundModel:Refresh(data)
     --for key, value in pairs(data) do
     --    self.Data[key] = value
     --end
+    --UIBubbleMgr.startBubble()
     --self:CheckBubbleState(data)
     --self:CheckGroundTransSuccess(data)
     self.Data = data
@@ -66,7 +67,7 @@ function BaseGroundModel:CheckBubbleState()
     if data.rent ~= nil and data.rent.renterId == nil then
         self.groundState = GroundTransState.Rent
         if self.bubbleItem == nil then
-            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Rent, {x = data.x, y = data.y})
+            self.bubbleItem = UIBubbleMgr.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Rent, {x = data.x, y = data.y})
             return
         end
         self.bubbleItem:_setBubbleState(GroundTransState.Rent)
@@ -75,7 +76,7 @@ function BaseGroundModel:CheckBubbleState()
     if data.sell ~= nil then
         self.groundState = GroundTransState.Sell
         if self.bubbleItem == nil then
-            self.bubbleItem = UIBubbleCtrl.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Sell, {x = data.x, y = data.y})
+            self.bubbleItem = UIBubbleMgr.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Sell, {x = data.x, y = data.y})
             return
         end
         self.bubbleItem:_setBubbleState(GroundTransState.Sell)

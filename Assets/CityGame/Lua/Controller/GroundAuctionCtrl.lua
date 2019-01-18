@@ -71,14 +71,20 @@ function GroundAuctionCtrl:_initPanelData()
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
 
-        if self.m_data.price > self.m_data.basePrice then
-            GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
-            GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-            GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
-        else
+        if self.m_data.price == nil then
             GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
             GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
             GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
+        else
+            if tonumber(self.m_data.price) > self.m_data.basePrice then
+                GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
+                GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
+                GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
+            else
+                GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
+                GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
+                GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
+            end
         end
 
         self.startTimeDownForFinish = true  --拍卖结束倒计时
@@ -179,6 +185,9 @@ end
 
 --出价
 function GroundAuctionCtrl:BidGround(ins)
+    --if ins.basePrice == nil then
+    --    return
+    --end
     local bidPrice = GroundAuctionPanel.bidInput.text
     if bidPrice == "" then
         --打开弹框
@@ -190,12 +199,12 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    if tonumber(bidPrice) < DataManager.GetMoney() then
-        Event.Brocast("SmallPop", "您的资金不足", 300)
-        return
-    end
+    --if tonumber(bidPrice) < DataManager.GetMoney() then
+    --    Event.Brocast("SmallPop", "您的资金不足", 300)
+    --    return
+    --end
 
-    if not ins.highestPrice then
+    if ins.highestPrice == nil then
         ins.highestPrice = ins.m_data.basePrice
     end
     if tonumber(bidPrice) > ins.highestPrice then

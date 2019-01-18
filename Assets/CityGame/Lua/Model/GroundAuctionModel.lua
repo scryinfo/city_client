@@ -46,7 +46,6 @@ function GroundAuctionModel.c_bubbleLateUpdate()
     UIBubbleMgr._cameraLateUpdate()
 end
 
-
 --关闭事件--
 function GroundAuctionModel.Close()
     Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
@@ -71,8 +70,7 @@ function GroundAuctionModel._soonTimeDown()
     local beginTime = this.soonAucGroundData.aucInfo.beginTime
     if beginTime <= TimeSynchronized.GetTheCurrentTime() then
         Event.Brocast("c_BidStart", this.soonAucGroundData.aucInfo)
-        this._checkNowData(this.soonAucGroundData.aucInfo)
-        this._checkSoonData()  --得到即将拍卖的信息
+        this._checkNowAndSoonData()  --得到即将拍卖的信息
 
         Event.Brocast("c_RefreshItems", {nowData = this.nowAucGroundData, soonData = this.soonAucGroundData})
         return
@@ -85,8 +83,7 @@ function GroundAuctionModel._soonTimeDown()
         --重新确认下一个拍卖的数据
         if this.soonAucGroundData.aucInfo.beginTime < TimeSynchronized.GetTheCurrentTime() then
             Event.Brocast("c_BidStart", this.soonAucGroundData.aucInfo)
-            this._checkNowData(this.soonAucGroundData.aucInfo)
-            this._checkSoonData()  --得到即将拍卖的信息
+            this._checkNowAndSoonData()  --得到即将拍卖的信息
 
             Event.Brocast("c_RefreshItems", {nowData = this.nowAucGroundData, soonData = this.soonAucGroundData})
         end
@@ -96,7 +93,6 @@ end
 
 --角色登录成功之后请求拍卖的信息
 function GroundAuctionModel.m_RoleLoginReqGroundAuction()
-    UIBubbleMgr.startBubble()
     this.m_ReqRueryMetaGroundAuction()
 end
 
@@ -118,6 +114,8 @@ function GroundAuctionModel._updateAucBidInfo(aucData)
 end
 --收到meta数据之后的操作
 function GroundAuctionModel.getMataGroundDataFunc(auctionInfo)
+    UIBubbleMgr.startBubble()
+
     --填充数据
     if this.groundAucDatas == nil then
         this.groundAucDatas = {}
@@ -129,8 +127,9 @@ function GroundAuctionModel.getMataGroundDataFunc(auctionInfo)
     end
 
     this._getOrderGroundDatas(this.groundAucDatas)  --获取时间顺序表
-    this._checkSoonData()  --得到即将拍卖的信息
+    this._checkNowAndSoonData()  --得到即将拍卖的信息
     UIBubbleMgr.createSoonAucBubble(this.soonAucGroundData)
+    UIBubbleMgr.createNowAucBubble(this.nowAucGroundData)
     this._moveToAucPos()
 
     this.m_ReqQueryGroundAuction()  --请求拍卖中的气泡
@@ -144,20 +143,20 @@ function GroundAuctionModel.getNowAucDataFunc(msgGroundAuc)
             this.groundAucDatas[item.id].biderId = item.biderId
             this.groundAucDatas[item.id].price = item.price
 
-            GroundAuctionModel._checkNowData(this.groundAucDatas[item.id])
-            if UIBubbleMgr.nowItem == nil then
-                UIBubbleMgr.createNowAucBubble(this.nowAucGroundData)
-                return
-            end
-            UIBubbleMgr.updateAucData(this.nowAucGroundData)
-            return
+            --GroundAuctionModel._checkNowData(this.groundAucDatas[item.id])
+            --if UIBubbleMgr.nowItem == nil then
+            --    UIBubbleMgr.createNowAucBubble(this.nowAucGroundData)
+            --    return
+            --end
+            --UIBubbleMgr.updateAucData(this.nowAucGroundData)
+            --return
         end
     end
 end
 --拍卖结束
 function GroundAuctionModel.bindEndFunc(endId)
     Event.Brocast("c_BidEnd", endId)  --关闭界面
-    this.GroundAuctionModel.valuableStartAucObj.transform.localScale = Vector3.zero
+    this.valuableStartAucObj.transform.localScale = Vector3.zero
 
     if this.groundAucDatas[endId] ~= nil then
         this.groundAucDatas[endId] = nil
@@ -210,16 +209,24 @@ function GroundAuctionModel._getValuableWillAucObj()
     return GroundAuctionModel.valuableWillAucObj
 end
 
---确认即将拍卖的数据
-function GroundAuctionModel._checkSoonData()
+--确认数据
+function GroundAuctionModel._checkNowAndSoonData()
     local showFirstWait = true
     this.soonAucGroundData = nil
+    this.nowAucGroundData = nil
+    this.tempNowCurrentTime = TimeSynchronized.GetTheCurrentTime()
     this.tempSoonCurrentTime = TimeSynchronized.GetTheCurrentTime()
 
     for i, groundAucItem in ipairs(this.orderAucDatas) do
         --如果已经开始拍卖
         if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
-            --GroundAuctionModel.getNowAucData(groundAucItem)
+            this.nowAucGroundData = {}
+            this.nowAucGroundData.isStartAuc = true
+            local groundObj = GroundAuctionModel._getValuableStartAucObj()
+            groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --第二个地块为左上角的位置
+            groundObj.transform.localScale = Vector3.one
+            this.nowAucGroundData.targetPos = groundObj.transform.position
+            this.nowAucGroundData.aucInfo = groundAucItem
         else
             if showFirstWait then
                 if groundAucItem.beginTime <= TimeSynchronized.GetTheCurrentTime() then
@@ -236,20 +243,6 @@ function GroundAuctionModel._checkSoonData()
                 return
             end
         end
-    end
-end
---确认拍卖的数据
-function GroundAuctionModel._checkNowData(groundAucItem)
-    this.nowAucGroundData = nil
-    this.tempSoonCurrentTime = TimeSynchronized.GetTheCurrentTime()
-    if groundAucItem.beginTime + groundAucItem.durationSec >= TimeSynchronized.GetTheCurrentTime() then
-        this.nowAucGroundData = {}
-        this.nowAucGroundData.isStartAuc = true
-        local groundObj = GroundAuctionModel._getValuableStartAucObj()
-        groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)  --第二个地块为左上角的位置
-        groundObj.transform.localScale = Vector3.one
-        this.nowAucGroundData.targetPos = groundObj.transform.position
-        this.nowAucGroundData.aucInfo = groundAucItem
     end
 end
 

@@ -6,6 +6,7 @@
 UIBubbleGroundAucSoonItem = class('UIBubbleGroundAucSoonItem')
 function UIBubbleGroundAucSoonItem:initialize(data)
     self.data = data
+    self.data.aucInfo.isStartAuc = data.isStartAuc
     self.bubbleRect = data.bubbleObj:GetComponent("RectTransform")
     self.bubbleObj = data.bubbleObj
 
@@ -26,12 +27,12 @@ function UIBubbleGroundAucSoonItem:initialize(data)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
 end
 
-function UIBubbleGroundAucNowItem:_hideFunc()
+function UIBubbleGroundAucSoonItem:_hideFunc()
     if self.bubbleObj ~= nil then
         self.bubbleObj.transform.localScale = Vector3.zero
     end
 end
-function UIBubbleGroundAucNowItem:_showFunc()
+function UIBubbleGroundAucSoonItem:_showFunc()
     if self.bubbleObj ~= nil then
         self.bubbleObj.transform.localScale = Vector3.one
     end

@@ -94,6 +94,7 @@ function UIBubbleGroundAucItem:Close()
     GAucModel.valuableStartAucObj.transform.localScale = Vector3.zero
 
     self.bubbleObj = nil
+    self.data = nil
     self = nil
 end
 

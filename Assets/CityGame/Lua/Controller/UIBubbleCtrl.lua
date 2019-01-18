@@ -6,7 +6,17 @@
 UIBubbleCtrl = class('UIBubbleCtrl',UIPage)
 UIPage:ResgisterOpen(UIBubbleCtrl)
 
-UIBubbleCtrl.static.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
+UIBubbleCtrl.static.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
+UIBubbleCtrl.static.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
+UIBubbleCtrl.static.NpcFlowObjPath = "View/Items/BuildingBubbleItems/UIBubbleNpcFlowItem"  --人流量
+
+--气泡类型
+UIBubbleType =
+{
+    GroundAuc = 1,
+    GroundTrans = 2,
+    BuildingSelf = 3,
+}
 
 function UIBubbleCtrl:initialize()
     UIPage.initialize(self, UIType.Fixed, UIMode.HideOther, UICollider.None)
@@ -21,11 +31,13 @@ function UIBubbleCtrl:OnCreate(obj)
 end
 
 function UIBubbleCtrl:Awake(go)
-    self:_addListener()
+    self.gameObject = go
+    --self:_addListener()
 end
 
 function UIBubbleCtrl:Refresh()
     self:_initFunc()
+    --self:_initGroundAucBubbles()
 end
 function UIBubbleCtrl:_addListener()
     Event.AddListener("c_RefreshItems", self._refreshItems, self)
@@ -39,7 +51,7 @@ function UIBubbleCtrl:_removeListener()
 end
 
 function UIBubbleCtrl._cameraLateUpdate()
-    if UIBubbleMgr.startFlowCam == nil or UIBubbleMgr.startFlowCam == false then
+    if UIBubbleCtrl.startFlowCam == nil or UIBubbleCtrl.startFlowCam == false then
         return
     end
     Event.Brocast("c_RefreshLateUpdate")
@@ -50,91 +62,137 @@ function UIBubbleCtrl:_initFunc()
         return
     end
 
-    self:createGroundAucData(self.m_data)
-end
-
-function UIBubbleCtrl:createGroundAucData(data)
-    if data == nil then
-        return
-    end
-    if self.bubbleMgr == nil then
-        self.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
-        UIBubbleCtrl.bubbleMgr = self.bubbleMgr
-    end
-
-    if data.bubbleType == UIBubbleType.GroundAuc then
-        self.bubbleMgr:initGroundAucBubbles(data)
+    if self.m_data.bubbleType == UIBubbleType.GroundAuc then
+        self:_initGroundAucBubbles(self.m_data)
     end
 end
 
---拍卖气泡
---function UIBubbleCtrl.createGroundAucData(data)
---    if data == nil then
---        return
---    end
---    if UIBubbleCtrl.bubbleMgr == nil then
---        UIBubbleCtrl.bubbleMgr = UIBubbleMgr:new(UIBubblePanel.root.transform)
---    end
---
---    if data.bubbleType == UIBubbleType.GroundAuc then
---        UIBubbleCtrl.bubbleMgr:initGroundAucBubbles(data)
---    end
---end
+--生成拍卖气泡
+function UIBubbleCtrl:_initGroundAucBubbles(groundAucDatas)
+    if self.groundAucLuaItems == nil then
+        self.groundAucLuaItems = {}
+    end
+    local auction = groundAucDatas.aucInfo
+    for i, data in pairs(auction) do
+        if data then
+            UIBubbleCtrl.startFlowCam = true
+        end
+
+        if data then
+            self:_creatGroundAucBubbleItem(data)
+        else
+            ct.log("cycle_w6_GroundAuc", "-----------")
+        end
+    end
+end
+
+function UIBubbleCtrl:_creatGroundAucBubbleItem(bubbleData)
+    if bubbleData.isStartAuc then
+        --已经开始拍卖
+        if self.groundAucNowObj == nil then
+            self.groundAucNowObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucNowObjPath)
+        end
+        local go = UnityEngine.GameObject.Instantiate(self.groundAucNowObj)
+        go.transform:SetParent(self.gameObject.transform)
+        if self.hide then
+            go.transform.localScale = Vector3.zero
+        else
+            go.transform.localScale = Vector3.one
+        end
+        local data = ct.deepCopy(bubbleData)
+        data.groundObj.transform.localScale = Vector3.one
+        data.bubbleRect = go:GetComponent("RectTransform")  --将obj引用到lua中
+        local groundAucNowItem = UIBubbleGroundAucNowItem:new(data)
+        self.groundAucLuaItems[bubbleData.id] = groundAucNowItem
+        UIBubbleCtrl.nowItem = groundAucNowItem
+    else
+        --即将拍卖
+        if nil == self.groundAucSoonObj then
+            self.groundAucSoonObj = UnityEngine.Resources.Load(UIBubbleCtrl.static.GroundAucSoonObjPath)
+        end
+        local go = UnityEngine.GameObject.Instantiate(self.groundAucSoonObj)
+        go.transform:SetParent(self.gameObject.transform)
+        if self.hide then
+            go.transform.localScale = Vector3.zero
+        else
+            go.transform.localScale = Vector3.one
+        end
+        local data = ct.deepCopy(bubbleData)
+        data.groundObj.transform.localScale = Vector3.one
+        data.bubbleRect = go:GetComponent("RectTransform")
+        local groundAucSoonItem = UIBubbleGroundAucSoonItem:new(data)
+        self.groundAucLuaItems[bubbleData.id] = groundAucSoonItem
+        UIBubbleCtrl.soonItem = groundAucSoonItem
+    end
+end
 
 --更新数据
 function UIBubbleCtrl:_refreshItems(datas)
-    self.bubbleMgr:_refreshItems(datas)
+    for key, item in pairs(self.groundAucLuaItems) do
+        item:Close()
+        item.data.groundObj.gameObject.transform.localScale = Vector3.zero  --删除场景中的预制
+        destroyImmediate(item.data.bubbleRect.gameObject)  --删除之前的item
+        self.groundAucLuaItems[key] = nil
+    end
+    UIBubbleCtrl.nowItem = nil
+    UIBubbleCtrl.soonItem = nil
+
+    self.groundAucLuaItems = {}
+    local auction = datas
+    for i, data in pairs(auction) do
+        if data then
+            self:_creatGroundAucBubbleItem(data)
+        else
+            ct.log("cycle_w6_GroundAuc", "-----------")
+        end
+    end
 end
 
 --隐藏所有气泡
 function UIBubbleCtrl:_hideAllItems()
-    self.bubbleMgr:_hideAllItems()
+    self.hide = true
+    for key, item in pairs(self.groundAucLuaItems) do
+        if item.data.bubbleRect then
+            item.data.bubbleRect.transform.localScale = Vector3.zero
+        end
+    end
 end
 --显示所有气泡
 function UIBubbleCtrl:_showAllItems()
-    self.bubbleMgr:_showAllItems()
+    self.hide = false
+    for key, item in pairs(self.groundAucLuaItems) do
+        if item.data.bubbleRect then
+            item.data.bubbleRect.transform.localScale = Vector3.one
+        end
+    end
 end
 
-----
 --打开拍卖界面
 function UIBubbleCtrl._openGroundAucCtrl(index)
     if index == 1 then
-        if UIBubbleCtrl.bubbleMgr:getNowItem() ~= nil then
-            UIBubbleCtrl.bubbleMgr:getNowItem():_openGroundAucFunc()
+        if UIBubbleCtrl.nowItem ~= nil then
+            UIBubbleCtrl.nowItem:_openGroundAucFunc()
         end
         return
     end
     if index == 0 then
-        if UIBubbleCtrl.bubbleMgr:getSoonItem() ~= nil then
-            UIBubbleCtrl.bubbleMgr:getSoonItem():_openGroundAucFunc()
+        if UIBubbleCtrl.soonItem ~= nil then
+            UIBubbleCtrl.soonItem:_openGroundAucFunc()
         end
         return
     end
+    ct.log("", "错误")
 end
+
+----
 --通过类型获取一个气泡
-function UIBubbleCtrl.getBubbleByType(bubbleType, groundState, serverPos, uiCenterPos)
-    if bubbleType == UIBubbleType.GroundTrans or bubbleType == UIBubbleType.BuildingSelf then
-        local data = {bubbleType = bubbleType, groundState = groundState, uiCenterPos = uiCenterPos}
-        local obj = UIBubbleCtrl.getBubbleObj(bubbleType)
-        if serverPos ~= nil then
-            data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
-            obj.name = "bubble "..serverPos.x..serverPos.y
-        end
-        local bubbleItem = UIBubbleTransAndBuildingItem:new(data, obj)
-        return bubbleItem
+function UIBubbleCtrl.getBubbleByType(type)
+    local bubbleItem
+    if type == UIBubbleType.GroundTrans then
+
+    elseif type == UIBubbleType.BuildingSelf then
+
     end
-end
-function UIBubbleCtrl.getBubbleObj(type)
-    local go
-    if type == UIBubbleType.GroundTrans or type == UIBubbleType.BuildingSelf then
-        if UIBubbleCtrl.static.sellRentPrefab == nil then
-            UIBubbleCtrl.static.sellRentPrefab = UnityEngine.Resources.Load(UIBubbleCtrl.static.SellRentObjPath)
-        end
-        go = UnityEngine.GameObject.Instantiate(UIBubbleCtrl.static.sellRentPrefab)
-        go.transform:SetParent(UIBubblePanel.root.transform)
-        go.transform.localScale = Vector3.one
-        return go
-    else
-        --拍卖类型的预制
-    end
+
+    return
 end

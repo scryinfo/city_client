@@ -11,7 +11,7 @@ local pbl = pbl
 UIBubbleMgr.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
 UIBubbleMgr.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleMgr.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
-UIBubbleCtrl.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
+UIBubbleMgr.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
 
 --构建函数--
 function UIBubbleMgr.New()

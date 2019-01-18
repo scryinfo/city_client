@@ -54,15 +54,11 @@ end
 function GroundAuctionCtrl:_initPanelData()
     Event.Brocast("c_HideGroundBubble")
 
-    if not self.m_data then
+    if self.m_data == nil then
         return
     end
 
-    self.beginTime = self.m_data.beginTime
-    self.durationSec = self.m_data.durationSec
-    self.currentTime = TimeSynchronized.GetTheCurrentTime()
     self.id = self.m_data.id
-
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.personAverageText.text = 0
     --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
@@ -98,69 +94,54 @@ function GroundAuctionCtrl:_initPanelData()
         self.startTimeDownForStart = true  --即将拍卖倒计时
     end
 
+    self.intTime = 1
 end
 
 ---Update
 function GroundAuctionCtrl:_update()
     --如果还没打开过界面
-    if not self.gameObject then
+    if self.gameObject == nil then
         return
     end
 
-    self:_waitForBidTimeDown()
-    self:_bidFinishTimeDown()
+    --计时器，每秒调用
+    self.intTime = self.intTime + UnityEngine.Time.unscaledDeltaTime
+    if self.intTime >= 1 then
+        self.intTime = 0
+        self:SoonTimeDownFunc()
+        self:NowTimeDownFunc()
+    end
 end
 
 ---倒计时---
 --即将拍卖倒计时
-function GroundAuctionCtrl:_waitForBidTimeDown()
-    if self.startTimeDownForStart then
-        local finishTime = self.m_data.beginTime
-        self.currentTime = self.currentTime or TimeSynchronized.GetTheCurrentTime()
-        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
-
-        local remainTime = finishTime - self.currentTime
-        if remainTime < 0 then
+function GroundAuctionCtrl:SoonTimeDownFunc()
+    if self.startTimeDownForStart == true then
+        local startAucTime = self.m_data.beginTime
+        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
+        if remainTime <= 0 then
             self.startTimeDownForStart = false
             return
         end
 
-        remainTime = getFormatUnixTime(remainTime)
-        --local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
-        local timeStr = remainTime.minute..":"..remainTime.second
+        local timeTable = getFormatUnixTime(remainTime)
+        local timeStr = timeTable.minute..":"..timeTable.second
         GroundAuctionPanel.waitBidTimeDownText.text = timeStr
-
-        if self.currentTime >= finishTime then
-            self.startTimeDownForStart = false
-            return
-        end
-
     end
 end
-
 --拍卖结束倒计时
-function GroundAuctionCtrl:_bidFinishTimeDown()
-    if self.startTimeDownForFinish then
+function GroundAuctionCtrl:NowTimeDownFunc()
+    if self.startTimeDownForFinish == true then
         local finishTime = self.m_data.beginTime + self.m_data.durationSec
-        self.currentTime = self.currentTime or TimeSynchronized.GetTheCurrentTime()
-        self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime
-
-        local remainTime = finishTime - self.currentTime
+        local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime < 0 then
             self.startTimeDownForFinish = false
             return
         end
 
-        remainTime = getFormatUnixTime(remainTime)
-        --local timeStr = remainTime.hour..":"..remainTime.minute..":"..remainTime.second
-        local timeStr = remainTime.minute..":"..remainTime.second
+        local timeTable = getFormatUnixTime(remainTime)
+        local timeStr = timeTable.minute..":"..timeTable.second
         GroundAuctionPanel.startBidTimeDownText.text = timeStr
-
-        if self.currentTime >= finishTime then
-            self.startTimeDownForFinish = false
-            return
-        end
-
     end
 end
 
@@ -171,7 +152,6 @@ function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
     end
 
     if startBidInfo.id ~= self.m_data.id then
-        ct.log("cycle_w6_GroundAuc","[cycle_w6_GroundAuc] ")
         return
     end
 
@@ -248,10 +228,6 @@ end
 --开始拍卖
 function GroundAuctionCtrl:_bidStart(groundData)
     Event.Brocast("m_RegistGroundBidInfor")
-
-    self.beginTime = self.m_data.beginTime
-    self.durationSec = self.m_data.durationSec
-    self.currentTime = TimeSynchronized.GetTheCurrentTime()
 
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one

@@ -26,7 +26,7 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
-    Event.AddListener("refreshNowTime",self.refreshNowTime,self)
+    Event.AddListener("refreshNowConte",self.refreshNowConte,self)
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -74,7 +74,16 @@ end
 
 --计算一条生产线总时间
 function AdjustProductionLineCtrl:calculateTime(msg)
-    local time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    if not msg then
+        return
+    end
+    local materialKey,goodsKey = 21,22
+    local time = 0
+    if math.floor(msg.line.itemId / 100000) == materialKey then
+        time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    elseif math.floor(msg.line.itemId / 100000) == goodsKey then
+        time = 1 / Good[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    end
     local timeTab = getTimeBySec(time)
     local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
@@ -192,30 +201,15 @@ function AdjustProductionLineCtrl:refreshTime(infoTab)
         end
     end
 end
---接收回调刷新时间
-function AdjustProductionLineCtrl:refreshNowTime(msg)
+--接收回调刷新产量
+function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then
         return;
     end
     for i,k in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if msg.id == k.lineId then
-            local materialKey,goodsKey = 21,22
-            local time = 0
-            local remainingNum = k.inputNumber.text - msg.nowCount
-            if math.floor(k.itemId / 100000) == materialKey then
-                time = 1 / Material[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
-            elseif math.floor(k.itemId / 100000) == goodsKey then
-                time = 1 / Good[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
-            end
-            if time < 0 or time == 0 then
-                k.timeText.text = "00:00:00"
-            else
-                local timeTab = getTimeBySec(time)
-                local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
-                k.timeText.text = timeStr
-                k.time_Slider.value = msg.nowCount
-                --k.pNumberScrollbar.value = k.inputNumber.text - msg.nowCount
-            end
+            --local remainingNum = k.inputNumber.text - msg.nowCount
+            k.time_Slider.value = msg.nowCount
         end
     end
 end
@@ -225,6 +219,7 @@ function AdjustProductionLineCtrl:deleteObjInfo()
         return;
     else
         for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            v:closeUpdate()
             destroy(v.prefab.gameObject);
         end
         AdjustProductionLineCtrl.materialProductionLine = {};

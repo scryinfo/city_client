@@ -71,9 +71,59 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
         end)
     end
     --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
-    self.timeText.text = "00:00:00"
-    --self.productionText =
+    self.timeText.text = self:getTimeNumber(homePageProductionLineInfo)
     self.productionSlider.maxValue = homePageProductionLineInfo.targetCount
     self.productionSlider.value = homePageProductionLineInfo.nowCount
+    self.maxValue = homePageProductionLineInfo.targetCount
     self.numberText.text = self.productionSlider.value.."/"..self.productionSlider.maxValue
+
+    Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
+end
+--计算时间
+function HomePageDisplay:getTimeNumber(infoData)
+    if not infoData then
+        return
+    end
+    --剩余产量
+    local remainingNum = infoData.targetCount - infoData.nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    local materialKey,goodsKey = 21,22
+    local time = 0
+    if math.floor(infoData.itemId / 100000) == materialKey then
+        time = 1 / Material[infoData.itemId].numOneSec / infoData.workerNum * remainingNum
+    elseif math.floor(infoData.itemId / 100000) == goodsKey then
+        time = 1 / Good[infoData.itemId].numOneSec / infoData.workerNum * remainingNum
+    end
+    self.remainingTime = time
+    UpdateBeat:Add(self.Update,self)
+    local timeTable = getTimeBySec(time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
+end
+--刷新时间
+function HomePageDisplay:Update()
+    if self.remainingTime <= 1 then
+        UpdateBeat:Remove(self.Update,self);
+        return
+    else
+        self.remainingTime = self.remainingTime - UnityEngine.Time.unscaledDeltaTime
+        local timeTable = getTimeBySec(self.remainingTime)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.timeText.text = timeStr
+    end
+end
+--刷新目前产量
+function HomePageDisplay:refreshNowConte(msg)
+    if not msg then
+        return
+    end
+    self.productionSlider.value = msg.nowCount
+    self.numberText.text = msg.nowCount.."/"..self.maxValue
+end
+--移除事件
+function HomePageDisplay:closeEvent()
+    UpdateBeat:Remove(self.Update,self);
+    Event.RemoveListener("c_refreshNowConte")
 end

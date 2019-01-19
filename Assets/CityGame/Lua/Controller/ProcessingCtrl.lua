@@ -41,8 +41,8 @@ function ProcessingCtrl:initializeData()
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
-    local companyName = DataManager.GetMyPersonalHomepageInfo()
-    ProcessingPanel.nameText.text = companyName.companyName
+    --local companyName = DataManager.GetMyPersonalHomepageInfo()
+    ProcessingPanel.nameText.text = DataInfo.info.name
     ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
 

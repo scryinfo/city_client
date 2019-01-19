@@ -194,6 +194,7 @@ function CameraMove:TouchBuild()
         --判断是否是中心建筑 --->是则打开
         if TerrainManager.IsTouchCentralBuilding(blockID) then
             ct.OpenCtrl("CenterBuildingCtrl")
+            return
         end
         --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
@@ -245,7 +246,7 @@ function CameraMove:UpdateMove()
         return
     end
     local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
-    if tempPos  then
+    if tempPos ~= nil then
         local OffsetVec  = tempPos - self.touchBeginPosition
         local tempPosition = self.touchBeginCameraPos - OffsetVec
         --范围限制

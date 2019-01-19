@@ -64,5 +64,4 @@ end
 
 function  ConstructItem:Close()
     self.data = nil
-    --self = nil
 end

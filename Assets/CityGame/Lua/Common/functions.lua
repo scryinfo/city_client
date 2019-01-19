@@ -273,12 +273,22 @@ function ct.mkMemoryProfile()
 end
 
 local  function deepCopy(orig)
-	local orig_type = type(orig)
 	local copy
+	local orig_type = type(orig)
 	if orig_type == 'table' then
 		copy = {}
 		for orig_key, orig_value in next, orig, nil do
-			copy[deepCopy(orig_key)] = deepCopy(orig_value)
+			if orig[orig_key] == orig then
+				copy[orig_key] = copy
+			elseif orig_key == 'super' then
+				orig.super.subclasses[orig] = nil
+				copy[deepCopy(orig_key)] = deepCopy(orig_value)
+				copy.subclassed = function(self, other) end
+				copy.super.subclass(copy,orig.name)
+				orig.super.subclass(orig,orig.name)
+			else
+				copy[deepCopy(orig_key)] = deepCopy(orig_value)
+			end
 		end
 		setmetatable(copy, deepCopy(getmetatable(orig)))
 	else -- number, string, boolean, etc

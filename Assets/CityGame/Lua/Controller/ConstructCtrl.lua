@@ -27,15 +27,26 @@ end
 
 function ConstructCtrl:Awake(go)
     self.gameObject = go
+    self.contentTrans = self.gameObject.transform:Find("bottomScroll/Viewport/Content")
+    self:_initPanelData()
 end
 
 function ConstructCtrl:Refresh()
-    self:_initPanelData()
+    --self:ClearAllItem()
+    --self:_initPanelData()
 
     ct.log("Allen_wk14_MyGround","临时生成我的地块")
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_CreateMyGrounds",self)
 end
 
+function ConstructCtrl:ClearAllItem()
+    if self.contentTrans.childCount > 0 then
+        for i = 0, self.contentTrans.childCount - 1 do
+            destroy(self.contentTrans:GetChild(i).gameObject)
+        end
+        --ConstructCtrl:ClearItemData()
+    end
+end
 
 function ConstructCtrl:_initPanelData()
     --根据配置表生成Items
@@ -44,24 +55,25 @@ function ConstructCtrl:_initPanelData()
     if not prefab then
         return
     end
-    local contentTrans = self.gameObject.transform:Find("bottomScroll/Viewport/Content")
     local contentWidth = 0
     self.Items  = {}
     for key, item in ipairs(ConstructConfig) do
-        local itemObj = UnityEngine.GameObject.Instantiate(prefab,contentTrans)
+        local itemObj = UnityEngine.GameObject.Instantiate(prefab,self.contentTrans)
         self.Items[key] = ConstructItem:new(item, itemObj.transform ,contentWidth)
         contentWidth =  self.Items[key].sizeDeltaX
     end
     contentWidth  =  contentWidth - 12
-    contentTrans:GetComponent("RectTransform").sizeDelta = Vector2.New(contentWidth,contentTrans:GetComponent("RectTransform").sizeDelta.y)
+    self.contentTrans:GetComponent("RectTransform").sizeDelta = Vector2.New(contentWidth,self.contentTrans:GetComponent("RectTransform").sizeDelta.y)
 end
 
-function ConstructCtrl:Close()
-    for i, v in pairs(self.Items) do
-        v:Close()
-        v = nil
+function ConstructCtrl:ClearItemData()
+    if self.Items ~= nil then
+        for i, v in pairs(self.Items) do
+            v:Close()
+            v = nil
+        end
+        self.Items = nil
     end
-    self.Items = nil
 end
 
 function ConstructCtrl:Hide()

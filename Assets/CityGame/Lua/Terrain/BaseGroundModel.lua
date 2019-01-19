@@ -26,6 +26,10 @@ function BaseGroundModel:Refresh(data)
     self.Data = data
     UIBubbleManager.startBubble()
     self:CheckBubbleState(data)
+
+    if data.rent ~= nil and data.rent.renterId ~= nil and data.rent.renterId == DataManager.GetMyOwnerID() then
+        DataManager.AddMyRentGroundInfo(data)
+    end
 end
 
 --判断地块状态

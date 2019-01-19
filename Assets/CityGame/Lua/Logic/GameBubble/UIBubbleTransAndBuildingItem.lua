@@ -80,6 +80,8 @@ end
 
 function UIBubbleTransAndBuildingItem:Close()
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
+    Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
+    Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
     --将obj放入对象池
     if self.gameObject ~= nil then
         destroyImmediate(self.gameObject)

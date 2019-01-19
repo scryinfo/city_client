@@ -48,17 +48,17 @@ function InputDialogPageCtrl:_getComponent(go)
 
     self.errorTipRoot = go.transform:Find("root/tipRoot")
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text")
-    self.changeNameTipText = go.transform:Find("root/changeNameTipText").gameObject:GetComponent("Text")  --改名字提示 --每七天改一次
+    --self.changeNameTipText = go.transform:Find("root/changeNameTipText").gameObject:GetComponent("Text")  --改名字提示 --每七天改一次
 end
 ---初始化
 function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.errorTipRoot.localScale = Vector3.zero
-    self.changeNameTipText.transform.localScale = Vector3.zero
+    --self.changeNameTipText.transform.localScale = Vector3.zero
 
     --根据传入的类型添加监听
     if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
-        self.changeNameTipText.transform.localScale = Vector3.one
+        --self.changeNameTipText.transform.localScale = Vector3.one
         Event.AddListener("c_BuildingNameUpdate", self._changeNameCallBack)  --更改建筑名字 --目前还没有，和服务器协议有关
     end
 end

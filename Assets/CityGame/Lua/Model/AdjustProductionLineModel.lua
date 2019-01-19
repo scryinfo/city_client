@@ -84,4 +84,5 @@ end
 function AdjustProductionLineModel.n_GsLineChangeInform(stream)
     local msgLineChangeInfo = assert(pbl.decode("gs.LineInfo",stream),"AdjustProductionLineModel.n_GsLineChangeInform: stream == nil")
     Event.Brocast("refreshNowConte",msgLineChangeInfo)
+    Event.Brocast("c_refreshNowConte",msgLineChangeInfo)
 end

@@ -44,8 +44,8 @@ end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
-    local companyName = DataManager.GetMyPersonalHomepageInfo()
-    RetailStoresPanel.nameText.text = companyName.companyName
+    --local companyName = DataManager.GetMyPersonalHomepageInfo()
+    RetailStoresPanel.nameText.text = DataInfo.info.name
     RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo

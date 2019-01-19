@@ -36,7 +36,7 @@ end
 function CreateRoleModel:n_CreateNewRole(pMsg)
     logDebug(pMsg.id)
     logDebug(pMsg.name)
-    --角色登录
+    --登录
     Event.Brocast("m_loginRole",pMsg)
 end
 

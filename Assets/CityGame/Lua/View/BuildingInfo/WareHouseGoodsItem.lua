@@ -19,6 +19,8 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.itemId = goodsDataInfo.itemId
     self.producerId = goodsDataInfo.producerId
     self.qty = goodsDataInfo.qty
+    self.bg = self.prefab.transform:Find("TransportItem"):GetComponent("Image");
+    self.material = self.prefab.transform:Find("TransportItem/Name");
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.downBG = self.prefab.transform:Find("TransportItem/downBG"):GetComponent("Image");
@@ -30,16 +32,22 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
 
+    --原料
+
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.downBG.sprite = texture
-            end
-        end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    if math.floor(self.itemId / 100000) == materialKey then            --原料
+        LoadSprite("Assets/CityGame/Resources/Atlas/CenterWareHouse/bg-goods-white-s.png", self.bg)
+        self.material.localScale = Vector3.zero
+        self.downBG:GetComponent("RectTransform").localPosition = Vector3.New(165,200, 0)
+        LoadSprite(Material[self.itemId].img, self.downBG,true)
+        --panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
+        --    if obj ~= nil then
+        --        local texture = ct.InstantiatePrefab(obj)
+        --        self.downBG.sprite = texture
+        --    end
+        --end)
+    elseif math.floor(self.itemId / 100000) == goodsKey then           --商品
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -51,7 +59,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
     self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
-    --Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
+   -- Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
 end
 --删除物品
 function WareHouseGoodsItem:OnDelete(go)
@@ -61,8 +69,8 @@ end
 --点击删除回调
 function WareHouseGoodsItem:c_GsDelItem()
 
-    Event.Brocast("c_DeleteItem",self)
-    -- self.manager:_deleteGoods(self)
+    --Event.Brocast("c_DeleteItem",self)
+     --self.manager:_deleteGoods(self.id)
 end
 
 --点击BG

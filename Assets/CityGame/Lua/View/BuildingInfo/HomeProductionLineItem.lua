@@ -105,6 +105,7 @@ function HomeProductionLineItem:delLineRefreshInfo(data)
     end
     for i,v in pairs(self.SmallLineRateItemTab) do
         if v.id == data.lineId then
+            v:closeEvent()
             destroy(v.prefab.gameObject)
         end
     end

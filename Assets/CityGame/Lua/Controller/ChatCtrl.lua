@@ -56,7 +56,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
-    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
+    --ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -149,10 +149,6 @@ end
 
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
-    if self.isShowPersonalInfo then
-        self.isShowPersonalInfo = false
-        return
-    end
     self:_closePlayerInfo()
     ChatPanel.expressionRoot:SetActive(false)
     self:_showWorldInfo()
@@ -507,14 +503,14 @@ end
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
     if ChatCtrl.static.chatMgr.activePlayerData then
-        go.isShowPersonalInfo = true
-        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+        local isOpenChat = true
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData, isOpenChat)
     end
 end
 
-function ChatCtrl:OnShowCompany(go)
-    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
-end
+--function ChatCtrl:OnShowCompany(go)
+--    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+--end
 
 -- 删除聊天记录
 function ChatCtrl:OnDeleteChatRecords(go)

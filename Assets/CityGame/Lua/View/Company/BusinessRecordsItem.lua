@@ -24,8 +24,8 @@ function BusinessRecordsItem:initialize(prefab, data)
     if self.data.itemId > 2200000 then
         typeText.text = "-Goods-"
         nameText.text = self.data.name
-        incomeText.text = "0"
-        expensesText.text = "0"
+        incomeText.text = self:_formatData(self.data.income, true)
+        expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
         expensesImage:SetActive(true)
         nameImage:SetActive(true)
@@ -33,46 +33,58 @@ function BusinessRecordsItem:initialize(prefab, data)
     elseif self.data.itemId > 2100000 then
         typeText.text = "-Raw material-"
         nameText.text = self.data.name
-        incomeText.text = "0"
-        expensesText.text = "0"
+        incomeText.text = self:_formatData(self.data.income, true)
+        expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
         expensesImage:SetActive(true)
         nameImage:SetActive(true)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1000 then
-        typeText.text = "-土地租赁-"
-        incomeText.text = self.data.income
-        expensesText.text = self.data.expenses
+        typeText.text = "-土地买卖-"
+        incomeText.text = self:_formatData(self.data.income, true)
+        expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
         expensesImage:SetActive(true)
         nameImage:SetActive(false)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1001 then
-        typeText.text = "-土地买卖-"
-        incomeText.text = self.data.income
-        expensesText.text = self.data.expenses
+        typeText.text = "-土地租赁-"
+        incomeText.text = self:_formatData(self.data.income, true)
+        expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
         expensesImage:SetActive(true)
         nameImage:SetActive(false)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1002 then
-        typeText.text = "-住宅房租-"
-        incomeText.text = self.data.income
-        incomeImage:SetActive(true)
-        expensesImage:SetActive(false)
-        nameImage:SetActive(false)
-        incomeImage.transform.anchoredPosition = Vector2.New(-182, -91.5)
-    elseif self.data.itemId == 1003 then
         typeText.text = "-运输费用-"
-        expensesText.text = self.data.expenses
+        expensesText.text = self:_formatData(self.data.expenses, false)
+        incomeImage:SetActive(false)
+        expensesImage:SetActive(true)
+        nameImage:SetActive(false)
+    elseif self.data.itemId == 1003 then
+        typeText.text = "-员工工资-"
+        expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(false)
         expensesImage:SetActive(true)
         nameImage:SetActive(false)
     elseif self.data.itemId == 1004 then
-        typeText.text = "-员工工资-"
-        expensesText.text = self.data.expenses
-        incomeImage:SetActive(false)
-        expensesImage:SetActive(true)
+        typeText.text = "-住宅房租-"
+        incomeText.text = self:_formatData(self.data.income, true)
+        incomeImage:SetActive(true)
+        expensesImage:SetActive(false)
         nameImage:SetActive(false)
+        incomeImage.transform.anchoredPosition = Vector2.New(-182, -91.5)
+    end
+end
+
+function BusinessRecordsItem:_formatData(number, isIncome)
+    if number == 0 then
+        return "0"
+    else
+        if isIncome then
+            return string.format("+E%s", number)
+        else
+            return string.format("-E%s", number)
+        end
     end
 end

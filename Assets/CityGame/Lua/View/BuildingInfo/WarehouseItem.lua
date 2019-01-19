@@ -10,7 +10,13 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     self.itemId = goodsDataInfo.key.id;
     self.buildingId = buildingId
     self.n = goodsDataInfo.n
-    self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
+    --商品
+    self.brandBg = self.prefab.transform:Find("brandBg");
+    self.brandName = self.prefab.transform:Find("brandBg/brandName"):GetComponent("Text");
+    self.brandScore = self.prefab.transform:Find("brandBg/brand/brandScore"):GetComponent("Text");
+    self.qualityScore = self.prefab.transform:Find("brandBg/quality/qualityScore"):GetComponent("Text");
+    --原料
+    self.bgBtn = self.prefab.transform:Find("bgBtn"):GetComponent("Image");  --物品btn，点击勾选物品，默认为false
     self.icon = self.prefab.transform:Find("icon"):GetComponent("Image");  --物品Icon
     self.circleGreayImg = self.prefab.transform:Find("circleGreayImg"):GetComponent("RectTransform");  --圆
     self.circleTickImg = self.prefab.transform:Find("circleGreayImg/circleTickImg"):GetComponent("RectTransform");  --勾选
@@ -23,6 +29,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
+        self:materialRoot()
         self.nameText.text = Material[self.itemId].name;
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -31,6 +38,8 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
             end
         end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
+        self:goodsRoot()
+        self.qualityScore.text = self.goodsDataInfo.key.qty
         self.nameText.text = Good[self.itemId].name;
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -40,9 +49,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
         end)
     end
     --赋值
-    --self.nameText.text = self.name
 
-    --self.itemId = goodsDataInfo.itemId
     --初始化ItemUI状态
     self.bgBtn.gameObject:GetComponent("Image").raycastTarget = false;
     self.circleGreayImg.transform.localScale = Vector3.zero;
@@ -87,6 +94,30 @@ end
 --删除后刷新ID及显示
 function WarehouseItem:RefreshID(id)
     self.id = id;
+end
+--原料
+function WarehouseItem:materialRoot()
+    self.brandBg.localScale = Vector3.zero
+    self.icon:GetComponent("RectTransform").localPosition = Vector3.New(0,40, 0)
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods-white-s .png",type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.bgBtn.sprite = texture
+        end
+    end)
+end
+--商品
+function WarehouseItem:goodsRoot()
+    self.brandBg.localScale = Vector3.one
+    self.icon:GetComponent("RectTransform").localPosition = Vector3.New(0,0, 0)
+    local type = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods 1.png",type,nil,function(goodData,obj)
+        if obj ~= nil then
+            local texture = ct.InstantiatePrefab(obj)
+            self.bgBtn.sprite = texture
+        end
+    end)
 end
 function WarehouseItem:RefreshData(data,id)
     self.id = id

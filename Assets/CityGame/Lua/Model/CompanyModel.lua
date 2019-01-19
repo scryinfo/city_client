@@ -13,7 +13,6 @@ end
 
 function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerEconomy","ss.EconomyInfos",self.n_OnReceivePlayerEconomy,self)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("sscode.OpCode","queryPlayerEconomy"),CompanyModel.n_OnReceivePlayerEconomy)
 end
 
 -- 查询玩家的交易消息返回

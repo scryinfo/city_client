@@ -64,10 +64,13 @@ function WarehouseCtrl:Refresh()
     self.store.type = BuildingInType.Warehouse
     self.store.buildingId = self.m_data.info.id
     WarehouseCtrl.playerId = self.m_data.info.id
-    local numText = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    local warehouseTotalNum = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    local warehouseNum = WarehouseCtrl:getWarehouseNum(self.m_data.store);
+    WarehousePanel.Locked_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-    WarehousePanel.Warehouse_Slider.value = numText;
-    WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+    WarehousePanel.Locked_Slider.value = warehouseTotalNum
+    WarehousePanel.Warehouse_Slider.value = warehouseNum;
+    WarehousePanel.numberText.text = getColorString(WarehousePanel.Locked_Slider.value,WarehousePanel.Locked_Slider.maxValue,"cyan","white");
     self:isShowDetermineBtn()
     if WarehousePanel.Content.childCount <= 0 then
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
@@ -125,8 +128,8 @@ function WarehouseCtrl:c_temporaryifNotGoods(id)
 end
 --获取仓库总数量
 function WarehouseCtrl:getWarehouseCapacity(table)
-    local warehouseCapacity = 0
-    local locked = 0
+    local warehouseCapacity = 0  --仓库总容量
+    local locked = 0             --仓库里锁着的
     if not table.inHand then
         warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity;
@@ -143,6 +146,18 @@ function WarehouseCtrl:getWarehouseCapacity(table)
         end
         warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
+    end
+end
+--获取仓库数量
+function WarehouseCtrl:getWarehouseNum(table)
+    local warehouseNum = 0
+    if not table.inHand then
+        return warehouseNum
+    else
+        for i,v in pairs(table.inHand) do
+            warehouseNum = warehouseNum + v.n
+        end
+        return warehouseNum
     end
 end
 
@@ -263,8 +278,10 @@ function WarehouseCtrl:n_transports(Data)
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
             end
-            WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
-            WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+            --WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
+            WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value - Data.item.n;
+            --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
+            WarehousePanel.numberText.text = getColorString(WarehousePanel.Locked_Slider.value,WarehousePanel.Locked_Slider.maxValue,"cyan","white")
         end
     end
 end

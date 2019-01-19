@@ -1,5 +1,6 @@
 SmallProductionLineItem = class('SmallProductionLineItem')
 
+local remainTime
 --初始化方法
 function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,i,manager)
     self.prefab = prefab;
@@ -30,6 +31,10 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.notConfirmBtn = self.prefab.transform:Find("adjustmentTop/button/notConfirmBtn");  --不能点击
     self.closeBtn = self.prefab.transform:Find("adjustmentTop/button/closeBtn");  --关闭修改添加父物体
 
+    self.currentTime = os.time()
+    self.startTimeDown = true
+    self.timeDown = true
+
     --新添加的线
     if not i then
         self:initUiInfo(self.goodsDataInfo)
@@ -49,6 +54,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClicl_closeBtn,self);
     self._luabehaviour:AddClick(self.addBtn.gameObject,self.OnClicl_addBtn,self);
+    --Event.AddListener("c_refreshTime",self.refreshTime,self)
 end
 --新加线
 function SmallProductionLineItem:initUiInfo(infoData)
@@ -84,6 +90,20 @@ function SmallProductionLineItem:initUiInfo(infoData)
         end)
     end
 end
+----刷新时间
+--function SmallProductionLineItem:refreshTime(data)
+--    local remainingNum = data.targetCount - data.nowCount
+--    local materialKey,goodsKey = 21,22
+--    self.time = 0
+--    if math.floor(data.itemId / 100000) == materialKey then
+--        self.time = 1 / Material[data.itemId].numOneSec / data.workerNum * remainingNum
+--    elseif math.floor(data.itemId / 100000) == goodsKey then
+--        self.time = 1 / Good[data.itemId].numOneSec / data.workerNum * remainingNum
+--    end
+--    --self.time = self.time + UnityEngine.Time.unscaledDeltaTime
+--    self.remainingTime = self.time
+--    UpdateBeat:Add(self.Update,self)
+--end
 --读到线
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.adjustmentTop.localScale = Vector3.zero
@@ -122,14 +142,15 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
             end
         end)
     end
-    self.timeText.text = self:getTimeNumber(self.goodsDataInfo)
-    self.minText.text = self:getMinuteNum(self.goodsDataInfo)
+    self.timeText.text = self:getTimeNumber(infoTab)
+    self.minText.text = self:getMinuteNum(infoTab)
 end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
     go.adjustmentTop.localScale = Vector3.zero
 end
+
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
     if not go.lineId then
@@ -210,18 +231,36 @@ function SmallProductionLineItem:getTimeNumber(infoData)
         return "00:00:00"
     end
     local materialKey,goodsKey = 21,22
-    local time = 0
+    self.time = 0
     if math.floor(self.itemId / 100000) == materialKey then
-        time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
+        self.time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
+        self.time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
     end
-    time = time + UnityEngine.Time.unscaledDeltaTime
-    local timeTable = getTimeBySec(time)
+    --self.time = self.time + UnityEngine.Time.unscaledDeltaTime
+    self.remainingTime = self.time
+    UpdateBeat:Add(self.Update,self)
+    local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
---计算没分钟的产量
+--刷新时间
+function SmallProductionLineItem:Update()
+    if self.remainingTime <= 1 then
+        UpdateBeat:Remove(self.Update,self);
+        return
+    else
+        self.remainingTime = self.remainingTime - UnityEngine.Time.unscaledDeltaTime
+        local timeTable = getTimeBySec(self.remainingTime)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.timeText.text = timeStr
+    end
+end
+--移除刷新时间
+function SmallProductionLineItem:closeUpdate()
+    UpdateBeat:Remove(self.Update,self);
+end
+--计算每分钟的产量
 function SmallProductionLineItem:getMinuteNum(infoData)
     if not infoData then
         return
@@ -246,10 +285,8 @@ function SmallProductionLineItem:getWarehouseNum(itemId)
             end
             for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
                 if v.key.id == itemId then
+                    i = i + 1
                     return v.n
-                else
-                    local number = 0
-                    return number
                 end
             end
         else

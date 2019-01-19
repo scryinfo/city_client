@@ -77,6 +77,6 @@ end
 
 function UIBubbleTransAndBuildingItem:LateUpdate()
     if self.pos ~= nil then
-        self.rect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos)
+        self.rect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos))
     end
 end

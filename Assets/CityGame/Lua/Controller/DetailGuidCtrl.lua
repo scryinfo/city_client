@@ -53,10 +53,13 @@ end
 function DetailGuidCtrl:detailBtn()
     panel.scroll.localScale=Vector3.one
     panel.detailIma.localScale=Vector3.zero
+    PlayMusEff(1002)
 end
 
 function DetailGuidCtrl:Close()
     UIPage.ClosePage();
+    PlayMusEff(1002)
+
 end
 ---刷新按钮
 function DetailGuidCtrl:updateItem(names)

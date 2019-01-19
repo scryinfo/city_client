@@ -19,6 +19,7 @@ function AdjustProductionLinePanel.InitPanel()
     this.addBtn = transform:Find("ScrollView/Viewport/Content/productionLineAdd");
     --Slider --Text
     this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider"):GetComponent("Slider");
+    this.locked_Slider = transform:Find("bg/Topbg01/Locked_Slider"):GetComponent("Slider")
     this.numberText = transform:Find("bg/Topbg01/numberText"):GetComponent("Text");
 
     --idle

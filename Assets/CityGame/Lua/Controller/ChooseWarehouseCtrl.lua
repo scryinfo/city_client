@@ -192,7 +192,10 @@ function ChooseWarehouseCtrl:GetDistance(pos)
     distance = math.sqrt(math.pow((pos.x-buildingInfo.posX),2)+math.pow((pos.y-buildingInfo.posY),2))
     return distance
 end
-
+--获取建筑ID
+function ChooseWarehouseCtrl:GetBuildingId()
+    return buildingInfo.buildingId
+end
 --获取建筑的名字
 function ChooseWarehouseCtrl:GetName()
     local name

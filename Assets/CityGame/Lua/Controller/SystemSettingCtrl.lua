@@ -35,6 +35,7 @@ function SystemSettingCtrl:OnCreate(obj)
     LuaBehaviour:AddClick(panel.outBtn.gameObject,self.c_OnClickout,self);
     LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn1,self);
+    LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
 
 end
 
@@ -112,10 +113,16 @@ function SystemSettingCtrl:c_OnClick_backBtn1()
 
 end
 
+--返回
+function SystemSettingCtrl:c_OnClick_backBtn2()
+    panel.LanguagePanel.localScale=Vector3.zero
+    panel.closeLan.localScale=Vector3.zero
+end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.one
+    panel.closeLan.localScale=Vector3.one
 end
 
 --中文
@@ -125,6 +132,8 @@ function SystemSettingCtrl:c_OnClick_chinese()
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
     panel:InitDate(GetLanguage(1000007))
+    panel.closeLan.localScale=Vector3.zero
+
 end
 --英文
 function SystemSettingCtrl:c_OnClick_english()
@@ -133,6 +142,8 @@ function SystemSettingCtrl:c_OnClick_english()
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(1000008))
+    panel.closeLan.localScale=Vector3.zero
+
 end
 
 

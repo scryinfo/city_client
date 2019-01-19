@@ -64,7 +64,7 @@ end
 function UIBubbleManager.startBubble()
     if this.startFlowCam == false then
         this.startFlowCam = true
-        this.BubbleParent.transform:SetParent(UIRoot.getFixedRoot().transform)
+        this.BubbleParent.transform:SetParent(UIRoot.getBubbleRoot().transform)
         this.BubbleParent.transform.localScale = Vector3.one
         this.BubbleParent.transform:GetComponent("RectTransform").anchoredPosition = Vector2.zero
     end

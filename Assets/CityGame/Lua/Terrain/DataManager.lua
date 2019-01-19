@@ -140,8 +140,11 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshWaysByCollectionID(tempCollectionID)
-    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].BlockDatas == nil then
-        return
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].BlockDatas == nil then
+        CreateBlockDataTable(tempCollectionID)
     end
     if not BuildDataStack[tempCollectionID].RoteDatas then
         BuildDataStack[tempCollectionID].RoteDatas = {}
@@ -171,7 +174,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     end
                     --add height
                     local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
-                    Vec.y = Vec.y + 0.01
+                    Vec.y = Vec.y + 0.02
                     go.transform.position = Vec
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
                     --如果没有道路数据，但原先有道路记录，则清除
@@ -709,6 +712,13 @@ function  DataManager.InitPersonDatas(tempData)
                 DataManager.SetMyFriends(value)
             end
         end
+    end
+    --初始化相机位置
+    if tempData.position ~= nil then
+        local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
+        local LastBlockID= TerrainManager.CollectionIDTurnBlockID(LastCollectionID)
+        local LastPos = TerrainManager.BlockIDTurnPosition(LastBlockID)
+        CameraMove.MoveCameraToPos(LastPos)
     end
     LoginSuccessAndGameStart()
 end

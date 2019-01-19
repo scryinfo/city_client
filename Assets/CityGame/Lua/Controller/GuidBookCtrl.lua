@@ -21,10 +21,9 @@ end
 
 --启动事件--
 function GuidBookCtrl:OnCreate(obj)
-
     UIPage.OnCreate(self,obj)
-    luaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Close,self);
+    luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Close,self)
     for name, v in pairs(GuidBookConfig) do
         local prefab  =creatGoods(self.aboutItem_Path,GuidBookPanel.buttonCon)
         AboutItem:new(prefab,luaBehaviour,name)
@@ -37,7 +36,8 @@ function GuidBookCtrl:Refresh()
 end
 
 function GuidBookCtrl:Close()
-    UIPage.ClosePage();
+    UIPage.ClosePage()
+    PlayMusEff(1002)
 end
 
 

@@ -157,6 +157,7 @@ function StopAndBuildCtrl:updatePersonInfo(data)
 
     local peronInfo=data.ctrl.groundOwnerDatas[#data.ctrl.groundOwnerDatas]
     --panel.rightPerIma.sprite=peronInfo
+    LoadSprite(PlayerHead[peronInfo.faceId].MainPath, panel.rightPerIma, true)
     panel.rightnameInp.text=peronInfo.name
     panel.rightcommanyInp.text=peronInfo.companyName
     ---*-226188068
@@ -174,6 +175,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
     local groundData=data.groundData
     --**des=""
     --panel.personIma.sprite=personData.des
+    LoadSprite(PlayerHead[personData.faceId].MainPath, panel.personIma, true)
     panel.nameInp.text=personData.name
     panel.commanyInp.text=personData.companyName
     --- ******************** ---

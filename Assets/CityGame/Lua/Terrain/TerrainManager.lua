@@ -13,7 +13,6 @@ local blockRange = Vector2.New(20, 20)
 --以下数据应当初始化
 local CameraCollectionID = -1
 
-
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
     local buildingID = table[1]
@@ -64,7 +63,8 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
     end
     --刷新AOI内的数据
     if CameraCollectionID ~= nil and CameraCollectionID ~= -1 then
-        for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+        local AOIList = TerrainManager.GetCameraCollectionIDAOIList()
+        for key, value in pairs(AOIList) do
             DataManager.RefreshWaysByCollectionID( value)
         end
     end
@@ -184,6 +184,7 @@ function TerrainManager.SendMoveToServer(tempBlockID)
     local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
     local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    ct.log("system","自己所在位置".. lMsg.x .." <--> " .. lMsg.y)
 end
 
 --应该每帧调用传camera的位置
@@ -260,6 +261,12 @@ end
 
 function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
 
+end
+
+function TerrainManager.AOIGridIndexTurnCollectionID(tempGridIndex)
+    local tempX = math.floor(math.abs(tempGridIndex.x))
+    local tempZ = math.floor(math.abs(tempGridIndex.y))
+    return tempZ + tempX * math.ceil(TerrainRange.x /blockRange.x) + 1
 end
 
 --创建临时修建建筑物

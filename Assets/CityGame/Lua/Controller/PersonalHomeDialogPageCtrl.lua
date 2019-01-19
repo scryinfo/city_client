@@ -111,6 +111,7 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
+    data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         Event.Brocast("m_ChatAddFriends", { id = ins.m_data.id, desc = text })
         Event.Brocast("SmallPop","Your request has been sent.",80)

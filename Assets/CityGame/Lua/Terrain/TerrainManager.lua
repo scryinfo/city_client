@@ -11,15 +11,15 @@ local ArchitectureStack = {}
 local TerrainRange = Vector2.New(1000 , 1000)    --地图大小范围
 local blockRange = Vector2.New(20, 20)
 --以下数据应当初始化
-local CameraPosition
 local CameraCollectionID = -1
+
 
 --创建建筑GameObject成功回调
 local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
     --add height
-    Vec3.y =  Vec3.y + 0.01
+    Vec3.y =  Vec3.y + 0.02
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
@@ -58,6 +58,9 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         if isCreate then
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
         end
+    end
+    for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+        TerrainManager.IsIncludeCentralBuilding(value)
     end
     --刷新AOI内的数据
     if CameraCollectionID ~= nil and CameraCollectionID ~= -1 then
@@ -266,8 +269,15 @@ local function CreateConstructBuildSuccess(go,table)
         return;
     end
     DataManager.TempDatas.constructID  = table[1]
+    --防止加载太慢
+    if DataManager.TempDatas.constructObj ~= nil then
+        destroy(DataManager.TempDatas.constructObj)
+    end
     DataManager.TempDatas.constructObj = go
-    DataManager.TempDatas.constructObj.transform.position = table[2]
+    local Vec3 = table[2]
+    --add height
+    Vec3.y =  Vec3.y + 0.02
+    DataManager.TempDatas.constructObj.transform.position = Vec3
     DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
     --一定要放在数据刷新完后打开
     ct.OpenCtrl('ConstructSwitchCtrl')
@@ -300,7 +310,7 @@ function TerrainManager.ConstructBuild(buildId,buildPos)
     buildMgr:CreateBuild(PlayerBuildingBaseData[buildId]["prefabRoute"],CreateConstructBuildSuccess,{buildId, buildPos})
 end
 
---点击3D场景
+--点击3D场景【旧的，被CameraMove:TouchBuild取代】
 --若点击到3D建筑所占地块
 function TerrainManager.TouchBuild(MousePos)
     local tempPos = rayMgr:GetCoordinateByVector3(MousePos)
@@ -313,6 +323,55 @@ function TerrainManager.TouchBuild(MousePos)
         end
     end
 end
+
+local CentralBuildingBlockList = nil
+local CentralBuildingObj = nil
+local CentralBuildingBlockID = nil
+local CentralBuildingCollectionID = nil
+--创建中心建筑
+function TerrainManager.CreateCenterBuilding()
+    if CentralBuildingObj == nil then
+        local CentralBuildingMes = TerrainConfig.CentralBuilding
+        if CentralBuildingMes.CenterNodePos ~= nil and CentralBuildingMes.BuildingType ~= nil and PlayerBuildingBaseData[CentralBuildingMes.BuildingType] ~= nil then
+            local myCenterGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute)
+            CentralBuildingObj = UnityEngine.GameObject.Instantiate(myCenterGroundObj)
+            --临时提高一些
+            local TargetPos =CentralBuildingMes.CenterNodePos
+            TargetPos.y = TargetPos.y + 0.02
+            CentralBuildingObj.transform.position = TargetPos
+            CentralBuildingObj.transform.localScale = Vector3.one
+            CentralBuildingObj.name = "CentralBuilding"
+            --写入覆盖范围
+            CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
+            CentralBuildingCollectionID = TerrainManager.BlockIDTurnCollectionID(CentralBuildingBlockID)
+            CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID, PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
+        end
+    end
+end
+
+--判断是否点击到中心建筑
+function TerrainManager.IsTouchCentralBuilding(blockID)
+    if  CentralBuildingBlockList ~= nil then
+        for key, value in pairs(CentralBuildingBlockList) do
+            if blockID == value then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+--判断AOI地块是否包含中心建筑
+--
+function TerrainManager.IsIncludeCentralBuilding(CollectionID)
+    local BuildingType = TerrainConfig.CentralBuilding.BuildingType
+    if CentralBuildingCollectionID == CollectionID then
+        --写入覆盖范围
+        DataManager.RefreshBlockDataWhenNodeChange(CentralBuildingBlockID,PlayerBuildingBaseData[BuildingType].x,BuildingType)
+    end
+end
+
+
 
 UnitTest.TestBlockStart()
 

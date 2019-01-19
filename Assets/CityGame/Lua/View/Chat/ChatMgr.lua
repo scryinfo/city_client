@@ -96,6 +96,15 @@ function ChatMgr:GetCurrentPage()
     return self.currentPage
 end
 
+-- 获得玩家的头像ID
+function ChatMgr:GetPlayerFaceId(id)
+    for _, v in ipairs(self.playerChoice) do
+        if v.item[id] then
+            return v.item[id].data.faceId
+        end
+    end
+end
+
 -- 删除单个Item
 function ChatMgr:DestroyItem(index, id)
     if self.playerChoice[index].item[id] then

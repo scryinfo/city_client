@@ -57,7 +57,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.AddListener("c_transport",self.c_transport,self);
-   -- Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
+    --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
 
 end
 

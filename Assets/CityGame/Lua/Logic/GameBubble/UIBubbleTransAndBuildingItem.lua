@@ -27,6 +27,8 @@ function UIBubbleTransAndBuildingItem:initialize(data, obj)
 
     self:_initFunc(data)
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
+    Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
+    Event.AddListener("c_BubbleAllShow", self._showFunc, self)
 end
 
 function UIBubbleTransAndBuildingItem:_initFunc(data)
@@ -41,6 +43,17 @@ function UIBubbleTransAndBuildingItem:_initFunc(data)
         self.data.uiCenterPos = Vector3.New(0.5, 0, 0.5)
     else
         self.data.uiCenterPos = Vector3.New(self.data.uiCenterPos[1], self.data.uiCenterPos[2], self.data.uiCenterPos[3])
+    end
+end
+
+function UIBubbleTransAndBuildingItem:_hideFunc()
+    if self.gameObject ~= nil then
+        self.gameObject.transform.localScale = Vector3.zero
+    end
+end
+function UIBubbleTransAndBuildingItem:_showFunc()
+    if self.gameObject ~= nil then
+        self.gameObject.transform.localScale = Vector3.one
     end
 end
 

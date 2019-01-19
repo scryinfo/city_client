@@ -35,6 +35,7 @@ function ConstructCtrl:Refresh()
     --self:ClearAllItem()
     --self:_initPanelData()
 
+    Event.Brocast("c_HideGroundBubble")
     ct.log("Allen_wk14_MyGround","临时生成我的地块")
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_CreateMyGrounds",self)
 end
@@ -81,6 +82,7 @@ function ConstructCtrl:Hide()
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
     CameraMove.ChangeCameraState(TouchStateType.NormalState)
     Event.Brocast("m_abolishConstructBuild")
+    Event.Brocast("c_ShowGroundBubble")
 end
 
 

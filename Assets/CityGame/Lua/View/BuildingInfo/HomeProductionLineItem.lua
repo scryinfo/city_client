@@ -82,6 +82,7 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         end
         self.SmallLineRateItemTab[i] = SmallLineRateItem
     end
+    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
 end
 --生产线添加时添加
 function HomeProductionLineItem:productionRefreshInfo(data)

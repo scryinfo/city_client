@@ -5,11 +5,11 @@
 ---建造面板
 -----
 
-ConstructSwitchCtrl = class('ConstructSwitchCtrl',UIPage)
+ConstructSwitchCtrl = class('ConstructSwitchCtrl',UIPanel)
 UIPage:ResgisterOpen(ConstructSwitchCtrl)
 
 function ConstructSwitchCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
+    UIPage.initialize(self, UIType.Bubble, UIMode.DoNothing, UICollider.None)
 end
 
 function ConstructSwitchCtrl:bundleName()

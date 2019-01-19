@@ -44,6 +44,11 @@ namespace City
             return UIRoot.getFixedRoot();
         }
 
+        public static Transform getBubbleRoot()
+        {
+            return UIRoot.getBubbleRoot();
+        }
+
         public static bool isWindowsEditor()
         {
             return Application.platform == RuntimePlatform.WindowsEditor;

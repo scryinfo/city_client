@@ -38,7 +38,7 @@ function UIBubbleTransAndBuildingItem:_initFunc(data)
     end
     self.pos = TerrainManager.BlockIDTurnPosition(data.blockId)
     if data.uiCenterPos == nil then
-        self.data.uiCenterPos = Vector3.zero
+        self.data.uiCenterPos = Vector3.New(0.5, 0, 0.5)
     else
         self.data.uiCenterPos = Vector3.New(self.data.uiCenterPos[1], self.data.uiCenterPos[2], self.data.uiCenterPos[3])
     end

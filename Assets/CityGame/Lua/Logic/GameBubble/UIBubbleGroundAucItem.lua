@@ -109,7 +109,7 @@ function UIBubbleGroundAucItem:LateUpdate()
         return
     end
     if self.bubbleObj ~= nil then
-        self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0.5, 0.05)))
+        self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
     else
         self.timeDown = false
         return

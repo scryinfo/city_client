@@ -58,7 +58,7 @@ function StopAndBuildPanel.InitPanel()
     this.depositText=transform:Find("leftRoot/bottonRoot/infoRoot/deposit/nameText"):GetComponent("Text")
     this.deposit=transform:Find("leftRoot/bottonRoot/infoRoot/deposit/Text"):GetComponent("Text")
     ------------************************* TODO:Right info **************************************---------------
-    this.rightPerIma=transform:Find("rightRoot/topRoot/PersonInfo/Avtar/personIma")
+    this.rightPerIma=transform:Find("rightRoot/topRoot/PersonInfo/Avtar/personIma"):GetComponent("Image")
     this.operatorText=transform:Find("rightRoot/topRoot/landInfo/Text"):GetComponent("Text");
     this.rightnameInp=transform:Find("rightRoot/topRoot/PersonInfo/nameInp"):GetComponent("InputField")
     this.rightcommanyInp=transform:Find("rightRoot/topRoot/PersonInfo/commanyInp"):GetComponent("InputField")

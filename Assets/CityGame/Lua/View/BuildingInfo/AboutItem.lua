@@ -22,5 +22,6 @@ end
 ---添加
 function AboutItem:OnClick_Add(ins)
     ct.OpenCtrl("DetailGuidCtrl",ins)
+    PlayMusEff(1002)
 end
 

@@ -1884,7 +1884,9 @@ CityEngineLua.reset = function()
 
 	if this._networkInterface then
 		this._networkInterface:reset();
-		this._networkInterface = City.NetworkInterface.New();
+	end
+	if this._tradeNetworkInterface1 then
+		this._tradeNetworkInterface1:reset();
 	end
 	this._lastTickTime = os.clock();
 	this._lastTickCBTime = os.clock();

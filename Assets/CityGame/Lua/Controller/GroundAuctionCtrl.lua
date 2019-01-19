@@ -232,11 +232,11 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     end
     if self.biderInfo == nil then
         --请求信息
-        GAucModel.m_ReqPlayersInfo({[1] = data.id})
+        GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
     else
         if self.biderInfo.id == data.id then
             --请求信息
-            GAucModel.m_ReqPlayersInfo({[1] = data.id})
+            GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
         end
     end
 end
@@ -257,6 +257,7 @@ end
 function GroundAuctionCtrl:_bidEnd(id)
     if id == self.id then
         self.biderInfo = nil
+        self.highestPrice = nil
         UIPage.ClosePage()
     end
 end

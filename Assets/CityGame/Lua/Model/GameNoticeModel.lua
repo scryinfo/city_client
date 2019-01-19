@@ -37,6 +37,11 @@ function GameNoticeModel:m_delMail(mailId)
 
 end
 
+--获取好友信息
+function GameNoticeModel:m_GetMyFriendsInfo(friendsIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds})
+end
+
 --服务器回调--
 
 --查看

@@ -25,6 +25,7 @@ function GameNoticePanel.InitPanel()
     this.hedaer = transform:Find("right/top/hedaer").gameObject:GetComponent("Text");
     this.xBtn = transform:Find("right/top/xButton").gameObject;
     this.time = transform:Find("right/down/time").gameObject:GetComponent("Text");
+    this.delete = transform:Find("right/down/time/delete").gameObject;
     this.rightContent = transform:Find("right/down/Scroll View/Viewport/Content").gameObject:GetComponent("Text");
     this.GoodsScrollView = transform:Find("right/down/GoodsScroll View").gameObject
     this.jumpBtn = transform:Find("right/down/jumpButton").gameObject;--跳转场景

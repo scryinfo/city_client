@@ -19,6 +19,7 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
+
         Event.Brocast("c_GroundBuildingCheck")
     end
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then

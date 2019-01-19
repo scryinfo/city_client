@@ -1427,3 +1427,4 @@ function DataManager.GetBagNum()
     end
     return n
 end
+

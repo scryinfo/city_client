@@ -144,7 +144,7 @@
 			{
                 //state.socket.Connect(state.connectIP, state.connectPort);
                 IAsyncResult connResult = state.socket.BeginConnect(state.connectIP, state.connectPort, null, null);
-		        connResult.AsyncWaitHandle.WaitOne(3000, true);  //等待2秒
+		        connResult.AsyncWaitHandle.WaitOne(4000, true);  //等待2秒
 		        if (!connResult.IsCompleted)
 		        {
                     state.error = "Failed";

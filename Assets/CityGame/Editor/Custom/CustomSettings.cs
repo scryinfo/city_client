@@ -215,6 +215,7 @@ public static class CustomSettings
         _GT(typeof(UnityEngine.EventSystems.EventSystem)),
         _GT(typeof(Battle.FOWLogic)),
         _GT(typeof(FOWSystem)),
+        _GT(typeof(City.NetworkInterface.ConnectState)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

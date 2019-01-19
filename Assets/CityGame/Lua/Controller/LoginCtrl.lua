@@ -135,6 +135,7 @@ end
 
 function LoginCtrl:c_ConnectionStateChange( isSuccess )
 	if isSuccess == true then
+		CityEngineLua.login_loginapp(false)
 		LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "连接错误";

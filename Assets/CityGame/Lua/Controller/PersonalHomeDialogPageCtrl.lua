@@ -30,6 +30,7 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.addFriendBtn.gameObject, self._reqAddFriend, self)
     self.luaBehaviour:AddClick(self.sendMessageBtn.gameObject, self._strangerChatBtnFunc, self)
     self.luaBehaviour:AddClick(self.friendSendMessageBtn.gameObject, self._friendChatBtnFunc, self)
+    self.luaBehaviour:AddClick(self.companyBtn.gameObject, self._companyBtnFunc, self)
 end
 
 function PersonalHomeDialogPageCtrl:Refresh()
@@ -49,6 +50,7 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.famaleTran = go.transform:Find("root/infoRoot/name/nameText/famale")
     self.maleTran = go.transform:Find("root/infoRoot/name/nameText/male")
     self.companyText = go.transform:Find("root/infoRoot/company/companyText"):GetComponent("Text")
+    self.companyBtn = go.transform:Find("root/infoRoot/company")
 
     self.otherOpen = go.transform:Find("root/otherOpen")
     self.strangerOtherTran = go.transform:Find("root/otherOpen/stranger")
@@ -119,12 +121,21 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
 end
 --好友私聊
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
-    ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
+    if ins.isOpenChat == nil or ins.isOpenChat == false then
+        ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
+    end
     ins:Hide()
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
-    ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
+    if ins.isOpenChat == nil or ins.isOpenChat == false then
+        ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
+    end
+    ins:Hide()
+end
+--公司
+function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
+    ct.OpenCtrl("CompanyCtrl", ins.m_data)
     ins:Hide()
 end
 --

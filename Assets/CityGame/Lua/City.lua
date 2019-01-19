@@ -1708,7 +1708,7 @@ CityEngineLua.login_loginapp = function( noconnect )
 		--发包
 		CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 		--多连接测试
-		UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
+		--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 	end
 end
 
@@ -1724,8 +1724,8 @@ CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, userD
 			
 	ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." success!");
 
-	-- this.hello(); //暂时不考虑握手的事
 	this.login_loginapp(false);
+
 end
 
 CityEngineLua.onLogin_loginapp = function()
@@ -1884,7 +1884,9 @@ CityEngineLua.reset = function()
 
 	if this._networkInterface then
 		this._networkInterface:reset();
-		this._networkInterface = City.NetworkInterface.New();
+	end
+	if this._tradeNetworkInterface1 then
+		this._tradeNetworkInterface1:reset();
 	end
 	this._lastTickTime = os.clock();
 	this._lastTickCBTime = os.clock();

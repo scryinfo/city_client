@@ -199,9 +199,8 @@ end
 
 --点击头像
 function GameMainInterfaceCtrl:OnHead()
-   local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
+    local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
-
 end
 
 --通知--

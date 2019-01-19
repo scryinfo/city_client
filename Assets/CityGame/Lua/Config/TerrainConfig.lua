@@ -9,7 +9,7 @@ TerrainConfig = {
         ["CameraIntoDurationtime"] = 0.4,       --打开建筑时镜头拉近耗时
         ["CameraOutDurationtime"] = 0.6,        --打开建筑时镜头拉远耗时
         ["CameraScaleValueMin"] = 5,            --相机缩放y轴高度最近距离
-        ["CameraScaleValueMax"] = 10,           --相机缩放y轴高度最远距离
+        ["CameraScaleValueMax"] = 15,           --相机缩放y轴高度最远距离
     },
     ["CentralBuilding"] ={
         ["CenterNodePos"] = Vector3.New(49,0,49),

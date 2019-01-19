@@ -139,6 +139,29 @@ function UIBubbleManager._showAllItems()
     Event.Brocast("c_BubbleAllShow")
 end
 
+--点了主页的按钮
+function UIBubbleManager._clickNowAndSoonBtn()
+    if this.aucItemsTable == nil then
+        return false
+    end
+    local soonData = {}
+    for i, item in pairs(this.aucItemsTable) do
+        if item ~= nil then
+            if item:_getAucState() == true then
+                local beginTime, durationSec = item:_getTimeDownInfo()
+                local data = {groundState = 1, beginTime = beginTime, durationSec = durationSec}
+                GAucModel._moveToAucNowPos()
+                return data
+            else
+                local beginTime, durationSec = item:_getTimeDownInfo()
+                soonData = {groundState = 0, beginTime = beginTime, durationSec = durationSec}
+            end
+        end
+    end
+    GAucModel._moveToAucPos()
+    return soonData
+end
+
 ----
 --打开拍卖界面
 function UIBubbleManager._openGroundAucCtrl(index)

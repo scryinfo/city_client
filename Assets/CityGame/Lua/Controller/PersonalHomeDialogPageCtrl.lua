@@ -94,7 +94,7 @@ function PersonalHomeDialogPageCtrl:_initData()
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 45, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
-    LoadSprite(PlayerHead[self.m_data.faceId].PersonHomepagePath, self.roleProtaitImg, true)
+    LoadSprite(PlayerHead[self.m_data.faceId].PersonHomepagePath, self.roleProtaitImg, false)
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)

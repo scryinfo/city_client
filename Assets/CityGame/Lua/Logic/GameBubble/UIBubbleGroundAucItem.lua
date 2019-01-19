@@ -71,7 +71,14 @@ function UIBubbleGroundAucItem:_checkIsClickGround(blockId)
         end
     end
 end
-
+--获取当前拍卖状态
+function UIBubbleGroundAucItem:_getAucState()
+    return self.data.isStartAuc
+end
+--获取当前拍卖状态
+function UIBubbleGroundAucItem:_getTimeDownInfo()
+    return self.data.aucInfo.beginTime, self.data.aucInfo.durationSec
+end
 
 function UIBubbleGroundAucItem:_hideFunc()
     if self.bubbleObj ~= nil then

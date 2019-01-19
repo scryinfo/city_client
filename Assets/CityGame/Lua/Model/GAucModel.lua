@@ -153,8 +153,14 @@ function GAucModel._getOrderGroundDatas(groundData)
 end
 --移动到即将拍卖的位置
 function GAucModel._moveToAucPos()
-    if GAucModel.valuableWillAucObj ~= nil then
+    if GAucModel.valuableWillAucObj ~= nil and GAucModel.valuableWillAucObj.transform.localScale ~= Vector3.zero then
         CameraMove.MoveCameraToPos(GAucModel.valuableWillAucObj.transform.position)
+    end
+end
+--移动到拍卖的位置
+function GAucModel._moveToAucNowPos()
+    if GAucModel.valuableStartAucObj ~= nil and GAucModel.valuableStartAucObj.transform.localScale ~= Vector3.zero then
+        CameraMove.MoveCameraToPos(GAucModel.valuableStartAucObj.transform.position)
     end
 end
 

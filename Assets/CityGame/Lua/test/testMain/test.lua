@@ -577,5 +577,35 @@ UnitTest.Exec("cycle_w22_pieTest", "test_cycle_w22_pieTest",  function ()
     --pie.CreatePie()
 end)
 
+--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
+--UnitTest.Exec_now("wk24_abel_mutiConnect_revMsg", "c_wk24_abel_mutiConnect_revMsg",self)
+UnitTest.Exec("wk24_abel_mutiConnect", "wk24_abel_mutiConnect",  function ()
+    ct.log("wk24_abel_mutiConnect","[c_wk24_abel_mutiConnect]  测试开始")
+    Event.AddListener("c_wk24_abel_mutiConnect", function (obj) --在测试用例中注册消息 c_AddClick_self
+        --192.168.0.149:20001
+        CityEngineLua.tradeappIP = "192.168.0.149";
+        CityEngineLua.tradeappPort = "20001"
+        CityEngineLua.login_tradeapp(true)
+    end)
+end)
+
+UnitTest.Exec("wk24_abel_mutiConnect_revMsg", "wk24_abel_mutiConnect_revMsg",  function ()
+    ct.log("wk24_abel_mutiConnect_revMsg","[c_wk24_abel_mutiConnect_revMsg]  测试开始")
+    Event.AddListener("c_wk24_abel_mutiConnect_revMsg", function (obj) --在测试用例中注册消息 c_AddClick_self
+        CityEngineLua.Message:registerNetMsg(pbl.enum("sscode.OpCode","queryPlayerEconomy"), function ()
+            local test = 0
+        end)
+        CityEngineLua._tradeNetworkInterface1.testId = 2
+        local pid ='8a20a7b8c1644a59b79e030c81603ed9'
+        ----1、 获取协议id
+        local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
+        ----2、 填充 protobuf 内部协议数据
+        local lMsg = { id = pid}
+        local pMsg = assert(pbl.encode("ss.Id", lMsg))
+        ----3、 创建包，填入数据并发包
+        CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1);
+    end)
+end)
+
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

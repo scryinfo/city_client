@@ -146,8 +146,8 @@ function GameMainInterfaceCtrl:initInsData()
     --初始化姓名,性别,金币
     GameMainInterfacePanel.name.text = self.name
     GameMainInterfacePanel.money.text = self.money
-    UpdateBeat:Add(self._update, self);
-
+    self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
+    self.m_Timer:Start()
     if self.gender then
         GameMainInterfacePanel.male.localScale = Vector3.one
         GameMainInterfacePanel.woman.localScale = Vector3.zero
@@ -157,14 +157,24 @@ function GameMainInterfaceCtrl:initInsData()
     end
 end
 
-function GameMainInterfaceCtrl:_update()
-    GameMainInterfacePanel.time.text = os.date("%H:%M");
-    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a");
-    local date = tonumber(os.date("%Y%m%d"))
-    local hour = tonumber(os.date("%H"))
-    for i, v in pairs(WeatherConfig[date].weather) do
-        if i == hour then
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..v, GameMainInterfacePanel.weather,true)
+local date
+local hour
+function GameMainInterfaceCtrl:RefreshWeather()
+    GameMainInterfacePanel.time.text = os.date("%H:%M")
+    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
+    date = tonumber(os.date("%Y%m%d"))
+    hour = tonumber(os.date("%H"))
+    if self.weatherDay == nil then
+        self.weatherDay = date
+    end
+    if self.weatherHour == nil then
+        self.weatherHour = hour
+    end
+    if self.weatherDay ~= date or  self.weatherHour ~= hour then
+        self.weatherDay = date
+        self.weatherHour = hour
+        if WeatherConfig[date].weather[hour] ~= nil then
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
         end
     end
 end
@@ -189,9 +199,8 @@ end
 
 --点击头像
 function GameMainInterfaceCtrl:OnHead()
-   local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
+    local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
-
 end
 
 --通知--
@@ -340,9 +349,10 @@ end
 
 --关闭updata
 function GameMainInterfaceCtrl:RemoveUpdata()
-    if UpdateBeat then
-        UpdateBeat:Remove(self._update, self);
+    if self.m_Timer ~= nil then
+        self.m_Timer:Start()
     end
 end
+
 
 

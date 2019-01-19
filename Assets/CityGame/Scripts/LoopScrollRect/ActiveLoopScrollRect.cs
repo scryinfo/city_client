@@ -76,4 +76,12 @@ public class ActiveLoopScrollRect : MonoBehaviour
             mLoopScrollRect.RefreshCells();
         }
     }
+
+    public void RefillCells()
+    {
+        if (mLoopScrollRect != null)
+        {
+            mLoopScrollRect.RefillCells();
+        }
+    }
 }

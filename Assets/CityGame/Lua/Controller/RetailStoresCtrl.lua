@@ -44,8 +44,8 @@ end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
-    local companyName = DataManager.GetMyPersonalHomepageInfo()
-    RetailStoresPanel.nameText.text = companyName.companyName
+    --local companyName = DataManager.GetMyPersonalHomepageInfo()
+    RetailStoresPanel.nameText.text = DataInfo.info.name
     RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo
@@ -69,7 +69,7 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     if not self.retailShopToggleGroup then
         self.retailShopToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.retailShopBehaviour, self.m_data)
     else
-        --self.retailShopToggleGroup:updataInfo(self.m_data)
+        self.retailShopToggleGroup:updateInfo(self.m_data)
     end
 end
 function RetailStoresCtrl:OnClick_buildInfo(ins)

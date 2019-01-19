@@ -7,7 +7,8 @@ GroundTransState =
 {
     None = 0,
     Sell = 1,
-    Rent = 2
+    Rent = 2,
+    Renting = 3,
 }
 
 GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPage)

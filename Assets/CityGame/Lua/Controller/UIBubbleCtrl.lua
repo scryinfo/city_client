@@ -32,7 +32,7 @@ end
 
 function UIBubbleCtrl:Awake(go)
     self.gameObject = go
-    self:_addListener()
+    --self:_addListener()
 end
 
 function UIBubbleCtrl:Refresh()

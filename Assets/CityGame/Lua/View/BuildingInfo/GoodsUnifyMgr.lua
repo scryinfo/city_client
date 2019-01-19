@@ -92,7 +92,7 @@ function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId,buildingId)
     local infoData = {}
     infoData.itemId = itemId
     infoData.buildingId = buildingId
-    local prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
+    local prefab = self:_creatGood(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
     local productionLineItem = SmallProductionLineItem:new(infoData,prefab,luabehaviour,nil,self);
     if not self.tempLineItem then
         self.tempLineItem = {}
@@ -202,6 +202,16 @@ function GoodsUnifyMgr:_creatGoods(path,parent)
     local go = UnityEngine.GameObject.Instantiate(prefab);
     local rect = go.transform:GetComponent("RectTransform");
     go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
+end
+--生产线生成预制
+function GoodsUnifyMgr:_creatGood(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    go.transform:SetSiblingIndex(1)
     rect.transform.localScale = Vector3.one;
     return go
 end

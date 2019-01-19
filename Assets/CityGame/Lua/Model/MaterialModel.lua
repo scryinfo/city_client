@@ -8,11 +8,9 @@ function MaterialModel:initialize(insId)
 end
 
 function MaterialModel:OnCreate()
-
-
+    Event.AddListener("mReqCloseMaterial",self.mReqCloseMaterial,self)
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
-
 end
 
 function MaterialModel:Close()
@@ -26,6 +24,10 @@ end
 --改变建筑名字
 function MaterialModel:m_ReqChangeMaterialName(buildingId,name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+end
+--关闭原料厂详情推送消息
+function MaterialModel:mReqCloseMaterial(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id = buildingId})
 end
 --服务器回调--
 --打开原料厂

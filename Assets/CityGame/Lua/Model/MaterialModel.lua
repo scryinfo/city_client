@@ -21,9 +21,10 @@ end
 function MaterialModel:m_ReqOpenMaterial(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
+
 --改变建筑名字
-function MaterialModel:m_ReqChangeMaterialName(buildingId,name)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+function MaterialModel:m_ReqChangeMaterialName(id, name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
 end
 --关闭原料厂详情推送消息
 function MaterialModel:mReqCloseMaterial(buildingId)

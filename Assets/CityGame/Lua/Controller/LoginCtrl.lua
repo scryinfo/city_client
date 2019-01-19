@@ -59,6 +59,7 @@ function LoginCtrl:OnCreate(go)
 	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 end
 
 --关闭事件--
@@ -132,8 +133,9 @@ function LoginCtrl:c_onLoginFailed( errorCode )
 	LoginPanel.textStatus:GetComponent('Text').text = "登录失败"..errorCode;
 end
 
-function LoginCtrl:c_ConnectionStateChange( isSuccess )
-	if isSuccess == true then
+function LoginCtrl:c_ConnectionStateChange( state )
+	if state.error == 'Success' then
+		--CityEngineLua.login_loginapp(false)
 		LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
 	else
 		LoginPanel.textStatus:GetComponent('Text').text = "连接错误";

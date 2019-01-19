@@ -103,25 +103,14 @@
 		public void _onConnectionState(ConnectState state)
 		{
 			City.Event.deregisterIn(this);
-
-			bool success = (state.error == "" && valid());
-			if (success)
-			{
-				Dbg.DEBUG_MSG(string.Format("NetworkInterface::_onConnectionState(), connect to {0} is success!", state.socket.RemoteEndPoint.ToString()));
-				_packetReceiver = new PacketReceiver(this);
-				_packetReceiver.startRecv();
-				connected = true;
-			}
-			else
-			{
-				reset();
-				Dbg.ERROR_MSG(string.Format("NetworkInterface::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
-			}
-
-            CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", success });
+            _packetReceiver = new PacketReceiver(this);
+            _packetReceiver.startRecv();
+            connected = true;
+            state.error = "Success";
+            CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
 
 			if (state.connectCB != null)
-				state.connectCB(state.connectIP, state.connectPort, success, state.userData);
+				state.connectCB(state.connectIP, state.connectPort, true, state.userData);
 		}
 
 		private static void connectCB(IAsyncResult ar)
@@ -153,9 +142,24 @@
 			Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), will connect to '{0}:{1}' ...", state.connectIP, state.connectPort));
 			try
 			{
-				state.socket.Connect(state.connectIP, state.connectPort);
-			}
-			catch (Exception e)
+                //state.socket.Connect(state.connectIP, state.connectPort);
+                IAsyncResult connResult = state.socket.BeginConnect(state.connectIP, state.connectPort, null, null);
+		        connResult.AsyncWaitHandle.WaitOne(4000, true);  //等待2秒
+		        if (!connResult.IsCompleted)
+		        {
+                    state.error = "Failed";
+                    Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' failed!'", state.connectIP, state.connectPort));
+                    CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
+                    close();
+			        //处理连接不成功的动作
+		        }
+		        else
+		        {
+                    //处理连接成功的动作
+                    _asyncConnectCB1(state);
+		        }
+            }
+            catch (Exception e)
 			{
 				Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
 				state.error = e.ToString();
@@ -165,18 +169,17 @@
 		/// <summary>
 		/// 在非主线程执行：连接服务器结果回调
 		/// </summary>
-		private void _asyncConnectCB(IAsyncResult ar)
+		private void _asyncConnectCB1(ConnectState state)
 		{
-			ConnectState state = (ConnectState)ar.AsyncState;
-			AsyncResult result = (AsyncResult)ar;
-			AsyncConnectMethod caller = (AsyncConnectMethod)result.AsyncDelegate;
+            Event.fireIn("_onConnectionState", new object[] { state });            
+        }
 
-			Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
-
-			// Call EndInvoke to retrieve the results.
-			caller.EndInvoke(ar);
-			Event.fireIn("_onConnectionState", new object[] { state });
-		}
+        private void _asyncConnectCB(IAsyncResult ar)
+		{
+            ConnectState state = (ConnectState)ar.AsyncState;
+            state.error = "";
+            Event.fireIn("_onConnectionState", new object[] { state });            
+        }
 
 		public void connectTo(string ip, int port, ConnectCallback callback, object userData)
 		{
@@ -219,9 +222,12 @@
 			// 先注册一个事件回调，该事件在当前线程触发
 			Event.registerIn("_onConnectionState", this, "_onConnectionState");
 
-			var v = new AsyncConnectMethod(this._asyncConnect);
-			v.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);
-		}
+            /*var v = new AsyncConnectMethod(this._asyncConnect);
+			v.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);*/
+            _asyncConnect(state);
+            //_asyncConnectCB();
+
+        }
 
         private bool IsHaveIpV6Address(IPAddress[] IPs, ref IPAddress[] outIPs)
         {

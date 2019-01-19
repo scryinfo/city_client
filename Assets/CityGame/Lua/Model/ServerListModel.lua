@@ -64,7 +64,7 @@ function ServerListModel:m_GsOK()
     ServerListModel:registerGsNetMsg()
     --连接gs
     CityEngineLua.login_baseapp(true)
-    CityEngineLua.login_tradeapp(true)
+    --CityEngineLua.login_tradeapp(true)
 end
 function ServerListModel:registerGsNetMsg()
     --gs网络回调注册
@@ -76,6 +76,9 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
     if stream == nil then
         return
     end
+
+    CityEngineLua.login_tradeapp(true)
+
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     --if no role yet, auto create a new role

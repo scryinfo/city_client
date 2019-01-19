@@ -1708,7 +1708,7 @@ CityEngineLua.login_loginapp = function( noconnect )
 		--发包
 		CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 		--多连接测试
-		UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
+		--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 	end
 end
 

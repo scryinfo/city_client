@@ -59,6 +59,7 @@ function LoginCtrl:OnCreate(go)
 	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
 	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
 	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 end
 
 --关闭事件--

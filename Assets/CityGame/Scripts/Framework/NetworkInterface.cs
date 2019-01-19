@@ -153,9 +153,22 @@
 			Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), will connect to '{0}:{1}' ...", state.connectIP, state.connectPort));
 			try
 			{
-				state.socket.Connect(state.connectIP, state.connectPort);
-			}
-			catch (Exception e)
+                //state.socket.Connect(state.connectIP, state.connectPort);
+                IAsyncResult connResult = state.socket.BeginConnect(state.connectIP, state.connectPort, null, null);
+		        connResult.AsyncWaitHandle.WaitOne(3000, true);  //等待2秒
+		        if (!connResult.IsCompleted)
+		        {
+                    Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' failed!'", state.connectIP, state.connectPort));
+                    close();
+			        //处理连接不成功的动作
+		        }
+		        else
+		        {
+			        //处理连接成功的动作
+			        _asyncConnectCB(connResult);
+		        }
+            }
+            catch (Exception e)
 			{
 				Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
 				state.error = e.ToString();
@@ -167,16 +180,9 @@
 		/// </summary>
 		private void _asyncConnectCB(IAsyncResult ar)
 		{
-			ConnectState state = (ConnectState)ar.AsyncState;
-			AsyncResult result = (AsyncResult)ar;
-			AsyncConnectMethod caller = (AsyncConnectMethod)result.AsyncDelegate;
-
-			Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
-
-			// Call EndInvoke to retrieve the results.
-			caller.EndInvoke(ar);
-			Event.fireIn("_onConnectionState", new object[] { state });
-		}
+            ConnectState state = (ConnectState)ar.AsyncState;
+            Event.fireIn("_onConnectionState", new object[] { state });            
+        }
 
 		public void connectTo(string ip, int port, ConnectCallback callback, object userData)
 		{
@@ -219,9 +225,12 @@
 			// 先注册一个事件回调，该事件在当前线程触发
 			Event.registerIn("_onConnectionState", this, "_onConnectionState");
 
-			var v = new AsyncConnectMethod(this._asyncConnect);
-			v.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);
-		}
+            /*var v = new AsyncConnectMethod(this._asyncConnect);
+			v.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);*/
+            _asyncConnect(state);
+            //_asyncConnectCB();
+
+        }
 
         private bool IsHaveIpV6Address(IPAddress[] IPs, ref IPAddress[] outIPs)
         {

@@ -65,6 +65,8 @@ function CtrlManager.Init()
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	MusicManger:Awake()
 	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+	UIBubbleManager.Awake() --temp
+
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
 
 	--ctrlList[CtrlNames.Login] = LoginCtrl.New();
@@ -152,4 +154,3 @@ end
 function CtrlManager.RemoveModel(modelName)
 	modelList[modelName] = nil;
 end
-

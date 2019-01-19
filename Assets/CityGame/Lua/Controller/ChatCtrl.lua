@@ -503,8 +503,8 @@ end
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
     if ChatCtrl.static.chatMgr.activePlayerData then
-        local isOpenChat = true
-        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData, isOpenChat)
+        ChatCtrl.static.chatMgr.activePlayerData.isOpenChat = true
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
     end
 end
 

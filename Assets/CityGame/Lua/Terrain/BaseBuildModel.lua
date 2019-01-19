@@ -8,6 +8,8 @@ BaseBuildModel = class('BaseBuildModel')
 function BaseBuildModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
+
+    Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
 
 --刷新数据
@@ -17,6 +19,8 @@ function BaseBuildModel:Refresh(data)
         self.Data[key] = value
     end
     DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
+    UIBubbleManager.startBubble()
+    self:CheckBubbleState()
 end
 
 --打开界面
@@ -43,7 +47,16 @@ function BaseBuildModel:OpenPanel()
     end
 end
 
-
+function BaseBuildModel:CheckBubbleState()
+    local data = self.Data
+    if data.ownerId == DataManager.GetMyOwnerID() then
+        if self.bubbleItem == nil then
+            local uiCenterPos = PlayerBuildingBaseData[data.buildingID].UICenterPos
+            self.bubbleItem = UIBubbleManager.getBubbleByType(UIBubbleType.BuildingSelf, GroundTransState.None, {x = data.x, y = data.y}, uiCenterPos)
+            return
+        end
+    end
+end
 
 function BaseBuildModel:Close()
     --删除节点
@@ -51,6 +64,10 @@ function BaseBuildModel:Close()
     --清除建筑GameObject
     if self.go ~= nil then
         destroy(self.go)
+    end
+    if self.bubbleItem ~= nil then
+        self.bubbleItem:Close()
+        self.bubbleItem = nil
     end
     self = nil
 end

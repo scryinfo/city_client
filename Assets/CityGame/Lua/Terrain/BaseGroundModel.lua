@@ -23,9 +23,9 @@ function BaseGroundModel:Refresh(data)
     --    self.Data[key] = value
     --end
     --self:CheckGroundTransSuccess(data)
+    self.Data = data
     UIBubbleManager.startBubble()
     self:CheckBubbleState(data)
-    self.Data = data
 end
 
 --判断地块状态

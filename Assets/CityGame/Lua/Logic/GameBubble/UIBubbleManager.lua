@@ -140,9 +140,9 @@ function UIBubbleManager._showAllItems()
 end
 
 --点了主页的按钮
-function UIBubbleManager._clickNowAndSoonBtn()
+function UIBubbleManager._getNowAndSoonState()
     if this.aucItemsTable == nil then
-        return false
+        return nil
     end
     local soonData = {}
     for i, item in pairs(this.aucItemsTable) do
@@ -150,7 +150,6 @@ function UIBubbleManager._clickNowAndSoonBtn()
             if item:_getAucState() == true then
                 local beginTime, durationSec = item:_getTimeDownInfo()
                 local data = {groundState = 1, beginTime = beginTime, durationSec = durationSec}
-                GAucModel._moveToAucNowPos()
                 return data
             else
                 local beginTime, durationSec = item:_getTimeDownInfo()
@@ -158,7 +157,6 @@ function UIBubbleManager._clickNowAndSoonBtn()
             end
         end
     end
-    GAucModel._moveToAucPos()
     return soonData
 end
 

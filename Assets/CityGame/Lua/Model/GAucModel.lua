@@ -92,13 +92,14 @@ function GAucModel._preLoadGroundAucObj()
     this.groundAucSoonObj = UnityEngine.Resources.Load(GAucModel.WillAucPath)  --即将拍卖
 end
 
---拍卖信息更新
+--拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
     local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
 end
+
 --收到meta数据之后的操作
 function GAucModel.getMataGroundDataFunc(auctionInfo)
     UIBubbleManager.startBubble()
@@ -309,7 +310,7 @@ function GAucModel.n_OnReceiveBindGround(stream)
 
     local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
     if auctionInfo then
-        this._updateAucBidInfo(auctionInfo)
+        --this._updateAucBidInfo(auctionInfo)
 
         local info = {}
         info.titleInfo = "CONGRATULATION"
@@ -362,7 +363,7 @@ function GAucModel.n_OnReceiveFailBid(stream)
 
     local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
     if bidInfo then
-        this._updateAucBidInfo(bidInfo)
+        --this._updateAucBidInfo(bidInfo)
     end
 end
 

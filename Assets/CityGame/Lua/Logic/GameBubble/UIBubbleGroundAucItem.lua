@@ -87,7 +87,7 @@ end
 function UIBubbleGroundAucItem:Close()
     self.timeDown = false
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
     Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
     destroy(self.bubbleObj.gameObject)

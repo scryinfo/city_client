@@ -171,7 +171,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     end
                     --add height
                     local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
-                    Vec.y = Vec.y + 0.01
+                    Vec.y = Vec.y + 0.02
                     go.transform.position = Vec
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
                     --如果没有道路数据，但原先有道路记录，则清除

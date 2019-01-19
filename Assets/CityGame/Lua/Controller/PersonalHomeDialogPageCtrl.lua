@@ -122,14 +122,14 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
 end
 --好友私聊
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
-    if ins.isOpenChat == nil or ins.isOpenChat == false then
+    if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end
     ins:Hide()
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
-    if ins.isOpenChat == nil or ins.isOpenChat == false then
+    if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
     end
     ins:Hide()

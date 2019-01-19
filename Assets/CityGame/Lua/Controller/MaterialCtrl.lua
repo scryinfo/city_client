@@ -46,7 +46,7 @@ end
 --刷新原料厂信息
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
-    MaterialPanel.nameText.text = DataInfo.info.name
+    MaterialPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
     MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
 
     self.m_data = DataInfo
@@ -101,7 +101,7 @@ function MaterialCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
-    Event.Brocast("mReqCloseMaterial",ins.buildingId)
+    Event.Brocast("mReqCloseMaterial",ins.insId)
     UIPage.ClosePage();
 end
 

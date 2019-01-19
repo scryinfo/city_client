@@ -39,8 +39,10 @@ function AdjustProductionLineCtrl:Refresh()
     end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     self.luabehaviour = adjustLine
+    AdjustProductionLinePanel.locked_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
-    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
+    AdjustProductionLinePanel.locked_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
+    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     --剩余容量
     AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)

@@ -119,8 +119,12 @@ function HomePageDisplay:refreshNowConte(msg)
     if not msg then
         return
     end
-    self.productionSlider.value = msg.nowCount
-    self.numberText.text = msg.nowCount.."/"..self.maxValue
+    for i,v in pairs(HomeProductionLineItem.productionTab) do
+        if v.id == msg.id then
+            v.productionSlider.value = msg.nowCount
+            v.numberText.text = msg.nowCount.."/"..self.maxValue
+        end
+    end
 end
 --移除事件
 function HomePageDisplay:closeEvent()

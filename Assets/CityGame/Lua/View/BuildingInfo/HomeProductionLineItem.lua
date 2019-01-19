@@ -97,6 +97,7 @@ function HomeProductionLineItem:productionRefreshInfo(data)
     else
         self.SmallLineRateItemTab[#self.SmallLineRateItemTab] = SmallLineRateItem
     end
+    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
 end
 --删除生产线时添加
 function HomeProductionLineItem:delLineRefreshInfo(data)

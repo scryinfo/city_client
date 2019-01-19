@@ -47,7 +47,7 @@ function CameraMove:Start(gameObject)
     self.touchBeginBlockID = nil
     self:InitParameters()
     --初始化相机位置
-    CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
+    --CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
 end
 
 --初始化相机参数

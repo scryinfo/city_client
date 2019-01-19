@@ -101,8 +101,13 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
     else
         local buyListing = {}
         buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
-        buyListing.targetLocationName = "中心仓库";
-        buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
+        --buyListing.targetLocationName = "中心仓库";
+        --buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
+        buyListing.targetLocationName = ChooseWarehouseCtrl:GetName();
+        local pos = {}
+        pos.x = ins.m_data.info.pos.x
+        pos.y = ins.m_data.info.pos.y
+        buyListing.distance = ChooseWarehouseCtrl:GetDistance(pos)
         local price = 0;
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
             price = price + tonumber(v.moneyText.text);
@@ -122,8 +127,9 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
             --    Event.Brocast("SmallPop","钱不够",280)
             --    return;
             --end
+            local buildingId = ChooseWarehouseCtrl:GetBuildingId()
             for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,ServerListModel.bagId);
+                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,buildingId);
             end
             --DataManager.SetSubtractMyMoney(math.floor(buyListing.total))
         end

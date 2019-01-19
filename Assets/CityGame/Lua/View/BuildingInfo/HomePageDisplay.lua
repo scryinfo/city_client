@@ -105,6 +105,7 @@ end
 --刷新时间
 function HomePageDisplay:Update()
     if self.remainingTime <= 1 then
+        self.timeText.text = "00:00:00"
         UpdateBeat:Remove(self.Update,self);
         return
     else

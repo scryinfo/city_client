@@ -22,6 +22,12 @@ function CityEngineLua.Bundle:newAndSendMsg(msgId, pb_buffer)
 	return bundle;
 end
 
+function CityEngineLua.Bundle:newAndSendMsgExt(msgId, pb_buffer, netInterface)
+	local bundle = self:newNetMsg(msgId, pb_buffer);
+	bundle:sendimp(netInterface);
+	return bundle;
+end
+
 function CityEngineLua.Bundle:newNetMsg(msgId, pb_buffer)
 	local bundle = CityEngineLua.Bundle:new();
 	local msg = CityEngineLua.Message:newNetMsg(msgId);
@@ -105,11 +111,9 @@ function CityEngineLua.Bundle:fini(issend)
 	self._curMsgStreamIndex = 0;
 end
 
-function CityEngineLua.Bundle:send()
-	local networkInterface = CityEngineLua._networkInterface;
-	
+function CityEngineLua.Bundle:sendimp(networkInterface)
 	self:fini(true);
-	
+
 	if(networkInterface:valid()) then
 		for i = 1, #self.streamList, 1 do
 			self.stream = self.streamList[i];
@@ -118,9 +122,12 @@ function CityEngineLua.Bundle:send()
 	else
 		ct.log("Bundle::send: networkInterface invalid!");
 	end
-	
+
 	self.streamList = {};
 	self.stream:clear();
+end
+function CityEngineLua.Bundle:send()
+	self:sendimp(CityEngineLua._networkInterface)
 end
 
 function CityEngineLua.Bundle:checkStream(v)

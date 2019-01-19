@@ -47,7 +47,7 @@ function CameraMove:Start(gameObject)
     self.touchBeginBlockID = nil
     self:InitParameters()
     --初始化相机位置
-    CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
+    --CameraMove.MoveCameraToPos(Vector3.New(10,0,10))
 end
 
 --初始化相机参数
@@ -194,6 +194,7 @@ function CameraMove:TouchBuild()
         --判断是否是中心建筑 --->是则打开
         if TerrainManager.IsTouchCentralBuilding(blockID) then
             ct.OpenCtrl("CenterBuildingCtrl")
+            return
         end
         --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
@@ -206,9 +207,8 @@ function CameraMove:TouchBuild()
             end
         end
         --判断是否点击在拍卖中的地块上
-        local click, index = GroundAuctionModel.getIsClickAucGround(blockID)
+        local click = UIBubbleManager.getIsClickAucGround(blockID)
         if click then
-            UIBubbleCtrl._openGroundAucCtrl(index)
             return
         end
 
@@ -245,7 +245,7 @@ function CameraMove:UpdateMove()
         return
     end
     local tempPos = CameraMove.GetTouchTerrianPosition(touchPos)
-    if tempPos  then
+    if tempPos ~= nil then
         local OffsetVec  = tempPos - self.touchBeginPosition
         local tempPosition = self.touchBeginCameraPos - OffsetVec
         --范围限制

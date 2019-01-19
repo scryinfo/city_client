@@ -56,6 +56,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
+    --ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.showCompanyBtn, self.OnShowCompany, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -148,10 +149,6 @@ end
 
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
-    if self.isShowPersonalInfo then
-        self.isShowPersonalInfo = false
-        return
-    end
     self:_closePlayerInfo()
     ChatPanel.expressionRoot:SetActive(false)
     self:_showWorldInfo()
@@ -462,6 +459,7 @@ function ChatCtrl:OnAddFriends(go)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
+    data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
@@ -505,10 +503,14 @@ end
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
     if ChatCtrl.static.chatMgr.activePlayerData then
-        go.isShowPersonalInfo = true
+        ChatCtrl.static.chatMgr.activePlayerData.isOpenChat = true
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
     end
 end
+
+--function ChatCtrl:OnShowCompany(go)
+--    ct.OpenCtrl("CompanyCtrl", ChatCtrl.static.chatMgr.activePlayerData)
+--end
 
 -- 删除聊天记录
 function ChatCtrl:OnDeleteChatRecords(go)
@@ -737,7 +739,7 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
         end
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
-        DataManager.SetStrangersInfo(roleInfo.id)
+        --DataManager.SetStrangersInfo(roleInfo.id)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
     end
 end

@@ -24,9 +24,9 @@ function AdjustProductionLineCtrl:OnCreate(obj)
     --adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
-    Event.AddListener("refreshTime",self.refreshTime,self)
+    --Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
-    Event.AddListener("refreshNowTime",self.refreshNowTime,self)
+    Event.AddListener("refreshNowConte",self.refreshNowConte,self)
 end
 
 function AdjustProductionLineCtrl:Awake(go)
@@ -39,8 +39,10 @@ function AdjustProductionLineCtrl:Refresh()
     end
     adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     self.luabehaviour = adjustLine
+    AdjustProductionLinePanel.locked_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
-    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
+    AdjustProductionLinePanel.locked_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
+    AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     --剩余容量
     AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)
@@ -54,7 +56,7 @@ function AdjustProductionLineCtrl:Refresh()
         self.productionLine.type = BuildingInType.ProductionLine
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
-    self:refreshTime(self.data.line)
+    --self:refreshTime(self.data.line)
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
@@ -74,12 +76,22 @@ end
 
 --计算一条生产线总时间
 function AdjustProductionLineCtrl:calculateTime(msg)
-    local time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    local timeTab = getTimeBySec(time)
-    local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
+    if not msg then
+        return
+    end
+    --local materialKey,goodsKey = 21,22
+    --local time = 0
+    --if math.floor(msg.line.itemId / 100000) == materialKey then
+    --    time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    --elseif math.floor(msg.line.itemId / 100000) == goodsKey then
+    --    time = 1 / Good[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
+    --end
+    --local timeTab = getTimeBySec(time)
+    --local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
-            v.timeText.text = timeStr
+            --v.timeText.text = timeStr.
+            v:getTimeNumber(msg.line)
         end
     end
 end
@@ -111,6 +123,7 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.buildingId == msg.buildingId and v.lineId == msg.lineId then
             self:refreshAddWorkerNum(tonumber(v.sNumberScrollbar.value))
+            v:closeUpdate()
             destroy(v.prefab.gameObject);
             table.remove(AdjustProductionLineCtrl.materialProductionLine,i)
         end
@@ -159,9 +172,6 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
             for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
                 if v.key.id == itemId then
                     return v.n
-                else
-                    local num = 0
-                    return num
                 end
             end
         else
@@ -170,52 +180,37 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
         end
     end
 end
---读取生产线，初始化时间
-function AdjustProductionLineCtrl:refreshTime(infoTab)
-    if not infoTab then
-        return
-    end
-    for i,v in pairs(infoTab) do
-        local remainingNum = v.targetCount - v.nowCount
-        local materialKey,goodsKey = 21,22
-        local time = 0
-        if math.floor(v.itemId / 100000) == materialKey then
-            time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
-        elseif math.floor(v.itemId / 100000) == goodsKey then
-            time = 1 / Good[v.itemId].numOneSec / v.workerNum * remainingNum
-        end
-        local timeTab = getTimeString(time)
-        if remainingNum > 0 then
-            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
-        elseif remainingNum < 0 or remainingNum == 0 then
-            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
-        end
-    end
-end
---接收回调刷新时间
-function AdjustProductionLineCtrl:refreshNowTime(msg)
+----读取生产线，初始化时间
+--function AdjustProductionLineCtrl:refreshTime(infoTab)
+--    if not infoTab then
+--        return
+--    end
+--    for i,v in pairs(infoTab) do
+--        local remainingNum = v.targetCount - v.nowCount
+--        local materialKey,goodsKey = 21,22
+--        local time = 0
+--        if math.floor(v.itemId / 100000) == materialKey then
+--            time = 1 / Material[v.itemId].numOneSec / v.workerNum * remainingNum
+--        elseif math.floor(v.itemId / 100000) == goodsKey then
+--            time = 1 / Good[v.itemId].numOneSec / v.workerNum * remainingNum
+--        end
+--        local timeTab = getTimeString(time)
+--        if remainingNum > 0 then
+--            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = timeTab
+--        elseif remainingNum < 0 or remainingNum == 0 then
+--            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
+--        end
+--    end
+--end
+--接收回调刷新产量
+function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then
         return;
     end
     for i,k in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if msg.id == k.lineId then
-            local materialKey,goodsKey = 21,22
-            local time = 0
-            local remainingNum = k.inputNumber.text - msg.nowCount
-            if math.floor(k.itemId / 100000) == materialKey then
-                time = 1 / Material[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
-            elseif math.floor(k.itemId / 100000) == goodsKey then
-                time = 1 / Good[k.itemId].numOneSec / k.sNumberScrollbar.value * 5 * remainingNum
-            end
-            if time < 0 or time == 0 then
-                k.timeText.text = "00:00:00"
-            else
-                local timeTab = getTimeBySec(time)
-                local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
-                k.timeText.text = timeStr
-                k.time_Slider.value = msg.nowCount
-                --k.pNumberScrollbar.value = k.inputNumber.text - msg.nowCount
-            end
+            --local remainingNum = k.inputNumber.text - msg.nowCount
+            k.time_Slider.value = msg.nowCount
         end
     end
 end
@@ -225,6 +220,7 @@ function AdjustProductionLineCtrl:deleteObjInfo()
         return;
     else
         for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            v:closeUpdate()
             destroy(v.prefab.gameObject);
         end
         AdjustProductionLineCtrl.materialProductionLine = {};
@@ -239,8 +235,6 @@ function AdjustProductionLineCtrl:deleteTempTable()
         for i,v in pairs(GoodsUnifyMgr.tempLineItem) do
             destroy(v.prefab.gameObject)
         end
-        --GoodsUnifyMgr.tempLineUIInfo = {};
-        --GoodsUnifyMgr.tempLinePrefab = {};
         GoodsUnifyMgr.tempLineItem = {};
     end
 end

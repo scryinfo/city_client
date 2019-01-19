@@ -140,8 +140,11 @@ end
 --参数
 --  tempCollectionID: 所属地块集合ID
 function DataManager.RefreshWaysByCollectionID(tempCollectionID)
-    if BuildDataStack[tempCollectionID] == nil or BuildDataStack[tempCollectionID].BlockDatas == nil then
-        return
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].BlockDatas == nil then
+        CreateBlockDataTable(tempCollectionID)
     end
     if not BuildDataStack[tempCollectionID].RoteDatas then
         BuildDataStack[tempCollectionID].RoteDatas = {}
@@ -171,7 +174,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     end
                     --add height
                     local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
-                    Vec.y = Vec.y + 0.01
+                    Vec.y = Vec.y + 0.02
                     go.transform.position = Vec
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
                     --如果没有道路数据，但原先有道路记录，则清除
@@ -279,6 +282,7 @@ function DataManager.RefreshBaseBuildData(data)
     end
     if BuildDataStack[collectionID].BaseBuildDatas[blockID] then
         BuildDataStack[collectionID].BaseBuildDatas[blockID]:Refresh(data)
+        BuildDataStack[collectionID].BaseBuildDatas[blockID]:CheckBubbleState()
         return false
     else
         --具体Model可根据建筑类型typeID重写BaseBuildModel
@@ -587,6 +591,9 @@ local function LoginSuccessAndGameStart()
     TerrainManager.CreateCenterBuilding()
     --打开循环判断自己的租地是否到期
     UpdateBeat:Add(DataManager_Update, this)
+
+    --请求自己的信息
+    GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
 end
 
 --土地集合
@@ -650,6 +657,8 @@ function  DataManager.InitPersonDatas(tempData)
         companyName = tempData.companyName,
         male = tempData.male,
         des = tempData.des,
+        faceId = tempData.faceId,
+        createTs = tempData.createTs
     }
 
     --初始化自己所拥有建筑品牌值
@@ -703,6 +712,13 @@ function  DataManager.InitPersonDatas(tempData)
                 DataManager.SetMyFriends(value)
             end
         end
+    end
+    --初始化相机位置
+    if tempData.position ~= nil then
+        local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
+        local LastBlockID= TerrainManager.CollectionIDTurnBlockID(LastCollectionID)
+        local LastPos = TerrainManager.BlockIDTurnPosition(LastBlockID)
+        CameraMove.MoveCameraToPos(LastPos)
     end
     LoginSuccessAndGameStart()
 end
@@ -860,6 +876,16 @@ end
 --获取主页需要的显示信息
 function DataManager.GetMyPersonalHomepageInfo()
     return PersonDataStack.m_roleInfo
+end
+
+--刷新自己的信息
+function DataManager.SetMyPersonalHomepageInfo(data)
+    PersonDataStack.m_roleInfo.name = data.name
+    PersonDataStack.m_roleInfo.companyName = data.companyName
+    PersonDataStack.m_roleInfo.des = data.des
+    PersonDataStack.m_roleInfo.faceId = data.faceId
+    PersonDataStack.m_roleInfo.male = data.male
+    PersonDataStack.m_roleInfo.createTs = data.createTs
 end
 
 --设置主页需要的显示信息--个人描述
@@ -1112,7 +1138,7 @@ function DataManager.Init()
     InitialEvents()
     InitialNetMessages()
     --土地拍卖Model
-    SystemDatas.GroundAuctionModel  = GroundAuctionModel.New()
+    SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
@@ -1209,6 +1235,7 @@ function DataManager.n_OnReceiveGroundChange(stream)
             --刷新/创建地块信息Model
             if BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID] ~= nil then
                 BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]:Refresh(value)
+                BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]:CheckBubbleState()
             else
                 BuildDataStack[tempGroundCollectionID].GroundDatas[tempGroundBlockID]  = BaseGroundModel:new(value)
             end
@@ -1235,6 +1262,7 @@ function DataManager.n_OnReceiveAddFriendSucess(stream)
     friend.b = true
     DataManager.SetMyFriends(friend)
     DataManager.SetMyFriendsApply({id = friend.id})
+    DataManager.SetStrangersInfo(friend.id)
     Event.Brocast("c_OnReceiveAddFriendSucess", friend)
 end
 
@@ -1261,7 +1289,11 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
 
     Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
+    Event.Brocast("c_GetBiderInfo", playerData)  --拍卖请求出价者id
 
+    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
+        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
+    end
 end
 
 --研究所Roll回复信息
@@ -1295,6 +1327,8 @@ function DataManager.n_OnReceiveErrorCode(stream)
             elseif data.reason == "notAllow" then
                 Event.Brocast("SmallPop","Has been shielded.",60)
             end
+        elseif data.opcode == 10000 then  -- 获取交易信息失败
+            Event.Brocast("c_OnReceivePlayerEconomy")
         end
     end
 end

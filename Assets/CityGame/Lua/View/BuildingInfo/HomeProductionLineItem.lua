@@ -82,6 +82,7 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         end
         self.SmallLineRateItemTab[i] = SmallLineRateItem
     end
+    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
 end
 --生产线添加时添加
 function HomeProductionLineItem:productionRefreshInfo(data)
@@ -97,6 +98,7 @@ function HomeProductionLineItem:productionRefreshInfo(data)
     else
         self.SmallLineRateItemTab[#self.SmallLineRateItemTab] = SmallLineRateItem
     end
+    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
 end
 --删除生产线时添加
 function HomeProductionLineItem:delLineRefreshInfo(data)
@@ -105,6 +107,7 @@ function HomeProductionLineItem:delLineRefreshInfo(data)
     end
     for i,v in pairs(self.SmallLineRateItemTab) do
         if v.id == data.lineId then
+            v:closeEvent()
             destroy(v.prefab.gameObject)
         end
     end

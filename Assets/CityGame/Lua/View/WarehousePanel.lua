@@ -43,6 +43,7 @@ function WarehousePanel.InitPanel()
     this.transportContent = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content");
     --Slider--Text
     this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider"):GetComponent("Slider");
+    this.Locked_Slider = transform:Find("WarehouseDetails/Locked_Slider"):GetComponent("Slider");
     this.numberText = transform:Find("WarehouseDetails/numberText"):GetComponent("Text");
     --Scroll View
     this.ScrollView = transform:Find("ScrollView"):GetComponent("RectTransform");

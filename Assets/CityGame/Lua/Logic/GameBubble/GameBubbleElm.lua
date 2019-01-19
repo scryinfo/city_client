@@ -30,7 +30,7 @@ function GameBubbleElm:InitElm(data)
 
     if data.bubbleType == BubblleType.GroundAuction then
         --拍卖的气泡
-        if data.beginTime > os.time() then
+        if data.beginTime > TimeSynchronized.GetTheCurrentTime() then
             self.infoText.text = "即将拍卖"
             self.timeText.transform.localScale = Vector3.zero
         else

@@ -15,6 +15,10 @@ function UIRoot.Instance()
     return UIRoot.static.m_Instance
 end
 
+function UIRoot.getBubbleRoot()
+    return CityLuaUtil.getBubbleRoot()
+end
+
 function UIRoot.getFixedRoot()
     return CityLuaUtil.getFixedRoot()
 end

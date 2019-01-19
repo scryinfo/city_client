@@ -53,8 +53,8 @@ function LoginModel:n_AllGameServerInfo( msgAllGameServerInfo )
     local xxx = 0 ;
 end
 
-function LoginModel.m_onConnectionState( isSuccess )
-    Event.Brocast("c_ConnectionStateChange", isSuccess );
+function LoginModel.m_onConnectionState( state )
+    Event.Brocast("c_ConnectionStateChange", state );
 end
 
 function LoginModel.m_onDisconnect( isSuccess )

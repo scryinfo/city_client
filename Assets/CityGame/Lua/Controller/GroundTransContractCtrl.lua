@@ -52,8 +52,8 @@ function GroundTransContractCtrl:_setShowState(data)
         GroundTransContractPanel.rentDailyRentText.text = "E"..data.groundInfo.rent.rentPreDay
         GroundTransContractPanel.totalPriceText.text = "E"..total
         GroundTransContractPanel.rentTenancyText.text = data.rentDay.."d"
-        local nowStr = os.date("%Y/%m/%d %H:%M", os.time())
-        local endStr = os.date("%Y/%m/%d %H:%M", os.time() + data.rentDay * 86400)
+        local nowStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime())
+        local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
         GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
     else
         GroundTransContractPanel.chooseState(false)

@@ -23,7 +23,7 @@ function SystemSettingPanel.InitPanel()
     this.backBtn = transform:Find("Panel/topRoot/bg/closeBtn");
     this.backBtn1 = transform:Find("BG/Image");
     this.backBtn2 = transform:Find("BG/Image (1)");
-
+    this.closeLan=transform:Find("Panel/bodyRoot/bg/body/closePage")
 
     this.outBtn = transform:Find("Panel/bodyRoot/bg/bottom/outBtn");
     this.outText= transform:Find("Panel/bodyRoot/bg/bottom/outBtn/Text"):GetComponent("Text")

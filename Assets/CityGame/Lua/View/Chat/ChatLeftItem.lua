@@ -16,6 +16,8 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     local transform = prefab.transform
     -- 头像
     self.headBtn = transform:Find("HeadBg").gameObject
+    -- 头像图片
+    self.headImage = transform:Find("HeadBg/HeadImage"):GetComponent("Image")
     -- 说话人的背景
     self.playerNameImage = transform:Find("PlayerNameImage"):GetComponent("RectTransform")
     -- 说话人的名字
@@ -24,6 +26,7 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     self.chatBg = transform:Find("ChatBg")
     -- 聊天的内容
     self.chatText = transform:Find("ChatBg/ChatText"):GetComponent("Text")
+
     self.playerNameText.text = self.data.name
     self.chatText.text = self.data.msg
 
@@ -45,6 +48,13 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     if self.data.channel == "WORLD" then
         transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
         ChatCtrl.static.luaBehaviour:AddClick(self.headBtn, self.OnHeadClick, self)
+        LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
+    else
+        if self.data.id == DataManager.GetMyOwnerID() then
+            LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
+        else
+            LoadSprite(PlayerHead[ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id)].ChatPath, self.headImage, true)
+        end
     end
 end
 

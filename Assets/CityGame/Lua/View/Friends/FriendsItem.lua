@@ -17,6 +17,8 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     local transform = prefab.transform
     self.bgBtn = transform:Find("Bg").gameObject
     self.headBtn = transform:Find("HeadBtn").gameObject
+    -- 好友头像
+    self.headImage = transform:Find("HeadBtn/HeadImage"):GetComponent("Image")
     -- 好友名
     self.nameText = transform:Find("NameText"):GetComponent("Text")
     -- 好友所在公司名字
@@ -43,9 +45,13 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     -- 拒绝好友申请
     self.refuseBtn  = transform:Find("RefuseBtn").gameObject
 
+    LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.headImage, true)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
-    self.signatureText.text = self.data.sign
+    if self.data.des == nil or self.data.des == "" then
+        self.data.des = "Everything i do i wanna put a shine on it, do it one more time."  --默认值
+    end
+    self.signatureText.text = self.data.des
     if self.data.desc then
         self.validationMsgText.text = self.data.desc
     end

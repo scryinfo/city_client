@@ -19,112 +19,98 @@ end
 
 function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Space) then
-        --PlayerTempModel.tempTestReqAddGroung(11,11,20,20)
-        PlayerTempModel.tempTestReqAddGroung(21,21,30,30)  --小蒲
-        PlayerTempModel.tempTestReqAddItem(2102001,99)
-        PlayerTempModel.tempTestReqAddItem(2102002,99)
-        PlayerTempModel.tempTestReqAddItem(2102003,99)
-        PlayerTempModel.tempTestReqAddItem(2102004,99)
 
-        PlayerTempModel.tempTestReqAddItem(2101001,99)
-        PlayerTempModel.tempTestReqAddItem(2101002,99)
-        PlayerTempModel.tempTestReqAddItem(2101003,99)
-        PlayerTempModel.tempTestReqAddItem(2101004,99)
-
-        PlayerTempModel.tempTestReqAddItem(2103001,99)
-        PlayerTempModel.tempTestReqAddItem(2103002,99)
-        PlayerTempModel.tempTestReqAddItem(2103003,99)
-        PlayerTempModel.tempTestReqAddItem(2103004,99)
+        Event.Brocast("c_GroundBuildingCheck")
     end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
-        PlayerTempModel.tempTestReqAddItem(2102001,99)
-        PlayerTempModel.tempTestReqAddItem(2102002,99)
-        PlayerTempModel.tempTestReqAddItem(2102003,99)
-        PlayerTempModel.tempTestReqAddItem(2102004,99)
-
-        PlayerTempModel.tempTestReqAddItem(2101001,99)
-        PlayerTempModel.tempTestReqAddItem(2101002,99)
-        PlayerTempModel.tempTestReqAddItem(2101003,99)
-        PlayerTempModel.tempTestReqAddItem(2101004,99)
-
-        PlayerTempModel.tempTestReqAddItem(2103001,99)
-        PlayerTempModel.tempTestReqAddItem(2103002,99)
-        PlayerTempModel.tempTestReqAddItem(2103003,99)
-        PlayerTempModel.tempTestReqAddItem(2103004,99)
-    end
-
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        PlayerTempModel.tempTestReqAddItem(2102001,99)
-        PlayerTempModel.tempTestReqAddItem(2102002,99)
-        PlayerTempModel.tempTestReqAddItem(2102003,99)
-
-        --ct.OpenCtrl("GroundTransDetailCtrl", {blockId = 8006})
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
-        PlayerTempModel.tempTestReqAddMoney(9999999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
-        --PlayerTempModel.tempTestReqAddItem(2151001, 999)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-        PlayerTempModel.tempTestAddGroung(31,31, 40,40)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
-        PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
-        PlayerTempModel.tempTestReqAddItem(2151002, 888)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
-        PlayerTempModel.tempTestReqAddItem(2151003, 777)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
-        PlayerTempModel.tempTestReqAddItem(2151004, 666)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
-        PlayerTempModel.tempTestReqAddItem(2152001, 555)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
-        --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
-        PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
-        --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
-        --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
-        PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
-        PlayerTempModel.tempTestAddGroung(41,41, 50,50)
-        --增加科技作弊码，可能没用了
-        --PlayerTempModel.tempTestInvent(2151001, 0)
-        --PlayerTempModel.tempTestInvent(2151002, 0)
-        --PlayerTempModel.tempTestInvent(2151003, 0)
-        --PlayerTempModel.tempTestInvent(2151004, 0)
-        --PlayerTempModel.tempTestInvent(2152001, 0)
-        --PlayerTempModel.tempTestInvent(2152002, 0)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
-        PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        PlayerTempModel.tempTestAddGroung(11,0, 20,10)
-    end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
-        PlayerTempModel.tempTestAddGroung(21,0, 30,10)
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
-        PlayerTempModel.tempTestAddGroung(51,51, 60,60)
-
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+    --    PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
+    --    PlayerTempModel.tempTestReqAddItem(2102001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102004,99)
+    --
+    --    PlayerTempModel.tempTestReqAddItem(2101001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101004,99)
+    --
+    --    PlayerTempModel.tempTestReqAddItem(2103001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103004,99)
+    --end
+    --
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+    --    PlayerTempModel.tempTestReqAddItem(2102001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102003,99)
+    --
+    --    --ct.OpenCtrl("GroundTransDetailCtrl", {blockId = 8006})
+    --end
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.A) then
+    --    PlayerTempModel.tempTestReqAddMoney(9999999)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
+    --    --PlayerTempModel.tempTestReqAddItem(2151001, 999)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+    --    PlayerTempModel.tempTestAddGroung(31,31, 40,40)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
+    --    PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
+    --end
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F) then
+    --    PlayerTempModel.tempTestReqAddItem(2151002, 888)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.G) then
+    --    PlayerTempModel.tempTestReqAddItem(2151003, 777)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.H) then
+    --    PlayerTempModel.tempTestReqAddItem(2151004, 666)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.J) then
+    --    PlayerTempModel.tempTestReqAddItem(2152001, 555)
+    --end
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+    --    --PlayerTempModel.m_ReqAddBuilding(1400001, 705, 750)
+    --    --PlayerTempModel.m_ReqAddBuilding(1100001, 715, 750)
+    --    --PlayerTempModel.m_ReqAddBuilding(1200001, 710, 750)
+    --    --PlayerTempModel.m_ReqAddBuilding(1400001, 805, 850)
+    --    --PlayerTempModel.m_ReqAddBuilding(1100001, 815, 850)
+    --    --PlayerTempModel.m_ReqAddBuilding(1200001, 810, 850)
+    --    PlayerTempModel.m_ReqAddBuilding(1400001, 2, 5)
+    --    --PlayerTempModel.m_ReqAddBuilding(1100001, 115, 150)
+    --    --PlayerTempModel.m_ReqAddBuilding(1200001, 110, 150)
+    --    PlayerTempModel.m_ReqAddBuilding(1100001, 31, 40)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.N) then
+    --    PlayerTempModel.tempTestAddGroung(41,41, 50,50)
+    --    --增加科技作弊码，可能没用了
+    --    --PlayerTempModel.tempTestInvent(2151001, 0)
+    --    --PlayerTempModel.tempTestInvent(2151002, 0)
+    --    --PlayerTempModel.tempTestInvent(2151003, 0)
+    --    --PlayerTempModel.tempTestInvent(2151004, 0)
+    --    --PlayerTempModel.tempTestInvent(2152001, 0)
+    --    --PlayerTempModel.tempTestInvent(2152002, 0)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.C) then
+    --    PlayerTempModel.m_ReqAddBuilding(1200001, 41, 50)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+    --    PlayerTempModel.tempTestAddGroung(11,0, 20,10)
+    --end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
+    --    PlayerTempModel.tempTestAddGroung(21,0, 30,10)
+    --end
+    --
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
+    --    PlayerTempModel.tempTestAddGroung(150,150, 160,160)
+    --
+    --end
     --ct.OpenCtrl("AddLineChooseItemCtrl", {})
 end
 --add invent

@@ -28,5 +28,5 @@ function BuidBtnItem:OnClick_Add(ins)
     DetailGuidPanel.scroll.localScale=Vector3.zero
     --刷新
    ins.detailCtrl:updateIntroduce(ins.topicName,ins.name)
-
+    PlayMusEff(1002)
 end

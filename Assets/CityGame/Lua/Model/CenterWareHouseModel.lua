@@ -48,6 +48,7 @@ end
 function CenterWareHouseModel.n_GsDelItem(stream)
     local pMsg = assert(pbl.decode("gs.DelItem",stream),"tempTransportModel.n_OnTransportInfo")
     --Event.Brocast("c_GsDelItem")
+    Event.Brocast("c_DelItem")
     Event.Brocast("c_DelBagItem",pMsg.item.id)
 end
 

@@ -33,7 +33,7 @@ end
 
 --点击城市信息
 function CenterBuildingCtrl:OnCityInfo()
-    ct.OpenCtrl("CityInfoCtrl")
+    --ct.OpenCtrl("CityInfoCtrl")
 end
 
 --点击中心仓库

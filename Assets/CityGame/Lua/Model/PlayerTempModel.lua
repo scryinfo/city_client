@@ -122,7 +122,7 @@ function PlayerTempModel.Update()
     end
 
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
-        PlayerTempModel.tempTestAddGroung(150,150, 160,160)
+        PlayerTempModel.tempTestAddGroung(51,51, 60,60)
 
     end
     --ct.OpenCtrl("AddLineChooseItemCtrl", {})

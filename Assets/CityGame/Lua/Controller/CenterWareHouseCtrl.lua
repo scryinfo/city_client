@@ -57,6 +57,7 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_OnTransportBG",self.c_OnTransportBG,self);
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.AddListener("c_transport",self.c_transport,self);
+    Event.AddListener("c_DelItem",self.c_DelItem,self);
     --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
 
 end
@@ -94,9 +95,18 @@ function CenterWareHouseCtrl:c_OnDelete(go)
     ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
+----删除物品回调
+--function CenterWareHouseCtrl:c_DeleteItem(go)
+--    go.manager:_deleteGoods(go.id)
+--end
 --删除物品回调
-function CenterWareHouseCtrl:c_DeleteItem(go)
-    go.manager:_deleteGoods(go.id)
+function CenterWareHouseCtrl:c_DelItem()
+    local n = 0
+    for i, v in pairs(WareHouseGoodsMgr.items) do
+        n = n + v.n
+    end
+    self.number = n
+    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
 end
 
 --点击BG
@@ -151,8 +161,9 @@ function CenterWareHouseCtrl:Refresh()
         return
     end
     self.number = 0;--商品个数
-    if self.m_data.bag.inHand ~= nil then
-        for i, v in pairs(self.m_data.bag.inHand) do
+    local inHand = DataManager.GetBagInfo()
+    if inHand ~= nil then
+        for i, v in pairs(inHand) do
             self.number =  self.number + tonumber(v.n)
         end
     end

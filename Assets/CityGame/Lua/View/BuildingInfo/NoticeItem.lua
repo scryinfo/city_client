@@ -6,6 +6,8 @@
 local class = require 'Framework/class'
 require('Framework/UI/UIPage')
 NoticeItem = class('NoticeItem')
+local pos ={}
+local type
 
 --初始化方法   数据（读配置表）
 function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,typeId)
@@ -16,6 +18,11 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
     self.manager = mgr
     self.id = id
     self.typeId = typeId
+    self.content = goodsDataInfo.contents
+    self.uuidParas = goodsDataInfo.uuidParas
+    self.hide = true
+
+    self:_addListener()
 
     self.itemHedaer = self.prefab.transform:Find("bg/hedaer").gameObject:GetComponent("Text");
     self.from = self.prefab.transform:Find("bg/from").gameObject:GetComponent("Text");
@@ -50,9 +57,56 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
 end
 
 function NoticeItem:OnBg(go)
+    if go.typeId == 12 then
+        go:GetPlayerId(go.uuidParas[1])
+        type = go.typeId
+    elseif go.typeId == 13 then
+        pos.x = go.goodsDataInfo.intParasArr[1]
+        pos.y = go.goodsDataInfo.intParasArr[2]
+        go:GetPlayerId(go.uuidParas[1])
+        type = go.typeId
+    elseif go.typeId == 14 then
+        pos.x = go.goodsDataInfo.intParasArr[1]
+        pos.y = go.goodsDataInfo.intParasArr[2]
+        go:GetPlayerId(go.uuidParas[1])
+        type = go.typeId
+    end
+
     Event.Brocast("c_onBg",go)
 end
 
 function NoticeItem:RefreshID(id)
     self.id = id
+end
+
+--获取玩家信息
+function NoticeItem:GetPlayerId(playerid)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
+end
+
+-- 监听Model层网络回调
+function NoticeItem:_addListener()
+    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+end
+
+--注销model层网络回调
+function NoticeItem:_removeListener()
+    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
+end
+
+function NoticeItem:c_OnReceivePlayerInfo(playerData)
+    if self.hide then
+        self.name = playerData.info[1].name
+        if type == 12 then
+            self.content = GetLanguage(1000010,self.name)
+            GameNoticePanel.rightContent.text = self.content
+        elseif type == 13 then
+            self.content = GetLanguage(1000011,"(".. pos.x..","..pos.y .. ")",self.name)
+            GameNoticePanel.rightContent.text = self.content
+        elseif stype == 14 then
+            self.content = GetLanguage(1000012,"(".. pos.x..","..pos.y .. ")",self.name)
+            GameNoticePanel.rightContent.text = self.content
+        end
+        --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
+    end
 end

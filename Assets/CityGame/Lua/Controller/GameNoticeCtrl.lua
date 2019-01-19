@@ -11,6 +11,12 @@ local bg = nil
 local isShowHint =false
 local id = nil  -- 类型Id
 local goId = nil --实例Id
+local hide
+local typeId
+local pos = {}
+local content      --邮件内容
+local noticeId     --邮件Id
+local read = false  --邮件读取状态
 
 function  GameNoticeCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameNoticePanel.prefab"
@@ -29,6 +35,7 @@ function GameNoticeCtrl:OnCreate(obj)
 
     GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
     GameNoticeBehaviour:AddClick(GameNoticePanel.xBtn,self.OnXBtn,self);
+    GameNoticeBehaviour:AddClick(GameNoticePanel.delete,self.OnDelete,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
 
@@ -42,11 +49,14 @@ end
 function GameNoticeCtrl:Awake()
     self.insId = OpenModelInsID.GameNoticeCtrl
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    --self:_addListener()
 end
 
 function GameNoticeCtrl:Refresh()
+    hide = true
     --打开通知Model
     self:initializeData()
+    --self:_noticeContent()
     NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
     if goId ~= nil then
         NoticeMgr.notice[goId].newBg:SetActive(true)
@@ -73,6 +83,11 @@ function GameNoticeCtrl:OnBgBtn()
     bg = nil
     NoticeMgr:_dleNotice()
     UIPage.ClosePage();
+end
+
+--点击xbutton
+function GameNoticeCtrl:OnXBtn()
+    GameNoticeCtrl:OnBgBtn()
 end
 
 --读取邮件
@@ -106,7 +121,8 @@ function GameNoticeCtrl:c_OnMailRead(go)
     -- [[显示内容
     GameNoticePanel.hedaer.text = go.itemHedaer.text
     GameNoticePanel.time.text = go.itemTime.text
-    GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    --GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    --GameNoticePanel.rightContent.text = go.content
     -- ]]
     if go.typeId ==1 then
         GameNoticePanel.GoodsScrollView:SetActive(true)
@@ -115,10 +131,11 @@ function GameNoticeCtrl:c_OnMailRead(go)
     end
     id = go.typeId
     goId = go.id
+    GameNoticePanel.delete:SetActive(true)
 end
 
 --删除通知
-function GameNoticeCtrl:OnXBtn(go)
+function GameNoticeCtrl:OnDelete(go)
     local data = {}
     data.titleInfo = "WARNING"
     data.contentInfo = "Delete the message?"
@@ -175,4 +192,64 @@ function GameNoticeCtrl:_deleteNotice(go)
     end
     bg = nil
     self:_initData()
+    GameNoticePanel.delete:SetActive(false)
+end
+
+--替换通知内容
+function GameNoticeCtrl:_noticeContent()
+    for i, v in pairs(self.m_data) do
+        if v.type == 12 then
+            self:GetPlayerId(v.uuidParas[1])
+            typeId = v.type
+            noticeId = v.id
+            read = v.read
+            --coroutine.yield()
+        elseif v.type ==13 then
+            self:GetPlayerId(v.uuidParas[1])
+            typeId = v.type
+            noticeId = v.id
+            read = v.read
+            pos.x = v.intParasArr[1]
+            pos.y = v.intParasArr[2]
+            --coroutine.yield()
+        elseif v.type ==14 then
+           self:GetPlayerId(v.uuidParas[1])
+            typeId = v.type
+            noticeId = v.id
+            read = v.read
+            pos.x = v.intParasArr[1]
+            pos.y = v.intParasArr[2]
+            --coroutine.yield()
+        end
+        
+    end
+end
+
+-- 监听Model层网络回调
+function GameNoticeCtrl:_addListener()
+    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+end
+
+--注销model层网络回调
+function GameNoticeCtrl:_removeListener()
+    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
+end
+
+--function GameNoticeCtrl:c_OnReceivePlayerInfo(playerData)
+--    if hide then
+--        self.name = playerData.info[1].name
+--        if typeId == 12 then
+--             content = GetLanguage(1000010,self.name)
+--        elseif typeId == 13 then
+--             content = GetLanguage(1000011,"(".. pos.x..","..pos.y .. ")",self.name)
+--        elseif typeId == 14 then
+--             content = GetLanguage(1000012,"(".. pos.x..","..pos.y .. ")",self.name)
+--        end
+--        NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
+--    end
+--end
+
+--获取玩家信息
+function GameNoticeCtrl:GetPlayerId(playerid)
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
 end

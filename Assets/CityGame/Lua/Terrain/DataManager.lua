@@ -588,6 +588,9 @@ local function LoginSuccessAndGameStart()
     TerrainManager.CreateCenterBuilding()
     --打开循环判断自己的租地是否到期
     UpdateBeat:Add(DataManager_Update, this)
+
+    --请求自己的信息
+    GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
 end
 
 --土地集合
@@ -652,6 +655,7 @@ function  DataManager.InitPersonDatas(tempData)
         male = tempData.male,
         des = tempData.des,
         faceId = tempData.faceId,
+        createTs = tempData.createTs
     }
 
     --初始化自己所拥有建筑品牌值
@@ -862,6 +866,16 @@ end
 --获取主页需要的显示信息
 function DataManager.GetMyPersonalHomepageInfo()
     return PersonDataStack.m_roleInfo
+end
+
+--刷新自己的信息
+function DataManager.SetMyPersonalHomepageInfo(data)
+    PersonDataStack.m_roleInfo.name = data.name
+    PersonDataStack.m_roleInfo.companyName = data.companyName
+    PersonDataStack.m_roleInfo.des = data.des
+    PersonDataStack.m_roleInfo.faceId = data.faceId
+    PersonDataStack.m_roleInfo.male = data.male
+    PersonDataStack.m_roleInfo.createTs = data.createTs
 end
 
 --设置主页需要的显示信息--个人描述
@@ -1267,6 +1281,9 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
     Event.Brocast("c_GetBiderInfo", playerData)  --拍卖请求出价者id
 
+    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
+        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
+    end
 end
 
 --研究所Roll回复信息

@@ -26,7 +26,7 @@ end
 function GuidBookCtrl:Awake(go)
     self.gameObject = go
     luaBehaviour = go.transform:GetComponent('LuaBehaviour')
-    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Hide,self)
+    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.onClick_Close,self)
     for name, v in pairs(GuidBookConfig) do
         local prefab  =creatGoods(self.aboutItem_Path,GuidBookPanel.buttonCon)
         AboutItem:new(prefab,luaBehaviour,name)
@@ -37,6 +37,10 @@ end
 
 function GuidBookCtrl:Refresh()
    ct.log("system","======================刷新指南书=================")
+end
+
+function GuidBookCtrl:onClick_Close(ins)
+    ins:Hide()
 end
 
 function  GuidBookCtrl:Hide()

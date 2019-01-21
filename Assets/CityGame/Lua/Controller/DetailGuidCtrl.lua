@@ -33,7 +33,7 @@ function DetailGuidCtrl:Awake(obj)
     self.detailInsList={}
     self.detail1InsList={}
     luaBehaviour = obj:GetComponent('LuaBehaviour');
-    luaBehaviour:AddClick(panel.backBtn.gameObject,self.Close,self);
+    luaBehaviour:AddClick(panel.backBtn.gameObject,self.onClick_Close,self);
     luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self);
     luaBehaviour:AddClick(obj,function ()  panel.scroll.localScale=Vector3.zero   end,self);
 end
@@ -55,7 +55,9 @@ function DetailGuidCtrl:detailBtn()
     PlayMusEff(1002)
 end
 
-
+function DetailGuidCtrl:onClick_Close(ins)
+    ins:Hide()
+end
 
 ---刷新按钮
 function DetailGuidCtrl:updateItem(names)
@@ -177,6 +179,8 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
         end
     end
 end
+
+
 
 function  DetailGuidCtrl:Hide()
     UIPanel.Hide(self)

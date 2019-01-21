@@ -11,11 +11,11 @@ GroundTransState =
     Renting = 3,
 }
 
-GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransDetailCtrl)
+GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransDetailCtrl)
 
 function GroundTransDetailCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransDetailCtrl:bundleName()
@@ -23,8 +23,10 @@ function GroundTransDetailCtrl:bundleName()
 end
 
 function GroundTransDetailCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
+end
 
+function GroundTransDetailCtrl:Awake(go)
     local groundAuctionBehaviour =  self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.rentBtnTran.gameObject, self._rentFunc, self)
@@ -35,17 +37,12 @@ function GroundTransDetailCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundTransDetailPanel.otherCheckBtnTran.gameObject, self._otherCheckFunc, self)
 end
 
-function GroundTransDetailCtrl:Awake(go)
-    --self.gameObject = go
-    --UpdateBeat:Add(self._update, self)
-end
-
 function GroundTransDetailCtrl:Refresh()
     self:_initPanelData()
 end
 
 function GroundTransDetailCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function GroundTransDetailCtrl:Close()
@@ -153,7 +150,7 @@ end
 function GroundTransDetailCtrl:_closeBtnFunc(ins)
     -- hide
     ins.hasOpened = false
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --owner出租按钮
 function GroundTransDetailCtrl:_rentFunc(ins)

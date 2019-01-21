@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/8/31 10:55
 ---
-GroundAuctionCtrl = class('GroundAuctionCtrl',UIPage)
-UIPage:ResgisterOpen(GroundAuctionCtrl)
+GroundAuctionCtrl = class('GroundAuctionCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundAuctionCtrl)
 
 function GroundAuctionCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundAuctionCtrl:bundleName()
@@ -15,7 +15,7 @@ function GroundAuctionCtrl:bundleName()
 end
 
 function GroundAuctionCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
@@ -47,7 +47,7 @@ function GroundAuctionCtrl:Hide()
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
     Event.RemoveListener("c_BidStart", self._bidStart, self)
     Event.RemoveListener("c_GetBiderInfo", self._getBiderInfo, self)
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function GroundAuctionCtrl:Close()
@@ -209,7 +209,7 @@ function GroundAuctionCtrl:UnRegistGroundBid(table)
     if table.m_data.isStartAuc then
         Event.Brocast("m_UnRegistGroundBidInfor")
     end
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 
 ---拍卖信息更新
@@ -258,7 +258,7 @@ function GroundAuctionCtrl:_bidEnd(id)
     if id == self.id then
         self.biderInfo = nil
         self.highestPrice = nil
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end
 end
 --开始拍卖

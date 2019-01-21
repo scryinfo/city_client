@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/26 17:29
 ---GroundTransContractCtrl
-GroundTransContractCtrl = class('GroundTransContractCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransContractCtrl)
+GroundTransContractCtrl = class('GroundTransContractCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransContractCtrl)
 
 function GroundTransContractCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransContractCtrl:bundleName()
@@ -15,15 +15,14 @@ function GroundTransContractCtrl:bundleName()
 end
 
 function GroundTransContractCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
+end
 
+function GroundTransContractCtrl:Awake(go)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.buyBottomBtn.gameObject, self._buyBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransContractPanel.rentBtn.gameObject, self._rentBtnFunc, self)
-end
-
-function GroundTransContractCtrl:Awake(go)
 end
 
 function GroundTransContractCtrl:Refresh()
@@ -31,11 +30,11 @@ function GroundTransContractCtrl:Refresh()
 end
 
 function GroundTransContractCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function GroundTransContractCtrl:Close()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 ---初始化
@@ -74,7 +73,7 @@ function GroundTransContractCtrl:_closeBtnFunc()
 end
 --返回按钮
 function GroundTransContractCtrl:_backBtnFunc()
-    UIPage:ClosePage()
+    UIPanel:ClosePage()
 end
 
 --点击购买按钮

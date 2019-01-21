@@ -108,7 +108,7 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
         UIPanel.static.m_instancePageNodes = {}
     end
     --将界面压入栈内
-    if pageData ~= nil and inClass ~= nil then
+    if inClass ~= nil then
         local tempPageNode  = {}
         tempPageNode.page = pageInstance            --界面实例Ctrl（会重复）
         tempPageNode.pageClass = inClass            --界面实例的Ctrl类
@@ -395,16 +395,20 @@ function UIPanel.BackToPageInstance(backtoPageClass,instanceData)
         Node = pageNodes[#pageNodes]
         if Node.pageClass == backtoPageClass then
             local isIns = true
-            for key, value in pairs(instanceData) do
-                if Node.pageData[key] ~= value then
-                    isIns = false
+            if instanceData == nil then
+                isIns = false
+            else
+                for key, value in pairs(instanceData) do
+                    if Node.pageData[key] ~= value then
+                        isIns = false
+                    end
                 end
             end
             if isIns == true then
                 UIPanel.ShowPageInstance(Node.page,Node.pageData)
                 break
             end
-        end
+            end
         UIPanel.ClosePopNode()
     end
 end

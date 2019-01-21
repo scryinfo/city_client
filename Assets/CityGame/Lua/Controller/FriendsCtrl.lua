@@ -4,12 +4,12 @@
 --- DateTime: 2018/11/28 11:52
 ---
 
-FriendsCtrl = class('FriendsCtrl', UIPage)
-UIPage:ResgisterOpen(FriendsCtrl)
+FriendsCtrl = class('FriendsCtrl', UIPanel)
+UIPanel:ResgisterOpen(FriendsCtrl)
 
 function FriendsCtrl:initialize()
     ct.log("tina_w7_friends", "FriendsCtrl:initialize")
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function FriendsCtrl:bundleName()
@@ -58,14 +58,14 @@ end
 function FriendsCtrl:OnCreate(go)
     ct.log("tina_w7_friends", "FriendsCtrl:OnCreate")
     --调用基类方法处理实例的数据
-    UIPage.OnCreate(self, go)
+    UIPanel.OnCreate(self, go)
     --初始化管理器
     --FriendsCtrl.friendsMgr = FriendsMgr:new()
 
     --添加UI事件点击监听
     FriendsCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.backBtn, function ()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end)
 
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.friendsManageBtn, self.OnFriendsManage, self)
@@ -108,18 +108,21 @@ end
 --FriendsCtrl.static.GroupClearData = function(transform)
 --end
 
+-- 注册监听事件
+function ChatCtrl:Active()
+    UIPanel.Active(self)
+    self:_addListener()
+end
+
 -- 刷新
 function FriendsCtrl:Refresh()
     self:initInsData()
-    self:_addListener()
+    --self:_addListener()
+    self:_refreshData()
 end
 
 function FriendsCtrl:initInsData()
     DataManager.OpenDetailModel(FriendsModel, OpenModelInsID.FriendsCtrl)
-end
-
-function FriendsCtrl:Close()
-
 end
 
 function FriendsCtrl:_addListener()
@@ -129,12 +132,12 @@ function FriendsCtrl:_addListener()
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 
-    self:_refreshData()
+    --self:_refreshData()
 end
 
 function FriendsCtrl:Hide()
     self:_removeListener()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function FriendsCtrl:_removeListener()

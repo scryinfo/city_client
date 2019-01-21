@@ -3,12 +3,12 @@
 --- Created by Tina.
 --- DateTime: 2018/11/30 15:16
 ---
-FriendslistCtrl = class('FriendslistCtrl', UIPage)
-UIPage:ResgisterOpen(FriendslistCtrl)
+FriendslistCtrl = class('FriendslistCtrl', UIPanel)
+UIPanel:ResgisterOpen(FriendslistCtrl)
 
 function FriendslistCtrl:initialize()
     ct.log("tina_w7_friends", "FriendslistCtrl:initialize")
-    UIPage.initialize(self, UIType.Normal, UIMode.NeedBack, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.NeedBack, UICollider.None)
 end
 
 function FriendslistCtrl:bundleName()
@@ -26,25 +26,28 @@ end
 function FriendslistCtrl:OnCreate(go)
     ct.log("tina_w7_friends", "FriendslistCtrl:OnCreate")
     --调用基类方法处理实例的数据
-    UIPage.OnCreate(self, go)
+    UIPanel.OnCreate(self, go)
     FriendslistCtrl.static.isAddfriends = false
 
     --添加UI事件点击监听
     FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end)
 
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.searchBtn, self.OnSearch, self)
 end
 
--- 刷新
-function FriendslistCtrl:Refresh()
+-- 注册监听事件
+function ChatCtrl:Active()
+    UIPanel.Active(self)
     self:_addListener()
 end
 
-function FriendslistCtrl:Close()
-
+-- 刷新
+function FriendslistCtrl:Refresh()
+    --self:_addListener()
+    self:_initState()
 end
 
 function FriendslistCtrl:_addListener()
@@ -55,7 +58,7 @@ function FriendslistCtrl:_addListener()
     Event.AddListener("c_DeleteBlacklist", self.c_DeleteBlacklist, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
 
-    self:_initState()
+    --self:_initState()
 end
 
 function FriendslistCtrl:Hide()

@@ -234,7 +234,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         --请求信息
         GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
     else
-        if self.biderInfo.id == data.id then
+        if self.biderInfo.id ~= data.id then
             --请求信息
             GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
         end

@@ -52,6 +52,7 @@ end
 ---初始化
 function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
+    self.rentInput.text = ""
     self.errorTipRoot.localScale = Vector3.zero
     --self.changeNameTipText.transform.localScale = Vector3.zero
 

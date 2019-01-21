@@ -30,11 +30,11 @@ function DETAILSBoxCtrl:Active()
 end
 
 function DETAILSBoxCtrl:OnClick_XBtn(obj)
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function DETAILSBoxCtrl:Hide()
     Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
-    UIPanel(self)
+    UIPanel.Hide(self)
 end
 
 function DETAILSBoxCtrl:Refresh()

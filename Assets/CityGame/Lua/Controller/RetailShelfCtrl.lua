@@ -224,9 +224,9 @@ function RetailShelfCtrl:shelfImgSetActive(table,num)
     end
 end
 function RetailShelfCtrl:OnClick_return_Btn()
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function RetailShelfCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id}
 end

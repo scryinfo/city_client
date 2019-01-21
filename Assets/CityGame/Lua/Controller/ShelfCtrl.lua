@@ -140,7 +140,7 @@ end
 
 function ShelfCtrl:OnClick_return_Btn(go)
     --go:deleteObjInfo();
-    UIPanel:Close()
+    UIPanel.ClosePage()
     if switchIsShow then
         go:openPlayerBuy(not switchIsShow)
     end
@@ -149,7 +149,7 @@ function ShelfCtrl:Hide()
     Event.RemoveListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.RemoveListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.RemoveListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id}
 end
 --根据名字排序

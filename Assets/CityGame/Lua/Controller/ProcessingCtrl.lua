@@ -100,10 +100,10 @@ function ProcessingCtrl:OnClick_backBtn(ins)
         ins.processingToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseProcessing",ins.buildingId)
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function ProcessingCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 --打开信息界面

@@ -102,10 +102,10 @@ function MaterialCtrl:OnClick_backBtn(ins)
         ins.materialToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseMaterial",ins.insId)
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function MaterialCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 

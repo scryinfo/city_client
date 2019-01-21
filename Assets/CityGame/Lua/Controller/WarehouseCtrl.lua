@@ -81,8 +81,7 @@ function WarehouseCtrl:Refresh()
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo()
-    --UIPanel:Close()
-    UIPanel:ClosePage()
+    UIPanel.ClosePage()
     if switchIsShow then
         go:OnClick_rightInfo(not switchIsShow,1)
     end
@@ -93,7 +92,7 @@ function WarehouseCtrl:Hide()
     Event.RemoveListener("c_warehouseClick",self._selectedGoods, self)
     Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.RemoveListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----搜索

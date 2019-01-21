@@ -99,10 +99,10 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function RetailStoresCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 --打开信息界面

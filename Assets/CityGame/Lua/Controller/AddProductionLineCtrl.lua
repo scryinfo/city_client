@@ -164,7 +164,7 @@ function AddProductionLineCtrl:_setLineDetailInfo(datas)
     end
 end
 function AddProductionLineCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 --[[

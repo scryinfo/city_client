@@ -65,5 +65,5 @@ function TransportBoxCtrl:OnClick_confirmBtn(ins)
     ins:OnClick_closeBtn(ins)
 end
 function TransportBoxCtrl:Hide()
-    UIPanel(self)
+    UIPanel.Hide(self)
 end

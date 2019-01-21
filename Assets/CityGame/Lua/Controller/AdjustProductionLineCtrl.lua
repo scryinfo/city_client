@@ -64,7 +64,7 @@ end
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo();
     --go:deleteTempTable();
-    UIPanel:Close()
+    UIPanel.ClosePage()
 end
 function AdjustProductionLineCtrl:Hide()
     Event.RemoveListener("calculateTime",self.calculateTime,self)
@@ -72,7 +72,7 @@ function AdjustProductionLineCtrl:Hide()
     --Event.RemoveListener("refreshTime",self.refreshTime,self)
     Event.RemoveListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.RemoveListener("refreshNowConte",self.refreshNowConte,self)
-    UIPanel(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 

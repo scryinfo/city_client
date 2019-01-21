@@ -98,7 +98,7 @@ function PersonalHomeDialogPageCtrl:_initData()
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --修改des
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
@@ -127,19 +127,19 @@ function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
     end
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --公司
 function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
     ct.OpenCtrl("CompanyCtrl", ins.m_data)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

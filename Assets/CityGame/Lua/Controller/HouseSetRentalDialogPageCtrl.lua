@@ -69,7 +69,7 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
 end
 
 function HouseSetRentalDialogPageCtrl:_onClickCloseBtn(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --刷新总分
 function HouseSetRentalDialogPageCtrl:_onClickRefreshBtn(ins)

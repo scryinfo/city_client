@@ -22,11 +22,11 @@ function AddLineChooseItemCtrl:Awake(go)
     self.gameObject = go
     self.behaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.behaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, function ()
-        self:Hide()
+        UIPanel.ClosePage()
     end, self)
     self.behaviour:AddClick(AddLineChooseItemPanel.leftBtn.gameObject, function ()
         ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
-        self:Hide()
+        UIPanel.ClosePage()
     end, self)
 end
 
@@ -62,7 +62,7 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            self:Hide()
+            UIPanel.ClosePage()
             ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
         end)
 
@@ -76,7 +76,7 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            self:Hide()
+            UIPanel.ClosePage()
             ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseRightInventItemId})
         end)
 

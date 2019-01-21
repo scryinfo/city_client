@@ -69,5 +69,5 @@ function HouseChangeRentCtrl:_onClickConfim(ins)
 end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end

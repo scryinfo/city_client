@@ -107,5 +107,5 @@ function InputDialogPageCtrl:_onClickConfim(ins)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end

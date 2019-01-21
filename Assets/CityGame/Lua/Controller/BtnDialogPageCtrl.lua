@@ -53,7 +53,7 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
     ins:_onClickClose(ins)
 end
 function BtnDialogPageCtrl:_onClickClose(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 
 

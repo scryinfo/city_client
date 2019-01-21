@@ -5,19 +5,15 @@
 ---
 -----
 
-HouseCtrl = class('HouseCtrl',UIPage)
-UIPage:ResgisterOpen(HouseCtrl)
+HouseCtrl = class('HouseCtrl',UIPanel)
+UIPanel:ResgisterOpen(HouseCtrl)
 
 function HouseCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function HouseCtrl:bundleName()
     return "Assets/CityGame/Resources/View/HousePanel.prefab"
-end
-
-function HouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
 end
 
 local this
@@ -27,7 +23,6 @@ function HouseCtrl:Awake(go)
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
     self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
-
     self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
     self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
@@ -92,7 +87,7 @@ function HouseCtrl:_backBtn(ins)
     if ins.houseToggleGroup then
         ins.houseToggleGroup:cleanItems()
     end
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 ---更改名字成功
 function HouseCtrl:_updateName(name)

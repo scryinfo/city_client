@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/5 10:00
 ---
-AddLineChooseItemCtrl = class('AddLineChooseItemCtrl',UIPage)
-UIPage:ResgisterOpen(AddLineChooseItemCtrl)
+AddLineChooseItemCtrl = class('AddLineChooseItemCtrl',UIPanel)
+UIPanel:ResgisterOpen(AddLineChooseItemCtrl)
 
 function AddLineChooseItemCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function AddLineChooseItemCtrl:bundleName()
@@ -15,7 +15,7 @@ function AddLineChooseItemCtrl:bundleName()
 end
 
 function AddLineChooseItemCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function AddLineChooseItemCtrl:Awake(go)
@@ -28,12 +28,18 @@ function AddLineChooseItemCtrl:Awake(go)
         ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
         self:Hide()
     end, self)
-
-    self:_addListener()
 end
 
 function AddLineChooseItemCtrl:Refresh()
     self:_initData()
+end
+function AddLineChooseItemCtrl:Active()
+    UIPanel.Active()
+    self:_addListener()
+end
+function AddLineChooseItemCtrl:Hide()
+    UIPanel.Hide()
+    self:_removeListener()
 end
 function AddLineChooseItemCtrl:_addListener()
     Event.AddListener("c_leftSetCenter", self._leftSetCenter, self)

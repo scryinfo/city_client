@@ -109,7 +109,7 @@ end
 --end
 
 -- 注册监听事件
-function ChatCtrl:Active()
+function FriendsCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 end

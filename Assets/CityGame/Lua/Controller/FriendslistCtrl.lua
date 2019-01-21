@@ -39,7 +39,7 @@ function FriendslistCtrl:OnCreate(go)
 end
 
 -- 注册监听事件
-function ChatCtrl:Active()
+function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 end

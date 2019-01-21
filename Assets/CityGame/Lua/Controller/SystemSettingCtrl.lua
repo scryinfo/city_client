@@ -89,7 +89,7 @@ end
 
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn(ins)
-    ins:Hide();
+    UIPanel.ClosePage()
     PlayMusEff(1002)
 end
 
@@ -99,9 +99,8 @@ function SystemSettingCtrl:c_OnClick_backBtn1(ins)
         panel.LanguagePanel.localScale=Vector3.zero
         return
     end
-    ins:Hide();
+    UIPanel.ClosePage()
     PlayMusEff(1002)
-
 end
 
 --返回

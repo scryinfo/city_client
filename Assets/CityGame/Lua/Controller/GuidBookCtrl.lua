@@ -40,7 +40,7 @@ function GuidBookCtrl:Refresh()
 end
 
 function GuidBookCtrl:onClick_Close(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 
 function  GuidBookCtrl:Hide()

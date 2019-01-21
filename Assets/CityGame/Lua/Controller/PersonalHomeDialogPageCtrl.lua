@@ -138,8 +138,8 @@ function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
 end
 --公司
 function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
-    ct.OpenCtrl("CompanyCtrl", ins.m_data)
     UIPanel.ClosePage()
+    ct.OpenCtrl("CompanyCtrl", ins.m_data)
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

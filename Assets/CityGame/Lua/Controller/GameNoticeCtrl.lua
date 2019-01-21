@@ -67,7 +67,7 @@ function GameNoticeCtrl:Refresh()
 end
 
 function GameNoticeCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
     Event.RemoveListener("c_onBg",self.c_onBg,self)
     Event.RemoveListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.RemoveListener("c_OnDeleMails",self.c_OnDeleMails,self)

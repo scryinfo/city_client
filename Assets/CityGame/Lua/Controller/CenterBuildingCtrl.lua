@@ -32,7 +32,7 @@ function CenterBuildingCtrl:Awake()
 end
 
 function CenterBuildingCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
 end
 
 function CenterBuildingCtrl:OnBg()

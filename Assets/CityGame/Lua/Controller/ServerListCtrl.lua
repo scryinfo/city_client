@@ -42,20 +42,11 @@ function ServerListCtrl:Refresh()
 end
 
 function ServerListCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
     --注销事件
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
-end
-
-function ServerListCtrl:Close()
-    --if self.server ~= nil then
-    --    for i, v in pairs(self.server) do
-    --        destroy(v.prefab.gameObject)
-    --    end
-    --    self.server = {}
-    --end
 end
 
 function ServerListCtrl:_initInsData()

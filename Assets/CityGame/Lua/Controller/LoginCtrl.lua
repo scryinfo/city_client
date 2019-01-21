@@ -58,7 +58,7 @@ function LoginCtrl:Refresh()
 end
 
 function LoginCtrl:Hide()
-	UIPanel.Hide()
+	UIPanel.Hide(self)
 	self:close()
 end
 
@@ -154,9 +154,9 @@ end
 function LoginCtrl:c_ConnectionStateChange( state )
 	if state.error == 'Success' then
 		--CityEngineLua.login_loginapp(false)
-		LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
+		--LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
 	else
-		LoginPanel.textStatus:GetComponent('Text').text = "连接错误";
+		--LoginPanel.textStatus:GetComponent('Text').text = "连接错误";
 	end
 end
 
@@ -173,9 +173,9 @@ end
 
 function LoginCtrl:c_GsConnected( success )
 	if success then
-		LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接成功!";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接成功!";
 	else
-		LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接失败";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接失败";
 	end
 end
 

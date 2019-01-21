@@ -73,7 +73,7 @@ function ChooseWarehouseCtrl:Active()
 end
 
 function ChooseWarehouseCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
     Event.RemoveListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
     Event.RemoveListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
     Event.RemoveListener("c_Transport",self.c_Transport,self)

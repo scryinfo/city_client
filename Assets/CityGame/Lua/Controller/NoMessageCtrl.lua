@@ -33,7 +33,7 @@ function NoMessageCtrl:Awake()
 end
 
 function NoMessageCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
 end
 
 --初始化

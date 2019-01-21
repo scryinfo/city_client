@@ -73,7 +73,7 @@ function CenterWareHouseCtrl:Active()
 end
 
 function CenterWareHouseCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel.Hide(self)
     Event.RemoveListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.RemoveListener("c_OnDelete",self.c_OnDelete,self);
     Event.RemoveListener("c_OnBGItem",self.c_OnBGItem,self);

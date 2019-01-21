@@ -33,7 +33,7 @@ end
 
 function GameMainInterfaceCtrl:Hide()
 
-    UIPanel.Hide()
+    UIPanel.Hide(self)
 
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)

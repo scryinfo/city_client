@@ -138,11 +138,12 @@ end
 
 --创建界面实例
 --创建完成调用DOShow
-function UIPanel:OnCreate(go)
+function UIPanel:OnCreate(obj)
     if self.gameObject == nil then
-        go.layer = LayerMask.NameToLayer("UI");
+        local go = ct.InstantiatePrefab(obj)
+        go.layer = LayerMask.NameToLayer("UI")
         UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
-        self.gameObject = go;
+        self.gameObject = go
         assert(go, "system","[UIPanel.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
             ct.log("system","[UIPanel.Show]", "资源加载失败: "..uiPath)
@@ -257,7 +258,7 @@ end
 --1.注册点击事件
 --2.初始化子组件【A】
 function UIPanel:Awake(obj)
-    self.gameObject = obj;
+    self.gameObject = obj
 end
 
 --子类需重写
@@ -266,8 +267,8 @@ end
 --2.初始化无网络数据
 --3.注册监听事件
 function UIPanel:Active()
-    self.gameObject:SetActive(true);
-    self.isActived = true;
+    self.gameObject:SetActive(true)
+    self.isActived = true
 end
 
 --子类需重写
@@ -295,7 +296,7 @@ end
 --3.销毁子组件【A】
 --4.销毁界面GameObject【继承父类即可】
 function UIPanel:Close()
-    destroy(self.gameObject);
+    destroy(self.gameObject)
 end
 
 ---------------------------------------------------------------------------------------外部调用方法---------------------------------------------------------------------------------------
@@ -425,7 +426,7 @@ function UIPanel.CheckPageIsActive(pageClass)
     local pageNodes = UIPanel.static.m_instancePageNodes
     if pageNodes ~= nil then
         for key, Node in pairs(pageNodes) do
-            if Node.pageClass == pageClass then
+            if Node.pageClass == pageClass and Node.page:isActive() == true then
                 return true
             end
         end

@@ -430,10 +430,11 @@ end
 --2：ontroller中self方法名
 function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
     --参数验证
-    if UIPage.static.m_allPages == nil or insId == nil or modelMethord == nil then
+    local m_allPages = UIPanel.GetAllPages()
+    if  m_allPages == nil or insId == nil or modelMethord == nil then
         return
     end
-    local tempController = UIPage.static.m_allPages[ctrlName]
+    local tempController = m_allPages[ctrlName]
     if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
         tempController[modelMethord](tempController,...)
     end
@@ -448,10 +449,11 @@ end
 --4：... Controller中方法参数
 function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethord, ...)
     --参数验证
-    if UIPage.static.m_allPages == nil or insId == nil or ctrlName == nil or modelMethord == nil or callBackMethord == nil then
+    local m_allPages = UIPanel.GetAllPages()
+    if m_allPages == nil or insId == nil or ctrlName == nil or modelMethord == nil or callBackMethord == nil then
         return
     end
-    local tempController = UIPage.static.m_allPages[ctrlName]
+    local tempController = m_allPages[ctrlName]
     if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.insId == insId then
         callBackMethord(tempController[modelMethord](tempController,...))
     end

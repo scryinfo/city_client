@@ -4,8 +4,8 @@
 --- DateTime: 2018/12/21/021 18:07
 ---
 
-DetailGuidCtrl = class('DetailGuidCtrl',UIPage)
-UIPage:ResgisterOpen(DetailGuidCtrl) --注册打开的方法
+DetailGuidCtrl = class('DetailGuidCtrl',UIPanel)
+UIPanel:ResgisterOpen(DetailGuidCtrl) --注册打开的方法
 
 local luaBehaviour;
 local panel;
@@ -15,7 +15,7 @@ DetailGuidCtrl.detailItem_Path="View/GoodsItem/detailItem"
 DetailGuidCtrl.detailItem1_Path="View/GoodsItem/detailItem1"
 
 function DetailGuidCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
 function  DetailGuidCtrl:bundleName()
@@ -24,7 +24,7 @@ end
 
 --启动事件--
 function DetailGuidCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
 end
 
 function DetailGuidCtrl:Awake(obj)
@@ -33,7 +33,7 @@ function DetailGuidCtrl:Awake(obj)
     self.detailInsList={}
     self.detail1InsList={}
     luaBehaviour = obj:GetComponent('LuaBehaviour');
-    luaBehaviour:AddClick(panel.backBtn.gameObject,self.Close,self);
+    luaBehaviour:AddClick(panel.backBtn.gameObject,self.onClick_Close,self);
     luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self);
     luaBehaviour:AddClick(obj,function ()  panel.scroll.localScale=Vector3.zero   end,self);
 end
@@ -55,7 +55,9 @@ function DetailGuidCtrl:detailBtn()
     PlayMusEff(1002)
 end
 
-
+function DetailGuidCtrl:onClick_Close(ins)
+   UIPanel.ClosePage()
+end
 
 ---刷新按钮
 function DetailGuidCtrl:updateItem(names)
@@ -177,6 +179,8 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
         end
     end
 end
+
+
 
 function  DetailGuidCtrl:Hide()
     UIPanel.Hide(self)

@@ -174,7 +174,7 @@ function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
 end
 --返回主界面
 function GroundTransSetPriceCtrl._closeBackToMain()
-    UIPanel.BackToPageInstance("GameMainInterfaceCtrl")
+    UIPanel.CloseAllPageExceptMain()
 
     --UIPanel:HideAllPages()
     --ct.OpenCtrl("GameMainInterfaceCtrl")

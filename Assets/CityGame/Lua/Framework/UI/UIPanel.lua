@@ -5,7 +5,7 @@
 
 require('Framework/UI/UIRoot')
 local UIRoot = UIRoot
---[[
+
 UIType = {
     Bubble = 0,     --气泡
     Normal =1 ,
@@ -28,7 +28,7 @@ UICollider =
     Normal=2,    --碰撞透明背景
     WithBg=3,    -- 碰撞非透明背景
 }
---]]
+
 UIPanel = class('UIPanel')
 UIPanel.static.m_allPages={}            --界面GameObject管理
 UIPanel.static.m_instancePageNodes={}   --界面实例顺序管理（new）
@@ -153,6 +153,7 @@ function UIPanel:Show(path, callback)
     end
 end
 
+
 --创建界面实例
 --创建完成调用DOShow
 function UIPanel:OnCreate(obj)
@@ -234,6 +235,9 @@ end
 
 --DoShow，页面调用打开时调用
 function UIPanel:DoShow()
+    if self.gameObject ~= nil then
+        self.gameObject.transform:SetAsLastSibling()
+    end
     self:Active()
     self:Refresh()
 end

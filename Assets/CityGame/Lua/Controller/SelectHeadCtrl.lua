@@ -26,7 +26,7 @@ function SelectHeadCtrl:Awake()
 end
 
 function SelectHeadCtrl:Active()
-    UIPanel:Active(self)
+    UIPanel.Active(self)
 end
 
 function SelectHeadCtrl:Hide()

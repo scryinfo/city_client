@@ -62,7 +62,7 @@ function CenterWareHouseCtrl:Awake()
 end
 
 function CenterWareHouseCtrl:Active()
-    UIPanel:Active(self)
+    UIPanel.Active(self)
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);

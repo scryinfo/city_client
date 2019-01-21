@@ -49,7 +49,7 @@ function GameNoticeCtrl:Awake()
 end
 
 function GameNoticeCtrl:Active()
-    UIPanel:Active(self)
+    UIPanel.Active(self)
     Event.AddListener("c_onBg",self.c_onBg,self)
     Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)

@@ -33,7 +33,7 @@ function NoMessageCtrl:Awake()
 end
 
 function NoMessageCtrl:Active()
-    UIPanel:Active(self)
+    UIPanel.Active(self)
 end
 
 function NoMessageCtrl:Hide()

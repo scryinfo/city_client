@@ -1,11 +1,11 @@
 -----
-WagesAdjustBoxCtrl = class('WagesAdjustBoxCtrl',UIPage)
-UIPage:ResgisterOpen(WagesAdjustBoxCtrl)
+WagesAdjustBoxCtrl = class('WagesAdjustBoxCtrl',UIPanel)
+UIPanel:ResgisterOpen(WagesAdjustBoxCtrl)
 
 WagesAdjustBoxCtrl.static.BlackColor = "#4B4B4B"
 
 function WagesAdjustBoxCtrl:initialize()
-    UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
 
 function WagesAdjustBoxCtrl:bundleName()
@@ -17,8 +17,7 @@ function WagesAdjustBoxCtrl:Awake(go)
 end
 
 function WagesAdjustBoxCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
-    self.gameObject.transform:SetAsFirstSibling()
+    UIPanel.OnCreate(self, obj)
 end
 
 function WagesAdjustBoxCtrl:Awake(go)
@@ -26,12 +25,10 @@ function WagesAdjustBoxCtrl:Awake(go)
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
-
-    Event.AddListener("mCloes",self.mCloes,self)
 end
 
 function WagesAdjustBoxCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function WagesAdjustBoxCtrl:Refresh()
@@ -64,26 +61,9 @@ function WagesAdjustBoxCtrl:_onClickConfim(ins)
         ins.m_data.callback()
         ins.m_data.callback = nil
     end
-    ins:Hide()
-
-    --local m_data=ins.m_data
-    --local data={}
-    --data.type="begin"
-    --data.mainText="Processing plant successfully opened"
-    --data.callback = function()
-    --                 Event.Brocast("m_ReqHouseSetSalary1",m_data.buildInfo.id,100)
-    --                 Event.Brocast("m_startBusiness",m_data.buildInfo.id)
-    --                 Event.Brocast("mCloes")
-    --                 --m_data:func()
-    --                 --Event.Brocast("SmallPop","Success",300)
-    --               end
-    --ct.OpenCtrl("ReminderCtrl",data)
+    UIPanel.ClosePage()
 end
 
 function WagesAdjustBoxCtrl:_onClickClose(ins)
-     ins:Hide()
-end
-
-function  WagesAdjustBoxCtrl:mCloes()
-    self:Hide()
+     UIPanel.ClosePage()
 end

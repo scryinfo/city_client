@@ -5,11 +5,11 @@
 ---建造面板
 -----
 
-ConstructCtrl = class('ConstructCtrl',UIPage)
-UIPage:ResgisterOpen(ConstructCtrl)
+ConstructCtrl = class('ConstructCtrl',UIPanel)
+UIPanel:ResgisterOpen(ConstructCtrl)
 
 function ConstructCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ConstructCtrl:bundleName()
@@ -17,11 +17,11 @@ function ConstructCtrl:bundleName()
 end
 
 function ConstructCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
     --关闭面板
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(ConstructPanel.btn_back.gameObject, function()
-        UIPage.ClosePage();
+        UIPanel.ClosePage();
     end );
 end
 
@@ -78,7 +78,7 @@ function ConstructCtrl:ClearItemData()
 end
 
 function ConstructCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
     UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
     CameraMove.ChangeCameraState(TouchStateType.NormalState)
     Event.Brocast("m_abolishConstructBuild")

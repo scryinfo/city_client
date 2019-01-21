@@ -53,6 +53,7 @@ function WarehouseCtrl:Awake(go)
     self.operation = nil;
 end
 function WarehouseCtrl:Active()
+    UIPanel.Active(self)
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)

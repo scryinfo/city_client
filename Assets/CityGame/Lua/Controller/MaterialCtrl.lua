@@ -26,9 +26,7 @@ function MaterialCtrl:Awake(go)
     self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-function MaterialCtrl:Active()
 
-end
 function MaterialCtrl:Refresh()
     this:initializeData()
 end

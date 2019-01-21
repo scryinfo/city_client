@@ -58,6 +58,7 @@ function LoginCtrl:Refresh()
 end
 
 function LoginCtrl:Hide()
+	UIPanel.Hide(self)
 	self:Close()
 end
 

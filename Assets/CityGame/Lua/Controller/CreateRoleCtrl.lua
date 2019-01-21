@@ -40,6 +40,7 @@ function CreateRoleCtrl:_initInsData()
 end
 
 function CreateRoleCtrl:Hide()
+    UIPanel.Hide(self)
     Event.RemoveListener("c_SameName",self.c_SameName,self)
 end
 

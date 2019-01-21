@@ -25,6 +25,9 @@ function SelectHeadCtrl:Awake()
     self.initData()
 end
 
+function SelectHeadCtrl:Hode()
+    UIPanel.Hide(self)
+end
 
 function SelectHeadCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)

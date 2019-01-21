@@ -10,25 +10,25 @@ LabResearchBtnState =
     NotEnough = 2,
 }
 
-LabResearchCtrl = class('LabResearchCtrl',UIPage)
-UIPage:ResgisterOpen(LabResearchCtrl)
+LabResearchCtrl = class('LabResearchCtrl',UIPanel)
+UIPanel:ResgisterOpen(LabResearchCtrl)
 
 LabResearchCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
 
 function LabResearchCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabResearchCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LabResearchPanel.prefab"
 end
 function LabResearchCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 function LabResearchCtrl:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabResearchPanel.backBtn.gameObject, function()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
         if self.backToCompose then
             ct.OpenCtrl("AddLineChooseItemCtrl")
         end
@@ -58,7 +58,7 @@ function LabResearchCtrl:Refresh()
 end
 function LabResearchCtrl:Hide()
     Event.RemoveListener("c_LabRollSuccess", self._backToScientificCtrl)
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function LabResearchCtrl:_update()
@@ -164,13 +164,13 @@ end
 function LabResearchCtrl:_creatTempLine()
     local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --继续研究，返回科技线
 function LabResearchCtrl:_launchLine()
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --关闭自己，返回科技线界面
 function LabResearchCtrl:_backToScientificCtrl()
@@ -179,7 +179,7 @@ function LabResearchCtrl:_backToScientificCtrl()
     info.contentInfo = "Stage of success!"
     info.tipInfo = ""
     info.btnCallBack = function ()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

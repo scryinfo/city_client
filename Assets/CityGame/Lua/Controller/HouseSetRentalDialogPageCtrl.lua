@@ -3,12 +3,12 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/4 9:53
 ---住宅更改租金界面
-HouseSetRentalDialogPageCtrl = class('HouseSetRentalDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(HouseSetRentalDialogPageCtrl)
+HouseSetRentalDialogPageCtrl = class('HouseSetRentalDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(HouseSetRentalDialogPageCtrl)
 HouseSetRentalDialogPageCtrl.static.BlackColor = "#474747"
 
 function HouseSetRentalDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function HouseSetRentalDialogPageCtrl:bundleName()
@@ -16,13 +16,12 @@ function HouseSetRentalDialogPageCtrl:bundleName()
 end
 
 function HouseSetRentalDialogPageCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function HouseSetRentalDialogPageCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_initData()
 
     local luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickCloseBtn, self)
@@ -70,7 +69,7 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
 end
 
 function HouseSetRentalDialogPageCtrl:_onClickCloseBtn(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --刷新总分
 function HouseSetRentalDialogPageCtrl:_onClickRefreshBtn(ins)

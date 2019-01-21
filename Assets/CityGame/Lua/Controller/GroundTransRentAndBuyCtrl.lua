@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/26 17:29
 ---
-GroundTransRentAndBuyCtrl = class('GroundTransRentAndBuyCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransRentAndBuyCtrl)
+GroundTransRentAndBuyCtrl = class('GroundTransRentAndBuyCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransRentAndBuyCtrl)
 
 function GroundTransRentAndBuyCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransRentAndBuyCtrl:bundleName()
@@ -15,15 +15,16 @@ function GroundTransRentAndBuyCtrl:bundleName()
 end
 
 function GroundTransRentAndBuyCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
+end
 
+function GroundTransRentAndBuyCtrl:Awake(go)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.ownerBtn.gameObject, self._portraitBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.buyBtn.gameObject, self._buyBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.rentBtn.gameObject, self._rentBtnFunc, self)
-
     GroundTransRentAndBuyPanel.tenancySlider.onValueChanged:AddListener(function(value)
         if GroundTransRentAndBuyCtrl.tempRentPreDay == nil then
             return
@@ -33,21 +34,18 @@ function GroundTransRentAndBuyCtrl:OnCreate(obj)
     end)
 end
 
-function GroundTransRentAndBuyCtrl:Awake(go)
-end
-
 function GroundTransRentAndBuyCtrl:Refresh()
     Event.AddListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
     self:_initPanelData()
 end
 
 function GroundTransRentAndBuyCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
     Event.RemoveListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
 end
 
 function GroundTransRentAndBuyCtrl:Close()
-    UIPage.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化
@@ -96,7 +94,7 @@ function GroundTransRentAndBuyCtrl:_closeBtnFunc()
 end
 --返回按钮
 function GroundTransRentAndBuyCtrl:_backBtnFunc()
-    UIPage:ClosePage()
+    UIPanel:ClosePage()
 end
 
 --点击购买按钮

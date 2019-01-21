@@ -3,24 +3,24 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/3 10:14
 ---
-LabInventionCtrl = class('LabInventionCtrl',UIPage)
-UIPage:ResgisterOpen(LabInventionCtrl)
+LabInventionCtrl = class('LabInventionCtrl',UIPanel)
+UIPanel:ResgisterOpen(LabInventionCtrl)
 LabInventionCtrl.static.InventionBulbItemPath = "View/Items/LaboratoryItems/LabInventionBulbItem"  --灯泡的预制
 
 function LabInventionCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LabInventionCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LabInventionPanel.prefab"
 end
 function LabInventionCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 function LabInventionCtrl:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabInventionPanel.backBtn.gameObject, function()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
         if self.backToCompose then
             ct.OpenCtrl("AddLineChooseItemCtrl")
         end
@@ -51,7 +51,7 @@ function LabInventionCtrl:Refresh()
 end
 function LabInventionCtrl:Hide()
     Event.RemoveListener("c_LabRollSuccess", self._backToScientificCtrl)
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 function LabInventionCtrl:_update()
     if not self.m_data then
@@ -187,14 +187,14 @@ end
 function LabInventionCtrl:_creatTempLine()
     local data = {itemId = self.m_data.itemId, type = 1, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --继续发明
 function LabInventionCtrl:_launchLine()
     local data = {itemId = self.m_data.itemId, type = 1, rollTarget = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --关闭自己，返回科技线界面
 function LabInventionCtrl:_backToScientificCtrl()
@@ -203,7 +203,7 @@ function LabInventionCtrl:_backToScientificCtrl()
     info.contentInfo = "Stage of success!"
     info.tipInfo = ""
     info.btnCallBack = function ()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end

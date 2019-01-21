@@ -324,6 +324,11 @@ function UIPanel.SetMainPanel(mainClass)
 end
 --]]
 
+--获取m_allPages
+function UIPanel.GetAllPages()
+    return UIPanel.static.m_allPages
+end
+
 --关闭当前最新打开的窗口
 --Normal及PopUp使用
 --关闭当前最顶窗口（无论是Normal还是PopUp）

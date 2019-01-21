@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 11:25
 ---个人主页弹窗
-PersonalHomeDialogPageCtrl = class('PersonalHomeDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(PersonalHomeDialogPageCtrl) --注册打开的方法
+PersonalHomeDialogPageCtrl = class('PersonalHomeDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(PersonalHomeDialogPageCtrl) --注册打开的方法
 
 function PersonalHomeDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function PersonalHomeDialogPageCtrl:bundleName()
@@ -15,7 +15,7 @@ function PersonalHomeDialogPageCtrl:bundleName()
 end
 
 function PersonalHomeDialogPageCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function PersonalHomeDialogPageCtrl:Awake(go)

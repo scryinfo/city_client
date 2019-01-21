@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/5 10:00
 ---
-AddLineChooseItemCtrl = class('AddLineChooseItemCtrl',UIPage)
-UIPage:ResgisterOpen(AddLineChooseItemCtrl)
+AddLineChooseItemCtrl = class('AddLineChooseItemCtrl',UIPanel)
+UIPanel:ResgisterOpen(AddLineChooseItemCtrl)
 
 function AddLineChooseItemCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function AddLineChooseItemCtrl:bundleName()
@@ -15,25 +15,31 @@ function AddLineChooseItemCtrl:bundleName()
 end
 
 function AddLineChooseItemCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function AddLineChooseItemCtrl:Awake(go)
     self.gameObject = go
     self.behaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.behaviour:AddClick(AddLineChooseItemPanel.backBtn.gameObject, function ()
-        self:Hide()
+        UIPanel.ClosePage()
     end, self)
     self.behaviour:AddClick(AddLineChooseItemPanel.leftBtn.gameObject, function ()
         ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseInventItemId})
-        self:Hide()
+        UIPanel.ClosePage()
     end, self)
-
-    self:_addListener()
 end
 
 function AddLineChooseItemCtrl:Refresh()
     self:_initData()
+end
+function AddLineChooseItemCtrl:Active()
+    UIPanel:Active()
+    self:_addListener()
+end
+function AddLineChooseItemCtrl:Hide()
+    UIPanel:Hide()
+    self:_removeListener()
 end
 function AddLineChooseItemCtrl:_addListener()
     Event.AddListener("c_leftSetCenter", self._leftSetCenter, self)
@@ -56,7 +62,7 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            self:Hide()
+            UIPanel.ClosePage()
             ct.OpenCtrl("LabResearchCtrl", {itemId = self.chooseResearchItemId})
         end)
 
@@ -70,7 +76,7 @@ function AddLineChooseItemCtrl:_initData()
 
         AddLineChooseItemPanel.rightBtn.onClick:RemoveAllListeners()
         AddLineChooseItemPanel.rightBtn.onClick:AddListener(function ()
-            self:Hide()
+            UIPanel.ClosePage()
             ct.OpenCtrl("LabInventionCtrl", {itemId = self.chooseRightInventItemId})
         end)
 

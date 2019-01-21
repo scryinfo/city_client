@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/26 17:29
 ---GroundTransSelfCheckInfoCtrl
-GroundTransSelfCheckInfoCtrl = class('GroundTransSelfCheckInfoCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransSelfCheckInfoCtrl)
+GroundTransSelfCheckInfoCtrl = class('GroundTransSelfCheckInfoCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransSelfCheckInfoCtrl)
 
 function GroundTransSelfCheckInfoCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransSelfCheckInfoCtrl:bundleName()
@@ -15,14 +15,13 @@ function GroundTransSelfCheckInfoCtrl:bundleName()
 end
 
 function GroundTransSelfCheckInfoCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
-
-    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
-    groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
+    UIPanel.OnCreate(self, obj)
 end
 
 function GroundTransSelfCheckInfoCtrl:Awake(go)
+    local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
+    groundAuctionBehaviour:AddClick(GroundTransSelfCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
 end
 
 function GroundTransSelfCheckInfoCtrl:Refresh()
@@ -30,11 +29,11 @@ function GroundTransSelfCheckInfoCtrl:Refresh()
 end
 
 function GroundTransSelfCheckInfoCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()
-    UIPage.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化
@@ -59,5 +58,5 @@ function GroundTransSelfCheckInfoCtrl:_closeBtnFunc()
 end
 --返回按钮
 function GroundTransSelfCheckInfoCtrl:_backBtnFunc()
-    UIPage:ClosePage()
+    UIPanel:ClosePage()
 end

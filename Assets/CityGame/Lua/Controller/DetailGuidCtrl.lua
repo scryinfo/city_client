@@ -14,12 +14,12 @@ DetailGuidCtrl.btnItem_Path="View/GoodsItem/buildBtn"
 DetailGuidCtrl.detailItem_Path="View/GoodsItem/detailItem"
 DetailGuidCtrl.detailItem1_Path="View/GoodsItem/detailItem1"
 
-function  DetailGuidCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/DetailGuidPanel.prefab"
-end
-
 function DetailGuidCtrl:initialize()
     UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+end
+
+function  DetailGuidCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/DetailGuidPanel.prefab"
 end
 
 --启动事件--
@@ -32,7 +32,6 @@ function DetailGuidCtrl:Awake(obj)
     self.btnInsList={}
     self.detailInsList={}
     self.detail1InsList={}
-
     luaBehaviour = obj:GetComponent('LuaBehaviour');
     luaBehaviour:AddClick(panel.backBtn.gameObject,self.Close,self);
     luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self);
@@ -56,11 +55,8 @@ function DetailGuidCtrl:detailBtn()
     PlayMusEff(1002)
 end
 
-function DetailGuidCtrl:Close()
-    UIPage.ClosePage();
-    PlayMusEff(1002)
 
-end
+
 ---刷新按钮
 function DetailGuidCtrl:updateItem(names)
         for i, v in pairs(GuidBookConfig) do
@@ -181,23 +177,12 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
         end
     end
 end
---else --默认
---
---    panel.detailText.text=name
---    for key, string in pairs(content) do
---        if num%2==1 then
---            local prefab =creatGoods(DetailGuidCtrl.detailItem_Path,panel.showCon)
---            local ins=DetailItem:new(prefab)
---            ins:updateData(key,string)
---            table.insert(self.detailInsList,ins)
---        else
---            local prefab =creatGoods(DetailGuidCtrl.detailItem1_Path,panel.showCon)
---            local ins=DetailItem1:new(prefab)
---            ins:updateData(key,string)
---            table.insert(self.detail1InsList,ins)
---        end
---        num=num+1
---    end
---
---
---    return
+
+function  DetailGuidCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function DetailGuidCtrl:Close()
+    UIPanel.Close(self)
+end
+

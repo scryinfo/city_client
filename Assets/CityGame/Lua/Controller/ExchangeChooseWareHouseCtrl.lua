@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/25 10:44
 ---
-ExchangeChooseWareHouseCtrl = class('ExchangeChooseWareHouseCtrl',UIPage)
-UIPage:ResgisterOpen(ExchangeChooseWareHouseCtrl)
+ExchangeChooseWareHouseCtrl = class('ExchangeChooseWareHouseCtrl',UIPanel)
+UIPanel:ResgisterOpen(ExchangeChooseWareHouseCtrl)
 
 function ExchangeChooseWareHouseCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ExchangeChooseWareHouseCtrl:bundleName()
@@ -15,11 +15,12 @@ function ExchangeChooseWareHouseCtrl:bundleName()
 end
 
 function ExchangeChooseWareHouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function ExchangeChooseWareHouseCtrl:Awake(go)
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
+    self.luaBehaviour:RemoveClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack, self)
 
     self.chooseWareSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.chooseWareSource.mProvideData = ExchangeChooseWareHouseCtrl.static.ChooseWareProvideData
@@ -27,24 +28,20 @@ function ExchangeChooseWareHouseCtrl:Awake(go)
 end
 
 function ExchangeChooseWareHouseCtrl:Refresh()
+    Event.AddListener("m_OnReceiveAllBuildingDetail", self._getBuildingDetailFunc, self)
     self:_initPanelData()
 end
 
 function ExchangeChooseWareHouseCtrl:Hide()
-    UIPage.Hide(self)
-    self.luaBehaviour:RemoveClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack, self)
+    UIPanel.Hide(self)
     Event.RemoveListener("m_OnReceiveAllBuildingDetail", self._getBuildingDetailFunc, self)
-
-    --ExchangeChooseWareHousePanel.wareHouseScroll:ActiveLoopScroll(self.chooseWareSource, 0)
 end
 
 function ExchangeChooseWareHouseCtrl:Close()
-    --ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
+    UIPanel.Close(self)
 end
 
 function ExchangeChooseWareHouseCtrl:_initPanelData()
-    self.luaBehaviour:AddClick(ExchangeChooseWareHousePanel.backBtn.gameObject, self.OnClickBack,self)
-    Event.AddListener("m_OnReceiveAllBuildingDetail", self._getBuildingDetailFunc, self)
     Event.Brocast("m_ReqAllBuildingDetail")
 end
 --收到建筑信息之后再显示
@@ -91,7 +88,7 @@ function ExchangeChooseWareHouseCtrl:_getAllStoreBuildings(data)
 end
 
 function ExchangeChooseWareHouseCtrl:OnClickBack()
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 
 ---滑动复用

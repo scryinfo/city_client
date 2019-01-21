@@ -6,32 +6,34 @@
 
 require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
-require('Framework/UI/UIPage')
+require('Framework/UI/UIPanel')
 
 require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 local class = require 'Framework/class'
-MunicipalCtrl = class('MunicipalCtrl',UIPage)
-UIPage:ResgisterOpen(MunicipalCtrl) --注册打开的方法
+MunicipalCtrl = class('MunicipalCtrl',UIPanel)
+UIPanel:ResgisterOpen(MunicipalCtrl) --注册打开的方法
 
 
 --构建函数
 function MunicipalCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
 function MunicipalCtrl:bundleName()
     return "Assets/CityGame/Resources/View/MunicipalPanel.prefab";
 end
 
+function MunicipalCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj);
+end
+
 local BuildMgr
 local this
 function MunicipalCtrl:Awake(go)
     this=self
-    self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MunicipalPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    --self.materialBehaviour:AddClick(MunicipalPanel.infoBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MunicipalPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MunicipalPanel.buildInfoBtn.gameObject,self.OnClick_buildInfo,self);
     self.materialBehaviour:AddClick(MunicipalPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
@@ -40,14 +42,9 @@ function MunicipalCtrl:Awake(go)
         data.buildingType = BuildingType.Municipal
     BuildMgr=BuildingInfoToggleGroupMgr:new(MunicipalPanel.leftRootTran, MunicipalPanel.rightRootTran, self.materialBehaviour, data)
     MunicipalPanel.scrollCon=go.transform:Find("rightRoot/Advertisement/contentRoot/Scroll View/Viewport/Content")
-
-
-
 end
 
-function MunicipalCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
-end
+
 
 function MunicipalCtrl:OnClick_buildInfo()
     Event.Brocast("c_openBuildingInfo",MunicipalPanel.lMsg.info)
@@ -73,14 +70,23 @@ end
 function MunicipalCtrl:_updateName(name)
     MunicipalPanel.nameText.text = name
 end
+
 --返回
-function MunicipalCtrl:OnClick_backBtn()
-    UIPage.ClosePage();
+function MunicipalCtrl:OnClick_backBtn(ins)
+    ins:Hide()
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
         Event.Brocast("m_stopListenBuildingDetailInform",MunicipalPanel.buildingId)
     end
 
+end
+
+function  MunicipalCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function MunicipalCtrl:Close()
+    UIPanel.Close(self)
 end
 
 

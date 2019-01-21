@@ -1,10 +1,10 @@
-MaterialCtrl = class('MaterialCtrl',UIPage)
-UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
+MaterialCtrl = class('MaterialCtrl',UIPanel)
+UIPanel:ResgisterOpen(MaterialCtrl) --注册打开的方法
 
 local this
 --构建函数
 function MaterialCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function MaterialCtrl:bundleName()
@@ -12,7 +12,7 @@ function MaterialCtrl:bundleName()
 end
 
 function MaterialCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 
 function MaterialCtrl:Awake(go)
@@ -102,7 +102,11 @@ function MaterialCtrl:OnClick_backBtn(ins)
         ins.materialToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseMaterial",ins.insId)
-    UIPage.ClosePage();
+    UIPanel.ClosePage()
+end
+function MaterialCtrl:Hide()
+    UIPanel.Hide(self)
+    return {insId = self.m_data.info.id,self.m_data}
 end
 
 --打开信息界面
@@ -115,7 +119,7 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPage:ShowPage(MaterialCtrl);
+        --UIPanel:ShowPage(MaterialCtrl);
         ct.OpenCtrl("MaterialCtrl")
     end)
 end)

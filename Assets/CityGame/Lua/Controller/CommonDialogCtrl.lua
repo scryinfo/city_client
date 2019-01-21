@@ -4,11 +4,11 @@
 --- DateTime: 2018/12/1 17:00
 ---
 
-CommonDialogCtrl = class('CommonDialogCtrl',UIPage)
-UIPage:ResgisterOpen(CommonDialogCtrl) --注册打开的方法
+CommonDialogCtrl = class('CommonDialogCtrl',UIPanel)
+UIPanel:ResgisterOpen(CommonDialogCtrl) --注册打开的方法
 
 function CommonDialogCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function CommonDialogCtrl:bundleName()
@@ -16,7 +16,7 @@ function CommonDialogCtrl:bundleName()
 end
 
 function CommonDialogCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function CommonDialogCtrl:Awake(go)
@@ -37,9 +37,6 @@ function CommonDialogCtrl:Refresh()
     end)
 end
 
-function CommonDialogCtrl:Close()
-end
-
 --寻找组件
 function CommonDialogCtrl:_getComponent(go)
     self.titleText = go.transform:Find("Root/TitleText").gameObject:GetComponent("Text")
@@ -48,6 +45,7 @@ function CommonDialogCtrl:_getComponent(go)
     self.input = go.transform:Find("Root/Input").gameObject:GetComponent("InputField")
     self.tipsText = go.transform:Find("Root/TipsText"):GetComponent("Text")
 end
+
 --初始化
 function CommonDialogCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
@@ -76,7 +74,11 @@ end
 function CommonDialogCtrl:_onClickClose(ins)
     --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
     ins.input.text = ""
-    ins:Hide()
     ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
     ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
+    UIPanel.ClosePage()
+end
+
+function CommonDialogCtrl:Hide()
+    UIPanel.Hide(self)
 end

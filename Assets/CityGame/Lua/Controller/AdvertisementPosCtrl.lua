@@ -7,18 +7,16 @@
 
 require "Common/define"
 require "View/BuildingInfo/BuildingInfoToggleGroupMgr";
-require('Framework/UI/UIPage')
+require('Framework/UI/UIPanel')
 require "View/BuildingInfo/ItemCreatDeleteMgr"
 
+AdvertisementPosCtrl = class('AdvertisementPosCtrl',UIPanel)
+UIPanel:ResgisterOpen(AdvertisementPosCtrl) --注册打开的方法
 
-local class = require 'Framework/class'
-AdvertisementPosCtrl = class('AdvertisementPosCtrl',UIPage)
-UIPage:ResgisterOpen(AdvertisementPosCtrl) --注册打开的方法
-
-local panel=AdvertisementPosPanel
+local panel
 --构建函数
 function AdvertisementPosCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function AdvertisementPosCtrl:bundleName()
@@ -26,13 +24,14 @@ function AdvertisementPosCtrl:bundleName()
 end
 
 function AdvertisementPosCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
+
 local materialBehaviours
 local MunicipalModel
 local text
 function AdvertisementPosCtrl:Awake(go)
-    self.gameObject = go;
+    panel=AdvertisementPosPanel
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
@@ -97,8 +96,15 @@ end
 
 
 --返回
-function AdvertisementPosCtrl:OnClick_backBtn()
-    UIPage.ClosePage();
+function AdvertisementPosCtrl:OnClick_backBtn(ins)
+    ins:Hide()
+end
+function  AdvertisementPosCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function AdvertisementPosCtrl:Close()
+    UIPanel.Close(self)
 end
 
 

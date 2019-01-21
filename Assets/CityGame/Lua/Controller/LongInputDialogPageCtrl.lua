@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 14:50
 ---长字段输入弹窗
-LongInputDialogPageCtrl = class('LongInputDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(LongInputDialogPageCtrl) --注册打开的方法
+LongInputDialogPageCtrl = class('LongInputDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(LongInputDialogPageCtrl) --注册打开的方法
 
 function LongInputDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function LongInputDialogPageCtrl:bundleName()
@@ -15,7 +15,7 @@ function LongInputDialogPageCtrl:bundleName()
 end
 
 function LongInputDialogPageCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function LongInputDialogPageCtrl:Awake(go)

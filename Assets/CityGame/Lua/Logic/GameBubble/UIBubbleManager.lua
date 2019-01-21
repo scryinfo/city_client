@@ -32,8 +32,8 @@ function UIBubbleManager.OnCreate()
 end
 
 function UIBubbleManager._preLoadGroundAucObj()
-    local prefab = UnityEngine.Resources.Load(UIBubbleManager.BubbleParentObjPath)
-    this.BubbleParent = UnityEngine.GameObject.Instantiate(prefab)
+    this.prefab = UnityEngine.Resources.Load(UIBubbleManager.BubbleParentObjPath)
+    this.BubbleParent = UnityEngine.GameObject.Instantiate(this.prefab)
 end
 
 function UIBubbleManager._addListener()
@@ -66,7 +66,9 @@ function UIBubbleManager.startBubble()
         this.startFlowCam = true
         this.BubbleParent.transform:SetParent(UIRoot.getBubbleRoot().transform)
         this.BubbleParent.transform.localScale = Vector3.one
-        this.BubbleParent.transform:GetComponent("RectTransform").anchoredPosition = Vector2.zero
+        local rect = this.BubbleParent.transform:GetComponent("RectTransform")
+        rect.anchoredPosition = Vector2.zero
+        rect.sizeDelta = this.prefab.transform:GetComponent("RectTransform").sizeDelta
     end
 end
 

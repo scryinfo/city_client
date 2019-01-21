@@ -16,11 +16,11 @@ ExchangeRecordTitleType =
     CityRecord = 3,
 }
 
-ExchangeCtrl = class('ExchangeCtrl',UIPage)
-UIPage:ResgisterOpen(ExchangeCtrl)
+ExchangeCtrl = class('ExchangeCtrl',UIPanel)
+UIPanel:ResgisterOpen(ExchangeCtrl)
 
 function ExchangeCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ExchangeCtrl:bundleName()
@@ -28,12 +28,9 @@ function ExchangeCtrl:bundleName()
 end
 
 function ExchangeCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
     --关闭面板
-    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    LuaBehaviour:AddClick(ExchangePanel.backBtn.gameObject, function()
-        UIPage.ClosePage()
-    end )
+
 end
 
 function ExchangeCtrl:Awake(go)
@@ -65,6 +62,11 @@ function ExchangeCtrl:Awake(go)
     ExchangePanel.cityRecordToggle.onValueChanged:AddListener(function (isOn)
         self:_cityRecordToggleValueChange(isOn)
     end)
+
+    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    LuaBehaviour:AddClick(ExchangePanel.backBtn.gameObject, function()
+        UIPanel.ClosePage()
+    end )
     --ExchangePanel.cityRecordDropfresh.mOnDropfresh = self._cityRecordDropfresh
     --ExchangePanel.cityRecordDropfresh.mOnDropfresh:InitDropFresh(0.75)
 
@@ -87,7 +89,11 @@ function ExchangeCtrl:Awake(go)
 end
 
 function ExchangeCtrl:Refresh()
+    self:_addListener()
     self:_initPanelData()
+end
+function ExchangeCtrl:Hide()
+    self:_removeListener()
 end
 
 function ExchangeCtrl:Close()
@@ -109,15 +115,20 @@ function ExchangeCtrl:_addListener()
     Event.AddListener("c_onReceiveExchangeMyDealLog", self._getTransactionRecord, self)
     Event.AddListener("c_onReceiveExchangeAllDealLog", self._getCityRecord, self)
     Event.AddListener("c_onReceiveExchangeDeal", self._getCityRecord, self)
-
 end
 function ExchangeCtrl:_removeListener()
-    --Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.RemoveListener("c_onExchangeSort", self._exchangeSortByValue, self)
+    Event.RemoveListener("c_onChangeCollectState", self._changeCollectState, self)
+    Event.RemoveListener("c_onExchangeOrderCanel", self._deleteOrder, self)
+
+    Event.RemoveListener("c_onReceiveExchangeItemList", self.c_onReceiveExchangeItemList, self)
+    Event.RemoveListener("c_onReceiveExchangeMyOrder", self._getEntrustmentRecord, self)
+    Event.RemoveListener("c_onReceiveExchangeMyDealLog", self._getTransactionRecord, self)
+    Event.RemoveListener("c_onReceiveExchangeAllDealLog", self._getCityRecord, self)
+    Event.RemoveListener("c_onReceiveExchangeDeal", self._getCityRecord, self)
 end
 
 function ExchangeCtrl:_initPanelData()
-    self:_addListener()
-
     --设置默认行情打开
     ExchangePanel._quotesToggleState(true)
     ExchangePanel._collectToggleState(false)

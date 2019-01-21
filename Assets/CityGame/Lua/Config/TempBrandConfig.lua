@@ -1,4 +1,4 @@
-TempGrandConfig = {	
+TempBrandConfig = {
 	[1400001] =  81250,
 	[1400002] =  81250,
 	[1400003] =  81250,

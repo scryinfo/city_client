@@ -10,7 +10,7 @@ require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
 function LoginCtrl:initialize()
 	UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 
-	--self.logined = false
+	self.logined = false
 	--self.offset.y = -200
 
 	--self.uiPath = "Login"
@@ -35,11 +35,6 @@ function LoginCtrl:Awake(go)
 end
 
 function LoginCtrl:Active()
-	--显示界面
-	--UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-
-	--self.logined = false
-	--self.offset.y = -200
 
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
@@ -57,9 +52,9 @@ end
 function LoginCtrl:Refresh()
 	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
-	if self.m_data ~= nil then
-		--self:setPosition(self.m_data.x,self.m_data.y)
-	end
+	--if self.m_data ~= nil then
+	--	self:setPosition(self.m_data.x,self.m_data.y)
+	--end
 end
 
 function LoginCtrl:Hide()

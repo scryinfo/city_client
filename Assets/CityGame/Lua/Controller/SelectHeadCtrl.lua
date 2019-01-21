@@ -18,12 +18,16 @@ function SelectHeadCtrl:initialize()
     --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
     UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
+function SelectHeadCtrl:Awake()
+    selectHeadBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    selectHeadBehaviour:AddClick(SelectHeadPanel.okBtn,self.OnOkBtn,self)
+
+    self.initData()
+end
+
 
 function SelectHeadCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    selectHeadBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    selectHeadBehaviour:AddClick(SelectHeadPanel.okBtn,self.OnOkBtn,self)
-    self.initData()
 end
 
 --初始化

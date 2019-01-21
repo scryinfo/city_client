@@ -48,6 +48,15 @@ function ServerListCtrl:Hide()
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
 
+function ServerListCtrl:Close()
+    --if self.server ~= nil then
+    --    for i, v in pairs(self.server) do
+    --        destroy(v.prefab.gameObject)
+    --    end
+    --    self.server = {}
+    --end
+end
+
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
 

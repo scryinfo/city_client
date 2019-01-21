@@ -5,7 +5,6 @@ CreateRoleCtrl = class('CreateRoleCtrl',UIPanel)
 UIPanel:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
-local gameObject;
 local gender = nil;
 
 function  CreateRoleCtrl:bundleName()
@@ -23,20 +22,30 @@ end
 
 function CreateRoleCtrl:Awake()
     self.insId = OpenModelInsID.CreateRoleCtrl
+
+    createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
+    createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
+    createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+
+end
+
+function CreateRoleCtrl:Active()
+    Event.AddListener("c_SameName",self.c_SameName,self)
 end
 
 function CreateRoleCtrl:_initInsData()
     DataManager.OpenDetailModel(CreateRoleModel,self.insId )
 
 end
+
+function CreateRoleCtrl:Hide()
+    Event.RemoveListener("c_SameName",self.c_SameName,self)
+end
+
 function CreateRoleCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
 
-    Event.AddListener("c_SameName",self.c_SameName,self)
 end
 
 --创建角色

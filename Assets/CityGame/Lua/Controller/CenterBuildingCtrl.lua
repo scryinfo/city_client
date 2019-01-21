@@ -20,11 +20,19 @@ end
 
 function CenterBuildingCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
+
+end
+
+function CenterBuildingCtrl:Awake()
     centerBuildingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.bg,self.OnBg,self)
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.cityInfo,self.OnCityInfo,self)
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.centerWarehouse,self.OnCenterWarehouse,self)
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.technology,self.OnTechnology,self)
+end
+
+function CenterBuildingCtrl:Hide()
+    UIPanel.Hide()
 end
 
 function CenterBuildingCtrl:OnBg()

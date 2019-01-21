@@ -58,8 +58,8 @@ function LoginCtrl:Refresh()
 end
 
 function LoginCtrl:Hide()
-	UIPanel.Hide(self)
-	self:Close()
+	UIPanel.Hide()
+	self:close()
 end
 
 function LoginCtrl:_initData()
@@ -81,7 +81,7 @@ function LoginCtrl:OnCreate(go)
 end
 
 --关闭事件--
-function LoginCtrl:Close()
+function LoginCtrl:close()
 	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
 	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);

@@ -32,6 +32,9 @@ function GameMainInterfaceCtrl:Active()
 end
 
 function GameMainInterfaceCtrl:Hide()
+
+    UIPanel.Hide()
+
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_openBuildingInfo", self.c_openBuildingInfo,self)

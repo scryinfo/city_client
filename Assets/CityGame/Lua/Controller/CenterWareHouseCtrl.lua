@@ -33,6 +33,11 @@ end
 
 function CenterWareHouseCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
+
+end
+
+function CenterWareHouseCtrl:Awake()
+    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     isShowList = false;
     switchIsShow = false;
 
@@ -50,7 +55,13 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
 
     CenterWareHousePanel.tipText.text = 0
+    isSelect = true;
+    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
+    self.insId = OpenModelInsID.CenterWareHouseCtrl
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+end
 
+function CenterWareHouseCtrl:Active()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
@@ -59,15 +70,18 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_transport",self.c_transport,self);
     Event.AddListener("c_DelItem",self.c_DelItem,self);
     --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
-
 end
 
-function CenterWareHouseCtrl:Awake()
-    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    isSelect = true;
-    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
-    self.insId = OpenModelInsID.CenterWareHouseCtrl
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+function CenterWareHouseCtrl:Hide()
+    UIPanel.Hide()
+    Event.RemoveListener("c_GsExtendBag",self.c_GsExtendBag,self);
+    Event.RemoveListener("c_OnDelete",self.c_OnDelete,self);
+    Event.RemoveListener("c_OnBGItem",self.c_OnBGItem,self);
+    Event.RemoveListener("c_OnTransportBG",self.c_OnTransportBG,self);
+    Event.RemoveListener("c_OnxBtn",self.c_OnxBtn,self);
+    Event.RemoveListener("c_transport",self.c_transport,self);
+    Event.RemoveListener("c_DelItem",self.c_DelItem,self);
+    --Event.RemoveListener("c_DeleteItem",self.c_DeleteItem,self);
 end
 
 --初始化

@@ -42,7 +42,7 @@ function ServerListCtrl:Refresh()
 end
 
 function ServerListCtrl:Hide()
-    UIPanel.Hide(self)
+    UIPanel.Hide()
     --注销事件
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);

@@ -3,9 +3,8 @@
 --- Created by password.
 --- DateTime: 2018/11/15 14:55
 ---没有信息
-NoMessageCtrl = class('NoMessageCtrl',UIPage)
-UIPage:ResgisterOpen(NoMessageCtrl) --注册打开的方法
-local gameObject;
+NoMessageCtrl = class('NoMessageCtrl',UIPanel)
+UIPanel:ResgisterOpen(NoMessageCtrl) --注册打开的方法
 local NoMessageBehaviour
 
 
@@ -14,18 +13,27 @@ function  NoMessageCtrl:bundleName()
 end
 
 function NoMessageCtrl:initialize()
-    --UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 --启动事件--
 function NoMessageCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
-    self:_initData();
+    UIPanel.OnCreate(self,obj)
 
+end
+
+function NoMessageCtrl:Awake()
     NoMessageBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     NoMessageBehaviour:AddClick(NoMessagePanel.bgBtn,self.OnBgBtn,self)
     NoMessageBehaviour:AddClick(NoMessagePanel.xBtn,self.OnXBtn,self);
+
+    self:_initData();
+
+end
+
+function NoMessageCtrl:Hide()
+    UIPanel.Hide()
 end
 
 --初始化
@@ -35,10 +43,10 @@ end
 
 --点击空白背景
 function NoMessageCtrl:OnBgBtn()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 
 --点击删除
 function NoMessageCtrl:OnXBtn()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end

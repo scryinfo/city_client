@@ -30,26 +30,28 @@ end
 --启动事件--
 function GameNoticeCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    self:_initData();
-    self.NoticeMgr = NoticeMgr:new()
-
-    GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
-    GameNoticeBehaviour:AddClick(GameNoticePanel.xBtn,self.OnXBtn,self);
-    GameNoticeBehaviour:AddClick(GameNoticePanel.delete,self.OnDelete,self);
-    GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
-    GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
-
-
-    Event.AddListener("c_onBg",self.c_onBg,self)
-    Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
-    Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)
 
 end
 
 function GameNoticeCtrl:Awake()
     self.insId = OpenModelInsID.GameNoticeCtrl
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
+    GameNoticeBehaviour:AddClick(GameNoticePanel.xBtn,self.OnXBtn,self);
+    GameNoticeBehaviour:AddClick(GameNoticePanel.delete,self.OnDelete,self);
+    GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
+    GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
+
+    self:_initData();
+
+    self.NoticeMgr = NoticeMgr:new()
     --self:_addListener()
+end
+
+function GameNoticeCtrl:Active()
+    Event.AddListener("c_onBg",self.c_onBg,self)
+    Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
+    Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)
 end
 
 function GameNoticeCtrl:Refresh()
@@ -62,6 +64,13 @@ function GameNoticeCtrl:Refresh()
         NoticeMgr.notice[goId].newBg:SetActive(true)
         bg =  NoticeMgr.notice[goId].newBg
     end
+end
+
+function GameNoticeCtrl:Hide()
+    UIPanel.Hide()
+    Event.RemoveListener("c_onBg",self.c_onBg,self)
+    Event.RemoveListener("c_OnMailRead",self.c_OnMailRead,self)
+    Event.RemoveListener("c_OnDeleMails",self.c_OnDeleMails,self)
 end
 
 function GameNoticeCtrl:initializeData()

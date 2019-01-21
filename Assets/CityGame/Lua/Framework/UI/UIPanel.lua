@@ -107,6 +107,10 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
     if UIPanel.static.m_instancePageNodes == nil then
         UIPanel.static.m_instancePageNodes = {}
     end
+    --如果打开的是普通界面，隐藏跟之前的界面
+    if pageInstance.type == UIType.Normal then
+        UIPanel.HideOldPage()
+    end
     --将界面压入栈内
     if inClass ~= nil then
         local tempPageNode  = {}
@@ -115,6 +119,19 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
         tempPageNode.pageType = pageInstance.type   --界面实例的层级类型
         tempPageNode.pageData = pageData            --界面实例的实例数据（重要）
         table.insert(UIPanel.static.m_instancePageNodes,tempPageNode)
+    end
+end
+
+--隐藏之前界面
+function UIPanel.HideOldPage()
+    local insNodes  = UIPanel.static.m_instancePageNodes
+    local nodeCount = #insNodes
+    while (nodeCount >= 1 ) do
+        insNodes[nodeCount].page:Hide()
+        if insNodes[nodeCount].pageType == UIType.Normal then
+            break
+        end
+        nodeCount = nodeCount -1
     end
 end
 

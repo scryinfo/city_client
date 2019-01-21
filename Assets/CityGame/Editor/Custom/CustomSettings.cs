@@ -198,6 +198,7 @@ public static class CustomSettings
 
         //City
         _GT(typeof(City.NetworkInterface)),
+        _GT(typeof(City.NetworkInterface.ConnectState)),
         _GT(typeof(City.MemoryStream)),
         _GT(typeof(City.CityLuaUtil)),        
         _GT(typeof(City.CityTest)),

@@ -47,7 +47,7 @@ end
 --返回
 function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
-    UIPanel.BackToPage(GameMainInterfaceCtrl)
+    UIPanel.CloseAllPageExceptMain()
 end
 
 --返回
@@ -64,7 +64,7 @@ function StopAndBuildCtrl:OnClick_remove(ins)
     data.callback=function() Event.Brocast("m_delBuilding",ins.m_data.id )
         Event.Brocast("SmallPop","Success",300)
         DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
-        UIPanel.BackToPage(GameMainInterfaceCtrl)
+        UIPanel.CloseAllPageExceptMain()
     end
     ct.OpenCtrl('ReminderCtrl',data)
 end

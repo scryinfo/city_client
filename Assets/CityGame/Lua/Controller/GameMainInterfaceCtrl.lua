@@ -328,7 +328,6 @@ end
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ScienceSellHallCtrl")
-
 end
 
 --指南书--

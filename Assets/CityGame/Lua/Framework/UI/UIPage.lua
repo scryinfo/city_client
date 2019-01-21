@@ -7,6 +7,7 @@
 require('Framework/UI/UIRoot')
 local typeof = tolua.typeof
 local UIRoot = UIRoot
+--[[
 UIType = {
     Bubble = 0,     --气泡
     Normal =1 ,
@@ -29,7 +30,7 @@ UICollider =
     Normal=2,    --碰撞透明背景
     WithBg=3,    -- 碰撞非透明背景
 }
-
+--]]
 UIPage = class('UIPage') --this is the same as class('UIPage', Object) or Object:subclass('UIPage') 没有基类的类，默认基类是Object，不需要写而已
 UIPage.static.m_allPages={}
 UIPage.static.allPages={}

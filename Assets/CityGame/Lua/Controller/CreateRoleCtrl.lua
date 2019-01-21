@@ -31,6 +31,7 @@ function CreateRoleCtrl:Awake()
 end
 
 function CreateRoleCtrl:Active()
+    UIPanel:Active(self)
     Event.AddListener("c_SameName",self.c_SameName,self)
 end
 

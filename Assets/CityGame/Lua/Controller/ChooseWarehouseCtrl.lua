@@ -64,6 +64,7 @@ function ChooseWarehouseCtrl:Refresh()
 end
 
 function ChooseWarehouseCtrl:Active()
+    UIPanel:Active(self)
     Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
     Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
     Event.AddListener("c_Transport",self.c_Transport,self)

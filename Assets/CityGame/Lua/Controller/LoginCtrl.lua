@@ -35,7 +35,7 @@ function LoginCtrl:Awake(go)
 end
 
 function LoginCtrl:Active()
-
+	UIPanel:Active(self)
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
 	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);

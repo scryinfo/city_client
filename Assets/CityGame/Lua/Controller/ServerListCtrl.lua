@@ -30,6 +30,7 @@ function ServerListCtrl:Awake()
 end
 
 function ServerListCtrl:Active()
+    UIPanel:Active(self)
     --普通消息注册
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);

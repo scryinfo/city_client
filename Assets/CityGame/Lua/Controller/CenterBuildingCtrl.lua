@@ -31,6 +31,10 @@ function CenterBuildingCtrl:Awake()
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.technology,self.OnTechnology,self)
 end
 
+function CenterBuildingCtrl:Active()
+    UIPanel:Active(self)
+end
+
 function CenterBuildingCtrl:Hide()
     UIPanel.Hide(self)
 end

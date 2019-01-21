@@ -32,6 +32,10 @@ function NoMessageCtrl:Awake()
 
 end
 
+function NoMessageCtrl:Active()
+    UIPanel:Active(self)
+end
+
 function NoMessageCtrl:Hide()
     UIPanel.Hide(self)
 end

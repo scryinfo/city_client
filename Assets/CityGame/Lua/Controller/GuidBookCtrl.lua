@@ -20,10 +20,10 @@ function GuidBookCtrl:initialize()
 end
 
 function GuidBookCtrl:Awake(obj)
+    self.gameObject=obj
 end
 
 function GuidBookCtrl:OnCreate(obj)
-    self.gameObject=obj
     GuidBookPanel.Awake(obj)
     luaBehaviour =obj.transform:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Hide,self)

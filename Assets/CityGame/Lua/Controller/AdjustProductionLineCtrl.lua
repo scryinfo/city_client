@@ -29,6 +29,7 @@ function AdjustProductionLineCtrl:Awake(go)
 
 end
 function AdjustProductionLineCtrl:Active()
+    UIPanel.Active(self)
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     --Event.AddListener("refreshTime",self.refreshTime,self)
@@ -65,6 +66,9 @@ function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo();
     --go:deleteTempTable();
     UIPanel.ClosePage()
+end
+function AdjustProductionLineCtrl:Close()
+    UIPanel.Close(self)
 end
 function AdjustProductionLineCtrl:Hide()
     Event.RemoveListener("calculateTime",self.calculateTime,self)

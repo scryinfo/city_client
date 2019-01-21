@@ -38,6 +38,7 @@ function ShelfCtrl:Awake(go)
     switchIsShow = false;
 end
 function ShelfCtrl:Active()
+    UIPanel.Active(self)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);

@@ -73,7 +73,7 @@ end
 
 --返回
 function MunicipalCtrl:OnClick_backBtn(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 
     if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then
         Event.Brocast("m_stopListenBuildingDetailInform",MunicipalPanel.buildingId)

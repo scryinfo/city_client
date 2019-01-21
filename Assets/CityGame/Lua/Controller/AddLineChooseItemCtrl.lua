@@ -34,11 +34,11 @@ function AddLineChooseItemCtrl:Refresh()
     self:_initData()
 end
 function AddLineChooseItemCtrl:Active()
-    UIPanel.Active()
+    UIPanel:Active()
     self:_addListener()
 end
 function AddLineChooseItemCtrl:Hide()
-    UIPanel.Hide()
+    UIPanel:Hide()
     self:_removeListener()
 end
 function AddLineChooseItemCtrl:_addListener()

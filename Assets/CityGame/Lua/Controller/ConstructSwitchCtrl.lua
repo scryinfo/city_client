@@ -6,10 +6,10 @@
 -----
 
 ConstructSwitchCtrl = class('ConstructSwitchCtrl',UIPanel)
-UIPage:ResgisterOpen(ConstructSwitchCtrl)
+UIPanel:ResgisterOpen(ConstructSwitchCtrl)
 
 function ConstructSwitchCtrl:initialize()
-    UIPage.initialize(self, UIType.Bubble, UIMode.DoNothing, UICollider.None)
+    UIPanel.initialize(self, UIType.Bubble, UIMode.DoNothing, UICollider.None)
 end
 
 function ConstructSwitchCtrl:bundleName()
@@ -17,27 +17,31 @@ function ConstructSwitchCtrl:bundleName()
 end
 
 function ConstructSwitchCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
     --关闭面板
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_confirm.gameObject, function()
-        --TODO：确认建造
-        ct.log("Allen_wk13","确认建造")
+        --确认建造
+        --ct.log("Allen_wk13","确认建造")
         Event.Brocast("m_constructBuildConfirm")
         Event.Brocast("m_abolishConstructBuild")
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
-        --TODO：取消建造
-        ct.log("Allen_wk13","取消建造")
+        --取消建造
+        --ct.log("Allen_wk13","取消建造")
         Event.Brocast("m_abolishConstructBuild")
     end );
 end
 
 function ConstructSwitchCtrl:Awake(go)
     self.gameObject = go
-    Event.AddListener("m_abolishConstructBuild", self.Hide, self);
-    Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self);
-    Event.AddListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self);
+end
+
+function ConstructSwitchCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("m_abolishConstructBuild", self.Hide, self)
+    Event.AddListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self)
+    Event.AddListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self)
 end
 
 function ConstructSwitchCtrl:Refresh()
@@ -70,13 +74,16 @@ function ConstructSwitchCtrl:MoveBtnNodePosition()
 end
 
 function ConstructSwitchCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
     TerrainManager.AbolishConstructBuild()
+    Event.RemoveListener("m_abolishConstructBuild", self.Hide, self)
+    Event.RemoveListener("m_constructBuildGameObjectMove", self.MoveBtnNodePosition, self)
+    Event.RemoveListener("m_constructBuildConfirm", self.ConstructBuildConfirm, self)
 end
 
 --确认建造建筑
 function ConstructSwitchCtrl:ConstructBuildConfirm()
-    --TODO：向服务器发送建造数据
+    --向服务器发送建造数据
     if DataManager.TempDatas.constructID ~= nil then
         local tempPos = DataManager.TempDatas.constructObj.transform.position
         PlayerTempModel.m_ReqAddBuilding(DataManager.TempDatas.constructID, math.floor(tempPos.x) ,  math.floor(tempPos.z))

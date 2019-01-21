@@ -4,12 +4,12 @@
 --- DateTime: 2019/1/15 15:28
 ---
 
-CompanyCtrl = class("CompanyCtrl", UIPage)
-UIPage:ResgisterOpen(CompanyCtrl)
+CompanyCtrl = class("CompanyCtrl", UIPanel)
+UIPanel:ResgisterOpen(CompanyCtrl)
 
 function CompanyCtrl:initialize()
     ct.log("tina_w22_friends", "CompanyCtrl:initialize()")
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function CompanyCtrl:bundleName()
@@ -19,7 +19,7 @@ end
 
 function CompanyCtrl:OnCreate(obj)
     ct.log("tina_w22_friends", "CompanyCtrl:OnCreate()")
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function CompanyCtrl:Awake()
@@ -31,9 +31,6 @@ function CompanyCtrl:Awake()
     self.businessRecordsSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.businessRecordsSource.mProvideData = CompanyCtrl.static.businessRecordsData
     self.businessRecordsSource.mClearData = CompanyCtrl.static.businessRecordsClearData
-
-
-
     --this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil)
 end
 
@@ -57,14 +54,26 @@ function CompanyCtrl:_allItemType()
 end
 
 function CompanyCtrl:OnBack(go)
-    go:_removeListener()
-    go:Hide()
+    --go:_removeListener()
+    --go:Hide()
+    UIPanel.ClosePage()
+end
+
+-- 注册监听事件
+function CompanyCtrl:Active()
+    UIPanel.Active(self)
+    self:_addListener()
 end
 
 function CompanyCtrl:Refresh()
     self:_allItemType()
-    self:_addListener()
+    --self:_addListener()
     self:_updateData()
+end
+
+function CompanyCtrl:Hide()
+    self:_removeListener()
+    UIPanel.Hide(self)
 end
 
 -- 监听Model层网络回调

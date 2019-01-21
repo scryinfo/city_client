@@ -4,12 +4,12 @@
 --- DateTime: 2018/12/14 10:05
 ---
 
-ChatCtrl = class('ChatCtrl', UIPage)
-UIPage:ResgisterOpen(ChatCtrl)
+ChatCtrl = class('ChatCtrl', UIPanel)
+UIPanel:ResgisterOpen(ChatCtrl)
 
 function ChatCtrl:initialize()
     ct.log("tina_w9_friends", "ChatCtrl:initialize")
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ChatCtrl:bundleName()
@@ -20,7 +20,7 @@ end
 function ChatCtrl:OnCreate(go)
     ct.log("tina_w9_friends", "ChatCtrl:OnCreate")
     --调用基类方法处理实例的数据
-    UIPage.OnCreate(self, go)
+    UIPanel.OnCreate(self, go)
 end
 
 
@@ -41,7 +41,8 @@ function ChatCtrl:Awake(go)
         ChatCtrl.static.chatMgr:DestroyContentChildren(2)
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
         ChatCtrl.static.chatMgr:SetToggle()
-        UIPage.ClosePage()
+        --UIPage.ClosePage()
+        UIPanel.ClosePage()
     end)
 
     --ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backChatBtn, self.OnBackChat, self)
@@ -75,19 +76,22 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.chatMgr:CreateExpression()
 end
 
+-- 注册监听事件
+function ChatCtrl:Active()
+    UIPanel.Active(self)
+    self:_addListener()
+end
+
 -- 刷新
 function ChatCtrl:Refresh()
     ct.log("tina_w9_friends", "ChatCtrl:Refresh")
     self:initInsData()
-    self:_addListener()
+    --self:_addListener()
+    self:_refreshState()
 end
 
 function ChatCtrl:initInsData()
     DataManager.OpenDetailModel(ChatModel, OpenModelInsID.ChatCtrl)
-end
-
-function ChatCtrl:Close()
-
 end
 
 --function ChatCtrl:AddListenerScrollView(index, isListener)
@@ -126,12 +130,14 @@ function ChatCtrl:_addListener()
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveRoleStatusChange", self.c_OnReceiveRoleStatusChange, self)
 
-    self:_refreshData()
+    --self:_refreshData()
 end
 
 function ChatCtrl:Hide()
     self:_removeListener()
-    UIPage.Hide(self)
+    --UIPanel.Hide(self)
+    --UIPanel:Hide()
+    UIPanel.Hide(self)
 end
 
 function ChatCtrl:_removeListener()
@@ -143,9 +149,9 @@ function ChatCtrl:_removeListener()
 end
 
 -- 获取界面数据
-function ChatCtrl:_refreshData()
-    self:_refreshState()
-end
+--function ChatCtrl:_refreshData()
+--    self:_refreshState()
+--end
 
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()

@@ -19,20 +19,20 @@ local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
 local class = require 'Framework/class'
-CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
-UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
+CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPanel)
+UIPanel:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
     return "Assets/CityGame/Resources/View/CenterWareHousePanel.prefab"
 end
 
 function CenterWareHouseCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function CenterWareHouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
     isShowList = false;
     switchIsShow = false;
 
@@ -153,7 +153,7 @@ function CenterWareHouseCtrl:c_OnBackBtn()
         CenterWareHouseCtrl:c_transportCloseBtn()
     end
     WareHouseGoodsMgr:ClearAllItem()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 
 function CenterWareHouseCtrl:Refresh()

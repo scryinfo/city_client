@@ -3,8 +3,8 @@
 --- Created by password.
 --- DateTime: 2018/11/13 14:31
 ---通知
-GameNoticeCtrl = class('GameNoticeCtrl',UIPage)
-UIPage:ResgisterOpen(GameNoticeCtrl) --注册打开的方法
+GameNoticeCtrl = class('GameNoticeCtrl',UIPanel)
+UIPanel:ResgisterOpen(GameNoticeCtrl) --注册打开的方法
 local gameObject;
 local GameNoticeBehaviour
 local bg = nil
@@ -23,13 +23,13 @@ function  GameNoticeCtrl:bundleName()
 end
 
 function GameNoticeCtrl:initialize()
-    --UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 --启动事件--
 function GameNoticeCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
     self:_initData();
     self.NoticeMgr = NoticeMgr:new()
 
@@ -82,7 +82,7 @@ end
 function GameNoticeCtrl:OnBgBtn()
     bg = nil
     NoticeMgr:_dleNotice()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 
 --点击xbutton
@@ -187,7 +187,7 @@ function GameNoticeCtrl:_deleteNotice(go)
     -- ]]
     id = nil
     if NoticeMgr.notice == nil then
-        UIPage.ClosePage();
+        UIPanel.ClosePage();
         ct.OpenCtrl("NoMessageCtrl")
     end
     bg = nil

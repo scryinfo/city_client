@@ -1,12 +1,11 @@
 -----
 -----
 
-ServerListCtrl = class('ServerListCtrl',UIPage)
-UIPage:ResgisterOpen(ServerListCtrl)
+ServerListCtrl = class('ServerListCtrl',UIPanel)
+UIPanel:ResgisterOpen(ServerListCtrl)
 ServerListCtrl.static.Server_PATH = "View/GoodsItem/ServerItem";
 
 local serverListBehaviour;
-local gameObject;
 local tempBg = nil;
 local tempTag = nil;
 local Index = nil
@@ -16,16 +15,37 @@ function  ServerListCtrl:bundleName()
 end
 
 function ServerListCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function ServerListCtrl:Awake()
     self.insId = OpenModelInsID.ServerListCtrl
+    self.data = self.m_data
+
+    serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
+
+    self:_initData();
+end
+
+function ServerListCtrl:Active()
+    --普通消息注册
+    Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.AddListener("c_OnServer",self.c_OnServer,self)
+
 end
 
 function ServerListCtrl:Refresh()
     self:_initInsData()
+end
+
+function ServerListCtrl:Hide()
+    --注销事件
+    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
 
 function ServerListCtrl:_initInsData()
@@ -34,17 +54,7 @@ function ServerListCtrl:_initInsData()
 end
 
 function ServerListCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
-    self.data = self.m_data
-    serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
-
-    self:_initData();
-
-    --普通消息注册
-    Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-    Event.AddListener("c_OnServer",self.c_OnServer,self)
+    UIPanel.OnCreate(self,obj)
 
  end
 
@@ -84,15 +94,15 @@ function ServerListCtrl:c_OnOK(go)
 end
 
 function ServerListCtrl:c_GsCreateRole()
-    UIPage:ClearAllPages()
+    UIPanel:ClearAllPages()
     ct.OpenCtrl("SelectHeadCtrl")
 end
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    UIPage:ClearAllPages()---------------------
-    --UIPage:ShowPage(GameMainInterfaceCtrl)
+    UIPanel:ClearAllPages()---------------------
+    --UIPanel:ShowPage(GameMainInterfaceCtrl)
     ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
-    --UIPage:ShowPage(TopBarCtrl)
-    --UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
+    --UIPanel:ShowPage(TopBarCtrl)
+    --UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")
 end
 --生成预制
 function ServerListCtrl:_createServerPab(path,parent)

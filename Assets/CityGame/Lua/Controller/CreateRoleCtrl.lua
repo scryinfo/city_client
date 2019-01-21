@@ -1,8 +1,8 @@
 -----
 -----
 
-CreateRoleCtrl = class('CreateRoleCtrl',UIPage)
-UIPage:ResgisterOpen(CreateRoleCtrl)
+CreateRoleCtrl = class('CreateRoleCtrl',UIPanel)
+UIPanel:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
 local gameObject;
@@ -13,8 +13,8 @@ function  CreateRoleCtrl:bundleName()
 end
 
 function CreateRoleCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function CreateRoleCtrl:Refresh()
@@ -30,7 +30,7 @@ function CreateRoleCtrl:_initInsData()
 
 end
 function CreateRoleCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
     createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
     createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)

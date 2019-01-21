@@ -1,5 +1,5 @@
-ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
-UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
+ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPanel);
+UIPanel:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 
 --排序type
 ChooseWarehouseSortItemType = {
@@ -15,7 +15,7 @@ local chooseWarehouse
 local hide
 
 function ChooseWarehouseCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ChooseWarehouseCtrl:bundleName()
@@ -23,7 +23,7 @@ function ChooseWarehouseCtrl:bundleName()
 end
 
 function ChooseWarehouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
     chooseWarehouse:AddClick(ChooseWarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
@@ -122,7 +122,7 @@ function ChooseWarehouseCtrl:OnClick_returnBtn()
     ChooseWarehouseCtrl:_removeListener()
     WareHouseGoodsMgr:_clear()
 
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 --搜索
 function ChooseWarehouseCtrl:OnClick_searchBtn()

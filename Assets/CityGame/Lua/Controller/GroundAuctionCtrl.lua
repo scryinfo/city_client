@@ -7,7 +7,7 @@ GroundAuctionCtrl = class('GroundAuctionCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundAuctionCtrl)
 
 function GroundAuctionCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.DoNothing, UICollider.None)
 end
 
 function GroundAuctionCtrl:bundleName()

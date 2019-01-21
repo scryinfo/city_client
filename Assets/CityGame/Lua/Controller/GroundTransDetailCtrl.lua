@@ -15,7 +15,7 @@ GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransDetailCtrl)
 
 function GroundTransDetailCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransDetailCtrl:bundleName()

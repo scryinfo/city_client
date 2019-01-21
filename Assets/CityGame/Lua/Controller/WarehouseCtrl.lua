@@ -81,7 +81,8 @@ function WarehouseCtrl:Refresh()
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo()
-    UIPanel:Close()
+    --UIPanel:Close()
+    UIPanel:ClosePage()
     if switchIsShow then
         go:OnClick_rightInfo(not switchIsShow,1)
     end

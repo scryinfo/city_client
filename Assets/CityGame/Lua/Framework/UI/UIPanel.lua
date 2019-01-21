@@ -142,7 +142,7 @@ function UIPanel:OnCreate(obj)
     if self.gameObject == nil then
         local go = ct.InstantiatePrefab(obj)
         go.layer = LayerMask.NameToLayer("UI")
-        UnityEngine.GameObject.AddComponent(go, LuaHelper.GetType("LuaFramework.LuaBehaviour"))
+        UnityEngine.GameObject.AddComponent(go, typeof(LuaFramework.LuaBehaviour))
         self.gameObject = go
         assert(go, "system","[UIPanel.Show] "," 没有找到资源： ",uiPath)
         if go == nil then

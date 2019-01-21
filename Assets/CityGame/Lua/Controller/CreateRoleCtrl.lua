@@ -1,11 +1,10 @@
 -----
 -----
 
-CreateRoleCtrl = class('CreateRoleCtrl',UIPage)
-UIPage:ResgisterOpen(CreateRoleCtrl)
+CreateRoleCtrl = class('CreateRoleCtrl',UIPanel)
+UIPanel:ResgisterOpen(CreateRoleCtrl)
 
 local createRoleBehaviour;
-local gameObject;
 local gender = nil;
 
 function  CreateRoleCtrl:bundleName()
@@ -13,8 +12,8 @@ function  CreateRoleCtrl:bundleName()
 end
 
 function CreateRoleCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function CreateRoleCtrl:Refresh()
@@ -23,20 +22,31 @@ end
 
 function CreateRoleCtrl:Awake()
     self.insId = OpenModelInsID.CreateRoleCtrl
+
+    createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
+    createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
+    createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+
+end
+
+function CreateRoleCtrl:Active()
+    Event.AddListener("c_SameName",self.c_SameName,self)
 end
 
 function CreateRoleCtrl:_initInsData()
     DataManager.OpenDetailModel(CreateRoleModel,self.insId )
 
 end
-function CreateRoleCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
-    createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
 
-    Event.AddListener("c_SameName",self.c_SameName,self)
+function CreateRoleCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("c_SameName",self.c_SameName,self)
+end
+
+function CreateRoleCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+
 end
 
 --创建角色

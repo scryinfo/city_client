@@ -1,8 +1,7 @@
-GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPage)
-UIPage:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
+GameMainInterfaceCtrl = class('GameMainInterfaceCtrl',UIPanel)
+UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
-local gameObject;
 local Mails
 
 
@@ -11,28 +10,17 @@ function  GameMainInterfaceCtrl:bundleName()
 end
 
 function GameMainInterfaceCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
-    gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
+    UIPanel.OnCreate(self,obj)
 
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
+end
 
-
-
+function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
@@ -41,17 +29,20 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
+end
 
-    --local headId = DataManager.GetHeadId()
-    --local path = PlayerHead[headId].MainPath
-    --local type = ct.getType(UnityEngine.Sprite)
-    --panelMgr:LoadPrefab_A(path,type,nil,function(goodData,obj)
-    --    if obj ~= nil then
-    --        local texture = ct.InstantiatePrefab(obj)
-    --        GameMainInterfacePanel.headItem.sprite = texture
-    --    end
-    --end)
+function GameMainInterfaceCtrl:Hide()
 
+    UIPanel.Hide(self)
+
+    Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
+    Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
+    Event.RemoveListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
+    Event.RemoveListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
+    Event.RemoveListener("c_receiveOwnerDatas",self.SaveData,self)
+    Event.RemoveListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
+    Event.RemoveListener("c_AllMails",self.c_AllMails,self)
+    Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
 end
 
 --金币改变
@@ -119,7 +110,18 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 function GameMainInterfaceCtrl:Awake()
-    --獎金池
+    gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
+
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
 
     --头像
     local faceId = DataManager.GetFaceId()

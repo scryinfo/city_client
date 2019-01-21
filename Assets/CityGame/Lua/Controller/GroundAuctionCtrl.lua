@@ -183,7 +183,8 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    --if tonumber(bidPrice) < DataManager.GetMoney() then
+    --local mMoney = DataManager.GetMoney()
+    --if tonumber(bidPrice) < mMoney  then
     --    Event.Brocast("SmallPop", "您的资金不足", 300)
     --    return
     --end

@@ -3,12 +3,12 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/24 17:57
 ---
-ExchangeDetailCtrl = class('ExchangeDetailCtrl',UIPage)
-UIPage:ResgisterOpen(ExchangeDetailCtrl)
+ExchangeDetailCtrl = class('ExchangeDetailCtrl',UIPanel)
+UIPanel:ResgisterOpen(ExchangeDetailCtrl)
 ExchangeDetailCtrl.static.level1TotalTime = 3600  --第一档的时间间隔
 
 function ExchangeDetailCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function ExchangeDetailCtrl:bundleName()
@@ -16,7 +16,7 @@ function ExchangeDetailCtrl:bundleName()
 end
 
 function ExchangeDetailCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function ExchangeDetailCtrl:Awake(go)
@@ -48,7 +48,7 @@ end
 function ExchangeDetailCtrl:Hide()
     self.startTimeDown = true
     self.luaBehaviour:RemoveClick(ExchangeDetailPanel.backBtn.gameObject, self.OnClickBack, self)
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 ---添加移除监听
@@ -99,7 +99,7 @@ function ExchangeDetailCtrl:_update()
 end
 
 function ExchangeDetailCtrl:OnClickBack()
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 
 ---toggle监听

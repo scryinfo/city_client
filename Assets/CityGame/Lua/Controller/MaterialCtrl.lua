@@ -1,10 +1,10 @@
-MaterialCtrl = class('MaterialCtrl',UIPage)
-UIPage:ResgisterOpen(MaterialCtrl) --注册打开的方法
+MaterialCtrl = class('MaterialCtrl',UIPanel)
+UIPanel:ResgisterOpen(MaterialCtrl) --注册打开的方法
 
 local this
 --构建函数
 function MaterialCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function MaterialCtrl:bundleName()
@@ -12,7 +12,7 @@ function MaterialCtrl:bundleName()
 end
 
 function MaterialCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 
 function MaterialCtrl:Awake(go)
@@ -26,7 +26,9 @@ function MaterialCtrl:Awake(go)
     self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
+function MaterialCtrl:Active()
 
+end
 function MaterialCtrl:Refresh()
     this:initializeData()
 end

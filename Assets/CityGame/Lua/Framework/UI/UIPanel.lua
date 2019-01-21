@@ -43,10 +43,10 @@ UIPanel.static.MainCtrl = nil
 ---------------------------------------------------------------------------------------框架内函数不可调用/继承---------------------------------------------------------------------------------------
 
 --初始化
+
 function UIPanel:initialize()
     self:initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.Normal)
 end
-
 function UIPanel:initialize(type, mod, col)
     self.mode = mod
     self.collider = col

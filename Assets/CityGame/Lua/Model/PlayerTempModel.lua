@@ -103,9 +103,9 @@ function PlayerTempModel.Update()
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
     --    PlayerTempModel.tempTestAddGroung(11,0, 20,10)
     --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
-    --    PlayerTempModel.tempTestAddGroung(21,0, 30,10)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
+        PlayerTempModel.tempTestAddGroung(21,0, 30,10)
+    end
     --
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
     --    PlayerTempModel.tempTestAddGroung(150,150, 160,160)

@@ -57,7 +57,7 @@ function UIBubbleManager._cameraLateUpdate()
     if this.startFlowCam == nil or this.startFlowCam == false then
         return
     end
-    Event.Brocast("c_RefreshLateUpdate")
+    --Event.Brocast("c_RefreshLateUpdate")
 end
 
 --设置打开气泡模式

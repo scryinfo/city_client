@@ -4,8 +4,8 @@
 --- DateTime: 2018/12/21/021 16:28
 ---
 
-GuidBookCtrl = class('GuidBookCtrl',UIPage)
-UIPage:ResgisterOpen(GuidBookCtrl) --注册打开的方法
+GuidBookCtrl = class('GuidBookCtrl',UIPanel)
+UIPanel:ResgisterOpen(GuidBookCtrl) --注册打开的方法
 
 local luaBehaviour;
 
@@ -16,30 +16,39 @@ function  GuidBookCtrl:bundleName()
 end
 
 function GuidBookCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel:initialize(UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
---启动事件--
+function GuidBookCtrl:Awake(obj)
+end
+
 function GuidBookCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
-    luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Close,self)
+    self.gameObject=obj
+    GuidBookPanel.Awake(obj)
+    luaBehaviour =obj.transform:GetComponent('LuaBehaviour')
+    luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Hide,self)
+end
+--1.显示界面【继承父类即可，亦可自己重写过度动画】
+--2.初始化无网络数据
+--3.注册监听事件
+function GuidBookCtrl:Active()
     for name, v in pairs(GuidBookConfig) do
         local prefab  =creatGoods(self.aboutItem_Path,GuidBookPanel.buttonCon)
         AboutItem:new(prefab,luaBehaviour,name)
     end
 end
 
-
 function GuidBookCtrl:Refresh()
-
+   ct.log("system","======================刷新指南书=================")
 end
 
-function GuidBookCtrl:Close()
-    UIPage.ClosePage()
+function GuidBookCtrl:Hide()
+    UIPanel.ClosePage()
     PlayMusEff(1002)
 end
 
+function GuidBookCtrl:Close()
 
+end
 
 

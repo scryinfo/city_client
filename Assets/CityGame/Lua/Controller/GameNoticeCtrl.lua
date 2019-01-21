@@ -72,6 +72,9 @@ function GameNoticeCtrl:Hide()
     Event.RemoveListener("c_onBg",self.c_onBg,self)
     Event.RemoveListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.RemoveListener("c_OnDeleMails",self.c_OnDeleMails,self)
+
+    bg = nil
+    NoticeMgr:_dleNotice()
 end
 
 function GameNoticeCtrl:initializeData()
@@ -90,8 +93,6 @@ end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
-    bg = nil
-    NoticeMgr:_dleNotice()
     UIPanel.ClosePage();
 end
 

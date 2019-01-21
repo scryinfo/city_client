@@ -83,6 +83,12 @@ function CenterWareHouseCtrl:Hide()
     Event.RemoveListener("c_transport",self.c_transport,self);
     Event.RemoveListener("c_DelItem",self.c_DelItem,self);
     --Event.RemoveListener("c_DeleteItem",self.c_DeleteItem,self);
+
+    --清空内容
+    if not isSelect then
+        CenterWareHouseCtrl:c_transportCloseBtn()
+    end
+    WareHouseGoodsMgr:ClearAllItem()
 end
 
 --初始化
@@ -164,10 +170,6 @@ end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
-    if not isSelect then
-        CenterWareHouseCtrl:c_transportCloseBtn()
-    end
-    WareHouseGoodsMgr:ClearAllItem()
     UIPanel.ClosePage();
 end
 

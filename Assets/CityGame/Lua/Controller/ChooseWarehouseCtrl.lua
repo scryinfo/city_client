@@ -24,13 +24,6 @@ end
 
 function ChooseWarehouseCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
-
-    Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
-    Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
-    Event.AddListener("c_Transport",self.c_Transport,self)
-    Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
-    Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
-    Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
 end
 function ChooseWarehouseCtrl:Awake(go)
     self.insId = OpenModelInsID.ChooseWarehouseCtrl
@@ -52,6 +45,17 @@ function ChooseWarehouseCtrl:Awake(go)
     isShowList = false;
 end
 
+function ChooseWarehouseCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
+    Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
+    Event.AddListener("c_Transport",self.c_Transport,self)
+    Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
+    Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
+    Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
+    self:_addListener()
+end
+
 function ChooseWarehouseCtrl:Refresh()
    -- WareHouseGoodsMgr:_clear()
     hide = true
@@ -63,16 +67,6 @@ function ChooseWarehouseCtrl:Refresh()
 
 end
 
-function ChooseWarehouseCtrl:Active()
-    UIPanel.Active(self)
-    Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
-    Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
-    Event.AddListener("c_Transport",self.c_Transport,self)
-    Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
-    Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
-    Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
-end
-
 function ChooseWarehouseCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
@@ -81,6 +75,10 @@ function ChooseWarehouseCtrl:Hide()
     Event.RemoveListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
     Event.RemoveListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
     Event.RemoveListener("CreateLinePanel",self.CreateLinePanel,self)
+    self:_removeListener()
+
+    hide = false
+    WareHouseGoodsMgr:_clear()
 end
 
 function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
@@ -139,10 +137,6 @@ end
 
 --返回
 function ChooseWarehouseCtrl:OnClick_returnBtn()
-    hide = false
-    ChooseWarehouseCtrl:_removeListener()
-    WareHouseGoodsMgr:_clear()
-
     UIPanel.ClosePage();
 end
 --搜索

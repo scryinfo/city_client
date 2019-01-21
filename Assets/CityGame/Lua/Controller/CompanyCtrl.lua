@@ -4,8 +4,8 @@
 --- DateTime: 2019/1/15 15:28
 ---
 
-CompanyCtrl = class("CompanyCtrl", UIPage)
-UIPage:ResgisterOpen(CompanyCtrl)
+CompanyCtrl = class("CompanyCtrl", UIPanel)
+UIPanel:ResgisterOpen(CompanyCtrl)
 
 function CompanyCtrl:initialize()
     ct.log("tina_w22_friends", "CompanyCtrl:initialize()")

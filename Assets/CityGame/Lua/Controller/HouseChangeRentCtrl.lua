@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/4 9:53
 ---住宅更改租金界面
-HouseChangeRentCtrl = class('HouseChangeRentCtrl',UIPage)
-UIPage:ResgisterOpen(HouseChangeRentCtrl)
+HouseChangeRentCtrl = class('HouseChangeRentCtrl',UIPanel)
+UIPanel:ResgisterOpen(HouseChangeRentCtrl)
 
 function HouseChangeRentCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function HouseChangeRentCtrl:bundleName()
@@ -15,20 +15,20 @@ function HouseChangeRentCtrl:bundleName()
 end
 
 function HouseChangeRentCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function HouseChangeRentCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_initData()
 
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(self.closeBtn, self._onClickCloseBtn, self)
+    self.luaBehaviour:AddClick(self.confirmBtn, self._onClickConfim, self)
 end
 
 function HouseChangeRentCtrl:Refresh()
-    self.luaBehaviour:AddClick(self.closeBtn, self._onClickCloseBtn, self)
-    self.luaBehaviour:AddClick(self.confirmBtn, self._onClickConfim, self)
+    self:_initData()
 end
 ---寻找组件
 function HouseChangeRentCtrl:_getComponent(go)
@@ -70,6 +70,4 @@ end
 
 function HouseChangeRentCtrl:_onClickCloseBtn(ins)
     ins:Hide()
-    ins.luaBehaviour:RemoveClick(ins.confirmBtn, ins._onClickConfim, ins)
-    ins.luaBehaviour:RemoveClick(ins.closeBtn, ins._onClickCloseBtn, ins)
 end

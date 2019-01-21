@@ -16,6 +16,10 @@ function HouseCtrl:bundleName()
     return "Assets/CityGame/Resources/View/HousePanel.prefab"
 end
 
+function HouseCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self, obj)
+end
+
 local this
 function HouseCtrl:Awake(go)
     this = self

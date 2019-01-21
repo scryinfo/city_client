@@ -1,5 +1,5 @@
-WarehouseCtrl = class('WarehouseCtrl',UIPage);
-UIPage:ResgisterOpen(WarehouseCtrl) --注册打开的方法
+WarehouseCtrl = class('WarehouseCtrl',UIPanel);
+UIPanel:ResgisterOpen(WarehouseCtrl) --注册打开的方法
 
 --物品上架还是运输
 ct.goodsState =
@@ -21,7 +21,7 @@ local switchIsShow;
 local warehouse
 
 function WarehouseCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function WarehouseCtrl:bundleName()
@@ -29,7 +29,10 @@ function WarehouseCtrl:bundleName()
 end
 
 function WarehouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
+end
+function WarehouseCtrl:Awake(go)
+    warehouse = self.gameObject:GetComponent('LuaBehaviour');
     warehouse:AddClick(WarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     warehouse:AddClick(WarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
     warehouse:AddClick(WarehousePanel.nameBtn.gameObject,self.OnClick_OnName,self);
@@ -43,22 +46,20 @@ function WarehouseCtrl:OnCreate(obj)
     --warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
-    Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
-    Event.AddListener("n_transports",self.n_transports,self)
-    Event.AddListener("c_warehouseClick",self._selectedGoods, self)
-    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
-    Event.AddListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
-
-end
-function WarehouseCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
     --初始化物品上架还是运输
     self.operation = nil;
 end
+function WarehouseCtrl:Active()
+    Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
+    Event.AddListener("n_transports",self.n_transports,self)
+    Event.AddListener("c_warehouseClick",self._selectedGoods, self)
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    Event.AddListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
+end
 function WarehouseCtrl:Refresh()
-    warehouse = self.gameObject:GetComponent('LuaBehaviour');
     self.luabehaviour = warehouse
     self.store = self.m_data.store
     self.store.type = BuildingInType.Warehouse
@@ -79,14 +80,19 @@ function WarehouseCtrl:Refresh()
     end
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
-    go:deleteObjInfo()
-    UIPage.ClosePage();
+    --go:deleteObjInfo()
+    UIPanel:Close()
     if switchIsShow then
         go:OnClick_rightInfo(not switchIsShow,1)
     end
 end
 function WarehouseCtrl:Hide()
-    UIPage.Hide(self)
+    Event.RemoveListener("n_shelfAdd",self.n_shelfAdd,self)
+    Event.RemoveListener("n_transports",self.n_transports,self)
+    Event.RemoveListener("c_warehouseClick",self._selectedGoods, self)
+    Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    Event.RemoveListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
+    UIPanel(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----搜索

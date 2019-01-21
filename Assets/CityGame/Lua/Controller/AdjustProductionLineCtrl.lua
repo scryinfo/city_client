@@ -1,5 +1,5 @@
-AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPage);
-UIPage:ResgisterOpen(AdjustProductionLineCtrl) --注册打开的方法
+AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPanel);
+UIPanel:ResgisterOpen(AdjustProductionLineCtrl) --注册打开的方法
 
 --原料厂实例
 AdjustProductionLineCtrl.materialProductionLine = {};
@@ -9,7 +9,7 @@ AdjustProductionLineCtrl.tempProductionLine = {}
 AdjustProductionLineCtrl.idleWorkerNums = 0
 local adjustLine
 function AdjustProductionLineCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function AdjustProductionLineCtrl:bundleName()
@@ -17,27 +17,28 @@ function AdjustProductionLineCtrl:bundleName()
 end
 
 function AdjustProductionLineCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
+end
 
+function AdjustProductionLineCtrl:Awake(go)
+    self.gameObject = go
+    adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     adjustLine:AddClick(AdjustProductionLinePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
     adjustLine:AddClick(AdjustProductionLinePanel.addBtn.gameObject,self.OnClick_addBtn,self);
     --adjustLine:AddClick(AdjustProductionLinePanel.determineBtn.gameObject,self.OnClick_determineBtn,self);
+
+end
+function AdjustProductionLineCtrl:Active()
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     --Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.AddListener("refreshNowConte",self.refreshNowConte,self)
 end
-
-function AdjustProductionLineCtrl:Awake(go)
-    self.gameObject = go
-end
-
 function AdjustProductionLineCtrl:Refresh()
     if self.m_data ~= nil then
         self.data = self.m_data
     end
-    adjustLine = self.gameObject:GetComponent('LuaBehaviour')
     self.luabehaviour = adjustLine
     AdjustProductionLinePanel.locked_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
@@ -61,13 +62,18 @@ function AdjustProductionLineCtrl:Refresh()
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
-    go:deleteObjInfo();
+    --go:deleteObjInfo();
     --go:deleteTempTable();
-    UIPage.ClosePage();
+    UIPanel:Close()
 end
 function AdjustProductionLineCtrl:Hide()
-    UIPage.Hide(self)
-    return {insId = self.m_data.info.id}
+    Event.RemoveListener("calculateTime",self.calculateTime,self)
+    Event.RemoveListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
+    --Event.RemoveListener("refreshTime",self.refreshTime,self)
+    Event.RemoveListener("_deleteProductionLine",self._deleteProductionLine,self)
+    Event.RemoveListener("refreshNowConte",self.refreshNowConte,self)
+    UIPanel(self)
+    return {insId = self.m_data.info.id,self.m_data}
 end
 
 function AdjustProductionLineCtrl:OnClick_addBtn(go)

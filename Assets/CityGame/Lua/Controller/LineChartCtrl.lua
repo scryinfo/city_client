@@ -4,12 +4,12 @@
 --- DateTime: 2018/10/5 21:28
 ---
 
-LineChartCtrl = class('LineChartCtrl',UIPage)
+LineChartCtrl = class('LineChartCtrl',UIPanel)
 
 
 --构建函数--
 function LineChartCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.None)
+    UIPanel.initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.None)
 end
 
 function LineChartCtrl:bundleName()
@@ -27,7 +27,7 @@ end
 
 --启动事件--
 function LineChartCtrl:OnCreate(go)
-    UIPage.OnCreate(self,go)
+    UIPanel.OnCreate(self,go)
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     --获取LineChart组件
     local GameObject = LineChartPanel.LineChartParent:GetComponent('LineChart');
@@ -71,7 +71,7 @@ end
 UnitTest.TestBlockStart()---------------------------------------------------------
 
 UnitTest.Exec("abel_w7_LineChart", "test_LineChart",  function ()
-    UIPage:ShowPage(LineChartCtrl)
+    UIPanel:ShowPage(LineChartCtrl)
     local xxx = 0
 end )
 

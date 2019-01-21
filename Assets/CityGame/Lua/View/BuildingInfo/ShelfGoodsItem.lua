@@ -104,7 +104,7 @@ function ShelfGoodsItem:closeEvent()
     Event.RemoveListener("c_buyGoodsItemDelete",self.c_buyGoodsItemDelete,self);
 end
 function ShelfGoodsItem:OnClick_detailsBtn(ins)
-    UIPage:ShowPage(DETAILSBoxCtrl,ins);
+    UIPanel:ShowPage(DETAILSBoxCtrl,ins);
 end
 --删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)

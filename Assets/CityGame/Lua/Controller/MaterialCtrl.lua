@@ -102,7 +102,11 @@ function MaterialCtrl:OnClick_backBtn(ins)
         ins.materialToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseMaterial",ins.insId)
-    UIPage.ClosePage();
+    UIPanel:Close()
+end
+function MaterialCtrl:Hide()
+    UIPanel(self)
+    return {insId = self.m_data.info.id,self.m_data}
 end
 
 --打开信息界面
@@ -115,7 +119,7 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPage:ShowPage(MaterialCtrl);
+        --UIPanel:ShowPage(MaterialCtrl);
         ct.OpenCtrl("MaterialCtrl")
     end)
 end)

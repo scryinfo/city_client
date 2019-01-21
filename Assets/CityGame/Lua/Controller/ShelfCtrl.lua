@@ -1,5 +1,5 @@
-ShelfCtrl = class('ShelfCtrl',UIPage)
-UIPage:ResgisterOpen(ShelfCtrl) --注册打开的方法
+ShelfCtrl = class('ShelfCtrl',UIPanel)
+UIPanel:ResgisterOpen(ShelfCtrl) --注册打开的方法
 
 local isShowList;
 local switchIsShow;
@@ -9,7 +9,7 @@ local listFalse = Vector3.New(0,0,0);
 --存放选中的物品，临时表
 ShelfCtrl.temporaryItems = {}
 function ShelfCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ShelfCtrl:bundleName()
@@ -17,7 +17,11 @@ function ShelfCtrl:bundleName()
 end
 
 function ShelfCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
+end
+
+function ShelfCtrl:Awake(go)
+    shelf = self.gameObject:GetComponent('LuaBehaviour')
     shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn, self);
     shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
     shelf:AddClick(ShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
@@ -29,19 +33,16 @@ function ShelfCtrl:OnCreate(obj)
     shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self);
     shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
 
-    Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
-    Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
-    Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
-end
-
-function ShelfCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
 end
-
+function ShelfCtrl:Active()
+    Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
+    Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
+    Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
+end
 function ShelfCtrl:Refresh()
-    shelf = self.gameObject:GetComponent('LuaBehaviour')
     if self.m_data[1] ~= nil then
         self.m_data = self.m_data[1]
     end
@@ -138,14 +139,17 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
 end
 
 function ShelfCtrl:OnClick_return_Btn(go)
-    go:deleteObjInfo();
-    UIPage.ClosePage();
+    --go:deleteObjInfo();
+    UIPanel:Close()
     if switchIsShow then
         go:openPlayerBuy(not switchIsShow)
     end
 end
 function ShelfCtrl:Hide()
-    UIPage.Hide(self)
+    Event.RemoveListener("_selectedBuyGoods",self._selectedBuyGoods,self);
+    Event.RemoveListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
+    Event.RemoveListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
+    UIPanel(self)
     return {insId = self.m_data.info.id}
 end
 --根据名字排序

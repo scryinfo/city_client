@@ -3,11 +3,11 @@
 --- Created by Administrator.
 --- DateTime: 2018/12/25/025 17:50
 ---
-StopAndBuildCtrl = class('StopAndBuildCtrl',UIPage)
-UIPage:ResgisterOpen(StopAndBuildCtrl) --注册打开的方法
+StopAndBuildCtrl = class('StopAndBuildCtrl',UIPanel)
+UIPanel:ResgisterOpen(StopAndBuildCtrl) --注册打开的方法
 --构建函数
 function StopAndBuildCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function StopAndBuildCtrl:bundleName()
@@ -15,12 +15,11 @@ function StopAndBuildCtrl:bundleName()
 end
 
 function StopAndBuildCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 local panel
 function StopAndBuildCtrl:Awake(go)
 
-    self.gameObject = go;
     panel=StopAndBuildPanel
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
@@ -48,14 +47,14 @@ end
 --返回
 function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
-    UIPage.ClosePage()
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
+    UIPanel.ClosePage()
 end
 
 --返回
 function StopAndBuildCtrl:OnClick_backBtn1()
     panel:CloseBtn()
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
@@ -63,12 +62,11 @@ function StopAndBuildCtrl:OnClick_remove(ins)
 
     data.type="remove"
     data.mainText="Confirm removal or not?"
-    --data.tips=
     data.callback=function() Event.Brocast("m_delBuilding",ins.m_data.id )
         Event.Brocast("SmallPop","Success",300)
         DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
-        UIPage.ClosePage()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
+        UIPanel.ClosePage()
     end
     ct.OpenCtrl('ReminderCtrl',data)
 end
@@ -86,6 +84,7 @@ function StopAndBuildCtrl:OnClick_stop(ins)
     ct.OpenCtrl('ReminderCtrl',data)
 end
 
+
 --todo：刷新
 function StopAndBuildCtrl:Refresh()
      local data=self.m_data
@@ -95,6 +94,13 @@ function StopAndBuildCtrl:Refresh()
     self:updateBtn(data)
 end
 
+function  StopAndBuildCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function StopAndBuildCtrl:Close()
+    UIPanel.Close(self)
+end
 
 
 local select

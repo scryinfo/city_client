@@ -19,36 +19,32 @@ function GuidBookCtrl:initialize()
     UIPanel:initialize(UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
-function GuidBookCtrl:Awake(obj)
-    self.gameObject=obj
+function GuidBookCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
 end
 
-function GuidBookCtrl:OnCreate(obj)
-    GuidBookPanel.Awake(obj)
-    luaBehaviour =obj.transform:GetComponent('LuaBehaviour')
+function GuidBookCtrl:Awake(go)
+    self.gameObject = go
+    luaBehaviour = go.transform:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(GuidBookPanel.backBtn.gameObject,self.Hide,self)
-end
---1.显示界面【继承父类即可，亦可自己重写过度动画】
---2.初始化无网络数据
---3.注册监听事件
-function GuidBookCtrl:Active()
     for name, v in pairs(GuidBookConfig) do
         local prefab  =creatGoods(self.aboutItem_Path,GuidBookPanel.buttonCon)
         AboutItem:new(prefab,luaBehaviour,name)
     end
 end
 
+
+
 function GuidBookCtrl:Refresh()
    ct.log("system","======================刷新指南书=================")
 end
 
-function GuidBookCtrl:Hide()
-    UIPanel.ClosePage()
+function  GuidBookCtrl:Hide()
+    UIPanel.Hide(self)
     PlayMusEff(1002)
 end
 
 function GuidBookCtrl:Close()
-
+    UIPanel.Close(self)
 end
-
 

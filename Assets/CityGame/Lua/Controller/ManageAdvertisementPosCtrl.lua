@@ -5,22 +5,18 @@
 ---
 
 
-
-require "Common/define"
-require('Framework/UI/UIPage')
-
 local isShowList;
 local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
-local class = require 'Framework/class'
-ManageAdvertisementPosCtrl = class('ManageAdvertisementPosCtrl',UIPage)
 
-UIPage:ResgisterOpen(ManageAdvertisementPosCtrl) --注册打开的方法
+ManageAdvertisementPosCtrl = class('ManageAdvertisementPosCtrl',UIPanel)
+
+UIPanel:ResgisterOpen(ManageAdvertisementPosCtrl) --注册打开的方法
 
 --构建函数
 function ManageAdvertisementPosCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ManageAdvertisementPosCtrl:bundleName()
@@ -28,7 +24,7 @@ function ManageAdvertisementPosCtrl:bundleName()
 end
 
 function ManageAdvertisementPosCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
     isShowList = false;
 end
 local materialBehaviours
@@ -36,7 +32,7 @@ local MunicipalModel
 local manger
 local AllGoods={}
 function ManageAdvertisementPosCtrl:Awake(go)
-    self.gameObject = go;
+
     local materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
@@ -134,7 +130,7 @@ function ManageAdvertisementPosCtrl:OnClick_backBtn(ins)
     end
     ins.ItemCreatDeleteMgr:Remove()
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(true);
-    UIPage.ClosePage();
+    ins:Hide()
 end
 
 
@@ -153,6 +149,9 @@ function ManageAdvertisementPosCtrl:isFirstSlot()
     else--他人进入
         MunicipalModel.manger.addItemList[0]:SetActive(false)
     end
+end
+function ManageAdvertisementPosCtrl:Active()
+
 end
 
 --刷新数据
@@ -430,7 +429,7 @@ function ManageAdvertisementPosCtrl:OnClick_confirm(ins)
 end
 
 function ManageAdvertisementPosCtrl:Mastercallback()
-    UIPage:ClosePage()
+    self:Hide()
     ct.OpenCtrl("AdvertisementPosCtrl")
     for i, v in pairs(self.ItemCreatDeleteMgr.addedItemList) do
         destroy(v);
@@ -498,7 +497,7 @@ function ManageAdvertisementPosCtrl:c_FirstCreate()
 end
 
 function ManageAdvertisementPosCtrl:OtherCallback()
-    UIPage:ClosePage()
+    self:Hide()
     ct.OpenCtrl("AdvertisementPosCtrl")
     local buildingId=MunicipalPanel.buildingId
 
@@ -578,11 +577,13 @@ function ManageAdvertisementPosCtrl:OtherCallback()
 
 end
 
+function  ManageAdvertisementPosCtrl:Hide()
+    UIPanel.Hide(self)
+end
 
-
-
-
-
+function ManageAdvertisementPosCtrl:Close()
+    UIPanel.Close(self)
+end
 
 
 

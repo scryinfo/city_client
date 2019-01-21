@@ -41,7 +41,7 @@ function GroundTransSetPriceCtrl:Hide()
 end
 
 function GroundTransSetPriceCtrl:Close()
-    UIPanel.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化

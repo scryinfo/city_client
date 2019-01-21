@@ -37,7 +37,7 @@ function GroundTransOthersCheckInfoCtrl:Hide()
 end
 
 function GroundTransOthersCheckInfoCtrl:Close()
-    UIPanel.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化

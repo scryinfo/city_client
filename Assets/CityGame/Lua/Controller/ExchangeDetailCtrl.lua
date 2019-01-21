@@ -67,7 +67,7 @@ function ExchangeDetailCtrl:_removeListeners()
 end
 
 function ExchangeDetailCtrl:Close()
-
+    UIPanel.Close(self)
 end
 
 function ExchangeDetailCtrl:_initPanelData()

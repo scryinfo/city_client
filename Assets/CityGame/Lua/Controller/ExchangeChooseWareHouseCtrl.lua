@@ -38,7 +38,7 @@ function ExchangeChooseWareHouseCtrl:Hide()
 end
 
 function ExchangeChooseWareHouseCtrl:Close()
-    --ExchangeDetailPanel.toggle01.onValueChanged:RemoveAllListeners()
+    UIPanel.Close(self)
 end
 
 function ExchangeChooseWareHouseCtrl:_initPanelData()

@@ -33,7 +33,7 @@ function GroundTransSelfCheckInfoCtrl:Hide()
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()
-    UIPanel.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化

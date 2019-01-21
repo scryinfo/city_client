@@ -45,7 +45,7 @@ function GroundTransRentAndBuyCtrl:Hide()
 end
 
 function GroundTransRentAndBuyCtrl:Close()
-    UIPanel.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化

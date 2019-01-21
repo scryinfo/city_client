@@ -34,7 +34,7 @@ function GroundTransContractCtrl:Hide()
 end
 
 function GroundTransContractCtrl:Close()
-    UIPanel.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化

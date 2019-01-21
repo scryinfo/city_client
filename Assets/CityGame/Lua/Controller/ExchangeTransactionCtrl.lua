@@ -58,6 +58,7 @@ function ExchangeTransactionCtrl:Hide()
 end
 
 function ExchangeTransactionCtrl:Close()
+    UIPanel.Close(self)
 end
 
 function ExchangeTransactionCtrl:_update()

@@ -51,7 +51,7 @@ function GroundAuctionCtrl:Hide()
 end
 
 function GroundAuctionCtrl:Close()
-
+    UIPanel.Close(self)
 end
 
 ---初始化界面

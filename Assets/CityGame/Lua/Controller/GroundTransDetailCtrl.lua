@@ -46,8 +46,7 @@ function GroundTransDetailCtrl:Hide()
 end
 
 function GroundTransDetailCtrl:Close()
-    --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
-    --Event.RemoveListener("c_NewGroundStartBid", self._changeToStartBidState, self)
+    UIPanel.Close(self)
 end
 
 ---初始化

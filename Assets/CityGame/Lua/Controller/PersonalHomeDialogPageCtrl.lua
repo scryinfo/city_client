@@ -38,7 +38,7 @@ function PersonalHomeDialogPageCtrl:Refresh()
 end
 
 function PersonalHomeDialogPageCtrl:Close()
-    --self:_removeListener()
+    UIPanel.Close(self)
 end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)

@@ -36,6 +36,7 @@ end
 
 function InputDialogPageCtrl:Close()
     self:_removeListener()
+    UIPanel.Close(self)
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)

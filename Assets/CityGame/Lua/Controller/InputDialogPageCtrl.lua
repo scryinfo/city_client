@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/10/4 14:57
 ---含有input输入框的弹窗
-InputDialogPageCtrl = class('InputDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(InputDialogPageCtrl) --注册打开的方法
+InputDialogPageCtrl = class('InputDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(InputDialogPageCtrl) --注册打开的方法
 
 function InputDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function InputDialogPageCtrl:bundleName()
@@ -15,20 +15,14 @@ function InputDialogPageCtrl:bundleName()
 end
 
 function InputDialogPageCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function InputDialogPageCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
-end
-
-function InputDialogPageCtrl:Refresh()
-    self:_initData()
-
     self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
     self.rentInput.onValueChanged:AddListener(function ()
@@ -36,8 +30,13 @@ function InputDialogPageCtrl:Refresh()
     end)
 end
 
+function InputDialogPageCtrl:Refresh()
+    self:_initData()
+end
+
 function InputDialogPageCtrl:Close()
     self:_removeListener()
+    UIPanel.Close(self)
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)
@@ -109,8 +108,5 @@ function InputDialogPageCtrl:_onClickConfim(ins)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(ins)
-    --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
-    ins:Hide()
-    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
-    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
+    UIPanel.ClosePage()
 end

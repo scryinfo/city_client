@@ -1,9 +1,9 @@
-RetailStoresCtrl = class('RetailStoresCtrl',UIPage)
-UIPage:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
+RetailStoresCtrl = class('RetailStoresCtrl',UIPanel)
+UIPanel:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
 local this
 --构建函数
 function RetailStoresCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function RetailStoresCtrl:bundleName()
@@ -11,7 +11,7 @@ function RetailStoresCtrl:bundleName()
 end
 
 function RetailStoresCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 
 function RetailStoresCtrl:Awake(go)
@@ -99,9 +99,12 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
-    UIPage.ClosePage();
+    UIPanel.ClosePage()
 end
-
+function RetailStoresCtrl:Hide()
+    UIPanel.Hide(self)
+    return {insId = self.m_data.info.id,self.m_data}
+end
 --打开信息界面
 function RetailStoresCtrl:OnClick_infoBtn()
 
@@ -112,7 +115,7 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPage:ShowPage(RetailStoresCtrl);
+        --UIPanel:ShowPage(RetailStoresCtrl);
         ct.OpenCtrl("RetailStoresCtrl")
     end)
 end)

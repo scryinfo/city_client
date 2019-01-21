@@ -1,5 +1,5 @@
-RetailShelfCtrl = class('RetailShelfCtrl',UIPage)
-UIPage:ResgisterOpen(RetailShelfCtrl)
+RetailShelfCtrl = class('RetailShelfCtrl',UIPanel)
+UIPanel:ResgisterOpen(RetailShelfCtrl)
 
 local isShowList
 local isShowLists
@@ -7,7 +7,7 @@ local switchIsShow
 RetailShelfCtrl.retailShelfGoods = {}
 RetailShelfCtrl.retailShelfUIData = {}
 function RetailShelfCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function RetailShelfCtrl:bundleName()
@@ -15,7 +15,7 @@ function RetailShelfCtrl:bundleName()
 end
 
 function RetailShelfCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
 end
 
 function RetailShelfCtrl:Awake(go)
@@ -54,7 +54,6 @@ function RetailShelfCtrl:Refresh()
         RetailShelfPanel.retailAddItem.gameObject:SetActive(false);
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
         self:shelfImgSetActive(self.GoodsUnifyMgr.retailShelfs,5)   --传零售店的实例表进来  要求余数的大小
-
     else
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
@@ -225,9 +224,9 @@ function RetailShelfCtrl:shelfImgSetActive(table,num)
     end
 end
 function RetailShelfCtrl:OnClick_return_Btn()
-    UIPage.ClosePage();
+    UIPanel.ClosePage()
 end
 function RetailShelfCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id}
 end

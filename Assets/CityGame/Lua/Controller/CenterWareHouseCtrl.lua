@@ -19,20 +19,25 @@ local listTrue = Vector3.New(0,0,180)
 local listFalse = Vector3.New(0,0,0)
 
 local class = require 'Framework/class'
-CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPage)
-UIPage:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
+CenterWareHouseCtrl = class('CenterWareHouseCtrl',UIPanel)
+UIPanel:ResgisterOpen(CenterWareHouseCtrl) --注册打开的方法
 
 function  CenterWareHouseCtrl:bundleName()
     return "Assets/CityGame/Resources/View/CenterWareHousePanel.prefab"
 end
 
 function CenterWareHouseCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function CenterWareHouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
+
+end
+
+function CenterWareHouseCtrl:Awake()
+    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     isShowList = false;
     switchIsShow = false;
 
@@ -50,7 +55,13 @@ function CenterWareHouseCtrl:OnCreate(obj)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.scoreBtn,self.OnClick_OnscoreBtn, self);
 
     CenterWareHousePanel.tipText.text = 0
+    isSelect = true;
+    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
+    self.insId = OpenModelInsID.CenterWareHouseCtrl
+    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+end
 
+function CenterWareHouseCtrl:Active()
     Event.AddListener("c_GsExtendBag",self.c_GsExtendBag,self);
     Event.AddListener("c_OnDelete",self.c_OnDelete,self);
     Event.AddListener("c_OnBGItem",self.c_OnBGItem,self);
@@ -59,15 +70,18 @@ function CenterWareHouseCtrl:OnCreate(obj)
     Event.AddListener("c_transport",self.c_transport,self);
     Event.AddListener("c_DelItem",self.c_DelItem,self);
     --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
-
 end
 
-function CenterWareHouseCtrl:Awake()
-    centerWareHousetBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    isSelect = true;
-    self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
-    self.insId = OpenModelInsID.CenterWareHouseCtrl
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+function CenterWareHouseCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("c_GsExtendBag",self.c_GsExtendBag,self);
+    Event.RemoveListener("c_OnDelete",self.c_OnDelete,self);
+    Event.RemoveListener("c_OnBGItem",self.c_OnBGItem,self);
+    Event.RemoveListener("c_OnTransportBG",self.c_OnTransportBG,self);
+    Event.RemoveListener("c_OnxBtn",self.c_OnxBtn,self);
+    Event.RemoveListener("c_transport",self.c_transport,self);
+    Event.RemoveListener("c_DelItem",self.c_DelItem,self);
+    --Event.RemoveListener("c_DeleteItem",self.c_DeleteItem,self);
 end
 
 --初始化
@@ -153,7 +167,7 @@ function CenterWareHouseCtrl:c_OnBackBtn()
         CenterWareHouseCtrl:c_transportCloseBtn()
     end
     WareHouseGoodsMgr:ClearAllItem()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 
 function CenterWareHouseCtrl:Refresh()

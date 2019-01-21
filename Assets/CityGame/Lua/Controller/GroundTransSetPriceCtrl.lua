@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/24 15:33
 ---土地交易设置租/卖金额
-GroundTransSetPriceCtrl = class('GroundTransSetPriceCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransSetPriceCtrl)
+GroundTransSetPriceCtrl = class('GroundTransSetPriceCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransSetPriceCtrl)
 
 function GroundTransSetPriceCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransSetPriceCtrl:bundleName()
@@ -15,8 +15,10 @@ function GroundTransSetPriceCtrl:bundleName()
 end
 
 function GroundTransSetPriceCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
+end
 
+function GroundTransSetPriceCtrl:Awake(go)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.backBtn.gameObject, self._backBtnFunc, self)
@@ -28,9 +30,6 @@ function GroundTransSetPriceCtrl:OnCreate(obj)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellChangeBtnTran.gameObject, self._sellChangeBtnFunc, self)
 end
 
-function GroundTransSetPriceCtrl:Awake(go)
-end
-
 function GroundTransSetPriceCtrl:Refresh()
     self:_initPanelData()
 end
@@ -38,11 +37,11 @@ end
 function GroundTransSetPriceCtrl:Hide()
     ct.log("cycle_w19_groundTrans", "调整价格_hide")
 
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
 end
 
 function GroundTransSetPriceCtrl:Close()
-    UIPage.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化
@@ -96,7 +95,7 @@ end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()
     ct.log("cycle_w19_groundTrans", "点击了返回按钮")
-    UIPage:ClosePage()
+    UIPanel:ClosePage()
 end
 
 --售卖发布按钮
@@ -175,7 +174,9 @@ function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
 end
 --返回主界面
 function GroundTransSetPriceCtrl._closeBackToMain()
-    UIPage:HideAllPages()
-    ct.OpenCtrl("GameMainInterfaceCtrl")
+    UIPanel.BackToPageInstance("GameMainInterfaceCtrl")
+
+    --UIPanel:HideAllPages()
+    --ct.OpenCtrl("GameMainInterfaceCtrl")
     --ct.OpenCtrl("UIBubbleCtrl")
 end

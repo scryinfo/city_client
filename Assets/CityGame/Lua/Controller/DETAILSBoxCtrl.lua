@@ -1,8 +1,8 @@
-DETAILSBoxCtrl = class('DETAILSBoxCtrl',UIPage);
+DETAILSBoxCtrl = class('DETAILSBoxCtrl',UIPanel);
 
 local itemId
 function DETAILSBoxCtrl:initialize()
-    UIPage.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
 end
 
 function DETAILSBoxCtrl:bundleName()
@@ -10,27 +10,31 @@ function DETAILSBoxCtrl:bundleName()
 end
 
 function DETAILSBoxCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
+end
+
+function DETAILSBoxCtrl:Awake(go)
+    self.gameObject = go;
     local details = self.gameObject:GetComponent('LuaBehaviour');
     details:AddClick(DETAILSBoxPanel.XBtn.gameObject,self.OnClick_XBtn,self);
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
-
+end
+function DETAILSBoxCtrl:Active()
     DETAILSBoxPanel.numberInput.onValueChanged:AddListener(function()
         self:numberInputInfo();
     end)
     DETAILSBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:numberSliderInfo();
     end)
-
     Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 end
 
-function DETAILSBoxCtrl:Awake(go)
-    self.gameObject = go;
-end
-
 function DETAILSBoxCtrl:OnClick_XBtn(obj)
-    obj:Hide();
+    UIPanel.ClosePage()
+end
+function DETAILSBoxCtrl:Hide()
+    Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
+    UIPanel.Hide(self)
 end
 
 function DETAILSBoxCtrl:Refresh()

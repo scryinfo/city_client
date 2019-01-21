@@ -1,16 +1,18 @@
 require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
 
-LoginCtrl = class('LoginCtrl',UIPage)
-UIPage:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
+LoginCtrl = class('LoginCtrl',UIPanel)
+UIPanel:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
 LoginCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
 --构建函数--
 function LoginCtrl:initialize()
-	UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+	UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+
 	self.logined = false
-	self.offset.y = -200
+	--self.offset.y = -200
+
 	--self.uiPath = "Login"
 end
 
@@ -22,28 +24,18 @@ function LoginCtrl:Awake(go)
 	ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
 	self.gameObject = go
 	self.insId = OpenModelInsID.LoginCtrl
-end
 
-function LoginCtrl:Refresh()
-	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
-	self:_initData()
-	if self.m_data ~= nil then
-		self:setPosition(self.m_data.x,self.m_data.y)
-	end
-end
-
-function LoginCtrl:_initData()
-	DataManager.OpenDetailModel(LoginModel,self.insId)
-end
---启动事件--
-function LoginCtrl:OnCreate(go)
-	UIPage.OnCreate(self,go)
+	--注册点击事件
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
-	ct.log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
+	self.root=self.gameObject.transform.root;
+end
+
+function LoginCtrl:Active()
+
 	--普通消息注册
 	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
 	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);
@@ -51,19 +43,45 @@ function LoginCtrl:OnCreate(go)
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-	self.root=self.gameObject.transform.root;
+
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
+
+end
+
+function LoginCtrl:Refresh()
+	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	self:_initData()
+	--if self.m_data ~= nil then
+	--	self:setPosition(self.m_data.x,self.m_data.y)
+	--end
+end
+
+function LoginCtrl:Hide()
+	UIPanel.Hide(self)
+	self:close()
+end
+
+function LoginCtrl:_initData()
+	DataManager.OpenDetailModel(LoginModel,self.insId)
+end
+--启动事件--
+function LoginCtrl:OnCreate(go)
+	UIPanel.OnCreate(self,go)
+
+	--ct.log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
+
+
 	--启用 c_AddClick_self 单元测试
 	--ct.log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
-	UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
-	UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
-	UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
-	UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
+	--UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)
+	--UnitTest.Exec_now("abel_w7_RemoveClick", "c_RemoveClick_self",self)
+	--UnitTest.Exec_now("fisher_w8_RemoveClick", "c_MaterialModel_ShowPage",self)
+	--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 end
 
 --关闭事件--
-function LoginCtrl:Close()
+function LoginCtrl:close()
 	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
 	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
@@ -115,10 +133,10 @@ function LoginCtrl:c_Disconnect( errorCode )
 end
 
 --[[function LoginCtrl:c_GsLoginSuccess()
-	--UIPage:ClearAllPages()
-	--UIPage:ShowPage(RoleManagerCtrl)
-	--UIPage:ShowPage(TopBarCtrl)
-	--UIPage:ShowPage(MainPageCtrl,"UI数据传输测试")
+	--UIPanel:ClearAllPages()
+	--UIPanel:ShowPage(RoleManagerCtrl)
+	--UIPanel:ShowPage(TopBarCtrl)
+	--UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")
 end--]]
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
@@ -136,9 +154,9 @@ end
 function LoginCtrl:c_ConnectionStateChange( state )
 	if state.error == 'Success' then
 		--CityEngineLua.login_loginapp(false)
-		LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
+		--LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
 	else
-		LoginPanel.textStatus:GetComponent('Text').text = "连接错误";
+		--LoginPanel.textStatus:GetComponent('Text').text = "连接错误";
 	end
 end
 
@@ -155,9 +173,9 @@ end
 
 function LoginCtrl:c_GsConnected( success )
 	if success then
-		LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接成功!";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接成功!";
 	else
-		LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接失败";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接失败";
 	end
 end
 
@@ -216,7 +234,7 @@ end
 
 UnitTest.TestBlockEnd()---------------------------------------------------------------
 
----生成预制
+--生成预制
 function LoginCtrl:c_creatGoods(path,parent)
 	local prefab = UnityEngine.Resources.Load(path);
 	local go = UnityEngine.GameObject.Instantiate(prefab);

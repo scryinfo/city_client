@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 11:25
 ---个人主页弹窗
-PersonalHomeDialogPageCtrl = class('PersonalHomeDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(PersonalHomeDialogPageCtrl) --注册打开的方法
+PersonalHomeDialogPageCtrl = class('PersonalHomeDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(PersonalHomeDialogPageCtrl) --注册打开的方法
 
 function PersonalHomeDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function PersonalHomeDialogPageCtrl:bundleName()
@@ -15,7 +15,7 @@ function PersonalHomeDialogPageCtrl:bundleName()
 end
 
 function PersonalHomeDialogPageCtrl:OnCreate(obj )
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function PersonalHomeDialogPageCtrl:Awake(go)
@@ -38,7 +38,7 @@ function PersonalHomeDialogPageCtrl:Refresh()
 end
 
 function PersonalHomeDialogPageCtrl:Close()
-    --self:_removeListener()
+    UIPanel.Close(self)
 end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)
@@ -98,7 +98,7 @@ function PersonalHomeDialogPageCtrl:_initData()
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --修改des
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
@@ -127,19 +127,19 @@ function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
     end
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --公司
 function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
     ct.OpenCtrl("CompanyCtrl", ins.m_data)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

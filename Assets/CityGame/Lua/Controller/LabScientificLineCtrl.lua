@@ -3,8 +3,8 @@
 --- Created by xuyafang.
 --- DateTime: 2018/11/16 15:48
 ---
-LabScientificLineCtrl = class('LabScientificLineCtrl',UIPage)
-UIPage:ResgisterOpen(LabScientificLineCtrl)
+LabScientificLineCtrl = class('LabScientificLineCtrl',UIPanel)
+UIPanel:ResgisterOpen(LabScientificLineCtrl)
 
 LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
 LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
@@ -12,7 +12,7 @@ LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/
 LabScientificLineCtrl.static.LabRemainStaffColor = "#4a7ff6"  --员工颜色
 
 function LabScientificLineCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function LabScientificLineCtrl:bundleName()
@@ -20,14 +20,14 @@ function LabScientificLineCtrl:bundleName()
 end
 
 function LabScientificLineCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function LabScientificLineCtrl:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(LabScientificLinePanel.backBtn.gameObject, function()
-        UIPage.ClosePage()
+        UIPanel.ClosePage()
     end)
     self.luaBehaviour:AddClick(LabScientificLinePanel.researchBtn.gameObject, function()
         self:_researchLineOpen()
@@ -35,8 +35,6 @@ function LabScientificLineCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabScientificLinePanel.inventionBtn.gameObject, function()
         self:_inventionLineOpen()
     end)
-
-    Event.AddListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
 
     --滑动复用部分
     self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
@@ -48,12 +46,12 @@ function LabScientificLineCtrl:Awake(go)
 end
 
 function LabScientificLineCtrl:Refresh()
+    Event.AddListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
     self:_initPanelData()
 end
 
 function LabScientificLineCtrl:Hide()
-    self.gameObject:SetActive(false)
-    self.isActived = false
+    Event.RemoveListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
 end
 
 function LabScientificLineCtrl:_initPanelData()

@@ -107,14 +107,31 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
     if UIPanel.static.m_instancePageNodes == nil then
         UIPanel.static.m_instancePageNodes = {}
     end
+    --如果打开的是普通界面，隐藏跟之前的界面
+    if pageInstance.type == UIType.Normal then
+        UIPanel.HideOldPage()
+    end
     --将界面压入栈内
-    if pageData ~= nil and inClass ~= nil then
+    if inClass ~= nil then
         local tempPageNode  = {}
         tempPageNode.page = pageInstance            --界面实例Ctrl（会重复）
         tempPageNode.pageClass = inClass            --界面实例的Ctrl类
         tempPageNode.pageType = pageInstance.type   --界面实例的层级类型
         tempPageNode.pageData = pageData            --界面实例的实例数据（重要）
         table.insert(UIPanel.static.m_instancePageNodes,tempPageNode)
+    end
+end
+
+--隐藏之前界面
+function UIPanel.HideOldPage()
+    local insNodes  = UIPanel.static.m_instancePageNodes
+    local nodeCount = #insNodes
+    while (nodeCount >= 1 ) do
+        insNodes[nodeCount].page:Hide()
+        if insNodes[nodeCount].pageType == UIType.Normal then
+            break
+        end
+        nodeCount = nodeCount -1
     end
 end
 
@@ -307,6 +324,11 @@ function UIPanel.SetMainPanel(mainClass)
 end
 --]]
 
+--获取m_allPages
+function UIPanel.GetAllPages()
+    return UIPanel.static.m_allPages
+end
+
 --关闭当前最新打开的窗口
 --Normal及PopUp使用
 --关闭当前最顶窗口（无论是Normal还是PopUp）
@@ -390,16 +412,20 @@ function UIPanel.BackToPageInstance(backtoPageClass,instanceData)
         Node = pageNodes[#pageNodes]
         if Node.pageClass == backtoPageClass then
             local isIns = true
-            for key, value in pairs(instanceData) do
-                if Node.pageData[key] ~= value then
-                    isIns = false
+            if instanceData == nil then
+                isIns = false
+            else
+                for key, value in pairs(instanceData) do
+                    if Node.pageData[key] ~= value then
+                        isIns = false
+                    end
                 end
             end
             if isIns == true then
                 UIPanel.ShowPageInstance(Node.page,Node.pageData)
                 break
             end
-        end
+            end
         UIPanel.ClosePopNode()
     end
 end

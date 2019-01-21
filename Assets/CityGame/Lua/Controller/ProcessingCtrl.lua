@@ -1,9 +1,9 @@
-ProcessingCtrl = class('ProcessingCtrl',UIPage)
-UIPage:ResgisterOpen(ProcessingCtrl) --注册打开的方法
+ProcessingCtrl = class('ProcessingCtrl',UIPanel)
+UIPanel:ResgisterOpen(ProcessingCtrl) --注册打开的方法
 local this
 --构建函数
 function ProcessingCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ProcessingCtrl:bundleName()
@@ -11,7 +11,7 @@ function ProcessingCtrl:bundleName()
 end
 
 function ProcessingCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 
 function ProcessingCtrl:Awake(go)
@@ -100,9 +100,12 @@ function ProcessingCtrl:OnClick_backBtn(ins)
         ins.processingToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseProcessing",ins.buildingId)
-    UIPage.ClosePage();
+    UIPanel.ClosePage()
 end
-
+function ProcessingCtrl:Hide()
+    UIPanel.Hide(self)
+    return {insId = self.m_data.info.id,self.m_data}
+end
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
 

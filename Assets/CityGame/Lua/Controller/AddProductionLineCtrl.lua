@@ -1,9 +1,9 @@
-AddProductionLineCtrl = class('AddProductionLineCtrl',UIPage)
-UIPage:ResgisterOpen(AddProductionLineCtrl)
+AddProductionLineCtrl = class('AddProductionLineCtrl',UIPanel)
+UIPanel:ResgisterOpen(AddProductionLineCtrl)
 
 function AddProductionLineCtrl:initialize()
-    --UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function AddProductionLineCtrl:bundleName()
@@ -11,7 +11,7 @@ function AddProductionLineCtrl:bundleName()
 end
 
 function AddProductionLineCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj)
+    UIPanel.OnCreate(self,obj)
 end
 
 function AddProductionLineCtrl:Awake(go)
@@ -20,15 +20,17 @@ function AddProductionLineCtrl:Awake(go)
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
         self:Hide();
-        --UIPage.ClosePage();
+        --UIPanel.ClosePage();
     end,self)
     self.luabehaviour:AddClick(AddProductionLinePanel.leftBtn.gameObject,function()
         --ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
         GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
         self:Hide();
-        --UIPage.ClosePage();
+        --UIPanel.ClosePage();
     end,self)
 
+end
+function AddProductionLineCtrl:Active()
     self:_addListener()
 end
 
@@ -161,10 +163,13 @@ function AddProductionLineCtrl:_setLineDetailInfo(datas)
         AddProductionLinePanel.centerItems[3]:initData(datas[3])
     end
 end
-
+function AddProductionLineCtrl:Hide()
+    UIPanel.Hide(self)
+    return {insId = self.m_data.info.id,self.m_data}
+end
 --[[
-AddProductionLineCtrl = class('AddProductionLineCtrl',UIPage);
-UIPage:ResgisterOpen(AddProductionLineCtrl)
+AddProductionLineCtrl = class('AddProductionLineCtrl',UIPanel);
+UIPanel:ResgisterOpen(AddProductionLineCtrl)
 
 --UI信息
 AddProductionLineCtrl.productionItemTab = {};
@@ -172,7 +177,7 @@ AddProductionLineCtrl.productionItemTab = {};
 AddProductionLineCtrl.temporaryIdTable = {}
 
 function AddProductionLineCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function AddProductionLineCtrl:bundleName()
@@ -180,7 +185,7 @@ function AddProductionLineCtrl:bundleName()
 end
 
 function AddProductionLineCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
     local addLine = self.gameObject:GetComponent('LuaBehaviour');
 
     self.luabehaviour = addLine
@@ -248,7 +253,7 @@ function AddProductionLineCtrl:_selectedProductionLine(id,itemId,name)
 end
 
 function AddProductionLineCtrl:OnClick_returnBtn()
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 --确定
 function AddProductionLineCtrl:OnClick_determineBtn(go)
@@ -256,7 +261,7 @@ function AddProductionLineCtrl:OnClick_determineBtn(go)
     --
     --end
     go.GoodsUnifyMgr:_creatProductionLine(go.name,go.itemId);
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 
 function AddProductionLineCtrl:OnClick_foodBtn()

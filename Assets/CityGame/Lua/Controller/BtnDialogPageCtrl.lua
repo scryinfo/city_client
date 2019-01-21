@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/30 16:30
 ---只含有按钮的简单弹框
-BtnDialogPageCtrl = class('BtnDialogPageCtrl',UIPage)
-UIPage:ResgisterOpen(BtnDialogPageCtrl)
+BtnDialogPageCtrl = class('BtnDialogPageCtrl',UIPanel)
+UIPanel:ResgisterOpen(BtnDialogPageCtrl)
 
 function BtnDialogPageCtrl:initialize()
-    UIPage.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function BtnDialogPageCtrl:bundleName()
@@ -15,22 +15,18 @@ function BtnDialogPageCtrl:bundleName()
 end
 
 function BtnDialogPageCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 
 function BtnDialogPageCtrl:Awake(go)
     self:_getComponent(go)
-   -- self:_initData()
-
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
-    --self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
-    --self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
+    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self)
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
 end
 
 function BtnDialogPageCtrl:Refresh()
     self:_initData()
-    self.luaBehaviour:AddClick(self.confimBtn.gameObject, self._onClickConfim, self);
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self);
 end
 
 ---寻找组件
@@ -57,9 +53,7 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
     ins:_onClickClose(ins)
 end
 function BtnDialogPageCtrl:_onClickClose(ins)
-    ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)
-    ins.luaBehaviour:RemoveClick(ins.closeBtn.gameObject, ins._onClickClose, ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 
 

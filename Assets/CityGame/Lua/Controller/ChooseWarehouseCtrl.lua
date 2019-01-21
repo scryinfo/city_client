@@ -1,5 +1,5 @@
-ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPage);
-UIPage:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
+ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPanel);
+UIPanel:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
 
 --排序type
 ChooseWarehouseSortItemType = {
@@ -15,7 +15,7 @@ local chooseWarehouse
 local hide
 
 function ChooseWarehouseCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function ChooseWarehouseCtrl:bundleName()
@@ -23,17 +23,7 @@ function ChooseWarehouseCtrl:bundleName()
 end
 
 function ChooseWarehouseCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.nameBtn.gameObject,self.OnClick_nameBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.quantityBtn.gameObject,self.OnClick_quantityBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.priceBtn.gameObject,self.OnClick_priceBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
-    chooseWarehouse:AddClick(ChooseWarehousePanel.bgBtn.gameObject,self.OnClick_bgBtn,self);
-
-    self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
+    UIPanel.OnCreate(self,obj);
 
     Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
     Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
@@ -45,6 +35,17 @@ end
 function ChooseWarehouseCtrl:Awake(go)
     self.insId = OpenModelInsID.ChooseWarehouseCtrl
     chooseWarehouse = self.gameObject:GetComponent('LuaBehaviour');
+    chooseWarehouse:AddClick(ChooseWarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.arrowBtn.gameObject,self.OnClick_OnSorting,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.nameBtn.gameObject,self.OnClick_nameBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.quantityBtn.gameObject,self.OnClick_quantityBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.priceBtn.gameObject,self.OnClick_priceBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
+    chooseWarehouse:AddClick(ChooseWarehousePanel.bgBtn.gameObject,self.OnClick_bgBtn,self);
+
+    self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
+
     self.gameObject = go;
     self:_addListener()
     --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
@@ -60,6 +61,25 @@ function ChooseWarehouseCtrl:Refresh()
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
 
+end
+
+function ChooseWarehouseCtrl:Active()
+    Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
+    Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
+    Event.AddListener("c_Transport",self.c_Transport,self)
+    Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
+    Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
+    Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
+end
+
+function ChooseWarehouseCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
+    Event.RemoveListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
+    Event.RemoveListener("c_Transport",self.c_Transport,self)
+    Event.RemoveListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
+    Event.RemoveListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
+    Event.RemoveListener("CreateLinePanel",self.CreateLinePanel,self)
 end
 
 function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
@@ -122,7 +142,7 @@ function ChooseWarehouseCtrl:OnClick_returnBtn()
     ChooseWarehouseCtrl:_removeListener()
     WareHouseGoodsMgr:_clear()
 
-    UIPage.ClosePage();
+    UIPanel.ClosePage();
 end
 --搜索
 function ChooseWarehouseCtrl:OnClick_searchBtn()

@@ -3,17 +3,17 @@
 --- Created by xuyafang.
 --- DateTime: 2018/11/16 10:29
 ---
-LaboratoryCtrl = class('LaboratoryCtrl',UIPage)
-UIPage:ResgisterOpen(LaboratoryCtrl)
+LaboratoryCtrl = class('LaboratoryCtrl',UIPanel)
+UIPanel:ResgisterOpen(LaboratoryCtrl)
 
 function LaboratoryCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 function LaboratoryCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
 function LaboratoryCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
 end
 local this
 function LaboratoryCtrl:Awake(go)
@@ -96,7 +96,7 @@ function LaboratoryCtrl:_backBtn(ins)
     ins.hasOpened = false
     --关闭界面时再发一遍详情
     DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', true)
-    UIPage.ClosePage()
+    UIPanel.ClosePage()
 end
 ---更改名字成功
 function LaboratoryCtrl:_updateName(name)

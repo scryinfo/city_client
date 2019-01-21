@@ -3,11 +3,11 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/26 17:29
 ---GroundTransOthersCheckInfoCtrl
-GroundTransOthersCheckInfoCtrl = class('GroundTransOthersCheckInfoCtrl',UIPage)
-UIPage:ResgisterOpen(GroundTransOthersCheckInfoCtrl)
+GroundTransOthersCheckInfoCtrl = class('GroundTransOthersCheckInfoCtrl',UIPanel)
+UIPanel:ResgisterOpen(GroundTransOthersCheckInfoCtrl)
 
 function GroundTransOthersCheckInfoCtrl:initialize()
-    UIPage.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransOthersCheckInfoCtrl:bundleName()
@@ -15,16 +15,15 @@ function GroundTransOthersCheckInfoCtrl:bundleName()
 end
 
 function GroundTransOthersCheckInfoCtrl:OnCreate(obj)
-    UIPage.OnCreate(self, obj)
+    UIPanel.OnCreate(self, obj)
+end
 
+function GroundTransOthersCheckInfoCtrl:Awake(go)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.AOwnerBtn.gameObject, self._ownerBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransOthersCheckInfoPanel.BRenterBtn.gameObject, self._renterBtnFunc, self)
-end
-
-function GroundTransOthersCheckInfoCtrl:Awake(go)
 end
 
 function GroundTransOthersCheckInfoCtrl:Refresh()
@@ -33,12 +32,12 @@ function GroundTransOthersCheckInfoCtrl:Refresh()
 end
 
 function GroundTransOthersCheckInfoCtrl:Hide()
-    UIPage.Hide(self)
+    UIPanel.Hide(self)
     Event.RemoveListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
 end
 
 function GroundTransOthersCheckInfoCtrl:Close()
-    UIPage.Hide(self)
+    UIPanel.Close(self)
 end
 
 ---初始化
@@ -80,12 +79,17 @@ function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
             end
         end
 
-        GroundTransOthersCheckInfoPanel.ANameText.text = self.ownerInfo.name
-        GroundTransOthersCheckInfoPanel.ACompanyText.text = self.ownerInfo.companyName
-        --GroundTransOthersCheckInfoPanel.APortraitImg.
-        GroundTransOthersCheckInfoPanel.BNameText.text = self.ownerInfo.name
-        GroundTransOthersCheckInfoPanel.BCompanyText.text = self.ownerInfo.companyName
-        --GroundTransOthersCheckInfoPanel.BPortraitImg.
+        if self.ownerInfo ~= nil then
+            GroundTransOthersCheckInfoPanel.ANameText.text = self.ownerInfo.name
+            GroundTransOthersCheckInfoPanel.ACompanyText.text = self.ownerInfo.companyName
+            LoadSprite(PlayerHead[self.ownerInfo.faceId].MainPath, GroundTransOthersCheckInfoPanel.APortraitImg)
+        end
+        --
+        if self.renterInfo ~= nil then
+            GroundTransOthersCheckInfoPanel.BNameText.text = self.renterInfo.name
+            GroundTransOthersCheckInfoPanel.BCompanyText.text = self.renterInfo.companyName
+            LoadSprite(PlayerHead[self.ownerInfo.faceId].MainPath, GroundTransOthersCheckInfoPanel.BPortraitImg)
+        end
     end
 end
 
@@ -97,7 +101,7 @@ function GroundTransOthersCheckInfoCtrl:_closeBtnFunc()
 end
 --返回按钮
 function GroundTransOthersCheckInfoCtrl:_backBtnFunc()
-    UIPage:ClosePage()
+    UIPanel:ClosePage()
 end
 
 --点击土地所有者头像

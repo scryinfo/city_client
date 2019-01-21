@@ -1,12 +1,10 @@
 -----
-
-
-TransportBoxCtrl = class('TransportBoxCtrl',UIPage);
-UIPage:ResgisterOpen(TransportBoxCtrl) --注册打开的方法
+TransportBoxCtrl = class('TransportBoxCtrl',UIPanel);
+UIPanel:ResgisterOpen(TransportBoxCtrl) --注册打开的方法
 local transportbox
 
 function TransportBoxCtrl:initialize()
-    UIPage.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
 end
 
 function TransportBoxCtrl:bundleName()
@@ -14,17 +12,17 @@ function TransportBoxCtrl:bundleName()
 end
 
 function TransportBoxCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 
 function TransportBoxCtrl:Awake(go)
     self.gameObject = go;
-end
-
-function TransportBoxCtrl:Refresh()
     transportbox = self.gameObject:GetComponent('LuaBehaviour');
     transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
     transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
+end
+
+function TransportBoxCtrl:Refresh()
     if self.m_data == nil then
         return;
     end
@@ -65,4 +63,7 @@ function TransportBoxCtrl:OnClick_confirmBtn(ins)
         ins.m_data.btnClick = nil
     end
     ins:OnClick_closeBtn(ins)
+end
+function TransportBoxCtrl:Hide()
+    UIPanel.Hide(self)
 end

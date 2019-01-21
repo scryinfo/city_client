@@ -153,6 +153,7 @@ function UIPanel:Show(path, callback)
     end
 end
 
+
 --创建界面实例
 --创建完成调用DOShow
 function UIPanel:OnCreate(obj)
@@ -234,6 +235,9 @@ end
 
 --DoShow，页面调用打开时调用
 function UIPanel:DoShow()
+    if self.gameObject ~= nil then
+        self.gameObject.transform:SetAsLastSibling()
+    end
     self:Active()
     self:Refresh()
 end

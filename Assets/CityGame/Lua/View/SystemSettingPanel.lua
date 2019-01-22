@@ -49,12 +49,6 @@ function SystemSettingPanel.InitPanel()
     this.englishBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
     this.englishBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English")
 
-
-
-
-
-
-
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)

@@ -34,6 +34,16 @@ function GroundTransContractPanel.InitPanel()
     --B
     this.BPortraitImg = transform:Find("rightRoot/bg02/portraitImg"):GetComponent("Image")
     this.BNameText = transform:Find("rightRoot/nameText"):GetComponent("Text")
+
+    --
+    this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
+    this.AText02 = transform:Find("leftRoot/Text"):GetComponent("Text")
+    this.BText03 = transform:Find("rightRoot/Text"):GetComponent("Text")
+    this.buyAreaText04 = transform:Find("centerRoot/buy/Text (1)"):GetComponent("Text")
+    this.rentAreaText05 = transform:Find("centerRoot/rent/Text (1)"):GetComponent("Text")
+    this.rentTenancyText06 = transform:Find("centerRoot/rent/Text (2)"):GetComponent("Text")
+    this.rentDailyText07 = transform:Find("centerRoot/rent/Text (3)"):GetComponent("Text")
+    this.totalText08 = transform:Find("centerRoot/total/Text"):GetComponent("Text")
 end
 --
 function GroundTransContractPanel.chooseState(isRent)

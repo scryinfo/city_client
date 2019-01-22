@@ -121,5 +121,5 @@ end
 function HomeProductionLineItem:updateInfo(data)
     self.productionData = data
     self.productionData.line = data.line
-    self:initializeInfo()
+    self:initializeInfo(self.productionData.line)
 end

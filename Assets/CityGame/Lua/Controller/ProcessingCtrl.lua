@@ -33,20 +33,24 @@ function ProcessingCtrl:Refresh()
 end
 
 function ProcessingCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
-    ProcessingPanel.nameText.text = DataInfo.info.name
+    ProcessingPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
     --ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
@@ -92,7 +96,7 @@ function ProcessingCtrl:OnClick_changeName(ins)
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.insId, 'm_ReqChangeProcessingName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeProcessingName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -110,10 +114,10 @@ function ProcessingCtrl:OnClick_backBtn(ins)
     Event.Brocast("mReqCloseProcessing",ins.buildingId)
     UIPanel.ClosePage()
 end
-function ProcessingCtrl:Hide()
-    UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
-end
+--function ProcessingCtrl:Hide()
+--    UIPanel.Hide(self)
+--    return {insId = self.m_data.info.id,self.m_data}
+--end
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
 

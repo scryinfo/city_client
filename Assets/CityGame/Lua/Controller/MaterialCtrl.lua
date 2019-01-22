@@ -35,14 +35,18 @@ function MaterialCtrl:Refresh()
 end
 
 function MaterialCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(MaterialModel,self.insId)
+    --    DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(MaterialModel,self.insId)
-        DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
 end
 
@@ -93,7 +97,7 @@ function MaterialCtrl:OnClick_changeName(ins)
     data.tipInfo = "Modified every seven days"
     --data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.insId, 'm_ReqChangeMaterialName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -113,9 +117,35 @@ function MaterialCtrl:OnClick_backBtn(ins)
 end
 function MaterialCtrl:Hide()
     UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
+    self:deleteProductionObj(HomeProductionLineItem.productionTab,ShelfRateItem.shelfTab)
+    --self:deleteShelfObj()
 end
-
+--退出时删除
+function MaterialCtrl:deleteProductionObj(LineData,shelfData)
+    if not LineData or LineData == {} and not shelfData or shelfData == {} then
+        return
+    else
+        for i,v in pairs(LineData) do
+            v:closeEvent()
+            destroy(v.prefab.gameObject);
+        end
+        for i,v in pairs(shelfData) do
+            destroy(v.prefab.gameObject)
+        end
+        HomeProductionLineItem.productionTab = {}
+        ShelfRateItem.shelfTab = {}
+    end
+end
+--function MaterialCtrl:deleteShelfObj()
+--    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
+--        return
+--    else
+--        for i,v in pairs(ShelfRateItem.shelfTab) do
+--            destroy(v.prefab.gameObject)
+--        end
+--        ShelfRateItem.shelfTab = {}
+--    end
+--end
 --打开信息界面
 function MaterialCtrl:OnClick_infoBtn()
 

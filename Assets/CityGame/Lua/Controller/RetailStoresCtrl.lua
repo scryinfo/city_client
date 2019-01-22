@@ -34,24 +34,27 @@ function RetailStoresCtrl:Refresh()
 end
 
 function RetailStoresCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(RetailStoresModel,self.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(RetailStoresModel,self.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
     end
 end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
-    RetailStoresPanel.nameText.text = DataInfo.info.name
+    RetailStoresPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
     --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
-
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -93,7 +96,7 @@ function RetailStoresCtrl:OnClick_changeName(ins)
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeRetailName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeRetailName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -110,10 +113,10 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
     end
     UIPanel.ClosePage()
 end
-function RetailStoresCtrl:Hide()
-    UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
-end
+--function RetailStoresCtrl:Hide()
+--    UIPanel.Hide(self)
+--    return {insId = self.m_data.info.id,self.m_data}
+--end
 --打开信息界面
 function RetailStoresCtrl:OnClick_infoBtn()
 

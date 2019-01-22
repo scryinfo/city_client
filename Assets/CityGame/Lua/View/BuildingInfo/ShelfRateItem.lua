@@ -99,8 +99,12 @@ function ShelfRateItem:initializeInfo(data)
         local homePageType = ct.homePage.shelf
         local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
         self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
+    ShelfRateItem.shelfTab = self.SmallShelfRateItemTab
 end
 --货架添加时添加
 function ShelfRateItem:shelfRefreshInfo(data)
@@ -128,6 +132,7 @@ function ShelfRateItem:shelfRefreshInfo(data)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
         self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
     end
+    ShelfRateItem.shelfTab = self.SmallShelfRateItemTab
 end
 --货架下架时删除
 function ShelfRateItem:delGoodRefreshInfo(data)
@@ -145,5 +150,5 @@ end
 function ShelfRateItem:updateInfo(data)
     self.shelfData = data
     self.shelfData.shelf.good = data.shelf.good
-    self:initializeInfo()
+    self:initializeInfo(self.shelfData.shelf.good)
 end

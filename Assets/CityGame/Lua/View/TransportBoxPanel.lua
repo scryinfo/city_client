@@ -13,6 +13,7 @@ end
 function TransportBoxPanel.InitPanel()
     this.confirmBtn = transform:Find("box_bg/confirmBtn");
     this.closeBtn = transform:Find("box_bg/closeBtn");
+    this.name = transform:Find("box_bg/name"):GetComponent("Text");
     this.fromName = transform:Find("box_bg/from/fromName"):GetComponent("Text");   --出发
     this.targetName = transform:Find("box_bg/target/targetName"):GetComponent("Text");   --终点
     this.distanceText = transform:Find("box_bg/distance/distanceText"):GetComponent("Text");   --距离
@@ -26,6 +27,7 @@ function TransportBoxPanel.InitPanel()
     this.transportsObj = transform:Find("box_bg/fee/transports"):GetComponent("RectTransform");  --运输要用的
     this.transportsMoney = transform:Find("box_bg/fee/transports/transportsMoney"):GetComponent("Text");    --运输要用的运费
     this.totalMoney = transform:Find("box_bg/fee/total/totalMoney"):GetComponent("Text");   --总计价钱
+    this.total = transform:Find("box_bg/fee/total"):GetComponent("Text");  --总计
 
 end
 function ChooseWarehousePanel.OnDestroy()

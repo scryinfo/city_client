@@ -24,13 +24,17 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
+    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
+    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable,self.toggleData)
     end);
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
+        PlayMusEff(1002)
         if not self.viewRect.gameObject.activeSelf then
             return
         end
@@ -42,6 +46,8 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
         end
     end);
+    self.openName.text = GetLanguage(25020004)
+    self.closeName.text = GetLanguage(25020004)
     self.SmallShelfRateItemTab = {}
     self:initializeInfo(self.shelfData.shelf.good)
 
@@ -93,8 +99,12 @@ function ShelfRateItem:initializeInfo(data)
         local homePageType = ct.homePage.shelf
         local prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,v,prefab)
+        if not self.SmallShelfRateItemTab then
+            self.SmallShelfRateItemTab = {}
+        end
         self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
+    ShelfRateItem.shelfTab = self.SmallShelfRateItemTab
 end
 --货架添加时添加
 function ShelfRateItem:shelfRefreshInfo(data)
@@ -122,6 +132,7 @@ function ShelfRateItem:shelfRefreshInfo(data)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,data,prefab)
         self.SmallShelfRateItemTab[#self.SmallShelfRateItemTab + 1] = SmallShelfRateItem
     end
+    ShelfRateItem.shelfTab = self.SmallShelfRateItemTab
 end
 --货架下架时删除
 function ShelfRateItem:delGoodRefreshInfo(data)
@@ -139,5 +150,5 @@ end
 function ShelfRateItem:updateInfo(data)
     self.shelfData = data
     self.shelfData.shelf.good = data.shelf.good
-    self:initializeInfo()
+    self:initializeInfo(self.shelfData.shelf.good)
 end

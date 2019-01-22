@@ -30,7 +30,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
         self:materialRoot()
-        self.nameText.text = Material[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -40,7 +40,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     elseif math.floor(self.itemId / 100000) == goodsKey then
         self:goodsRoot()
         self.qualityScore.text = self.goodsDataInfo.key.qty
-        self.nameText.text = Good[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -79,6 +79,7 @@ function WarehouseItem:c_GoodsItemDelete()
 end
 --勾选物品
 function WarehouseItem:OnClick_bgBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_warehouseClick", ins)
 end
 --删除事件
@@ -88,6 +89,7 @@ function WarehouseItem:closeEvent()
 end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
+    PlayMusEff(1002)
     Event.Brocast("mReqDelItem",go.buildingId,go.itemId)
     --go.manager:_WarehousedeleteGoods(go.id);
 end

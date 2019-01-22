@@ -20,6 +20,8 @@ function DETAILSBoxCtrl:Awake(go)
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
 function DETAILSBoxCtrl:Active()
+    UIPanel.Active(self)
+    DETAILSBoxPanel.name.text = GetLanguage(27010004)
     DETAILSBoxPanel.numberInput.onValueChanged:AddListener(function()
         self:numberInputInfo();
     end)
@@ -30,6 +32,7 @@ function DETAILSBoxCtrl:Active()
 end
 
 function DETAILSBoxCtrl:OnClick_XBtn(obj)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 function DETAILSBoxCtrl:Hide()
@@ -75,6 +78,7 @@ function DETAILSBoxCtrl:Refresh()
 end
 --修改数量价格
 function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
+    PlayMusEff(1002)
     local number = DETAILSBoxPanel.numberSlider.value
     local price = tonumber(DETAILSBoxPanel.priceInput.text)
 

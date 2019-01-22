@@ -22,14 +22,18 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
     self.sizeSlider = self.viewRect.transform:Find("contentRoot/sizeSlider"):GetComponent("Slider");  -- slider
     self.numberText = self.viewRect.transform:Find("contentRoot/number"):GetComponent("Text");
+    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
+    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable, self.toggleData)
     end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
+        PlayMusEff(1002)
         ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
     end);
     self:initData()
@@ -47,6 +51,9 @@ function WarehouseRateItem:initData()
     self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
     self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
     self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
+    self.openName.text = GetLanguage(25020003)
+    self.closeName.text = GetLanguage(25020003)
+    WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
 end
 
 function WarehouseRateItem:getWarehouseCapacity(table)

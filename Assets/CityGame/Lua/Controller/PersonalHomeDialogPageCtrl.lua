@@ -33,6 +33,11 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.companyBtn.gameObject, self._companyBtnFunc, self)
 end
 
+function PersonalHomeDialogPageCtrl:Active()
+    UIPanel.Active(self)
+    self.titleText.text = GetLanguage(16010001)
+end
+
 function PersonalHomeDialogPageCtrl:Refresh()
     self:_initData()
 end
@@ -60,6 +65,9 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
 
     self.friendOtherTran = go.transform:Find("root/otherOpen/friends")
     self.friendSendMessageBtn = go.transform:Find("root/otherOpen/friends/sendMessageBtn")  --如果是好友则只能聊天，不能再加好友
+
+    --多语言
+    self.titleText = go.transform:Find("root/topBg/Text"):GetComponent("Text")
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
@@ -98,10 +106,12 @@ function PersonalHomeDialogPageCtrl:_initData()
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 --修改des
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
+    PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
         if str ~= "" and str ~= nil then
             ins:_reqChangeDesToServer(str)
@@ -112,6 +122,7 @@ function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
 end
 --请求加好友
 function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "REMINDER"
     data.tipInfo = "Please input verification information!"
@@ -124,6 +135,7 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
 end
 --好友私聊
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end
@@ -131,6 +143,7 @@ function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
         ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
     end
@@ -138,6 +151,7 @@ function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
 end
 --公司
 function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     ct.OpenCtrl("CompanyCtrl", ins.m_data)
 end

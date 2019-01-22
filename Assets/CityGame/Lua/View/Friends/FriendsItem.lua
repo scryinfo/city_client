@@ -149,22 +149,21 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
 end
 
 function FriendsItem:OnBg(go)
-    --UIPage.ClosePage()
-    --GameObject.Destroy(go.prefab)
+    PlayMusEff(1002)
     ct.log("tina_w7_friends", "向好友发起聊天")
     ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
 end
 
 function FriendsItem:OnHead(go)
-    --UIPage.ClosePage()
+    PlayMusEff(1002)
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", go.data)
     ct.log("tina_w7_friends", "显示好友个人信息")
 end
 
 -- 删除好友
 function FriendsItem:OnDelete(go)
-    --UIPage.ClosePage()
     --打开弹框
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(12020002)
     data.contentInfo = GetLanguage(12020003, go.data.name)
@@ -178,6 +177,7 @@ end
 -- 移除屏蔽
 function FriendsItem:OnRemoveMask(go)
     --打开弹框
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(12030002)
     data.contentInfo = GetLanguage(12030003, go.data.name)
@@ -191,6 +191,7 @@ end
 -- 发送私聊
 function FriendsItem:OnSendMsg(go)
     ct.log("tina_w8_friends", "向陌生人发起私聊")
+    PlayMusEff(1002)
     FriendslistCtrl.static.isAddfriends = true
     if go.isFriends then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
@@ -201,6 +202,7 @@ end
 
 -- 加好友
 function FriendsItem:OnAddFriends(go)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(12040002)
     data.tipInfo = GetLanguage(12040003)
@@ -216,6 +218,7 @@ end
 -- 同意好友申请
 function FriendsItem:OnAgree(go)
     ct.log("tina_w8_friends", "向服务器发送同意好友申请请求")
+    PlayMusEff(1002)
     Event.Brocast("m_AddFriendsReq", go.data.id, true)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({itemId = go.itemId})
@@ -227,6 +230,7 @@ end
 -- 拒绝好友申请
 function FriendsItem:OnRefuse(go)
     ct.log("tina_w8_friends", "向服务器发送拒绝好友申请请求")
+    PlayMusEff(1002)
     Event.Brocast("m_AddFriendsReq", go.data.id, false)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({id = go.data.id})

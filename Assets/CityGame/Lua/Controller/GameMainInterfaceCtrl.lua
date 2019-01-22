@@ -248,6 +248,7 @@ function GameMainInterfaceCtrl._showFriendsNotice()
 end
 
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
+    PlayMusEff(1006)
     self._showFriendsNotice()
 end
 

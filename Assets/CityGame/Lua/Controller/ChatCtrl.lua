@@ -36,6 +36,7 @@ function ChatCtrl:Awake(go)
     --添加UI事件点击监听
     ChatCtrl.static.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.backBtn, function ()
+        PlayMusEff(1002)
         ChatCtrl.static.chatMgr:DestroyContentChildren(0)
         ChatCtrl.static.chatMgr:DestroyContentChildren(1)
         ChatCtrl.static.chatMgr:DestroyContentChildren(2)
@@ -95,7 +96,6 @@ end
 function ChatCtrl:Refresh()
     ct.log("tina_w9_friends", "ChatCtrl:Refresh")
     self:initInsData()
-    --self:_addListener()
     self:_refreshState()
 end
 
@@ -413,16 +413,19 @@ end
 
 -- 点击表情按钮
 function ChatCtrl:OnShowExpression()
+    PlayMusEff(1002)
     ChatPanel.expressionRoot:SetActive(not ChatPanel.expressionRoot.activeSelf)
 end
 
 -- 关闭表情列表
 function ChatCtrl:OnBackExpression()
+    PlayMusEff(1002)
     ChatPanel.expressionRoot:SetActive(false)
 end
 
 -- 发送聊天消息
 function ChatCtrl:OnSend(go)
+    PlayMusEff(1002)
     local text = ChatPanel.chatInputField.text
     local chatStr = string.gsub(text, "^%s*(.-)%s*$", "%1")
     if string.len(chatStr) == 0 or chatStr == "" then
@@ -450,6 +453,7 @@ end
 
 -- 陌生人加好友
 function ChatCtrl:OnAddFriends(go)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(15010006)
     data.tipInfo = GetLanguage(15010007)
@@ -465,6 +469,7 @@ end
 
 -- 陌生人私聊
 function ChatCtrl:OnChat()
+    PlayMusEff(1002)
     local activePlayerData = ChatCtrl.static.chatMgr:GetActivePlayerData()
     local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
     ChatPanel.strangersToggle.isOn = true
@@ -484,6 +489,7 @@ end
 
 -- 查看聊天记录
 function ChatCtrl:OnChatRecords(go)
+    PlayMusEff(1002)
     if ChatPanel.chatRecordsRoot.activeSelf then
         ChatPanel.chatRecordsRoot:SetActive(false)
         ChatPanel.playerInfoRoot:SetActive(true)
@@ -496,6 +502,7 @@ end
 
 -- 显示个人信息界面
 function ChatCtrl:OnShowPersonalInfo(go)
+    PlayMusEff(1002)
     if ChatCtrl.static.chatMgr.activePlayerData then
         ChatCtrl.static.chatMgr.activePlayerData.isOpenChat = true
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ChatCtrl.static.chatMgr.activePlayerData)
@@ -505,6 +512,7 @@ end
 -- 删除聊天记录
 function ChatCtrl:OnDeleteChatRecords(go)
     --打开弹框
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(15010006)
     data.contentInfo = GetLanguage(15010019)
@@ -517,17 +525,20 @@ end
 
 -- 显示前一页
 function ChatCtrl:OnPrev(go)
+    PlayMusEff(1002)
     ChatCtrl.static.chatMgr:ShowPageInfo(ChatCtrl.static.chatMgr:GetCurrentPage() - 1)
 end
 
 -- 显示后一页
 function ChatCtrl:OnNext(go)
+    PlayMusEff(1002)
     ChatCtrl.static.chatMgr:ShowPageInfo(ChatCtrl.static.chatMgr:GetCurrentPage() + 1)
 end
 
 -- 屏蔽玩家
 function ChatCtrl:OnShield(go)
     --打开弹框
+    PlayMusEff(1002)
     local activePlayerData = ChatCtrl.static.chatMgr:GetActivePlayerData()
     local data = {}
     data.titleInfo = GetLanguage(15010009)

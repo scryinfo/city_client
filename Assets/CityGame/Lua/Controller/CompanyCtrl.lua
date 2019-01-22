@@ -54,8 +54,7 @@ function CompanyCtrl:_allItemType()
 end
 
 function CompanyCtrl:OnBack(go)
-    --go:_removeListener()
-    --go:Hide()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 

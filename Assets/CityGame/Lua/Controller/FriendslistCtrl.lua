@@ -33,6 +33,7 @@ function FriendslistCtrl:OnCreate(go)
     --添加UI事件点击监听
     FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
+        PlayMusEff(1002)
         UIPanel.ClosePage()
     end)
 
@@ -138,6 +139,7 @@ function FriendslistCtrl:_initState()
     end
 
 function FriendslistCtrl:OnSearch(go)
+    PlayMusEff(1002)
     local text = FriendslistPanel.searchInputField:GetComponent("InputField").text
     if text == "" then
         return

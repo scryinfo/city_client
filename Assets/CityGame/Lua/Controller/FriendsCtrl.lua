@@ -32,6 +32,7 @@ function FriendsCtrl:OnCreate(go)
     --添加UI事件点击监听
     FriendsCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.backBtn, function ()
+        PlayMusEff(1002)
         UIPanel.ClosePage()
     end)
 
@@ -192,6 +193,7 @@ end
 
 -- 管理好友
 function FriendsCtrl:OnFriendsManage(go)
+    PlayMusEff(1002)
     go:_removeListener()
     local data =
     {
@@ -203,6 +205,7 @@ end
 
 --打开黑名单
 function FriendsCtrl:OnBlacklist(go)
+    PlayMusEff(1002)
     go:_removeListener()
     local data =
     {
@@ -214,6 +217,7 @@ end
 
 --添加好友
 function FriendsCtrl:OnAddFriends(go)
+    PlayMusEff(1002)
     go:_removeListener()
     local data =
     {
@@ -225,6 +229,7 @@ end
 
 --打开申请列表
 function FriendsCtrl:OnApplicationlist(go)
+    PlayMusEff(1002)
     go:_removeListener()
     local data =
     {

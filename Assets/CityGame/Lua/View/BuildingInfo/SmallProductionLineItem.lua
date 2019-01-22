@@ -155,12 +155,14 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
 end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
+    PlayMusEff(1002)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
     go.adjustmentTop.localScale = Vector3.zero
 end
 
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
+    PlayMusEff(1002)
     if not go.lineId then
         go.manager:_deleteLine(go)
     else
@@ -169,6 +171,7 @@ function SmallProductionLineItem:OnClicl_XBtn(go)
 end
 --关闭添加修改的Top
 function SmallProductionLineItem:OnClicl_closeBtn(go)
+    PlayMusEff(1002)
     go.adjustmentTop.localScale = Vector3.zero
 end
 --初始化按钮

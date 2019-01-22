@@ -19,7 +19,7 @@ function ProcessingCtrl:Awake(go)
     self.gameObject = go;
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.processingBehaviour:AddClick(ProcessingPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
@@ -47,8 +47,8 @@ end
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
     ProcessingPanel.nameText.text = DataInfo.info.name
-    ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
-
+    --ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
     self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
@@ -76,14 +76,17 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     end
 end
 function ProcessingCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function ProcessingCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 
 --更改名字
 function ProcessingCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
@@ -100,6 +103,7 @@ function ProcessingCtrl:_updateName(name)
 end
 --返回
 function ProcessingCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.processingToggleGroup then
         ins.processingToggleGroup:cleanItems()
     end

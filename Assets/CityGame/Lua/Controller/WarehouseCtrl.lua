@@ -84,6 +84,7 @@ function WarehouseCtrl:Refresh()
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     if switchIsShow then
         go:OnClick_rightInfo(not switchIsShow,1)
@@ -172,14 +173,17 @@ end
 
 --Open shelf
 function WarehouseCtrl:OnClick_shelfBtn(go)
+    PlayMusEff(1002)
     go:OnClick_rightInfo(not switchIsShow,0)
 end
 --Open transpor
 function WarehouseCtrl:OnClick_transportBtn(go)
+    PlayMusEff(1002)
     go:OnClick_rightInfo(not switchIsShow,1)
 end
 --名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
+    PlayMusEff(1002)
     WarehousePanel.nowText.text = "By name";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
@@ -187,6 +191,7 @@ function WarehouseCtrl:OnClick_OnName(ins)
 end
 --数量排序
 function WarehouseCtrl:OnClick_OnNumber(ins)
+    PlayMusEff(1002)
     WarehousePanel.nowText.text = "By quantity";
     WarehouseCtrl:OnClick_OpenList(not isShowList);
     local quantityType = ct.sortingItemType.Quantity
@@ -195,6 +200,7 @@ end
 --跳转选择仓库界面
 function WarehouseCtrl:OnClick_transportopenBtn(go)
     --go:deleteObjInfo()
+    PlayMusEff(1002)
     local data = {}
     data.pos = {}
     data.pos.x = go.m_data.info.pos.x
@@ -205,6 +211,7 @@ function WarehouseCtrl:OnClick_transportopenBtn(go)
 end
 --确定上架
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
+    PlayMusEff(1002)
     if not go.GoodsUnifyMgr.shelfPanelItem then
         return;
     else
@@ -234,6 +241,7 @@ function WarehouseCtrl:n_shelfAdd(msg)
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
+    PlayMusEff(1002)
     if not GoodsUnifyMgr.transportPanelItem then
         return;
     end
@@ -333,6 +341,7 @@ function WarehouseCtrl:isShowDetermineBtn()
     end
 end
 function WarehouseCtrl:OnClick_OnSorting(ins)
+    PlayMusEff(1002)
     WarehouseCtrl:OnClick_OpenList(not isShowList);
 end
 --打开排序

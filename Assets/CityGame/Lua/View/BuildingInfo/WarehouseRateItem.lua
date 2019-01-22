@@ -26,12 +26,14 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable, self.toggleData)
     end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
             return
         end
+        PlayMusEff(1002)
         ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
     end);
     self:initData()

@@ -56,12 +56,14 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)
+    PlayMusEff(1002)
     transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
     transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     --ins.m_data = nil;
     ins:Hide();
 end
 function TransportBoxCtrl:OnClick_confirmBtn(ins)
+    PlayMusEff(1002)
     if ins.m_data.btnClick then
         ins.m_data.btnClick()
         ins.m_data.btnClick = nil

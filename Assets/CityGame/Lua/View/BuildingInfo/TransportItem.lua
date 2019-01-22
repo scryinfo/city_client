@@ -48,6 +48,7 @@ function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,ite
 end
 --删除
 function TransportItem:OnClick_closeBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_temporaryifNotGoods",ins.id);
 end
 --刷新滑动条

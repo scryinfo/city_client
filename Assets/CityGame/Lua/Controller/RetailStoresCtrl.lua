@@ -19,7 +19,7 @@ function RetailStoresCtrl:Awake(go)
     self.gameObject = go;
     self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
@@ -49,7 +49,9 @@ end
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
     RetailStoresPanel.nameText.text = DataInfo.info.name
-    RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
+
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -76,13 +78,16 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     end
 end
 function RetailStoresCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function RetailStoresCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
 function RetailStoresCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
@@ -99,6 +104,7 @@ function RetailStoresCtrl:_updateName(name)
 end
 --返回
 function RetailStoresCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end

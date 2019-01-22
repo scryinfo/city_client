@@ -20,7 +20,7 @@ function MaterialCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
@@ -50,8 +50,8 @@ end
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
     MaterialPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
-
+    --MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    MaterialPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
@@ -78,13 +78,16 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
 end
 
 function MaterialCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function MaterialCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
 function MaterialCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
@@ -101,6 +104,7 @@ function MaterialCtrl:_updateName(name)
 end
 --返回
 function MaterialCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end

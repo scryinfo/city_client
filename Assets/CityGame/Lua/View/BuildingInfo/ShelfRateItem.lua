@@ -29,10 +29,12 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
 
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable,self.toggleData)
     end);
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
+        PlayMusEff(1002)
         if not self.viewRect.gameObject.activeSelf then
             return
         end

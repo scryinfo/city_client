@@ -53,6 +53,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
 end
 --删除
 function DetailsItem:OnClick_closeBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_temporaryifNotGoods", ins.id)
 end
 --刷新滑动条

@@ -21,6 +21,7 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
+        PlayMusEff(1002)
         if not self.viewRect.gameObject.activeSelf then
             return
         end

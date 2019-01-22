@@ -53,6 +53,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
 end
 --删除
 function BuyDetailsItem:OnClick_closeBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_tempTabNotGoods",ins.id);
 end
 --刷新滑动条

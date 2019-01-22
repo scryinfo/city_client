@@ -90,6 +90,7 @@ function ShelfCtrl:c_tempTabNotGoods(id)
 end
 --跳转选择仓库界面
 function ShelfCtrl:OnClick_openBtn(go)
+    PlayMusEff(1002)
     local data = {}
     data.pos = {}
     data.pos.x = go.m_data.info.pos.x
@@ -100,6 +101,7 @@ function ShelfCtrl:OnClick_openBtn(go)
 end
 --购买物品
 function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+    PlayMusEff(1002)
     if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
         return;
     else
@@ -143,6 +145,7 @@ end
 
 function ShelfCtrl:OnClick_return_Btn(go)
     --go:deleteObjInfo();
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     if switchIsShow then
         go:openPlayerBuy(not switchIsShow)
@@ -157,6 +160,7 @@ function ShelfCtrl:Hide()
 end
 --根据名字排序
 function ShelfCtrl:OnClick_OnName(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By name";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
@@ -164,6 +168,7 @@ function ShelfCtrl:OnClick_OnName(ins)
 end
 --根据数量排序
 function ShelfCtrl:OnClick_OnNumber(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By quantity";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local quantityType = ct.sortingItemType.Quantity
@@ -171,6 +176,7 @@ function ShelfCtrl:OnClick_OnNumber(ins)
 end
 --根据价格排序
 function ShelfCtrl:OnClick_OnpriceBtn(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By price";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local priceType = ct.sortingItemType.Price
@@ -178,6 +184,7 @@ function ShelfCtrl:OnClick_OnpriceBtn(ins)
 end
 
 function ShelfCtrl.OnClick_OnSorting(ins)
+    PlayMusEff(1002)
     ShelfCtrl.OnClick_OpenList(not isShowList);
 end
 
@@ -193,6 +200,7 @@ function ShelfCtrl.OnClick_OpenList(isShow)
 end
 --其他玩家购买窗口
 function ShelfCtrl:OnClick_playerBuy(go)
+    PlayMusEff(1002)
     go:openPlayerBuy(not switchIsShow)
 end
 
@@ -244,6 +252,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
     Event.Brocast("SmallPop","购买成功",300)
 end
 function ShelfCtrl:OnClick_createGoods(go)
+    PlayMusEff(1002)
     if go.data == nil then
         return
     end

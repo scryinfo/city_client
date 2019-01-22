@@ -79,6 +79,7 @@ function WarehouseItem:c_GoodsItemDelete()
 end
 --勾选物品
 function WarehouseItem:OnClick_bgBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_warehouseClick", ins)
 end
 --删除事件
@@ -88,6 +89,7 @@ function WarehouseItem:closeEvent()
 end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
+    PlayMusEff(1002)
     Event.Brocast("mReqDelItem",go.buildingId,go.itemId)
     --go.manager:_WarehousedeleteGoods(go.id);
 end

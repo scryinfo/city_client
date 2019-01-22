@@ -66,6 +66,7 @@ end
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo();
     --go:deleteTempTable();
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 function AdjustProductionLineCtrl:Close()
@@ -82,6 +83,7 @@ function AdjustProductionLineCtrl:Hide()
 end
 
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
     ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
 end
 

@@ -49,7 +49,7 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     if self.data.des == nil or self.data.des == "" then
-        self.data.des = "Everything i do i wanna put a shine on it, do it one more time."  --默认值
+        self.data.des = GetLanguage(12010003)  --默认值
     end
     self.signatureText.text = self.data.des
     if self.data.desc then
@@ -149,26 +149,24 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
 end
 
 function FriendsItem:OnBg(go)
-    --UIPage.ClosePage()
-    --GameObject.Destroy(go.prefab)
+    PlayMusEff(1002)
     ct.log("tina_w7_friends", "向好友发起聊天")
     ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
 end
 
 function FriendsItem:OnHead(go)
-    --UIPage.ClosePage()
+    PlayMusEff(1002)
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", go.data)
     ct.log("tina_w7_friends", "显示好友个人信息")
 end
 
 -- 删除好友
 function FriendsItem:OnDelete(go)
-    --UIPage.ClosePage()
     --打开弹框
+    PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "WARNING"
-    data.contentInfo = "Delete the production line?"
-    data.tipInfo = "(The production schedule will be empty!)"
+    data.titleInfo = GetLanguage(12020002)
+    data.contentInfo = GetLanguage(12020003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送删除好友请求")
         Event.Brocast("m_DeleteFriend", go.data.id, false)
@@ -179,10 +177,10 @@ end
 -- 移除屏蔽
 function FriendsItem:OnRemoveMask(go)
     --打开弹框
+    PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "WARNING"
-    data.contentInfo = "Delete the production line?"
-    data.tipInfo = "(The production schedule will be empty!)"
+    data.titleInfo = GetLanguage(12030002)
+    data.contentInfo = GetLanguage(12030003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送移除屏蔽请求")
         Event.Brocast("m_DeleteBlacklist", go.data.id)
@@ -193,6 +191,7 @@ end
 -- 发送私聊
 function FriendsItem:OnSendMsg(go)
     ct.log("tina_w8_friends", "向陌生人发起私聊")
+    PlayMusEff(1002)
     FriendslistCtrl.static.isAddfriends = true
     if go.isFriends then
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = go.data.id})
@@ -203,14 +202,15 @@ end
 
 -- 加好友
 function FriendsItem:OnAddFriends(go)
+    PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "REMINDER"
-    data.tipInfo = "Please input verification information!"
+    data.titleInfo = GetLanguage(12040002)
+    data.tipInfo = GetLanguage(12040003)
     data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_AddFriends", go.data.id, text)
-        Event.Brocast("SmallPop","Your request has been sent.",80)
+        Event.Brocast("SmallPop", GetLanguage(12040004),80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -218,21 +218,24 @@ end
 -- 同意好友申请
 function FriendsItem:OnAgree(go)
     ct.log("tina_w8_friends", "向服务器发送同意好友申请请求")
+    PlayMusEff(1002)
     Event.Brocast("m_AddFriendsReq", go.data.id, true)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({itemId = go.itemId})
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
-        --FriendslistPanel.friendsView:ActiveLoopScroll(FriendslistCtrl.friendsSource, #FriendslistCtrl.friendInfo)
+        Event.Brocast("SmallPop", GetLanguage(12050002, go.data.name),80)
     end
 end
 
 -- 拒绝好友申请
 function FriendsItem:OnRefuse(go)
     ct.log("tina_w8_friends", "向服务器发送拒绝好友申请请求")
+    PlayMusEff(1002)
     Event.Brocast("m_AddFriendsReq", go.data.id, false)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({id = go.data.id})
         table.remove(FriendslistCtrl.friendInfo, go.itemId)
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
+        Event.Brocast("SmallPop", GetLanguage(12050003, go.data.name),80)
     end
 end

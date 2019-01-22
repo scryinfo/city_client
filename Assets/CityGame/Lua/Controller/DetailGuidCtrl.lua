@@ -28,14 +28,14 @@ function DetailGuidCtrl:OnCreate(obj)
 end
 
 function DetailGuidCtrl:Awake(obj)
-    panel = DetailGuidPanel;
+    panel = DetailGuidPanel
     self.btnInsList={}
     self.detailInsList={}
     self.detail1InsList={}
-    luaBehaviour = obj:GetComponent('LuaBehaviour');
-    luaBehaviour:AddClick(panel.backBtn.gameObject,self.onClick_Close,self);
-    luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self);
-    luaBehaviour:AddClick(obj,function ()  panel.scroll.localScale=Vector3.zero   end,self);
+    luaBehaviour = obj:GetComponent('LuaBehaviour')
+    luaBehaviour:AddClick(panel.backBtn.gameObject,self.onClick_Close,self)
+    luaBehaviour:AddClick(panel.detailBtn.gameObject,self.detailBtn,self)
+    luaBehaviour:AddClick(obj,function ()  panel.scroll.localScale=Vector3.zero   end,self)
 end
 
 
@@ -57,6 +57,8 @@ end
 
 function DetailGuidCtrl:onClick_Close(ins)
    UIPanel.ClosePage()
+    PlayMusEff(1002)
+
 end
 
 ---刷新按钮
@@ -92,7 +94,6 @@ function DetailGuidCtrl:updateItem(names)
                 for i, ins in pairs(tempList) do
                     table.insert(self.btnInsList,ins)
                 end
-
             end
         end
     ---*************************************************
@@ -114,7 +115,7 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
 
         if mainName then--选择
             if name==mainName then
-                panel.detailText.text=mainName
+                panel.detailText.text=GetLanguage(tonumber(mainName))
                 for key,string in pairs(content) do
                     if num%2==1 then
 

@@ -189,7 +189,7 @@ namespace LuaFramework {
             yield return new WaitForEndOfFrame();
            // 这里都是资源文件，用线程下载
             float num = 0;
-            for (int i = 0; i < m_ojects.Count; i++)
+            for (int i = m_ojects.Count-1; i >= 0; --i)
             {
                 
                 BeginDownload(m_ojects[i].fileUrl, m_ojects[i].localfile);
@@ -200,8 +200,8 @@ namespace LuaFramework {
                   yield return new WaitForEndOfFrame();
                 }
 
-                num = i;
-                content.text = m_ojects[i].localfile;
+                num = m_ojects.Count - i;
+                content.text = m_ojects[i].localfile.Replace(dataPath,"");
                 slider.value = num / m_ojects.Count;
             }
             yield return new WaitForEndOfFrame();

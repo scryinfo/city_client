@@ -31,16 +31,16 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 
     local n = 0
     if DataInfo.info.mId == nil then
-        self.size.text = BagPosInfo[1].sizeName
-        self.name.text = BagPosInfo[1].typeName
+        self.size.text = GetLanguage(21030007)
+        self.name.text = GetLanguage(21030008)
         local bagCapacity = DataManager.GetBagCapacity()  --仓库总容量
         self.warehouse_Slider.maxValue = bagCapacity
         n = DataManager.GetBagNum()      --仓库内物品数量
         self.spareCapacity = bagCapacity - n --剩余容量
         self.number.text = n .. "/" .. bagCapacity
     else
-        self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
-        self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
+        self.name.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].typeName)
+        self.size.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].sizeName)
         self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
         if DataInfo.store.inHand == nil then
             n = 0
@@ -80,6 +80,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
+    PlayMusEff(1002)
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输
     go.manager:_onClick()

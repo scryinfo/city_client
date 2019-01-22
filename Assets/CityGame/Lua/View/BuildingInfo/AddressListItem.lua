@@ -28,5 +28,6 @@ function AddressListItem:initialize(DataInfo,prefab,mgr)
 end
 
 function AddressListItem:OnAddressListBG(go)
+    PlayMusEff(1002)
     Event.Brocast("c_OnAddressListBG",go)
 end

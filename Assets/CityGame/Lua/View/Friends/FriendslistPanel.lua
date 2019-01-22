@@ -17,7 +17,7 @@ function FriendslistPanel.Awake(obj)
 end
 
 function FriendslistPanel.InitPanel()
-    -- 面板名字
+    -- 面板名字、支持多语言
     this.panelNameText = transform:Find("MiddleRoot/TitleBg/PanelNameText"):GetComponent("Text")
 
     this.backBtn = transform:Find("MiddleRoot/BackBtn").gameObject

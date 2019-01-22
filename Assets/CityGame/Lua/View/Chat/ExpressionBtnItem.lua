@@ -18,5 +18,6 @@ end
 
 function ExpressionBtnItem:OnExpressionBtn(go)
     ct.log("tina_w9_friends", "ExpressionBtnItem:OnExpressionBtn")
+    PlayMusEff(1002)
     ChatPanel.chatInputField.text = ChatPanel.chatInputField.text .. tostring(go.id)
 end

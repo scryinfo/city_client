@@ -18,12 +18,13 @@ end
 function BuidBtnItem:updateData(topicName,name)
     self.topicName=topicName
     self.name = name
-    self.nameText.text=name
+
+    self.nameText.text=GetLanguage(tonumber(name))
 end
 
 ---添加
 function BuidBtnItem:OnClick_Add(ins)
-    DetailGuidPanel.detailText.text=ins.name
+    DetailGuidPanel.detailText.text=GetLanguage(tonumber(ins.name))
     DetailGuidPanel.detailIma.localScale=Vector3.one
     DetailGuidPanel.scroll.localScale=Vector3.zero
     --刷新

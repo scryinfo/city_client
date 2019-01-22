@@ -7,7 +7,7 @@ GroundTransSetPriceCtrl = class('GroundTransSetPriceCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransSetPriceCtrl)
 
 function GroundTransSetPriceCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransSetPriceCtrl:bundleName()

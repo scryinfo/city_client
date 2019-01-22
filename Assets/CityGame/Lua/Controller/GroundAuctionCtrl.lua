@@ -7,7 +7,7 @@ GroundAuctionCtrl = class('GroundAuctionCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundAuctionCtrl)
 
 function GroundAuctionCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.DoNothing, UICollider.None)
 end
 
 function GroundAuctionCtrl:bundleName()
@@ -192,7 +192,8 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    --if tonumber(bidPrice) < DataManager.GetMoney() then
+    --local mMoney = DataManager.GetMoney()
+    --if tonumber(bidPrice) < mMoney  then
     --    Event.Brocast("SmallPop", "您的资金不足", 300)
     --    return
     --end
@@ -244,7 +245,7 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         --请求信息
         GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
     else
-        if self.biderInfo.id == data.id then
+        if self.biderInfo.id ~= data.id then
             --请求信息
             GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
         end

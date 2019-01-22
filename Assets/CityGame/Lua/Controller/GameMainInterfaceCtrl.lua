@@ -49,6 +49,7 @@ end
 --金币改变
 function GameMainInterfaceCtrl:c_ChangeMoney(money)
     self.money = getPriceString("E"..money..".0000",24,20)
+    GameMainInterfacePanel.money.text = self.money
 end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)
@@ -131,8 +132,10 @@ function GameMainInterfaceCtrl:Awake()
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.gender = info.male
+
     local gold = DataManager.GetMoney()
     self.money = getPriceString("E"..gold..".0000",24,20)
+    GameMainInterfacePanel.money.text = self.money
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -146,9 +149,9 @@ end
 function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
-    --初始化姓名,性别,金币
+    --初始化姓名,性别
     GameMainInterfacePanel.name.text = self.name
-    GameMainInterfacePanel.money.text = self.money
+
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
     self.m_Timer:Start()
     if self.gender then

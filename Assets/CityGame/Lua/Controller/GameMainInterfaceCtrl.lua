@@ -17,7 +17,6 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-
 end
 
 function GameMainInterfaceCtrl:Active()

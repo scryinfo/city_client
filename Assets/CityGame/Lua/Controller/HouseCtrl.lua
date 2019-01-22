@@ -76,9 +76,9 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
 end
 ---更改名字
 function HouseCtrl:_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
+    data.titleInfo = GetLanguage(25040001)
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
         DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
@@ -88,6 +88,7 @@ function HouseCtrl:_changeName(ins)
 end
 ---返回
 function HouseCtrl:_backBtn(ins)
+    PlayMusEff(1002)
     if ins.houseToggleGroup then
         ins.houseToggleGroup:cleanItems()
     end
@@ -100,12 +101,14 @@ end
 
 --点击中间按钮的方法
 function HouseCtrl:_centerBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data then
         Event.Brocast("c_openBuildingInfo", ins.m_data.info)
     end
 end
 --点击开业按钮方法
 function HouseCtrl:_openBuildingBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data then
         Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
     end

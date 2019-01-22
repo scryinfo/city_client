@@ -39,8 +39,8 @@ function CreateRoleCtrl:Active()
     CreateRolePanel.name.text = GetLanguage(10040001)
     CreateRolePanel.maleText.text = GetLanguage(10040002)
     CreateRolePanel.femaleText.text = GetLanguage(10040003)
-    CreateRolePanel.duplicateText.text = GetLanguage(10040005)
-    CreateRolePanel.Companyname.text = GetLanguage(10040004)
+    CreateRolePanel.duplicateText.text = GetLanguage(10040004)
+    CreateRolePanel.Companyname.text = GetLanguage(10040005)
 end
 
 function CreateRoleCtrl:_initInsData()
@@ -60,6 +60,7 @@ end
 
 --创建角色
 function CreateRoleCtrl:OnCreateRole(go)
+    PlayMusEff(1002)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
@@ -78,6 +79,7 @@ end
 
 --选择性别 男
 function CreateRoleCtrl:OnMale()
+    PlayMusEff(1002)
     gender = true
     CreateRolePanel.male:GetComponent("Image").color =getColorByInt(255,218,72,255)
     CreateRolePanel.female:GetComponent("Image").color =getColorByInt(215,215,215,255)
@@ -87,6 +89,7 @@ end
 
 --选择性别 女
 function CreateRoleCtrl:OnFemale()
+    PlayMusEff(1002)
     gender = false
     CreateRolePanel.female:GetComponent("Image").color =getColorByInt(255,218,72,255)
     CreateRolePanel.male:GetComponent("Image").color =getColorByInt(215,215,215,255)

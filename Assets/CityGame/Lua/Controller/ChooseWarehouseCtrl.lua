@@ -56,6 +56,10 @@ function ChooseWarehouseCtrl:Active()
     Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
     Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
     self:_addListener()
+
+    ChooseWarehousePanel.name.text = GetLanguage(21030001)
+    ChooseWarehousePanel.mineName.text = GetLanguage(21030005)
+    ChooseWarehousePanel.addresslist.text = GetLanguage(21030006)
 end
 
 function ChooseWarehouseCtrl:Refresh()
@@ -139,14 +143,16 @@ end
 
 --返回
 function ChooseWarehouseCtrl:OnClick_returnBtn()
+    PlayMusEff(1002)
     UIPanel.ClosePage();
 end
 --搜索
 function ChooseWarehouseCtrl:OnClick_searchBtn()
-
+    PlayMusEff(1002)
 end
 --点击ming BG
 function ChooseWarehouseCtrl:OnClick_bgBtn(go)
+    PlayMusEff(1002)
     if go.onClick then
         WareHouseGoodsMgr:_deleteLinePanel()
         ChooseWarehousePanel.boxImg:SetActive(true)
@@ -229,6 +235,7 @@ end
 
 --根据名字排序
 function ChooseWarehouseCtrl:OnClick_nameBtn()
+    PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By name";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
     local type = ChooseWarehouseSortItemType.Name
@@ -236,6 +243,7 @@ function ChooseWarehouseCtrl:OnClick_nameBtn()
 end
 --根据数量排序
 function ChooseWarehouseCtrl:OnClick_quantityBtn()
+    PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By quantity";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
     local type = ChooseWarehouseSortItemType.Quantity
@@ -243,6 +251,7 @@ function ChooseWarehouseCtrl:OnClick_quantityBtn()
 end
 --根据价格排序
 function ChooseWarehouseCtrl:OnClick_priceBtn()
+    PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By price";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
     local type = ChooseWarehouseSortItemType.Price
@@ -250,11 +259,13 @@ function ChooseWarehouseCtrl:OnClick_priceBtn()
 end
 --根据时间排序
 function ChooseWarehouseCtrl:OnClick_timeBtn()
+    PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By time";
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
 end
 
 function ChooseWarehouseCtrl:OnClick_OnSorting()
+    PlayMusEff(1002)
     ChooseWarehouseCtrl:OnClick_OpenList(not isShowList);
 end
 

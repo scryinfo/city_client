@@ -1,8 +1,8 @@
 PlayerBuildingBaseData=
 {
     [1100001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="原料厂",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020001,
         ["des"] ="小型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_1x1.png",
         ["prefabRoute"] = "Building/MaterialBuilding_1x1",
@@ -27,8 +27,8 @@ PlayerBuildingBaseData=
 
     },
     [1100002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="原料厂",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020001,
         ["des"] ="中型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_2x2.png",
         ["prefabRoute"] = "Building/MaterialBuilding_2x2",
@@ -53,8 +53,8 @@ PlayerBuildingBaseData=
 
     },
     [1100003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="原料厂",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020001,
         ["des"] ="大型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_3x3.png",
         ["prefabRoute"] = "Building/MaterialBuilding_3x3",
@@ -79,8 +79,8 @@ PlayerBuildingBaseData=
 
     },
     [1200001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="加工厂",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020002,
         ["des"] ="小型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_1x1.png",
         ["prefabRoute"] = "Building/Factory_1x1",
@@ -104,8 +104,8 @@ PlayerBuildingBaseData=
 		["salary"] = 900000
     },
     [1200002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="加工厂",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020002,
         ["des"] ="中型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_2x2.png",
         ["prefabRoute"] = "Building/Factory_2x2",
@@ -129,8 +129,8 @@ PlayerBuildingBaseData=
 		["salary"] = 900000
     },
     [1200003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="加工厂",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020002,
         ["des"] ="大型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_3x3.png",
         ["prefabRoute"] = "Building/Factory_3x3",
@@ -154,8 +154,8 @@ PlayerBuildingBaseData=
 		["salary"] = 900000
     },
     [1300001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="零售店",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020003,
         ["des"] ="小型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_1x1.png",
         ["prefabRoute"] = "Building/SuperMarket_1x1",
@@ -182,8 +182,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1300002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="零售店",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020003,
         ["des"] ="中型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_2x2.png",
         ["prefabRoute"] = "Building/SuperMarket_2x2",
@@ -210,8 +210,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1300003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="零售店",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020003,
         ["des"] ="大型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_3x3.png",
         ["prefabRoute"] = "Building/SuperMarket_3x3",
@@ -238,8 +238,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1400001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="住宅",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020005,
         ["des"] ="小型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse1x1.png",
         ["prefabRoute"] = "Building/HomeHouse_1x1",
@@ -266,8 +266,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1400002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="住宅",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020005,
         ["des"] ="中型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse2x2.png",
         ["prefabRoute"] = "Building/HomeHouse_2x2",
@@ -294,8 +294,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1400003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="住宅",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020005,
         ["des"] ="大型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse3x3.png",
         ["prefabRoute"] = "Building/HomeHouse_3x3",
@@ -322,8 +322,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 650000
     },
     [1500001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="研究所",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020006,
         ["des"] ="小型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding1x1.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_1X1",
@@ -347,8 +347,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1500002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="研究所",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020006,
         ["des"] ="中型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding2x2.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_2x2",
@@ -372,8 +372,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1500003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="研究所",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020006,
         ["des"] ="大型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding3x3.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_3x3",
@@ -397,8 +397,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1600001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="公园",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020004,
         ["des"] ="小型公园的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/park_1x1.png",
         ["prefabRoute"] = "Building/Park_1x1",
@@ -425,8 +425,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1600002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="公园",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020004,
         ["des"] ="中型公园的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/park_2x2.png",
         ["prefabRoute"] = "Building/Park_2x2",
@@ -453,8 +453,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1600003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="公园",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020004,
         ["des"] ="大型公园的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/park_3x3.png",
         ["prefabRoute"] = "Building/Park_3x3",
@@ -481,8 +481,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
 	[1700001] ={
-        ["sizeName"] ="小型",
-        ["typeName"] ="人才中心",
+        ["sizeName"] =41010001,
+        ["typeName"] =41020007,
         ["des"] ="小型人才中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-1x1.png",
         ["prefabRoute"] = "Building/Park_1x1",
@@ -506,8 +506,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1700002] ={
-        ["sizeName"] ="中型",
-        ["typeName"] ="人才中心",
+        ["sizeName"] =41010002,
+        ["typeName"] =41020007,
         ["des"] ="中型人才中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-2x2.png",
         ["prefabRoute"] = "Building/Park_2x2",
@@ -531,8 +531,8 @@ PlayerBuildingBaseData=
     ,["salary"] = 55
     },
     [1700003] ={
-        ["sizeName"] ="大型",
-        ["typeName"] ="人才中心",
+        ["sizeName"] =41010003,
+        ["typeName"] =41020007,
         ["des"] ="大型人才中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-3x3.png",
         ["prefabRoute"] = "Building/Park_3x3",

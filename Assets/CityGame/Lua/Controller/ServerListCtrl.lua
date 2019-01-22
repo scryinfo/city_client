@@ -90,6 +90,7 @@ end
 
 --点击确定--
 function ServerListCtrl:c_OnOK(go)
+    PlayMusEff(1002)
     --Event.Brocast("m_chooseGameServer", Index,go.data);
     local data = {}
     data.Index = Index

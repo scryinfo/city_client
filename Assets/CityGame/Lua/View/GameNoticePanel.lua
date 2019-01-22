@@ -32,5 +32,6 @@ function GameNoticePanel.InitPanel()
     this.timeLeft = transform:Find("right/down/timeLeft").gameObject:GetComponent("Text");--剩余时间
     this.hint = transform:Find("right/down/hint").gameObject;
     this.hintItem = transform:Find("right/down/hintItem").gameObject;
+    this.hintText = transform:Find("right/down/hintItem/Text").gameObject:GetComponent("Text");
 
 end

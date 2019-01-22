@@ -24,6 +24,7 @@ function CenterWareHousePanel.InitPanel()
     this.number = transform:Find("topRoot/Capacity/Slider/Number").gameObject;--仓库商品个数
     this.slider = transform:Find("topRoot/Capacity/Slider");
     this.arrowBtn = transform:Find("topRoot/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.centrel = transform:Find("topRoot/Centrel"):GetComponent("Image");
     this.nameBtn = transform:Find("topRoot/ListTable/List/nameBtn").gameObject;  --名字排序
     this.quantityBtn = transform:Find("topRoot/ListTable/List/quantityBtn").gameObject;  --数量排序
     this.levelBtn = transform:Find("topRoot/ListTable/List/levelBtn").gameObject; --评分排序

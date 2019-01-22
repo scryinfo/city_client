@@ -50,6 +50,8 @@ function LoginCtrl:Active()
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
+	local path = GetLanguage(10020003)
+	LoadSprite(path, LoginPanel.btnLogin:GetComponent("Image"), true)
 
 end
 
@@ -100,6 +102,7 @@ function LoginCtrl:onClickChooseGameServer(serverId)
 end
 --登录--
 function LoginCtrl:OnLogin(go)
+	PlayMusEff(1002)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
 	if username == "" then
@@ -111,6 +114,7 @@ function LoginCtrl:OnLogin(go)
 end
 --注册--
 function LoginCtrl:OnRegister(go)
+	PlayMusEff(1002)
 	if go.logined == false then
 		ct.log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
 	else

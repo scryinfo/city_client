@@ -59,6 +59,7 @@ function ChatLeftItem:initialize(itemId, prefab, data)
 end
 
 function ChatLeftItem:OnHeadClick(go)
+    PlayMusEff(1002)
     local friends = DataManager.GetMyFriends()
     if friends[go.data.id] ~= nil then -- 是好友，跳转好友界面
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)

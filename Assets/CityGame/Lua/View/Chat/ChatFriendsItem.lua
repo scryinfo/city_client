@@ -67,6 +67,7 @@ end
 
 function ChatFriendsItem:_toggleValueChange(isOn)
     if isOn then
+        PlayMusEff(1002)
         self.toggle.interactable = false
         self.noticeImage:SetActive(false)
         ChatCtrl.static.chatMgr:SetToggle(self.toggle)

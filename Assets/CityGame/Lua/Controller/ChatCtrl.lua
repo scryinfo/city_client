@@ -225,6 +225,7 @@ end
 -- 世界分页
 function ChatCtrl:_worldToggleValueChange(isOn)
     if isOn then
+        PlayMusEff(1002)
         ChatPanel.worldRoot:SetActive(isOn)
         ChatPanel.worldOpen:SetActive(isOn)
         ChatPanel.worldClose:SetActive(not isOn)
@@ -296,6 +297,7 @@ end
 -- 好友分页
 function ChatCtrl:_friendsToggleValueChange(isOn)
     if isOn then
+        PlayMusEff(1002)
         ChatPanel.worldRoot:SetActive(not isOn)
         ChatPanel.worldOpen:SetActive(not isOn)
         ChatPanel.worldClose:SetActive(isOn)
@@ -385,6 +387,7 @@ end
 -- 陌生人分页
 function ChatCtrl:_strangersToggleValueChange(isOn)
     if isOn then
+        PlayMusEff(1002)
         ChatPanel.worldRoot:SetActive(not isOn)
         ChatPanel.worldOpen:SetActive(not isOn)
         ChatPanel.worldClose:SetActive(isOn)

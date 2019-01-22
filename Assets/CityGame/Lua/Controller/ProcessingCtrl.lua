@@ -24,6 +24,10 @@ function ProcessingCtrl:Awake(go)
     self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.processingBehaviour:AddClick(ProcessingPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 end
+function ProcessingCtrl:Active()
+    UIPanel.Active(self)
+    ProcessingPanel.Text.text = GetLanguage(29010001)
+end
 function ProcessingCtrl:Refresh()
     this:initializeData()
 end

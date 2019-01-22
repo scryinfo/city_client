@@ -22,7 +22,7 @@ function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,ite
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = Material[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -30,7 +30,7 @@ function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,ite
             end
         end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = Good[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)

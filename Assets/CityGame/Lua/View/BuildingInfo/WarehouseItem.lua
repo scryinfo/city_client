@@ -30,7 +30,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
         self:materialRoot()
-        self.nameText.text = Material[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -40,7 +40,7 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     elseif math.floor(self.itemId / 100000) == goodsKey then
         self:goodsRoot()
         self.qualityScore.text = self.goodsDataInfo.key.qty
-        self.nameText.text = Good[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)

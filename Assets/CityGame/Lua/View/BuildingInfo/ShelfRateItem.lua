@@ -24,6 +24,8 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
+    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
+    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
@@ -42,6 +44,8 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
         end
     end);
+    self.openName.text = GetLanguage(25020004)
+    self.closeName.text = GetLanguage(25020004)
     self.SmallShelfRateItemTab = {}
     self:initializeInfo(self.shelfData.shelf.good)
 

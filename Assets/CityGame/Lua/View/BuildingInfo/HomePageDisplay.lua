@@ -21,7 +21,8 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(homePageShelfInfo.k.id / 100000) == materialKey then
-        self.nameText.text = Material[homePageShelfInfo.k.id].name
+        --self.nameText.text = Material[homePageShelfInfo.k.id].name
+        self.nameText.text = GetLanguage(homePageShelfInfo.k.id)
         panelMgr:LoadPrefab_A(Material[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -29,7 +30,7 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
             end
         end)
     elseif math.floor(homePageShelfInfo.k.id / 100000) == goodsKey then
-        self.nameText.text = Good[homePageShelfInfo.k.id].name
+        self.nameText.text = GetLanguage(homePageShelfInfo.k.id)
         panelMgr:LoadPrefab_A(Good[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -54,7 +55,8 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(homePageProductionLineInfo.itemId / 100000) == materialKey then
-        self.nameText.text = Material[homePageProductionLineInfo.itemId].name
+        --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
+        self.nameText.text = GetLanguage(homePageProductionLineInfo.itemId)
         panelMgr:LoadPrefab_A(Material[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -62,7 +64,7 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
             end
         end)
     elseif math.floor(homePageProductionLineInfo.itemId / 100000) == goodsKey then
-        self.nameText.text = Good[homePageProductionLineInfo.itemId].name
+        self.nameText.text = GetLanguage(homePageProductionLineInfo.itemId)
         panelMgr:LoadPrefab_A(Good[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)

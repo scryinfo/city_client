@@ -20,6 +20,8 @@ function DETAILSBoxCtrl:Awake(go)
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
 function DETAILSBoxCtrl:Active()
+    UIPanel.Active(self)
+    DETAILSBoxPanel.name.text = GetLanguage(27010004)
     DETAILSBoxPanel.numberInput.onValueChanged:AddListener(function()
         self:numberInputInfo();
     end)

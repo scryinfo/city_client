@@ -54,6 +54,8 @@ function WarehouseCtrl:Awake(go)
 end
 function WarehouseCtrl:Active()
     UIPanel.Active(self)
+    WarehousePanel.tipText.text = GetLanguage(26040002)
+    WarehousePanel.nameText.text = GetLanguage(26040002)
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
@@ -322,7 +324,7 @@ function WarehouseCtrl:isShowDetermineBtn()
     for i,v in pairs(self.GoodsUnifyMgr.transportPanelItem) do
         num = num + i
     end
-    if num ~= 0 and WarehousePanel.nameText.text ~= "请选择仓库" then
+    if num ~= 0 and WarehousePanel.nameText.text ~= nil then
         WarehousePanel.transportConfirmBtn.localScale = Vector3.one
         WarehousePanel.transportUncheckBtn.localScale = Vector3.zero
     else
@@ -353,7 +355,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             self.operation = ct.goodsState.shelf;
         else
             WarehousePanel.transport:SetActive(true);
-            WarehousePanel.nameText.text = "请选择仓库"
+            --WarehousePanel.nameText.text = "请选择仓库"
             WarehousePanel.transportUncheckBtn.localScale = Vector3.one
             WarehousePanel.transportConfirmBtn.localScale = Vector3.zero
             self.operation = ct.goodsState.transport;
@@ -372,7 +374,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             self.operation = nil;
         else
             WarehousePanel.transport:SetActive(false);
-            WarehousePanel.nameText.text = "请选择仓库"
+            --WarehousePanel.nameText.text = "请选择仓库"
             for i in pairs(WarehouseCtrl.temporaryItems) do
                 Event.Brocast("c_temporaryifNotGoods", i)
             end

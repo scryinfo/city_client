@@ -26,7 +26,10 @@ function MaterialCtrl:Awake(go)
     self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-
+function MaterialCtrl:Active()
+    UIPanel.Active(self)
+    MaterialPanel.Text.text = GetLanguage(25010001)
+end
 function MaterialCtrl:Refresh()
     this:initializeData()
 end

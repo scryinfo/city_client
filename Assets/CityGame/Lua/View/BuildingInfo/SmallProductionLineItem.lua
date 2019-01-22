@@ -31,6 +31,10 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.notConfirmBtn = self.prefab.transform:Find("adjustmentTop/button/notConfirmBtn");  --不能点击
     self.closeBtn = self.prefab.transform:Find("adjustmentTop/button/closeBtn");  --关闭修改添加父物体
 
+    --线
+    self.numberNameText = self.prefab.transform:Find("Productionbg/nameText"):GetComponent("Text");
+    self.staffNumberText = self.prefab.transform:Find("Staffbg/nameText"):GetComponent("Text");
+
     self.currentTime = os.time()
     self.startTimeDown = true
     self.timeDown = true
@@ -70,10 +74,12 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums / 5;
     self.sNumberScrollbar.value = 0
     self.minText.text = "0".."/min"
+    self.numberNameText.text = GetLanguage(self.itemId)
+    self.staffNumberText.text = GetLanguage(self.itemId)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = Material[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -81,7 +87,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
             end
         end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = Good[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -122,11 +128,13 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.staffNumberText.text = tostring(infoTab.workerNum)
     self.sNumberScrollbar.maxValue = (AdjustProductionLineCtrl.idleWorkerNums + infoTab.workerNum) / 5
     self.sNumberScrollbar.value = infoTab.workerNum / 5;
+    self.numberNameText.text = GetLanguage(self.itemId)
+    self.staffNumberText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = Material[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -134,7 +142,7 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
             end
         end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = Good[self.itemId].name
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)

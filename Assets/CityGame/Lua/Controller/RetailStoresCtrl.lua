@@ -25,7 +25,10 @@ function RetailStoresCtrl:Awake(go)
     self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-
+function RetailStoresCtrl:Active()
+    UIPanel.Active(self)
+    RetailStoresPanel.Text.text = GetLanguage(33010001)
+end
 function RetailStoresCtrl:Refresh()
     this:initializeData()
 end

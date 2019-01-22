@@ -21,7 +21,11 @@ function TransportBoxCtrl:Awake(go)
     transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
     transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
-
+function TransportBoxCtrl:Active()
+    UIPanel.Active(self)
+    TransportBoxPanel.name.text = GetLanguage(26040008)
+    TransportBoxPanel.total.text = GetLanguage(26040009)
+end
 function TransportBoxCtrl:Refresh()
     if self.m_data == nil then
         return;

@@ -39,6 +39,8 @@ function ShelfCtrl:Awake(go)
 end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
+    ShelfPanel.tipText.text = GetLanguage(26040002)
+    ShelfPanel.nameText.text = GetLanguage(26040002)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
@@ -201,7 +203,7 @@ function ShelfCtrl:openPlayerBuy(isShow)
         ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
         ShelfPanel.confirmBtn.localScale = Vector3.zero
         ShelfPanel.uncheckBtn.localScale = Vector3.one
-        ShelfPanel.nameText.text = "请选择仓库";
+        --ShelfPanel.nameText.text = "请选择仓库";
         --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
     else
@@ -265,7 +267,7 @@ function ShelfCtrl:isShowDetermineBtn()
     for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
         num = num + i
     end
-    if num ~= 0 and ShelfPanel.nameText.text ~= "请选择仓库" then
+    if num ~= 0 and ShelfPanel.nameText.text ~= nil then
         ShelfPanel.confirmBtn.localScale = Vector3.one
         ShelfPanel.uncheckBtn.localScale = Vector3.zero
     else

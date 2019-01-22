@@ -17,6 +17,8 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");    --关闭状态
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
+    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         if not self.viewRect.gameObject.activeSelf then
@@ -29,6 +31,8 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         end
     end);
 
+    self.openName.text = GetLanguage(25020005)
+    self.closeName.text = GetLanguage(25020005)
     self:initializeInfo(self.productionData.line);
 
     --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);

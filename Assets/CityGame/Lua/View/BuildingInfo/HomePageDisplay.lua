@@ -74,6 +74,7 @@ function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefa
     end
     --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
     self.timeText.text = self:getTimeNumber(homePageProductionLineInfo)
+    self.productionText.text = self:getMinuteNum(homePageProductionLineInfo)
     self.productionSlider.maxValue = homePageProductionLineInfo.targetCount
     self.productionSlider.value = homePageProductionLineInfo.nowCount
     self.maxValue = homePageProductionLineInfo.targetCount
@@ -104,8 +105,27 @@ function HomePageDisplay:getTimeNumber(infoData)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
+--计算每分钟产量
+function HomePageDisplay:getMinuteNum(infoData)
+    if not infoData then
+        return
+    end
+    local number = 0
+    local materialKey,goodsKey = 21,22
+    if math.floor(infoData.itemId / 100000) == materialKey then
+        number = Material[infoData.itemId].numOneSec * infoData.workerNum * 60
+    elseif math.floor(infoData.itemId / 100000) == goodsKey then
+        number = Good[infoData.itemId].numOneSec * infoData.workerNum * 60
+    end
+    local numStr = "("..math.floor(number).."/min"..")"
+    return numStr
+end
 --刷新时间
 function HomePageDisplay:Update()
+    if WarehouseRateItem.warehouseCapacity <= 0 then
+        UpdateBeat:Remove(self.Update,self)
+        return
+    end
     if self.remainingTime <= 1 then
         self.timeText.text = "00:00:00"
         UpdateBeat:Remove(self.Update,self);

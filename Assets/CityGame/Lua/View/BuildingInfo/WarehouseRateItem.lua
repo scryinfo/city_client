@@ -52,7 +52,8 @@ function WarehouseRateItem:initData()
     self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
     self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
     self.openName.text = GetLanguage(25020003)
-    self.closeName.text = getTimeBySec(25020003)
+    self.closeName.text = GetLanguage(25020003)
+    WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
 end
 
 function WarehouseRateItem:getWarehouseCapacity(table)

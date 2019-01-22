@@ -33,11 +33,9 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 
     --线
     self.numberNameText = self.prefab.transform:Find("Productionbg/nameText"):GetComponent("Text");
-    self.staffNumberText = self.prefab.transform:Find("Staffbg/nameText"):GetComponent("Text");
-
-    self.currentTime = os.time()
-    self.startTimeDown = true
-    self.timeDown = true
+    self.staffText = self.prefab.transform:Find("Staffbg/nameText"):GetComponent("Text");
+    --仓库的容量  不足时停止刷新时间
+    self.warehouseCapacity = AdjustProductionLineCtrl.residualCapacity
 
     --新添加的线
     if not i then
@@ -66,7 +64,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self:initButtonState()
     self.itemId = infoData.itemId
     self.inputNumber.text = 0;
-    self.pNumberScrollbar.maxValue = AdjustProductionLineCtrl.residualCapacity;
+    self.pNumberScrollbar.maxValue = self.warehouseCapacity;
     self.timeText.text = "00:00:00"
     self.time_Slider.value = 0;
     self.staffNumberText.text = "0";
@@ -75,7 +73,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.sNumberScrollbar.value = 0
     self.minText.text = "0".."/min"
     self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffNumberText.text = GetLanguage(self.itemId)
+    self.staffText.text = GetLanguage(self.itemId)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
@@ -122,14 +120,14 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.time_Slider.maxValue = infoTab.targetCount;
     self.time_Slider.value = infoTab.nowCount
     self.inputNumber.text = infoTab.targetCount
-    self.pNumberScrollbar.maxValue = AdjustProductionLineCtrl.residualCapacity
+    self.pNumberScrollbar.maxValue = self.warehouseCapacity
     self.pNumberScrollbar.value = infoTab.targetCount
     self.productionNumber.text = self:getWarehouseNum(self.itemId);     --右上角小房子
     self.staffNumberText.text = tostring(infoTab.workerNum)
     self.sNumberScrollbar.maxValue = (AdjustProductionLineCtrl.idleWorkerNums + infoTab.workerNum) / 5
     self.sNumberScrollbar.value = infoTab.workerNum / 5;
     self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffNumberText.text = GetLanguage(self.itemId)
+    self.staffText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
@@ -257,15 +255,19 @@ function SmallProductionLineItem:getTimeNumber(infoData)
 end
 --刷新时间
 function SmallProductionLineItem:Update()
+    if self.warehouseCapacity <= 0 then
+        UpdateBeat:Remove(self.Update,self)
+        return
+    end
     if self.remainingTime <= 1 then
+        self.timeText.text = "00:00:00"
         UpdateBeat:Remove(self.Update,self);
         return
-    else
-        self.remainingTime = self.remainingTime - UnityEngine.Time.unscaledDeltaTime
-        local timeTable = getTimeBySec(self.remainingTime)
-        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
-        self.timeText.text = timeStr
     end
+    self.remainingTime = self.remainingTime - UnityEngine.Time.unscaledDeltaTime
+    local timeTable = getTimeBySec(self.remainingTime)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    self.timeText.text = timeStr
 end
 --移除刷新时间
 function SmallProductionLineItem:closeUpdate()
@@ -283,7 +285,7 @@ function SmallProductionLineItem:getMinuteNum(infoData)
     elseif math.floor(self.itemId / 100000) == goodsKey then
         number = Good[self.itemId].numOneSec * infoData.workerNum * 60
     end
-    local numStr = math.floor(number).."/min"
+    local numStr = "("..math.floor(number).."/min"..")"
     return numStr
 end
 --获取仓库里有的库存

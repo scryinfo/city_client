@@ -91,9 +91,9 @@ function MaterialCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    --data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeMaterialName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.insId, 'm_ReqChangeMaterialName', ins.m_data.insId, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)

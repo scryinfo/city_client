@@ -4,11 +4,11 @@
 --- DateTime: 2018/12/26/026 17:17
 ---
 
-ReminderCtrl = class('ReminderCtrl',UIPage)
-UIPage:ResgisterOpen(ReminderCtrl) --注册打开的方法
+ReminderCtrl = class('ReminderCtrl',UIPanel)
+UIPanel:ResgisterOpen(ReminderCtrl) --注册打开的方法
 
 function ReminderCtrl:initialize()
-    UIPage.initialize(self,UIType.PopUp,UIMode.HideOther,UICollider.Normal);
+    UIPanel.initialize(self,UIType.PopUp,UIMode.HideOther,UICollider.Normal);
 end
 
 function ReminderCtrl:bundleName()
@@ -16,12 +16,11 @@ function ReminderCtrl:bundleName()
 end
 
 function ReminderCtrl:OnCreate(obj)
-    UIPage.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj);
 end
 local LuaBehaviour
 local panel
 function ReminderCtrl:Awake(go)
-    self.gameObject = go;
     panel=ReminderPanel
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(ReminderPanel.confirmBtn.gameObject,self.OnClick_confirm,self);
@@ -32,18 +31,21 @@ function ReminderCtrl:OnClick_confirm(obj)
     if(obj.m_data.callback) then
         obj.m_data:callback()
     end
-    obj:Hide();
+    UIPanel.ClosePage()
+    PlayMusEff(1002)
+
 end
 --关闭
 function ReminderCtrl:OnClick_close(obj)
-    obj:Hide()
+    UIPanel.ClosePage()
+    PlayMusEff(1002)
+
 end
 --刷新
 function ReminderCtrl:Refresh()
+    panel.ChangeLan()
     local data=self.m_data
     self:updateText(data)
-
-
 end
 
 
@@ -57,10 +59,13 @@ function ReminderCtrl:updateText(data)
     elseif data.type=="remove" then
         panel.mainText.text=data.mainText
         panel.tipText.transform.localScale=Vector3.one
-
-    elseif  data.type=="begin" then
-        panel.mainText.text=data.mainText
-        panel.tipText.transform.localScale=Vector3.one
-        --panel.tipText.text=
     end
+end
+
+function  ReminderCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function ReminderCtrl:Close()
+    UIPanel.Close(self)
 end

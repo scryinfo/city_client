@@ -45,7 +45,7 @@ end
 
 ---停业收包
 function StopAndBuildModel.n_shutdownBusiness(lMsg)
-    Event.Brocast("SmallPop","Success",300)
+    Event.Brocast("SmallPop",GetLanguage(40010018),300)
 end
 
 ---拆建筑发包

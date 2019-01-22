@@ -48,43 +48,52 @@ end
 function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
     UIPanel.CloseAllPageExceptMain()
+    PlayMusEff(1002)
+
 end
 
 --返回
 function StopAndBuildCtrl:OnClick_backBtn1()
     panel:CloseBtn()
     UIPanel.ClosePage()
+    PlayMusEff(1002)
+
 end
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
     local data={}
 
     data.type="remove"
-    data.mainText="Confirm removal or not?"
+    data.mainText=GetLanguage(40010013)
     data.callback=function() Event.Brocast("m_delBuilding",ins.m_data.id )
-        Event.Brocast("SmallPop","Success",300)
+        Event.Brocast("SmallPop",GetLanguage(40010015),300)
         DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
         UIPanel.CloseAllPageExceptMain()
     end
     ct.OpenCtrl('ReminderCtrl',data)
+    PlayMusEff(1002)
+
 end
 
 --停业
 function StopAndBuildCtrl:OnClick_stop(ins)
     local data={}
     data.type="stop"
-    data.mainText="Confirmation of closure?"
+    data.mainText=GetLanguage(40010009)
     data.callback=function() Event.Brocast("m_shutdownBusiness",ins.m_data.id)
         panel.removeBtn.localScale=Vector3.one
         panel.stopIconRoot.localScale=Vector3.one
     end
 
     ct.OpenCtrl('ReminderCtrl',data)
+    PlayMusEff(1002)
+
 end
 
 
 --todo：刷新
 function StopAndBuildCtrl:Refresh()
+    panel:ChangeLanguage()
      local data=self.m_data
     --刷新人物信息
     self:updatePersonInfo(data)
@@ -203,6 +212,8 @@ function StopAndBuildCtrl:change(ins,num,btn)
     btn.transform.parent:Find("select").localScale=Vector3.one
     select=btn.transform.parent:Find("select")
     select.transform.parent:SetAsLastSibling()
+    PlayMusEff(1002)
+
 end
 
 function StopAndBuildCtrl:OnClick_greenBtn1(ins)

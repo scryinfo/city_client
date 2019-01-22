@@ -16,7 +16,7 @@ function DetailItem1:initialize(prefab)
 end
 ---添加
 function DetailItem1:updateData(topic,content,ima)
-    self.topicText.text="   "..topic
-    self.contentText.text=content
+    self.topicText.text="   "..GetLanguage(tonumber(topic))
+    self.contentText.text=GetLanguage(tonumber(content))
     --self.ima.sprite=ima
 end

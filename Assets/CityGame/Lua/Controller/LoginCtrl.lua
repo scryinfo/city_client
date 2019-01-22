@@ -47,6 +47,10 @@ function LoginCtrl:Active()
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
 
+	--多语言
+	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
+	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
+
 end
 
 function LoginCtrl:Refresh()

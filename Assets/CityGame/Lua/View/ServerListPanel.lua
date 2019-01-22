@@ -17,6 +17,7 @@ end
 --初始化面板--
 function ServerListPanel.InitPanel()
     this.content = transform:Find("LeftServerList/Scroll View/Viewport/Content").gameObject;
+    this.serverText = transform:Find("Image/ServerText").gameObject:GetComponent("Text");
 
     this.oKBtn = transform:Find("RightDownButton/OKButton").gameObject;
 end

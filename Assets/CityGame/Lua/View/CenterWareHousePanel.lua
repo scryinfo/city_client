@@ -43,9 +43,11 @@ function CenterWareHousePanel.InitPanel()
     this.transportCloseBtn = transform:Find("rightRoot/bg/transport/closeBtn").gameObject;
     this.transportConfirmBtn = transform:Find("rightRoot/bg/transport/confirmBtn").gameObject;
     this.transportConfirm = transform:Find("rightRoot/bg/transport/confirm").gameObject;
+    this.tip = transform:Find("rightRoot/bg/transport/tip").gameObject:GetComponent("Text");
     this.tipText = transform:Find("rightRoot/bg/transport/tip/tipText").gameObject:GetComponent("Text");
     this.transportopenBtn = transform:Find("rightRoot/bg/transport/warehouseName/openBtn").gameObject;
     this.nameText = transform:Find("rightRoot/bg/transport/warehouseName").gameObject:GetComponent("InputField");
+    this.warehouseNameText = transform:Find("rightRoot/bg/transport/warehouseName/Placeholder").gameObject:GetComponent("Text");
     this.tspContent = transform:Find("rightRoot/bg/transport/ScrollView/Viewport/Content").gameObject:GetComponent("RectTransform");
 
     this.transportBtn = transform:Find("TransportButton").gameObject--运输按钮

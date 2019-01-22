@@ -27,6 +27,8 @@ end
 
 function SelectHeadCtrl:Active()
     UIPanel.Active(self)
+
+    SelectHeadPanel.text.text = GetLanguage(10050001)
 end
 
 function SelectHeadCtrl:Hide()

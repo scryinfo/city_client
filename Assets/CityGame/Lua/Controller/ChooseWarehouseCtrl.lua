@@ -37,6 +37,8 @@ function ChooseWarehouseCtrl:Awake(go)
     chooseWarehouse:AddClick(ChooseWarehousePanel.timeBtn.gameObject,self.OnClick_timeBtn,self);
     chooseWarehouse:AddClick(ChooseWarehousePanel.bgBtn.gameObject,self.OnClick_bgBtn,self);
 
+    Event.AddListener("c_Transport",self.c_Transport,self)
+
     self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
 
     self.gameObject = go;
@@ -49,7 +51,7 @@ function ChooseWarehouseCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
     Event.AddListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
-    Event.AddListener("c_Transport",self.c_Transport,self)
+    --Event.AddListener("c_Transport",self.c_Transport,self)
     Event.AddListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
     Event.AddListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
     Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
@@ -71,7 +73,7 @@ function ChooseWarehouseCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_OnAddressListBG",self.c_OnAddressListBG,self)
     Event.RemoveListener("c_OnLinePanelBG",self.c_OnLinePanelBG,self)
-    Event.RemoveListener("c_Transport",self.c_Transport,self)
+    --Event.RemoveListener("c_Transport",self.c_Transport,self)
     Event.RemoveListener("c_OnQueryPlayerBuildings",self.c_OnQueryPlayerBuildings,self)
     Event.RemoveListener("c_OnCreatFriendsLinePanel",self.c_OnCreatFriendsLinePanel,self)
     Event.RemoveListener("CreateLinePanel",self.CreateLinePanel,self)

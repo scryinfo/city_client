@@ -182,11 +182,11 @@ function GroundAuctionCtrl:BidGround(ins)
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
         return
     end
-
-    --if tonumber(bidPrice) < DataManager.GetMoney() then
-    --    Event.Brocast("SmallPop", "您的资金不足", 300)
-    --    return
-    --end
+    
+    if tonumber(bidPrice) < DataManager.GetMoney() then
+        Event.Brocast("SmallPop", "您的资金不足", 300)
+        return
+    end
 
     if ins.highestPrice == nil then
         ins.highestPrice = ins.m_data.basePrice

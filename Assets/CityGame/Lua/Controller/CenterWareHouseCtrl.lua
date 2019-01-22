@@ -71,6 +71,9 @@ function CenterWareHouseCtrl:Active()
     Event.AddListener("c_transport",self.c_transport,self);
     Event.AddListener("c_DelItem",self.c_DelItem,self);
     --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
+
+    CenterWareHousePanel.tip.text = GetLanguage(21020001)
+    CenterWareHousePanel.warehouseNameText.text = GetLanguage(21020002)
 end
 
 function CenterWareHouseCtrl:Hide()

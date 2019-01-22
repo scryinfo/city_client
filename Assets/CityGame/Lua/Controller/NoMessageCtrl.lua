@@ -28,12 +28,12 @@ function NoMessageCtrl:Awake()
     NoMessageBehaviour:AddClick(NoMessagePanel.bgBtn,self.OnBgBtn,self)
     NoMessageBehaviour:AddClick(NoMessagePanel.xBtn,self.OnXBtn,self);
 
-    self:_initData();
-
 end
 
 function NoMessageCtrl:Active()
     UIPanel.Active(self)
+
+    self:_initData();
 end
 
 function NoMessageCtrl:Hide()
@@ -42,15 +42,17 @@ end
 
 --初始化
 function NoMessageCtrl:_initData()
-    NoMessagePanel.content.text = "No message at present"
+    NoMessagePanel.content.text = GetLanguage(13010001)
 end
 
 --点击空白背景
 function NoMessageCtrl:OnBgBtn()
+    PlayMusEff(1002)
     UIPanel.ClosePage();
 end
 
 --点击删除
 function NoMessageCtrl:OnXBtn()
+    PlayMusEff(1002)
     UIPanel.ClosePage();
 end

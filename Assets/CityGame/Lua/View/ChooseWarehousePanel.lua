@@ -15,6 +15,7 @@ function ChooseWarehousePanel.InitPanel()
     this.searchBtn = transform:Find("searchBtn");
     this.arrowBtn = transform:Find("Right/SortingBtn/arrowBtn");
     this.nowText = transform:Find("Right/SortingBtn/bg/nowText"):GetComponent("Text");
+    this.name = transform:Find("name_text"):GetComponent("Text");
     this.list = transform:Find("Right/SortingBtn/ListTable/List"):GetComponent("RectTransform");
     this.nameBtn = transform:Find("Right/SortingBtn/ListTable/List/nameBtn");
     this.quantityBtn = transform:Find("Right/SortingBtn/ListTable/List/quantityBtn");
@@ -23,6 +24,8 @@ function ChooseWarehousePanel.InitPanel()
     --Mine
     this.faceImg = transform:Find("Left/mine/FriendsLineItem/face");
     this.nameText = transform:Find("Left/mine/FriendsLineItem/name"):GetComponent("Text");
+    this.mineName = transform:Find("Left/mine"):GetComponent("Text");
+    this.addresslist = transform:Find("Left/Addresslist"):GetComponent("Text");
     this.boxImg = transform:Find("Left/mine/FriendsLineItem/box").gameObject;
     this.bgBtn = transform:Find("Left/mine/FriendsLineItem/bg");
     --Addresslist  ScrollView

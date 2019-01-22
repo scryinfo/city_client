@@ -15,21 +15,6 @@ end
 --创建郵件
 function NoticeMgr:_createNotice(insluabehaviour,MailsData)
     self.behaviour = insluabehaviour
-    --local uiTab = {}
-    --uiTab.header = Notice[typeId].header
-    ----uiTab.content = Notice[v.type].content
-    --uiTab.content = content
-    --uiTab.redirect = Notice[typeId].redirect
-    --uiTab.state = read
-    --local prefab = self:_createNoticePab(NoticeMgr.static.Notice_PATH,GameNoticePanel.leftContent)
-    --local NoticeLuaItem = NoticeItem:new(uiTab,prefab,self.behaviour, self,noticeId,typeId)
-    --if not self.notice then
-    --    self.notice = {}
-    --end
-    --self.notice[noticeId] = NoticeLuaItem
-    --NoticeMgr.notice[noticeId] = self.notice[noticeId]
-    --self.items  存的是Lua实例
-
     --测试数据
     self.ModelDataList={}
     --配置表数据模拟
@@ -46,7 +31,7 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         uiTab.state = v.read
         uiTab.uuidParas = v.uuidParas
         uiTab.intParasArr = v.intParasArr
-        uiTab.from = "系统消息"
+        uiTab.from = GetLanguage(13010002)
         configTable[i] = uiTab
         --预制的信息`
         local prefabData={}

@@ -27,6 +27,8 @@ end
 
 function SelectHeadCtrl:Active()
     UIPanel.Active(self)
+
+    SelectHeadPanel.text.text = GetLanguage(10050001)
 end
 
 function SelectHeadCtrl:Hide()
@@ -47,6 +49,7 @@ end
 
 --点击确定
 function SelectHeadCtrl:OnOkBtn(go)
+    PlayMusEff(1002)
     if headId ~= nil then
         ct.OpenCtrl("CreateRoleCtrl",headId)
     else

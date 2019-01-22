@@ -57,6 +57,7 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
 end
 
 function NoticeItem:OnBg(go)
+    PlayMusEff(1002)
     if go.typeId == 12 then
         go:GetPlayerId(go.uuidParas[1])
         type = go.typeId
@@ -98,13 +99,13 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
     if self.hide then
         self.name = playerData.info[1].name
         if type == 12 then
-            self.content = GetLanguage(1000010,self.name)
+            self.content = GetLanguage(13010051,self.name)
             GameNoticePanel.rightContent.text = self.content
         elseif type == 13 then
-            self.content = GetLanguage(1000011,"(".. pos.x..","..pos.y .. ")",self.name)
+            self.content = GetLanguage(13010053,self.name,"(".. pos.x..","..pos.y .. ")")
             GameNoticePanel.rightContent.text = self.content
         elseif stype == 14 then
-            self.content = GetLanguage(1000012,"(".. pos.x..","..pos.y .. ")",self.name)
+            self.content = GetLanguage(13010054,self.name,"(".. pos.x..","..pos.y .. ")")
             GameNoticePanel.rightContent.text = self.content
         end
         --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)

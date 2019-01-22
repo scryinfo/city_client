@@ -72,6 +72,7 @@ end
 
 --点击关闭按钮
 function CommonDialogCtrl:_onClickClose(ins)
+    PlayMusEff(1002)
     --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")
     ins.input.text = ""
     ins.luaBehaviour:RemoveClick(ins.confimBtn.gameObject, ins._onClickConfim, ins)

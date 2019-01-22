@@ -166,9 +166,8 @@ function FriendsItem:OnDelete(go)
     --UIPage.ClosePage()
     --打开弹框
     local data = {}
-    data.titleInfo = "WARNING"
-    data.contentInfo = "Delete the production line?"
-    data.tipInfo = "(The production schedule will be empty!)"
+    data.titleInfo = GetLanguage(12020002)
+    data.contentInfo = GetLanguage(12020003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送删除好友请求")
         Event.Brocast("m_DeleteFriend", go.data.id, false)
@@ -180,9 +179,8 @@ end
 function FriendsItem:OnRemoveMask(go)
     --打开弹框
     local data = {}
-    data.titleInfo = "WARNING"
-    data.contentInfo = "Delete the production line?"
-    data.tipInfo = "(The production schedule will be empty!)"
+    data.titleInfo = GetLanguage(12030002)
+    data.contentInfo = GetLanguage(12030003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送移除屏蔽请求")
         Event.Brocast("m_DeleteBlacklist", go.data.id)
@@ -204,13 +202,13 @@ end
 -- 加好友
 function FriendsItem:OnAddFriends(go)
     local data = {}
-    data.titleInfo = "REMINDER"
-    data.tipInfo = "Please input verification information!"
+    data.titleInfo = GetLanguage(12040002)
+    data.tipInfo = GetLanguage(12040003)
     data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_AddFriends", go.data.id, text)
-        Event.Brocast("SmallPop","Your request has been sent.",80)
+        Event.Brocast("SmallPop", GetLanguage(12040004),80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -222,7 +220,7 @@ function FriendsItem:OnAgree(go)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({itemId = go.itemId})
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
-        --FriendslistPanel.friendsView:ActiveLoopScroll(FriendslistCtrl.friendsSource, #FriendslistCtrl.friendInfo)
+        Event.Brocast("SmallPop", GetLanguage(12050002, go.data.name),80)
     end
 end
 
@@ -234,5 +232,6 @@ function FriendsItem:OnRefuse(go)
         DataManager.SetMyFriendsApply({id = go.data.id})
         table.remove(FriendslistCtrl.friendInfo, go.itemId)
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
+        Event.Brocast("SmallPop", GetLanguage(12050003, go.data.name),80)
     end
 end

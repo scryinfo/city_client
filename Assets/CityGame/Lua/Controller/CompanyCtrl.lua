@@ -63,6 +63,10 @@ end
 function CompanyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+    CompanyPanel.incomeTitle.text = GetLanguage(17010002)
+    CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
+    CompanyPanel.tips.text = GetLanguage(17010005)
+    CompanyPanel.tipsTextCom.text = GetLanguage(17010006)
 end
 
 function CompanyCtrl:Refresh()
@@ -93,18 +97,18 @@ end
 
 function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
-        CompanyPanel.titleText.text = "MY COMPANY"
+        CompanyPanel.titleText.text = GetLanguage(17010001)
         CompanyPanel.coinBg:SetActive(true)
         CompanyPanel.coinText.text = DataManager.GetMoney()
     else
-        CompanyPanel.titleText.text = "COMPANY"
+        CompanyPanel.titleText.text = GetLanguage(17010007)
         CompanyPanel.coinBg:SetActive(false)
     end
     LoadSprite(PlayerHead[self.m_data.faceId].MainPath, CompanyPanel.headImage, true)
     CompanyPanel.companyText.text = self.m_data.companyName
     CompanyPanel.nameText.text = self.m_data.name
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
-    CompanyPanel.foundingTimeText.text = string.format("founding time:%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
+    CompanyPanel.foundingTimeText.text = string.format(GetLanguage(17010004) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
     CompanyPanel.businessRecordsScroll:RefillCells()
     --CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItemId)

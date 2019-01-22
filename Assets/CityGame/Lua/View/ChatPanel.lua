@@ -22,16 +22,26 @@ function ChatPanel.InitPanel()
     --this.backChatBtn = transform:Find("BackChatBtn").gameObject
     this.playerInfoRoot = transform:Find("PlayerInfoRoot").gameObject
 
-    -- 世界、好友、陌生人分页
+    -- 世界分页
     this.worldToggle = transform:Find("LeftRoot/TopRoot/WorldToggle"):GetComponent("Toggle")
-    this.friendsToggle = transform:Find("LeftRoot/TopRoot/FriendsToggle"):GetComponent("Toggle")
-    this.strangersToggle = transform:Find("LeftRoot/TopRoot/StrangersToggle"):GetComponent("Toggle")
     this.worldOpen = transform:Find("LeftRoot/TopRoot/WorldToggle/Open").gameObject
     this.worldClose = transform:Find("LeftRoot/TopRoot/WorldToggle/Close").gameObject
+    this.worldOpenText = transform:Find("LeftRoot/TopRoot/WorldToggle/Open/Text"):GetComponent("Text")
+    this.worldCloseText = transform:Find("LeftRoot/TopRoot/WorldToggle/Close/Text"):GetComponent("Text")
+
+    -- 好友分页
+    this.friendsToggle = transform:Find("LeftRoot/TopRoot/FriendsToggle"):GetComponent("Toggle")
     this.friendsOpen = transform:Find("LeftRoot/TopRoot/FriendsToggle/Open").gameObject
     this.friendsClose = transform:Find("LeftRoot/TopRoot/FriendsToggle/Close").gameObject
+    this.friendsOpenText = transform:Find("LeftRoot/TopRoot/FriendsToggle/Open/Text"):GetComponent("Text")
+    this.friendsCloseText = transform:Find("LeftRoot/TopRoot/FriendsToggle/Close/Text"):GetComponent("Text")
+
+    -- 陌生人分页
+    this.strangersToggle = transform:Find("LeftRoot/TopRoot/StrangersToggle"):GetComponent("Toggle")
     this.strangersOpen  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Open").gameObject
     this.strangersClose  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Close").gameObject
+    this.strangersOpenText  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Open/Text"):GetComponent("Text")
+    this.strangersCloseText  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Close/Text"):GetComponent("Text")
 
     -- 好友、陌生人红点
     this.friendsNoticeImage = transform:Find("LeftRoot/TopRoot/FriendsToggle/NoticeImage").gameObject
@@ -102,8 +112,14 @@ function ChatPanel.InitPanel()
 
     -- 没内容小狐狸提示
     this.worldNoContentRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot/NoContentRoot").gameObject
+    this.worldNoContentText = transform:Find("LeftRoot/MiddleRoot/WorldRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
+    this.chatRecordsTitleText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/TitleText"):GetComponent("Text")
     this.friendsNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
+    this.friendsNoContentText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
     this.friendsChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/NoContentRoot").gameObject
+    this.friendsChatNoContentText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/NoContentRoot/Bg/Text"):GetComponent("Text")
     this.strangersNoContentRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/NoContentRoot").gameObject
+    this.strangersNoContentText = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
     this.strangersChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/NoContentRoot").gameObject
+    this.strangersChatNoContentText = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/NoContentRoot/Bg/Text"):GetComponent("Text")
 end

@@ -7,7 +7,7 @@ GroundTransOthersCheckInfoCtrl = class('GroundTransOthersCheckInfoCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransOthersCheckInfoCtrl)
 
 function GroundTransOthersCheckInfoCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransOthersCheckInfoCtrl:bundleName()

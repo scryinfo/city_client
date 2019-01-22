@@ -88,5 +88,5 @@ end
 --刷新数据
 function HomeOtherPlayerShelfItem:updateInfo(data)
     self.productionData.shelf.good = data.shelf.good
-    self:initializeInfo()
+    self:initializeInfo(self.productionData.shelf.good)
 end

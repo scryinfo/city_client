@@ -53,6 +53,7 @@ function GameNoticeCtrl:Active()
     Event.AddListener("c_onBg",self.c_onBg,self)
     Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)
+
 end
 
 function GameNoticeCtrl:Refresh()
@@ -93,11 +94,13 @@ end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
+    PlayMusEff(1002)
     UIPanel.ClosePage();
 end
 
 --点击xbutton
 function GameNoticeCtrl:OnXBtn()
+    PlayMusEff(1002)
     GameNoticeCtrl:OnBgBtn()
 end
 
@@ -134,6 +137,7 @@ function GameNoticeCtrl:c_OnMailRead(go)
     GameNoticePanel.time.text = go.itemTime.text
     --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     --GameNoticePanel.rightContent.text = go.content
+    GameNoticePanel.timeLeft.text = GetLanguage(13010003)
     -- ]]
     if go.typeId ==1 then
         GameNoticePanel.GoodsScrollView:SetActive(true)
@@ -147,9 +151,10 @@ end
 
 --删除通知
 function GameNoticeCtrl:OnDelete(go)
+    PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "WARNING"
-    data.contentInfo = "Delete the message?"
+    data.titleInfo = GetLanguage(13010061)
+    data.contentInfo = GetLanguage(13010062)
     data.tipInfo = ""
     data.btnCallBack = function ()
         DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
@@ -165,17 +170,20 @@ end
 
 --跳转场景
 function GameNoticeCtrl:OnJumpBtn(go)
+    PlayMusEff(1002)
     ct.OpenCtrl(Notice[id].redirect)
 end
 
 --剩余时间显示
 function GameNoticeCtrl:OnHint()
+    PlayMusEff(1002)
     GameNoticeCtrl:_setActiva(not isShowHint)
 end
 
 --控制剩余时间显隐
 function GameNoticeCtrl:_setActiva(isShow)
     GameNoticePanel.hintItem:SetActive(isShow)
+    GameNoticePanel.hintText.text = GetLanguage(13010004)
     isShowHint = isShow
 end
 

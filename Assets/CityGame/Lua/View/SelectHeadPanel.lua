@@ -20,6 +20,7 @@ end
 --初始化面板--
 function SelectHeadPanel.InitPanel()
     this.bg = transform:Find("bg").gameObject:GetComponent("Image");
+    this.text = transform:Find("Image/Text").gameObject:GetComponent("Text");
     this.content = transform:Find("bg/Scroll View/Viewport/Content");
     this.okBtn = transform:Find("rightDownBtn/OKBtn").gameObject;
 end

@@ -76,7 +76,6 @@ end
 --数据初始化
 function StopAndBuildPanel.InitDate(MunicipalData)
     this.MunicipalData = MunicipalData;
-
 end
 
 function StopAndBuildPanel:CloseBtn()
@@ -91,4 +90,17 @@ function StopAndBuildPanel:CloseBtn()
     this.greenBtn9.localScale=Vector3.zero
     this.select1.localScale=Vector3.zero
 
+end
+
+--数据初始化
+function StopAndBuildPanel:ChangeLanguage()
+    this.operatorText.text=GetLanguage(40010002)
+    this.groundInfoText.text=GetLanguage(40010001)
+    this.scaleText.text=GetLanguage(40010003)
+    this.constructText.text=GetLanguage(40010004)
+    this.tips.text=GetLanguage(40010007)
+    this.dateText.text=GetLanguage(40010005)
+    this.dailyRentText.text=GetLanguage(40010006)
+    this.depositText.text=GetLanguage(40010017)
+    this.stopText.text=GetLanguage(40010016)
 end

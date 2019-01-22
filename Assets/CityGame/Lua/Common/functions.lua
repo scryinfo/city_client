@@ -398,7 +398,7 @@ function creatGoods(path,parent)
 	local go = UnityEngine.GameObject.Instantiate(prefab);
 	local rect = go.transform:GetComponent("RectTransform");
 	go.transform:SetParent(parent);--.transform
-	rect.transform.localScale = Vector3.one;
+	rect.transform.localScale = Vector3.one
 	rect.transform.localPosition=Vector3.zero
 	return go
 end

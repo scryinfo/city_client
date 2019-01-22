@@ -63,6 +63,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
 end
 --删除物品
 function WareHouseGoodsItem:OnDelete(go)
+    PlayMusEff(1002)
     Event.Brocast("c_OnDelete",go)
 end
 
@@ -75,11 +76,13 @@ end
 
 --点击BG
 function WareHouseGoodsItem:OnBGItem()
+    PlayMusEff(1002)
     --Event.Brocast("c_OnBGItem")
 end
 
 --点击运输后的BG
 function WareHouseGoodsItem:OnTransportBG(go)
+    PlayMusEff(1002)
     Event.Brocast("c_OnTransportBG",go)
 end
 

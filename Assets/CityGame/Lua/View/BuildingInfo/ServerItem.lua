@@ -28,5 +28,6 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
 end
 
 function ServerItem:OnServerBtn(go)
+    PlayMusEff(1002)
     Event.Brocast("c_OnServer",go)
 end

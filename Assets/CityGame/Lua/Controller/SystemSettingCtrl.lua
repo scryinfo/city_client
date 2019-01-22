@@ -40,9 +40,9 @@ end
 function SystemSettingCtrl:Refresh()
     local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum==0 then
-        panel:InitDate(GetLanguage(1000008))
+        panel:InitDate(GetLanguage(14010008))
     elseif Languagenum==1 then
-        panel:InitDate(GetLanguage(1000007))
+        panel:InitDate(GetLanguage(14010006))
     end
 end
 --退出
@@ -120,7 +120,7 @@ function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
-    panel:InitDate(GetLanguage(1000007))
+    panel:InitDate(GetLanguage(14010006))
     panel.closeLan.localScale=Vector3.zero
 end
 --英文
@@ -128,7 +128,7 @@ function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
-    panel:InitDate(GetLanguage(1000008))
+    panel:InitDate(GetLanguage(14010008))
     panel.closeLan.localScale=Vector3.zero
 end
 

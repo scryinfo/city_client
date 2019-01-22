@@ -25,6 +25,7 @@ function RoleHeadItem:initialize(prefab,path,id)
 end
 
 function RoleHeadItem:OnBtn(go)
+    PlayMusEff(1002)
     if ins ~= nil then
         ins.select.localScale = Vector3.zero
         ins.bg.color =getColorByInt(152,186,255,255)

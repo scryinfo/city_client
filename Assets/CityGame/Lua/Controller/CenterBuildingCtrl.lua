@@ -33,6 +33,15 @@ end
 
 function CenterBuildingCtrl:Active()
     UIPanel.Active(self)
+
+    local cityinfoPath,centerWarehousePath,technologyPath
+    cityinfoPath = GetLanguage(19010001)
+    centerWarehousePath = GetLanguage(19010002)
+    technologyPath = GetLanguage(19010003)
+    LoadSprite(cityinfoPath,CenterBuildingPanel.cityInfo:GetComponent("Image"),false)
+    LoadSprite(centerWarehousePath,CenterBuildingPanel.centerWarehouse:GetComponent("Image"),false)
+    LoadSprite(technologyPath,CenterBuildingPanel.technology:GetComponent("Image"),false)
+    CenterBuildingPanel.cityInfo:GetComponent("Image")
 end
 
 function CenterBuildingCtrl:Hide()
@@ -40,20 +49,23 @@ function CenterBuildingCtrl:Hide()
 end
 
 function CenterBuildingCtrl:OnBg()
+    PlayMusEff(1002)
     UIPanel.ClosePage();
 end
 
 --点击城市信息
 function CenterBuildingCtrl:OnCityInfo()
+    PlayMusEff(1002)
     --ct.OpenCtrl("CityInfoCtrl")
 end
 
 --点击中心仓库
 function CenterBuildingCtrl:OnCenterWarehouse()
+    PlayMusEff(1002)
     ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
 end
 
 --点击待定
 function CenterBuildingCtrl:OnTechnology()
-
+    PlayMusEff(1002)
 end

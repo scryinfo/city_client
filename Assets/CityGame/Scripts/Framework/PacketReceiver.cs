@@ -58,15 +58,16 @@
 		public void process()
 		{
 			int t_wpos = Interlocked.Add(ref _wpos, 0);
+			int t_rpos  = Interlocked.Add(ref _rpos, 0);
             
-            if (_rpos < t_wpos) //如果 _buffer 中写入的数据大于读取的数据，那么就把新增的数据转发到lua中解析
+            if (t_rpos < t_wpos) //如果 _buffer 中写入的数据大于读取的数据，那么就把新增的数据转发到lua中解析
             {
-                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(t_wpos - _rpos) });
+                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)t_rpos, (UInt32)(t_wpos - t_rpos) });
 				Interlocked.Exchange(ref _rpos, t_wpos);
 			} 
-			else if(t_wpos < _rpos)
+			else if(t_wpos < t_rpos)
 			{
-                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(_buffer.Length - _rpos) });
+                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)t_rpos, (UInt32)(_buffer.Length - t_rpos) });
                 CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)0, (UInt32)t_wpos });
 				Interlocked.Exchange(ref _rpos, t_wpos);
 			}
@@ -79,8 +80,9 @@
 		int _free()
 		{
 			int t_rpos = Interlocked.Add(ref _rpos, 0);
+            int t_wpos = Interlocked.Add(ref _wpos, 0);
 
-			if (_wpos == _buffer.Length)
+            if (t_wpos == _buffer.Length)
 			{
 				if (t_rpos == 0)
 				{
@@ -90,12 +92,13 @@
 				Interlocked.Exchange(ref _wpos, 0);
 			}
 
-			if (t_rpos <= _wpos)
+            t_wpos = Interlocked.Add(ref _wpos, 0);
+            if (t_rpos <= _wpos)
 			{
-				return _buffer.Length - _wpos;
+				return _buffer.Length - t_wpos;
 			}
 
-			return t_rpos - _wpos - 1;
+			return t_rpos - t_wpos - 1;
 		}
 
 		public void startRecv()
@@ -105,7 +108,16 @@
 			v.BeginInvoke(new AsyncCallback(_onRecv), null);
 		}
 
-		private void _asyncReceive()
+        private readonly object balanceLock = new object();
+        private byte[] getBuffet()
+        {
+            lock (balanceLock)
+            {
+                return _buffer;
+            }
+        }
+
+        private void _asyncReceive()
 		{
 			if (_networkInterface == null || !_networkInterface.valid())
 			{
@@ -119,9 +131,9 @@
 			{
 				// 必须有空间可写，否则我们阻塞在线程中直到有空间为止
 				int first = 0;
-				int space = _free();
+				int space = _free();                
 
-				while (space == 0)
+                while (space == 0)
 				{
 					if (first > 0)
 					{
@@ -132,7 +144,7 @@
 							return;
 						}
 
-						Dbg.WARNING_MSG("PacketReceiver::_asyncReceive(): waiting for space, Please adjust 'TCP_PACKET_MAX'! retries=" + first);
+						Dbg.WARNING_MSG("PacketReceiver::_asyncReceive(): waiting for space, Please adjust 'RECV_BUFFER_MAX'! retries=" + first);
 						System.Threading.Thread.Sleep(5);
 					}
 
@@ -140,10 +152,12 @@
 					space = _free();
 				}
 
-				int bytesRead = 0;
+                int t_wpos = Interlocked.Add(ref _wpos, 0);
+
+                int bytesRead = 0;
 				try
 				{
-					bytesRead = socket.Receive(_buffer, _wpos, space, 0);
+					bytesRead = socket.Receive(getBuffet(), t_wpos, space, 0);
 				}
 				catch (SocketException se)
 				{                    
@@ -157,9 +171,6 @@
 				{
 					// 更新写位置
 					Interlocked.Add(ref _wpos, bytesRead);
-                    if (bytesRead >= NetworkInterface.TCP_PACKET_MAX) {
-                        Dbg.ERROR_MSG(string.Format("[PacketReceiver::_asyncReceive]: bytesRead >= NetworkInterface.TCP_PACKET_MAX, TCP_PACKET_MAX = '{0}'", NetworkInterface.TCP_PACKET_MAX));
-                    }
 				}
 				else
 				{

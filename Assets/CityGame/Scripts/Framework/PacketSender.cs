@@ -26,8 +26,18 @@
 		int _wpos = 0;				// 写入的数据位置
 		int _spos = 0;				// 发送完毕的数据位置
 		int _sending = 0;
-		
-		private NetworkInterface _networkInterface = null;
+
+        private readonly object balanceLock = new object();
+
+        private byte[] getBuffet()
+        {
+            lock (balanceLock)
+            {
+                return _buffer;
+            }
+        }
+
+        private NetworkInterface _networkInterface = null;
 		AsyncCallback _asyncCallback = null;
 		AsyncSendMethod _asyncSendMethod;
 		
@@ -86,7 +96,7 @@
 
 			if (dataLength > space)
 			{
-				Dbg.ERROR_MSG("PacketSender::send(): no space, Please adjust 'TCP_PACKET_MAX'! data(" + dataLength 
+				Dbg.ERROR_MSG("PacketSender::send(): no space, Please adjust 'SEND_BUFFER_MAX'! data(" + dataLength 
 					+ ") > space(" + space + "), wpos=" + _wpos + ", spos=" + t_spos);
 				
 				return false;
@@ -100,7 +110,7 @@
 			else
 			{
 				int remain = _buffer.Length - tt_wpos;
-				Array.Copy(stream.data(), stream.rpos, _buffer, tt_wpos, remain);
+				Array.Copy(stream.data(), stream.rpos, getBuffet(), tt_wpos, remain);
 				Array.Copy(stream.data(), stream.rpos + remain, _buffer, 0, expect_total - _buffer.Length);
 			}
 
@@ -133,8 +143,9 @@
 
 			while (true)
 			{
-				int sendSize = Interlocked.Add(ref _wpos, 0) - _spos;
-				int t_spos = _spos % _buffer.Length;
+                int t_sposOrg = Interlocked.Add(ref _spos, 0);
+                int sendSize = Interlocked.Add(ref _wpos, 0) - _spos;
+                int t_spos = t_sposOrg % _buffer.Length;
 				if (t_spos == 0)
 					t_spos = sendSize;
 
@@ -144,7 +155,7 @@
 				int bytesSent = 0;
 				try
 				{
-					bytesSent = socket.Send(_buffer, _spos % _buffer.Length, sendSize, 0);
+					bytesSent = socket.Send(_buffer, t_sposOrg % _buffer.Length, sendSize, 0);
 				}
 				catch (SocketException se)
 				{
@@ -171,4 +182,5 @@
 			caller.EndInvoke(ar);
 		}
 	}
+
 } 

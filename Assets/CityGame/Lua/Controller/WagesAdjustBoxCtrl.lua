@@ -12,10 +12,6 @@ function WagesAdjustBoxCtrl:bundleName()
     return "Assets/CityGame/Resources/View/WagesAdjustBoxPanel.prefab"
 end
 
-function WagesAdjustBoxCtrl:Awake(go)
-    self.gameObject = go
-end
-
 function WagesAdjustBoxCtrl:OnCreate(obj)
     UIPanel.OnCreate(self, obj)
 end

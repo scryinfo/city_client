@@ -54,7 +54,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 
     HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
-    HousePanel.buildingNameText.text = PlayerBuildingBaseData[houseDetailData.info.mId].sizeName..PlayerBuildingBaseData[houseDetailData.info.mId].typeName
+    HousePanel.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].typeName)
     local insId = self.m_data.insId
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp

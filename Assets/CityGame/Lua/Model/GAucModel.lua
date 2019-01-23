@@ -317,13 +317,9 @@ function GAucModel.n_OnReceiveBindGround(stream)
         --this._updateAucBidInfo(auctionInfo)
 
         local info = {}
-        info.titleInfo = "CONGRATULATION"
-        info.contentInfo = "Successful participation in auction"
-        info.tipInfo = "(if there is a higher bid price we will notify you by meil.)"
-        info.btnCallBack = function ()
-            ct.log("cycle_w6_houseAndGround","[cycle_w6_houseAndGround] 回调啊回调")
-        end
-        --UIPage:ShowPage(BtnDialogPageCtrl, info)
+        info.titleInfo = GetLanguage(22010005)
+        info.contentInfo = GetLanguage(22010007)
+        info.tipInfo = string.format("(%s)", GetLanguage(22010006))
         ct.OpenCtrl("BtnDialogPageCtrl", info)
     end
 end

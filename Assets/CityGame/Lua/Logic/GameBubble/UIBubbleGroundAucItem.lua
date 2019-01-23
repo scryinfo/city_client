@@ -53,6 +53,7 @@ function UIBubbleGroundAucItem:_openGroundAucFunc()
     --if self.data.aucInfo == nil then
     --    return
     --end
+    PlayMusEff(1002)
     ct.OpenCtrl("GroundAuctionCtrl", self.data.aucInfo)
 end
 

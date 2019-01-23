@@ -21,6 +21,7 @@ function ConstructCtrl:OnCreate(obj)
     --关闭面板
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(ConstructPanel.btn_back.gameObject, function()
+        PlayMusEff(1002)
         UIPanel.CloseAllPageExceptMain()
     end )
 end

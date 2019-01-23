@@ -346,6 +346,7 @@ function BuildingInfoToggleGroupMgr:_creatRetailShop()
         --local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
         --self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
 
+        --货架 左4
         local shelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         self.rightData[1] = self:creatOtherPlayerShelf(shelfToggleData)
         ---广告展示--右1

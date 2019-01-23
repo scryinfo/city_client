@@ -15,13 +15,7 @@ end
 function PlayerTempModel.Awake()
     UpdateBeat:Add(this.Update, this)
     this:OnCreate()
-    for key, v in pairs(GOOD) do
-        PlayerTempModel.tempTestReqAddItem(key,500)
-    end
 
-    for key, v in pairs(Material) do
-        PlayerTempModel.tempTestReqAddItem(key,500)
-    end
 end
 
 function PlayerTempModel.Update()
@@ -29,25 +23,23 @@ function PlayerTempModel.Update()
     --
     --    Event.Brocast("c_GroundBuildingCheck")
     --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-    --    --PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
-    --    for i, v in pairs(GOOD) do
-    --
-    --    end
-    --    PlayerTempModel.tempTestReqAddItem(2102002,99)
-    --    PlayerTempModel.tempTestReqAddItem(2102003,99)
-    --    PlayerTempModel.tempTestReqAddItem(2102004,99)
-    --
-    --    PlayerTempModel.tempTestReqAddItem(2101001,99)
-    --    PlayerTempModel.tempTestReqAddItem(2101002,99)
-    --    PlayerTempModel.tempTestReqAddItem(2101003,99)
-    --    PlayerTempModel.tempTestReqAddItem(2101004,99)
-    --
-    --    PlayerTempModel.tempTestReqAddItem(2103001,99)
-    --    PlayerTempModel.tempTestReqAddItem(2103002,99)
-    --    PlayerTempModel.tempTestReqAddItem(2103003,99)
-    --    PlayerTempModel.tempTestReqAddItem(2103004,99)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        --PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
+
+        PlayerTempModel.tempTestReqAddItem(2102002,99)
+        PlayerTempModel.tempTestReqAddItem(2102003,99)
+        PlayerTempModel.tempTestReqAddItem(2102004,99)
+
+        PlayerTempModel.tempTestReqAddItem(2101001,99)
+        PlayerTempModel.tempTestReqAddItem(2101002,99)
+        PlayerTempModel.tempTestReqAddItem(2101003,99)
+        PlayerTempModel.tempTestReqAddItem(2101004,99)
+
+        PlayerTempModel.tempTestReqAddItem(2103001,99)
+        PlayerTempModel.tempTestReqAddItem(2103002,99)
+        PlayerTempModel.tempTestReqAddItem(2103003,99)
+        PlayerTempModel.tempTestReqAddItem(2103004,99)
+    end
     --
     --
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then

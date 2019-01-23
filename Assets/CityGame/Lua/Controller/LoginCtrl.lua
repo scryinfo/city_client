@@ -50,8 +50,8 @@ function LoginCtrl:Active()
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
-	local path = GetLanguage(10020003)
-	LoadSprite(path, LoginPanel.btnLogin:GetComponent("Image"), true)
+	--local path = GetLanguage(10020003)
+	--LoadSprite(path, LoginPanel.btnLogin:GetComponent("Image"), true)
 
 end
 

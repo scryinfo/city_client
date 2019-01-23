@@ -24,18 +24,18 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     for key, v in pairs(Material) do
         PlayerTempModel.tempTestReqAddItem(key,500)
     end
+    Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
+    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
+    Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
+    Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
+    Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
 end
 
 function GameMainInterfaceCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
-    Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
-    Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
-    Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
-    Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
-    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -44,12 +44,7 @@ function GameMainInterfaceCtrl:Hide()
 
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
- --   Event.RemoveListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
-    --Event.RemoveListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
-    --Event.RemoveListener("c_receiveOwnerDatas",self.SaveData,self)
-   -- Event.RemoveListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
-    --Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
 end
 
 --金币改变

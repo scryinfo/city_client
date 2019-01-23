@@ -44,6 +44,12 @@ function ChooseWarehouseCtrl:Awake(go)
     self.gameObject = go;
     --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
     isShowList = false;
+
+    --初始化
+    local name = DataManager:GetName()
+    ChooseWarehousePanel.nameText.text = name
+    local faceId = DataManager.GetFaceId()
+    LoadSprite(PlayerHead[faceId].WareHouse, ChooseWarehousePanel.faceItem, true)
 end
 
 function ChooseWarehouseCtrl:Active()
@@ -67,8 +73,6 @@ function ChooseWarehouseCtrl:Refresh()
     self:initInsData()
     self:GetMyFriends()
     ChooseWarehousePanel.boxImg:SetActive(true)
-    local name = DataManager:GetName()
-    ChooseWarehousePanel.nameText.text = name
 
 end
 

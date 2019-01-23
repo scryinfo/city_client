@@ -33,19 +33,19 @@ function ProcessingCtrl:Refresh()
 end
 
 function ProcessingCtrl:initializeData()
-    --if self.m_data.insId then
-    --    self.insId=self.m_data.insId
-    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
-    --else
-    --    self.m_data.insId=self.insId
-    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
-    --end
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
+    --if self.m_data then
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    --end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)

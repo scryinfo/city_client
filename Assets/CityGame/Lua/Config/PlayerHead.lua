@@ -12,6 +12,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/avatar_01.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/avatar_01.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/avatar_01.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/avatar_01-warehouse.png",
     },
     [2] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_02-m.png",
@@ -21,6 +22,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/avatar_02.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/avatar_02.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/avatar_02.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/avatar_02_warehouse.png",
     },
     [3] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_03-m.png",
@@ -30,6 +32,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/avatar_03.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/avatar_03.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/avatar_03.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/avatar_03_warehouse.png",
     },
     [4] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_04-m.png",
@@ -39,6 +42,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/avatar_04.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/avatar_04.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/avatar_04.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/avatar_04_warehouse.png",
     },
     [5] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/avatar_05-m.png",
@@ -48,6 +52,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/avatar_05.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/avatar_05.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/avatar_05.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/avatar_05_warehouse.png",
     },
     [6] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_01-m.png",
@@ -57,6 +62,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/Avatar_girl_01.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/Avatar_girl_01.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/Avatar_girl_01.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/Avatar_girl_01_warehouse.png",
     },
     [7] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_02-m.png",
@@ -66,6 +72,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/Avatar_girl_02.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/Avatar_girl_02.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/Avatar_girl_02.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/Avatar_girl_02_warehouse.png",
     },
     [8] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_03-m.png",
@@ -75,6 +82,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/Avatar_girl_03.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/Avatar_girl_03.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/Avatar_girl_03.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/Avatar_girl_03_warehouse.png",
     },
     [9] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_04-m.png",
@@ -84,6 +92,7 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/Avatar_girl_04.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/Avatar_girl_04.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/Avatar_girl_04.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/Avatar_girl_04_warehouse.png",
     },
     [10] = {
         SelectRolePath = "Assets/CityGame/Resources/Atlas/PlayerHead/big/Avatar_girl_05-m.png",
@@ -93,5 +102,6 @@ PlayerHead = {
         PersonHomepagePath = "Assets/CityGame/Resources/Atlas/PlayerHead/PersonHomepage/Avatar_girl_05.png",
         GroundTransLargePath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/large/Avatar_girl_05.png",
         GroundTransSmallPath = "Assets/CityGame/Resources/Atlas/PlayerHead/GroundTrans/small/Avatar_girl_05.png",
+        WareHouse = "Assets/CityGame/Resources/Atlas/PlayerHead/wareHouse/Avatar_girl_05_warehouse.png",
     },
 }

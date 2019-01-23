@@ -13,13 +13,17 @@ function AddressListItem:initialize(DataInfo,prefab,mgr)
     self.dataInfo = DataInfo;
     self.manager = mgr;
     self.id = DataInfo.id
+    self.faceId = DataInfo.faceId
     self.onClick = true  --第一次点击
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("name").gameObject:GetComponent("Text");
+    self.face = self.prefab.transform:Find("face/faceItem").gameObject:GetComponent("Image");
     self.box = self.prefab.transform:Find("box").gameObject;
 
     self.name.text = DataInfo.name
+
+    LoadSprite(PlayerHead[self.faceId].WareHouse, self.face, true)
 
     self.box:SetActive(false);
     self.bg.onClick:AddListener(function()

@@ -15,7 +15,7 @@ local AddressItems = {}
 
 WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
 WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
-WareHouseGoodsMgr.static.AddressList_PATH = "View/FriendsLineItem";
+WareHouseGoodsMgr.static.AddressList_PATH = "View/GoodsItem/FriendsLineItem";
 WareHouseGoodsMgr.static.Line_PATH = "View/GoodsItem/ChooseLineItem";
 
 function WareHouseGoodsMgr:initialize()

@@ -36,7 +36,9 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
 
     self.itemHedaer.text = goodsDataInfo.header
     self.from.text = goodsDataInfo.from
-    self.itemTime.text = os.date("%Y-%m-%d %H:%M:%S");
+    local ts = getFormatUnixTime( goodsDataInfo.time/1000)
+    local time =ts.year.."-"..ts.month.."-"..ts.day.." "..ts.hour..":"..ts.minute..":"..ts.second
+    self.itemTime.text = time
     self.newHedaer.text = goodsDataInfo.header
     self.newFrom.text = goodsDataInfo.from
     self.newTime.text = self.itemTime.text

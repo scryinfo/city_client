@@ -123,10 +123,10 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
             self.content = GetLanguage(13010051,self.name)
             GameNoticePanel.rightContent.text = self.content
         elseif type == 13 then
-            self.content = GetLanguage(13010053,self.name,"(".. pos.x..","..pos.y .. ")")
+            self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
             GameNoticePanel.rightContent.text = self.content
         elseif stype == 14 then
-            self.content = GetLanguage(13010054,self.name,"(".. pos.x..","..pos.y .. ")")
+            self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
             GameNoticePanel.rightContent.text = self.content
         end
         --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)

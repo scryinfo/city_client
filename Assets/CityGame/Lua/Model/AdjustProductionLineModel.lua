@@ -63,7 +63,7 @@ function AdjustProductionLineModel.n_GsDetermineBtn(stream)
     Event.Brocast("calculateTime",msgAllGameServerInfo)
     Event.Brocast("refreshSubtractWorkerNum",msgAllGameServerInfo)
     Event.Brocast("SmallPop","添加成功",300)
-    Event.Brocast("productionRefreshInfo",msgAllGameServerInfo)
+    --Event.Brocast("productionRefreshInfo",msgAllGameServerInfo)
 end
 --修改生产线
 function AdjustProductionLineModel.n_GsModifyKLine(stream)

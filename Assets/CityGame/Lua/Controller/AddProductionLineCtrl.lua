@@ -19,18 +19,19 @@ function AddProductionLineCtrl:Awake(go)
     self.luabehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
-        self:Hide();
-        --UIPanel.ClosePage();
+        --self:Hide();
+        UIPanel.ClosePage();
     end,self)
     self.luabehaviour:AddClick(AddProductionLinePanel.leftBtn.gameObject,function()
         --ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
         GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
-        self:Hide();
-        --UIPanel.ClosePage();
+        --self:Hide();
+        UIPanel.ClosePage();
     end,self)
 
 end
 function AddProductionLineCtrl:Active()
+    UIPanel.Active(self)
     self:_addListener()
 end
 
@@ -51,7 +52,8 @@ function AddProductionLineCtrl:_initData()
 
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-            self:Hide();
+            --self:Hide();
+            UIPanel.ClosePage();
             --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
             GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
 
@@ -63,7 +65,8 @@ function AddProductionLineCtrl:_initData()
         --加工厂确定生产按钮
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-            self:Hide();
+            --self:Hide()
+            UIPanel.ClosePage();
             --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
             GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
         end)

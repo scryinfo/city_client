@@ -56,7 +56,9 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     MaterialPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
     --MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     MaterialPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
+    local insId = self.m_data.insId
     self.m_data = DataInfo
+    self.m_data.insId = insId
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
         MaterialPanel.changeNameBtn.localScale = Vector3.zero
@@ -112,40 +114,50 @@ function MaterialCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
-    Event.Brocast("mReqCloseMaterial",ins.insId)
+    Event.Brocast("mReqCloseMaterial",ins.m_data.insId)
     UIPanel.ClosePage()
 end
 function MaterialCtrl:Hide()
     UIPanel.Hide(self)
-    self:deleteProductionObj(HomeProductionLineItem.productionTab,ShelfRateItem.shelfTab)
-    --self:deleteShelfObj()
+    self:deleteProductionObj()
+    self:deleteShelfObj()
+    self:deleteOtherShelf()
 end
 --退出时删除
-function MaterialCtrl:deleteProductionObj(LineData,shelfData)
-    if not LineData or LineData == {} and not shelfData or shelfData == {} then
+function MaterialCtrl:deleteProductionObj()
+    if not HomeProductionLineItem.productionTab or HomeProductionLineItem.productionTab == {} then
         return
     else
-        for i,v in pairs(LineData) do
+        for i,v in pairs(HomeProductionLineItem.productionTab) do
             v:closeEvent()
             destroy(v.prefab.gameObject);
         end
-        for i,v in pairs(shelfData) do
+        HomeProductionLineItem.productionTab = {}
+    end
+end
+function MaterialCtrl:deleteShelfObj()
+    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
+        return
+    else
+        for i,v in pairs(ShelfRateItem.shelfTab) do
             destroy(v.prefab.gameObject)
         end
-        HomeProductionLineItem.productionTab = {}
         ShelfRateItem.shelfTab = {}
     end
 end
---function MaterialCtrl:deleteShelfObj()
---    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
---        return
---    else
---        for i,v in pairs(ShelfRateItem.shelfTab) do
---            destroy(v.prefab.gameObject)
---        end
---        ShelfRateItem.shelfTab = {}
---    end
---end
+function MaterialCtrl:deleteOtherShelf()
+    if self.m_data.isOther == true then
+        if not HomeOtherPlayerShelfItem.shelfTab or HomeOtherPlayerShelfItem.shelfTab == {} then
+            return
+        end
+        for i,v in pairs(HomeOtherPlayerShelfItem.shelfTab) do
+            destroy(v.prefab.gameObject)
+        end
+        HomeOtherPlayerShelfItem.shelfTab = {}
+    else
+        return
+    end
+end
 --打开信息界面
 function MaterialCtrl:OnClick_infoBtn()
 

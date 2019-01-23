@@ -56,7 +56,10 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
+    local insId = self.m_data.insId
     self.m_data = DataInfo
+    self.m_data.insId = insId
+
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
         RetailStoresPanel.changeNameBtn.localScale = Vector3.zero

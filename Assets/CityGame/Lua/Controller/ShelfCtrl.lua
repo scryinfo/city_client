@@ -145,7 +145,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
 end
 
 function ShelfCtrl:OnClick_return_Btn(go)
-    --go:deleteObjInfo();
+    go:deleteObjInfo();
     PlayMusEff(1002)
     UIPanel.ClosePage()
     if switchIsShow then

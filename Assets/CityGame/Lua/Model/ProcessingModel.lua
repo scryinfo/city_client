@@ -22,13 +22,13 @@ end
 function ProcessingModel:m_ReqOpenProcessing(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailProduceDepartment","gs.Id",{id = buildingId})
 end
---关闭加工厂详情推送消息
-function ProcessingModel:mReqCloseProcessing(buildingId)
-    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id = buildingId})
-end
 --改变建筑名字
 function ProcessingModel:m_ReqChangeProcessingName(buildingId,name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = buildingId, name = name})
+end
+--关闭加工厂详情推送消息
+function ProcessingModel:mReqCloseProcessing(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id = buildingId})
 end
 --服务器回调--
 --打开加工厂

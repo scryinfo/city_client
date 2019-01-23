@@ -114,12 +114,23 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
+    Event.Brocast("mReqCloseRetailStores",ins.m_data.insId)
     UIPanel.ClosePage()
 end
---function RetailStoresCtrl:Hide()
---    UIPanel.Hide(self)
---    return {insId = self.m_data.info.id,self.m_data}
---end
+function RetailStoresCtrl:Hide()
+    UIPanel.Hide(self)
+    self:deleteOtherShelf()
+end
+--退出时删除
+function RetailStoresCtrl:deleteOtherShelf()
+    if not HomeOtherPlayerShelfItem.shelfTab or HomeOtherPlayerShelfItem.shelfTab == {} then
+        return
+    end
+    for i,v in pairs(HomeOtherPlayerShelfItem.shelfTab) do
+        destroy(v.prefab.gameObject)
+    end
+    HomeOtherPlayerShelfItem.shelfTab = {}
+end
 --打开信息界面
 function RetailStoresCtrl:OnClick_infoBtn()
 

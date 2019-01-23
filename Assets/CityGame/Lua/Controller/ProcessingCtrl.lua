@@ -118,10 +118,23 @@ function ProcessingCtrl:OnClick_backBtn(ins)
     Event.Brocast("mReqCloseProcessing",ins.m_data.insId)
     UIPanel.ClosePage()
 end
---function ProcessingCtrl:Hide()
---    UIPanel.Hide(self)
---    return {insId = self.m_data.info.id,self.m_data}
---end
+function ProcessingCtrl:Hide()
+    UIPanel.Hide(self)
+    self:deleteProductionObj()
+end
+--退出时删除
+function ProcessingCtrl:deleteProductionObj()
+    if not HomeProductionLineItem.productionTab or HomeProductionLineItem.productionTab == {} then
+        return
+    else
+        for i,v in pairs(HomeProductionLineItem.productionTab) do
+            v:closeEvent()
+            destroy(v.prefab.gameObject);
+        end
+        HomeProductionLineItem.productionTab = {}
+    end
+end
+
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
 

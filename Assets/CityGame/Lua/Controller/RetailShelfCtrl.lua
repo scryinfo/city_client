@@ -45,6 +45,7 @@ function RetailShelfCtrl:Refresh()
     if self.m_data == nil then
         return;
     end
+    self.data = self.m_data
     self.shelf = self.m_data.shelf
     self.shelf.type = BuildingInType.RetailShelf
     self.shelf.isOther = self.m_data.isOther
@@ -58,7 +59,7 @@ function RetailShelfCtrl:Refresh()
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
     RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].shelfCapacity;
-    RetailShelfPanel.capacitySlider.value = self:getShelfCapacity(self.m_data.shelf)
+    RetailShelfPanel.capacitySlider.value = self:getShelfCapacity(self.m_data.shelf.good)
     RetailShelfPanel.numberText.text = getColorString(RetailShelfPanel.capacitySlider.value,RetailShelfPanel.capacitySlider.maxValue,"blue","white")
 end
 --打开名字数量价格排序
@@ -102,10 +103,11 @@ function RetailShelfCtrl:OnClick_addBtn(go)
     --data.buildingData = BuildingType.RetailShop;
     --go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
     PlayMusEff(1002)
-    if go.m_data == nil then
+    if go.data == nil then
         return
     end
-    --go:
+    go:deleteObjInfo()
+    ct.OpenCtrl("WarehouseCtrl",go.data)
 end
 --其他玩家购买窗口
 function RetailShelfCtrl:OnClick_playerBuy(go)
@@ -209,13 +211,13 @@ function RetailShelfCtrl:OnClick_OnSenior(go)
     go:OnClick_OpenList(not isShowLists,1)
 end
 --获取零售店货架容量
-function RetailShelfCtrl:getShelfCapacity(table)
+function RetailShelfCtrl:getShelfCapacity(shelfData)
     local shelfCapacity = 0;
-    if not table.inHand then
+    if not shelfData then
         shelfCapacity = 0;
         return shelfCapacity;
     else
-        for k,v in pairs(table.inHand) do
+        for k,v in pairs(shelfData) do
             shelfCapacity = shelfCapacity + v.n
         end
         return shelfCapacity;
@@ -234,11 +236,21 @@ function RetailShelfCtrl:shelfImgSetActive(table,num)
         end
     end
 end
-function RetailShelfCtrl:OnClick_return_Btn()
+function RetailShelfCtrl:OnClick_return_Btn(go)
     PlayMusEff(1002)
+    go:deleteObjInfo()
     UIPanel.ClosePage()
 end
 function RetailShelfCtrl:Hide()
     UIPanel.Hide(self)
-    return {insId = self.m_data.info.id}
+end
+--退出时清空
+function RetailShelfCtrl:deleteObjInfo()
+    if not self.GoodsUnifyMgr.retailShelfs then
+        return;
+    else
+        for i,v in pairs(self.GoodsUnifyMgr.retailShelfs) do
+            destroy(v.prefab.gameObject);
+        end
+    end
 end

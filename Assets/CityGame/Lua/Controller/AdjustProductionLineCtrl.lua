@@ -103,7 +103,7 @@ function AdjustProductionLineCtrl:calculateTime(msg)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
             --v.timeText.text = timeStr.
-            v:getTimeNumber(msg.line)
+            v.timeText.text = v:getTimeNumber(msg.line)
             v.minText.text = v:getMinuteNum(msg.line)
         end
     end

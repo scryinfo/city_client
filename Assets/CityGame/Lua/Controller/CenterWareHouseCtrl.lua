@@ -71,10 +71,6 @@ function CenterWareHouseCtrl:Active()
     Event.AddListener("c_transport",self.c_transport,self);
     Event.AddListener("c_DelItem",self.c_DelItem,self);
     --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
-    local path = GetLanguage(21010001)
-    LoadSprite(path, CenterWareHousePanel.centrel,false)
-    CenterWareHousePanel.tip.text = GetLanguage(21020001)
-    CenterWareHousePanel.warehouseNameText.text = GetLanguage(21020002)
 end
 
 function CenterWareHouseCtrl:Hide()
@@ -88,11 +84,6 @@ function CenterWareHouseCtrl:Hide()
     Event.RemoveListener("c_DelItem",self.c_DelItem,self);
     --Event.RemoveListener("c_DeleteItem",self.c_DeleteItem,self);
 
-    --清空内容
-    if not isSelect then
-        CenterWareHouseCtrl:c_transportCloseBtn()
-    end
-    WareHouseGoodsMgr:ClearAllItem()
 end
 
 --初始化
@@ -174,7 +165,11 @@ end
 
 --返回按钮
 function CenterWareHouseCtrl:c_OnBackBtn()
-    PlayMusEff(1002)
+    --清空内容
+    if not isSelect then
+        CenterWareHouseCtrl:c_transportCloseBtn()
+    end
+    WareHouseGoodsMgr:ClearAllItem()
     UIPanel.ClosePage();
 end
 
@@ -204,7 +199,6 @@ end
 
 --扩容按钮
 function CenterWareHouseCtrl:c_OnAddBtn(go)
-    PlayMusEff(1002)
     local money = DataManager.GetMoney()
     if money<go.money then
         Event.Brocast("SmallPop","扩容金额不足",300)
@@ -221,7 +215,6 @@ end
 
 --运输按钮
 function CenterWareHouseCtrl:c_TransportBtn(go)
-    PlayMusEff(1002)
     CenterWareHousePanel.addItem:SetActive(false);
     isSelect = false;
     WareHouseGoodsMgr:_setActiva(isSelect)
@@ -230,7 +223,6 @@ end
 
 --选择仓库按钮
 function CenterWareHouseCtrl:c_transportopenBtn()
-    PlayMusEff(1002)
     local data = {}
     data.pos = {}
     data.pos.x = BagPosInfo[1].bagX
@@ -242,7 +234,6 @@ end
 
 --开始运输按钮
 function CenterWareHouseCtrl:c_transportConfirmBtn(go)
-    PlayMusEff(1002)
     local data = {}
     data.currentLocationName = "中心仓库"--起始地址
     data.targetLocationName =ChooseWarehouseCtrl:GetName()--目标地址
@@ -303,7 +294,6 @@ end
 
 --关闭运输按钮
 function CenterWareHouseCtrl:c_transportCloseBtn()
-    PlayMusEff(1002)
     --CenterWareHousePanel.addItem:SetActive(true);
     isSelect = true;
     WareHouseGoodsMgr:_setActiva(isSelect)
@@ -312,13 +302,11 @@ function CenterWareHouseCtrl:c_transportCloseBtn()
 end
 
 function CenterWareHouseCtrl.OnClick_OnSorting(go)
-    PlayMusEff(1002)
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
 end
 
 --根据名字排序
 function CenterWareHouseCtrl.OnClick_OnName(go)
-    PlayMusEff(1002)
     CenterWareHousePanel.nowText.text = "By name";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
     local type = CenterWareHouseSortItemType.Name
@@ -326,20 +314,17 @@ function CenterWareHouseCtrl.OnClick_OnName(go)
 end
 --根据数量排序
 function CenterWareHouseCtrl.OnClick_OnNumber(go)
-    PlayMusEff(1002)
     CenterWareHousePanel.nowText.text = "By quantity";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
     CenterWareHouseCtrl:_getSortItems(CenterWareHouseSortItemType.Quantity)
 end
 --根据水平排序
 function CenterWareHouseCtrl.OnClick_OnlevelBtn(go)
-    PlayMusEff(1002)
     CenterWareHousePanel.nowText.text = "By level";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
 end
 --根据分数排序
 function CenterWareHouseCtrl.OnClick_OnscoreBtn(go)
-    PlayMusEff(1002)
     CenterWareHousePanel.nowText.text = "By score";
     CenterWareHouseCtrl.OnClick_OpenList(not isShowList);
 end

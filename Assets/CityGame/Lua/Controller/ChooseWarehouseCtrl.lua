@@ -42,7 +42,6 @@ function ChooseWarehouseCtrl:Awake(go)
     self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
 
     self.gameObject = go;
-    self:_addListener()
     --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
     isShowList = false;
 end

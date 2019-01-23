@@ -5,18 +5,12 @@
 ---通知
 GameNoticeCtrl = class('GameNoticeCtrl',UIPanel)
 UIPanel:ResgisterOpen(GameNoticeCtrl) --注册打开的方法
-local gameObject;
 local GameNoticeBehaviour
 local bg = nil
 local isShowHint =false
 local id = nil  -- 类型Id
 local goId = nil --实例Id
 local hide
-local typeId
-local pos = {}
-local content      --邮件内容
-local noticeId     --邮件Id
-local read = false  --邮件读取状态
 
 function  GameNoticeCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameNoticePanel.prefab"
@@ -45,7 +39,6 @@ function GameNoticeCtrl:Awake()
     self:_initData();
 
     self.NoticeMgr = NoticeMgr:new()
-    --self:_addListener()
 end
 
 function GameNoticeCtrl:Active()
@@ -60,7 +53,6 @@ function GameNoticeCtrl:Refresh()
     hide = true
     --打开通知Model
     self:initializeData()
-    --self:_noticeContent()
     NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
     if goId ~= nil then
         NoticeMgr.notice[goId].newBg:SetActive(true)
@@ -137,7 +129,8 @@ function GameNoticeCtrl:c_OnMailRead(go)
     GameNoticePanel.time.text = go.itemTime.text
     --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     --GameNoticePanel.rightContent.text = go.content
-    GameNoticePanel.timeLeft.text = GetLanguage(13010003)
+    GameNoticePanel.timeLeft.transform.localScale = Vector3.one
+    GameNoticePanel.timeLeft.text = GetLanguage(13010003,go.day)
     -- ]]
     if go.typeId ==1 then
         GameNoticePanel.GoodsScrollView:SetActive(true)
@@ -165,6 +158,7 @@ end
 
 --删除通知回调
 function GameNoticeCtrl:c_OnDeleMails(go)
+
      GameNoticeCtrl:_deleteNotice(go)
 end
 
@@ -189,6 +183,7 @@ end
 
 --删除通知方法
 function GameNoticeCtrl:_deleteNotice(go)
+    GameNoticePanel.timeLeft.transform.localScale = Vector3.zero
     --  [[删除邮件实例与表中数据
     if go == nil then
         return
@@ -212,63 +207,4 @@ function GameNoticeCtrl:_deleteNotice(go)
     bg = nil
     self:_initData()
     GameNoticePanel.delete:SetActive(false)
-end
-
---替换通知内容
-function GameNoticeCtrl:_noticeContent()
-    for i, v in pairs(self.m_data) do
-        if v.type == 12 then
-            self:GetPlayerId(v.uuidParas[1])
-            typeId = v.type
-            noticeId = v.id
-            read = v.read
-            --coroutine.yield()
-        elseif v.type ==13 then
-            self:GetPlayerId(v.uuidParas[1])
-            typeId = v.type
-            noticeId = v.id
-            read = v.read
-            pos.x = v.intParasArr[1]
-            pos.y = v.intParasArr[2]
-            --coroutine.yield()
-        elseif v.type ==14 then
-           self:GetPlayerId(v.uuidParas[1])
-            typeId = v.type
-            noticeId = v.id
-            read = v.read
-            pos.x = v.intParasArr[1]
-            pos.y = v.intParasArr[2]
-            --coroutine.yield()
-        end
-        
-    end
-end
-
--- 监听Model层网络回调
-function GameNoticeCtrl:_addListener()
-    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
-end
-
---注销model层网络回调
-function GameNoticeCtrl:_removeListener()
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
-end
-
---function GameNoticeCtrl:c_OnReceivePlayerInfo(playerData)
---    if hide then
---        self.name = playerData.info[1].name
---        if typeId == 12 then
---             content = GetLanguage(1000010,self.name)
---        elseif typeId == 13 then
---             content = GetLanguage(1000011,"(".. pos.x..","..pos.y .. ")",self.name)
---        elseif typeId == 14 then
---             content = GetLanguage(1000012,"(".. pos.x..","..pos.y .. ")",self.name)
---        end
---        NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
---    end
---end
-
---获取玩家信息
-function GameNoticeCtrl:GetPlayerId(playerid)
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
 end

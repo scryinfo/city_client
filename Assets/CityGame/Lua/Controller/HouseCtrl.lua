@@ -51,6 +51,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         HousePanel.stopRootTran.localScale = Vector3.zero
     else
         HousePanel.stopRootTran.localScale = Vector3.one
+        HousePanel.stopText01.text = GetLanguage(40010016)
     end
 
     HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"

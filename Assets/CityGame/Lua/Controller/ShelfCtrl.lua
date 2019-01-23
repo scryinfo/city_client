@@ -236,13 +236,17 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
         if v.itemId == Data.item.key.id then
             if v.goodsDataInfo.n == Data.item.n then
                 self.GoodsUnifyMgr:_deleteGoods(v)
+                self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
+
+                Event.Brocast("c_buyGoodsItemChoose")
+
                 for i,v in pairs(ShelfCtrl.temporaryItems) do
                     self.GoodsUnifyMgr:_deleteBuyGoods(v)
                     self:isShowDetermineBtn()
                 end
             else
                 v.numberText.text = v.goodsDataInfo.n - Data.item.n;
-                --v.goodsDataInfo.n = tonumber(v.numberText.text)
+                v.goodsDataInfo.n = tonumber(v.numberText.text)
                 for i in pairs(ShelfCtrl.temporaryItems) do
                     self:c_tempTabNotGoods(i)
                     --Event.Brocast("c_tempTabNotGoods", i)

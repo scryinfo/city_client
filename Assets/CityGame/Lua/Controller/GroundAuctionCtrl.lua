@@ -50,6 +50,7 @@ function GroundAuctionCtrl:Hide()
 
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
+    self.highestPrice = nil
 
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
@@ -261,7 +262,7 @@ end
 --
 function GroundAuctionCtrl:_setUIInfo(playerData)
     GroundAuctionPanel.nameText.text = self.biderInfo.name
-    LoadSprite(PlayerHead[playerData.faceId].MainPath, GroundAuctionPanel.biderProtaitImg)
+    LoadSprite(PlayerHead[playerData.faceId].GroundTransSmallPath, GroundAuctionPanel.biderProtaitImg, true)
 end
 
 --拍卖结束

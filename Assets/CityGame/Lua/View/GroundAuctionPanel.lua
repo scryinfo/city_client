@@ -32,7 +32,7 @@ function GroundAuctionPanel.InitPanel()
     this.floorPriceText = transform:Find("bidRoot/startBidRoot/price/floorRoot/floorPriceText"):GetComponent("Text")
 
     this.bidInput = transform:Find("bidRoot/startBidRoot/input/bidInput"):GetComponent('InputField')
-    this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText")
+    --this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText")
     this.bidBtn = transform:Find("bidRoot/startBidRoot/bidBtn"):GetComponent("Button")
 
     this.waitBidRoot = transform:Find("bidRoot/waitBidRoot")

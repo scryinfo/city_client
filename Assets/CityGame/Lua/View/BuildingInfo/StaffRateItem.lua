@@ -45,6 +45,7 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     end
 
     mainPanelLuaBehaviour:AddClick(self.closeOpenBtn.gameObject, function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
     self:_initData()

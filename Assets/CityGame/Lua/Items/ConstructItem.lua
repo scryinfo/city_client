@@ -58,6 +58,7 @@ end
 
 --点击建筑按钮
 function ConstructItem:_clickConstructBtn(tempID)
+    PlayMusEff(1002)
     local tempVec = rayMgr:GetCoordinateByVector3(Vector3.New(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2,0))
     TerrainManager.ConstructBuild(tempID,tempVec)
 end

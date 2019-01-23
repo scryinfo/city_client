@@ -192,11 +192,11 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    --local mMoney = DataManager.GetMoney()
-    --if tonumber(bidPrice) < mMoney  then
-    --    Event.Brocast("SmallPop", "您的资金不足", 300)
-    --    return
-    --end
+    local mMoney = DataManager.GetMoney()
+    if tonumber(bidPrice) > mMoney  then
+        Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+        return
+    end
 
     if ins.highestPrice == nil then
         ins.highestPrice = ins.m_data.basePrice

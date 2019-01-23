@@ -42,7 +42,7 @@ function GameMainInterfaceCtrl:Hide()
     --Event.RemoveListener("c_receiveOwnerDatas",self.SaveData,self)
    -- Event.RemoveListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
-    Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
+    --Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
 end
 
 --金币改变
@@ -182,6 +182,9 @@ function GameMainInterfaceCtrl:RefreshWeather()
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
         end
     end
+    --获取拍卖状态
+    local a = UIBubbleManager._getNowAndSoonState()
+     local n
 end
 
 --获取所有邮件
@@ -214,20 +217,6 @@ end
 function GameMainInterfaceCtrl.OnNotice(go)
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
---[[    if  NoticeMgr.notice ~= nil then
-        if  #NoticeMgr.notice == 0 then
-            ct.OpenCtrl("NoMessageCtrl")
-        else
-            ct.OpenCtrl('GameNoticeCtrl')
-        end
-    else
-        if #Notice == 0  then
-            ct.OpenCtrl("NoMessageCtrl")
-        else
-            ct.OpenCtrl('GameNoticeCtrl')
-        end
-    end]]
-
     if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
@@ -325,6 +314,7 @@ end
 --拍卖
 function GameMainInterfaceCtrl:OnAuction()
     PlayMusEff(1002)
+    GAucModel._moveToAucPos()
 end
 
 --住宅--

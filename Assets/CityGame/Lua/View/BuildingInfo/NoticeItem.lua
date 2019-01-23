@@ -39,6 +39,19 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
     local ts = getFormatUnixTime( goodsDataInfo.time/1000)
     local time =ts.year.."-"..ts.month.."-"..ts.day.." "..ts.hour..":"..ts.minute..":"..ts.second
     self.itemTime.text = time
+    --到期时间(毫秒)
+   -- local expore = goodsDataInfo.time + 604800000
+    local expore = goodsDataInfo.time + 518400000
+    --获取当前时间(毫秒)
+    local current = TimeSynchronized.GetTheCurrentServerTime()
+    --剩余时间(毫秒)
+    local remaining = expore - current
+    local remainingTs = getFormatUnixTime( remaining/1000)
+    --剩余天数
+    local remainingDay = remainingTs.day
+    --切割字符串
+    local remainingDays = split(remainingDay, 0)
+    self.day = remainingDays[2]
     self.newHedaer.text = goodsDataInfo.header
     self.newFrom.text = goodsDataInfo.from
     self.newTime.text = self.itemTime.text
@@ -73,6 +86,12 @@ function NoticeItem:OnBg(go)
         pos.y = go.goodsDataInfo.intParasArr[2]
         go:GetPlayerId(go.uuidParas[1])
         type = go.typeId
+    elseif go.typeId == 9 then
+        go.content = GetLanguage(13010043,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
+        GameNoticePanel.rightContent.text = go.content
+    elseif go.typeId == 11 then
+        go.content = GetLanguage(13010047,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
+        GameNoticePanel.rightContent.text = go.content
     end
 
     Event.Brocast("c_onBg",go)

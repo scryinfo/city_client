@@ -262,7 +262,7 @@ end
 --
 function GroundAuctionCtrl:_setUIInfo(playerData)
     GroundAuctionPanel.nameText.text = self.biderInfo.name
-    LoadSprite(PlayerHead[playerData.faceId].MainPath, GroundAuctionPanel.biderProtaitImg)
+    LoadSprite(PlayerHead[playerData.faceId].GroundTransSmallPath, GroundAuctionPanel.biderProtaitImg, true)
 end
 
 --拍卖结束

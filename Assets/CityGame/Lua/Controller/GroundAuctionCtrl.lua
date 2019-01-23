@@ -50,6 +50,7 @@ function GroundAuctionCtrl:Hide()
 
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
+    self.highestPrice = nil
 
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)

@@ -186,6 +186,10 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
                 if v.key.id == itemId then
                     return v.n
                 end
+                if v.key.id ~= itemId then
+                    local num = 0
+                    return num
+                end
             end
         else
             local num = 0

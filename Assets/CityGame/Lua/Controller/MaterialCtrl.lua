@@ -35,19 +35,19 @@ function MaterialCtrl:Refresh()
 end
 
 function MaterialCtrl:initializeData()
-    --if self.m_data.insId then
-    --    self.insId=self.m_data.insId
-    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
-    --else
-    --    self.m_data.insId=self.insId
-    --    DataManager.OpenDetailModel(MaterialModel,self.insId)
-    --    DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
-    --end
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(MaterialModel,self.insId)
+        DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
+    --if self.m_data.id then
+    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    --end
 end
 
 --刷新原料厂信息

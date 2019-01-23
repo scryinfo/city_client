@@ -32,6 +32,7 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         uiTab.uuidParas = v.uuidParas
         uiTab.intParasArr = v.intParasArr
         uiTab.from = GetLanguage(13010002)
+        uiTab.time = v.ts
         configTable[i] = uiTab
         --预制的信息`
         local prefabData={}

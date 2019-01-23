@@ -17,6 +17,13 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
+    for key, v in pairs(Good) do
+        PlayerTempModel.tempTestReqAddItem(key,500)
+    end
+
+    for key, v in pairs(Material) do
+        PlayerTempModel.tempTestReqAddItem(key,500)
+    end
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -42,12 +49,13 @@ function GameMainInterfaceCtrl:Hide()
     --Event.RemoveListener("c_receiveOwnerDatas",self.SaveData,self)
    -- Event.RemoveListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
-    Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
+    --Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
 end
 
 --金币改变
 function GameMainInterfaceCtrl:c_ChangeMoney(money)
     self.money = getPriceString("E"..money..".0000",24,20)
+    GameMainInterfacePanel.money.text = self.money
 end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)
@@ -130,8 +138,10 @@ function GameMainInterfaceCtrl:Awake()
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.gender = info.male
+
     local gold = DataManager.GetMoney()
     self.money = getPriceString("E"..gold..".0000",24,20)
+    GameMainInterfacePanel.money.text = self.money
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -145,9 +155,9 @@ end
 function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
-    --初始化姓名,性别,金币
+    --初始化姓名,性别
     GameMainInterfacePanel.name.text = self.name
-    GameMainInterfacePanel.money.text = self.money
+
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
     self.m_Timer:Start()
     if self.gender then
@@ -179,6 +189,9 @@ function GameMainInterfaceCtrl:RefreshWeather()
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
         end
     end
+    --获取拍卖状态
+    local a = UIBubbleManager._getNowAndSoonState()
+     local n
 end
 
 --获取所有邮件
@@ -211,20 +224,6 @@ end
 function GameMainInterfaceCtrl.OnNotice(go)
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
---[[    if  NoticeMgr.notice ~= nil then
-        if  #NoticeMgr.notice == 0 then
-            ct.OpenCtrl("NoMessageCtrl")
-        else
-            ct.OpenCtrl('GameNoticeCtrl')
-        end
-    else
-        if #Notice == 0  then
-            ct.OpenCtrl("NoMessageCtrl")
-        else
-            ct.OpenCtrl('GameNoticeCtrl')
-        end
-    end]]
-
     if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
@@ -322,6 +321,7 @@ end
 --拍卖
 function GameMainInterfaceCtrl:OnAuction()
     PlayMusEff(1002)
+    GAucModel._moveToAucPos()
 end
 
 --住宅--

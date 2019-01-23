@@ -26,4 +26,6 @@ function HousePanel.InitPanel()
     this.centerBtn = transform:Find("centerBtn")
     this.stopRootTran = transform:Find("stopRoot")
     this.stopIconBtn = transform:Find("stopRoot/stopIconBtn")
+    --
+    this.stopText01 = transform:Find("stopRoot/Text"):GetComponent("Text")
 end

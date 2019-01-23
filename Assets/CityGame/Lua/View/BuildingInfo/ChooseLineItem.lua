@@ -15,6 +15,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.posX =  DataInfo.info.pos.x
     self.posY =  DataInfo.info.pos.y
     self.manager = mgr;
+    self.state = DataInfo.info.state
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
@@ -31,16 +32,16 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 
     local n = 0
     if DataInfo.info.mId == nil then
-        self.size.text = GetLanguage(21030007)
-        self.name.text = GetLanguage(21030008)
+        self.size.text = BagPosInfo[1].sizeName
+        self.name.text = BagPosInfo[1].typeName
         local bagCapacity = DataManager.GetBagCapacity()  --仓库总容量
         self.warehouse_Slider.maxValue = bagCapacity
         n = DataManager.GetBagNum()      --仓库内物品数量
         self.spareCapacity = bagCapacity - n --剩余容量
         self.number.text = n .. "/" .. bagCapacity
     else
-        self.name.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].typeName)
-        self.size.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].sizeName)
+        self.name.text = PlayerBuildingBaseData[DataInfo.info.mId].typeName
+        self.size.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName
         self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
         if DataInfo.store.inHand == nil then
             n = 0
@@ -80,7 +81,10 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
-    PlayMusEff(1002)
+    if go.state == "WAITING_OPEN" then
+        Event.Brocast("SmallPop","所选建筑未开业",300)
+        return
+    end
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输
     go.manager:_onClick()

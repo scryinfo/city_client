@@ -134,7 +134,8 @@
 			while (true)
 			{
 				int sendSize = Interlocked.Add(ref _wpos, 0) - _spos;
-				int t_spos = _spos % _buffer.Length;
+				int t_spos = Interlocked.Add(ref _spos, 0);
+				t_spos = t_spos % _buffer.Length;
 				if (t_spos == 0)
 					t_spos = sendSize;
 
@@ -144,7 +145,7 @@
 				int bytesSent = 0;
 				try
 				{
-					bytesSent = socket.Send(_buffer, _spos % _buffer.Length, sendSize, 0);
+					bytesSent = socket.Send(_buffer, t_spos % _buffer.Length, sendSize, 0);
 				}
 				catch (SocketException se)
 				{

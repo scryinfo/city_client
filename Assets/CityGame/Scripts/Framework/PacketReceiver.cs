@@ -58,15 +58,16 @@
 		public void process()
 		{
 			int t_wpos = Interlocked.Add(ref _wpos, 0);
+			int t_rpos = Interlocked.Add(ref _rpos, 0);
             
-            if (_rpos < t_wpos) //如果 _buffer 中写入的数据大于读取的数据，那么就把新增的数据转发到lua中解析
+            if (t_rpos < t_wpos) //如果 _buffer 中写入的数据大于读取的数据，那么就把新增的数据转发到lua中解析
             {
-                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(t_wpos - _rpos) });
+                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)t_rpos, (UInt32)(t_wpos - t_rpos) });
 				Interlocked.Exchange(ref _rpos, t_wpos);
 			} 
 			else if(t_wpos < _rpos)
 			{
-                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(_buffer.Length - _rpos) });
+                CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)t_rpos, (UInt32)(_buffer.Length - t_rpos) });
                 CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)0, (UInt32)t_wpos });
 				Interlocked.Exchange(ref _rpos, t_wpos);
 			}
@@ -106,8 +107,8 @@
 		}
 
 		private void _asyncReceive()
-		{
-			if (_networkInterface == null || !_networkInterface.valid())
+		{            
+            if (_networkInterface == null || !_networkInterface.valid())
 			{
 				Dbg.WARNING_MSG("PacketReceiver::_asyncReceive(): network interface invalid!");
 				return;
@@ -140,10 +141,12 @@
 					space = _free();
 				}
 
-				int bytesRead = 0;
+                int t_wpos = Interlocked.Add(ref _wpos, 0);
+
+                int bytesRead = 0;
 				try
 				{
-					bytesRead = socket.Receive(_buffer, _wpos, space, 0);
+					bytesRead = socket.Receive(_buffer, t_wpos, space, 0);
 				}
 				catch (SocketException se)
 				{                    

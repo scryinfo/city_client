@@ -287,7 +287,23 @@ function DataManager.RefreshBaseBuildData(data)
     else
         --具体Model可根据建筑类型typeID重写BaseBuildModel
         BuildDataStack[collectionID].BaseBuildDatas[blockID] = BaseBuildModel:new(data)
-        return true
+        --判断是否自己地块，地块是否是自己挂出的租售信息
+        if PersonDataStack.m_groundInfos ~= nil then
+            for key, value in pairs(PersonDataStack.m_groundInfos) do
+                if value.x == data.x and value.y == data.y then
+                    if value.sell ~= nil then
+                        --todo:向服务器发送取消出售的信息
+                        DataManager.m_ReqCancelSellGround({[1] = {x = value.x, y = value.y}})
+                        break
+                    elseif value.rent ~= nil  and value.rent.renterId == nil then
+                        --TODO:向服务器发送取消出租的信息
+                        DataManager.m_ReqCancelRentGround({[1] = {x = value.x, y = value.y}})
+                        break
+                    end
+                end
+            end
+            return true
+        end
     end
 end
 
@@ -1097,6 +1113,21 @@ function DataManager.IsInTheRange(startBlockID,rangeSize,tempID)
 end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
+--客户端请求
+--取消出租
+function DataManager.m_ReqCancelRentGround(coord)
+    local msgId = pbl.enum("gscode.OpCode","cancelRentGround")
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", {coord = coord}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+--取消售卖
+function DataManager.m_ReqCancelSellGround(coord)
+    local msgId = pbl.enum("gscode.OpCode","cancelSellGround")
+    local pMsg = assert(pbl.encode("gs.MiniIndexCollection", {coord = coord}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+
+
 --注册所有消息回调
 local function InitialEvents()
     Event.AddListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)

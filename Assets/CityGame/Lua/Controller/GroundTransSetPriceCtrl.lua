@@ -7,7 +7,7 @@ GroundTransSetPriceCtrl = class('GroundTransSetPriceCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransSetPriceCtrl)
 
 function GroundTransSetPriceCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransSetPriceCtrl:bundleName()
@@ -32,6 +32,14 @@ end
 
 function GroundTransSetPriceCtrl:Refresh()
     self:_initPanelData()
+end
+
+function GroundTransSetPriceCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransSetPricePanel.sellPriceText01.text = GetLanguage(24030002)
+    GroundTransSetPricePanel.minRentText02.text = GetLanguage(24020002)
+    GroundTransSetPricePanel.maxRentText03.text = GetLanguage(24020003)
+    GroundTransSetPricePanel.rentDayText04.text = GetLanguage(24020004)
 end
 
 function GroundTransSetPriceCtrl:Hide()
@@ -61,7 +69,7 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
     GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.zero
 
     if showPageType == GroundTransState.Rent then
-        GroundTransSetPricePanel.titleText.text = "RENT"
+        GroundTransSetPricePanel.titleText.text = GetLanguage(24020001)
         GroundTransSetPricePanel.rentRoot.localScale = Vector3.one
         if groundState == GroundTransState.None then
             --显示设置租金
@@ -74,7 +82,7 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
             GroundTransSetPricePanel.rentalInput.text = groundInfo.rent.rentPreDay
         end
     elseif showPageType == GroundTransState.Sell then
-        GroundTransSetPricePanel.titleText.text = "SELL"
+        GroundTransSetPricePanel.titleText.text = GetLanguage(24030001)
         GroundTransSetPricePanel.sellRoot.localScale = Vector3.one
         if groundState == GroundTransState.None then
             --显示设置出售金额
@@ -90,93 +98,97 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSetPriceCtrl:_closeBtnFunc()
+    PlayMusEff(1002)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransSetPriceCtrl:_backBtnFunc()
+    PlayMusEff(1002)
     ct.log("cycle_w19_groundTrans", "点击了返回按钮")
     UIPanel:ClosePage()
 end
 
 --售卖发布按钮
 function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
+    PlayMusEff(1002)
     local price = GroundTransSetPricePanel.sellInput.text
     if price ~= "" and tonumber(price) > 0 then
         GroundTransModel.m_ReqSellGround(price)
-        Event.Brocast("SmallPop","Released", 300)
+        Event.Brocast("SmallPop", GetLanguage(24030003), 300)
 
         GroundTransSetPriceCtrl._closeBackToMain()
     else
-        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070001), 300)
     end
 end
 --修改出售价格按钮
 function GroundTransSetPriceCtrl:_sellChangeBtnFunc(ins)
+    PlayMusEff(1002)
     local price = GroundTransSetPricePanel.sellInput.text
     if price == "" or tonumber(price) <= 0 then
-        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070001), 300)
         return
     end
     if tonumber(price) == ins.m_data.groundInfo.sell.price then
-        Event.Brocast("SmallPop","您输入的信息没有变化", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070002), 300)
         return
     end
     GroundTransModel.m_ReqCancelSellGround()  --先发送取消售卖再发送售卖，则为修改
     GroundTransModel.m_ReqSellGround(price)
-    Event.Brocast("SmallPop","Modified", 300)
+    Event.Brocast("SmallPop", GetLanguage(24030004), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --取消出售
 function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
+    PlayMusEff(1002)
     GroundTransModel.m_ReqCancelSellGround()
 
-    Event.Brocast("SmallPop","Stop selling", 300)
+    Event.Brocast("SmallPop", GetLanguage(24030005), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 
 --出租发布按钮
 function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
+    PlayMusEff(1002)
     local minDay = GroundTransSetPricePanel.minRentDayInput.text
     local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
     local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
     if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
-        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070001), 300)
         return
     end
     GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
 
-    Event.Brocast("SmallPop","Released", 300)
+    Event.Brocast("SmallPop", GetLanguage(24020006), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --修改出租价格按钮
 function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
+    PlayMusEff(1002)
     local minDay = GroundTransSetPricePanel.minRentDayInput.text
     local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
     local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
     if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
-        Event.Brocast("SmallPop","请检查您的输入是否符合规则", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070001), 300)
         return
     end
     if minDay == ins.m_data.groundInfo.rent.rentDaysMin or maxDay == ins.m_data.groundInfo.rent.rentDaysMax or dayRentalPrice == ins.m_data.groundInfo.rent.rentPreDay then
-        Event.Brocast("SmallPop","您输入的信息没有变化", 300)
+        Event.Brocast("SmallPop", GetLanguage(24070002), 300)
         return
     end
     GroundTransModel.m_ReqCancelRentGround()
     GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
-    Event.Brocast("SmallPop","Modified", 300)
+    Event.Brocast("SmallPop", GetLanguage(24020007), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --取消出租
 function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
+    PlayMusEff(1002)
     GroundTransModel.m_ReqCancelRentGround()
-    Event.Brocast("SmallPop","Stop renting", 300)
+    Event.Brocast("SmallPop", GetLanguage(24020008), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回主界面
 function GroundTransSetPriceCtrl._closeBackToMain()
     UIPanel.CloseAllPageExceptMain()
-
-    --UIPanel:HideAllPages()
-    --ct.OpenCtrl("GameMainInterfaceCtrl")
-    --ct.OpenCtrl("UIBubbleCtrl")
 end

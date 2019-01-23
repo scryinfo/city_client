@@ -12,10 +12,10 @@ local this = ReminderPanel;
 
 --启动事件
 function ReminderPanel.Awake(obj)
-    --  gameObject = obj;
-    transform = obj.transform;
 
+    transform = obj.transform;
     this.InitPanle();
+
 end
 --初始化界面
 function ReminderPanel.InitPanle()
@@ -34,11 +34,13 @@ function ReminderPanel.InitPanle()
 
 end
 
-function ReminderPanel.OnDestroy()
-
-
-
-
+function ReminderPanel.ChangeLan()
+    this.titleText.text=GetLanguage(40010008)
+    this.one.text=GetLanguage(40010010)
+    this.second.text=GetLanguage(40010011)
+    this.third.text=GetLanguage(40010012)
+    this.fourth.text=GetLanguage(40010019)
+    this.tipText.text=GetLanguage(40010014)
 end
 
 

@@ -129,6 +129,7 @@ PlayerSettings:
   bundleVersion: 1.0
   preloadedAssets:
   - {fileID: 102900000, guid: 1740e45337d2b2a438b9aeb7f2e36405, type: 3}
+  - {fileID: 1266311441400832, guid: f7bc9e02753d7af4b92a16335dcfc14d, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -556,7 +557,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG;AMPLIFY_SHADER_EDITOR
-    7: ASYNC_MODE;LUA_BUNDEL2;RES_BUNDEL2;LUA_LOG;AMPLIFY_SHADER_EDITOR
+    7: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG;AMPLIFY_SHADER_EDITOR
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

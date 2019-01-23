@@ -7,7 +7,7 @@ GroundTransRentAndBuyCtrl = class('GroundTransRentAndBuyCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransRentAndBuyCtrl)
 
 function GroundTransRentAndBuyCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransRentAndBuyCtrl:bundleName()
@@ -37,6 +37,18 @@ end
 function GroundTransRentAndBuyCtrl:Refresh()
     Event.AddListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
     self:_initPanelData()
+end
+
+function GroundTransRentAndBuyCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransRentAndBuyPanel.titleText01.text = GetLanguage(24040002)
+    GroundTransRentAndBuyPanel.sellPriceText02.text = GetLanguage(24040004)
+    GroundTransRentAndBuyPanel.tenancyText03.text = GetLanguage(24050005)
+    GroundTransRentAndBuyPanel.rentalText04.text = GetLanguage(24050006)
+    GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(24040005)
+    GroundTransRentAndBuyPanel.rentBtnText06.text = GetLanguage(24050001)
+    GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(24040001)
+
 end
 
 function GroundTransRentAndBuyCtrl:Hide()
@@ -89,28 +101,33 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransRentAndBuyCtrl:_closeBtnFunc()
+    PlayMusEff(1002)
     --关闭所有界面
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransRentAndBuyCtrl:_backBtnFunc()
+    PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
 --点击购买按钮
 function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
         ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo})
     end
 end
 --点击租房按钮
 function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
         ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancyText.text)})
     end
 end
 --点击头像
 function GroundTransRentAndBuyCtrl:_portraitBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.roleInfo then
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.roleInfo)
     end

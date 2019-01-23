@@ -13,6 +13,7 @@ end
 function DETAILSBoxPanel.InitPanel()
     this.XBtn = transform:Find("XBtn");
     this.confirmBtn = transform:Find("confirmBtn");
+    this.name = transform:Find("bg/name"):GetComponent("Text");
     --商品
     this.playerGoodInfo = transform:Find("playerGoodInfo");
     this.goodsIcon = transform:Find("playerGoodInfo/goodsIcon"):GetComponent("Image");

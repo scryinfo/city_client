@@ -86,7 +86,7 @@
 
 			if (dataLength > space)
 			{
-				Dbg.ERROR_MSG("PacketSender::send(): no space, Please adjust 'SEND_BUFFER_MAX'! data(" + dataLength 
+				Dbg.ERROR_MSG("PacketSender::send(): no space, Please adjust 'TCP_PACKET_MAX'! data(" + dataLength 
 					+ ") > space(" + space + "), wpos=" + _wpos + ", spos=" + t_spos);
 				
 				return false;

@@ -7,7 +7,7 @@ GroundTransContractCtrl = class('GroundTransContractCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransContractCtrl)
 
 function GroundTransContractCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransContractCtrl:bundleName()
@@ -29,6 +29,17 @@ function GroundTransContractCtrl:Refresh()
     self:_initPanelData()
 end
 
+function GroundTransContractCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransContractPanel.AText02.text = GetLanguage(24060007)
+    GroundTransContractPanel.BText03.text = GetLanguage(24060006)
+    GroundTransContractPanel.buyAreaText04.text = GetLanguage(24040006)
+    GroundTransContractPanel.rentAreaText05.text = GetLanguage(24050004)
+    GroundTransContractPanel.rentTenancyText06.text = GetLanguage(24050005)
+    GroundTransContractPanel.rentDailyText07.text = GetLanguage(24050006)
+    GroundTransContractPanel.totalText08.text = GetLanguage(24040005)
+end
+
 function GroundTransContractCtrl:Hide()
     UIPanel.Hide(self)
 end
@@ -46,6 +57,8 @@ end
 --根据状态显示界面
 function GroundTransContractCtrl:_setShowState(data)
     if data.rentDay then
+        GroundTransContractPanel.titleText01.text = GetLanguage(24050003)
+        GroundTransContractPanel.rentTipText.text = GetLanguage(24050007)
         GroundTransContractPanel.chooseState(true)
         local total = data.groundInfo.rent.rentPreDay * data.rentDay
         GroundTransContractPanel.rentDailyRentText.text = "E"..data.groundInfo.rent.rentPreDay
@@ -55,6 +68,7 @@ function GroundTransContractCtrl:_setShowState(data)
         local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
         GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
     else
+        GroundTransContractPanel.titleText01.text = GetLanguage(24040003)
         GroundTransContractPanel.chooseState(false)
         GroundTransContractPanel.totalPriceText.text = "E"..data.groundInfo.sell.price
     end
@@ -69,15 +83,18 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransContractCtrl:_closeBtnFunc()
+    PlayMusEff(1002)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransContractCtrl:_backBtnFunc()
+    PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
 --点击购买按钮
 function GroundTransContractCtrl:_buyBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
         GroundTransModel.m_ReqBuyGround(ins.m_data.groundInfo.sell.price)
         Event.Brocast("SmallPop","Success", 300)
@@ -86,6 +103,7 @@ function GroundTransContractCtrl:_buyBtnFunc(ins)
 end
 --点击租房按钮
 function GroundTransContractCtrl:_rentBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
         GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
         Event.Brocast("SmallPop","Success", 300)

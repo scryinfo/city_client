@@ -19,32 +19,40 @@ function ProcessingCtrl:Awake(go)
     self.gameObject = go;
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.processingBehaviour:AddClick(ProcessingPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+end
+function ProcessingCtrl:Active()
+    UIPanel.Active(self)
+    ProcessingPanel.Text.text = GetLanguage(29010001)
 end
 function ProcessingCtrl:Refresh()
     this:initializeData()
 end
 
 function ProcessingCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
-    ProcessingPanel.nameText.text = DataInfo.info.name
-    ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
-
+    ProcessingPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
+    --ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
     self.buildingId = DataInfo.info.id
     self.m_data = DataInfo
@@ -72,20 +80,23 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     end
 end
 function ProcessingCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function ProcessingCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 
 --更改名字
 function ProcessingCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeProcessingName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeProcessingName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -96,16 +107,17 @@ function ProcessingCtrl:_updateName(name)
 end
 --返回
 function ProcessingCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.processingToggleGroup then
         ins.processingToggleGroup:cleanItems()
     end
     Event.Brocast("mReqCloseProcessing",ins.buildingId)
     UIPanel.ClosePage()
 end
-function ProcessingCtrl:Hide()
-    UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
-end
+--function ProcessingCtrl:Hide()
+--    UIPanel.Hide(self)
+--    return {insId = self.m_data.info.id,self.m_data}
+--end
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
 

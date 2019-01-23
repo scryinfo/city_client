@@ -24,6 +24,9 @@ function BuildingBrandItem:initialize(data, viewRect)
     self.currentQualityText = viewRect.transform:Find("contentRoot/quality/current/currentText"):GetComponent("Text")
     self.highestQualityText = viewRect.transform:Find("contentRoot/quality/highest/highestText"):GetComponent("Text")
     self.highestQualityPlayerImg = viewRect.transform:Find("contentRoot/quality/highest/protait/whiteBg/avtar"):GetComponent("Image")
+    --lanuage
+    self.topBrandText01 = viewRect.transform:Find("topRoot/Text01"):GetComponent("Text")
+    self.topQtyText01 = viewRect.transform:Find("topRoot/Text02"):GetComponent("Text")
 
     self.buildingInfoToggleState = BuildingInfoToggleState.Open  --默认打开
     self:_initTopInfo()
@@ -32,12 +35,18 @@ end
 function BuildingBrandItem:_initTopInfo()
     self.brandText.text = self.data.brand or 100
     self.qualityText.text = self.data.qty or 100
+    self:_lanuage()
 end
 function BuildingBrandItem:_initContentInfo()
     self.contentBrandText.text = self.data.brand or 100
     self.contentQualityText.text = self.data.qty or 100
     --差浏览量
     --最高浏览量最高品质的玩家头像
+end
+
+function BuildingBrandItem:_lanuage()
+    self.topBrandText01.text = GetLanguage(37040008)
+    self.topQtyText01.text = GetLanguage(37040009)
 end
 
 --打开

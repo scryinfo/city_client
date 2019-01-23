@@ -22,6 +22,7 @@ function ShelfPanel.InitPanel()
     this.priceBtn = transform:Find("ListTable/List/priceBtn");  --价格排序
     this.nowText = transform:Find("Sorting/bg/nowText"):GetComponent("Text");
     this.list = transform:Find("ListTable/List"):GetComponent("RectTransform");
+    this.tipText = transform:Find("RightInformation/bg/buy/tipText"):GetComponent("Text");
     --Scroll View
     this.scrollView = transform:Find("Scroll View")
     this.Content = transform:Find("Scroll View/Viewport/Content");

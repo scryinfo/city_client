@@ -21,7 +21,7 @@ function AdjustProductionLinePanel.InitPanel()
     this.capacity_Slider = transform:Find("bg/Topbg01/Capacity_Slider"):GetComponent("Slider");
     this.locked_Slider = transform:Find("bg/Topbg01/Locked_Slider"):GetComponent("Slider")
     this.numberText = transform:Find("bg/Topbg01/numberText"):GetComponent("Text");
-
+    this.Capacity = transform:Find("bg/Topbg01/Capacity"):GetComponent("Text");
     --idle
     this.idleNumberText = transform:Find("bg/Topbg01/Staffbg/numberText"):GetComponent("Text");
     --Scroll View

@@ -20,26 +20,33 @@ function MaterialCtrl:Awake(go)
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-
+function MaterialCtrl:Active()
+    UIPanel.Active(self)
+    MaterialPanel.Text.text = GetLanguage(25010001)
+end
 function MaterialCtrl:Refresh()
     this:initializeData()
 end
 
 function MaterialCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(MaterialModel,self.insId)
+    --    DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(MaterialModel,self.insId)
-        DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
 end
 
@@ -47,8 +54,8 @@ end
 function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
     MaterialPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
-
+    --MaterialPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    MaterialPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
@@ -75,19 +82,22 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
 end
 
 function MaterialCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function MaterialCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
 function MaterialCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+    --data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeMaterialName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -98,6 +108,7 @@ function MaterialCtrl:_updateName(name)
 end
 --返回
 function MaterialCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
@@ -106,9 +117,35 @@ function MaterialCtrl:OnClick_backBtn(ins)
 end
 function MaterialCtrl:Hide()
     UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
+    self:deleteProductionObj(HomeProductionLineItem.productionTab,ShelfRateItem.shelfTab)
+    --self:deleteShelfObj()
 end
-
+--退出时删除
+function MaterialCtrl:deleteProductionObj(LineData,shelfData)
+    if not LineData or LineData == {} and not shelfData or shelfData == {} then
+        return
+    else
+        for i,v in pairs(LineData) do
+            v:closeEvent()
+            destroy(v.prefab.gameObject);
+        end
+        for i,v in pairs(shelfData) do
+            destroy(v.prefab.gameObject)
+        end
+        HomeProductionLineItem.productionTab = {}
+        ShelfRateItem.shelfTab = {}
+    end
+end
+--function MaterialCtrl:deleteShelfObj()
+--    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
+--        return
+--    else
+--        for i,v in pairs(ShelfRateItem.shelfTab) do
+--            destroy(v.prefab.gameObject)
+--        end
+--        ShelfRateItem.shelfTab = {}
+--    end
+--end
 --打开信息界面
 function MaterialCtrl:OnClick_infoBtn()
 

@@ -17,7 +17,6 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -205,6 +204,7 @@ end
 
 --点击头像
 function GameMainInterfaceCtrl:OnHead()
+    PlayMusEff(1002)
     local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
 end
@@ -212,6 +212,7 @@ end
 --通知--
 
 function GameMainInterfaceCtrl.OnNotice(go)
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
 --[[    if  NoticeMgr.notice ~= nil then
         if  #NoticeMgr.notice == 0 then
@@ -236,12 +237,14 @@ end
 
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
 --好友--
 function GameMainInterfaceCtrl.OnFriends()
+    PlayMusEff(1002)
     ct.OpenCtrl("FriendsCtrl")
 end
 
@@ -252,6 +255,7 @@ function GameMainInterfaceCtrl._showFriendsNotice()
 end
 
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()
+    PlayMusEff(1006)
     self._showFriendsNotice()
 end
 
@@ -304,12 +308,14 @@ end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
@@ -318,7 +324,7 @@ end
 
 --拍卖
 function GameMainInterfaceCtrl:OnAuction()
-
+    PlayMusEff(1002)
 end
 
 --住宅--
@@ -335,12 +341,14 @@ end
 
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
 --广告设施
 function GameMainInterfaceCtrl:OnAdvertisFacilitie()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("MunicipalCtrl")
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
@@ -349,6 +357,8 @@ end
 
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
+    PlayMusEff(1002)
+    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("CenterBuildingCtrl")
 end
 

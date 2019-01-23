@@ -49,23 +49,17 @@ function SystemSettingPanel.InitPanel()
     this.englishBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
     this.englishBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English")
 
-
-
-
-
-
-
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)
-        this.titleText.text=GetLanguage(1000001)
-        this.outText.text=GetLanguage(1000002)
-        this.MusicText.text=GetLanguage(1000003)
-        this.MusicEffectBtnText.text=GetLanguage(1000004)
-        this.LanguageText.text=GetLanguage(1000005)
-        this.LanguageBtnText.text=GetLanguage(1000006,string)
-        this.chineseBtnText.text=GetLanguage(1000007)
-        this.englishBtnText.text=GetLanguage(1000008)
+        this.titleText.text=GetLanguage(14010001)
+        this.outText.text=GetLanguage(14010010)
+        this.MusicText.text=GetLanguage(14010003)
+        this.MusicEffectBtnText.text=GetLanguage(14010002)
+        this.LanguageText.text=GetLanguage(14010004)
+        this.LanguageBtnText.text=GetLanguage(14010005,string)
+        this.chineseBtnText.text=GetLanguage(14010006)
+        this.englishBtnText.text=GetLanguage(14010008)
      local music=UnityEngine.PlayerPrefs.GetInt("Music")
     local musicEffect=UnityEngine.PlayerPrefs.GetInt("MusicEffect")
     if music==0 then
@@ -86,5 +80,4 @@ function SystemSettingPanel:InitDate(string)
         this.MusicEffectBtngrey.localScale=Vector3.one
         this.MusicEffect:Stop()
     end
-
 end

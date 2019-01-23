@@ -29,6 +29,7 @@ function MaterialPanel.InitPanel()
     this.headImgBtn = transform:Find("topRoot/headBg/headImgBtn");
     this.buildInfo = transform:Find("buildInfo");
     this.stopIconRoot = transform:Find("stopIconROOT");
+    this.Text = transform:Find("stopIconROOT/Text"):GetComponent("Text");
 end
 --数据初始化
 function MaterialPanel.InitDate(materialData)

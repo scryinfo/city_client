@@ -63,10 +63,12 @@ function RetailShelfCtrl:Refresh()
 end
 --打开名字数量价格排序
 function RetailShelfCtrl:OnClick_arrowBtn(go)
+    PlayMusEff(1002)
     go:OnClick_OpenList(not isShowList,0)
 end
 --打开等级评分排序
 function RetailShelfCtrl:OnClick_levelArrowBtn(go)
+    PlayMusEff(1002)
     go:OnClick_OpenList(not isShowLists,1)
 end
 --排序列表
@@ -99,6 +101,7 @@ function RetailShelfCtrl:OnClick_addBtn(go)
     --local data = {}
     --data.buildingData = BuildingType.RetailShop;
     --go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
+    PlayMusEff(1002)
     if go.m_data == nil then
         return
     end
@@ -106,6 +109,7 @@ function RetailShelfCtrl:OnClick_addBtn(go)
 end
 --其他玩家购买窗口
 function RetailShelfCtrl:OnClick_playerBuy(go)
+    PlayMusEff(1002)
     go:openPlayerBuy(not switchIsShow)
 end
 
@@ -164,36 +168,43 @@ end
 
 --名字排序
 function RetailShelfCtrl:OnClick_OnName(go)
+    PlayMusEff(1002)
     RetailShelfPanel.nowText.text = "By name";
     go:OnClick_OpenList(not isShowList,0)
 end
 --数量排序
 function RetailShelfCtrl:OnClick_OnNumber(go)
+    PlayMusEff(1002)
     RetailShelfPanel.nowText.text = "By quantity";
     go:OnClick_OpenList(not isShowList,0)
 end
 --价格排序
 function RetailShelfCtrl:OnClick_OnPrice(go)
+    PlayMusEff(1002)
     RetailShelfPanel.nowText.text = "By price";
     go:OnClick_OpenList(not isShowList,0)
 end
 --全部排序
 function RetailShelfCtrl:OnClick_OnAll(go)
+    PlayMusEff(1002)
     RetailShelfPanel.levelnowText.text = "All";
     go:OnClick_OpenList(not isShowLists,1)
 end
 --低等级排序
 function RetailShelfCtrl:OnClick_OnNormal(go)
+    PlayMusEff(1002)
     RetailShelfPanel.levelnowText.text = "Normal";
     go:OnClick_OpenList(not isShowLists,1)
 end
 --中等级排序
 function RetailShelfCtrl:OnClick_OnMiddle(go)
+    PlayMusEff(1002)
     RetailShelfPanel.levelnowText.text = "Middle";
     go:OnClick_OpenList(not isShowLists,1)
 end
 --高等级排序
 function RetailShelfCtrl:OnClick_OnSenior(go)
+    PlayMusEff(1002)
     RetailShelfPanel.levelnowText.text = "Senior";
     go:OnClick_OpenList(not isShowLists,1)
 end
@@ -224,6 +235,7 @@ function RetailShelfCtrl:shelfImgSetActive(table,num)
     end
 end
 function RetailShelfCtrl:OnClick_return_Btn()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 function RetailShelfCtrl:Hide()

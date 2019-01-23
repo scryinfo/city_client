@@ -28,6 +28,15 @@ function GroundTransDetailPanel.InitPanel()
     this.rentingBtnTran = transform:Find("root/bg02/stateBtnRoot/rentingBtn")
     this.selfCheckBtnTran = transform:Find("root/bg02/stateBtnRoot/selfCheckBtn")
     this.otherCheckBtnTran = transform:Find("root/bg02/stateBtnRoot/otherCheckBtn")
+    --
+    this.titleText01 = transform:Find("root/bg02/Image/Text"):GetComponent("Text")
+    this.averageText02 = transform:Find("root/bg02/Text01"):GetComponent("Text")
+    this.buildingText03 = transform:Find("root/bg02/buildingRoot/buildingCount/Text"):GetComponent("Text")
+    this.areaText04 = transform:Find("root/bg02/Text"):GetComponent("Text")
+    this.rentText05 = transform:Find("root/bg02/stateBtnRoot/noneState/rentBtn/Text"):GetComponent("Text")
+    this.sellText06 = transform:Find("root/bg02/stateBtnRoot/noneState/sellBtn/Text"):GetComponent("Text")
+    this.sellingText07 = transform:Find("root/bg02/stateBtnRoot/sellingBtn/Text"):GetComponent("Text")
+    this.rentingText08 = transform:Find("root/bg02/stateBtnRoot/rentingBtn/Text"):GetComponent("Text")
 end
 --关掉所有状态
 function GroundTransDetailPanel._closeAllBtnTran()

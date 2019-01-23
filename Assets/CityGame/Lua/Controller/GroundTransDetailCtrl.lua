@@ -15,7 +15,7 @@ GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransDetailCtrl)
 
 function GroundTransDetailCtrl:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
 
 function GroundTransDetailCtrl:bundleName()
@@ -39,6 +39,18 @@ end
 
 function GroundTransDetailCtrl:Refresh()
     self:_initPanelData()
+end
+
+function GroundTransDetailCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransDetailPanel.titleText01.text = GetLanguage(24010001)
+    GroundTransDetailPanel.averageText02.text = GetLanguage(24010002)
+    GroundTransDetailPanel.buildingText03.text = GetLanguage(24010003)
+    GroundTransDetailPanel.areaText04.text = GetLanguage(24010004)
+    GroundTransDetailPanel.rentText05.text = GetLanguage(24010005)
+    GroundTransDetailPanel.sellText06.text = GetLanguage(24010006)
+    GroundTransDetailPanel.sellingText07.text = GetLanguage(24010008)
+    GroundTransDetailPanel.rentingText08.text = GetLanguage(24010007)
 end
 
 function GroundTransDetailCtrl:Hide()
@@ -147,24 +159,27 @@ end
 
 ---按钮方法
 function GroundTransDetailCtrl:_closeBtnFunc(ins)
-    -- hide
+    PlayMusEff(1002)
     ins.hasOpened = false
     UIPanel.ClosePage()
 end
 --owner出租按钮
 function GroundTransDetailCtrl:_rentFunc(ins)
+    PlayMusEff(1002)
     local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Rent}
     --打开设置租金/售卖金额界面，参数为info
     ct.OpenCtrl("GroundTransSetPriceCtrl", info)
 end
 --owner出售按钮
 function GroundTransDetailCtrl:_sellFunc(ins)
+    PlayMusEff(1002)
     local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell}
     --打开设置租金/售卖金额界面，参数为info
     ct.OpenCtrl("GroundTransSetPriceCtrl", info)
 end
 --正在出售按钮
 function GroundTransDetailCtrl:_sellingFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.ownerId == DataManager.GetMyOwnerID() then
         --打开调整出租出售价格界面
         local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell}
@@ -178,6 +193,7 @@ function GroundTransDetailCtrl:_sellingFunc(ins)
 end
 --正在出租按钮
 function GroundTransDetailCtrl:_rentingFunc(ins)
+    PlayMusEff(1002)
     if ins.m_data.groundInfo.ownerId == DataManager.GetMyOwnerID() then
         --打开调整出租出售价格界面
         local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Rent}
@@ -191,11 +207,13 @@ function GroundTransDetailCtrl:_rentingFunc(ins)
 end
 --租赁者/土地拥有者查看土地
 function GroundTransDetailCtrl:_selfCheckFunc(ins)
+    PlayMusEff(1002)
     --打开租赁详情界面
     ct.OpenCtrl("GroundTransSelfCheckInfoCtrl", {groundInfo = ins.m_data.groundInfo})
 end
 --其他人查看土地
 function GroundTransDetailCtrl:_otherCheckFunc(ins)
+    PlayMusEff(1002)
     --打开attribution界面
     ct.OpenCtrl("GroundTransOthersCheckInfoCtrl", {groundInfo = ins.m_data.groundInfo})
 end

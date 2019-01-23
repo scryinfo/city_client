@@ -132,7 +132,7 @@
 							return;
 						}
 
-						Dbg.WARNING_MSG("PacketReceiver::_asyncReceive(): waiting for space, Please adjust 'RECV_BUFFER_MAX'! retries=" + first);
+						Dbg.WARNING_MSG("PacketReceiver::_asyncReceive(): waiting for space, Please adjust 'TCP_PACKET_MAX'! retries=" + first);
 						System.Threading.Thread.Sleep(5);
 					}
 

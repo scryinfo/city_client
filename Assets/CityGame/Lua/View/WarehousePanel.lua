@@ -41,6 +41,7 @@ function WarehousePanel.InitPanel()
     this.transportopenBtn = transform:Find("RightInformation/bg/transport/warehouseName/openBtn");
     this.nameText = transform:Find("RightInformation/bg/transport/warehouseName/nameText"):GetComponent("Text");
     this.transportContent = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content");
+    this.tipText = transform:Find("RightInformation/bg/transport/tipText"):GetComponent("Text")
     --Slider--Text
     this.Warehouse_Slider = transform:Find("WarehouseDetails/Warehouse_Slider"):GetComponent("Slider");
     this.Locked_Slider = transform:Find("WarehouseDetails/Locked_Slider"):GetComponent("Slider");

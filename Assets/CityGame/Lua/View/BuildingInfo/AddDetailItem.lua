@@ -26,7 +26,7 @@ end
 function AddDetailItem:initData(data)
     local type = ct.getType(UnityEngine.Sprite)
     if Material[data.itemId] then
-        self.nameText.text = Material[data.itemId].name
+        self.nameText.text = GetLanguage(data.itemId);
         panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -34,7 +34,7 @@ function AddDetailItem:initData(data)
             end
         end)
     else
-        self.nameText.text = Good[data.itemId].name
+        self.nameText.text = GetLanguage(data.itemId);
     end
     --if data.itemState == AddLineDetailItemState.InventIng then
     --    self.stateRoot.localScale = Vector3.one

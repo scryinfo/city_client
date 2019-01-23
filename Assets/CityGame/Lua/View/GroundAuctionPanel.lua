@@ -41,4 +41,9 @@ function GroundAuctionPanel.InitPanel()
     this.waitBidBasePriceText = transform:Find("bidRoot/waitBidRoot/price/basePriceText"):GetComponent("Text")
 
     this.personAverageText = transform:Find("personFlowRoot/Image02/averageText"):GetComponent("Text")
+    --
+    this.personFlowText01 = transform:Find("personFlowRoot/Text01"):GetComponent("Text")
+    this.averageText02 = transform:Find("personFlowRoot/Image02/Text02"):GetComponent("Text")
+    this.waitFloorPriceText03 = transform:Find("bidRoot/waitBidRoot/price/Text"):GetComponent("Text")
+    this.startFloorPriceText04 = transform:Find("bidRoot/startBidRoot/price/floorRoot/Text"):GetComponent("Text")
 end

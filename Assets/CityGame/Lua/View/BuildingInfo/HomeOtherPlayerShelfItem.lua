@@ -15,8 +15,11 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");    --关闭状态
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
+    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
+        PlayMusEff(1002)
         if not self.viewRect.gameObject.activeSelf then
             return
         end
@@ -28,7 +31,8 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
             ct.OpenCtrl("ShelfCtrl",self.productionData)
         end
     end);
-
+    self.openName.text = GetLanguage(25020004)
+    self.closeName.text = GetLanguage(25020004)
     self:initializeInfo(self.productionData.shelf.good)
 end
 
@@ -84,5 +88,5 @@ end
 --刷新数据
 function HomeOtherPlayerShelfItem:updateInfo(data)
     self.productionData.shelf.good = data.shelf.good
-    self:initializeInfo()
+    self:initializeInfo(self.productionData.shelf.good)
 end

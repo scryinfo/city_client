@@ -48,6 +48,7 @@ function WarehouseCtrl:Awake(go)
 
     --暂时放到Awake
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    --WarehousePanel.nameText.text = GetLanguage(26040002)
 
     self.gameObject = go
     isShowList = false;
@@ -58,7 +59,6 @@ end
 function WarehouseCtrl:Active()
     UIPanel.Active(self)
     WarehousePanel.tipText.text = GetLanguage(26040002)
-    WarehousePanel.nameText.text = GetLanguage(26040002)
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
@@ -85,7 +85,7 @@ function WarehouseCtrl:Refresh()
     end
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
-    --go:deleteObjInfo()
+    go:deleteObjInfo()
     PlayMusEff(1002)
     UIPanel.ClosePage()
     if switchIsShow then
@@ -386,7 +386,7 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             self.operation = nil;
         else
             WarehousePanel.transport:SetActive(false);
-            --WarehousePanel.nameText.text = "请选择仓库"
+            WarehousePanel.nameText.text = ""
             for i in pairs(WarehouseCtrl.temporaryItems) do
                 self:c_temporaryifNotGoods(i)
             end

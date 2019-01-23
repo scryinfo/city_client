@@ -34,7 +34,7 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
         panelMgr:LoadPrefab_A(Good[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
-                self.icon.sprite = texture
+                self.iconImg.sprite = texture
             end
         end)
     end

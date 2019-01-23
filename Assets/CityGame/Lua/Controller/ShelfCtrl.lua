@@ -36,11 +36,12 @@ function ShelfCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
+    ShelfPanel.nameText.text = GetLanguage(26040002)
+
 end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
     ShelfPanel.tipText.text = GetLanguage(26040002)
-    ShelfPanel.nameText.text = GetLanguage(26040002)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
@@ -106,7 +107,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         return;
     else
         local buyListing = {}
-        buyListing.currentLocationName = PlayerBuildingBaseData[ins.m_data.info.mId].sizeName..PlayerBuildingBaseData[ins.m_data.info.mId].typeName;
+        buyListing.currentLocationName = ins.m_data.info.name
         --buyListing.targetLocationName = "中心仓库";
         --buyListing.distance = math.sqrt(math.pow((45 - ins.m_data.info.pos.x),2) + math.pow((45 - ins.m_data.info.pos.y),2));
         buyListing.targetLocationName = ChooseWarehouseCtrl:GetName();
@@ -135,7 +136,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
             --end
             local buildingId = ChooseWarehouseCtrl:GetBuildingId()
             for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.moneyText.text,buildingId);
+                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.goodsDataInfo.price,buildingId);
             end
             --DataManager.SetSubtractMyMoney(math.floor(buyListing.total))
         end
@@ -156,7 +157,6 @@ function ShelfCtrl:Hide()
     Event.RemoveListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.RemoveListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
     UIPanel.Hide(self)
-    return {insId = self.m_data.info.id}
 end
 --根据名字排序
 function ShelfCtrl:OnClick_OnName(ins)
@@ -236,20 +236,25 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
         if v.itemId == Data.item.key.id then
             if v.goodsDataInfo.n == Data.item.n then
                 self.GoodsUnifyMgr:_deleteGoods(v)
+                self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
+
+                Event.Brocast("c_buyGoodsItemChoose")
+
                 for i,v in pairs(ShelfCtrl.temporaryItems) do
                     self.GoodsUnifyMgr:_deleteBuyGoods(v)
                     self:isShowDetermineBtn()
                 end
             else
                 v.numberText.text = v.goodsDataInfo.n - Data.item.n;
-                v.goodsDataInfo.n = v.numberText.text
+                v.goodsDataInfo.n = tonumber(v.numberText.text)
                 for i in pairs(ShelfCtrl.temporaryItems) do
-                    Event.Brocast("c_tempTabNotGoods", i)
+                    self:c_tempTabNotGoods(i)
+                    --Event.Brocast("c_tempTabNotGoods", i)
                 end
+                Event.Brocast("SmallPop","购买成功",300)
             end
         end
     end
-    Event.Brocast("SmallPop","购买成功",300)
 end
 function ShelfCtrl:OnClick_createGoods(go)
     PlayMusEff(1002)

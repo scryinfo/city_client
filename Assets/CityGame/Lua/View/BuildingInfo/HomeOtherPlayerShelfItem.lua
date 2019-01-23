@@ -51,6 +51,7 @@ function HomeOtherPlayerShelfItem:initializeInfo(data)
         end
         self.SmallShelfRateItemTab[i] = SmallShelfRateItem
     end
+    HomeOtherPlayerShelfItem.shelfTab = self.SmallShelfRateItemTab
 end
 
 --获取是第几次点击了

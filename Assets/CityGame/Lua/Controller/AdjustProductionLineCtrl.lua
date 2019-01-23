@@ -65,13 +65,10 @@ function AdjustProductionLineCtrl:Refresh()
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
-    --go:deleteObjInfo();
     --go:deleteTempTable();
+    go:deleteObjInfo();
     PlayMusEff(1002)
     UIPanel.ClosePage()
-end
-function AdjustProductionLineCtrl:Close()
-    UIPanel.Close(self)
 end
 function AdjustProductionLineCtrl:Hide()
     Event.RemoveListener("calculateTime",self.calculateTime,self)
@@ -79,6 +76,7 @@ function AdjustProductionLineCtrl:Hide()
     --Event.RemoveListener("refreshTime",self.refreshTime,self)
     Event.RemoveListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.RemoveListener("refreshNowConte",self.refreshNowConte,self)
+
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
@@ -106,6 +104,7 @@ function AdjustProductionLineCtrl:calculateTime(msg)
         if v.itemId == msg.line.itemId then
             --v.timeText.text = timeStr.
             v:getTimeNumber(msg.line)
+            v.minText.text = v:getMinuteNum(msg.line)
         end
     end
 end

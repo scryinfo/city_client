@@ -160,6 +160,7 @@ function GoodsUnifyMgr:_deleteBuyGoods(id)
     destroy(self.shelfBuyGoodslItems[id].prefab.gameObject);
     self.shelfBuyGoodslItems[id] = nil;
     ShelfCtrl.temporaryItems[id] = nil;
+
 end
 --货架删除
 function GoodsUnifyMgr:_deleteGoods(ins)

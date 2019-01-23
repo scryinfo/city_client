@@ -34,19 +34,19 @@ function RetailStoresCtrl:Refresh()
 end
 
 function RetailStoresCtrl:initializeData()
-    --if self.m_data.insId then
-    --    self.insId=self.m_data.insId
-    --    DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
-    --else
-    --    self.m_data.insId=self.insId
-    --    DataManager.OpenDetailModel(RetailStoresModel,self.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
-    --end
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(RetailStoresModel,self.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
     end
+    --if self.m_data then
+    --    DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
+    --end
 end
 
 --刷新零售店信息
@@ -56,7 +56,10 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
+    local insId = self.m_data.insId
     self.m_data = DataInfo
+    self.m_data.insId = insId
+
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
         RetailStoresPanel.changeNameBtn.localScale = Vector3.zero

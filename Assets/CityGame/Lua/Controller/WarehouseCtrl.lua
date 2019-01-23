@@ -46,6 +46,9 @@ function WarehouseCtrl:Awake(go)
     --warehouse:AddClick(WarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
+    --暂时放到Awake
+    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
@@ -59,7 +62,6 @@ function WarehouseCtrl:Active()
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
-    Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.AddListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
 end
 function WarehouseCtrl:Refresh()
@@ -94,7 +96,7 @@ function WarehouseCtrl:Hide()
     Event.RemoveListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.RemoveListener("n_transports",self.n_transports,self)
     Event.RemoveListener("c_warehouseClick",self._selectedGoods, self)
-    Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    --Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.RemoveListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
@@ -290,7 +292,7 @@ function WarehouseCtrl:n_transports(Data)
                 end
             else
                 v.numberText.text = v.goodsDataInfo.n - Data.item.n;
-                v.goodsDataInfo.n = v.numberText.text
+                v.goodsDataInfo.n = tonumber(v.numberText.text)
                 for i in pairs(WarehouseCtrl.temporaryItems) do
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
@@ -365,8 +367,9 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
         else
             WarehousePanel.transport:SetActive(true);
             --WarehousePanel.nameText.text = "请选择仓库"
-            WarehousePanel.transportUncheckBtn.localScale = Vector3.one
-            WarehousePanel.transportConfirmBtn.localScale = Vector3.zero
+            --WarehousePanel.transportUncheckBtn.localScale = Vector3.one
+            --WarehousePanel.transportConfirmBtn.localScale = Vector3.zero
+            self:isShowDetermineBtn()
             self.operation = ct.goodsState.transport;
         end
         if self.GoodsUnifyMgr.warehouseLuaTab ~= nil then
@@ -385,11 +388,14 @@ function WarehouseCtrl:OnClick_rightInfo(isShow,number)
             WarehousePanel.transport:SetActive(false);
             --WarehousePanel.nameText.text = "请选择仓库"
             for i in pairs(WarehouseCtrl.temporaryItems) do
-                Event.Brocast("c_temporaryifNotGoods", i)
+                self:c_temporaryifNotGoods(i)
             end
             self.operation = nil;
         end
         if self.GoodsUnifyMgr.warehouseLuaTab ~= nil then
+            --for i,v in pairs(self.GoodsUnifyMgr.warehouseLuaTab) do
+            --    v:c_GoodsItemDelete()
+            --end
             Event.Brocast("c_GoodsItemDelete")
         end
         WarehousePanel.Content.offsetMax = Vector2.New(0,0);

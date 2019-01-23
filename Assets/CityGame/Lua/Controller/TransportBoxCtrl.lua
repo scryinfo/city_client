@@ -17,14 +17,14 @@ end
 
 function TransportBoxCtrl:Awake(go)
     self.gameObject = go;
-    transportbox = self.gameObject:GetComponent('LuaBehaviour');
-    transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
-    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
 function TransportBoxCtrl:Active()
     UIPanel.Active(self)
     TransportBoxPanel.name.text = GetLanguage(26040008)
     TransportBoxPanel.total.text = GetLanguage(26040009)
+    transportbox = self.gameObject:GetComponent('LuaBehaviour');
+    transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
+    transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
 function TransportBoxCtrl:Refresh()
     if self.m_data == nil then
@@ -60,7 +60,9 @@ function TransportBoxCtrl:OnClick_closeBtn(ins)
     transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
     transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     --ins.m_data = nil;
-    ins:Hide();
+    --ins:clickClosrBtn();
+    UIPanel.ClosePage()
+
 end
 function TransportBoxCtrl:OnClick_confirmBtn(ins)
     PlayMusEff(1002)
@@ -68,8 +70,10 @@ function TransportBoxCtrl:OnClick_confirmBtn(ins)
         ins.m_data.btnClick()
         ins.m_data.btnClick = nil
     end
-    ins:OnClick_closeBtn(ins)
+    --ins:OnClick_closeBtn(ins)
+    UIPanel.ClosePage()
 end
-function TransportBoxCtrl:Hide()
-    UIPanel.Hide(self)
-end
+--function TransportBoxCtrl:clickClosrBtn()
+--    UIPanel.ClosePage()
+--    --UIPanel.Hide(self)
+--end

@@ -33,19 +33,19 @@ function ProcessingCtrl:Refresh()
 end
 
 function ProcessingCtrl:initializeData()
-    --if self.m_data.insId then
-    --    self.insId=self.m_data.insId
-    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
-    --else
-    --    self.m_data.insId=self.insId
-    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
-    --end
-    if self.m_data then
+    if self.m_data.insId then
+        self.insId=self.m_data.insId
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    else
+        self.m_data.insId=self.insId
+        DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
+    --if self.m_data then
+    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
+    --end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
@@ -54,8 +54,12 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     --ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
-    self.buildingId = DataInfo.info.id
+    --self.buildingId = DataInfo.info.id
+    --self.m_data = DataInfo
+    local insId = self.m_data.insId
     self.m_data = DataInfo
+    self.m_data.insId = insId
+
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
         ProcessingPanel.changeNameBtn.localScale = Vector3.zero
@@ -111,7 +115,7 @@ function ProcessingCtrl:OnClick_backBtn(ins)
     if ins.processingToggleGroup then
         ins.processingToggleGroup:cleanItems()
     end
-    Event.Brocast("mReqCloseProcessing",ins.buildingId)
+    Event.Brocast("mReqCloseProcessing",ins.m_data.insId)
     UIPanel.ClosePage()
 end
 --function ProcessingCtrl:Hide()

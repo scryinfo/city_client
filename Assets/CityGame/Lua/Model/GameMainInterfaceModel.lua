@@ -19,6 +19,7 @@ function GameMainInterfaceModel:OnCreate()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
 end
 
@@ -44,6 +45,12 @@ end
 --服务器回调--
 --获取所有邮件
 function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
+    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
+    Event.Brocast("c_AllMails",lMsg.mail)
+end
+
+--邮件更新回调
+function GameMainInterfaceModel:n_GsGetMails(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     Event.Brocast("c_AllMails",lMsg.mail)
 end

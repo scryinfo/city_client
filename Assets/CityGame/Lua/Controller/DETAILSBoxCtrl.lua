@@ -1,4 +1,5 @@
 DETAILSBoxCtrl = class('DETAILSBoxCtrl',UIPanel);
+UIPanel:ResgisterOpen(DETAILSBoxCtrl)
 
 local itemId
 function DETAILSBoxCtrl:initialize()

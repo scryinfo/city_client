@@ -108,7 +108,7 @@ function ShelfGoodsItem:closeEvent()
 end
 function ShelfGoodsItem:OnClick_detailsBtn(ins)
     PlayMusEff(1002)
-    UIPanel:ShowPage(DETAILSBoxCtrl,ins);
+    ct.OpenCtrl("DETAILSBoxCtrl",ins);
 end
 --删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)

@@ -216,13 +216,15 @@ function ShelfCtrl:openPlayerBuy(isShow)
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
     else
         ShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-        Event.Brocast("c_buyGoodsItemDelete")
         ShelfPanel.Content.offsetMax = Vector2.New(0,0);
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
         if self.GoodsUnifyMgr.shelfBuyGoodslItems ~= nil then
             for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
                 self:c_tempTabNotGoods(i)
             end
+        end
+        if self.GoodsUnifyMgr.shelfLuaTab ~= {} then
+            Event.Brocast("c_buyGoodsItemDelete")
         end
     end
     switchIsShow = isShow

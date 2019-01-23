@@ -15,6 +15,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.posX =  DataInfo.info.pos.x
     self.posY =  DataInfo.info.pos.y
     self.manager = mgr;
+    self.state = DataInfo.info.state
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
@@ -80,6 +81,10 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
+    if go.state == "WAITING_OPEN" then
+        Event.Brocast("SmallPop","所选建筑未开业",300)
+        return
+    end
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输
     go.manager:_onClick()

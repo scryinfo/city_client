@@ -43,23 +43,23 @@ function CityEngineLua.Message:new( id, name, length, argstype, argtypes, handle
 
 	me.handler = handler;
 
-    return me;
+	return me;
 end
 
-	
+
 function CityEngineLua.Message:createFromStream(msgstream)
 	if #self.args <= 0 then
 		return msgstream;
 	end
-	
+
 	local result = {};
 	for i = 1, #self.args, 1 do
 		table.insert( result, self.args[i]:createFromStream(msgstream) );
 	end
-	
+
 	return result;
 end
-	
+
 function CityEngineLua.Message:handleMessage(msgstream)
 	if self.handler == nil then
 		ct.log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
@@ -100,15 +100,15 @@ function CityEngineLua.Message.n_errorProcess(stream)
 end
 
 function CityEngineLua.Message.bindFixedMessage()
-				-- 提前约定一些固定的协议
-			-- 这样可以在没有从服务端导入协议之前就能与服务端进行握手等交互。
-    --CityEngineLua.messages["Loginapp_hello"] = CityEngineLua.Message:new(pb.asCode_pb.login, "hello", -1, -1, {}, nil);
+	-- 提前约定一些固定的协议
+	-- 这样可以在没有从服务端导入协议之前就能与服务端进行握手等交互。
+	--CityEngineLua.messages["Loginapp_hello"] = CityEngineLua.Message:new(pb.asCode_pb.login, "hello", -1, -1, {}, nil);
 	--CityEngineLua.messages["Loginapp_importClientMessages"] = CityEngineLua.Message:new(5, "importClientMessages", 0, 0, {}, nil);
 	--CityEngineLua.messages["Loginapp_hello"] = CityEngineLua.Message:new(4, "hello", -1, -1, {}, nil);
 	--CityEngineLua.messages["Baseapp_importClientMessages"] = CityEngineLua.Message:new(207, "importClientMessages", 0, 0, {}, nil);
 	--CityEngineLua.messages["Baseapp_importClientEntityDef"] = CityEngineLua.Message:new(208, "importClientMessages", 0, 0, {}, nil);
 	--CityEngineLua.messages["Baseapp_hello"] = CityEngineLua.Message:new(200, "hello", -1, -1, {}, nil);
-    --
+	--
 	--------client--------------
 	--服务器返回错误的处理
 	CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
@@ -116,19 +116,19 @@ function CityEngineLua.Message.bindFixedMessage()
 	--CityEngineLua.messages["Client_onHelloCB"] = CityEngineLua.Message:new(521, "Client_onHelloCB", -1, -1, {},
 	--	CityEngineLua["Client_onHelloCB"]);
 	--CityEngineLua.clientMessages[CityEngineLua.messages["Client_onHelloCB"].id] = CityEngineLua.messages["Client_onHelloCB"];
-    --
+	--
 	--CityEngineLua.messages["Client_onScriptVersionNotMatch"] = CityEngineLua.Message:new(522, "Client_onScriptVersionNotMatch", -1, -1, {},
 	--	CityEngineLua["Client_onScriptVersionNotMatch"]);
 	--CityEngineLua.clientMessages[CityEngineLua.messages["Client_onScriptVersionNotMatch"].id] = CityEngineLua.messages["Client_onScriptVersionNotMatch"];
-    --
+	--
 	--CityEngineLua.messages["Client_onVersionNotMatch"] = CityEngineLua.Message:new(523, "Client_onVersionNotMatch", -1, -1, {},
 	--	CityEngineLua["Client_onVersionNotMatch"]);
 	--CityEngineLua.clientMessages[CityEngineLua.messages["Client_onVersionNotMatch"].id] = CityEngineLua.messages["Client_onVersionNotMatch"];
-    --
+	--
 	--CityEngineLua.messages["Client_onImportClientMessages"] = CityEngineLua.Message:new(518, "Client_onImportClientMessages", -1, -1, {},
 	--	CityEngineLua["Client_onImportClientMessages"]);
 	--CityEngineLua.clientMessages[CityEngineLua.messages["Client_onImportClientMessages"].id] = CityEngineLua.messages["Client_onImportClientMessages"];
-	
+
 end
 
 -- 消息的长度 4字节
@@ -162,74 +162,75 @@ function CityEngineLua.MessageReader.onConnectError(errorCode)
 	end
 end
 
-function CityEngineLua.MessageReader.process(datas, offset, length)
-	local totallen = offset;
-	while(length > 0 and reader.expectSize > 0)
-		do if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
-			if(length >= reader.expectSize) then
-				CityLuaUtil.ArrayCopy(datas, totallen, reader.stream:data(), reader.stream.wpos, reader.expectSize);
-				totallen = totallen + reader.expectSize;
-				reader.stream.wpos = reader.stream.wpos + reader.expectSize;
-				length = length - reader.expectSize;
+function CityEngineLua.MessageReader.process(datas, offset, toReadDatalength)
+	local srcReadEnd = offset;
+	while(toReadDatalength > 0 and reader.expectSize > 0)
+	do if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
+		if(toReadDatalength >= reader.expectSize) then
+			--从网络数据块上次读取结束点开始拷贝4字节到reader.stream, 相当于把长度值拷贝到reader.stream
+			CityLuaUtil.ArrayCopy(datas, srcReadEnd, reader.stream:data(), reader.stream.wpos, reader.expectSize);
+			--更新网络数据读取结束位置
+			srcReadEnd = srcReadEnd + reader.expectSize;
+			--更新reader.stream写入终止点位置
+			reader.stream.wpos = reader.stream.wpos + reader.expectSize;
+			--更新剩余未读数据长度
+			toReadDatalength = toReadDatalength - reader.expectSize;
 
-				reader.msglen = reader.stream:readUint32();
-				reader.state = CityEngineLua.READ_STATE_MSGID;
-				reader.expectSize = reader.expectMsgIdSize;
-			else
-				--c#传入的buffer至少包含长度和msid区段，否则就是网络异常，终止本次解析
-					--不一定，如果是黏包的情况下，可能存在长度区段和id区段不完整，因为有可能正好传输的数据大于最小传输单位，所以这里不能丢掉这个包，而应等待后续数据的到来
-				--break;
-			end
-		elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
-			if(length >= reader.expectSize) then
-				CityLuaUtil.ArrayCopy(datas, totallen, reader.stream:data(), reader.stream.wpos, reader.expectSize);
-				totallen = totallen + reader.expectSize;
-				reader.stream.wpos = reader.stream.wpos + reader.expectSize;
-				length = length - reader.expectSize;
-				reader.msgid = reader.stream:readUint16();
-				reader.expectSize = reader.msglen
-				reader.state = CityEngineLua.READ_STATE_BODY
-				--reader.stream:clear();
+			reader.msglen = reader.stream:readUint32();
+			reader.state = CityEngineLua.READ_STATE_MSGID;
+			reader.expectSize = reader.expectMsgIdSize;
+		else
+			--如果网络传入的数据长度小于4字节，终止循环，而应等待后续数据的到来
+			break;
+		end
+	elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
+		if(toReadDatalength >= reader.expectSize) then
+			CityLuaUtil.ArrayCopy(datas, srcReadEnd, reader.stream:data(), reader.stream.wpos, reader.expectSize);
+			srcReadEnd = srcReadEnd + reader.expectSize;
+			reader.stream.wpos = reader.stream.wpos + reader.expectSize;
+			toReadDatalength = toReadDatalength - reader.expectSize;
+			reader.msgid = reader.stream:readUint16();
+			reader.expectSize = reader.msglen
+			reader.state = CityEngineLua.READ_STATE_BODY
+			--reader.stream:clear();
 
-				local msg = CityEngineLua.clientMessages[reader.msgid];
-				if not msg then
-					--这种情况可能是协议没注册，需要跳过当前数据段
-					reader.stream:append(datas, totallen, reader.expectSize);
-					totallen = totallen + reader.expectSize;
-					length = length - reader.expectSize;
-					local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
-					reader.expectSize = 4;
-					reader.state = CityEngineLua.READ_STATE_MSGLEN
-				else
-					if(reader.msglen == 0) then
-						-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
-						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0));
-						reader.state = CityEngineLua.READ_STATE_MSGLEN;
-						reader.expectSize = 4;
-					end
-				end
-			else
-				--msid解析必须是成功的，否则也是网络异常，终止本次解析
-					--也就是说，服务器发送的包长度区段和msgid区段都是必须有的，这两个数据段6个字节，必定是小于最小传输单位的，所以如果这两个数据段不完整，必然是网络的问题
-					--不一定，如果是黏包的情况下，可能存在长度区段和id区段不完整，因为有可能正好传输的数据大于最小传输单位，所以这里不能丢掉这个包，而应等待后续数据的到来
-					--break;
-			end
-		elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
-			if(length >= reader.expectSize) then
-				reader.stream:append(datas, totallen, reader.expectSize);
-				totallen = totallen + reader.expectSize;
-				length = length - reader.expectSize;
-				local msg = CityEngineLua.clientMessages[reader.msgid];
-				msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
-				reader.stream:clear();
-				reader.state = CityEngineLua.READ_STATE_MSGLEN;
+			local msg = CityEngineLua.clientMessages[reader.msgid];
+			if not msg then
+				--这种情况可能是协议没注册，需要跳过当前数据段
+				reader.stream:append(datas, srcReadEnd, reader.expectSize);
+				srcReadEnd = srcReadEnd + reader.expectSize;
+				toReadDatalength = toReadDatalength - reader.expectSize;
+				local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 				reader.expectSize = 4;
+				reader.state = CityEngineLua.READ_STATE_MSGLEN
 			else
-				--length 小于 reader.expectSize, 说明pb数据段不完整，需等待下一次socket收包组包
+				if(reader.msglen == 0) then
+					-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
+					msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0));
+					reader.state = CityEngineLua.READ_STATE_MSGLEN;
+					reader.expectSize = 4;
+				end
 			end
-		elseif(reader.state == CityEngineLua.READ_STATE_MSGLEN_EX) then
-			--现在暂时没有这种情况
+		else
+			--如果剩余未读数据小于协议ID的长度（2字节），那么终止循环，继续等待
+			break;
+		end
+	elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
+		if(toReadDatalength >= reader.expectSize) then
+			reader.stream:append(datas, srcReadEnd, reader.expectSize);
+			srcReadEnd = srcReadEnd + reader.expectSize;
+			toReadDatalength = toReadDatalength - reader.expectSize;
+			local msg = CityEngineLua.clientMessages[reader.msgid];
+			msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
+			reader.state = CityEngineLua.READ_STATE_MSGLEN;
+			reader.expectSize = 4;
+		else
+			--length 小于 reader.expectSize, 说明pb数据段不完整，需等待下一次socket收包组包
 			break
 		end
+	elseif(reader.state == CityEngineLua.READ_STATE_MSGLEN_EX) then
+		--现在暂时没有这种情况
+		break
+	end
 	end
 end

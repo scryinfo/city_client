@@ -45,7 +45,7 @@ function BtnDialogPageCtrl:_initData()
 end
 
 function BtnDialogPageCtrl:_onClickConfim(ins)
-    ct.log("cycle_w6_houseAndGround", "BtnDialogPageCtrl:_onClickConfim")
+    PlayMusEff(1002)
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil
@@ -53,6 +53,7 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
     ins:_onClickClose(ins)
 end
 function BtnDialogPageCtrl:_onClickClose(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 

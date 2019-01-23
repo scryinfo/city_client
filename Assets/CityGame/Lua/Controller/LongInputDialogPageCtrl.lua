@@ -26,6 +26,12 @@ function LongInputDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
 end
 
+function LongInputDialogPageCtrl:Active()
+    UIPanel.Active(self)
+    self.titleText.text = GetLanguage(16010002)
+    self.inputPlaceholderText.text = GetLanguage(16010003)
+end
+
 function LongInputDialogPageCtrl:Refresh()
     self:_initData()
 end
@@ -36,6 +42,9 @@ function LongInputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn")
     self.confirmBtn = go.transform:Find("root/confirmBtn")
     self.input = go.transform:Find("root/input"):GetComponent("InputField")
+    --language
+    self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
+    self.inputPlaceholderText = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
 end
 ---初始化
 function LongInputDialogPageCtrl:_initData()
@@ -45,6 +54,7 @@ function LongInputDialogPageCtrl:_initData()
 end
 
 function LongInputDialogPageCtrl:_onClickConfim(ins)
+    PlayMusEff(1002)
     if ins.m_data.btnCallBack then
         if ins.input.text ~= nil and ins.input.text ~= "" then
             ins.m_data.btnCallBack(ins.input.text)
@@ -54,5 +64,6 @@ function LongInputDialogPageCtrl:_onClickConfim(ins)
     ins:_onClickClose(ins)
 end
 function LongInputDialogPageCtrl:_onClickClose(ins)
+    PlayMusEff(1002)
     ins:Hide()
 end

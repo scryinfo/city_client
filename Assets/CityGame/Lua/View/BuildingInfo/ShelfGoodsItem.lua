@@ -27,7 +27,8 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = Material[self.itemId].name;
+        --self.nameText.text = Material[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -35,7 +36,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
             end
         end)
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = Good[self.itemId].name;
+        self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -90,10 +91,12 @@ function ShelfGoodsItem:c_buyGoodsItemDelete()
 end
 --勾选物品
 function ShelfGoodsItem:OnClick_bgBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("_selectedBuyGoods",ins);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
+    PlayMusEff(1002)
     Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
     Event.Brocast("SmallPop","下架成功",300)
     go.manager:_deleteGoods(go)
@@ -104,6 +107,7 @@ function ShelfGoodsItem:closeEvent()
     Event.RemoveListener("c_buyGoodsItemDelete",self.c_buyGoodsItemDelete,self);
 end
 function ShelfGoodsItem:OnClick_detailsBtn(ins)
+    PlayMusEff(1002)
     UIPanel:ShowPage(DETAILSBoxCtrl,ins);
 end
 --删除后刷新ID及刷新架子显示

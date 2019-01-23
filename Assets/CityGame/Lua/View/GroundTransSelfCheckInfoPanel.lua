@@ -19,4 +19,9 @@ function GroundTransSelfCheckInfoPanel.InitPanel()
     this.rentalText = transform:Find("root/rentRoot/rentalText"):GetComponent("Text")
     this.tenancyText = transform:Find("root/rentRoot/tenancyText"):GetComponent("Text")
     this.remainDayText = transform:Find("root/rentRoot/remainDayText"):GetComponent("Text")
+    --
+    this.rentalText01 = transform:Find("root/rentRoot/Text01"):GetComponent("Text")
+    this.tenancyText02 = transform:Find("root/rentRoot/Text02"):GetComponent("Text")
+    this.remainDayText03 = transform:Find("root/rentRoot/Text03"):GetComponent("Text")
+    this.titleText04 = transform:Find("root/titleText"):GetComponent("Text")
 end

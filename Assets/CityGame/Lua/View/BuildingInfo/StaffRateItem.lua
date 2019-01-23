@@ -29,6 +29,14 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close")
     self.closeOpenBtn = self.viewRect.transform:Find("topRoot/close/openBtn")
 
+    --language
+    self.titleText01 = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text")
+    self.titleText02 = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text")
+    self.workingText01 = self.viewRect.transform:Find("contentRoot/workState/working/Text"):GetComponent("Text")
+    self.restingText02 = self.viewRect.transform:Find("contentRoot/workState/resting/Text"):GetComponent("Text")
+    self.perWageText01 = self.viewRect.transform:Find("contentRoot/Text02"):GetComponent("Text")
+    self.totalWageText02 = self.viewRect.transform:Find("contentRoot/Text03"):GetComponent("Text")
+
     if staffData.isOther then
         self.openToDoBtn.localScale = Vector3.zero
     else
@@ -37,6 +45,7 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     end
 
     mainPanelLuaBehaviour:AddClick(self.closeOpenBtn.gameObject, function()
+        PlayMusEff(1002)
         clickOpenFunc(mgrTable, self.toggleData)
     end, self)
     self:_initData()
@@ -44,6 +53,7 @@ end
 
 --初始化界面
 function StaffRateItem:_initData()
+    self:_lanuage()
     self.perCapitaWageText.text = self.staffData.dayWage
     --self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
     self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
@@ -52,6 +62,15 @@ function StaffRateItem:_initData()
     self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H
     self.currentContentH = StaffRateItem.static.CONTENT_ALLRIGHT_H
     self:_checkWorkTime()
+end
+
+function StaffRateItem:_lanuage()
+    self.titleText01.text = GetLanguage(37040002)
+    self.titleText02.text = GetLanguage(37040002)
+    self.workingText01.text = GetLanguage(37040004)
+    self.restingText02.text = GetLanguage(37040005)
+    self.perWageText01.text = GetLanguage(37040006)
+    self.totalWageText02.text = GetLanguage(37040007)
 end
 
 function StaffRateItem:_checkWorkTime()
@@ -107,6 +126,7 @@ end
 
 --点击打开按钮
 function StaffRateItem:_clickOpenBtn()
+    PlayMusEff(1002)
     if self.clickOpenFunc then
         self.clickOpenFunc()
     end
@@ -114,6 +134,7 @@ end
 
 --点击DoSth按钮
 function StaffRateItem:_clickToDoBtn(ins)
+    PlayMusEff(1002)
     --打开工资调整界面
     local value = {dayWage = ins.staffData.dayWage, workerNum = ins.staffData.totalStaffCount}
     ct.OpenCtrl("WagesAdjustBoxCtrl", value)

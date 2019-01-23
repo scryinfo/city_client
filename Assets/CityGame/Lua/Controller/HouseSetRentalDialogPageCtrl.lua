@@ -42,9 +42,12 @@ function HouseSetRentalDialogPageCtrl:_getComponent(go)
     self.scoreText = go.transform:Find("root/totalScore/scoreText"):GetComponent("Text")
     self.roomDesTextRect = go.transform:Find("root/roomDesText"):GetComponent("Text")
     self.roomCountText = go.transform:Find("root/roomDesText/roomCountText"):GetComponent("Text")
+    --
+    self.titleText01 = go.transform:Find("root/titleText"):GetComponent("Text")
 end
 ---初始化
 function HouseSetRentalDialogPageCtrl:_initData()
+    self:_language()
     if self.m_data == nil then
         return
     end
@@ -57,7 +60,13 @@ function HouseSetRentalDialogPageCtrl:_initData()
     self.roomDesTextRect.rectTransform.sizeDelta = Vector2.New(trueTextW, self.roomDesTextRect.rectTransform.sizeDelta.y)
 end
 
+function HouseSetRentalDialogPageCtrl:_language()
+    self.roomDesTextRect.text = GetLanguage(37050003)
+    self.titleText01.text = GetLanguage(37050001)
+end
+
 function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
+    PlayMusEff(1002)
     local inputValue = ins.input.text
     if inputValue == "" then
         return
@@ -69,10 +78,12 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
 end
 
 function HouseSetRentalDialogPageCtrl:_onClickCloseBtn(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 --刷新总分
 function HouseSetRentalDialogPageCtrl:_onClickRefreshBtn(ins)
+    PlayMusEff(1002)
     local inputValue = ins.input.text
     if inputValue == "" then
         ins.input.text = "0"

@@ -39,6 +39,8 @@ function ShelfCtrl:Awake(go)
 end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
+    ShelfPanel.tipText.text = GetLanguage(26040002)
+    ShelfPanel.nameText.text = GetLanguage(26040002)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
@@ -88,6 +90,7 @@ function ShelfCtrl:c_tempTabNotGoods(id)
 end
 --跳转选择仓库界面
 function ShelfCtrl:OnClick_openBtn(go)
+    PlayMusEff(1002)
     local data = {}
     data.pos = {}
     data.pos.x = go.m_data.info.pos.x
@@ -98,6 +101,7 @@ function ShelfCtrl:OnClick_openBtn(go)
 end
 --购买物品
 function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+    PlayMusEff(1002)
     if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
         return;
     else
@@ -141,6 +145,7 @@ end
 
 function ShelfCtrl:OnClick_return_Btn(go)
     --go:deleteObjInfo();
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     if switchIsShow then
         go:openPlayerBuy(not switchIsShow)
@@ -155,6 +160,7 @@ function ShelfCtrl:Hide()
 end
 --根据名字排序
 function ShelfCtrl:OnClick_OnName(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By name";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local nameType = ct.sortingItemType.Name
@@ -162,6 +168,7 @@ function ShelfCtrl:OnClick_OnName(ins)
 end
 --根据数量排序
 function ShelfCtrl:OnClick_OnNumber(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By quantity";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local quantityType = ct.sortingItemType.Quantity
@@ -169,6 +176,7 @@ function ShelfCtrl:OnClick_OnNumber(ins)
 end
 --根据价格排序
 function ShelfCtrl:OnClick_OnpriceBtn(ins)
+    PlayMusEff(1002)
     ShelfPanel.nowText.text = "By price";
     ShelfCtrl.OnClick_OpenList(not isShowList);
     local priceType = ct.sortingItemType.Price
@@ -176,6 +184,7 @@ function ShelfCtrl:OnClick_OnpriceBtn(ins)
 end
 
 function ShelfCtrl.OnClick_OnSorting(ins)
+    PlayMusEff(1002)
     ShelfCtrl.OnClick_OpenList(not isShowList);
 end
 
@@ -191,6 +200,7 @@ function ShelfCtrl.OnClick_OpenList(isShow)
 end
 --其他玩家购买窗口
 function ShelfCtrl:OnClick_playerBuy(go)
+    PlayMusEff(1002)
     go:openPlayerBuy(not switchIsShow)
 end
 
@@ -201,7 +211,7 @@ function ShelfCtrl:openPlayerBuy(isShow)
         ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
         ShelfPanel.confirmBtn.localScale = Vector3.zero
         ShelfPanel.uncheckBtn.localScale = Vector3.one
-        ShelfPanel.nameText.text = "请选择仓库";
+        --ShelfPanel.nameText.text = "请选择仓库";
         --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
     else
@@ -242,6 +252,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
     Event.Brocast("SmallPop","购买成功",300)
 end
 function ShelfCtrl:OnClick_createGoods(go)
+    PlayMusEff(1002)
     if go.data == nil then
         return
     end
@@ -265,7 +276,7 @@ function ShelfCtrl:isShowDetermineBtn()
     for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
         num = num + i
     end
-    if num ~= 0 and ShelfPanel.nameText.text ~= "请选择仓库" then
+    if num ~= 0 and ShelfPanel.nameText.text ~= nil then
         ShelfPanel.confirmBtn.localScale = Vector3.one
         ShelfPanel.uncheckBtn.localScale = Vector3.zero
     else

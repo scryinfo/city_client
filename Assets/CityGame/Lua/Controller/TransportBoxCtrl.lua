@@ -21,7 +21,11 @@ function TransportBoxCtrl:Awake(go)
     transportbox:AddClick(TransportBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self);
     transportbox:AddClick(TransportBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
 end
-
+function TransportBoxCtrl:Active()
+    UIPanel.Active(self)
+    TransportBoxPanel.name.text = GetLanguage(26040008)
+    TransportBoxPanel.total.text = GetLanguage(26040009)
+end
 function TransportBoxCtrl:Refresh()
     if self.m_data == nil then
         return;
@@ -52,12 +56,14 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)
+    PlayMusEff(1002)
     transportbox:RemoveClick(TransportBoxPanel.closeBtn.gameObject, ins.OnClick_closeBtn, ins)
     transportbox:RemoveClick(TransportBoxPanel.confirmBtn.gameObject, ins.OnClick_confirmBtn, ins)
     --ins.m_data = nil;
     ins:Hide();
 end
 function TransportBoxCtrl:OnClick_confirmBtn(ins)
+    PlayMusEff(1002)
     if ins.m_data.btnClick then
         ins.m_data.btnClick()
         ins.m_data.btnClick = nil

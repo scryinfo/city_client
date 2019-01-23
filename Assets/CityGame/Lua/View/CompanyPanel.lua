@@ -19,7 +19,14 @@ end
 
 function CompanyPanel.InitPanel()
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
+
+    -- 多语言
     this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
+    this.incomeTitle = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/IncomeTitle"):GetComponent("Text")
+    this.expenditureTitle = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/ExpenditureTitle"):GetComponent("Text")
+    this.expenditureTitle = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/ExpenditureTitle"):GetComponent("Text")
+    this.tips = transform:Find("BottomRoot/BusinessRecordsRoot/Tips"):GetComponent("Text")
+    this.tipsTextCom = transform:Find("BottomRoot/BusinessRecordsRoot/TipsText"):GetComponent("Text")
 
     -- 基础信息显示
     this.headImage = transform:Find("BottomRoot/BasicInfoRoot/HeadBg/HeadImage"):GetComponent("Image")

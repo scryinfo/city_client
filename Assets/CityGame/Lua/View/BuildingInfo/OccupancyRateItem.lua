@@ -24,6 +24,10 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider.maxValue = occupancyData.totalCount
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = string.format("%d<color=%s>/%d</color>", occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, occupancyData.totalCount)
+    --language
+    self.titleText01 = self.viewRect.transform:Find("topRoot/nameText"):GetComponent("Text")
+    self.occRateText02 = self.viewRect.transform:Find("contentRoot/Text01"):GetComponent("Text")
+    self.oneRoomText03 = self.viewRect.transform:Find("contentRoot/Text"):GetComponent("Text")
 
     self.openToDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn")
     if occupancyData.isOther then
@@ -34,6 +38,13 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     end
 
     Event.AddListener("c_onReceiveHouseRentChange", self._rentPriceChange, self)
+    self:_lanuage()
+end
+
+function OccupancyRateItem:_lanuage()
+    self.titleText01.text = GetLanguage(37040010)
+    self.occRateText02.text = GetLanguage(37040012)
+    self.oneRoomText03.text = GetLanguage(37040011)
 end
 
 --获取是第几个点击了
@@ -73,6 +84,7 @@ function OccupancyRateItem:updateInfo(data)
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = string.format("%d<color=%s>/%d</color>", self.occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, self.occupancyData.totalCount)
     self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+    self:_lanuage()
 end
 --房租改变
 function OccupancyRateItem:_rentPriceChange(data)
@@ -88,6 +100,7 @@ function OccupancyRateItem:_rentPriceChange(data)
 end
 
 function OccupancyRateItem:_clickToDoBtn(ins)
+    PlayMusEff(1002)
     ct.OpenCtrl("HouseSetRentalDialogPageCtrl", ins.occupancyData)
 end
 

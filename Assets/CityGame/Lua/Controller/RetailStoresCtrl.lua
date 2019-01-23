@@ -19,34 +19,42 @@ function RetailStoresCtrl:Awake(go)
     self.gameObject = go;
     self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-
+function RetailStoresCtrl:Active()
+    UIPanel.Active(self)
+    RetailStoresPanel.Text.text = GetLanguage(33010001)
+end
 function RetailStoresCtrl:Refresh()
     this:initializeData()
 end
 
 function RetailStoresCtrl:initializeData()
-    if self.m_data.insId then
-        self.insId=self.m_data.insId
+    --if self.m_data.insId then
+    --    self.insId=self.m_data.insId
+    --    DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
+    --else
+    --    self.m_data.insId=self.insId
+    --    DataManager.OpenDetailModel(RetailStoresModel,self.insId)
+    --    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
+    --end
+    if self.m_data then
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
-    else
-        self.m_data.insId=self.insId
-        DataManager.OpenDetailModel(RetailStoresModel,self.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
     end
 end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     --local companyName = DataManager.GetMyPersonalHomepageInfo()
-    RetailStoresPanel.nameText.text = DataInfo.info.name
-    RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    RetailStoresPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
+    --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
+    RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
 
     self.m_data = DataInfo
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -73,19 +81,22 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     end
 end
 function RetailStoresCtrl:OnClick_buildInfo(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
 function RetailStoresCtrl:OnClick_prepareOpen(ins)
+    PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
 function RetailStoresCtrl:OnClick_changeName(ins)
+    PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME";
     data.tipInfo = "Modified every seven days";
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeRetailName', ins.m_data.insId, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeRetailName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
@@ -96,15 +107,16 @@ function RetailStoresCtrl:_updateName(name)
 end
 --返回
 function RetailStoresCtrl:OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if ins.materialToggleGroup then
         ins.materialToggleGroup:cleanItems()
     end
     UIPanel.ClosePage()
 end
-function RetailStoresCtrl:Hide()
-    UIPanel.Hide(self)
-    return {insId = self.m_data.info.id,self.m_data}
-end
+--function RetailStoresCtrl:Hide()
+--    UIPanel.Hide(self)
+--    return {insId = self.m_data.info.id,self.m_data}
+--end
 --打开信息界面
 function RetailStoresCtrl:OnClick_infoBtn()
 

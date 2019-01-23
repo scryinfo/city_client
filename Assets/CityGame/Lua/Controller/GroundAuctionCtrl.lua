@@ -28,6 +28,14 @@ function GroundAuctionCtrl:Awake(go)
     UpdateBeat:Add(self._update, self)
 end
 
+function GroundAuctionCtrl:Active()
+    UIPanel.Active(self)
+    GroundAuctionPanel.personFlowText01.text = GetLanguage(22010004)
+    GroundAuctionPanel.averageText02.text = GetLanguage(22010004)
+    GroundAuctionPanel.waitFloorPriceText03.text = GetLanguage(22010002)
+    GroundAuctionPanel.startFloorPriceText04.text = GetLanguage(22010002)
+end
+
 function GroundAuctionCtrl:Refresh()
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
@@ -72,7 +80,7 @@ function GroundAuctionCtrl:_initPanelData()
         Event.Brocast("m_RegistGroundBidInfor")
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
-        GroundAuctionPanel.nameText.text = "Floor price :"
+        GroundAuctionPanel.nameText.text = GetLanguage(22010002)
 
         if self.m_data.price == nil then
             GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
@@ -172,6 +180,7 @@ end
 
 --出价
 function GroundAuctionCtrl:BidGround(ins)
+    PlayMusEff(1005)
     local bidPrice = GroundAuctionPanel.bidInput.text
     if bidPrice == "" then
         --打开弹框
@@ -183,11 +192,11 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    --local mMoney = DataManager.GetMoney()
-    --if tonumber(bidPrice) < mMoney  then
-    --    Event.Brocast("SmallPop", "您的资金不足", 300)
-    --    return
-    --end
+    local mMoney = DataManager.GetMoney()
+    if tonumber(bidPrice) > mMoney  then
+        Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+        return
+    end
 
     if ins.highestPrice == nil then
         ins.highestPrice = ins.m_data.basePrice
@@ -207,6 +216,7 @@ end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
 function GroundAuctionCtrl:UnRegistGroundBid(table)
+    PlayMusEff(1002)
     if table.m_data.isStartAuc then
         Event.Brocast("m_UnRegistGroundBidInfor")
     end
@@ -285,6 +295,7 @@ function GroundAuctionCtrl:_bidStart(groundData)
 end
 --点击头像
 function GroundAuctionCtrl:_clickProtait(ins)
+    PlayMusEff(1002)
     if ins.biderInfo == nil then
         return
     end

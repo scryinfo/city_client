@@ -32,6 +32,14 @@ function GroundTransSelfCheckInfoCtrl:Hide()
     UIPanel.Hide(self)
 end
 
+function GroundTransSelfCheckInfoCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransSelfCheckInfoPanel.rentalText01.text = GetLanguage(24060004)
+    GroundTransSelfCheckInfoPanel.tenancyText02.text = GetLanguage(24060004)
+    GroundTransSelfCheckInfoPanel.remainDayText03.text = GetLanguage(24060004)
+    GroundTransSelfCheckInfoPanel.titleText04.text = GetLanguage(24060001)  --缺剩余租赁天数&总的租赁天数
+end
+
 function GroundTransSelfCheckInfoCtrl:Close()
     UIPanel.Close(self)
 end
@@ -53,10 +61,12 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSelfCheckInfoCtrl:_closeBtnFunc()
+    PlayMusEff(1002)
     --关闭所有界面
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransSelfCheckInfoCtrl:_backBtnFunc()
+    PlayMusEff(1002)
     UIPanel:ClosePage()
 end

@@ -18,28 +18,15 @@ end
 
 function FriendsPanel.InitPanel()
     this.backBtn = transform:Find("BackBtn").gameObject
-
-    --好友、群组分页
-    --this.friendsToggle = transform:Find("MiddleRoot/TopRoot/FriendsToggle"):GetComponent("Toggle")
-    --this.groupToggle = transform:Find("MiddleRoot/TopRoot/GroupToggle"):GetComponent("Toggle")
-    --this.friendsOpen = transform:Find("MiddleRoot/TopRoot/FriendsToggle/Open").gameObject
-    --this.friendsClose = transform:Find("MiddleRoot/TopRoot/FriendsToggle/Close").gameObject
-    --this.groupOpen  = transform:Find("MiddleRoot/TopRoot/GroupToggle/Open").gameObject
-    --this.groupClose  = transform:Find("MiddleRoot/TopRoot/GroupToggle/Close").gameObject
-
     --好友群组节点
     this.friendsRoot = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot").gameObject
-    --this.groupRoot = transform:Find("MiddleRoot/MiddleRoot/GroupRoot").gameObject
 
     --好友群组数量
     this.friendsNumberText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/TopRoot/NumberText"):GetComponent("Text")
-    --this.groupNumberText = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/TopRoot/NumberText"):GetComponent("Text")
 
     --好友群组滑动框显示
     this.friendsView = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.friendsContent = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport/Content")
-    --this.groupView = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
-    --this.groupContent = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/Scroll View/Viewport/Content")
 
     --好友按钮群组（管理、黑名单、加好友、申请列表、申请列表红点、申请列表的申请个数）
     this.friendsManageBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ManageBtn").gameObject
@@ -49,10 +36,10 @@ function FriendsPanel.InitPanel()
     this.applicationlistNotice = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice").gameObject
     this.applicationlistNoticeText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice/Text"):GetComponent("Text")
 
-    --群按钮群组（管理、发起群聊）
-    --this.groupManageBtn = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/BtnRoot/ManageBtn").gameObject
-    --this.startGroupBtn = transform:Find("MiddleRoot/MiddleRoot/GroupRoot/BtnRoot/StartGroupBtn").gameObject
-
     -- 没有好友的小狐狸显示
     this.friendsNoContentRoot = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
+
+    -- 多语言
+    this.titleText = transform:Find("MiddleRoot/TopRoot/Bg/TitleText"):GetComponent("Text")
+    this.NoContentText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
 end

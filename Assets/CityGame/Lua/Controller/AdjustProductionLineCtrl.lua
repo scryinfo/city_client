@@ -30,6 +30,7 @@ function AdjustProductionLineCtrl:Awake(go)
 end
 function AdjustProductionLineCtrl:Active()
     UIPanel.Active(self)
+    AdjustProductionLinePanel.Capacity.text = GetLanguage(28010002)
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     --Event.AddListener("refreshTime",self.refreshTime,self)
@@ -45,6 +46,7 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.locked_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
+    AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --刷新时间用
     AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
     --剩余容量
     AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)
@@ -65,6 +67,7 @@ end
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
     --go:deleteObjInfo();
     --go:deleteTempTable();
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 function AdjustProductionLineCtrl:Close()
@@ -81,6 +84,7 @@ function AdjustProductionLineCtrl:Hide()
 end
 
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
     ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
 end
 

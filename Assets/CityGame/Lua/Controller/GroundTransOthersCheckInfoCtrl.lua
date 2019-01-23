@@ -31,6 +31,14 @@ function GroundTransOthersCheckInfoCtrl:Refresh()
     self:_initPanelData()
 end
 
+function GroundTransOthersCheckInfoCtrl:Active()
+    UIPanel.Active(self)
+    GroundTransOthersCheckInfoPanel.titleText01.text = GetLanguage(24060002)
+    GroundTransOthersCheckInfoPanel.noneText02.text = GetLanguage(24060003)
+    GroundTransOthersCheckInfoPanel.partAText03.text = GetLanguage(24060007)
+    GroundTransOthersCheckInfoPanel.partBText04.text = GetLanguage(24060006)
+end
+
 function GroundTransOthersCheckInfoCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
@@ -96,22 +104,26 @@ end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransOthersCheckInfoCtrl:_closeBtnFunc()
+    PlayMusEff(1002)
     --关闭所有界面
     GroundTransSetPriceCtrl._closeBackToMain()
 end
 --返回按钮
 function GroundTransOthersCheckInfoCtrl:_backBtnFunc()
+    PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
 --点击土地所有者头像
 function GroundTransOthersCheckInfoCtrl:_ownerBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.ownerInfo then
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.ownerInfo)
     end
 end
 --点击土地租赁者头像
 function GroundTransOthersCheckInfoCtrl:_renterBtnFunc(ins)
+    PlayMusEff(1002)
     if ins.renterInfo then
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.renterInfo)
     end

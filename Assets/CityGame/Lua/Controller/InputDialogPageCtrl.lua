@@ -35,7 +35,6 @@ function InputDialogPageCtrl:Refresh()
 end
 
 function InputDialogPageCtrl:Close()
-    self:_removeListener()
     UIPanel.Close(self)
 end
 ---寻找组件
@@ -44,6 +43,7 @@ function InputDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject
     self.confimBtn = go.transform:Find("root/confirmBtn").gameObject
     self.rentInput = go.transform:Find("root/rentInput").gameObject:GetComponent("InputField")
+    self.rentInputPlaceholderText = go.transform:Find("root/rentInput/Placeholder"):GetComponent("Text")
 
     self.errorTipRoot = go.transform:Find("root/tipRoot")
     self.errorTipText = go.transform:Find("root/tipRoot/Text").gameObject:GetComponent("Text")
@@ -51,57 +51,26 @@ function InputDialogPageCtrl:_getComponent(go)
 end
 ---初始化
 function InputDialogPageCtrl:_initData()
+    self:_language()
+
     self.titleText.text = self.m_data.titleInfo
     self.rentInput.text = ""
     self.errorTipRoot.localScale = Vector3.zero
     --self.changeNameTipText.transform.localScale = Vector3.zero
-
-    --根据传入的类型添加监听
-    if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
-        --self.changeNameTipText.transform.localScale = Vector3.one
-        Event.AddListener("c_BuildingNameUpdate", self._changeNameCallBack)  --更改建筑名字 --目前还没有，和服务器协议有关
-    end
 end
----移出监听
-function InputDialogPageCtrl:_removeListener()
-    --根据传入的类型添加监听
-    if self.m_data.inputDialogPageServerType == InputDialogPageServerType.UpdateBuildingName then
-        Event.RemoveListener("c_BuildingNameUpdate", self._bidInfoUpdate)
-    --elseif self.m_data.inputDialogPageServerType == InputDialogPageServerType. then
 
-    end
+function InputDialogPageCtrl:_language()
+    self.rentInputPlaceholderText.text = GetLanguage(37030002)
 end
----更改名字失败，提示信息更改
-function InputDialogPageCtrl:_changeNameCallBack(stream)
-    local info = assert(pbl.decode("gs.MetaGroundAuction", stream), "InputDialogPageCtrl:_changeNameCallBack: stream == nil")
-    if #info.auction == 0 then
-        return
-    end
 
-    --判断返回的操作是否成功balabala
-    self.errorTipRoot.localScale = Vector3.one
-    self.errorTipText.text = "With sensitive words,Try again"  --根据不同情况选择不同提示语
-end
 ---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(ins)
-    ---在这的self 是传进来的btn组件，table才是实例
+    PlayMusEff(1002)
     local inputValue = ins.rentInput.text
     if inputValue == "" or #inputValue < 3 then
         return
     end
 
-    --需要等待服务器消息
-    --if table.m_data.btnCallBack then
-    --    table.m_data.btnCallBack()
-    --    table.errorTipRoot.localScale = Vector3.one
-    --    table.errorTipText.text = "With sensitive words,Try again"  --根据不同情况选择不同提示语
-    --end
-    --如果需要和服务器交互，则不能直接关闭
-    --if not table.m_data.inputDialogPageServerType then
-    --    table:Hide()
-    --end
-
-    ---测试
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack(inputValue)
     end
@@ -109,5 +78,6 @@ function InputDialogPageCtrl:_onClickConfim(ins)
 end
 ---点击关闭按钮
 function InputDialogPageCtrl:_onClickClose(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end

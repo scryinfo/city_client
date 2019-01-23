@@ -21,7 +21,7 @@ function ConstructItem:_initData()
     local itemNameRect = self.viewTrans:Find("namebar/NameText"):GetComponent("RectTransform")
     local itemNameText = self.viewTrans:Find("namebar/NameText"):GetComponent("Text")
     --设置名字（TODO：改为多语言）
-    itemNameText.text = data.buildName
+    itemNameText.text = GetLanguage(data.buildName)
     --设置名字宽度（设置说明按钮位置）
     itemNameRect.sizeDelta = Vector2.New(itemNameText.preferredWidth,itemNameRect.sizeDelta.y)
     --TODO:此处应该根据种类多少动态增加长度
@@ -58,6 +58,7 @@ end
 
 --点击建筑按钮
 function ConstructItem:_clickConstructBtn(tempID)
+    PlayMusEff(1002)
     local tempVec = rayMgr:GetCoordinateByVector3(Vector3.New(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2,0))
     TerrainManager.ConstructBuild(tempID,tempVec)
 end

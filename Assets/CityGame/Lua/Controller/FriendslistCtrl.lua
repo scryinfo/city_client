@@ -3,6 +3,7 @@
 --- Created by Tina.
 --- DateTime: 2018/11/30 15:16
 ---
+
 FriendslistCtrl = class('FriendslistCtrl', UIPanel)
 UIPanel:ResgisterOpen(FriendslistCtrl)
 
@@ -32,6 +33,7 @@ function FriendslistCtrl:OnCreate(go)
     --添加UI事件点击监听
     FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
+        PlayMusEff(1002)
         UIPanel.ClosePage()
     end)
 
@@ -54,7 +56,6 @@ function FriendslistCtrl:_addListener()
     -- 监听Model层网络回调
     Event.AddListener("c_OnReceiveSearchPlayerInfo", self.c_OnReceiveSearchPlayerInfo, self)
     Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
-    --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_DeleteBlacklist", self.c_DeleteBlacklist, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
 
@@ -72,7 +73,6 @@ function FriendslistCtrl:_removeListener()
     -- 监听Model层网络回调
     Event.RemoveListener("c_OnReceiveSearchPlayerInfo", self.c_OnReceiveSearchPlayerInfo, self)
     Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
-    --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_DeleteBlacklist", self.c_DeleteBlacklist, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
 end
@@ -82,12 +82,11 @@ function FriendslistCtrl:_initState()
     --if
     local type = self.m_data.type
     FriendslistCtrl.type = self.m_data.type
-    --FriendslistPanel.listContent.offsetMax = Vector2.New(0,0)
     --好友界面数据刷新
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
-        FriendslistPanel.panelNameText.text = "MANAGE"
+        FriendslistPanel.panelNameText.text = GetLanguage(12020001) --"MANAGE"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -100,7 +99,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 3 then
-        FriendslistPanel.panelNameText.text = "BLACK LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(12030001) --"BLACK LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(true)
         FriendslistPanel.searchInputField:SetActive(false)
         FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88)
@@ -117,7 +116,7 @@ function FriendslistCtrl:_initState()
         if FriendslistCtrl.static.isAddfriends then
             FriendslistCtrl.static.isAddfriends = false
         else
-            FriendslistPanel.panelNameText.text = "ADD NEW FRIENDS"
+            FriendslistPanel.panelNameText.text = GetLanguage(12040001) --"ADD NEW FRIENDS"
             FriendslistPanel.blacklistNumberImage:SetActive(false)
             FriendslistPanel.blacklistNumberText.text = ""
             --显示和清空搜索框
@@ -128,7 +127,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 5 then
-        FriendslistPanel.panelNameText.text = "APPLICATION LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(12050001) --"APPLICATION LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -140,6 +139,7 @@ function FriendslistCtrl:_initState()
     end
 
 function FriendslistCtrl:OnSearch(go)
+    PlayMusEff(1002)
     local text = FriendslistPanel.searchInputField:GetComponent("InputField").text
     if text == "" then
         return
@@ -176,7 +176,6 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
 end
 
 function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
-    --DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     for i, v in ipairs(FriendslistCtrl.friendInfo) do
         if v.id == friendsId.id then
             table.remove(FriendslistCtrl.friendInfo, i)
@@ -184,23 +183,14 @@ function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
         end
     end
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-    Event.Brocast("SmallPop","Deleted",60)
+    Event.Brocast("SmallPop",GetLanguage(12020002),60)
 end
-
---function FriendslistCtrl:c_OnReceivePlayerInfo(friendsData)
---    if friendsData.info[1] then
---        FriendslistCtrl.friendInfo = friendsData.info
---        FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
---    else
---        FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
---    end
---end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)
     if friendsId.id then
         self:_showBlacklistNum()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-        Event.Brocast("SmallPop","Successful removal from blacklist.",60)
+        Event.Brocast("SmallPop",GetLanguage(12030004),60)
     end
 end
 

@@ -26,6 +26,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     local type = ct.getType(UnityEngine.Sprite)
     if data.itemType == 0 then
         tempData = Material[data.itemId]
+        self.nameText.text = GetLanguage(data.itemId)
         panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -34,6 +35,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
         end)
     else
         tempData = Good[data.itemId]
+        self.nameText.text = GetLanguage(data.itemId)
         panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
@@ -41,7 +43,6 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
             end
         end)
     end
-    self.nameText.text = tempData.name
     self.numberText.text = AdjustProductionLineCtrl.getGoodInventoryNum(data.itemId)
 
     self.toggle.onValueChanged:RemoveAllListeners()

@@ -407,7 +407,7 @@ function GetLanguage(key,...)
 	return key.."没有设置"
 end
 
-function GetSprite(key,...)
+function GetSprite(key)
 
     local path=currentSprite[key]
 	if path then

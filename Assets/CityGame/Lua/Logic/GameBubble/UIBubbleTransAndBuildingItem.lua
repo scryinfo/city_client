@@ -14,7 +14,9 @@ function UIBubbleTransAndBuildingItem:initialize(data, obj)
     self.selfBuilding = obj.transform:Find("selfBuilding")
 
     self.sellBtn = obj.transform:Find("groundSell/sellBtn"):GetComponent("Button")
+    self.sellImg01 = obj.transform:Find("groundSell/sellBtn/Image"):GetComponent("Image")
     self.rentBtn = obj.transform:Find("groundRent/rentBtn"):GetComponent("Button")
+    self.rentImg02 = obj.transform:Find("groundRent/rentBtn/Image"):GetComponent("Image")
 
     self.sellBtn.onClick:RemoveAllListeners()
     self.rentBtn.onClick:RemoveAllListeners()
@@ -60,10 +62,12 @@ end
 function UIBubbleTransAndBuildingItem:_setBubbleState(state)
     if state == GroundTransState.Sell then
         self.groundSell.localScale = Vector3.one
+        LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
         self.groundRent.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
     elseif state == GroundTransState.Rent then
         self.groundRent.localScale = Vector3.one
+        LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)
         self.groundSell.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
     elseif state == UIBubbleType.BuildingSelf then

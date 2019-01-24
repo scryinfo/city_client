@@ -493,7 +493,7 @@ function ScreenPosTurnActualPos(targetScreenPos)
 	return ActualPos
 end
 --将服务器的数据转化成客户端数据格式
-function GetPriceString(serverPrice)
+function GetClientPriceString(serverPrice)
 	return string.format("%0.4f", serverPrice / 10000)
 end
 

@@ -51,10 +51,12 @@ function WagesAdjustBoxCtrl:_initData()
     local dayWage = self.m_data.dayWage or 0
     local workerNum = self.m_data.workerNum or 0
 
-    local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(dayWage, 24, 20), WagesAdjustBoxCtrl.static.BlackColor, "/D")
+    local numStr = tostring(GetClientPriceString(dayWage))
+    local perWageStr = string.format("%s<color=%s>%s</color>", getPriceString(numStr, 24, 20), WagesAdjustBoxCtrl.static.BlackColor, "/D")
     self.perWageText.text = perWageStr
 
-    local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(dayWage * workerNum, 36, 30), WagesAdjustBoxCtrl.static.BlackColor, "/D")
+    local numStr1 = tostring(GetClientPriceString(dayWage * workerNum))
+    local totalWageStr = string.format("%s<color=%s>%s</color>", getPriceString(numStr1, 36, 30), WagesAdjustBoxCtrl.static.BlackColor, "/D")
     self.totalWageText.text = totalWageStr
     self.staffCountText.text = workerNum
 end

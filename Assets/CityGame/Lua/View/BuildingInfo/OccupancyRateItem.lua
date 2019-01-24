@@ -20,7 +20,7 @@ function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, ma
     self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider")  -- slider
     self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancyText"):GetComponent("Text")
 
-    self.rentalValueText.text = getPriceString(occupancyData.rent, 30, 24).."/D"
+    self.rentalValueText.text = getPriceString(GetClientPriceString(occupancyData.rent), 30, 24).."/D"
     self.occupancySlider.maxValue = occupancyData.totalCount
     self.occupancySlider.value = occupancyData.renter
     self.occupancyText.text = string.format("%d<color=%s>/%d</color>", occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, occupancyData.totalCount)
@@ -83,7 +83,7 @@ function OccupancyRateItem:updateInfo(data)
     self.occupancyData = data
     self.occupancySlider.value = self.occupancyData.renter
     self.occupancyText.text = string.format("%d<color=%s>/%d</color>", self.occupancyData.renter, OccupancyRateItem.static.OccupancyTextColor, self.occupancyData.totalCount)
-    self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+    self.rentalValueText.text = getPriceString(GetClientPriceString(self.occupancyData.rent), 30, 24).."/D"
     self:_lanuage()
 end
 --房租改变
@@ -96,7 +96,7 @@ function OccupancyRateItem:_rentPriceChange(data)
     if not self.viewRect.gameObject.activeSelf then
         return
     end
-    self.rentalValueText.text = getPriceString(self.occupancyData.rent, 30, 24).."/D"
+    self.rentalValueText.text = getPriceString(GetClientPriceString(self.occupancyData.rent), 30, 24).."/D"
 end
 
 function OccupancyRateItem:_clickToDoBtn(ins)

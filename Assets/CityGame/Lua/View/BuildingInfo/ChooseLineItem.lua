@@ -49,11 +49,16 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
                 n = n + v.n
             end
         end
+        if  DataInfo.store.locked ~= nil then
+            for i, v in pairs(DataInfo.store.locked) do
+                n = n + v.n
+            end
+        end
         self.spareCapacity = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity - n --剩余容量
         self.number.text = n .. "/" .. PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity
     end
 
-    self.sizeName =  self.size.text..self.name.text
+    self.sizeName = self.factory.text.. self.size.text..self.name.text
 
     local distances
     distances = math.sqrt(math.pow((pos.x-self.posX),2) + math.pow((pos.y-self.posY),2))
@@ -93,7 +98,7 @@ function ChooseLineItem:OnLinePanelBG(go)
     data.buildingId = go.buildingId
     data.posX = go.posX
     data.posY = go.posY
-    data.name =  go.size.text .. go.name.text
+    data.name =  go.sizeName
     data.spareCapacity = go.spareCapacity
     Event.Brocast("c_OnLinePanelBG",data)
     ChooseWarehouseCtrl:OnClick_returnBtn()

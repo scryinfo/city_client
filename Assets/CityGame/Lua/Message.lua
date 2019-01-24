@@ -151,6 +151,7 @@ CityEngineLua.MessageReader = {
 	expectSize = 4,
 	expectBodySize = 0,
 	state = CityEngineLua.READ_STATE_MSGLEN,
+	bufferToRead = 0,
 	stream = City.MemoryStream.New(),
 };
 local reader = CityEngineLua.MessageReader;

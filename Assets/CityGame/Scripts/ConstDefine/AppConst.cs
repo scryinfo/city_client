@@ -15,7 +15,7 @@ namespace LuaFramework {
         /// 否则就需要自己将StreamingAssets里面的所有内容
         /// 复制到自己的Webserver上面，并修改下面的WebUrl。
         /// </summary>
-        public const bool UpdateMode = false;                       //更新模式-默认关闭 
+        public const bool UpdateMode = true;                       //更新模式-默认关闭 
         //public const bool UpdateMode = false;                       //更新模式-默认关闭 
         public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭
 #if LUA_BUNDEL
@@ -34,7 +34,7 @@ namespace LuaFramework {
         public const string AssetDir = "StreamingAssets";           //素材目录 
         //public const string WebUrl = "http://localhost:6688/";      //测试更新地址
         //public const string WebUrl = "http://192.168.0.188:8080/CityHotUp/";      //测试更新地址
-        public const string WebUrl = "http://192.168.0.51:8080/CityHotUp/";      //测试更新地址
+        public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址
         //public const string WebUrl = "http://40.73.5.184:8080/city/";      //测试更新地址
         public const string AssetDir_CloseBundleMode = "View";        //关闭资源 BundleMode 后的资源读取路径
         public static string FrameworkRoot {

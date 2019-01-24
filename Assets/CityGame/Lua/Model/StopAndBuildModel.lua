@@ -35,7 +35,7 @@ DataManager.ModelSendNetMes("gscode.OpCode", "startBusiness","gs.Id",{ id = buil
 end
 ---开业收包
 function StopAndBuildModel.n_startBusiness(lMsg)
-    Event.Brocast("c_successBuilding")
+ Event.Brocast("c_successBuilding")
 end
 
 ---停业发包

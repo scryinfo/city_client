@@ -151,10 +151,10 @@ CityEngineLua.MessageReader = {
 	expectSize = 4,
 	expectBodySize = 0,
 	state = CityEngineLua.READ_STATE_MSGLEN,
+	bufferToRead = 0,
 	stream = City.MemoryStream.New(),
 };
 local reader = CityEngineLua.MessageReader;
-
 function CityEngineLua.MessageReader.onConnectError(errorCode)
 	if(errorCode == SYSEVENT.SYSEVENT_DISCONNECT ) then
 		--目前连接处理错误统一处理为 m_onDisconnect ，因为暂时还不清楚有哪些别的连接错误
@@ -162,75 +162,83 @@ function CityEngineLua.MessageReader.onConnectError(errorCode)
 	end
 end
 
-function CityEngineLua.MessageReader.process(datas, offset, toReadDatalength)
-	local srcReadEnd = offset;
-	while(toReadDatalength > 0 and reader.expectSize > 0)
-	do if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
-		if(toReadDatalength >= reader.expectSize) then
-			--从网络数据块上次读取结束点开始拷贝4字节到reader.stream, 相当于把长度值拷贝到reader.stream
-			CityLuaUtil.ArrayCopy(datas, srcReadEnd, reader.stream:data(), reader.stream.wpos, reader.expectSize);
-			--更新网络数据读取结束位置
-			srcReadEnd = srcReadEnd + reader.expectSize;
-			--更新reader.stream写入终止点位置
-			reader.stream.wpos = reader.stream.wpos + reader.expectSize;
-			--更新剩余未读数据长度
-			toReadDatalength = toReadDatalength - reader.expectSize;
-
-			reader.msglen = reader.stream:readUint32();
-			reader.state = CityEngineLua.READ_STATE_MSGID;
-			reader.expectSize = reader.expectMsgIdSize;
+function CityEngineLua.MessageReader.process(datas, offset, size)
+ 	local toReadDatalength = reader.stream.wpos
+	--接收网络缓冲数据
+	if size > 0 then
+		--计算 reader 中待读取数据长度
+		local testNewLength = reader.stream.wpos + size
+		--如果 reader.stream 缓冲右侧空余空间没满，直接拷贝新数据到右侧空间，如果满了，则从左侧0位开始拷贝
+		if reader.stream.wpos + size <= City.MemoryStream.BUFFER_MAX then
+			--注意，这里不会出现真正 reader.stream.wpos + size > City.MemoryStream.BUFFER_MAX 的情况，
+			--因为C#中已经把这种情况下的数据分成了两段，传到lua中的第一段数据必定是能正好放放满，不会超出
+			--参考 public void process() else if (t_wpos < _rpos)
+			CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), reader.stream.wpos, size)
+			reader.stream.wpos = reader.stream.wpos + size
+			toReadDatalength = reader.stream.wpos - reader.stream.rpos
 		else
-			--如果网络传入的数据长度小于4字节，终止循环，而应等待后续数据的到来
-			break;
+			reader.stream.rpos = 0
+			reader.stream.wpos = size
+			toReadDatalength = size
+			CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), 0, size)
 		end
-	elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
-		if(toReadDatalength >= reader.expectSize) then
-			CityLuaUtil.ArrayCopy(datas, srcReadEnd, reader.stream:data(), reader.stream.wpos, reader.expectSize);
-			srcReadEnd = srcReadEnd + reader.expectSize;
-			reader.stream.wpos = reader.stream.wpos + reader.expectSize;
-			toReadDatalength = toReadDatalength - reader.expectSize;
-			reader.msgid = reader.stream:readUint16();
-			reader.expectSize = reader.msglen
-			reader.state = CityEngineLua.READ_STATE_BODY
-			--reader.stream:clear();
-
-			local msg = CityEngineLua.clientMessages[reader.msgid];
-			if not msg then
-				--这种情况可能是协议没注册，需要跳过当前数据段
-				reader.stream:append(datas, srcReadEnd, reader.expectSize);
-				srcReadEnd = srcReadEnd + reader.expectSize;
-				toReadDatalength = toReadDatalength - reader.expectSize;
-				local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
-				reader.expectSize = 4;
-				reader.state = CityEngineLua.READ_STATE_MSGLEN
+	end
+	while(toReadDatalength > 0 and reader.expectSize > 0) do
+		if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
+			if(toReadDatalength >= reader.expectSize) then
+				--更新reader.stream写入终止点位置
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize
+				--更新剩余未读数据长度
+				toReadDatalength = toReadDatalength - reader.expectSize
+				--读取pb数据段长度
+				reader.msglen = reader.stream:readUint32();
+				--切换读取状态
+				reader.state = CityEngineLua.READ_STATE_MSGID;
+				reader.expectSize = reader.expectMsgIdSize;
 			else
+				--如果网络传入的数据长度小于4字节，终止循环，等待后续数据的到来
+				break;
+			end
+		elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
+			if(toReadDatalength >= reader.expectSize) then
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize;
+				toReadDatalength = toReadDatalength - reader.expectSize;
+				reader.msgid = reader.stream:readUint16();
+				reader.expectSize = reader.msglen
+				reader.state = CityEngineLua.READ_STATE_BODY
+				--如果不带pb数据段的，这里就要处理
 				if(reader.msglen == 0) then
 					-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
-					msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0));
+					if reader.msgid ~= 0 then
+						local msg = CityEngineLua.clientMessages[reader.msgid]
+						if msg ~= nil then
+							msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0))
+						end
+					end
 					reader.state = CityEngineLua.READ_STATE_MSGLEN;
 					reader.expectSize = 4;
 				end
+			else
+				break;--等待后续数据的到来
 			end
-		else
-			--如果剩余未读数据小于协议ID的长度（2字节），那么终止循环，继续等待
-			break;
-		end
-	elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
-		if(toReadDatalength >= reader.expectSize) then
-			reader.stream:append(datas, srcReadEnd, reader.expectSize);
-			srcReadEnd = srcReadEnd + reader.expectSize;
-			toReadDatalength = toReadDatalength - reader.expectSize;
-			local msg = CityEngineLua.clientMessages[reader.msgid];
-			msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
-			reader.state = CityEngineLua.READ_STATE_MSGLEN;
-			reader.expectSize = 4;
-		else
-			--length 小于 reader.expectSize, 说明pb数据段不完整，需等待下一次socket收包组包
+		elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
+			if(toReadDatalength >= reader.expectSize) then
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize;
+				toReadDatalength = toReadDatalength - reader.expectSize;
+				if reader.msgid ~= 0 then
+					local msg = CityEngineLua.clientMessages[reader.msgid];
+					if msg ~= nil then
+						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
+					end
+				end
+				reader.state = CityEngineLua.READ_STATE_MSGLEN;
+				reader.expectSize = 4;
+			else
+				break--等待后续数据的到来
+			end
+		elseif(reader.state == CityEngineLua.READ_STATE_MSGLEN_EX) then
+			--现在暂时没有这种情况
 			break
 		end
-	elseif(reader.state == CityEngineLua.READ_STATE_MSGLEN_EX) then
-		--现在暂时没有这种情况
-		break
-	end
 	end
 end

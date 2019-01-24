@@ -141,6 +141,9 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
             table.remove(AdjustProductionLineCtrl.materialProductionLine,i)
         end
     end
+    if AdjustProductionLineCtrl.materialProductionLine == nil or AdjustProductionLineCtrl.materialProductionLine == {} then
+        return
+    end
     local i = 1
     for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         AdjustProductionLineCtrl.materialProductionLine[i]:RefreshID(i)

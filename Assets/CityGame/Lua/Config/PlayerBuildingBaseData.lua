@@ -1,4 +1,4 @@
-PlayerBuildingBaseData=
+﻿PlayerBuildingBaseData=
 {
     [1100001] ={
         ["sizeName"] =41010001,
@@ -559,8 +559,8 @@ PlayerBuildingBaseData=
         ["typeName"] ="中心建筑",
         ["des"] ="中心建筑的说明",
         ["prefabRoute"] = "View/Building/Centralbuilding",
-        ["x"] = 7 ,
-        ["y"] = 7 ,
+        ["x"] = 5 ,
+        ["y"] = 5 ,
     },
     [4000001] ={
         ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块

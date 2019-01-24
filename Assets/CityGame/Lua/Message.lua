@@ -163,25 +163,31 @@ function CityEngineLua.MessageReader.onConnectError(errorCode)
 end
 
 function CityEngineLua.MessageReader.process(datas, offset, size)
-	local toReadDatalength = reader.stream.wpos
+ 	local toReadDatalength = reader.stream.wpos
 	--接收网络缓冲数据
 	if size > 0 then
 		--计算 reader 中待读取数据长度
 		local testNewLength = reader.stream.wpos + size
 		--如果 reader.stream 缓冲右侧空余空间没满，直接拷贝新数据到右侧空间，如果满了，则从左侧0位开始拷贝
-		if reader.stream.wpos <= City.MemoryStream.BUFFER_MAX then
-			toReadDatalength = reader.stream.wpos + size
+		if reader.stream.wpos + size <= City.MemoryStream.BUFFER_MAX then
+			--注意，这里不会出现真正 reader.stream.wpos + size > City.MemoryStream.BUFFER_MAX 的情况，
+			--因为C#中已经把这种情况下的数据分成了两段，传到lua中的第一段数据必定是能正好放放满，不会超出
+			--参考 public void process() else if (t_wpos < _rpos)
+			CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), reader.stream.wpos, size)
+			reader.stream.wpos = reader.stream.wpos + size
+			toReadDatalength = reader.stream.wpos - reader.stream.rpos
 		else
-			reader.stream.wpos = 0
+			reader.stream.rpos = 0
+			reader.stream.wpos = size
 			toReadDatalength = size
+			CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), 0, size)
 		end
-		CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), reader.stream.wpos, size)
 	end
 	while(toReadDatalength > 0 and reader.expectSize > 0) do
 		if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
 			if(toReadDatalength >= reader.expectSize) then
 				--更新reader.stream写入终止点位置
-				reader.stream.wpos = reader.stream.wpos + reader.expectSize
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize
 				--更新剩余未读数据长度
 				toReadDatalength = toReadDatalength - reader.expectSize
 				--读取pb数据段长度
@@ -195,7 +201,7 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
 			if(toReadDatalength >= reader.expectSize) then
-				reader.stream.wpos = reader.stream.wpos + reader.expectSize;
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize;
 				toReadDatalength = toReadDatalength - reader.expectSize;
 				reader.msgid = reader.stream:readUint16();
 				reader.expectSize = reader.msglen
@@ -217,7 +223,7 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
 			if(toReadDatalength >= reader.expectSize) then
-				reader.stream.wpos = reader.stream.wpos + reader.expectSize;
+				--reader.stream.rpos = reader.stream.rpos + reader.expectSize;
 				toReadDatalength = toReadDatalength - reader.expectSize;
 				if reader.msgid ~= 0 then
 					local msg = CityEngineLua.clientMessages[reader.msgid];

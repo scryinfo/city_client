@@ -346,12 +346,12 @@ function GameMainInterfaceCtrl:OnAdvertisFacilitie()
     Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
 end
 
-
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("CenterBuildingCtrl")
+    TerrainManager.MoveToCentralBuidingPosition()
+    --ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --关闭updata

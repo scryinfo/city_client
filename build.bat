@@ -16,6 +16,6 @@ echo start res building  at  %time%.............
  
 D:\Unity\Editor\Unity.exe -quit -batchmode -executeMethod CityBuild.BuildResourceBundle -logFile build.log
  
-XCOPY ..\client\Assets\CityGame\Source\Generate  D:\CityHotUp1 /s/e/y
+XCOPY ..\client\Assets\StreamingAssets\*.*  D:\CityHotUp1 /s/e/y
 
 echo res building finished  at  %time%.............!  

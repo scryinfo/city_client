@@ -1792,7 +1792,7 @@ CityEngineLua.login_tradeapp = function(noconnect)
 		this._tradeNetworkInterface1 = City.NetworkInterface.New();
 		this._tradeNetworkInterface1:connectTo(this.tradeappIP, this.tradeappPort, this.onConnectTo_tradeapp_callback, nil);
 	else
-		UnitTest.Exec_now("wk24_abel_mutiConnect_revMsg", "c_wk24_abel_mutiConnect_revMsg",self)
+		--UnitTest.Exec_now("wk24_abel_mutiConnect_revMsg", "c_wk24_abel_mutiConnect_revMsg",self)
 		----ss 登录
 		----1、 获取协议id
 		--local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
@@ -1801,6 +1801,10 @@ CityEngineLua.login_tradeapp = function(noconnect)
 		--local pMsg = assert(pbl.encode("ss.Id", lMsg))
 		----3、 创建包，填入数据并发包
 		--CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, this._tradeNetworkInterface1);
+		if this._tradeNetworkInterface1 then
+			this._tradeNetworkInterface1:reset()
+			this._tradeNetworkInterface1 = nil
+		end
 	end
 end
 
@@ -1816,7 +1820,7 @@ CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, userDa
 
 	logDebug("City::login_tradeapp(): connect "..ip..":"..port.." is successfully!");
 	--Event.Brocast("c_GsConnected", true );
-	this.login_tradeapp(false)
+	--this.login_tradeapp(false)
 end
 
 CityEngineLua.hello = function()

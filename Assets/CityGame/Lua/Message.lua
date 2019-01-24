@@ -229,6 +229,8 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 					local msg = CityEngineLua.clientMessages[reader.msgid];
 					if msg ~= nil then
 						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
+					else
+						local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 					end
 				end
 				reader.state = CityEngineLua.READ_STATE_MSGLEN;

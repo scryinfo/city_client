@@ -607,6 +607,8 @@ end
 local function LoginSuccessAndGameStart()
     --初始化中心建筑
     TerrainManager.CreateCenterBuilding()
+    --初始化相机位置为中心建筑在视野正中央
+    TerrainManager.MoveToCentralBuidingPosition()
     --打开循环判断自己的租地是否到期
     UpdateBeat:Add(DataManager_Update, this)
 

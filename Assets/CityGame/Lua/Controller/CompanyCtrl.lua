@@ -62,6 +62,7 @@ end
 function CompanyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+    CityEngineLua.login_tradeapp(true)
     CompanyPanel.incomeTitle.text = GetLanguage(17010002)
     CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
     CompanyPanel.tips.text = GetLanguage(17010005)
@@ -75,6 +76,7 @@ function CompanyCtrl:Refresh()
 end
 
 function CompanyCtrl:Hide()
+    CityEngineLua.login_tradeapp(false)
     self:_removeListener()
     UIPanel.Hide(self)
 end

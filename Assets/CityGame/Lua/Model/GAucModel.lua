@@ -117,7 +117,7 @@ function GAucModel.getMataGroundDataFunc(auctionInfo)
     this._getOrderGroundDatas(this.groundAucDatas)  --获取时间顺序表
     this.getFirstNowData()  --创建拍卖中的item
     this._checkSoonData()  --创建即将拍卖item
-    this._moveToAucPos()
+    --this._moveToAucPos()
 end
 
 --收到拍卖中的数据之后的操作

@@ -61,6 +61,10 @@ function AdjustProductionLineCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
     --self:refreshTime(self.data.line)
+    local capacity = {}
+    capacity[self.idleWorkerNum] = "red"
+    capacity[self.buildingMaxWorkerNum] = "black"
+
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 

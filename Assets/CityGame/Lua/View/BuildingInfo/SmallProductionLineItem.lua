@@ -14,6 +14,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.nameText = self.prefab.transform:Find("Top/nameText"):GetComponent("Text");  --原料名字
     self.timeText = self.prefab.transform:Find("Top/timeIcon/timeText"):GetComponent("Text");  --时间
     self.time_Slider = self.prefab.transform:Find("Top/time_Slider"):GetComponent("Slider");
+    self.numberText = self.prefab.transform:Find("Top/numberText"):GetComponent("Text");
     self.XBtn = self.prefab.transform:Find("Top/XBtn");
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon"):GetComponent("Image");
 
@@ -50,6 +51,9 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.sNumberScrollbar.onValueChanged:AddListener(function()
         self:sNumberScrollbarInfo();
     end)
+    self.time_Slider.onValueChanged:AddListener(function()
+        self:time_SliderInfo();
+    end)
     self.inputNumber.onValueChanged:AddListener(function()
         self:inputInfo();
     end)
@@ -67,7 +71,9 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.pNumberScrollbar.maxValue = self.warehouseCapacity;
     self.timeText.text = "00:00:00"
     self.time_Slider.value = 0;
+    self.time_Slider.maxValue = 0;
     self.staffNumberText.text = "0";
+    self.numberText.text = "0/0";
     self.productionNumber.text = self:getWarehouseNum(self.itemId);
     self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums / 5;
     self.sNumberScrollbar.value = 0
@@ -115,11 +121,12 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.lineId = infoTab.id
     self.itemId = infoTab.itemId
     self.buildingId = infoTab.buildingId
-    self.time_Slider.maxValue = 100;
-    self.time_Slider.value = 0;
+    --self.time_Slider.maxValue = 100;
+    --self.time_Slider.value = 0;
     self.time_Slider.maxValue = infoTab.targetCount;
     self.time_Slider.value = infoTab.nowCount
     self.inputNumber.text = infoTab.targetCount
+    self.numberText.text = infoTab.nowCount.."/"..infoTab.targetCount
     self.pNumberScrollbar.maxValue = self.warehouseCapacity
     self.pNumberScrollbar.value = infoTab.targetCount
     self.productionNumber.text = self:getWarehouseNum(self.itemId);     --右上角小房子
@@ -200,6 +207,11 @@ function SmallProductionLineItem:pNumberScrollbarInfo()
         self:initButtonAmendState()
     end
     self.inputNumber.text = self.pNumberScrollbar.value;
+end
+function SmallProductionLineItem:time_SliderInfo()
+    local targetCount = self.time_Slider.maxValue
+    local nowCount = self.time_Slider.value
+    self.numberText.text = getColorString(nowCount,targetCount,"green","black")
 end
 function SmallProductionLineItem:sNumberScrollbarInfo()
     self.adjustmentTop.localScale = Vector3.one

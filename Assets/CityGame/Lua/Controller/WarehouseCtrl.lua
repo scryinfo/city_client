@@ -237,9 +237,25 @@ function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
     end
-    for i in pairs(WarehouseCtrl.temporaryItems) do
-        Event.Brocast("c_temporaryifNotGoods", i)
+    local Data = self.GoodsUnifyMgr.warehouseLuaTab
+    for i,v in pairs(Data) do
+        if v.itemId == msg.item.key.id then
+            if v.n == msg.item.n then
+                self.GoodsUnifyMgr:_WarehousedeleteGoods(i)
+                for i,v in pairs(WarehouseCtrl.temporaryItems) do
+                    self.GoodsUnifyMgr:_deleteShelfItem(v)
+                    self:isShowDetermineBtn()
+                end
+            else
+                v.numberText.text = v.goodsDataInfo.n - msg.item.n;
+                v.goodsDataInfo.n = tonumber(v.numberText.text)
+                for i in pairs(WarehouseCtrl.temporaryItems) do
+                    Event.Brocast("c_temporaryifNotGoods", i)
+                end
+            end
+        end
     end
+
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)

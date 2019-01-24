@@ -468,6 +468,8 @@ function ScreenPosTurnActualPos(targetScreenPos)
 	local ActualPos = Vector2.New(  targetScreenPos.x * Game.ScreenRatio ,targetScreenPos.y * Game.ScreenRatio)
 	return ActualPos
 end
-
-
+--将服务器的数据转化成客户端数据格式
+function GetPriceString(serverPrice)
+	return string.format("%0.4f", serverPrice / 10000)
+end
 

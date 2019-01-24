@@ -16,6 +16,7 @@ function WarehousePanel.InitPanel()
     this.returnBtn = transform:Find("Button/ReturnBtn");
     --this.openBtn = transform:Find("Button/SortingBtn/OpenBtn").gameObject;
     this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.warehouseImg = transform:Find("bg/warehouse");
 
     this.nowText = transform:Find("Button/Sorting/nowText"):GetComponent("Text");
     this.list = transform:Find("ListTable/List"):GetComponent("RectTransform");

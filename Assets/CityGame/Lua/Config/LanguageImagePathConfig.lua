@@ -3,18 +3,33 @@
 --- Created by xuyafang.
 --- DateTime: 2019/1/24 17:04
 ---
-LanguageImagePathConfig =
+Sprite_Chinese =
 {
     --建议命名：英文以LE_开头，中文以LC_开头，其他不变，这样就可以直接复制粘贴统一修改了
-    ["EN"] =
-    {
-        ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
-        ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
-    },
+    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
+    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
+    --中心建筑
+    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/city info-C.png",
+    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse-C.png",
+    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon-C.png",
+    --中心仓库
+    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-centerwarehouse-C.png",
+    --建筑自带仓库、货架
+    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse-C.png",
+    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf-C.png",
+}
 
-    ["CN"] =
-    {
-        ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-sell.png",
-        ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-rent.png",
-    }
+Sprite_English={
+
+   ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-sell.png",
+   ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-rent.png",
+   --中心建筑
+   ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/city info.png",
+   ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse.png",
+   ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon.png",
+   --中心仓库
+   ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-centerwarehouse.png",
+    --建筑自带仓库、货架
+   ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
+   ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
 }

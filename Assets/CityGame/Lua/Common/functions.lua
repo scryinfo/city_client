@@ -350,8 +350,11 @@ function getPriceString(str, intSize, floatSize)
 end
 
 currentLanguage={}
+currentSprite={}
 chinese={}
 english={}
+sprite_chi={}
+sprite_eng={}
 function ReadConfigLanguage()
 	for ID, ch in pairs(Language_Chinese) do
 		chinese[ID]=ch
@@ -360,11 +363,21 @@ function ReadConfigLanguage()
 		english[ID]=en
 	end
 
+	for key, content in pairs(Sprite_Chinese) do
+		sprite_chi[key]=content
+	end
+	for key, content in pairs(Sprite_Chinese) do
+		sprite_eng[key]=content
+	end
+
+
    local num=UnityEngine.PlayerPrefs.GetInt("Language")
 	if num==0 then
 		currentLanguage=english
+		currentSprite=sprite_eng
 	elseif num==1 then
 		currentLanguage=chinese
+		currentSprite=sprite_chi
 	end
 end
 
@@ -372,9 +385,11 @@ function SaveLanguageSettings(languageType)
 	if languageType==LanguageType.Chinese then
 		UnityEngine.PlayerPrefs.SetInt("Language",1)
 		currentLanguage=chinese
+		currentSprite=sprite_chi
 	elseif languageType==LanguageType.English then
 		UnityEngine.PlayerPrefs.SetInt("Language",0)
 		currentLanguage=english
+		currentSprite=sprite_eng
 	end
 end
 
@@ -392,6 +407,15 @@ function GetLanguage(key,...)
 	return key.."没有设置"
 end
 
+function GetSprite(key)
+
+    local path=currentSprite[key]
+	if path then
+		return path
+	else
+		return key.."没有设置"
+	end
+end
 ---生成预制
 function creatGoods(path,parent)
 	local prefab = UnityEngine.Resources.Load(path);
@@ -469,7 +493,7 @@ function ScreenPosTurnActualPos(targetScreenPos)
 	return ActualPos
 end
 --将服务器的数据转化成客户端数据格式
-function GetPriceString(serverPrice)
+function GetClientPriceString(serverPrice)
 	return string.format("%0.4f", serverPrice / 10000)
 end
 

@@ -42,6 +42,7 @@ end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
     ShelfPanel.tipText.text = GetLanguage(26040002)
+    LoadSprite(GetSprite("Shelf"), ShelfPanel.shelfImg:GetComponent("Image"), false)
     Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
     Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);

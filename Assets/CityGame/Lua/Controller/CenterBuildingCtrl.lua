@@ -35,12 +35,15 @@ function CenterBuildingCtrl:Active()
     UIPanel.Active(self)
 
     local cityinfoPath,centerWarehousePath,technologyPath
-    cityinfoPath = GetLanguage(19010001)
-    centerWarehousePath = GetLanguage(19010002)
-    technologyPath = GetLanguage(19010003)
-    LoadSprite(cityinfoPath,CenterBuildingPanel.cityInfo:GetComponent("Image"),false)
-    LoadSprite(centerWarehousePath,CenterBuildingPanel.centerWarehouse:GetComponent("Image"),false)
-    LoadSprite(technologyPath,CenterBuildingPanel.technology:GetComponent("Image"),false)
+    LoadSprite(GetSprite("CBCityInfo"), CenterBuildingPanel.cityInfo:GetComponent("Image"), false)
+    LoadSprite(GetSprite("CBWareHouse"), CenterBuildingPanel.centerWarehouse:GetComponent("Image"), false)
+    LoadSprite(GetSprite("CBSoon"), CenterBuildingPanel.technology:GetComponent("Image"), false)
+    --cityinfoPath = GetSprite(CBCityInfo)
+    --centerWarehousePath = GetLanguage(19010002)
+    --technologyPath = GetLanguage(19010003)
+    --LoadSprite(cityinfoPath,CenterBuildingPanel.cityInfo:GetComponent("Image"),false)
+    --LoadSprite(centerWarehousePath,CenterBuildingPanel.centerWarehouse:GetComponent("Image"),false)
+    --LoadSprite(technologyPath,CenterBuildingPanel.technology:GetComponent("Image"),false)
     CenterBuildingPanel.cityInfo:GetComponent("Image")
 end
 

@@ -77,7 +77,7 @@ function ServerListModel.n_GsLoginSuccessfully(stream )
         return
     end
 
-    CityEngineLua.login_tradeapp(true)
+    --CityEngineLua.login_tradeapp(true)
 
     --decode
     local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")

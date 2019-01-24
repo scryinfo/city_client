@@ -58,6 +58,7 @@ function WarehouseCtrl:Awake(go)
 end
 function WarehouseCtrl:Active()
     UIPanel.Active(self)
+    LoadSprite(GetSprite("Warehouse"), WarehousePanel.warehouseImg:GetComponent("Image"), false)
     WarehousePanel.tipText.text = GetLanguage(26040002)
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)

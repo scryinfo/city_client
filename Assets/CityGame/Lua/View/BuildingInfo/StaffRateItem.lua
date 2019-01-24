@@ -54,9 +54,8 @@ end
 --初始化界面
 function StaffRateItem:_initData()
     self:_lanuage()
-    self.perCapitaWageText.text = self.staffData.dayWage
-    --self.perCapitaWageText.text = os.date("%Y%m%d%H%M%S", os.time())
-    self.totalWageText.text = self.staffData.dayWage * self.staffData.totalStaffCount
+    self.perCapitaWageText.text = string.format("%s/D", getPriceString(GetClientPriceString(self.staffData.dayWage), 30, 24))
+    self.totalWageText.text = string.format("%s/D", getPriceString(GetClientPriceString(self.staffData.dayWage * self.staffData.totalStaffCount), 30, 24))
     self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
 
     self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H

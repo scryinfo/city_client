@@ -17,6 +17,7 @@ function ShelfPanel.InitPanel()
     this.refresh_Btn = transform:Find("refresh_Btn").gameObject;--刷新按钮
     this.buy_Btn = transform:Find("buy_Btn").gameObject;        --购买按钮
     this.arrowBtn = transform:Find("Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.shelfImg = transform:Find("shelf");
     this.nameBtn = transform:Find("ListTable/List/nameBtn");  --名字排序
     this.quantityBtn = transform:Find("ListTable/List/quantityBtn");  --数量排序
     this.priceBtn = transform:Find("ListTable/List/priceBtn");  --价格排序

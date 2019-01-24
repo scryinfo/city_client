@@ -59,7 +59,7 @@ function getPriceString(str, intSize, floatSize)
 	return finalStr
 end
 
---获取容量显示文本，总容量和已用容量颜色不同
+--获取数值显示文本，颜色不同
 function getColorString(num1,num2,col1,col2)
     if num1 == nil and num2 == nil then
         return

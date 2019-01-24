@@ -72,8 +72,12 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
         return
     end
 
+    local valuableNum = tonumber(inputValue) * 10000
+    if valuableNum < 1 then
+        valuableNum = 0
+    end
     --向服务器发送请求，改变租金
-    Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, inputValue)
+    Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, valuableNum)
     ins:_onClickCloseBtn(ins)
 end
 

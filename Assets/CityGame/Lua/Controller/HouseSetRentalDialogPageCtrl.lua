@@ -51,7 +51,7 @@ function HouseSetRentalDialogPageCtrl:_initData()
     if self.m_data == nil then
         return
     end
-    self.m_data.rent = self.m_data.rent or 0
+    self.m_data.rent = GetClientPriceString(self.m_data.rent) or 0
     self.input.text = tostring(self.m_data.rent)
     self.scoreText.text = self:_getValuableScore(self.m_data.rent, self.m_data.buildingTypeId)
 

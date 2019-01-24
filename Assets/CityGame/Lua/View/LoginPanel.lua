@@ -15,6 +15,7 @@ end
 --初始化面板--
 function LoginPanel.InitPanel()
 	this.btnLogin = transform:Find("Button_login").gameObject;
+	this.btnLoginText = transform:Find("Button_login/Text").gameObject:GetComponent('Text');
 	this.btnRegister = transform:Find("Button_register").gameObject;
 	this.inputUsername = transform:Find("InputField_username").gameObject;
 	this.inputUsernameTest = transform:Find("InputField_username/Placeholder").gameObject:GetComponent('Text');

@@ -54,6 +54,7 @@ public class CityBuild : Editor
         //PlayerSettings.Android.keyaliasName = "bieming1";
         // 别名密码
         //PlayerSettings.Android.keyaliasPass = "123456";
+        System.Threading.Thread.Sleep(5);
 
         List<string> levels = new List<string>();
         foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)

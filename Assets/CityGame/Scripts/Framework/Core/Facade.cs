@@ -36,6 +36,11 @@ public class Facade {
         m_controller = Controller.Instance;
     }
 
+    public static void createGameManager()
+    {
+        m_GameManager = new GameObject();
+    }
+
     public virtual void RegisterCommand(string commandName, Type commandType) {
         m_controller.RegisterCommand(commandName, commandType);
     }

@@ -15,7 +15,7 @@
 	*/
     public class MemoryStream
     {
-        public const int BUFFER_MAX = 1460 * 4;
+        public const int BUFFER_MAX = 1024 * 1024 * 2; 
 
         public int rpos = 0;
         public int wpos = 0;

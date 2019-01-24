@@ -381,7 +381,7 @@ end
 --移动到中心建筑位置
 function TerrainManager.MoveToCentralBuidingPosition()
     if TerrainConfig ~= nil and TerrainConfig.CentralBuilding ~= nil and TerrainConfig.CentralBuilding.CenterNodePos ~= nil then
-        local centerPos = TerrainConfig.CentralBuilding.CenterNodePos
+        local centerPos = Vector3.New(TerrainConfig.CentralBuilding.CenterNodePos.x , TerrainConfig.CentralBuilding.CenterNodePos.y ,TerrainConfig.CentralBuilding.CenterNodePos.z)
         centerPos.x = centerPos.x + PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x / 2
         centerPos.z = centerPos.z + PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].y / 2
         CameraMove.MoveCameraToPos(centerPos)

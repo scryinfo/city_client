@@ -51,7 +51,7 @@ function HouseSetRentalDialogPageCtrl:_initData()
     if self.m_data == nil then
         return
     end
-    self.m_data.rent = self.m_data.rent or 0
+    self.m_data.rent = GetClientPriceString(self.m_data.rent) or 0
     self.input.text = tostring(self.m_data.rent)
     self.scoreText.text = self:_getValuableScore(self.m_data.rent, self.m_data.buildingTypeId)
 
@@ -72,8 +72,9 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
         return
     end
 
+    local valuableNum = GetServerPriceNumber(inputValue)
     --向服务器发送请求，改变租金
-    Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, inputValue)
+    Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, valuableNum)
     ins:_onClickCloseBtn(ins)
 end
 

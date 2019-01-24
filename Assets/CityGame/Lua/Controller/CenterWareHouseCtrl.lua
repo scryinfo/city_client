@@ -75,7 +75,7 @@ function CenterWareHouseCtrl:Active()
     CenterWareHousePanel.tip.text = GetLanguage(21020001)
     CenterWareHousePanel.warehouseNameText.text = GetLanguage(21020002)
 
-    LoadSprite(GetSprite("CenterWareHouse"), CenterWareHousePanel.centre, false)
+    LoadSprite(GetSprite("CenterWareHouse"), CenterWareHousePanel.centrel, false)
 end
 
 function CenterWareHouseCtrl:Hide()
@@ -240,7 +240,7 @@ end
 --开始运输按钮
 function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     local data = {}
-    data.currentLocationName = "中心仓库"--起始地址
+    data.currentLocationName = GetLanguage(21010001)--起始地址
     data.targetLocationName =ChooseWarehouseCtrl:GetName()--目标地址
     local pos ={}
     pos.x = BagPosInfo[1].bagX

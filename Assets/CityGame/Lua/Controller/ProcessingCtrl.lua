@@ -121,6 +121,7 @@ end
 function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
     self:deleteProductionObj()
+    self:deleteShelfObj()
 end
 --退出时删除
 function ProcessingCtrl:deleteProductionObj()
@@ -134,7 +135,17 @@ function ProcessingCtrl:deleteProductionObj()
         HomeProductionLineItem.productionTab = {}
     end
 end
-
+--退出时删除主页货架
+function ProcessingCtrl:deleteShelfObj()
+    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
+        return
+    else
+        for i,v in pairs(ShelfRateItem.shelfTab) do
+            destroy(v.prefab.gameObject)
+        end
+        ShelfRateItem.shelfTab = {}
+    end
+end
 --打开信息界面
 function ProcessingCtrl:OnClick_infoBtn()
 

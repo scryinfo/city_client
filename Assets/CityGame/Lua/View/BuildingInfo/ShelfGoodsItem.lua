@@ -11,7 +11,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     self._luabehaviour = inluabehaviour
     self.itemId = goodsDataInfo.k.id
     self.num = goodsDataInfo.n
-    self.name = Material[self.itemId].name
+    --self.name = Material[self.itemId].name
     self.price = goodsDataInfo.price
     self.bgBtn = self.prefab.transform:Find("bgBtn");  --物品btn，点击勾选物品，默认为false
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;  --架子
@@ -119,12 +119,12 @@ function ShelfGoodsItem:RefreshID(id)
         self.shelfImg:SetActive(false);
     end
 end
-function ShelfGoodsItem:RefreshData(data,id)
-    self.id = id
-    self.num = data.num
-    self.name = data.name
-    self.price = data.price
-    self.itemId = data.itemId
-    --self.producerId = data.producerId
-    --self.qty = data.qty
-end
+--function ShelfGoodsItem:RefreshData(data,id)
+--    self.id = id
+--    self.num = data.num
+--    self.name = data.name
+--    self.price = data.price
+--    self.itemId = data.itemId
+--    --self.producerId = data.producerId
+--    --self.qty = data.qty
+--end

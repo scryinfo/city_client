@@ -75,7 +75,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
     Event.AddListener("c_successBuilding",function ()
-        func()
+            func()
         Event.Brocast("SmallPop","Success",300)
     end ,self)
 
@@ -350,8 +350,8 @@ end
 function GameMainInterfaceCtrl:OnCenterBuilding()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    TerrainManager.MoveToCentralBuidingPosition()
-    --ct.OpenCtrl("CenterBuildingCtrl")
+    --TerrainManager.MoveToCentralBuidingPosition()
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --关闭updata

@@ -75,7 +75,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
     Event.AddListener("c_successBuilding",function ()
-        func()
+            func()
         Event.Brocast("SmallPop","Success",300)
     end ,self)
 

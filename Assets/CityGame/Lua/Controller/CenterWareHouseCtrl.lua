@@ -75,7 +75,7 @@ function CenterWareHouseCtrl:Active()
     CenterWareHousePanel.tip.text = GetLanguage(21020001)
     CenterWareHousePanel.warehouseNameText.text = GetLanguage(21020002)
 
-    LoadSprite(GetSprite("CenterWareHouse"), CenterWareHousePanel.centre, false)
+    LoadSprite(GetSprite("CenterWareHouse"), CenterWareHousePanel.centrel, false)
 end
 
 function CenterWareHouseCtrl:Hide()

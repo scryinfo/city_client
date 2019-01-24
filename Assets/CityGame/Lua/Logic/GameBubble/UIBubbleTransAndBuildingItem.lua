@@ -62,13 +62,11 @@ end
 function UIBubbleTransAndBuildingItem:_setBubbleState(state)
     if state == GroundTransState.Sell then
         self.groundSell.localScale = Vector3.one
-        LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
         self.groundRent.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
         LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
     elseif state == GroundTransState.Rent then
         self.groundRent.localScale = Vector3.one
-        LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)
         self.groundSell.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
         LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)

@@ -30,7 +30,11 @@ function AdjustProductionLineCtrl:Awake(go)
 end
 function AdjustProductionLineCtrl:Active()
     UIPanel.Active(self)
+
+    AdjustProductionLinePanel.nameText.text = GetLanguage(32010001)
     AdjustProductionLinePanel.Capacity.text = GetLanguage(28010002)
+    AdjustProductionLinePanel.idleText.text = GetLanguage(32010003)
+
     Event.AddListener("calculateTime",self.calculateTime,self)
     Event.AddListener("refreshSubtractWorkerNum",self.refreshSubtractWorkerNum,self)
     --Event.AddListener("refreshTime",self.refreshTime,self)

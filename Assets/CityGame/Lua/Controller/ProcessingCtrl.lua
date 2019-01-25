@@ -122,6 +122,7 @@ function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
     self:deleteProductionObj()
     self:deleteShelfObj()
+    self:deleteOtherShelf()
 end
 --退出时删除
 function ProcessingCtrl:deleteProductionObj()
@@ -144,6 +145,20 @@ function ProcessingCtrl:deleteShelfObj()
             destroy(v.prefab.gameObject)
         end
         ShelfRateItem.shelfTab = {}
+    end
+end
+--退出时删除购买货架
+function ProcessingCtrl:deleteOtherShelf()
+    if self.m_data.isOther == true then
+        if not HomeOtherPlayerShelfItem.shelfTab or HomeOtherPlayerShelfItem.shelfTab == {} then
+            return
+        end
+        for i,v in pairs(HomeOtherPlayerShelfItem.shelfTab) do
+            destroy(v.prefab.gameObject)
+        end
+        HomeOtherPlayerShelfItem.shelfTab = {}
+    else
+        return
     end
 end
 --打开信息界面

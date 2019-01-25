@@ -28,4 +28,6 @@ md D:\hotUp\CityHotUp
 
 XCOPY ..\client\Assets\StreamingAssets  D:\hotUp\CityHotUp /s /e /k /h /g /c /r/y
 
+XCOPY ..\client\Apk  D:\city_project\apk /s /e /k /h /g /c /r/y
+
 echo hot update resources updating finished at  %time%.............  

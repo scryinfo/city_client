@@ -558,7 +558,7 @@ PlayerBuildingBaseData=
     [2000000] = {
         ["typeName"] ="中心建筑",
         ["des"] ="中心建筑的说明",
-        ["prefabRoute"] = "View/Building/Centralbuilding",
+        ["prefabRoute"] = "Building/Centralbuilding",
         ["x"] = 7 ,
         ["y"] = 7 ,
     },

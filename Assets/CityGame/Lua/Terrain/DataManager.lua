@@ -532,14 +532,14 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                         return
                     end
                 end
-            else--服务器返回的数据没有唯一ID
-                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
-                        if funcTable.self ~= nil then
-                            funcTable.func(funcTable.self,protoData)
-                        else
-                            funcTable.func(protoData)
-                        end
+            end
+            --该消息监听的无参回调如果有
+            if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                    if funcTable.self ~= nil then
+                        funcTable.func(funcTable.self,protoData)
+                    else
+                        funcTable.func(protoData)
                     end
                 end
             end

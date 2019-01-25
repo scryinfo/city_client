@@ -8,7 +8,9 @@ require('Framework/UI/UIPage')
 NoticeItem = class('NoticeItem')
 local pos ={}
 local type
-
+local nameSize
+local goodsName
+local num
 --初始化方法   数据（读配置表）
 function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,typeId)
     self.prefab = prefab;
@@ -92,8 +94,16 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 11 then
         go.content = GetLanguage(13010047,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
-    end
+    elseif go.typeId == 3 then
+        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        goodsName = GetLanguage(go.goodsDataInfo.intParasArr[1])
+        num = go.goodsDataInfo.intParasArr[2]
+        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
+            go:GetMateralDetailInfo(go.uuidParas[1])
+        else
 
+        end
+    end
     Event.Brocast("c_onBg",go)
 end
 
@@ -106,14 +116,28 @@ function NoticeItem:GetPlayerId(playerid)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
 end
 
+--获取原料厂建筑详情
+function NoticeItem:GetMateralDetailInfo(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMateralDetailInfo',buildingId)--获取好友信息
+end
+
+--获取加工厂建筑详情
+function NoticeItem:GetProduceDepartment(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetProduceDepartment',buildingId)--获取好友信息
+end
+
 -- 监听Model层网络回调
 function NoticeItem:_addListener()
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+    Event.AddListener("c_MaterialInfo", self.c_MaterialInfo, self) --原料厂建筑详情回调
+    Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
 end
 
 --注销model层网络回调
 function NoticeItem:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
+    Event.RemoveListener("c_MaterialInfo", self.c_MaterialInfo, self)--原料厂建筑详情回调
+    Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
@@ -132,3 +156,14 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
         --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
     end
 end
+
+function NoticeItem:c_MaterialInfo(name)
+    self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+    GameNoticePanel.rightContent.text = self.content
+end
+
+function NoticeItem:c_ProduceInfo(name)
+    self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+    GameNoticePanel.rightContent.text = self.content
+end
+

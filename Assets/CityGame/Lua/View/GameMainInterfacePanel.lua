@@ -37,6 +37,8 @@ function GameMainInterfacePanel.InitPanel()
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
     this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--
+    this.isAuction =  transform:Find("AuctionButton/auction/isAuction");--正在拍卖--
+    this.auctionTime =  transform:Find("AuctionButton/time").gameObject:GetComponent("Text");--拍卖时间--
 
 
     this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--

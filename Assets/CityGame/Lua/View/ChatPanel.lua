@@ -82,6 +82,7 @@ function ChatPanel.InitPanel()
     this.shieldBtn = transform:Find("PlayerInfoRoot/ShieldBtn").gameObject
     this.addFriendsBtn = transform:Find("PlayerInfoRoot/AddFriendsBtn").gameObject
     this.chatBtn = transform:Find("PlayerInfoRoot/ChatBtn").gameObject
+    this.headImage = transform:Find("PlayerInfoRoot/HeadImage"):GetComponent("Image")
 
     -- 陌生人列表节点、个数
     this.strangersPlayerContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/LeftRoot/Scroll View/Viewport/Content")

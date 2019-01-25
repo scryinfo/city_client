@@ -4,6 +4,7 @@ UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 local gameMainInterfaceBehaviour;
 local Mails
 local countDown = 0
+local groundState
 
 
 function  GameMainInterfaceCtrl:bundleName()
@@ -71,10 +72,12 @@ function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
         GameMainInterfacePanel.isAuction.localScale = Vector3.zero
         local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
         countDown = state.beginTime - currentTime   --倒计时间
+        groundState = GetLanguage(11020002)
     elseif state.groundState == 1 then
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
         GameMainInterfacePanel.isAuction.localScale = Vector3.one
         countDown = state.durationSec
+        groundState = GetLanguage(11020001)
     else
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
     end
@@ -208,7 +211,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
     countDown = countDown - 1
     local ts = getFormatUnixTime(countDown)
     local time = ts.minute..":"..ts.second
-    GameMainInterfacePanel.auctionTime.text = time
+    GameMainInterfacePanel.auctionTime.text = groundState.."..."..time
     if countDown <= 0 then
         GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
     end

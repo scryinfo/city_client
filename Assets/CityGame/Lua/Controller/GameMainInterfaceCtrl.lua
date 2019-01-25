@@ -3,6 +3,7 @@ UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
 local Mails
+local countDown = 0
 
 
 function  GameMainInterfaceCtrl:bundleName()
@@ -29,6 +30,7 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
+    Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -36,6 +38,7 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
+    Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -45,6 +48,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
+    Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
 end
 
 --金币改变
@@ -56,6 +60,23 @@ end
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData)
+    end
+end
+
+--获取拍卖状态
+function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
+   local state =  UIBubbleManager._getNowAndSoonState() --获取状态
+    if state.groundState == 0 then
+        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
+        GameMainInterfacePanel.isAuction.localScale = Vector3.zero
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        countDown = state.beginTime - currentTime   --倒计时间
+    elseif state.groundState == 1 then
+        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
+        GameMainInterfacePanel.isAuction.localScale = Vector3.one
+        countDown = state.durationSec
+    else
+        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
     end
 end
 
@@ -152,7 +173,7 @@ function GameMainInterfaceCtrl:initInsData()
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     --初始化姓名,性别
     GameMainInterfacePanel.name.text = self.name
-
+    self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
     self.m_Timer:Start()
     if self.gender then
@@ -184,9 +205,13 @@ function GameMainInterfaceCtrl:RefreshWeather()
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
         end
     end
-    --获取拍卖状态
-    local a = UIBubbleManager._getNowAndSoonState()
-     local n
+    countDown = countDown - 1
+    local ts = getFormatUnixTime(countDown)
+    local time = ts.minute..":"..ts.second
+    GameMainInterfacePanel.auctionTime.text = time
+    if countDown <= 0 then
+        GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
+    end
 end
 
 --获取所有邮件

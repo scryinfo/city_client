@@ -1,4 +1,4 @@
-﻿PlayerBuildingBaseData=
+PlayerBuildingBaseData=
 {
     [1100001] ={
         ["sizeName"] =41010001,
@@ -558,12 +558,12 @@
     [2000000] = {
         ["typeName"] ="中心建筑",
         ["des"] ="中心建筑的说明",
-        ["prefabRoute"] = "View/Building/Centralbuilding",
-        ["x"] = 5 ,
-        ["y"] = 5 ,
+        ["prefabRoute"] = "Building/Centralbuilding",
+        ["x"] = 7 ,
+        ["y"] = 7 ,
     },
     [4000001] ={
-        ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块
+        ["prefabRoute"] = "Building/my_Ground",  --临时我的地块
     },
     [13] ={
         ["typeName"] ="Supermarket",

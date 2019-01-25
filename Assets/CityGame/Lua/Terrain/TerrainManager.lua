@@ -335,23 +335,34 @@ local CentralBuildingBlockList = nil
 local CentralBuildingObj = nil
 local CentralBuildingBlockID = nil
 local CentralBuildingCollectionID = nil
+
+--
+local function CreateCenterBuildSuccess(go,...)
+    CentralBuildingObj = go
+    local CentralBuildingMes = TerrainConfig.CentralBuilding
+    --临时提高一些
+    local TargetPos =CentralBuildingMes.CenterNodePos
+    TargetPos.y = TargetPos.y + 0.02
+    CentralBuildingObj.transform.position = TargetPos
+    CentralBuildingObj.transform.localScale = Vector3.one
+    CentralBuildingObj.name = "CentralBuilding"
+    --写入覆盖范围
+    CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
+    CentralBuildingCollectionID = TerrainManager.BlockIDTurnCollectionID(CentralBuildingBlockID)
+    CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID, PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
+    --刷新道路
+    for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
+        TerrainManager.IsIncludeCentralBuilding(value)
+        DataManager.RefreshWaysByCollectionID(value)
+    end
+end
+
 --创建中心建筑
 function TerrainManager.CreateCenterBuilding()
     if CentralBuildingObj == nil then
         local CentralBuildingMes = TerrainConfig.CentralBuilding
         if CentralBuildingMes.CenterNodePos ~= nil and CentralBuildingMes.BuildingType ~= nil and PlayerBuildingBaseData[CentralBuildingMes.BuildingType] ~= nil then
-            local myCenterGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute)
-            CentralBuildingObj = UnityEngine.GameObject.Instantiate(myCenterGroundObj)
-            --临时提高一些
-            local TargetPos =CentralBuildingMes.CenterNodePos
-            TargetPos.y = TargetPos.y + 0.02
-            CentralBuildingObj.transform.position = TargetPos
-            CentralBuildingObj.transform.localScale = Vector3.one
-            CentralBuildingObj.name = "CentralBuilding"
-            --写入覆盖范围
-            CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
-            CentralBuildingCollectionID = TerrainManager.BlockIDTurnCollectionID(CentralBuildingBlockID)
-            CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID, PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
+            buildMgr:CreateBuild(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute,CreateCenterBuildSuccess,nil)
         end
     end
 end

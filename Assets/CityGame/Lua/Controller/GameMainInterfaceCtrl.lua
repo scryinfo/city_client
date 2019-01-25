@@ -350,8 +350,8 @@ end
 function GameMainInterfaceCtrl:OnCenterBuilding()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    TerrainManager.MoveToCentralBuidingPosition()
-    --ct.OpenCtrl("CenterBuildingCtrl")
+    --TerrainManager.MoveToCentralBuidingPosition()
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --关闭updata

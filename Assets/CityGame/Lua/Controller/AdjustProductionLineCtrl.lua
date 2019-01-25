@@ -61,6 +61,10 @@ function AdjustProductionLineCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
     --self:refreshTime(self.data.line)
+    local capacity = {}
+    capacity[self.idleWorkerNum] = "red"
+    capacity[self.buildingMaxWorkerNum] = "black"
+
     AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
 end
 
@@ -140,6 +144,9 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
             destroy(v.prefab.gameObject);
             table.remove(AdjustProductionLineCtrl.materialProductionLine,i)
         end
+    end
+    if AdjustProductionLineCtrl.materialProductionLine == nil or AdjustProductionLineCtrl.materialProductionLine == {} then
+        return
     end
     local i = 1
     for k,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do

@@ -1355,7 +1355,7 @@ function DataManager.n_OnReceiveErrorCode(stream)
             info.titleInfo = "FAIL"
             info.contentInfo = "Roll Fail"
             info.tipInfo = ""
-            ct.OpenCtrl("BtnDialogPageCtrl", info)
+            ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
         elseif data.opcode == 5015 then  --世界发言失败
             if data.reason == "highFrequency" then
                 Event.Brocast("SmallPop","Speeches are frequent. Please wait a moment.",80)

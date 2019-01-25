@@ -32,6 +32,7 @@ function AddProductionLineCtrl:Awake(go)
 end
 function AddProductionLineCtrl:Active()
     UIPanel.Active(self)
+    AddProductionLinePanel.nameText.text = GetLanguage(32020001)
     self:_addListener()
 end
 

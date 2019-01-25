@@ -563,7 +563,7 @@ PlayerBuildingBaseData=
         ["y"] = 7 ,
     },
     [4000001] ={
-        ["prefabRoute"] = "View/Building/my_Ground",  --临时我的地块
+        ["prefabRoute"] = "Building/my_Ground",  --临时我的地块
     },
     [13] ={
         ["typeName"] ="Supermarket",

@@ -31,11 +31,10 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
-    Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
+    --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
 end
 
 function GameMainInterfaceCtrl:Active()
-    UIPanel.Active(self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
@@ -161,6 +160,8 @@ function GameMainInterfaceCtrl:Awake()
     local gold = DataManager.GetMoney()
     self.money = getPriceString("E"..gold..".0000",24,20)
     GameMainInterfacePanel.money.text = self.money
+
+    GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -174,11 +175,12 @@ end
 function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
-    --初始化姓名,性别
-    GameMainInterfacePanel.name.text = self.name
+    UIPanel.Active(self)
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
     self.m_Timer:Start()
+    --初始化姓名,性别
+    GameMainInterfacePanel.name.text = self.name
     if self.gender then
         GameMainInterfacePanel.male.localScale = Vector3.one
         GameMainInterfacePanel.woman.localScale = Vector3.zero
@@ -208,12 +210,14 @@ function GameMainInterfaceCtrl:RefreshWeather()
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
         end
     end
-    countDown = countDown - 1
-    local ts = getFormatUnixTime(countDown)
-    local time = ts.minute..":"..ts.second
-    GameMainInterfacePanel.auctionTime.text = groundState.."..."..time
-    if countDown <= 0 then
-        GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
+    if groundState ~= nil then
+        countDown = countDown - 1
+        local ts = getFormatUnixTime(countDown)
+        local time = ts.minute..":"..ts.second
+        GameMainInterfacePanel.auctionTime.text = groundState.."..."..time
+        if countDown <= 0 then
+            GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
+        end
     end
 end
 

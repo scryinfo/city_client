@@ -16,12 +16,16 @@ echo start res building  at  %time%.............
  
 D:\Unity\Editor\Unity.exe -quit -batchmode -executeMethod CityBuild.BuildResourceBundle -logFile build.log
 
-if exist (
-	rd/s/q D:/hotUp/CityHotUp 
-)
+echo res building finished  at  %time%.............!  
 
+
+echo start update resources to hot update directory   at  %time%.............  
+
+if exist D:\hotUp\CityHotUp (
+	rd/s/q D:\hotUp\CityHotUp
+)
 md D:\hotUp\CityHotUp
 
 XCOPY ..\client\Assets\StreamingAssets\*.*  D:\hotUp\CityHotUp /s/e/y
 
-echo res building finished  at  %time%.............!  
+echo hot update resources updating finished at  %time%.............  

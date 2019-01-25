@@ -254,11 +254,10 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
 
         if self.otherShelfRateItem then
             self.otherShelfView.gameObject:SetActive(true)
-        else
-            --购买货架
-            local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-            self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
         end
+        --购买货架
+        local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+        self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
 
         --如果这几个信息在，就隐藏  生产线
         if self.productionRateItem then
@@ -339,6 +338,9 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         --local otherShelfLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, otherShelfViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
         --self.rightData[1] = otherShelfLuaItem
 
+        if self.otherShelfRateItem then
+            self.otherShelfView.gameObject:SetActive(true)
+        end
         --购买货架
         local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)

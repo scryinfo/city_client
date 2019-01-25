@@ -8,6 +8,7 @@ function AddProductionLinePanel.Awake(obj)
 end
 
 function AddProductionLinePanel.InitPanel()
+    this.nameText = transform:Find("bg/Topbg/nameText"):GetComponent("Text")
     this.returnBtn = transform:Find("Button/returnBtn")
     this.leftBtnParent = transform:Find("leftBtnParent"):GetComponent("RectTransform")
     this.leftBtn = transform:Find("leftBtnParent/leftBtn")

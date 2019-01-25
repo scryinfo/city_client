@@ -75,6 +75,7 @@ function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)
     local valuableNum = GetServerPriceNumber(inputValue)
     --向服务器发送请求，改变租金
     Event.Brocast("m_ReqHouseChangeRent", ins.m_data.buildingId, valuableNum)
+    Event.Brocast("SmallPop", GetLanguage(37050002), 300)
     ins:_onClickCloseBtn(ins)
 end
 

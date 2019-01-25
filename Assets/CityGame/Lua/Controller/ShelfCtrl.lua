@@ -137,7 +137,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
             --end
             local buildingId = ChooseWarehouseCtrl:GetBuildingId()
             for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.goodsDataInfo.price,buildingId);
+                Event.Brocast("m_ReqBuyShelfGoods",ins.m_data.info.id,v.itemId,v.numberScrollbar.value,v.goodsDataInfo.price,buildingId,v.goodsDataInfo.k.producerId,v.goodsDataInfo.k.qty);
             end
             --DataManager.SetSubtractMyMoney(math.floor(buyListing.total))
         end

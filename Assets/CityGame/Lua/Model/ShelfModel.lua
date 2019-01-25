@@ -39,11 +39,18 @@ function ShelfModel.m_ReqShelfDel(buildingId,itemId,num)
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
 --购买物品
-function ShelfModel.m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId)
-    local msgId = pbl.enum("gscode.OpCode","buyInShelf")
-    local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = tonumber(number)},price = tonumber(price),wareHouseId = wareHouseId}
-    local pMsg = assert(pbl.encode("gs.BuyInShelf", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+function ShelfModel.m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
+    if producerId == nil and qty == nil then
+        local msgId = pbl.enum("gscode.OpCode","buyInShelf")
+        local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = tonumber(number)},price = tonumber(price),wareHouseId = wareHouseId}
+        local pMsg = assert(pbl.encode("gs.BuyInShelf", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    else
+        local msgId = pbl.enum("gscode.OpCode","buyInShelf")
+        local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(number)},price = tonumber(price),wareHouseId = wareHouseId}
+        local pMsg = assert(pbl.encode("gs.BuyInShelf", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    end
 end
 --网络回调--
 --下架物品

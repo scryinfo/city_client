@@ -157,7 +157,7 @@ function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
         Event.Brocast("SmallPop", GetLanguage(24070001), 300)
         return
     end
-    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, dayRentalPrice)
+    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, GetServerPriceNumber(dayRentalPrice))
 
     Event.Brocast("SmallPop", GetLanguage(24020006), 300)
     GroundTransSetPriceCtrl._closeBackToMain()

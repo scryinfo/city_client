@@ -26,6 +26,6 @@ if exist D:\hotUp\CityHotUp (
 )
 md D:\hotUp\CityHotUp
 
-XCOPY ..\client\Assets\StreamingAssets\*.*  D:\hotUp\CityHotUp /s/e/y
+echo d|XCOPY ..\client\Assets\StreamingAssets  D:\hotUp\CityHotUp /s /e /k /h /g /c /r/y
 
 echo hot update resources updating finished at  %time%.............  

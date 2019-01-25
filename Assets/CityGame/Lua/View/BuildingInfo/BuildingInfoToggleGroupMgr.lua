@@ -100,6 +100,7 @@ function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
     elseif buildingData.buildingType == BuildingType.RetailShop then
         self:_creatRetailShop()
     end
+    self:_sortItems(1, 1)
 end
 
 --清除lua实例
@@ -251,10 +252,56 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         --local prodictionLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, prodictionLineViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
         --self.rightData[1] = prodictionLuaItem
 
-        --购买货架
-        local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
+        if self.otherShelfRateItem then
+            self.otherShelfView.gameObject:SetActive(true)
+        else
+            --购买货架
+            local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
+            self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
+        end
+
+        --如果这几个信息在，就隐藏  生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(false)
+        end
+        --员工
+        if self.staffViewRect then
+            self.staffViewRect.gameObject:SetActive(false)
+        end
+        --仓库
+        if self.warehouseRateItem then
+            self.warehouseView.gameObject:SetActive(false)
+        end
+        --货架
+        if self.shelfRateItem then
+            self.shelfView.gameObject:SetActive(false)
+        end
+        --生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(false)
+        end
     else
+        --如果这几个信息在，就显示  生产线
+        if self.otherShelfRateItem then
+            self.otherShelfView.gameObject:SetActive(false)
+        else
+        end
+        --员工
+        if self.staffViewRect then
+            self.staffViewRect.gameObject:SetActive(true)
+        end
+        --仓库
+        if self.warehouseRateItem then
+            self.warehouseView.gameObject:SetActive(true)
+        end
+        --货架
+        if self.shelfRateItem then
+            self.shelfView.gameObject:SetActive(true)
+        end
+        --生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(true)
+        end
         --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)
@@ -270,6 +317,8 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
         --生产线 --右1
         local productionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         self.rightData[1] = self:creatRefreshProductionLine(productionToggleData)
+
+
     end
 end
 --创建加工厂主页左右信息
@@ -293,7 +342,50 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         --购买货架
         local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
         self.rightData[1] = self:creatOtherPlayerShelf(otherShelfToggleData)
+        --如果这几个信息在，就隐藏  生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(false)
+        end
+        --员工
+        if self.staffViewRect then
+            self.staffViewRect.gameObject:SetActive(false)
+        end
+        --仓库
+        if self.warehouseRateItem then
+            self.warehouseView.gameObject:SetActive(false)
+        end
+        --货架
+        if self.shelfRateItem then
+            self.shelfView.gameObject:SetActive(false)
+        end
+        --生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(false)
+        end
+
     else
+        --如果这几个信息在，就显示  生产线
+        if self.otherShelfRateItem then
+            self.otherShelfView.gameObject:SetActive(false)
+        else
+        end
+        --员工
+        if self.staffViewRect then
+            self.staffViewRect.gameObject:SetActive(true)
+        end
+        --仓库
+        if self.warehouseRateItem then
+            self.warehouseView.gameObject:SetActive(true)
+        end
+        --货架
+        if self.shelfRateItem then
+            self.shelfView.gameObject:SetActive(true)
+        end
+        --生产线
+        if self.productionRateItem then
+            self.productionView.gameObject:SetActive(true)
+        end
+
         --员工  左2
         local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
         self.leftData[2] = self:_createStaff(staffToggleData)

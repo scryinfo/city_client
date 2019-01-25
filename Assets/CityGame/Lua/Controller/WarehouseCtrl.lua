@@ -265,7 +265,7 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         return;
     end
     local btransportListing = {}
-    btransportListing.currentLocationName = MaterialPanel.nameText.text.."仓库"
+    btransportListing.currentLocationName = go.m_data.info.name.."仓库"
     btransportListing.targetLocationName = ChooseWarehouseCtrl:GetName().."仓库"
     local pos = {}
     pos.x = go.m_data.info.pos.x

@@ -32,6 +32,12 @@ function AddProductionLineCtrl:Awake(go)
 end
 function AddProductionLineCtrl:Active()
     UIPanel.Active(self)
+    local table = {}
+    table["aaa"] = 111
+    table["bbb"] = "dasdas"
+    table["ccc"] = "大萨达所"
+    table["ddd"] = 444
+    local asd = #table
     AddProductionLinePanel.nameText.text = GetLanguage(32020001)
     self:_addListener()
 end

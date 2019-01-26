@@ -60,7 +60,7 @@ end
 
 --金币改变
 function GameMainInterfaceCtrl:c_ChangeMoney(money)
-    self.money = getPriceString("E"..money..".0000",24,20)
+    self.money = getPriceString("E"..GetClientPriceString(money),24,20)
     GameMainInterfacePanel.money.text = self.money
 end
 

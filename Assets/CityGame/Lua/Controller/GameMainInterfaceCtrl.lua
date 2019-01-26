@@ -53,7 +53,9 @@ function GameMainInterfaceCtrl:Hide()
 end
 
 function GameMainInterfaceCtrl:Close()
-    GameMainInterfaceCtrl:RemoveUpdata()
+    self:RemoveUpdata()
+    UIPanel.Close(self)
+    self = nil
 end
 
 --金币改变

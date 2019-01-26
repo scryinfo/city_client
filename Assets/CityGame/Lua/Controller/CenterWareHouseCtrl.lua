@@ -296,6 +296,7 @@ function CenterWareHouseCtrl:c_transport(msg)
     --data.tipInfo = "可在运输线查看详情"
     --ct.OpenCtrl('BtnDialogPageCtrl',data)
     CenterWareHousePanel.transportConfirm:SetActive(true);
+    Event.Brocast("SmallPop",GetLanguage(21040003),300)
 end
 
 --关闭运输按钮

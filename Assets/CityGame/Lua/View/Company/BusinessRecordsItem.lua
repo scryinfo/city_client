@@ -79,7 +79,7 @@ end
 
 function BusinessRecordsItem:_formatData(number, isIncome)
     if number == 0 then
-        return "0"
+        return GetClientPriceString(number)
     else
         if isIncome then
             return string.format("+E%s", GetClientPriceString(number))

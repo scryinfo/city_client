@@ -36,6 +36,8 @@ DataManager = {}
 local BuildDataStack = {}      --建筑信息堆栈
 local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
+local ModelNetMsgStack = {}
+
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
@@ -400,7 +402,7 @@ end
 
 --获取DetailModel到管理器中
 function DataManager.GetDetailModelByID(insId)
-    if  BuildDataStack.DetailModelStack then
+    if BuildDataStack ~=nil and  BuildDataStack.DetailModelStack ~= nil then
         return BuildDataStack.DetailModelStack[insId]
     end
     return nil
@@ -476,8 +478,6 @@ function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethor
 end
 
 ----------------------------------------------------------------------------------DetailModel的网络消息管理
-
-local ModelNetMsgStack = {}
 
 --DetailModel 向服务器发送数据
 --参数：
@@ -655,7 +655,7 @@ function  DataManager.InitPersonDatas(tempData)
     end
     PersonDataStack.m_bag = tempData.bag
     --初始化自己的moneys
-    PersonDataStack.m_money = tempData.money
+    PersonDataStack.m_money = tempData.money --GetClientPriceString(tempData.money)
     --初始化中心仓库容量
     PersonDataStack.m_bagCapacity = tempData.bagCapacity
     --初始化自己的name
@@ -831,6 +831,10 @@ end
 --获取自己的money
 function DataManager.GetMoney()
     return PersonDataStack.m_money
+end
+
+function DataManager.GetMoneyByString()
+    return GetClientPriceString(PersonDataStack.m_money)
 end
 
 --刷新自己的money
@@ -1162,11 +1166,6 @@ local function InitialNetMessages()
 
 end
 
---清除所有消息回调
-local function ClearEvents()
-    
-end
-
 --DataManager初始化
 function DataManager.Init()
     RoadRootObj = find("Road")
@@ -1182,8 +1181,33 @@ function DataManager.Init()
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
 end
 
+--清除所有消息回调
+local function ClearEvents()
+    Event.RemoveListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
+    Event.RemoveListener("c_AddBagInfo",DataManager.c_AddBagInfo)
+    Event.RemoveListener("c_DelBagInfo",DataManager.c_DelBagInfo)
+    Event.RemoveListener("c_DelBagItem",DataManager.c_DelBagItem)
+end
+
+--清除所有Model
+local function ClearAllModel()
+    if BuildDataStack ~= nil then
+        for tempCollectionID, value in pairs(BuildDataStack) do
+            DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
+            BuildDataStack[tempCollectionID] = nil
+        end
+    end
+    BuildDataStack = {}
+    PersonDataStack = {}
+    SystemDatas = {}
+    ModelNetMsgStack = {}
+    InitialEvents()
+    InitialNetMessages()
+end
+
 function DataManager.Close()
     ClearEvents()
+    ClearAllModel()
 end
 
 ----------------------------------------------------网络回调函数---------------------------------

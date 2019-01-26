@@ -48,7 +48,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     --赋值
     --self.nameText.text = self.name
     self.numberText.text = self.num
-    self.moneyText.text = self.price..".0000"
+    self.moneyText.text = GetClientPriceString(self.price)
 
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
@@ -98,7 +98,7 @@ end
 function ShelfGoodsItem:OnClicl_XBtn(go)
     PlayMusEff(1002)
     Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
-    Event.Brocast("SmallPop","下架成功",300)
+    Event.Brocast("SmallPop",GetLanguage(27010003),300)
     go.manager:_deleteGoods(go)
 end
 --删除事件

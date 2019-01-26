@@ -49,6 +49,13 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
+
+end
+
+function GameMainInterfaceCtrl:Close()
+    self:RemoveUpdata()
+    UIPanel.Close(self)
+    self = nil
 end
 
 --金币改变
@@ -75,7 +82,9 @@ function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
     elseif state.groundState == 1 then
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
         GameMainInterfacePanel.isAuction.localScale = Vector3.one
-        countDown = state.durationSec
+        local endTime = state.beginTime + state.durationSec    --结束时间
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        countDown = endTime - currentTime
         groundState = GetLanguage(11020001)
     else
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
@@ -157,8 +166,8 @@ function GameMainInterfaceCtrl:Awake()
     self.name = info.name
     self.gender = info.male
 
-    local gold = DataManager.GetMoney()
-    self.money = getPriceString("E"..gold..".0000",24,20)
+    local gold = DataManager.GetMoneyByString()
+    self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
@@ -194,7 +203,9 @@ end
 local date
 local hour
 function GameMainInterfaceCtrl:RefreshWeather()
-    GameMainInterfacePanel.time.text = os.date("%H:%M")
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
     GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
     date = tonumber(os.date("%Y%m%d"))
     hour = tonumber(os.date("%H"))

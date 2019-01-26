@@ -68,20 +68,21 @@ function ServerListModel:m_GsOK()
 end
 function ServerListModel:registerGsNetMsg()
     --gs网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),ServerListModel.n_GsLoginSuccessfully);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","login","gs.LoginACK",self.n_GsLoginSuccessfully,self)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),ServerListModel.n_GsLoginSuccessfully);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
    -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","roleLogin","gs.LoginACK",self.n_GsLoginSuccessfully)
 end
-function ServerListModel.n_GsLoginSuccessfully(stream )
-    if stream == nil then
-        return
-    end
-
-    --CityEngineLua.login_tradeapp(true)
-
-    --decode
-    local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    --if no role yet, auto create a new role
+function ServerListModel:n_GsLoginSuccessfully(lMsg )
+    --if stream == nil then
+    --    return
+    --end
+    --
+    ----CityEngineLua.login_tradeapp(true)
+    --
+    ----decode
+    --local lMsg = assert(pbl.decode("gs.LoginACK", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    ----if no role yet, auto create a new role
     if lMsg.info == nil then
         Event.Brocast("c_GsCreateRole")
     else

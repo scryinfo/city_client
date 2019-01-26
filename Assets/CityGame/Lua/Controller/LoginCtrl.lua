@@ -95,6 +95,7 @@ function LoginCtrl:close()
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
 	--Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+	Event.Brocast("c_RemoveListener")
 	destroy(self.gameObject);
 end
 
@@ -137,7 +138,7 @@ end
 
 function LoginCtrl:c_Disconnect( errorCode )
 	--这里打印会失败, LoginPanel 已经不能访Destroy问了
-	LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
+	--LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
 	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 

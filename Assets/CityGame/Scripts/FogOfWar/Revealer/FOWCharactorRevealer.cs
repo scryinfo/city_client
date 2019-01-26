@@ -14,7 +14,7 @@ public class FOWCharactorRevealer : FOWRevealer
     protected int m_charaID;
 
     public static Vector3 myPosition = Vector3.zero;
-    public static float myRadius = 500f;
+    public static float myRadius = 50.5f;
 
     public FOWCharactorRevealer()
     {

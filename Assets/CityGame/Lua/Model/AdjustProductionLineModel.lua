@@ -68,7 +68,11 @@ end
 --修改生产线
 function AdjustProductionLineModel.n_GsModifyKLine(stream)
     local msgModifyKLineInfo = assert(pbl.decode("gs.ChangeLine", stream), "AdjustProductionLineModel.n_GsModifyKLine: stream == nil")
-    Event.Brocast("calculateTime",msgModifyKLineInfo)
+    if not msgModifyKLineInfo then
+        return
+    end
+    Event.Brocast("callbackDataInfo",msgModifyKLineInfo)
+    Event.Brocast("SmallPop",GetLanguage(27010005),300)
 end
 --删除生产线
 function AdjustProductionLineModel.nGsDeleteLine(stream)
@@ -76,7 +80,7 @@ function AdjustProductionLineModel.nGsDeleteLine(stream)
         return;
     end
     local msgProductionLine = assert(pbl.decode("gs.DelLine",stream),"AdjustProductionLineModel.nGsDeleteLine: stream == nil")
-    Event.Brocast("SmallPop","删除成功",300)
+    Event.Brocast("SmallPop",GetLanguage(28010006),300)
     Event.Brocast("_deleteProductionLine",msgProductionLine)
     --Event.Brocast("delLineRefreshInfo",msgProductionLine)
 end

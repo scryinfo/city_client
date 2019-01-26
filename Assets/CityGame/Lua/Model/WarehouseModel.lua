@@ -78,14 +78,14 @@ function WarehouseModel.n_OnShelfAddInfo(stream)
     end
     local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
     Event.Brocast("n_shelfAdd",msgShelfAddInfo)
-    Event.Brocast("SmallPop","上架成功",300)
+    Event.Brocast("SmallPop",GetLanguage(27020002),300)
     --Event.Brocast("shelfRefreshInfo",msgShelfAddInfo)
     --Event.Brocast("refreshShelfInfo",msgShelfAddInfo)
 end
 --修改货架数量或价格
 function WarehouseModel.n_OnModifyShelfInfo(stream)
     local msgModifyShelfInfo = assert(pbl.decode("gs.ShelfSet",stream),"WarehouseModel.n_OnModifyShelfInfo")
-    Event.Brocast("refreshUiInfo",msgModifyShelfInfo)
+    Event.Brocast("shelfRefreshUiInfo",msgModifyShelfInfo)
 end
 --删除仓库物品
 function WarehouseModel.n_GsDelItem(stream)

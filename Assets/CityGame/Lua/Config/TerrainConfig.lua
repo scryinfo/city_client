@@ -1,7 +1,7 @@
 TerrainConfig = {
     ["TerrainAttribute"]= {
-        ["FOWCenterPos"] =  Vector3.New(500,0,500), --战争迷雾中心位置点
-        ["FOWRange"] = 500,                     --战争迷雾范围
+        ["FOWCenterPos"] =  Vector3.New(50.5,0,50.5), --战争迷雾中心位置点
+        ["FOWRange"] = 50.5,                     --战争迷雾范围
         ["CameraRootXMin"] = 0,                 --相机位置X轴的最小值
         ["CameraRootXMax"] = 1000,              --相机位置X轴的最大值
         ["CameraRootZMin"] = 0,                 --相机位置Z轴的最小值
@@ -12,7 +12,7 @@ TerrainConfig = {
         ["CameraScaleValueMax"] = 15,           --相机缩放y轴高度最远距离
     },
     ["CentralBuilding"] ={
-        ["CenterNodePos"] = Vector3.New(49,0,49),
+        ["CenterNodePos"] = Vector3.New(49 ,0,49),
         ["BuildingType"]  = 2000000,
     },
 }

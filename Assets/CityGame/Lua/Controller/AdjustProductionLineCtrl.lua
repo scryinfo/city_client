@@ -58,7 +58,7 @@ function AdjustProductionLineCtrl:Refresh()
     numTab["num2"] = AdjustProductionLinePanel.capacity_Slider.maxValue
     numTab["num3"] = lockedNum
     numTab["col1"] = "Cyan"
-    numTab["col2"] = "white"
+    numTab["col2"] = "black"
     numTab["col3"] = "Teal"
     AdjustProductionLinePanel.numberText.text = getColorString(numTab)
     --剩余容量

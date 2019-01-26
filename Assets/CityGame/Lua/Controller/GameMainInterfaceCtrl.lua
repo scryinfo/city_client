@@ -164,7 +164,7 @@ function GameMainInterfaceCtrl:Awake()
     self.name = info.name
     self.gender = info.male
 
-    local gold = DataManager.GetMoney()
+    local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money
 

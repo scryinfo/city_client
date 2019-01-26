@@ -100,7 +100,7 @@ function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
         CompanyPanel.titleText.text = GetLanguage(17010001)
         CompanyPanel.coinBg:SetActive(true)
-        CompanyPanel.coinText.text = DataManager.GetMoney()
+        CompanyPanel.coinText.text = DataManager.GetMoneyByString()
     else
         CompanyPanel.titleText.text = GetLanguage(17010007)
         CompanyPanel.coinBg:SetActive(false)

@@ -297,6 +297,7 @@ function ChatMgr:ShowPlayerInfo(index, data)
     ChatPanel.nameText.text = data.name
     ChatPanel.companyText.text = data.companyName
     self:SetActivePlayerData(data)
+    LoadSprite(PlayerHead[data.faceId].HalfBodyPath, ChatPanel.headImage, true)
     if index == 1 then -- 世界界面陌生人信息显示
         ChatPanel.shieldBtn:SetActive(true)
         ChatPanel.addFriendsBtn:SetActive(true)

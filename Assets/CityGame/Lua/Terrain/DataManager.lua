@@ -302,8 +302,8 @@ function DataManager.RefreshBaseBuildData(data)
                     end
                 end
             end
-            return true
         end
+        return true
     end
 end
 
@@ -532,14 +532,14 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                         return
                     end
                 end
-            else--服务器返回的数据没有唯一ID
-                if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                    for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
-                        if funcTable.self ~= nil then
-                            funcTable.func(funcTable.self,protoData)
-                        else
-                            funcTable.func(protoData)
-                        end
+            end
+            --该消息监听的无参回调如果有
+            if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
+                for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+                    if funcTable.self ~= nil then
+                        funcTable.func(funcTable.self,protoData)
+                    else
+                        funcTable.func(protoData)
                     end
                 end
             end
@@ -1236,6 +1236,7 @@ function DataManager.n_OnReceiveUnitRemove(stream)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
         if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
             BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
+            BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID] = nil
             --TODO：计算在当前AOI所有地块中 需要刷新的地块
             --刷新需要刷新的地块
             for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
@@ -1355,7 +1356,7 @@ function DataManager.n_OnReceiveErrorCode(stream)
             info.titleInfo = "FAIL"
             info.contentInfo = "Roll Fail"
             info.tipInfo = ""
-            ct.OpenCtrl("BtnDialogPageCtrl", info)
+            ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
         elseif data.opcode == 5015 then  --世界发言失败
             if data.reason == "highFrequency" then
                 Event.Brocast("SmallPop","Speeches are frequent. Please wait a moment.",80)

@@ -38,7 +38,7 @@ function ConstructCtrl:Refresh()
 
     Event.Brocast("c_HideGroundBubble")
     ct.log("Allen_wk14_MyGround","临时生成我的地块")
-    UnitTest.Exec_now("Allen_wk14_MyGround", "c_CreateMyGrounds",self)
+    ConstructCtrl.CreateMyGrounds()
 end
 
 function ConstructCtrl:ClearAllItem()
@@ -86,6 +86,44 @@ function ConstructCtrl:Hide()
     Event.Brocast("c_ShowGroundBubble")
 end
 
+local function CreateMyGroundSuccess(go,position)
+    local tempObj = go
+    tempObj.transform.position = position
+    tempObj.transform.localScale = Vector3.one
+    tempObj.name = "My_OwnGround"
+    table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+end
+
+--创建我的地块
+function ConstructCtrl.CreateMyGrounds()
+    if not DataManager.TempDatas then
+        DataManager.TempDatas ={}
+    end
+    DataManager.TempDatas.myGroundObj = {}
+    local myPersonData = DataManager.GetMyPersonData()
+    local myGroundPath = PlayerBuildingBaseData[4000001].prefabRoute
+    if myPersonData.m_groundInfos then
+        for key, value in pairs(myPersonData.m_groundInfos) do
+            if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
+            end
+        end
+    else
+        myPersonData.m_groundInfos = {}
+    end
+    if  myPersonData.m_rentGroundInfos then
+        for key, value in pairs(myPersonData.m_rentGroundInfos) do
+            if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
+            end
+        end
+    else
+        myPersonData.m_rentGroundInfos = {}
+    end
+
+end
+
+
 
 UnitTest.TestBlockStart()
 UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
@@ -96,15 +134,11 @@ UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
         end
         DataManager.TempDatas.myGroundObj = {}
         local myPersonData = DataManager.GetMyPersonData()
-        local myGroundObj = UnityEngine.Resources.Load(PlayerBuildingBaseData[4000001].prefabRoute)
+        local myGroundPath = PlayerBuildingBaseData[4000001].prefabRoute
         if myPersonData.m_groundInfos then
             for key, value in pairs(myPersonData.m_groundInfos) do
                 if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
-                    local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)
-                    tempObj.transform.position =Vector3.New(value.x,0,value.y)
-                    tempObj.transform.localScale = Vector3.one
-                    tempObj.name = "My_OwnGround"
-                    table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+                    buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
                 end
             end
         else
@@ -113,11 +147,7 @@ UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
         if  myPersonData.m_rentGroundInfos then
             for key, value in pairs(myPersonData.m_rentGroundInfos) do
                 if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
-                    local tempObj = UnityEngine.GameObject.Instantiate(myGroundObj)
-                    tempObj.transform.position =Vector3.New(value.x,0,value.y)
-                    tempObj.transform.localScale = Vector3.one
-                    tempObj.name = "My_RentGround"
-                    table.insert(DataManager.TempDatas.myGroundObj,tempObj)
+                    buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
                 end
             end
         else

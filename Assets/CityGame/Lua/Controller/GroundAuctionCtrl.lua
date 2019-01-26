@@ -86,16 +86,16 @@ function GroundAuctionCtrl:_initPanelData()
         if self.m_data.price == nil then
             GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
             GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-            GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
+            GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
         else
             if tonumber(self.m_data.price) > self.m_data.basePrice then
                 GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
                 GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-                GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
+                GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(self.m_data.price), 30, 24)
             else
                 GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
                 GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-                GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
+                GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
             end
         end
 
@@ -104,7 +104,7 @@ function GroundAuctionCtrl:_initPanelData()
         GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.zero
         GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.one
 
-        GroundAuctionPanel.waitBidBasePriceText.text = getPriceString(self.m_data.basePrice, 30, 24)
+        GroundAuctionPanel.waitBidBasePriceText.text = getPriceString(GetClientPriceString(self.m_data.basePrice), 30, 24)
         local timeData = getFormatUnixTime(self.m_data.beginTime)
         GroundAuctionPanel.startBidTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
         self.startTimeDownForStart = true  --即将拍卖倒计时
@@ -200,10 +200,10 @@ function GroundAuctionCtrl:BidGround(ins)
     end
 
     if ins.highestPrice == nil then
-        ins.highestPrice = ins.m_data.basePrice
+        ins.highestPrice = tonumber(GetClientPriceString(ins.m_data.basePrice))
     end
-    if tonumber(bidPrice) > ins.highestPrice then
-        Event.Brocast("m_PlayerBidGround", ins.m_data.id, bidPrice)
+    if tonumber(bidPrice) > tonumber(ins.highestPrice) then
+        Event.Brocast("m_PlayerBidGround", ins.m_data.id, GetServerPriceNumber(bidPrice))
     else
         --打开弹框
         local showData = {}
@@ -230,11 +230,11 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         return
     end
 
-    self.highestPrice = data.price
-    GroundAuctionPanel.currentPriceText.text = getPriceString(data.price, 30, 24)
+    self.highestPrice = GetClientPriceString(data.price)
+    --GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
     GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
     GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-    GroundAuctionPanel.currentPriceText.text = tostring(self.highestPrice)
+    GroundAuctionPanel.currentPriceText.text = getPriceString(self.highestPrice, 30, 24)
     self.biderId = data.biderId
 
     if self.biderId == DataManager.GetMyOwnerID() then
@@ -285,11 +285,11 @@ function GroundAuctionCtrl:_bidStart(groundData)
     if self.m_data.biderId then
         GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
         GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-        GroundAuctionPanel.currentPriceText.text = getPriceString(self.m_data.price, 30, 24)
+        GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(self.m_data.price), 30, 24)
     else
         GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
         GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-        GroundAuctionPanel.floorPriceText.text = tostring(self.m_data.basePrice)
+        GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
     end
 
     self.startTimeDownForFinish = true  --拍卖结束倒计时

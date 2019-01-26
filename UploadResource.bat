@@ -6,7 +6,7 @@ set scptool=D:\tools\winscp\
 
 set local_dir=..\client\Assets\StreamingAssets\
 
-set remote_dir= /home/cityrs/city1
+set remote_dir= /home/cityrs/city
 
 ::账号
 
@@ -26,7 +26,7 @@ cd %scptool%
 
 ::调用软件 执行上传
 
-WinSCP.exe /console /command "option batch continue" "option confirm off" "open root:djf0KJop9823u7j*@40.73.5.184:22" "cd /home/cityrs/city1" "lcd ..\client\Assets\StreamingAssets\" "option transfer binary" "put ..\client\Assets\StreamingAssets\*.* /home/cityrs/city " "close" "exit"
+WinSCP.exe /console /command "option batch continue" "option confirm off" "open root:djf0KJop9823u7j*@40.73.5.184:22" "cd /home/cityrs/city" "lcd ..\client\Assets\StreamingAssets\" "option transfer binary" "put ..\client\Assets\StreamingAssets\*.* /home/cityrs/city " "close" "exit"
 
 echo upload completed.....
 

@@ -20,5 +20,5 @@ echo res building finished  at  %time%.............!
 
 echo copy new Apk to D:\city_project\apk\public
 XCOPY ..\client\Apk  D:\city_project\apk\public /s /e /k /h /g /c /r/y
-rd/s/q ..\client\Apk
+@rd/s/q ..\client\Apk
 

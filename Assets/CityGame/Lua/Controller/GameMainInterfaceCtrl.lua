@@ -158,7 +158,7 @@ function GameMainInterfaceCtrl:Awake()
     self.gender = info.male
 
     local gold = DataManager.GetMoney()
-    self.money = getPriceString("E"..gold..".0000",24,20)
+    self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态

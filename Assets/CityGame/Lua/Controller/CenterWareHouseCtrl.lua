@@ -251,8 +251,9 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
         n = n + v.inputText.text
     end
     data.number = n--数量
-    data.freight = n*data.distance*BagPosInfo[1].postageCost--运费
-    data.total = n*data.distance*BagPosInfo[1].postageCost--总运费
+    data.price = ChooseWarehouseCtrl:GetPrice() --运输单价
+    data.freight = GetClientPriceString(n*data.price)--运费
+    data.total =  GetClientPriceString(n*data.price)--总运费
     data.capacity = ChooseWarehouseCtrl:GetCapacity()   --所选仓库容量
     if data.capacity < tonumber(CenterWareHousePanel.tipText.text) then
         Event.Brocast("SmallPop","所选建筑仓库容量不足",300)

@@ -72,6 +72,6 @@ end
 
 --金币改变回调
 function GameMainInterfaceModel:n_GsExtendBag(lMsg)
-    DataManager.SetMoney(lMsg.money)
+    DataManager.SetMoney(GetClientPriceString(lMsg.money))
     Event.Brocast("c_ChangeMoney",lMsg.money)
 end

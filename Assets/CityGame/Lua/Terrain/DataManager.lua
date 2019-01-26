@@ -655,7 +655,7 @@ function  DataManager.InitPersonDatas(tempData)
     end
     PersonDataStack.m_bag = tempData.bag
     --初始化自己的moneys
-    PersonDataStack.m_money = tempData.money
+    PersonDataStack.m_money = GetClientPriceString(tempData.money)
     --初始化中心仓库容量
     PersonDataStack.m_bagCapacity = tempData.bagCapacity
     --初始化自己的name

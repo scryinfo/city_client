@@ -236,6 +236,11 @@ function ChooseWarehouseCtrl:GetCapacity()
     return Capacity
 end
 
+--获取运输单价
+function ChooseWarehouseCtrl:GetPrice()
+    return buildingInfo.price
+end
+
 --根据名字排序
 function ChooseWarehouseCtrl:OnClick_nameBtn()
     PlayMusEff(1002)

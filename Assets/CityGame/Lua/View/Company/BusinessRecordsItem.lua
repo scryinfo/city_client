@@ -8,7 +8,6 @@ BusinessRecordsItem = class('BusinessRecordsItem')
 
 -- 初始化
 function BusinessRecordsItem:initialize(prefab, data)
-    self.itemId = itemId
     self.prefab = prefab
     self.data = data
 

@@ -162,6 +162,9 @@ function GameMainInterfaceCtrl:Awake()
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
+    --初始化循环参数
+    self.intTime = 1
+    self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -176,8 +179,6 @@ function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     UIPanel.Active(self)
-    self.intTime = 1
-    self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
     self.m_Timer:Start()
     --初始化姓名,性别
     GameMainInterfacePanel.name.text = self.name
@@ -389,7 +390,7 @@ end
 --关闭updata
 function GameMainInterfaceCtrl:RemoveUpdata()
     if self.m_Timer ~= nil then
-        self.m_Timer:Start()
+        self.m_Timer:Stop()
     end
 end
 

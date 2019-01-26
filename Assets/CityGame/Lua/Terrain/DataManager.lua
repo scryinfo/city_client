@@ -36,6 +36,8 @@ DataManager = {}
 local BuildDataStack = {}      --建筑信息堆栈
 local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
+local ModelNetMsgStack = {}
+
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
@@ -400,7 +402,7 @@ end
 
 --获取DetailModel到管理器中
 function DataManager.GetDetailModelByID(insId)
-    if  BuildDataStack.DetailModelStack then
+    if BuildDataStack ~=nil and  BuildDataStack.DetailModelStack ~= nil then
         return BuildDataStack.DetailModelStack[insId]
     end
     return nil
@@ -476,8 +478,6 @@ function DataManager.ControllerRpc(insId, ctrlName, modelMethord, callBackMethor
 end
 
 ----------------------------------------------------------------------------------DetailModel的网络消息管理
-
-local ModelNetMsgStack = {}
 
 --DetailModel 向服务器发送数据
 --参数：
@@ -1190,8 +1190,15 @@ local function ClearAllModel()
     if BuildDataStack ~= nil then
         for tempCollectionID, value in pairs(BuildDataStack) do
             DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
+            BuildDataStack[tempCollectionID] = nil
         end
     end
+    BuildDataStack = {}
+    PersonDataStack = {}
+    SystemDatas = {}
+    ModelNetMsgStack = {}
+    InitialEvents()
+    InitialNetMessages()
 end
 
 function DataManager.Close()

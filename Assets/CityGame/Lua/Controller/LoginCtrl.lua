@@ -95,6 +95,7 @@ function LoginCtrl:close()
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
 	--Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+	Event.Brocast("c_RemoveListener")
 	destroy(self.gameObject);
 end
 

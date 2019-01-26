@@ -56,6 +56,7 @@ function SystemSettingCtrl:c_OnClickout(ins)
     CityEngineLua.currstate = "";
     ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
     PlayMusEff(1002)
+    CityEngineLua.Message.clear()
 
 end
 

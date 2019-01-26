@@ -73,19 +73,21 @@ end
 --获取拍卖状态
 function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
    local state =  UIBubbleManager._getNowAndSoonState() --获取状态
-    if state.groundState == 0 then
-        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
-        GameMainInterfacePanel.isAuction.localScale = Vector3.zero
-        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-        countDown = state.beginTime - currentTime   --倒计时间
-        groundState = GetLanguage(11020002)
-    elseif state.groundState == 1 then
-        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
-        GameMainInterfacePanel.isAuction.localScale = Vector3.one
-        local endTime = state.beginTime + state.durationSec    --结束时间
-        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-        countDown = endTime - currentTime
-        groundState = GetLanguage(11020001)
+    if state ~= nil and state.groundState ~= nil then
+        if state.groundState == 0 then
+            GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
+            GameMainInterfacePanel.isAuction.localScale = Vector3.zero
+            local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+            countDown = state.beginTime - currentTime   --倒计时间
+            groundState = GetLanguage(11020002)
+        elseif state.groundState == 1 then
+            GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
+            GameMainInterfacePanel.isAuction.localScale = Vector3.one
+            local endTime = state.beginTime + state.durationSec    --结束时间
+            local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+            countDown = endTime - currentTime
+            groundState = GetLanguage(11020001)
+        end
     else
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
     end

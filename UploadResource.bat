@@ -6,7 +6,7 @@ set scptool=D:\tools\winscp\
 
 set local_dir=..\client\Assets\StreamingAssets
 
-set remote_dir= /home/cityrs/city
+set remote_dir= /home/cityrs/city1
 
 ::账号
 

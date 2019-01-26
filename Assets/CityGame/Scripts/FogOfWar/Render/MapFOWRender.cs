@@ -16,8 +16,8 @@ public class MapFOWRender
         {
             // TODO：实际项目中，自己根据场景地图设置中心点位置
             // 这里为了简单，直接居中
-            float fCenterX = 500f;
-            float fCenterZ = 500f;
+            float fCenterX = 50.5f;
+            float fCenterZ = 50.5f;
             float scale = FOWSystem.instance.worldSize / 128f * 2.56f;
 
             render.transform.position = new Vector3(fCenterX, 0f, fCenterZ);

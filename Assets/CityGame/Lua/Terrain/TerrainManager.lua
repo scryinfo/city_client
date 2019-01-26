@@ -18,7 +18,7 @@ local function CreateSuccess(go,table)
     local buildingID = table[1]
     local Vec3 = table[2]
     --add height
-    Vec3.y =  Vec3.y + 0.02
+    Vec3.y =  Vec3.y + 0.01
     go.transform.position = Vec3
     --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     if TerrainManager.TerrainRoot == nil  then
@@ -283,7 +283,7 @@ local function CreateConstructBuildSuccess(go,table)
     DataManager.TempDatas.constructObj = go
     local Vec3 = table[2]
     --add height
-    Vec3.y =  Vec3.y + 0.02
+    Vec3.y =  Vec3.y + 0.03
     DataManager.TempDatas.constructObj.transform.position = Vec3
     DataManager.TempDatas.constructPosID = TerrainManager.PositionTurnBlockID(table[2])
     --一定要放在数据刷新完后打开
@@ -342,9 +342,9 @@ local function CreateCenterBuildSuccess(go,...)
     local CentralBuildingMes = TerrainConfig.CentralBuilding
     --临时提高一些
     local TargetPos =CentralBuildingMes.CenterNodePos
-    TargetPos.y = TargetPos.y + 0.02
+    TargetPos.y = TargetPos.y + 0.01
     CentralBuildingObj.transform.position = TargetPos
-    CentralBuildingObj.transform.localScale = Vector3.one
+    CentralBuildingObj.transform.localScale = Vector3.New(5/7,5/7,5/7)
     CentralBuildingObj.name = "CentralBuilding"
     --写入覆盖范围
     CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)

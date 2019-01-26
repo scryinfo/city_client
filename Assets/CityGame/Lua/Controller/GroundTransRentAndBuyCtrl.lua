@@ -29,8 +29,22 @@ function GroundTransRentAndBuyCtrl:Awake(go)
         if GroundTransRentAndBuyCtrl.tempRentPreDay == nil then
             return
         end
-        GroundTransRentAndBuyPanel.tenancyText.text = value
+        GroundTransRentAndBuyPanel.tenancyInput.text = value
         GroundTransRentAndBuyPanel.totalRentalText.text = "E"..getPriceString(GetClientPriceString(value * GroundTransRentAndBuyCtrl.tempRentPreDay),24,20)
+    end)
+
+    GroundTransRentAndBuyPanel.tenancyInput.onValueChanged:AddListener(function()
+        if GroundTransRentAndBuyPanel.tenancyInput.text == "" then
+            return
+        end
+        local num = tonumber(GroundTransRentAndBuyPanel.tenancyInput.text)
+        if num > GroundTransRentAndBuyPanel.tenancySlider.maxValue then
+            num = GroundTransRentAndBuyPanel.tenancySlider.maxValue
+        end
+        if num == 0 then
+            num = 1
+        end
+        GroundTransRentAndBuyPanel.tenancySlider.value = num
     end)
 end
 
@@ -77,7 +91,7 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
         GroundTransRentAndBuyPanel.tenancySlider.minValue = groundInfo.rent.rentDaysMin
         GroundTransRentAndBuyPanel.tenancySlider.maxValue = groundInfo.rent.rentDaysMax
         GroundTransRentAndBuyPanel.tenancySlider.value = GroundTransRentAndBuyPanel.tenancySlider.maxValue
-        GroundTransRentAndBuyPanel.tenancyText.text = GroundTransRentAndBuyPanel.tenancySlider.value
+        GroundTransRentAndBuyPanel.tenancyInput.text = GroundTransRentAndBuyPanel.tenancySlider.value
         GroundTransRentAndBuyPanel.dayRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay), 24, 20)
         GroundTransRentAndBuyPanel.totalRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value),24,20)
         GroundTransRentAndBuyCtrl.tempRentPreDay = groundInfo.rent.rentPreDay  --显示日租金
@@ -121,7 +135,7 @@ end
 function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
-        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancyText.text)})
+        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancySlider.value)})
     end
 end
 --点击头像

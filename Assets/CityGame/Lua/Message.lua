@@ -209,11 +209,9 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 				--如果不带pb数据段的，这里就要处理
 				if(reader.msglen == 0) then
 					-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
-					if reader.msgid ~= 0 then
-						local msg = CityEngineLua.clientMessages[reader.msgid]
-						if msg ~= nil then
-							msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0))
-						end
+					local msg = CityEngineLua.clientMessages[reader.msgid]
+					if msg ~= nil then
+						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0))
 					end
 					reader.state = CityEngineLua.READ_STATE_MSGLEN;
 					reader.expectSize = 4;
@@ -225,13 +223,11 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 			if(toReadDatalength >= reader.expectSize) then
 				--reader.stream.rpos = reader.stream.rpos + reader.expectSize;
 				toReadDatalength = toReadDatalength - reader.expectSize;
-				if reader.msgid ~= 0 then
-					local msg = CityEngineLua.clientMessages[reader.msgid];
-					if msg ~= nil then
-						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
-					else
-						local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
-					end
+				local msg = CityEngineLua.clientMessages[reader.msgid];
+				if msg ~= nil then
+					msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
+				else
+					local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 				end
 				reader.state = CityEngineLua.READ_STATE_MSGLEN;
 				reader.expectSize = 4;

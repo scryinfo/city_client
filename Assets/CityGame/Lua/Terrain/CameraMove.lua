@@ -227,7 +227,7 @@ function CameraMove:MoveConstructObj()
         if blockID ~= self.touchBeginBlockID then
             local targetID= DataManager.TempDatas.constructPosID + blockID - self.touchBeginBlockID
             local targetPos = TerrainManager.BlockIDTurnPosition(targetID)
-            targetPos.y = targetPos.y + 0.01
+            targetPos.y = targetPos.y + 0.03
             DataManager.TempDatas.constructObj.transform.position = targetPos
             DataManager.TempDatas.constructPosID = targetID
             self.touchBeginBlockID = blockID

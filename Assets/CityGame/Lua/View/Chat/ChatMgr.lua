@@ -4,7 +4,7 @@
 --- DateTime: 2018/12/14 11:50
 ---
 
-ChatMgr = class('FriendsMgr')
+ChatMgr = class('ChatMgr')
 ChatMgr.static.ExpressionBtnPATH = "View/Chat/ExpressionBtnItem"
 ChatMgr.static.ChatRightItemPath = "View/Chat/ChatRightItem"
 ChatMgr.static.ChatLeftItemPath = "View/Chat/ChatLeftItem"
@@ -14,7 +14,7 @@ ChatMgr.static.ChatRecordsItemPath = "View/Chat/ChatRecordsItem"
 ChatMgr.static.ChatRecordsTimeItemPath = "View/Chat/ChatRecordsTimeItem"
 
 function ChatMgr:initialize()
-    ct.log("tina_w9_friends", "FriendsMgr:initialize")
+    ct.log("tina_w9_friends", "ChatMgr:initialize")
     self:initData()
 end
 

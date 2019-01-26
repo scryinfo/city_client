@@ -1,13 +1,8 @@
 FOWManager = {}
 
-local FowRadius = 500
-local FowRangeCenter = Vector3.New(500,0,500) --const值
-
-
 local function BlockPosTurnFowPos(tempPos)
-    return tempPos - FowRangeCenter
+    return tempPos - TerrainConfig.TerrainAttribute.FOWCenterPos
 end
-
 
 --刷新迷雾范围
 --tempPos 迷雾中心位置
@@ -19,6 +14,6 @@ end
 
 --还原最大迷雾范围
 function FOWManager.BackToMaxFowRange()
-    Battle.FOWLogic.instance:ChangeFogOfWarRange(Vector3.zero ,FowRadius)
+    Battle.FOWLogic.instance:ChangeFogOfWarRange(Vector3.zero ,TerrainConfig.TerrainAttribute.FOWRange)
     FOWSystem.instance.enableSystem = true
 end

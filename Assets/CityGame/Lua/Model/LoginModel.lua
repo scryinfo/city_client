@@ -18,16 +18,22 @@ function LoginModel:OnCreate()
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.AddListener("m_onConnectionState", self.m_onConnectionState);
     Event.AddListener("m_onDisconnect", self.m_onDisconnect);
+    Event.AddListener("c_RemoveListener", self.c_RemoveListener,self);
     --注册 AccountServer 消息
+    local a = DataManager
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",self.n_AsLogin,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","getServerList","as.AllGameServerInfo",self.n_AllGameServerInfo,self)
 end
 --关闭事件--
-function LoginModel.Close()
+function LoginModel:Close()
     --清空本地UI事件
-    Event.RemoveListener("m_OnAsLogin", self.OnLogin);
+    Event.RemoveListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.RemoveListener("m_onConnectionState", self.m_onConnectionState);
     Event.RemoveListener("m_onDisconnect", self.m_onDisconnect);
+end
+
+function LoginModel:c_RemoveListener()
+    self:Close()
 end
 
 --点击登录

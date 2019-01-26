@@ -8,7 +8,6 @@ BusinessRecordsItem = class('BusinessRecordsItem')
 
 -- 初始化
 function BusinessRecordsItem:initialize(prefab, data)
-    self.itemId = itemId
     self.prefab = prefab
     self.data = data
 
@@ -79,12 +78,12 @@ end
 
 function BusinessRecordsItem:_formatData(number, isIncome)
     if number == 0 then
-        return "0"
+        return GetClientPriceString(number)
     else
         if isIncome then
-            return string.format("+E%s", number)
+            return string.format("+E%s", GetClientPriceString(number))
         else
-            return string.format("-E%s", number)
+            return string.format("-E%s", GetClientPriceString(number))
         end
     end
 end

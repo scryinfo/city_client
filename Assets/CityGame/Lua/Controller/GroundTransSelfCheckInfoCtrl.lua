@@ -52,7 +52,7 @@ function GroundTransSelfCheckInfoCtrl:_initPanelData()
 end
 --
 function GroundTransSelfCheckInfoCtrl:_setShowState(rent)
-    GroundTransSelfCheckInfoPanel.rentalText.text = rent.rentPreDay
+    GroundTransSelfCheckInfoPanel.rentalText.text = "E"..getPriceString(GetClientPriceString(rent.rentPreDay), 24, 20)
     GroundTransSelfCheckInfoPanel.tenancyText.text = rent.rentDays.."d"
     local remainDay = math.floor(((rent.rentBeginTs / 1000 + rent.rentDays * 86400) - TimeSynchronized.GetTheCurrentTime()) / 86400)
     GroundTransSelfCheckInfoPanel.remainDayText.text = remainDay.."d"

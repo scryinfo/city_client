@@ -321,8 +321,9 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         number = number + v.numberScrollbar.value
     end
     btransportListing.number = number
-    btransportListing.freight = number * btransportListing.distance * BagPosInfo[1].postageCost
-    btransportListing.total = number * btransportListing.distance * BagPosInfo[1].postageCost
+    btransportListing.price = ChooseWarehouseCtrl:GetPrice()
+    btransportListing.freight = GetClientPriceString(number * btransportListing.price)
+    btransportListing.total = GetClientPriceString(number * btransportListing.price)
     btransportListing.capacity = ChooseWarehouseCtrl:GetCapacity()
     if number > btransportListing.capacity then
         Event.Brocast("SmallPop","所选建筑仓库容量不足",300)

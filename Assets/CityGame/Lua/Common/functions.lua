@@ -504,10 +504,10 @@ function ScreenPosTurnActualPos(targetScreenPos)
 end
 --将服务器的数据转化成客户端数据格式
 function GetClientPriceString(serverPrice)
-	if serverPrice == nil or serverPrice < 0 then
-		return 0.0000
+	if serverPrice == nil or serverPrice == "" or tonumber(serverPrice) < 0 then
+		return "0.0000"
 	end
-	return string.format("%0.4f", serverPrice / 10000)
+	return string.format("%0.4f", tonumber(serverPrice) / 10000)
 end
 
 --客户端的数据转化成服务端数据格式

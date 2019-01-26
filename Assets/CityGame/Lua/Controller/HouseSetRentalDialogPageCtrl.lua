@@ -91,7 +91,7 @@ function HouseSetRentalDialogPageCtrl:_onClickRefreshBtn(ins)
         ins.input.text = "0"
         inputValue = 0
     end
-    ins.scoreText.text = ins:_getValuableScore(inputValue, ins.m_data.buildingTypeId)
+    ins.scoreText.text = ins:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), ins.m_data.buildingTypeId)
 end
 
 function HouseSetRentalDialogPageCtrl:_getValuableScore(rentPrice, buildingType)

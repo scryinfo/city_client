@@ -101,7 +101,7 @@ end
 
 function OccupancyRateItem:_clickToDoBtn(ins)
     PlayMusEff(1002)
-    ct.OpenCtrl("HouseSetRentalDialogPageCtrl", ins.occupancyData)
+    ct.OpenCtrl("HouseSetRentalDialogPageCtrl", ct.deepCopy(ins.occupancyData))
 end
 
 function OccupancyRateItem:destory()

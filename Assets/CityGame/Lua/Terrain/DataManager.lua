@@ -1162,11 +1162,6 @@ local function InitialNetMessages()
 
 end
 
---清除所有消息回调
-local function ClearEvents()
-    
-end
-
 --DataManager初始化
 function DataManager.Init()
     RoadRootObj = find("Road")
@@ -1182,8 +1177,26 @@ function DataManager.Init()
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
 end
 
+--清除所有消息回调
+local function ClearEvents()
+    Event.RemoveListener("c_RoleLoginDataInit", DataManager.InitPersonDatas)
+    Event.RemoveListener("c_AddBagInfo",DataManager.c_AddBagInfo)
+    Event.RemoveListener("c_DelBagInfo",DataManager.c_DelBagInfo)
+    Event.RemoveListener("c_DelBagItem",DataManager.c_DelBagItem)
+end
+
+--清除所有Model
+local function ClearAllModel()
+    if BuildDataStack ~= nil then
+        for tempCollectionID, value in pairs(BuildDataStack) do
+            DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
+        end
+    end
+end
+
 function DataManager.Close()
     ClearEvents()
+    ClearAllModel()
 end
 
 ----------------------------------------------------网络回调函数---------------------------------
@@ -1236,6 +1249,7 @@ function DataManager.n_OnReceiveUnitRemove(stream)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
         if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].BlockDatas and BuildDataStack[tempCollectionID].BlockDatas[tempBlockID] ~= nil then
             BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID]:Close()
+            BuildDataStack[tempCollectionID].BaseBuildDatas[tempBlockID] = nil
             --TODO：计算在当前AOI所有地块中 需要刷新的地块
             --刷新需要刷新的地块
             for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do

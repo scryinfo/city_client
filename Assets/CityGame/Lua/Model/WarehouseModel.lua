@@ -78,7 +78,7 @@ function WarehouseModel.n_OnShelfAddInfo(stream)
     end
     local msgShelfAddInfo = assert(pbl.decode("gs.ShelfAdd",stream),"WarehouseModel.n_OnShelfAddInfo")
     Event.Brocast("n_shelfAdd",msgShelfAddInfo)
-    Event.Brocast("SmallPop","上架成功",300)
+    Event.Brocast("SmallPop",GetLanguage(27020002),300)
     --Event.Brocast("shelfRefreshInfo",msgShelfAddInfo)
     --Event.Brocast("refreshShelfInfo",msgShelfAddInfo)
 end

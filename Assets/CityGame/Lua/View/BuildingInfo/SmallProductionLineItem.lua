@@ -78,8 +78,8 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums / 5;
     self.sNumberScrollbar.value = 0
     self.minText.text = "0".."/min"
-    self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffText.text = GetLanguage(self.itemId)
+    --self.numberNameText.text = GetLanguage(self.itemId)
+    --self.staffText.text = GetLanguage(self.itemId)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
@@ -133,8 +133,8 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.staffNumberText.text = tostring(infoTab.workerNum)
     self.sNumberScrollbar.maxValue = (AdjustProductionLineCtrl.idleWorkerNums + infoTab.workerNum) / 5
     self.sNumberScrollbar.value = infoTab.workerNum / 5;
-    self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffText.text = GetLanguage(self.itemId)
+    --self.numberNameText.text = GetLanguage(self.itemId)
+    --self.staffText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)

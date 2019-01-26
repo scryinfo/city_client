@@ -88,7 +88,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
         Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         ins:Hide();
-        Event.Brocast("SmallPop","修改成功",300)
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
     if number == ins.m_data.num and price == ins.m_data.price then
@@ -99,13 +99,13 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         local num = ins.m_data.num - number
         Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
         ins:Hide();
-        Event.Brocast("SmallPop","数量修改成功",300)
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
     if number == ins.m_data.num and price ~= ins.m_data.price then
         Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         ins:Hide();
-        Event.Brocast("SmallPop","价格修改成功",300)
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
 end

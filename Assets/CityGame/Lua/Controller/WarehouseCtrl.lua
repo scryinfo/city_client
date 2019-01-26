@@ -242,13 +242,36 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             if not go.m_data.shelf.good then
+                if v.inputPrice.text == "0" then
+                    Event.Brocast("SmallPop","请输入价格",300)
+                    return
+                end
+                if v.inputNumber.text == "0" then
+                    Event.Brocast("SmallPop","请输入数量",300)
+                    return
+                end
                 Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                --return;
             else
                 for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
+                        if v.inputPrice.text == "0" then
+                            Event.Brocast("SmallPop","请输入价格",300)
+                            return
+                        end
+                        if v.inputNumber.text == "0" then
+                            Event.Brocast("SmallPop","请输入数量",300)
+                            return
+                        end
                         Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
+                end
+                if v.inputPrice.text == "0" then
+                    Event.Brocast("SmallPop","请输入价格",300)
+                    return
+                end
+                if v.inputNumber.text == "0" then
+                    Event.Brocast("SmallPop","请输入数量",300)
+                    return
                 end
                 Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
@@ -312,7 +335,6 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         else
             for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
                 Event.Brocast("c_Transport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                --Event.Brocast("m_ReqTransport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
         end
     end

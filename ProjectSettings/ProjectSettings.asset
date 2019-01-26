@@ -557,7 +557,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: ASYNC_MODE;LUA_BUNDEL1;RES_BUNDEL1;LUA_LOG;AMPLIFY_SHADER_EDITOR
-    7: HOTUP;LUA_BUNDEL;RES_BUNDEL;LUA_LOG1;ASYNC_MODE
+    7: HOTUP;LUA_BUNDEL1;RES_BUNDEL;LUA_LOG1;ASYNC_MODE
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

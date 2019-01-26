@@ -23,23 +23,23 @@ function PlayerTempModel.Update()
     --
     --    Event.Brocast("c_GroundBuildingCheck")
     --end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        --PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
-
-        PlayerTempModel.tempTestReqAddItem(2102002,99)
-        PlayerTempModel.tempTestReqAddItem(2102003,99)
-        PlayerTempModel.tempTestReqAddItem(2102004,99)
-
-        PlayerTempModel.tempTestReqAddItem(2101001,99)
-        PlayerTempModel.tempTestReqAddItem(2101002,99)
-        PlayerTempModel.tempTestReqAddItem(2101003,99)
-        PlayerTempModel.tempTestReqAddItem(2101004,99)
-
-        PlayerTempModel.tempTestReqAddItem(2103001,99)
-        PlayerTempModel.tempTestReqAddItem(2103002,99)
-        PlayerTempModel.tempTestReqAddItem(2103003,99)
-        PlayerTempModel.tempTestReqAddItem(2103004,99)
-    end
+    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+    --    --PlayerTempModel.tempTestReqAddGroung(0,0,10,10)  --小元
+    --
+    --    PlayerTempModel.tempTestReqAddItem(2102002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2102004,99)
+    --
+    --    PlayerTempModel.tempTestReqAddItem(2101001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2101004,99)
+    --
+    --    PlayerTempModel.tempTestReqAddItem(2103001,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103002,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103003,99)
+    --    PlayerTempModel.tempTestReqAddItem(2103004,99)
+    --end
     --
     --
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
@@ -56,9 +56,9 @@ function PlayerTempModel.Update()
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.D) then
     --    --PlayerTempModel.tempTestReqAddItem(2151001, 999)
     --end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
-    --    PlayerTempModel.tempTestAddGroung(31,31, 40,40)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.M) then
+        PlayerTempModel.tempTestAddGroung(31,31, 40,40)
+    end
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Y) then
     --    PlayerTempModel.m_ReqAddBuilding(1100001, 300, 310)
     --end
@@ -104,9 +104,9 @@ function PlayerTempModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
         PlayerTempModel.tempTestAddGroung(11,0, 20,10)
     end
-    --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
-    --    PlayerTempModel.tempTestAddGroung(21,0, 30,10)
-    --end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.S) then
+        PlayerTempModel.tempTestAddGroung(21,0, 30,10)
+    end
     --
     --if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.P) then
     --    PlayerTempModel.tempTestAddGroung(150,150, 160,160)

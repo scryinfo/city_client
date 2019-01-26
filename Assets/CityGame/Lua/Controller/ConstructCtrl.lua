@@ -80,7 +80,7 @@ end
 
 function ConstructCtrl:Hide()
     UIPanel.Hide(self)
-    UnitTest.Exec_now("Allen_wk14_MyGround", "c_DestoryMyGrounds",self)
+    ConstructCtrl.ClearMyGrounds()
     CameraMove.ChangeCameraState(TouchStateType.NormalState)
     Event.Brocast("m_abolishConstructBuild")
     Event.Brocast("c_ShowGroundBubble")
@@ -123,52 +123,13 @@ function ConstructCtrl.CreateMyGrounds()
 
 end
 
-
-
-UnitTest.TestBlockStart()
-UnitTest.Exec("Allen_wk14_MyGround", "test_CreateMyGrounds_self",  function ()
-    ct.log("Allen_wk14_MyGround","[c_CreateMyGrounds] ...............")
-    Event.AddListener("c_CreateMyGrounds", function (obj)
-        if not DataManager.TempDatas then
-            DataManager.TempDatas ={}
-        end
-        DataManager.TempDatas.myGroundObj = {}
-        local myPersonData = DataManager.GetMyPersonData()
-        local myGroundPath = PlayerBuildingBaseData[4000001].prefabRoute
-        if myPersonData.m_groundInfos then
-            for key, value in pairs(myPersonData.m_groundInfos) do
-                if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
-                    buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
-                end
-            end
-        else
-            myPersonData.m_groundInfos = {}
-        end
-        if  myPersonData.m_rentGroundInfos then
-            for key, value in pairs(myPersonData.m_rentGroundInfos) do
-                if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
-                    buildMgr:CreateBuild(myGroundPath,CreateMyGroundSuccess,Vector3.New(value.x,0,value.y))
-                end
-            end
-        else
-            myPersonData.m_rentGroundInfos = {}
-        end
-    end)
-end)
-
-
-UnitTest.Exec("Allen_wk14_MyGround", "test_c_DestoryMyGrounds_self",  function ()
-    ct.log("Allen_wk14_MyGround","[c_DestoryMyGrounds] ...............")
-    Event.AddListener("c_DestoryMyGrounds", function (obj)
-        if not DataManager.TempDatas or not DataManager.TempDatas.myGroundObj then
-            return
-        end
-        for key, value in pairs(DataManager.TempDatas.myGroundObj) do
-                destroy(value)
-        end
-        DataManager.TempDatas.myGroundObj = nil
-    end)
-end)
-
-
-UnitTest.TestBlockEnd()
+--删除我的地块
+function ConstructCtrl.ClearMyGrounds()
+    if not DataManager.TempDatas or not DataManager.TempDatas.myGroundObj then
+        return
+    end
+    for key, value in pairs(DataManager.TempDatas.myGroundObj) do
+        destroy(value)
+    end
+    DataManager.TempDatas.myGroundObj = nil
+end

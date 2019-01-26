@@ -17,7 +17,8 @@ function GameNoticeModel:OnCreate()
      DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delMail","gs.Id",self.n_OnDeleMails,self)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","mailRead"),GameNoticeModel.n_OnMailRead);
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delMail"),GameNoticeModel.n_OnDeleMails);
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnMaterialFactory,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnProduceDepartment,self)
 end
 
 function GameNoticeModel:Close()
@@ -42,6 +43,16 @@ function GameNoticeModel:m_GetMyFriendsInfo(friendsIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds})
 end
 
+--获取原料厂详情
+function GameNoticeModel:m_GetMateralDetailInfo(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","detailMaterialFactory" ,"gs.Id",{id = buildingId})
+end
+
+--获取加工厂详情
+function GameNoticeModel:m_GetProduceDepartment(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","detailMaterialFactory" ,"gs.Id",{id = buildingId})
+end
+
 --服务器回调--
 
 --查看
@@ -57,4 +68,14 @@ function GameNoticeModel:n_OnDeleMails(lMsg)
     --local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
     local go = NoticeMgr.notice[lMsg.id]
     Event.Brocast("c_OnDeleMails",go)
+end
+
+--原料厂建筑详情回调
+function GameNoticeModel:n_OnMaterialFactory(info)
+    Event.Brocast("c_MaterialInfo",info.info.name)
+end
+
+--加工厂建筑详情回调
+function GameNoticeModel:n_OnProduceDepartment(info)
+    Event.Brocast("c_ProduceInfo",info.info.name)
 end

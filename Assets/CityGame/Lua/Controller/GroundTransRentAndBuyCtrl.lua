@@ -30,7 +30,7 @@ function GroundTransRentAndBuyCtrl:Awake(go)
             return
         end
         GroundTransRentAndBuyPanel.tenancyText.text = value
-        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..value * GroundTransRentAndBuyCtrl.tempRentPreDay
+        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..getPriceString(GetClientPriceString(value * GroundTransRentAndBuyCtrl.tempRentPreDay),24,20)
     end)
 end
 
@@ -48,7 +48,7 @@ function GroundTransRentAndBuyCtrl:Active()
     GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(24040005)
     GroundTransRentAndBuyPanel.rentBtnText06.text = GetLanguage(24050001)
     GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(24040001)
-
+    GroundTransRentAndBuyPanel.rentBtnText08.text = GetLanguage(24050001)
 end
 
 function GroundTransRentAndBuyCtrl:Hide()
@@ -78,13 +78,13 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
         GroundTransRentAndBuyPanel.tenancySlider.maxValue = groundInfo.rent.rentDaysMax
         GroundTransRentAndBuyPanel.tenancySlider.value = GroundTransRentAndBuyPanel.tenancySlider.maxValue
         GroundTransRentAndBuyPanel.tenancyText.text = GroundTransRentAndBuyPanel.tenancySlider.value
-        GroundTransRentAndBuyPanel.dayRentalText.text = "E"..groundInfo.rent.rentPreDay
-        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value
+        GroundTransRentAndBuyPanel.dayRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay), 24, 20)
+        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value),24,20)
         GroundTransRentAndBuyCtrl.tempRentPreDay = groundInfo.rent.rentPreDay  --显示日租金
 
     elseif groundState == GroundTransState.Sell then
         GroundTransRentAndBuyPanel.sellRoot.localScale = Vector3.one
-        GroundTransRentAndBuyPanel.sellPriceText.text = groundInfo.sell.price
+        GroundTransRentAndBuyPanel.sellPriceText.text = "E"..getPriceString(GetClientPriceString(groundInfo.sell.price), 24, 20)
     end
 end
 

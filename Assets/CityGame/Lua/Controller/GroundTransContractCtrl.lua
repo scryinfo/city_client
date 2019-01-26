@@ -61,8 +61,8 @@ function GroundTransContractCtrl:_setShowState(data)
         GroundTransContractPanel.rentTipText.text = GetLanguage(24050007)
         GroundTransContractPanel.chooseState(true)
         local total = data.groundInfo.rent.rentPreDay * data.rentDay
-        GroundTransContractPanel.rentDailyRentText.text = "E"..data.groundInfo.rent.rentPreDay
-        GroundTransContractPanel.totalPriceText.text = "E"..total
+        GroundTransContractPanel.rentDailyRentText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.rent.rentPreDay),30,24)
+        GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(total),48,36)
         GroundTransContractPanel.rentTenancyText.text = data.rentDay.."d"
         local nowStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime())
         local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
@@ -70,7 +70,7 @@ function GroundTransContractCtrl:_setShowState(data)
     else
         GroundTransContractPanel.titleText01.text = GetLanguage(24040003)
         GroundTransContractPanel.chooseState(false)
-        GroundTransContractPanel.totalPriceText.text = "E"..data.groundInfo.sell.price
+        GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.sell.price),48,36)
     end
     GroundTransContractPanel.rentAreaText.text = "1x1"
     GroundTransContractPanel.buyAreaText.text = "1x1"

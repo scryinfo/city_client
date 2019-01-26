@@ -65,7 +65,7 @@ public class CityBuild : Editor
         }
 
         // 打包出 APK 名
-        string buildTime = System.DateTime.Now.ToString("yyyyMMddHHmmss", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+        string buildTime = System.DateTime.Now.ToString("yyyyMMddHHmm", System.Globalization.DateTimeFormatInfo.InvariantInfo);
         string apkName = string.Format("./Apk/{0}.apk", "city_"+ buildTime);
         // 执行打包
         string res = BuildPipeline.BuildPlayer(levels.ToArray(), apkName, buildTarget, BuildOptions.None);

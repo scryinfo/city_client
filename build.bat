@@ -19,6 +19,6 @@ D:\Unity\Editor\Unity.exe -quit -batchmode -executeMethod CityBuild.BuildResourc
 echo res building finished  at  %time%.............!  
 
 echo copy new Apk to D:\city_project\apk  
-XCOPY ..\client\Apk  D:\city_project\apk /s /e /k /h /g /c /r/y
+XCOPY ..\client\Apk  D:\city_project\apk\Develop /s /e /k /h /g /c /r/y
 rd/s/q ..\client\Apk
 

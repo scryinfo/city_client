@@ -3,7 +3,7 @@ UIPanel:ResgisterOpen(SystemSettingCtrl) --注册打开的方法
 
 local panel
 local LuaBehaviour;
-local CityEngineLua=CityEngineLua
+--local CityEngineLua=CityEngineLua
 
 function  SystemSettingCtrl:bundleName()
     return "Assets/CityGame/Resources/View/SystemSettingPanel.prefab"
@@ -50,6 +50,7 @@ function SystemSettingCtrl:c_OnClickout(ins)
     CityEngineLua:reset()
  --   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
     UIPanel.ClearAllPages()
+    DataManager.Close()
    -- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
     CityEngineLua.currserver = "";
     CityEngineLua.currstate = "";

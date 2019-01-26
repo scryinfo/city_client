@@ -49,6 +49,11 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
+
+end
+
+function GameMainInterfaceCtrl:Close()
+    GameMainInterfaceCtrl:RemoveUpdata()
 end
 
 --金币改变

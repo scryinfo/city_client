@@ -26,7 +26,7 @@ cd %scptool%
 
 ::调用软件 执行上传
 
-WinSCP.exe /console /command "option batch continue" "option confirm off" "open root:djf0KJop9823u7j*@40.73.5.184:22" "cd /home/cityrs/city1" "lcd G:\city_project\client\Assets\StreamingAssets\" "option transfer binary" "put G:\city_project\client\Assets\StreamingAssets\*.* /home/cityrs/city1 " "close" "exit"
+WinSCP.exe /console /command "option batch continue" "option confirm off" "open root:djf0KJop9823u7j*@40.73.5.184:22" "cd /home/cityrs/city1" "lcd ..\client\Assets\StreamingAssets\" "option transfer binary" "put ..\client\Assets\StreamingAssets\*.* /home/cityrs/city " "close" "exit"
 
 echo upload completed.....
 

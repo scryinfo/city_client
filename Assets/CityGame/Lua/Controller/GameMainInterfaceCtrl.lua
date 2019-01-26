@@ -196,7 +196,9 @@ end
 local date
 local hour
 function GameMainInterfaceCtrl:RefreshWeather()
-    GameMainInterfacePanel.time.text = os.date("%H:%M")
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
     GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
     date = tonumber(os.date("%Y%m%d"))
     hour = tonumber(os.date("%H"))

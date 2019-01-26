@@ -158,12 +158,12 @@ function CompanyCtrl:c_OnReceivePlayerEconomy(economyInfos)
                 end
             end
         end
-        CompanyPanel.incomeText.text = tostring(allIncome)
-        CompanyPanel.expenditureText.text = tostring(allExpenses)
+        CompanyPanel.incomeText.text = GetClientPriceString(allIncome)
+        CompanyPanel.expenditureText.text = GetClientPriceString(allExpenses)
         CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItemId)
     else
-        CompanyPanel.incomeText.text = "0"
-        CompanyPanel.expenditureText.text = "0"
+        CompanyPanel.incomeText.text = "0.0000"
+        CompanyPanel.expenditureText.text = "0.0000"
         CompanyPanel.tipsText:SetActive(true)
         CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, 0)
     end

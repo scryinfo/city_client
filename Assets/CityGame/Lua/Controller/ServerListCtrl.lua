@@ -59,6 +59,7 @@ end
 
 function ServerListCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
+    tempBg = nil
 
  end
 

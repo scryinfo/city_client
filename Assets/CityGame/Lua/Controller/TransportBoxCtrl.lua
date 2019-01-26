@@ -38,13 +38,13 @@ function TransportBoxCtrl:refreshUiInfo()
         TransportBoxPanel.goodsObj.localScale = Vector3.zero
         TransportBoxPanel.transportObj.localScale = Vector3.zero
         TransportBoxPanel.transportsObj.localScale = Vector3.one
-        TransportBoxPanel.transportsMoney.text =  "E"..math.floor(self.m_data.freight)..".0000";
+        TransportBoxPanel.transportsMoney.text =  "E"..self.m_data.freight;
     else
         TransportBoxPanel.goodsObj.localScale = Vector3.one
         TransportBoxPanel.transportObj.localScale = Vector3.one
         TransportBoxPanel.transportsObj.localScale = Vector3.zero
-        TransportBoxPanel.transportMoney.text = "E"..math.floor(self.m_data.freight)..".0000";
-        TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice..".0000";
+        TransportBoxPanel.transportMoney.text = "E"..self.m_data.freight;
+        TransportBoxPanel.goodsMoney.text = "E"..self.m_data.goodsPrice;
 
     end
     --self.buildingId = self.m_data.buildingId;
@@ -53,7 +53,7 @@ function TransportBoxCtrl:refreshUiInfo()
     TransportBoxPanel.targetName.text = self.m_data.targetLocationName;
     TransportBoxPanel.distanceText.text = math.floor(self.m_data.distance).."km";
     TransportBoxPanel.numberText.text = self.m_data.number;
-    TransportBoxPanel.totalMoney.text = "E"..math.floor(self.m_data.total)..".0000";
+    TransportBoxPanel.totalMoney.text = "E"..self.m_data.total;
 end
 function TransportBoxCtrl:OnClick_closeBtn(ins)
     PlayMusEff(1002)

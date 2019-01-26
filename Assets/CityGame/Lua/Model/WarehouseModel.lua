@@ -85,7 +85,7 @@ end
 --修改货架数量或价格
 function WarehouseModel.n_OnModifyShelfInfo(stream)
     local msgModifyShelfInfo = assert(pbl.decode("gs.ShelfSet",stream),"WarehouseModel.n_OnModifyShelfInfo")
-    Event.Brocast("refreshUiInfo",msgModifyShelfInfo)
+    Event.Brocast("shelfRefreshUiInfo",msgModifyShelfInfo)
 end
 --删除仓库物品
 function WarehouseModel.n_GsDelItem(stream)

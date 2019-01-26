@@ -37,7 +37,7 @@ function ShelfCtrl:Awake(go)
     isShowList = false;
     switchIsShow = false;
     ShelfPanel.nameText.text = GetLanguage(26040002)
-
+    Event.AddListener("shelfRefreshUiInfo",self.refreshUiInfo,self)
 end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
@@ -256,6 +256,18 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
                 end
                 Event.Brocast("SmallPop","购买成功",300)
             end
+        end
+    end
+end
+--修改价格后刷新回调
+function ShelfCtrl:refreshUiInfo(msg)
+    if not msg then
+        return
+    end
+    for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
+        if v.itemId == msg.item.key.id then
+            v.moneyText.text = "E"..GetClientPriceString(msg.price)
+            v.numberText.text = msg.item.n
         end
     end
 end

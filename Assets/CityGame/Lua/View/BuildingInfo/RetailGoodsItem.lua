@@ -28,7 +28,7 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
     self.brandName.text = "Addypolly"
     self.brandValue.text = "0"
     self.qualityValue.text = self.goodsDataInfo.k.qty
-    self.moneyText.text = "E"..self.goodsDataInfo.price..".0000"
+    self.moneyText.text = "E"..GetClientPriceString(self.goodsDataInfo.price)
 
     local type = ct.getType(UnityEngine.Sprite)
     panelMgr:LoadPrefab_A(Good[self.goodsDataInfo.k.id].img,type,nil,function(goodData,obj)

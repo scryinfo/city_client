@@ -48,7 +48,7 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,st
     --赋值
     --self.nameText.text = self.name
     self.numberText.text = self.num
-    self.moneyText.text = self.price..".0000"
+    self.moneyText.text = GetClientPriceString(self.price)
 
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);

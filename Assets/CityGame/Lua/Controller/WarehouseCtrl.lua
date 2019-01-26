@@ -221,15 +221,15 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             if not go.m_data.shelf.good then
                 Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                return;
+                --return;
             else
                 for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
                         Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
                 end
+                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
-            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
         end
     end
 end

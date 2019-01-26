@@ -75,7 +75,9 @@ function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
     elseif state.groundState == 1 then
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
         GameMainInterfacePanel.isAuction.localScale = Vector3.one
-        countDown = state.durationSec
+        local endTime = state.beginTime + state.durationSec    --结束时间
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        countDown = endTime - currentTime
         groundState = GetLanguage(11020001)
     else
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero

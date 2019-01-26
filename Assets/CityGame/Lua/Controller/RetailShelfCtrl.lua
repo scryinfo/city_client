@@ -60,7 +60,12 @@ function RetailShelfCtrl:Refresh()
     end
     RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].shelfCapacity;
     RetailShelfPanel.capacitySlider.value = self:getShelfCapacity(self.m_data.shelf.good)
-    RetailShelfPanel.numberText.text = getColorString(RetailShelfPanel.capacitySlider.value,RetailShelfPanel.capacitySlider.maxValue,"blue","white")
+    local numTab = {}
+    numTab["num1"] = RetailShelfPanel.capacitySlider.value
+    numTab["num2"] = RetailShelfPanel.capacitySlider.maxValue
+    numTab["col1"] = "blue"
+    numTab["col2"] = "white"
+    RetailShelfPanel.numberText.text = getColorString(numTab)
 end
 --打开名字数量价格排序
 function RetailShelfCtrl:OnClick_arrowBtn(go)

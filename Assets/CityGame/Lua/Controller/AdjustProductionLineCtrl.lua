@@ -40,6 +40,7 @@ function AdjustProductionLineCtrl:Active()
     --Event.AddListener("refreshTime",self.refreshTime,self)
     Event.AddListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.AddListener("refreshNowConte",self.refreshNowConte,self)
+    Event.AddListener("callbackDataInfo",self.callbackDataInfo,self)
 end
 function AdjustProductionLineCtrl:Refresh()
     if self.m_data ~= nil then
@@ -93,6 +94,7 @@ function AdjustProductionLineCtrl:Hide()
     --Event.RemoveListener("refreshTime",self.refreshTime,self)
     Event.RemoveListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.RemoveListener("refreshNowConte",self.refreshNowConte,self)
+    Event.RemoveListener("callbackDataInfo",self.callbackDataInfo,self)
 
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
@@ -108,15 +110,6 @@ function AdjustProductionLineCtrl:calculateTime(msg)
     if not msg then
         return
     end
-    --local materialKey,goodsKey = 21,22
-    --local time = 0
-    --if math.floor(msg.line.itemId / 100000) == materialKey then
-    --    time = 1 / Material[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    --elseif math.floor(msg.line.itemId / 100000) == goodsKey then
-    --    time = 1 / Good[msg.line.itemId].numOneSec / msg.line.workerNum * msg.line.targetCount
-    --end
-    --local timeTab = getTimeBySec(time)
-    --local timeStr = timeTab.hour..":"..timeTab.minute..":"..timeTab.second
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
             --v.timeText.text = timeStr.
@@ -141,10 +134,6 @@ function AdjustProductionLineCtrl:calculateMinuteNum(msg)
         end
     end
 end
-----修改生产线
---function AdjustProductionLineCtrl:OnClick_modifyBtn()
---    Event.Brocast("m_ResModifyKLine",ins.data.info.id,SmallProductionLineItem.number,SmallProductionLineItem.staffNumr,SmallProductionLineItem.lineid);
---end
 --删除生产中或生产完的生产线
 function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     if not msg then
@@ -254,13 +243,52 @@ function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then
         return;
     end
-    for i,k in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-        if msg.id == k.lineId then
-            --local remainingNum = k.inputNumber.text - msg.nowCount
-            k.time_Slider.value = msg.nowCount
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if msg.id == v.lineId then
+            if msg.nowCount ~= nil then
+                v.time_Slider.value = msg.nowCount
+            end
         end
     end
 end
+--调整生产线回调
+function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
+    if not DataInfo then
+        return
+    end
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if DataInfo.lineId == v.lineId then
+            if DataInfo.targetCount ~= nil then
+                v.time_Slider.maxValue = DataInfo.targetCount
+                v.inputNumber.text = DataInfo.targetCount
+                v.pNumberScrollbar.maxValue = DataInfo.targetCount
+                v.numberText.text = v.time_Slider.value.."/"..v.pNumberScrollbar.maxValue
+                --v.timeText.text = self:againCalculateTime(DataInfo)
+            end
+        end
+    end
+end
+----调整成功后重新计算时间
+--function AdjustProductionLineCtrl:againCalculateTime(DataInfo)
+--    if not DataInfo then
+--        return
+--    end
+--    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+--        if DataInfo.lineId == v.lineId then
+--            local time = 0
+--            local materialKey,goodsKey = 21,22
+--            local remainingNum = DataInfo.targetCount - v.time_Slider.value
+--            if math.floor(v.itemId / 100000) == materialKey then
+--                time = 1 / Material[v.itemId].numOneSec / DataInfo.workerNum * remainingNum
+--            elseif math.floor(v.itemId / 100000) == goodsKey then
+--                time = 1 / Good[v.itemId].numOneSec / DataInfo.workerNum * remainingNum
+--            end
+--            local timeTable = getTimeBySec(time)
+--            local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+--            return timeStr
+--        end
+--    end
+--end
 --关闭面板时清空UI信息，以备其他模块调用
 function AdjustProductionLineCtrl:deleteObjInfo()
     if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then

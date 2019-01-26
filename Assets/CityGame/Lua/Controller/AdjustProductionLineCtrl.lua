@@ -51,7 +51,15 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLinePanel.locked_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
     AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --刷新时间用
-    AdjustProductionLinePanel.numberText.text = getColorString(AdjustProductionLinePanel.capacity_Slider.value,AdjustProductionLinePanel.capacity_Slider.maxValue,"blue","black")
+    local lockedNum = WarehouseCtrl:getLockedNum(self.data.store)
+    local numTab = {}
+    numTab["num1"] = AdjustProductionLinePanel.locked_Slider.value
+    numTab["num2"] = AdjustProductionLinePanel.capacity_Slider.maxValue
+    numTab["num3"] = lockedNum
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "white"
+    numTab["col3"] = "Teal"
+    AdjustProductionLinePanel.numberText.text = getColorString(numTab)
     --剩余容量
     AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)
     self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
@@ -65,11 +73,12 @@ function AdjustProductionLineCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour,self.productionLine);
     end
     --self:refreshTime(self.data.line)
-    local capacity = {}
-    capacity[self.idleWorkerNum] = "red"
-    capacity[self.buildingMaxWorkerNum] = "black"
-
-    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+    local idelTab = {}
+    idelTab["num1"] = self.idleWorkerNum
+    idelTab["num2"] = self.buildingMaxWorkerNum
+    idelTab["col1"] = "red"
+    idelTab["col2"] = "black"
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
 end
 
 function AdjustProductionLineCtrl:OnClick_returnBtn(go)
@@ -177,13 +186,23 @@ end
 function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
-    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+    local idelTab = {}
+    idelTab["num1"] = self.idleWorkerNum
+    idelTab["num2"] = self.buildingMaxWorkerNum
+    idelTab["col1"] = "red"
+    idelTab["col2"] = "black"
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
 end
 --删除生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     self.idleWorkerNum = self.idleWorkerNum + number * 5
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
-    AdjustProductionLinePanel.idleNumberText.text = getColorString(self.idleWorkerNum,self.buildingMaxWorkerNum,"red","black")
+    local idelTab = {}
+    idelTab["num1"] = self.idleWorkerNum
+    idelTab["num2"] = self.buildingMaxWorkerNum
+    idelTab["col1"] = "red"
+    idelTab["col2"] = "black"
+    AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
 end
 --添加界面获取仓库库存数量
 function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)

@@ -56,7 +56,6 @@ end
 --下架物品
 function ShelfModel.n_OnShelfDelInfo(stream)
     local msgShelfDelInfo = assert(pbl.decode("gs.ShelfDel",stream),"ShelfModel.n_OnShelfDelInfo")
-
     Event.Brocast("delGoodRefreshInfo",msgShelfDelInfo)
 end
 --购买物品

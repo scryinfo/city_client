@@ -50,7 +50,7 @@ end
 
 --获取加工厂详情
 function GameNoticeModel:m_GetProduceDepartment(buildingId)
-    DataManager.ModelSendNetMes("gscode.OpCode","detailMaterialFactory" ,"gs.Id",{id = buildingId})
+    DataManager.ModelSendNetMes("gscode.OpCode","detailProduceDepartment" ,"gs.Id",{id = buildingId})
 end
 
 --服务器回调--

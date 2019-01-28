@@ -566,6 +566,21 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
     end
 end
 
+function DataManager.RegisterErrorNetMsg()
+    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
+        local protoData = assert(pbl.decode("common.Fail", stream), "")
+        if protoData ~= nil then
+            local info = {}
+            info.titleInfo = "网络错误"
+            --替換為多語言
+            info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
+            info.tipInfo = ""
+            ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+        end
+    end)
+end
+
+
 --移除 消息回调
 function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
      if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
@@ -1176,6 +1191,7 @@ function DataManager.Init()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
+    DataManager.RegisterErrorNetMsg()
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')

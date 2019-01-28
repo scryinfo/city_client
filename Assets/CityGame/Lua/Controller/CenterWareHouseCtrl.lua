@@ -93,7 +93,12 @@ end
 
 --初始化
 function CenterWareHouseCtrl:_initData()
-    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
+    local numTab = {}
+    numTab["num1"] = self.number
+    numTab["num2"] = self.totalCapacity
+    numTab["col1"] = "cyan"
+    numTab["col2"] = "white"
+    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(numTab);
     CenterWareHousePanel.slider:GetComponent("Slider").maxValue = self.totalCapacity;
     CenterWareHousePanel.slider:GetComponent("Slider").value = self.number;
     CenterWareHousePanel.money:GetComponent("Text").text = self.money;
@@ -127,7 +132,12 @@ function CenterWareHouseCtrl:c_DelItem()
         n = n + v.n
     end
     self.number = n
-    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(self.number,self.totalCapacity,"cyan","white");
+    local numTab = {}
+    numTab["num1"] = self.number
+    numTab["num2"] = self.totalCapacity
+    numTab["col1"] = "cyan"
+    numTab["col2"] = "white"
+    CenterWareHousePanel.number:GetComponent("Text").text = getColorString(numTab);
 end
 
 --点击BG

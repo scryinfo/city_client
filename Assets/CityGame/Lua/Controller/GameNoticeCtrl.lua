@@ -54,7 +54,7 @@ function GameNoticeCtrl:Refresh()
     --打开通知Model
     self:initializeData()
     NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
-    if goId ~= nil then
+    if goId ~= nil and  NoticeMgr.notice[goId]~= nil then
         NoticeMgr.notice[goId].newBg:SetActive(true)
         bg =  NoticeMgr.notice[goId].newBg
     end

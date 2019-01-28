@@ -118,7 +118,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         DataManager.DetailModelRpcNoRet(self.insId , 'm_DeleteItem',dataId)
        -- go.manager:_deleteGoods(go.id)
     end
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
 
 --删除物品回调
@@ -274,6 +274,11 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
         return
     end
     data.btnClick = function()
+        local money = DataManager.GetMoney()
+        if money < n*data.price then
+            Event.Brocast("SmallPop","运费不足",300)
+            return
+        end
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then
                 Event.Brocast("SmallPop","运输商品个数不能为0",300)

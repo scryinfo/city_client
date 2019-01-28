@@ -84,7 +84,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
-    if go.state == "WAITING_OPEN" then
+    if go.state ~= "OPERATE"  then
         Event.Brocast("SmallPop","所选建筑未开业",300)
         return
     end

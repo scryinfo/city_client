@@ -22,7 +22,7 @@ function BaseGroundModel:Refresh(data)
     --for key, value in pairs(data) do
     --    self.Data[key] = value
     --end
-    --self:CheckGroundTransSuccess(data)
+    self:CheckGroundTransSuccess(data)
     self.Data = data
     UIBubbleManager.startBubble()
     self:CheckBubbleState(data)
@@ -53,12 +53,12 @@ function BaseGroundModel:CheckGroundTransSuccess(groundInfo)
     --之前的id~=自己，现在==自己，则购买成功
     if nil ~= DataManager.GetMyOwnerID() and self.Data.ownerId ~= DataManager.GetMyOwnerID() and groundInfo.ownerId == DataManager.GetMyOwnerID() then
         if self.groundState == GroundTransState.Sell and groundState == GroundTransState.None then
-            Event.Brocast("SmallPop", "购买成功", 300)
+            Event.Brocast("SmallPop", GetLanguage(24040007), 300)
         end
     end
     if self.groundState == GroundTransState.Renting and groundState == GroundTransState.Rent then
         if groundInfo.rent.renterId == DataManager.GetMyOwnerID() then
-            Event.Brocast("SmallPop", "租赁成功", 300)
+            Event.Brocast("SmallPop", GetLanguage(24050010), 300)
         end
     end
 
@@ -101,5 +101,6 @@ function BaseGroundModel:Close()
     if self.bubbleItem ~= nil then
         self.bubbleItem:Close()
     end
+    self.groundState = nil
     self = nil
 end

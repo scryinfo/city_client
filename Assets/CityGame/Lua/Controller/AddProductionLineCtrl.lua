@@ -22,12 +22,6 @@ function AddProductionLineCtrl:Awake(go)
         --self:Hide();
         UIPanel.ClosePage();
     end,self)
-    self.luabehaviour:AddClick(AddProductionLinePanel.leftBtn.gameObject,function()
-        --ct.OpenCtrl("AdjustProductionLineCtrl",{itemId = self.chooseInventItemId})
-        GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
-        --self:Hide();
-        UIPanel.ClosePage();
-    end,self)
 
 end
 function AddProductionLineCtrl:Active()
@@ -51,12 +45,12 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
 
-        AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
-        AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
+        AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
+        AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
             --self:Hide();
             UIPanel.ClosePage();
             --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
 
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
@@ -68,8 +62,8 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             --self:Hide()
             UIPanel.ClosePage();
-            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.chooseInventItemId,self.m_data.info.id)
+            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.leftItemId})
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
         end)
     end
 
@@ -108,7 +102,7 @@ function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
 
     if enableShow then
         AddProductionLinePanel.leftDisableImg.localScale = Vector3.zero
-        self.chooseInventItemId = itemId
+        self.leftItemId = itemId
     else
         AddProductionLinePanel.leftDisableImg.localScale = Vector3.one
     end
@@ -124,13 +118,6 @@ function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
 
     if enableShow then
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.zero
-        if LabScientificLineCtrl.static.type == 0 then
-            if itemId >= 2200000 then
-                self.chooseResearchItemId = itemId
-            end
-        else
-            self.chooseInventItemId = itemId
-        end
     else
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.one
     end

@@ -1680,6 +1680,23 @@ end
 --	CityEngineLua.login_loginapp(true);
 --end
 
+--注意，这里在运行时会调用不过来
+CityEngineLua.onConnectionState = function( state )
+	ct.log("system","[m_onConnectionState]",state.error)
+	Event.Brocast("c_ConnectionStateChange", state );
+	if state.error == '' then
+		--成功
+	else
+		local info = {}
+		info.titleInfo = "网络连接错误"
+		--替換為多語言
+		info.contentInfo = "网络错误Opcode：" ..state.error
+		info.tipInfo = ""
+		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		ct.log("system","[m_onConnectionState]"..state.error)
+	end
+end
+
 --登录到服务端(loginapp), 登录成功后还必须登录到网关(baseapp)登录流程才算完毕
 CityEngineLua.login_loginapp = function( noconnect )
 	if noconnect then
@@ -1711,16 +1728,10 @@ CityEngineLua.login_loginapp = function( noconnect )
 	end
 end
 
-CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, userData)
+CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
 	if not success then
-		ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." is error!");
-		local info = {}
-		info.titleInfo = "错误"
-		--替換為多語言
-		info.contentInfo = "网络连接超时"
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		this.onConnectionState(netState)
 		return;
 	end
 			
@@ -1776,16 +1787,10 @@ CityEngineLua.login_baseapp = function(noconnect)
 	end
 end
 
-CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userData)
+CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
 	if not success then
-		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
-		local info = {}
-		info.titleInfo = "错误"
-		--替換為多語言
-		info.contentInfo = "网络连接超时"
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		this.onConnectionState(netState)
 		return;
 	end
 	
@@ -1819,16 +1824,10 @@ CityEngineLua.login_tradeapp = function(noconnect)
 	end
 end
 
-CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, userData)
+CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
 	if not success then
-		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
-		local info = {}
-		info.titleInfo = "错误"
-		--替換為多語言
-		info.contentInfo = "网络连接超时"
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		this.onConnectionState(netState)
 		return;
 	end
 

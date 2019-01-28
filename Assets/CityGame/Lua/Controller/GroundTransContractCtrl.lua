@@ -97,7 +97,6 @@ function GroundTransContractCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
         GroundTransModel.m_ReqBuyGround(ins.m_data.groundInfo.sell.price)
-        Event.Brocast("SmallPop","Success", 300)
         GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
@@ -106,7 +105,6 @@ function GroundTransContractCtrl:_rentBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
         GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
-        Event.Brocast("SmallPop","Success", 300)
         GroundTransSetPriceCtrl._closeBackToMain()
     end
 end

@@ -315,6 +315,9 @@ function WarehouseCtrl:n_shelfAdd(msg)
             end
         end
     end
+    if not self.m_data.shelf.good then
+        return
+    end
     for i,v in pairs(self.m_data.shelf.good) do
         if v.k.id == msg.item.key.id then
             v.n = v.n + msg.item.n

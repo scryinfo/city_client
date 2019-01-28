@@ -96,8 +96,12 @@ end
 function GroundTransContractCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
+        if ins.m_data.groundInfo.sell.price > DataManager.GetMoney() then
+            Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+            GroundTransSetPriceCtrl._closeBackToMain()
+            return
+        end
         GroundTransModel.m_ReqBuyGround(ins.m_data.groundInfo.sell.price)
-        Event.Brocast("SmallPop","Success", 300)
         GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
@@ -105,8 +109,12 @@ end
 function GroundTransContractCtrl:_rentBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
+        if ins.m_data.groundInfo.rent.rentPreDay * ins.m_data.rentDay > DataManager.GetMoney() then
+            Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+            GroundTransSetPriceCtrl._closeBackToMain()
+            return
+        end
         GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
-        Event.Brocast("SmallPop","Success", 300)
         GroundTransSetPriceCtrl._closeBackToMain()
     end
 end

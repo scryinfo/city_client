@@ -376,7 +376,7 @@ function ReadConfigLanguage()
 	for key, content in pairs(Sprite_Chinese) do
 		sprite_chi[key]=content
 	end
-	for key, content in pairs(Sprite_Chinese) do
+	for key, content in pairs(Sprite_English) do
 		sprite_eng[key]=content
 	end
 

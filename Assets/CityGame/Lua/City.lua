@@ -24,7 +24,6 @@ local log = log
 
 --服务器
 CityEngineLua.ip = AppConst.asServerIp
---CityEngineLua.ip = "192.168.0.51";
 CityEngineLua.port = "9001";
 
 -- Mobile(Phone, Pad)	= 1,

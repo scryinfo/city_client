@@ -23,8 +23,10 @@
 	{
         public int testId = 1;
         public delegate void AsyncConnectMethod(ConnectState state);
+        public delegate void AsyncConnectTimeOutMethod(DateTime start);
         public const int TCP_PACKET_MAX = 1024*1024*1;
         public delegate void ConnectCallback(string ip, int port, bool success, object userData);
+        public delegate void ConnectTimeOutCallback(DateTime start, int test);
         public AsyncConnectMethod _connectDelegate = null;
         public ConnectState _ConnectState = null;
         protected Socket _socket = null;
@@ -33,8 +35,9 @@
 
 		public bool connected = false;
         private DateTime _connectionStart;
+        private IAsyncResult _result;
 #if UNITY_EDITOR
-        private float _connectionTimeOut = 4000;
+        private float _connectionTimeOut = 2000;
 #else
         private float _connectionTimeOut = 8000;            
 #endif
@@ -185,14 +188,18 @@
 			Event.fireIn("_onConnectionState", new object[] { state });
 		}
 
-        IEnumerator OnCheckConnectionTimeOut()
+        void OnCheckConnectionTimeOut(DateTime start)
         {
-            yield return (System.DateTime.Now - _connectionStart).TotalMilliseconds > _connectionTimeOut;
+            TimeSpan checkinterval = TimeSpan.FromMilliseconds(100);
+            while ((System.DateTime.Now - start).TotalMilliseconds < _connectionTimeOut){
+                System.Threading.Thread.Sleep(checkinterval);
+            }
             //超时处理            
-            _connectDelegate.EndInvoke(null);
             close();
             _ConnectState.error = "Failed";
             Event.fireIn("_onConnectionState", new object[] { _ConnectState });
+            _connectDelegate.EndInvoke(_result);
+            Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
         }
 
 
@@ -238,10 +245,11 @@
 			Event.registerIn("_onConnectionState", this, "_onConnectionState");
 
             _connectDelegate = new AsyncConnectMethod(this._asyncConnect);
-            _connectDelegate.BeginInvoke(_ConnectState, new AsyncCallback(this._asyncConnectCB), _ConnectState);
+            _result = _connectDelegate.BeginInvoke(_ConnectState, new AsyncCallback(this._asyncConnectCB), _ConnectState);
             _connectionStart = System.DateTime.Now;
 
-
+            var v = new AsyncConnectTimeOutMethod(this.OnCheckConnectionTimeOut);
+            v.BeginInvoke(_connectionStart, null,null);            
         }
 
         private bool IsHaveIpV6Address(IPAddress[] IPs, ref IPAddress[] outIPs)

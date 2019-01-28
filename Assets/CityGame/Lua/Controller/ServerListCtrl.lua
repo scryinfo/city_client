@@ -87,6 +87,7 @@ function ServerListCtrl:c_OnServer(go)
     tempBg = go.bg;
     tempTag = go.tag
     Index = go.id;
+    RobotIns:SaveData("serinofs",go.data)
 end
 
 --点击确定--

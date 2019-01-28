@@ -61,6 +61,7 @@ function CtrlManager.Init()
 	ReadConfigLanguage()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面
+	RobotIns =RobotTest:new()
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	MusicManger:Awake()

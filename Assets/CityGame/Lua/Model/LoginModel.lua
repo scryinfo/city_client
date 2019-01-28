@@ -53,6 +53,7 @@ function LoginModel:n_AllGameServerInfo( msgAllGameServerInfo )
         --服务器发过来的bytes测试
         UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",serinofs)
         --服务器发过来的bytes测试
+        Event.Brocast("RobotTest_OnAsLogin");
         return
     end
 

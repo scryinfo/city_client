@@ -155,7 +155,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.smallMap.gameObject,self.OnSmallMap,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
@@ -384,12 +384,11 @@ function GameMainInterfaceCtrl.OnGuideBool()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
---广告设施
-function GameMainInterfaceCtrl:OnAdvertisFacilitie()
+--小地图
+function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("MunicipalCtrl")
-    Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
+    ct.OpenCtrl("MiniMapCtrl")
 end
 
 --中心建筑

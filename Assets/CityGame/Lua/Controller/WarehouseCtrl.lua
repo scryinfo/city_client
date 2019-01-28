@@ -60,9 +60,7 @@ function WarehouseCtrl:Active()
     UIPanel.Active(self)
     LoadSprite(GetSprite("Warehouse"), WarehousePanel.warehouseImg:GetComponent("Image"), false)
     WarehousePanel.tipText.text = GetLanguage(26040002)
-    if self.m_data.shelfOpen ~= nil then
-        self:OnClick_rightInfo(not switchIsShow,0)
-    end
+
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
@@ -95,6 +93,9 @@ function WarehouseCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
     else
         return
+    end
+    if self.m_data.shelfOpen ~= nil then
+        self:OnClick_rightInfo(not switchIsShow,0)
     end
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
@@ -306,7 +307,12 @@ function WarehouseCtrl:n_shelfAdd(msg)
             end
         end
     end
-
+    for i,v in pairs(self.m_data.shelf.good) do
+        if v.k.id == msg.item.key.id then
+            v.n = v.n + msg.item.n
+            v.price = msg.price
+        end
+    end
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)

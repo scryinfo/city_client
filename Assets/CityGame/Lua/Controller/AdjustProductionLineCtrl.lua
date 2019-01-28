@@ -194,26 +194,20 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
 end
 --添加界面获取仓库库存数量
 function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
-    if itemId then
-        if AdjustProductionLineCtrl.store then
-            if AdjustProductionLineCtrl.store.inHand == nil then
-                local num = 0
-                return num
-            end
-            for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
-                if v.key.id == itemId then
-                    return v.n
-                end
-                if v.key.id ~= itemId then
-                    local num = 0
-                    return num
-                end
-            end
-        else
-            local num = 0
-            return num
+    if not itemId then
+        return
+    end
+    if not AdjustProductionLineCtrl.store.inHand then
+        local number = 0
+        return number
+    end
+    for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+        if v.key.id == itemId then
+            return v.n
         end
     end
+        local number = 0
+        return number
 end
 ----读取生产线，初始化时间
 --function AdjustProductionLineCtrl:refreshTime(infoTab)

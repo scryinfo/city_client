@@ -46,8 +46,9 @@ function MiniMapCtrl:EnLargeMap()
             scale_value = self.ScaleMax
         end
         if self.my_Scale ~= scale_value then
+            self:CenterOffset(self.my_Scale,scale_value)
             self.my_Scale = scale_value
-            RefreshMiniMapScale()
+            self:RefreshMiniMapScale()
         end
     end
 end
@@ -60,18 +61,37 @@ function MiniMapCtrl:NarrowMap()
             scale_value = self.ScaleMin
         end
         if self.my_Scale ~= scale_value then
+            self:CenterOffset(self.my_Scale,scale_value)
             self.my_Scale = scale_value
-            RefreshMiniMapScale()
+            self:RefreshMiniMapScale()
         end
     end
 end
 
+--做中心偏移
+function MiniMapCtrl:CenterOffset(beginScale,EndScale)
+    local TargetAnchoredPosition = MiniMapPanel.rect_MiniMapBg.anchoredPosition * (EndScale/ beginScale)
+    local NowRangeSize = (EndScale - 1) * MiniMapPanel.rect_MiniMapBg.sizeDelta.x / 2
+    if TargetAnchoredPosition.x > NowRangeSize then
+        TargetAnchoredPosition.x = NowRangeSize
+    elseif  TargetAnchoredPosition.x < -NowRangeSize then
+        TargetAnchoredPosition.x = -NowRangeSize
+    end
+    if TargetAnchoredPosition.y > NowRangeSize then
+        TargetAnchoredPosition.y = NowRangeSize
+    elseif  TargetAnchoredPosition.y < -NowRangeSize then
+        TargetAnchoredPosition.y = -NowRangeSize
+    end
+    MiniMapPanel.rect_MiniMapBg:DOAnchorPos(TargetAnchoredPosition , self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
+end
+
+
 --刷新当前地图的大小
-function RefreshMiniMapScale()
+function MiniMapCtrl:RefreshMiniMapScale()
     --刷新Slider
     MiniMapPanel.slider_Scale.value = self.my_Scale
     --TODO:做中心偏移
-    this.rect_MiniMapBg:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
+    MiniMapPanel.rect_MiniMapBg:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
 end
 
 function MiniMapCtrl:Awake(go)
@@ -82,13 +102,13 @@ end
 --读取配置表
 function MiniMapCtrl:InitConfig()
     --读取配置表
-    self.ScaleMin = TerrainConfig[MiniMap].ScaleMin
-    self.ScaleMax = TerrainConfig[MiniMap].ScaleMax
-    self.ScaleOffset = TerrainConfig[MiniMap].ScaleOffset
-    self.my_Scale = TerrainConfig[MiniMap].ScaleStart
-    self.ScaleDuringTime = TerrainConfig[MiniMap].ScaleDuringTime
+    self.ScaleMin = TerrainConfig.MiniMap.ScaleMin
+    self.ScaleMax = TerrainConfig.MiniMap.ScaleMax
+    self.ScaleOffset = TerrainConfig.MiniMap.ScaleOffset
+    self.my_Scale = TerrainConfig.MiniMap.ScaleStart
+    self.ScaleDuringTime = TerrainConfig.MiniMap.ScaleDuringTime
     --
-    self.itemWidth = MiniMapPanel.rect_MiniMapBg.sizeDelta.x / TerrainConfig[MiniMap].MapSize   --一格Item的Rect大小
+    self.itemWidth = MiniMapPanel.rect_MiniMapBg.sizeDelta.x / TerrainConfig.MiniMap.MapSize   --一格Item的Rect大小
     self.itemDelta = Vector2.New(self.itemWidth , self.itemWidth)                               --一格Item的Scale大小
 end
 
@@ -97,7 +117,7 @@ function MiniMapCtrl:Active()
     --设置地图大小和Slider初始值
     MiniMapPanel.slider_Scale.minValue = self.ScaleMin
     MiniMapPanel.slider_Scale.maxValue = self.ScaleMax
-    RefreshMiniMapScale()
+    self:RefreshMiniMapScale()
     self:_initSystemItem()
 end
 
@@ -105,12 +125,13 @@ end
 function MiniMapCtrl:_initSystemItem()
     --生成中心建筑
     local obj = UnityEngine.GameObject.Instantiate(MiniMapPanel.prefab_CentralItem,MiniMapPanel.root_system)
+    obj:SetActive(true)
     local objRect = obj:GetComponent("RectTransform")
-    local rectPos = Vector2.New(TerrainConfig.CentralBuilding.CenterNodePos.x ,TerrainConfig.CentralBuilding.CenterNodePos.z )
+    local rectPos = Vector2.New(TerrainConfig.CentralBuilding.CenterNodePos.z ,- TerrainConfig.CentralBuilding.CenterNodePos.x )
     objRect.anchoredPosition = rectPos * self.itemWidth
     objRect.sizeDelta = self.itemDelta *  PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x
     local tempBtn =  obj:GetComponent("Button")
-    tempBtn.onClick:RemoveAllListeners();
+    tempBtn.onClick:RemoveAllListeners()
     tempBtn.onClick:AddListener(function ()
         self:_clickConstructBtn(rectPos)
     end)
@@ -140,20 +161,6 @@ function MiniMapCtrl:_initItemData()
     if MyBuild.retailShop ~= nil then
         self:CreateItems(MyBuild.retailShop,MiniMapPanel.prefab_SupermarketItem,MiniMapPanel.root_supermarket)
     end
-    local path = 'View/Items/ConstructItem'
-    local prefab = UnityEngine.Resources.Load(path);
-    if not prefab then
-        return
-    end
-    local contentWidth = 0
-    self.Items  = {}
-    for key, item in ipairs(ConstructConfig) do
-        local itemObj = UnityEngine.GameObject.Instantiate(prefab,self.contentTrans)
-        self.Items[key] = ConstructItem:new(item, itemObj.transform ,contentWidth)
-        contentWidth =  self.Items[key].sizeDeltaX
-    end
-    contentWidth  =  contentWidth - 12
-    self.contentTrans:GetComponent("RectTransform").sizeDelta = Vector2.New(contentWidth,self.contentTrans:GetComponent("RectTransform").sizeDelta.y)
 end
 
 
@@ -164,8 +171,9 @@ function MiniMapCtrl:CreateItems(itemDatas,itemPrefab,itemRoot)
     for key, value in pairs(itemDatas) do
         if value.info ~= nil and value.info.pos ~= nil and value.info.pos.x ~= nil and value.info.pos.y ~= nil and value.info.mId ~= nil and PlayerBuildingBaseData[value.info.mId] ~= nil and PlayerBuildingBaseData[value.info.mId].x ~= nil  then
             local obj = UnityEngine.GameObject.Instantiate(itemPrefab,itemRoot)
+            obj:SetActive(true)
             local objRect = obj:GetComponent("RectTransform")
-            objRect.anchoredPosition = value.info.pos * self.itemWidth
+            objRect.anchoredPosition = Vector2.New( value.info.pos.y, - value.info.pos.x) * self.itemWidth
             objRect.sizeDelta = self.itemDelta *  PlayerBuildingBaseData[value.info.mId].x
             local tempBtn =  obj:GetComponent("Button")
             tempBtn.onClick:RemoveAllListeners();
@@ -182,7 +190,7 @@ function MiniMapCtrl:_clickConstructBtn(tempPos)
     PlayMusEff(1002)
     local MoveToPos = Vector3.New(tempPos.x,0,tempPos.y)
     CameraMove.MoveCameraToPos(MoveToPos)
-    UIPanel.Close()
+    UIPanel.ClosePage()
 end
 
 function MiniMapCtrl:Hide()

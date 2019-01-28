@@ -131,7 +131,7 @@
             CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
 
             if (state.connectCB != null)
-                state.connectCB(state.connectIP, state.connectPort, success, state.userData);
+                state.connectCB(state.connectIP, state.connectPort, success, state);
         }
 
         private static void connectCB(IAsyncResult ar)
@@ -167,7 +167,7 @@
             }
             catch (Exception e)
             {
-                Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
+                //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
                 state.error = e.ToString();
             }
         }
@@ -181,7 +181,7 @@
             AsyncResult result = (AsyncResult)ar;
             AsyncConnectMethod caller = (AsyncConnectMethod)result.AsyncDelegate;
 
-            Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
+            //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
             if (state.error == "") {
                 _ConnectState.error = "Success";
             }
@@ -206,7 +206,7 @@
                 _ConnectState.error = "Connection TimeOut";
                 Event.fireIn("_onConnectionState", new object[] { _ConnectState });
                 _connectDelegate.EndInvoke(_result);
-                Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
+                //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
             }
         }
 

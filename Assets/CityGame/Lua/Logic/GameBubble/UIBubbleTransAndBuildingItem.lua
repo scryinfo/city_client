@@ -31,6 +31,7 @@ function UIBubbleTransAndBuildingItem:initialize(data, obj)
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
+    Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
 end
 
 function UIBubbleTransAndBuildingItem:_initFunc(data)
@@ -56,6 +57,13 @@ end
 function UIBubbleTransAndBuildingItem:_showFunc()
     if self.gameObject ~= nil then
         self.gameObject.transform.localScale = Vector3.one
+    end
+end
+function UIBubbleTransAndBuildingItem:_changeLanguageFunc()
+    if self.data.state == GroundTransState.Sell then
+        LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
+    elseif self.data.state == GroundTransState.Rent then
+        LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)
     end
 end
 
@@ -86,6 +94,8 @@ function UIBubbleTransAndBuildingItem:Close()
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
     Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
+    Event.RemoveListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+
     --将obj放入对象池
     if self.gameObject ~= nil then
         destroyImmediate(self.gameObject)

@@ -194,12 +194,14 @@
             while ((System.DateTime.Now - start).TotalMilliseconds < _connectionTimeOut){
                 System.Threading.Thread.Sleep(checkinterval);
             }
-            //超时处理            
-            close();
-            _ConnectState.error = "Connection TimeOut";
-            Event.fireIn("_onConnectionState", new object[] { _ConnectState });
-            _connectDelegate.EndInvoke(_result);
-            Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
+            if(_ConnectState.error != ""){
+                //超时处理            
+                close();
+                _ConnectState.error = "Connection TimeOut";
+                Event.fireIn("_onConnectionState", new object[] { _ConnectState });
+                _connectDelegate.EndInvoke(_result);
+                Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
+            }
         }
 
 

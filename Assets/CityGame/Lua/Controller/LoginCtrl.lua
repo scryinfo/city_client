@@ -162,20 +162,7 @@ function LoginCtrl:c_onLoginFailed( errorCode )
 end
 
 function LoginCtrl:c_ConnectionStateChange( state )
-	ct.log("system", "c_ConnectionStateChange state.error =", state.error)
-	if state.error == 'Success' then
-		--CityEngineLua.login_loginapp(false)
-		--LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
-	elseif state.error == 'Connection TimeOut' then
-		local info = {}
-		info.titleInfo = "错误"
-		--替換為多語言
-		info.contentInfo = "网络连接超时"
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
-	else
 
-	end
 end
 
 function LoginCtrl:c_LoginSuccessfully( success )

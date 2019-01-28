@@ -124,6 +124,7 @@ function SystemSettingCtrl:c_OnClick_chinese()
     SaveLanguageSettings(LanguageType.Chinese)
     panel:InitDate(GetLanguage(14010006))
     panel.closeLan.localScale=Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
 --英文
 function SystemSettingCtrl:c_OnClick_english()
@@ -132,6 +133,7 @@ function SystemSettingCtrl:c_OnClick_english()
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(14010008))
     panel.closeLan.localScale=Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
 
 function  SystemSettingCtrl:Hide()

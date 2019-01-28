@@ -60,14 +60,14 @@ end
 function BuyDetailsItem:scrollbarInfo()
     local number = self.numberScrollbar.value;
     self.inputNumber.text = number;
-    self.moneyText.text = number * self.goodsDataInfo.price;
+    self.moneyText.text = getPriceString(GetClientPriceString(number * self.goodsDataInfo.price),39,35);
 end
 --刷新输入框
 function BuyDetailsItem:inputInfo()
     local number = self.inputNumber.text;
     if number ~= "" then
         self.numberScrollbar.value = number;
-        self.moneyText.text = number * self.goodsDataInfo.price;
+        self.moneyText.text = getPriceString(GetClientPriceString(number * self.goodsDataInfo.price),39,35);
     else
         self.numberScrollbar.value = 0;
         self.moneyText.text = 0;

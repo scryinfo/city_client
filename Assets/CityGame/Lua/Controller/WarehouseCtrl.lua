@@ -60,10 +60,12 @@ function WarehouseCtrl:Active()
     UIPanel.Active(self)
     LoadSprite(GetSprite("Warehouse"), WarehousePanel.warehouseImg:GetComponent("Image"), false)
     WarehousePanel.tipText.text = GetLanguage(26040002)
+
     Event.AddListener("n_shelfAdd",self.n_shelfAdd,self)
     Event.AddListener("n_transports",self.n_transports,self)
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
-    Event.AddListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
+    Event.AddListener("deleteObjeCallback",self.deleteObjeCallback,self)
+    Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
 end
 function WarehouseCtrl:Refresh()
     self.luabehaviour = warehouse
@@ -71,17 +73,17 @@ function WarehouseCtrl:Refresh()
     self.store.type = BuildingInType.Warehouse
     self.store.buildingId = self.m_data.info.id
     WarehouseCtrl.playerId = self.m_data.info.id
-    local warehouseTotalNum = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
-    local warehouseNum = WarehouseCtrl:getWarehouseNum(self.m_data.store);
-    local lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
+    self.warehouseTotalNum = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
+    self.warehouseNum = WarehouseCtrl:getWarehouseNum(self.m_data.store);
+    self.lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
     WarehousePanel.Locked_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
-    WarehousePanel.Locked_Slider.value = warehouseTotalNum
-    WarehousePanel.Warehouse_Slider.value = warehouseNum;
+    WarehousePanel.Locked_Slider.value = self.warehouseTotalNum
+    WarehousePanel.Warehouse_Slider.value = self.warehouseNum;
     local numTab = {}
-    numTab["num1"] = warehouseTotalNum
+    numTab["num1"] = self.warehouseNum
     numTab["num2"] = WarehousePanel.Locked_Slider.maxValue
-    numTab["num3"] = lockedNum
+    numTab["num3"] = self.lockedNum
     numTab["col1"] = "Cyan"
     numTab["col2"] = "white"
     numTab["col3"] = "Teal"
@@ -91,6 +93,9 @@ function WarehouseCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
     else
         return
+    end
+    if self.m_data.shelfOpen ~= nil then
+        self:OnClick_rightInfo(not switchIsShow,0)
     end
 end
 function WarehouseCtrl:OnClick_returnBtn(go)
@@ -106,7 +111,8 @@ function WarehouseCtrl:Hide()
     Event.RemoveListener("n_transports",self.n_transports,self)
     Event.RemoveListener("c_warehouseClick",self._selectedGoods, self)
     --Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
-    Event.RemoveListener("warehousedeleteGoods",self.warehousedeleteGoods,self)
+    Event.RemoveListener("deleteObjeCallback",self.deleteObjeCallback,self)
+    Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
@@ -165,7 +171,7 @@ function WarehouseCtrl:getWarehouseCapacity(table)
                 locked = locked + t.n
             end
         end
-        --warehouseCapacity = warehouseCapacity + locked
+        warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
     end
 end
@@ -199,12 +205,20 @@ end
 --Open shelf
 function WarehouseCtrl:OnClick_shelfBtn(go)
     PlayMusEff(1002)
-    go:OnClick_rightInfo(not switchIsShow,0)
+    if go.m_data.info.state == "OPERATE" then
+        go:OnClick_rightInfo(not switchIsShow,0)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
+    end
 end
 --Open transpor
 function WarehouseCtrl:OnClick_transportBtn(go)
     PlayMusEff(1002)
-    go:OnClick_rightInfo(not switchIsShow,1)
+    if go.m_data.info.state == "OPERATE" then
+        go:OnClick_rightInfo(not switchIsShow,1)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
+    end
 end
 --名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
@@ -283,6 +297,24 @@ function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
     end
+    if not self.m_data.shelf.good then
+        local good = {}
+        local data = {}
+        local k = {}
+        k.id = msg.item.key.id
+        data.k = k
+        data.n = msg.item.n
+        data.price = msg.price
+        good[1] = data
+        self.m_data.shelf.good = good
+    else
+        for i,v in pairs(self.m_data.shelf.good) do
+            if v.k.id == msg.item.key.id then
+                v.n = v.n + msg.item.n
+                v.price = msg.price
+            end
+        end
+    end
     local Data = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(Data) do
         if v.itemId == msg.item.key.id then
@@ -301,7 +333,6 @@ function WarehouseCtrl:n_shelfAdd(msg)
             end
         end
     end
-
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
@@ -359,7 +390,6 @@ function WarehouseCtrl:n_transports(Data)
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
             end
-            --WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
             WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value - Data.item.n;
             local lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
             local numTab = {}
@@ -373,23 +403,48 @@ function WarehouseCtrl:n_transports(Data)
         end
     end
 end
---删除仓库物品
-function WarehouseCtrl:warehousedeleteGoods(msg)
+--点击删除物品
+function WarehouseCtrl:deleteWarehouseItem(ins)
+    local data = {}
+    data.titleInfo = GetLanguage(30030001)
+    data.contentInfo = GetLanguage(30030002)
+    data.tipInfo = ""
+    data.btnCallBack = function ()
+        local dataId = {}
+        dataId.buildingId = self.m_data.insId
+        dataId.id = ins.itemId
+        Event.Brocast("mReqDelItem",ins.buildingId,ins.itemId,ins.producerId,ins.qty)
+    end
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--删除仓库物品回调
+function WarehouseCtrl:deleteObjeCallback(msg)
     if not msg then
         return
     end
-    --for i,v in pairs(self.warehouseLuaTab) do
-    --    if i == id then
-    --        v:closeEvent()
-    --        destroy(v.prefab.gameObject);
-    --        table.remove(self.warehouseLuaTab,id);
-    --    end
-    --end
-    --local i = 1
-    --for k,v in pairs(self.warehouseLuaTab) do
-    --    self.warehouseLuaTab[i]:RefreshID(i)
-    --    i = i + 1
-    --end
+    for i,v in pairs(self.GoodsUnifyMgr.warehouseLuaTab) do
+        if msg.item.id == v.itemId then
+            v:closeEvent()
+            WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value - v.n
+            WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - v.n
+            local numTab = {}
+            numTab["num1"] = WarehousePanel.Warehouse_Slider.value
+            numTab["num2"] = WarehousePanel.Locked_Slider.maxValue
+            numTab["num3"] = self.lockedNum
+            numTab["col1"] = "Cyan"
+            numTab["col2"] = "white"
+            numTab["col3"] = "Teal"
+            WarehousePanel.numberText.text = getColorString(numTab);
+            destroy(v.prefab.gameObject);
+            table.remove(self.GoodsUnifyMgr.warehouseLuaTab,i);
+            Event.Brocast("SmallPop",GetLanguage(30030003),300)
+        end
+    end
+    local i = 1
+    for k,v in pairs(self.GoodsUnifyMgr.warehouseLuaTab) do
+        self.GoodsUnifyMgr.warehouseLuaTab[i]:RefreshID(i)
+        i = i + 1
+    end
 end
 --刷新运输确定按钮
 function WarehouseCtrl:isShowDetermineBtn()

@@ -46,6 +46,7 @@ function UIBubbleGroundAucItem:initialize(data)
     --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
+    Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
 end
 
 --打开拍卖界面，即将拍卖
@@ -96,6 +97,10 @@ function UIBubbleGroundAucItem:_showFunc()
         self.bubbleObj.transform.localScale = Vector3.one
     end
 end
+function UIBubbleGroundAucItem:_changeLanguageFunc()
+    self.nowText01.text = GetLanguage(22010001)
+    self.soonText02.text = GetLanguage(22020003)
+end
 
 function UIBubbleGroundAucItem:Close()
     self.timeDown = false
@@ -103,6 +108,7 @@ function UIBubbleGroundAucItem:Close()
     --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
     Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
+    Event.RemoveListener("c_ChangeLanguage", self._changeLanguageFunc, self)
     destroy(self.bubbleObj.gameObject)
     GAucModel.valuableStartAucObj.transform.localScale = Vector3.zero
 

@@ -70,7 +70,6 @@ function CenterWareHouseCtrl:Active()
     Event.AddListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.AddListener("c_transport",self.c_transport,self);
     Event.AddListener("c_DelItem",self.c_DelItem,self);
-    --Event.AddListener("c_DeleteItem",self.c_DeleteItem,self);
 
     CenterWareHousePanel.tip.text = GetLanguage(21020001)
     CenterWareHousePanel.warehouseNameText.text = GetLanguage(21020002)
@@ -87,7 +86,6 @@ function CenterWareHouseCtrl:Hide()
     Event.RemoveListener("c_OnxBtn",self.c_OnxBtn,self);
     Event.RemoveListener("c_transport",self.c_transport,self);
     Event.RemoveListener("c_DelItem",self.c_DelItem,self);
-    --Event.RemoveListener("c_DeleteItem",self.c_DeleteItem,self);
 
 end
 
@@ -108,29 +106,34 @@ end
 function CenterWareHouseCtrl:c_OnDelete(go)
     local buildingId = DataManager.GetBagId()
     local data = {}
-    data.titleInfo = "提示"
+    data.titleInfo = GetLanguage(35030001)
     data.contentInfo = "确认销毁吗"
-    data.tipInfo = "物品将永久消失"
+    data.tipInfo = GetLanguage(35030002)
     data.btnCallBack = function ()
         local dataId = {}
         dataId.buildingId = buildingId
         dataId.id = go.itemId
+        dataId.producerId = go.producerId
+        dataId.qty = go.qty
         DataManager.DetailModelRpcNoRet(self.insId , 'm_DeleteItem',dataId)
-        go.manager:_deleteGoods(go.id)
+       -- go.manager:_deleteGoods(go.id)
     end
     ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
-----删除物品回调
---function CenterWareHouseCtrl:c_DeleteItem(go)
---    go.manager:_deleteGoods(go.id)
---end
 --删除物品回调
-function CenterWareHouseCtrl:c_DelItem()
+function CenterWareHouseCtrl:c_DelItem(itemId)
     local n = 0
+    local id
     for i, v in pairs(WareHouseGoodsMgr.items) do
-        n = n + v.n
+        if v.itemId == itemId then
+            id = v.id
+        else
+            n = n + v.n
+        end
     end
+    --刪除物品
+    WareHouseGoodsMgr:_deleteGoods(id)
     self.number = n
     local numTab = {}
     numTab["num1"] = self.number
@@ -138,6 +141,7 @@ function CenterWareHouseCtrl:c_DelItem()
     numTab["col1"] = "cyan"
     numTab["col2"] = "white"
     CenterWareHousePanel.number:GetComponent("Text").text = getColorString(numTab);
+    Event.Brocast("SmallPop",GetLanguage(35030003),300)
 end
 
 --点击BG

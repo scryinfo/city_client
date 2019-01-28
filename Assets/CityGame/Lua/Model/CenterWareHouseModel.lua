@@ -16,12 +16,10 @@ function CenterWareHouseModel:OnCreate()
     --注册本地UI事件
     Event.AddListener("m_bagCapacity",self.m_bagCapacity,self)
     Event.AddListener("m_opCenterWareHouse",self.m_opCenterWareHouse,self)
-    Event.AddListener("m_DeleteItem",self.m_DeleteItem,self)
     --as网络回调注册
    -- DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",self.n_GsDelItem,self)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",self.n_GsDelItem,self)--新版model网络注册
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),CenterWareHouseModel.n_GsDelItem);
 end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
@@ -45,14 +43,15 @@ function CenterWareHouseModel:n_GsExtendBag(stream)
 end
 
 --删除回调
-function CenterWareHouseModel.n_GsDelItem(stream)
-    local pMsg = assert(pbl.decode("gs.DelItem",stream),"tempTransportModel.n_OnTransportInfo")
-    --Event.Brocast("c_GsDelItem")
-    Event.Brocast("c_DelItem")
-    Event.Brocast("c_DelBagItem",pMsg.item.id)
+function CenterWareHouseModel:n_GsDelItem(pMsg)
+    if pMsg ~= nil then
+        Event.Brocast("c_DelItem",pMsg.item.id)
+        Event.Brocast("c_DelBagItem",pMsg.item.id)
+    end
 end
 
 --删除商品发包
 function CenterWareHouseModel:m_DeleteItem(dataId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "delItem","gs.DelItem",{buildingId = dataId.buildingId, item = {id = dataId.id}})
+    DataManager.ModelSendNetMes("gscode.OpCode", "delItem","gs.DelItem",
+            {buildingId = dataId.buildingId, item = {id = dataId.id,producerId = dataId.producerId,qty = dataId.qty}})
 end

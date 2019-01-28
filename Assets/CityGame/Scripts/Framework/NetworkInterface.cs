@@ -125,7 +125,7 @@
 			else
 			{
 				reset();
-				Dbg.ERROR_MSG(string.Format("NetworkInterface::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
+				Dbg.DEBUG_MSG(string.Format("NetworkInterface::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
 			}
 
             CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
@@ -167,7 +167,7 @@
 			}
 			catch (Exception e)
 			{
-				Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
+				Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
 				state.error = e.ToString();
 			}
 		}
@@ -199,7 +199,7 @@
             _ConnectState.error = "Failed";
             Event.fireIn("_onConnectionState", new object[] { _ConnectState });
             _connectDelegate.EndInvoke(_result);
-            Dbg.ERROR_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
+            Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
         }
 
 

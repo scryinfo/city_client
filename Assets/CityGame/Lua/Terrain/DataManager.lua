@@ -291,8 +291,10 @@ function DataManager.RefreshBaseBuildData(data)
         BuildDataStack[collectionID].BaseBuildDatas[blockID] = BaseBuildModel:new(data)
         --判断是否自己地块，地块是否是自己挂出的租售信息
         if PersonDataStack.m_groundInfos ~= nil then
-            for key, value in pairs(PersonDataStack.m_groundInfos) do
-                if value.x == data.x and value.y == data.y then
+            local tempInfos = DataManager.CaculationTerrainRangeBlock(data.posID, PlayerBuildingBaseData[data.mId].x)
+            for key, blockID in pairs(tempInfos) do
+                local value = PersonDataStack.m_groundInfos[blockID]
+                if value ~= nil then
                     if value.sell ~= nil then
                         --todo:向服务器发送取消出售的信息
                         DataManager.m_ReqCancelSellGround({[1] = {x = value.x, y = value.y}})
@@ -568,7 +570,7 @@ end
 
 function DataManager.RegisterErrorNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
-        local protoData = assert(pbl.decode("Fail", stream), "")
+        local protoData = assert(pbl.decode("common.Fail", stream), "")
         if protoData ~= nil then
             local info = {}
             info.titleInfo = protoData.s
@@ -650,7 +652,25 @@ function  DataManager.InitPersonDatas(tempData)
     --初始化个人唯一ID
     PersonDataStack.m_owner = tempData.id
     --初始化自己所拥有地块集合
+
+    if tempData.ground ~= nil then
+        if PersonDataStack.m_groundInfos == nil then
+            PersonDataStack.m_groundInfos = {}
+        end
+        for key, value in pairs(tempData.ground) do
+            PersonDataStack.m_groundInfos[TerrainManager.GridIndexTurnBlockID(value)] = value
+        end
+    end
+    --[[过时
     PersonDataStack.m_groundInfos = tempData.ground
+    if PersonDataStack.m_groundInfos ~= nil then
+        for i, v in pairs(PersonDataStack.m_groundInfos) do
+            if v.sell ~= nil then
+                ct.log()
+            end
+        end
+    end
+    --]]
     --初始化自己所租赁地块集合
     --PersonDataStack.m_rentGroundInfos = tempData.rentGround
     if tempData.rentGround ~= nil then
@@ -1173,7 +1193,7 @@ local function InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
-    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
@@ -1387,6 +1407,7 @@ end
 
 --处理错误信息
 --研究所Roll回复信息
+--不启用
 function DataManager.n_OnReceiveErrorCode(stream)
     local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
     if data then

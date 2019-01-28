@@ -205,12 +205,20 @@ end
 --Open shelf
 function WarehouseCtrl:OnClick_shelfBtn(go)
     PlayMusEff(1002)
-    go:OnClick_rightInfo(not switchIsShow,0)
+    if go.m_data.info.state == "OPERATE" then
+        go:OnClick_rightInfo(not switchIsShow,0)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
+    end
 end
 --Open transpor
 function WarehouseCtrl:OnClick_transportBtn(go)
     PlayMusEff(1002)
-    go:OnClick_rightInfo(not switchIsShow,1)
+    if go.m_data.info.state == "OPERATE" then
+        go:OnClick_rightInfo(not switchIsShow,1)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
+    end
 end
 --名字排序
 function WarehouseCtrl:OnClick_OnName(ins)
@@ -387,15 +395,15 @@ end
 function WarehouseCtrl:deleteWarehouseItem(ins)
     local data = {}
     data.titleInfo = GetLanguage(30030001)
-    data.contentInfo = ""
-    data.tipInfo = GetLanguage(30030002)
+    data.contentInfo = GetLanguage(30030002)
+    data.tipInfo = ""
     data.btnCallBack = function ()
         local dataId = {}
         dataId.buildingId = self.m_data.insId
         dataId.id = ins.itemId
         Event.Brocast("mReqDelItem",ins.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
 --删除仓库物品回调
 function WarehouseCtrl:deleteObjeCallback(msg)

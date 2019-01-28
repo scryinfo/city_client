@@ -101,7 +101,11 @@ end
 
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
+    if go.m_data.info.state == "OPERATE" then
+        ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
+    end
 end
 
 --计算一条生产线总时间

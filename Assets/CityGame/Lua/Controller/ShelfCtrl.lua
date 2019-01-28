@@ -273,12 +273,16 @@ function ShelfCtrl:refreshUiInfo(msg)
 end
 function ShelfCtrl:OnClick_createGoods(go)
     PlayMusEff(1002)
-    if go.data == nil then
-        return
+    if go.m_data.info.state == "OPERATE" then
+        if go.data == nil then
+            return
+        end
+        go:deleteObjInfo();
+        go.data.shelfOpen = 1
+        ct.OpenCtrl("WarehouseCtrl",go.data)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
     end
-    go:deleteObjInfo();
-    go.data.shelfOpen = 1
-    ct.OpenCtrl("WarehouseCtrl",go.data)
 end
 --刷新购买确定按钮
 function ShelfCtrl:isShowDetermineBtn()

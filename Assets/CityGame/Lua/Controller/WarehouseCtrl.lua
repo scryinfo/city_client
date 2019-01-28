@@ -297,6 +297,24 @@ function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
     end
+    if not self.m_data.shelf.good then
+        local good = {}
+        local data = {}
+        local k = {}
+        k.id = msg.item.key.id
+        data.k = k
+        data.n = msg.item.n
+        data.price = msg.price
+        good[1] = data
+        self.m_data.shelf.good = good
+    else
+        for i,v in pairs(self.m_data.shelf.good) do
+            if v.k.id == msg.item.key.id then
+                v.n = v.n + msg.item.n
+                v.price = msg.price
+            end
+        end
+    end
     local Data = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(Data) do
         if v.itemId == msg.item.key.id then
@@ -313,12 +331,6 @@ function WarehouseCtrl:n_shelfAdd(msg)
                     Event.Brocast("c_temporaryifNotGoods", i)
                 end
             end
-        end
-    end
-    for i,v in pairs(self.m_data.shelf.good) do
-        if v.k.id == msg.item.key.id then
-            v.n = v.n + msg.item.n
-            v.price = msg.price
         end
     end
 end

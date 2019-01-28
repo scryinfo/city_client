@@ -162,12 +162,7 @@ function LoginCtrl:c_onLoginFailed( errorCode )
 end
 
 function LoginCtrl:c_ConnectionStateChange( state )
-	if state.error == 'Success' then
-		--CityEngineLua.login_loginapp(false)
-		--LoginPanel.textStatus:GetComponent('Text').text = "连接成功，正在登陆";
-	else
-		--LoginPanel.textStatus:GetComponent('Text').text = "连接错误";
-	end
+
 end
 
 function LoginCtrl:c_LoginSuccessfully( success )

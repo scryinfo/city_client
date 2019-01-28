@@ -58,6 +58,7 @@ local ctrlList = {};	--控制器列表--
 local modelList = {};	--模型列表--
 
 function CtrlManager.Init()
+	UnityEngine.PlayerPrefs.SetInt("Language",1)
 	ReadConfigLanguage()
 	logWarn("CtrlManager.Init----->>>");
 	--默认显示登录界面

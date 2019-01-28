@@ -37,6 +37,7 @@ public class CityMain : MonoBehaviour
     public void _closeNetwork(NetworkInterface networkInterface)
     {
         networkInterface.close();
+        networkInterface._onConnectionState(networkInterface._ConnectState);
     }	
 
 	void OnDestroy()

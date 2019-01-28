@@ -73,11 +73,19 @@ function WarehouseCtrl:Refresh()
     WarehouseCtrl.playerId = self.m_data.info.id
     local warehouseTotalNum = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
     local warehouseNum = WarehouseCtrl:getWarehouseNum(self.m_data.store);
+    local lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
     WarehousePanel.Locked_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity;
     WarehousePanel.Locked_Slider.value = warehouseTotalNum
     WarehousePanel.Warehouse_Slider.value = warehouseNum;
-    WarehousePanel.numberText.text = getColorString(WarehousePanel.Locked_Slider.value,WarehousePanel.Locked_Slider.maxValue,"cyan","white");
+    local numTab = {}
+    numTab["num1"] = warehouseTotalNum
+    numTab["num2"] = WarehousePanel.Locked_Slider.maxValue
+    numTab["num3"] = lockedNum
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "white"
+    numTab["col3"] = "Teal"
+    WarehousePanel.numberText.text = getColorString(numTab);
     self:isShowDetermineBtn()
     if WarehousePanel.Content.childCount <= 0 then
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.store)
@@ -157,7 +165,7 @@ function WarehouseCtrl:getWarehouseCapacity(table)
                 locked = locked + t.n
             end
         end
-        warehouseCapacity = warehouseCapacity + locked
+        --warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
     end
 end
@@ -172,6 +180,20 @@ function WarehouseCtrl:getWarehouseNum(table)
         end
         return warehouseNum
     end
+end
+--获取锁着的数量
+function WarehouseCtrl:getLockedNum(table)
+    local lockedNum = 0
+    if not table.inHand then
+        return lockedNum
+    end
+    if not table.locked then
+        return lockedNum
+    end
+    for i,v in pairs(table.locked) do
+        lockedNum = lockedNum + v.n
+    end
+    return lockedNum
 end
 
 --Open shelf
@@ -220,16 +242,39 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     else
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             if not go.m_data.shelf.good then
-                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                return;
+                if GetServerPriceNumber(v.inputPrice.text) == 0 then
+                    Event.Brocast("SmallPop","请输入价格",300)
+                    return
+                end
+                if v.inputNumber.text == "0" and v.inputNumber.text == "" then
+                    Event.Brocast("SmallPop","请输入数量",300)
+                    return
+                end
+                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             else
                 for k,t in pairs(go.m_data.shelf.good) do
-                    if v.itemId == t.k.id and tonumber(v.inputPrice.text) ~= t.price then
-                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    if v.itemId == t.k.id and GetServerPriceNumber(v.inputPrice.text) ~= t.price then
+                        if GetServerPriceNumber(v.inputPrice.text) == 0 then
+                            Event.Brocast("SmallPop","请输入价格",300)
+                            return
+                        end
+                        if v.inputNumber.text == "0" and v.inputNumber.text == ""  then
+                            Event.Brocast("SmallPop","请输入数量",300)
+                            return
+                        end
+                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
                 end
+                if GetServerPriceNumber(v.inputPrice.text) == 0 then
+                    Event.Brocast("SmallPop","请输入价格",300)
+                    return
+                end
+                if v.inputNumber.text == "0" and v.inputNumber.text == "" then
+                    Event.Brocast("SmallPop","请输入数量",300)
+                    return
+                end
+                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
-            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,v.inputPrice.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
         end
     end
 end
@@ -291,7 +336,6 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
         else
             for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
                 Event.Brocast("c_Transport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                --Event.Brocast("m_ReqTransport",go.m_data.info.id,v.itemId,v.inputNumber.text,v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
         end
     end
@@ -317,8 +361,15 @@ function WarehouseCtrl:n_transports(Data)
             end
             --WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - Data.item.n;
             WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value - Data.item.n;
-            --WarehousePanel.numberText.text = getColorString(WarehousePanel.Warehouse_Slider.value,WarehousePanel.Warehouse_Slider.maxValue,"cyan","white");
-            WarehousePanel.numberText.text = getColorString(WarehousePanel.Locked_Slider.value,WarehousePanel.Locked_Slider.maxValue,"cyan","white")
+            local lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
+            local numTab = {}
+            numTab["num1"] = WarehousePanel.Locked_Slider.value
+            numTab["num2"] = WarehousePanel.Locked_Slider.maxValue
+            numTab["num3"] = lockedNum
+            numTab["col1"] = "Cyan"
+            numTab["col2"] = "white"
+            numTab["col3"] = "Teal"
+            WarehousePanel.numberText.text = getColorString(numTab)
         end
     end
 end

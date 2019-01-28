@@ -60,15 +60,25 @@ function getPriceString(str, intSize, floatSize)
 end
 
 --获取数值显示文本，颜色不同
-function getColorString(num1,num2,col1,col2)
-    if num1 == nil and num2 == nil then
-        return
-    end
-    local str1 = table.concat({"<color=",col1,">",num1,"</color>"})
-    local str2 = table.concat({"<color=",col2,">",num2,"</color>"})
-    local str = table.concat({str1,"/",str2})
-    return str
+function getColorString(numTab)
+	local leng = 0
+	for i,v in pairs(numTab) do
+		leng = leng + 1
+	end
+	local str = nil
+	if leng == 4 then
+		local str1 = table.concat({"<color=",numTab["col1"],">",numTab["num1"],"</color>"})
+		local str2 = table.concat({"<color=",numTab["col2"],">",numTab["num2"],"</color>"})
+		str = table.concat({str1,"/",str2})
+	else
+		local str1 = table.concat({"<color=",numTab["col1"],">",numTab["num1"],"</color>"})
+		local str2 = table.concat({"<color=",numTab["col2"],">",numTab["num2"],"</color>"})
+		local str3 = table.concat({"<color=",numTab["col3"],">",numTab["num3"],"</color>"})
+		str = table.concat({str1,"/",str3,"/",str2})
+	end
+	return str
 end
+
 --秒数转换时间格式字符串
 function getTimeString(time)
 	local hours = math.floor(time / 3600)
@@ -505,7 +515,7 @@ function GetServerPriceNumber(clientValue)
 	if clientValue == nil or tostring(clientValue) == "" then
 		return 0
 	end
-	local valuableNum = tonumber(clientValue) * 10000
+	local valuableNum = math.floor(tonumber(clientValue) * 10000)
 	if valuableNum < 1 then
 		valuableNum = 0
 	end

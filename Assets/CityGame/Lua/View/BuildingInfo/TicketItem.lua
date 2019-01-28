@@ -71,10 +71,13 @@ end
 
 --刷新数据
 function TicketItem:updateInfo(buildingOwnerId,ticketPrice)
-
-        self.toDoBtn.localScale=Vector3.zero
-
-   self.wageText.text=getColorString(ticketPrice,100,"blue","white")
+    self.toDoBtn.localScale=Vector3.zero
+    local numTab = {}
+    numTab["num1"] = ticketPrice
+    numTab["num2"] = 100
+    numTab["col1"] = "blue"
+    numTab["col2"] = "white"
+    self.wageText.text=getColorString(numTab)
     self.slider.value=ticketPrice/100
 end
 

@@ -60,6 +60,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self._luabehaviour:AddClick(self.XBtn.gameObject, self.OnClicl_XBtn, self);
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClicl_closeBtn,self);
     self._luabehaviour:AddClick(self.addBtn.gameObject,self.OnClicl_addBtn,self);
+    self._luabehaviour:AddClick(self.amendBtn.gameObject,self.OnClicl_amendBtn,self)
     --Event.AddListener("c_refreshTime",self.refreshTime,self)
 end
 --新加线
@@ -78,8 +79,8 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.sNumberScrollbar.maxValue = AdjustProductionLineCtrl.idleWorkerNums / 5;
     self.sNumberScrollbar.value = 0
     self.minText.text = "0".."/min"
-    self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffText.text = GetLanguage(self.itemId)
+    --self.numberNameText.text = GetLanguage(self.itemId)
+    --self.staffText.text = GetLanguage(self.itemId)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
     if math.floor(self.itemId / 100000) == materialKey then
@@ -100,20 +101,6 @@ function SmallProductionLineItem:initUiInfo(infoData)
         end)
     end
 end
-----刷新时间
---function SmallProductionLineItem:refreshTime(data)
---    local remainingNum = data.targetCount - data.nowCount
---    local materialKey,goodsKey = 21,22
---    self.time = 0
---    if math.floor(data.itemId / 100000) == materialKey then
---        self.time = 1 / Material[data.itemId].numOneSec / data.workerNum * remainingNum
---    elseif math.floor(data.itemId / 100000) == goodsKey then
---        self.time = 1 / Good[data.itemId].numOneSec / data.workerNum * remainingNum
---    end
---    --self.time = self.time + UnityEngine.Time.unscaledDeltaTime
---    self.remainingTime = self.time
---    UpdateBeat:Add(self.Update,self)
---end
 --读到线
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.adjustmentTop.localScale = Vector3.zero
@@ -133,8 +120,8 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.staffNumberText.text = tostring(infoTab.workerNum)
     self.sNumberScrollbar.maxValue = (AdjustProductionLineCtrl.idleWorkerNums + infoTab.workerNum) / 5
     self.sNumberScrollbar.value = infoTab.workerNum / 5;
-    self.numberNameText.text = GetLanguage(self.itemId)
-    self.staffText.text = GetLanguage(self.itemId)
+    --self.numberNameText.text = GetLanguage(self.itemId)
+    --self.staffText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
@@ -164,7 +151,12 @@ function SmallProductionLineItem:OnClicl_addBtn(go)
     Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
     go.adjustmentTop.localScale = Vector3.zero
 end
-
+--点击发送修改生产线
+function SmallProductionLineItem:OnClicl_amendBtn(go)
+    PlayMusEff(1002)
+    Event.Brocast("m_ResModifyKLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.lineId)
+    go.adjustmentTop.localScale = Vector3.zero
+end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
     PlayMusEff(1002)
@@ -205,13 +197,23 @@ function SmallProductionLineItem:pNumberScrollbarInfo()
         self:initButtonAddState()
     else
         self:initButtonAmendState()
+        if self.pNumberScrollbar.value < self.time_Slider.value then
+            --self.pNumberScrollbar.minValue = self.time_Slider.value
+            self.pNumberScrollbar.value = self.time_Slider.value
+            return
+        end
     end
     self.inputNumber.text = self.pNumberScrollbar.value;
 end
 function SmallProductionLineItem:time_SliderInfo()
     local targetCount = self.time_Slider.maxValue
     local nowCount = self.time_Slider.value
-    self.numberText.text = getColorString(nowCount,targetCount,"green","black")
+    local numTab = {}
+    numTab["num1"] = nowCount
+    numTab["num2"] = targetCount
+    numTab["col1"] = "green"
+    numTab["col2"] = "black"
+    self.numberText.text = getColorString(numTab)
 end
 function SmallProductionLineItem:sNumberScrollbarInfo()
     self.adjustmentTop.localScale = Vector3.one
@@ -300,6 +302,7 @@ function SmallProductionLineItem:getMinuteNum(infoData)
     local numStr = "("..math.floor(number).."/min"..")"
     return numStr
 end
+
 --获取仓库里有的库存
 function SmallProductionLineItem:getWarehouseNum(itemId)
     if itemId then

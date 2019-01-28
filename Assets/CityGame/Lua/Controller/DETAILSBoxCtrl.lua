@@ -19,6 +19,7 @@ function DETAILSBoxCtrl:Awake(go)
     local details = self.gameObject:GetComponent('LuaBehaviour');
     details:AddClick(DETAILSBoxPanel.XBtn.gameObject,self.OnClick_XBtn,self);
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
+    Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 end
 function DETAILSBoxCtrl:Active()
     UIPanel.Active(self)
@@ -29,7 +30,6 @@ function DETAILSBoxCtrl:Active()
     DETAILSBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:numberSliderInfo();
     end)
-    Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 end
 
 function DETAILSBoxCtrl:OnClick_XBtn(obj)
@@ -37,7 +37,7 @@ function DETAILSBoxCtrl:OnClick_XBtn(obj)
     UIPanel.ClosePage()
 end
 function DETAILSBoxCtrl:Hide()
-    Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
+    --Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
     UIPanel.Hide(self)
 end
 
@@ -75,37 +75,41 @@ function DETAILSBoxCtrl:Refresh()
     DETAILSBoxPanel.numberInput.text = self.m_data.num
     DETAILSBoxPanel.numberSlider.maxValue = self.m_data.num
     DETAILSBoxPanel.numberSlider.value = self.m_data.num
-    DETAILSBoxPanel.priceInput.text = self.m_data.price..".0000"
+    DETAILSBoxPanel.priceInput.text = GetClientPriceString(self.m_data.price)
 end
 --修改数量价格
 function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
     PlayMusEff(1002)
     local number = DETAILSBoxPanel.numberSlider.value
-    local price = tonumber(DETAILSBoxPanel.priceInput.text)
+    if DETAILSBoxPanel.priceInput.text == "" or GetServerPriceNumber(DETAILSBoxPanel.priceInput.text) == 0 then
+        Event.Brocast("SmallPop", "出价格式小数精度不能低于0.0001",300)
+        return
+    end
+    local price = GetServerPriceNumber(DETAILSBoxPanel.priceInput.text)
 
     if number ~= ins.m_data.num and price ~= ins.m_data.price then
         local num = ins.m_data.num - number
         Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
         Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
-        ins:Hide();
-        Event.Brocast("SmallPop","修改成功",300)
+        UIPanel.ClosePage()
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
     if number == ins.m_data.num and price == ins.m_data.price then
-        ins:Hide();
+        UIPanel.ClosePage()
         return;
     end
     if number ~= ins.m_data.num and price == ins.m_data.price then
         local num = ins.m_data.num - number
         Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
-        ins:Hide();
-        Event.Brocast("SmallPop","数量修改成功",300)
+        UIPanel.ClosePage()
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
     if number == ins.m_data.num and price ~= ins.m_data.price then
         Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
-        ins:Hide();
-        Event.Brocast("SmallPop","价格修改成功",300)
+        UIPanel.ClosePage()
+        Event.Brocast("SmallPop",GetLanguage(27010005),300)
         return;
     end
 end
@@ -121,9 +125,4 @@ end
 --刷新输入框
 function DETAILSBoxCtrl:numberSliderInfo()
     DETAILSBoxPanel.numberInput.text = DETAILSBoxPanel.numberSlider.value;
-end
---刷新UI显示
-function DETAILSBoxCtrl:refreshUiInfo(msg)
-    self.moneyText.text = getPriceString("E"..msg.price..".0000",35,25)
-    self.numberText.text = msg.item.n
 end

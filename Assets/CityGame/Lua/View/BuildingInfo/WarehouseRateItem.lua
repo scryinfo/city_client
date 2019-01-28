@@ -50,12 +50,20 @@ end
 function WarehouseRateItem:initData()
     self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
     self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
-    self.numberText.text = getColorString(self.sizeSlider.value,self.sizeSlider.maxValue,"black","black");
+    local lockedNum = self:getLockedNum(self.warehouseData.store);
+    local numTab = {}
+    numTab["num1"] = self.sizeSlider.value
+    numTab["num2"] = self.sizeSlider.maxValue
+    numTab["num3"] = lockedNum
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "Black"
+    numTab["col3"] = "Teal"
+    self.numberText.text = getColorString(numTab);
     self.openName.text = GetLanguage(25020003)
     self.closeName.text = GetLanguage(25020003)
     WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
 end
-
+--获取仓库容量
 function WarehouseRateItem:getWarehouseCapacity(table)
     local warehouseCapacity = 0
     local locked = 0
@@ -73,11 +81,24 @@ function WarehouseRateItem:getWarehouseCapacity(table)
                 locked = locked + t.n
             end
         end
-        warehouseCapacity = warehouseCapacity + locked
+        --warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity
     end
 end
-
+--获取锁着的数量
+function WarehouseRateItem:getLockedNum(table)
+    local lockedNum = 0
+    if not table.inHand then
+        return lockedNum
+    end
+    if not table.locked then
+        return lockedNum
+    end
+    for i,v in pairs(table.locked) do
+        lockedNum = lockedNum + v.n
+    end
+    return lockedNum
+end
 --获取是第几个点击了
 function WarehouseRateItem:getToggleIndex()
     return self.toggleData.index;

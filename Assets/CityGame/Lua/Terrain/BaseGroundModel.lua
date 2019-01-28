@@ -69,7 +69,6 @@ end
 function BaseGroundModel:CheckBubbleState()
     local data = self.Data
     if data.rent ~= nil and data.rent.renterId == nil then
-        self.groundState = GroundTransState.Rent
         if self.bubbleItem == nil then
             self.bubbleItem = UIBubbleManager.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Rent, {x = data.x, y = data.y})
             return
@@ -78,7 +77,6 @@ function BaseGroundModel:CheckBubbleState()
         return
     end
     if data.sell ~= nil then
-        self.groundState = GroundTransState.Sell
         if self.bubbleItem == nil then
             self.bubbleItem = UIBubbleManager.getBubbleByType(UIBubbleType.GroundTrans, GroundTransState.Sell, {x = data.x, y = data.y})
             return
@@ -87,7 +85,6 @@ function BaseGroundModel:CheckBubbleState()
         return
     end
     --如果之前有气泡则直接干掉实例
-    self.groundState = GroundTransState.None
     if self.bubbleItem ~= nil then
         self.bubbleItem:Close()
         self.bubbleItem = nil

@@ -277,12 +277,8 @@ function ShelfCtrl:OnClick_createGoods(go)
         return
     end
     go:deleteObjInfo();
+    go.data.shelfOpen = 1
     ct.OpenCtrl("WarehouseCtrl",go.data)
-    --if go.data.buildingType == BuildingType.MaterialFactory then
-    --    ct.OpenCtrl("WarehouseCtrl",go.data)
-    --elseif go.data.buildingType == BuildingType.ProcessingFactory then
-    --    ct.OpenCtrl("WarehouseCtrl",go.data)
-    --end
 end
 --刷新购买确定按钮
 function ShelfCtrl:isShowDetermineBtn()

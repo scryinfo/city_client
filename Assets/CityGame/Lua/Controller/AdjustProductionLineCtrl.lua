@@ -95,7 +95,6 @@ function AdjustProductionLineCtrl:Hide()
     Event.RemoveListener("_deleteProductionLine",self._deleteProductionLine,self)
     Event.RemoveListener("refreshNowConte",self.refreshNowConte,self)
     Event.RemoveListener("callbackDataInfo",self.callbackDataInfo,self)
-
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end

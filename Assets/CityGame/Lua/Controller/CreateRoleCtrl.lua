@@ -64,9 +64,9 @@ function CreateRoleCtrl:OnCreateRole(go)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
-        Event.Brocast("SmallPop"," 用户名或公司名为空",300)
+        Event.Brocast("SmallPop",GetLanguage(10040006),300)
     elseif gender == nil  then
-        Event.Brocast("SmallPop"," 请选择性别",300)
+        Event.Brocast("SmallPop",GetLanguage(10040007),300)
     else
         local data = {}
         data.nickname = nickname

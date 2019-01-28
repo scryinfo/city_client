@@ -85,7 +85,7 @@ end
 
 function ChooseLineItem:OnLinePanelBG(go)
     if go.state ~= "OPERATE"  then
-        Event.Brocast("SmallPop","所选建筑未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(21030009),300)
         return
     end
     go.manager:TransportConfirm(go.isOnClick )

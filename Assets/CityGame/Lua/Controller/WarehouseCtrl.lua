@@ -357,12 +357,12 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(go)
     btransportListing.total = GetClientPriceString(number * btransportListing.price)
     btransportListing.capacity = ChooseWarehouseCtrl:GetCapacity()
     if number > btransportListing.capacity then
-        Event.Brocast("SmallPop","所选建筑仓库容量不足",300)
+        Event.Brocast("SmallPop",GetLanguage(26040012),300)
         return
     end
     btransportListing.btnClick = function ()
         if number == 0 then
-            Event.Brocast("SmallPop","运输商品个数不能为0",300)
+            Event.Brocast("SmallPop",GetLanguage(27020004),300)
             return
         else
             for i,v in pairs(GoodsUnifyMgr.transportPanelItem) do
@@ -407,8 +407,8 @@ end
 function WarehouseCtrl:deleteWarehouseItem(ins)
     local data = {}
     data.titleInfo = GetLanguage(30030001)
-    data.contentInfo = GetLanguage(30030002)
-    data.tipInfo = ""
+    data.contentInfo = GetLanguage(35030004)
+    data.tipInfo = GetLanguage(30030002)
     data.btnCallBack = function ()
         local dataId = {}
         dataId.buildingId = self.m_data.insId

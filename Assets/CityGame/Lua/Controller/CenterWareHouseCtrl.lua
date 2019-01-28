@@ -107,7 +107,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
     local buildingId = DataManager.GetBagId()
     local data = {}
     data.titleInfo = GetLanguage(35030001)
-    data.contentInfo = "确认销毁吗"
+    data.contentInfo = GetLanguage(35030004)
     data.tipInfo = GetLanguage(35030002)
     data.btnCallBack = function ()
         local dataId = {}
@@ -281,7 +281,7 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
         end
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then
-                Event.Brocast("SmallPop","运输商品个数不能为0",300)
+                Event.Brocast("SmallPop",GetLanguage(27020004),300)
                 return
             end
         end

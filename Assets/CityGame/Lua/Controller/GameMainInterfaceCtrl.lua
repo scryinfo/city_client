@@ -341,6 +341,25 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
             end
         end
     end
+
+    local data = DataManager.GetMyChatInfo(1)
+    local worldInfoAllNum = #data
+    if worldInfoAllNum >=1 then
+        for i = 1, GameMainInterfacePanel.worldChatContent.childCount do
+            UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
+        end
+        for j = math.max(1, worldInfoAllNum - 3), worldInfoAllNum do
+            panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
+                if obj ~= nil then
+                    local go = ct.InstantiatePrefab(obj)
+                    local rect = go.transform:GetComponent("RectTransform")
+                    go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+                    rect.transform.localScale = Vector3.one
+                    local chatWorldItem = ChatWorldItem:new(go, data[j])
+                end
+            end)
+        end
+    end
 end
 
 --设置--

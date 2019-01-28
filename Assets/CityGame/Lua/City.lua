@@ -25,7 +25,7 @@ local log = log
 --服务器
 --CityEngineLua.ip = "40.73.3.102";
 CityEngineLua.ip = "192.168.0.51";
-CityEngineLua.port = "9002";
+CityEngineLua.port = "9001";
 
 -- Mobile(Phone, Pad)	= 1,
 -- Windows Application program	= 2,

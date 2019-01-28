@@ -110,6 +110,11 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
     --如果打开的是普通界面，隐藏跟之前的界面
     if pageInstance.type == UIType.Normal then
         UIPanel.HideOldPage()
+    elseif pageInstance.type ==  UIType.PopUp then
+
+    else
+        --如果对象不为Normal和PopUp，不压栈
+        return
     end
     --将界面压入栈内
     if inClass ~= nil then

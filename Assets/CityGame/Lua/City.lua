@@ -23,8 +23,8 @@ local log = log
 --CityEngineLua.port = "10000";
 
 --服务器
---CityEngineLua.ip = "40.73.3.102";
-CityEngineLua.ip = "192.168.0.51";
+CityEngineLua.ip = "40.73.3.102";
+--CityEngineLua.ip = "192.168.0.51";
 CityEngineLua.port = "9001";
 
 -- Mobile(Phone, Pad)	= 1,
@@ -1716,6 +1716,12 @@ CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, userD
 	this._lastTickCBTime = os.clock();
 	if not success then
 		ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." is error!");
+		local info = {}
+		info.titleInfo = "错误"
+		--替換為多語言
+		info.contentInfo = "网络连接超时"
+		info.tipInfo = ""
+		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
 		return;
 	end
 			
@@ -1775,6 +1781,12 @@ CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, userDat
 	this._lastTickCBTime = os.clock();
 	if not success then
 		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
+		local info = {}
+		info.titleInfo = "错误"
+		--替換為多語言
+		info.contentInfo = "网络连接超时"
+		info.tipInfo = ""
+		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
 		return;
 	end
 	
@@ -1812,6 +1824,12 @@ CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, userDa
 	this._lastTickCBTime = os.clock();
 	if not success then
 		ct.log("City::login_baseapp(): connect "..ip..":"..port.." is error!");
+		local info = {}
+		info.titleInfo = "错误"
+		--替換為多語言
+		info.contentInfo = "网络连接超时"
+		info.tipInfo = ""
+		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
 		return;
 	end
 

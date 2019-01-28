@@ -25,7 +25,7 @@ function WarehouseModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_GsDelItem);
-
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",WarehouseModel.n_GsDelItem,WarehouseModel)
 end
 --关闭事件
 function WarehouseModel.Close()
@@ -65,7 +65,7 @@ function WarehouseModel.mReqDelItem(buildingId,id,producerId,qty)
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     else
         local msgId = pbl.enum("gscode.OpCode","delItem")
-        local lMsg = {buildingId = buildingId, item = {key = {id = id,producerId = producerId,qty = qty}}}
+        local lMsg = {buildingId = buildingId, item = {id = id,producerId = producerId,qty = qty}}
         local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     end

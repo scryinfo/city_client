@@ -28,6 +28,15 @@ function GroundTransSetPriceCtrl:Awake(go)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellIssueBtnTran.gameObject, self._sellIssueBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellCancelBtnTran.gameObject, self._cancelSellBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellChangeBtnTran.gameObject, self._sellChangeBtnFunc, self)
+
+    GroundTransSetPricePanel.maxRentDayInput.onValueChanged:AddListener(function(value)
+        if value == nil or value == "" then
+            return
+        end
+        if tonumber(value) > 999 then
+            GroundTransSetPricePanel.maxRentDayInput.text = "999"
+        end
+    end)
 end
 
 function GroundTransSetPriceCtrl:Refresh()

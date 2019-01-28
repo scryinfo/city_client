@@ -679,10 +679,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_companyName = tempData.companyName
     --初始化自己的头像ID
     PersonDataStack.m_faceId = tempData.faceId
-    --初始化自己所拥有建筑（购买的土地）
-    PersonDataStack.m_buysBuild = tempData.buys
-    --初始化自己所拥有建筑（租赁的土地）
-    PersonDataStack.m_rentsBuild = tempData.rents
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =

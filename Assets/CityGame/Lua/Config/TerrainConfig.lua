@@ -15,4 +15,13 @@ TerrainConfig = {
         ["CenterNodePos"] = Vector3.New(49 ,0,49),
         ["BuildingType"]  = 2000000,
     },
+    ["MiniMap"] = {
+        ["ScaleMin"] = 1,
+        ["ScaleMax"] = 4,
+        ["ScaleOffset"] = 1,
+        ["ScaleStart"] = 1,
+        ["ScaleDuringTime"] = 0.1,
+        ["MapSize"] = 101,
+
+    }
 }

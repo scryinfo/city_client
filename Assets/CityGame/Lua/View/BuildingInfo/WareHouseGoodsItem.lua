@@ -59,19 +59,11 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self._luabehaviour:AddClick(self.deleteBtn, self.OnDelete, self);
     self._luabehaviour:AddClick(self.bgItem, self.OnBGItem,self)
     self._luabehaviour:AddClick(self.transportBG,self.OnTransportBG,self)
-    --Event.AddListener("c_GsDelItem",self.c_GsDelItem,self);
 end
 --删除物品
 function WareHouseGoodsItem:OnDelete(go)
     PlayMusEff(1002)
     Event.Brocast("c_OnDelete",go)
-end
-
---点击删除回调
-function WareHouseGoodsItem:c_GsDelItem()
-
-    --Event.Brocast("c_DeleteItem",self)
-     --self.manager:_deleteGoods(self.id)
 end
 
 --点击BG
@@ -107,6 +99,6 @@ function WareHouseGoodsItem:RefreshData(data,id)
     self.n = data.number
     self.name = data.name
     self.itemId = data.itemId
-    --self.producerId = data.producerId
-    --self.qty = data.qty
+    self.producerId = data.producerId
+    self.qty = data.qty
 end

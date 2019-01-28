@@ -101,7 +101,7 @@ function NoticeItem:OnBg(go)
         if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
             go:GetMateralDetailInfo(go.uuidParas[1])
         else
-
+            go:GetProduceDepartment(go.uuidParas[1])
         end
     end
     Event.Brocast("c_onBg",go)
@@ -149,7 +149,7 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
         elseif type == 13 then
             self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
             GameNoticePanel.rightContent.text = self.content
-        elseif stype == 14 then
+        elseif type == 14 then
             self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
             GameNoticePanel.rightContent.text = self.content
         end

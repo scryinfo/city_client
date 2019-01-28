@@ -568,12 +568,12 @@ end
 
 function DataManager.RegisterErrorNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
-        local protoData = assert(pbl.decode("Fail", stream), "")
+        local protoData = assert(pbl.decode("common.Fail", stream), "")
         if protoData ~= nil then
             local info = {}
-            info.titleInfo = protoData.s
+            info.titleInfo = "网络错误"
             --替換為多語言
-            info.contentInfo = protoData.reason
+            info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
             info.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
         end

@@ -49,6 +49,7 @@ function LoginModel:n_AllGameServerInfo( msgAllGameServerInfo )
     --local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     if #msgAllGameServerInfo.infos ~= 0 then
         local serinofs = msgAllGameServerInfo.infos
+        RobotIns:SaveData("serinofs",serinofs)
         ct.OpenCtrl("ServerListCtrl", serinofs)
         --服务器发过来的bytes测试
         UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",serinofs)

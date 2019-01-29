@@ -1687,12 +1687,7 @@ CityEngineLua.onConnectionState = function( state )
 	if state.error == '' then
 		--成功
 	else
-		local info = {}
-		info.titleInfo = "网络连接错误"
-		--替換為多語言
-		info.contentInfo = "网络错误Opcode：" ..state.error
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		ct.MsgBox("网络连接错误", "网络错误Opcode：" ..state.error)
 		ct.log("system","[m_onConnectionState]"..state.error)
 	end
 end

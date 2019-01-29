@@ -1696,7 +1696,10 @@ end
 CityEngineLua.login_loginapp = function( noconnect )
 	if noconnect then
 		this.reset();
-		this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
+		local timer = FrameTimer.New(function()
+			this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
+		end, 10, 0)
+		timer:Start()
 	else
 		--清除所有注册的网络消息
 		----ct.log("City::login_loginapp(): send login! username=" .. this.username);

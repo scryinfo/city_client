@@ -62,7 +62,7 @@ end
 function UIBubbleTransAndBuildingItem:_changeLanguageFunc()
     if self.data.groundState == GroundTransState.Sell then
         LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
-    elseif self.data.state == GroundTransState.Rent then
+    elseif self.data.groundState == GroundTransState.Rent then
         LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)
     end
 end

@@ -53,7 +53,7 @@ end
 --邮件更新回调
 function GameMainInterfaceModel:n_GsGetMails(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
-    Event.Brocast("c_AllMails",lMsg.mail)
+    Event.Brocast("c_RefreshMails",lMsg)
 end
 
 --改变员工工资

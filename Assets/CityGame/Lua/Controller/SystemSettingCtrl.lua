@@ -59,7 +59,8 @@ function SystemSettingCtrl:c_OnClickout(ins)
     ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
     PlayMusEff(1002)
     CityEngineLua.Message.clear()
-
+    --停止
+    UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
 end
 
 --开音乐

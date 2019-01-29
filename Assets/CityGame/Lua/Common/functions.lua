@@ -264,15 +264,16 @@ end
 function ct.MsgBox(titleInfo , contentInfo,tipInfo)
 	local info = {}
 	info.titleInfo = titleInfo
-
-	if info.titleInfo == nil then
-		info.titleInfo = "提示"
-	end
 	--替換為多語言
 	info.contentInfo = contentInfo
 	info.tipInfo = tipInfo
-	ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+	if info.titleInfo == nil then
+		info.titleInfo = "提示"
+		ct.OpenCtrl("BtnDialogPageCtrl", info)
+	else
+		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
 	end
+end
 
 ct.MemoryProfilePath=""
 

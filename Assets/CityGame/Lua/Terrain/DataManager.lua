@@ -184,6 +184,12 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
                 end
+            else
+                if nil ~= BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                    --删除之前的道路Obj
+                    destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
+                end
             end
             break
         end

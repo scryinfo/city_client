@@ -1218,7 +1218,7 @@ local function InitialEvents()
 end
 
 --注册所有网络消息回调
-local function InitialNetMessages()
+function DataManager.InitialNetMessages()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), DataManager.n_OnReceiveAddBuilding)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), DataManager.n_OnReceiveUnitCreate)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
@@ -1242,7 +1242,7 @@ end
 function DataManager.Init()
     RoadRootObj = find("Road")
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
     --土地拍卖Model
     SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
@@ -1275,7 +1275,7 @@ local function ClearAllModel()
     SystemDatas = {}
     ModelNetMsgStack = {}
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
 end
 
 function DataManager.Close()

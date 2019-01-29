@@ -166,6 +166,7 @@
                 else
                 {
                     Dbg.WARNING_MSG(string.Format("PacketReceiver::_asyncReceive(): receive 0 bytes, disconnect from '{0}'!", socket.RemoteEndPoint));
+                    _networkInterface._ConnectState.error = "Disconnect by server";
                     System.Threading.Thread.Sleep(5);
                     Event.fireIn("_closeNetwork", new object[] { _networkInterface });
                     return;

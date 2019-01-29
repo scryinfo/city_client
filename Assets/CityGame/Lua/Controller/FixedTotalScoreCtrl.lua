@@ -38,8 +38,8 @@ function FixedTotalScoreCtrl:_getComponent(go)
 end
 ---初始化
 function FixedTotalScoreCtrl:_initData()
-    if self.pos ~= nil then
-        self.tipRect.position = self.pos
+    if self.m_data ~= nil then
+        self.tipRect.position = self.m_data
     end
     self.infoText.text = GetLanguage(37040012)
 end

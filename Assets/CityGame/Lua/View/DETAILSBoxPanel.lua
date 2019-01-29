@@ -19,8 +19,8 @@ function DETAILSBoxPanel.InitPanel()
     this.goodsIcon = transform:Find("playerGoodInfo/goodsIcon"):GetComponent("Image");
     this.playerName = transform:Find("playerGoodInfo/playerName"):GetComponent("Text");
     this.GoodNameText = transform:Find("playerGoodInfo/goodsNameText"):GetComponent("Text");
-    this.companyNameText = transform:Find("playerGoodInfo/companyNamebg/companyNameText"):GetComponent("Text");
-    this.headImg = transform:Find("playerGoodInfo/headImg"):GetComponent("Image")
+    --this.companyNameText = transform:Find("playerGoodInfo/companyNamebg/companyNameText"):GetComponent("Text");
+    --this.headImg = transform:Find("playerGoodInfo/headImg"):GetComponent("Image")
     --原料
     this.playerMaterialInfo = transform:Find("playerMaterialInfo");
     this.materialNameText = transform:Find("playerMaterialInfo/infoBg/materialNameText"):GetComponent("Text");
@@ -30,4 +30,9 @@ function DETAILSBoxPanel.InitPanel()
     this.priceInput = transform:Find("goodsInfo/priceInput"):GetComponent("InputField");
     this.priceText = transform:Find("goodsInfo/priceText"):GetComponent("Text");
     this.numberSlider = transform:Find("goodsInfo/numberSlider"):GetComponent("Slider");
+
+    --总分提示
+    this.scoreText = transform:Find("playerGoodInfo/totalScore/scoreText"):GetComponent("Text")
+    this.infoBtn = transform:Find("playerGoodInfo/infoBtn")
+    this.infoRootBtn = transform:Find("infoRootBtn")
 end

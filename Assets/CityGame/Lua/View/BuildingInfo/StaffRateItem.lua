@@ -16,12 +16,14 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     self.clickOpenFunc = clickOpenFunc
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
-    self.working = self.viewRect.transform:Find("contentRoot/workState/working")
-    self.workingTimeText = self.viewRect.transform:Find("contentRoot/workState/working/workingText"):GetComponent("Text")
-    self.resting = self.viewRect.transform:Find("contentRoot/workState/resting")
-    self.restingTimeText = self.viewRect.transform:Find("contentRoot/workState/resting/restingText"):GetComponent("Text")
-    self.perCapitaWageText = self.viewRect.transform:Find("contentRoot/perCapitaWageText"):GetComponent("Text")
-    self.totalWageText = self.viewRect.transform:Find("contentRoot/totalWageText"):GetComponent("Text")
+    self.stopTrans = self.viewRect.transform:Find("contentRoot/stop")
+    self.openTrans = self.viewRect.transform:Find("contentRoot/open")
+    self.working = self.viewRect.transform:Find("contentRoot/open/workState/working")
+    self.workingTimeText = self.viewRect.transform:Find("contentRoot/open/workState/working/workingText"):GetComponent("Text")
+    self.resting = self.viewRect.transform:Find("contentRoot/open/workState/resting")
+    self.restingTimeText = self.viewRect.transform:Find("contentRoot/open/workState/resting/restingText"):GetComponent("Text")
+    self.perCapitaWageText = self.viewRect.transform:Find("contentRoot/open/perCapitaWageText"):GetComponent("Text")
+    self.totalWageText = self.viewRect.transform:Find("contentRoot/open/totalWageText"):GetComponent("Text")
 
     self.openStateTran = self.viewRect.transform:Find("topRoot/open")
     self.totalStaffCountText = self.viewRect.transform:Find("topRoot/open/countText"):GetComponent("Text")
@@ -32,10 +34,11 @@ function StaffRateItem:initialize(staffData, clickOpenFunc, viewRect, mainPanelL
     --language
     self.titleText01 = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text")
     self.titleText02 = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text")
-    self.workingText01 = self.viewRect.transform:Find("contentRoot/workState/working/Text"):GetComponent("Text")
-    self.restingText02 = self.viewRect.transform:Find("contentRoot/workState/resting/Text"):GetComponent("Text")
-    self.perWageText01 = self.viewRect.transform:Find("contentRoot/Text02"):GetComponent("Text")
-    self.totalWageText02 = self.viewRect.transform:Find("contentRoot/Text03"):GetComponent("Text")
+    self.workingText01 = self.viewRect.transform:Find("contentRoot/open/workState/working/Text"):GetComponent("Text")
+    self.restingText02 = self.viewRect.transform:Find("contentRoot/open/workState/resting/Text"):GetComponent("Text")
+    self.stopText03 = self.viewRect.transform:Find("contentRoot/stop/Text"):GetComponent("Text")
+    self.perWageText01 = self.viewRect.transform:Find("contentRoot/open/Text02"):GetComponent("Text")
+    self.totalWageText02 = self.viewRect.transform:Find("contentRoot/open/Text03"):GetComponent("Text")
 
     if staffData.isOther then
         self.openToDoBtn.localScale = Vector3.zero
@@ -54,12 +57,18 @@ end
 --初始化界面
 function StaffRateItem:_initData()
     self:_lanuage()
+    if self.staffData.buildingState ~= "OPERATE" then
+        self.stopTrans.localScale = Vector3.one
+        self.openTrans.localScale = Vector3.zero
+        self.totalStaffCountText.transform.localScale = Vector3.zero
+        return
+    end
+    self.stopTrans.localScale = Vector3.zero
+    self.openTrans.localScale = Vector3.one
+    self.totalStaffCountText.transform.localScale = Vector3.one
     self.perCapitaWageText.text = string.format("%s/D", getPriceString(GetClientPriceString(self.staffData.dayWage), 30, 24))
     self.totalWageText.text = string.format("%s/D", getPriceString(GetClientPriceString(self.staffData.dayWage * self.staffData.totalStaffCount), 30, 24))
     self.totalStaffCountText.text = " ("..self.staffData.totalStaffCount..") "
-
-    self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H
-    self.currentContentH = StaffRateItem.static.CONTENT_ALLRIGHT_H
     self:_checkWorkTime()
 end
 
@@ -68,6 +77,7 @@ function StaffRateItem:_lanuage()
     self.titleText02.text = GetLanguage(37040002)
     self.workingText01.text = GetLanguage(37040004)
     self.restingText02.text = GetLanguage(37040005)
+    self.stopText03.text = GetLanguage(37040013)
     self.perWageText01.text = GetLanguage(37040006)
     self.totalWageText02.text = GetLanguage(37040007)
 end
@@ -76,7 +86,7 @@ function StaffRateItem:_checkWorkTime()
     self.workingTimeText.transform.localScale = Vector3.zero
     self.restingTimeText.transform.localScale = Vector3.zero
 
-    if self.staffData.buildingTypeId~=1 then
+    if self.staffData.buildingTypeId ~= 1 then
         local timeTable = getFormatUnixTime(os.time())
         local time = timeTable.year..timeTable.month..timeTable.day
         if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日
@@ -145,8 +155,8 @@ function StaffRateItem:openToggleItem(targetMovePos)
     self.openStateTran.localScale = Vector3.one
     self.closeStateTran.localScale = Vector3.zero
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, self.currentContentH), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
-    return Vector2.New(targetMovePos.x, targetMovePos.y - self.currentTotalH-5)
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, StaffRateItem.static.CONTENT_ALLRIGHT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
+    return Vector2.New(targetMovePos.x, targetMovePos.y -StaffRateItem.static.TOTAL_ALLRIGHT_H - 5)
 end
 
 --关闭

@@ -589,6 +589,7 @@ function BuildingInfoToggleGroupMgr:_createStaff(staffToggleData)
         staffData.totalStaffCount = PlayerBuildingBaseData[staffData.buildingTypeId].maxWorkerNum
         staffData.noDomicileCount = 0
         staffData.isOther = self.toggleData.isOther  --判断是自己还是别人打开了界面
+        staffData.buildingState = self.toggleData.info.state  --判断是否是开业状态
         local staffLuaItem = StaffRateItem:new(staffData, self._clickItemFunc, self.staffViewRect, self.mainPanelLuaBehaviour, staffToggleData, self)
         return staffLuaItem
     end

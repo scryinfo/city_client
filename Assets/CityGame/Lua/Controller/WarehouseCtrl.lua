@@ -66,7 +66,6 @@ function WarehouseCtrl:Active()
     Event.AddListener("c_warehouseClick",self._selectedGoods, self)
     Event.AddListener("deleteObjeCallback",self.deleteObjeCallback,self)
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
-    Event.AddListener("refreshBuildingDataInfo",self.refreshBuildingDataInfo,self)
 end
 function WarehouseCtrl:Refresh()
     self.luabehaviour = warehouse
@@ -114,7 +113,6 @@ function WarehouseCtrl:Hide()
     --Event.RemoveListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
     Event.RemoveListener("deleteObjeCallback",self.deleteObjeCallback,self)
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
-    Event.RemoveListener("refreshBuildingDataInfo",self.refreshBuildingDataInfo,self)
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
@@ -299,25 +297,6 @@ function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
     end
-    --if not self.m_data.shelf.good then
-    --    local good = {}
-    --    local data = {}
-    --    local k = {}
-    --    k.id = msg.item.key.id
-    --    data.k = k
-    --    data.n = msg.item.n
-    --    data.price = msg.price
-    --    good[1] = data
-    --    self.m_data.shelf.good = good
-    --else
-    --    for i,v in pairs(self.m_data.shelf.good) do
-    --        if v.k.id == msg.item.key.id then
-    --            v.n = v.n + msg.item.n
-    --            v.price = msg.price
-    --        end
-    --    end
-    --end
-    Event.Brocast("m_ReqBuildingDataInfo",self.m_data.info.id,self.m_data.info.mId)
     local Data = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(Data) do
         if v.itemId == msg.item.key.id then
@@ -335,6 +314,34 @@ function WarehouseCtrl:n_shelfAdd(msg)
                 end
             end
         end
+    end
+    if not self.m_data.shelf.good then
+        local good = {}
+        local data = {}
+        local k = {}
+        k.id = msg.item.key.id
+        data.k = k
+        data.n = msg.item.n
+        data.price = msg.price
+        good[#good + 1] = data
+        self.m_data.shelf.good = good
+    else
+        for i,v in pairs(self.m_data.shelf.good) do
+            if v.k.id == msg.item.key.id then
+                v.n = v.n + msg.item.n
+                v.price = msg.price
+                return
+            end
+        end
+        local good = {}
+        local data = {}
+        local k = {}
+        k.id = msg.item.key.id
+        data.k = k
+        data.n = msg.item.n
+        data.price = msg.price
+        good = data
+        self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
     end
 end
 --确定运输
@@ -549,10 +556,6 @@ function WarehouseCtrl:_getSortItems(type,sortingTable)
             WarehouseItem:RefreshData(v.goodsDataInfo,i)
         end
     end
-end
---刷新建筑详情回调
-function WarehouseCtrl:refreshBuildingDataInfo(DataInfo)
-    self.m_data = DataInfo
 end
 --关闭面板时清空UI信息，以备其他模块调用
 function WarehouseCtrl:deleteObjInfo()

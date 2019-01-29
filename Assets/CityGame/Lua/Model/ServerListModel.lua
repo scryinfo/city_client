@@ -99,6 +99,9 @@ function ServerListModel:n_GsLoginSuccessfully(lMsg )
     else
         ct.log("system","Error:登录服务器没有同步时间")
     end
+
+    --开启心跳模拟
+    UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
 end
 
 --登录gs发包

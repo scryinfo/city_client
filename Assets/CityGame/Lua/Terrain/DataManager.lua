@@ -1483,16 +1483,18 @@ end
 ----------
 
 -- 收到服务器的聊天消息
-function DataManager.n_OnReceiveRoleCommunication(stream,msgId)
-    local chatData = stream
+function DataManager.n_OnReceiveRoleCommunication(netData,msgId)
+    --异常处理
     if msgId == 0 then
-        if chatData.reason == 'highFrequency' then
-            ct.MsgBox(nil, '哈哈哈哈')
+        if netData.reason == 'highFrequency' then
+            local localizationStr = '发言过度频繁' --这里应该是读取多语言表
+            ct.MsgBox(nil, localizationStr)
         end
         return
     end
-    DataManager.SetMyChatInfo(chatData)
-    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+    --非异常的处理流程
+    DataManager.SetMyChatInfo(netData)
+    Event.Brocast("c_OnReceiveRoleCommunication", netData)
 end
 
 -- 好友在线状态刷新

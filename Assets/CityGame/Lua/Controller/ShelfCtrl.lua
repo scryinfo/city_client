@@ -120,16 +120,16 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
             price = price + GetServerPriceNumber(v.tempPrice)
         end
-        buyListing.goodsPrice = price;
+        buyListing.goodsPrice = GetClientPriceString(price);
         local freight = 0;
+        local onePrice = ChooseWarehouseCtrl:GetPrice()
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-            freight = freight + (buyListing.distance * tonumber(v.numberScrollbar.value) * 10);
+            freight = freight + (onePrice * v.numberScrollbar.value);
             buyListing.number = tonumber(v.numberScrollbar.value)
         end
-        buyListing.freight = freight
-        buyListing.total = price + freight;
+        buyListing.freight = GetClientPriceString(freight)
+        buyListing.total = GetClientPriceString(price + freight);
         --local moneyValue = DataManager.GetMyMoney()
-
         buyListing.btnClick = function()
             --if moneyValue < buyListing.total then
             --    Event.Brocast("SmallPop","钱不够",280)

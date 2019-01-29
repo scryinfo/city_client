@@ -26,7 +26,13 @@ function HouseSetRentalDialogPageCtrl:Awake(go)
     local luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickCloseBtn, self)
     luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
-    luaBehaviour:AddClick(self.refreshBtn.gameObject, self._onClickRefreshBtn, self)
+    --luaBehaviour:AddClick(self.refreshBtn.gameObject, self._onClickRefreshBtn, self)
+    self.input.onValueChanged:AddListener(function(inputValue)
+        if inputValue == nil or inputValue == "" then
+            return
+        end
+        self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), self.m_data.buildingTypeId)
+    end)
 end
 
 function HouseSetRentalDialogPageCtrl:Refresh()
@@ -61,7 +67,7 @@ function HouseSetRentalDialogPageCtrl:_initData()
 end
 
 function HouseSetRentalDialogPageCtrl:_language()
-    self.roomDesTextRect.text = GetLanguage(37050003)
+    self.roomDesTextRect.text = GetLanguage(37040012)
     self.titleText01.text = GetLanguage(37050001)
 end
 

@@ -60,7 +60,13 @@ function StaffRateItem:_initData()
 
     self.currentTotalH = StaffRateItem.static.TOTAL_ALLRIGHT_H
     self.currentContentH = StaffRateItem.static.CONTENT_ALLRIGHT_H
-    self:_checkWorkTime()
+    self.working.transform.localScale = Vector3.zero
+    self.resting.transform.localScale = Vector3.zero
+    if self.staffData.buildingState == "OPERATE" then
+        self:_checkWorkTime()
+    else
+
+    end
 end
 
 function StaffRateItem:_lanuage()
@@ -76,7 +82,7 @@ function StaffRateItem:_checkWorkTime()
     self.workingTimeText.transform.localScale = Vector3.zero
     self.restingTimeText.transform.localScale = Vector3.zero
 
-    if self.staffData.buildingTypeId~=1 then
+    if self.staffData.buildingTypeId ~= 1 then
         local timeTable = getFormatUnixTime(os.time())
         local time = timeTable.year..timeTable.month..timeTable.day
         if HolidayConfig[tonumber(time)] == 0 then  --判断是否是工作日

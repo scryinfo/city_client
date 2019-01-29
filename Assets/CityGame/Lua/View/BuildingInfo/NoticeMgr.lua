@@ -24,7 +24,7 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
     end
     for i, v in pairs(MailsData) do
         local uiTab = {}
-        uiTab.header = Notice[v.type].header
+        uiTab.header = GetLanguage(Notice[v.type].header)
         uiTab.content = Notice[v.type].content
         --uiTab.content = content
         uiTab.redirect = Notice[v.type].redirect

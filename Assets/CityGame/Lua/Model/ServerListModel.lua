@@ -60,6 +60,9 @@ function ServerListModel:n_ChooseGameServer( msg )
     ServerListModel.isClick = false
 end
 function ServerListModel:m_GsOK()
+    --清除之前的所有注册的网络消息
+    DataManager.UnAllModelRegisterNetMsg()
+
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
     --连接gs
@@ -68,6 +71,7 @@ function ServerListModel:m_GsOK()
 end
 function ServerListModel:registerGsNetMsg()
     --gs网络回调注册
+    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","login","gs.LoginACK",self.n_GsLoginSuccessfully,self)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),ServerListModel.n_GsLoginSuccessfully);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);

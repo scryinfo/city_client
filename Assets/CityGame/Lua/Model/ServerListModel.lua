@@ -62,7 +62,7 @@ end
 function ServerListModel:m_GsOK()
     --清除之前的所有注册的网络消息
     DataManager.UnAllModelRegisterNetMsg()
-
+    DataManager.InitialNetMessages()
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
     --连接gs

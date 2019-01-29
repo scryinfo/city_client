@@ -114,6 +114,8 @@ end
 
 function MiniMapCtrl:Active()
     UIPanel.Active(self)
+
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllBuildingDetail","gs.BuildingSet",self.n_OnReceiveAllBuildingDetailInfo,self)
     --设置地图大小和Slider初始值
     MiniMapPanel.slider_Scale.minValue = self.ScaleMin
     MiniMapPanel.slider_Scale.maxValue = self.ScaleMax
@@ -132,6 +134,7 @@ function MiniMapCtrl:_initSystemItem()
     objRect.sizeDelta = self.itemDelta *  PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x
     local tempBtn =  obj:GetComponent("Button")
     tempBtn.onClick:RemoveAllListeners()
+    rectPos.y = - rectPos.y
     tempBtn.onClick:AddListener(function ()
         self:_clickConstructBtn(rectPos)
     end)
@@ -139,7 +142,8 @@ end
 
 
 function MiniMapCtrl:Refresh()
-    self:_initItemData()
+    local msgId = pbl.enum("gscode.OpCode", "getAllBuildingDetail")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
 function MiniMapCtrl:_initItemData()
@@ -192,6 +196,14 @@ function MiniMapCtrl:_clickConstructBtn(tempPos)
     CameraMove.MoveCameraToPos(MoveToPos)
     UIPanel.ClosePage()
 end
+
+function MiniMapCtrl:n_OnReceiveAllBuildingDetailInfo(data)
+    if data then
+        DataManager.SetMyAllBuildingDetail(data)
+    end
+    self:_initItemData()
+end
+
 
 function MiniMapCtrl:Hide()
     UIPanel.Hide(self)

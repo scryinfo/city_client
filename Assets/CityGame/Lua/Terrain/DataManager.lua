@@ -42,7 +42,7 @@ local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
 --local HeadId                  --头像的ID
-
+local pbl = pbl
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
@@ -502,6 +502,10 @@ function DataManager.ModelSendNetMes(protoNameStr,protoNumStr,protoEncodeStr,Msg
     end
 end
 
+function DataManager.UnAllModelRegisterNetMsg()
+    ModelNetMsgStack = {}
+end
+
 --DetailModel 注册消息回调
 --参数：
 --insId：Model唯一ID
@@ -510,14 +514,13 @@ end
 --protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
 --InstantiateSelf: 仅针对非建筑详情Model使用，传入对应的ID值
+--errorfun: error处理方法
 function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf)
-    if not ModelNetMsgStack[protoNameStr] then
-        ModelNetMsgStack[protoNameStr] = {}
-    end
-    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= "table" then
-        ModelNetMsgStack[protoNameStr][protoNumStr] = {}
+    local newMsgId = pbl.enum(protoNameStr,protoNumStr)
+    if not ModelNetMsgStack[newMsgId] or type(ModelNetMsgStack[newMsgId]) ~= "table" then
+        ModelNetMsgStack[newMsgId] = {}
         --注册分发函数
-        CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
+        CityEngineLua.Message:registerNetMsg(newMsgId,function (stream, msgId)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
             local protoID = nil
             if protoData ~= nil then
@@ -528,9 +531,9 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             if protoID ~= nil then--服务器返回的数据有唯一ID
-                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                for key, call in pairs(ModelNetMsgStack[newMsgId]) do
                     if key == protoID then
-                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
+                        for i, func in pairs(ModelNetMsgStack[newMsgId][key]) do
                             if BuildDataStack.DetailModelStack[protoID] then
                                 func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
@@ -542,12 +545,12 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             --该消息监听的无参回调如果有
-            if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+            if ModelNetMsgStack[newMsgId]["NoParameters"] ~= nil  then
+                for i, funcTable in pairs(ModelNetMsgStack[newMsgId]["NoParameters"]) do
                     if funcTable.self ~= nil then
-                        funcTable.func(funcTable.self,protoData)
+                        funcTable.func(funcTable.self,protoData,newMsgId)
                     else
-                        funcTable.func(protoData)
+                        funcTable.func(protoData,newMsgId)
                     end
                 end
             end
@@ -556,36 +559,74 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
     end
     --依据有无唯一ID，存储回调方法
     if  insId ~= nil then --若有唯一ID，则将方法写到唯一ID对应的table中
-        if ModelNetMsgStack[protoNameStr][protoNumStr][insId] == nil then
-            ModelNetMsgStack[protoNameStr][protoNumStr][insId] = {}
+        if ModelNetMsgStack[newMsgId][insId] == nil then
+            ModelNetMsgStack[newMsgId][insId] = {}
         end
-        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr][insId],callBackMethord)
+        table.insert(ModelNetMsgStack[newMsgId][insId],callBackMethord)
     else--若无唯一ID，则将方法写到"NoParameters"对应的table中
-        if  ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] == nil then
-            ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] = {}
+        if  ModelNetMsgStack[newMsgId]["NoParameters"] == nil then
+            ModelNetMsgStack[newMsgId]["NoParameters"] = {}
         end
         local funcTable = {}
         funcTable.func = callBackMethord
         if InstantiateSelf ~= nil then
             funcTable.self = InstantiateSelf
         end
-        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"],funcTable)
-
+        table.insert(ModelNetMsgStack[newMsgId]["NoParameters"],funcTable)
     end
 end
 
+
+
 function DataManager.RegisterErrorNetMsg()
-    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
-        local protoData = assert(pbl.decode("common.Fail", stream), "")
-        if protoData ~= nil then
+    DataManager.ModelRegisterNetMsg(nil,"common.OpCode","error","common.Fail",function (protoData, msgId)
+        --该消息监听的无参回调如果有
+        local msgErrId = pbl.enum('common.OpCode','error')
+        if ModelNetMsgStack[protoData.opcode] ~= nil then
+            if ModelNetMsgStack[protoData.opcode]["NoParameters"] ~= nil  then
+                local tb = ModelNetMsgStack[protoData.opcode]["NoParameters"]
+                for i, funcTable in pairs(tb) do
+                    if funcTable.self ~= nil then
+                        funcTable.func(funcTable.self,protoData,msgErrId)
+                    else
+                        funcTable.func(protoData,msgErrId)
+                    end
+                end
+            end
+        else
             local info = {}
-            info.titleInfo = "网络错误"
+            info.titleInfo = "未注册处理方法的网络错误"
             --替換為多語言
             info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
             info.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
         end
-    end)
+
+    end ,nil)
+
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
+    --    local protoData = assert(pbl.decode("common.Fail", stream), "")
+    --    --该消息监听的无参回调如果有
+    --    if ModelNetMsgStack['common.OpCode']['error']["NoParameters"] ~= nil  then
+    --        for i, funcTable in pairs(ModelNetMsgStack['common'][protoData.opcode]["NoParameters"]) do
+    --            if funcTable.self ~= nil then
+    --                funcTable.func(funcTable.self,protoData,pbl.enum('common.OpCode','error'))
+    --            else
+    --                funcTable.func(protoData,pbl.enum('common.OpCode','error'))
+    --            end
+    --        end
+    --    end
+    --
+    --    --之前的临时处理
+    --    if protoData ~= nil then
+    --        local info = {}
+    --        info.titleInfo = "网络错误"
+    --        --替換為多語言
+    --        info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
+    --        info.tipInfo = ""
+    --        ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+    --    end
+    --end)
 end
 
 
@@ -1189,26 +1230,7 @@ local function InitialEvents()
 end
 
 --注册所有网络消息回调
-local function InitialNetMessages()
-    --[[
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), DataManager.n_OnReceiveAddBuilding)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), DataManager.n_OnReceiveUnitCreate)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendReq"), DataManager.n_OnReceiveAddFriendReq)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),DataManager.n_DeleteBlacklist)
-    --]]
-
+function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addBuilding","gs.BuildingInfo",DataManager.n_OnReceiveAddBuilding)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","unitCreate","gs.UnitCreate",DataManager.n_OnReceiveUnitCreate)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","unitRemove","gs.UnitRemove",DataManager.n_OnReceiveUnitRemove)
@@ -1231,7 +1253,7 @@ end
 function DataManager.Init()
     RoadRootObj = find("Road")
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
     --土地拍卖Model
     SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
@@ -1266,7 +1288,7 @@ local function ClearAllModel()
     SystemDatas = {}
     ModelNetMsgStack = {}
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
 end
 
 function DataManager.Close()
@@ -1436,8 +1458,7 @@ end
 --处理错误信息
 --研究所Roll回复信息
 --不启用
-function DataManager.n_OnReceiveErrorCode(stream)
-    local data = stream
+function DataManager.n_OnReceiveErrorCode(data, msgId)
     if data then
         ct.log("cycle_w15_laboratory03", "---- error opcode："..data.opcode)
         if data.opcode == 1157 then  --研究所roll失败
@@ -1462,10 +1483,18 @@ end
 ----------
 
 -- 收到服务器的聊天消息
-function DataManager.n_OnReceiveRoleCommunication(stream)
-    local chatData = stream
-    DataManager.SetMyChatInfo(chatData)
-    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+function DataManager.n_OnReceiveRoleCommunication(netData,msgId)
+    --异常处理
+    if msgId == 0 then
+        if netData.reason == 'highFrequency' then
+            local localizationStr = '发言过度频繁' --这里应该是读取多语言表
+            ct.MsgBox(nil, localizationStr)
+        end
+        return
+    end
+    --非异常的处理流程
+    DataManager.SetMyChatInfo(netData)
+    Event.Brocast("c_OnReceiveRoleCommunication", netData)
 end
 
 -- 好友在线状态刷新

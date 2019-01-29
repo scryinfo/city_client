@@ -1687,12 +1687,7 @@ CityEngineLua.onConnectionState = function( state )
 	if state.error == '' then
 		--成功
 	else
-		local info = {}
-		info.titleInfo = "网络连接错误"
-		--替換為多語言
-		info.contentInfo = "网络错误Opcode：" ..state.error
-		info.tipInfo = ""
-		ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+		ct.MsgBox("网络连接错误", "网络错误Opcode：" ..state.error)
 		ct.log("system","[m_onConnectionState]"..state.error)
 	end
 end
@@ -1703,6 +1698,7 @@ CityEngineLua.login_loginapp = function( noconnect )
 		this.reset();
 		this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 	else
+		--清除所有注册的网络消息
 		----ct.log("City::login_loginapp(): send login! username=" .. this.username);
 		------1、 获取协议id
 		--local msgId = pb.asCode.login

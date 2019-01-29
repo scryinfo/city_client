@@ -39,6 +39,8 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
+    Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
+
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -49,6 +51,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
+    Event.RemoveListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
 
 end
 
@@ -173,6 +176,9 @@ function GameMainInterfaceCtrl:Awake()
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
+
+    GameMainInterfacePanel.city.text = GetLanguage(10030003)
+
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
@@ -208,9 +214,10 @@ function GameMainInterfaceCtrl:RefreshWeather()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
-    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
-    date = tonumber(os.date("%Y%m%d"))
-    hour = tonumber(os.date("%H"))
+    --GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
+    GameMainInterfacePanel.date.text = ts.year.."-"..ts.month.."-"..ts.day
+    date = tonumber(ts.year..ts.month..ts.day)
+    hour = tonumber(ts.hour)
     if self.weatherDay == nil then
         self.weatherDay = date
     end
@@ -251,6 +258,12 @@ function GameMainInterfaceCtrl:c_AllMails(DataInfo)
             GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
         end
     end
+end
+
+--跟新邮件
+function GameMainInterfaceCtrl:c_RefreshMails(mails)
+    GameMainInterfacePanel.noticeItem.localScale = Vector3.one
+    table.insert(Mails,mails)
 end
 
 --点击头像

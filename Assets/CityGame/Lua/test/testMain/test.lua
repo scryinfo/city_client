@@ -32,26 +32,33 @@ end)
 
 UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
     ct.log("abel_w27_processNetMsgError","[processNetMsgError]  balabalabalabala...............")
+
     --定义网络回调
-    local netCallBack = function(stream)
-        local test = 0
+    local netCallBack = function(protoData,msgid)
+        if msgid == 0 then --如果 msgid 为 0 ，说明是错误码，需要处理
+            --替換為多語言
+            local contentInfo = "错误码:" ..protoData.opcode..'     原因: '..protoData.reason..'     '..protoData.s
+            ct.MsgBox("警告", contentInfo, "")
+        else    --如果 msgid 不为零， 那么就是正常的网络回调
+            ct.MsgBox("提示", " abel_w27_processNetMsgError 测试 ")
+        end
     end
-    --定义错误处理
-    local netErrorHandler = function(stream)
-        local ttt = 0
-    end
+
     --注册网络回调和错误处理
     local msgId = pbl.enum("ascode.OpCode","login")
-    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",netCallBack,nil,netErrorHandler)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",netCallBack,nil)--新版model网络注册
     --CityEngineLua.Message:registerNetMsg(msgId,netCallBack,netErrorHandler)
     ----2、 发送错误的数据
     local msglogion = {
         account = '' --发一个空字符，应该会报错
     }
-    -- 序列化成二进制数据
-    local pb_login = assert(pbl.encode("as.Login", msglogion))
-    --发包
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+    --连接并登陆
+    CityEngineLua.username = '0'    --非法账号
+    --CityEngineLua.username = '1'  --合法账号
+    CityEngineLua.password = ''
+    CityEngineLua._clientdatas = nil
+    CityEngineLua.ip = '192.168.0.192'
+    CityEngineLua.login_loginapp(true);
 end)
 
 UnitTest.Exec("abel_w3", "test_pb",  function ()

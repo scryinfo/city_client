@@ -1703,6 +1703,7 @@ CityEngineLua.login_loginapp = function( noconnect )
 		this.reset();
 		this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 	else
+		--清除所有注册的网络消息
 		----ct.log("City::login_loginapp(): send login! username=" .. this.username);
 		------1、 获取协议id
 		--local msgId = pb.asCode.login
@@ -1776,6 +1777,8 @@ CityEngineLua.login_baseapp = function(noconnect)
 		--	this._networkInterface:connectTo(this.baseappIP, this.baseappPort, this.onConnectTo_baseapp_callback, nil);
 		--end
 	else
+		--清除所有注册的网络消息
+		DataManager.UnAllModelRegisterNetMsg()
 		--gs 登录
 		----1、 获取协议id
 		local msgId = pbl.enum("gscode.OpCode","login")

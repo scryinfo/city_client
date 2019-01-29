@@ -21,18 +21,11 @@ registerNetMsg:
 ]]--
 function CityEngineLua.Message:registerNetMsg(msgId, handler, errorHandler)
 	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
-	CityEngineLua.clientMessagesErrorHandlers[msgId] = errorHandler
+	CityEngineLua.clientMessagesErrorHandlers[msgId] = handler
 end
 
-function CityEngineLua.Message:processNetMsgError(stream)
-	local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
-	if data and CityEngineLua.clientMessagesErrorHandlers[data.opcode] then
-		CityEngineLua.clientMessagesErrorHandlers[data.opcode](data)
-	else
-		ct.log("system", '[processNetMsgError] opcode not define in common.proto')
-	end
-	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
-	CityEngineLua.clientMessagesErrorHandlers[msgId] = errorHandler
+function CityEngineLua.Message:processNetMsgError(stream,protoData)
+    CityEngineLua.clientMessagesErrorHandlers[protoData.opcode](nil,stream,0)
 end
 
 function CityEngineLua.Message:newNetMsg( id)
@@ -74,16 +67,16 @@ function CityEngineLua.Message:createFromStream(msgstream)
 	return result;
 end
 
-function CityEngineLua.Message:handleMessage(msgstream)
+function CityEngineLua.Message:handleMessage(msgstream, msgid)
 	if self.handler == nil then
 		ct.log("City.Message::handleMessage: interface(" .. self.name .. "/" .. self.id .. ") no implement!");
 		return;
 	end
 
 	if msgstream  then
-		self.handler(msgstream);
+		self.handler(msgstream,msgid);
 	else
-		self.handler();
+		self.handler(msgid);
 	end
 	--if #self.args <= 0 then
 	--	if self.argsType < 0 then
@@ -225,7 +218,7 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 					-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
 					local msg = CityEngineLua.clientMessages[reader.msgid]
 					if msg ~= nil then
-						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0))
+						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0),reader.msgid)
 					end
 					reader.state = CityEngineLua.READ_STATE_MSGLEN;
 					reader.expectSize = 4;
@@ -239,7 +232,7 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 				toReadDatalength = toReadDatalength - reader.expectSize;
 				local msg = CityEngineLua.clientMessages[reader.msgid];
 				if msg ~= nil then
-					msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize));
+					msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize),reader.msgid);
 				else
 					local pb = CityLuaUtilExt.bufferToString(reader.stream, reader.expectSize)
 				end

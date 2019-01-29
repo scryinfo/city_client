@@ -34,8 +34,8 @@ function CreateRoleCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_SameName",self.c_SameName,self)
 
-    CreateRolePanel.nicknameText.text = GetLanguage(10040006)
-    CreateRolePanel.companynameText.text = GetLanguage(10040007)
+    CreateRolePanel.nicknameText.text = GetLanguage(10040008)
+    CreateRolePanel.companynameText.text = GetLanguage(10040009)
     CreateRolePanel.name.text = GetLanguage(10040001)
     CreateRolePanel.maleText.text = GetLanguage(10040002)
     CreateRolePanel.femaleText.text = GetLanguage(10040003)
@@ -100,5 +100,5 @@ end
 --重名
 function CreateRoleCtrl:c_SameName()
     CreateRolePanel.duplicate.localScale = Vector3.one
-    Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
+    --Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
 end

@@ -315,34 +315,68 @@ function WarehouseCtrl:n_shelfAdd(msg)
             end
         end
     end
-    if not self.m_data.shelf.good then
-        local good = {}
-        local data = {}
-        local k = {}
-        k.id = msg.item.key.id
-        data.k = k
-        data.n = msg.item.n
-        data.price = msg.price
-        good[#good + 1] = data
-        self.m_data.shelf.good = good
-    else
-        for i,v in pairs(self.m_data.shelf.good) do
-            if v.k.id == msg.item.key.id then
-                v.n = v.n + msg.item.n
-                v.price = msg.price
-                return
+    if msg.item.key.producerId == nil and msg.item.key.qty == nil then
+        if not self.m_data.shelf.good then
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good[#good + 1] = data
+            self.m_data.shelf.good = good
+        else
+            for i,v in pairs(self.m_data.shelf.good) do
+                if v.k.id == msg.item.key.id then
+                    v.n = v.n + msg.item.n
+                    v.price = msg.price
+                    return
+                end
             end
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good = data
+            self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
         end
-        local good = {}
-        local data = {}
-        local k = {}
-        k.id = msg.item.key.id
-        data.k = k
-        data.n = msg.item.n
-        data.price = msg.price
-        good = data
-        self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
+    else
+        if not self.m_data.shelf.good then
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            k.producerId = msg.item.key.producerId
+            k.qty = msg.item.key.qty
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good[#good + 1] = data
+            self.m_data.shelf.good = good
+        else
+            for i,v in pairs(self.m_data.shelf.good) do
+                if v.k.id == msg.item.key.id then
+                    v.n = v.n + msg.item.n
+                    v.price = msg.price
+                    return
+                end
+            end
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good = data
+            self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
+        end
     end
+
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)

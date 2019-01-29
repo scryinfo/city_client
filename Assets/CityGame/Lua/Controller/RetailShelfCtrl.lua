@@ -104,15 +104,17 @@ end
 
 --点击添加按钮Add
 function RetailShelfCtrl:OnClick_addBtn(go)
-    --local data = {}
-    --data.buildingData = BuildingType.RetailShop;
-    --go.GoodsUnifyMgr = GoodsUnifyMgr:new(go.retailShelf,data);
     PlayMusEff(1002)
-    if go.data == nil then
-        return
+    if go.m_data.info.state == "OPERATE" then
+        if go.data == nil then
+            return
+        end
+        go:deleteObjInfo()
+        go.data.shelfOpen = 1
+        ct.OpenCtrl("WarehouseCtrl",go.data)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
     end
-    go:deleteObjInfo()
-    ct.OpenCtrl("WarehouseCtrl",go.data)
 end
 --其他玩家购买窗口
 function RetailShelfCtrl:OnClick_playerBuy(go)

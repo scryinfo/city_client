@@ -73,6 +73,7 @@ function WarehouseCtrl:Refresh()
     self.store.type = BuildingInType.Warehouse
     self.store.buildingId = self.m_data.info.id
     WarehouseCtrl.playerId = self.m_data.info.id
+    self.mId = self.m_data.info.mId
     self.warehouseTotalNum = WarehouseCtrl:getWarehouseCapacity(self.m_data.store);
     self.warehouseNum = WarehouseCtrl:getWarehouseNum(self.m_data.store);
     self.lockedNum = WarehouseCtrl:getLockedNum(self.m_data.store)
@@ -264,7 +265,30 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
                     Event.Brocast("SmallPop","请输入数量",300)
                     return
                 end
-                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                local material,processing,retailStores = 11,12,13
+                local materialKey,goodsKey = 21,22
+                if math.floor(go.mId / 100000) == material then
+                    if math.floor(v.itemId / 100000) == goodsKey then
+                        Event.Brocast("SmallPop","原料厂不能上架商品",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                elseif math.floor(go.mId / 100000) == processing then
+                    if math.floor(v.itemId / 100000) == materialKey then
+                        Event.Brocast("SmallPop","加工厂不能上架原料",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                elseif math.floor(go.mId / 100000) == retailStores then
+                    if math.floor(v.itemId / 100000) == materialKey then
+                        Event.Brocast("SmallPop","零售店不能上架原料",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                end
             else
                 for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id and GetServerPriceNumber(v.inputPrice.text) ~= t.price then
@@ -276,7 +300,33 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
                             Event.Brocast("SmallPop","请输入数量",300)
                             return
                         end
-                        Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                        local material,processing,retailStores = 11,12,13
+                        local materialKey,goodsKey = 21,22
+                        if math.floor(go.mId / 100000) == material then
+                            if math.floor(v.itemId / 100000) == goodsKey then
+                                Event.Brocast("SmallPop","原料厂不能上架商品",300)
+                                return
+                            else
+                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                            end
+                        elseif math.floor(go.mId / 100000) == processing then
+                            if math.floor(v.itemId / 100000) == materialKey then
+                                Event.Brocast("SmallPop","加工厂不能上架原料",300)
+                                return
+                            else
+                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                            end
+                        elseif math.floor(go.mId / 100000) == retailStores then
+                            if math.floor(v.itemId / 100000) == materialKey then
+                                Event.Brocast("SmallPop","零售店不能上架原料",300)
+                                return
+                            else
+                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                            end
+                        end
+
+
+                        --Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
                 end
                 if GetServerPriceNumber(v.inputPrice.text) == 0 then
@@ -287,7 +337,31 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
                     Event.Brocast("SmallPop","请输入数量",300)
                     return
                 end
-                Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                local material,processing,retailStores = 11,12,13
+                local materialKey,goodsKey = 21,22
+                if math.floor(go.mId / 100000) == material then
+                    if math.floor(v.itemId / 100000) == goodsKey then
+                        Event.Brocast("SmallPop","原料厂不能上架商品",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                elseif math.floor(go.mId / 100000) == processing then
+                    if math.floor(v.itemId / 100000) == materialKey then
+                        Event.Brocast("SmallPop","加工厂不能上架原料",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                elseif math.floor(go.mId / 100000) == retailStores then
+                    if math.floor(v.itemId / 100000) == materialKey then
+                        Event.Brocast("SmallPop","零售店不能上架原料",300)
+                        return
+                    else
+                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                    end
+                end
+                --Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
         end
     end
@@ -296,24 +370,6 @@ end
 function WarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
-    end
-    if not self.m_data.shelf.good then
-        local good = {}
-        local data = {}
-        local k = {}
-        k.id = msg.item.key.id
-        data.k = k
-        data.n = msg.item.n
-        data.price = msg.price
-        good[1] = data
-        self.m_data.shelf.good = good
-    else
-        for i,v in pairs(self.m_data.shelf.good) do
-            if v.k.id == msg.item.key.id then
-                v.n = v.n + msg.item.n
-                v.price = msg.price
-            end
-        end
     end
     local Data = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(Data) do
@@ -333,6 +389,68 @@ function WarehouseCtrl:n_shelfAdd(msg)
             end
         end
     end
+    if msg.item.key.producerId == nil and msg.item.key.qty == nil then
+        if not self.m_data.shelf.good then
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good[#good + 1] = data
+            self.m_data.shelf.good = good
+        else
+            for i,v in pairs(self.m_data.shelf.good) do
+                if v.k.id == msg.item.key.id then
+                    v.n = v.n + msg.item.n
+                    v.price = msg.price
+                    return
+                end
+            end
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good = data
+            self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
+        end
+    else
+        if not self.m_data.shelf.good then
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            k.producerId = msg.item.key.producerId
+            k.qty = msg.item.key.qty
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good[#good + 1] = data
+            self.m_data.shelf.good = good
+        else
+            for i,v in pairs(self.m_data.shelf.good) do
+                if v.k.id == msg.item.key.id then
+                    v.n = v.n + msg.item.n
+                    v.price = msg.price
+                    return
+                end
+            end
+            local good = {}
+            local data = {}
+            local k = {}
+            k.id = msg.item.key.id
+            data.k = k
+            data.n = msg.item.n
+            data.price = msg.price
+            good = data
+            self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
+        end
+    end
+
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)
@@ -547,7 +665,6 @@ function WarehouseCtrl:_getSortItems(type,sortingTable)
         end
     end
 end
-
 --关闭面板时清空UI信息，以备其他模块调用
 function WarehouseCtrl:deleteObjInfo()
     if not self.GoodsUnifyMgr.warehouseLuaTab then

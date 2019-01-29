@@ -20,7 +20,43 @@ function DETAILSBoxCtrl:Awake(go)
     details:AddClick(DETAILSBoxPanel.XBtn.gameObject,self.OnClick_XBtn,self);
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
+
+    --
+    details:AddClick(DETAILSBoxPanel.infoBtn.gameObject, function ()
+        DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.one
+    end ,self)
+    details:AddClick(DETAILSBoxPanel.infoRootBtn.gameObject, function ()
+        DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
+    end ,self)
+    DETAILSBoxPanel.priceInput.onValueChanged:AddListener(function(inputValue)
+        if inputValue == nil or inputValue == "" then
+            return
+        end
+        if DETAILSBoxPanel.scoreText.transform.localScale == Vector3.zero or self.itemId == nil then
+            return
+        end
+
+        DETAILSBoxPanel.scoreText.text = self:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), self.itemId)
+    end)
 end
+
+function DETAILSBoxCtrl:_getValuableScore(rentPrice, buildingType)
+    local value = (1 - (rentPrice / TempBrandConfig[buildingType])) *100
+    value = math.floor(value)
+    if value <= 0 then
+        return "000"
+    end
+    if value > 0 and value < 10 then
+        return "00"..tostring(value)
+    end
+    if value >= 10 and value < 100 then
+        return "0"..tostring(value)
+    end
+    if value >= 100 then
+        return "100"
+    end
+end
+
 function DETAILSBoxCtrl:Active()
     UIPanel.Active(self)
     DETAILSBoxPanel.name.text = GetLanguage(27010004)
@@ -50,17 +86,25 @@ function DETAILSBoxCtrl:Refresh()
     if math.floor(self.itemId / 100000) == materialKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.zero
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.one
-        DETAILSBoxPanel.materialNameText.text = self.m_data.name
+        DETAILSBoxPanel.materialNameText.text = Material[self.itemId].name
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
                 DETAILSBoxPanel.materialIcon.sprite = texture
             end
         end)
+
+        DETAILSBoxPanel.scoreText.transform.localScale = Vector3.zero
+        DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.zero
+        DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
     elseif math.floor(self.itemId / 100000) == goodsKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.one
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.zero
         DETAILSBoxPanel.GoodNameText.text = Good[self.itemId].name
+
+        DETAILSBoxPanel.scoreText.transform.localScale = Vector3.one
+        DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.one
+        DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
         --DETAILSBoxPanel.playerName.text =
         --DETAILSBoxPanel.companyNameText.text =
         --DETAILSBoxPanel.headImg =
@@ -71,7 +115,7 @@ function DETAILSBoxCtrl:Refresh()
             end
         end)
     end
-    DETAILSBoxPanel.GoodNameText.text = self.m_data.name
+    --DETAILSBoxPanel.GoodNameText.text = self.m_data.name
     DETAILSBoxPanel.numberInput.text = self.m_data.num
     DETAILSBoxPanel.numberSlider.maxValue = self.m_data.num
     DETAILSBoxPanel.numberSlider.value = self.m_data.num

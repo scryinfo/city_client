@@ -53,6 +53,7 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
     AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --刷新时间用
     local lockedNum = WarehouseCtrl:getLockedNum(self.data.store)
+    self.mId = self.m_data.info.mId
     local numTab = {}
     numTab["num1"] = AdjustProductionLinePanel.locked_Slider.value
     numTab["num2"] = AdjustProductionLinePanel.capacity_Slider.maxValue
@@ -102,10 +103,16 @@ end
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then
+        local num = PlayerBuildingBaseData[go.mId].lineMaxWorkerNum / 5
+        if AdjustProductionLinePanel.content:GetComponent("RectTransform").childCount == num then
+            Event.Brocast("SmallPop","已达当前建筑容量限制",300)
+            return
+        end
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
         Event.Brocast("SmallPop","建筑尚未开业",300)
     end
+
 end
 
 --计算一条生产线总时间
@@ -233,6 +240,14 @@ end
 --        elseif remainingNum < 0 or remainingNum == 0 then
 --            AdjustProductionLineCtrl.materialProductionLine[i].timeText.text = "00:00:00"
 --        end
+--    end
+--end
+--暂时检测最多能有几条生产线
+--function AdjustProductionLineCtrl:manyLine()
+--    local num = PlayerBuildingBaseData[self.mId].lineMaxWorkerNum / 5
+--    if AdjustProductionLinePanel.content:GetComponent("RectTransform").childCount == num then
+--        Event.Brocast("SmallPop","当前建筑容量已经上线",300)
+--        return
 --    end
 --end
 --接收回调刷新产量

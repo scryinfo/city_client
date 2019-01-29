@@ -16,6 +16,7 @@ function WarehouseModel.OnCreate()
     Event.AddListener("m_ReqShelfAdd",this.m_ReqShelfAdd);
     Event.AddListener("m_ReqModifyShelf",this.m_ReqModifyShelf)
     Event.AddListener("mReqDelItem",this.mReqDelItem)
+    Event.AddListener("m_ReqBuildingDataInfo",this.m_ReqBuildingDataInfo)
     WarehouseModel.registerAsNetMsg()
 
 end
@@ -25,6 +26,8 @@ function WarehouseModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_GsDelItem);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),WarehouseModel.n_GsMaterialDataInfo);
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailProduceDepartment"),WarehouseModel.n_GsProcessingDataInfo);
     --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",WarehouseModel.n_GsDelItem,WarehouseModel)
 end
 --关闭事件
@@ -70,6 +73,21 @@ function WarehouseModel.mReqDelItem(buildingId,id,producerId,qty)
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     end
 end
+--刷新数据重新请求建筑数据
+function WarehouseModel.m_ReqBuildingDataInfo(buildingId,itemId)
+    local Material,processing = 11,12
+    if math.floor(itemId / 10000) == Material then
+        local msgId = pbl.enum("gscode.OpCode","detailMaterialFactory")
+        local lMsg = {id = buildingId}
+        local pMsg = assert(pbl.encode("gs.Id", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    elseif math.floor(itemId / 10000) == processing then
+        local msgId = pbl.enum("gscode.OpCode","detailProduceDepartment")
+        local lMsg = {id = buildingId}
+        local pMsg = assert(pbl.encode("gs.Id", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    end
+end
 --网络回调--
 --上架物品
 function WarehouseModel.n_OnShelfAddInfo(stream)
@@ -93,4 +111,15 @@ function WarehouseModel.n_GsDelItem(stream)
     if pMsg ~= nil then
         Event.Brocast("deleteObjeCallback",pMsg)
     end
+end
+--刷新数据重新请求建筑数据回调
+--原料厂
+function WarehouseModel.n_GsMaterialDataInfo(stream)
+    local buildingDataInfo = assert(pbl.decode("gs.MaterialFactory",stream),"WarehouseModel.n_GsMaterialDataInfo")
+    Event.Brocast("refreshBuildingDataInfo",buildingDataInfo)
+end
+--加工厂
+function WarehouseModel.n_GsProcessingDataInfo(stream)
+    local buildingDataInfo = assert(pbl.decode("gs.ProduceDepartment",stream),"WarehouseModel.n_GsProcessingDataInfo")
+    Event.Brocast("refreshBuildingDataInfo",buildingDataInfo)
 end

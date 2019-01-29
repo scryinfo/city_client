@@ -11,8 +11,8 @@ function DETAILSBoxPanel.Awake(obj)
     this.InitPanel();
 end
 function DETAILSBoxPanel.InitPanel()
-    this.XBtn = transform:Find("XBtn");
-    this.confirmBtn = transform:Find("confirmBtn");
+    this.XBtn = transform:Find("bg/XBtn");
+    this.confirmBtn = transform:Find("bg/confirmBtn");
     this.name = transform:Find("bg/name"):GetComponent("Text");
     --商品
     this.playerGoodInfo = transform:Find("playerGoodInfo");

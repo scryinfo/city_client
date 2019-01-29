@@ -39,6 +39,8 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
+    Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
+
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -49,6 +51,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
+    Event.RemoveListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
 
 end
 
@@ -117,7 +120,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
 
     Event.AddListener("c_successBuilding",function ()
             func()
-        Event.Brocast("SmallPop","Success",300)
+        Event.Brocast("SmallPop",GetLanguage(40010020),300)
     end ,self)
 
 end
@@ -162,7 +165,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.advertisFacilitie.gameObject,self.OnAdvertisFacilitie,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.smallMap.gameObject,self.OnSmallMap,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
@@ -180,6 +183,9 @@ function GameMainInterfaceCtrl:Awake()
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
+
+    GameMainInterfacePanel.city.text = GetLanguage(10030003)
+
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
@@ -215,9 +221,10 @@ function GameMainInterfaceCtrl:RefreshWeather()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
-    GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
-    date = tonumber(os.date("%Y%m%d"))
-    hour = tonumber(os.date("%H"))
+    --GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
+    GameMainInterfacePanel.date.text = ts.year.."-"..ts.month.."-"..ts.day
+    date = tonumber(ts.year..ts.month..ts.day)
+    hour = tonumber(ts.hour)
     if self.weatherDay == nil then
         self.weatherDay = date
     end
@@ -258,6 +265,12 @@ function GameMainInterfaceCtrl:c_AllMails(DataInfo)
             GameMainInterfacePanel.noticeItem.localScale = Vector3.zero
         end
     end
+end
+
+--跟新邮件
+function GameMainInterfaceCtrl:c_RefreshMails(mails)
+    GameMainInterfacePanel.noticeItem.localScale = Vector3.one
+    table.insert(Mails,mails)
 end
 
 --点击头像
@@ -348,6 +361,25 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
             end
         end
     end
+
+    local data = DataManager.GetMyChatInfo(1)
+    local worldInfoAllNum = #data
+    if worldInfoAllNum >=1 then
+        for i = 1, GameMainInterfacePanel.worldChatContent.childCount do
+            UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
+        end
+        for j = math.max(1, worldInfoAllNum - 3), worldInfoAllNum do
+            panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
+                if obj ~= nil then
+                    local go = ct.InstantiatePrefab(obj)
+                    local rect = go.transform:GetComponent("RectTransform")
+                    go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+                    rect.transform.localScale = Vector3.one
+                    local chatWorldItem = ChatWorldItem:new(go, data[j])
+                end
+            end)
+        end
+    end
 end
 
 --设置--
@@ -391,12 +423,11 @@ function GameMainInterfaceCtrl.OnGuideBool()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
---广告设施
-function GameMainInterfaceCtrl:OnAdvertisFacilitie()
+--小地图
+function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("MunicipalCtrl")
-    Event.Brocast("m_detailPublicFacility",MunicipalModel.lMsg.info.id)
+    ct.OpenCtrl("MiniMapCtrl")
 end
 
 --中心建筑

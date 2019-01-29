@@ -107,7 +107,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
     local buildingId = DataManager.GetBagId()
     local data = {}
     data.titleInfo = GetLanguage(35030001)
-    data.contentInfo = "确认销毁吗"
+    data.contentInfo = GetLanguage(35030004)
     data.tipInfo = GetLanguage(35030002)
     data.btnCallBack = function ()
         local dataId = {}
@@ -118,7 +118,7 @@ function CenterWareHouseCtrl:c_OnDelete(go)
         DataManager.DetailModelRpcNoRet(self.insId , 'm_DeleteItem',dataId)
        -- go.manager:_deleteGoods(go.id)
     end
-    ct.OpenCtrl('BtnDialogPageCtrl',data)
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
 
 --删除物品回调
@@ -274,9 +274,14 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
         return
     end
     data.btnClick = function()
+        local money = DataManager.GetMoney()
+        if money < n*data.price then
+            Event.Brocast("SmallPop","运费不足",300)
+            return
+        end
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do
             if v.inputText.text == "0" then
-                Event.Brocast("SmallPop","运输商品个数不能为0",300)
+                Event.Brocast("SmallPop",GetLanguage(27020004),300)
                 return
             end
         end

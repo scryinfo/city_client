@@ -5,7 +5,8 @@
 ---
 UnitTest.TestBlockStart()---------------------------------------------------------
 if not ct.G_UNITTEST then return {} end
-
+local uTime = UnityEngine.Time
+local gettime = tolua.gettime
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
@@ -28,6 +29,74 @@ protoc:addpath("./Assets/CityGame/Lua/pb")
 
 UnitTest.Exec("abel_w4", "test_pb11111",  function ()
     ct.log("abel_w4","[test_pb11111]  balabalabalabala...............")
+end)
+
+UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
+    ct.testUpdate = false
+    --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
+    Event.AddListener("e_HartBeatStop", function (serinofs)
+        ct.testUpdate = false
+    end)
+    Event.AddListener("e_HartBeatStart", function (serinofs)
+        ct.testUpdate = true
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","heartBeat","gs.HeartBeat",function()
+            ct.G_LAST_HARTBEAT = uTime.time
+        end)
+        --每x秒检查一次上次心跳是否超时，超时
+        ct.G_LAST_HARTBEAT = uTime.time
+        local timerCheck = FrameTimer.New(function()
+            local timetest = uTime.time - ct.G_LAST_HARTBEAT
+            if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
+                --提示网络连接不稳定
+                ct.MsgBox("网络连接", "网络连接不稳定")
+            end
+        end, 30, 1)
+        timerCheck:Start()
+        --目前GS才有心跳协议，AS没有
+        local timerSendHartBeat = FrameTimer.New(function()
+            if CityEngineLua._networkInterface.connected  and ct.testUpdate then
+                --HeartBeat
+                local msgId = pbl.enum("gscode.OpCode","heartBeat")
+                ----2、 填充 protobuf 内部协议数据
+                local lMsg = { ts = TimeSynchronized.GetTheCurrentServerTime()}
+                ----3、 序列化成二进制数据
+                local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
+                CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+            end
+        end, 90, 1)
+        timerSendHartBeat:Start()
+    end)
+end)
+
+UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
+    ct.log("abel_w27_processNetMsgError","[processNetMsgError]  balabalabalabala...............")
+
+    --定义网络回调
+    local netCallBack = function(protoData,msgid)
+        if msgid == 0 then --如果 msgid 为 0 ，说明是错误码，需要处理
+            --替換為多語言
+            local contentInfo = "错误码:" ..protoData.opcode..'     原因: '..protoData.reason..'     '..protoData.s
+            ct.MsgBox("警告", contentInfo, "")
+        else    --如果 msgid 不为零， 那么就是正常的网络回调
+            --ct.MsgBox("提示", " abel_w27_processNetMsgError 测试 ")
+        end
+    end
+
+    --注册网络回调和错误处理
+    local msgId = pbl.enum("ascode.OpCode","login")
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",netCallBack,nil)--新版model网络注册
+    --CityEngineLua.Message:registerNetMsg(msgId,netCallBack,netErrorHandler)
+    ----2、 发送错误的数据
+    local msglogion = {
+        account = '' --发一个空字符，应该会报错
+    }
+    --连接并登陆
+    CityEngineLua.username = '0'    --非法账号
+    --CityEngineLua.username = '1'  --合法账号
+    CityEngineLua.password = ''
+    CityEngineLua._clientdatas = nil
+    CityEngineLua.ip = '192.168.0.192'
+    CityEngineLua.login_loginapp(true);
 end)
 
 UnitTest.Exec("abel_w3", "test_pb",  function ()

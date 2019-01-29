@@ -173,6 +173,16 @@ function GoodsUnifyMgr:_deleteGoods(ins)
         i = i + 1
     end
 end
+--零售店货架删除
+function GoodsUnifyMgr:_deleteRetailShelf(ins)
+    destroy(self.retailShelfs[ins.id].prefab.gameObject);
+    table.remove(self.retailShelfs, ins.id)
+    local i = 1
+    for k,v in pairs(self.retailShelfs) do
+        self.retailShelfs[i]:RefreshID(i)
+        i = i +1
+    end
+end
 --删除刚添加的生产线
 function GoodsUnifyMgr:_deleteLine(ins)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do

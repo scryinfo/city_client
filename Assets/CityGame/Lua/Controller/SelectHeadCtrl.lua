@@ -53,7 +53,7 @@ function SelectHeadCtrl:OnOkBtn(go)
     if headId ~= nil then
         ct.OpenCtrl("CreateRoleCtrl",headId)
     else
-        Event.Brocast("SmallPop"," 请选择头像",300)
+        Event.Brocast("SmallPop",GetLanguage(10050002),300)
     end
 end
 

@@ -50,7 +50,7 @@ CompoundTypeConfig={
 		},
 		
 		[4] = {
-		itemId = 2102003,
+		itemId = 2102004,
 		name = "dressdata", 
 		itemType = 0,
 		},

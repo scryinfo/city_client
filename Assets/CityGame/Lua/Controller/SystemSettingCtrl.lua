@@ -48,16 +48,22 @@ end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
     CityEngineLua:reset()
- --   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
-    UIPanel.ClearAllPages()
-    DataManager.Close()
-   -- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-    CityEngineLua.currserver = "";
-    CityEngineLua.currstate = "";
-    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-    PlayMusEff(1002)
-    CityEngineLua.Message.clear()
-
+    local timerCheck = FrameTimer.New(function()
+        --   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
+        --清除之前的所有注册的网络消息
+        DataManager.UnAllModelRegisterNetMsg()
+        UIPanel.ClearAllPages()
+        DataManager.Close()
+        -- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+        CityEngineLua.currserver = "";
+        CityEngineLua.currstate = "";
+        ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+        PlayMusEff(1002)
+        CityEngineLua.Message.clear()
+        --停止
+        UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
+    end, 10, 0)
+    timerCheck:Start()
 end
 
 --开音乐
@@ -124,6 +130,7 @@ function SystemSettingCtrl:c_OnClick_chinese()
     SaveLanguageSettings(LanguageType.Chinese)
     panel:InitDate(GetLanguage(14010006))
     panel.closeLan.localScale=Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
 --英文
 function SystemSettingCtrl:c_OnClick_english()
@@ -132,6 +139,7 @@ function SystemSettingCtrl:c_OnClick_english()
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(14010008))
     panel.closeLan.localScale=Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
 
 function  SystemSettingCtrl:Hide()

@@ -96,7 +96,7 @@ function PersonalHomeDialogPageCtrl:_initData()
     end
     self.sayText.text = self.m_data.des
     if self.m_data.des == nil or self.m_data.des == "" then
-        self.m_data.des = "Everything i do i wanna put a shine on it, do it one more time, i gotta give it up."  --默认值
+        self.m_data.des = GetLanguage(12010003)  --默认值
     end
     self.sayText.text = self.m_data.des
     self.nameText.text = self.m_data.name

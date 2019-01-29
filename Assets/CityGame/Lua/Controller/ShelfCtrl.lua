@@ -118,18 +118,18 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         buyListing.distance = ChooseWarehouseCtrl:GetDistance(pos)
         local price = 0;
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-            price = price + tonumber(v.moneyText.text);
+            price = price + GetServerPriceNumber(v.tempPrice)
         end
-        buyListing.goodsPrice = price;
+        buyListing.goodsPrice = GetClientPriceString(price);
         local freight = 0;
+        local onePrice = ChooseWarehouseCtrl:GetPrice()
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-            freight = freight + (buyListing.distance * tonumber(v.numberScrollbar.value) * 10);
+            freight = freight + (onePrice * v.numberScrollbar.value);
             buyListing.number = tonumber(v.numberScrollbar.value)
         end
-        buyListing.freight = freight
-        buyListing.total = price + freight;
+        buyListing.freight = GetClientPriceString(freight)
+        buyListing.total = GetClientPriceString(price + freight);
         --local moneyValue = DataManager.GetMyMoney()
-
         buyListing.btnClick = function()
             --if moneyValue < buyListing.total then
             --    Event.Brocast("SmallPop","钱不够",280)
@@ -273,16 +273,16 @@ function ShelfCtrl:refreshUiInfo(msg)
 end
 function ShelfCtrl:OnClick_createGoods(go)
     PlayMusEff(1002)
-    if go.data == nil then
-        return
+    if go.m_data.info.state == "OPERATE" then
+        if go.data == nil then
+            return
+        end
+        go:deleteObjInfo();
+        go.data.shelfOpen = 1
+        ct.OpenCtrl("WarehouseCtrl",go.data)
+    else
+        Event.Brocast("SmallPop","建筑尚未开业",300)
     end
-    go:deleteObjInfo();
-    ct.OpenCtrl("WarehouseCtrl",go.data)
-    --if go.data.buildingType == BuildingType.MaterialFactory then
-    --    ct.OpenCtrl("WarehouseCtrl",go.data)
-    --elseif go.data.buildingType == BuildingType.ProcessingFactory then
-    --    ct.OpenCtrl("WarehouseCtrl",go.data)
-    --end
 end
 --刷新购买确定按钮
 function ShelfCtrl:isShowDetermineBtn()

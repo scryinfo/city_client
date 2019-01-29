@@ -1,6 +1,6 @@
 AddDetailItem = class('AddDetailItem')
---AddLineCompositeItem.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
---AddLineCompositeItem.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
+AddDetailItem.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
+AddDetailItem.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
 
 --中间合成的Item
 function AddDetailItem:initialize(viewRect)
@@ -34,6 +34,12 @@ function AddDetailItem:initData(data)
             end
         end)
     else
+        panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
+            if obj ~= nil then
+                local texture = ct.InstantiatePrefab(obj)
+                self.iconImg.sprite = texture
+            end
+        end)
         self.nameText.text = GetLanguage(data.itemId);
     end
     --if data.itemState == AddLineDetailItemState.InventIng then
@@ -71,9 +77,9 @@ end
 --显示选中/未选中状态
 function AddDetailItem:showSelectState(select)
     if select then
-        --self.borderImg.color = getColorByVector3(AddDetailItem.static.ChooseColor)
+        self.borderImg.color = getColorByVector3(AddDetailItem.static.ChooseColor)
     else
-        --self.borderImg.color = getColorByVector3(AddDetailItem.static.NomalColor)
+        self.borderImg.color = getColorByVector3(AddDetailItem.static.NomalColor)
     end
 end
 --隐藏显示场景中的obj

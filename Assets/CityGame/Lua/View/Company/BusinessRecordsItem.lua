@@ -16,13 +16,17 @@ function BusinessRecordsItem:initialize(prefab, data)
     local nameImage = transform:Find("NameImage").gameObject
     local nameText = transform:Find("NameImage/NameText"):GetComponent("Text")
     local incomeImage = transform:Find("IncomeImage").gameObject
+    local incomeTitle = transform:Find("IncomeImage/IncomeTitle"):GetComponent("Text")
     local incomeText = transform:Find("IncomeImage/IncomeText"):GetComponent("Text")
     local expensesImage = transform:Find("ExpensesImage").gameObject
+    local expensesTitle = transform:Find("ExpensesImage/ExpensesTitle"):GetComponent("Text")
     local expensesText = transform:Find("ExpensesImage/ExpensesText"):GetComponent("Text")
 
+    incomeTitle.text = GetLanguage(17010002)
+    expensesTitle.text = GetLanguage(17010003)
     if self.data.itemId > 2200000 then
         typeText.text = "-Goods-"
-        nameText.text = self.data.name
+        nameText.text = GetLanguage(self.data.itemId)
         incomeText.text = self:_formatData(self.data.income, true)
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
@@ -31,7 +35,7 @@ function BusinessRecordsItem:initialize(prefab, data)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId > 2100000 then
         typeText.text = "-Raw material-"
-        nameText.text = self.data.name
+        nameText.text = GetLanguage(self.data.itemId)
         incomeText.text = self:_formatData(self.data.income, true)
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
@@ -39,7 +43,7 @@ function BusinessRecordsItem:initialize(prefab, data)
         nameImage:SetActive(true)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1000 then
-        typeText.text = "-土地买卖-"
+        typeText.text = GetLanguage(17010009) --"-土地买卖-"
         incomeText.text = self:_formatData(self.data.income, true)
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
@@ -47,7 +51,7 @@ function BusinessRecordsItem:initialize(prefab, data)
         nameImage:SetActive(false)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1001 then
-        typeText.text = "-土地租赁-"
+        typeText.text = GetLanguage(17010008)  -- "-土地租赁-"
         incomeText.text = self:_formatData(self.data.income, true)
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(true)
@@ -55,19 +59,19 @@ function BusinessRecordsItem:initialize(prefab, data)
         nameImage:SetActive(false)
         incomeImage.transform.anchoredPosition = Vector2.New(-182, 30)
     elseif self.data.itemId == 1002 then
-        typeText.text = "-运输费用-"
+        typeText.text = GetLanguage(17010011) --"-运输费用-"
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(false)
         expensesImage:SetActive(true)
         nameImage:SetActive(false)
     elseif self.data.itemId == 1003 then
-        typeText.text = "-员工工资-"
+        typeText.text = GetLanguage(17010012) -- "-员工工资-"
         expensesText.text = self:_formatData(self.data.expenses, false)
         incomeImage:SetActive(false)
         expensesImage:SetActive(true)
         nameImage:SetActive(false)
     elseif self.data.itemId == 1004 then
-        typeText.text = "-住宅房租-"
+        typeText.text = GetLanguage(17010010) -- "-住宅房租-"
         incomeText.text = self:_formatData(self.data.income, true)
         incomeImage:SetActive(true)
         expensesImage:SetActive(false)

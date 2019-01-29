@@ -34,8 +34,8 @@ function CreateRoleCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_SameName",self.c_SameName,self)
 
-    CreateRolePanel.nicknameText.text = GetLanguage(10040006)
-    CreateRolePanel.companynameText.text = GetLanguage(10040007)
+    CreateRolePanel.nicknameText.text = GetLanguage(10040008)
+    CreateRolePanel.companynameText.text = GetLanguage(10040009)
     CreateRolePanel.name.text = GetLanguage(10040001)
     CreateRolePanel.maleText.text = GetLanguage(10040002)
     CreateRolePanel.femaleText.text = GetLanguage(10040003)
@@ -64,9 +64,9 @@ function CreateRoleCtrl:OnCreateRole(go)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
-        Event.Brocast("SmallPop"," 用户名或公司名为空",300)
+        Event.Brocast("SmallPop",GetLanguage(10040006),300)
     elseif gender == nil  then
-        Event.Brocast("SmallPop"," 请选择性别",300)
+        Event.Brocast("SmallPop",GetLanguage(10040007),300)
     else
         local data = {}
         data.nickname = nickname
@@ -100,5 +100,5 @@ end
 --重名
 function CreateRoleCtrl:c_SameName()
     CreateRolePanel.duplicate.localScale = Vector3.one
-    Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
+    --Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
 end

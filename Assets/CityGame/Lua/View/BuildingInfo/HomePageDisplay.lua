@@ -39,7 +39,7 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
         end)
     end
     self.numberText.text = homePageShelfInfo.n
-    self.moneyText.text = getPriceString("E"..homePageShelfInfo.price..".0000",15,13)
+    self.moneyText.text = "E"..getPriceString(GetClientPriceString(homePageShelfInfo.price),15,13)
 end
 --主页生产线
 function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefab)

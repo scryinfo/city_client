@@ -25,7 +25,7 @@ function WarehouseModel.registerAsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_GsDelItem);
-
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",WarehouseModel.n_GsDelItem,WarehouseModel)
 end
 --关闭事件
 function WarehouseModel.Close()
@@ -35,24 +35,26 @@ end
 --客户端请求--
 --上架物品
 function WarehouseModel.m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
-    if producerId == nil and qty == nil then
-        ct.log("system",buildingId,Id,num,price)
-        local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-        local lMsg = {buildingId = buildingId, item = {key = {id = Id},n = tonumber(num)}, price = tonumber(price)}
-        local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
-        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-    else
-        ct.log("system",buildingId,Id,num,price,producerId,qty)
-        local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-        local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
-        local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
-        CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-    end
+    ct.log("system",buildingId,Id,num,price,producerId,qty)
+    local msgId = pbl.enum("gscode.OpCode","shelfAdd")
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
+    local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+
+    --if producerId == nil and qty == nil then
+    --    ct.log("system",buildingId,Id,num,price)
+    --    local msgId = pbl.enum("gscode.OpCode","shelfAdd")
+    --    local lMsg = {buildingId = buildingId, item = {key = {id = Id},n = tonumber(num)}, price = tonumber(price)}
+    --    local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
+    --    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+    --else
+    --
+    --end
 end
 --修改货架数量或价格
-function WarehouseModel.m_ReqModifyShelf(buildingId,Id,num,price)
+function WarehouseModel.m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
     local msgId = pbl.enum("gscode.OpCode","shelfSet")
-    local lMsg = {buildingId = buildingId, item = {key = {id = Id},n = num}, price = price}
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = num}, price = price}
     local pMsg = assert(pbl.encode("gs.ShelfSet", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
@@ -65,7 +67,7 @@ function WarehouseModel.mReqDelItem(buildingId,id,producerId,qty)
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     else
         local msgId = pbl.enum("gscode.OpCode","delItem")
-        local lMsg = {buildingId = buildingId, item = {key = {id = id,producerId = producerId,qty = qty}}}
+        local lMsg = {buildingId = buildingId, item = {id = id,producerId = producerId,qty = qty}}
         local pMsg = assert(pbl.encode("gs.DelItem", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
     end
@@ -90,5 +92,7 @@ end
 --删除仓库物品
 function WarehouseModel.n_GsDelItem(stream)
     local pMsg = assert(pbl.decode("gs.DelItem",stream),"WarehouseModel.n_GsDelItem")
-    --Event.Brocast("warehousedeleteGoods",msgGoodItemInfo)
+    if pMsg ~= nil then
+        Event.Brocast("deleteObjeCallback",pMsg)
+    end
 end

@@ -26,7 +26,18 @@ function HouseSetRentalDialogPageCtrl:Awake(go)
     local luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickCloseBtn, self)
     luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
-    luaBehaviour:AddClick(self.refreshBtn.gameObject, self._onClickRefreshBtn, self)
+    luaBehaviour:AddClick(self.infoRootBtn.gameObject, function ()
+        self.infoRootBtn.transform.localScale = Vector3.zero
+    end , self)
+    luaBehaviour:AddClick(self.infoBtn.gameObject, function ()
+        self.infoRootBtn.transform.localScale = Vector3.one
+    end , self)
+    self.input.onValueChanged:AddListener(function(inputValue)
+        if inputValue == nil or inputValue == "" then
+            return
+        end
+        self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), self.m_data.buildingTypeId)
+    end)
 end
 
 function HouseSetRentalDialogPageCtrl:Refresh()
@@ -34,9 +45,10 @@ function HouseSetRentalDialogPageCtrl:Refresh()
 end
 ---寻找组件
 function HouseSetRentalDialogPageCtrl:_getComponent(go)
+    self.infoRootBtn = go.transform:Find("infoRootBtn")
+    self.infoBtn = go.transform:Find("root/infoBtn")
     self.confirmBtn = go.transform:Find("root/confirmBtn")
     self.closeBtn = go.transform:Find("root/closeBtn")
-    self.refreshBtn = go.transform:Find("root/refreshBtn")
     self.input = go.transform:Find("root/input"):GetComponent("InputField")
 
     self.scoreText = go.transform:Find("root/totalScore/scoreText"):GetComponent("Text")
@@ -44,10 +56,12 @@ function HouseSetRentalDialogPageCtrl:_getComponent(go)
     self.roomCountText = go.transform:Find("root/roomDesText/roomCountText"):GetComponent("Text")
     --
     self.titleText01 = go.transform:Find("root/titleText"):GetComponent("Text")
+    self.infoText02 = go.transform:Find("infoRootBtn/bg/Text"):GetComponent("Text")
 end
 ---初始化
 function HouseSetRentalDialogPageCtrl:_initData()
     self:_language()
+    self.infoRootBtn.transform.localScale = Vector3.zero
     if self.m_data == nil then
         return
     end
@@ -61,8 +75,9 @@ function HouseSetRentalDialogPageCtrl:_initData()
 end
 
 function HouseSetRentalDialogPageCtrl:_language()
-    self.roomDesTextRect.text = GetLanguage(37050003)
+    self.roomDesTextRect.text = GetLanguage(37040012)
     self.titleText01.text = GetLanguage(37050001)
+    self.infoText02.text = GetLanguage(37040012)
 end
 
 function HouseSetRentalDialogPageCtrl:_onClickConfim(ins)

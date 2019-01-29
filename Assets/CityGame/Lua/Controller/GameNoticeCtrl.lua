@@ -81,7 +81,7 @@ function GameNoticeCtrl:_initData()
     GameNoticePanel.jumpBtn:SetActive(false)
     GameNoticePanel.hedaer.text = ""
     GameNoticePanel.time.text = ""
-    GameNoticePanel.rightContent.text = "请选择左边的邮件"
+    GameNoticePanel.rightContent.text = GetLanguage(13010063)
 end
 
 --点击空白背景返回

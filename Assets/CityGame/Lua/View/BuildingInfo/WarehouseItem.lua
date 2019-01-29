@@ -10,6 +10,8 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,b
     self.itemId = goodsDataInfo.key.id;
     self.buildingId = buildingId
     self.n = goodsDataInfo.n
+    self.producerId = goodsDataInfo.key.producerId
+    self.qty = goodsDataInfo.key.qty
     --商品
     self.brandBg = self.prefab.transform:Find("brandBg");
     self.brandName = self.prefab.transform:Find("brandBg/brandName"):GetComponent("Text");
@@ -90,7 +92,7 @@ end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("mReqDelItem",go.buildingId,go.itemId)
+    Event.Brocast("deleteWarehouseItem",go)
     --go.manager:_WarehousedeleteGoods(go.id);
 end
 --删除后刷新ID及显示

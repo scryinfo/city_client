@@ -118,7 +118,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
         buyListing.distance = ChooseWarehouseCtrl:GetDistance(pos)
         local price = 0;
         for i,v in pairs(ins.GoodsUnifyMgr.shelfBuyGoodslItems) do
-            price = price + tonumber(v.moneyText.text);
+            price = price + GetServerPriceNumber(v.tempPrice)
         end
         buyListing.goodsPrice = price;
         local freight = 0;

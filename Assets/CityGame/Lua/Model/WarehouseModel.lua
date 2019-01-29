@@ -35,6 +35,12 @@ end
 --客户端请求--
 --上架物品
 function WarehouseModel.m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
+    ct.log("system",buildingId,Id,num,price,producerId,qty)
+    local msgId = pbl.enum("gscode.OpCode","shelfAdd")
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
+    local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
+
     --if producerId == nil and qty == nil then
     --    ct.log("system",buildingId,Id,num,price)
     --    local msgId = pbl.enum("gscode.OpCode","shelfAdd")
@@ -44,11 +50,6 @@ function WarehouseModel.m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
     --else
     --
     --end
-    ct.log("system",buildingId,Id,num,price,producerId,qty)
-    local msgId = pbl.enum("gscode.OpCode","shelfAdd")
-    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
-    local pMsg = assert(pbl.encode("gs.ShelfAdd", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end
 --修改货架数量或价格
 function WarehouseModel.m_ReqModifyShelf(buildingId,Id,num,price)

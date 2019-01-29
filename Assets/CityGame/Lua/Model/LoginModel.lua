@@ -49,12 +49,13 @@ function LoginModel:n_AllGameServerInfo( msgAllGameServerInfo )
     --local msgAllGameServerInfo = assert(pbl.decode("as.AllGameServerInfo", stream), "LoginModel.n_AllGameServerInfo: stream == nil")
     if #msgAllGameServerInfo.infos ~= 0 then
         local serinofs = msgAllGameServerInfo.infos
-        RobotIns:SaveData("serinofs",serinofs)
+       -- RobotIns:SaveData("serinofs",serinofs)
         ct.OpenCtrl("ServerListCtrl", serinofs)
         --服务器发过来的bytes测试
         UnitTest.Exec_now("abel_w11_UUID_FromeServer", "t_UUID_FromeServer",serinofs)
+       -- UnitTest.Exec_now("byj_w27_robetTest", "byj_w27_robetTest",serinofs)
         --服务器发过来的bytes测试
-        Event.Brocast("RobotTest_OnAsLogin");
+        --Event.Brocast("RobotTest_OnAsLogin");
         return
     end
 
@@ -82,6 +83,8 @@ end
 
 --登录AS回调
 function LoginModel.n_AsLogin(stream )
+
+
     local successfully = true
     --这里本来应该是反序列化pb字节流，但暂时因为服务器那边的login协议是特殊处理的，返回的包没有pb数据，所以暂时没有反序列化这一步
     --local msglogion = pb.as.Login()

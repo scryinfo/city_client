@@ -40,7 +40,7 @@ UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
             local contentInfo = "错误码:" ..protoData.opcode..'     原因: '..protoData.reason..'     '..protoData.s
             ct.MsgBox("警告", contentInfo, "")
         else    --如果 msgid 不为零， 那么就是正常的网络回调
-            ct.MsgBox("提示", " abel_w27_processNetMsgError 测试 ")
+            --ct.MsgBox("提示", " abel_w27_processNetMsgError 测试 ")
         end
     end
 

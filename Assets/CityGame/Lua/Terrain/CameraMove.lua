@@ -9,9 +9,9 @@ local m_CameraScaleValueMin = 5     --缩放最近距离
 local m_CameraScaleValueMax = 10    --缩放最远距离
 
 local m_CameraRootXMin = 0      --相机root节点X轴移动范围最小值
-local m_CameraRootXMax = 1000   --相机root节点X轴移动范围最大值
+local m_CameraRootXMax = 101   --相机root节点X轴移动范围最大值
 local m_CameraRootZMin = 0      --相机root节点Z轴移动范围最小值
-local m_CameraRootZMax = 1000   --相机root节点Z轴移动范围最大值
+local m_CameraRootZMax = 101   --相机root节点Z轴移动范围最大值
 
 local m_IntoDurationtime = 0.4          --相机切到UI层所需时间
 local m_OutDurationtime = 0.6           --相机切出UI层所需时间

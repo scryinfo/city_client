@@ -261,6 +261,19 @@ function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end
 
+function ct.MsgBox(titleInfo , contentInfo,tipInfo)
+	local info = {}
+	info.titleInfo = titleInfo
+
+	if info.titleInfo == nil then
+		info.titleInfo = "提示"
+	end
+	--替換為多語言
+	info.contentInfo = contentInfo
+	info.tipInfo = tipInfo
+	ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+	end
+
 ct.MemoryProfilePath=""
 
 function ct.getMemoryProfile()

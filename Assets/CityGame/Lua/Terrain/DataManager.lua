@@ -42,7 +42,7 @@ local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
 local RoadRootObj
 --local HeadId                  --头像的ID
-
+local pbl = pbl
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
@@ -58,7 +58,7 @@ local function CreateBlockDataTable(tempCollectionID)
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     --将内部所有数据置为 -1
     local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize)
-    for key, value in ipairs(idList) do
+    for key, value in pairs(idList) do
         BuildDataStack[tempCollectionID].BlockDatas[value] = -1
     end
 end
@@ -91,7 +91,7 @@ end
 --nodeSize： 根节点值
 function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
     local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
-    for key, value in ipairs(idList) do
+    for key, value in pairs(idList) do
         DataManager.RefreshBlockData(value,nodeValue)
     end
 end
@@ -181,6 +181,12 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj = go
                     --如果没有道路数据，但原先有道路记录，则清除
                 elseif  roadNum == 0 and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] ~= nil and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                    destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
+                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
+                end
+            else
+                if nil ~= BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] and BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj ~= nil then
+                    --删除之前的道路Obj
                     destroy(BuildDataStack[tempCollectionID].RoteDatas[itemBlockID].roadObj)
                     BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
                 end
@@ -496,6 +502,10 @@ function DataManager.ModelSendNetMes(protoNameStr,protoNumStr,protoEncodeStr,Msg
     end
 end
 
+function DataManager.UnAllModelRegisterNetMsg()
+    ModelNetMsgStack = {}
+end
+
 --DetailModel 注册消息回调
 --参数：
 --insId：Model唯一ID
@@ -504,14 +514,13 @@ end
 --protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
 --InstantiateSelf: 仅针对非建筑详情Model使用，传入对应的ID值
+--errorfun: error处理方法
 function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf)
-    if not ModelNetMsgStack[protoNameStr] then
-        ModelNetMsgStack[protoNameStr] = {}
-    end
-    if not ModelNetMsgStack[protoNameStr][protoNumStr] or type(ModelNetMsgStack[protoNameStr][protoNumStr]) ~= "table" then
-        ModelNetMsgStack[protoNameStr][protoNumStr] = {}
+    local newMsgId = pbl.enum(protoNameStr,protoNumStr)
+    if not ModelNetMsgStack[newMsgId] or type(ModelNetMsgStack[newMsgId]) ~= "table" then
+        ModelNetMsgStack[newMsgId] = {}
         --注册分发函数
-        CityEngineLua.Message:registerNetMsg(pbl.enum(protoNameStr,protoNumStr),function (stream)
+        CityEngineLua.Message:registerNetMsg(newMsgId,function (stream, msgId)
             local protoData = assert(pbl.decode(protoAnaStr, stream), "")
             local protoID = nil
             if protoData ~= nil then
@@ -522,9 +531,9 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             if protoID ~= nil then--服务器返回的数据有唯一ID
-                for key, call in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]) do
+                for key, call in pairs(ModelNetMsgStack[newMsgId]) do
                     if key == protoID then
-                        for i, func in pairs(ModelNetMsgStack[protoNameStr][protoNumStr][key]) do
+                        for i, func in pairs(ModelNetMsgStack[newMsgId][key]) do
                             if BuildDataStack.DetailModelStack[protoID] then
                                 func(BuildDataStack.DetailModelStack[protoID],protoData)
                             else
@@ -536,12 +545,12 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             --该消息监听的无参回调如果有
-            if ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] ~= nil  then
-                for i, funcTable in pairs(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"]) do
+            if ModelNetMsgStack[newMsgId]["NoParameters"] ~= nil  then
+                for i, funcTable in pairs(ModelNetMsgStack[newMsgId]["NoParameters"]) do
                     if funcTable.self ~= nil then
-                        funcTable.func(funcTable.self,protoData)
+                        funcTable.func(funcTable.self,protoData,newMsgId)
                     else
-                        funcTable.func(protoData)
+                        funcTable.func(protoData,newMsgId)
                     end
                 end
             end
@@ -550,36 +559,74 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
     end
     --依据有无唯一ID，存储回调方法
     if  insId ~= nil then --若有唯一ID，则将方法写到唯一ID对应的table中
-        if ModelNetMsgStack[protoNameStr][protoNumStr][insId] == nil then
-            ModelNetMsgStack[protoNameStr][protoNumStr][insId] = {}
+        if ModelNetMsgStack[newMsgId][insId] == nil then
+            ModelNetMsgStack[newMsgId][insId] = {}
         end
-        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr][insId],callBackMethord)
+        table.insert(ModelNetMsgStack[newMsgId][insId],callBackMethord)
     else--若无唯一ID，则将方法写到"NoParameters"对应的table中
-        if  ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] == nil then
-            ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"] = {}
+        if  ModelNetMsgStack[newMsgId]["NoParameters"] == nil then
+            ModelNetMsgStack[newMsgId]["NoParameters"] = {}
         end
         local funcTable = {}
         funcTable.func = callBackMethord
         if InstantiateSelf ~= nil then
             funcTable.self = InstantiateSelf
         end
-        table.insert(ModelNetMsgStack[protoNameStr][protoNumStr]["NoParameters"],funcTable)
-
+        table.insert(ModelNetMsgStack[newMsgId]["NoParameters"],funcTable)
     end
 end
 
+
+
 function DataManager.RegisterErrorNetMsg()
-    CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
-        local protoData = assert(pbl.decode("common.Fail", stream), "")
-        if protoData ~= nil then
+    DataManager.ModelRegisterNetMsg(nil,"common.OpCode","error","common.Fail",function (protoData, msgId)
+        --该消息监听的无参回调如果有
+        local msgErrId = pbl.enum('common.OpCode','error')
+        if ModelNetMsgStack[protoData.opcode] ~= nil then
+            if ModelNetMsgStack[protoData.opcode]["NoParameters"] ~= nil  then
+                local tb = ModelNetMsgStack[protoData.opcode]["NoParameters"]
+                for i, funcTable in pairs(tb) do
+                    if funcTable.self ~= nil then
+                        funcTable.func(funcTable.self,protoData,msgErrId)
+                    else
+                        funcTable.func(protoData,msgErrId)
+                    end
+                end
+            end
+        else
             local info = {}
-            info.titleInfo = "网络错误"
+            info.titleInfo = "未注册处理方法的网络错误"
             --替換為多語言
             info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
             info.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
         end
-    end)
+
+    end ,nil)
+
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)
+    --    local protoData = assert(pbl.decode("common.Fail", stream), "")
+    --    --该消息监听的无参回调如果有
+    --    if ModelNetMsgStack['common.OpCode']['error']["NoParameters"] ~= nil  then
+    --        for i, funcTable in pairs(ModelNetMsgStack['common'][protoData.opcode]["NoParameters"]) do
+    --            if funcTable.self ~= nil then
+    --                funcTable.func(funcTable.self,protoData,pbl.enum('common.OpCode','error'))
+    --            else
+    --                funcTable.func(protoData,pbl.enum('common.OpCode','error'))
+    --            end
+    --        end
+    --    end
+    --
+    --    --之前的临时处理
+    --    if protoData ~= nil then
+    --        local info = {}
+    --        info.titleInfo = "网络错误"
+    --        --替換為多語言
+    --        info.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
+    --        info.tipInfo = ""
+    --        ct.OpenCtrl("ErrorBtnDialogPageCtrl", info)
+    --    end
+    --end)
 end
 
 
@@ -603,9 +650,9 @@ local function CalculateTheExpirationDateOfMyRentGroundInfo()
     if PersonDataStack.m_rentGroundInfos ~= nil then
         local currentTime = TimeSynchronized.GetTheCurrentServerTime()
         if currentTime ~= nil then
-            for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+            for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
                 if value.rent.rentDueTime == nil  or value.rent.rentDueTime <= currentTime  then
-                    table.remove(PersonDataStack.m_rentGroundInfos,key)
+                    PersonDataStack.m_rentGroundInfos[key] = nil
                 end
             end
         end
@@ -628,7 +675,8 @@ local function LoginSuccessAndGameStart()
     TerrainManager.MoveToCentralBuidingPosition()
     --打开循环判断自己的租地是否到期
     UpdateBeat:Add(DataManager_Update, this)
-
+    ------------------------------------打开我自己可用的地块
+    MyGround.CreateMyGrounds()
     --请求自己的信息
     GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
 end
@@ -774,8 +822,6 @@ function  DataManager.InitPersonDatas(tempData)
     LoginSuccessAndGameStart()
 end
 
-
-
 --添加/修改自己所拥有土地
 function DataManager.AddMyGroundInfo(groundInfoData)
     --检查自己所拥有地块集合有没有该地块
@@ -783,6 +829,9 @@ function DataManager.AddMyGroundInfo(groundInfoData)
         for key, value in pairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
                 PersonDataStack.m_groundInfos[key] = groundInfoData
+                if groundInfoData.rent ~= nil and groundInfoData.rent.renterId ~= nil then
+                    MyGround.RemoveMyGround(Vector3.New(groundInfoData.x,0,groundInfoData.y))
+                end
                 return
             end
         end
@@ -790,6 +839,7 @@ function DataManager.AddMyGroundInfo(groundInfoData)
         PersonDataStack.m_groundInfos = {}
     end
     table.insert(PersonDataStack.m_groundInfos,groundInfoData)
+    MyGround.AddMyGround(Vector3.New(groundInfoData.x,0,groundInfoData.y))
 end
 
 --添加/修改自己所租赁土地
@@ -798,7 +848,7 @@ function DataManager.AddMyRentGroundInfo(groundInfoData)
     if PersonDataStack.m_rentGroundInfos ~= nil then
         for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y and groundInfoData.rent ~= nil then
-                table.remove(PersonDataStack.m_rentGroundInfos,key)
+                PersonDataStack.m_rentGroundInfos[key] = nil
                 break
             end
         end
@@ -809,14 +859,16 @@ function DataManager.AddMyRentGroundInfo(groundInfoData)
         groundInfoData.rent.rentDueTime = groundInfoData.rent.rentBeginTs + groundInfoData.rent.rentDays * 24 * 60 * 60 * 1000
     end
     table.insert(PersonDataStack.m_rentGroundInfos,groundInfoData)
+    MyGround.AddMyGround(Vector3.New(groundInfoData.x,0,groundInfoData.y))
 end
 
 --删除自己所拥有土地
 function DataManager.RemoveMyGroundInfo(groundInfoData)
     if PersonDataStack.m_groundInfos ~= nil then
-        for key, value in ipairs(PersonDataStack.m_groundInfos) do
+        for key, value in pairs(PersonDataStack.m_groundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
-                table.remove(PersonDataStack.m_groundInfos,key)
+                PersonDataStack.m_groundInfos[key] = nil
+                MyGround.RemoveMyGround(Vector3.New(groundInfoData.x,0,groundInfoData.y))
             end
         end
     end
@@ -826,9 +878,10 @@ end
 --暂时没有用到
 function DataManager.RemoveMyRentGroundInfo(groundInfoData)
     if PersonDataStack.m_rentGroundInfos ~= nil then
-        for key, value in ipairs(PersonDataStack.m_rentGroundInfos) do
+        for key, value in pairs(PersonDataStack.m_rentGroundInfos) do
             if value.x == groundInfoData.x and value.y == groundInfoData .y then
-                table.remove(PersonDataStack.m_rentGroundInfos,key)
+                PersonDataStack.m_rentGroundInfos[key] = nil
+                MyGround.RemoveMyGround(Vector3.New(groundInfoData.x,0,groundInfoData.y))
             end
         end
     end
@@ -1105,7 +1158,7 @@ end
 
 function DataManager.IsAllOwnerGround(startBlockID,tempsize)
     local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
-    for key, value in ipairs(idList) do
+    for key, value in pairs(idList) do
         if not DataManager.IsOwnerGround(TerrainManager.BlockIDTurnPosition(value)) then
             return false
         end
@@ -1126,7 +1179,7 @@ end
 --判断所有范围内地块允不允许改变
 function DataManager.IsALlEnableChangeGround(startBlockID,tempsize)
     local idList = DataManager.CaculationTerrainRangeBlock(startBlockID,tempsize)
-    for key, value in ipairs(idList) do
+    for key, value in pairs(idList) do
         if not DataManager.IsEnableChangeGround(value) then
             return false
         end
@@ -1177,23 +1230,22 @@ local function InitialEvents()
 end
 
 --注册所有网络消息回调
-local function InitialNetMessages()
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), DataManager.n_OnReceiveAddBuilding)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitCreate"), DataManager.n_OnReceiveUnitCreate)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitRemove"), DataManager.n_OnReceiveUnitRemove)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","unitChange"), DataManager.n_OnReceiveUnitChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","groundChange"), DataManager.n_OnReceiveGroundChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendReq"), DataManager.n_OnReceiveAddFriendReq)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addFriendSucess"), DataManager.n_OnReceiveAddFriendSucess)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getBlacklist"), DataManager.n_OnReceiveGetBlacklist)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPlayerInfo"), DataManager.n_OnReceivePlayerInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","labRoll"), DataManager.n_OnReceiveLabRoll)  --研究所Roll失败消息
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","newItem"), DataManager.n_OnReceiveNewItem)  --研究所新的东西呈现
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"), DataManager.n_OnReceiveErrorCode)  --错误消息处理
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleCommunication"),DataManager.n_OnReceiveRoleCommunication)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleStatusChange"),DataManager.n_OnReceiveRoleStatusChange)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteFriend"),DataManager.n_OnReceiveDeleteFriend)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","deleteBlacklist"),DataManager.n_DeleteBlacklist)
+function DataManager.InitialNetMessages()
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addBuilding","gs.BuildingInfo",DataManager.n_OnReceiveAddBuilding)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","unitCreate","gs.UnitCreate",DataManager.n_OnReceiveUnitCreate)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","unitRemove","gs.UnitRemove",DataManager.n_OnReceiveUnitRemove)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","unitChange","gs.BuildingInfo",DataManager.n_OnReceiveUnitChange)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","groundChange","gs.GroundChange",DataManager.n_OnReceiveGroundChange)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendReq","gs.RequestFriend",DataManager.n_OnReceiveAddFriendReq)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendSucess","gs.RoleInfo",DataManager.n_OnReceiveAddFriendSucess)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getBlacklist","gs.RoleInfos",DataManager.n_OnReceiveGetBlacklist)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",DataManager.n_OnReceivePlayerInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","labRoll","gs.IntNum",DataManager.n_OnReceiveLabRoll)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newItem","gs.IntNum",DataManager.n_OnReceiveNewItem)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleCommunication","gs.CommunicationProces",DataManager.n_OnReceiveRoleCommunication)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleStatusChange","gs.ByteBool",DataManager.n_OnReceiveRoleStatusChange)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteFriend","gs.Id",DataManager.n_OnReceiveDeleteFriend)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteBlacklist","gs.Id",DataManager.n_DeleteBlacklist)
 
 end
 
@@ -1201,13 +1253,15 @@ end
 function DataManager.Init()
     RoadRootObj = find("Road")
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
     --土地拍卖Model
     SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
     end
     DataManager.RegisterErrorNetMsg()
+    --初始化自己的地块初始信息
+    MyGround.Init()
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1234,7 +1288,7 @@ local function ClearAllModel()
     SystemDatas = {}
     ModelNetMsgStack = {}
     InitialEvents()
-    InitialNetMessages()
+    DataManager.InitialNetMessages()
 end
 
 function DataManager.Close()
@@ -1245,7 +1299,7 @@ end
 ----------------------------------------------------网络回调函数---------------------------------
 
 function DataManager.n_OnReceiveAddBuilding(stream)
-    local buildingInfo = assert(pbl.decode("gs.BuildingInfo", stream), "DataManager.n_OnReceiveAddBuilding: stream == nil")
+    local buildingInfo = stream
     --buildingInfo  ==》BuildingInfo
     --此处因命名和层级问题，临时处理
     if not buildingInfo or not buildingInfo.mId then
@@ -1258,7 +1312,7 @@ function DataManager.n_OnReceiveAddBuilding(stream)
 end
 
 function DataManager.n_OnReceiveUnitCreate(stream)
-    local UnitCreate = assert(pbl.decode("gs.UnitCreate", stream), "DataManager.n_OnReceiveUnitCreate: stream == nil")
+    local UnitCreate = stream
     --此处因命名和层级问题，临时处理
     if not UnitCreate or not UnitCreate.info or 0 == #UnitCreate.info then
         return
@@ -1272,7 +1326,7 @@ function DataManager.n_OnReceiveUnitCreate(stream)
 end
 
 function DataManager.n_OnReceiveUnitChange(stream)
-    local buildingInfo = assert(pbl.decode("gs.BuildingInfo", stream), "DataManager.n_OnReceiveUnitChange: stream == nil")
+    local buildingInfo = stream
     --buildingInfo  ==》BuildingInfo
     --此处因命名和层级问题，临时处理
     if not buildingInfo or not buildingInfo.mId then
@@ -1286,7 +1340,7 @@ end
 
 function DataManager.n_OnReceiveUnitRemove(stream)
     --完成删除(注：删除自己的建筑回调，需做本地自己拥有建筑的删除)
-    local removeInfo = assert(pbl.decode("gs.UnitRemove", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    local removeInfo = stream
     if removeInfo ~= nil and removeInfo.id ~= nil and removeInfo.x ~= nil and removeInfo.y ~= nil then
         local tempBlockID = TerrainManager.GridIndexTurnBlockID(removeInfo)
         local tempCollectionID =  TerrainManager.BlockIDTurnCollectionID(tempBlockID)
@@ -1304,7 +1358,7 @@ end
 
 --接收服务器地块信息数据
 function DataManager.n_OnReceiveGroundChange(stream)
-    local GroundChange = assert(pbl.decode("gs.GroundChange", stream), "DataManager.n_OnReceiveUnitRemove: stream == nil")
+    local GroundChange = stream
     if GroundChange ~= nil and GroundChange.info ~= nil then
         for key, value in pairs(GroundChange.info) do
             --如果地块所有人是自己的话，写进自己所拥有地块集合
@@ -1337,7 +1391,7 @@ end
 
 -- 接收好友申请
 function DataManager.n_OnReceiveAddFriendReq(stream)
-    local requestFriend = assert(pbl.decode("gs.RequestFriend", stream), "DataManager.n_OnReceiveAddFriendReq: stream == nil")
+    local requestFriend = stream
     if not requestFriend or not requestFriend.id then
         return
     end
@@ -1347,7 +1401,7 @@ end
 
 -- 接收好友添加成功申请
 function DataManager.n_OnReceiveAddFriendSucess(stream)
-    local friend = assert(pbl.decode("gs.RoleInfo", stream), "DataManager.n_OnReceiveAddFriendSucess: stream == nil")
+    local friend = stream
     if not friend or not friend.id then
         return
     end
@@ -1360,11 +1414,11 @@ end
 
 -- 接收黑名单
 function DataManager.n_OnReceiveGetBlacklist(stream)
-    local roleInfos = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceiveGetBlacklist: stream == nil")
+    local roleInfos = stream
     if not roleInfos.info then
         return
     end
-    for _, v in ipairs(roleInfos.info) do
+    for _, v in pairs(roleInfos.info) do
         if v then
             DataManager.SetMyBlacklist(v)
         end
@@ -1373,7 +1427,7 @@ end
 
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
-    local playerData = assert(pbl.decode("gs.RoleInfos", stream), "DataManager.n_OnReceivePlayerInfo: stream == nil")
+    local playerData = stream
     --for _, v in ipairs(playerData.info) do
     --    DataManager.SetMyFriendsInfo(v)
     --end
@@ -1395,7 +1449,7 @@ end
 
 --发明研究成功  --用来更新玩家数据
 function DataManager.n_OnReceiveNewItem(stream)
-    local data = assert(pbl.decode("gs.IntNum", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+    local data = stream
     if data then
         DataManager.SetMyGoodLv(data)
     end
@@ -1404,8 +1458,7 @@ end
 --处理错误信息
 --研究所Roll回复信息
 --不启用
-function DataManager.n_OnReceiveErrorCode(stream)
-    local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+function DataManager.n_OnReceiveErrorCode(data, msgId)
     if data then
         ct.log("cycle_w15_laboratory03", "---- error opcode："..data.opcode)
         if data.opcode == 1157 then  --研究所roll失败
@@ -1430,29 +1483,37 @@ end
 ----------
 
 -- 收到服务器的聊天消息
-function DataManager.n_OnReceiveRoleCommunication(stream)
-    local chatData = assert(pbl.decode("gs.CommunicationProces", stream), "ChatModel.n_OnReceiveRoleCommunication: stream == nil")
-    DataManager.SetMyChatInfo(chatData)
-    Event.Brocast("c_OnReceiveRoleCommunication", chatData)
+function DataManager.n_OnReceiveRoleCommunication(netData,msgId)
+    --异常处理
+    if msgId == 0 then
+        if netData.reason == 'highFrequency' then
+            local localizationStr = '发言过度频繁' --这里应该是读取多语言表
+            ct.MsgBox(nil, localizationStr)
+        end
+        return
+    end
+    --非异常的处理流程
+    DataManager.SetMyChatInfo(netData)
+    Event.Brocast("c_OnReceiveRoleCommunication", netData)
 end
 
 -- 好友在线状态刷新
 function DataManager.n_OnReceiveRoleStatusChange(stream)
-    local roleData = assert(pbl.decode("gs.ByteBool", stream), "ChatModel.n_OnReceiveRoleStatusChange: stream == nil")
+    local roleData = stream
     DataManager.SetMyFriends(roleData)
     Event.Brocast("c_OnReceiveRoleStatusChange", roleData)
 end
 
 -- 收到删除好友信息
 function DataManager.n_OnReceiveDeleteFriend(stream)
-    local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_OnReceiveDeleteFriend: stream == nil")
+    local friendsId = stream
     DataManager.SetMyFriends({ id = friendsId.id, b = nil })
     Event.Brocast("c_OnReceiveDeleteFriend", friendsId)
 end
 
 -- 解除屏蔽返回
 function DataManager.n_DeleteBlacklist(stream)
-    local friendsId = assert(pbl.decode("gs.Id", stream), "DataManager.n_DeleteBlacklist: stream == nil")
+    local friendsId = stream
     DataManager.SetMyBlacklist({ id = friendsId.id })
     Event.Brocast("c_DeleteBlacklist", friendsId)
 end
@@ -1464,7 +1525,7 @@ function DataManager.c_AddBagInfo(itemId,n)
         return
     end
     local newInHand = false
-    for i, v in ipairs(PersonDataStack.m_inHand) do
+    for i, v in pairs(PersonDataStack.m_inHand) do
         if v.key.id == itemId then
             v.n = v.n + n
             newInHand = false

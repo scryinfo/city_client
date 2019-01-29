@@ -30,6 +30,30 @@ UnitTest.Exec("abel_w4", "test_pb11111",  function ()
     ct.log("abel_w4","[test_pb11111]  balabalabalabala...............")
 end)
 
+UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
+    ct.log("abel_w27_processNetMsgError","[processNetMsgError]  balabalabalabala...............")
+    --定义网络回调
+    local netCallBack = function(stream)
+        local test = 0
+    end
+    --定义错误处理
+    local netErrorHandler = function(stream)
+        local ttt = 0
+    end
+    --注册网络回调和错误处理
+    local msgId = pbl.enum("ascode.OpCode","login")
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",netCallBack,nil,netErrorHandler)--新版model网络注册
+    --CityEngineLua.Message:registerNetMsg(msgId,netCallBack,netErrorHandler)
+    ----2、 发送错误的数据
+    local msglogion = {
+        account = '' --发一个空字符，应该会报错
+    }
+    -- 序列化成二进制数据
+    local pb_login = assert(pbl.encode("as.Login", msglogion))
+    --发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+end)
+
 UnitTest.Exec("abel_w3", "test_pb",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")

@@ -504,7 +504,8 @@ end
 --protoAnaStr:  0
 --callBackMethord： 具体回调函数(参数为已解析)
 --InstantiateSelf: 仅针对非建筑详情Model使用，传入对应的ID值
-function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf)
+--errorfun: error处理方法
+function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr,callBackMethord,InstantiateSelf,errorHandler)
     if not ModelNetMsgStack[protoNameStr] then
         ModelNetMsgStack[protoNameStr] = {}
     end
@@ -546,7 +547,7 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             ct.log("System","没有找到对应的建筑详情Model类的回调函数")
-        end)
+        end,errorHandler)
     end
     --依据有无唯一ID，存储回调方法
     if  insId ~= nil then --若有唯一ID，则将方法写到唯一ID对应的table中
@@ -1405,6 +1406,7 @@ end
 --研究所Roll回复信息
 --不启用
 function DataManager.n_OnReceiveErrorCode(stream)
+    CityEngineLua.Message:processNetMsgError(stream)
     local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
     if data then
         ct.log("cycle_w15_laboratory03", "---- error opcode："..data.opcode)

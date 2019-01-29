@@ -5,6 +5,8 @@ CityEngineLua.messages = {};
 CityEngineLua.messages[SERVER_TYPE.SERVER_TYPE_AS] = {};
 CityEngineLua.messages[SERVER_TYPE.SERVER_TYPE_GS] = {};
 CityEngineLua.clientMessages = {};
+CityEngineLua.clientMessagesErrorHandlers = {};
+
 
 
 CityEngineLua.Message = {}
@@ -17,8 +19,20 @@ registerNetMsg:
 	2、 handler：
 		要注册的回调函数，网络消息回来之后，会调用到这个注册的函数，并传入一个 存放Protobuf数据的 steam 字节流， 客户端需要在回调函数中调用 protobuf 对应协议的反序列化方法
 ]]--
-function CityEngineLua.Message:registerNetMsg(msgId, handler)
+function CityEngineLua.Message:registerNetMsg(msgId, handler, errorHandler)
 	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
+	CityEngineLua.clientMessagesErrorHandlers[msgId] = errorHandler
+end
+
+function CityEngineLua.Message:processNetMsgError(stream)
+	local data = assert(pbl.decode("common.Fail", stream), "DataManager.n_OnReceiveNewItem: stream == nil")
+	if data and CityEngineLua.clientMessagesErrorHandlers[data.opcode] then
+		CityEngineLua.clientMessagesErrorHandlers[data.opcode](data)
+	else
+		ct.log("system", '[processNetMsgError] opcode not define in common.proto')
+	end
+	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
+	CityEngineLua.clientMessagesErrorHandlers[msgId] = errorHandler
 end
 
 function CityEngineLua.Message:newNetMsg( id)

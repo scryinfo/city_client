@@ -40,7 +40,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
         ct.G_LAST_HARTBEAT = uTime.time
         local timer0 = FrameTimer.New(function()
             local timetest = uTime.time - ct.G_LAST_HARTBEAT
-            if timetest > ct.G_TIMEOUT_NET then
+            if timetest > ct.G_TIMEOUT_NET and CityEngineLua._networkInterface.connected then
                 --提示网络连接不稳定
                 ct.MsgBox("网络连接", "网络连接不稳定")
             end

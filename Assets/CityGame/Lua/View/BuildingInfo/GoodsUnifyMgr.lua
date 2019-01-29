@@ -91,7 +91,7 @@ end
 function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId,buildingId)
     local infoData = {}
     infoData.itemId = itemId
-    infoData.buildingId = buildingIdf
+    infoData.buildingId = buildingId
     local prefab = self:_creatGood(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
     local productionLineItem = SmallProductionLineItem:new(infoData,prefab,luabehaviour,nil,self);
     if not self.tempLineItem then
@@ -171,6 +171,16 @@ function GoodsUnifyMgr:_deleteGoods(ins)
     for k,v in pairs(self.shelfLuaTab) do
         self.shelfLuaTab[i]:RefreshID(i)
         i = i + 1
+    end
+end
+--零售店货架删除
+function GoodsUnifyMgr:_deleteRetailShelf(ins)
+    destroy(self.retailShelfs[ins.id].prefab.gameObject);
+    table.remove(self.retailShelfs, ins.id)
+    local i = 1
+    for k,v in pairs(self.retailShelfs) do
+        self.retailShelfs[i]:RefreshID(i)
+        i = i +1
     end
 end
 --删除刚添加的生产线

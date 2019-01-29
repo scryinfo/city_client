@@ -9,6 +9,9 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
     self.manager = mgr
     self.state = state
     self.buildingId = buildingId
+    self.itemId = goodsDataInfo.k.id
+    self.producerId = goodsDataInfo.k.producerId
+    self.qty = goodsDataInfo.k.qty
 
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;
     self.goodsicon = self.prefab.transform:Find("details/goodsicon"):GetComponent("Image");
@@ -37,7 +40,7 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
             self.goodsicon.sprite = texture
         end
     end)
-
+    self.inluabehaviour:AddClick(self.XBtn.gameObject,self.OnClick_inluabehaviour,self)
     self:initializeUiState()
 end
 --初始化UI状态
@@ -49,4 +52,13 @@ function RetailGoodsItem:initializeUiState()
         self.XBtn.transform.localScale = Vector3.New(1,1,1);
         self.detailsBtn.transform.localScale = Vector3.New(1,1,1);
     end
+end
+function RetailGoodsItem:OnClick_inluabehaviour(go)
+    PlayMusEff(1002)
+    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
+    Event.Brocast("SmallPop",GetLanguage(27010003),300)
+    go.manager:_deleteRetailShelf(go)
+end
+function RetailGoodsItem:RefreshID(id)
+    self.id = id
 end

@@ -628,7 +628,8 @@ local function LoginSuccessAndGameStart()
     TerrainManager.MoveToCentralBuidingPosition()
     --打开循环判断自己的租地是否到期
     UpdateBeat:Add(DataManager_Update, this)
-
+    ------------------------------------打开我自己可用的地块
+    MyGround.CreateMyGrounds()
     --请求自己的信息
     GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
 end

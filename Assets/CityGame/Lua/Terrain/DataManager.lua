@@ -504,6 +504,7 @@ end
 
 function DataManager.UnAllModelRegisterNetMsg()
     ModelNetMsgStack = {}
+    CityEngineLua.Message.clear()
 end
 
 --DetailModel 注册消息回调
@@ -544,9 +545,10 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     end
                 end
             end
+
             --该消息监听的无参回调如果有
-            if ModelNetMsgStack[newMsgId]["NoParameters"] ~= nil  then
-                for i, funcTable in pairs(ModelNetMsgStack[newMsgId]["NoParameters"]) do
+            if  ModelNetMsgStack[newMsgId]["NoParameters"] ~= nil then  --ModelNetMsgStack[newMsgId]~=nil and
+            for i, funcTable in pairs(ModelNetMsgStack[newMsgId]["NoParameters"]) do
                     if funcTable.self ~= nil then
                         funcTable.func(funcTable.self,protoData,newMsgId)
                     else

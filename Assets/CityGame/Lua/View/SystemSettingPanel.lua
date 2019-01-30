@@ -53,7 +53,7 @@ end
 --数据初始化
 function SystemSettingPanel:InitDate(string)
         this.titleText.text=GetLanguage(14010001)
-        this.outText.text=GetLanguage(14010010)
+        this.outText.text=GetLanguage(14010005)
         this.MusicText.text=GetLanguage(14010003)
         this.MusicEffectBtnText.text=GetLanguage(14010002)
         this.LanguageText.text=GetLanguage(14010004)

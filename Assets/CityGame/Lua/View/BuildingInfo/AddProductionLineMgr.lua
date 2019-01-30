@@ -71,13 +71,18 @@ end
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
 function AddProductionLineMgr:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
-    ct.log("cycle_w15_laboratory03", "------ typeId: "..typeId)
 
     if self.keyToggleItems[typeId] then
+        for i, toggleItem in pairs(self.keyToggleItems) do
+            toggleItem:setToggleIsOn(false)
+        end
         self.keyToggleItems[typeId]:setToggleIsOn(true)
     end
 
     if self.keyContentItems[itemId] then
+        for i, detailItem in pairs(self.keyContentItems) do
+            detailItem:setToggleIsOn(false)
+        end
         self.keyContentItems[itemId]:setToggleIsOn(true)
     end
 end

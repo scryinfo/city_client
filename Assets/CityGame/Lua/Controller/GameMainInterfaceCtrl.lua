@@ -101,8 +101,15 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then
         return
     end
+
+
+
     local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
     local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
+
+    if DataManager.GetMoney()< workerNum*dayWage then
+        Event.Brocast("SmallPop","资金不足",300)
+    end
 
     local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()
             Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)

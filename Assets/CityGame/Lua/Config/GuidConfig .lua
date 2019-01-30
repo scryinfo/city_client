@@ -93,4 +93,16 @@ GuidBookConfig={
 
     },
 
+
+    ["ScryCity介绍,about.png"]=
+    {
+        ["18020001"]=--ScryCity介绍
+        {
+            ["18020001"]="4234323",--ScryCity介绍
+
+
+
+        },
+    },
+
 }

@@ -1684,11 +1684,11 @@ end
 CityEngineLua.onConnectionState = function( state )
 	ct.log("system","[m_onConnectionState]",state.error)
 	Event.Brocast("c_ConnectionStateChange", state );
-	if state.error == '' then
+	if state.error == '' then -- 默认成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Connect server succeed' then --连接成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-	elseif state.error == 'Manual close connection' then --手动断开成功
+	elseif state.error == 'Manual close connection' then --手动断开成功（无需处理）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)

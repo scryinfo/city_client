@@ -28,7 +28,10 @@ function CompanyModel:m_QueryPlayerEconomy(id)
 end
 
 -- 服务器返回的消息信息
-function CompanyModel:n_OnReceivePlayerEconomy(economyInfos)
-    --local economyInfos = assert(pbl.decode("ss.EconomyInfos", stream), "DataManager.n_DeleteBlacklist: stream == nil")
+function CompanyModel:n_OnReceivePlayerEconomy(economyInfos, msgId)
+    --异常处理
+    if msgId == 0 then
+        economyInfos = nil
+    end
     Event.Brocast("c_OnReceivePlayerEconomy", economyInfos)
 end

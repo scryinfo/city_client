@@ -1487,8 +1487,9 @@ function DataManager.n_OnReceiveRoleCommunication(netData,msgId)
     --异常处理
     if msgId == 0 then
         if netData.reason == 'highFrequency' then
-            local localizationStr = '发言过度频繁' --这里应该是读取多语言表
-            ct.MsgBox(nil, localizationStr)
+            Event.Brocast("SmallPop",GetLanguage(15010021),70)
+        elseif netData.reason == 'notAllow' then
+            Event.Brocast("SmallPop",GetLanguage(15010022),70)
         end
         return
     end

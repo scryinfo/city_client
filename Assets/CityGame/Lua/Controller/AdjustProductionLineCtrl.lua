@@ -257,13 +257,28 @@ function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
         return
     end
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.goodsDataInfo.workerNum < DataInfo.workerNum then
+            local nowNum = DataInfo.workerNum - v.goodsDataInfo.workerNum
+            self.idleWorkerNum = self.idleWorkerNum - nowNum
+            local idelTab = {}
+            idelTab["num1"] = self.idleWorkerNum
+            idelTab["num2"] = self.buildingMaxWorkerNum
+            idelTab["col1"] = "red"
+            idelTab["col2"] = "black"
+            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+        elseif v.goodsDataInfo.workerNum > DataInfo.workerNum then
+            local nowNum = v.goodsDataInfo.workerNum - DataInfo.workerNum
+            self.idleWorkerNum = self.idleWorkerNum + nowNum
+            local idelTab = {}
+            idelTab["num1"] = self.idleWorkerNum
+            idelTab["num2"] = self.buildingMaxWorkerNum
+            idelTab["col1"] = "red"
+            idelTab["col2"] = "black"
+            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+        end
         if DataInfo.lineId == v.lineId then
-            if DataInfo.targetCount ~= nil then
-                v.time_Slider.maxValue = DataInfo.targetCount
-                v.inputNumber.text = DataInfo.targetCount
-                v.pNumberScrollbar.maxValue = DataInfo.targetCount
-                v.numberText.text = v.time_Slider.value.."/"..v.pNumberScrollbar.maxValue
-                --v.timeText.text = self:againCalculateTime(DataInfo)
+            if DataInfo.targetNum ~= nil then
+                v:RefreshUiItemInfo(DataInfo)
             end
         end
     end
@@ -314,4 +329,27 @@ function AdjustProductionLineCtrl:deleteTempTable()
             end
         end
     end
+end
+
+--清除所有SmallProductionLineItem的改变情况
+function AdjustProductionLineCtrl.ClearOtherChangeState()
+    if AdjustProductionLineCtrl.materialProductionLine ~= nil then
+        for key, tempItem in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if tempItem:GetChangeState() == true then
+                tempItem.CloseAdjustmentTop(tempItem)
+            end
+        end
+    end
+
+end
+
+function AdjustProductionLineCtrl.IsHaveNewLine()
+    if AdjustProductionLineCtrl.materialProductionLine ~= nil then
+        for key, tempItem in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if tempItem.lineId == nil then
+                return true
+            end
+        end
+    end
+    return false
 end

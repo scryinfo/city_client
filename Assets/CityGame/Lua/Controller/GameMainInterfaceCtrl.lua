@@ -263,7 +263,12 @@ end
 --跟新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
-    table.insert(Mails,mails)
+    if Mails == nil then
+        Mails = {}
+        Mails[1] = mails
+    else
+        table.insert(Mails,mails)
+    end
 end
 
 --点击头像

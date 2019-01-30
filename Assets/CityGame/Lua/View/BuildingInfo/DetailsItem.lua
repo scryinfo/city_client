@@ -22,7 +22,6 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
     self.infoBtn = self.prefab.transform:Find("buttombg/scoreRoot/infoBtn")
 
     self.inputPrice.text = 0
-    self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(0), self.itemId)
     self.inputNumber.text = 0
     self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
     self.numberScrollbar.value = 0
@@ -42,6 +41,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
         end)
         self.scoreRootTrans.transform.localScale = Vector3.zero
     elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(0), self.itemId)
         self.nameText.text = GetLanguage(self.itemId)
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then

@@ -147,28 +147,30 @@ function MiniMapCtrl:Refresh()
 end
 
 function MiniMapCtrl:_initItemData()
-    --根据配置表生成Items
+    --根据可用土地来刷新地块Item
+    self:CalculateMyGrounds()
+    --根据配置表生成建筑Items
     local MyBuild = DataManager.GetMyAllBuildingDetail()
     --生成住宅
     if MyBuild.apartment ~= nil then
-        self:CreateItems(MyBuild.apartment,MiniMapPanel.prefab_HomeItem,MiniMapPanel.root_home)
+        self:CreateBuildItems(MyBuild.apartment,MiniMapPanel.prefab_HomeItem,MiniMapPanel.root_home)
     end
     --生成原料厂
     if MyBuild.materialFactory ~= nil then
-        self:CreateItems(MyBuild.materialFactory,MiniMapPanel.prefab_MaterialItem,MiniMapPanel.root_material)
+        self:CreateBuildItems(MyBuild.materialFactory,MiniMapPanel.prefab_MaterialItem,MiniMapPanel.root_material)
     end
     --生成加工厂
     if MyBuild.produceDepartment ~= nil then
-        self:CreateItems(MyBuild.produceDepartment,MiniMapPanel.prefab_FactoryItem,MiniMapPanel.root_factory)
+        self:CreateBuildItems(MyBuild.produceDepartment,MiniMapPanel.prefab_FactoryItem,MiniMapPanel.root_factory)
     end
     --生成零售店
     if MyBuild.retailShop ~= nil then
-        self:CreateItems(MyBuild.retailShop,MiniMapPanel.prefab_SupermarketItem,MiniMapPanel.root_supermarket)
+        self:CreateBuildItems(MyBuild.retailShop,MiniMapPanel.prefab_SupermarketItem,MiniMapPanel.root_supermarket)
     end
 end
 
 
-function MiniMapCtrl:CreateItems(itemDatas,itemPrefab,itemRoot)
+function MiniMapCtrl:CreateBuildItems(itemDatas,itemPrefab,itemRoot)
     if self.Btn_Objs == nil then
         self.Btn_Objs = {}
     end
@@ -186,6 +188,52 @@ function MiniMapCtrl:CreateItems(itemDatas,itemPrefab,itemRoot)
             end)
             table.insert(self.Btn_Objs,obj)
         end
+    end
+end
+
+--计算哪些是我能用的土地
+function MiniMapCtrl:CalculateMyGrounds()
+    local myPersonData = DataManager.GetMyPersonData()
+    if myPersonData == nil then
+        return
+    end
+    if myPersonData.m_groundInfos ~= nil then
+        for key, value in pairs(myPersonData.m_groundInfos) do
+            if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                self:CreateGroundItems(value,MiniMapPanel.prefab_GroundItem,MiniMapPanel.root_ground)
+            end
+        end
+    else
+        myPersonData.m_groundInfos = {}
+    end
+    if  myPersonData.m_rentGroundInfos ~= nil then
+        for key, value in pairs(myPersonData.m_rentGroundInfos) do
+            if  DataManager.IsOwnerGround({x = value.x, z = value.y}) then
+                self:CreateGroundItems(value,MiniMapPanel.prefab_GroundItem,MiniMapPanel.root_ground)
+            end
+        end
+    else
+        myPersonData.m_rentGroundInfos = {}
+    end
+end
+
+--创建我的土地Item
+function MiniMapCtrl:CreateGroundItems(value,itemPrefab,itemRoot)
+    if self.Btn_Objs == nil then
+        self.Btn_Objs = {}
+    end
+    if value.x ~= nil and value.y ~= nil then
+        local obj = UnityEngine.GameObject.Instantiate(itemPrefab,itemRoot)
+        obj:SetActive(true)
+        local objRect = obj:GetComponent("RectTransform")
+        objRect.anchoredPosition = Vector2.New( value.y, - value.x) * self.itemWidth
+        objRect.sizeDelta = self.itemDelta
+        local tempBtn =  obj:GetComponent("Button")
+        tempBtn.onClick:RemoveAllListeners();
+        tempBtn.onClick:AddListener(function ()
+            self:_clickConstructBtn(value)
+        end)
+        table.insert(self.Btn_Objs,obj)
     end
 end
 

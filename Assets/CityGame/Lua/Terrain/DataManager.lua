@@ -408,6 +408,23 @@ function DataManager.AddNewDetailModel(model,insId)
     BuildDataStack.DetailModelStack[insId] = model
 end
 
+--删除DetailModel通过实例ID
+function DataManager.CloseDetailModel(insId)
+    if nil ~= BuildDataStack.DetailModelStack and nil ~= BuildDataStack.DetailModelStack[insId]  then
+        BuildDataStack.DetailModelStack[insId]:Close()
+        BuildDataStack.DetailModelStack[insId] = nil
+    end
+end
+
+--删除所有DetailModels
+function DataManager.ClearAllDetailModels()
+    if nil ~= BuildDataStack.DetailModelStack then
+        for key, value in pairs(BuildDataStack.DetailModelStack) do
+            value:Close()
+        end
+    end
+end
+
 --获取DetailModel到管理器中
 function DataManager.GetDetailModelByID(insId)
     if BuildDataStack ~=nil and  BuildDataStack.DetailModelStack ~= nil then
@@ -1279,6 +1296,7 @@ end
 
 --清除所有Model
 local function ClearAllModel()
+    DataManager.ClearAllDetailModels()
     if BuildDataStack ~= nil then
         for tempCollectionID, value in pairs(BuildDataStack) do
             DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
@@ -1291,6 +1309,8 @@ local function ClearAllModel()
     ModelNetMsgStack = {}
     InitialEvents()
     DataManager.InitialNetMessages()
+    --干掉我的地块
+    MyGround.ClearMyGrounds()
 end
 
 function DataManager.Close()
@@ -1489,8 +1509,9 @@ function DataManager.n_OnReceiveRoleCommunication(netData,msgId)
     --异常处理
     if msgId == 0 then
         if netData.reason == 'highFrequency' then
-            local localizationStr = '发言过度频繁' --这里应该是读取多语言表
-            ct.MsgBox(nil, localizationStr)
+            Event.Brocast("SmallPop",GetLanguage(15010021),70)
+        elseif netData.reason == 'notAllow' then
+            Event.Brocast("SmallPop",GetLanguage(15010022),70)
         end
         return
     end

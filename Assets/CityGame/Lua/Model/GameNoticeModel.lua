@@ -19,6 +19,7 @@ function GameNoticeModel:OnCreate()
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delMail"),GameNoticeModel.n_OnDeleMails);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnMaterialFactory,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnProduceDepartment,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)
 end
 
 function GameNoticeModel:Close()
@@ -53,6 +54,11 @@ function GameNoticeModel:m_GetProduceDepartment(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode","detailProduceDepartment" ,"gs.Id",{id = buildingId})
 end
 
+--获取零售店详情
+function GameNoticeModel:m_GetRetailShop(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","detailRetailShop" ,"gs.Id",{id = buildingId})
+end
+
 --服务器回调--
 
 --查看
@@ -78,4 +84,9 @@ end
 --加工厂建筑详情回调
 function GameNoticeModel:n_OnProduceDepartment(info)
     Event.Brocast("c_ProduceInfo",info.info.name)
+end
+
+--零售店建筑详情回调
+function GameNoticeModel:n_OnDetailRetailShop(info)
+    Event.Brocast("c_RetailShopInfo",info.info.name)
 end

@@ -1,4 +1,7 @@
 ----City项目的全局数据
+local uTime = UnityEngine.Time
+local gettime = tolua.gettime
+
 local loginner = print
 local getIdHead = function(id)
 	return "["..id.."]";
@@ -8,6 +11,8 @@ ct ={
 	G_DEBUGLOG = true, --是否打开调试日志
 	G_UNITTEST = true,	--是否打开单元测试
 	G_PERFORMANCETEST = false,	--是否打开性能测试
+	G_TIMEOUT_NET = 12,
+	G_LAST_HARTBEAT = uTime.time,
 	log = function(logid,s,...)
 		if s == nil then
 			return

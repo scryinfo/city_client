@@ -149,8 +149,8 @@
                 {
                     _networkInterface._sysEvent = City.SYSEVENT.SYSEVENT_DISCONNECT;
                     Dbg.WARNING_MSG(string.Format("PacketReceiver::_asyncReceive(): receive error, disconnect from '{0}'! error = '{1}'", socket.RemoteEndPoint, se));
+                    _networkInterface._ConnectState.error = se.Message;
                     Event.fireIn("_closeNetwork", new object[] { _networkInterface });
-                    _networkInterface._ConnectState.error = se.Message;                    
                     return;
                 }
 

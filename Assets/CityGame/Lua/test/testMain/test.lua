@@ -5,7 +5,8 @@
 ---
 UnitTest.TestBlockStart()---------------------------------------------------------
 if not ct.G_UNITTEST then return {} end
-
+local uTime = UnityEngine.Time
+local gettime = tolua.gettime
 package.path = package.path .. ';./Assets/CityGame/Lua/test/?.lua'
 package.path = package.path .. ';./Assets/CityGame/Lua/test/pbl/?.lua'
 test = {}
@@ -28,6 +29,43 @@ protoc:addpath("./Assets/CityGame/Lua/pb")
 
 UnitTest.Exec("abel_w4", "test_pb11111",  function ()
     ct.log("abel_w4","[test_pb11111]  balabalabalabala...............")
+end)
+
+UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
+    ct.testUpdate = false
+    --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
+    Event.AddListener("e_HartBeatStop", function (serinofs)
+        ct.testUpdate = false
+    end)
+    Event.AddListener("e_HartBeatStart", function (serinofs)
+        ct.testUpdate = true
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","heartBeat","gs.HeartBeat",function()
+            ct.G_LAST_HARTBEAT = uTime.time
+        end)
+        --每x秒检查一次上次心跳是否超时，超时
+        ct.G_LAST_HARTBEAT = uTime.time
+        local timerCheck = FrameTimer.New(function()
+            local timetest = uTime.time - ct.G_LAST_HARTBEAT
+            if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
+                --提示网络连接不稳定
+                ct.MsgBox("网络连接", "网络连接不稳定")
+            end
+        end, 30, 1)
+        timerCheck:Start()
+        --目前GS才有心跳协议，AS没有
+        local timerSendHartBeat = FrameTimer.New(function()
+            if CityEngineLua._networkInterface.connected  and ct.testUpdate then
+                --HeartBeat
+                local msgId = pbl.enum("gscode.OpCode","heartBeat")
+                ----2、 填充 protobuf 内部协议数据
+                local lMsg = { ts = TimeSynchronized.GetTheCurrentServerTime()}
+                ----3、 序列化成二进制数据
+                local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
+                CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+            end
+        end, 90, 1)
+        timerSendHartBeat:Start()
+    end)
 end)
 
 UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()

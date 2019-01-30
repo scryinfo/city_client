@@ -23,11 +23,11 @@ function AddProductionLineCtrl:Awake(go)
         UIPanel.ClosePage();
     end,self)
 
+    self:_addListener()
 end
 function AddProductionLineCtrl:Active()
     UIPanel.Active(self)
     AddProductionLinePanel.nameText.text = GetLanguage(32020001)
-    self:_addListener()
 end
 
 function AddProductionLineCtrl:Refresh()
@@ -36,6 +36,7 @@ end
 function AddProductionLineCtrl:_addListener()
     Event.AddListener("leftSetCenter", self.leftSetCenter, self)
     Event.AddListener("rightSetCenter", self.rightSetCenter, self)
+    Event.AddListener("c_new_changeAddlineData", self._changeAddLineData, self)
 end
 
 function AddProductionLineCtrl:_initData()
@@ -66,13 +67,27 @@ function AddProductionLineCtrl:_initData()
             GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
         end)
     end
-
-    --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
-    AddProductionLinePanel.leftToggleMgr:initData()
-    local matTypeId = AddProductionLinePanel.leftToggleMgr:getCurrentTypeId()
-    local goodTypeId = TempCompoundTypeConnectConfig[matTypeId]
-    AddProductionLinePanel.rightToggleMgr:initData(goodTypeId)
+    self:_changeAddLineData(AddLineButtonPosValue.Left)
 end
+
+----
+function AddProductionLineCtrl:_changeAddLineData(posValue, itemId)
+    --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
+    if posValue == AddLineButtonPosValue.Left then
+        AddProductionLinePanel.leftToggleMgr:initData(itemId)
+        local matTypeId = AddProductionLinePanel.leftToggleMgr:getCurrentTypeId()
+        local goodTypeId = TempCompoundTypeConnectConfig[matTypeId]
+        AddProductionLinePanel.rightToggleMgr:initData(goodTypeId)
+    else
+        AddProductionLinePanel.rightToggleMgr:initData(itemId)
+        local matTypeId = AddProductionLinePanel.rightToggleMgr:getCurrentTypeId()
+        local goodTypeId = TempCompoundTypeConnectConfig[matTypeId]
+        AddProductionLinePanel.leftToggleMgr:initData(goodTypeId)
+    end
+end
+
+----
+
 
 --根据itemId获得当前应该显示的状态
 function AddProductionLineCtrl.GetItemState(itemId)
@@ -116,6 +131,7 @@ function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
     AddProductionLinePanel.productionItem:initData(Good[itemId])
+    --AddProductionLinePanel.leftToggleMgr:setToggleIsOnByType(selectItemMatToGoodIds[1].itemId)
 
     if enableShow then
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.zero

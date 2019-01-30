@@ -77,3 +77,7 @@ function AddGoodDetailItem:cleanState()
         self:setToggleIsOn(false)
     end
 end
+--
+function AddGoodDetailItem:getItemId()
+    return self.data.itemId
+end

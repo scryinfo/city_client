@@ -71,19 +71,23 @@ end
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
 function AddProductionLineMgr:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
+    if self.tempDetailItemId ~= nil and itemId == self.tempDetailItemId then
+        return
+    end
+    self.tempDetailItemId = itemId
 
     if self.keyToggleItems[typeId] then
         for i, toggleItem in pairs(self.keyToggleItems) do
-            toggleItem:setToggleIsOn(false)
+            toggleItem.setToggleIsOn(toggleItem, false)
         end
-        self.keyToggleItems[typeId]:setToggleIsOn(true)
+        self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
     end
 
     if self.keyContentItems[itemId] then
         for i, detailItem in pairs(self.keyContentItems) do
-            detailItem:setToggleIsOn(false)
+            detailItem.setToggleIsOn(detailItem, false)
         end
-        self.keyContentItems[itemId]:setToggleIsOn(true)
+        self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
     end
 end
 function AddProductionLineMgr:_showDetails(typeId)
@@ -111,8 +115,8 @@ function AddProductionLineMgr:_showDetails(typeId)
         go.transform.localScale = Vector3.one
 
         local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
-        self:_setLineShow(itemId, rectPosition, enableShow)
-    end}
+            self:_setLineShow(itemId, rectPosition, enableShow)
+        end}
         local item = AddGoodDetailItem:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
         self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
@@ -122,9 +126,12 @@ function AddProductionLineMgr:_showDetails(typeId)
         self.contentItems[i]:setToggleIsOn(false)
     end
     self.contentItems[1]:setToggleIsOn(true)
+    self.tempDetailItemId = self.contentItems[1]:getItemId()
 end
 --选择了某个item，显示线路
 function AddProductionLineMgr:_setLineShow(itemId, rectPosition, enableShow)
+    self.tempDetailItemId = itemId
+
     if self.sideValue == AddLineButtonPosValue.Left then
         Event.Brocast("leftSetCenter", itemId, rectPosition, enableShow)
     elseif self.sideValue == AddLineButtonPosValue.Right then
@@ -143,5 +150,6 @@ function AddProductionLineMgr:_resetDetails()
         for i, item in ipairs(self.contentItems) do
             item:cleanState()
         end
+        self.tempDetailItemId = nil
     end
 end

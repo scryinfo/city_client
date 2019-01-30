@@ -16,9 +16,10 @@ function ServerListModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer,self)
 end
 --关闭事件--
-function ServerListModel.Close()
+function ServerListModel:Close()
     --清空本地UI事件1
    -- Event.RemoveListener("m_chooseGameServer", self.m_chooseGameServer);
+    Event.RemoveListener("m_loginRole", self.loginRole,self);
 end
 function ServerListModel.registerAsNetMsg()
     --as网络回调注册

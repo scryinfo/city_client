@@ -118,6 +118,7 @@ function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
 
     if enableShow then
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.zero
+        self.rightItemId = itemId
     else
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.one
     end

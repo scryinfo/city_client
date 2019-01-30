@@ -102,6 +102,7 @@ end
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then
+        go:deleteTempTable()
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
         Event.Brocast("SmallPop","建筑尚未开业",300)
@@ -119,6 +120,7 @@ function AdjustProductionLineCtrl:calculateTime(msg)
             --v.timeText.text = timeStr.
             v.timeText.text = v:getTimeNumber(msg.line)
             v.minText.text = v:getMinuteNum(msg.line)
+            v.lineId = msg.line.id
         end
     end
 end
@@ -302,12 +304,14 @@ end
 --清理临时表
 function AdjustProductionLineCtrl:deleteTempTable()
     --添加了但是没有生产的
-    if not GoodsUnifyMgr.tempLineItem or GoodsUnifyMgr.tempLineItem == nil then
-        return;
+    if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
+        return
     else
-        for i,v in pairs(GoodsUnifyMgr.tempLineItem) do
-            destroy(v.prefab.gameObject)
+        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if not v.lineId then
+                destroy(v.prefab.gameObject)
+                AdjustProductionLineCtrl.materialProductionLine[i] = nil;
+            end
         end
-        GoodsUnifyMgr.tempLineItem = {};
     end
 end

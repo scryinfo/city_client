@@ -69,7 +69,13 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self:initButtonState()
     self.itemId = infoData.itemId
     self.inputNumber.text = 0;
-    self.pNumberScrollbar.maxValue = self.warehouseCapacity;
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.pNumberScrollbar.maxValue = self.warehouseCapacity;
+    else
+        self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
+    end
+    self.inputNumber.characterLimit = string.len(self.pNumberScrollbar.maxValue)
     self.timeText.text = "00:00:00"
     self.time_Slider.value = 0;
     self.time_Slider.maxValue = 0;
@@ -169,7 +175,11 @@ end
 --关闭添加修改的Top
 function SmallProductionLineItem:OnClicl_closeBtn(go)
     PlayMusEff(1002)
-    go.adjustmentTop.localScale = Vector3.zero
+    if not go.lineId then
+        go.manager:_deleteLine(go)
+    else
+        go.adjustmentTop.localScale = Vector3.zero
+    end
 end
 --初始化按钮
 --初始化状态
@@ -321,5 +331,29 @@ function SmallProductionLineItem:getWarehouseNum(itemId)
             local number = 0
             return number
         end
+    end
+end
+--获取商品最大可以生产的数量
+function SmallProductionLineItem:getGoodMaxValue(itemId)
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    if AdjustProductionLineCtrl.store then
+        if AdjustProductionLineCtrl.store.inHand == nil then
+            local number = 0
+            return number
+        end
+        local materialNum = {}
+        for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+            for k,t in pairs(material) do
+                if v.key.id == t.itemId then
+                    materialNum[#materialNum + 1] = v.n / t.num
+                end
+            end
+        end
+        table.sort(materialNum)
+        local value = materialNum[1]
+        return math.floor(value)
+    else
+        local number = 0
+        return number
     end
 end

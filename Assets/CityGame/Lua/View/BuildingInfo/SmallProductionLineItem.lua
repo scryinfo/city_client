@@ -37,7 +37,6 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.staffText = self.prefab.transform:Find("Staffbg/nameText"):GetComponent("Text");
     --仓库的容量  不足时停止刷新时间
     self.warehouseCapacity = AdjustProductionLineCtrl.residualCapacity
-
     --新添加的线
     if not i then
         self:initUiInfo(self.goodsDataInfo)
@@ -154,13 +153,17 @@ end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
+    if go.pNumberScrollbar.value <= 0 or go.pNumberScrollbar.value == "" then
+        Event.Brocast("SmallPop","请输入数量",300)
+        return
+    end
+    Event.Brocast("m_ReqAddLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.itemId)
     go.adjustmentTop.localScale = Vector3.zero
 end
 --点击发送修改生产线
 function SmallProductionLineItem:OnClicl_amendBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ResModifyKLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.lineId)
+    Event.Brocast("m_ResModifyKLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.lineId)
     go.adjustmentTop.localScale = Vector3.zero
 end
 --点击删除
@@ -247,6 +250,8 @@ function SmallProductionLineItem:inputInfo()
         self.pNumberScrollbar.value = number;
     else
         self.pNumberScrollbar.value = 0;
+        --暂时
+        self.inputNumber.text = 0
     end
 end
 --删除后刷新ID及刷新显示

@@ -35,14 +35,14 @@ end
 --添加生产线
 function AdjustProductionLineModel.m_ReqAddLine(buildingId,number,steffNumber,itemId)
     local msgId = pbl.enum("gscode.OpCode", "ftyAddLine")
-    local lMsg = {id = buildingId, itemId = itemId, targetNum = tonumber(number), workerNum = tonumber(steffNumber)}
+    local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = tonumber(steffNumber)}
     local pMsg = assert(pbl.encode("gs.AddLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --修改生产线
 function AdjustProductionLineModel.m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
     local msgId = pbl.enum("gscode.OpCode", "ftyChangeLine")
-    local lMsg = {buildingId = buildingId,targetNum = tonumber(targetNum),workerNum = tonumber(steffNumber),lineId = lineId}
+    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = tonumber(steffNumber),lineId = lineId}
     local pMsg = assert(pbl.encode("gs.ChangeLine", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end

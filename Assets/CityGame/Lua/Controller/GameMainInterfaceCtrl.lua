@@ -177,8 +177,6 @@ function GameMainInterfaceCtrl:Awake()
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
 
-    GameMainInterfacePanel.city.text = GetLanguage(10030003)
-
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
@@ -206,6 +204,7 @@ function GameMainInterfaceCtrl:initInsData()
         GameMainInterfacePanel.male.localScale = Vector3.zero
         GameMainInterfacePanel.woman.localScale = Vector3.one
     end
+    GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
 local date

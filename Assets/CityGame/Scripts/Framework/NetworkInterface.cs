@@ -128,7 +128,7 @@
                 Dbg.DEBUG_MSG(string.Format("NetworkInterface::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
             }
 
-            CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
+            //CityLuaUtil.CallMethod("Event", "Brocast", new object[] { "m_onConnectionState", state });
 
             if (state.connectCB != null)
                 state.connectCB(state.connectIP, state.connectPort, success, state);

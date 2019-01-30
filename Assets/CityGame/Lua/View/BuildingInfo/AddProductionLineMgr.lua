@@ -43,12 +43,29 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     end
 end
 --初始化
-function AddProductionLineMgr:initData(data)
+function AddProductionLineMgr:initData(chooseTypeId)
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
         self.toggleItems[i]:setToggleIsOn(false)
     end
+
+    --根据特定值去设置toggle
+    if chooseTypeId ~= nil then
+        for i, item in pairs(self.toggleItems) do
+            if self.toggleItems[i]:getTypeId() == chooseTypeId then
+                self.toggleItems[i]:setToggleIsOn(true)
+                self.tempTypeId = self.toggleItems[i]:getTypeId()
+                return
+            end
+        end
+    end
+
     self.toggleItems[1]:setToggleIsOn(true)
+    self.tempTypeId = self.toggleItems[1]:getTypeId()
+end
+--获取当前选择的typeId
+function AddProductionLineMgr:getCurrentTypeId()
+    return self.tempTypeId
 end
 
 --根据typeId 和 itemId 获取对应的item，并显示选中状态

@@ -48,7 +48,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
             local timetest = uTime.time - ct.G_LAST_HARTBEAT
             if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
                 --提示网络连接不稳定
-                ct.MsgBox("网络连接", "网络连接不稳定")
+                ct.MsgBox("网络连接", "网络信号差")
             end
         end, 30, 1)
         timerCheck:Start()

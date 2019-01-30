@@ -20,6 +20,9 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self.tag = self.prefab.transform:Find("tag").gameObject;
     self.serverName = self.prefab.transform:Find("ServerName").gameObject:GetComponent("Text");
 
+    if not goodsDataInfo.available  then
+        self.serverBtn:GetComponent("Button").interactable = false
+    end
     self.bg:SetActive(false);
     self.tag:SetActive(false);
     self.serverName.text = goodsDataInfo.name

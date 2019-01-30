@@ -270,7 +270,7 @@ function GroundAuctionCtrl:_bidEnd(id)
     if id == self.id then
         self.biderInfo = nil
         self.highestPrice = nil
-        UIPanel.ClosePage()
+        UIPanel.CloseAllPageExceptMain()
     end
 end
 --开始拍卖

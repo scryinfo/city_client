@@ -1681,15 +1681,18 @@ end
 --end
 
 --注意，这里在运行时会调用不过来
-CityEngineLua.onConnectionState = function( state )
+CityEngineLua.onConnectionStateChange = function(state )
 	ct.log("system","[m_onConnectionState]",state.error)
 	Event.Brocast("c_ConnectionStateChange", state );
 	if state.error == '' then -- 默认成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Connect server succeed' then --连接成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-	elseif state.error == 'Manual close connection' then --手动断开成功（无需处理）
+	elseif state.error == 'Manual close connection' then --客户端主动断开成功（无需处理）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
+	elseif state.error == 'Disconnect by server' then --服务器断开连接（需提示）
+		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
+		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
@@ -1734,7 +1737,7 @@ end
 CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
 
-	this.onConnectionState(netState)
+	this.onConnectionStateChange(netState)
 			
 	this.currserver = "loginapp";
 	this.currstate = "login";
@@ -1790,7 +1793,7 @@ end
 
 CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
-	this.onConnectionState(netState)
+	this.onConnectionStateChange(netState)
 	
 	this.currserver = "baseapp";
 	this.currstate = "";
@@ -1824,7 +1827,7 @@ end
 
 CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
-	this.onConnectionState(netState)
+	this.onConnectionStateChange(netState)
 
 	--this.currserver = "baseapp";
 	--this.currstate = "";

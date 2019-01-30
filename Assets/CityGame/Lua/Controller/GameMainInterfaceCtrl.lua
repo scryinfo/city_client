@@ -234,7 +234,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
         countDown = countDown - 1
         local ts = getFormatUnixTime(countDown)
         local time = ts.minute..":"..ts.second
-        GameMainInterfacePanel.auctionTime.text = groundState.."..."..time
+        GameMainInterfacePanel.auctionTime.text = time
         if countDown <= 0 then
             GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
         end

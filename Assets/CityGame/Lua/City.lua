@@ -1691,7 +1691,7 @@ CityEngineLua.onConnectionState = function( state )
 	elseif state.error == 'Manual close connection' then --手动断开成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	else
-		ct.MsgBox("网络连接错误", "网络错误Opcode：" ..state.error)
+		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	end
 end
@@ -1733,10 +1733,8 @@ end
 
 CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
-	if not success then
-		this.onConnectionState(netState)
-		return;
-	end
+
+	this.onConnectionState(netState)
 			
 	this.currserver = "loginapp";
 	this.currstate = "login";
@@ -1792,10 +1790,7 @@ end
 
 CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
-	if not success then
-		this.onConnectionState(netState)
-		return;
-	end
+	this.onConnectionState(netState)
 	
 	this.currserver = "baseapp";
 	this.currstate = "";
@@ -1829,10 +1824,7 @@ end
 
 CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, netState)
 	this._lastTickCBTime = os.clock();
-	if not success then
-		this.onConnectionState(netState)
-		return;
-	end
+	this.onConnectionState(netState)
 
 	--this.currserver = "baseapp";
 	--this.currstate = "";
@@ -1906,11 +1898,15 @@ CityEngineLua.reset = function()
 	this.bufferedCreateEntityMessage = {};
 
 	if this._networkInterface then
-		this._networkInterface._ConnectState.error = 'Manual close connection'
+		if this._networkInterface._ConnectState then
+			this._networkInterface._ConnectState.error = 'Manual close connection'
+		end
 		this._networkInterface:reset();
 	end
 	if this._tradeNetworkInterface1 then
-		this._tradeNetworkInterface1._ConnectState.error = 'Manual close connection'
+		if this._networkInterface._ConnectState then
+			this._tradeNetworkInterface1._ConnectState.error = 'Manual close connection'
+		end
 		this._tradeNetworkInterface1:reset();
 	end
 	this._lastTickTime = os.clock();

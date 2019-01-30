@@ -114,7 +114,7 @@
         {
             City.Event.deregisterIn(this);
 
-            bool success = (state.error == "Success" && valid());
+            bool success = (state.error == "Connect server succeed" && valid());
             if (success)
             {
                 Dbg.DEBUG_MSG(string.Format("NetworkInterface::_onConnectionState(), connect to {0} is success!", state.socket.RemoteEndPoint.ToString()));
@@ -183,7 +183,7 @@
 
             //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
             if (state.error == "") {
-                _ConnectState.error = "Success";
+                _ConnectState.error = "Connect server succeed";
             }
             
             // Call EndInvoke to retrieve the results.
@@ -199,7 +199,7 @@
             {
                 System.Threading.Thread.Sleep(checkinterval);
             }
-            if (_ConnectState.error != "Success")
+            if (_ConnectState.error != "Connect server succeed")
             {
                 //超时处理            
                 close();

@@ -28,7 +28,6 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.keyToggleItems = {}
     self.keyContentItems = {}
 
-
     for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineButtonPosValue.Left) and i < 2200 or (sideValue == AddLineButtonPosValue.Right and i > 2200) then
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
@@ -47,7 +46,7 @@ end
 function AddProductionLineMgr:initData(data)
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
-        self.toggleItems[i]:showState(false)
+        self.toggleItems[i]:setToggleIsOn(false)
     end
     self.toggleItems[1]:setToggleIsOn(true)
 end
@@ -98,7 +97,7 @@ function AddProductionLineMgr:_showDetails(typeId)
     end
 
     for i, item in ipairs(self.contentItems) do
-        self.contentItems[i]:showState(false)
+        self.contentItems[i]:setToggleIsOn(false)
     end
     self.contentItems[1]:setToggleIsOn(true)
 end

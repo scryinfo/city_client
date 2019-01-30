@@ -450,7 +450,6 @@ function WarehouseCtrl:n_shelfAdd(msg)
             self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
         end
     end
-
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)

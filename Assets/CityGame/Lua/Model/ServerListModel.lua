@@ -16,9 +16,10 @@ function ServerListModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer,self)
 end
 --关闭事件--
-function ServerListModel.Close()
+function ServerListModel:Close()
     --清空本地UI事件1
    -- Event.RemoveListener("m_chooseGameServer", self.m_chooseGameServer);
+    Event.RemoveListener("m_loginRole", self.loginRole,self);
 end
 function ServerListModel.registerAsNetMsg()
     --as网络回调注册
@@ -53,6 +54,7 @@ function ServerListModel:n_ChooseGameServer( msg )
     --local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
     ----处理数据：缓存服务器返回的 token
     CityEngineLua.token = msg.code
+    --Event.Brocast("RobotTest_OnchooseServer",msg.code)
     ServerListModel.isClick = true
     if ServerListModel.isClick then
         ServerListModel:m_GsOK()
@@ -77,7 +79,7 @@ function ServerListModel:registerGsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
    -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","roleLogin","gs.LoginACK",self.n_GsLoginSuccessfully)
 end
-function ServerListModel:n_GsLoginSuccessfully(lMsg )
+function ServerListModel:n_GsLoginSuccessfully( lMsg )
     --if stream == nil then
     --    return
     --end
@@ -92,6 +94,7 @@ function ServerListModel:n_GsLoginSuccessfully(lMsg )
     else
         Event.Brocast("m_loginRole",lMsg.info[1])
     end
+    --Event.Brocast("RobotTest_OnGsLoginSuccessfully")
     --cache data
     --同步服务器时间
     if lMsg.ts ~= nil then

@@ -40,7 +40,7 @@ end
 function SystemSettingCtrl:Refresh()
     local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum==0 then
-        panel:InitDate(GetLanguage(14010008))
+        panel:InitDate(GetLanguage(14010007))
     elseif Languagenum==1 then
         panel:InitDate(GetLanguage(14010006))
     end
@@ -137,7 +137,7 @@ function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
-    panel:InitDate(GetLanguage(14010008))
+    panel:InitDate(GetLanguage(14010007))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

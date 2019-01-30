@@ -28,7 +28,6 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.keyToggleItems = {}
     self.keyContentItems = {}
 
-
     for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineButtonPosValue.Left) and i < 2200 or (sideValue == AddLineButtonPosValue.Right and i > 2200) then
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
@@ -44,25 +43,51 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     end
 end
 --初始化
-function AddProductionLineMgr:initData(data)
+function AddProductionLineMgr:initData(chooseTypeId)
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
-        self.toggleItems[i]:showState(false)
+        self.toggleItems[i]:setToggleIsOn(false)
     end
+
+    --根据特定值去设置toggle
+    if chooseTypeId ~= nil then
+        for i, item in pairs(self.toggleItems) do
+            if self.toggleItems[i]:getTypeId() == chooseTypeId then
+                self.toggleItems[i]:setToggleIsOn(true)
+                self.tempTypeId = self.toggleItems[i]:getTypeId()
+                return
+            end
+        end
+    end
+
     self.toggleItems[1]:setToggleIsOn(true)
+    self.tempTypeId = self.toggleItems[1]:getTypeId()
+end
+--获取当前选择的typeId
+function AddProductionLineMgr:getCurrentTypeId()
+    return self.tempTypeId
 end
 
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
 function AddProductionLineMgr:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
-    ct.log("cycle_w15_laboratory03", "------ typeId: "..typeId)
+    if self.tempDetailItemId ~= nil and itemId == self.tempDetailItemId then
+        return
+    end
+    self.tempDetailItemId = itemId
 
     if self.keyToggleItems[typeId] then
-        self.keyToggleItems[typeId]:setToggleIsOn(true)
+        for i, toggleItem in pairs(self.keyToggleItems) do
+            toggleItem.setToggleIsOn(toggleItem, false)
+        end
+        self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
     end
 
     if self.keyContentItems[itemId] then
-        self.keyContentItems[itemId]:setToggleIsOn(true)
+        for i, detailItem in pairs(self.keyContentItems) do
+            detailItem.setToggleIsOn(detailItem, false)
+        end
+        self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
     end
 end
 function AddProductionLineMgr:_showDetails(typeId)
@@ -90,20 +115,23 @@ function AddProductionLineMgr:_showDetails(typeId)
         go.transform.localScale = Vector3.one
 
         local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
-        self:_setLineShow(itemId, rectPosition, enableShow)
-    end}
+            self:_setLineShow(itemId, rectPosition, enableShow)
+        end}
         local item = AddGoodDetailItem:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
         self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
     end
 
     for i, item in ipairs(self.contentItems) do
-        self.contentItems[i]:showState(false)
+        self.contentItems[i]:setToggleIsOn(false)
     end
     self.contentItems[1]:setToggleIsOn(true)
+    self.tempDetailItemId = self.contentItems[1]:getItemId()
 end
 --选择了某个item，显示线路
 function AddProductionLineMgr:_setLineShow(itemId, rectPosition, enableShow)
+    self.tempDetailItemId = itemId
+
     if self.sideValue == AddLineButtonPosValue.Left then
         Event.Brocast("leftSetCenter", itemId, rectPosition, enableShow)
     elseif self.sideValue == AddLineButtonPosValue.Right then
@@ -122,5 +150,6 @@ function AddProductionLineMgr:_resetDetails()
         for i, item in ipairs(self.contentItems) do
             item:cleanState()
         end
+        self.tempDetailItemId = nil
     end
 end

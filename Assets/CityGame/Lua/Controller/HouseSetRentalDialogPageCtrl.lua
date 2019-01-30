@@ -26,11 +26,12 @@ function HouseSetRentalDialogPageCtrl:Awake(go)
     local luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickCloseBtn, self)
     luaBehaviour:AddClick(self.confirmBtn.gameObject, self._onClickConfim, self)
-    luaBehaviour:AddClick(self.infoRootBtn.gameObject, function ()
-        self.infoRootBtn.transform.localScale = Vector3.zero
-    end , self)
+    --luaBehaviour:AddClick(self.infoRootBtn.gameObject, function ()
+    --    self.infoRootBtn.transform.localScale = Vector3.zero
+    --end , self)
     luaBehaviour:AddClick(self.infoBtn.gameObject, function ()
-        self.infoRootBtn.transform.localScale = Vector3.one
+        --self.infoRootBtn.transform.localScale = Vector3.one
+        ct.OpenCtrl("FixedTotalScoreCtrl", self.infoBtn.transform.position)
     end , self)
     self.input.onValueChanged:AddListener(function(inputValue)
         if inputValue == nil or inputValue == "" then

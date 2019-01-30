@@ -65,7 +65,6 @@ function CtrlManager.Init()
 	--ct.OpenCtrl('MunicipalCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	--ct.OpenCtrl('ScienceSellPopCtrl',Vector2.New(0, -300)) --注意传入的是类名
 	MusicManger:Awake()
-	ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	UIBubbleManager.Awake() --temp
 
 	--UIPage:ShowPage(LoginCtrl, "LoginCtrl更新所需数据"):setPosition(0, -200);
@@ -116,7 +115,6 @@ function CtrlManager.Init()
 	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	--modelList[ModelNames.friends] = FriendsModel.New();
 	--modelList[ModelNames.Chat] = ChatModel.New();
-
 	return this;
 end
 

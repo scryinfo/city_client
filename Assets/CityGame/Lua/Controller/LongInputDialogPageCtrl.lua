@@ -65,5 +65,5 @@ function LongInputDialogPageCtrl:_onClickConfim(ins)
 end
 function LongInputDialogPageCtrl:_onClickClose(ins)
     PlayMusEff(1002)
-    ins:Hide()
+    UIPanel.ClosePage()
 end

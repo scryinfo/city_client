@@ -103,6 +103,15 @@ function NoticeItem:OnBg(go)
         else
             go:GetProduceDepartment(go.uuidParas[1])
         end
+        type = go.typeId
+    elseif go.typeId == 2 then
+        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
+            go:GetMateralDetailInfo(go.uuidParas[1])
+        elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
+            go:GetProduceDepartment(go.uuidParas[1])
+        end
+        type = go.typeId
     end
     Event.Brocast("c_onBg",go)
 end
@@ -126,11 +135,17 @@ function NoticeItem:GetProduceDepartment(buildingId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetProduceDepartment',buildingId)--获取好友信息
 end
 
+--获取零售店建筑详情
+function NoticeItem:GetRetailShop(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetRetailShop',buildingId)--获取好友信息
+end
+
 -- 监听Model层网络回调
 function NoticeItem:_addListener()
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
     Event.AddListener("c_MaterialInfo", self.c_MaterialInfo, self) --原料厂建筑详情回调
     Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
+    Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
 end
 
 --注销model层网络回调
@@ -138,6 +153,7 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
     Event.RemoveListener("c_MaterialInfo", self.c_MaterialInfo, self)--原料厂建筑详情回调
     Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
+    Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
@@ -158,12 +174,27 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
 end
 
 function NoticeItem:c_MaterialInfo(name)
-    self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
-    GameNoticePanel.rightContent.text = self.content
+    if type == 3 then
+        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        GameNoticePanel.rightContent.text = self.content
+    elseif  type == 2 then
+        self.content = GetLanguage(13010017,name,nameSize)
+        GameNoticePanel.rightContent.text = self.content
+    end
 end
 
 function NoticeItem:c_ProduceInfo(name)
-    self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+    if type == 3 then
+        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        GameNoticePanel.rightContent.text = self.content
+    elseif  type == 2 then
+        self.content = GetLanguage(13010017,name,nameSize)
+        GameNoticePanel.rightContent.text = self.content
+    end
+end
+
+function NoticeItem:c_RetailShopInfo(name)
+    self.content = GetLanguage(13010017,name,nameSize)
     GameNoticePanel.rightContent.text = self.content
 end
 

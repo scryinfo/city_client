@@ -260,7 +260,7 @@ function GameMainInterfaceCtrl:c_AllMails(DataInfo)
     end
 end
 
---跟新邮件
+--更新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
     if Mails == nil then

@@ -25,8 +25,6 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         end
         if self.productionData.buildingType == BuildingType.RetailShop then
             ct.OpenCtrl("RetailShelfCtrl",self.productionData)
-            --elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            --    ct.OpenCtrl("ShelfCtrl",self.productionData)
         else
             ct.OpenCtrl("ShelfCtrl",self.productionData)
         end
@@ -88,6 +86,7 @@ function HomeOtherPlayerShelfItem:closeToggleItem(targetMovePos)
 end
 --刷新数据
 function HomeOtherPlayerShelfItem:updateInfo(data)
+    self.productionData = data
     self.productionData.shelf.good = data.shelf.good
     self:initializeInfo(self.productionData.shelf.good)
 end

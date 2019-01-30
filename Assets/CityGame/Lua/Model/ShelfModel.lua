@@ -32,9 +32,9 @@ end
 
 --客户端请求--
 --下架物品
-function ShelfModel.m_ReqShelfDel(buildingId,itemId,num)
+function ShelfModel.m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
     local msgId = pbl.enum("gscode.OpCode","shelfDel")
-    local lMsg = {buildingId = buildingId,item = {key = {id = itemId},n = num}}
+    local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = num}}
     local pMsg = assert(pbl.encode("gs.ShelfDel", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end

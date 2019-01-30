@@ -97,7 +97,7 @@ end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text)
+    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
     Event.Brocast("SmallPop",GetLanguage(27010003),300)
     go.manager:_deleteGoods(go)
 end

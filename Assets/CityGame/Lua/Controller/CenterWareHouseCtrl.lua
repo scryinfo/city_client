@@ -271,13 +271,13 @@ function CenterWareHouseCtrl:c_transportConfirmBtn(go)
     data.total =  GetClientPriceString(n*data.price)--总运费
     data.capacity = ChooseWarehouseCtrl:GetCapacity()   --所选仓库容量
     if data.capacity < tonumber(CenterWareHousePanel.tipText.text) then
-        Event.Brocast("SmallPop","所选建筑仓库容量不足",300)
+        Event.Brocast("SmallPop",GetLanguage(26040012),300)
         return
     end
     data.btnClick = function()
         local money = DataManager.GetMoney()
         if money < n*data.price then
-            Event.Brocast("SmallPop","运费不足",300)
+            Event.Brocast("SmallPop",GetLanguage(4301006),300)
             return
         end
         for i, v in pairs(WareHouseGoodsMgr.allTspItem) do

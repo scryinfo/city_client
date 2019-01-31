@@ -106,7 +106,7 @@ function AdjustProductionLineCtrl:OnClick_addBtn(go)
         --go:deleteObjInfo();
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
-        Event.Brocast("SmallPop","建筑尚未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 
 end

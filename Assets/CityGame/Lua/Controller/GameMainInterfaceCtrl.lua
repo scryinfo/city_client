@@ -169,7 +169,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
 
     if DataManager.GetMoney()< workerNum*dayWage then
-        Event.Brocast("SmallPop","资金不足",300)
+        Event.Brocast("SmallPop",GetLanguage(4301006),300)
     end
 
     local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()

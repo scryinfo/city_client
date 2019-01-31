@@ -62,7 +62,7 @@ function AdjustProductionLineModel.n_GsDetermineBtn(stream)
     local msgAllGameServerInfo = assert(pbl.decode("gs.FtyLineAddInform", stream), "AdjustProductionLineModel.n_GsDetermineBtn: stream == nil")
     Event.Brocast("calculateTime",msgAllGameServerInfo)
     Event.Brocast("refreshSubtractWorkerNum",msgAllGameServerInfo)
-    Event.Brocast("SmallPop","添加成功",300)
+    Event.Brocast("SmallPop",GetLanguage(28010007),300)
     --Event.Brocast("productionRefreshInfo",msgAllGameServerInfo)
 end
 --修改生产线

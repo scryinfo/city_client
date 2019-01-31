@@ -52,7 +52,7 @@ function AddProductionLineCtrl:_initData()
 
             for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
                 if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop","当前正在生产该原料",300)
+                    Event.Brocast("SmallPop",GetLanguage(26020007),300)
                     return
                 end
             end
@@ -69,7 +69,7 @@ function AddProductionLineCtrl:_initData()
             --self:Hide()
             for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
                 if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop","当前正在生产该商品",300)
+                    Event.Brocast("SmallPop",GetLanguage(26020008),300)
                     return
                 end
             end

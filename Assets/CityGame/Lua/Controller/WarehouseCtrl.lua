@@ -210,7 +210,7 @@ function WarehouseCtrl:OnClick_shelfBtn(go)
     if go.m_data.info.state == "OPERATE" then
         go:OnClick_rightInfo(not switchIsShow,0)
     else
-        Event.Brocast("SmallPop","建筑尚未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 end
 --Open transpor
@@ -219,7 +219,7 @@ function WarehouseCtrl:OnClick_transportBtn(go)
     if go.m_data.info.state == "OPERATE" then
         go:OnClick_rightInfo(not switchIsShow,1)
     else
-        Event.Brocast("SmallPop","建筑尚未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 end
 --名字排序
@@ -322,7 +322,7 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         end
         local itemIdStr = split(noMatchstr,",")
         local itemId = tonumber(itemIdStr[1])
-        Event.Brocast("SmallPop",GetLanguage(itemId).."等道具数量或类型不符",300)
+        Event.Brocast("SmallPop",GetLanguage(itemId)..GetLanguage(26020004),300)
     end
 end
 --上架回调执行

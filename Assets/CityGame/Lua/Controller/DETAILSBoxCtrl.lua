@@ -127,7 +127,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
     PlayMusEff(1002)
     local number = DETAILSBoxPanel.numberSlider.value
     if DETAILSBoxPanel.priceInput.text == "" or GetServerPriceNumber(DETAILSBoxPanel.priceInput.text) == 0 then
-        Event.Brocast("SmallPop", "出价格式小数精度不能低于0.0001",300)
+        Event.Brocast("SmallPop", GetLanguage(22030003),300)
         return
     end
     local price = GetServerPriceNumber(DETAILSBoxPanel.priceInput.text)

@@ -261,7 +261,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
                     self:c_tempTabNotGoods(i)
                     --Event.Brocast("c_tempTabNotGoods", i)
                 end
-                Event.Brocast("SmallPop","购买成功",300)
+                Event.Brocast("SmallPop",GetLanguage(27010006),300)
             end
         end
     end
@@ -288,7 +288,7 @@ function ShelfCtrl:OnClick_createGoods(go)
         go.data.shelfOpen = 1
         ct.OpenCtrl("WarehouseCtrl",go.data)
     else
-        Event.Brocast("SmallPop","建筑尚未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 end
 --刷新购买确定按钮

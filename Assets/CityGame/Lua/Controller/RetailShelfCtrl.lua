@@ -114,7 +114,7 @@ function RetailShelfCtrl:OnClick_addBtn(go)
         go.data.shelfOpen = 1
         ct.OpenCtrl("WarehouseCtrl",go.data)
     else
-        Event.Brocast("SmallPop","建筑尚未开业",300)
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 end
 --其他玩家购买窗口

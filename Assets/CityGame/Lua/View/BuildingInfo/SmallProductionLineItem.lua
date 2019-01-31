@@ -171,11 +171,11 @@ end
 function SmallProductionLineItem:OnClicl_addBtn(go)
     PlayMusEff(1002)
     if go.pNumberScrollbar.value <= 0 or go.pNumberScrollbar.value == "" then
-        Event.Brocast("SmallPop","请输入数量",300)
+        Event.Brocast("SmallPop",GetLanguage(26020005),300)
         return
     end
     if go.staffNumberText.text == "" or go.staffNumberText.text == "0" then
-        Event.Brocast("SmallPop","请设置员工人数",300)
+        Event.Brocast("SmallPop",GetLanguage(26020006),300)
         return
     end
     Event.Brocast("m_ReqAddLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.itemId)

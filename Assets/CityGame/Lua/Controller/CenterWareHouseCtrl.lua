@@ -189,6 +189,7 @@ function CenterWareHouseCtrl:c_OnBackBtn()
         CenterWareHouseCtrl:c_transportCloseBtn()
     end
     WareHouseGoodsMgr:ClearAllItem()
+    CenterWareHousePanel.nameText.text = ""
     UIPanel.ClosePage();
 end
 

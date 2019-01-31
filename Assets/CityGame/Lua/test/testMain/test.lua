@@ -49,7 +49,10 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
             if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
                 --提示网络连接不稳定
                 ct.G_TIMEOUT_NET = timetest --更新时间，下次超时再次提醒
-                ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008))
+                local okCallBack = function()
+                    CityEngineLua.LoginOut()
+                end
+                ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
             end
         end, 30, 1)
         timerCheck:Start()

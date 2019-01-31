@@ -43,6 +43,7 @@ function LoadingCtrl:_Update()
     end
 end
 
-function LoadingCtrl:Close()
+function LoadingCtrl:Hide()
+    UIPanel.Close(self)
     UpdateBeat:Remove(self._Update, self)
 end

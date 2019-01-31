@@ -320,7 +320,12 @@ end
 --刷新时间
 function SmallProductionLineItem:Update()
     if self.warehouseCapacity <= 0 then
+        self.timeText.text = "00:00:00"
         UpdateBeat:Remove(self.Update,self)
+        return
+    end
+    if self.sNumberScrollbar.value == 0 then
+        self.timeText.text = "00:00:00"
         return
     end
     if self.remainingTime <= 1 then

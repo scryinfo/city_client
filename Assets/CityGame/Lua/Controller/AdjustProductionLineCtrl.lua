@@ -193,6 +193,10 @@ function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     idelTab["col1"] = "red"
     idelTab["col2"] = "black"
     AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+    AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        v.sNumberScrollbar.maxValue = v.sNumberScrollbar.value + AdjustProductionLineCtrl.idleWorkerNums / 5
+    end
 end
 --删除生产线成功后回调刷新剩余人数
 function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
@@ -204,6 +208,10 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     idelTab["col1"] = "red"
     idelTab["col2"] = "black"
     AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+    AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        v.sNumberScrollbar.maxValue = v.sNumberScrollbar.value + AdjustProductionLineCtrl.idleWorkerNums / 5
+    end
 end
 --添加界面获取仓库库存数量
 function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
@@ -289,6 +297,9 @@ function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
                 if DataInfo.targetNum ~= nil then
                     v:RefreshUiItemInfo(DataInfo)
                 end
+            end
+            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+                v.sNumberScrollbar.maxValue = v.sNumberScrollbar.value + AdjustProductionLineCtrl.idleWorkerNums / 5
             end
         end
     end

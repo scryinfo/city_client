@@ -1692,7 +1692,12 @@ CityEngineLua.onConnectionStateChange = function(state )
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Disconnect by server' then --服务器断开连接（需提示）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
+		--ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
+
+		local okCallBack = function()
+			CityEngineLua.LoginOut()
+		end
+		ct.MsgBox(GetLanguage(4301012), GetLanguage(4301007), nil, okCallBack, okCallBack)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
@@ -1835,6 +1840,7 @@ CityEngineLua.onConnectTo_tradeapp_callback = function(ip, port, success, netSta
 	logDebug("City::login_tradeapp(): connect "..ip..":"..port.." is successfully!");
 	--Event.Brocast("c_GsConnected", true );
 	--this.login_tradeapp(false)
+	Event.Brocast("c_OnConnectTradeSuccess")
 end
 
 CityEngineLua.hello = function()

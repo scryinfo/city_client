@@ -29,23 +29,50 @@ local function CreateSuccess(go,table)
         ArchitectureStack[buildingID] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     end
     --将建筑GameObject保存到对应Model中
-    local  tempBaseBuildModel=DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
-    if tempBaseBuildModel ~= nil then
-        tempBaseBuildModel.go = go
-    end
+    local  tempBaseBuildModel = DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
     if TerrainManager.BuildObjQueue ~= nil then
         TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue - 1
     end
+    if tempBaseBuildModel ~= nil and tempBaseBuildModel.go == nil then
+        tempBaseBuildModel.go = go
+        return
+    end
+    destroy(go)
 end
 
 function TerrainManager.Init()
     TerrainManager.BuildObjQueue = 0
+    TerrainManager.WillBuildQueue = {}
     Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
+    UpdateBeat:Add(TerrainManager._Update)
+end
+
+function TerrainManager._Update()
+    --判断有没有等待生成的
+    if TerrainManager.WillBuildQueue ~= nil and #TerrainManager.WillBuildQueue > 0 then
+        --判断生成队列中的个数是否小于临界值
+        if TerrainManager.BuildObjQueue == nil then
+            TerrainManager.BuildObjQueue = 0
+        end
+        if TerrainManager.BuildObjQueue <= 0 then
+            while(TerrainManager.BuildObjQueue < 30)do
+                if #TerrainManager.WillBuildQueue <= 0 then
+                    break
+                end
+                local WillLoadBuild = TerrainManager.WillBuildQueue[#TerrainManager.WillBuildQueue]
+                buildMgr:CreateBuild(WillLoadBuild.typeID,CreateSuccess,WillLoadBuild.inTable)
+                table.remove(TerrainManager.WillBuildQueue,#TerrainManager.WillBuildQueue)
+                TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1
+            end
+        end
+    end
 end
 
 function TerrainManager.ReMove()
     TerrainManager.BuildObjQueue = nil
+    TerrainManager.WillBuildQueue = nil
     Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
+    UpdateBeat:Remove(TerrainManager._Update)
 end
 
 --根据建筑数据生成GameObject
@@ -60,10 +87,17 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
         if isCreate then
-            buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
-            if TerrainManager.BuildObjQueue ~= nil then
-                TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1
+            if TerrainManager.WillBuildQueue ==  nil then
+                TerrainManager.WillBuildQueue = {}
             end
+            local WillLoadBuild = { ["typeID"] =  PlayerBuildingBaseData[value.buildingID]["prefabRoute"] , ["inTable"] = {value.buildingID, Vector3.New(value.x,0,value.y)} }
+            table.insert(TerrainManager.WillBuildQueue,WillLoadBuild)
+            --[[
+                --buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
+                if TerrainManager.BuildObjQueue ~= nil then
+                    TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1/
+                end
+            --]]
         end
     end
     for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
@@ -246,7 +280,11 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     end
     local rowNum = math.ceil(TerrainRange.x /blockRange.x)
     local Y = math.floor((blockID / TerrainRange.x) / blockRange.y) * rowNum    --行
-    local X = math.floor((blockID %  TerrainRange.x) / blockRange.x ) + 1            --列
+    local Remainder = (blockID %  TerrainRange.x)
+    if Remainder ~= 0 then
+        Remainder = Remainder - 1
+    end
+    local X = math.floor(Remainder / blockRange.x ) + 1            --列
     return X +  Y
 end
 
@@ -255,15 +293,19 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if blockID == nil then
         return{ x = -1,y = -1}
     end
+    local Remainder = (blockID %  TerrainRange.x)
+    if Remainder ~= 0 then
+        Remainder = Remainder - 1
+    end
     local X = math.floor((blockID / TerrainRange.x) / blockRange.y)
-    local Y = math.floor((blockID % TerrainRange.x )/ blockRange.x)
+    local Y = math.floor(Remainder/ blockRange.x)
     return{ x = X,y = Y}
 end
 
 --通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
     local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
-    local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x
+    local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x + 1
     return X +  Y
 end
 

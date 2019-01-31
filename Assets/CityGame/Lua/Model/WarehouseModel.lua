@@ -22,10 +22,12 @@ end
 
 function WarehouseModel.registerAsNetMsg()
     --网络回调注册 n开头
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","shelfAdd","gs.ShelfAdd",WarehouseModel.n_OnShelfAddInfo)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","shelfSet","gs.shelfSet",WarehouseModel.n_OnModifyShelfInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfAdd"),WarehouseModel.n_OnShelfAddInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shelfSet"),WarehouseModel.n_OnModifyShelfInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delItem"),WarehouseModel.n_GsDelItem);
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",WarehouseModel.n_GsDelItem,WarehouseModel)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",WarehouseModel.n_GsDelItem)
 end
 --关闭事件
 function WarehouseModel.Close()
@@ -54,7 +56,7 @@ end
 --修改货架数量或价格
 function WarehouseModel.m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
     local msgId = pbl.enum("gscode.OpCode","shelfSet")
-    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = num}, price = price}
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = price}
     local pMsg = assert(pbl.encode("gs.ShelfSet", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 end

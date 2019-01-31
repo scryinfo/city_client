@@ -32,8 +32,6 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         end
     end);
 
-    self.openName.text = GetLanguage(25020005)
-    self.closeName.text = GetLanguage(25020005)
     self:initializeInfo(self.productionData.line);
 
     --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
@@ -75,19 +73,22 @@ function HomeProductionLineItem:closeToggleItem(targetMovePos)
 end
 --初始化数据
 function HomeProductionLineItem:initializeInfo(productionLineData)
+    self.openName.text = GetLanguage(25020005)
+    self.closeName.text = GetLanguage(25020005)
     if not productionLineData then
         return;
     end
+    HomeProductionLineItem.productionTab = {}
     for i,v in pairs(productionLineData) do
         local homePageType = ct.homePage.productionLine
         local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
         local SmallLineRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        if not self.SmallLineRateItemTab then
-            self.SmallLineRateItemTab = {}
-        end
-        self.SmallLineRateItemTab[i] = SmallLineRateItem
+        --if not self.SmallLineRateItemTab then
+        --    self.SmallLineRateItemTab = {}
+        --end
+        HomeProductionLineItem.productionTab[#HomeProductionLineItem.productionTab + 1] = SmallLineRateItem
     end
-    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
+    --HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
 end
 --生产线添加时添加
 function HomeProductionLineItem:productionRefreshInfo(data)

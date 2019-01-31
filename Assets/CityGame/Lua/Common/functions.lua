@@ -261,12 +261,14 @@ function ct.OpenCtrl(inClassName,data) -- 统一的打开 Controller 的方法, 
 	Event.Brocast('c_OnOpen'..inClassName,data)
 end
 
-function ct.MsgBox(titleInfo , contentInfo,tipInfo)
+function ct.MsgBox(titleInfo , contentInfo,tipInfo, okCallBack, closeCallBack)
 	local info = {}
 	info.titleInfo = titleInfo
 	--替換為多語言
 	info.contentInfo = contentInfo
 	info.tipInfo = tipInfo
+	info.btnCallBack = okCallBack
+	info.closeCallBack = closeCallBack
 	if info.titleInfo == nil then
 		info.titleInfo = "提示"
 		ct.OpenCtrl("BtnDialogPageCtrl", info)

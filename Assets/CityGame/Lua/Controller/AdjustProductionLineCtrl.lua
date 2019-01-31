@@ -53,7 +53,6 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
     AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --刷新时间用
     local lockedNum = WarehouseCtrl:getLockedNum(self.data.store)
-    self.mId = self.m_data.info.mId
     local numTab = {}
     numTab["num1"] = AdjustProductionLinePanel.locked_Slider.value
     numTab["num2"] = AdjustProductionLinePanel.capacity_Slider.maxValue
@@ -103,11 +102,8 @@ end
 function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then
-        local num = PlayerBuildingBaseData[go.mId].lineMaxWorkerNum / 5
-        if AdjustProductionLinePanel.content:GetComponent("RectTransform").childCount == num then
-            Event.Brocast("SmallPop","已达当前建筑容量限制",300)
-            return
-        end
+        go:deleteTempTable()
+        --go:deleteObjInfo();
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
         Event.Brocast("SmallPop","建筑尚未开业",300)
@@ -123,6 +119,12 @@ function AdjustProductionLineCtrl:calculateTime(msg)
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.itemId == msg.line.itemId then
             --v.timeText.text = timeStr.
+            v.goodsDataInfo = {}
+            v.itemId = msg.line.itemId
+            v.lineId = msg.line.id
+            v.goodsDataInfo.workerNum = msg.line.workerNum
+            v.goodsDataInfo.targetCount = msg.line.targetCount
+            v.goodsDataInfo.nowCount = msg.line.nowCount
             v.timeText.text = v:getTimeNumber(msg.line)
             v.minText.text = v:getMinuteNum(msg.line)
         end
@@ -242,14 +244,6 @@ end
 --        end
 --    end
 --end
---暂时检测最多能有几条生产线
---function AdjustProductionLineCtrl:manyLine()
---    local num = PlayerBuildingBaseData[self.mId].lineMaxWorkerNum / 5
---    if AdjustProductionLinePanel.content:GetComponent("RectTransform").childCount == num then
---        Event.Brocast("SmallPop","当前建筑容量已经上线",300)
---        return
---    end
---end
 --接收回调刷新产量
 function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then
@@ -263,44 +257,39 @@ function AdjustProductionLineCtrl:refreshNowConte(msg)
         end
     end
 end
---调整生产线回调
+--调整生产线回调调整员工人数
 function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
     if not DataInfo then
         return
     end
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+        if v.goodsDataInfo.workerNum < DataInfo.workerNum then
+            local nowNum = DataInfo.workerNum - v.goodsDataInfo.workerNum
+            self.idleWorkerNum = self.idleWorkerNum - nowNum
+            local idelTab = {}
+            idelTab["num1"] = self.idleWorkerNum
+            idelTab["num2"] = self.buildingMaxWorkerNum
+            idelTab["col1"] = "red"
+            idelTab["col2"] = "black"
+            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+        elseif v.goodsDataInfo.workerNum > DataInfo.workerNum then
+            local nowNum = v.goodsDataInfo.workerNum - DataInfo.workerNum
+            self.idleWorkerNum = self.idleWorkerNum + nowNum
+            local idelTab = {}
+            idelTab["num1"] = self.idleWorkerNum
+            idelTab["num2"] = self.buildingMaxWorkerNum
+            idelTab["col1"] = "red"
+            idelTab["col2"] = "black"
+            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+        end
+        v:getRefreshTimeNumber(DataInfo)
         if DataInfo.lineId == v.lineId then
-            if DataInfo.targetCount ~= nil then
-                v.time_Slider.maxValue = DataInfo.targetCount
-                v.inputNumber.text = DataInfo.targetCount
-                v.pNumberScrollbar.maxValue = DataInfo.targetCount
-                v.numberText.text = v.time_Slider.value.."/"..v.pNumberScrollbar.maxValue
-                --v.timeText.text = self:againCalculateTime(DataInfo)
+            if DataInfo.targetNum ~= nil then
+                v:RefreshUiItemInfo(DataInfo)
             end
         end
     end
 end
-----调整成功后重新计算时间
---function AdjustProductionLineCtrl:againCalculateTime(DataInfo)
---    if not DataInfo then
---        return
---    end
---    for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
---        if DataInfo.lineId == v.lineId then
---            local time = 0
---            local materialKey,goodsKey = 21,22
---            local remainingNum = DataInfo.targetCount - v.time_Slider.value
---            if math.floor(v.itemId / 100000) == materialKey then
---                time = 1 / Material[v.itemId].numOneSec / DataInfo.workerNum * remainingNum
---            elseif math.floor(v.itemId / 100000) == goodsKey then
---                time = 1 / Good[v.itemId].numOneSec / DataInfo.workerNum * remainingNum
---            end
---            local timeTable = getTimeBySec(time)
---            local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
---            return timeStr
---        end
---    end
---end
 --关闭面板时清空UI信息，以备其他模块调用
 function AdjustProductionLineCtrl:deleteObjInfo()
     if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
@@ -316,12 +305,37 @@ end
 --清理临时表
 function AdjustProductionLineCtrl:deleteTempTable()
     --添加了但是没有生产的
-    if not GoodsUnifyMgr.tempLineItem or GoodsUnifyMgr.tempLineItem == nil then
-        return;
+    if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
+        return
     else
-        for i,v in pairs(GoodsUnifyMgr.tempLineItem) do
-            destroy(v.prefab.gameObject)
+        for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if not v.lineId then
+                destroy(v.prefab.gameObject)
+                AdjustProductionLineCtrl.materialProductionLine[i] = nil;
+            end
         end
-        GoodsUnifyMgr.tempLineItem = {};
     end
+end
+
+--清除所有SmallProductionLineItem的改变情况
+function AdjustProductionLineCtrl.ClearOtherChangeState()
+    if AdjustProductionLineCtrl.materialProductionLine ~= nil then
+        for key, tempItem in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if tempItem:GetChangeState() == true then
+                tempItem.CloseAdjustmentTop(tempItem)
+            end
+        end
+    end
+
+end
+
+function AdjustProductionLineCtrl.IsHaveNewLine()
+    if AdjustProductionLineCtrl.materialProductionLine ~= nil then
+        for key, tempItem in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            if tempItem.lineId == nil then
+                return true
+            end
+        end
+    end
+    return false
 end

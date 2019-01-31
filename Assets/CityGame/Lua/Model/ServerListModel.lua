@@ -31,6 +31,10 @@ end
 --选择游戏服务器
 function ServerListModel:m_chooseGameServer( data )
     local serverIndex = data.Index --测试服务器列表索引 1 是公共服务器 2 是李宁的服务器
+    if data.serinofs[serverIndex].available == false then
+        ct.MsgBox(GetLanguage(4301012), GetLanguage(4301002))
+        return
+    end
     local sid =  data.serinofs[serverIndex].serverId
     local ip =  data.serinofs[serverIndex].ip
     local port =  data.serinofs[serverIndex].port --服务器返回1000，应该是 9001，不然连不上
@@ -67,6 +71,15 @@ function ServerListModel:m_GsOK()
     DataManager.InitialNetMessages()
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
+    -----------------------------------------------------------------------------
+    --临时单独处理小孟的协议，后边统走datamanager
+    WarehouseModel.registerAsNetMsg()
+    ShelfModel.registerAsNetMsg()
+    AdjustProductionLineModel.registerAsNetMsg()
+    tempTransportModel.registerAsNetMsg()
+    StopAndBuildModel.Awake()
+    -----------------------------------------------------------------------------
+    GAucModel.registerNetMsg()  --拍卖的网络回调
     --连接gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)

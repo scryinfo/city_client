@@ -48,6 +48,7 @@ function WarehouseCtrl:Awake(go)
 
     --暂时放到Awake
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+
     --WarehousePanel.nameText.text = GetLanguage(26040002)
 
     self.gameObject = go
@@ -250,120 +251,78 @@ function WarehouseCtrl:OnClick_transportopenBtn(go)
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --确定上架
+function WarehouseCtrl.isValidShelfOp(go, v)
+    local materialKey,goodsKey = 21,22 --道具类型
+    local material,processing,retailStores = 11,12,13--建筑类型
+    if GetServerPriceNumber(v.inputPrice.text) == 0 then
+        return false
+    end
+    if v.inputNumber.text == "0" and v.inputNumber.text == "" then
+        return false
+    end
+
+    if math.floor(go.mId / 100000) == material then
+        if math.floor(v.itemId / 100000) ~= materialKey then
+            return false
+        end
+    end
+
+    if math.floor(go.mId / 100000) == processing then
+        if math.floor(v.itemId / 100000) ~= goodsKey then
+            return false
+        end
+    end
+
+    if math.floor(go.mId / 100000) == retailStores then
+        if math.floor(v.itemId / 100000) ~= goodsKey then
+            return false
+        end
+    end
+    return true
+end
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     PlayMusEff(1002)
+    local noMatch ={}
+
     if not go.GoodsUnifyMgr.shelfPanelItem then
         return;
     else
+        --shelfPanelItem 将要上架的道具列表
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
-            if not go.m_data.shelf.good then
-                if GetServerPriceNumber(v.inputPrice.text) == 0 then
-                    Event.Brocast("SmallPop","请输入价格",300)
-                    return
-                end
-                if v.inputNumber.text == "0" and v.inputNumber.text == "" then
-                    Event.Brocast("SmallPop","请输入数量",300)
-                    return
-                end
-                local material,processing,retailStores = 11,12,13
-                local materialKey,goodsKey = 21,22
-                if math.floor(go.mId / 100000) == material then
-                    if math.floor(v.itemId / 100000) == goodsKey then
-                        Event.Brocast("SmallPop","原料厂不能上架商品",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
-                elseif math.floor(go.mId / 100000) == processing then
-                    if math.floor(v.itemId / 100000) == materialKey then
-                        Event.Brocast("SmallPop","加工厂不能上架原料",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
-                elseif math.floor(go.mId / 100000) == retailStores then
-                    if math.floor(v.itemId / 100000) == materialKey then
-                        Event.Brocast("SmallPop","零售店不能上架原料",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
+            --local isvalidOp = true
+            if not go.m_data.shelf.good then --未上架
+                if WarehouseCtrl.isValidShelfOp(go,v) == true then
+                    Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                else
+                    noMatch[#noMatch+1] = v
                 end
             else
+                --已上架
                 for k,t in pairs(go.m_data.shelf.good) do
-                    if v.itemId == t.k.id and GetServerPriceNumber(v.inputPrice.text) ~= t.price then
-                        if GetServerPriceNumber(v.inputPrice.text) == 0 then
-                            Event.Brocast("SmallPop","请输入价格",300)
-                            return
+                    if v.itemId == t.k.id then
+                        if WarehouseCtrl.isValidShelfOp(go,v) == true then
+                            Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                        else
+                            noMatch[#noMatch+1] = v
                         end
-                        if v.inputNumber.text == "0" and v.inputNumber.text == ""  then
-                            Event.Brocast("SmallPop","请输入数量",300)
-                            return
-                        end
-                        local material,processing,retailStores = 11,12,13
-                        local materialKey,goodsKey = 21,22
-                        if math.floor(go.mId / 100000) == material then
-                            if math.floor(v.itemId / 100000) == goodsKey then
-                                Event.Brocast("SmallPop","原料厂不能上架商品",300)
-                                return
-                            else
-                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                            end
-                        elseif math.floor(go.mId / 100000) == processing then
-                            if math.floor(v.itemId / 100000) == materialKey then
-                                Event.Brocast("SmallPop","加工厂不能上架原料",300)
-                                return
-                            else
-                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                            end
-                        elseif math.floor(go.mId / 100000) == retailStores then
-                            if math.floor(v.itemId / 100000) == materialKey then
-                                Event.Brocast("SmallPop","零售店不能上架原料",300)
-                                return
-                            else
-                                Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                            end
-                        end
-
-
-                        --Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                     end
                 end
-                if GetServerPriceNumber(v.inputPrice.text) == 0 then
-                    Event.Brocast("SmallPop","请输入价格",300)
-                    return
+                if WarehouseCtrl.isValidShelfOp(go,v) == true then
+                    Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+                else
+                    noMatch[#noMatch+1] = v
                 end
-                if v.inputNumber.text == "0" and v.inputNumber.text == "" then
-                    Event.Brocast("SmallPop","请输入数量",300)
-                    return
-                end
-                local material,processing,retailStores = 11,12,13
-                local materialKey,goodsKey = 21,22
-                if math.floor(go.mId / 100000) == material then
-                    if math.floor(v.itemId / 100000) == goodsKey then
-                        Event.Brocast("SmallPop","原料厂不能上架商品",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
-                elseif math.floor(go.mId / 100000) == processing then
-                    if math.floor(v.itemId / 100000) == materialKey then
-                        Event.Brocast("SmallPop","加工厂不能上架原料",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
-                elseif math.floor(go.mId / 100000) == retailStores then
-                    if math.floor(v.itemId / 100000) == materialKey then
-                        Event.Brocast("SmallPop","零售店不能上架原料",300)
-                        return
-                    else
-                        Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
-                    end
-                end
-                --Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
             end
         end
+    end
+    if #noMatch > 0 then
+        local noMatchstr = ','
+        for i, v in pairs(noMatch) do
+            noMatchstr = v.itemId..","..noMatchstr
+        end
+        local itemIdStr = split(noMatchstr,",")
+        local itemId = tonumber(itemIdStr[1])
+        Event.Brocast("SmallPop",GetLanguage(itemId).."等道具数量或类型不符",300)
     end
 end
 --上架回调执行
@@ -450,7 +409,6 @@ function WarehouseCtrl:n_shelfAdd(msg)
             self.m_data.shelf.good[#self.m_data.shelf.good + 1] = good
         end
     end
-
 end
 --确定运输
 function WarehouseCtrl:OnClick_transportConfirmBtn(go)

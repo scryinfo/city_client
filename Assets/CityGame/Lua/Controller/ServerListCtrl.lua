@@ -57,6 +57,15 @@ function ServerListCtrl:_initInsData()
 
 end
 
+function ServerListCtrl:Close()
+    --destroy(self.gameObject)
+    UIPanel.Close(self)
+    --注销事件
+    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+end
+
 function ServerListCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
     tempBg = nil
@@ -104,9 +113,9 @@ function ServerListCtrl:c_GsCreateRole()
     ct.OpenCtrl("SelectHeadCtrl")
 end
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    UIPanel:ClearAllPages()---------------------
+    --UIPanel:ClearAllPages()---------------------
     --UIPanel:ShowPage(GameMainInterfaceCtrl)
-    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
+    --ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
     ct.OpenCtrl('LoadingCtrl',playerId)
     --UIPanel:ShowPage(TopBarCtrl)
     --UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")

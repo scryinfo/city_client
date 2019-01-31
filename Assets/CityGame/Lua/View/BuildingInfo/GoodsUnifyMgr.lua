@@ -93,7 +93,7 @@ function GoodsUnifyMgr:_creatProductionLine(luabehaviour,itemId,buildingId)
     infoData.itemId = itemId
     infoData.buildingId = buildingId
     local prefab = self:_creatGood(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-    local productionLineItem = SmallProductionLineItem:new(infoData,prefab,luabehaviour,nil,self);
+    local productionLineItem = SmallProductionLineItem:new(infoData,prefab,luabehaviour,true,self);
     if not self.tempLineItem then
         self.tempLineItem = {}
     end
@@ -108,7 +108,7 @@ function GoodsUnifyMgr:_getProductionLine(productionLineData,buildingId)
     for i,v in pairs(productionLineData) do
         v.buildingId = buildingId
         local prefab = self:_creatGoods(GoodsUnifyMgr.static.SmallProductionLineItem_PATH,AdjustProductionLinePanel.content);
-        local productionLineLuaItem = SmallProductionLineItem:new(v,prefab,self.behaviour,i,nil);
+        local productionLineLuaItem = SmallProductionLineItem:new(v,prefab,self.behaviour,false,nil);
         AdjustProductionLineCtrl.materialProductionLine[i] = productionLineLuaItem
     end
 end

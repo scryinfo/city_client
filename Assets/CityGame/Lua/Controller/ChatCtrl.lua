@@ -90,6 +90,7 @@ function ChatCtrl:Active()
     ChatPanel.friendsChatNoContentText.text = GetLanguage(15010013)
     ChatPanel.strangersNoContentText.text = GetLanguage(15010012)
     ChatPanel.strangersChatNoContentText.text = GetLanguage(15010014)
+    ChatPanel.showCompanyText.text = GetLanguage(15010020)
 end
 
 -- 刷新
@@ -460,7 +461,7 @@ function ChatCtrl:OnAddFriends(go)
     local data = {}
     data.titleInfo = GetLanguage(15010006)
     data.tipInfo = GetLanguage(15010007)
-    data.inputInfo = "I am a good boy"
+    data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })

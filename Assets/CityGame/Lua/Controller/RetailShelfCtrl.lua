@@ -56,6 +56,7 @@ function RetailShelfCtrl:Refresh()
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
         self:shelfImgSetActive(self.GoodsUnifyMgr.retailShelfs,5)   --传零售店的实例表进来  要求余数的大小
     else
+        RetailShelfPanel.retailAddItem.gameObject:SetActive(true);
         RetailShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
     RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].shelfCapacity;

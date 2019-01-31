@@ -96,6 +96,7 @@ function ChatPanel.InitPanel()
     -- 玩家个人信息和公司信息显示按钮
     this.showPersonalInfoBtn = transform:Find("PlayerInfoRoot/ShowPersonalInfoBtn").gameObject
     this.showCompanyBtn = transform:Find("PlayerInfoRoot/ShowCompanyBtn").gameObject
+    this.showCompanyText = transform:Find("PlayerInfoRoot/ShowCompanyBtn/Text"):GetComponent("Text")
 
     -- 聊天记录
     this.chatRecordsRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot").gameObject

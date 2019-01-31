@@ -2,7 +2,7 @@ SmallProductionLineItem = class('SmallProductionLineItem')
 
 local remainTime
 --初始化方法
-function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,i,manager)
+function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,isEnableChange,manager)
     self.prefab = prefab;
     self.manager = manager;
     self.goodsDataInfo = goodsDataInfo;
@@ -37,9 +37,10 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
     self.staffText = self.prefab.transform:Find("Staffbg/nameText"):GetComponent("Text");
     --仓库的容量  不足时停止刷新时间
     self.warehouseCapacity = AdjustProductionLineCtrl.residualCapacity
-
     --新添加的线
-    if not i then
+    self.isEnableChange = isEnableChange
+    self:RefreshAdjustmentTop()
+    if self.isEnableChange == true then
         self:initUiInfo(self.goodsDataInfo)
     else
         --读到的线
@@ -65,11 +66,16 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
 end
 --新加线
 function SmallProductionLineItem:initUiInfo(infoData)
-    self.adjustmentTop.localScale = Vector3.one
     self:initButtonState()
     self.itemId = infoData.itemId
     self.inputNumber.text = 0;
-    self.pNumberScrollbar.maxValue = self.warehouseCapacity;
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.pNumberScrollbar.maxValue = self.warehouseCapacity;
+    else
+        self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
+    end
+    self.inputNumber.characterLimit = string.len(self.pNumberScrollbar.maxValue)
     self.timeText.text = "00:00:00"
     self.time_Slider.value = 0;
     self.time_Slider.maxValue = 0;
@@ -101,20 +107,36 @@ function SmallProductionLineItem:initUiInfo(infoData)
         end)
     end
 end
+--刷新线
+function SmallProductionLineItem:RefreshUiItemInfo(DataInfo)
+    self.goodsDataInfo.buildingId = DataInfo.buildingId
+    self.goodsDataInfo.id = DataInfo.lineId
+    self.goodsDataInfo.targetCount = DataInfo.targetNum
+    self.goodsDataInfo.workerNum = DataInfo.workerNum
+    self.time_Slider.maxValue = DataInfo.targetNum
+    self.numberText.text = self.time_Slider.value.."/"..DataInfo.targetNum
+    self:CloseAdjustmentTop()
+end
 --读到线
 function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
-    self.adjustmentTop.localScale = Vector3.zero
     self.id = i
     self.lineId = infoTab.id
     self.itemId = infoTab.itemId
     self.buildingId = infoTab.buildingId
     --self.time_Slider.maxValue = 100;
     --self.time_Slider.value = 0;
-    self.time_Slider.maxValue = infoTab.targetCount;
+    self.time_Slider.maxValue = infoTab.targetCount
     self.time_Slider.value = infoTab.nowCount
     self.inputNumber.text = infoTab.targetCount
     self.numberText.text = infoTab.nowCount.."/"..infoTab.targetCount
-    self.pNumberScrollbar.maxValue = self.warehouseCapacity
+    --判断是原料还是商品
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.pNumberScrollbar.maxValue = self.warehouseCapacity
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
+        self.inputNumber.characterLimit = string.len(self:getGoodMaxValue(self.itemId))
+    end
     self.pNumberScrollbar.value = infoTab.targetCount
     self.productionNumber.text = self:getWarehouseNum(self.itemId);     --右上角小房子
     self.staffNumberText.text = tostring(infoTab.workerNum)
@@ -148,14 +170,23 @@ end
 --点击发送添加线
 function SmallProductionLineItem:OnClicl_addBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ReqAddLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.itemId)
-    go.adjustmentTop.localScale = Vector3.zero
+    if go.pNumberScrollbar.value <= 0 or go.pNumberScrollbar.value == "" then
+        Event.Brocast("SmallPop","请输入数量",300)
+        return
+    end
+    if go.staffNumberText.text == "" or go.staffNumberText.text == "0" then
+        Event.Brocast("SmallPop","请设置员工人数",300)
+        return
+    end
+    Event.Brocast("m_ReqAddLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.itemId)
+    --go.adjustmentTop.localScale = Vector3.zero
+    go:CloseAdjustmentTop()
 end
 --点击发送修改生产线
 function SmallProductionLineItem:OnClicl_amendBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ResModifyKLine",go.buildingId,go.inputNumber.text,go.staffNumberText.text,go.lineId)
-    go.adjustmentTop.localScale = Vector3.zero
+    Event.Brocast("m_ResModifyKLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.lineId)
+    go:CloseAdjustmentTop()
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)
@@ -169,7 +200,11 @@ end
 --关闭添加修改的Top
 function SmallProductionLineItem:OnClicl_closeBtn(go)
     PlayMusEff(1002)
-    go.adjustmentTop.localScale = Vector3.zero
+    if not go.lineId then
+        go.manager:_deleteLine(go)
+    else
+        go:CloseAdjustmentTop()
+    end
 end
 --初始化按钮
 --初始化状态
@@ -192,7 +227,11 @@ function SmallProductionLineItem:initButtonAmendState()
 end
 --刷新滑动条
 function SmallProductionLineItem:pNumberScrollbarInfo()
-    self.adjustmentTop.localScale = Vector3.one
+    if AdjustProductionLineCtrl.IsHaveNewLine() and self.lineId ~= nil then
+        self:RefreshThisItem()
+        return
+    end
+    self:ChangeAdjustmentTop()
     if not self.lineId then
         self:initButtonAddState()
     else
@@ -216,7 +255,11 @@ function SmallProductionLineItem:time_SliderInfo()
     self.numberText.text = getColorString(numTab)
 end
 function SmallProductionLineItem:sNumberScrollbarInfo()
-    self.adjustmentTop.localScale = Vector3.one
+    if AdjustProductionLineCtrl.IsHaveNewLine() and self.lineId ~= nil then
+        self:RefreshThisItem()
+        return
+    end
+    self:ChangeAdjustmentTop()
     if not self.lineId then
         self:initButtonAddState()
     else
@@ -226,7 +269,12 @@ function SmallProductionLineItem:sNumberScrollbarInfo()
 end
 --刷新输入框
 function SmallProductionLineItem:inputInfo()
-    self.adjustmentTop.localScale = Vector3.one
+    --当有新增生产线时，其他生产线不能改变
+    if AdjustProductionLineCtrl.IsHaveNewLine() and self.lineId ~= nil then
+        self:RefreshThisItem()
+        return
+    end
+    self:ChangeAdjustmentTop()
     if not self.lineId then
         self:initButtonAddState()
     else
@@ -237,6 +285,8 @@ function SmallProductionLineItem:inputInfo()
         self.pNumberScrollbar.value = number;
     else
         self.pNumberScrollbar.value = 0;
+        ----暂时
+        --self.inputNumber.text = 0
     end
 end
 --删除后刷新ID及刷新显示
@@ -302,24 +352,116 @@ function SmallProductionLineItem:getMinuteNum(infoData)
     local numStr = "("..math.floor(number).."/min"..")"
     return numStr
 end
-
+--刷新刚刚刷新的时间
+function SmallProductionLineItem:getRefreshTimeNumber(infoData)
+    if not infoData then
+        return;
+    end
+    --还有多少个没有生产
+    local remainingNum = infoData.targetNum - self.goodsDataInfo.nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    local materialKey,goodsKey = 21,22
+    self.time = 0
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
+    end
+    self.remainingTime = self.time
+end
 --获取仓库里有的库存
 function SmallProductionLineItem:getWarehouseNum(itemId)
-    if itemId then
-        if AdjustProductionLineCtrl.store then
-            if AdjustProductionLineCtrl.store.inHand == nil then
-                local number = 0
-                return number
-            end
-            for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
-                if v.key.id == itemId then
-                    i = i + 1
-                    return v.n
-                end
-            end
-        else
+    if not itemId then
+        return
+    end
+    if not AdjustProductionLineCtrl.store.inHand then
+        local number = 0
+        return number
+    end
+    for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+        if v.key.id == itemId then
+            return v.n
+        end
+    end
+    local number = 0
+    return number
+end
+--获取商品最大可以生产的数量
+function SmallProductionLineItem:getGoodMaxValue(itemId)
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    if AdjustProductionLineCtrl.store then
+        if AdjustProductionLineCtrl.store.inHand == nil then
             local number = 0
             return number
         end
+        local materialNum = {}
+        for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+            for k,t in pairs(material) do
+                if v.key.id == t.itemId then
+                    materialNum[#materialNum + 1] = v.n / t.num
+                end
+            end
+        end
+        table.sort(materialNum)
+        local value = materialNum[1]
+        return math.floor(value)
+    else
+        local number = 0
+        return number
+    end
+end
+
+--获取修改状态
+function SmallProductionLineItem:GetChangeState()
+    if self.isEnableChange ~= nil then
+        return self.isEnableChange
+    else
+        ct.log("system","SmallProductionLineItem.isEnableChange is nil")
+        return true
+    end
+end
+
+--修改AdjustmentTop
+function SmallProductionLineItem:ChangeAdjustmentTop()
+    if self.isEnableChange ~= true then
+        --优先判断有没有新加线还没修改的
+        AdjustProductionLineCtrl.ClearOtherChangeState()
+        self:OpenAdjustmentTop()
+    end
+end
+
+function SmallProductionLineItem:OpenAdjustmentTop()
+    self.isEnableChange = true
+    self:RefreshAdjustmentTop()
+end
+
+function SmallProductionLineItem:CloseAdjustmentTop()
+    self:RefreshThisItem()
+    self.isEnableChange = false
+    self:RefreshAdjustmentTop()
+end
+
+
+--根据自身数据[self.goodsDataInfo]刷新(还原)自身
+function SmallProductionLineItem:RefreshThisItem()
+    local infoTab = self.goodsDataInfo
+    if infoTab ~= nil and infoTab.targetCount ~= nil and infoTab.workerNum ~= nil then
+        if  self.pNumberScrollbar.value ~= infoTab.targetCount then
+            self.pNumberScrollbar.value = infoTab.targetCount
+        end
+        if self.sNumberScrollbar.value ~= infoTab.workerNum / 5 then
+            self.sNumberScrollbar.value = infoTab.workerNum / 5
+        end
+    end
+end
+
+--刷新adjustmentTop显示状态[禁止调用这个方法]
+function SmallProductionLineItem:RefreshAdjustmentTop()
+    if self.isEnableChange == true then
+        self.adjustmentTop.localScale = Vector3.one
+    else
+        self.adjustmentTop.localScale = Vector3.zero
     end
 end

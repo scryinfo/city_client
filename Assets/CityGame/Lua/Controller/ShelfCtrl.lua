@@ -62,10 +62,16 @@ function ShelfCtrl:Refresh()
         self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
     end
     if self.m_data.isOther then
-        ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+        if self.m_data.info.state == "OPERATE" then
+            ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+        else
+            ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+        end
         ShelfPanel.shelfAddItem.gameObject:SetActive(false)
         self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
+
     else
+        ShelfPanel.shelfAddItem.gameObject:SetActive(true)
         ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     end
 
@@ -158,6 +164,7 @@ function ShelfCtrl:Hide()
     Event.RemoveListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
     Event.RemoveListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
     UIPanel.Hide(self)
+    return {insId = self.m_data.info.id,self.m_data}
 end
 --根据名字排序
 function ShelfCtrl:OnClick_OnName(ins)
@@ -259,7 +266,7 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
         end
     end
 end
---修改价格后刷新回调
+----修改价格后刷新回调
 function ShelfCtrl:refreshUiInfo(msg)
     if not msg then
         return
@@ -267,7 +274,7 @@ function ShelfCtrl:refreshUiInfo(msg)
     for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
         if v.itemId == msg.item.key.id then
             v.moneyText.text = "E"..GetClientPriceString(msg.price)
-            v.numberText.text = msg.item.n
+            v.numberText.text = tonumber(v.numberText.text) + msg.item.n
         end
     end
 end

@@ -49,10 +49,15 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
             --self:Hide();
-            UIPanel.ClosePage();
-            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.chooseInventItemId})
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
 
+            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+                if v.itemId == self.leftItemId then
+                    Event.Brocast("SmallPop","当前正在生产该原料",300)
+                    return
+                end
+            end
+            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
+            UIPanel.ClosePage();
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
@@ -62,9 +67,14 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             --self:Hide()
-            UIPanel.ClosePage();
-            --ct.OpenCtrl("AdjustProductionLineCtrl", {itemId = self.leftItemId})
+            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+                if v.itemId == self.leftItemId then
+                    Event.Brocast("SmallPop","当前正在生产该商品",300)
+                    return
+                end
+            end
             GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
+            UIPanel.ClosePage();
         end)
     end
     self:_changeAddLineData(AddLineButtonPosValue.Left)

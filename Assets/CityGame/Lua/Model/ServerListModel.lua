@@ -67,6 +67,7 @@ function ServerListModel:m_GsOK()
     DataManager.InitialNetMessages()
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
+    GAucModel.registerNetMsg()  --拍卖的网络回调
     --连接gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)

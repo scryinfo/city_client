@@ -185,8 +185,12 @@ end
 --点击发送修改生产线
 function SmallProductionLineItem:OnClicl_amendBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ResModifyKLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.lineId)
-    go:CloseAdjustmentTop()
+    if  tonumber(go.sNumberScrollbar.value) == 0 then
+        Event.Brocast("m_ReqDeleteLine",go.buildingId,go.lineId)
+    else
+        Event.Brocast("m_ResModifyKLine",go.buildingId,go.pNumberScrollbar.value,go.staffNumberText.text,go.lineId)
+        go:CloseAdjustmentTop()
+    end
 end
 --点击删除
 function SmallProductionLineItem:OnClicl_XBtn(go)

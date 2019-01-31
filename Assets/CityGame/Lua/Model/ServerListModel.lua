@@ -67,6 +67,13 @@ function ServerListModel:m_GsOK()
     DataManager.InitialNetMessages()
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
+    -----------------------------------------------------------------------------
+    --临时单独处理小孟的协议，后边统走datamanager
+    WarehouseModel.registerAsNetMsg()
+    ShelfModel.registerAsNetMsg()
+    AdjustProductionLineModel.registerAsNetMsg()
+    -----------------------------------------------------------------------------
+
     --连接gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)

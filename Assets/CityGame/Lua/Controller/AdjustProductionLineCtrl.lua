@@ -103,6 +103,7 @@ function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then
         go:deleteTempTable()
+        go:deleteObjInfo();
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
         Event.Brocast("SmallPop","建筑尚未开业",300)

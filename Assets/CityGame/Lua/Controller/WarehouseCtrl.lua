@@ -48,6 +48,8 @@ function WarehouseCtrl:Awake(go)
 
     --暂时放到Awake
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
+    Event.AddListener("shelfRefreshUiInfo",self.refreshUiInfo,self)
+
     --WarehousePanel.nameText.text = GetLanguage(26040002)
 
     self.gameObject = go
@@ -365,6 +367,73 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
             end
         end
     end
+
+
+    --PlayMusEff(1002)
+    --if not go.GoodsUnifyMgr.shelfPanelItem then
+    --    return;
+    --else
+    --    for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
+    --        if not go.m_data.shelf.good then
+    --            if GetServerPriceNumber(v.inputPrice.text) == 0 then
+    --                Event.Brocast("SmallPop","请输入价格",300)
+    --                return
+    --            end
+    --            if v.inputNumber.text == "0" and v.inputNumber.text == "" then
+    --                Event.Brocast("SmallPop","请输入数量",300)
+    --                return
+    --            end
+    --            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --        else
+    --            for k,t in pairs(go.m_data.shelf.good) do
+    --                if v.itemId == t.k.id and GetServerPriceNumber(v.inputPrice.text) ~= t.price then
+    --                    if GetServerPriceNumber(v.inputPrice.text) == 0 then
+    --                        Event.Brocast("SmallPop","请输入价格",300)
+    --                        return
+    --                    end
+    --                    if v.inputNumber.text == "0" and v.inputNumber.text == ""  then
+    --                        Event.Brocast("SmallPop","请输入数量",300)
+    --                        return
+    --                    end
+    --                    Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --                end
+    --            end
+    --            --if GetServerPriceNumber(v.inputPrice.text) == 0 then
+    --            --    Event.Brocast("SmallPop","请输入价格",300)
+    --            --    return
+    --            --end
+    --            --if v.inputNumber.text == "0" and v.inputNumber.text == "" then
+    --            --    Event.Brocast("SmallPop","请输入数量",300)
+    --            --    return
+    --            --end
+    --            --Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --        end
+    --    end
+    --end
+
+
+    --PlayMusEff(1002)
+    --if not go.GoodsUnifyMgr.shelfPanelItem then
+    --    return;
+    --else
+    --    for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
+    --        if not go.m_data.shelf.good then
+    --            Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --        else
+    --            for k,t in pairs(go.m_data.shelf.good) do
+    --                if v.itemId == t.k.id then
+    --
+    --                    Event.Brocast("m_ReqModifyShelf",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --                    return
+    --                else
+    --
+    --                    Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
+    --                    return
+    --                end
+    --            end
+    --        end
+    --    end
+    --end
 end
 --上架回调执行
 function WarehouseCtrl:n_shelfAdd(msg)
@@ -519,6 +588,24 @@ function WarehouseCtrl:n_transports(Data)
             WarehousePanel.numberText.text = getColorString(numTab)
         end
     end
+end
+--修改价格后刷新回调
+function WarehouseCtrl:refreshUiInfo(msg)
+    if not msg then
+        return
+    end
+    for i,v in pairs(self.m_data.shelf.good) do
+        if v.k.id == msg.item.key.id then
+            v.n = v.n + msg.item.n
+            v.price = msg.price
+        end
+    end
+    --for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
+    --    if v.itemId == msg.item.key.id then
+    --        v.moneyText.text = "E"..GetClientPriceString(msg.price)
+    --        v.numberText.text = tonumber(v.numberText.text) + msg.item.n
+    --    end
+    --end
 end
 --点击删除物品
 function WarehouseCtrl:deleteWarehouseItem(ins)

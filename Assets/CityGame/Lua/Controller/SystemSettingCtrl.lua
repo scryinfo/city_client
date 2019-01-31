@@ -47,8 +47,7 @@ function SystemSettingCtrl:Refresh()
 end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
-    PlayMusEff(1002)
-    CityEngineLua.gsLoginOut()
+    CityEngineLua.LoginOut()
 end
 
 --开音乐

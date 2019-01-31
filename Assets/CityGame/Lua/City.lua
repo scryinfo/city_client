@@ -1921,7 +1921,8 @@ CityEngineLua.reset = function()
 	
 end
 
-function CityEngineLua.gsLoginOut()
+function CityEngineLua.LoginOut()
+	PlayMusEff(1002)
 	CityEngineLua:reset()
 	local timerCheck = FrameTimer.New(function()
 		--   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);

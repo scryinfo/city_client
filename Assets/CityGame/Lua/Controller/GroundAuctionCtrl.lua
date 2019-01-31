@@ -186,8 +186,8 @@ function GroundAuctionCtrl:BidGround(ins)
     if bidPrice == "" then
         --打开弹框
         local showData = {}
-        showData.titleInfo = "REMINDER"
-        showData.contentInfo = "Please enter right price "
+        showData.titleInfo = GetLanguage(40010008)
+        showData.contentInfo = GetLanguage(24070001)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
         return
@@ -207,8 +207,8 @@ function GroundAuctionCtrl:BidGround(ins)
     else
         --打开弹框
         local showData = {}
-        showData.titleInfo = "REMINDER"
-        showData.contentInfo = "Your price should be higher then "..ins.highestPrice
+        showData.titleInfo = GetLanguage(40010008)
+        showData.contentInfo = GetLanguage(22030002)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     end

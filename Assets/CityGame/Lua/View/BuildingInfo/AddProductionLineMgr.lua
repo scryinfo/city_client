@@ -41,6 +41,8 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
             self.keyToggleItems[i] = item  --创建以typeId为key的表
         end
     end
+    --UpdateBeat:Add(self._update, self)
+    FixedUpdateBeat:Add(self._update, self)
 end
 --初始化
 function AddProductionLineMgr:initData(chooseTypeId)
@@ -151,5 +153,24 @@ function AddProductionLineMgr:_resetDetails()
             item:cleanState()
         end
         self.tempDetailItemId = nil
+    end
+end
+
+--
+function AddProductionLineMgr:_update()
+    if self.sideValue == AddLineTogglesSideValue.Left then
+        if self.keyContentItems[self.tempDetailItemId] ~= nil then
+            local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
+            AddProductionLinePanel.leftBtnParent.transform.position = pos
+        end
+        return
+    end
+
+    if self.sideValue == AddLineTogglesSideValue.Right then
+        if self.keyContentItems[self.tempDetailItemId] ~= nil then
+            local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
+            AddProductionLinePanel.rightBtnParent.transform.position = pos
+        end
+        return
     end
 end

@@ -37,7 +37,7 @@ function ShelfCtrl:Awake(go)
     isShowList = false;
     switchIsShow = false;
     ShelfPanel.nameText.text = GetLanguage(26040002)
-    --Event.AddListener("shelfRefreshUiInfo",self.refreshUiInfo,self)
+    Event.AddListener("shelfRefreshUiInfo",self.refreshUiInfo,self)
 end
 function ShelfCtrl:Active()
     UIPanel.Active(self)
@@ -261,23 +261,17 @@ function ShelfCtrl:receiveBuyRefreshInfo(Data)
     end
 end
 ----修改价格后刷新回调
---function ShelfCtrl:refreshUiInfo(msg)
---    if not msg then
---        return
---    end
---    for i,v in pairs(self.m_data.shelf.good) do
---        if v.k.id == msg.item.key.id then
---            v.n = v.n + msg.item.n
---            v.price = msg.price
---        end
---    end
---    --for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
---    --    if v.itemId == msg.item.key.id then
---    --        v.moneyText.text = "E"..GetClientPriceString(msg.price)
---    --        v.numberText.text = tonumber(v.numberText.text) + msg.item.n
---    --    end
---    --end
---end
+function ShelfCtrl:refreshUiInfo(msg)
+    if not msg then
+        return
+    end
+    for i,v in pairs(self.GoodsUnifyMgr.shelfLuaTab) do
+        if v.itemId == msg.item.key.id then
+            v.moneyText.text = "E"..GetClientPriceString(msg.price)
+            v.numberText.text = tonumber(v.numberText.text) + msg.item.n
+        end
+    end
+end
 function ShelfCtrl:OnClick_createGoods(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then

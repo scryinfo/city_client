@@ -82,9 +82,17 @@ function PersonalHomeDialogPageCtrl:_initData()
             self.friendOtherTran.localScale = Vector3.one
             self.strangerOtherTran.localScale = Vector3.zero
         end
+
+        if self.m_data.des == nil or self.m_data.des == "" then
+            self.m_data.des = GetLanguage(12010003)  --默认值
+        end
     else
         self.otherOpen.localScale = Vector3.zero
         self.changeSayBtn.localScale = Vector3.one
+
+        if self.m_data.des == nil or self.m_data.des == "" then
+            self.m_data.des = GetLanguage(4301013)  --默认值
+        end
     end
 
     if self.m_data.male == false then
@@ -94,10 +102,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.famaleTran.localScale = Vector3.zero
         self.maleTran.localScale = Vector3.one
     end
-    self.sayText.text = self.m_data.des
-    if self.m_data.des == nil or self.m_data.des == "" then
-        self.m_data.des = GetLanguage(12010003)  --默认值
-    end
+
     self.sayText.text = self.m_data.des
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 45, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度

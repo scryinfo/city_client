@@ -101,8 +101,15 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     if DataManager.GetMyOwnerID()~=buildingInfo.ownerId  then
         return
     end
+
+
+
     local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
     local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
+
+    if DataManager.GetMoney()< workerNum*dayWage then
+        Event.Brocast("SmallPop","资金不足",300)
+    end
 
     local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()
             Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)
@@ -177,8 +184,6 @@ function GameMainInterfaceCtrl:Awake()
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
 
-    GameMainInterfacePanel.city.text = GetLanguage(10030003)
-
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
@@ -206,6 +211,7 @@ function GameMainInterfaceCtrl:initInsData()
         GameMainInterfacePanel.male.localScale = Vector3.zero
         GameMainInterfacePanel.woman.localScale = Vector3.one
     end
+    GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
 local date
@@ -235,7 +241,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
         countDown = countDown - 1
         local ts = getFormatUnixTime(countDown)
         local time = ts.minute..":"..ts.second
-        GameMainInterfacePanel.auctionTime.text = groundState.."..."..time
+        GameMainInterfacePanel.auctionTime.text = time
         if countDown <= 0 then
             GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
         end
@@ -263,7 +269,12 @@ end
 --更新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
-    table.insert(Mails,mails)
+    if Mails == nil then
+        Mails = {}
+        Mails[1] = mails
+    else
+        table.insert(Mails,mails)
+    end
 end
 
 --点击头像

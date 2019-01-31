@@ -397,11 +397,25 @@ function SmallProductionLineItem:getGoodMaxValue(itemId)
             return number
         end
         local materialNum = {}
+        --[[
         for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
             for k,t in pairs(material) do
                 if v.key.id == t.itemId then
                     materialNum[#materialNum + 1] = v.n / t.num
                 end
+            end
+        end
+        --]]
+        for k,t in pairs(material) do
+            local isOwnner = false
+            for i,v in pairs(AdjustProductionLineCtrl.store.inHand) do
+                if v.key.id == t.itemId then
+                    materialNum[#materialNum + 1] = v.n / t.num
+                    isOwnner = true
+                end
+            end
+            if isOwnner == false then
+                materialNum[#materialNum + 1] = 0
             end
         end
         table.sort(materialNum)

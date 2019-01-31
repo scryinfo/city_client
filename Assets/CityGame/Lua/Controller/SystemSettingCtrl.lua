@@ -40,9 +40,9 @@ end
 function SystemSettingCtrl:Refresh()
     local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum==1 then
-        panel:InitDate(GetLanguage(14010007))
-    elseif Languagenum==0 then
         panel:InitDate(GetLanguage(14010006))
+    elseif Languagenum==0 then
+        panel:InitDate(GetLanguage(14010007))
     end
 end
 --退出

@@ -71,7 +71,7 @@ function ChooseWarehouseCtrl:Refresh()
    -- WareHouseGoodsMgr:_clear()
     hide = true
     self:initInsData()
-    self:GetMyFriends()
+   -- self:GetMyFriends()
     ChooseWarehousePanel.boxImg:SetActive(true)
 
 end

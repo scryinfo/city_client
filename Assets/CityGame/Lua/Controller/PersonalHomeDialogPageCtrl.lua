@@ -21,7 +21,6 @@ end
 function PersonalHomeDialogPageCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_initData()
 
     self.luaBehaviour = go:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject, self._onClickClose, self)
@@ -118,11 +117,17 @@ end
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
-        if str ~= "" and str ~= nil then
-            ins:_reqChangeDesToServer(str)
-            ins.sayText.text = str
-            DataManager.SetMyPersonalHomepageDesInfo(str)
+        if str == "" or str == nil then
+            str = GetLanguage(12010003)
         end
+        ins:_reqChangeDesToServer(str)
+        DataManager.SetMyPersonalHomepageDesInfo(str)
+
+        ins.sayText.text = ins.m_data.des
+        --if ins.m_data.id == DataManager.GetMyOwnerID() then
+        --    ins.m_data.des = GetLanguage(4301013)  --默认值
+        --end
+        ins.sayText.text = str
     end})
 end
 --请求加好友

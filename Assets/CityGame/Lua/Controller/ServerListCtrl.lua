@@ -43,18 +43,17 @@ end
 function ServerListCtrl:Refresh()
     self:_initInsData()
 end
-
+--[[
 function ServerListCtrl:Hide()
-    UIPanel.Hide(self)
-    --注销事件
-    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+UIPanel.Hide(self)
+--注销事件
+EveeListener("c_GsCreateRole",self.c_GsCreateRole,self);
+Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
-
+--]]
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
-
 end
 
 function ServerListCtrl:Close()
@@ -109,16 +108,11 @@ function ServerListCtrl:c_OnOK(go)
 end
 
 function ServerListCtrl:c_GsCreateRole()
-    UIPanel:ClearAllPages()
     ct.OpenCtrl("SelectHeadCtrl")
 end
+
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    UIPanel:ClearAllPages()---------------------
-    --UIPanel:ShowPage(GameMainInterfaceCtrl)
-    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
     ct.OpenCtrl('LoadingCtrl',playerId)
-    --UIPanel:ShowPage(TopBarCtrl)
-    --UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")
 end
 --生成预制
 function ServerListCtrl:_createServerPab(path,parent)

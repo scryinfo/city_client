@@ -56,9 +56,7 @@ end
 function LongInputDialogPageCtrl:_onClickConfim(ins)
     PlayMusEff(1002)
     if ins.m_data.btnCallBack then
-        if ins.input.text ~= nil and ins.input.text ~= "" then
-            ins.m_data.btnCallBack(ins.input.text)
-        end
+        ins.m_data.btnCallBack(ins.input.text)
         ins.m_data.btnCallBack = nil
     end
     ins:_onClickClose(ins)

@@ -84,9 +84,11 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 end
 
 function ChooseLineItem:OnLinePanelBG(go)
-    if go.state ~= "OPERATE"  then
-        Event.Brocast("SmallPop",GetLanguage(21030009),300)
-        return
+    if go.posX ~= 51 then
+        if go.state ~= "OPERATE"  then
+            Event.Brocast("SmallPop",GetLanguage(21030009),300)
+            return
+        end
     end
     go.manager:TransportConfirm(go.isOnClick )
     -- [[  点击使其可以运输

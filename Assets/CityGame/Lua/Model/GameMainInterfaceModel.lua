@@ -15,13 +15,15 @@ function GameMainInterfaceModel:OnCreate()
     Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+    Event.AddListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
 
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
-   -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况
+    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
 end
@@ -43,6 +45,10 @@ function GameMainInterfaceModel:m_GetAllMails()
     --local pb_size = #pb_login
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
+function GameMainInterfaceModel:m_GetFriendInfo(friendsId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = {friendsId}})
 end
 
 --服务器回调--
@@ -77,4 +83,9 @@ end
 function GameMainInterfaceModel:n_GsExtendBag(lMsg)
     DataManager.SetMoney(lMsg.money)
     Event.Brocast("c_ChangeMoney",lMsg.money)
+end
+
+--自己的收益情况回调
+function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
+    Event.Brocast("c_IncomeNotify",lMsg)
 end

@@ -85,7 +85,7 @@ function AdLineChartItem:openToggleItem(targetMovePos)
     --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
     --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
 
-    return Vector2.New(targetMovePos.x, targetMovePos.y - AdLineChartItem.static.TOTAL_H)
+    return Vector2.New(targetMovePos.x, targetMovePos.y - AdLineChartItem.static.TOTAL_H - 5)
 end
 
 --关闭
@@ -98,7 +98,7 @@ function AdLineChartItem:closeToggleItem(targetMovePos)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 
-    return Vector2.New(targetMovePos.x, targetMovePos.y - AdLineChartItem.static.TOP_H)
+    return Vector2.New(targetMovePos.x, targetMovePos.y - AdLineChartItem.static.TOP_H - 5)
 end
 
 --刷新数据

@@ -5,6 +5,7 @@ local gameMainInterfaceBehaviour;
 local Mails
 local countDown = 0
 local groundState
+local incomeNotify    --收益详情表
 
 
 function  GameMainInterfaceCtrl:bundleName()
@@ -40,7 +41,7 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
     Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
-
+    Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -52,7 +53,8 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
     Event.RemoveListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
-
+    Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
+    GameMainInterfaceCtrl:OnClick_EarningBtn(false)
 end
 
 function GameMainInterfaceCtrl:Close()
@@ -94,6 +96,37 @@ function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
     else
         GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
     end
+end
+
+--收益详情
+function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
+    if incomeNotify == nil then
+        incomeNotify = {}
+        incomeNotify[1] = dataInfo
+    else
+        table.insert(incomeNotify,dataInfo)
+    end
+    self.isTimmer = true
+    self.timmer = 2
+    GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
+    GameMainInterfacePanel.open.transform.localScale = Vector3.zero
+
+    GameMainInterfacePanel.simpleMoney.text = "E"..GetClientPriceString(dataInfo.cost)
+
+    if dataInfo.buyer == "PLAYER" then
+        if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture.png", GameMainInterfacePanel.simplePicture, true)
+            GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
+        end
+    elseif dataInfo.type == "INSHELF" then
+        if dataInfo.bid == 1100001 or dataInfo.bid == 1100002 or dataInfo.bid == 1100003 then
+            LoadSprite(Material[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+        else
+            LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+        end
+        GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
+    end
+    GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
 end
 
 function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
@@ -163,6 +196,17 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
 
+    --todo 收益
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.open,self.OnOpen,self); --打开收益详情
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.close,self.OnClose,self); --关闭收益详情
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.xBtn,self.OnXBtn,self); --点击xBtn
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
+
+    --滑动互用
+    self.earnings = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.earnings.mProvideData = GameMainInterfaceCtrl.static.EarningsProvideData
+    self.earnings.mClearData = GameMainInterfaceCtrl.static.EarningsClearData
+
     --头像
     local faceId = DataManager.GetFaceId()
     LoadSprite(PlayerHead[faceId].MainPath, GameMainInterfacePanel.headItem, true)
@@ -176,6 +220,9 @@ function GameMainInterfaceCtrl:Awake()
     GameMainInterfacePanel.money.text = self.money
 
     GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
+
+    --收益倒计时条件
+    self.isTimmer = false
 
     --初始化循环参数
     self.intTime = 1
@@ -237,6 +284,14 @@ function GameMainInterfaceCtrl:RefreshWeather()
         GameMainInterfacePanel.auctionTime.text = time
         if countDown <= 0 then
             GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
+        end
+    end
+    if  self.isTimmer then
+        self.timmer = self.timmer -1
+        if self.timmer <= 0 then
+            GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
+            GameMainInterfacePanel.open.transform.localScale = Vector3.one
+            self.isTimmer = false
         end
     end
 end
@@ -440,6 +495,57 @@ function GameMainInterfaceCtrl:RemoveUpdata()
     if self.m_Timer ~= nil then
         self.m_Timer:Stop()
     end
+end
+
+--todo  收益
+--打开
+function GameMainInterfaceCtrl:OnOpen()
+    GameMainInterfaceCtrl:OnClick_EarningBtn(true)
+end
+
+--关闭
+function GameMainInterfaceCtrl:OnClose()
+    GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+end
+
+--点击xBtn
+function GameMainInterfaceCtrl:OnXBtn()
+    GameMainInterfacePanel.clearBtn.transform.localScale = Vector3.one
+    GameMainInterfacePanel.clearBg.transform.localScale = Vector3.one
+    GameMainInterfacePanel.xBtn.transform.localScale = Vector3.zero
+end
+
+--点击ClearBg
+function GameMainInterfaceCtrl:OnClearBg()
+    GameMainInterfacePanel.clearBtn.transform.localScale = Vector3.zero
+    GameMainInterfacePanel.clearBg.transform.localScale = Vector3.zero
+    GameMainInterfacePanel.xBtn.transform.localScale = Vector3.one
+end
+
+--滑动互用
+GameMainInterfaceCtrl.static.EarningsProvideData = function(transform, idx)
+
+    idx = idx + 1
+    local item = DetailsEarningItem:new(incomeNotify[idx],transform,idx)
+    local materialItems = {}
+    materialItems[idx] = item
+end
+
+GameMainInterfaceCtrl.static.EarningsClearData = function(transform)
+
+end
+
+
+--打开关闭收益详情
+function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
+    if isShow then
+        GameMainInterfacePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        GameMainInterfacePanel.open.transform.localScale = Vector3.zero
+    else
+        GameMainInterfacePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        GameMainInterfacePanel.open.transform.localScale = Vector3.one
+    end
+    GameMainInterfaceCtrl:OnClearBg()
 end
 
 

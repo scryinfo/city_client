@@ -22,6 +22,11 @@ TerrainConfig = {
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
         ["MapSize"] = 101,
-
+    },
+    ["LoadingConfig"] = {
+        ["MinDurationTime"] = 1,
+        ["RotateSpeed"] = 200,
+        ["RotateDirection"] = Vector3.back,
     }
+
 }

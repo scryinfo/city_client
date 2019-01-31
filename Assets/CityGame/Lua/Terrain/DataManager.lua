@@ -1311,6 +1311,7 @@ local function ClearAllModel()
     DataManager.InitialNetMessages()
     --干掉我的地块
     MyGround.ClearMyGrounds()
+    TerrainManager.ReMove()
 end
 
 function DataManager.Close()

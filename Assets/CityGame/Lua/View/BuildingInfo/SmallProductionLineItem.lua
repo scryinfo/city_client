@@ -44,7 +44,7 @@ function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,
         self:initUiInfo(self.goodsDataInfo)
     else
         --读到的线
-        self:RefreshUiInfo(self.goodsDataInfo,i)
+        self:RefreshUiInfo(self.goodsDataInfo)
     end
     self.pNumberScrollbar.onValueChanged:AddListener(function()
         self:pNumberScrollbarInfo();

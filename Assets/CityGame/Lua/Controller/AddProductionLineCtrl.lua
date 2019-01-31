@@ -3,7 +3,7 @@ UIPanel:ResgisterOpen(AddProductionLineCtrl)
 
 function AddProductionLineCtrl:initialize()
     --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function AddProductionLineCtrl:bundleName()
@@ -174,5 +174,5 @@ function AddProductionLineCtrl:_setLineDetailInfo(datas)
 end
 function AddProductionLineCtrl:Hide()
     UIPanel.Hide(self)
-    return {insId = self.m_data.info.id}
+    --return {insId = self.m_data.info.id}
 end

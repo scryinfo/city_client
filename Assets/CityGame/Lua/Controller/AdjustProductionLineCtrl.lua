@@ -263,29 +263,32 @@ function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
         return
     end
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-        if v.goodsDataInfo.workerNum < DataInfo.workerNum then
-            local nowNum = DataInfo.workerNum - v.goodsDataInfo.workerNum
-            self.idleWorkerNum = self.idleWorkerNum - nowNum
-            local idelTab = {}
-            idelTab["num1"] = self.idleWorkerNum
-            idelTab["num2"] = self.buildingMaxWorkerNum
-            idelTab["col1"] = "red"
-            idelTab["col2"] = "black"
-            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
-        elseif v.goodsDataInfo.workerNum > DataInfo.workerNum then
-            local nowNum = v.goodsDataInfo.workerNum - DataInfo.workerNum
-            self.idleWorkerNum = self.idleWorkerNum + nowNum
-            local idelTab = {}
-            idelTab["num1"] = self.idleWorkerNum
-            idelTab["num2"] = self.buildingMaxWorkerNum
-            idelTab["col1"] = "red"
-            idelTab["col2"] = "black"
-            AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
-        end
-        v:getRefreshTimeNumber(DataInfo)
         if DataInfo.lineId == v.lineId then
-            if DataInfo.targetNum ~= nil then
-                v:RefreshUiItemInfo(DataInfo)
+            if v.goodsDataInfo.workerNum < DataInfo.workerNum then
+                local nowNum = DataInfo.workerNum - v.goodsDataInfo.workerNum
+                self.idleWorkerNum = self.idleWorkerNum - nowNum
+                local idelTab = {}
+                idelTab["num1"] = self.idleWorkerNum
+                idelTab["num2"] = self.buildingMaxWorkerNum
+                idelTab["col1"] = "red"
+                idelTab["col2"] = "black"
+                AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+            elseif v.goodsDataInfo.workerNum > DataInfo.workerNum then
+                local nowNum = v.goodsDataInfo.workerNum - DataInfo.workerNum
+                self.idleWorkerNum = self.idleWorkerNum + nowNum
+                local idelTab = {}
+                idelTab["num1"] = self.idleWorkerNum
+                idelTab["num2"] = self.buildingMaxWorkerNum
+                idelTab["col1"] = "red"
+                idelTab["col2"] = "black"
+                AdjustProductionLinePanel.idleNumberText.text = getColorString(idelTab)
+            end
+            AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
+            v:getRefreshTimeNumber(DataInfo)
+            if DataInfo.lineId == v.lineId then
+                if DataInfo.targetNum ~= nil then
+                    v:RefreshUiItemInfo(DataInfo)
+                end
             end
         end
     end

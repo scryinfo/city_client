@@ -16,6 +16,12 @@ function LineChartRateItem:initialize(materialData, clickOpenFunc, viewRect, mai
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
     self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
 
+    --language
+    self.titleText01 = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text")
+    self.titleText02 = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text")
+    self.stayTunedText03 = self.viewRect.transform:Find("contentRoot/bgLine/Image/Text"):GetComponent("Text")
+    self:_language()
+
     self.goLineChart = self.viewRect.transform:Find("contentRoot/bgLine/LineChartPanel/Image/Scroll View/Viewport/Content/GameObject"):GetComponent("LineChart");
     local verts={
         Vector2.New(0.0, 0.4),
@@ -111,4 +117,10 @@ end
 
 function LineChartRateItem:destory()
     destroy(self.viewRect.gameObject)
+end
+--多语言
+function LineChartRateItem:_language()
+    self.titleText01.text = GetLanguage(25010007)
+    self.titleText02.text = GetLanguage(25010007)
+    self.stayTunedText03.text = GetLanguage(25010008)
 end

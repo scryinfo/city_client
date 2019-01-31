@@ -151,4 +151,11 @@ function Game.OnPostInitOK()
     --end
     DataManager.Init()
     TerrainManager.Init()
+    RobotIns =RobotTest:new()
+    if RobotIns.isActive then
+           return
+    end
+
+    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+
 end

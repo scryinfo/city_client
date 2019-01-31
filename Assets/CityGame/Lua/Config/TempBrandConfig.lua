@@ -15,3 +15,10 @@ TempBrandConfig = {
 	[2252202] =  199550,
 	[2252203] =  349700
 }
+TempCompoundTypeConnectConfig = {
+	[2101] = 2251,  --fooddata 对应 food
+	[2102] = 2252,  --dressdata 对应 dress
+
+	[2251] = 2101,  --fooddata 对应 food
+	[2252] = 2102,  --dressdata 对应 dress
+}

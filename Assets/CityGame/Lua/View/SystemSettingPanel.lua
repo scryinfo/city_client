@@ -53,13 +53,13 @@ end
 --数据初始化
 function SystemSettingPanel:InitDate(string)
         this.titleText.text=GetLanguage(14010001)
-        this.outText.text=GetLanguage(14010010)
+        this.outText.text=GetLanguage(14010005)
         this.MusicText.text=GetLanguage(14010003)
         this.MusicEffectBtnText.text=GetLanguage(14010002)
         this.LanguageText.text=GetLanguage(14010004)
-        this.LanguageBtnText.text=GetLanguage(14010005,string)
+        this.LanguageBtnText.text=GetLanguage(14010008,string)
         this.chineseBtnText.text=GetLanguage(14010006)
-        this.englishBtnText.text=GetLanguage(14010008)
+        this.englishBtnText.text=GetLanguage(14010007)
      local music=UnityEngine.PlayerPrefs.GetInt("Music")
     local musicEffect=UnityEngine.PlayerPrefs.GetInt("MusicEffect")
     if music==0 then

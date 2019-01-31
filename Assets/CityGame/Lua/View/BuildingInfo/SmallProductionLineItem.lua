@@ -345,7 +345,25 @@ function SmallProductionLineItem:getMinuteNum(infoData)
     local numStr = "("..math.floor(number).."/min"..")"
     return numStr
 end
-
+--刷新刚刚刷新的时间
+function SmallProductionLineItem:getRefreshTimeNumber(infoData)
+    if not infoData then
+        return;
+    end
+    --还有多少个没有生产
+    local remainingNum = infoData.targetNum - self.goodsDataInfo.nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    local materialKey,goodsKey = 21,22
+    self.time = 0
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
+    end
+    self.remainingTime = self.time
+end
 --获取仓库里有的库存
 function SmallProductionLineItem:getWarehouseNum(itemId)
     if not itemId then

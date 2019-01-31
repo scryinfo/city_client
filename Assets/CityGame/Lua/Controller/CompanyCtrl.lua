@@ -62,7 +62,7 @@ end
 function CompanyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-    CityEngineLua.login_tradeapp(true)
+
     CompanyPanel.incomeTitle.text = GetLanguage(17010002)
     CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
     CompanyPanel.tips.text = GetLanguage(17010005)
@@ -73,6 +73,8 @@ function CompanyCtrl:Refresh()
     self:_allItemType()
     --self:_addListener()
     self:_updateData()
+    self:initInsData()
+    CityEngineLua.login_tradeapp(true)
 end
 
 function CompanyCtrl:Hide()
@@ -84,15 +86,20 @@ end
 -- 监听Model层网络回调
 function CompanyCtrl:_addListener()
     Event.AddListener("c_OnReceivePlayerEconomy", self.c_OnReceivePlayerEconomy, self)
+    Event.AddListener("c_OnConnectTradeSuccess", self.c_OnSendPlayerEconomy, self)
 end
 
 --注销model层网络回调h
 function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnReceivePlayerEconomy", self.c_OnReceivePlayerEconomy, self)
+    Event.RemoveListener("c_OnConnectTradeSuccess", self.c_OnSendPlayerEconomy, self)
 end
 
 function CompanyCtrl:initInsData()
     DataManager.OpenDetailModel(CompanyModel, OpenModelInsID.CompanyCtrl)
+end
+
+function CompanyCtrl:c_OnSendPlayerEconomy()
     DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryPlayerEconomy', self.m_data.id)
 end
 
@@ -114,7 +121,7 @@ function CompanyCtrl:_updateData()
     CompanyPanel.businessRecordsScroll:RefillCells()
     --CompanyPanel.businessRecordsScroll:ActiveLoopScroll(self.businessRecordsSource, #CompanyCtrl.static.AllItemId)
 
-    self:initInsData()
+
 end
 
 function CompanyCtrl:_showAllItem()

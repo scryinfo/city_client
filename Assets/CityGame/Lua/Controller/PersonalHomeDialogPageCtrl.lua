@@ -131,7 +131,7 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
     local data = {}
     data.titleInfo = GetLanguage(12040002)
     data.tipInfo = GetLanguage(12040003)
-    data.inputInfo = "I am a good boy"
+    data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         Event.Brocast("m_ChatAddFriends", { id = ins.m_data.id, desc = text })
         Event.Brocast("SmallPop", GetLanguage(12040004), 80)

@@ -90,6 +90,7 @@ function ChatCtrl:Active()
     ChatPanel.friendsChatNoContentText.text = GetLanguage(15010013)
     ChatPanel.strangersNoContentText.text = GetLanguage(15010012)
     ChatPanel.strangersChatNoContentText.text = GetLanguage(15010014)
+    ChatPanel.showCompanyText.text = GetLanguage(15010020)
 end
 
 -- 刷新

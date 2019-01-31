@@ -605,11 +605,11 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
     GameMainInterfaceCtrl:OnClearBg()
     if incomeNotify  == nil then
         GameMainInterfacePanel.noMessage.localScale = Vector3.one
-        GameMainInterfacePanel.timeText.transform.localScale = Vector3.zero
+        GameMainInterfacePanel.timeBg.transform.localScale = Vector3.zero
         GameMainInterfacePanel.xBtn.transform.localScale =  Vector3.zero
     else
         GameMainInterfacePanel.noMessage.localScale = Vector3.zero
-        GameMainInterfacePanel.timeText.transform.localScale = Vector3.one
+        GameMainInterfacePanel.timeBg.transform.localScale = Vector3.one
         GameMainInterfacePanel.xBtn.transform.localScale =  Vector3.one
     end
 end

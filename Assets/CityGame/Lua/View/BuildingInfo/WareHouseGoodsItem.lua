@@ -21,6 +21,7 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.qty = goodsDataInfo.qty
     self.bg = self.prefab.transform:Find("TransportItem"):GetComponent("Image");
     self.material = self.prefab.transform:Find("TransportItem/Name");
+    self.goodsTest = self.prefab.transform:Find("TransportItem/Name/NameText").gameObject:GetComponent("Text");
     self.nameText = self.prefab.transform:Find("TransportItem/GoodsName").gameObject:GetComponent("Text");
     self.numberText = self.prefab.transform:Find("TransportItem/NumberText").gameObject:GetComponent("Text");
     self.downBG = self.prefab.transform:Find("TransportItem/downBG"):GetComponent("Image");
@@ -31,7 +32,6 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
     self.transportBG = self.prefab.transform:Find("TransportItem").gameObject;
     self.nameText.text = goodsDataInfo.name
     self.numberText.text = goodsDataInfo.number
-
     --原料
 
     local materialKey,goodsKey = 21,22
@@ -41,14 +41,9 @@ function WareHouseGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr,
         self.material.localScale = Vector3.zero
         self.downBG:GetComponent("RectTransform").localPosition = Vector3.New(165,200, 0)
         LoadSprite(Material[self.itemId].img, self.downBG,true)
-        --panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-        --    if obj ~= nil then
-        --        local texture = ct.InstantiatePrefab(obj)
-        --        self.downBG.sprite = texture
-        --    end
-        --end)
     elseif math.floor(self.itemId / 100000) == goodsKey then           --商品
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
+            self.goodsTest.text = GetLanguage(4301011)
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
                 self.downBG.sprite = texture

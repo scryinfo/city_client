@@ -9,7 +9,7 @@ Sprite_Chinese =
     ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-sell.png",
     ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-rent.png",
     --中心建筑
-    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/city info-C.png",
+    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon-cityinfo-C.png",
     ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse-C.png",
     ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon-C.png",
     --中心仓库
@@ -24,7 +24,7 @@ Sprite_English={
    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
    --中心建筑
-   ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/city info.png",
+   ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon -city info.png",
    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse.png",
    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon.png",
    --中心仓库

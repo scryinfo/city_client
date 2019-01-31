@@ -43,6 +43,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text = "X"..dataInfo.count
         end
     elseif dataInfo.buyer == "NPC" then
+        self.playerId = 0
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
         if dataInfo.type == "RENT_ROOM" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", self.picture, true)

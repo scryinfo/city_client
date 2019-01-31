@@ -55,6 +55,7 @@ function GameMainInterfacePanel.InitPanel()
     this.simpleEarning = transform:Find("EarningsPanel/simpleEarning").gameObject; --点击简易收益
     this.xBtn = transform:Find("EarningsPanel/bg/xBtn").gameObject; --删除简易收益
     this.timeEarning = transform:Find("EarningsPanel/bg/time").gameObject; --收益时间
+    this.timeBg = transform:Find("EarningsPanel/bg/time");
     this.timeText = transform:Find("EarningsPanel/bg/time/timeText").gameObject:GetComponent("Text");
     this.clearBtn = transform:Find("EarningsPanel/bg/clearBtn").gameObject; --清空简易收益
     this.clearBg = transform:Find("EarningsPanel/bg/clearBg").gameObject; --清空简易收益背景

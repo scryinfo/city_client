@@ -87,6 +87,7 @@ end
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
     PlayMusEff(1002)
+    GameNoticePanel.hintItem:SetActive(false)
     UIPanel.ClosePage();
 end
 

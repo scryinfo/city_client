@@ -129,12 +129,12 @@ end
 function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "REMINDER"
-    data.tipInfo = "Please input verification information!"
+    data.titleInfo = GetLanguage(12040002)
+    data.tipInfo = GetLanguage(12040003)
     data.inputInfo = "I am a good boy"
     data.btnCallBack = function(text)
         Event.Brocast("m_ChatAddFriends", { id = ins.m_data.id, desc = text })
-        Event.Brocast("SmallPop","Your request has been sent.",80)
+        Event.Brocast("SmallPop", GetLanguage(12040004), 80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end

@@ -69,8 +69,8 @@ function TerrainManager._Update()
 end
 
 function TerrainManager.ReMove()
-    TerrainManager.BuildObjQueue = nil
-    TerrainManager.WillBuildQueue = nil
+    TerrainManager.BuildObjQueue = 0
+    TerrainManager.WillBuildQueue = {}
     Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
     UpdateBeat:Remove(TerrainManager._Update)
 end

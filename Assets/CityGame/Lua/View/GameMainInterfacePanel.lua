@@ -58,6 +58,7 @@ function GameMainInterfacePanel.InitPanel()
     this.timeText = transform:Find("EarningsPanel/bg/time/timeText").gameObject:GetComponent("Text");
     this.clearBtn = transform:Find("EarningsPanel/bg/clearBtn").gameObject; --清空简易收益
     this.clearBg = transform:Find("EarningsPanel/bg/clearBg").gameObject; --清空简易收益背景
+    this.simple = transform:Find("EarningsPanel/simpleEarning").gameObject; --简易收益面板
     this.simpleMoney = transform:Find("EarningsPanel/simpleEarning/incomeText").gameObject:GetComponent("Text"); --简易收益面板金额
     this.simplePicture = transform:Find("EarningsPanel/simpleEarning/picture").gameObject:GetComponent("Image"); --简易收益面板图片
     this.simplePictureText = transform:Find("EarningsPanel/simpleEarning/picture/pictureText").gameObject:GetComponent("Text"); --简易收益面板图片内容
@@ -66,4 +67,6 @@ function GameMainInterfacePanel.InitPanel()
     this.earningScroll = transform:Find("EarningsPanel/bg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect"); --收益时间
 
     this.bg = transform:Find("EarningsPanel/bg"):GetComponent("RectTransform");    --收益详情背景
+    this.noMessage = transform:Find("EarningsPanel/bg/noMessage");    --收益详情背景
+    this.earningsPanelBg = transform:Find("EarningsPanelBg").gameObject;    --收益背景
 end

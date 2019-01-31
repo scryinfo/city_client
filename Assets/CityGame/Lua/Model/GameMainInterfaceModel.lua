@@ -15,6 +15,7 @@ function GameMainInterfaceModel:OnCreate()
     Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+    Event.AddListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
 
     DataManager.RegisterErrorNetMsg()
     --网络回调
@@ -44,6 +45,10 @@ function GameMainInterfaceModel:m_GetAllMails()
     --local pb_size = #pb_login
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
+function GameMainInterfaceModel:m_GetFriendInfo(friendsId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = {friendsId}})
 end
 
 --服务器回调--

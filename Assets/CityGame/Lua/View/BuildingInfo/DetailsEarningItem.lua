@@ -30,7 +30,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         LoadSprite(PlayerHead[self.faceId].earningsPath, self.head, true)
         self.name.localScale = Vector3.zero
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture.png", self.picture, true)
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-apartment.png", self.picture, true)
             self.pictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
             if dataInfo.type == "BUY_GROUND" then
                 self.sell.localScale = Vector3.one
@@ -53,11 +53,11 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text = "X"..dataInfo.count
         end
     end
-    if self.faceId ~= 0 then
-        self.head:GetComponent("Button").onClick:AddListener(function ()
-            self:_OnHeadBtn(self)
-        end)
-    end
+    --if self.faceId ~= 0 then
+    --    self.head:GetComponent("Button").onClick:AddListener(function ()
+    --        self:_OnHeadBtn(self)
+    --    end)
+    --end
 end
 
 function DetailsEarningItem:_OnHeadBtn(go)

@@ -44,6 +44,8 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+
+    GameMainInterfacePanel.noMessage.text = GetLanguage(11020005)
 end
 
 function GameMainInterfaceCtrl:Hide()

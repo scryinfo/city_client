@@ -36,7 +36,7 @@ function CenterBuildingCtrl:Active()
 
     local cityinfoPath,centerWarehousePath,technologyPath
     LoadSprite(GetSprite("CBCityInfo"), CenterBuildingPanel.cityInfo:GetComponent("Image"), false)
-    LoadSprite(GetSprite("CBWareHouse"), CenterBuildingPanel.centerWarehouse:GetComponent("Image"), false)
+    LoadSprite(GetSprite("CBWareHouse"), CenterBuildingPanel.centerWarehouse:GetComponent("Image"), true)
     LoadSprite(GetSprite("CBSoon"), CenterBuildingPanel.technology:GetComponent("Image"), false)
 end
 

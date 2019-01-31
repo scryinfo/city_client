@@ -28,6 +28,7 @@ Language_English={
 [11020002] = "Will on bidding soon",
 [11020003] = "Renting",
 [11020004] = "Selling",
+[11020005] = "No profit notice",
 [12010001] = "Friends",
 [12010002] = "Add a new friend !",
 [12010003] = "This guy is too lazy to write some words",

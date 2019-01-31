@@ -1,4 +1,4 @@
-EN={
+Language_English={
 [10020001] = "Please input your account",
 [10020002] = "Please input your password",
 [10020003] = "Login",

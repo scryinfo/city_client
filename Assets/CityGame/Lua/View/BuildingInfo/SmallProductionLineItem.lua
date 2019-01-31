@@ -129,7 +129,14 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.time_Slider.value = infoTab.nowCount
     self.inputNumber.text = infoTab.targetCount
     self.numberText.text = infoTab.nowCount.."/"..infoTab.targetCount
-    self.pNumberScrollbar.maxValue = self.warehouseCapacity
+    --判断是原料还是商品
+    local materialKey,goodsKey = 21,22
+    if math.floor(self.itemId / 100000) == materialKey then
+        self.pNumberScrollbar.maxValue = self.warehouseCapacity
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
+    end
+    self.inputNumber.characterLimit = string.len(self:getGoodMaxValue(self.itemId))
     self.pNumberScrollbar.value = infoTab.targetCount
     self.productionNumber.text = self:getWarehouseNum(self.itemId);     --右上角小房子
     self.staffNumberText.text = tostring(infoTab.workerNum)

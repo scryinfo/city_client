@@ -57,7 +57,7 @@ local function CreateBlockDataTable(tempCollectionID)
     BuildDataStack[tempCollectionID].BlockDatas = {}
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     --将内部所有数据置为 -1
-    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize)
+    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
     for key, value in pairs(idList) do
         BuildDataStack[tempCollectionID].BlockDatas[value] = -1
     end

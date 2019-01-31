@@ -54,6 +54,10 @@ function BtnDialogPageCtrl:_onClickConfim(ins)
 end
 function BtnDialogPageCtrl:_onClickClose(ins)
     PlayMusEff(1002)
+    if ins.m_data.closeCallBack then
+        ins.m_data.closeCallBack()
+        ins.m_data.closeCallBack = nil
+    end
     UIPanel.ClosePage()
 end
 

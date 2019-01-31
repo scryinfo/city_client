@@ -11,7 +11,7 @@ function ChatRecordsTimeItem:initialize(prefab, time)
     self.prefab = prefab
 
     local timeTable = getFormatUnixTime(time/1000)
-    local nowTimeTable = getFormatUnixTime(os.time())
+    local nowTimeTable = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
     if nowTimeTable.year ~= timeTable.year or nowTimeTable.month ~= timeTable.month or nowTimeTable.day ~= timeTable.day then
         prefab.transform:Find("TimeText"):GetComponent("Text").text = timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day .. " " .. timeTable.hour .. ":" .. timeTable.minute
     else

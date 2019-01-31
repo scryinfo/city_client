@@ -1692,7 +1692,8 @@ CityEngineLua.onConnectionStateChange = function(state )
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Disconnect by server' then --服务器断开连接（需提示）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
+		--ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
+		ct.MsgBox("网络连接", "服务器断开连接")
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)

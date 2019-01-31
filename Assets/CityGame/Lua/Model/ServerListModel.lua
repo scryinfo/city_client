@@ -77,6 +77,7 @@ function ServerListModel:m_GsOK()
     ShelfModel.registerAsNetMsg()
     AdjustProductionLineModel.registerAsNetMsg()
     tempTransportModel.registerAsNetMsg()
+    StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调
     --连接gs

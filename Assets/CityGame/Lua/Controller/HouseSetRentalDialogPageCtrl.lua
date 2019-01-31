@@ -31,7 +31,7 @@ function HouseSetRentalDialogPageCtrl:Awake(go)
     --end , self)
     luaBehaviour:AddClick(self.infoBtn.gameObject, function ()
         --self.infoRootBtn.transform.localScale = Vector3.one
-        ct.OpenCtrl("FixedTotalScoreCtrl", self.infoBtn.transform.position)
+        ct.OpenCtrl("FixedTotalScoreCtrl", {pos = self.infoBtn.transform.position, type = "House"})
     end , self)
     self.input.onValueChanged:AddListener(function(inputValue)
         if inputValue == nil or inputValue == "" then

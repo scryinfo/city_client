@@ -24,7 +24,7 @@ function DETAILSBoxCtrl:Awake(go)
     --
     details:AddClick(DETAILSBoxPanel.infoBtn.gameObject, function ()
         --DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.one
-        ct.OpenCtrl("FixedTotalScoreCtrl", DETAILSBoxPanel.infoBtn.transform.position)
+        ct.OpenCtrl("FixedTotalScoreCtrl", {pos = DETAILSBoxPanel.infoBtn.transform.position, type = "Goods"})
     end ,self)
     details:AddClick(DETAILSBoxPanel.infoRootBtn.gameObject, function ()
         DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero

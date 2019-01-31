@@ -117,14 +117,22 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
+        elseif dataInfo.type == "INSHELF" then
+            if dataInfo.bid == 1100001 or dataInfo.bid == 1100002 or dataInfo.bid == 1100003 then
+                LoadSprite(Material[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+            else
+                LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+            end
+            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
-    elseif dataInfo.type == "INSHELF" then
-        if dataInfo.bid == 1100001 or dataInfo.bid == 1100002 or dataInfo.bid == 1100003 then
-            LoadSprite(Material[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
-        else
-            LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+        elseif dataInfo.buyer == "NPC" then
+        if dataInfo.type == "RENT_ROOM" then
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
+            GameMainInterfacePanel.simplePictureText.text = "X1"
+        elseif dataInfo.type == "INSHELF" then
+            LoadSprite(Good[dataInfo.itemId].img,  GameMainInterfacePanel.simplePicture)
+            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
-        GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
     end
     GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
 end

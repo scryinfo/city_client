@@ -66,7 +66,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
     end)
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_closeBtn,self)
     self._luabehaviour:AddClick(self.infoBtn.gameObject, function ()
-        ct.OpenCtrl("FixedTotalScoreCtrl", self.infoBtn.transform.position)
+        ct.OpenCtrl("FixedTotalScoreCtrl", {pos = self.infoBtn.transform.position, type = "Goods"})
     end ,self)
 end
 --删除

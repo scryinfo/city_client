@@ -104,8 +104,8 @@ end
 
 --左边的detail被点击，需要改变中心线
 function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
-    AddProductionLinePanel.leftBtnParent.transform.position = rectPosition
-    AddProductionLinePanel.leftBtnParent.anchoredPosition = AddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
+    --AddProductionLinePanel.leftBtnParent.transform.position = rectPosition
+    --AddProductionLinePanel.leftBtnParent.anchoredPosition = AddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
 
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
@@ -125,8 +125,8 @@ function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
 end
 --右侧的detail被点击，改变中心线
 function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
-    AddProductionLinePanel.rightBtnParent.transform.position = rectPosition
-    AddProductionLinePanel.rightBtnParent.anchoredPosition = AddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
+    --AddProductionLinePanel.rightBtnParent.transform.position = rectPosition
+    --AddProductionLinePanel.rightBtnParent.anchoredPosition = AddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
 
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)

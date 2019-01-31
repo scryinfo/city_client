@@ -33,13 +33,18 @@ local function CreateSuccess(go,table)
     if tempBaseBuildModel ~= nil then
         tempBaseBuildModel.go = go
     end
+    if TerrainManager.BuildObjQueue ~= nil then
+        TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue - 1
+    end
 end
 
 function TerrainManager.Init()
+    TerrainManager.BuildObjQueue = 0
     Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
 end
 
 function TerrainManager.ReMove()
+    TerrainManager.BuildObjQueue = nil
     Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
 end
 
@@ -56,6 +61,9 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         --判断是否需要创建建筑
         if isCreate then
             buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
+            if TerrainManager.BuildObjQueue ~= nil then
+                TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1
+            end
         end
     end
     for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do

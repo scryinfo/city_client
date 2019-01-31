@@ -318,9 +318,9 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     if #noMatch > 0 then
         local noMatchstr = ''
         for i, v in pairs(noMatch) do
-            noMatchstr = noMatchstr..','..v.itemId
+            noMatchstr = noMatchstr..","..v.itemId
         end
-        Event.Brocast("SmallPop",GetLanguage(),300)
+        Event.Brocast("SmallPop",noMatchstr.."等道具类型不符",300)
     end
 end
 --上架回调执行

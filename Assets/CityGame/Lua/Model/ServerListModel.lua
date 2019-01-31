@@ -72,6 +72,7 @@ function ServerListModel:m_GsOK()
     WarehouseModel.registerAsNetMsg()
     ShelfModel.registerAsNetMsg()
     AdjustProductionLineModel.registerAsNetMsg()
+    tempTransportModel.registerAsNetMsg()
     -----------------------------------------------------------------------------
 
     --连接gs

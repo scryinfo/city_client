@@ -114,7 +114,7 @@ function WarehouseRateItem:openToggleItem(targetMovePos)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, WarehouseRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H);
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H - 5);
 end
 
 --关闭
@@ -127,7 +127,7 @@ function WarehouseRateItem:closeToggleItem(targetMovePos)
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H);
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H - 5);
 end
 
 --刷新数据

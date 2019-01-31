@@ -316,11 +316,13 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
         end
     end
     if #noMatch > 0 then
-        local noMatchstr = ''
+        local noMatchstr = ','
         for i, v in pairs(noMatch) do
-            noMatchstr = noMatchstr..","..v.itemId
+            noMatchstr = v.itemId..","..noMatchstr
         end
-        Event.Brocast("SmallPop",noMatchstr.."等道具类型不符",300)
+        local itemIdStr = split(noMatchstr,",")
+        local itemId = tonumber(itemIdStr[1])
+        Event.Brocast("SmallPop",GetLanguage(itemId).."等道具数量或类型不符",300)
     end
 end
 --上架回调执行

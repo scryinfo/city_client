@@ -47,23 +47,7 @@ function SystemSettingCtrl:Refresh()
 end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
-    CityEngineLua:reset()
-    local timerCheck = FrameTimer.New(function()
-        --   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
-        --清除之前的所有注册的网络消息
-        DataManager.UnAllModelRegisterNetMsg()
-        UIPanel.ClearAllPages()
-        DataManager.Close()
-        -- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-        CityEngineLua.currserver = "";
-        CityEngineLua.currstate = "";
-        ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-        PlayMusEff(1002)
-        CityEngineLua.Message.clear()
-        --停止
-        UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
-    end, 10, 0)
-    timerCheck:Start()
+    CityEngineLua.LoginOut()
 end
 
 --开音乐

@@ -36,13 +36,15 @@ function LoadingCtrl:_Update()
         self.IsLoadOver = true
     end
     if self.MinDurationTime <= 0 and  self.IsLoadOver == true then
-        UIPanel.ClosePage()
+        self:EnterTheMain()
     else
         self.MinDurationTime =  self.MinDurationTime - UnityEngine.Time.deltaTime
     end
 end
 
-function LoadingCtrl:Hide()
-    UIPanel.Close(self)
+function LoadingCtrl:EnterTheMain()
+    local playerId = self.m_data
     UpdateBeat:Remove(self._Update, self)
+    UIPanel:ClearAllPages()
+    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
 end

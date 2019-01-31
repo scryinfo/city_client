@@ -113,9 +113,9 @@ function ServerListCtrl:c_GsCreateRole()
     ct.OpenCtrl("SelectHeadCtrl")
 end
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    UIPanel:ClearAllPages()---------------------
+    --UIPanel:ClearAllPages()---------------------
     --UIPanel:ShowPage(GameMainInterfaceCtrl)
-    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
+    --ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
     ct.OpenCtrl('LoadingCtrl',playerId)
     --UIPanel:ShowPage(TopBarCtrl)
     --UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")

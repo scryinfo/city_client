@@ -32,8 +32,6 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
         end
     end);
 
-    self.openName.text = GetLanguage(25020005)
-    self.closeName.text = GetLanguage(25020005)
     self:initializeInfo(self.productionData.line);
 
     --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
@@ -75,6 +73,8 @@ function HomeProductionLineItem:closeToggleItem(targetMovePos)
 end
 --初始化数据
 function HomeProductionLineItem:initializeInfo(productionLineData)
+    self.openName.text = GetLanguage(25020005)
+    self.closeName.text = GetLanguage(25020005)
     if not productionLineData then
         return;
     end

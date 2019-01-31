@@ -103,7 +103,7 @@ function AdjustProductionLineCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     if go.m_data.info.state == "OPERATE" then
         go:deleteTempTable()
-        go:deleteObjInfo();
+        --go:deleteObjInfo();
         ct.OpenCtrl("AddProductionLineCtrl",go.m_data)
     else
         Event.Brocast("SmallPop","建筑尚未开业",300)
@@ -121,12 +121,12 @@ function AdjustProductionLineCtrl:calculateTime(msg)
             --v.timeText.text = timeStr.
             v.goodsDataInfo = {}
             v.itemId = msg.line.itemId
+            v.lineId = msg.line.id
             v.goodsDataInfo.workerNum = msg.line.workerNum
             v.goodsDataInfo.targetCount = msg.line.targetCount
             v.goodsDataInfo.nowCount = msg.line.nowCount
             v.timeText.text = v:getTimeNumber(msg.line)
             v.minText.text = v:getMinuteNum(msg.line)
-            v.lineId = msg.line.id
         end
     end
 end

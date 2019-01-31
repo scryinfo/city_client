@@ -135,8 +135,8 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
         self.pNumberScrollbar.maxValue = self.warehouseCapacity
     elseif math.floor(self.itemId / 100000) == goodsKey then
         self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
+        self.inputNumber.characterLimit = string.len(self:getGoodMaxValue(self.itemId))
     end
-    self.inputNumber.characterLimit = string.len(self:getGoodMaxValue(self.itemId))
     self.pNumberScrollbar.value = infoTab.targetCount
     self.productionNumber.text = self:getWarehouseNum(self.itemId);     --右上角小房子
     self.staffNumberText.text = tostring(infoTab.workerNum)

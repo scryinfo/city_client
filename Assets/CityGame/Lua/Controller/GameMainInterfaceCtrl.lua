@@ -21,13 +21,13 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    for key, v in pairs(Good) do
-        PlayerTempModel.tempTestReqAddItem(key,500)
-    end
-
-    for key, v in pairs(Material) do
-        PlayerTempModel.tempTestReqAddItem(key,500)
-    end
+    --for key, v in pairs(Good) do
+    --    PlayerTempModel.tempTestReqAddItem(key,500)
+    --end
+    --
+    --for key, v in pairs(Material) do
+    --    PlayerTempModel.tempTestReqAddItem(key,500)
+    --end
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)

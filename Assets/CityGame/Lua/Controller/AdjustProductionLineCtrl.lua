@@ -153,7 +153,11 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     end
     for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
         if v.buildingId == msg.buildingId and v.lineId == msg.lineId then
-            self:refreshAddWorkerNum(tonumber(v.sNumberScrollbar.value))
+            if v.goodsDataInfo.workerNum ~= nil then
+                self:refreshAddWorkerNum(v.goodsDataInfo.workerNum / 5)
+            else
+                self:refreshAddWorkerNum(0)
+            end
             v:closeUpdate()
             destroy(v.prefab.gameObject);
             table.remove(AdjustProductionLineCtrl.materialProductionLine,i)

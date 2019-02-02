@@ -41,6 +41,7 @@ local function CreateSuccess(go,table)
 end
 
 function TerrainManager.Init()
+    TerrainManager.BuildObjQueue = 0
     TerrainManager.WillBuildQueue = {}
     Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
     UpdateBeat:Add(TerrainManager._Update)

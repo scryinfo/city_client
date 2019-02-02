@@ -12,12 +12,15 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     local viewTrans = self.viewRect
 
     self.head = viewTrans:Find("bg/headImage/head"):GetComponent("Image")  --头像
+    self.income = viewTrans:Find("bg/income"):GetComponent("Text")
     self.name = viewTrans:Find("bg/headImage/name")        --名字
     self.incomeText = viewTrans:Find("bg/incomeText"):GetComponent("Text")   --收益金额
     self.picture = viewTrans:Find("bg/picture"):GetComponent("Image")         --图片
     self.pictureText = viewTrans:Find("bg/picture/pictureText"):GetComponent("Text")   --图片内容
     self.rent = viewTrans:Find("bg/rent")
     self.sell = viewTrans:Find("bg/sell")
+
+    self.income.text = GetLanguage(17010002)
 
     self.faceId = 0
 

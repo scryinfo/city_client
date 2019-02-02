@@ -25,7 +25,7 @@ Sprite_English={
    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
    --中心建筑
    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon -city info.png",
-   ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse.png",
+   ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse1.png",
    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon.png",
    --中心仓库
    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-centerwarehouse.png",

@@ -4,6 +4,6 @@ BagPosInfo ={
         typeName ="仓库",
 		bagX = 51,
 		bagY = 51,
-		postageCost = 1000;
+		postageCost = 50;
 	}
 }

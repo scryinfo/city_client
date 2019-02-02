@@ -43,8 +43,10 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text = "X"..dataInfo.count
         end
     elseif dataInfo.buyer == "NPC" then
+        self.faceId = 0
         self.playerId = 0
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
+        self.name.localScale = Vector3.one
         if dataInfo.type == "RENT_ROOM" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", self.picture, true)
             self.pictureText.text = "X1"
@@ -53,11 +55,11 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text = "X"..dataInfo.count
         end
     end
-    --if self.faceId ~= 0 then
-    --    self.head:GetComponent("Button").onClick:AddListener(function ()
-    --        self:_OnHeadBtn(self)
-    --    end)
-    --end
+    if self.faceId ~= 0 then
+        self.head:GetComponent("Button").onClick:AddListener(function ()
+            self:_OnHeadBtn(self)
+        end)
+    end
 end
 
 function DetailsEarningItem:_OnHeadBtn(go)

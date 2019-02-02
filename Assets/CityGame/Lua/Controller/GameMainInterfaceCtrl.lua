@@ -45,7 +45,7 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
 
-    GameMainInterfacePanel.noMessage.text = GetLanguage(11020005)
+    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -150,6 +150,7 @@ end
 --好友信息
 function GameMainInterfaceCtrl:c_OnReceivePlayerInfo(playerData)
     local info = {}
+    info.id = playerData.info[1].id
     info.name = playerData.info[1].name
     info.companyName = playerData.info[1].companyName
     info.des = playerData.info[1].des
@@ -254,6 +255,10 @@ function GameMainInterfaceCtrl:Awake()
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.gender = info.male
+
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
 
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)

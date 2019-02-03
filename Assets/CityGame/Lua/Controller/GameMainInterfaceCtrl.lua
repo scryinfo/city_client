@@ -592,10 +592,17 @@ GameMainInterfaceCtrl.static.EarningsProvideData = function(transform, idx)
     local item = DetailsEarningItem:new(incomeNotify[#incomeNotify-idx+1],transform,idx)
     local earningItems = {}
     earningItems[idx] = item
+    gameMainInterfaceBehaviour:AddClick(transform:Find("bg/headImage/head").gameObject, GameMainInterfaceCtrl._OnHeadBtn, item)
 end
 
 GameMainInterfaceCtrl.static.EarningsClearData = function(transform)
+    gameMainInterfaceBehaviour:RemoveClick( transform:Find("bg/headImage/head").gameObject, GameMainInterfaceCtrl._OnHeadBtn)
+end
 
+function GameMainInterfaceCtrl:_OnHeadBtn(go)
+    if go.playerId ~= 0 then
+        Event.Brocast("m_GetFriendInfo",go.playerId)
+    end
 end
 
 --打开关闭收益详情

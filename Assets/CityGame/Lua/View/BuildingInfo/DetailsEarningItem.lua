@@ -12,6 +12,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     local viewTrans = self.viewRect
 
     self.head = viewTrans:Find("bg/headImage/head"):GetComponent("Image")  --头像
+    self.headName = viewTrans:Find("bg/headImage/name"):GetComponent("Text")  --头像
     self.income = viewTrans:Find("bg/income"):GetComponent("Text")
     self.name = viewTrans:Find("bg/headImage/name")        --名字
     self.incomeText = viewTrans:Find("bg/incomeText"):GetComponent("Text")   --收益金额
@@ -48,7 +49,10 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     elseif dataInfo.buyer == "NPC" then
         self.faceId = 0
         self.playerId = 0
+        self.sell.localScale = Vector3.zero
+        self.rent.localScale = Vector3.zero
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
+        self.headName.text = GetLanguage(11020006)
         self.name.localScale = Vector3.one
         if dataInfo.type == "RENT_ROOM" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", self.picture, true)
@@ -57,16 +61,5 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
             self.pictureText.text = "X"..dataInfo.count
         end
-    end
-    if self.faceId ~= 0 then
-        self.head:GetComponent("Button").onClick:AddListener(function ()
-            self:_OnHeadBtn(self)
-        end)
-    end
-end
-
-function DetailsEarningItem:_OnHeadBtn(go)
-    if go.playerId ~= 0 then
-       Event.Brocast("m_GetFriendInfo",go.playerId)
     end
 end

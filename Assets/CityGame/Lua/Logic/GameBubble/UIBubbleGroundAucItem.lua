@@ -12,8 +12,9 @@ function UIBubbleGroundAucItem:initialize(data)
 
     local viewTrans = self.bubbleObj.transform
     self.now = viewTrans:Find("now")
-    self.nowTimeText = viewTrans:Find("now/bgBtn/timeDownRoot/nowTimeText"):GetComponent("Text")
-    self.nowText01 = viewTrans:Find("now/bgBtn/Text"):GetComponent("Text")
+    self.nowTimeText = viewTrans:Find("now/bgBtn/binding/timeDownRoot/nowTimeText"):GetComponent("Text")
+    self.nowText01 = viewTrans:Find("now/bgBtn/binding/Text"):GetComponent("Text")
+    self.noneBidText02 = viewTrans:Find("now/bgBtn/noneBidText"):GetComponent("Text")
     self.nowBgBtn = viewTrans:Find("now/bgBtn"):GetComponent("Button")
 
     self.soon = viewTrans:Find("soon")

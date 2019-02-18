@@ -36,7 +36,7 @@ end
 function GAucModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GAucModel.n_OnReceiveQueryGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GAucModel.n_OnReceiveBindGround)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GAucModel.n_OnReceivequeryMetaGroundAuctionInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GAucModel.n_OnReceivequeryMetaGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GAucModel.n_OnReceiveBidChangeInfor)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GAucModel.n_OnReceiveAuctionEnd)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GAucModel.n_OnReceiveWinBid)
@@ -84,7 +84,7 @@ end
 
 --角色登录成功之后请求拍卖的信息
 function GAucModel.m_RoleLoginReqGroundAuction()
-    this.m_ReqRueryMetaGroundAuction()
+    GAucModel.m_ReqQueryGroundAuction()
 end
 
 --预先加载两个预制
@@ -124,19 +124,27 @@ end
 --收到拍卖中的数据之后的操作
 function GAucModel.getNowAucDataFunc(msgGroundAuc)
     --得到所有拍卖土地的出价信息
-    for i, item in ipairs(msgGroundAuc.auction) do
-        if this.groundAucDatas[item.id] then
-            this.groundAucDatas[item.id].biderId = item.biderId
-            this.groundAucDatas[item.id].price = item.price
+    --for i, item in ipairs(msgGroundAuc.auction) do
+    --    if this.groundAucDatas[item.id] then
+    --        this.groundAucDatas[item.id].biderId = item.biderId
+    --        this.groundAucDatas[item.id].price = item.price
+    --
+    --        if item.biderId ~= nil then
+    --            local data = {id = item.id, price = item.price, biderId = item.biderId}
+    --            Event.Brocast("c_BidInfoUpdate", data)
+    --            --
+    --            return
+    --        end
+    --    end
+    --end
 
-            if item.biderId ~= nil then
-                local data = {id = item.id, price = item.price, biderId = item.biderId}
-                Event.Brocast("c_BidInfoUpdate", data)
-                --
-                return
-            end
-        end
+    local lastId
+    for i, value in pairs(msgGroundAuc.auction) do
+        lastId = value.id
+        --生成item
     end
+    this.soonId = lastId + 1  --获取即将拍卖的id
+
 end
 --拍卖结束
 function GAucModel.bindEndFunc(endId)
@@ -249,8 +257,8 @@ end
 
 --请求已经拍卖的土地信息
 function GAucModel.m_ReqRueryMetaGroundAuction()
-    local msgId = pbl.enum("gscode.OpCode","queryMetaGroundAuction")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+    --local msgId = pbl.enum("gscode.OpCode","queryMetaGroundAuction")
+    --CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --出价
@@ -287,7 +295,7 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
         return
     end
     local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GAucModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
-    if msgGroundAuc == nil or #msgGroundAuc.auction == 0 then
+    if msgGroundAuc == nil then
         return
     end
 
@@ -296,15 +304,15 @@ end
 
 --当收到所有拍卖的土地信息
 function GAucModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
-    if stream == nil or stream == "" then
-        return
-    end
-    local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GAucModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
-    if auctionInfo == nil or #auctionInfo.auction == 0 then
-        return
-    end
+    --if stream == nil or stream == "" then
+    --    return
+    --end
+    --local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GAucModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
+    --if auctionInfo == nil or #auctionInfo.auction == 0 then
+    --    return
+    --end
 
-    this.getMataGroundDataFunc(auctionInfo)
+    --this.getMataGroundDataFunc(auctionInfo)
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？

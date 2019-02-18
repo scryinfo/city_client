@@ -8,11 +8,9 @@ UIBubbleManager= {}
 local this = UIBubbleManager
 local pbl = pbl
 
-UIBubbleManager.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
-UIBubbleManager.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleManager.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
 UIBubbleManager.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
-UIBubbleManager.GroundAucObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucItem"  --拍卖气泡
+UIBubbleManager.GroundAucObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucItem.prefab"  --拍卖气泡
 
 --构建函数--
 function UIBubbleManager.New()
@@ -98,7 +96,25 @@ function UIBubbleManager._creatGroundAucBubbleItem(bubbleData)
         this.aucItemsTable = {}
     end
     if this.groundAucNowObj == nil then
-        this.groundAucNowObj = UnityEngine.Resources.Load(this.GroundAucObjPath)
+        --this.groundAucNowObj = UnityEngine.Resources.Load(this.GroundAucObjPath)
+
+        panelMgr:LoadPrefab_A(this.GroundAucObjPath, nil, nil, function(ins, obj )
+            if obj ~= nil then
+                this.groundAucNowObj = obj
+                local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+                go.transform:SetParent(this.BubbleParent.transform)
+                if this.hide then
+                    go.transform.localScale = Vector3.zero
+                else
+                    go.transform.localScale = Vector3.one
+                end
+                local data = bubbleData
+                data.bubbleObj = go  --将obj引用到lua中
+                local groundAucNowItem = UIBubbleGroundAucItem:new(data)
+                this.aucItemsTable[bubbleData.aucInfo.id] = groundAucNowItem
+            end
+        end)
+        return
     end
 
     local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)

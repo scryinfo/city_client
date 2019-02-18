@@ -29,7 +29,6 @@ require "Controller/BtnDialogPageCtrl"
 require "Controller/InputDialogPageCtrl"
 require "Controller/ExchangeCtrl"
 require "Model/LoginModel"
-require "Model/GroundAuctionModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
 require "Model/MunicipalModel"
@@ -46,7 +45,6 @@ require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
-require "Logic/GameBubble/GameBubbleManager"
 
 --测试
 require "Controller/TestExchangeCtrl"
@@ -88,8 +86,8 @@ function CtrlManager.Init()
     --ctrlList[CtrlNames.House] = HouseCtrl.New();
 
     --modelList[ModelNames.Login] = LoginModel.New();
-	modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
-	modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
+    --modelList[ModelNames.GroundAuction] = GroundAuctionModel.New();
+    --modelList[ModelNames.GameBubbleManager] = GameBubbleManager.New();
 	modelList[ModelNames.BuildingInfo] = BuildingInfoModel.New();
 	--modelList[ModelNames.House] = HouseModel.New();
 	--modelList[modelName.GameMainInterface] = GameMainInterfaceModel.New();

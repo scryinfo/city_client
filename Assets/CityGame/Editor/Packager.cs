@@ -253,9 +253,9 @@ public class Packager {
             if (pos >= 0)
             {
                 string bundleName = subdir + files[i].Remove(0, pos + 1);
-                string oldExt = pattern.Remove(0,1);
-                bundleName = bundleName.Replace(oldExt, "");
-                bundleName += AppConst.BundleExt;
+                string oldExt = pattern.Remove(0,1).Replace('.', '_');
+                bundleName = bundleName + oldExt;
+                bundleName = (path+'/'+ bundleName).GetHashCode().ToString() + AppConst.BundleExt;
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 build.assetNames = new string[] { files[i] };
@@ -414,7 +414,7 @@ public class Packager {
         {
             string bundleName = path;
             bundleName = bundleName.Replace("/", "_");
-
+            bundleName = (bundleName + AppConst.BundleExt.Replace(".", "_")).GetHashCode().ToString();
             build.assetBundleName = bundleName + AppConst.BundleExt;
             List<string> reslist = new List<string>();
 
@@ -446,7 +446,8 @@ public class Packager {
         string[] patterns = { "*.png", "*.otf", "*.prefab" };
         AssetBundleBuild pkginfo;
         pkginfo.assetBundleName = null;
-        AddBuildMapInOne(ref curPath, ref patterns);
+
+        /*AddBuildMapInOne(ref curPath, ref patterns);
 
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapInOne(ref curPath, ref patterns);
@@ -455,7 +456,15 @@ public class Packager {
         AddBuildMapInOne(ref curPath, ref patterns);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapInOne(ref curPath, ref patterns);
+        AddBuildMapInOne(ref curPath, ref patterns);*/
+
+        AddBuildMapOp(ref curPath, ref patterns);
+        curPath = "Assets/CityGame/Resources/Atlas";
+        AddBuildMapOp(ref curPath, ref patterns);
+        curPath = "Assets/CityGame/Resources/Building";
+        AddBuildMapOp(ref curPath, ref patterns);
+        curPath = "Assets/CityGame/Resources/View";
+        AddBuildMapOp(ref curPath, ref patterns);
 
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");

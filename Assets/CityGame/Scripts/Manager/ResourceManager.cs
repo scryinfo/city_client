@@ -412,7 +412,15 @@ namespace LuaFramework {
                 string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
                 if (dependencies.Length > 0)
                 {
-                    m_Dependencies.Add(abName, dependencies);
+                    if (m_Dependencies.ContainsKey(abName))
+                    {
+                        Debug.Log(" m_Dependencies has already exist the abName: " + abName);
+                        yield return null;
+                    }
+                    else {
+                        m_Dependencies.Add(abName, dependencies);
+                    }
+                    
                     for (int i = 0; i < dependencies.Length; i++)
                     {
                         string depName = dependencies[i];

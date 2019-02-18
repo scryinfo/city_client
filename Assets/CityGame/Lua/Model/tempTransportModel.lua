@@ -13,16 +13,16 @@ end
 --启动事件
 function tempTransportModel.OnCreate()
     --注册本地事件 m开头
-    Event.AddListener("m_ReqTransport",this.m_ReqTransport);
-
-
-    tempTransportModel.registerAsNetMsg()
+    --Event.AddListener("m_ReqTransport",this.m_ReqTransport);
+    --
+    --
+    --tempTransportModel.registerAsNetMsg()
 end
 
 function tempTransportModel.registerAsNetMsg()
     --网络回调注册 n开头
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","transferItem"),tempTransportModel.n_OnTransportInfo);
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","transferItem","gs.TransferItem",tempTransportModel.n_OnTransportInfo,tempTransportModel)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","transferItem","gs.TransferItem",tempTransportModel.n_OnTransportInfo,tempTransportModel)
 
 end
 --关闭事件

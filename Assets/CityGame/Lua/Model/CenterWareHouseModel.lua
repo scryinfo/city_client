@@ -16,10 +16,12 @@ function CenterWareHouseModel:OnCreate()
     --注册本地UI事件
     Event.AddListener("m_bagCapacity",self.m_bagCapacity,self)
     Event.AddListener("m_opCenterWareHouse",self.m_opCenterWareHouse,self)
+    Event.AddListener("m_ReqTransport",self.m_ReqTransport,self);   --运输发包
     --as网络回调注册
    -- DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delItem","gs.DelItem",self.n_GsDelItem,self)--新版model网络注册
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","moneyChange"),CenterWareHouseModel.n_GsExtendBag);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnTransportInfo,self) --运输回调
 end
 
 function CenterWareHouseModel:m_bagCapacity(bagCapacity)
@@ -33,6 +35,12 @@ end
 function CenterWareHouseModel:m_ExtendBag()
     local msgId = pbl.enum("gscode.OpCode","extendBag")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+end
+
+--运输物品
+function CenterWareHouseModel:m_ReqTransport(src,dst, itemId, n,producerId,qty)
+    DataManager.ModelSendNetMes("gscode.OpCode", "transferItem","gs.TransferItem",
+            { src = src,dst = dst,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(n)}} )
 end
 
 --扩容回调
@@ -54,4 +62,24 @@ end
 function CenterWareHouseModel:m_DeleteItem(dataId)
     DataManager.ModelSendNetMes("gscode.OpCode", "delItem","gs.DelItem",
             {buildingId = dataId.buildingId, item = {id = dataId.id,producerId = dataId.producerId,qty = dataId.qty}})
+end
+
+--运输物品回调
+function CenterWareHouseModel:n_OnTransportInfo(msgTransportInfo)
+    local bagId = DataManager.GetBagId()
+
+    local itemId = msgTransportInfo.item.key.id
+    local producerId = msgTransportInfo.item.key.producerId
+    local qty = msgTransportInfo.item.key.qty
+    local n = msgTransportInfo.item.n
+    if bagId == msgTransportInfo.src then
+        Event.Brocast("c_transport",msgTransportInfo)
+
+        Event.Brocast("c_DelBagInfo",itemId,n)
+    else
+        Event.Brocast("n_transports",msgTransportInfo)
+        if msgTransportInfo.dst == bagId then
+            Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+        end
+    end
 end

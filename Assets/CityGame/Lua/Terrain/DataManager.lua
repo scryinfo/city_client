@@ -1545,7 +1545,7 @@ end
 
 --增加中心仓库物品
 function DataManager.c_AddBagInfo(itemId,producerId,qty,n)
-    if not PersonDataStack.m_inHand then
+    if  #PersonDataStack.m_inHand == 0 then
         PersonDataStack.m_inHand = {}
         PersonDataStack.m_inHand[1] = {}
         PersonDataStack.m_inHand[1].key = {}

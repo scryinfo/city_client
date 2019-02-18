@@ -131,7 +131,7 @@ function Game.OnPostInitOK()
     --临时运输测试
     local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
     if tempTransportModel ~= nil then
-        tempTransportModel:Awake();
+       -- tempTransportModel:Awake();
     end
 
     --local friendsModel = CtrlManager.GetModel(ModelNames.friends);

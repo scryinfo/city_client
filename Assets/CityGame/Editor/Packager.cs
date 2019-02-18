@@ -236,7 +236,7 @@ public class Packager {
         HandleNoneLuaBundleInLua();
     }
 
-    static void AutoAddBuildMap(string pattern, string path, string rootPath)
+    static void AutoAddBuildMap(string pattern, string path, string rootPath, bool lastDirectory = false)
     {
         string temp = "";
         string subdir = path.Replace(rootPath, "");
@@ -245,37 +245,58 @@ public class Packager {
             subdir += "_";
 
         string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+        path = path.Replace('\\', '/');
+        path = path.Replace('/', '_');
         int pos = -1;
-        for (int i = 0; i < files.Length; i++)
+        if (lastDirectory)
         {
-            files[i] = files[i].Replace('\\', '/');
-            pos = files[i].LastIndexOf('/');
-            if (pos >= 0)
+            if(files.Length > 0)
             {
-                string bundleName = subdir + files[i].Remove(0, pos + 1);
-                string oldExt = pattern.Remove(0,1).Replace('.', '_');
-                bundleName = bundleName + oldExt;
-                bundleName = (path+'/'+ bundleName).GetHashCode().ToString() + AppConst.BundleExt;
+                string bundleName = "ct_" + path.GetHashCode().ToString() + AppConst.BundleExt;
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
-                build.assetNames = new string[] { files[i] };
-                assetBundleList[files[i]] = bundleName.ToLower();
+                List<string> reslist = new List<string>();
+                for (int i = 0; i < files.Length; i++)
+                {
+                    files[i] = files[i].Replace('\\', '/');
+                    assetBundleList[files[i]] = bundleName.ToLower();
+                }
+                build.assetNames = files;
                 maps.Add(build);
+            }
+        }
+        else {
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Replace('\\', '/');
+                pos = files[i].LastIndexOf('/');
+                if (pos >= 0)
+                {
+                    string bundleName = subdir + files[i].Remove(0, pos + 1);
+                    string oldExt = pattern.Remove(0, 1).Replace('.', '_');
+                    bundleName = bundleName.Replace('.','_');
+                    bundleName = "ct_" + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;
+                    AssetBundleBuild build = new AssetBundleBuild();
+                    build.assetBundleName = bundleName;
+                    build.assetNames = new string[] { files[i] };
+                    assetBundleList[files[i]] = bundleName.ToLower();
+                    maps.Add(build);
+                }
             }
         }
     }
 
-    static void AddBuildMapOp(ref string path, ref string[] patterns)
+    static void AddBuildMapOp(ref string path, ref string[] patterns, bool lastDirectory = false)
     {
         for (int i = 0; i < patterns.Length; ++i)
         {
-            AutoAddBuildMap(patterns[i], path, path);            
+            AutoAddBuildMap(patterns[i], path, path, lastDirectory);            
         }
 
         string[] dirs = Directory.GetDirectories(path);
         for (int i = 0; i < dirs.Length; ++i)
         {
-            AddBuildMapOp(ref dirs[i], ref patterns);
+            AddBuildMapOp(ref dirs[i], ref patterns, lastDirectory);
         }
     }
 
@@ -458,13 +479,13 @@ public class Packager {
         curPath = "Assets/CityGame/Resources/View";
         AddBuildMapInOne(ref curPath, ref patterns);*/
 
-        AddBuildMapOp(ref curPath, ref patterns);
-        curPath = "Assets/CityGame/Resources/Atlas";
-        AddBuildMapOp(ref curPath, ref patterns);
-        curPath = "Assets/CityGame/Resources/Building";
-        AddBuildMapOp(ref curPath, ref patterns);
+        AddBuildMapOp(ref curPath, ref patterns, false);
+         curPath = "Assets/CityGame/Resources/Atlas";
+         AddBuildMapOp(ref curPath, ref patterns, true);
+         curPath = "Assets/CityGame/Resources/Building";
+         AddBuildMapOp(ref curPath, ref patterns, true);
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapOp(ref curPath, ref patterns);
+        AddBuildMapOp(ref curPath, ref patterns, true);
 
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");

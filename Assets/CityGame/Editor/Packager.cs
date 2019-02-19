@@ -250,7 +250,7 @@ public class Packager {
         int posD = path.LastIndexOf('/');
         if (posD >= 0)
         {
-            directory = path.Remove(0, posD + 1);
+            directory = path.Remove(0, posD + 1).Replace('.', '_');
         }
 
         path = path.Replace('/', '_');
@@ -294,7 +294,7 @@ public class Packager {
                 if (pos >= 0)
                 {
                     string bundleName = subdir + files[i].Remove(0, pos + 1);
-                    string pName = bundleName;
+                    string pName = bundleName.Replace('.', '_');
                     string oldExt = pattern.Remove(0, 1).Replace('.', '_');
                     bundleName = bundleName.Replace('.','_');
                     bundleName = pName + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;

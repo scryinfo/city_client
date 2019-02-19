@@ -495,8 +495,22 @@ public class Packager {
         string[] patterns = { "*.png", "*.otf", "*.prefab" };
         AssetBundleBuild pkginfo;
         pkginfo.assetBundleName = null;
-        
+
         AddBuildMapOp(ref curPath, ref patterns, false);
+        curPath = "Assets/CityGame/Resources/Atlas";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+        curPath = "Assets/CityGame/Resources/Building";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+
+        curPath = "Assets/CityGame/Resources/View/Building";
+        AddBuildMapOp(ref curPath, ref patterns, false);
+
+        curPath = "Assets/CityGame/Resources/View";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+
+        
+
+        /*AddBuildMapOp(ref curPath, ref patterns, false);
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapOp(ref curPath, ref patterns, true);
         curPath = "Assets/CityGame/Resources/Building";
@@ -507,8 +521,8 @@ public class Packager {
 //         AddBuildMapOp(ref curPath, ref patterns, false);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapOp(ref curPath, ref patterns, true);        
-        
+        AddBuildMapOp(ref curPath, ref patterns, true);        */
+
     }
 
     /// <summary>

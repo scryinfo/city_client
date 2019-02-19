@@ -33,6 +33,7 @@ namespace LuaFramework {
         static Dictionary<string, string> m_ResourcesBundleInfo = new Dictionary<string, string>();
         static Dictionary<string, AssetBundleInfo> m_LoadedAssetBundles = new Dictionary<string, AssetBundleInfo>();
         Dictionary<string, List<LoadAssetRequest>> m_LoadRequests = new Dictionary<string, List<LoadAssetRequest>>();
+        Dictionary<string, bool> m_depLoadRequests = new Dictionary<string, bool>();
         int resInitCountAll = 0;
         int resInitCountCur = 0;
         class LoadAssetRequest {
@@ -410,7 +411,7 @@ namespace LuaFramework {
             else
             {
                 string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
-                if (dependencies.Length > 0)
+                //if (dependencies.Length > 0)
                 {
                     if (m_Dependencies.ContainsKey(abName) ||  m_LoadRequests.ContainsKey(abName))
                     {
@@ -425,17 +426,25 @@ namespace LuaFramework {
                     {
                         string depName = dependencies[i];
                         AssetBundleInfo bundleInfo = null;
+                        if (depName.Contains("materialbuilding_777370806"))
+                        {
+                            int t = 0;
+                        }
                         if (m_LoadedAssetBundles.TryGetValue(depName, out bundleInfo))
                         {
                             bundleInfo.m_ReferencedCount++;
                         }
-                        else if (!m_LoadRequests.ContainsKey(depName))
+                        else if (!m_LoadRequests.ContainsKey(depName) && !m_depLoadRequests.ContainsKey(depName))
                         {
+                            //m_LoadRequests.Add(abName, null);
                             yield return StartCoroutine(OnLoadAssetBundle(depName, type));
                         }
                     }
                 }
-                download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(abName), 0);
+                if (!m_depLoadRequests.ContainsKey(abName)){
+                    download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(abName), 0);
+                    m_depLoadRequests.Add(abName, true);
+                }
             }
             yield return download;
 

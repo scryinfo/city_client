@@ -411,20 +411,16 @@ namespace LuaFramework {
             else
             {
                 string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
-                //if (dependencies.Length > 0)
-                {
-                    if (m_Dependencies.ContainsKey(abName) ||  m_LoadRequests.ContainsKey(abName))
-                    {
-                        Debug.Log(" m_Dependencies has already exist the abName: " + abName);
-                        yield return null;
-                    }
-                    else {
+                if (dependencies.Length > 0)
+                {                   
+                    if(!m_Dependencies.ContainsKey(abName))
                         m_Dependencies.Add(abName, dependencies);
-                    }
-                    
+
                     for (int i = 0; i < dependencies.Length; i++)
-                    {
+                    {                        
                         string depName = dependencies[i];
+                        if (m_depLoadRequests.ContainsKey(depName))
+                            continue;
                         AssetBundleInfo bundleInfo = null;
                         if (depName.Contains("materialbuilding_777370806"))
                         {
@@ -434,7 +430,8 @@ namespace LuaFramework {
                         {
                             bundleInfo.m_ReferencedCount++;
                         }
-                        else if (!m_LoadRequests.ContainsKey(depName) && !m_depLoadRequests.ContainsKey(depName))
+                        //else if (!m_LoadRequests.ContainsKey(depName) && !m_depLoadRequests.ContainsKey(depName))
+                        else if (!m_LoadRequests.ContainsKey(depName) && !m_LoadedAssetBundles.ContainsKey(depName))
                         {
                             //m_LoadRequests.Add(abName, null);
                             yield return StartCoroutine(OnLoadAssetBundle(depName, type));
@@ -443,11 +440,13 @@ namespace LuaFramework {
                 }
                 if (!m_depLoadRequests.ContainsKey(abName)){
                     download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(abName), 0);
-                    m_depLoadRequests.Add(abName, true);
+                    if (!m_depLoadRequests.ContainsKey(abName))
+                    {
+                        m_depLoadRequests.Add(abName, true);
+                    }   
                 }
-            }
-            yield return download;
-
+            }            
+            yield return download;            
             AssetBundle assetObj = download == null? null : download.assetBundle;
             if (assetObj != null)
             {
@@ -455,20 +454,28 @@ namespace LuaFramework {
             }
             else
             {
-                List<LoadAssetRequest> list = null;
-                m_LoadRequests.TryGetValue(abName, out list);
-                for (int i = 0; i < list.Count; i++)
+                AssetBundleInfo bundleInfo = null;
+                if (m_LoadedAssetBundles.TryGetValue(abName, out bundleInfo))
                 {
-                    if (list[i].sharpFunc != null)
+
+                }
+                else
+                {
+                    List<LoadAssetRequest> list = null;
+                    m_LoadRequests.TryGetValue(abName, out list);
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        list[i].sharpFunc(null, null);
-                        list[i].sharpFunc = null;
-                    }
-                    if (list[i].luaFunc != null)
-                    {
-                        list[i].luaFunc.Call((object)null);
-                        list[i].luaFunc.Dispose();
-                        list[i].luaFunc = null;
+                        if (list[i].sharpFunc != null)
+                        {
+                            list[i].sharpFunc(null, null);
+                            list[i].sharpFunc = null;
+                        }
+                        if (list[i].luaFunc != null)
+                        {
+                            list[i].luaFunc.Call((object)null);
+                            list[i].luaFunc.Dispose();
+                            list[i].luaFunc = null;
+                        }
                     }
                 }
             }

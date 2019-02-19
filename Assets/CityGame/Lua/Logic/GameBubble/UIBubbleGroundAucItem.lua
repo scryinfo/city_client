@@ -65,12 +65,21 @@ function UIBubbleGroundAucItem:initialize(data)
         self.groundGo = GAucModel._getValuableWillAucObj()
     end
     self.groundGo.transform.position = self.data.targetPos
+    --self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
+    --self.m_Timer:Start()
 
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
     Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+end
+
+function UIBubbleGroundAucItem:_itemTimer()
+    if self.timeDown == true then
+        self:NowTimeDownFunc()
+        self:SoonTimeDownFunc()
+    end
 end
 
 --打开拍卖界面，即将拍卖
@@ -129,6 +138,9 @@ end
 
 function UIBubbleGroundAucItem:Close()
     self.timeDown = false
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
     --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
@@ -141,30 +153,25 @@ function UIBubbleGroundAucItem:Close()
 end
 
 function UIBubbleGroundAucItem:LateUpdate()
-    if self.timeDown == false then
-        return
-    end
     if self.bubbleObj ~= nil then
         self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
-    else
-        self.timeDown = false
-        return
     end
     --计时器，每秒调用
-    self.intTime = self.intTime + UnityEngine.Time.unscaledDeltaTime
-    if self.intTime >= 1 then
-        self.intTime = 0
-        self:NowTimeDownFunc()
-        self:SoonTimeDownFunc()
-    end
+    --self.intTime = self.intTime + UnityEngine.Time.deltaTime
+    --if self.intTime >= 1 then
+    --    self.intTime = 0
+    --    self:NowTimeDownFunc()
+    --    self:SoonTimeDownFunc()
+    --end
 end
 --正在拍卖的倒计时
 function UIBubbleGroundAucItem:NowTimeDownFunc()
-    if self.data.isStartBid == true then
+    if self.isStartBid == true then
         local finishTime = self.data.endTs
         local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime <= 0 then
             self.timeDown = false
+            self.isStartBid = false
             self.groundGo.transform.localScale = Vector3.zero
             --拍卖结束
             UIBubbleManager.closeItem(self, self.data.id)
@@ -179,14 +186,16 @@ end
 --即将拍卖的倒计时
 function UIBubbleGroundAucItem:SoonTimeDownFunc()
     if self.data.isStartAuc == false then
-        local startAucTime = GroundAucConfig[self.data.id]
+        local startAucTime = GroundAucConfig[self.data.id].beginTime
         local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime <= 0 then
             self.data.isStartAuc = true
             --开始拍卖
             self.now.transform.localScale = Vector3.one
             self.soon.transform.localScale = Vector3.zero
+            self.noneBidText02.transform.localScale = Vector3.one
             GAucModel._getValuableStartAucObj().transform.position = self.data.targetPos
+            GAucModel.updateSoonItem(self.data.id + 1)
             Event.Brocast("c_BidStart", self.data)  --切换界面
             return
         end

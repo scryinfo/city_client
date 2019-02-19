@@ -260,7 +260,7 @@ public class Packager {
             if(files.Length > 0)
             {
                 string bundleName = directory + path.GetHashCode().ToString() + AppConst.BundleExt;
-
+                bundleName = bundleName.Replace('-', '_');
                 int resCount = 0;
                 for (int i = 0; i < files.Length; i++)
                 {                    
@@ -298,6 +298,7 @@ public class Packager {
                     string oldExt = pattern.Remove(0, 1).Replace('.', '_');
                     bundleName = bundleName.Replace('.','_');
                     bundleName = pName + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;
+                    bundleName = bundleName.Replace('-', '_');
                     AssetBundleBuild build = new AssetBundleBuild();
                     build.assetBundleName = bundleName;
                     build.assetNames = new string[] { files[i] };
@@ -502,8 +503,8 @@ public class Packager {
         AddBuildMapOp(ref curPath, ref patterns, true);
 
         //view中的building太大，打单独包
-        curPath = "Assets/CityGame/Resources/View/Building";
-        AddBuildMapOp(ref curPath, ref patterns, false);
+//         curPath = "Assets/CityGame/Resources/View/Building";
+//         AddBuildMapOp(ref curPath, ref patterns, false);
 
         curPath = "Assets/CityGame/Resources/View";
         AddBuildMapOp(ref curPath, ref patterns, true);        

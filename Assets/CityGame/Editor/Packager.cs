@@ -494,18 +494,7 @@ public class Packager {
         string[] patterns = { "*.png", "*.otf", "*.prefab" };
         AssetBundleBuild pkginfo;
         pkginfo.assetBundleName = null;
-
-        /*AddBuildMapInOne(ref curPath, ref patterns);
-
-        curPath = "Assets/CityGame/Resources/Atlas";
-        AddBuildMapInOne(ref curPath, ref patterns);
-
-        curPath = "Assets/CityGame/Resources/Building";
-        AddBuildMapInOne(ref curPath, ref patterns);
-
-        curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapInOne(ref curPath, ref patterns);*/
-
+        
         AddBuildMapOp(ref curPath, ref patterns, false);
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapOp(ref curPath, ref patterns, true);
@@ -517,76 +506,8 @@ public class Packager {
         AddBuildMapOp(ref curPath, ref patterns, false);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapOp(ref curPath, ref patterns, true);
+        AddBuildMapOp(ref curPath, ref patterns, true);        
         
-        //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
-        //AddBuildMapOp("Assets/CityGame/Resources/testPng");
-        //AddBuildMapOp("Assets/CityGame/Resources/View");
-
-        return;
-
-        AddBuildMap("CreateAvatar" + AppConst.BundleExt, "CreateAvatarPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Login" + AppConst.BundleExt, "LoginPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("SelectAvatar" + AppConst.BundleExt, "SelectAvatarPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("GameWorld" + AppConst.BundleExt, "GameWorldPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("PlayerHead" + AppConst.BundleExt, "PlayerHeadPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("TargetHead" + AppConst.BundleExt, "TargetHeadPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("GroundAuction" + AppConst.BundleExt, "GroundAuctionPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingInfo" + AppConst.BundleExt, "BuildingInfoPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingInfoRight" + AppConst.BundleExt, "BuildingInfoRightPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingTransfer" + AppConst.BundleExt, "BuildingTransferPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("House" + AppConst.BundleExt, "HousePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BtnDialogPage" + AppConst.BundleExt, "BtnDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
-        AddBuildMap("InputDialogPage" + AppConst.BundleExt, "InputDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
-        AddBuildMap("HouseChangeRent" + AppConst.BundleExt, "HouseChangeRentPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Exchange" + AppConst.BundleExt, "ExchangePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("WagesAdjustBox" + AppConst.BundleExt, "WagesAdjustBoxPanel.prefab", "Assets/CityGame/Resources/View");
-
-        //测试滑动--交易所
-        AddBuildMap("TestExchange" + AppConst.BundleExt, "TestExchangePanel.prefab", "Assets/CityGame/Resources/View/TestCycle");
-        AddBuildMap("ScorllTestPrefab" + AppConst.BundleExt, "ScorllTestPrefab.prefab", "Assets/CityGame/Resources/View/TestCycle");
-
-        AddBuildMap("UIRoot" + AppConst.BundleExt, "UIRootPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("TopBar" + AppConst.BundleExt, "TopBarPanel.prefab", "Assets/CityGame/Resources/View");
-
-        AddBuildMap("Notice" + AppConst.BundleExt, "NoticePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Battle" + AppConst.BundleExt, "BattlePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("SkillPage" + AppConst.BundleExt, "SkillPagePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("MainPage" + AppConst.BundleExt, "MainPagePanel.prefab", "Assets/CityGame/Resources/View");
-
-        AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
-        AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");
-        //AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
-
-        //饼图
-        AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");
-        //曲线图
-        AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
-
-        //游戏主界面
-        AddBuildMap("GameMainInterface" + AppConst.BundleExt, "GameMainInterfacePanel.prefab", "Assets/CityGame/Resources/View");
-        //角色管理面板
-        AddBuildMap("RoleManager" + AppConst.BundleExt, "RoleManagerPanel.prefab", "Assets/CityGame/Resources/View");
-        //选服页面
-        AddBuildMap("ServerList" + AppConst.BundleExt, "ServerListPanel.prefab", "Assets/CityGame/Resources/View");
-        //创角页面
-        AddBuildMap("CreateRole" + AppConst.BundleExt, "CreateRolePanel.prefab", "Assets/CityGame/Resources/View");
-
-        //原料厂主页
-        AddBuildMap("Material" + AppConst.BundleExt, "MaterialPanel.prefab", "Assets/CityGame/Resources/View");
-        //仓库面板
-        AddBuildMap("Warehouse" + AppConst.BundleExt, "WarehousePanel.prefab", "Assets/CityGame/Resources/View");
-        //货架面板
-        AddBuildMap("Shelf" + AppConst.BundleExt,"ShelfPanel.prefab", "Assets/CityGame/Resources/View");
-        //调整生产线
-        AddBuildMap("AdjustProductionLine" + AppConst.BundleExt, "AdjustProductionLinePanel.prefab","Assets/CityGame/Resources/View");
-        //选择仓库
-        AddBuildMap("ChooseWarehousePanel" + AppConst.BundleExt, "ChooseWarehousePanel.prefab", "Assets/CityGame/Resources/View");
-
-        //中心仓库
-        AddBuildMap("CenterWareHouse" + AppConst.BundleExt, "CenterWareHousePanel.prefab", "Assets/CityGame/Resources/View");
-        //玩家信息提示框
-        AddBuildMap("MessageTooltip" + AppConst.BundleExt, "MessageTooltipPanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

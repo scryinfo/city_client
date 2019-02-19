@@ -238,6 +238,14 @@ public class Packager {
 
     static void AutoAddBuildMap(string pattern, string path, string rootPath, bool lastDirectory = false)
     {
+        string subdir = path.Replace(rootPath, "");
+        subdir = subdir.Replace("\\", "");
+        if (subdir.Length > 0)
+            subdir += "_";
+
+        string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+        path = path.Replace('\\', '/');
+
         string directory = "";
         int posD = path.LastIndexOf('/');
         if (posD >= 0)
@@ -245,8 +253,6 @@ public class Packager {
             directory = path.Remove(0, posD + 1);
         }
 
-        string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-        path = path.Replace('\\', '/');
         path = path.Replace('/', '_');
         int pos = -1;
         if (lastDirectory)
@@ -254,22 +260,36 @@ public class Packager {
             if(files.Length > 0)
             {
                 string bundleName = directory + path.GetHashCode().ToString() + AppConst.BundleExt;
-                AssetBundleBuild build = new AssetBundleBuild();
-                build.assetBundleName = bundleName;
-                List<string> reslist = new List<string>();
+
+                int resCount = 0;
                 for (int i = 0; i < files.Length; i++)
-                {
+                {                    
                     files[i] = files[i].Replace('\\', '/');
+                    if (assetBundleList.ContainsKey(files[i]))
+                    {
+                        continue;
+                    }
+                    resCount++; 
                     assetBundleList[files[i]] = bundleName.ToLower();
                 }
-                build.assetNames = files;
-                maps.Add(build);
+
+                if(resCount > 0)
+                {
+                    AssetBundleBuild build = new AssetBundleBuild();
+                    build.assetBundleName = bundleName;
+                    build.assetNames = files;
+                    maps.Add(build);
+                }
             }
         }
         else {
             for (int i = 0; i < files.Length; i++)
             {
                 files[i] = files[i].Replace('\\', '/');
+                if (assetBundleList.ContainsKey(files[i]))
+                {
+                    continue;
+                }
                 pos = files[i].LastIndexOf('/');
                 if (pos >= 0)
                 {
@@ -448,6 +468,10 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
+                    if (assetBundleList.ContainsKey(files[i]))
+                    {
+                        continue;
+                    }
                     assetBundleList[files[j]] = build.assetBundleName.ToLower();
                 }
                 reslist.AddRange(files);                
@@ -483,13 +507,18 @@ public class Packager {
         AddBuildMapInOne(ref curPath, ref patterns);*/
 
         AddBuildMapOp(ref curPath, ref patterns, false);
-         curPath = "Assets/CityGame/Resources/Atlas";
-         AddBuildMapOp(ref curPath, ref patterns, true);
-         curPath = "Assets/CityGame/Resources/Building";
-         AddBuildMapOp(ref curPath, ref patterns, true);
-        curPath = "Assets/CityGame/Resources/View";
+        curPath = "Assets/CityGame/Resources/Atlas";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+        curPath = "Assets/CityGame/Resources/Building";
         AddBuildMapOp(ref curPath, ref patterns, true);
 
+        //view中的building太大，打单独包
+        curPath = "Assets/CityGame/Resources/View/Building";
+        AddBuildMapOp(ref curPath, ref patterns, false);
+
+        curPath = "Assets/CityGame/Resources/View";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+        
         //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
         //AddBuildMapOp("Assets/CityGame/Resources/testPng");
         //AddBuildMapOp("Assets/CityGame/Resources/View");

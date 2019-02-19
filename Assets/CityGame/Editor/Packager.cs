@@ -238,11 +238,12 @@ public class Packager {
 
     static void AutoAddBuildMap(string pattern, string path, string rootPath, bool lastDirectory = false)
     {
-        string temp = "";
-        string subdir = path.Replace(rootPath, "");
-        subdir = subdir.Replace("\\", "");
-        if (subdir.Length > 0)
-            subdir += "_";
+        string directory = "";
+        int posD = path.LastIndexOf('/');
+        if (posD >= 0)
+        {
+            directory = path.Remove(0, posD + 1);
+        }
 
         string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
         path = path.Replace('\\', '/');
@@ -252,7 +253,7 @@ public class Packager {
         {
             if(files.Length > 0)
             {
-                string bundleName = "ct_" + path.GetHashCode().ToString() + AppConst.BundleExt;
+                string bundleName = directory + path.GetHashCode().ToString() + AppConst.BundleExt;
                 AssetBundleBuild build = new AssetBundleBuild();
                 build.assetBundleName = bundleName;
                 List<string> reslist = new List<string>();
@@ -273,9 +274,10 @@ public class Packager {
                 if (pos >= 0)
                 {
                     string bundleName = subdir + files[i].Remove(0, pos + 1);
+                    string pName = bundleName;
                     string oldExt = pattern.Remove(0, 1).Replace('.', '_');
                     bundleName = bundleName.Replace('.','_');
-                    bundleName = "ct_" + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;
+                    bundleName = pName + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;
                     AssetBundleBuild build = new AssetBundleBuild();
                     build.assetBundleName = bundleName;
                     build.assetNames = new string[] { files[i] };
@@ -435,8 +437,9 @@ public class Packager {
         {
             string bundleName = path;
             bundleName = bundleName.Replace("/", "_");
+            string pName = bundleName;
             bundleName = (bundleName + AppConst.BundleExt.Replace(".", "_")).GetHashCode().ToString();
-            build.assetBundleName = bundleName + AppConst.BundleExt;
+            build.assetBundleName = pName + bundleName + AppConst.BundleExt;
             List<string> reslist = new List<string>();
 
             for (int i = 0; i < patterns.Length; ++i)

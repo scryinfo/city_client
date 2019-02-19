@@ -27,14 +27,45 @@ function GroundAuctionPanel.InitPanel()
 
     this.nowRoot = transform:Find("root/nowRoot")
     this.nowTimeDownText = transform:Find("root/nowRoot/nowTimeDownText"):GetComponent("Text")
+    this.nowTimeDownImage = transform:Find("root/nowRoot/Image")
     this.bidInput = transform:Find("root/nowRoot/input"):GetComponent("InputField")
     this.bidBtn = transform:Find("root/nowRoot/bidBtn")
-    this.historyScroll = transform:Find("root/nowRoot/historyRoot"):GetComponent("ActiveLoopScrollRect")
+    --历史记录
+    this.historyScroll = transform:Find("root/nowRoot/historyRoot/scrollRect"):GetComponent("ActiveLoopScrollRect")
+
+    this.historyRoot = transform:Find("root/nowRoot/historyRoot")
+    this.noneHistoryRoot = transform:Find("root/nowRoot/noneHistoryRoot")
+    this.nowFloorPriceText = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/floorPriceText"):GetComponent("Text")
 
     this.averageRangeText = transform:Find("root/rangeNpcRoot/averageRangeText"):GetComponent("Text")
     --
     this.personFlowText01 = transform:Find("root/rangeNpcRoot/Text"):GetComponent("Text")
-    this.soonFloorText02 = transform:Find("root/soonRoot/Text01"):GetComponent("Text")
+    this.soonFloorText02 = transform:Find("root/soonRoot/floorRoot/Text01"):GetComponent("Text")
     this.nowBidText03 = transform:Find("root/nowRoot/Text01"):GetComponent("Text")
     this.tipText04 = transform:Find("root/nowRoot/tipText02"):GetComponent("Text")
+    this.nowFloorPriceText05 = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/Text"):GetComponent("Text")
+end
+--拍卖中有没有人出价
+function GroundAuctionPanel.setBidState(hasBid)
+    if hasBid == true then
+        this.historyRoot.localScale = Vector3.one
+        this.noneHistoryRoot.localScale = Vector3.zero
+        this.nowTimeDownText.transform.localScale = Vector3.one
+        this.nowTimeDownImage.transform.localScale = Vector3.one
+    else
+        this.historyRoot.localScale = Vector3.zero
+        this.noneHistoryRoot.localScale = Vector3.one
+        this.nowTimeDownText.transform.localScale = Vector3.zero
+        this.nowTimeDownImage.transform.localScale = Vector3.zero
+    end
+end
+--拍卖中或者即将拍卖
+function GroundAuctionPanel.setSoonAndNow(isNow)
+    if isNow == true then
+        this.soonRoot.localScale = Vector3.zero
+        this.nowRoot.localScale = Vector3.one
+    else
+        this.soonRoot.localScale = Vector3.one
+        this.nowRoot.localScale = Vector3.zero
+    end
 end

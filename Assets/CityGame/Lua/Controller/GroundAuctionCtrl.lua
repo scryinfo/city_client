@@ -6,6 +6,8 @@
 GroundAuctionCtrl = class('GroundAuctionCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundAuctionCtrl)
 
+GroundAuctionCtrl.static.GAucHistoryPath = "View/Items/GAucHistoryItem"  --历史记录
+
 function GroundAuctionCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.DoNothing, UICollider.None)
 end
@@ -20,20 +22,26 @@ function GroundAuctionCtrl:OnCreate(obj)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
-    groundAuctionBehaviour:AddClick(GroundAuctionPanel.biderProtaitBtn.gameObject, self._clickProtait, self)
 end
 
 function GroundAuctionCtrl:Awake(go)
     self.gameObject = go
-    UpdateBeat:Add(self._update, self)
+
+    self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.quotesSource.mProvideData = GroundAuctionCtrl.static.QuotesProvideData
+    self.quotesSource.mClearData = GroundAuctionCtrl.static.QuotesClearData
+
+    self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
 end
 
 function GroundAuctionCtrl:Active()
     UIPanel.Active(self)
     GroundAuctionPanel.personFlowText01.text = GetLanguage(22010004)
-    GroundAuctionPanel.averageText02.text = GetLanguage(22010004)
-    GroundAuctionPanel.waitFloorPriceText03.text = GetLanguage(22010002)
-    GroundAuctionPanel.startFloorPriceText04.text = GetLanguage(22010002)
+    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
+    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
+    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
+    GroundAuctionPanel.nowFloorPriceText05.text = GetLanguage(22010002)
+
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -47,6 +55,10 @@ end
 
 function GroundAuctionCtrl:Hide()
     Event.Brocast("c_ShowGroundBubble")
+
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
 
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
@@ -63,69 +75,44 @@ function GroundAuctionCtrl:Close()
     UIPanel.Close(self)
 end
 
+function GroundAuctionCtrl:_itemTimer()
+    self:SoonTimeDownFunc()
+    self:NowTimeDownFunc()
+end
+
 ---初始化界面
 function GroundAuctionCtrl:_initPanelData()
     Event.Brocast("c_HideGroundBubble")
-
     if self.m_data == nil then
         return
     end
 
+    self.m_Timer:Start()
     self.id = self.m_data.id
     GroundAuctionPanel.bidInput.text = ""
-    GroundAuctionPanel.personAverageText.text = 0
-    --如果是已经开始了的，则显示拍卖倒计时界面，向服务器发送打开了UI界面，开始接收拍卖信息
+    GroundAuctionPanel.averageRangeText.text = 0
+    local groundInfo = GroundAucConfig[self.m_data.id]
+    --如果开始拍卖，还需判断是否有人出价
     if self.m_data.isStartAuc then
-        GAucModel.m_ReqQueryGroundAuction()
-
-        Event.Brocast("m_RegistGroundBidInfor")
-        GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
-        GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
-        GroundAuctionPanel.nameText.text = GetLanguage(22010002)
-
-        if self.m_data.price == nil then
-            GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
-            GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-            GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
+        GroundAuctionPanel.setSoonAndNow(true)
+        --判断是否有人出价
+        if self.m_data.endTs == nil or self.m_data.endTs == 0 then
+            GroundAuctionPanel.setBidState(false)
+            GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
         else
-            if tonumber(self.m_data.price) > self.m_data.basePrice then
-                GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
-                GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-                GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(self.m_data.price), 30, 24)
-            else
-                GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
-                GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-                GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
-            end
+            GroundAuctionPanel.setBidState(true)
+            GroundAuctionCtrl.bidHistory = self.m_data.bidHistory
+            GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
+            self.startTimeDownForFinish = true  --拍卖结束倒计时
         end
-
-        self.startTimeDownForFinish = true  --拍卖结束倒计时
+        Event.Brocast("m_RegistGroundBidInfor")
     else
-        GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.zero
-        GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.one
+        GroundAuctionPanel.setSoonAndNow(false)
 
-        GroundAuctionPanel.waitBidBasePriceText.text = getPriceString(GetClientPriceString(self.m_data.basePrice), 30, 24)
-        local timeData = getFormatUnixTime(self.m_data.beginTime)
-        GroundAuctionPanel.startBidTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
+        GroundAuctionPanel.floorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
+        local timeData = getFormatUnixTime(groundInfo.beginTime)
+        GroundAuctionPanel.startTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
         self.startTimeDownForStart = true  --即将拍卖倒计时
-    end
-
-    self.intTime = 1
-end
-
----Update
-function GroundAuctionCtrl:_update()
-    --如果还没打开过界面
-    if self.gameObject == nil then
-        return
-    end
-
-    --计时器，每秒调用
-    self.intTime = self.intTime + UnityEngine.Time.unscaledDeltaTime
-    if self.intTime >= 1 then
-        self.intTime = 0
-        self:SoonTimeDownFunc()
-        self:NowTimeDownFunc()
     end
 end
 
@@ -133,7 +120,7 @@ end
 --即将拍卖倒计时
 function GroundAuctionCtrl:SoonTimeDownFunc()
     if self.startTimeDownForStart == true then
-        local startAucTime = self.m_data.beginTime
+        local startAucTime = GroundAucConfig[self.m_data.id].beginTime
         local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime <= 0 then
             self.startTimeDownForStart = false
@@ -142,13 +129,13 @@ function GroundAuctionCtrl:SoonTimeDownFunc()
 
         local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.minute..":"..timeTable.second
-        GroundAuctionPanel.waitBidTimeDownText.text = timeStr
+        GroundAuctionPanel.startTimeText.text = timeStr
     end
 end
 --拍卖结束倒计时
 function GroundAuctionCtrl:NowTimeDownFunc()
     if self.startTimeDownForFinish == true then
-        local finishTime = self.m_data.beginTime + self.m_data.durationSec
+        local finishTime = self.m_data.endTs
         local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime < 0 then
             self.startTimeDownForFinish = false
@@ -157,26 +144,8 @@ function GroundAuctionCtrl:NowTimeDownFunc()
 
         local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.minute..":"..timeTable.second
-        GroundAuctionPanel.startBidTimeDownText.text = timeStr
+        GroundAuctionPanel.nowTimeDownText.text = timeStr
     end
-end
-
---由即将拍卖变成拍卖状态
-function GroundAuctionCtrl:_changeToStartBidState(startBidInfo)
-    if not self.gameObject then  --如果还没打开过界面，则不进行任何操作
-        return
-    end
-
-    if startBidInfo.id ~= self.m_data.id then
-        return
-    end
-
-    GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
-    GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
-
-    GroundAuctionPanel.currentPriceText.text = startBidInfo.num
-    --开始拍卖结束倒计时
-    self.startTimeDownForFinish = true
 end
 
 --出价
@@ -200,7 +169,7 @@ function GroundAuctionCtrl:BidGround(ins)
     end
 
     if ins.highestPrice == nil then
-        ins.highestPrice = tonumber(GetClientPriceString(ins.m_data.basePrice))
+        ins.highestPrice = tonumber(GetClientPriceString(GroundAucConfig[ins.m_data.id].basePrice))
     end
     if tonumber(bidPrice) > tonumber(ins.highestPrice) then
         Event.Brocast("m_PlayerBidGround", ins.m_data.id, GetServerPriceNumber(bidPrice))
@@ -216,9 +185,9 @@ function GroundAuctionCtrl:BidGround(ins)
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
-function GroundAuctionCtrl:UnRegistGroundBid(table)
+function GroundAuctionCtrl:UnRegistGroundBid(ins)
     PlayMusEff(1002)
-    if table.m_data.isStartAuc then
+    if ins.m_data.isStartAuc then
         Event.Brocast("m_UnRegistGroundBidInfor")
     end
     UIPanel.ClosePage()
@@ -231,26 +200,17 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     end
 
     self.highestPrice = GetClientPriceString(data.price)
-    --GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
-    GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
-    GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-    GroundAuctionPanel.currentPriceText.text = getPriceString(self.highestPrice, 30, 24)
-    self.biderId = data.biderId
+    if GroundAuctionCtrl.bidHistory ~= nil then
+        GroundAuctionCtrl.bidHistory = {}
+    end
+    local time = TimeSynchronized.GetTheCurrentTime()
+    self.m_data.endTs = time + 60
+    local temp = {biderId = data.biderId, price = data.nowPrice, ts = time}
+    table.insert(GroundAuctionCtrl.bidHistory, 1, temp)
+    -------------------啊啊啊差点
+    GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
 
-    if self.biderId == DataManager.GetMyOwnerID() then
-        self.biderInfo = DataManager.GetMyPersonalHomepageInfo()
-        self:_setUIInfo(self.biderInfo)
-        return
-    end
-    if self.biderInfo == nil then
-        --请求信息
-        GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
-    else
-        if self.biderInfo.id ~= data.id then
-            --请求信息
-            GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
-        end
-    end
+    self.startTimeDownForFinish = true
 end
 --得到消息
 function GroundAuctionCtrl:_getBiderInfo(playerData)
@@ -275,30 +235,23 @@ function GroundAuctionCtrl:_bidEnd(id)
 end
 --开始拍卖
 function GroundAuctionCtrl:_bidStart(groundData)
+    if groundData.id ~= self.m_data.id then
+        return
+    end
     Event.Brocast("m_RegistGroundBidInfor")
 
     GroundAuctionPanel.bidInput.text = ""
-    GroundAuctionPanel.startBidRoot.transform.localScale = Vector3.one
-    GroundAuctionPanel.waitBidRoot.transform.localScale = Vector3.zero
+    GroundAuctionPanel.setSoonAndNow(true)
+    GroundAuctionPanel.setBidState(false)
+    GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(GroundAucConfig[self.m_data.id].basePrice), 30, 24)
     self.m_data = groundData
-
-    if self.m_data.biderId then
-        GroundAuctionPanel.topRootTran.transform.localScale = Vector3.one
-        GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.zero
-        GroundAuctionPanel.currentPriceText.text = getPriceString(GetClientPriceString(self.m_data.price), 30, 24)
-    else
-        GroundAuctionPanel.topRootTran.transform.localScale = Vector3.zero
-        GroundAuctionPanel.floorRootTran.transform.localScale = Vector3.one
-        GroundAuctionPanel.floorPriceText.text = GetClientPriceString(self.m_data.basePrice)
-    end
-
     self.startTimeDownForFinish = true  --拍卖结束倒计时
 end
---点击头像
-function GroundAuctionCtrl:_clickProtait(ins)
-    PlayMusEff(1002)
-    if ins.biderInfo == nil then
-        return
-    end
-    ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.biderInfo)
+--历史记录
+GroundAuctionCtrl.static.QuotesProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = GAucHistoryItem:new(GroundAuctionCtrl.bidHistory[idx], transform)
+    GroundAuctionCtrl.quoteItems[idx] = item
+end
+GroundAuctionCtrl.static.QuotesClearData = function(transform)
 end

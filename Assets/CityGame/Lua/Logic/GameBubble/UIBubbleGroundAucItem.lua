@@ -65,8 +65,8 @@ function UIBubbleGroundAucItem:initialize(data)
         self.groundGo = GAucModel._getValuableWillAucObj()
     end
     self.groundGo.transform.position = self.data.targetPos
-    --self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
-    --self.m_Timer:Start()
+    self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
+    self.m_Timer:Start()
 
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
@@ -156,13 +156,6 @@ function UIBubbleGroundAucItem:LateUpdate()
     if self.bubbleObj ~= nil then
         self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
     end
-    --计时器，每秒调用
-    --self.intTime = self.intTime + UnityEngine.Time.deltaTime
-    --if self.intTime >= 1 then
-    --    self.intTime = 0
-    --    self:NowTimeDownFunc()
-    --    self:SoonTimeDownFunc()
-    --end
 end
 --正在拍卖的倒计时
 function UIBubbleGroundAucItem:NowTimeDownFunc()
@@ -194,6 +187,7 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
             self.now.transform.localScale = Vector3.one
             self.soon.transform.localScale = Vector3.zero
             self.noneBidText02.transform.localScale = Vector3.one
+            self.nowBinding.localScale = Vector3.zero
             GAucModel._getValuableStartAucObj().transform.position = self.data.targetPos
             GAucModel.updateSoonItem(self.data.id + 1)
             Event.Brocast("c_BidStart", self.data)  --切换界面

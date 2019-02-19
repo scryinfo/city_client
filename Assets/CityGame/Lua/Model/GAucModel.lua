@@ -189,22 +189,22 @@ end
 --- 回调 ---
 --收到拍卖中的土地信息
 function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
-    --if stream == nil or stream == "" then
-    --    local time = TimeSynchronized.GetTheCurrentTime()
-    --    for i, value in ipairs(GroundAucConfig) do
-    --        if value.beginTime > time then
-    --            GAucModel.updateSoonItem(i)
-    --            return
-    --        end
-    --    end
-    --    return
-    --end
-    --local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GAucModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
-    --if msgGroundAuc == nil then
-    --    return
-    --end
-    --
-    --this.getNowAucDataFunc(msgGroundAuc)
+    if stream == nil or stream == "" then
+        local time = TimeSynchronized.GetTheCurrentTime()
+        for i, value in ipairs(GroundAucConfig) do
+            if value.beginTime > time then
+                GAucModel.updateSoonItem(i)
+                return
+            end
+        end
+        return
+    end
+    local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GAucModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
+    if msgGroundAuc == nil then
+        return
+    end
+
+    this.getNowAucDataFunc(msgGroundAuc)
 end
 
 --当收到所有拍卖的土地信息

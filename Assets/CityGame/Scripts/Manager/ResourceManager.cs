@@ -448,7 +448,7 @@ namespace LuaFramework {
             }
             yield return download;
 
-            AssetBundle assetObj = download.assetBundle;
+            AssetBundle assetObj = download == null? null : download.assetBundle;
             if (assetObj != null)
             {
                 m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(assetObj));

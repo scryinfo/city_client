@@ -27,10 +27,15 @@ function GameMainInterfacePanel.InitPanel()
     this.money = transform:Find("LeftUpPanel/gold/money"):GetComponent("Text");
 
     this.noticeButton = transform:Find("NoticeButton").gameObject;
+    this.noticeText = transform:Find("NoticeButton/notice/noticeText"):GetComponent("Text");
     this.noticeItem = transform:Find("NoticeButton/noticeItem"); --通知红点
     this.friendsButton = transform:Find("FriendsButton").gameObject --好友
+    this.friendsText = transform:Find("FriendsButton/friends/frirndsText"):GetComponent("Text");
     this.friendsNotice = transform:Find("FriendsButton/NoticeItem").gameObject --好友红点提示
     this.setButton = transform:Find("SetButton").gameObject;
+    this.setText = transform:Find("SetButton/set/setText"):GetComponent("Text");
+    this.guideBool = transform:Find("GuideBoolButton").gameObject; --指南书--
+    this.guideBoolText = transform:Find("GuideBoolButton/guideBook/guideText"):GetComponent("Text");
 
     this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
     this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
@@ -49,8 +54,11 @@ function GameMainInterfacePanel.InitPanel()
     this.worldChatNoticeItem = transform:Find("WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
     
     this.smallMap = transform:Find("DownCreatePanel/SmallMap").gameObject;--小地图--
-    this.guideBool = transform:Find("GuideBoolButton").gameObject; --指南书--
-    this.centerBuilding = transform:Find("CenterBuildingButton").gameObject; --中心建筑
+    this.smallMapText = transform:Find("DownCreatePanel/SmallMap/mapText"):GetComponent("Text");
+    this.centerBuilding = transform:Find("DownCreatePanel/CenterBuildingButton").gameObject; --中心建筑
+    this.cityText = transform:Find("DownCreatePanel/CenterBuildingButton/cityText"):GetComponent("Text");
+    this.league = transform:Find("DownCreatePanel/League").gameObject; --联盟
+    this.leagueText = transform:Find("DownCreatePanel/League/leagueText"):GetComponent("Text");
 
     -- todo 收益
     this.open = transform:Find("EarningsPanel/open").gameObject; --打开收益详情

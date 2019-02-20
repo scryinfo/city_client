@@ -46,6 +46,13 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
 
     GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
+    GameMainInterfacePanel.noticeText.text = GetLanguage(11020009)
+    GameMainInterfacePanel.friendsText.text = GetLanguage(11020010)
+    GameMainInterfacePanel.setText.text = GetLanguage(11020007)
+    GameMainInterfacePanel.guideBoolText.text = GetLanguage(11020008)
+    GameMainInterfacePanel.smallMapText.text = GetLanguage(11020013)
+    GameMainInterfacePanel.cityText.text = GetLanguage(11020012)
+    GameMainInterfacePanel.leagueText.text = GetLanguage(11020011)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -234,6 +241,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.league,self.OnLeague,self); --联盟
 
     --todo 收益
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.open,self.OnOpen,self); --打开收益详情
@@ -549,6 +557,11 @@ function GameMainInterfaceCtrl:OnCenterBuilding()
     ct.OpenCtrl("CenterBuildingCtrl")
 end
 
+--联盟
+function GameMainInterfaceCtrl:OnLeague()
+
+end
+
 --关闭updata
 function GameMainInterfaceCtrl:RemoveUpdata()
     if self.m_Timer ~= nil then
@@ -559,21 +572,25 @@ end
 --todo  收益
 --打开
 function GameMainInterfaceCtrl:OnOpen()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:OnClick_EarningBtn(true)
 end
 
 --点击收益背景
 function GameMainInterfaceCtrl:OnEarningsPanelBg()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:OnClick_EarningBtn(false)
 end
 
 --关闭
 function GameMainInterfaceCtrl:OnClose()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:OnClick_EarningBtn(false)
 end
 
 --点击xBtn
 function GameMainInterfaceCtrl:OnXBtn()
+    PlayMusEff(1002)
     GameMainInterfacePanel.clearBtn.transform.localScale = Vector3.one
     GameMainInterfacePanel.clearBg.transform.localScale = Vector3.one
     GameMainInterfacePanel.xBtn.transform.localScale = Vector3.zero
@@ -581,12 +598,14 @@ end
 
 --点击ClearBtn
 function GameMainInterfaceCtrl:OnClearBtn(go)
+    PlayMusEff(1002)
     incomeNotify = {}
     GameMainInterfacePanel.earningScroll:ActiveLoopScroll(go.earnings, 0)
 end
 
 --点击ClearBg
 function GameMainInterfaceCtrl:OnClearBg()
+    PlayMusEff(1002)
     GameMainInterfacePanel.clearBtn.transform.localScale = Vector3.zero
     GameMainInterfacePanel.clearBg.transform.localScale = Vector3.zero
     GameMainInterfacePanel.xBtn.transform.localScale = Vector3.one
@@ -594,6 +613,7 @@ end
 
 --点击简单收益面板
 function GameMainInterfaceCtrl:OnSimple()
+    PlayMusEff(1002)
     GameMainInterfaceCtrl:OnClick_EarningBtn(true)
 end
 

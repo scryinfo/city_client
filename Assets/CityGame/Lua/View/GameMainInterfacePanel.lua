@@ -18,10 +18,12 @@ end
 function GameMainInterfacePanel.InitPanel()
 
     this.head = transform:Find("LeftUpPanel/head").gameObject --头像
-    this.headItem = transform:Find("LeftUpPanel/head/headItem"):GetComponent("Image") --头像
-    this.name = transform:Find("LeftUpPanel/name"):GetComponent("Text");
-    this.male = transform:Find("LeftUpPanel/name/male");
-    this.woman = transform:Find("LeftUpPanel/name/woman");
+    this.headItem = transform:Find("LeftUpPanel/head/headBg/headItem"):GetComponent("Image") --头像
+    this.name = transform:Find("LeftUpPanel/bg/name"):GetComponent("Text");
+    this.companyBtn = transform:Find("LeftUpPanel/bg/company").gameObject
+    this.company = transform:Find("LeftUpPanel/bg/company/companyText"):GetComponent("Text");
+    this.male = transform:Find("LeftUpPanel/bg/name/male");
+    this.woman = transform:Find("LeftUpPanel/bg/name/woman");
     this.money = transform:Find("LeftUpPanel/gold/money"):GetComponent("Text");
 
     this.noticeButton = transform:Find("NoticeButton").gameObject;
@@ -33,7 +35,8 @@ function GameMainInterfacePanel.InitPanel()
     this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
     this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
-    this.weather = transform:Find("Info/weather"):GetComponent("Image");   --天气
+    this.temperature = transform:Find("Info/city/temperatureText"):GetComponent("Text");   --温度
+    this.weather = transform:Find("Info/city/temperatureText/weather"):GetComponent("Image");   --天气
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
     this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--

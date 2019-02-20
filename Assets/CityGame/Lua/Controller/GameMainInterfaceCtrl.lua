@@ -224,6 +224,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.companyBtn,self.OnCompanyBtn,self); --点击公司名
 
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
@@ -254,11 +255,13 @@ function GameMainInterfaceCtrl:Awake()
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
+    self.company = info.companyName
     self.gender = info.male
 
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
+    GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
 
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)
@@ -287,8 +290,9 @@ function GameMainInterfaceCtrl:initInsData()
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     UIPanel.Active(self)
     self.m_Timer:Start()
-    --初始化姓名,性别
+    --初始化姓名,性别,公司名字
     GameMainInterfacePanel.name.text = self.name
+    GameMainInterfacePanel.company.text = self.company
     if self.gender then
         GameMainInterfacePanel.male.localScale = Vector3.one
         GameMainInterfacePanel.woman.localScale = Vector3.zero
@@ -320,6 +324,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
         self.weatherHour = hour
         if WeatherConfig[date].weather[hour] ~= nil then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
+            GameMainInterfacePanel.temperature.text = WeatherConfig[date].temperature[hour].."℃"
         end
     end
     if groundState ~= nil then
@@ -377,6 +382,13 @@ function GameMainInterfaceCtrl:OnHead()
     PlayMusEff(1002)
     local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", ownerInfo)
+end
+
+--点击公司名
+function GameMainInterfaceCtrl:OnCompanyBtn()
+    PlayMusEff(1002)
+    local ownerInfo = DataManager.GetMyPersonalHomepageInfo()
+    ct.OpenCtrl("CompanyCtrl", ownerInfo)
 end
 
 --通知--

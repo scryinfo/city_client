@@ -91,7 +91,7 @@ function UIBubbleManager.updateAucData(data)
 end
 
 --创建一个拍卖item
-function UIBubbleManager._creatGroundAucBubbleItem(bubbleData)
+function UIBubbleManager._creatGroundAucBubbleItem(bubbleData, isStartAuc)
     if this.aucItemsTable == nil then
         this.aucItemsTable = {}
     end
@@ -126,6 +126,7 @@ function UIBubbleManager._creatGroundAucBubbleItem(bubbleData)
     end
     local data = bubbleData
     data.bubbleObj = go  --将obj引用到lua中
+    data.isStartAuc = isStartAuc
     local groundAucNowItem = UIBubbleGroundAucItem:new(data)
     this.aucItemsTable[bubbleData.id] = groundAucNowItem
 end

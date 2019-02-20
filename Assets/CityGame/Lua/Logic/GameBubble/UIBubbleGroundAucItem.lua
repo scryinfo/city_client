@@ -37,25 +37,22 @@ function UIBubbleGroundAucItem:initialize(data)
     end)
 
     self.timeDown = true
-    if data.bidHistory == nil then
-        self.data.isStartAuc = false
-    else
-        self.data.isStartAuc = true
+    if self.data.isStartAuc == true then
         --判断是否有出价
-        if #data.bidHistory == 0 then
+        if data.bidHistory == nil or #data.bidHistory == 0 then
+            self.isStartBid = false
+            self.noneBidText02.transform.localScale = Vector3.one
+            self.nowBinding.localScale = Vector3.zero
+        else
             self.isStartBid = true
             self.noneBidText02.transform.localScale = Vector3.zero
             self.nowBinding.localScale = Vector3.one
-        else
-            self.timeDown = false
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
             table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
             self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
         end
     end
 
-    self.data.targetPos = Vector3.New(GroundAucConfig[self.data.id].area[1].x, 0, GroundAucConfig[self.data.id].area[1].y)
+    local pos = Vector3.New(GroundAucConfig[self.data.id].area[1].x, 0, GroundAucConfig[self.data.id].area[1].y)
     if self.data.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero
@@ -65,7 +62,8 @@ function UIBubbleGroundAucItem:initialize(data)
         self.soon.transform.localScale = Vector3.one
         self.groundGo = GAucModel._getValuableWillAucObj()
     end
-    self.groundGo.transform.position = self.data.targetPos
+    self.groundGo.transform.position = pos
+    self.data.targetPos = self.groundGo.transform.position
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
     self.m_Timer:Start()
 
@@ -101,6 +99,9 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
         self.data.endTs = data.ts + GAucModel.BidTime
         local temp = {biderId = data.biderId, price = data.nowPrice, ts = data.ts}
         table.insert(self.data.bidHistory, 1, temp)
+        self.isStartBid = true
+        self.noneBidText02.transform.localScale = Vector3.zero
+        self.nowBinding.localScale = Vector3.one
     end
 end
 --获取是否点击到对应地块
@@ -165,6 +166,9 @@ end
 --正在拍卖的倒计时
 function UIBubbleGroundAucItem:NowTimeDownFunc()
     if self.isStartBid == true then
+        if self.data.endTs == nil then
+            return
+        end
         local finishTime = self.data.endTs
         local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime <= 0 then

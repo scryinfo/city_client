@@ -72,7 +72,7 @@ end
 
 --拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
-    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts}
+    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts / 1000}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
@@ -87,7 +87,7 @@ function GAucModel.getNowAucDataFunc(msgGroundAuc)
     for i, value in pairs(msgGroundAuc.auction) do
         lastId = value.id
         --拍卖
-        UIBubbleManager._creatGroundAucBubbleItem(value)
+        UIBubbleManager._creatGroundAucBubbleItem(value, true)
     end
     --生成即将拍卖的item
     GAucModel.updateSoonItem(lastId + 1)
@@ -97,7 +97,7 @@ function GAucModel.updateSoonItem(groundId)
     if GroundAucConfig[groundId] == nil then
         return
     end
-    UIBubbleManager._creatGroundAucBubbleItem({id = groundId})
+    UIBubbleManager._creatGroundAucBubbleItem({id = groundId}, false)
     UIBubbleManager.startBubble()
 end
 
@@ -158,7 +158,7 @@ end
 function GAucModel.m_BidGround(id, price)
     local msgId = pbl.enum("gscode.OpCode","bidGround")
     local lMsg = { id = id, num = price}
-    local pMsg = assert(pbl.encode("gs.ByteNum", lMsg))
+    local pMsg = assert(pbl.encode("gs.IntNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
@@ -208,7 +208,7 @@ function GAucModel.n_OnReceiveBindGround(stream)
         return
     end
 
-    local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
+    local auctionInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
     if auctionInfo then
         --this._updateAucBidInfo(auctionInfo)
 
@@ -237,8 +237,8 @@ function GAucModel.n_OnReceiveAuctionEnd(stream)
         return
     end
 
-    local endId = assert(pbl.decode("gs.Id", stream), "GAucModel.n_OnReceiveAuctionEnd: stream == nil")
-    GAucModel.bindEndFunc(endId.id)
+    local endId = assert(pbl.decode("gs.Num", stream), "GAucModel.n_OnReceiveAuctionEnd: stream == nil")
+    GAucModel.bindEndFunc(endId.num)
 end
 
 --拍卖成功
@@ -248,7 +248,7 @@ function GAucModel.n_OnReceiveWinBid(stream)
     end
 
     if stream then
-        --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+        --local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
     end
 end
 --拍卖失败
@@ -257,7 +257,7 @@ function GAucModel.n_OnReceiveFailBid(stream)
         return
     end
 
-    local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+    local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
     if bidInfo then
         --this._updateAucBidInfo(bidInfo)
     end

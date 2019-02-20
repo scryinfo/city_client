@@ -48,6 +48,7 @@ function GroundAuctionCtrl:Refresh()
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
     Event.AddListener("c_BidStart", self._bidStart, self)  --拍卖开始
+    Event.AddListener("c_ReturnGAucHistoryObj", self._returnHistoryObj, self)  --回收历史记录item
 
     self:_initPanelData()
 end
@@ -66,6 +67,7 @@ function GroundAuctionCtrl:Hide()
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
     Event.RemoveListener("c_BidStart", self._bidStart, self)
+    Event.RemoveListener("c_ReturnGAucHistoryObj", self._returnHistoryObj, self)
     UIPanel.Hide(self)
 end
 
@@ -100,9 +102,8 @@ function GroundAuctionCtrl:_initPanelData()
         else
             GroundAuctionPanel.setBidState(true)
             GroundAuctionCtrl.bidHistory = self.m_data.bidHistory
-            table.sort(GroundAuctionCtrl.bidHistory, function (m, n) return m.ts > n.ts end)
-            GroundAuctionCtrl.bidHistory[1].first = true
-            GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
+            self:_createHistory()
+
             self.startTimeDownForFinish = true  --拍卖结束倒计时
         end
         Event.Brocast("m_RegistGroundBidInfor")
@@ -114,6 +115,46 @@ function GroundAuctionCtrl:_initPanelData()
         GroundAuctionPanel.startTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
         self.startTimeDownForStart = true  --即将拍卖倒计时
     end
+end
+
+--历史记录
+function GroundAuctionCtrl:_createHistory()
+    self:_cleanHistory()  --清除history item
+
+    table.sort(self.bidHistory, function (m, n) return m.ts > n.ts end)
+    for i, value in ipairs(self.bidHistory) do
+        if i == 1 then
+            value.isFirst = true
+        else
+            value.isFirst = false
+        end
+        local go = self:_getValuableHistoryObj()
+        go.transform:SetParent(GroundAuctionPanel.historyContent.transform)
+        go.transform.localScale = Vector3.one
+        self.historyLuaItems[i] = GAucHistoryItem:new(value, go.transform)
+    end
+end
+--获取一个有效的item
+function GroundAuctionCtrl:_getValuableHistoryObj()
+    if self.historyObjs == nil or #self.historyObjs == 0 then
+        local go = UnityEngine.GameObject.Instantiate(GroundAuctionPanel.historyItemPrefab)
+        --go.transform.localScale = Vector3.one
+        return go
+    else
+        local go = self.historyObjs[1]
+        --go.transform.localScale = Vector3.one
+        table.remove(self.historyObjs, 1)
+        return go
+    end
+end
+--回收obj
+function GroundAuctionCtrl:_returnHistoryObj(go)
+    if self.historyObjs == nil then
+        self.historyObjs = {}
+    end
+    go.transform:SetParent(GroundAuctionPanel.historyRoot.transform)
+    go.transform.localScale = Vector3.zero
+    table.insert(self.historyObjs, 1, go)
 end
 
 ---倒计时---
@@ -129,12 +170,15 @@ function GroundAuctionCtrl:SoonTimeDownFunc()
 
         local timeTable = getFormatUnixTime(remainTime)
         local timeStr = timeTable.minute..":"..timeTable.second
-        GroundAuctionPanel.startTimeText.text = timeStr
+        GroundAuctionPanel.soonTimeDownText.text = timeStr
     end
 end
 --拍卖结束倒计时
 function GroundAuctionCtrl:NowTimeDownFunc()
     if self.startTimeDownForFinish == true then
+        if self.m_data.endTs == nil then
+            return
+        end
         local finishTime = self.m_data.endTs
         local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
         if remainTime < 0 then
@@ -199,35 +243,27 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         return
     end
 
+    GroundAuctionPanel.setBidState(true)
     self.highestPrice = GetClientPriceString(data.price)
-    if GroundAuctionCtrl.bidHistory ~= nil then
-        GroundAuctionCtrl.bidHistory = {}
+    if self.bidHistory == nil then
+        self.bidHistory = {}
     end
     self:_cleanHistory()  --清除history item
-    self.data.endTs = data.ts + GAucModel.BidTime
-    local temp = {biderId = data.biderId, price = data.nowPrice, ts = data.ts}
-    table.insert(GroundAuctionCtrl.bidHistory, 1, temp)
-    --控制历史记录的条数
-    --
-    for i, value in ipairs(GroundAuctionCtrl.bidHistory) do
-        if i == 1 then
-            value.isFirst = true
-        else
-            value.isFirst = false
-        end
-    end
-    GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
-
+    self.m_data.endTs = data.ts + GAucModel.BidTime
+    local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+    table.insert(self.bidHistory, 1, temp)
+    self:_createHistory()
     self.startTimeDownForFinish = true
 end
 --清除历史item
 function GroundAuctionCtrl:_cleanHistory()
-    if GroundAuctionCtrl.historyLuaItems ~= nil and #GroundAuctionCtrl.historyLuaItems ~= 0 then
-        for i, value in pairs(GroundAuctionCtrl.historyLuaItems) do
+    if self.historyLuaItems ~= nil and #self.historyLuaItems ~= 0 then
+        for i, value in pairs(self.historyLuaItems) do
             value:close()
+            value = nil
         end
     end
-    GroundAuctionCtrl.historyLuaItems = {}
+    self.historyLuaItems = {}
 end
 
 --拍卖结束
@@ -250,13 +286,4 @@ function GroundAuctionCtrl:_bidStart(groundData)
     GroundAuctionPanel.setBidState(false)
     GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(GroundAucConfig[self.m_data.id].basePrice), 30, 24)
     self.m_data = groundData
-    self.startTimeDownForFinish = true  --拍卖结束倒计时
-end
---历史记录
-GroundAuctionCtrl.static.QuotesProvideData = function(transform, idx)
-    idx = idx + 1
-    local item = GAucHistoryItem:new(GroundAuctionCtrl.bidHistory[idx], transform)
-    GroundAuctionCtrl.historyLuaItems[idx] = item
-end
-GroundAuctionCtrl.static.QuotesClearData = function(transform)
 end

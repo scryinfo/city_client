@@ -4,7 +4,6 @@
 --- DateTime: 2019/2/14 17:27
 ---
 GAucHistoryItem = class('GAucHistoryItem')
---GAucHistoryItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
 
 function GAucHistoryItem:initialize(data, viewRect)
     self.viewRect = viewRect
@@ -22,7 +21,10 @@ function GAucHistoryItem:initialize(data, viewRect)
         self:_clickProtaitFunc()
     end)
 
-    Event.AddListener("c_GAucHistoryGetInfo", self._getInfo)
+    if data.biderId ~= nil then
+        Event.AddListener("c_GAucHistoryGetInfo", self._getInfo, self)
+        GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
+    end
 
     self:_initData(data)
 end
@@ -50,7 +52,7 @@ function GAucHistoryItem:_clickProtaitFunc()
 end
 --拿到信息
 function GAucHistoryItem:_getInfo(playerData)
-    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == self.data.id then
+    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == self.data.biderId then
         local info = {}
         info.id = playerData.info[1].id
         info.name = playerData.info[1].name
@@ -67,8 +69,9 @@ function GAucHistoryItem:_getInfo(playerData)
 end
 
 function GAucHistoryItem:close()
+    Event.RemoveListener("c_GAucHistoryGetInfo", self._getInfo, self)
+    Event.Brocast("c_ReturnGAucHistoryObj", self.viewRect.gameObject)  --回收item
     self.data = nil
     self.playerInfo = nil
     self = nil
-    Event.RemoveListener("c_GAucHistoryGetInfo", self._getInfo)
 end

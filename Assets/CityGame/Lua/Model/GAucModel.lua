@@ -10,6 +10,7 @@ local pbl = pbl
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
+GAucModel.BidTime = 60
 
 --构建函数--
 function GAucModel.New()
@@ -71,7 +72,7 @@ end
 
 --拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
-    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId}
+    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
@@ -151,12 +152,6 @@ end
 function GAucModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
-end
-
---请求已经拍卖的土地信息
-function GAucModel.m_ReqRueryMetaGroundAuction()
-    --local msgId = pbl.enum("gscode.OpCode","queryMetaGroundAuction")
-    --CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --出价

@@ -204,9 +204,8 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
         GroundAuctionCtrl.bidHistory = {}
     end
     self:_cleanHistory()  --清除history item
-    local time = TimeSynchronized.GetTheCurrentTime()
-    self.m_data.endTs = time + 60
-    local temp = {biderId = data.biderId, price = data.nowPrice, ts = time}
+    self.data.endTs = data.ts + GAucModel.BidTime
+    local temp = {biderId = data.biderId, price = data.nowPrice, ts = data.ts}
     table.insert(GroundAuctionCtrl.bidHistory, 1, temp)
     --控制历史记录的条数
     --

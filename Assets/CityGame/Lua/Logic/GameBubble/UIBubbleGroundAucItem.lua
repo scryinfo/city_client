@@ -37,13 +37,12 @@ function UIBubbleGroundAucItem:initialize(data)
     end)
 
     self.timeDown = true
-    self.intTime = 1
-    if data.endTs == nil then
+    if data.bidHistory == nil then
         self.data.isStartAuc = false
     else
         self.data.isStartAuc = true
         --判断是否有出价
-        if data.bidHistory ~= nil or data.endTs ~= 0 then
+        if #data.bidHistory == 0 then
             self.isStartBid = true
             self.noneBidText02.transform.localScale = Vector3.zero
             self.nowBinding.localScale = Vector3.one
@@ -51,6 +50,8 @@ function UIBubbleGroundAucItem:initialize(data)
             self.timeDown = false
             self.noneBidText02.transform.localScale = Vector3.one
             self.nowBinding.localScale = Vector3.zero
+            table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
+            self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
         end
     end
 
@@ -97,9 +98,8 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
         if self.data.bidHistory == nil then
             self.data.bidHistory = {}
         end
-        local time = TimeSynchronized.GetTheCurrentTime()
-        self.data.endTs = time + 60
-        local temp = {biderId = data.biderId, price = data.nowPrice, ts = time}
+        self.data.endTs = data.ts + GAucModel.BidTime
+        local temp = {biderId = data.biderId, price = data.nowPrice, ts = data.ts}
         table.insert(self.data.bidHistory, 1, temp)
     end
 end

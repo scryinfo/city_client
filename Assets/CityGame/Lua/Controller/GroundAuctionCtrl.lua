@@ -103,6 +103,7 @@ function GroundAuctionCtrl:_initPanelData()
             GroundAuctionPanel.setBidState(true)
             GroundAuctionCtrl.bidHistory = self.m_data.bidHistory
             self:_createHistory()
+            self.highestPrice = GetClientPriceString(GroundAuctionCtrl.bidHistory[1].price)
 
             self.startTimeDownForFinish = true  --拍卖结束倒计时
         end

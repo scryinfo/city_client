@@ -207,19 +207,6 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     this.getNowAucDataFunc(msgGroundAuc)
 end
 
---当收到所有拍卖的土地信息
-function GAucModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
-    --if stream == nil or stream == "" then
-    --    return
-    --end
-    --local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GAucModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
-    --if auctionInfo == nil or #auctionInfo.auction == 0 then
-    --    return
-    --end
-
-    --this.getMataGroundDataFunc(auctionInfo)
-end
-
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream)
     if stream == nil or stream == "" then

@@ -94,8 +94,13 @@ end
 --信息更新
 function UIBubbleGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.id then
-        self.data.price = data.price
-        self.data.biderId = data.biderId
+        if self.data.bidHistory == nil then
+            self.data.bidHistory = {}
+        end
+        local time = TimeSynchronized.GetTheCurrentTime()
+        self.data.endTs = time + 60
+        local temp = {biderId = data.biderId, price = data.nowPrice, ts = time}
+        table.insert(self.data.bidHistory, 1, temp)
     end
 end
 --获取是否点击到对应地块

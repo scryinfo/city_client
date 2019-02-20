@@ -48,7 +48,6 @@ function GroundAuctionCtrl:Refresh()
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
     Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
     Event.AddListener("c_BidStart", self._bidStart, self)  --拍卖开始
-    Event.AddListener("c_GetBiderInfo", self._getBiderInfo, self)
 
     self:_initPanelData()
 end
@@ -67,7 +66,6 @@ function GroundAuctionCtrl:Hide()
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
     Event.RemoveListener("c_BidStart", self._bidStart, self)
-    Event.RemoveListener("c_GetBiderInfo", self._getBiderInfo, self)
     UIPanel.Hide(self)
 end
 
@@ -102,6 +100,8 @@ function GroundAuctionCtrl:_initPanelData()
         else
             GroundAuctionPanel.setBidState(true)
             GroundAuctionCtrl.bidHistory = self.m_data.bidHistory
+            table.sort(GroundAuctionCtrl.bidHistory, function (m, n) return m.ts > n.ts end)
+            GroundAuctionCtrl.bidHistory[1].first = true
             GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
             self.startTimeDownForFinish = true  --拍卖结束倒计时
         end
@@ -203,26 +203,32 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     if GroundAuctionCtrl.bidHistory ~= nil then
         GroundAuctionCtrl.bidHistory = {}
     end
+    self:_cleanHistory()  --清除history item
     local time = TimeSynchronized.GetTheCurrentTime()
     self.m_data.endTs = time + 60
     local temp = {biderId = data.biderId, price = data.nowPrice, ts = time}
     table.insert(GroundAuctionCtrl.bidHistory, 1, temp)
-    -------------------啊啊啊差点
+    --控制历史记录的条数
+    --
+    for i, value in ipairs(GroundAuctionCtrl.bidHistory) do
+        if i == 1 then
+            value.isFirst = true
+        else
+            value.isFirst = false
+        end
+    end
     GroundAuctionPanel.historyScroll:ActiveLoopScroll(self.quotesSource, #GroundAuctionCtrl.bidHistory, GroundAuctionCtrl.static.GAucHistoryPath)
 
     self.startTimeDownForFinish = true
 end
---得到消息
-function GroundAuctionCtrl:_getBiderInfo(playerData)
-    if playerData.info ~= nil and #playerData.info == 1 and playerData.info[1].id == self.biderId then
-        self.biderInfo = playerData.info[1]
-        self:_setUIInfo(self.biderInfo)
+--清除历史item
+function GroundAuctionCtrl:_cleanHistory()
+    if GroundAuctionCtrl.historyLuaItems ~= nil and #GroundAuctionCtrl.historyLuaItems ~= 0 then
+        for i, value in pairs(GroundAuctionCtrl.historyLuaItems) do
+            value:close()
+        end
     end
-end
---
-function GroundAuctionCtrl:_setUIInfo(playerData)
-    GroundAuctionPanel.nameText.text = self.biderInfo.name
-    LoadSprite(PlayerHead[playerData.faceId].GroundTransSmallPath, GroundAuctionPanel.biderProtaitImg, true)
+    GroundAuctionCtrl.historyLuaItems = {}
 end
 
 --拍卖结束
@@ -251,7 +257,7 @@ end
 GroundAuctionCtrl.static.QuotesProvideData = function(transform, idx)
     idx = idx + 1
     local item = GAucHistoryItem:new(GroundAuctionCtrl.bidHistory[idx], transform)
-    GroundAuctionCtrl.quoteItems[idx] = item
+    GroundAuctionCtrl.historyLuaItems[idx] = item
 end
 GroundAuctionCtrl.static.QuotesClearData = function(transform)
 end

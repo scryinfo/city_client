@@ -1458,7 +1458,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
     Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
 
     Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
-    Event.Brocast("c_GetBiderInfo", playerData)  --拍卖请求出价者id
+    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
 
     if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
         DataManager.SetMyPersonalHomepageInfo(playerData.info[1])

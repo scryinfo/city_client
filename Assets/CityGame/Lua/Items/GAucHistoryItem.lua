@@ -19,24 +19,56 @@ function GAucHistoryItem:initialize(data, viewRect)
     self.otherTran = viewTrans:Find("other")
     self.otherPriceText = viewTrans:Find("other/otherPriceText"):GetComponent("Text")
     self.protaitBtn.onClick:AddListener(function ()
-        --self:_creatTempLine()
+        self:_clickProtaitFunc()
     end)
+
+    Event.AddListener("c_GAucHistoryGetInfo", self._getInfo)
 
     self:_initData(data)
 end
 function GAucHistoryItem:_initData(data)
     self.data = data
-
     --self.nameText.text = ""
     if data.isFirst == true then
         self.firstbg.localScale = Vector3.one
         self.firstTran.localScale = Vector3.one
         self.otherTran.localScale = Vector3.zero
-        --self.firstPriceText.text = ""
+        self.firstPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
     else
         self.firstbg.localScale = Vector3.zero
         self.firstTran.localScale = Vector3.zero
         self.otherTran.localScale = Vector3.one
-        --self.otherPriceText.text = ""
+        self.otherPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
     end
+end
+--点击头像
+function GAucHistoryItem:_clickProtaitFunc()
+    if self.playerInfo == nil then
+        return
+    end
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", self.playerInfo)
+end
+--拿到信息
+function GAucHistoryItem:_getInfo(playerData)
+    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == self.data.id then
+        local info = {}
+        info.id = playerData.info[1].id
+        info.name = playerData.info[1].name
+        info.companyName = playerData.info[1].companyName
+        info.des = playerData.info[1].des
+        info.faceId = playerData.info[1].faceId
+        info.male = playerData.info[1].male
+        info.createTs = playerData.info[1].createTs
+        self.playerInfo = info
+
+        self.nameText.text = info.name
+        LoadSprite(PlayerHead[info.faceId].GroundTransSmallPath, self.protaitImg, true)
+    end
+end
+
+function GAucHistoryItem:close()
+    self.data = nil
+    self.playerInfo = nil
+    self = nil
+    Event.RemoveListener("c_GAucHistoryGetInfo", self._getInfo)
 end

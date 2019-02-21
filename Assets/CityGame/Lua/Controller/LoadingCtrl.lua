@@ -32,10 +32,7 @@ end
 
 function LoadingCtrl:_Update()
     LoadingPanel.rotateIconTrans:Rotate( self.RotateDirection * self.RotateSpeed * UnityEngine.Time.deltaTime )
-    if TerrainManager.BuildObjQueue ~= nil and TerrainManager.BuildObjQueue <= 0 then
-        self.IsLoadOver = true
-    end
-    if self.MinDurationTime <= 0 and  self.IsLoadOver == true then
+    if self.MinDurationTime <= 0 then
         self:EnterTheMain()
     else
         self.MinDurationTime =  self.MinDurationTime - UnityEngine.Time.deltaTime

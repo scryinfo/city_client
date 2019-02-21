@@ -157,5 +157,5 @@ function Game.OnPostInitOK()
     end
 
     ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-
+    MapObjectsManager.Init()
 end

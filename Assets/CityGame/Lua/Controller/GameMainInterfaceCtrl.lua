@@ -559,7 +559,7 @@ end
 
 --联盟
 function GameMainInterfaceCtrl:OnLeague()
-
+    PlayMusEff(1002)
 end
 
 --关闭updata

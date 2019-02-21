@@ -101,10 +101,14 @@ end
 function ServerListCtrl:c_OnOK(go)
     PlayMusEff(1002)
     --Event.Brocast("m_chooseGameServer", Index,go.data);
+    if Index == nil then
+        return
+    end
     local data = {}
     data.Index = Index
     data.serinofs = go.data
     DataManager.DetailModelRpcNoRet(go.insId , 'm_chooseGameServer',data)
+    ServerListPanel.oKBtn:GetComponent("Button").enabled = false
 end
 
 function ServerListCtrl:c_GsCreateRole()

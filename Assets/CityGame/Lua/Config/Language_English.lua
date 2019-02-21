@@ -2,6 +2,7 @@ Language_English={
 [10020001] = "Account",
 [10020002] = "Password",
 [10020003] = "Login",
+[10020004] = "The account or password cannot be empty",
 [10030001] = "Please select your server",
 [10030002] = "Xi'an",
 [10030003] = "Chengdu",

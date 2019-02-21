@@ -108,10 +108,12 @@ function LoginCtrl:OnLogin(go)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
 	if username == "" then
-		ct.log("system"," 账号不能为空")
+		--ct.log("system"," 账号不能为空")
+		Event.Brocast("SmallPop",GetLanguage(10020004),300)
 	else
 		--CityEngineLua.login(username, pw, "lxq");
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
+		LoginPanel.btnLogin:GetComponent("Button").enabled = false
 	end
 end
 --注册--

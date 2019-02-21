@@ -97,7 +97,7 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
             self.data.bidHistory = {}
         end
         self.data.endTs = data.ts + GAucModel.BidTime
-        local temp = {biderId = data.biderId, price = data.nowPrice, ts = data.ts}
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
         table.insert(self.data.bidHistory, 1, temp)
         self.isStartBid = true
         self.noneBidText02.transform.localScale = Vector3.zero
@@ -170,7 +170,7 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
             return
         end
         local finishTime = self.data.endTs
-        local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
+        local remainTime = finishTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.timeDown = false
             self.isStartBid = false
@@ -180,7 +180,7 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         self.nowTimeText.text = timeStr
     end
@@ -188,8 +188,8 @@ end
 --即将拍卖的倒计时
 function UIBubbleGroundAucItem:SoonTimeDownFunc()
     if self.data.isStartAuc == false then
-        local startAucTime = GroundAucConfig[self.data.id].beginTime
-        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
+        local startAucTime = GroundAucConfig[self.data.id].beginTime * 1000
+        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.data.isStartAuc = true
             --开始拍卖
@@ -203,7 +203,7 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         self.soonTimeText.text = timeStr
     end

@@ -10,7 +10,7 @@ local pbl = pbl
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
-GAucModel.BidTime = 60
+GAucModel.BidTime = 60000
 
 --构建函数--
 function GAucModel.New()
@@ -27,8 +27,8 @@ end
 function GAucModel.OnCreate()
     --本地的回调注册
     Event.AddListener("m_PlayerBidGround", this.m_BidGround)
-    Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
-    Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
+    --Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
+    --Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
     Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
     Event.AddListener("c_UIBubbleLateUpdate", this.c_bubbleLateUpdate)  --temp
 end
@@ -72,7 +72,7 @@ end
 
 --拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
-    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts / 1000}
+    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
@@ -84,13 +84,23 @@ function GAucModel.getNowAucDataFunc(msgGroundAuc)
         this.groundAucDatas = {}
     end
     local lastId = 0
+    local isFisish = false
+    local length = #GroundAucConfig
     for i, value in pairs(msgGroundAuc.auction) do
-        lastId = value.id
+        if value.id >= lastId then
+            lastId = value.id
+        end
         --拍卖
         UIBubbleManager._creatGroundAucBubbleItem(value, true)
+        UIBubbleManager.startBubble()
+        if value == length then
+            isFisish = true
+        end
     end
     --生成即将拍卖的item
-    GAucModel.updateSoonItem(lastId + 1)
+    if isFisish == false then
+        GAucModel.updateSoonItem(lastId + 1)
+    end
 end
 --更新即将拍卖
 function GAucModel.updateSoonItem(groundId)
@@ -248,7 +258,7 @@ function GAucModel.n_OnReceiveWinBid(stream)
     end
 
     if stream then
-        --local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+        Event.Brocast("SmallPop", "拍卖成功", 300)
     end
 end
 --拍卖失败
@@ -259,7 +269,7 @@ function GAucModel.n_OnReceiveFailBid(stream)
 
     local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
     if bidInfo then
-        --this._updateAucBidInfo(bidInfo)
+        Event.Brocast("SmallPop", "出现更高的拍卖价格", 300)
     end
 end
 

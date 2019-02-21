@@ -26,11 +26,6 @@ end
 
 function GroundAuctionCtrl:Awake(go)
     self.gameObject = go
-
-    self.quotesSource = UnityEngine.UI.LoopScrollDataSource.New()  --行情
-    self.quotesSource.mProvideData = GroundAuctionCtrl.static.QuotesProvideData
-    self.quotesSource.mClearData = GroundAuctionCtrl.static.QuotesClearData
-
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
 end
 
@@ -41,7 +36,6 @@ function GroundAuctionCtrl:Active()
     GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
     GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
     GroundAuctionPanel.nowFloorPriceText05.text = GetLanguage(22010002)
-
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -63,6 +57,8 @@ function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
     self.highestPrice = nil
+    self.bidHistory = {}
+    self:_cleanHistoryObj()
 
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
@@ -101,9 +97,9 @@ function GroundAuctionCtrl:_initPanelData()
             GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
         else
             GroundAuctionPanel.setBidState(true)
-            GroundAuctionCtrl.bidHistory = self.m_data.bidHistory
+            self.bidHistory = ct.deepCopy(self.m_data.bidHistory)
             self:_createHistory()
-            self.highestPrice = GetClientPriceString(GroundAuctionCtrl.bidHistory[1].price)
+            self.highestPrice = GetClientPriceString(self.bidHistory[1].price)
 
             self.startTimeDownForFinish = true  --拍卖结束倒计时
         end
@@ -118,7 +114,7 @@ function GroundAuctionCtrl:_initPanelData()
     end
 end
 
---历史记录
+--历史记录简易池
 function GroundAuctionCtrl:_createHistory()
     self:_cleanHistory()  --清除history item
 
@@ -157,19 +153,29 @@ function GroundAuctionCtrl:_returnHistoryObj(go)
     go.transform.localScale = Vector3.zero
     table.insert(self.historyObjs, 1, go)
 end
+--隐藏界面时，清掉记录
+function GroundAuctionCtrl:_cleanHistoryObj()
+    if self.historyObjs == nil then
+        return
+    end
+    for i, go in pairs(self.historyObjs) do
+        go.transform:SetParent(GroundAuctionPanel.historyRoot.transform)
+        go.transform.localScale = Vector3.zero
+    end
+end
 
 ---倒计时---
 --即将拍卖倒计时
 function GroundAuctionCtrl:SoonTimeDownFunc()
     if self.startTimeDownForStart == true then
-        local startAucTime = GroundAucConfig[self.m_data.id].beginTime
-        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
+        local startAucTime = GroundAucConfig[self.m_data.id].beginTime * 1000
+        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.startTimeDownForStart = false
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         GroundAuctionPanel.soonTimeDownText.text = timeStr
     end
@@ -181,13 +187,13 @@ function GroundAuctionCtrl:NowTimeDownFunc()
             return
         end
         local finishTime = self.m_data.endTs
-        local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
+        local remainTime = finishTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime < 0 then
             self.startTimeDownForFinish = false
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         GroundAuctionPanel.nowTimeDownText.text = timeStr
     end
@@ -232,9 +238,6 @@ end
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
 function GroundAuctionCtrl:UnRegistGroundBid(ins)
     PlayMusEff(1002)
-    if ins.m_data.isStartAuc then
-        Event.Brocast("m_UnRegistGroundBidInfor")
-    end
     UIPanel.ClosePage()
 end
 

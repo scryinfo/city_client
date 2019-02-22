@@ -197,7 +197,8 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
             self.soon.transform.localScale = Vector3.zero
             self.noneBidText02.transform.localScale = Vector3.one
             self.nowBinding.localScale = Vector3.zero
-            GAucModel._getValuableStartAucObj().transform.position = self.data.targetPos
+            self.groundGo = GAucModel._getValuableStartAucObj()
+            self.groundGo.transform.position = self.data.targetPos
             GAucModel.updateSoonItem(self.data.id + 1)
             Event.Brocast("c_BidStart", self.data)  --切换界面
             return

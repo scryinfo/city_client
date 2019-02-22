@@ -12,8 +12,14 @@ function MapObjectsManager.Init()
     --初始化基础建筑Prefeb（异步）
     local PoolInstantiates = MapGameObjectsConfig.PoolInstantiate
     for i, item in pairs(PoolInstantiates) do
-        buildMgr:CreateBuild(PlayerBuildingBaseData[item.PlayerBuildingBaseDataID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
+        if item.PlayerBuildingBaseDataID ~= nil then
+            buildMgr:CreateBuild(PlayerBuildingBaseData[item.PlayerBuildingBaseDataID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
+        elseif item.RoadPrefabConfig ~= nil then
+            buildMgr:CreateBuild(RoadPrefabConfig[item.RoadPrefabConfig]["prefabRoute"] ,CreateBasePrefabSuccess,item)
+        end
     end
+    --初始化中心建筑
+    TerrainManager.CreateCenterBuilding()
 end
 
 --向某个对象池请求获取一个可用的GameObject

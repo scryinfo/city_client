@@ -19,6 +19,7 @@ function LoadingCtrl:initialize()
         self.RotateDirection = Vector3.back
     end
     self.IsLoadOver = false
+    MapObjectsManager.Init()
 end
 
 function LoadingCtrl:bundleName()
@@ -33,7 +34,7 @@ end
 function LoadingCtrl:_Update()
     LoadingPanel.rotateIconTrans:Rotate( self.RotateDirection * self.RotateSpeed * UnityEngine.Time.deltaTime )
     if self.MinDurationTime <= 0 then
-        self:EnterTheMain()
+        self:EnterTheLogin()
     else
         self.MinDurationTime =  self.MinDurationTime - UnityEngine.Time.deltaTime
     end
@@ -44,4 +45,10 @@ function LoadingCtrl:EnterTheMain()
     UpdateBeat:Remove(self._Update, self)
     UIPanel:ClearAllPages()
     ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
+end
+
+
+function LoadingCtrl:EnterTheLogin()
+    UpdateBeat:Remove(self._Update, self)
+    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
 end

@@ -112,7 +112,9 @@ function ServerListCtrl:c_GsCreateRole()
 end
 
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    ct.OpenCtrl('LoadingCtrl',playerId)
+    --ct.OpenCtrl('LoadingCtrl',playerId)
+    UIPanel:ClearAllPages()
+    ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
 end
 --生成预制
 function ServerListCtrl:_createServerPab(path,parent)

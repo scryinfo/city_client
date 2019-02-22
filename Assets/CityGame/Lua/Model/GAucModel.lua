@@ -135,7 +135,6 @@ function GAucModel._getValuableStartAucObj()
     else
         local go = this.valuableStartAucList[1]
         go.transform.localScale = Vector3.one
-        go.gameObject.name = "拍卖中"
         table.remove(this.valuableStartAucList, 1)
         return go
     end
@@ -146,7 +145,6 @@ function GAucModel._returnHistoryObj(go)
         this.valuableStartAucList = {}
     end
     go.transform.localScale = Vector3.zero
-    go.gameObject.name = "结束拍卖"
     table.insert(this.valuableStartAucList, 1, go)
 end
 
@@ -157,7 +155,6 @@ function GAucModel._getValuableWillAucObj()
         GAucModel.valuableWillAucObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
     end
     GAucModel.valuableWillAucObj.transform.localScale = Vector3.one
-    GAucModel.valuableWillAucObj.gameObject.name = "即将拍卖"
     return GAucModel.valuableWillAucObj
 end
 

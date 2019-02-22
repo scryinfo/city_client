@@ -125,26 +125,29 @@ end
 --    end
 --end
 
---获取有效的开始拍卖的土地预制
+--获取一个有效的item
 function GAucModel._getValuableStartAucObj()
-    if GAucModel.valuableStartAucList ~= nil and #GAucModel.valuableStartAucList ~= 0 then
-        for i, value in pairs(GAucModel.valuableStartAucList) do
-            if value.transform.localScale == Vector3.zero then
-                value.transform.localScale = Vector3.one
-                return value
-            end
-        end
+    if this.valuableStartAucList == nil or #this.valuableStartAucList == 0 then
+        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+        go.transform.localScale = Vector3.one
+        return go
+    else
+        local go = this.valuableStartAucList[1]
+        go.transform.localScale = Vector3.one
+        table.remove(this.valuableStartAucList, 1)
+        return go
     end
-
-    if GAucModel.valuableStartAucList == nil then
-        GAucModel.valuableStartAucList = {}
-    end
-    local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
-    go.transform.localScale = Vector3.one
-    go.gameObject.name = "拍卖中"
-    table.insert(GAucModel.valuableStartAucList, 1, go)
-    return go
 end
+--回收obj
+function GAucModel._returnHistoryObj(go)
+    if this.valuableStartAucList == nil then
+        this.valuableStartAucList = {}
+    end
+    go.transform.localScale = Vector3.zero
+    table.insert(this.valuableStartAucList, 1, go)
+end
+
+
 --获取有效的即将拍卖的土地预制
 function GAucModel._getValuableWillAucObj()
     if GAucModel.valuableWillAucObj == nil then

@@ -174,9 +174,7 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
         if remainTime <= 0 then
             self.timeDown = false
             self.isStartBid = false
-            if self.groundGo.gameObject.name == "拍卖中" then
-                self.groundGo.transform.localScale = Vector3.zero
-            end
+            GAucModel._returnHistoryObj(self.groundGo.gameObject)
             --拍卖结束
             UIBubbleManager.closeItem(self, self.data.id)
             return

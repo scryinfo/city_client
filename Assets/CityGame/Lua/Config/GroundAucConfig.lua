@@ -26,7 +26,7 @@ GroundAucConfig ={
             [23]={x=55,y=49},
             [24]={x=57,y=50},
             [25]={x=58,y=52}},
-        beginTime = 1550806200,
+        beginTime = 1550818200,
         basePrice = 100
     },
     [2] = {
@@ -56,7 +56,7 @@ GroundAucConfig ={
             [23]={x=55,y=44},
             [24]={x=57,y=45},
             [25]={x=58,y=47}},
-        beginTime = 1550806260,
+        beginTime = 1550818260,
         basePrice = 100
     },
     [3] = {
@@ -86,7 +86,7 @@ GroundAucConfig ={
             [23]={x=50,y=44},
             [24]={x=52,y=45},
             [25]={x=53,y=47}},
-        beginTime = 1550806320,
+        beginTime = 1550818320,
         basePrice = 100
     },
     [4] = {
@@ -116,7 +116,7 @@ GroundAucConfig ={
             [23]={x=45,y=44},
             [24]={x=47,y=45},
             [25]={x=48,y=47}},
-        beginTime = 1550806380,
+        beginTime = 1550818380,
         basePrice = 100
     },
     [5] = {
@@ -146,7 +146,7 @@ GroundAucConfig ={
             [23]={x=45,y=49},
             [24]={x=47,y=50},
             [25]={x=48,y=52}},
-        beginTime = 1550806440,
+        beginTime = 1550818440,
         basePrice = 100
     },
     [6] = {
@@ -176,7 +176,7 @@ GroundAucConfig ={
             [23]={x=45,y=54},
             [24]={x=47,y=55},
             [25]={x=48,y=57}},
-        beginTime = 1550806500,
+        beginTime = 1550818500,
         basePrice = 100
     },
     [7] = {
@@ -206,7 +206,7 @@ GroundAucConfig ={
             [23]={x=50,y=54},
             [24]={x=52,y=55},
             [25]={x=53,y=57}},
-        beginTime = 1550806560,
+        beginTime = 1550818560,
         basePrice = 100
     },
     [8] = {
@@ -236,7 +236,7 @@ GroundAucConfig ={
             [23]={x=55,y=54},
             [24]={x=57,y=55},
             [25]={x=58,y=57}},
-        beginTime = 1550806620,
+        beginTime = 1550818620,
         basePrice = 100
     },
     [9] = {
@@ -266,7 +266,7 @@ GroundAucConfig ={
             [23]={x=60,y=54},
             [24]={x=62,y=55},
             [25]={x=63,y=57}},
-        beginTime = 1550806680,
+        beginTime = 1550818680,
         basePrice = 100
     },
     [10] = {
@@ -296,7 +296,7 @@ GroundAucConfig ={
             [23]={x=60,y=49},
             [24]={x=62,y=50},
             [25]={x=63,y=52}},
-        beginTime = 1550806740,
+        beginTime = 1550818740,
         basePrice = 100
     },
     [11] = {
@@ -326,7 +326,7 @@ GroundAucConfig ={
             [23]={x=60,y=44},
             [24]={x=62,y=45},
             [25]={x=63,y=47}},
-        beginTime = 1550806800,
+        beginTime = 1550818800,
         basePrice = 100
     },
     [12] = {
@@ -356,7 +356,7 @@ GroundAucConfig ={
             [23]={x=60,y=39},
             [24]={x=62,y=40},
             [25]={x=63,y=42}},
-        beginTime = 1550806860,
+        beginTime = 1550818860,
         basePrice = 100
     },
     [13] = {
@@ -386,7 +386,7 @@ GroundAucConfig ={
             [23]={x=55,y=39},
             [24]={x=57,y=40},
             [25]={x=58,y=42}},
-        beginTime = 1550806920,
+        beginTime = 1550818920,
         basePrice = 100
     },
     [14] = {
@@ -416,7 +416,7 @@ GroundAucConfig ={
             [23]={x=50,y=39},
             [24]={x=52,y=40},
             [25]={x=53,y=42}},
-        beginTime = 1550806980,
+        beginTime = 1550818980,
         basePrice = 100
     },
     [15] = {
@@ -446,7 +446,7 @@ GroundAucConfig ={
             [23]={x=45,y=39},
             [24]={x=47,y=40},
             [25]={x=48,y=42}},
-        beginTime = 1550807040,
+        beginTime = 1550819040,
         basePrice = 100
     },
     [16] = {
@@ -476,7 +476,7 @@ GroundAucConfig ={
             [23]={x=40,y=39},
             [24]={x=42,y=40},
             [25]={x=43,y=42}},
-        beginTime = 1550807100,
+        beginTime = 1550819100,
         basePrice = 100
     },
     [17] = {
@@ -506,7 +506,7 @@ GroundAucConfig ={
             [23]={x=40,y=44},
             [24]={x=42,y=45},
             [25]={x=43,y=47}},
-        beginTime = 1550807160,
+        beginTime = 1550819160,
         basePrice = 100
     },
     [18] = {
@@ -536,7 +536,7 @@ GroundAucConfig ={
             [23]={x=40,y=49},
             [24]={x=42,y=50},
             [25]={x=43,y=52}},
-        beginTime = 1550807220,
+        beginTime = 1550819220,
         basePrice = 100
     },
     [19] = {
@@ -566,7 +566,7 @@ GroundAucConfig ={
             [23]={x=40,y=54},
             [24]={x=42,y=55},
             [25]={x=43,y=57}},
-        beginTime = 1550807280,
+        beginTime = 1550819280,
         basePrice = 100
     },
     [20] = {
@@ -596,7 +596,7 @@ GroundAucConfig ={
             [23]={x=40,y=59},
             [24]={x=42,y=60},
             [25]={x=43,y=62}},
-        beginTime = 1550807340,
+        beginTime = 1550819340,
         basePrice = 100
     },
     [21] = {
@@ -626,7 +626,7 @@ GroundAucConfig ={
             [23]={x=45,y=59},
             [24]={x=47,y=60},
             [25]={x=48,y=62}},
-        beginTime = 1550807400,
+        beginTime = 1550819400,
         basePrice = 100
     },
     [22] = {
@@ -656,7 +656,7 @@ GroundAucConfig ={
             [23]={x=50,y=59},
             [24]={x=52,y=60},
             [25]={x=53,y=62}},
-        beginTime = 1550807460,
+        beginTime = 1550819460,
         basePrice = 100
     },
     [23] = {
@@ -686,7 +686,7 @@ GroundAucConfig ={
             [23]={x=55,y=59},
             [24]={x=57,y=60},
             [25]={x=58,y=62}},
-        beginTime = 1550807520,
+        beginTime = 1550819520,
         basePrice = 100
     },
     [24] = {
@@ -716,7 +716,7 @@ GroundAucConfig ={
             [23]={x=60,y=59},
             [24]={x=62,y=60},
             [25]={x=63,y=62}},
-        beginTime = 1550807580,
+        beginTime = 1550819580,
         basePrice = 100
     },
     [25] = {
@@ -746,7 +746,7 @@ GroundAucConfig ={
             [23]={x=65,y=59},
             [24]={x=67,y=60},
             [25]={x=68,y=62}},
-        beginTime = 1550807640,
+        beginTime = 1550819640,
         basePrice = 100
     },
     [26] = {
@@ -776,7 +776,7 @@ GroundAucConfig ={
             [23]={x=65,y=54},
             [24]={x=67,y=55},
             [25]={x=68,y=57}},
-        beginTime = 1550807700,
+        beginTime = 1550819700,
         basePrice = 100
     },
     [27] = {
@@ -806,7 +806,7 @@ GroundAucConfig ={
             [23]={x=65,y=49},
             [24]={x=67,y=50},
             [25]={x=68,y=52}},
-        beginTime = 1550807760,
+        beginTime = 1550819760,
         basePrice = 100
     },
     [28] = {
@@ -836,7 +836,7 @@ GroundAucConfig ={
             [23]={x=65,y=44},
             [24]={x=67,y=45},
             [25]={x=68,y=47}},
-        beginTime = 1550807820,
+        beginTime = 1550819820,
         basePrice = 100
     },
     [29] = {
@@ -866,7 +866,7 @@ GroundAucConfig ={
             [23]={x=65,y=39},
             [24]={x=67,y=40},
             [25]={x=68,y=42}},
-        beginTime = 1550807880,
+        beginTime = 1550819880,
         basePrice = 100
     },
     [30] = {
@@ -896,7 +896,7 @@ GroundAucConfig ={
             [23]={x=65,y=34},
             [24]={x=67,y=35},
             [25]={x=68,y=37}},
-        beginTime = 1550807940,
+        beginTime = 1550819940,
         basePrice = 100
     },
     [31] = {
@@ -926,7 +926,7 @@ GroundAucConfig ={
             [23]={x=60,y=34},
             [24]={x=62,y=35},
             [25]={x=63,y=37}},
-        beginTime = 1550808000,
+        beginTime = 1550820000,
         basePrice = 100
     },
     [32] = {
@@ -956,7 +956,7 @@ GroundAucConfig ={
             [23]={x=55,y=34},
             [24]={x=57,y=35},
             [25]={x=58,y=37}},
-        beginTime = 1550808060,
+        beginTime = 1550820060,
         basePrice = 100
     },
     [33] = {
@@ -986,7 +986,7 @@ GroundAucConfig ={
             [23]={x=50,y=34},
             [24]={x=52,y=35},
             [25]={x=53,y=37}},
-        beginTime = 1550808120,
+        beginTime = 1550820120,
         basePrice = 100
     },
     [34] = {
@@ -1016,7 +1016,7 @@ GroundAucConfig ={
             [23]={x=45,y=34},
             [24]={x=47,y=35},
             [25]={x=48,y=37}},
-        beginTime = 1550808180,
+        beginTime = 1550820180,
         basePrice = 100
     },
     [35] = {
@@ -1046,7 +1046,7 @@ GroundAucConfig ={
             [23]={x=40,y=34},
             [24]={x=42,y=35},
             [25]={x=43,y=37}},
-        beginTime = 1550808240,
+        beginTime = 1550820240,
         basePrice = 100
     },
     [36] = {
@@ -1076,7 +1076,7 @@ GroundAucConfig ={
             [23]={x=35,y=34},
             [24]={x=37,y=35},
             [25]={x=38,y=37}},
-        beginTime = 1550808300,
+        beginTime = 1550820300,
         basePrice = 100
     },
     [37] = {
@@ -1106,7 +1106,7 @@ GroundAucConfig ={
             [23]={x=35,y=39},
             [24]={x=37,y=40},
             [25]={x=38,y=42}},
-        beginTime = 1550808360,
+        beginTime = 1550820360,
         basePrice = 100
     },
     [38] = {
@@ -1136,7 +1136,7 @@ GroundAucConfig ={
             [23]={x=35,y=44},
             [24]={x=37,y=45},
             [25]={x=38,y=47}},
-        beginTime = 1550808420,
+        beginTime = 1550820420,
         basePrice = 100
     },
     [39] = {
@@ -1166,7 +1166,7 @@ GroundAucConfig ={
             [23]={x=35,y=49},
             [24]={x=37,y=50},
             [25]={x=38,y=52}},
-        beginTime = 1550808480,
+        beginTime = 1550820480,
         basePrice = 100
     },
     [40] = {
@@ -1196,7 +1196,7 @@ GroundAucConfig ={
             [23]={x=35,y=54},
             [24]={x=37,y=55},
             [25]={x=38,y=57}},
-        beginTime = 1550808540,
+        beginTime = 1550820540,
         basePrice = 100
     },
     [41] = {
@@ -1226,7 +1226,7 @@ GroundAucConfig ={
             [23]={x=35,y=59},
             [24]={x=37,y=60},
             [25]={x=38,y=62}},
-        beginTime = 1550808600,
+        beginTime = 1550820600,
         basePrice = 100
     },
     [42] = {
@@ -1256,7 +1256,7 @@ GroundAucConfig ={
             [23]={x=35,y=64},
             [24]={x=37,y=65},
             [25]={x=38,y=67}},
-        beginTime = 1550808660,
+        beginTime = 1550820660,
         basePrice = 100
     },
     [43] = {
@@ -1286,7 +1286,7 @@ GroundAucConfig ={
             [23]={x=40,y=64},
             [24]={x=42,y=65},
             [25]={x=43,y=67}},
-        beginTime = 1550808720,
+        beginTime = 1550820720,
         basePrice = 100
     },
     [44] = {
@@ -1316,7 +1316,7 @@ GroundAucConfig ={
             [23]={x=45,y=64},
             [24]={x=47,y=65},
             [25]={x=48,y=67}},
-        beginTime = 1550808780,
+        beginTime = 1550820780,
         basePrice = 100
     },
     [45] = {
@@ -1346,7 +1346,7 @@ GroundAucConfig ={
             [23]={x=50,y=64},
             [24]={x=52,y=65},
             [25]={x=53,y=67}},
-        beginTime = 1550808840,
+        beginTime = 1550820840,
         basePrice = 100
     },
     [46] = {
@@ -1376,7 +1376,7 @@ GroundAucConfig ={
             [23]={x=55,y=64},
             [24]={x=57,y=65},
             [25]={x=58,y=67}},
-        beginTime = 1550808900,
+        beginTime = 1550820900,
         basePrice = 100
     },
     [47] = {
@@ -1406,7 +1406,7 @@ GroundAucConfig ={
             [23]={x=60,y=64},
             [24]={x=62,y=65},
             [25]={x=63,y=67}},
-        beginTime = 1550808960,
+        beginTime = 1550820960,
         basePrice = 100
     },
     [48] = {
@@ -1436,7 +1436,7 @@ GroundAucConfig ={
             [23]={x=65,y=64},
             [24]={x=67,y=65},
             [25]={x=68,y=67}},
-        beginTime = 1550809020,
+        beginTime = 1550821020,
         basePrice = 100
     },
     [49] = {
@@ -1466,7 +1466,7 @@ GroundAucConfig ={
             [23]={x=70,y=64},
             [24]={x=72,y=65},
             [25]={x=73,y=67}},
-        beginTime = 1550809080,
+        beginTime = 1550821080,
         basePrice = 100
     },
     [50] = {
@@ -1496,7 +1496,7 @@ GroundAucConfig ={
             [23]={x=70,y=59},
             [24]={x=72,y=60},
             [25]={x=73,y=62}},
-        beginTime = 1550809140,
+        beginTime = 1550821140,
         basePrice = 100
     },
 }

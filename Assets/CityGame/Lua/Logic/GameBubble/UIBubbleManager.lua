@@ -97,24 +97,7 @@ function UIBubbleManager._creatGroundAucBubbleItem(bubbleData, isStartAuc)
     end
     if this.groundAucNowObj == nil then
         this.groundAucNowObj = UnityEngine.Resources.Load(this.GroundAucObjPath)
-
-        --panelMgr:LoadPrefab_A(this.GroundAucObjPath, nil, nil, function(ins, obj )
-        --    if obj ~= nil then
-        --        this.groundAucNowObj = obj
-        --        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
-        --        go.transform:SetParent(this.BubbleParent.transform)
-        --        if this.hide then
-        --            go.transform.localScale = Vector3.zero
-        --        else
-        --            go.transform.localScale = Vector3.one
-        --        end
-        --        local data = bubbleData
-        --        data.bubbleObj = go  --将obj引用到lua中
-        --        local groundAucNowItem = UIBubbleGroundAucItem:new(data)
-        --        this.aucItemsTable[bubbleData.id] = groundAucNowItem
-        --    end
-        --end)
-        --return
+        --
     end
 
     local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)

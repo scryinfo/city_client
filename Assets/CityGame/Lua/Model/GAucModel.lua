@@ -10,7 +10,7 @@ local pbl = pbl
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
-GAucModel.BidTime = 60000
+GAucModel.BidTime = 30000
 
 --构建函数--
 function GAucModel.New()
@@ -83,32 +83,30 @@ function GAucModel.getNowAucDataFunc(msgGroundAuc)
     if this.groundAucDatas == nil then
         this.groundAucDatas = {}
     end
-    local lastId = 0
-    local isFisish = false
-    local length = #GroundAucConfig
+    local maxId = 0
     for i, value in pairs(msgGroundAuc.auction) do
-        if value.id >= lastId then
-            lastId = value.id
+        if value.id >= maxId then
+            maxId = value.id
         end
         --拍卖
         UIBubbleManager._creatGroundAucBubbleItem(value, true)
         UIBubbleManager.startBubble()
-        if value == length then
-            isFisish = true
-        end
     end
-    --生成即将拍卖的item
-    if isFisish == false then
-        GAucModel.updateSoonItem(lastId + 1)
-    end
+    GAucModel.updateSoonItem(maxId)
 end
 --更新即将拍卖
-function GAucModel.updateSoonItem(groundId)
-    if GroundAucConfig[groundId] == nil then
-        return
+function GAucModel.updateSoonItem(id)
+    local time = TimeSynchronized.GetTheCurrentTime()
+    for i = id, #GroundAucConfig do
+        if GroundAucConfig[id] == nil then
+            return
+        end
+        if GroundAucConfig[i].beginTime >= time then
+            UIBubbleManager._creatGroundAucBubbleItem({id = i}, false)
+            UIBubbleManager.startBubble()
+            return
+        end
     end
-    UIBubbleManager._creatGroundAucBubbleItem({id = groundId}, false)
-    UIBubbleManager.startBubble()
 end
 
 --拍卖结束

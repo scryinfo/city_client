@@ -213,7 +213,7 @@ function GroundAuctionCtrl:BidGround(ins)
         return
     end
 
-    local mMoney = DataManager.GetMoney()
+    local mMoney = tonumber(GetClientPriceString(DataManager.GetMoney()))
     if tonumber(bidPrice) > mMoney  then
         Event.Brocast("SmallPop", GetLanguage(22010003), 300)
         return
@@ -283,11 +283,11 @@ function GroundAuctionCtrl:_bidStart(groundData)
     if groundData.id ~= self.m_data.id then
         return
     end
-    Event.Brocast("m_RegistGroundBidInfor")
+    --Event.Brocast("m_RegistGroundBidInfor")
 
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.setSoonAndNow(true)
     GroundAuctionPanel.setBidState(false)
     GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(GroundAucConfig[self.m_data.id].basePrice), 30, 24)
-    self.m_data = groundData
+    --self.m_data = groundData
 end

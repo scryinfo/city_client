@@ -100,7 +100,7 @@ function GroundAuctionCtrl:_initPanelData()
             self.bidHistory = ct.deepCopy(self.m_data.bidHistory)
             self:_createHistory()
             self.highestPrice = GetClientPriceString(self.bidHistory[1].price)
-
+            GroundAuctionPanel.historyContent.localPosition = Vector2.zero
             self.startTimeDownForFinish = true  --拍卖结束倒计时
         end
         Event.Brocast("m_RegistGroundBidInfor")

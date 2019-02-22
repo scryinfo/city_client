@@ -148,28 +148,28 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     if BuildDataStack[tempCollectionID].BlockDatas == nil then
         CreateBlockDataTable(tempCollectionID)
     end
-    if not BuildDataStack[tempCollectionID].RoteDatas then
+    if BuildDataStack[tempCollectionID].RoteDatas == nil then
         BuildDataStack[tempCollectionID].RoteDatas = {}
     end
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
-        local ThisRoteDatas = BuildDataStack[tempCollectionID].RoteDatas[itemBlockID]
+        local ThisRoteDatas = BuildDataStack[tempCollectionID].RoteDatas
         while true do
             if itemNodeID == -1 then
                 local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
                 --如果有道路数据
                 if roadNum > 0 and roadNum < #RoadNumConfig  then
-                    if not ThisRoteDatas then
-                        ThisRoteDatas ={}
+                    if not ThisRoteDatas[itemBlockID] then
+                        ThisRoteDatas[itemBlockID] ={}
                     else
-                        if ThisRoteDatas.roadNum ==  roadNum then
+                        if ThisRoteDatas[itemBlockID].roadNum ==  roadNum then
                             break
                         else
                             --删除之前的道路Obj
-                            MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas.roadNum]].poolName,ThisRoteDatas.roadObj)
-                            ThisRoteDatas.roadObj = nil
+                            MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
+                            ThisRoteDatas[itemBlockID].roadObj = nil
                         end
                     end
-                    ThisRoteDatas.roadNum = roadNum
+                    ThisRoteDatas[itemBlockID].roadNum = roadNum
                     local go = MapObjectsManager.GetGameObjectByPool(RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
                     if nil ~= RoadRootObj then
                         go.transform:SetParent(RoadRootObj.transform)
@@ -178,17 +178,17 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     local Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
                     Vec.y = Vec.y + 0.02
                     go.transform.position = Vec
-                    ThisRoteDatas.roadObj = go
+                    ThisRoteDatas[itemBlockID].roadObj = go
                     --如果没有道路数据，但原先有道路记录，则清除
-                elseif  roadNum == 0 and ThisRoteDatas ~= nil and ThisRoteDatas.roadObj ~= nil and ThisRoteDatas.roadNum ~= nil then
-                    MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas.roadNum]].poolName,ThisRoteDatas.roadObj)
-                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
+                elseif  roadNum == 0 and ThisRoteDatas[itemBlockID] ~= nil and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil then
+                    MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
+                    ThisRoteDatas[itemBlockID] = nil
                 end
             else
-                if nil ~= ThisRoteDatas and ThisRoteDatas.roadObj ~= nil and ThisRoteDatas.roadNum ~= nil  then
+                if nil ~= ThisRoteDatas[itemBlockID] and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil  then
                     --删除之前的道路Obj
-                    MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas.roadNum]].poolName,ThisRoteDatas.roadObj)
-                    BuildDataStack[tempCollectionID].RoteDatas[itemBlockID] = nil
+                    MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
+                    ThisRoteDatas[itemBlockID] = nil
                 end
             end
             break
@@ -205,7 +205,7 @@ function DataManager.RemoveWaysByCollectionID(tempCollectionID)
         return
     end
     for key, value in pairs(BuildDataStack[tempCollectionID].RoteDatas) do
-        destroy(BuildDataStack[tempCollectionID].RoteDatas[key].roadObj)
+        MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[BuildDataStack[tempCollectionID].RoteDatas[key].roadNum]].poolName,BuildDataStack[tempCollectionID].RoteDatas[key].roadObj)
         BuildDataStack[tempCollectionID].RoteDatas[key] = nil
     end
 end

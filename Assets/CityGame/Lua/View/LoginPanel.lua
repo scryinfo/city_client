@@ -9,7 +9,6 @@ function LoginPanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
 	this.InitPanel();
-	logWarn("Awake lua--->>"..gameObject.name);
 end
 
 --初始化面板--
@@ -29,6 +28,6 @@ function LoginPanel.Start()
 end
 --单击事件--
 function LoginPanel.OnDestroy()
-	logWarn("OnDestroy---->>>");
+
 end
 

@@ -54,7 +54,7 @@ namespace LuaFramework {
 #if ASYNC_MODE
             ResManager.LoadPrefab(abName, assetName, delegate (UnityEngine.Object[] objs, AssetBundle ab)
             {
-                if (objs.Length == 0) return;
+                if (objs == null || objs.Length == 0) return;
 
                 //objs[0].name = "Assets/CityGame/Resources/"+
                 string test = objs[0].name;

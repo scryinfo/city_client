@@ -108,7 +108,7 @@ function ServerListCtrl:c_OnOK(go)
 end
 
 function ServerListCtrl:c_GsCreateRole()
-    ct.OpenCtrl("SelectHeadCtrl")
+    ct.OpenCtrl("AvtarCtrl")
 end
 
 function ServerListCtrl:c_GsLoginSuccess(playerId)

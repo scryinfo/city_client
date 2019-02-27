@@ -33,10 +33,7 @@ FiveType={
   decal=10,
 }
 
-HeadSizeType={
-  big=1,
-  small=2,
-}
+
 
 ---==========================================================================================框架函数============================================================================================
 
@@ -287,6 +284,8 @@ function AvtarCtrl:changAparance(data)
         LoadSprite(path,appearance[type].ima)
     end
 end
+
+
 
 function GetAvtar(faceId)
     local arr=split(faceId,"-")

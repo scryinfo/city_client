@@ -49,17 +49,25 @@ DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID =
 ---------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
 -------------------------------原子地块数据--------------------------------
 --功能
---  创建一个新的原子地块集合，并将内部所有数据置为 -1
+--  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
 --  tempCollectionID: 所属地块集合ID
 local function CreateBlockDataTable(tempCollectionID)
     --创建一个新的原子地块集合
-    BuildDataStack[tempCollectionID].BlockDatas = {}
+    local TempTable =  {}
+    local systemMapTemp = SystemMapConfig[tempCollectionID]
+    for id, value in pairs(systemMapTemp) do
+        TempTable[id] = SystemMapConversionConfig[value]
+    end
+    BuildDataStack[tempCollectionID].BlockDatas = TempTable
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     --将内部所有数据置为 -1
     local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
     for key, value in pairs(idList) do
-        BuildDataStack[tempCollectionID].BlockDatas[value] = -1
+        local temp = BuildDataStack[tempCollectionID].BlockDatas
+        if temp[value] == nil then
+            temp[value] = -1
+        end
     end
 end
 
@@ -154,7 +162,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
         local ThisRoteDatas = BuildDataStack[tempCollectionID].RoteDatas
         while true do
-            if itemNodeID == -1 then
+            if itemNodeID < 0 then
                 local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
                 --如果有道路数据
                 if roadNum > 0 and roadNum < #RoadNumConfig  then
@@ -246,12 +254,12 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
     for key, value in pairs(RoadAroundNumber) do
         if value.ID and value.ID > 0 and value.ID < TerrainRangeSize*TerrainRangeSize then
             if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
-                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] ~= -1 then
+                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] >= 0 then
                     roadNum  = roadNum + value.Num
                 end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] >= 0  then
                     roadNum  = roadNum + value.Num
                 end
             end
@@ -334,7 +342,7 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         --计算需要删除的地块里面有没有跨地块的建筑，如果有-->BaseBlockData不删除
         for key, value in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
             --判断是否有建筑跨地块
-            if value ~= -1 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
+            if value >= 0 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
                 --需要判断该建筑是否在AOI范围内
                 local attributeCollectionID = TerrainManager.BlockIDTurnCollectionID(value)
                 if TerrainManager.IsBelongToCameraCollectionIDAOIList(attributeCollectionID)  then
@@ -1186,7 +1194,7 @@ end
 --判断该地块允不允许改变
 function DataManager.IsEnableChangeGround(blockID)
     local blockdata = DataManager.GetBlockDataByID(blockID)
-    if -1 ~= blockdata and nil ~= blockdata then
+    if nil ~= blockdata and  0 <= blockdata  then
         return false
     else
         return true

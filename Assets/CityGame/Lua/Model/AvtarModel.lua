@@ -7,23 +7,25 @@
 
 AvtarModel = class("AvtarModel",ModelBase)
 local pbl = pbl
-
+local insID
 function AvtarModel:initialize(insId)
     self.insId = insId
+    insID=insId
     self:OnCreate()
 end
 
 function AvtarModel:OnCreate()
-    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
-
+    Event.AddListener("m_setRoleFaceId", self.m_setRoleFaceId,self)--设置FaceId
     --网络回调
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
+    --DataManager.ModelRegisterNetMsg(insID,"gscode.OpCode","setRoleFaceId","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
 
 end
-
-function AvtarModel:Close()
-    --清空本地UI事件
+---================================================================================发包===========================================================================
+function AvtarModel:m_setRoleFaceId(faceId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setRoleFaceId","gs.Str",{ str =faceId })
 end
+
+---================================================================================收包===========================================================================
 
 
 

@@ -12,6 +12,9 @@ local panel
 local LuaBehaviour;
 local this
 local headPrefab={}
+headPrefab[1]={}
+headPrefab[2]={}
+
 local currHead
 
 local fiveItemPath="View/AvtarItems/fiveItem"
@@ -30,6 +33,11 @@ FiveType={
   decal=10,
 }
 
+HeadSizeType={
+  big=1,
+  small=2,
+}
+
 ---==========================================================================================框架函数============================================================================================
 
 function  AvtarCtrl:bundleName()
@@ -44,12 +52,10 @@ function AvtarCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-function AvtarCtrl:Active()
 
-end
 
 function AvtarCtrl:Refresh()
-
+    DataManager.OpenDetailModel(MunicipalModel,OpenModelInsID.AvtarCtrl)
 end
 
 function  AvtarCtrl:Hide()
@@ -151,10 +157,27 @@ local function FindOrgan(transform)
 end
 
 function AvtarCtrl:begin()
-    sex=1
-    self:randomChange()
-    self:switchKinds(AvtarConfig.man[1].kinds)
+    local faceId=DataManager.GetFaceId()
+
+    if faceId then--有ID隐藏男女
+        local arr=split(faceId,"-")
+        if arr[1]=="1" then
+            self:switchKinds(AvtarConfig.man[1].kinds)
+        else
+            self:switchKinds(AvtarConfig.woMan[1].kinds)
+        end
+        GetAvtar(faceId)
+        panel.maleBtn.gameObject:SetActive(false)
+        panel.feMaleBtn.gameObject:SetActive(false)
+
+    else--无ID
+        sex=1
+        self:randomChange()
+        self:switchKinds(AvtarConfig.man[1].kinds)
+        --加载五官
+    end
     InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
+
 end
 
 function AvtarCtrl:switchKinds(config)
@@ -163,10 +186,17 @@ end
 
 local num
 function AvtarCtrl:randomChange()
+    local config
+    if sex==1 then
+        config=AvtarConfig.man
+    else
+        config=AvtarConfig.woMan
+    end
 
-    for i, qiGuan in ipairs(AvtarConfig.man) do
+
+    for i, qiGuan in ipairs(config) do
         num =math.random(1,#qiGuan.kinds)
-        self:changAparance(AvtarConfig.man[i].kinds[num])
+        self:changAparance(config[i].kinds[num])
     end
 
 end
@@ -182,33 +212,61 @@ function AvtarCtrl:changAparance(data)
     nums=data.id or num
     --特殊处理头和帽子
     if type=="head" then
+        local config
+        if sex==1 then
+            config=HeadConfig.man
+        else
+            config=HeadConfig.woMan
+        end
 
         --已有的隐藏
         if currHead then
             currHead:SetActive(false)
         end
         --避免重复生成
-        if headPrefab[nums] then
-            headPrefab[nums]:SetActive(true)
-        else
-            headPrefab[nums]=creatGoods(HeadConfig.man[nums].path,panel.showContent)
+        if headPrefab[sex][nums] then
+            headPrefab[sex][nums]:SetActive(true)
+        else--
+            headPrefab[sex][nums]=creatGoods(config[nums].path,panel.showContent)
         end
 
-        currHead=headPrefab[nums]
-        FindOrgan(headPrefab[nums].transform)
+        currHead=headPrefab[sex][nums]
+        FindOrgan(headPrefab[sex][nums].transform)
 
         --加载原来服饰
         for key, value in pairs(appearance) do
             if key ~= "head" and    pastApperanceID[key] then
-                LoadSprite(pastApperanceID[key].path,appearance[key].ima)
-                if key=="frontHat" then
-                    LoadSprite(pastApperanceID["backHat"].path,appearance["backHat"].ima)
+                
+                if pastApperanceID[key].path=="" then--部件不要的处理
+                    if appearance[key].ima and appearance[key].ima.transform then
+                        appearance[key].ima.transform.gameObject:SetActive(false)
+                    end
+                else--部件要的处理
+                    if appearance[key].ima and appearance[key].ima.transform then
+                        appearance[key].ima.transform.gameObject:SetActive(true)
+                        LoadSprite(pastApperanceID[key].path,appearance[key].ima)
+                    end
                 end
+
+                 if key=="frontHat" then
+                    if pastApperanceID["backHat"].path=="" then--部件不要的处理
+                        appearance["backHat"].ima.transform.gameObject:SetActive(false)
+                    else--部件不要的处理
+                        appearance["backHat"].ima.transform.gameObject:SetActive(true)
+                        LoadSprite(pastApperanceID["backHat"].path,appearance["backHat"].ima)
+                    end
+                end
+                
             end
         end
 
     elseif type=="frontHat" then
-        LoadSprite(arr[3],appearance[arr[4]].ima)
+        if arr[3]=="" then
+            appearance[arr[4]].ima.transform.gameObject:SetActive(false)
+        else
+            appearance[arr[4]].ima.transform.gameObject:SetActive(true)
+            LoadSprite(arr[3],appearance[arr[4]].ima)
+        end
         pastApperanceID["backHat"]={}
         pastApperanceID["backHat"].path=arr[3]
     end
@@ -222,11 +280,46 @@ function AvtarCtrl:changAparance(data)
 
     pastApperanceID[type].path=path
 
-    LoadSprite(path,appearance[type].ima)
+    if path=="" then
+        appearance[type].ima.transform.gameObject:SetActive(false)
+    else
+        appearance[type].ima.transform.gameObject:SetActive(true)
+        LoadSprite(path,appearance[type].ima)
+    end
 end
 
+function GetAvtar(faceId)
+    local arr=split(faceId,"-")
+    if arr[1]=="1" then--男人
+        sex=1
+        --todo：加载小人头像
+        headPrefab[sex][1]=creatGoods(HeadConfig.man[1].path,panel.showContent)
+        currHead=headPrefab[sex][1]
+        FindOrgan(headPrefab[sex][1].transform)
+        local temp=split(arr[2],",")
+        for i = 1, #temp ,2 do
+            if temp[i]~="" then
+                local type=tonumber(temp[i])
+                local typeId=tonumber(temp[i+1])
+                local kind=AvtarConfig.man[type].kinds[typeId]
+                num=type
+                this:changAparance(kind)
+            end
+        end
 
+    else--女人
+        sex=2
+        --todo：加载小人头像
+        local temp=split(arr[2],",")
+        for i = 1, #temp ,2 do
+            local kind=AvtarConfig.woMan[temp[i]].kinds[temp[i+1]].path
+            this:changAparance(kind)
+        end
 
+    end
+
+    return currHead
+end
 
 ---==========================================================================================点击函数===================================================================================================
 --返回
@@ -236,7 +329,7 @@ end
 
 --确定
 function AvtarCtrl:c_OnClick_confirm()
-   local faceId,type,typeId=""
+    local faceId,type,typeId=""
     for key, value in pairs(appearance) do
         if value.typeId then
             type=tostring(FiveType[key])
@@ -245,12 +338,23 @@ function AvtarCtrl:c_OnClick_confirm()
         end
     end
     faceId=tostring(sex).."-"..faceId
+    local temp={}
+    temp.faceId=faceId
 
-    if sex==1 then
-        ct.OpenCtrl("CreateRoleCtrl",faceId,true)
+
+
+    if DataManager.GetFaceId() then
+        Event.Brocast("m_setRoleFaceId",faceId)
     else
-        ct.OpenCtrl("CreateRoleCtrl",faceId,false)
+        if sex==1 then
+            temp.gender=true
+            ct.OpenCtrl("CreateRoleCtrl",temp)
+        else
+            temp.gender=false
+            ct.OpenCtrl("CreateRoleCtrl",temp)
+        end
     end
+
 end
 
 --随机
@@ -264,6 +368,8 @@ function AvtarCtrl:c_OnClick_male(ins)
     panel.maleSelect.localScale=Vector3.one
     InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
     sex=1
+    ins:randomChange()
+    ins:switchKinds(AvtarConfig.man[1].kinds)
 end
 
 --女性
@@ -272,6 +378,8 @@ function AvtarCtrl:c_OnClick_faMale(ins)
     panel.maleSelect.localScale=Vector3.zero
     InsAndObjectPool(AvtarConfig.woMan,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
     sex=2
+    ins:randomChange()
+    ins:switchKinds(AvtarConfig.woMan[1].kinds)
 end
 
 

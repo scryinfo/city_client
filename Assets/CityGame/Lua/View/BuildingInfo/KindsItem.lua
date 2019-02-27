@@ -32,6 +32,12 @@ function KindsItem:saveData(data)
     self.data=data
     local arr=split(data.path,",")
     self.id=data.id
-    LoadSprite(arr[1],self.ima)
     self.type=arr[2]
+    if arr[1]=="" then
+        self.ima.transform.localScale=Vector3.zero
+    else
+        self.ima.transform.localScale=Vector3.one
+        LoadSprite(arr[1],self.ima)
+    end
+
 end

@@ -44,7 +44,7 @@ function  AvatarManger.Awake()
 end
 
 
-local  function setSize(go,configType)
+ function AvatarManger.setSize(go,configType)
     local V,H=UnityEngine.RectTransform.Axis.Vertical,UnityEngine.RectTransform.Axis.Horizontal
 
     for i, sizeData in ipairs(configType) do
@@ -167,7 +167,6 @@ local function changAparance(kind)
 
 end
 
-
 function AvatarManger.GetBigAvatar(faceId)
     local arr,config=split(faceId,"-")
 
@@ -202,20 +201,13 @@ function AvatarManger.GetBigAvatar(faceId)
     return temp
 end
 
-
-
 function AvatarManger.GetSmallAvatar(faceId)
     local AvatarData= AvatarManger.GetBigAvatar(faceId)
 
-    local go= setSize(AvatarData.go,HeadSizeType.small)
+    local go= AvatarManger.setSize(AvatarData.go,HeadSizeType.small)
     AvatarData.go=go
     return AvatarData
 end
-
-
-
-
-
 
 
 function AvatarManger.CollectAvatar(AvatarData)

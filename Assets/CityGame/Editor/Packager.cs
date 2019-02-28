@@ -236,46 +236,90 @@ public class Packager {
         HandleNoneLuaBundleInLua();
     }
 
-    static void AutoAddBuildMap(string pattern, string path, string rootPath)
+    static void AutoAddBuildMap(string pattern, string path, string rootPath, bool lastDirectory = false)
     {
-        string temp = "";
         string subdir = path.Replace(rootPath, "");
         subdir = subdir.Replace("\\", "");
         if (subdir.Length > 0)
             subdir += "_";
 
         string[] files = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-        int pos = -1;
-        for (int i = 0; i < files.Length; i++)
+        path = path.Replace('\\', '/');
+
+        string directory = "";
+        int posD = path.LastIndexOf('/');
+        if (posD >= 0)
         {
-            files[i] = files[i].Replace('\\', '/');
-            pos = files[i].LastIndexOf('/');
-            if (pos >= 0)
+            directory = path.Remove(0, posD + 1).Replace('.', '_');
+        }
+
+        path = path.Replace('/', '_');
+        int pos = -1;
+        if (lastDirectory)
+        {
+            if(files.Length > 0)
             {
-                string bundleName = subdir + files[i].Remove(0, pos + 1);
-                string oldExt = pattern.Remove(0,1);
-                bundleName = bundleName.Replace(oldExt, "");
-                bundleName += AppConst.BundleExt;
-                AssetBundleBuild build = new AssetBundleBuild();
-                build.assetBundleName = bundleName;
-                build.assetNames = new string[] { files[i] };
-                assetBundleList[files[i]] = bundleName.ToLower();
-                maps.Add(build);
+                string bundleName = directory + path.GetHashCode().ToString() + AppConst.BundleExt;
+                bundleName = bundleName.Replace('-', '_');
+                int resCount = 0;
+                for (int i = 0; i < files.Length; i++)
+                {                    
+                    files[i] = files[i].Replace('\\', '/');
+                    if (assetBundleList.ContainsKey(files[i]))
+                    {
+                        continue;
+                    }
+                    resCount++; 
+                    assetBundleList[files[i]] = bundleName.ToLower();
+                }
+
+                if(resCount > 0)
+                {
+                    AssetBundleBuild build = new AssetBundleBuild();
+                    build.assetBundleName = bundleName;
+                    build.assetNames = files;
+                    maps.Add(build);
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Replace('\\', '/');
+                if (assetBundleList.ContainsKey(files[i]))
+                {
+                    continue;
+                }
+                pos = files[i].LastIndexOf('/');
+                if (pos >= 0)
+                {
+                    string bundleName = subdir + files[i].Remove(0, pos + 1);
+                    string pName = bundleName.Replace('.', '_');
+                    string oldExt = pattern.Remove(0, 1).Replace('.', '_');
+                    bundleName = bundleName.Replace('.','_');
+                    bundleName = pName + (path + '_' + bundleName).GetHashCode().ToString() + AppConst.BundleExt;
+                    bundleName = bundleName.Replace('-', '_');
+                    AssetBundleBuild build = new AssetBundleBuild();
+                    build.assetBundleName = bundleName;
+                    build.assetNames = new string[] { files[i] };
+                    assetBundleList[files[i]] = bundleName.ToLower();
+                    maps.Add(build);
+                }
             }
         }
     }
 
-    static void AddBuildMapOp(ref string path, ref string[] patterns)
+    static void AddBuildMapOp(ref string path, ref string[] patterns, bool lastDirectory = false)
     {
         for (int i = 0; i < patterns.Length; ++i)
         {
-            AutoAddBuildMap(patterns[i], path, path);            
+            AutoAddBuildMap(patterns[i], path, path, lastDirectory);            
         }
 
         string[] dirs = Directory.GetDirectories(path);
         for (int i = 0; i < dirs.Length; ++i)
         {
-            AddBuildMapOp(ref dirs[i], ref patterns);
+            AddBuildMapOp(ref dirs[i], ref patterns, lastDirectory);
         }
     }
 
@@ -414,8 +458,9 @@ public class Packager {
         {
             string bundleName = path;
             bundleName = bundleName.Replace("/", "_");
-
-            build.assetBundleName = bundleName + AppConst.BundleExt;
+            string pName = bundleName;
+            bundleName = (bundleName + AppConst.BundleExt.Replace(".", "_")).GetHashCode().ToString();
+            build.assetBundleName = pName + bundleName + AppConst.BundleExt;
             List<string> reslist = new List<string>();
 
             for (int i = 0; i < patterns.Length; ++i)
@@ -424,6 +469,10 @@ public class Packager {
                 for(int j = 0; j < files.Length; ++j)
                 {
                     files[j] = files[j].Replace('\\', '/');
+                    if (assetBundleList.ContainsKey(files[i]))
+                    {
+                        continue;
+                    }
                     assetBundleList[files[j]] = build.assetBundleName.ToLower();
                 }
                 reslist.AddRange(files);                
@@ -446,85 +495,34 @@ public class Packager {
         string[] patterns = { "*.png", "*.otf", "*.prefab" };
         AssetBundleBuild pkginfo;
         pkginfo.assetBundleName = null;
-        AddBuildMapInOne(ref curPath, ref patterns);
 
+        AddBuildMapOp(ref curPath, ref patterns, false);
         curPath = "Assets/CityGame/Resources/Atlas";
-        AddBuildMapInOne(ref curPath, ref patterns);
-
+        AddBuildMapOp(ref curPath, ref patterns, true);
         curPath = "Assets/CityGame/Resources/Building";
-        AddBuildMapInOne(ref curPath, ref patterns);
+        AddBuildMapOp(ref curPath, ref patterns, true);
+
+        curPath = "Assets/CityGame/Resources/View/Building";
+        AddBuildMapOp(ref curPath, ref patterns, false);
 
         curPath = "Assets/CityGame/Resources/View";
-        AddBuildMapInOne(ref curPath, ref patterns);
+        AddBuildMapOp(ref curPath, ref patterns, true);
 
-        //AddBuildMapOp("Assets/CityGame/Resources/Atlas");
-        //AddBuildMapOp("Assets/CityGame/Resources/testPng");
-        //AddBuildMapOp("Assets/CityGame/Resources/View");
+        
 
-        return;
+        /*AddBuildMapOp(ref curPath, ref patterns, false);
+        curPath = "Assets/CityGame/Resources/Atlas";
+        AddBuildMapOp(ref curPath, ref patterns, true);
+        curPath = "Assets/CityGame/Resources/Building";
+        AddBuildMapOp(ref curPath, ref patterns, true);
 
-        AddBuildMap("CreateAvatar" + AppConst.BundleExt, "CreateAvatarPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Login" + AppConst.BundleExt, "LoginPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("SelectAvatar" + AppConst.BundleExt, "SelectAvatarPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("GameWorld" + AppConst.BundleExt, "GameWorldPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("PlayerHead" + AppConst.BundleExt, "PlayerHeadPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("TargetHead" + AppConst.BundleExt, "TargetHeadPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("GroundAuction" + AppConst.BundleExt, "GroundAuctionPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingInfo" + AppConst.BundleExt, "BuildingInfoPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingInfoRight" + AppConst.BundleExt, "BuildingInfoRightPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BuildingTransfer" + AppConst.BundleExt, "BuildingTransferPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("House" + AppConst.BundleExt, "HousePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("BtnDialogPage" + AppConst.BundleExt, "BtnDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
-        AddBuildMap("InputDialogPage" + AppConst.BundleExt, "InputDialogPagePanel.prefab", "Assets/CityGame/Resources/View/Common");
-        AddBuildMap("HouseChangeRent" + AppConst.BundleExt, "HouseChangeRentPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Exchange" + AppConst.BundleExt, "ExchangePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("WagesAdjustBox" + AppConst.BundleExt, "WagesAdjustBoxPanel.prefab", "Assets/CityGame/Resources/View");
+        //view中的building太大，打单独包
+//         curPath = "Assets/CityGame/Resources/View/Building";
+//         AddBuildMapOp(ref curPath, ref patterns, false);
 
-        //测试滑动--交易所
-        AddBuildMap("TestExchange" + AppConst.BundleExt, "TestExchangePanel.prefab", "Assets/CityGame/Resources/View/TestCycle");
-        AddBuildMap("ScorllTestPrefab" + AppConst.BundleExt, "ScorllTestPrefab.prefab", "Assets/CityGame/Resources/View/TestCycle");
+        curPath = "Assets/CityGame/Resources/View";
+        AddBuildMapOp(ref curPath, ref patterns, true);        */
 
-        AddBuildMap("UIRoot" + AppConst.BundleExt, "UIRootPanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("TopBar" + AppConst.BundleExt, "TopBarPanel.prefab", "Assets/CityGame/Resources/View");
-
-        AddBuildMap("Notice" + AppConst.BundleExt, "NoticePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("Battle" + AppConst.BundleExt, "BattlePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("SkillPage" + AppConst.BundleExt, "SkillPagePanel.prefab", "Assets/CityGame/Resources/View");
-        AddBuildMap("MainPage" + AppConst.BundleExt, "MainPagePanel.prefab", "Assets/CityGame/Resources/View");
-
-        AddBuildMap("Model" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Model");
-        AddBuildMap("Skill" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Effect/Prefab");
-        //AddBuildMap("Terrain" + AppConst.BundleExt, "*.prefab", "Assets/CityGame/Resources/Terrain");
-
-        //饼图
-        AddBuildMap("PieCanvas" + AppConst.BundleExt, "PieCanvas.prefab", "Assets/CityGame/Resources/Prefab/PieChart");
-        //曲线图
-        AddBuildMap("LineChart" + AppConst.BundleExt, "LineChartPanel.prefab", "Assets/CityGame/Resources/View");
-
-        //游戏主界面
-        AddBuildMap("GameMainInterface" + AppConst.BundleExt, "GameMainInterfacePanel.prefab", "Assets/CityGame/Resources/View");
-        //角色管理面板
-        AddBuildMap("RoleManager" + AppConst.BundleExt, "RoleManagerPanel.prefab", "Assets/CityGame/Resources/View");
-        //选服页面
-        AddBuildMap("ServerList" + AppConst.BundleExt, "ServerListPanel.prefab", "Assets/CityGame/Resources/View");
-        //创角页面
-        AddBuildMap("CreateRole" + AppConst.BundleExt, "CreateRolePanel.prefab", "Assets/CityGame/Resources/View");
-
-        //原料厂主页
-        AddBuildMap("Material" + AppConst.BundleExt, "MaterialPanel.prefab", "Assets/CityGame/Resources/View");
-        //仓库面板
-        AddBuildMap("Warehouse" + AppConst.BundleExt, "WarehousePanel.prefab", "Assets/CityGame/Resources/View");
-        //货架面板
-        AddBuildMap("Shelf" + AppConst.BundleExt,"ShelfPanel.prefab", "Assets/CityGame/Resources/View");
-        //调整生产线
-        AddBuildMap("AdjustProductionLine" + AppConst.BundleExt, "AdjustProductionLinePanel.prefab","Assets/CityGame/Resources/View");
-        //选择仓库
-        AddBuildMap("ChooseWarehousePanel" + AppConst.BundleExt, "ChooseWarehousePanel.prefab", "Assets/CityGame/Resources/View");
-
-        //中心仓库
-        AddBuildMap("CenterWareHouse" + AppConst.BundleExt, "CenterWareHousePanel.prefab", "Assets/CityGame/Resources/View");
-        //玩家信息提示框
-        AddBuildMap("MessageTooltip" + AppConst.BundleExt, "MessageTooltipPanel.prefab", "Assets/CityGame/Resources/View");
     }
 
     /// <summary>

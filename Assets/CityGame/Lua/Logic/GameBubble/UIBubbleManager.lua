@@ -8,8 +8,6 @@ UIBubbleManager= {}
 local this = UIBubbleManager
 local pbl = pbl
 
-UIBubbleManager.GroundAucSoonObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucSoonItem"  --即将拍卖
-UIBubbleManager.GroundAucNowObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucNowItem"  --正在拍卖
 UIBubbleManager.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
 UIBubbleManager.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
 UIBubbleManager.GroundAucObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucItem"  --拍卖气泡
@@ -93,12 +91,13 @@ function UIBubbleManager.updateAucData(data)
 end
 
 --创建一个拍卖item
-function UIBubbleManager._creatGroundAucBubbleItem(bubbleData)
+function UIBubbleManager._creatGroundAucBubbleItem(bubbleData, isStartAuc)
     if this.aucItemsTable == nil then
         this.aucItemsTable = {}
     end
     if this.groundAucNowObj == nil then
         this.groundAucNowObj = UnityEngine.Resources.Load(this.GroundAucObjPath)
+        --
     end
 
     local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
@@ -110,8 +109,9 @@ function UIBubbleManager._creatGroundAucBubbleItem(bubbleData)
     end
     local data = bubbleData
     data.bubbleObj = go  --将obj引用到lua中
+    data.isStartAuc = isStartAuc
     local groundAucNowItem = UIBubbleGroundAucItem:new(data)
-    this.aucItemsTable[bubbleData.aucInfo.id] = groundAucNowItem
+    this.aucItemsTable[bubbleData.id] = groundAucNowItem
 end
 
 --判断是否点击到拍卖的地块
@@ -143,23 +143,24 @@ end
 
 --点了主页的按钮
 function UIBubbleManager._getNowAndSoonState()
-    if this.aucItemsTable == nil then
-        return nil
-    end
-    local soonData = {}
-    for i, item in pairs(this.aucItemsTable) do
-        if item ~= nil then
-            if item:_getAucState() == true then
-                local beginTime, durationSec = item:_getTimeDownInfo()
-                local data = {groundState = 1, beginTime = beginTime, durationSec = durationSec}
-                return data
-            else
-                local beginTime, durationSec = item:_getTimeDownInfo()
-                soonData = {groundState = 0, beginTime = beginTime, durationSec = durationSec}
-            end
-        end
-    end
-    return soonData
+    --if this.aucItemsTable == nil then
+    --    return nil
+    --end
+    --local soonData = {}
+    --for i, item in pairs(this.aucItemsTable) do
+    --    if item ~= nil then
+    --        if item:_getAucState() == true then
+    --            local beginTime, durationSec = item:_getTimeDownInfo()
+    --            local data = {groundState = 1, beginTime = beginTime, durationSec = durationSec}
+    --            return data
+    --        else
+    --            local beginTime, durationSec = item:_getTimeDownInfo()
+    --            soonData = {groundState = 0, beginTime = beginTime, durationSec = durationSec}
+    --        end
+    --    end
+    --end
+    --return soonData
+    return nil
 end
 
 ----

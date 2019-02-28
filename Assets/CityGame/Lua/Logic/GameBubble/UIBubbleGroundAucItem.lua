@@ -6,14 +6,16 @@
 UIBubbleGroundAucItem = class('UIBubbleGroundAucItem')
 function UIBubbleGroundAucItem:initialize(data)
     self.data = data
-    self.data.aucInfo.isStartAuc = data.isStartAuc
+    --self.data.aucInfo.isStartAuc = data.isStartAuc
     self.bubbleRect = data.bubbleObj:GetComponent("RectTransform")
     self.bubbleObj = data.bubbleObj
 
     local viewTrans = self.bubbleObj.transform
     self.now = viewTrans:Find("now")
-    self.nowTimeText = viewTrans:Find("now/bgBtn/timeDownRoot/nowTimeText"):GetComponent("Text")
-    self.nowText01 = viewTrans:Find("now/bgBtn/Text"):GetComponent("Text")
+    self.nowBinding = viewTrans:Find("now/bgBtn/binding")  --正在出价中
+    self.nowTimeText = viewTrans:Find("now/bgBtn/binding/timeDownRoot/nowTimeText"):GetComponent("Text")
+    self.nowText01 = viewTrans:Find("now/bgBtn/binding/Text"):GetComponent("Text")
+    self.noneBidText02 = viewTrans:Find("now/bgBtn/noneBidText"):GetComponent("Text")
     self.nowBgBtn = viewTrans:Find("now/bgBtn"):GetComponent("Button")
 
     self.soon = viewTrans:Find("soon")
@@ -23,6 +25,7 @@ function UIBubbleGroundAucItem:initialize(data)
 
     self.nowText01.text = GetLanguage(22010001)
     self.soonText02.text = GetLanguage(22020003)
+    self.noneBidText02.text = GetLanguage(22010001)
 
     self.nowBgBtn.onClick:RemoveAllListeners()
     self.nowBgBtn.onClick:AddListener(function ()
@@ -33,20 +36,49 @@ function UIBubbleGroundAucItem:initialize(data)
         self:_openGroundAucFunc()
     end)
 
+    self.timeDown = true
+    if self.data.isStartAuc == true then
+        --判断是否有出价
+        if data.bidHistory == nil or #data.bidHistory == 0 then
+            self.isStartBid = false
+            self.noneBidText02.transform.localScale = Vector3.one
+            self.nowBinding.localScale = Vector3.zero
+        else
+            self.isStartBid = true
+            self.noneBidText02.transform.localScale = Vector3.zero
+            self.nowBinding.localScale = Vector3.one
+            table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
+            self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
+        end
+    end
+
+    local pos = Vector3.New(GroundAucConfig[self.data.id].area[1].x, 0, GroundAucConfig[self.data.id].area[1].y)
     if self.data.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero
+        self.groundGo = GAucModel._getValuableStartAucObj()  --设置场景中的拍卖gameobject
     else
         self.now.transform.localScale = Vector3.zero
         self.soon.transform.localScale = Vector3.one
+        self.groundGo = GAucModel._getValuableWillAucObj()
     end
-    self.timeDown = true
-    self.intTime = 1
+    self.groundGo.transform.position = pos
+    self.data.targetPos = self.groundGo.transform.position
+    self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
+    self.m_Timer:Start()
+
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    --Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
     Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+end
+
+function UIBubbleGroundAucItem:_itemTimer()
+    if self.timeDown == true then
+        self:NowTimeDownFunc()
+        self:SoonTimeDownFunc()
+    end
 end
 
 --打开拍卖界面，即将拍卖
@@ -55,14 +87,21 @@ function UIBubbleGroundAucItem:_openGroundAucFunc()
     --    return
     --end
     PlayMusEff(1002)
-    ct.OpenCtrl("GroundAuctionCtrl", self.data.aucInfo)
+    ct.OpenCtrl("GroundAuctionCtrl", self.data)
 end
 
 --信息更新
 function UIBubbleGroundAucItem:_bidInfoUpdate(data)
-    if data.id == self.data.aucInfo.id then
-        self.data.aucInfo.price = data.price
-        self.data.aucInfo.biderId = data.biderId
+    if data.id == self.data.id then
+        if self.data.bidHistory == nil then
+            self.data.bidHistory = {}
+        end
+        self.data.endTs = data.ts + GAucModel.BidTime
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.bidHistory, 1, temp)
+        self.isStartBid = true
+        self.noneBidText02.transform.localScale = Vector3.zero
+        self.nowBinding.localScale = Vector3.one
     end
 end
 --获取是否点击到对应地块
@@ -70,7 +109,7 @@ function UIBubbleGroundAucItem:_checkIsClickGround(blockId)
     if self.data == nil then
         return false
     end
-    for i, pos in pairs(self.data.aucInfo.area) do
+    for i, pos in pairs(GroundAucConfig[self.data.id].area) do
         local tempBlockId = TerrainManager.GridIndexTurnBlockID(pos)
         if tempBlockId == blockId then
             self:_openGroundAucFunc()
@@ -83,9 +122,9 @@ function UIBubbleGroundAucItem:_getAucState()
     return self.data.isStartAuc
 end
 --获取当前拍卖状态
-function UIBubbleGroundAucItem:_getTimeDownInfo()
-    return self.data.aucInfo.beginTime, self.data.aucInfo.durationSec
-end
+--function UIBubbleGroundAucItem:_getTimeDownInfo()
+--    return self.data.aucInfo.beginTime, self.data.aucInfo.durationSec
+--end
 
 function UIBubbleGroundAucItem:_hideFunc()
     if self.bubbleObj ~= nil then
@@ -100,53 +139,48 @@ end
 function UIBubbleGroundAucItem:_changeLanguageFunc()
     self.nowText01.text = GetLanguage(22010001)
     self.soonText02.text = GetLanguage(22020003)
+    self.noneBidText02.text = GetLanguage(22010001)
 end
 
 function UIBubbleGroundAucItem:Close()
     self.timeDown = false
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
     --Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
     Event.RemoveListener("c_BubbleAllHide", self._hideFunc, self)
     Event.RemoveListener("c_BubbleAllShow", self._showFunc, self)
     Event.RemoveListener("c_ChangeLanguage", self._changeLanguageFunc, self)
     destroy(self.bubbleObj.gameObject)
-    GAucModel.valuableStartAucObj.transform.localScale = Vector3.zero
 
     self.bubbleObj = nil
     self = nil
 end
 
 function UIBubbleGroundAucItem:LateUpdate()
-    if self.timeDown == false then
-        return
-    end
     if self.bubbleObj ~= nil then
         self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
-    else
-        self.timeDown = false
-        return
-    end
-    --计时器，每秒调用
-    self.intTime = self.intTime + UnityEngine.Time.unscaledDeltaTime
-    if self.intTime >= 1 then
-        self.intTime = 0
-        self:NowTimeDownFunc()
-        self:SoonTimeDownFunc()
     end
 end
 --正在拍卖的倒计时
 function UIBubbleGroundAucItem:NowTimeDownFunc()
-    if self.data.isStartAuc == true then
-        local finishTime = self.data.aucInfo.beginTime + self.data.aucInfo.durationSec
-        local remainTime = finishTime - TimeSynchronized.GetTheCurrentTime()
+    if self.isStartBid == true then
+        if self.data.endTs == nil then
+            return
+        end
+        local finishTime = self.data.endTs
+        local remainTime = finishTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.timeDown = false
+            self.isStartBid = false
+            GAucModel._returnHistoryObj(self.groundGo.gameObject)
             --拍卖结束
-            UIBubbleManager.closeItem(self, self.data.aucInfo.id)
+            UIBubbleManager.closeItem(self, self.data.id)
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         self.nowTimeText.text = timeStr
     end
@@ -154,20 +188,23 @@ end
 --即将拍卖的倒计时
 function UIBubbleGroundAucItem:SoonTimeDownFunc()
     if self.data.isStartAuc == false then
-        local startAucTime = self.data.aucInfo.beginTime
-        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentTime()
+        local startAucTime = GroundAucConfig[self.data.id].beginTime * 1000
+        local remainTime = startAucTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.data.isStartAuc = true
-            self.data.aucInfo.isStartAuc = true
             --开始拍卖
             self.now.transform.localScale = Vector3.one
             self.soon.transform.localScale = Vector3.zero
-            GAucModel._getValuableStartAucObj().transform.position = self.data.targetPos
-            Event.Brocast("c_BidStart", self.data.aucInfo)  --切换界面
+            self.noneBidText02.transform.localScale = Vector3.one
+            self.nowBinding.localScale = Vector3.zero
+            self.groundGo = GAucModel._getValuableStartAucObj()
+            self.groundGo.transform.position = self.data.targetPos
+            GAucModel.updateSoonItem(self.data.id + 1)
+            Event.Brocast("c_BidStart", self.data)  --切换界面
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime)
+        local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
         self.soonTimeText.text = timeStr
     end

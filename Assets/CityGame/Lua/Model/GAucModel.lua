@@ -10,6 +10,7 @@ local pbl = pbl
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
+GAucModel.BidTime = 30000
 
 --构建函数--
 function GAucModel.New()
@@ -19,15 +20,15 @@ end
 function GAucModel.Awake()
     this:OnCreate()
     this._preLoadGroundAucObj()
-    UpdateBeat:Add(this._update, this)
+    --UpdateBeat:Add(this._update, this)
 end
 
 --启动事件--
 function GAucModel.OnCreate()
     --本地的回调注册
     Event.AddListener("m_PlayerBidGround", this.m_BidGround)
-    Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
-    Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
+    --Event.AddListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
+    --Event.AddListener("m_UnRegistGroundBidInfor", this.m_UnRegistGroundBidInfor)
     Event.AddListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
     Event.AddListener("c_UIBubbleLateUpdate", this.c_bubbleLateUpdate)  --temp
 end
@@ -36,7 +37,7 @@ end
 function GAucModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GAucModel.n_OnReceiveQueryGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GAucModel.n_OnReceiveBindGround)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GAucModel.n_OnReceivequeryMetaGroundAuctionInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GAucModel.n_OnReceivequeryMetaGroundAuctionInfo)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GAucModel.n_OnReceiveBidChangeInfor)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GAucModel.n_OnReceiveAuctionEnd)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GAucModel.n_OnReceiveWinBid)
@@ -55,36 +56,12 @@ function GAucModel.Close()
     Event.RemoveListener("m_RoleLoginReqGroundAuction", this.m_RoleLoginReqGroundAuction)
     --Event.RemoveListener("m_GroundAucStateChange", this.m_GroundAucStateChange)
 end
----一直检测拍卖的状态信息
-function GAucModel._update()
-    if this.orderAucDatas ~= nil and #this.orderAucDatas > 0 then
-        --this._nowTimeDown()
-        this._soonTimeDown()
-    end
-end
 
---即将拍卖，拍卖倒计时
-function GAucModel._soonTimeDown()
-    if this.soonAucGroundData == nil then
-        return
-    end
-
-    this.intTime = this.intTime + UnityEngine.Time.unscaledDeltaTime
-    if this.intTime >= 1 then
-        this.intTime = 0
-
-        local beginTime = this.soonAucGroundData.beginTime
-        if beginTime <= TimeSynchronized.GetTheCurrentTime() then
-            this._checkSoonData()
-            return
-        end
-    end
-end
 -----------------------------------------------------------------------------------
 
 --角色登录成功之后请求拍卖的信息
 function GAucModel.m_RoleLoginReqGroundAuction()
-    this.m_ReqRueryMetaGroundAuction()
+    GAucModel.m_ReqQueryGroundAuction()
 end
 
 --预先加载两个预制
@@ -95,149 +72,90 @@ end
 
 --拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
-    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId}
+    local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
     end
 end
 
---收到meta数据之后的操作
-function GAucModel.getMataGroundDataFunc(auctionInfo)
-    UIBubbleManager.startBubble()
-
-    --填充数据
+--收到拍卖中的数据之后的操作
+function GAucModel.getNowAucDataFunc(msgGroundAuc)
     if this.groundAucDatas == nil then
         this.groundAucDatas = {}
     end
-    for i, item in ipairs(auctionInfo.auction) do
-        item.beginTime = item.beginTime / 1000
-        item.durationSec = item.durationSec / 1000
-        this.groundAucDatas[item.id] = item
+    local maxId = 0
+    for i, value in pairs(msgGroundAuc.auction) do
+        if value.id >= maxId then
+            maxId = value.id
+        end
+        --拍卖
+        UIBubbleManager._creatGroundAucBubbleItem(value, true)
+        UIBubbleManager.startBubble()
     end
-
-    this._getOrderGroundDatas(this.groundAucDatas)  --获取时间顺序表
-    this.getFirstNowData()  --创建拍卖中的item
-    this._checkSoonData()  --创建即将拍卖item
-    Event.Brocast("m_MainCtrlShowGroundAuc")
+    GAucModel.updateSoonItem(maxId)
 end
-
---收到拍卖中的数据之后的操作
-function GAucModel.getNowAucDataFunc(msgGroundAuc)
-    --得到所有拍卖土地的出价信息
-    for i, item in ipairs(msgGroundAuc.auction) do
-        if this.groundAucDatas[item.id] then
-            this.groundAucDatas[item.id].biderId = item.biderId
-            this.groundAucDatas[item.id].price = item.price
-
-            if item.biderId ~= nil then
-                local data = {id = item.id, price = item.price, biderId = item.biderId}
-                Event.Brocast("c_BidInfoUpdate", data)
-                --
-                return
-            end
+--更新即将拍卖
+function GAucModel.updateSoonItem(id)
+    local time = TimeSynchronized.GetTheCurrentTime()
+    for i = id, #GroundAucConfig do
+        if GroundAucConfig[id] == nil then
+            return
+        end
+        if GroundAucConfig[i].beginTime >= time then
+            UIBubbleManager._creatGroundAucBubbleItem({id = i}, false)
+            UIBubbleManager.startBubble()
+            return
         end
     end
 end
+
 --拍卖结束
 function GAucModel.bindEndFunc(endId)
     Event.Brocast("c_BidEnd", endId)  --关闭界面
 end
 
---获取当前soon And now AucGround，生成气泡
-function GAucModel._getOrderGroundDatas(groundData)
-    local auction = groundData
-    this.orderAucDatas = {}
-    for id, value in pairs(auction) do
-        this.orderAucDatas[#this.orderAucDatas + 1] = value
-    end
-    table.sort(this.orderAucDatas, function (m, n) return m.beginTime < n.beginTime end)  --按照时间顺序排序
-end
 --移动到拍卖的位置
-function GAucModel._moveToAucPos()
-    if GAucModel.valuableStartAucObj ~= nil and GAucModel.valuableStartAucObj.transform.localScale ~= Vector3.zero then
-        CameraMove.MoveCameraToPos(GAucModel.valuableStartAucObj.transform.position)
-        return
+--function GAucModel._moveToAucPos()
+--    if GAucModel.valuableStartAucObj ~= nil and GAucModel.valuableStartAucObj.transform.localScale ~= Vector3.zero then
+--        CameraMove.MoveCameraToPos(GAucModel.valuableStartAucObj.transform.position)
+--        return
+--    end
+--    if GAucModel.valuableWillAucObj ~= nil and GAucModel.valuableWillAucObj.transform.localScale ~= Vector3.zero then
+--        CameraMove.MoveCameraToPos(GAucModel.valuableWillAucObj.transform.position)
+--    end
+--end
+
+--获取一个有效的item
+function GAucModel._getValuableStartAucObj()
+    if this.valuableStartAucList == nil or #this.valuableStartAucList == 0 then
+        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+        go.transform.localScale = Vector3.one
+        go.gameObject.name = "拍卖中"
+        return go
+    else
+        local go = this.valuableStartAucList[1]
+        go.transform.localScale = Vector3.one
+        table.remove(this.valuableStartAucList, 1)
+        return go
     end
-    if GAucModel.valuableWillAucObj ~= nil and GAucModel.valuableWillAucObj.transform.localScale ~= Vector3.zero then
-        CameraMove.MoveCameraToPos(GAucModel.valuableWillAucObj.transform.position)
+end
+--回收obj
+function GAucModel._returnHistoryObj(go)
+    if this.valuableStartAucList == nil then
+        this.valuableStartAucList = {}
     end
+    go.transform.localScale = Vector3.zero
+    table.insert(this.valuableStartAucList, 1, go)
 end
 
---获取有效的开始拍卖的土地预制
-function GAucModel._getValuableStartAucObj()
-    if GAucModel.valuableStartAucObj == nil then
-        GAucModel.valuableStartAucObj = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
-    end
-    GAucModel.valuableStartAucObj.transform.localScale = Vector3.one
-    GAucModel.valuableStartAucObj.gameObject.name = "拍卖中"
-    return GAucModel.valuableStartAucObj
-end
+
 --获取有效的即将拍卖的土地预制
 function GAucModel._getValuableWillAucObj()
     if GAucModel.valuableWillAucObj == nil then
         GAucModel.valuableWillAucObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
     end
     GAucModel.valuableWillAucObj.transform.localScale = Vector3.one
-    GAucModel.valuableWillAucObj.gameObject.name = "即将拍卖"
     return GAucModel.valuableWillAucObj
-end
-
---确认数据
-function GAucModel._checkSoonData()
-    local showFirstWait = true
-    local sTime = TimeSynchronized.GetTheCurrentTime()
-    for i, groundAucItem in ipairs(this.orderAucDatas) do
-        --如果已经开始拍卖
-        if groundAucItem.beginTime <= sTime then
-            table.remove(this.orderAucDatas, i)
-        else
-            if showFirstWait then
-                local data = {}
-                data.isStartAuc = false
-                local groundObj = GAucModel._getValuableWillAucObj()
-                groundObj.transform.position = Vector3.New(groundAucItem.area[1].x, 0, groundAucItem.area[1].y)
-                groundObj.transform.localScale = Vector3.one
-                data.targetPos = groundObj.transform.position
-                data.aucInfo = groundAucItem
-                UIBubbleManager._creatGroundAucBubbleItem(data)  --创建一个item
-                this.soonAucGroundData = groundAucItem
-                this.intTime = 0
-
-                table.remove(this.orderAucDatas, i)
-                return
-            end
-        end
-    end
-end
---确认拍卖的数据  --只有一开始的时候判断
-function GAucModel.getFirstNowData()
-    if this.orderAucDatas ~= nil and #this.orderAucDatas then
-        local sTime = TimeSynchronized.GetTheCurrentTime()
-        for i, value in ipairs(this.orderAucDatas) do
-            if value.beginTime < sTime then
-                local data = {}
-                data.isStartAuc = true
-                local groundObj = GAucModel._getValuableStartAucObj()
-                groundObj.transform.position = Vector3.New(value.area[1].x, 0, value.area[1].y)  --第二个地块为左上角的位置
-                groundObj.transform.localScale = Vector3.one
-                data.targetPos = groundObj.transform.position
-                data.aucInfo = value
-                UIBubbleManager._creatGroundAucBubbleItem(data)  --创建一个item
-                table.remove(this.orderAucDatas, i)
-            end
-        end
-        --if this.orderAucDatas[1].beginTime < TimeSynchronized.GetTheCurrentTime() then
-        --    local data = {}
-        --    data.isStartAuc = true
-        --    local groundObj = GAucModel._getValuableStartAucObj()
-        --    groundObj.transform.position = Vector3.New(this.orderAucDatas[1].area[1].x, 0, this.orderAucDatas[1].area[1].y)  --第二个地块为左上角的位置
-        --    groundObj.transform.localScale = Vector3.one
-        --    data.targetPos = groundObj.transform.position
-        --    data.aucInfo = this.orderAucDatas[1]
-        --    UIBubbleManager._creatGroundAucBubbleItem(data)  --创建一个item
-        --    table.remove(this.orderAucDatas, 1)
-        --end
-    end
 end
 
 --- 客户端请求 ---
@@ -247,17 +165,11 @@ function GAucModel.m_ReqQueryGroundAuction()
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
---请求已经拍卖的土地信息
-function GAucModel.m_ReqRueryMetaGroundAuction()
-    local msgId = pbl.enum("gscode.OpCode","queryMetaGroundAuction")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
-end
-
 --出价
 function GAucModel.m_BidGround(id, price)
     local msgId = pbl.enum("gscode.OpCode","bidGround")
     local lMsg = { id = id, num = price}
-    local pMsg = assert(pbl.encode("gs.ByteNum", lMsg))
+    local pMsg = assert(pbl.encode("gs.IntNum", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
@@ -284,27 +196,21 @@ end
 --收到拍卖中的土地信息
 function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
     if stream == nil or stream == "" then
+        local time = TimeSynchronized.GetTheCurrentTime()
+        for i, value in ipairs(GroundAucConfig) do
+            if value.beginTime > time then
+                GAucModel.updateSoonItem(i)
+                return
+            end
+        end
         return
     end
     local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GAucModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
-    if msgGroundAuc == nil or #msgGroundAuc.auction == 0 then
+    if msgGroundAuc == nil then
         return
     end
 
     this.getNowAucDataFunc(msgGroundAuc)
-end
-
---当收到所有拍卖的土地信息
-function GAucModel.n_OnReceivequeryMetaGroundAuctionInfo(stream)
-    if stream == nil or stream == "" then
-        return
-    end
-    local auctionInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GAucModel.n_OnReceivequeryMetaGroundAuctionInfo: stream == nil")
-    if auctionInfo == nil or #auctionInfo.auction == 0 then
-        return
-    end
-
-    this.getMataGroundDataFunc(auctionInfo)
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
@@ -313,7 +219,7 @@ function GAucModel.n_OnReceiveBindGround(stream)
         return
     end
 
-    local auctionInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
+    local auctionInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
     if auctionInfo then
         --this._updateAucBidInfo(auctionInfo)
 
@@ -342,8 +248,8 @@ function GAucModel.n_OnReceiveAuctionEnd(stream)
         return
     end
 
-    local endId = assert(pbl.decode("gs.Id", stream), "GAucModel.n_OnReceiveAuctionEnd: stream == nil")
-    GAucModel.bindEndFunc(endId.id)
+    local endId = assert(pbl.decode("gs.Num", stream), "GAucModel.n_OnReceiveAuctionEnd: stream == nil")
+    GAucModel.bindEndFunc(endId.num)
 end
 
 --拍卖成功
@@ -353,7 +259,7 @@ function GAucModel.n_OnReceiveWinBid(stream)
     end
 
     if stream then
-        --local bidInfo = assert(pbl.decode("gs.ByteNUm", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+        Event.Brocast("SmallPop", "拍卖成功", 300)
     end
 end
 --拍卖失败
@@ -362,9 +268,9 @@ function GAucModel.n_OnReceiveFailBid(stream)
         return
     end
 
-    local bidInfo = assert(pbl.decode("gs.ByteNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+    local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
     if bidInfo then
-        --this._updateAucBidInfo(bidInfo)
+        Event.Brocast("SmallPop", "出现更高的拍卖价格", 300)
     end
 end
 

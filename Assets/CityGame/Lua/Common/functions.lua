@@ -504,9 +504,11 @@ function LoadSprite(path, Icon, bSetNativeSize)
 	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj )
 		if obj ~= nil then
 			local texture = ct.InstantiatePrefab(obj)
-			Icon.sprite = texture
-			if bSetNativeSize == true then
-				Icon:SetNativeSize()
+			if Icon then
+				Icon.sprite = texture
+				if bSetNativeSize == true then
+					Icon:SetNativeSize()
+				end
 			end
 		end
 	end)

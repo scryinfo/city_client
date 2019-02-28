@@ -18,32 +18,56 @@ end
 
 --初始化面板--
 function GroundAuctionPanel.InitPanel()
-    this.backBtn = transform:Find("backBtn").gameObject
+    this.backBtn = transform:Find("bgBtn").gameObject
 
-    this.startBidRoot = transform:Find("bidRoot/startBidRoot")
-    this.startBidTimeDownText = transform:Find("bidRoot/startBidRoot/time/timeDownText"):GetComponent("Text")
-    this.topRootTran = transform:Find("bidRoot/startBidRoot/price/topRoot")
-    this.biderProtaitImg = transform:Find("bidRoot/startBidRoot/price/topRoot/portait"):GetComponent("Image")
-    this.biderProtaitBtn = transform:Find("bidRoot/startBidRoot/price/topRoot/portait")
-    this.currentPriceText = transform:Find("bidRoot/startBidRoot/price/topRoot/currentPriceText"):GetComponent("Text")
-    this.nameText = transform:Find("bidRoot/startBidRoot/price/topRoot/Text"):GetComponent("Text")
+    this.soonRoot = transform:Find("root/soonRoot")
+    this.soonTimeDownText = transform:Find("root/soonRoot/soonTimeDownText"):GetComponent("Text")
+    this.startTimeText = transform:Find("root/soonRoot/startTimeText"):GetComponent("Text")
+    this.floorPriceText = transform:Find("root/soonRoot/floorRoot/floorPriceText"):GetComponent("Text")
 
-    this.floorRootTran = transform:Find("bidRoot/startBidRoot/price/floorRoot")
-    this.floorPriceText = transform:Find("bidRoot/startBidRoot/price/floorRoot/floorPriceText"):GetComponent("Text")
+    this.nowRoot = transform:Find("root/nowRoot")
+    this.nowTimeDownText = transform:Find("root/nowRoot/nowTimeDownText"):GetComponent("Text")
+    this.nowTimeDownImage = transform:Find("root/nowRoot/Image")
+    this.bidInput = transform:Find("root/nowRoot/input"):GetComponent("InputField")
+    this.bidBtn = transform:Find("root/nowRoot/bidBtn")
+    --历史记录
+    --this.historyScroll = transform:Find("root/nowRoot/historyRoot/scrollRect"):GetComponent("ActiveLoopScrollRect")
+    this.historyContent = transform:Find("root/nowRoot/historyRoot/scrollRect/content")
+    this.historyItemPrefab = transform:Find("root/nowRoot/historyRoot/GAucHistoryItem")
 
-    this.bidInput = transform:Find("bidRoot/startBidRoot/input/bidInput"):GetComponent('InputField')
-    --this.bidErrorTipText = transform:Find("bidRoot/startBidRoot/input/errorTipText")
-    this.bidBtn = transform:Find("bidRoot/startBidRoot/bidBtn"):GetComponent("Button")
+    this.historyRoot = transform:Find("root/nowRoot/historyRoot")
+    this.noneHistoryRoot = transform:Find("root/nowRoot/noneHistoryRoot")
+    this.nowFloorPriceText = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/floorPriceText"):GetComponent("Text")
 
-    this.waitBidRoot = transform:Find("bidRoot/waitBidRoot")
-    this.waitBidTimeDownText = transform:Find("bidRoot/waitBidRoot/time/timeDownText"):GetComponent("Text")
-    this.startBidTimeText = transform:Find("bidRoot/waitBidRoot/time/bidTimeText"):GetComponent("Text")
-    this.waitBidBasePriceText = transform:Find("bidRoot/waitBidRoot/price/basePriceText"):GetComponent("Text")
-
-    this.personAverageText = transform:Find("personFlowRoot/Image02/averageText"):GetComponent("Text")
+    this.averageRangeText = transform:Find("root/rangeNpcRoot/averageRangeText"):GetComponent("Text")
     --
-    this.personFlowText01 = transform:Find("personFlowRoot/Text01"):GetComponent("Text")
-    this.averageText02 = transform:Find("personFlowRoot/Image02/Text02"):GetComponent("Text")
-    this.waitFloorPriceText03 = transform:Find("bidRoot/waitBidRoot/price/Text"):GetComponent("Text")
-    this.startFloorPriceText04 = transform:Find("bidRoot/startBidRoot/price/floorRoot/Text"):GetComponent("Text")
+    this.personFlowText01 = transform:Find("root/rangeNpcRoot/Text"):GetComponent("Text")
+    this.soonFloorText02 = transform:Find("root/soonRoot/floorRoot/Text01"):GetComponent("Text")
+    this.nowBidText03 = transform:Find("root/nowRoot/Text01"):GetComponent("Text")
+    this.tipText04 = transform:Find("root/nowRoot/tipText02"):GetComponent("Text")
+    this.nowFloorPriceText05 = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/Text"):GetComponent("Text")
+end
+--拍卖中有没有人出价
+function GroundAuctionPanel.setBidState(hasBid)
+    if hasBid == true then
+        this.historyRoot.localScale = Vector3.one
+        this.noneHistoryRoot.localScale = Vector3.zero
+        this.nowTimeDownText.transform.localScale = Vector3.one
+        this.nowTimeDownImage.transform.localScale = Vector3.one
+    else
+        this.historyRoot.localScale = Vector3.zero
+        this.noneHistoryRoot.localScale = Vector3.one
+        this.nowTimeDownText.transform.localScale = Vector3.zero
+        this.nowTimeDownImage.transform.localScale = Vector3.zero
+    end
+end
+--拍卖中或者即将拍卖
+function GroundAuctionPanel.setSoonAndNow(isNow)
+    if isNow == true then
+        this.soonRoot.localScale = Vector3.zero
+        this.nowRoot.localScale = Vector3.one
+    else
+        this.soonRoot.localScale = Vector3.one
+        this.nowRoot.localScale = Vector3.zero
+    end
 end

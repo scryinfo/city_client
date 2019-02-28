@@ -287,6 +287,7 @@ end
 
 
 
+
 function GetAvtar(faceId)
     local arr=split(faceId,"-")
     if arr[1]=="1" then--男人

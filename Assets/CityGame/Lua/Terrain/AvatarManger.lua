@@ -6,6 +6,7 @@
 
 HeadSizeType={
     small={
+        [0]={width=70,heigth=70},
         [1]={ type="body",width=70,heigth=70},
         [2]={ type="backHat",width=70,heigth=70},
         [3]={ type="head",width=70,heigth=70},
@@ -43,11 +44,12 @@ function  AvatarManger.Awake()
     end
 end
 
-
  function AvatarManger.setSize(go,configType)
     local V,H=UnityEngine.RectTransform.Axis.Vertical,UnityEngine.RectTransform.Axis.Horizontal
+     go.transform:GetComponent("RectTransform"):SetSizeWithCurrentAnchors(H,configType[0].width)
+     go.transform:GetComponent("RectTransform"):SetSizeWithCurrentAnchors(V,configType[0].heigth)
 
-    for i, sizeData in ipairs(configType) do
+     for i, sizeData in ipairs(configType) do
         local trans=go.transform:Find(sizeData.type)
         if trans then
             local ima=trans:GetComponent("Image")
@@ -208,7 +210,6 @@ function AvatarManger.GetSmallAvatar(faceId)
     AvatarData.go=go
     return AvatarData
 end
-
 
 function AvatarManger.CollectAvatar(AvatarData)
     if AvatarData then

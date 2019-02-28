@@ -354,7 +354,7 @@ local function CreateCenterBuildSuccess(go,...)
     local TargetPos =CentralBuildingMes.CenterNodePos
     TargetPos.y = TargetPos.y + 0.01
     CentralBuildingObj.transform.position = TargetPos
-    CentralBuildingObj.transform.localScale = Vector3.New(5/7,5/7,5/7)
+    CentralBuildingObj.transform.localScale = Vector3.New(1,1,1)
     CentralBuildingObj.name = "CentralBuilding"
     --写入覆盖范围
     CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)

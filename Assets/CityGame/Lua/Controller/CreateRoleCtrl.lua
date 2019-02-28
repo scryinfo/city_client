@@ -25,8 +25,8 @@ function CreateRoleCtrl:Awake()
 
     createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
-    createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+    --createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
+   -- createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
 
 end
 
@@ -65,14 +65,14 @@ function CreateRoleCtrl:OnCreateRole(go)
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
         Event.Brocast("SmallPop",GetLanguage(10040006),300)
-    elseif gender == nil  then
-        Event.Brocast("SmallPop",GetLanguage(10040007),300)
+    --elseif gender == nil  then
+    --    Event.Brocast("SmallPop",GetLanguage(10040007),300)
     else
         local data = {}
         data.nickname = nickname
         data.companyname = companyname
-        data.gender = gender
-        data.faceId = go.m_data
+        data.gender = go.m_data.gender
+        data.faceId = go.m_data.faceId
         DataManager.DetailModelRpcNoRet(go.insId , 'm_createNewRole',data)
     end
 end

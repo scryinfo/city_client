@@ -49,7 +49,8 @@ function ChooseWarehouseCtrl:Awake(go)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
     local faceId = DataManager.GetFaceId()
-    LoadSprite(PlayerHead[faceId].WareHouse, ChooseWarehousePanel.faceItem, true)
+    AvatarManger.GetSmallAvatar(faceId,GChooseWarehousePanel.faceItem.transform,0.2)
+
 end
 
 function ChooseWarehouseCtrl:Active()

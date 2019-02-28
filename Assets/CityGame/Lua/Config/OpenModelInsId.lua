@@ -14,4 +14,6 @@ OpenModelInsID = {
     ["ChatCtrl"] = 8,
     ["FriendsCtrl"] = 9,
     ["CompanyCtrl"] = 10,
+    ["AvtarCtrl"] = 15,
+
 }

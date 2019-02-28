@@ -34,6 +34,20 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
+
+    PlayerTempModel.tempTestReqAddItem(2102002,99)
+    PlayerTempModel.tempTestReqAddItem(2102003,99)
+    PlayerTempModel.tempTestReqAddItem(2102004,99)
+
+    PlayerTempModel.tempTestReqAddItem(2101001,99)
+    PlayerTempModel.tempTestReqAddItem(2101002,99)
+    PlayerTempModel.tempTestReqAddItem(2101003,99)
+    PlayerTempModel.tempTestReqAddItem(2101004,99)
+
+    PlayerTempModel.tempTestReqAddItem(2103001,99)
+    PlayerTempModel.tempTestReqAddItem(2103002,99)
+    PlayerTempModel.tempTestReqAddItem(2103003,99)
+    PlayerTempModel.tempTestReqAddItem(2103004,99)
 end
 
 function GameMainInterfaceCtrl:Active()

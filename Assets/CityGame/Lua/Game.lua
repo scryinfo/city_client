@@ -54,4 +54,6 @@ function Game.OnPostInitOK()
     lu.LuaUnit.run()
     DataManager.Init()
     TerrainManager.Init()
+    --Avatar管理器
+    AvatarManger.Awake()
 end

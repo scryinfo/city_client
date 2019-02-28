@@ -5,7 +5,7 @@
 ---
 
 HeadSizeType={
-    big={
+    small={
         [1]={ type="body",width=70,heigth=70},
         [2]={ type="backHat",width=70,heigth=70},
         [3]={ type="head",width=70,heigth=70},
@@ -17,7 +17,7 @@ HeadSizeType={
         [9]={ type="frontHat",width=70,heigth=70},
         [10]={ type="mouth",width=70,heigth=70},
     },
-    small={
+    big={
 
 
 
@@ -28,18 +28,34 @@ HeadSizeType={
 AvatarManger={}
 
 local  appearance={}
-local num,sex,currHead
-function  AvatarManger.Awake()
+local headPool={}
 
+local num,sex,currHead,headTypeId
+
+function  AvatarManger.Awake()
+    headPool={}
+    headPool[1],headPool[2]={},{}
+    for i = 1, 6 do
+        headPool[1][i]= LuaGameObjectPool:new(i,creatGoods(HeadConfig.man[i].path),1,Vector3.New(0,0,0) )
+    end
+    for i = 1, 8 do
+        headPool[2][i]= LuaGameObjectPool:new((i+10),creatGoods(HeadConfig.woMan[i].path),1,Vector3.New(0,0,0) )
+    end
 end
 
 
-local  function setSize(go,sizeType)
-    local V= UnityEngine.RectTransform.Axis.Vertical
+local  function setSize(go,configType)
+    local V,H=UnityEngine.RectTransform.Axis.Vertical,UnityEngine.RectTransform.Axis.Horizontal
 
-    for i, config in ipairs(sizeType) do
-
+    for i, sizeData in ipairs(configType) do
+        local trans=go.transform:Find(sizeData.type)
+        if trans then
+            local ima=trans:GetComponent("Image")
+            ima.rectTransform:SetSizeWithCurrentAnchors(V,sizeData.heigth)
+            ima.rectTransform:SetSizeWithCurrentAnchors(H,sizeData.width)
+        end
     end
+    return go
 end
 
 local function FindOrgan(transform)
@@ -80,7 +96,7 @@ end
 
 local function changAparance(kind)
     local arr,path,type,nums
-    arr=split(data.path,",")
+    arr=split(kind.path,",")
     path=arr[1]
     type=arr[2]
 
@@ -93,8 +109,9 @@ local function changAparance(kind)
         else
             config=HeadConfig.woMan
         end
+        headTypeId=nums
 
-        currHead=creatGoods(config[nums].path)
+        currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
 
@@ -107,7 +124,7 @@ local function changAparance(kind)
                         appearance[key].ima.transform.gameObject:SetActive(false)
                     end
                 else--部件要的处理
-                    if appearance[key].ima and appearance[key].ima.transform then
+                    if appearance[key].ima and appearance[key].ima.transform and appearance[key].path then
                         appearance[key].ima.transform.gameObject:SetActive(true)
                         LoadSprite(appearance[key].path,appearance[key].ima)
                     end
@@ -151,70 +168,113 @@ local function changAparance(kind)
 end
 
 
-function AvatarManger.GetSmallAvtar(faceId)
-    local arr=split(faceId,"-")
-    if arr[1]=="1" then--男人
-        --todo：加载小人头像
-        currHead =creatGoods(HeadConfig.man[1].path)
-        FindOrgan(currHead.transform)
-        sex=1
-        local temp=split(arr[2],",")
-        for i = 1, #temp ,2 do
-            if temp[i]~="" then
-                local type=tonumber(temp[i])
-                local typeId=tonumber(temp[i+1])
-                local kind=AvtarConfig.man[type].kinds[typeId]
-                num=type
-                changAparance(kind)
-            end
-        end
+function AvatarManger.GetBigAvatar(faceId)
+    local arr,config=split(faceId,"-")
 
-    else--女人
-        --todo：加载小人头像
-        currHead =creatGoods(HeadConfig.woMan[1].path)
-        FindOrgan(currHead.transform)
-        sex=2
-        local temp=split(arr[2],",")
-        for i = 1, #temp ,2 do
-            local kind=AvtarConfig.woMan[temp[i]].kinds[temp[i+1]].path
-           changAparance(kind)
+    sex=tonumber(arr[1])
+    --加载小人头像
+    currHead =headPool[sex][1]:GetAvailableGameObject()
+    FindOrgan(currHead.transform)
+    --配置表
+    if sex==1 then
+        config=AvtarConfig.man
+    else
+        config=AvtarConfig.woMan
+    end
+    --换装
+    local temp=split(arr[2],",")
+    for i = 1, #temp ,2 do
+        if temp[i]~="" then
+            local type=tonumber(temp[i])
+            local typeId=tonumber(temp[i+1])
+            local kind=config[type].kinds[typeId]
+            num=type
+            changAparance(kind)
         end
-
     end
 
-    return currHead
+    --便于回收
+    local temp ={}
+    temp.sex=sex
+    temp.headTypeId=headTypeId
+    temp.go=currHead
+
+    return temp
 end
 
 
-function AvatarManger.GetBigAvtar(faceId)
-    local arr=split(faceId,"-")
-    if arr[1]=="1" then--男人
-        sex=1
-        --todo：加载小人头像
-        headPrefab[sex][1]=creatGoods(HeadConfig.man[1].path,panel.showContent)
-        currHead=headPrefab[sex][1]
-        FindOrgan(headPrefab[sex][1].transform)
-        local temp=split(arr[2],",")
-        for i = 1, #temp ,2 do
-            if temp[i]~="" then
-                local type=tonumber(temp[i])
-                local typeId=tonumber(temp[i+1])
-                local kind=AvtarConfig.man[type].kinds[typeId]
-                num=type
-                this:changAparance(kind)
-            end
-        end
 
-    else--女人
-        sex=2
-        --todo：加载小人头像
-        local temp=split(arr[2],",")
-        for i = 1, #temp ,2 do
-            local kind=AvtarConfig.woMan[temp[i]].kinds[temp[i+1]].path
-            this:changAparance(kind)
-        end
+function AvatarManger.GetSmallAvatar(faceId)
+    local AvatarData= AvatarManger.GetBigAvatar(faceId)
 
-    end
-
-    return currHead
+    local go= setSize(AvatarData.go,HeadSizeType.small)
+    AvatarData.go=go
+    return AvatarData
 end
+
+
+
+
+
+
+
+function AvatarManger.CollectAvatar(AvatarData)
+    if AvatarData then
+        headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--function AvatarManger.GetBigAvtar(faceId)
+--    local arr=split(faceId,"-")
+--    if arr[1]=="1" then--男人
+--        sex=1
+--        --todo：加载小人头像
+--        headPrefab[sex][1]=creatGoods(HeadConfig.man[1].path,panel.showContent)
+--        currHead=headPrefab[sex][1]
+--        FindOrgan(headPrefab[sex][1].transform)
+--        local temp=split(arr[2],",")
+--        for i = 1, #temp ,2 do
+--            if temp[i]~="" then
+--                local type=tonumber(temp[i])
+--                local typeId=tonumber(temp[i+1])
+--                local kind=AvtarConfig.man[type].kinds[typeId]
+--                num=type
+--                this:changAparance(kind)
+--            end
+--        end
+--
+--    else--女人
+--        sex=2
+--        --todo：加载小人头像
+--        local temp=split(arr[2],",")
+--        for i = 1, #temp ,2 do
+--            local kind=AvtarConfig.woMan[temp[i]].kinds[temp[i+1]].path
+--            this:changAparance(kind)
+--        end
+--
+--    end
+--
+--    return currHead
+--end

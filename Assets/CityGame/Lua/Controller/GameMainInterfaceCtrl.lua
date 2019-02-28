@@ -34,8 +34,6 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
-    ct.OpenCtrl('AvtarCtrl')
-    UIPanel.ClosePage()
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -168,8 +166,6 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
         return
     end
 
-
-
     local workerNum=PlayerBuildingBaseData[buildingInfo.mId].maxWorkerNum
     local dayWage=PlayerBuildingBaseData[buildingInfo.mId].salary
 
@@ -252,7 +248,7 @@ function GameMainInterfaceCtrl:Awake()
 
     --头像
     local faceId = DataManager.GetFaceId()
-    LoadSprite(PlayerHead[faceId].MainPath, GameMainInterfacePanel.headItem, true)
+    local go= AvatarManger.GetSmallAvatar(faceId)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name

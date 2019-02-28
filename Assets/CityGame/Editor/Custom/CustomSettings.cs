@@ -103,7 +103,7 @@ public static class CustomSettings
         //_GT(typeof(LineRenderer))
         //_GT(typeof(TrailRenderer))
 #endif        
-         _GT(typeof(RectTransform)),
+   
          _GT(typeof(RectTransform.Axis)),     
         _GT(typeof(PlayerPrefs)),
         _GT(typeof(Behaviour)),

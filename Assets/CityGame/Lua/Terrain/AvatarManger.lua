@@ -203,9 +203,11 @@ function AvatarManger.GetBigAvatar(faceId,isSmall)
         if temp[i]~="" then
             local type=tonumber(temp[i])
             local typeId=tonumber(temp[i+1])
-            local kind=config[type].kinds[typeId]
-            num=type
-            changAparance(kind)
+            if config[type] then
+                local kind=config[type].kinds[typeId]
+                num=type
+                changAparance(kind)
+            end
         end
     end
 

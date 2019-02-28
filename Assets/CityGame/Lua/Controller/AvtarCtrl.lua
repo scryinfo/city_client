@@ -360,6 +360,7 @@ end
 --随机
 function AvtarCtrl:c_OnClick_randomChange(ins)
     ins:randomChange()
+    --   AvatarManger.setSize(currHead,0.2)
 end
 
 --男性

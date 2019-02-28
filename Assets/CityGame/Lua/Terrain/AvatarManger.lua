@@ -16,6 +16,8 @@ HeadSizeType={
         [8]={ type="nose",width=70,heigth=70},
         [9]={ type="frontHat",width=70,heigth=70},
         [10]={ type="mouth",width=70,heigth=70},
+        [11]={ type="goatee",width=70,heigth=70},
+
 }
 
 AvatarManger={}
@@ -41,8 +43,8 @@ end
 
      local rect,imaRect= go.transform:GetComponent("RectTransform")
 
-     rect:SetSizeWithCurrentAnchors(H,(rect.sizeDelta.x)*size)
-     rect:SetSizeWithCurrentAnchors(V,(rect.sizeDelta.y)*size)
+     rect:SetSizeWithCurrentAnchors(V,(rect.sizeDelta.x)*size)
+     rect:SetSizeWithCurrentAnchors(H,(rect.sizeDelta.y)*size)
 
      --归位
      go.transform.localScale = Vector3.one
@@ -53,8 +55,8 @@ end
         local trans=go.transform:Find(sizeData.type)
         if trans then
             imaRect=trans:GetComponent("Image").rectTransform
-            imaRect:SetSizeWithCurrentAnchors(V,(imaRect.sizeDelta.x)*size)
-            imaRect:SetSizeWithCurrentAnchors(H,(imaRect.sizeDelta.y)*size)
+            imaRect:SetSizeWithCurrentAnchors(H,(imaRect.sizeDelta.x)*size)
+            imaRect:SetSizeWithCurrentAnchors(V,(imaRect.sizeDelta.y)*size)
 
             imaRect.anchoredPosition=Vector2.New(((imaRect.anchoredPosition.x)*size),((imaRect.anchoredPosition.y)*size))
         end

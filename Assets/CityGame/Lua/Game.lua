@@ -101,16 +101,16 @@ function Game.OnPostInitOK()
     if playerTempModel ~= nil then
         playerTempModel:Awake();
     end
-    --测试仓库
-    local WarehouseModel = CtrlManager.GetModel(ModelNames.Warehouse);
-    if WarehouseModel ~= nil then
-        WarehouseModel:Awake();
-    end
-    --调整生产线
-    local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
-    if AdjustProductionLineModel ~= nil then
-        AdjustProductionLineModel:Awake();
-    end
+    ----测试仓库
+    --local WarehouseModel = CtrlManager.GetModel(ModelNames.Warehouse);
+    --if WarehouseModel ~= nil then
+    --    WarehouseModel:Awake();
+    --end
+    ----调整生产线
+    --local AdjustProductionLineModel = CtrlManager.GetModel(ModelNames.AdjustProductionLine);
+    --if AdjustProductionLineModel ~= nil then
+    --    AdjustProductionLineModel:Awake();
+    --end
     --科技交易所
     local ScienceSellHallModel = CtrlManager.GetModel(ModelNames.ScienceSellHall);
     if ScienceSellHallModel ~= nil then
@@ -118,21 +118,22 @@ function Game.OnPostInitOK()
     end
 
     --测试货架
-    local ShelfModel = CtrlManager.GetModel(ModelNames.Shelf);
-    if ShelfModel ~= nil then
-        ShelfModel:Awake();
-    end
+    --local ShelfModel = CtrlManager.GetModel(ModelNames.Shelf);
+    --if ShelfModel ~= nil then
+    --    ShelfModel:Awake();
+    --end
 
     --测试临时角色信息界面
     --local PlayerTempModel = CtrlManager.GetModel(ModelNames.PlayerTemp);
     --if PlayerTempModel ~= nil then
     --    PlayerTempModel:Awake();
     --end
+
     --临时运输测试
-    local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
-    if tempTransportModel ~= nil then
-        tempTransportModel:Awake();
-    end
+    --local tempTransportModel = CtrlManager.GetModel(ModelNames.tempTransport);
+    --if tempTransportModel ~= nil then
+    --    tempTransportModel:Awake();
+    --end
 
     --local friendsModel = CtrlManager.GetModel(ModelNames.friends);
     --if friendsModel ~= nil then
@@ -157,5 +158,6 @@ function Game.OnPostInitOK()
     end
 
     ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-
+    local Test = WarehouseCtrl:new()
+    local a= 1
 end

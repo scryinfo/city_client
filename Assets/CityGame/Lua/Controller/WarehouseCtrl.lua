@@ -1,4 +1,352 @@
-WarehouseCtrl = class('WarehouseCtrl',UIPanel);
+WarehouseCtrl = class('WarehouseCtrl',BuildingBaseCtrl)
+UIPanel:ResgisterOpen(WarehouseCtrl)--注册打开的方法
+
+local warehouse
+local switchRightPanel
+local itemStateBool
+local switchIsShow    --false 打开上架  true 打开运输
+ct.itemPrefab =
+{
+    shelfItem  = 0,  --上架
+    transportItem = 1,  --运输
+}
+function WarehouseCtrl:initialize()
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+end
+function WarehouseCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/WarehousePanel.prefab"
+end
+function WarehouseCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+end
+function WarehouseCtrl:Awake(go)
+    warehouse = self.gameObject:GetComponent('LuaBehaviour')
+    warehouse:AddClick(WarehousePanel.returnBtn.gameObject,self.OnClick_returnBtn,self)
+    warehouse:AddClick(WarehousePanel.shelfBtn.gameObject,self.ClickRightShelfBtn,self)
+    warehouse:AddClick(WarehousePanel.shelfCloseBtn.gameObject,self.ClickRightShelfBtn,self)
+    warehouse:AddClick(WarehousePanel.transportBtn.gameObject,self.ClickRightTransportBtn,self)
+    warehouse:AddClick(WarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self)
+    warehouse:AddClick(WarehousePanel.transportCloseBtn.gameObject,self.ClickRightTransportBtn,self)
+    warehouse:AddClick(WarehousePanel.transportopenBtn.gameObject,self.OnClick_transportopenBtn,self)
+    warehouse:AddClick(WarehousePanel.transportConfirmBtn.gameObject,self.OnClick_transportConfirmBtn,self)
+
+    switchRightPanel = false
+    itemStateBool = nil
+    switchIsShow = nil
+    self.tempItemList = {}  --选中的数据
+    self.recordIdList = {}  --记录选中的id
+    self.warehouseDatas = {}  --仓库数据
+    self.loadItemPrefab = nil
+end
+function WarehouseCtrl:Active()
+    UIPanel.Active(self)
+    WarehousePanel.tipText.text = GetLanguage(26040002)
+    LoadSprite(GetSprite("Warehouse"), WarehousePanel.warehouseImg:GetComponent("Image"), false)
+    self:_addListener()
+    self:RefreshConfirmButton()
+end
+function WarehouseCtrl:_addListener()
+    Event.AddListener("WarehouseSelectedGoodsItem",self.SelectedGoodsItem,self)
+end
+function WarehouseCtrl:_removeListener()
+    Event.RemoveListener("WarehouseSelectedGoodsItem",self.SelectedGoodsItem,self)
+end
+function WarehouseCtrl:Refresh()
+    self.luabehaviour = warehouse
+    self.store = self.m_data.store
+    self.buildingId = self.m_data.info.id
+    self:InitializeCapacity()
+    if next(self.warehouseDatas) == nil then
+        self:CreateGoodsItems(self.store.inHand,WarehousePanel.warehouseItem,WarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
+    end
+end
+function WarehouseCtrl:Hide()
+    UIPanel.Hide(self)
+    self:_removeListener()
+    return {insId = self.m_data.info.id,self.m_data}
+end
+----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
+--初始化仓库容量
+function WarehouseCtrl:InitializeCapacity()
+    WarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+    WarehousePanel.Warehouse_Slider.value = self:GetWarehouseNum(self.store)
+    WarehousePanel.Locked_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+    WarehousePanel.Locked_Slider.value = self:GatWarehouseCapacity(self.store)
+    self.lockedNum = self.GetLockedNum(self.store)
+    local numTab = {}
+    numTab["num1"] = WarehousePanel.Warehouse_Slider.value
+    numTab["num2"] = self.lockedNum
+    numTab["num3"] = WarehousePanel.Warehouse_Slider.maxValue
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "white"
+    WarehousePanel.numberText.text = getColorString(numTab)
+end
+----------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
+--点击打开上架Panel
+function WarehouseCtrl:ClickRightShelfBtn(ins)
+    PlayMusEff(1002)
+    if ins.m_data.info.state == "OPERATE" then
+        switchIsShow = false
+        ins:OpenRightPanel(not switchRightPanel,switchIsShow)
+    else
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
+        return
+    end
+end
+--点击打开运输Panel
+function WarehouseCtrl:ClickRightTransportBtn(ins)
+    PlayMusEff(1002)
+    if ins.m_data.info.state == "OPERATE" then
+        switchIsShow = true
+        ins:OpenRightPanel(not switchRightPanel,switchIsShow)
+    else
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
+        return
+    end
+end
+--跳转选择仓库
+function WarehouseCtrl:OnClick_transportopenBtn(ins)
+    PlayMusEff(1002)
+    local data = {}
+    data.pos = {}
+    data.pos.x = ins.m_data.info.pos.x
+    data.pos.y = ins.m_data.info.pos.y
+    data.buildingId = ins.m_data.info.id
+    data.nameText = WarehousePanel.nameText
+    ct.OpenCtrl("ChooseWarehouseCtrl",data)
+end
+--上架确认
+function WarehouseCtrl:OnClick_shelfConfirmBtn(ins)
+    PlayMusEff(1002)
+    local noMatch = {}
+    for key1,value1 in pairs(ins.tempItemList) do
+        --如果架子上是空的
+        if not ins.m_data.shelf.good then
+            if ins:WhetherValidShelfOp(value1) == true then
+                Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+            else
+                noMatch[#noMatch + 1] = value1.itemId
+            end
+        else
+            --如果架子上不是空的，先检查架子上有没有这个商品
+            if ins:ShelfWhetherHave(ins.m_data.shelf.good,value1) == true then
+                --如果有这个东西，需要发送两个协议，修改和上架
+                if ins:WhetherValidShelfOp(value1) == true then
+                    --修改协议
+                    Event.Brocast("m_ReqMaterialModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    --上架协议
+                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                else
+                    noMatch[#noMatch + 1] = value1.itemId
+                end
+            else
+                if ins:WhetherValidShelfOp(value1) == true then
+                    --发送上架协议
+                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                else
+                    noMatch[#noMatch + 1] = value1.itemId
+                end
+            end
+        end
+    end
+    --后边要改成如果上架的商品中有一个不匹配的，则全部都不能上架
+    noMatch = {}
+    --if next(noMatch) ~= nil then
+    --    --打印上架不成功的itemId
+    --end
+end
+--运输确认
+function WarehouseCtrl:OnClick_transportConfirmBtn(ins)
+    PlayMusEff(1002)
+    local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
+    local transportDatasInfo = {}
+    transportDatasInfo.currentLocationName = ins.m_data.info.name
+    transportDatasInfo.targetLocationName = ChooseWarehouseCtrl:GetName()
+    local pos = {}
+    pos.x = ins.m_data.info.pos.x
+    pos.y = ins.m_data.info.pos.y
+    transportDatasInfo.distance = ChooseWarehouseCtrl:GetDistance(pos)
+    transportDatasInfo.number = ins.GetDataTableNum(ins.tempItemList)
+    transportDatasInfo.freight = GetClientPriceString(ChooseWarehouseCtrl:GetPrice())
+    transportDatasInfo.total = GetClientPriceString(transportDatasInfo.number * GetServerPriceNumber(transportDatasInfo.freight))
+    transportDatasInfo.btnClick = function ()
+        if transportDatasInfo.number == 0 then
+            Event.Brocast("SmallPop",GetLanguage(27020004),300)
+            return
+        else
+            for key,value in pairs(ins.tempItemList) do
+                Event.Brocast("m_MaterialTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
+            end
+        end
+    end
+    ct.OpenCtrl("TransportBoxCtrl",transportDatasInfo)
+end
+--退出仓库
+function WarehouseCtrl:OnClick_returnBtn(ins)
+    PlayMusEff(1002)
+    if switchIsShow ~= nil then
+        ins:OpenRightPanel(not switchRightPanel,switchIsShow)
+    end
+    ins:CloseDestroy(ins.warehouseDatas)
+    UIPanel.ClosePage()
+end
+----------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
+--刷新仓库数据
+function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
+    for key,value in pairs(self.warehouseDatas) do
+        if value.itemId == dataInfo.item.key.id then
+            if value.n == dataInfo.item.n then
+                self:deleteGoodsItem(self.warehouseDatas,key)
+            else
+                value.numberText.text = value.n - dataInfo.item.n
+                value.goodsDataInfo.n = tonumber(value.numberText.text)
+                value.n = tonumber(value.numberText.text)
+                local stateBool = true
+                self:GoodsItemState(self.warehouseDatas,stateBool)--数量减少后刷新商品的状态为可以勾选
+            end
+            self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
+            self:RefreshCapacity(dataInfo,whether)
+        end
+    end
+    WarehousePanel.nameText.text = ""
+    self:RefreshConfirmButton()
+    if whether == true then
+        Event.Brocast("SmallPop",GetLanguage(26040010),300)
+    else
+        Event.Brocast("SmallPop",GetLanguage(27020002),300)
+    end
+end
+----------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------------
+--勾选商品
+function WarehouseCtrl:SelectedGoodsItem(ins)
+    if self.recordIdList[ins.id] == nil then
+        self.recordIdList[ins.id] = ins.id
+        if self.loadItemPrefab == ct.itemPrefab.shelfItem then
+            self:CreateGoodsDetails(ins.goodsDataInfo,WarehousePanel.DetailsItem,WarehousePanel.shelfContent,DetailsItem,self.luabehaviour,ins.id,self.tempItemList)
+        elseif self.loadItemPrefab == ct.itemPrefab.transportItem then
+            self:CreateGoodsDetails(ins.goodsDataInfo,WarehousePanel.TransportItem,WarehousePanel.transportContent,TransportItem,self.luabehaviour,ins.id,self.tempItemList)
+        end
+        self.warehouseDatas[ins.id]:c_GoodsItemSelected()
+    else
+        self.warehouseDatas[ins.id]:c_GoodsItemChoose()
+        self:DestoryGoodsDetailsList(self.tempItemList,self.recordIdList,ins.id)
+    end
+    self:RefreshConfirmButton()
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--打开上架或运输Panel
+function WarehouseCtrl:OpenRightPanel(isShow,switchShow)
+    if isShow then
+        itemStateBool = true
+        WarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+        WarehousePanel.Content.offsetMax = Vector2.New(-810,0)
+        if switchShow == false then
+            WarehousePanel.shelf:SetActive(true)
+            self.loadItemPrefab = ct.itemPrefab.shelfItem
+        else
+            WarehousePanel.transport:SetActive(true)
+            self.loadItemPrefab = ct.itemPrefab.transportItem
+        end
+        switchIsShow = switchShow
+        self:GoodsItemState(self.warehouseDatas,itemStateBool)
+        self:RefreshConfirmButton()
+    else
+        itemStateBool = false
+        if switchShow == false then
+            WarehousePanel.shelf:SetActive(false)
+            self.loadItemPrefab = nil
+        else
+            WarehousePanel.transport:SetActive(false)
+            self.loadItemPrefab = nil
+            WarehousePanel.nameText.text = ""
+        end
+        WarehousePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+        WarehousePanel.Content.offsetMax = Vector2.New(0,0)
+        self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
+        self:GoodsItemState(self.warehouseDatas,itemStateBool)
+        switchIsShow = nil
+    end
+    switchRightPanel = isShow
+end
+--刷新确认上架或确认运输的按钮
+function WarehouseCtrl:RefreshConfirmButton()
+    if switchIsShow == false then
+        if next(self.tempItemList) == nil then
+            WarehousePanel.shelfUncheckBtn.transform.localScale = Vector3.one
+            WarehousePanel.shelfConfirmBtn.transform.localScale = Vector3.zero
+        else
+            WarehousePanel.shelfUncheckBtn.transform.localScale = Vector3.zero
+            WarehousePanel.shelfConfirmBtn.transform.localScale = Vector3.one
+        end
+    else
+        if next(self.tempItemList) == nil or WarehousePanel.nameText.text == "" then
+            WarehousePanel.transportUncheckBtn.transform.localScale = Vector3.one
+            WarehousePanel.transportConfirmBtn.transform.localScale = Vector3.zero
+        elseif next(self.tempItemList) ~= nil and WarehousePanel.nameText.text ~= "" then
+            WarehousePanel.transportUncheckBtn.transform.localScale = Vector3.zero
+            WarehousePanel.transportConfirmBtn.transform.localScale = Vector3.one
+        end
+    end
+end
+--检查上架商品是否匹配，是否输入数量和价格  --原料厂，零售店判断mId不同
+function WarehouseCtrl:WhetherValidShelfOp(ins)
+    local materialKey = 21              --可以上架的商品类型
+    if GetServerPriceNumber(ins.inputPrice.text) == 0 then
+        Event.Brocast("SmallPop","价格不能为0"--[[GetLanguage(26020004)]],300)
+        return false
+    end
+    if ins.inputNumber.text == "0" or ins.inputNumber.text == "" then
+        Event.Brocast("SmallPop","数量不能为0"--[[GetLanguage(26020004)]],300)
+        return false
+    end
+    if math.floor(ins.itemId / 100000) ~= materialKey then
+        return false
+    end
+    return true
+end
+--检查架子上是否有这个商品
+function WarehouseCtrl:ShelfWhetherHave(table,value1)
+    for key,value in pairs(table) do
+        if value.k.id == value1.itemId then
+            return true
+        end
+    end
+    return false
+end
+--刷新仓库容量  --true 运输   --false 上架
+function WarehouseCtrl:RefreshCapacity(dataInfo,whether)
+    if whether == true then
+        WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - dataInfo.item.n
+        WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value - dataInfo.item.n
+        self.lockedNum = self.GetLockedNum(self.m_data.store)
+        local numTab = {}
+        numTab["num1"] = WarehousePanel.Warehouse_Slider.value
+        numTab["num2"] = self.lockedNum
+        numTab["num3"] = WarehousePanel.Warehouse_Slider.maxValue
+        numTab["col1"] = "Cyan"
+        numTab["col2"] = "Teal"
+        numTab["col3"] = "white"
+        WarehousePanel.numberText.text = getColorString(numTab)
+    else
+        WarehousePanel.Warehouse_Slider.value = WarehousePanel.Warehouse_Slider.value - dataInfo.item.n
+        WarehousePanel.Locked_Slider.value = WarehousePanel.Locked_Slider.value + dataInfo.item.n
+        self.lockedNum = self.lockedNum + dataInfo.item.n
+        local numTab = {}
+        numTab["num1"] = WarehousePanel.Warehouse_Slider.value
+        numTab["num2"] = self.lockedNum
+        numTab["num3"] = WarehousePanel.Warehouse_Slider.maxValue
+        numTab["col1"] = "Cyan"
+        numTab["col2"] = "Teal"
+        numTab["col3"] = "white"
+        WarehousePanel.numberText.text = getColorString(numTab)
+    end
+end
+
+
+
+--[[
+WarehouseCtrl = class('WarehouseCtrl',BuildingBaseCtrl);
 UIPanel:ResgisterOpen(WarehouseCtrl) --注册打开的方法
 
 --物品上架还是运输
@@ -260,19 +608,16 @@ function WarehouseCtrl.isValidShelfOp(go, v)
     if v.inputNumber.text == "0" and v.inputNumber.text == "" then
         return false
     end
-
     if math.floor(go.mId / 100000) == material then
         if math.floor(v.itemId / 100000) ~= materialKey then
             return false
         end
     end
-
     if math.floor(go.mId / 100000) == processing then
         if math.floor(v.itemId / 100000) ~= goodsKey then
             return false
         end
     end
-
     if math.floor(go.mId / 100000) == retailStores then
         if math.floor(v.itemId / 100000) ~= goodsKey then
             return false
@@ -283,7 +628,6 @@ end
 function WarehouseCtrl:OnClick_shelfConfirmBtn(go)
     PlayMusEff(1002)
     local noMatch ={}
-
     if not go.GoodsUnifyMgr.shelfPanelItem then
         return;
     else
@@ -634,3 +978,4 @@ function WarehouseCtrl:deleteObjInfo()
         end
     end
 end
+]]

@@ -1,6 +1,3 @@
-require('Controller/WarehouseCtrl')
-
-
 WarehouseRateItem = class('WarehouseRateItem');
 --WarehouseRateItem.static.TOTAL_H = 475  --整个Item的高度
 --WarehouseRateItem.static.CONTENT_H = 410  --显示内容的高度

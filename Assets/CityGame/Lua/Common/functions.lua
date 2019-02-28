@@ -74,7 +74,7 @@ function getColorString(numTab)
 		local str1 = table.concat({"<color=",numTab["col1"],">",numTab["num1"],"</color>"})
 		local str2 = table.concat({"<color=",numTab["col2"],">",numTab["num2"],"</color>"})
 		local str3 = table.concat({"<color=",numTab["col3"],">",numTab["num3"],"</color>"})
-		str = table.concat({str1,"/",str3,"/",str2})
+		str = table.concat({str1,"/",str2,"/",str3})
 	end
 	return str
 end

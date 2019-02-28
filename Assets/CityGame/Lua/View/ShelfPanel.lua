@@ -38,6 +38,9 @@ function ShelfPanel.InitPanel()
     this.nameText = transform:Find("RightInformation/bg/buy/warehouseName/nameText"):GetComponent("Text");
     this.openBtn = transform:Find("RightInformation/bg/buy/warehouseName/openBtn").gameObject;
     this.buyContent = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content");
+    --预制
+    this.ShelfGoodsItem = transform:Find("Scroll View/Viewport/Content/ShelfGoodsItem").gameObject
+    this.BuyDetailsItem = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content/BuyDetailsItem").gameObject
 end
 function ShelfPanel.OnDestroy()
 

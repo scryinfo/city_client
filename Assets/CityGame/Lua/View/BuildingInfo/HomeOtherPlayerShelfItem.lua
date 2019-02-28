@@ -17,6 +17,8 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
     self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
     self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
+    --预制
+    self.ShelfRateItemPrefab = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content/SmallShelfRateItem").gameObject
 
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         PlayMusEff(1002)
@@ -39,17 +41,15 @@ function HomeOtherPlayerShelfItem:initializeInfo(data)
     if not data then
         return;
     end
-    for i,v in pairs(data) do
+    for key,value in pairs(data) do
         local homePageType = ct.homePage.shelf
-        local prefabData={}
-        prefabData.prefab = creatGoods(ShelfRateItem.static.Goods_PATH,self.content)
-        local SmallShelfRateItem = HomePageDisplay:new(homePageType,data[i],prefabData.prefab)
-        if not self.SmallShelfRateItemTab then
-            self.SmallShelfRateItemTab = {}
+        local prefab = self:loadingItemPrefab(self.ShelfRateItemPrefab,self.content)
+        local SmallShelfRateItem = HomePageDisplay:new(homePageType,value,prefab)
+        if not HomeOtherPlayerShelfItem.SmallShelfRateItemTab then
+            HomeOtherPlayerShelfItem.SmallShelfRateItemTab = {}
         end
-        self.SmallShelfRateItemTab[i] = SmallShelfRateItem
+        HomeOtherPlayerShelfItem.SmallShelfRateItemTab[key] = SmallShelfRateItem
     end
-    HomeOtherPlayerShelfItem.shelfTab = self.SmallShelfRateItemTab
 end
 
 --获取是第几次点击了
@@ -89,4 +89,13 @@ function HomeOtherPlayerShelfItem:updateInfo(data)
     self.productionData = data
     self.productionData.shelf.good = data.shelf.good
     self:initializeInfo(self.productionData.shelf.good)
+end
+--加载实例化Prefab
+function HomeOtherPlayerShelfItem:loadingItemPrefab(itemPrefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
+    local objRect = obj.transform:GetComponent("RectTransform");
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one;
+    obj:SetActive(true)
+    return obj
 end

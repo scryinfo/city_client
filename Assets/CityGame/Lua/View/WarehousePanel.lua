@@ -28,13 +28,14 @@ function WarehousePanel.InitPanel()
     this.rightInformation = transform:Find("RightInformation"):GetComponent("RectTransform");
     this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
-    this.transport = transform:Find("RightInformation/bg/transport").gameObject;
     this.shelfContent = transform:Find("RightInformation/bg/shelf/ScrollView/Viewport/Content");
 
     this.shelfCloseBtn = transform:Find("RightInformation/bg/shelf/closeBtn");
     this.shelfConfirmBtn = transform:Find("RightInformation/bg/shelf/confirmBtn");
+    this.shelfUncheckBtn = transform:Find("RightInformation/bg/shelf/uncheckBtn")
 
     --Button transport
+    this.transport = transform:Find("RightInformation/bg/transport").gameObject;
     this.transportCloseBtn = transform:Find("RightInformation/bg/transport/closeBtn");
     this.transportConfirmBtn = transform:Find("RightInformation/bg/transport/confirmBtn");
     this.transportUncheckBtn = transform:Find("RightInformation/bg/transport/uncheckBtn");
@@ -50,6 +51,10 @@ function WarehousePanel.InitPanel()
     --Scroll View
     this.ScrollView = transform:Find("ScrollView"):GetComponent("RectTransform");
     this.Content = transform:Find("ScrollView/Viewport/Content"):GetComponent("RectTransform");
+    --预制
+    this.warehouseItem = transform:Find("ScrollView/Viewport/Content/WarehouseItem").gameObject
+    this.DetailsItem = transform:Find("RightInformation/bg/shelf/ScrollView/Viewport/Content/DetailsItem").gameObject
+    this.TransportItem = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content/TransportItem").gameObject
 
 end
 function WarehousePanel.OnDestroy()

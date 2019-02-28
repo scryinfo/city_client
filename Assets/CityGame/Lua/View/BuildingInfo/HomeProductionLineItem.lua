@@ -1,37 +1,40 @@
 require('Controller/AdjustProductionLineCtrl')
 
 HomeProductionLineItem = class('HomeProductionLineItem')
-HomeProductionLineItem.static.TOTAL_H = 775  --整个Item的高度
-HomeProductionLineItem.static.CONTENT_H = 732  --显示内容的高度
+HomeProductionLineItem.static.TOTAL_H = 308  --整个Item的高度
+HomeProductionLineItem.static.CONTENT_H = 223  --显示内容的高度
 HomeProductionLineItem.static.TOP_H = 100  --top条的高度
 HomeProductionLineItem.static.Line_PATH = "View/GoodsItem/LineItem"
+HomeProductionLineItem.storeData = {}
 
 --初始化方法  数据需要接受服务器发送的数据
 function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.productionData = productionData;
-    self.toggleData = toggleData;    --位于toggle的第一个   右边
+    HomeProductionLineItem.storeData = productionData.store.inHand
+    self.toggleData = toggleData;    --位于toggle的第4个   左边
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
     self.closeStateTran = self.viewRect.transform:Find("topRoot/close");    --关闭状态
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
     self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
-    self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.content = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content")
     self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
     self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
+    self.addBtn = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/Add/bgBtn")
+    --预制
+    self.LineItem = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/LineItem").gameObject
+    self.add = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/Add").gameObject
 
-    mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
+    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
         PlayMusEff(1002)
-        if not self.viewRect.gameObject.activeSelf then
-            return
-        end
-        if self.productionData.buildingType == BuildingType.MaterialFactory then
-            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
-        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            ct.OpenCtrl("AdjustProductionLineCtrl",self.productionData)
-        end
+        clickOpenFunc(mgrTable, self.toggleData)
     end);
-
+    mainPanelLuaBehaviour:AddClick(self.addBtn.gameObject,function()
+        PlayMusEff(1002)
+        ct.OpenCtrl("AddProductionLineCtrl",self.productionData)
+    end);
     self:initializeInfo(self.productionData.line);
 
     --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
@@ -76,46 +79,17 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
     self.openName.text = GetLanguage(25020005)
     self.closeName.text = GetLanguage(25020005)
     if not productionLineData then
-        return;
-    end
-    HomeProductionLineItem.productionTab = {}
-    for i,v in pairs(productionLineData) do
-        local homePageType = ct.homePage.productionLine
-        local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
-        local SmallLineRateItem = HomePageDisplay:new(homePageType,v,prefab)
-        --if not self.SmallLineRateItemTab then
-        --    self.SmallLineRateItemTab = {}
-        --end
-        HomeProductionLineItem.productionTab[#HomeProductionLineItem.productionTab + 1] = SmallLineRateItem
-    end
-    --HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
-end
---生产线添加时添加
-function HomeProductionLineItem:productionRefreshInfo(data)
-    if not data then
+        self.add:SetActive(true)
         return;
     end
     local homePageType = ct.homePage.productionLine
-    local prefab = creatGoods(HomeProductionLineItem.static.Line_PATH,self.content)
-    local SmallLineRateItem = HomePageDisplay:new(homePageType,data.line,prefab)
-    if not self.SmallLineRateItemTab then
-        self.SmallLineRateItemTab = {}
-        self.SmallLineRateItemTab[1] = SmallLineRateItem
-    else
-        self.SmallLineRateItemTab[#self.SmallLineRateItemTab] = SmallLineRateItem
-    end
-    HomeProductionLineItem.productionTab = self.SmallLineRateItemTab
-end
---删除生产线时添加
-function HomeProductionLineItem:delLineRefreshInfo(data)
-    if not data then
-        return
-    end
-    for i,v in pairs(self.SmallLineRateItemTab) do
-        if v.id == data.lineId then
-            v:closeEvent()
-            destroy(v.prefab.gameObject)
+    for key,value in pairs(productionLineData) do
+        local prefab = self.loadingItemPrefab(self.LineItem,self.content)
+        local lineItem = HomePageDisplay:new(homePageType,value,prefab)
+        if not self.lineItemTable then
+            self.lineItemTable = {}
         end
+        table.insert(self.lineItemTable,lineItem)
     end
 end
 --刷新数据
@@ -123,4 +97,28 @@ function HomeProductionLineItem:updateInfo(data)
     self.productionData = data
     self.productionData.line = data.line
     self:initializeInfo(self.productionData.line)
+end
+--获取当前建筑某种商品的库存数量
+function HomeProductionLineItem.GetInventoryNum(itemId)
+    if not HomeProductionLineItem.storeData then
+        local number = 0
+        return number
+    end
+    for key,value in pairs(HomeProductionLineItem.storeData) do
+        if value.key.id == itemId then
+            return value.n
+        end
+    end
+    local number = 0
+    return number
+end
+--加载实例化Prefab
+function HomeProductionLineItem.loadingItemPrefab(itemPrefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
+    local objRect = obj.transform:GetComponent("RectTransform");
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one;
+    --obj.transform:SetSiblingIndex(1)
+    obj:SetActive(true)
+    return obj
 end

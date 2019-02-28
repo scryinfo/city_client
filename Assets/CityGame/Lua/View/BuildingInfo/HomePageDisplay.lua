@@ -42,45 +42,42 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.moneyText.text = "E"..getPriceString(GetClientPriceString(homePageShelfInfo.price),15,13)
 end
 --主页生产线
-function HomePageDisplay:homePageProductionLine(homePageProductionLineInfo,prefab)
+function HomePageDisplay:homePageProductionLine(lineInfo,prefab)
     self.prefab = prefab;
-    self.id = homePageProductionLineInfo.id
-    self.iconIcon = self.prefab.transform:Find("iconmg/iconIcon"):GetComponent("Image");
-    self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
-    self.timeText = self.prefab.transform:Find("timeImg/timeText"):GetComponent("Text");
-    self.productionText = self.prefab.transform:Find("productionText"):GetComponent("Text");
-    self.productionSlider = self.prefab.transform:Find("productionSlider"):GetComponent("Slider");
-    self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");
+    self.itemId = lineInfo.itemId
+    self.buildingId = lineInfo.id
 
-    local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(homePageProductionLineInfo.itemId / 100000) == materialKey then
-        --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
-        self.nameText.text = GetLanguage(homePageProductionLineInfo.itemId)
-        panelMgr:LoadPrefab_A(Material[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconIcon.sprite = texture
-            end
-        end)
-    elseif math.floor(homePageProductionLineInfo.itemId / 100000) == goodsKey then
-        self.nameText.text = GetLanguage(homePageProductionLineInfo.itemId)
-        panelMgr:LoadPrefab_A(Good[homePageProductionLineInfo.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconIcon.sprite = texture
-            end
-        end)
-    end
-    --self.nameText.text = Material[homePageProductionLineInfo.itemId].name
-    self.timeText.text = self:getTimeNumber(homePageProductionLineInfo)
-    self.productionText.text = self:getMinuteNum(homePageProductionLineInfo)
-    self.productionSlider.maxValue = homePageProductionLineInfo.targetCount
-    self.productionSlider.value = homePageProductionLineInfo.nowCount
-    self.maxValue = homePageProductionLineInfo.targetCount
-    self.numberText.text = self.productionSlider.value.."/"..self.productionSlider.maxValue
+    self.itembg = self.prefab.transform:Find("itembg"):GetComponent("Image")
+    self.brandName = self.prefab.transform:Find("itembg/brandbg/brandName"):GetComponent("Text")
+    self.brandValue = self.prefab.transform:Find("itembg/brand/brandValue"):GetComponent("Text")   --品牌评分
+    self.qualityValue = self.prefab.transform:Find("itembg/quality/qualityValue"):GetComponent("Text")   --品质评分
+    self.nameText = self.prefab.transform:Find("itembg/nameText"):GetComponent("Text")
+    self.icon = prefab.transform:Find("itembg/icon"):GetComponent("Image")
+    self.accreditIcon = prefab.transform:Find("itembg/accreditIcon")
+    self.timeText = prefab.transform:Find("time/timeText"):GetComponent("Text")
+    self.productionSlider = prefab.transform:Find("productionSlider"):GetComponent("Slider")
+    self.numberText = prefab.transform:Find("numberText"):GetComponent("Text")
+    self.deleteBtn = prefab.transform:Find("deleteBtn")
+    self.countdownText = prefab.transform:Find("countdownText"):GetComponent("Text")
+
+    self:InitializeData()
 
     Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
+end
+--生产线赋值
+function HomePageDisplay:InitializeData()
+    --self.itembg =
+    self.brandName.text = GetLanguage(4301011)
+    ---self.brandValue =
+    ---self.qualityValue =
+    self.nameText.text = GetLanguage(self.itemId)
+    --self.icon
+    --self.accreditIcon =
+    --self.timeText.text =
+    --self.productionSlider =
+    --self.numberText.text =
+    --self.countdownText.text =
+
 end
 --计算时间
 function HomePageDisplay:getTimeNumber(infoData)
@@ -105,21 +102,21 @@ function HomePageDisplay:getTimeNumber(infoData)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
---计算每分钟产量
-function HomePageDisplay:getMinuteNum(infoData)
-    if not infoData then
-        return
-    end
-    local number = 0
-    local materialKey,goodsKey = 21,22
-    if math.floor(infoData.itemId / 100000) == materialKey then
-        number = Material[infoData.itemId].numOneSec * infoData.workerNum * 60
-    elseif math.floor(infoData.itemId / 100000) == goodsKey then
-        number = Good[infoData.itemId].numOneSec * infoData.workerNum * 60
-    end
-    local numStr = "("..math.floor(number).."/min"..")"
-    return numStr
-end
+----计算每分钟产量
+--function HomePageDisplay:getMinuteNum(infoData)
+--    if not infoData then
+--        return
+--    end
+--    local number = 0
+--    local materialKey,goodsKey = 21,22
+--    if math.floor(infoData.itemId / 100000) == materialKey then
+--        number = Material[infoData.itemId].numOneSec * infoData.workerNum * 60
+--    elseif math.floor(infoData.itemId / 100000) == goodsKey then
+--        number = Good[infoData.itemId].numOneSec * infoData.workerNum * 60
+--    end
+--    local numStr = "("..math.floor(number).."/min"..")"
+--    return numStr
+--end
 --刷新时间
 function HomePageDisplay:Update()
     if WarehouseRateItem.warehouseCapacity <= 0 then

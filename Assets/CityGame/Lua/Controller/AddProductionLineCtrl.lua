@@ -42,6 +42,7 @@ end
 function AddProductionLineCtrl:_initData()
     --这里要区分是生产左边还是右边，然后把确定按钮打开
     AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
+    local data = {}
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
@@ -49,15 +50,19 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
             --self:Hide();
-
-            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-                if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop",GetLanguage(26020007),300)
-                    return
-                end
-            end
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
-            UIPanel.ClosePage();
+            --for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            --    if v.itemId == self.leftItemId then
+            --        Event.Brocast("SmallPop",GetLanguage(26020007),300)
+            --        return
+            --    end
+            --end
+            --GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
+            --UIPanel.ClosePage();
+            data.itemId = self.leftItemId
+            data.mId = self.m_data.info.mId
+            data.buildingId = self.m_data.info.id
+            data.buildingType = self.m_data.buildingType
+            ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
@@ -67,14 +72,17 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             --self:Hide()
-            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-                if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop",GetLanguage(26020008),300)
-                    return
-                end
-            end
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
-            UIPanel.ClosePage();
+            --for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
+            --    if v.itemId == self.leftItemId then
+            --        Event.Brocast("SmallPop",GetLanguage(26020008),300)
+            --        return
+            --    end
+            --end
+            --GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
+            --UIPanel.ClosePage();
+            data.itemId = self.leftItemId
+            data.buildingId = self.m_data.info.id
+            ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     end
     self:_changeAddLineData(AddLineButtonPosValue.Left)

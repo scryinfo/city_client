@@ -173,7 +173,7 @@ local function changAparance(kind)
 
 end
 
-function AvatarManger.GetBigAvatar(faceId)
+function AvatarManger.GetBigAvatar(faceId,isSmall)
     local arr,config=split(faceId,"-")
 
     sex=tonumber(arr[1])
@@ -181,11 +181,20 @@ function AvatarManger.GetBigAvatar(faceId)
     currHead =headPool[sex][1]:GetAvailableGameObject()
     FindOrgan(currHead.transform)
     --配置表
-    if sex==1 then
-        config=AvtarConfig.man
+    if isSmall then
+        if sex==1 then
+            config=SmallAvtarConfig.man
+        else
+            config=SmallAvtarConfig.woMan
+        end
     else
-        config=AvtarConfig.woMan
+        if sex==1 then
+            config=AvtarConfig.man
+        else
+            config=AvtarConfig.woMan
+        end
     end
+
     --换装
     local temp=split(arr[2],",")
     for i = 1, #temp ,2 do
@@ -204,13 +213,14 @@ function AvatarManger.GetBigAvatar(faceId)
     temp.headTypeId=headTypeId
     temp.go=currHead
 
-   table.insert(record,temp)
+    table.insert(record,temp)
+
     return temp
 end
 
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
-    local AvatarData= AvatarManger.GetBigAvatar(faceId)
+   local AvatarData= AvatarManger.GetBigAvatar(faceId,true)
 
     AvatarData.go.transform:SetParent(parent);
     local go= AvatarManger.setSize(AvatarData.go,size)

@@ -34,14 +34,17 @@ end
 
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
-    --注册LuaView--
-    CtrlManager.Init();
-    local ctrl = CtrlManager.GetCtrl(CtrlNames.Login);
-    if ctrl ~= nil then
-        ctrl:Awake();
-    end
+    --初始化多语言--
+    ReadConfigLanguage()
+    --初始化音乐--
+    MusicManger:Awake()
+    --初始化气泡--
+    UIBubbleManager.Awake()
+    --初始化屏幕适配比例--
     InitScreenRatio()
-    World.init();
+    
+    ct.OpenCtrl('LoadingCtrl')
+    --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end
 
 function Game.OnPostInitOK()
@@ -146,16 +149,9 @@ function Game.OnPostInitOK()
     --开业停业
     StopAndBuildModel:Awake()
     --单元测试入口
-    --if CityLuaUtil.isluaLogEnable() == true then
-        lu.LuaUnit.run()
-    --end
+    lu.LuaUnit.run()
     DataManager.Init()
     TerrainManager.Init()
-    RobotIns =RobotTest:new()
-    if RobotIns.isActive then
-           return
-    end
-
-    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-
+    --Avatar管理器
+    AvatarManger.Awake()
 end

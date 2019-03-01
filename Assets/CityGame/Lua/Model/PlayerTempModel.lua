@@ -13,7 +13,7 @@ function PlayerTempModel.New()
 end
 
 function PlayerTempModel.Awake()
-    UpdateBeat:Add(this.Update, this)
+    --UpdateBeat:Add(this.Update, this)
     this:OnCreate()
 
 end

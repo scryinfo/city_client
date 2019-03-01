@@ -63,7 +63,7 @@ function BaseBuildModel:Close()
     DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --清除建筑GameObject
     if self.go ~= nil then
-        destroy(self.go)
+        MapObjectsManager.RecyclingGameObjectToPool(PlayerBuildingBaseData[self.Data.buildingID].poolName,self.go)
     end
     if self.bubbleItem ~= nil then
         self.bubbleItem:Close()

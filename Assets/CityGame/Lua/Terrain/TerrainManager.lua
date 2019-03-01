@@ -13,14 +13,19 @@ local blockRange = Vector2.New(20, 20)
 --以下数据应当初始化
 local CameraCollectionID = -1
 
---创建建筑GameObject成功回调
-local function CreateSuccess(go,table)
-    local buildingID = table[1]
-    local Vec3 = table[2]
+function TerrainManager.Init()
+    Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
+end
+
+function TerrainManager.ReMove()
+    Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
+end
+
+local function BuildCreateSuccess( value , buildingID , BuildPosition)
+    local go  = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[value.buildingID].poolName)
     --add height
-    Vec3.y =  Vec3.y + 0.01
-    go.transform.position = Vec3
-    --CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
+    BuildPosition.y =  BuildPosition.y + 0.01
+    go.transform.position = BuildPosition
     if TerrainManager.TerrainRoot == nil  then
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
@@ -29,7 +34,7 @@ local function CreateSuccess(go,table)
         ArchitectureStack[buildingID] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     end
     --将建筑GameObject保存到对应Model中
-    local  tempBaseBuildModel = DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(Vec3))
+    local  tempBaseBuildModel = DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(BuildPosition))
     if TerrainManager.BuildObjQueue ~= nil then
         TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue - 1
     end
@@ -37,42 +42,7 @@ local function CreateSuccess(go,table)
         tempBaseBuildModel.go = go
         return
     end
-    destroy(go)
-end
-
-function TerrainManager.Init()
-    TerrainManager.BuildObjQueue = 0
-    TerrainManager.WillBuildQueue = {}
-    Event.AddListener("CameraMoveTo",TerrainManager.Refresh)
-    UpdateBeat:Add(TerrainManager._Update)
-end
-
-function TerrainManager._Update()
-    --判断有没有等待生成的
-    if TerrainManager.WillBuildQueue ~= nil and #TerrainManager.WillBuildQueue > 0 then
-        --判断生成队列中的个数是否小于临界值
-        if TerrainManager.BuildObjQueue == nil then
-            TerrainManager.BuildObjQueue = 0
-        end
-        if TerrainManager.BuildObjQueue <= 0 then
-            while(TerrainManager.BuildObjQueue < 30)do
-                if #TerrainManager.WillBuildQueue <= 0 then
-                    break
-                end
-                local WillLoadBuild = TerrainManager.WillBuildQueue[#TerrainManager.WillBuildQueue]
-                buildMgr:CreateBuild(WillLoadBuild.typeID,CreateSuccess,WillLoadBuild.inTable)
-                table.remove(TerrainManager.WillBuildQueue,#TerrainManager.WillBuildQueue)
-                TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1
-            end
-        end
-    end
-end
-
-function TerrainManager.ReMove()
-    TerrainManager.BuildObjQueue = 0
-    TerrainManager.WillBuildQueue = {}
-    Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
-    UpdateBeat:Remove(TerrainManager._Update)
+    MapObjectsManager.RecyclingGameObjectToPool(PlayerBuildingBaseData[value.buildingID].poolName,go)
 end
 
 --根据建筑数据生成GameObject
@@ -87,17 +57,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         local isCreate = DataManager.RefreshBaseBuildData(value)
         --判断是否需要创建建筑
         if isCreate then
-            if TerrainManager.WillBuildQueue ==  nil then
-                TerrainManager.WillBuildQueue = {}
-            end
-            local WillLoadBuild = { ["typeID"] =  PlayerBuildingBaseData[value.buildingID]["prefabRoute"] , ["inTable"] = {value.buildingID, Vector3.New(value.x,0,value.y)} }
-            table.insert(TerrainManager.WillBuildQueue,WillLoadBuild)
-            --[[
-                --buildMgr:CreateBuild(PlayerBuildingBaseData[value.buildingID]["prefabRoute"],CreateSuccess,{value.buildingID, Vector3.New(value.x,0,value.y)})
-                if TerrainManager.BuildObjQueue ~= nil then
-                    TerrainManager.BuildObjQueue = TerrainManager.BuildObjQueue + 1/
-                end
-            --]]
+            BuildCreateSuccess(value,value.buildingID, Vector3.New(value.x,0,value.y))
         end
     end
     for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
@@ -394,7 +354,7 @@ local function CreateCenterBuildSuccess(go,...)
     local TargetPos =CentralBuildingMes.CenterNodePos
     TargetPos.y = TargetPos.y + 0.01
     CentralBuildingObj.transform.position = TargetPos
-    CentralBuildingObj.transform.localScale = Vector3.New(5/7,5/7,5/7)
+    CentralBuildingObj.transform.localScale = Vector3.New(1,1,1)
     CentralBuildingObj.name = "CentralBuilding"
     --写入覆盖范围
     CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)

@@ -74,8 +74,8 @@ function GroundTransContractCtrl:_setShowState(data)
     end
     GroundTransContractPanel.rentAreaText.text = "1x1"
     GroundTransContractPanel.buyAreaText.text = "1x1"
-    LoadSprite(PlayerHead[data.ownerInfo.faceId].GroundTransLargePath, GroundTransContractPanel.APortraitImg, true)
-    LoadSprite(PlayerHead[DataManager.GetMyPersonalHomepageInfo().faceId].GroundTransLargePath, GroundTransContractPanel.BPortraitImg, true)
+    AvatarManger.GetSmallAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.2)
+    AvatarManger.GetSmallAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.2)
     GroundTransContractPanel.ANameText.text = data.ownerInfo.name
     GroundTransContractPanel.BNameText.text = DataManager.GetMyPersonalHomepageInfo().name
 end

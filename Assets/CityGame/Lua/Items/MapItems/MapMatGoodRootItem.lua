@@ -28,18 +28,21 @@ end
 --多语言
 function MapMatGoodRootItem:_language()
     --self.typeNameText.text = GetLanguage(self.data[1].name)
-    self.typeNameText.text = self.data[1].name
+    self.typeNameText.text = self.data.detailData[1].name
 end
 --
 function MapMatGoodRootItem:_createItems()
     self.items = {}
+    local count = 0
     for i, value in ipairs(self.data.detailData) do
-        local go = UnityEngine.GameObject.Instantiate(MapPanel.mapMatGoodRootItem)
+        count = count + 1
+        local go = UnityEngine.GameObject.Instantiate(MapPanel.mapMatGoodSearchItem)
         go.transform:SetParent(self.detailRoot.transform)
         go.transform.localScale = Vector3.one
         local data = {itemId = value.itemId, mapSearchType = self.data.mapSearchType}
         self.items[value.itemId] = MapMatGoodSearchItem:new(data, go)
     end
 
-    self.element.preferredHeight = self.detailRoot:GetComponent("RectTransform").sizeDelta.y + 68
+    local h = 138 * math.ceil(count / 4)
+    self.element.preferredHeight = h + 68
 end

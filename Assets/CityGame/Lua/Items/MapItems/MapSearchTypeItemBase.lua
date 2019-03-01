@@ -29,8 +29,12 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     LoadSprite(data.disSelectIconPath, self.disSelectIconImg, true)
 
     Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
+    self:_addListener()
     self:resetState()
 end
+
+--
+
 --重置状态
 function MapSearchTypeItemBase:resetState()
     self.isSelect = false
@@ -64,3 +68,5 @@ end
 ---需要子类重写的方法
 --点击事件
 function MapSearchTypeItemBase:_clickFunc() end
+
+function MapSearchTypeItemBase:_addListener() end

@@ -137,6 +137,7 @@ end
 function MapCtrl:matSelect()
     self:toggleDetailPage(true)
     self:_openPageItems(EMapSearchType.Material)
+
     self.m_Timer:Start()
 end
 --打开商品详情界面
@@ -166,7 +167,7 @@ function MapCtrl:nonePageCancelSelect(selectId)
 end
 --
 function MapCtrl:typeCloseSelectPage(selectId)
-    if self.selectItem:getTypeId() == selectId then
+    if self.selectDetailItem:getTypeId() == selectId then
         self:toggleDetailPage(false)
     end
 end
@@ -190,27 +191,31 @@ end
 --
 function MapCtrl:refreshDetailItem(item)
     if item == nil then
-        if self.selectItem ~= nil then
+        if self.selectDetailItem ~= nil then
             self.typeTable[self.selectId]:setShowName()
-            self.selectItem:resetState()
-            self.selectItem = nil
+            self.selectDetailItem:resetState()
+            self.selectDetailItem = nil
         end
     else
         self.selectDetailItem = item
         local typeId = item:getTypeId()
-        self.typeTable[typeId]:setShowName(item:getNameStr())
+        local tempItem = self.typeTable[typeId]
+        if tempItem ~= nil then
+            tempItem:setShowName(item:getNameStr())
 
-        self.m_Timer:Start()
-        --向服务器发送请求  商品 原料
-
+            self.m_Timer:Start()
+            --向服务器发送请求  商品 原料
+        else
+            ct.log("")
+        end
     end
 end
 
 --取消选中
 function MapCtrl:_cancelDetailSelect()
-    if self.selectItem ~= nil then
-        self.selectItem:resetState()
-        self.selectItem = nil
+    if self.selectDetailItem ~= nil then
+        self.selectDetailItem:resetState()
+        self.selectDetailItem = nil
     end
 end
 

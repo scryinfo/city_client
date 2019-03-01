@@ -5,6 +5,10 @@
 ---小地图搜索类型
 MapSearchTypePageItem = class('MapSearchTypePageItem', MapSearchTypeItemBase)
 
+function MapSearchTypePageItem:_addListener()
+    Event.AddListener("c_MapTypeChangeName", self.setShowName, self)
+end
+
 --选中了类型中的某一个
 function MapSearchTypePageItem:refreshShow(isSelect, showName)
     if isSelect == true then
@@ -13,6 +17,9 @@ function MapSearchTypePageItem:refreshShow(isSelect, showName)
         end
         self.select.localScale = Vector3.one
         self.disSelect.localScale = Vector3.zero
+        if showName ~= nil then
+            self:setShowName(showName)
+        end
     else
         self.select.localScale = Vector3.zero
         self.disSelect.localScale = Vector3.one

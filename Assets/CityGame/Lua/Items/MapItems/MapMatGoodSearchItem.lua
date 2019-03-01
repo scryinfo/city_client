@@ -15,7 +15,7 @@ function MapMatGoodSearchItem:initialize(data, viewRect)
     self.nameText = self.viewRect.transform:Find("nameText"):GetComponent("Text")
     --LoadSprite(data.selectIconPath, self.iconImg, true)
 
-    self.toggle = self.viewRect.transform:Find("btn"):GetComponent("Toggle")
+    self.toggle = self.viewRect.transform:GetComponent("Toggle")
     self:_setToggleGroup()
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:_toggle(isOn)
@@ -32,7 +32,8 @@ function MapMatGoodSearchItem:resetState()
 end
 --多语言
 function MapMatGoodSearchItem:_language()
-    self.nameText.text = GetLanguage(self.data.languageId)
+    --self.nameText.text = GetLanguage(self.data.languageId)
+    self.nameText.text = "wait"
 end
 --
 function MapMatGoodSearchItem:_toggle(isOn)
@@ -60,5 +61,6 @@ function MapMatGoodSearchItem:getItemId()
     return self.data.mapItemId
 end
 function MapMatGoodSearchItem:getNameStr()
-    return GetLanguage(self.data.languageId)
+    return "wait"
+    --return GetLanguage(self.data.languageId)
 end

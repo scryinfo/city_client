@@ -46,8 +46,67 @@ local pbl = pbl
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
----------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------- 建筑信息--------------------------------------------------------------------------------
+-------------------------------系统建筑数据--------------------------------
+function DataManager.AddSystemBuild(collectionID,blockID,poolName,go)
+    if BuildDataStack[collectionID].SystemBuildDatas == nil then
+        BuildDataStack[collectionID].SystemBuildDatas = {}
+    end
+    BuildDataStack[collectionID].SystemBuildDatas[blockID] = {
+        ["poolName"] = poolName,
+        ["gameObject"] = go,
+    }
+end
+
+function DataManager.RemoveSystemBuild(collectionID)
+    local tempSystemBuild =  BuildDataStack[collectionID].SystemBuildDatas
+    if tempSystemBuild == nil then
+        return
+    end
+    for blockID,tempTable in pairs(tempSystemBuild) do
+        MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+    end
+    BuildDataStack[collectionID].SystemBuildDatas = nil
+end
+-------------------------------基础地块生成--------------------------------
+
+function DataManager.AddSystemTerrain(collectionID,blockID,poolName,go)
+    if BuildDataStack[collectionID].SystemTerrainDatas == nil then
+        BuildDataStack[collectionID].SystemTerrainDatas = {}
+    end
+    BuildDataStack[collectionID].SystemTerrainDatas[blockID] = {
+        ["poolName"] = poolName,
+        ["gameObject"] = go,
+    }
+end
+
+function DataManager.RemoveSystemTerrain(collectionID)
+    local tempSystemBuild =  BuildDataStack[collectionID].SystemTerrainDatas
+    if tempSystemBuild == nil then
+        return
+    end
+    for blockID,tempTable in pairs(tempSystemBuild) do
+        MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+    end
+    BuildDataStack[collectionID].SystemTerrainDatas = nil
+end
+
+
+
+local function InitCollectionSystemTerrain(tempCollectionID)
+    local tempBlockData =  BuildDataStack[tempCollectionID].BlockDatas
+    for blockId, value in pairs(tempBlockData) do
+        if value == -1 then
+            local go = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[4000000].poolName)
+            go.transform.position = TerrainManager.BlockIDTurnPosition(blockId)
+            DataManager.AddSystemBuild(tempCollectionID,blockId,PlayerBuildingBaseData[4000000].poolName,go)
+        end
+    end
+end
+
+
 -------------------------------原子地块数据--------------------------------
+
 --功能
 --  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
@@ -57,17 +116,35 @@ local function CreateBlockDataTable(tempCollectionID)
     local TempTable =  {}
     local systemMapTemp = SystemMapConfig[tempCollectionID]
     for id, value in pairs(systemMapTemp) do
-        TempTable[id] = SystemMapConversionConfig[value]
+        local buildList =  DataManager.CaculationTerrainRangeBlock(id,PlayerBuildingBaseData[value].x)
+        for key, value in pairs(buildList) do
+            TempTable[value] = id
+        end
     end
-    BuildDataStack[tempCollectionID].BlockDatas = TempTable
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     --将内部所有数据置为 -1
     local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
     for key, value in pairs(idList) do
-        local temp = BuildDataStack[tempCollectionID].BlockDatas
-        if temp[value] == nil then
-            temp[value] = -1
+        if TempTable[value] == nil then
+            TempTable[value] = -1
         end
+    end
+    BuildDataStack[tempCollectionID].BlockDatas = TempTable
+    ---生成系统土地------------
+    InitCollectionSystemTerrain(tempCollectionID)
+    ---生成系统建筑------------
+    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
+    ---刷新一遍道路
+    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+    collectgarbage("collect")
+end
+
+function DataManager.InitBuildDatas(tempCollectionID)
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].BlockDatas == nil then
+        CreateBlockDataTable(tempCollectionID)
     end
 end
 
@@ -83,13 +160,7 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     if nodeID == nil then
         nodeID = -1
     end
-    if nil == BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-    end
-    if  BuildDataStack[collectionID].BlockDatas == nil then
-    --初始化地块集合
-        CreateBlockDataTable(collectionID)
-    end
+    DataManager.InitBuildDatas(collectionID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
@@ -103,6 +174,7 @@ function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
         DataManager.RefreshBlockData(value,nodeValue)
     end
 end
+
 
 --功能
 --  返回一块范围内的blockID集合
@@ -287,11 +359,7 @@ function DataManager.RefreshBaseBuildData(data)
     end
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     --判断地块是否已经初始化
-    if nil == BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-        --初始化地块集合
-        CreateBlockDataTable(collectionID)
-    end
+    DataManager.InitBuildDatas(collectionID)
     --检查数据初始化
     if BuildDataStack[collectionID].BaseBuildDatas == nil then
         BuildDataStack[collectionID].BaseBuildDatas = {}
@@ -357,6 +425,10 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
     end
     --删除所有道路信息数据（RoteDatas）
     DataManager.RemoveWaysByCollectionID(tempCollectionID)
+    --删除所有系统建筑数据
+    DataManager.RemoveSystemBuild(tempCollectionID)
+    --删除所有系统道路数据
+    DataManager.RemoveSystemTerrain(tempCollectionID)
     --删除所有地块信息BaseGroundModel（GroundDatas）
     if BuildDataStack[tempCollectionID].GroundDatas ~= nil  then
         for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
@@ -371,8 +443,7 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         end
         BuildDataStack[tempCollectionID].BaseBuildDatas = nil
     end
-    --清空这个节点
-    --BuildDataStack[tempCollectionID] = nil
+    collectgarbage("collect")
 end
 
 --获取建筑基础数据

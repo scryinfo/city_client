@@ -21,6 +21,7 @@ TerrainConfig = {
         ["ScaleOffset"] = 1,
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
+        ["MapLeftPageDuringTime"] = 1,
         ["MapSize"] = 101,
     },
     ["LoadingConfig"] = {

@@ -71,7 +71,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
     Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
-    Event.AddListener("c_MapCloseDetailPage", self.typeCloseSelectPage, self)
+    Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
 end
 
 function MapCtrl:Hide()
@@ -79,7 +79,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
     Event.RemoveListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.RemoveListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
-    Event.RemoveListener("c_MapCloseDetailPage", self.typeCloseSelectPage, self)
+    Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
 
     self.m_Timer:Stop()
     self:_cancelDetailSelect()
@@ -166,9 +166,9 @@ function MapCtrl:nonePageCancelSelect(selectId)
     end
 end
 --
-function MapCtrl:typeCloseSelectPage(selectId)
-    if self.selectDetailItem:getTypeId() == selectId then
-        self:toggleDetailPage(false)
+function MapCtrl:typeToggleSelectPage(selectId, open)
+    if self.selectId == selectId then
+        self:toggleDetailPage(open)
     end
 end
 --每次切换选择的类型的时候都应调用该方法
@@ -182,6 +182,8 @@ function MapCtrl:refreshTypeItems(selectId)
             if value:getTypeId() == selectId then
                 value:refreshShow(true)
                 self.selectId = selectId
+
+                self:toggleDetailPage(false)
             else
                 value:refreshShow(false)
             end

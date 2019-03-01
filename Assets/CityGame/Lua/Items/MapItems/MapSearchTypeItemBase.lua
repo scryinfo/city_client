@@ -23,6 +23,7 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     self.clickBtn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
+    self.isOpenState = false  --是否是打开状态  --只用于有展开页的typeItem
 
     --加载图片
     LoadSprite(data.selectIconPath, self.selectIconImg, true)
@@ -38,6 +39,7 @@ end
 --重置状态
 function MapSearchTypeItemBase:resetState()
     self.isSelect = false
+    self.isOpenState = false
     self.select.localScale = Vector3.zero
     self.disSelect.localScale = Vector3.one
     self.loadBtnTran.transform.localScale = Vector3.zero

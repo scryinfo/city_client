@@ -30,10 +30,17 @@ end
 --点击事件
 function MapSearchTypePageItem:_clickFunc()
     if self.isSelect == true then
-        Event.Brocast("c_MapCloseDetailPage", self.data.typeId)  --关闭右侧界面
+        --Event.Brocast("c_MapCloseDetailPage", self.data.typeId, false)  --关闭右侧界面
     else
         Event.Brocast("c_MapSearchSelectType", self.data.typeId)  --播报事件，选中自己
+        self.isOpenState = true
+        Event.Brocast("c_MapCloseDetailPage", self.data.typeId, self.isOpenState)  --关闭右侧界面
+        return
     end
+
+    --展开右侧或者关闭右侧
+    self.isOpenState = not self.isOpenState
+    Event.Brocast("c_MapCloseDetailPage", self.data.typeId, self.isOpenState)  --关闭右侧界面
 end
 --
 function MapSearchTypePageItem:setShowName(str)

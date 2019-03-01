@@ -89,8 +89,8 @@ function ServerListModel:registerGsNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","login","gs.LoginACK",self.n_GsLoginSuccessfully,self)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),ServerListModel.n_GsLoginSuccessfully);
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
-   -- DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","roleLogin","gs.LoginACK",self.n_GsLoginSuccessfully)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleLogin","gs.Role",self.n_OnRoleLogin,self)
 end
 function ServerListModel:n_GsLoginSuccessfully( lMsg )
     --if stream == nil then
@@ -122,12 +122,12 @@ function ServerListModel:loginRole(info)
     DataManager.ModelSendNetMes("gscode.OpCode", "roleLogin","gs.Id",{ id = info.id })
 end
 
-function ServerListModel.n_OnRoleLogin(stream)
+function ServerListModel:n_OnRoleLogin(pMsg)
     --message RoleLoginAck{
     --    required Role role = 1;
     --}
-    if(stream) then
-        local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
+    if(pMsg) then
+        --local pMsg =assert(pbl.decode("gs.Role",stream),"LoginModel.n_OnRoleLogin : pbl.decode failed")
         if pMsg.bag ~= nil then
             ServerListModel.inHand = pMsg.bag.inHand
         end

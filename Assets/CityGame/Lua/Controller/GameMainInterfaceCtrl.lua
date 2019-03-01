@@ -7,6 +7,11 @@ local countDown = 0
 local groundState
 local incomeNotify    --收益详情表
 local lastTime   --上一次时间
+--todo 城市广播
+local radioTime      --时间
+local radioIndex     --索引
+local radio          --广播信息表(有序)
+local newRadio       --未播放的广播信息表
 
 
 function  GameMainInterfaceCtrl:bundleName()
@@ -44,15 +49,9 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+    Event.AddListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
 
     GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
-    GameMainInterfacePanel.noticeText.text = GetLanguage(11020009)
-    GameMainInterfacePanel.friendsText.text = GetLanguage(11020010)
-    GameMainInterfacePanel.setText.text = GetLanguage(11020007)
-    GameMainInterfacePanel.guideBoolText.text = GetLanguage(11020008)
-    GameMainInterfacePanel.smallMapText.text = GetLanguage(11020013)
-    GameMainInterfacePanel.cityText.text = GetLanguage(11020012)
-    GameMainInterfacePanel.leagueText.text = GetLanguage(11020011)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -227,6 +226,39 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 
 end
 
+--todo 城市广播
+function GameMainInterfaceCtrl:c_OnRadioInfo(info)
+    local index
+    if radio == nil then
+        radio = {}
+        radio[1] = info
+    else
+        if info.type ~= 1 then 
+            for i, v in pairs(radio) do
+                if info.type == v.type then
+                   index = i
+                end
+            end
+            if index ~= nil then
+                table.remove(radio,index)
+            end
+        end
+        table.insert(radio,info)
+    end
+    if radio[#radio].ts - radio[#radio-1].ts < 10 then
+        if newRadio == nil then
+            newRadio = {}
+            newRadio[1] = info
+        else
+            table.insert(newRadio,info)
+        end
+    else
+        GameMainInterfaceCtrl:BroadcastRadio(radio,#radio)
+        radioTime = 10
+        radioIndex = 1
+    end
+end
+
 function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -243,6 +275,9 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.league,self.OnLeague,self); --联盟
 
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.openBtn,self.OnOpenBtn,self); --打来隐藏图标
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.closeBtn,self.OnCloseBtn,self); --关闭隐藏图标
+
     --todo 收益
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.open,self.OnOpen,self); --打开收益详情
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.earningsPanelBg,self.OnEarningsPanelBg,self); --点击收益详情Bg
@@ -251,6 +286,10 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBtn,self.OnClearBtn,self); --点击ClearBtn
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
+
+    --todo 城市广播
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rightRadio,self.OnRightRadio,self);
 
     --滑动互用
     self.earnings = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -280,9 +319,14 @@ function GameMainInterfaceCtrl:Awake()
     --收益倒计时条件
     self.isTimmer = false
 
+    radioTime = 0
+    radioIndex = 1
+    radio = {{type = 1,ts = 1},{type = 2,ts = 11}}
+
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
+
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -352,6 +396,28 @@ function GameMainInterfaceCtrl:RefreshWeather()
                 GameMainInterfacePanel.open.transform.localScale = Vector3.one
             end
             self.isTimmer = false
+        end
+    end
+
+    -- todo  城市广播
+    radioTime = radioTime -1
+    if radioTime <= 0 then
+        radioTime = 10
+        if newRadio ~= nil then
+            GameMainInterfaceCtrl:BroadcastRadio(newRadio,1)
+            table.remove(newRadio,1)
+            if #newRadio == 0 then
+                newRadio = nil
+            end
+        else
+            if radio == nil then
+                return
+            end
+            GameMainInterfaceCtrl:BroadcastRadio(radio,radioIndex)
+            radioIndex = radioIndex + 1
+            if radioIndex > #radio then
+                radioIndex = radioIndex - #radio
+            end
         end
     end
 end
@@ -501,6 +567,18 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
     end
 end
 
+--打开隐藏图标
+function GameMainInterfaceCtrl:OnOpenBtn()
+    GameMainInterfacePanel.openBg.localScale = Vector3.zero
+    GameMainInterfacePanel.closeBg.localScale = Vector3.one
+end
+
+--关闭隐藏图标
+function GameMainInterfaceCtrl:OnCloseBtn()
+    GameMainInterfacePanel.openBg.localScale = Vector3.one
+    GameMainInterfacePanel.closeBg.localScale = Vector3.zero
+end
+
 --设置--
 function GameMainInterfaceCtrl.Onset()
     PlayMusEff(1002)
@@ -544,22 +622,25 @@ end
 
 --小地图
 function GameMainInterfaceCtrl:OnSmallMap()
-    PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("MiniMapCtrl")
+    --PlayMusEff(1002)
+    --GameMainInterfaceCtrl:RemoveUpdata()
+    --ct.OpenCtrl("MiniMapCtrl")
+    GameMainInterfaceCtrl:c_OnRadioInfo({type = 5,ts = 30})
 end
 
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
-    PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
-    --TerrainManager.MoveToCentralBuidingPosition()
-    ct.OpenCtrl("CenterBuildingCtrl")
+    --PlayMusEff(1002)
+    --GameMainInterfaceCtrl:RemoveUpdata()
+    ----TerrainManager.MoveToCentralBuidingPosition()
+    --ct.OpenCtrl("CenterBuildingCtrl")
+    GameMainInterfaceCtrl:c_OnRadioInfo({type = 4,ts = 26})
 end
 
 --联盟
 function GameMainInterfaceCtrl:OnLeague()
     PlayMusEff(1002)
+    GameMainInterfaceCtrl:c_OnRadioInfo({type = 3,ts = 21})
 end
 
 --关闭updata
@@ -642,10 +723,16 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
     if isShow then
         GameMainInterfacePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.zero
+        GameMainInterfacePanel.opens.transform.localScale = Vector3.zero
+        GameMainInterfacePanel.close.transform.localScale = Vector3.one
+        GameMainInterfacePanel.closes.transform.localScale = Vector3.one
         GameMainInterfacePanel.earningsPanelBg.transform.localScale = Vector3.one
     else
         GameMainInterfacePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.one
+        GameMainInterfacePanel.opens.transform.localScale = Vector3.one
+        GameMainInterfacePanel.close.transform.localScale = Vector3.zero
+        GameMainInterfacePanel.closes.transform.localScale = Vector3.zero
         GameMainInterfacePanel.earningsPanelBg.transform.localScale = Vector3.zero
     end
     GameMainInterfaceCtrl:OnClearBg()
@@ -660,5 +747,37 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
     end
 end
 
+--todo 城市广播
+
+function GameMainInterfaceCtrl:OnLeftRadioBtn()
+    GameMainInterfaceCtrl:OnClick_RadioCity(true)
+end
+
+function GameMainInterfaceCtrl:OnRightRadio()
+    GameMainInterfaceCtrl:OnClick_RadioCity(false)
+end
+
+--打开关闭城市广播
+function GameMainInterfaceCtrl:OnClick_RadioCity(isShow)
+    if isShow then
+        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(-570,0,0)
+        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.zero
+        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.zero
+    else
+        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(0,0,0)
+        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.one
+        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.one
+    end
+end
+
+--播放表中图片
+function GameMainInterfaceCtrl:BroadcastRadio(table,index)
+    if table == nil then
+        return
+    end
+    LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, false)
+end
 
 

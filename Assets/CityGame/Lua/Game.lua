@@ -42,8 +42,8 @@ function Game.OnInitOK()
     UIBubbleManager.Awake()
     --初始化屏幕适配比例--
     InitScreenRatio()
-    
-    ct.OpenCtrl('LoginCtrl')
+
+    ct.OpenCtrl('LoadingCtrl')
     --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end
 

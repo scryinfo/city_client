@@ -175,7 +175,7 @@ local function changAparance(kind)
 
 end
 
-function AvatarManger.GetBigAvatar(faceId,isSmall)
+local function GetAvatar(faceId,isSmall)
     local arr,config=split(faceId,"-")
 
     sex=tonumber(arr[1])
@@ -222,16 +222,25 @@ function AvatarManger.GetBigAvatar(faceId,isSmall)
     return temp
 end
 
+
+
+
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
-   local AvatarData= AvatarManger.GetBigAvatar(faceId,true)
+   local AvatarData=GetAvatar(faceId,true)
 
     AvatarData.go.transform:SetParent(parent);
-    local go= AvatarManger.setSize(AvatarData.go,size)
-    AvatarData.go=go
-
-    return AvatarData
+    AvatarManger.setSize(AvatarData.go,size)
 end
+
+function AvatarManger.GetBigAvatar(faceId,parent,size)
+
+    local AvatarData=GetAvatar(faceId,false)
+
+    AvatarData.go.transform:SetParent(parent);
+    AvatarManger.setSize(AvatarData.go,size)
+end
+
 
 function AvatarManger.CollectAvatar()
     if #record>0 then

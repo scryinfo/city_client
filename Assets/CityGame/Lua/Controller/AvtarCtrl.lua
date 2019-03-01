@@ -253,7 +253,6 @@ function AvtarCtrl:changAparance(data)
                         LoadSprite(pastApperanceID["backHat"].path,appearance["backHat"].ima)
                     end
                 end
-                
             end
         end
 

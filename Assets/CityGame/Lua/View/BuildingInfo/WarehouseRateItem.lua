@@ -31,7 +31,12 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
             return
         end
         PlayMusEff(1002)
-        ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+        if self.warehouseData.info.state == "OPERATE" then
+            ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+        else
+            Event.Brocast("SmallPop",GetLanguage(35040013),300)
+            return
+        end
     end);
     self:initData()
 

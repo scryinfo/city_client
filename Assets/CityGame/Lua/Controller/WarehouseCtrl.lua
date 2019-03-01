@@ -86,24 +86,14 @@ end
 --点击打开上架Panel
 function WarehouseCtrl:ClickRightShelfBtn(ins)
     PlayMusEff(1002)
-    if ins.m_data.info.state == "OPERATE" then
-        switchIsShow = false
-        ins:OpenRightPanel(not switchRightPanel,switchIsShow)
-    else
-        Event.Brocast("SmallPop",GetLanguage(35040013),300)
-        return
-    end
+    switchIsShow = false
+    ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
 --点击打开运输Panel
 function WarehouseCtrl:ClickRightTransportBtn(ins)
     PlayMusEff(1002)
-    if ins.m_data.info.state == "OPERATE" then
-        switchIsShow = true
-        ins:OpenRightPanel(not switchRightPanel,switchIsShow)
-    else
-        Event.Brocast("SmallPop",GetLanguage(35040013),300)
-        return
-    end
+    switchIsShow = true
+    ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
 --跳转选择仓库
 function WarehouseCtrl:OnClick_transportopenBtn(ins)

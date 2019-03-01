@@ -26,6 +26,8 @@ function AddLineBoxPanel:InitPanel()
     this.nemaText = transform:Find("root/info/goods/nemaText"):GetComponent("Text")
     this.icon = transform:Find("root/info/goods/icon"):GetComponent("Image")
     this.accreditIcon = transform:Find("root/info/goods/accreditIcon")
+    this.itemGoodsbg = transform:Find("root/info/goods/itemGoodsbg")
+    this.itemMaterialbg = transform:Find("root/info/goods/itemMaterialbg")
     --setting
     this.inputNumber = transform:Find("root/setting/inputNumber"):GetComponent("InputField")
     this.numberScrollbar = transform:Find("root/setting/numberScrollbar"):GetComponent("Slider")

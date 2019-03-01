@@ -158,7 +158,5 @@ function Game.OnPostInitOK()
            return
     end
 
-    ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
-    local Test = WarehouseCtrl:new()
-    local a= 1
+    --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end

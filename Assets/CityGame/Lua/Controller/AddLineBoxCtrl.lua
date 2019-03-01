@@ -38,19 +38,26 @@ function AddLineBoxCtrl:Hide()
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
 function AddLineBoxCtrl:InitializeData()
+    self.buildingId = self.m_data.insId
+    self.itemId = self.m_data.itemId
+    self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
+
     AddLineBoxPanel.numberScrollbar.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
     AddLineBoxPanel.numberScrollbar.value = 0
     AddLineBoxPanel.inputNumber.characterLimit = string.len(AddLineBoxPanel.numberScrollbar.maxValue)
     AddLineBoxPanel.inputNumber.text = 0
     AddLineBoxPanel.timeText.text = "00:00:00"
+    AddLineBoxPanel.nemaText.text = GetLanguage(self.itemId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        local speed = 1 / Material[self.m_data.itemId].numOneSec / 60
-        AddLineBoxPanel.nemaText.text = Material[self.m_data.itemId].name
+        local speed = 1 / (Material[self.itemId].numOneSec * self.workerNum)
         AddLineBoxPanel.speedText.text = "<color=#00ffba>"..self:GetOneSecNum(speed).." sec.".."</color>/one"
+        AddLineBoxPanel.itemGoodsbg.localScale = Vector3.New(0,0,0)
+        LoadSprite(Material[self.itemId].img,AddLineBoxPanel.icon,false)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        local speed = 1 / Good[self.m_data.itemId].numOneSec / 60
-        AddLineBoxPanel.nemaText.text = Good[self.m_data.itemId].name
+        local speed = 1 / (Good[self.itemId].numOneSec * self.workerNum)
         AddLineBoxPanel.speedText.text = "<color=#00ffba>"..self:GetOneSecNum(speed).." sec.".."</color>/one"
+        AddLineBoxPanel.itemMaterialbg.localScale = Vector3.New(0,0,0)
+        LoadSprite(Good[self.itemId].img,AddLineBoxPanel.icon,false)
     end
 end
 ----------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
@@ -71,18 +78,18 @@ end
 function AddLineBoxCtrl:OnClick_confirmBtn(go)
     PlayMusEff(1002)
     local number = AddLineBoxPanel.numberScrollbar.value
-    local ststaffaffNum = PlayerBuildingBaseData[go.m_data.mId].maxWorkerNum
     if go:NumberWhetherZero(number) == true then
         if go.m_data.buildingType == BuildingType.MaterialFactory then
-            Event.Brocast("m_ReqMaterialAddLine",go.m_data.buildingId,number,ststaffaffNum,go.m_data.itemId)
+            Event.Brocast("m_ReqMaterialAddLine",go.buildingId,number,go.workerNum,go.itemId)
         end
     end
 end
 ------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
 --添加成功后
 function AddLineBoxCtrl:SucceedUpdatePanel(dataInfo)
-    local aaa = dataInfo
-    local bbb = ""
+    if dataInfo ~= nil then
+        UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+    end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --截取小数点后两位
@@ -97,12 +104,15 @@ end
 --滑动条刷新输入框值
 function AddLineBoxCtrl:SlidingUpdateInput()
     AddLineBoxPanel.inputNumber.text = AddLineBoxPanel.numberScrollbar.value
-    --AddLineBoxPanel.timeText.text =
+    AddLineBoxPanel.timeText.text = self:GetTime(AddLineBoxPanel.numberScrollbar.value,self.workerNum)
 end
 --输入刷新滑动条
 function AddLineBoxCtrl:InputUpdateSlider()
     if AddLineBoxPanel.inputNumber.text ~= "" then
         AddLineBoxPanel.numberScrollbar.value = AddLineBoxPanel.inputNumber.text
+        AddLineBoxPanel.timeText.text = self:GetTime(AddLineBoxPanel.numberScrollbar.value,self.workerNum)
+    else
+        AddLineBoxPanel.timeText.text = "00:00:00"
     end
 end
 --检查要生产的数量是否为零
@@ -112,4 +122,20 @@ function AddLineBoxCtrl:NumberWhetherZero(number)
         return false
     end
     return true
+end
+--计算时间
+function AddLineBoxCtrl:GetTime(targetCount,workerNum)
+    if targetCount == 0 then
+        return "00:00:00"
+    end
+    local materialKey,goodsKey = 21,22  --商品类型
+    local time
+    if math.floor(self.itemId / 100000) == materialKey then
+        time = targetCount / (Material[self.itemId].numOneSec * workerNum)
+    elseif math.floor(self.itemId / 100000) == goodsKey then
+        time = targetCount / (Good[self.itemId].numOneSec * workerNum)
+    end
+    local timeTable = getTimeBySec(time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
 end

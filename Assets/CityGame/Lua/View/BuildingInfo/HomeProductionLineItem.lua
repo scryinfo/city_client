@@ -6,13 +6,15 @@ HomeProductionLineItem.static.CONTENT_H = 223  --显示内容的高度
 HomeProductionLineItem.static.TOP_H = 100  --top条的高度
 HomeProductionLineItem.static.Line_PATH = "View/GoodsItem/LineItem"
 HomeProductionLineItem.storeData = {}
-
+HomeProductionLineItem.lineItemTable = {}
 --初始化方法  数据需要接受服务器发送的数据
 function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.productionData = productionData;
+    self.buildingId = productionData.insId
     HomeProductionLineItem.storeData = productionData.store.inHand
     self.toggleData = toggleData;    --位于toggle的第4个   左边
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
@@ -33,13 +35,18 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     end);
     mainPanelLuaBehaviour:AddClick(self.addBtn.gameObject,function()
         PlayMusEff(1002)
-        ct.OpenCtrl("AddProductionLineCtrl",self.productionData)
+        if self.productionData.info.state == "OPERATE" then
+            ct.OpenCtrl("AddProductionLineCtrl",self.productionData)
+        else
+            Event.Brocast("SmallPop",GetLanguage(35040013),300)
+            return
+        end
     end);
     self:initializeInfo(self.productionData.line);
 
-    --Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
     Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
     Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
+    Event.AddListener("materialDeleteLine",self.deleteLine,self)
 end
 
 --获取是第几次点击了
@@ -82,19 +89,18 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         self.add:SetActive(true)
         return;
     end
+    self.add:SetActive(false)
     local homePageType = ct.homePage.productionLine
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
-        local lineItem = HomePageDisplay:new(homePageType,value,prefab)
-        if not self.lineItemTable then
-            self.lineItemTable = {}
-        end
-        table.insert(self.lineItemTable,lineItem)
+        local lineItem = HomePageDisplay:new(homePageType,value,prefab,self.mainPanelLuaBehaviour,self.buildingId)
+        table.insert(HomeProductionLineItem.lineItemTable,lineItem)
     end
 end
 --刷新数据
 function HomeProductionLineItem:updateInfo(data)
     self.productionData = data
+    self.buildingId = data.insId
     self.productionData.line = data.line
     self:initializeInfo(self.productionData.line)
 end
@@ -121,4 +127,15 @@ function HomeProductionLineItem.loadingItemPrefab(itemPrefab,itemRoot)
     --obj.transform:SetSiblingIndex(1)
     obj:SetActive(true)
     return obj
+end
+--删除主页面生产线
+function HomeProductionLineItem:deleteLine(dataInfo)
+    for key,value in pairs(HomeProductionLineItem.lineItemTable) do
+        if dataInfo.lineId == value.lineId then
+            destroy(value.prefab.gameObject)
+            HomeProductionLineItem.lineItemTable[key] = nil
+        end
+    end
+    self.add:SetActive(true)
+    Event.Brocast("SmallPop",GetLanguage(28010006),300)
 end

@@ -14,6 +14,7 @@ function MaterialModel:OnCreate()
     Event.AddListener("m_ReqMaterialModifyShelf",self.m_ReqModifyShelf,self)
     Event.AddListener("m_ReqMaterialShelfDel",self.m_ReqShelfDel,self)
     Event.AddListener("m_ReqMaterialAddLine",self.m_ReqAddLine,self)
+    Event.AddListener("m_ReqMaterialDeleteLine",self.m_ReqDeleteLine,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -26,9 +27,9 @@ function MaterialModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoods)
     ----生产线
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyAddLine","gs.FtyLineAddInform",self.n_OnAddLineInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
 end
 
@@ -67,6 +68,10 @@ end
 --添加生产线
 function MaterialModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
     self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
+end
+--删除生产线
+function MaterialModel:m_ReqDeleteLine(buildingId,lineId)
+    self.funModel:m_ReqDeleteLine(buildingId,lineId)
 end
 ---服务器回调---
 --打开原料厂
@@ -107,7 +112,10 @@ end
 function MaterialModel:n_OnAddLineInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"AddLineBoxCtrl",'SucceedUpdatePanel',data)
 end
-
+--删除生产线
+function MaterialModel:n_OnDeleteLineInfo(data)
+    Event.Brocast("materialDeleteLine",data)
+end
 
 
 

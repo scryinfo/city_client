@@ -5,6 +5,7 @@ ShelfRateItem = class('ShelfRateItem')
 ShelfRateItem.static.TOTAL_H = 775  --整个Item的高度
 ShelfRateItem.static.CONTENT_H = 732  --显示内容的高度
 ShelfRateItem.static.TOP_H = 100  --top条的高度
+ShelfRateItem.SmallShelfRateItemTab = {}
 --ShelfRateItem.static.Goods_PATH = "View/GoodsItem/SmallShelfRateItem"
 --主页信息货架，生产线，只作显示
 ct.homePage =
@@ -38,12 +39,17 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        if self.shelfData.buildingType == BuildingType.MaterialFactory then
-            ct.OpenCtrl("ShelfCtrl",self.shelfData)
-        elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-            ct.OpenCtrl("ShelfCtrl",self.shelfData)
-        elseif self.shelfData.buildingType == BuildingType.RetailShop then
-            ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
+        if self.shelfData.info.state == "OPERATE" then
+            if self.shelfData.buildingType == BuildingType.MaterialFactory then
+                ct.OpenCtrl("ShelfCtrl",self.shelfData)
+            elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
+                ct.OpenCtrl("ShelfCtrl",self.shelfData)
+            elseif self.shelfData.buildingType == BuildingType.RetailShop then
+                ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
+            end
+        else
+            Event.Brocast("SmallPop",GetLanguage(35040013),300)
+            return
         end
     end);
     self.openName.text = GetLanguage(25020004)
@@ -93,10 +99,8 @@ function ShelfRateItem:initializeInfo(data)
         local homePageType = ct.homePage.shelf
         local prefab = self:loadingItemPrefab(self.ShelfRateItemPrefab,self.content)
         local SmallShelfRateItem = HomePageDisplay:new(homePageType,value,prefab)
-        if not ShelfRateItem.SmallShelfRateItemTab then
-            ShelfRateItem.SmallShelfRateItemTab = {}
-        end
-        ShelfRateItem.SmallShelfRateItemTab[key] = SmallShelfRateItem
+        --ShelfRateItem.SmallShelfRateItemTab[key] = SmallShelfRateItem
+        table.insert(ShelfRateItem.SmallShelfRateItemTab,SmallShelfRateItem)
     end
 end
 --刷新数据

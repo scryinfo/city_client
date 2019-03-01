@@ -44,10 +44,6 @@ function MaterialCtrl:initializeData()
         DataManager.OpenDetailModel(MaterialModel,self.insId)
         DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
     end
-    --if self.m_data.id then
-    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
-    --end
 end
 
 --刷新原料厂信息
@@ -95,7 +91,6 @@ function MaterialCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
-    --data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
         DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
         ins:_updateName(name)
@@ -120,34 +115,34 @@ function MaterialCtrl:Hide()
     if self.m_data.isOther == true then
         self:deleteOtherShelf()
     else
-        --self:deleteProductionObj()
+        self:deleteProductionObj()
         self:deleteShelfObj()
     end
 end
---退出时删除
---function MaterialCtrl:deleteProductionObj()
---    if not HomeProductionLineItem.productionTab or HomeProductionLineItem.productionTab == {} then
---        return
---    else
---        for i,v in pairs(HomeProductionLineItem.productionTab) do
---            v:closeEvent()
---            destroy(v.prefab.gameObject);
---        end
---        HomeProductionLineItem.productionTab = {}
---    end
---end
---删除主页货架item
+--清空生产线
+function MaterialCtrl:deleteProductionObj()
+    if next(HomeProductionLineItem.lineItemTable) == nil then
+        return
+    else
+        for key,value in pairs(HomeProductionLineItem.lineItemTable) do
+            value:closeEvent()
+            destroy(value.prefab.gameObject);
+            HomeProductionLineItem.lineItemTable[key] = nil
+        end
+    end
+end
+--清空货架
 function MaterialCtrl:deleteShelfObj()
-    if next(ShelfRateItem.SmallShelfRateItemTab) == nil or ShelfRateItem.SmallShelfRateItemTab == nil then
+    if next(ShelfRateItem.SmallShelfRateItemTab) == nil then
         return
     else
         for key,value in pairs(ShelfRateItem.SmallShelfRateItemTab) do
             destroy(value.prefab.gameObject)
-            --table.remove(ShelfRateItem.SmallShelfRateItemTab,key)
             ShelfRateItem.SmallShelfRateItemTab[key] = nil
         end
     end
 end
+--清空货架（其他玩家看到的）
 function MaterialCtrl:deleteOtherShelf()
     if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
         return
@@ -159,11 +154,8 @@ function MaterialCtrl:deleteOtherShelf()
 end
 --打开信息界面
 function MaterialCtrl:OnClick_infoBtn()
-
 end
-
 UnitTest.TestBlockStart()---------------------------------------------------------
-
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)

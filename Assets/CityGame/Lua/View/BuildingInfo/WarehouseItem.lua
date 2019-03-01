@@ -83,11 +83,6 @@ function WarehouseItem:OnClick_bgBtn(ins)
     PlayMusEff(1002)
     Event.Brocast("WarehouseSelectedGoodsItem", ins)
 end
-----删除事件
---function WarehouseItem:closeEvent()
---    Event.RemoveListener("c_GoodsItemChoose",self.c_GoodsItemChoose,self);
---    Event.RemoveListener("c_GoodsItemDelete",self.c_GoodsItemDelete,self);
---end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
     PlayMusEff(1002)

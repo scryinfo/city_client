@@ -49,18 +49,9 @@ function AddProductionLineCtrl:_initData()
 
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
-            --self:Hide();
-            --for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-            --    if v.itemId == self.leftItemId then
-            --        Event.Brocast("SmallPop",GetLanguage(26020007),300)
-            --        return
-            --    end
-            --end
-            --GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
-            --UIPanel.ClosePage();
             data.itemId = self.leftItemId
             data.mId = self.m_data.info.mId
-            data.buildingId = self.m_data.info.id
+            data.insId = self.m_data.info.id
             data.buildingType = self.m_data.buildingType
             ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
@@ -68,27 +59,16 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.one
 
-        --加工厂确定生产按钮
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-            --self:Hide()
-            --for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-            --    if v.itemId == self.leftItemId then
-            --        Event.Brocast("SmallPop",GetLanguage(26020008),300)
-            --        return
-            --    end
-            --end
-            --GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
-            --UIPanel.ClosePage();
             data.itemId = self.leftItemId
-            data.buildingId = self.m_data.info.id
+            data.insId = self.m_data.info.id
             ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     end
     self:_changeAddLineData(AddLineButtonPosValue.Left)
 end
 
-----
 function AddProductionLineCtrl:_changeAddLineData(posValue, itemId)
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     if posValue == AddLineButtonPosValue.Left then

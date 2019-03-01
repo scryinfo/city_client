@@ -103,6 +103,7 @@ function HomeProductionLineItem:updateInfo(data)
     self.buildingId = data.insId
     self.productionData.line = data.line
     self:initializeInfo(self.productionData.line)
+    HomeProductionLineItem.storeData = data.store.inHand
 end
 --获取当前建筑某种商品的库存数量
 function HomeProductionLineItem.GetInventoryNum(itemId)

@@ -5,24 +5,22 @@
 ---小地图搜索类型
 MapSearchTypePageItem = class('MapSearchTypePageItem', MapSearchTypeItemBase)
 
-function MapSearchTypePageItem:_addListener()
-    Event.AddListener("c_MapTypeChangeName", self.setShowName, self)
-end
-
 --选中了类型中的某一个
 function MapSearchTypePageItem:refreshShow(isSelect, showName)
     if isSelect == true then
         if self.isSelect == false then
             self.selectFunc()  --由未选中变为选中状态
         end
-        self.select.localScale = Vector3.one
-        self.disSelect.localScale = Vector3.zero
+        self.choose.localScale = Vector3.one
+        self.disChoose.localScale = Vector3.zero
+        self.pageOpenImg.localScale = Vector3.one
         if showName ~= nil then
             self:setShowName(showName)
         end
     else
-        self.select.localScale = Vector3.zero
-        self.disSelect.localScale = Vector3.one
+        self.choose.localScale = Vector3.zero
+        self.disChoose.localScale = Vector3.one
+        self.pageOpenImg.localScale = Vector3.zero
     end
     self.loadBtnTran.transform.localScale = Vector3.one
     self.isSelect = isSelect
@@ -32,20 +30,26 @@ function MapSearchTypePageItem:_clickFunc()
     if self.isSelect == true then
         --Event.Brocast("c_MapCloseDetailPage", self.data.typeId, false)  --关闭右侧界面
     else
-        Event.Brocast("c_MapSearchSelectType", self.data.typeId)  --播报事件，选中自己
         self.isOpenState = true
+        self.pageOpenImg.localScale = Vector3.one
+        Event.Brocast("c_MapSearchSelectType", self.data.typeId)  --播报事件，选中自己
         Event.Brocast("c_MapCloseDetailPage", self.data.typeId, self.isOpenState)  --关闭右侧界面
         return
     end
 
     --展开右侧或者关闭右侧
     self.isOpenState = not self.isOpenState
+    if self.isOpenState == true then
+        self.pageOpenImg.localScale = Vector3.one
+    else
+        self.pageOpenImg.localScale = Vector3.zero
+    end
     Event.Brocast("c_MapCloseDetailPage", self.data.typeId, self.isOpenState)  --关闭右侧界面
 end
 --
 function MapSearchTypePageItem:setShowName(str)
     if str ~= nil and str ~= "" then
-        self.selectShowNameText.text = str
+        self.chooseShowNameText.text = str
     end
     if str == nil then
         self:_language()

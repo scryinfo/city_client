@@ -5,17 +5,21 @@
 ---小地图搜索类型
 MapSearchTypeNonePageItem = class('MapSearchTypeNonePageItem', MapSearchTypeItemBase)
 
+function MapSearchTypeNonePageItem:_childInitFunc()
+    self.pageState.localScale = Vector3.zero
+end
+
 --选中了类型中的某一个
 function MapSearchTypeNonePageItem:refreshShow(isSelect)
     if isSelect == true then
         if self.isSelect == false then
             self.selectFunc()  --由未选中变为选中状态
         end
-        self.select.localScale = Vector3.one
-        self.disSelect.localScale = Vector3.zero
+        self.choose.localScale = Vector3.one
+        self.disChoose.localScale = Vector3.zero
     else
-        self.select.localScale = Vector3.zero
-        self.disSelect.localScale = Vector3.one
+        self.choose.localScale = Vector3.zero
+        self.disChoose.localScale = Vector3.one
     end
     self.loadBtnTran.transform.localScale = Vector3.one
     self.isSelect = isSelect

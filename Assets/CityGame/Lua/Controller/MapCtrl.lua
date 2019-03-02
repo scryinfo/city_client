@@ -209,9 +209,9 @@ function MapCtrl:refreshDetailItem(item)
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
             tempItem:setShowName(item:getNameStr())
-
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
+
         else
             ct.log("")
         end

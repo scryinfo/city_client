@@ -11,12 +11,14 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     self.data = data
     self.selectFunc = selectFunc
 
-    self.select = self.viewRect.transform:Find("select")
-    self.selectIconImg = self.viewRect.transform:Find("select/icon"):GetComponent("Image")
-    self.selectShowNameText = self.viewRect.transform:Find("select/showNameText"):GetComponent("Text")
-    self.disSelect = self.viewRect.transform:Find("disSelect")
-    self.disSelectIconImg = self.viewRect.transform:Find("disSelect/icon"):GetComponent("Image")
-    self.greyTypeNameText = self.viewRect.transform:Find("disSelect/greyTypeNameText"):GetComponent("Text")
+    self.choose = self.viewRect.transform:Find("choose")
+    self.chooseIconImg = self.viewRect.transform:Find("choose/icon"):GetComponent("Image")
+    self.chooseShowNameText = self.viewRect.transform:Find("choose/showNameText"):GetComponent("Text")
+    self.disChoose = self.viewRect.transform:Find("disChoose")
+    self.disChooseIconImg = self.viewRect.transform:Find("disChoose/icon"):GetComponent("Image")
+    self.greyTypeNameText = self.viewRect.transform:Find("disChoose/greyTypeNameText"):GetComponent("Text")
+    self.pageState = self.viewRect.transform:Find("openState")
+    self.pageOpenImg = self.viewRect.transform:Find("openState/openImg")
 
     self.clickBtn = self.viewRect.transform:Find("clickBtn"):GetComponent("Button")
     self.loadBtnTran = self.viewRect.transform:Find("loadBtn")
@@ -26,11 +28,10 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     self.isOpenState = false  --是否是打开状态  --只用于有展开页的typeItem
 
     --加载图片
-    LoadSprite(data.selectIconPath, self.selectIconImg, true)
+    LoadSprite(data.selectIconPath, self.chooseIconImg, true)
     LoadSprite(data.disSelectIconPath, self.disSelectIconImg, true)
 
     Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
-    self:_addListener()
     self:resetState()
 end
 
@@ -38,11 +39,13 @@ end
 
 --重置状态
 function MapSearchTypeItemBase:resetState()
-    self.isSelect = false
-    self.isOpenState = false
-    self.select.localScale = Vector3.zero
-    self.disSelect.localScale = Vector3.one
+    self.isSelect = false  --选中自己
+    self.isOpenState = false  --打开展开页，只针对有page的item
+    self.choose.localScale = Vector3.zero
+    self.disChoose.localScale = Vector3.one
+    self.pageOpenImg.localScale = Vector3.zero
     self.loadBtnTran.transform.localScale = Vector3.zero
+    self:_childInitFunc()
     self:_language()
 end
 --多语言
@@ -51,7 +54,7 @@ function MapSearchTypeItemBase:_language()
     --self.selectShowNameText.text = GetLanguage(self.data.languageId)
     --self.greyTypeNameText.text = GetLanguage(self.data.languageId)
 
-    self.selectShowNameText.text = self.data.name
+    self.chooseShowNameText.text = self.data.name
     self.greyTypeNameText.text = self.data.name
 end
 --loading
@@ -71,4 +74,4 @@ end
 --点击事件
 function MapSearchTypeItemBase:_clickFunc() end
 
-function MapSearchTypeItemBase:_addListener() end
+function MapSearchTypeItemBase:_childInitFunc() end

@@ -199,6 +199,11 @@ function MapCtrl:refreshDetailItem(item)
             self.selectDetailItem = nil
         end
     else
+        if self.selectDetailItem ~= nil then
+            self.typeTable[self.selectId]:setShowName()
+            self.selectDetailItem:resetState()
+        end
+
         self.selectDetailItem = item
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]

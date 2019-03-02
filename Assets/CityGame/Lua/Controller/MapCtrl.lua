@@ -194,13 +194,14 @@ end
 function MapCtrl:refreshDetailItem(item)
     if item == nil then
         if self.selectDetailItem ~= nil then
-            self.typeTable[self.selectId]:setShowName()
+            --self.typeTable[self.selectId]:setShowName()
             self.selectDetailItem:resetState()
             self.selectDetailItem = nil
         end
+        Event.Brocast("c_ChooseTypeDetail")
     else
         if self.selectDetailItem ~= nil then
-            self.typeTable[self.selectId]:setShowName()
+            --self.typeTable[self.selectId]:setShowName()
             self.selectDetailItem:resetState()
         end
 
@@ -208,7 +209,9 @@ function MapCtrl:refreshDetailItem(item)
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
-            tempItem:setShowName(item:getNameStr())
+            --tempItem:setShowName(item:getNameStr())
+
+            Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
 

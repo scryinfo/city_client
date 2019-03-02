@@ -15,11 +15,11 @@ function MapSearchTypeNonePageItem:refreshShow(isSelect)
         if self.isSelect == false then
             self.selectFunc()  --由未选中变为选中状态
         end
-        self.choose.localScale = Vector3.one
-        self.disChoose.localScale = Vector3.zero
+        --self.choose.localScale = Vector3.one
+        --self.disChoose.localScale = Vector3.zero
     else
-        self.choose.localScale = Vector3.zero
-        self.disChoose.localScale = Vector3.one
+        --self.choose.localScale = Vector3.zero
+        --self.disChoose.localScale = Vector3.one
     end
     self.loadBtnTran.transform.localScale = Vector3.one
     self.isSelect = isSelect
@@ -30,5 +30,16 @@ function MapSearchTypeNonePageItem:_clickFunc()
         Event.Brocast("c_MapSearchCancelSelect", self.data.typeId)  --取消选中状态
     else
         Event.Brocast("c_MapSearchSelectType", self.data.typeId)  --播报事件，选中自己
+        Event.Brocast("c_ChooseTypeDetail", self.data.typeId)
+    end
+end
+--
+function MapSearchTypeNonePageItem:_chooseTypeDetail(typeId, showStr)
+    if typeId == self.data.typeId and showStr == nil then
+        self.choose.localScale = Vector3.one
+        self.disChoose.localScale = Vector3.zero
+    else
+        self.choose.localScale = Vector3.zero
+        self.disChoose.localScale = Vector3.one
     end
 end

@@ -32,6 +32,7 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     LoadSprite(data.disSelectIconPath, self.disSelectIconImg, true)
 
     Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
+    Event.AddListener("c_ChooseTypeDetail", self._chooseTypeDetail, self)  --选中搜索某个东西
     self:resetState()
 end
 
@@ -75,3 +76,5 @@ end
 function MapSearchTypeItemBase:_clickFunc() end
 
 function MapSearchTypeItemBase:_childInitFunc() end
+
+function MapSearchTypeItemBase:_chooseTypeDetail() end

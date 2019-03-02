@@ -6,20 +6,17 @@
 MapSearchTypePageItem = class('MapSearchTypePageItem', MapSearchTypeItemBase)
 
 --选中了类型中的某一个
-function MapSearchTypePageItem:refreshShow(isSelect, showName)
+function MapSearchTypePageItem:refreshShow(isSelect)
     if isSelect == true then
         if self.isSelect == false then
             self.selectFunc()  --由未选中变为选中状态
         end
-        self.choose.localScale = Vector3.one
-        self.disChoose.localScale = Vector3.zero
+        --self.choose.localScale = Vector3.one
+        --self.disChoose.localScale = Vector3.zero
         self.pageOpenImg.localScale = Vector3.one
-        if showName ~= nil then
-            self:setShowName(showName)
-        end
     else
-        self.choose.localScale = Vector3.zero
-        self.disChoose.localScale = Vector3.one
+        --self.choose.localScale = Vector3.zero
+        --self.disChoose.localScale = Vector3.one
         self.pageOpenImg.localScale = Vector3.zero
     end
     self.loadBtnTran.transform.localScale = Vector3.one
@@ -52,6 +49,18 @@ function MapSearchTypePageItem:setShowName(str)
         self.chooseShowNameText.text = str
     end
     if str == nil then
+        self:_language()
+    end
+end
+--
+function MapSearchTypePageItem:_chooseTypeDetail(typeId, showStr)
+    if typeId == self.data.typeId and showStr ~= nil then
+        self.chooseShowNameText.text = showStr
+        self.choose.localScale = Vector3.one
+        self.disChoose.localScale = Vector3.zero
+    else
+        self.choose.localScale = Vector3.zero
+        self.disChoose.localScale = Vector3.one
         self:_language()
     end
 end

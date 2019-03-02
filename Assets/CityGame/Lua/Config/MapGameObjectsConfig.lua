@@ -433,7 +433,69 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 2000505,
             ["InitCount"] = 0,
         },
-        --TODO:河流/湖泊/装饰物
+        -----------------------------------------------河流
+        {   --河流1
+            ["Name"] = "RiversRoot01",
+            ["PlayerBuildingBaseDataID"] = 2000301,
+            ["InitCount"] = 0,
+        },
+        {   --河流2
+            ["Name"] = "RiversRoot02",
+            ["PlayerBuildingBaseDataID"] = 2000402,
+            ["InitCount"] = 0,
+        },
+        {   --河流3
+            ["Name"] = "RiversRoot03",
+            ["PlayerBuildingBaseDataID"] = 2000302,
+            ["InitCount"] = 0,
+        },
+        {   --河流4
+            ["Name"] = "RiversRoot04",
+            ["PlayerBuildingBaseDataID"] = 2000401,
+            ["InitCount"] = 0,
+        },
+        {   --河流5
+            ["Name"] = "RiversRoot05",
+            ["PlayerBuildingBaseDataID"] = 2000303,
+            ["InitCount"] = 0,
+        },
+        {   --河流6
+            ["Name"] = "RiversRoot06",
+            ["PlayerBuildingBaseDataID"] = 2000306,
+            ["InitCount"] = 0,
+        },
+        {   --河流7
+            ["Name"] = "RiversRoot07",
+            ["PlayerBuildingBaseDataID"] = 2000312,
+            ["InitCount"] = 0,
+        },
+        {   --河流8
+            ["Name"] = "RiversRoot08",
+            ["PlayerBuildingBaseDataID"] = 2000309,
+            ["InitCount"] = 0,
+        },
+        {   --河流9
+            ["Name"] = "RiversRoot09",
+            ["PlayerBuildingBaseDataID"] = 2000403,
+            ["InitCount"] = 0,
+        },
+        {   --河流10
+            ["Name"] = "RiversRoot10",
+            ["PlayerBuildingBaseDataID"] = 2000406,
+            ["InitCount"] = 0,
+        },
+        {   --河流11
+            ["Name"] = "RiversRoot11",
+            ["PlayerBuildingBaseDataID"] = 2000412,
+            ["InitCount"] = 0,
+        },
+        {   --河流12
+            ["Name"] = "RiversRoot12",
+            ["PlayerBuildingBaseDataID"] = 2000409,
+            ["InitCount"] = 0,
+        },
+
+        --TODO:湖泊/装饰物
     },
     ["OnlyOne"] = {
         ["Centralbuilding"] = 2000000,      --中心建筑

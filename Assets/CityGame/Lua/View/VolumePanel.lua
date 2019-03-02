@@ -29,10 +29,10 @@ function VolumePanel.InitPanel()
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额
     this.money = transform:Find("leftBg/moneyBg/money/moneyText"):GetComponent("Text"); --营业额
-    this.city = transform:Find("leftBg/moneyBg/city/hint/Text"):GetComponent("Text"); --城市市民
-    this.adult = transform:Find("leftBg/moneyBg/adult/adultImage/adultText"):GetComponent("Text"); --成年人
-    this.old = transform:Find("leftBg/moneyBg/old/oldImage/oldText"):GetComponent("Text"); --老人
-    this.youth = transform:Find("leftBg/moneyBg/youth/youthImage/youthText"):GetComponent("Text"); --青年人
+    this.city = transform:Find("leftBg/moneyBg/numberBg/city/hint/Text"):GetComponent("Text"); --城市市民
+    this.adult = transform:Find("leftBg/moneyBg/numberBg/adult/adultImage/adultText"):GetComponent("Text"); --成年人
+    this.old = transform:Find("leftBg/moneyBg/numberBg/old/oldImage/oldText"):GetComponent("Text"); --老人
+    this.youth = transform:Find("leftBg/moneyBg/numberBg/youth/youthImage/youthText"):GetComponent("Text"); --青年人
 
     --right
     this.clotherBtn = transform:Find("rightBg/clotherBtn").gameObject; --clotherBtn
@@ -46,4 +46,5 @@ function VolumePanel.InitPanel()
     this.requirement = transform:Find("rightBg/requirementLine/requirementText"):GetComponent("Text"); --Prospective requirement
     this.undateTime = transform:Find("rightBg/updateImage/undateTime"):GetComponent("Text"); --更新时间倒计时
     this.content = transform:Find("rightBg/Scroll View/Viewport/Content");
+    this.scroll = transform:Find("rightBg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect");
 end

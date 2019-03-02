@@ -49,7 +49,7 @@ function ChooseWarehouseCtrl:Awake(go)
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
     local faceId = DataManager.GetFaceId()
-    AvatarManger.GetSmallAvatar(faceId,GChooseWarehousePanel.faceItem.transform,0.2)
+    AvatarManger.GetSmallAvatar(faceId,ChooseWarehousePanel.faceItem.transform,0.2)
 
 end
 

@@ -58,7 +58,7 @@ function CenterWareHouseCtrl:Awake()
     isSelect = true;
     self. WareHouseGoodsMgr = WareHouseGoodsMgr:new()
     self.insId = OpenModelInsID.CenterWareHouseCtrl
-    self.totalCapacity = self.m_data.bagCapacity;--仓库总容量
+    self.totalCapacity = DataManager.GetBagCapacity();--仓库总容量
 end
 
 function CenterWareHouseCtrl:Active()
@@ -195,9 +195,7 @@ function CenterWareHouseCtrl:c_OnBackBtn()
 end
 
 function CenterWareHouseCtrl:Refresh()
-    if self.m_data == nil then
-        return
-    end
+
     self.number = 0;--商品个数
     local inHand = DataManager.GetBagInfo()
     if inHand ~= nil then

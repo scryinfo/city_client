@@ -138,6 +138,8 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         Event.Brocast("c_RoleLoginDataInit",pMsg);
         Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
+        Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
+
 
         --激活相机脚本
         --[[

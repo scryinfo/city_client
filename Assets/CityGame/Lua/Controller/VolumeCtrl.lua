@@ -8,6 +8,65 @@ UIPanel:ResgisterOpen(VolumeCtrl)
 --VolumeCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local volumeBehaviour;
+local isClother = true
+local clothes =  {
+    [1] = {
+        itemId = 2251101,
+        demand = 2000,
+        supply = 500,
+    },
+    [2] = {
+        itemId = 2251102,
+        demand = 2000,
+        supply = 300,
+    },
+    [3] = {
+        itemId = 2251103,
+        demand = 2000,
+        supply = 2100,
+    },
+    [4] = {
+        itemId = 2251201,
+        demand = 1500,
+        supply = 2100,
+    },
+    [5] = {
+        itemId = 2251202,
+        demand = 3600,
+        supply = 2100,
+    },[6] = {
+        itemId = 2251203,
+        demand = 4000,
+        supply = 2100,
+    },
+}
+local food = {
+    [1] = {
+        itemId = 2252101,
+        demand = 1800,
+        supply = 2100,
+    },[2] = {
+        itemId = 2252102,
+        demand = 2000,
+        supply = 300,
+    },[3] = {
+        itemId = 2252103,
+        demand = 2000,
+        supply = 450,
+    },[4] = {
+        itemId = 2252201,
+        demand = 2000,
+        supply = 120,
+    },[5] = {
+        itemId = 2252202,
+        demand = 2000,
+        supply = 1000,
+    },[6] = {
+        itemId = 2252203,
+        demand = 3000,
+        supply = 2100,
+    },
+}
 
 function  VolumeCtrl:bundleName()
     return "Assets/CityGame/Resources/View/VolumePanel.prefab"
@@ -27,6 +86,8 @@ function VolumeCtrl:Awake()
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.supplyDemand.mProvideData = VolumeCtrl.static.SupplyDemandProvideData
     self.supplyDemand.mClearData = VolumeCtrl.static.SupplyDemandClearData
+
+    VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #clothes)
 
     self.initData()
 end
@@ -55,22 +116,35 @@ function VolumeCtrl:OnBack()
 end
 
 --ClotherBtn
-function VolumeCtrl:OnClotherBtn()
-    VolumePanel.clothes.localScale = Vector3.one
-    VolumePanel.food.localScale = Vector3.zero
+function VolumeCtrl:OnClotherBtn(go)
+    isClother = true
+    --VolumePanel.clotherBtn.transform.localScale = Vector3.zero
+    VolumePanel.clotherBtn:SetActive(false)
+    VolumePanel.foodBtn:SetActive(true)
+
+    VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #clothes)
+
 end
 
 --FoodBtn
-function VolumeCtrl:OnFoodBtn()
-    VolumePanel.clothes.localScale = Vector3.zero
-    VolumePanel.food.localScale = Vector3.one
+function VolumeCtrl:OnFoodBtn(go)
+    isClother = false
+    VolumePanel.foodBtn:SetActive(false)
+    VolumePanel.clotherBtn:SetActive(true)
+    VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #food)
 end
 
 --滑动互用
 VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
 
     idx = idx + 1
-    local item = SupplyDemandItem:new(incomeNotify[#incomeNotify-idx+1],transform,idx)
+    local item
+    if isClother then
+        item = SupplyDemandItem:new(clothes[idx],transform)
+    else
+        item = SupplyDemandItem:new(food[idx],transform)
+    end
+
     local supplyDemand = {}
     supplyDemand[idx] = item
 end

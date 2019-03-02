@@ -303,6 +303,9 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rightRadio,self.OnRightRadio,self);
 
+    --交易记录
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.volume,self.OnVolume,self);
+
     --滑动互用
     self.earnings = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.earnings.mProvideData = GameMainInterfaceCtrl.static.EarningsProvideData
@@ -635,19 +638,17 @@ end
 
 --小地图
 function GameMainInterfaceCtrl:OnSmallMap()
-    --PlayMusEff(1002)
-    --GameMainInterfaceCtrl:RemoveUpdata()
-    --ct.OpenCtrl("MiniMapCtrl")
-    GameMainInterfaceCtrl:c_OnRadioInfo({type = 5,ts = 30})
+    PlayMusEff(1002)
+    GameMainInterfaceCtrl:RemoveUpdata()
+    ct.OpenCtrl("MiniMapCtrl")
 end
 
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
-    --PlayMusEff(1002)
-    --GameMainInterfaceCtrl:RemoveUpdata()
-    ----TerrainManager.MoveToCentralBuidingPosition()
-    --ct.OpenCtrl("CenterBuildingCtrl")
-    GameMainInterfaceCtrl:c_OnRadioInfo({type = 4,ts = 26})
+    PlayMusEff(1002)
+    GameMainInterfaceCtrl:RemoveUpdata()
+    --TerrainManager.MoveToCentralBuidingPosition()
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --联盟
@@ -790,7 +791,16 @@ function GameMainInterfaceCtrl:BroadcastRadio(table,index)
     if table == nil then
         return
     end
+    local type = table[index].type
+    if type == 1 then
+
+    end
     LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, false)
+end
+
+--todo 交易量
+function GameMainInterfaceCtrl:OnVolume()
+    ct.OpenCtrl("VolumeCtrl")
 end
 
 

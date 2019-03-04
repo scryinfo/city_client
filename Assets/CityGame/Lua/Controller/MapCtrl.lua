@@ -67,6 +67,15 @@ function MapCtrl:Awake(go)
     self:_initData()
 end
 
+function MapCtrl:Active()
+    UIPanel.Active(self)
+
+    --设置地图大小和Slider初始值
+    MapPanel.scaleSlider.minValue = self.ScaleMin
+    MapPanel.scaleSlider.maxValue = self.ScaleMax
+    self:RefreshMiniMapScale()
+end
+
 function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
     Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)
@@ -90,6 +99,8 @@ end
 
 --初始化
 function MapCtrl:_initData()
+    --MapPanel.mapRootRect.sizeDelta = Vector2.New(UnityEngine.Screen.width, UnityEngine.Screen.width)  --设置地图为正方形
+
     self.typeTable = {}
     --先生成搜索type
     for i, value in ipairs(MapTypeConfig) do

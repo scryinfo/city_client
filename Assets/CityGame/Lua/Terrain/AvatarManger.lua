@@ -6,23 +6,23 @@
 
 HeadSizeType={
         [0]={width=70,heigth=70},
-        [1]={ type="body",width=70,heigth=70},
-        [2]={ type="backHat",width=70,heigth=70},
-        [3]={ type="head",width=70,heigth=70},
-        [4]={ type="decal",width=70,heigth=70},
-        [5]={ type="brow",width=70,heigth=70},
-        [6]={ type="hair",width=70,heigth=70},
-        [7]={ type="eyes",width=70,heigth=70},
-        [8]={ type="nose",width=70,heigth=70},
-        [9]={ type="frontHat",width=70,heigth=70},
-        [10]={ type="mouth",width=70,heigth=70},
-        [11]={ type="goatee",width=70,heigth=70},
+        [1]={ type="body/body",width=70,heigth=70},
+        [2]={ type="backHat/backHat",width=70,heigth=70},
+        [3]={ type="head/head",width=70,heigth=70},
+        [4]={ type="decal/decal",width=70,heigth=70},
+        [5]={ type="brow/brow",width=70,heigth=70},
+        [6]={ type="hair/hair",width=70,heigth=70},
+        [7]={ type="eyes/eyes",width=70,heigth=70},
+        [8]={ type="nose/nose",width=70,heigth=70},
+        [9]={ type="frontHat/frontHat",width=70,heigth=70},
+        [10]={ type="mouth/mouth",width=70,heigth=70},
+        [11]={ type="goatee/goatee",width=70,heigth=70},
 
 }
 
 AvatarManger={}
 
-local  appearance={}
+local  appearance,unitPool={},{}
 local headPool,record={},{}
 
 local num,sex,currHead,headTypeId
@@ -30,12 +30,14 @@ local num,sex,currHead,headTypeId
 function  AvatarManger.Awake()
     headPool={}
     headPool[1],headPool[2]={},{}
+    unitPool[1],unitPool[2]={},{}
     for i = 1, 6 do
-        headPool[1][i]= LuaGameObjectPool:new("Avatar"..i,creatGoods(HeadConfig.man[i].path),1,Vector3.New(0,0,0) )
+        headPool[1][i]= LuaGameObjectPool:new("Avatar"..i,creatGoods(HeadConfig.man[i].path),0,Vector3.New(0,0,0) )
     end
     for i = 1, 8 do
-        headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),1,Vector3.New(0,0,0) )
+        headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),0,Vector3.New(0,0,0) )
     end
+
 end
 
  function AvatarManger.setSize(go,size)
@@ -81,25 +83,23 @@ local function FindOrgan(transform)
         appearance["goatee"]={}
     end
 
-    appearance["body"].ima=transform:Find("body"):GetComponent("Image")
-    appearance["backHat"].ima=transform:Find("backHat"):GetComponent("Image")
-    appearance["head"].ima=transform:Find("head"):GetComponent("Image")
-    appearance["haircut"].ima=transform:Find("hair"):GetComponent("Image")
-    appearance["nose"].ima=transform:Find("nose"):GetComponent("Image")
-    appearance["brow"].ima=transform:Find("brow"):GetComponent("Image")
-    appearance["frontHat"].ima=transform:Find("frontHat"):GetComponent("Image")
-    appearance["eyes"].ima=transform:Find("eyes"):GetComponent("Image")
-    appearance["mouth"].ima=transform:Find("mouth"):GetComponent("Image")
+    appearance["body"].ima=transform:Find("body/body"):GetComponent("Image")
+    appearance["backHat"].ima=transform:Find("backHat/backHat"):GetComponent("Image")
+    appearance["head"].ima=transform:Find("head/head"):GetComponent("Image")
+    appearance["haircut"].ima=transform:Find("hair/hair"):GetComponent("Image")
+    appearance["nose"].ima=transform:Find("nose/nose"):GetComponent("Image")
+    appearance["brow"].ima=transform:Find("brow/brow"):GetComponent("Image")
+    appearance["frontHat"].ima=transform:Find("frontHat/frontHat"):GetComponent("Image")
+    appearance["eyes"].ima=transform:Find("eyes/eyes"):GetComponent("Image")
+    appearance["mouth"].ima=transform:Find("mouth/mouth"):GetComponent("Image")
 
-    appearance["decal"].ima=transform:Find("decal")
-    appearance["goatee"].ima=transform:Find("goatee")
+    appearance["decal"].ima=transform:Find("decal/decal")
+    appearance["goatee"].ima=transform:Find("goatee/goatee")
 
     if appearance["decal"].ima then
-        appearance["decal"].ima=transform:Find("decal"):GetComponent("Image")
-        appearance["goatee"].ima=transform:Find("goatee"):GetComponent("Image")
+        appearance["decal"].ima=transform:Find("decal/decal"):GetComponent("Image")
+        appearance["goatee"].ima=transform:Find("goatee/goatee"):GetComponent("Image")
     end
-
-
 end
 
 local function changAparance(kind)
@@ -119,6 +119,11 @@ local function changAparance(kind)
         end
         headTypeId=nums
 
+        if currHead then
+            for i, v in pairs(appearance) do
+                UnLoadSprite(v.path)
+            end
+        end
         currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
@@ -175,7 +180,7 @@ local function changAparance(kind)
 
 end
 
-function AvatarManger.GetBigAvatar(faceId,isSmall)
+local function GetAvatar(faceId,isSmall)
     local arr,config=split(faceId,"-")
 
     sex=tonumber(arr[1])
@@ -222,20 +227,34 @@ function AvatarManger.GetBigAvatar(faceId,isSmall)
     return temp
 end
 
+
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
-   local AvatarData= AvatarManger.GetBigAvatar(faceId,true)
+   local AvatarData=GetAvatar(faceId,true)
 
     AvatarData.go.transform:SetParent(parent);
-    local go= AvatarManger.setSize(AvatarData.go,size)
-    AvatarData.go=go
-
-    return AvatarData
+    AvatarManger.setSize(AvatarData.go,size)
 end
+
+function AvatarManger.GetBigAvatar(faceId,parent,size)
+
+    local AvatarData=GetAvatar(faceId,false)
+
+    AvatarData.go.transform:SetParent(parent);
+    AvatarManger.setSize(AvatarData.go,size)
+end
+
 
 function AvatarManger.CollectAvatar()
     if #record>0 then
         for i, AvatarData in ipairs(record) do
+            for i, config in ipairs(HeadSizeType) do
+                 local trans=AvatarData.go.transform:Find(config.type)
+                if trans then
+                   local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
         end
     end

@@ -150,8 +150,9 @@ function Game.OnPostInitOK()
     StopAndBuildModel:Awake()
     --单元测试入口
     lu.LuaUnit.run()
+    PlayerInfoManger.Awake()
     DataManager.Init()
     TerrainManager.Init()
     --Avatar管理器
-    AvatarManger.Awake()
+   -- AvatarManger.Awake()
 end

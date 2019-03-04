@@ -500,10 +500,12 @@ function split(input, delimiter)
 	return arr
 end
 
+local AssetObjs  = {}
+
 --第三个参数为是否设置img为原图大小
 function LoadSprite(path, Icon, bSetNativeSize)
 	local type = ct.getType(UnityEngine.Sprite)
-	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj )
+	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj ,ab)
 		if obj ~= nil then
 			local texture = ct.InstantiatePrefab(obj)
 			if Icon then
@@ -512,8 +514,23 @@ function LoadSprite(path, Icon, bSetNativeSize)
 					Icon:SetNativeSize()
 				end
 			end
+			if AssetObjs == nil then
+				AssetObjs = {}
+			end
+			if ab ~= nil then
+				AssetObjs[path] = ab
+			end
 		end
 	end)
+end
+
+
+function UnLoadSprite(path)
+	if AssetObjs ~= nil and AssetObjs[path] ~= nil then
+		local v = AssetObjs[path]
+		AssetObjs[path] = nil
+		UnityEngine.AssetBundle.Unload(v,true)
+	end
 end
 
 

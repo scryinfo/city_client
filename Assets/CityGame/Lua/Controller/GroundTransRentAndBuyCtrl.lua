@@ -107,7 +107,7 @@ function GroundTransRentAndBuyCtrl:_showPersonalInfo(roleInfo)
     if roleInfo.info ~= nil and #roleInfo.info == 1 and roleInfo.info[1].id == self.m_data.groundInfo.ownerId then
         self.roleInfo = roleInfo.info[1]
         GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
-        LoadSprite(PlayerHead[self.roleInfo.faceId].GroundTransSmallPath, GroundTransRentAndBuyPanel.portraitImg, true)
+        AvatarManger.GetSmallAvatar(self.roleInfo.faceId,GroundTransRentAndBuyPanel.portraitImg.transform,0.2)
     end
 end
 

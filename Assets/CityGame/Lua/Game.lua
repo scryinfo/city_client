@@ -14,7 +14,7 @@ local lu = luaunit
 Game = {};
 local this = Game;
 
-local game; 
+local game;
 local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
@@ -42,6 +42,7 @@ function Game.OnInitOK()
     UIBubbleManager.Awake()
     --初始化屏幕适配比例--
     InitScreenRatio()
+
     ct.OpenCtrl('LoadingCtrl')
     --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end
@@ -53,4 +54,6 @@ function Game.OnPostInitOK()
     lu.LuaUnit.run()
     DataManager.Init()
     TerrainManager.Init()
+    --Avatar管理器
+    AvatarManger.Awake()
 end

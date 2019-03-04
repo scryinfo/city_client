@@ -191,14 +191,22 @@ function CameraMove:TouchBuild()
     local tempPos = CameraMove.GetTouchTerrianPosition(inputTools:GetClickFocusPoint())
     if tempPos  then
         local blockID = TerrainManager.PositionTurnBlockID(tempPos)
-        --判断是否是中心建筑 --->是则打开
-        if TerrainManager.IsTouchCentralBuilding(blockID) then
-            ct.OpenCtrl("CenterBuildingCtrl")
-            return
-        end
         --判断是否是建筑 --->是则打开
         local tempNodeID  = DataManager.GetBlockDataByID(blockID)
         if tempNodeID ~= nil and tempNodeID ~= -1 then
+            --先行判断是否为系统建筑
+            local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(blockID)
+            local tempSystem = SystemMapConfig[tempCollectionID]
+            --打开系统建筑详情
+            if tempSystem ~= nil and tempSystem[tempNodeID] ~= nil then
+                --判断是否是中心建筑 --->是则打开
+                if tempSystem[tempNodeID] == 2000500 then
+                    ct.OpenCtrl("CenterBuildingCtrl")
+                end
+                --TODO:其他BUFF建筑
+                return
+            end
+            --如果不是则判断是否建筑Model
             local tempBuildModel = DataManager.GetBaseBuildDataByID(tempNodeID)
             if nil ~= tempBuildModel then
                 tempBuildModel:OpenPanel()

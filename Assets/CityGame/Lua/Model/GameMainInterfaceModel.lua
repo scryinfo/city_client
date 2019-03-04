@@ -23,6 +23,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
     -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
@@ -88,4 +89,10 @@ end
 --自己的收益情况回调
 function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
     Event.Brocast("c_IncomeNotify",lMsg)
+end
+
+--城市广播回调
+function GameMainInterfaceModel:n_GsCityBroadcast(lMsg)
+    local a = lMsg
+    Event.Brocast("c_RadioInfo",lMsg)
 end

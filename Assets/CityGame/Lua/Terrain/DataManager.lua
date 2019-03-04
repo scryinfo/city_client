@@ -46,20 +46,155 @@ local pbl = pbl
 
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
----------------------------------------------------------------------------------- 建筑信息---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------- 建筑信息--------------------------------------------------------------------------------
+-------------------------------系统建筑数据--------------------------------
+function DataManager.AddSystemBuild(collectionID,blockID,poolName,go)
+    if BuildDataStack[collectionID].SystemBuildDatas == nil then
+        BuildDataStack[collectionID].SystemBuildDatas = {}
+    end
+    BuildDataStack[collectionID].SystemBuildDatas[blockID] = {
+        ["poolName"] = poolName,
+        ["gameObject"] = go,
+    }
+end
+
+function DataManager.RemoveSystemBuild(collectionID)
+    local tempSystemBuild =  BuildDataStack[collectionID].SystemBuildDatas
+    if tempSystemBuild == nil then
+        return
+    end
+    for blockID,tempTable in pairs(tempSystemBuild) do
+        MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+    end
+    BuildDataStack[collectionID].SystemBuildDatas = nil
+end
+-------------------------------基础地块生成--------------------------------
+
+function DataManager.AddSystemTerrain(collectionID,blockID,poolName,go)
+    if BuildDataStack[collectionID].SystemTerrainDatas == nil then
+        BuildDataStack[collectionID].SystemTerrainDatas = {}
+    end
+    BuildDataStack[collectionID].SystemTerrainDatas[blockID] = {
+        ["poolName"] = poolName,
+        ["gameObject"] = go,
+    }
+end
+
+function DataManager.RemoveSystemTerrain(collectionID)
+    local tempSystemBuild =  BuildDataStack[collectionID].SystemTerrainDatas
+    if tempSystemBuild == nil then
+        return
+    end
+    for blockID,tempTable in pairs(tempSystemBuild) do
+        MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+    end
+    BuildDataStack[collectionID].SystemTerrainDatas = nil
+end
+
+-------------------------------系统河流数据--------------------------------
+
+function DataManager.AddSystemRiver(collectionID,blockID,poolName,go)
+    if BuildDataStack[collectionID].SystemRiverDatas == nil then
+        BuildDataStack[collectionID].SystemRiverDatas = {}
+    end
+    BuildDataStack[collectionID].SystemRiverDatas[blockID] = {
+        ["poolName"] = poolName,
+        ["gameObject"] = go,
+    }
+end
+
+function DataManager.RemoveSystemRiver(collectionID)
+    local tempSystemBuild =  BuildDataStack[collectionID].SystemRiverDatas
+    if tempSystemBuild == nil then
+        return
+    end
+    for blockID,tempTable in pairs(tempSystemBuild) do
+        MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+    end
+    BuildDataStack[collectionID].SystemRiverDatas = nil
+end
+
+--------------------------------------------------------------------------
+
+--生成系统土地
+local function InitCollectionSystemTerrain(tempCollectionID)
+    local tempBlockData =  BuildDataStack[tempCollectionID].BlockDatas
+    for blockId, value in pairs(tempBlockData) do
+        if value == -1 then
+            local go = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[4000000].poolName)
+            go.transform.position = TerrainManager.BlockIDTurnPosition(blockId)
+            DataManager.AddSystemTerrain(tempCollectionID,blockId,PlayerBuildingBaseData[4000000].poolName,go)
+        end
+    end
+end
+
+--生成系统河流
+local function InitSystemRiverGameObject(tempCollectionID)
+    local systemMapTemp = RiversConfig[tempCollectionID]
+    if systemMapTemp ~= nil then
+        for blockId, PlayerDataID in pairs(systemMapTemp) do
+            local go = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[PlayerDataID].poolName)
+            go.transform.position = TerrainManager.BlockIDTurnPosition(blockId)
+            DataManager.AddSystemRiver(tempCollectionID,blockId,PlayerBuildingBaseData[PlayerDataID].poolName,go)
+        end
+    end
+end
+
 -------------------------------原子地块数据--------------------------------
+
 --功能
---  创建一个新的原子地块集合，并将内部所有数据置为 -1
+--  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
 --  tempCollectionID: 所属地块集合ID
 local function CreateBlockDataTable(tempCollectionID)
     --创建一个新的原子地块集合
-    BuildDataStack[tempCollectionID].BlockDatas = {}
+    local TempTable =  {}
+    --将系统建筑写入其中
+    local systemMapTemp = SystemMapConfig[tempCollectionID]
+    if systemMapTemp~= nil then
+        for id, value in pairs(systemMapTemp) do
+            local buildList =  DataManager.CaculationTerrainRangeBlock(id,PlayerBuildingBaseData[value].x)
+            for key, value in pairs(buildList) do
+                TempTable[value] = id
+            end
+        end
+    end
+    --将河流建筑写入其中（写0是为了不生成土地，但是可以生成道路）
+    local systemRiverTemp = RiversConfig[tempCollectionID]
+    if systemRiverTemp ~= nil then
+        for id, value in pairs(systemRiverTemp) do
+            local buildList =  DataManager.CaculationTerrainRangeBlock(id,PlayerBuildingBaseData[value].x)
+            for key, blockid in pairs(buildList) do
+                TempTable[blockid] = PlayerBuildingBaseData[value].BlockDatasValue
+            end
+        end
+    end
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     --将内部所有数据置为 -1
     local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
     for key, value in pairs(idList) do
-        BuildDataStack[tempCollectionID].BlockDatas[value] = -1
+        if TempTable[value] == nil then
+            TempTable[value] = -1
+        end
+    end
+    BuildDataStack[tempCollectionID].BlockDatas = TempTable
+    ---生成系统土地------------
+    InitCollectionSystemTerrain(tempCollectionID)
+    ---生成系统建筑------------
+    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
+    ---生成河流
+    InitSystemRiverGameObject(tempCollectionID)
+    ---刷新一遍道路
+    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+    collectgarbage("collect")
+end
+
+function DataManager.InitBuildDatas(tempCollectionID)
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].BlockDatas == nil then
+        CreateBlockDataTable(tempCollectionID)
     end
 end
 
@@ -75,13 +210,7 @@ function DataManager.RefreshBlockData(blockID,nodeID)
     if nodeID == nil then
         nodeID = -1
     end
-    if nil == BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-    end
-    if  BuildDataStack[collectionID].BlockDatas == nil then
-    --初始化地块集合
-        CreateBlockDataTable(collectionID)
-    end
+    DataManager.InitBuildDatas(collectionID)
     BuildDataStack[collectionID].BlockDatas[blockID] = nodeID
 end
 
@@ -95,6 +224,7 @@ function DataManager.RefreshBlockDataWhenNodeChange(nodeID,nodeSize,nodeValue)
         DataManager.RefreshBlockData(value,nodeValue)
     end
 end
+
 
 --功能
 --  返回一块范围内的blockID集合
@@ -154,7 +284,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
         local ThisRoteDatas = BuildDataStack[tempCollectionID].RoteDatas
         while true do
-            if itemNodeID == -1 then
+            if itemNodeID <= 0 then
                 local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
                 --如果有道路数据
                 if roadNum > 0 and roadNum < #RoadNumConfig  then
@@ -246,12 +376,12 @@ function DataManager.CalculateRoadNum(tempCollectionID,roadBlockID)
     for key, value in pairs(RoadAroundNumber) do
         if value.ID and value.ID > 0 and value.ID < TerrainRangeSize*TerrainRangeSize then
             if BuildDataStack[tempCollectionID].BlockDatas[value.ID] then
-                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] ~= -1 then
+                if BuildDataStack[tempCollectionID].BlockDatas[value.ID] > 0 then
                     roadNum  = roadNum + value.Num
                 end
             else
                 local ItemCollectionID =  TerrainManager.BlockIDTurnCollectionID(value.ID)
-                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] ~= -1  then
+                if BuildDataStack[ItemCollectionID] ~= nil and BuildDataStack[ItemCollectionID].BlockDatas ~= nil and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] and BuildDataStack[ItemCollectionID].BlockDatas[value.ID] > 0  then
                     roadNum  = roadNum + value.Num
                 end
             end
@@ -279,11 +409,7 @@ function DataManager.RefreshBaseBuildData(data)
     end
     local collectionID =  TerrainManager.BlockIDTurnCollectionID(blockID)
     --判断地块是否已经初始化
-    if nil == BuildDataStack[collectionID] then
-        BuildDataStack[collectionID] = {}
-        --初始化地块集合
-        CreateBlockDataTable(collectionID)
-    end
+    DataManager.InitBuildDatas(collectionID)
     --检查数据初始化
     if BuildDataStack[collectionID].BaseBuildDatas == nil then
         BuildDataStack[collectionID].BaseBuildDatas = {}
@@ -334,7 +460,7 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         --计算需要删除的地块里面有没有跨地块的建筑，如果有-->BaseBlockData不删除
         for key, value in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
             --判断是否有建筑跨地块
-            if value ~= -1 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
+            if value > 0 and BuildDataStack[tempCollectionID].BlockDatas[value] == nil then
                 --需要判断该建筑是否在AOI范围内
                 local attributeCollectionID = TerrainManager.BlockIDTurnCollectionID(value)
                 if TerrainManager.IsBelongToCameraCollectionIDAOIList(attributeCollectionID)  then
@@ -349,6 +475,12 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
     end
     --删除所有道路信息数据（RoteDatas）
     DataManager.RemoveWaysByCollectionID(tempCollectionID)
+    --删除所有系统建筑数据
+    DataManager.RemoveSystemBuild(tempCollectionID)
+    --删除所有系统道路数据
+    DataManager.RemoveSystemTerrain(tempCollectionID)
+    --删除所有系统河流数据
+    DataManager.RemoveSystemRiver(tempCollectionID)
     --删除所有地块信息BaseGroundModel（GroundDatas）
     if BuildDataStack[tempCollectionID].GroundDatas ~= nil  then
         for key, value in pairs(BuildDataStack[tempCollectionID].GroundDatas) do
@@ -363,8 +495,7 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
         end
         BuildDataStack[tempCollectionID].BaseBuildDatas = nil
     end
-    --清空这个节点
-    --BuildDataStack[tempCollectionID] = nil
+    collectgarbage("collect")
 end
 
 --获取建筑基础数据
@@ -764,6 +895,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_companyName = tempData.companyName
     --初始化自己的头像ID
     PersonDataStack.m_faceId = tempData.faceId
+    --初始化自己的公会ID
+    PersonDataStack.m_societyId = tempData.societyId
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =
@@ -829,6 +962,11 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
+
+    -- 初始化公会信息
+    PersonDataStack.guildManager = GuildManager:new()
+    DataManager.InitGuildInfo()
+
     --初始化相机位置
     if tempData.position ~= nil then
         local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
@@ -1124,6 +1262,88 @@ function DataManager.SetChatRecords(index)
     return PersonDataStack.socialityManager:SetChatRecords(index)
 end
 
+-- 获得公会ID
+function DataManager.GetGuildID()
+    return PersonDataStack.m_societyId
+end
+
+-- 设置公会ID
+function DataManager.SetGuildID(id)
+    PersonDataStack.m_societyId = id
+end
+
+-- 查询公会全部信息
+function DataManager.InitGuildInfo()
+    if PersonDataStack.m_societyId then
+        PersonDataStack.guildManager:InitGuildInfo(PersonDataStack.m_societyId)
+    end
+end
+
+-- 设置公会全部信息
+function DataManager.SetGuildInfo(societyInfo)
+    PersonDataStack.guildManager:SetGuildInfo(societyInfo)
+end
+
+-- 获取公会全部信息
+function DataManager.GetGuildInfo()
+    return PersonDataStack.guildManager:GetGuildInfo()
+end
+
+-- 删除已处理的入会请求
+function DataManager.DeleteGuildJoinReq(joinReq)
+    PersonDataStack.guildManager:DeleteGuildJoinReq(joinReq)
+end
+
+-- 设置公会信息
+function DataManager.SetGuildMember(memberChanges)
+    PersonDataStack.guildManager:SetGuildMember(memberChanges)
+end
+
+-- 设置公会通知
+function DataManager.SetGuildNotice(societyNotice)
+    PersonDataStack.guildManager:SetGuildNotice(societyNotice)
+end
+
+-- 新增入会请求
+function DataManager.SetGuildJoinReq(joinReq)
+    PersonDataStack.guildManager:SetGuildJoinReq(joinReq)
+end
+
+-- 获得自己公会的职位
+function DataManager.GetOwnGuildIdentity()
+    return PersonDataStack.guildManager:GetOwnGuildIdentity(PersonDataStack.m_owner)
+end
+
+-- 刪除公会成员
+function DataManager.DeleteGuildMember(playerId)
+    PersonDataStack.guildManager:DeleteGuildMember(playerId)
+end
+
+-- 成员上下线
+function DataManager.SetGuildMemberOnline(playerId, online)
+    PersonDataStack.guildManager:SetGuildMemberOnline(playerId, online)
+end
+
+-- 成员权限变更
+function DataManager.SetGuildMemberIdentity(playerId, identity)
+    PersonDataStack.guildManager:SetGuildMemberIdentity(playerId, identity)
+end
+
+-- 改名字返回
+function DataManager.SetGuildSocietyName(bytesStrings)
+    PersonDataStack.guildManager:SetGuildSocietyName(bytesStrings)
+end
+
+-- 改介绍返回
+function DataManager.SetGuildIntroduction(bytesStrings)
+    PersonDataStack.guildManager:SetGuildIntroduction(bytesStrings)
+end
+
+-- 改宣言返回
+function DataManager.SetGuildDeclaration(bytesStrings)
+    PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+---------------------------------
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding
@@ -1186,7 +1406,7 @@ end
 --判断该地块允不允许改变
 function DataManager.IsEnableChangeGround(blockID)
     local blockdata = DataManager.GetBlockDataByID(blockID)
-    if -1 ~= blockdata and nil ~= blockdata then
+    if nil ~= blockdata and  0 <= blockdata  then
         return false
     else
         return true
@@ -1263,7 +1483,16 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleStatusChange","gs.ByteBool",DataManager.n_OnReceiveRoleStatusChange)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteFriend","gs.Id",DataManager.n_OnReceiveDeleteFriend)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteBlacklist","gs.Id",DataManager.n_DeleteBlacklist)
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getSocietyInfo", "gs.SocietyInfo", DataManager.n_GetSocietyInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delJoinReq", "gs.JoinReq", DataManager.n_JoinReq)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","memberChange", "gs.MemberChanges", DataManager.n_MemberChanges)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","noticeAdd", "gs.SocietyNotice", DataManager.n_NoticeAdd)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq", "gs.JoinReq", DataManager.n_NewJoinReq)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","joinHandle", "gs.SocietyInfo", DataManager.n_JoinHandle)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", DataManager.n_ExitSociety)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifySocietyName","gs.BytesStrings", DataManager.n_ModifySocietyName)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", DataManager.n_ModifyIntroduction)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", DataManager.n_ModifyDeclaration)
 end
 
 --DataManager初始化
@@ -1446,22 +1675,22 @@ function DataManager.n_OnReceiveGetBlacklist(stream)
     end
 end
 
---查询玩家信息返回
-function DataManager.n_OnReceivePlayerInfo(stream)
-    local playerData = stream
-    --for _, v in ipairs(playerData.info) do
-    --    DataManager.SetMyFriendsInfo(v)
-    --end
-    Event.Brocast("c_OnReceivePlayerInfo", playerData)
-    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
-
-    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
-    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
-
-    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
-        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
-    end
-end
+----查询玩家信息返回
+--function DataManager.n_OnReceivePlayerInfo(stream)
+--    local playerData = stream
+--    --for _, v in ipairs(playerData.info) do
+--    --    DataManager.SetMyFriendsInfo(v)
+--    --end
+--    Event.Brocast("c_OnReceivePlayerInfo", playerData)
+--    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
+--
+--    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
+--    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
+--
+--    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
+--        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
+--    end
+--end
 
 --研究所Roll回复信息
 function DataManager.n_OnReceiveLabRoll(stream)
@@ -1539,11 +1768,91 @@ function DataManager.n_DeleteBlacklist(stream)
     DataManager.SetMyBlacklist({ id = friendsId.id })
     Event.Brocast("c_DeleteBlacklist", friendsId)
 end
+
+-- 查询公会消息返回
+function DataManager.n_GetSocietyInfo(societyInfo)
+    DataManager.SetGuildInfo(societyInfo)
+end
+
+-- 删除已处理的入会请求
+function DataManager.n_JoinReq(joinReq)
+    DataManager.DeleteGuildJoinReq(joinReq)
+end
+
+-- 成员变更
+function DataManager.n_MemberChanges(memberChanges)
+    for i, v in ipairs(memberChanges.changeLists) do
+        if v.type == "JOIN" then
+            -- 有玩家加入
+            DataManager.SetGuildMember(v.info)
+        elseif v.type == "EXIT" then
+            -- 有玩家退出
+            DataManager.DeleteGuildMember(v.playerId)
+        elseif v.type == "ONLINE" then
+            -- 有玩家上线
+            DataManager.SetGuildMemberOnline(v.playerId, true)
+        elseif v.type == "OFFLINE" then
+            -- 有玩家下线
+            DataManager.SetGuildMemberOnline(v.playerId, false)
+        elseif v.type == "IDENTITY" then
+            -- 有玩家的权限变更
+            DataManager.SetGuildMemberIdentity(v.playerId, v.identity)
+        end
+    end
+end
+
+-- 新增公会通知
+function DataManager.n_NoticeAdd(societyNotice)
+    DataManager.SetGuildNotice(societyNotice)
+end
+
+-- 新增入会请求
+function DataManager.n_NewJoinReq(joinReq)
+    DataManager.SetGuildJoinReq(joinReq)
+end
+
+-- 申请加入公会通过
+function DataManager.n_JoinHandle(societyInfo)
+    DataManager.SetGuildID(societyInfo.id)
+    DataManager.SetGuildInfo(societyInfo)
+end
+
+-- 退出公会
+function DataManager.n_ExitSociety(ByteBool)
+    DataManager.SetGuildID()
+    DataManager.SetGuildInfo()
+end
+
+-- 改名字返回
+function DataManager.n_ModifySocietyName(bytesStrings, msgId)
+    --异常处理
+    if msgId == 0 then
+        return
+    end
+    DataManager.SetGuildSocietyName(bytesStrings)
+end
+
+-- 改介绍返回
+function DataManager.n_ModifyIntroduction(bytesStrings)
+    DataManager.SetGuildIntroduction(bytesStrings)
+end
+
+-- 改宣言返回
+function DataManager.n_ModifyDeclaration(bytesStrings)
+    DataManager.SetGuildDeclaration(bytesStrings)
+end
 ----------
 
 --增加中心仓库物品
-function DataManager.c_AddBagInfo(itemId,n)
-    if not PersonDataStack.m_inHand then
+function DataManager.c_AddBagInfo(itemId,producerId,qty,n)
+    if  #PersonDataStack.m_inHand == 0 then
+        PersonDataStack.m_inHand = {}
+        PersonDataStack.m_inHand[1] = {}
+        PersonDataStack.m_inHand[1].key = {}
+        PersonDataStack.m_inHand[1].key.id = itemId
+        PersonDataStack.m_inHand[1].key.producerId = producerId
+        PersonDataStack.m_inHand[1].key.qty = qty
+        PersonDataStack.m_inHand[1].n = n
         return
     end
     local newInHand = false
@@ -1557,7 +1866,7 @@ function DataManager.c_AddBagInfo(itemId,n)
         end
     end
     if newInHand then
-        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId},n = n}
+        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId,producerId = producerId,qty = qty},n = n}
     end
 end
 

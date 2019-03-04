@@ -51,3 +51,4 @@ function LuaGameObjectPool:RecyclingGameObjectToPool(go)
         self:AddGameObjectToPool(go)
     end
 end
+

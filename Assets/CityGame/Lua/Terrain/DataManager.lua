@@ -1542,8 +1542,15 @@ end
 ----------
 
 --增加中心仓库物品
-function DataManager.c_AddBagInfo(itemId,n)
-    if not PersonDataStack.m_inHand then
+function DataManager.c_AddBagInfo(itemId,producerId,qty,n)
+    if  #PersonDataStack.m_inHand == 0 then
+        PersonDataStack.m_inHand = {}
+        PersonDataStack.m_inHand[1] = {}
+        PersonDataStack.m_inHand[1].key = {}
+        PersonDataStack.m_inHand[1].key.id = itemId
+        PersonDataStack.m_inHand[1].key.producerId = producerId
+        PersonDataStack.m_inHand[1].key.qty = qty
+        PersonDataStack.m_inHand[1].n = n
         return
     end
     local newInHand = false
@@ -1557,7 +1564,7 @@ function DataManager.c_AddBagInfo(itemId,n)
         end
     end
     if newInHand then
-        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId},n = n}
+        PersonDataStack.m_inHand[#PersonDataStack.m_inHand + 1]  = {key = {id = itemId,producerId = producerId,qty = qty},n = n}
     end
 end
 

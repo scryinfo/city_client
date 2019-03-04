@@ -58,7 +58,7 @@ end
 --点击中心仓库
 function CenterBuildingCtrl:OnCenterWarehouse()
     PlayMusEff(1002)
-    ct.OpenCtrl("CenterWareHouseCtrl",PlayerTempModel.roleData)
+    ct.OpenCtrl("CenterWareHouseCtrl")
 end
 
 --点击待定

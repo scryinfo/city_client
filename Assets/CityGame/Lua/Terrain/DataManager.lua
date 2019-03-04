@@ -1446,22 +1446,22 @@ function DataManager.n_OnReceiveGetBlacklist(stream)
     end
 end
 
---查询玩家信息返回
-function DataManager.n_OnReceivePlayerInfo(stream)
-    local playerData = stream
-    --for _, v in ipairs(playerData.info) do
-    --    DataManager.SetMyFriendsInfo(v)
-    --end
-    Event.Brocast("c_OnReceivePlayerInfo", playerData)
-    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
-
-    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
-    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
-
-    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
-        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
-    end
-end
+----查询玩家信息返回
+--function DataManager.n_OnReceivePlayerInfo(stream)
+--    local playerData = stream
+--    --for _, v in ipairs(playerData.info) do
+--    --    DataManager.SetMyFriendsInfo(v)
+--    --end
+--    Event.Brocast("c_OnReceivePlayerInfo", playerData)
+--    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
+--
+--    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
+--    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
+--
+--    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
+--        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
+--    end
+--end
 
 --研究所Roll回复信息
 function DataManager.n_OnReceiveLabRoll(stream)

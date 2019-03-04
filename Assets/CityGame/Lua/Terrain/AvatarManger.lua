@@ -119,6 +119,11 @@ local function changAparance(kind)
         end
         headTypeId=nums
 
+        if currHead then
+            for i, v in pairs(appearance) do
+                UnLoadSprite(v.path)
+            end
+        end
         currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)

@@ -235,6 +235,11 @@ function AvtarCtrl:changAparance(data)
                     LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
                 end
             end
+
+            for key, pastApperance in pairs(pastApperanceID) do
+                UnLoadSprite(pastApperance.path)
+            end
+
             currHead:SetActive(false)
         end
         --避免重复生成

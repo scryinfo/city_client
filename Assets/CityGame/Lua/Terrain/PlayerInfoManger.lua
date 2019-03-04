@@ -4,31 +4,57 @@
 --- DateTime: 2019/3/1/001 11:30
 ---
 
+PlayerInfoManger={}
 
---local  cache
---
---function PlayerInfoManger.Awake()
---    cache={}
---
---
---end
---
---function PlayerInfoManger.GetInfoAndExcute(playerId,func,class)
---    local info=cache[playerId]
---
---    if info then
---        class:func(info)
---    else
---
---    end
---
---end
+local  cache,playerIds
 
+function PlayerInfoManger.Awake()
+    cache,playerIds={},{}
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
+end
 
+local _func,_class
 
+--查询玩家信息返回
+function DataManager.n_OnReceivePlayerInfo(stream)
 
-
+        for i, info in ipairs(stream) do
+             --写入缓存
+             cache[playerIds[i]]=info
+             --调用函数
+            _func(_class)
+        end
+    playerIds={}
+end
 
 
+---==========================================================================================外部===================================================================================================
 
+function PlayerInfoManger.GetInfoAndExcute(playerIds,func,class)
+    _func=func
+    _class=class
+
+    for i, ids in ipairs(playerIds) do
+        local info=cache[ids]
+
+        if info then
+            func(class)
+        else
+            for i, ids in ipairs(playerIds) do
+                table.insert(playerIds,ids)
+            end
+            Event.Brocast("m_QueryPlayerInfoChat",playerIds)
+        end
+    end
+
+end
+
+
+function PlayerInfoManger.ClearCache()
+    for id, info in pairs(cache) do
+        id=nil
+        info=nil
+    end
+    cache={}
+end
 

@@ -53,14 +53,17 @@ end
 
 function AvtarCtrl:Refresh()
     DataManager.OpenDetailModel(MunicipalModel,OpenModelInsID.AvtarCtrl)
+    self:begin()
 end
 
 function  AvtarCtrl:Hide()
     UIPanel.Hide(self)
+    self:ClearCasch()
 end
 
 function AvtarCtrl:Close()
     UIPanel.Close(self)
+    self:ClearCasch()
 end
 
 function  AvtarCtrl:Awake(go)
@@ -74,11 +77,18 @@ function  AvtarCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.maleBtn.gameObject,self.c_OnClick_male,self);
     LuaBehaviour:AddClick(panel.feMaleBtn.gameObject,self.c_OnClick_faMale,self);
 
-    self:begin()
-
 end
 
 ---==========================================================================================业务代码===================================================================================================
+--清空缓存
+function AvtarCtrl:ClearCasch()
+    for sex, table in pairs(headPrefab) do
+        for i, v in pairs(table) do
+            destroy(v)
+        end
+    end
+end
+
 local appearance={}
 local pool={}
 local sex
@@ -133,22 +143,22 @@ local function FindOrgan(transform)
         appearance["goatee"]={}
     end
 
-    appearance["body"].ima=transform:Find("body"):GetComponent("Image")
-    appearance["backHat"].ima=transform:Find("backHat"):GetComponent("Image")
-    appearance["head"].ima=transform:Find("head"):GetComponent("Image")
-    appearance["haircut"].ima=transform:Find("hair"):GetComponent("Image")
-    appearance["nose"].ima=transform:Find("nose"):GetComponent("Image")
-    appearance["brow"].ima=transform:Find("brow"):GetComponent("Image")
-    appearance["frontHat"].ima=transform:Find("frontHat"):GetComponent("Image")
-    appearance["eyes"].ima=transform:Find("eyes"):GetComponent("Image")
-    appearance["mouth"].ima=transform:Find("mouth"):GetComponent("Image")
+    appearance["body"].ima=transform:Find("body/body"):GetComponent("Image")
+    appearance["backHat"].ima=transform:Find("backHat/backHat"):GetComponent("Image")
+    appearance["head"].ima=transform:Find("head/head"):GetComponent("Image")
+    appearance["haircut"].ima=transform:Find("hair/hair"):GetComponent("Image")
+    appearance["nose"].ima=transform:Find("nose/nose"):GetComponent("Image")
+    appearance["brow"].ima=transform:Find("brow/brow"):GetComponent("Image")
+    appearance["frontHat"].ima=transform:Find("frontHat/frontHat"):GetComponent("Image")
+    appearance["eyes"].ima=transform:Find("eyes/eyes"):GetComponent("Image")
+    appearance["mouth"].ima=transform:Find("mouth/mouth"):GetComponent("Image")
 
-    appearance["decal"].ima=transform:Find("decal")
-    appearance["goatee"].ima=transform:Find("goatee")
+    appearance["decal"].ima=transform:Find("decal/decal")
+    appearance["goatee"].ima=transform:Find("goatee/goatee")
 
     if appearance["decal"].ima then
-        appearance["decal"].ima=transform:Find("decal"):GetComponent("Image")
-        appearance["goatee"].ima=transform:Find("goatee"):GetComponent("Image")
+        appearance["decal"].ima=transform:Find("decal/decal"):GetComponent("Image")
+        appearance["goatee"].ima=transform:Find("goatee/goatee"):GetComponent("Image")
     end
 
 end
@@ -218,6 +228,18 @@ function AvtarCtrl:changAparance(data)
 
         --已有的隐藏
         if currHead then
+            for i, config in ipairs(HeadSizeType) do
+                local trans=currHead.transform:Find(config.type)
+                if trans then
+                    local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
+
+            --for key, pastApperance in pairs(pastApperanceID) do
+            --    UnLoadSprite(pastApperance.path)
+            --end
+
             currHead:SetActive(false)
         end
         --避免重复生成
@@ -253,7 +275,6 @@ function AvtarCtrl:changAparance(data)
                         LoadSprite(pastApperanceID["backHat"].path,appearance["backHat"].ima)
                     end
                 end
-                
             end
         end
 
@@ -382,10 +403,3 @@ function AvtarCtrl:c_OnClick_faMale(ins)
     ins:randomChange()
     ins:switchKinds(AvtarConfig.woMan[1].kinds)
 end
-
-
-
-
-
-
-

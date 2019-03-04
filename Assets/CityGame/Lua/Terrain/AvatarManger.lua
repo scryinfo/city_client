@@ -43,7 +43,7 @@ end
  function AvatarManger.setSize(go,size)
      local V,H=UnityEngine.RectTransform.Axis.Vertical,UnityEngine.RectTransform.Axis.Horizontal
 
-     local rect,imaRect= go.transform:GetComponent("RectTransform")
+     local rect,imaRect,pImaRect= go.transform:GetComponent("RectTransform")
 
      rect:SetSizeWithCurrentAnchors(V,(rect.sizeDelta.x)*size)
      rect:SetSizeWithCurrentAnchors(H,(rect.sizeDelta.y)*size)
@@ -61,6 +61,12 @@ end
             imaRect:SetSizeWithCurrentAnchors(V,(imaRect.sizeDelta.y)*size)
 
             imaRect.anchoredPosition=Vector2.New(((imaRect.anchoredPosition.x)*size),((imaRect.anchoredPosition.y)*size))
+
+            pImaRect=imaRect.parent:GetComponent("RectTransform")
+            pImaRect:SetSizeWithCurrentAnchors(H,(pImaRect.sizeDelta.x)*size)
+            pImaRect:SetSizeWithCurrentAnchors(V,(pImaRect.sizeDelta.y)*size)
+
+            pImaRect.anchoredPosition=Vector2.New(((pImaRect.anchoredPosition.x)*size),((pImaRect.anchoredPosition.y)*size))
         end
 
     end

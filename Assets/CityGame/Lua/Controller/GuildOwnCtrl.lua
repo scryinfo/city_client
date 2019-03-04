@@ -118,7 +118,7 @@ end
 
 function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
+    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = "不超过7字", btnCallBack = function (str)
         if str == "" or str == nil then
             str = "请输入联盟名字"
             Event.Brocast("SmallPop",str,80)

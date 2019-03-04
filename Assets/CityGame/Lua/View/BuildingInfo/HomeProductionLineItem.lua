@@ -85,15 +85,16 @@ end
 function HomeProductionLineItem:initializeInfo(productionLineData)
     self.openName.text = GetLanguage(25020005)
     self.closeName.text = GetLanguage(25020005)
+    local aaa = getFormatUnixTime(TimeSynchronized.GetTheCurrentServerTime() / 1000)
     if not productionLineData then
         self.add:SetActive(true)
         return;
     end
     self.add:SetActive(false)
-    local homePageType = ct.homePage.productionLine
+    --local homePageType = ct.homePage.productionLine
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
-        local lineItem = HomePageDisplay:new(homePageType,value,prefab,self.mainPanelLuaBehaviour,self.buildingId)
+        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId)
         table.insert(HomeProductionLineItem.lineItemTable,lineItem)
     end
 end
@@ -133,6 +134,7 @@ end
 function HomeProductionLineItem:deleteLine(dataInfo)
     for key,value in pairs(HomeProductionLineItem.lineItemTable) do
         if dataInfo.lineId == value.lineId then
+            value:closeEvent()
             destroy(value.prefab.gameObject)
             HomeProductionLineItem.lineItemTable[key] = nil
         end

@@ -15,6 +15,7 @@ function MaterialModel:OnCreate()
     Event.AddListener("m_ReqMaterialShelfDel",self.m_ReqShelfDel,self)
     Event.AddListener("m_ReqMaterialAddLine",self.m_ReqAddLine,self)
     Event.AddListener("m_ReqMaterialDeleteLine",self.m_ReqDeleteLine,self)
+    Event.AddListener("m_ReqMaterialBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -30,7 +31,7 @@ function MaterialModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
 end
 
 function MaterialModel:Close()
@@ -72,6 +73,10 @@ end
 --删除生产线
 function MaterialModel:m_ReqDeleteLine(buildingId,lineId)
     self.funModel:m_ReqDeleteLine(buildingId,lineId)
+end
+--货架购买
+function MaterialModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
+    self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
 end
 ---服务器回调---
 --打开原料厂
@@ -116,7 +121,10 @@ end
 function MaterialModel:n_OnDeleteLineInfo(data)
     Event.Brocast("materialDeleteLine",data)
 end
-
+--生产线变化推送
+function MaterialModel:n_OnLineChangeInform(data)
+    Event.Brocast("c_refreshNowConte",data)
+end
 
 
 

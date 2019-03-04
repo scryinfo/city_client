@@ -7,38 +7,6 @@ BuildingBaseModel = class("BuildingBaseModel",ModelBase)
 
 function BuildingBaseModel:initialize(insId)
     self.insId = insId
-    self:_addListener()
-end
---启动事件
-function BuildingBaseModel:_addListener()
-    ---本地事件---
-    ----仓库
-    --Event.AddListener("m_ReqShelfAdd",self.m_ReqShelfAdd,self)
-    --Event.AddListener("m_ReqBuildingTransport",self.m_ReqBuildingTransport,self)
-    --Event.AddListener("m_ReqModifyShelf",self.m_ReqModifyShelf,self)
-    --Event.AddListener("m_ReqDelItem",self.m_ReqDelItem,self)
-    ----货架
-    --Event.AddListener("m_ReqShelfDel",self.m_ReqShelfDel,self)
-    --Event.AddListener("m_ReqBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
-    ----生产线
-    --Event.AddListener("m_ReqAddLine",self.m_ReqAddLine,self)
-    --Event.AddListener("m_ResModifyKLine",self.m_ResModifyKLine,self)
-    --Event.AddListener("m_ReqDeleteLine",self.m_ReqDeleteLine,self)
-
-    ---网络回调---
-    ----仓库
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfAdd","gs.ShelfAdd",self.n_OnShelfAddInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
-    ----货架
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoods)
-    ----生产线
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyAddLine","gs.FtyLineAddInform",self.n_OnAddLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
 end
 ---客户端请求---
 ---仓库---

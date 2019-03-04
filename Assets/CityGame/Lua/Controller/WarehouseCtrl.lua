@@ -102,7 +102,7 @@ function WarehouseCtrl:OnClick_transportopenBtn(ins)
     data.pos = {}
     data.pos.x = ins.m_data.info.pos.x
     data.pos.y = ins.m_data.info.pos.y
-    data.buildingId = ins.m_data.info.id
+    data.buildingId = ins.buildingId
     data.nameText = WarehousePanel.nameText
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end

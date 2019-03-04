@@ -18,17 +18,21 @@ function ShelfCtrl:Awake(go)
     shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn,self)
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self)
-end
-function ShelfCtrl:Active()
-    UIPanel.Active(self)
-    ShelfPanel.tipText.text = GetLanguage(26040002)
-    LoadSprite(GetSprite("Shelf"), ShelfPanel.shelfImg:GetComponent("Image"), false)
+    shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self)
+    shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
+
     itemStateBool = nil
     switchRightPanel = false
     self.tempItemList = {}  --选中的数据
     self.recordIdList = {}  --记录选中的id
     self.shelfDatas = {}  --货架上的数据
+end
+function ShelfCtrl:Active()
+    UIPanel.Active(self)
+    ShelfPanel.tipText.text = GetLanguage(26040002)
+    LoadSprite(GetSprite("Shelf"), ShelfPanel.shelfImg:GetComponent("Image"), false)
     self:_addListener()
+    self:RefreshBuyButton()
 end
 function ShelfCtrl:_addListener()
     Event.AddListener("ShelfSelectedGoodsItem",self.SelectedGoodsItem,self)
@@ -50,10 +54,6 @@ end
 function ShelfCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
-    if switchRightPanel == true then
-        self:openPlayerBuy(not switchRightPanel)
-    end
-    self:CloseDestroy(self.shelfDatas)
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -61,19 +61,27 @@ end
 function ShelfCtrl:MeInitializeData()
     ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
     ShelfPanel.shelfAddItem.gameObject:SetActive(true)
-    self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+    if next(self.shelfDatas) == nil then
+        self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+    end
     self.ShelfImgSetActive(self.shelfDatas,5,0)
 end
 --别人
 function ShelfCtrl:OthersInitializeData()
     ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
     ShelfPanel.shelfAddItem.gameObject:SetActive(false)
-    self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+    if next(self.shelfDatas) == nil then
+        self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+    end
     self.ShelfImgSetActive(self.shelfDatas,5,1)
 end
 ----------------------------------------------------------------------点击函数------------------------------------------------------------------------------------------
-function ShelfCtrl:OnClick_return_Btn()
+function ShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
+    if switchRightPanel == true then
+        ins:openPlayerBuy(not switchRightPanel)
+    end
+    ins:CloseDestroy(ins.shelfDatas)
     UIPanel.ClosePage()
 end
 --点击打开购买Panel
@@ -84,6 +92,43 @@ function ShelfCtrl:OnClick_playerBuy(ins)
     else
         Event.Brocast("SmallPop",GetLanguage(35040013),300)
         return
+    end
+end
+--跳转选择仓库
+function ShelfCtrl:OnClick_openBtn(ins)
+    PlayMusEff(1002)
+    local data = {}
+    data.pos = {}
+    data.pos.x = ins.m_data.info.pos.x
+    data.pos.y = ins.m_data.info.pos.y
+    data.buildingId = ins.buildingId
+    data.nameText = ShelfPanel.nameText
+    ct.OpenCtrl("ChooseWarehouseCtrl",data)
+end
+--购买确认
+function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+    PlayMusEff(1002)
+    local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
+    local buyDataInfo = {}
+    buyDataInfo.currentLocationName = ins.m_data.info.name
+    buyDataInfo.targetLocationName = ChooseWarehouseCtrl:GetName()
+    local pos = {}
+    pos.x = ins.m_data.info.pos.x
+    pos.y = ins.m_data.info.pos.y
+    buyDataInfo.distance = ChooseWarehouseCtrl:GetDistance(pos)
+    buyDataInfo.number = ins.GetDataTableNum(ins.tempItemList)
+    buyDataInfo.freight = GetClientPriceString(ChooseWarehouseCtrl:GetPrice())
+    buyDataInfo.goodsPrice = ins:GetTotalPrice()
+    buyDataInfo.btnClick = function()
+        if buyDataInfo.number == 0 then
+            Event.Brocast("SmallPop",GetLanguage(27020004),300)
+            return
+        else
+            for key,value in pairs(ins.tempItemList) do
+                Event.Brocast("m_ReqMaterialBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
+                        value.goodsDataInfo.price,targetBuildingId,value.goodsDataInfo.k.producerId,value.goodsDataInfo.k.qty)
+            end
+        end
     end
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
@@ -133,6 +178,7 @@ function ShelfCtrl:openPlayerBuy(isShow)
         self.ShelfImgSetActive(self.shelfDatas,5,1)
         self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
         self:GoodsItemState(self.shelfDatas,itemStateBool)
+        ShelfPanel.nameText.text = ""
     end
     switchRightPanel = isShow
 end
@@ -146,7 +192,14 @@ function ShelfCtrl:RefreshBuyButton()
         ShelfPanel.confirmBtn.transform.localScale = Vector3.one
     end
 end
-
+--获取购买商品总价格
+function ShelfCtrl:GetTotalPrice()
+    local price = 0
+    for key,value in pairs(self.tempItemList) do
+        price = price + GetServerPriceNumber(value.tempPrice)
+    end
+    return GetClientPriceString(price)
+end
 
 
 

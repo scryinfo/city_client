@@ -40,9 +40,9 @@ function AddProductionLineCtrl:_addListener()
 end
 
 function AddProductionLineCtrl:_initData()
-    --这里要区分是生产左边还是右边，然后把确定按钮打开
     AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
     local data = {}
+    AddProductionLineCtrl.static.buildingType = self.m_data.buildingType
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
@@ -91,11 +91,14 @@ end
 function AddProductionLineCtrl.GetItemState(itemId)
     local data = {}
     data.enableShow = true
+    if AddProductionLineCtrl.static.buildingType == BuildingType.MaterialFactory then
 
-    if not AddProductionLineCtrl.goodLv[itemId] then
-        data.enableShow = false
-    else
-        data.enableShow = true
+    elseif AddProductionLineCtrl.static.buildingType == BuildingType.ProcessingFactory then
+        if not AddProductionLineCtrl.goodLv[itemId] then
+            data.enableShow = false
+        else
+            data.enableShow = true
+        end
     end
     return data
 end

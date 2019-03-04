@@ -478,7 +478,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = m_allPages[ctrlName]
-    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId then
         tempController[modelMethord](tempController,...)
     end
 end

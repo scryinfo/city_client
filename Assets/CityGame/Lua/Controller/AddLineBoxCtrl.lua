@@ -88,11 +88,13 @@ end
 --添加成功后
 function AddLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
+        TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
         UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+        Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---截取小数点后两位
+--保留小数点后两位
 function AddLineBoxCtrl:GetOneSecNum(str)
     local index = string.find(str, '%.')
     if not index then

@@ -14,6 +14,10 @@ OpenModelInsID = {
     ["ChatCtrl"] = 8,
     ["FriendsCtrl"] = 9,
     ["CompanyCtrl"] = 10,
+    ["GuildListCtrl"] = 11,
+    ["GuildOwnCtrl"] = 12,
+    ["GuildMessageCtrl"] = 13,
+    ["GuildApplyCtrl"] = 14,
     ["AvtarCtrl"] = 15,
 
 }

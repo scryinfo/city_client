@@ -764,6 +764,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_companyName = tempData.companyName
     --初始化自己的头像ID
     PersonDataStack.m_faceId = tempData.faceId
+    --初始化自己的公会ID
+    PersonDataStack.m_societyId = tempData.societyId
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =
@@ -829,6 +831,11 @@ function  DataManager.InitPersonDatas(tempData)
             end
         end
     end
+
+    -- 初始化公会信息
+    PersonDataStack.guildManager = GuildManager:new()
+    DataManager.InitGuildInfo()
+
     --初始化相机位置
     if tempData.position ~= nil then
         local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
@@ -1124,6 +1131,88 @@ function DataManager.SetChatRecords(index)
     return PersonDataStack.socialityManager:SetChatRecords(index)
 end
 
+-- 获得公会ID
+function DataManager.GetGuildID()
+    return PersonDataStack.m_societyId
+end
+
+-- 设置公会ID
+function DataManager.SetGuildID(id)
+    PersonDataStack.m_societyId = id
+end
+
+-- 查询公会全部信息
+function DataManager.InitGuildInfo()
+    if PersonDataStack.m_societyId then
+        PersonDataStack.guildManager:InitGuildInfo(PersonDataStack.m_societyId)
+    end
+end
+
+-- 设置公会全部信息
+function DataManager.SetGuildInfo(societyInfo)
+    PersonDataStack.guildManager:SetGuildInfo(societyInfo)
+end
+
+-- 获取公会全部信息
+function DataManager.GetGuildInfo()
+    return PersonDataStack.guildManager:GetGuildInfo()
+end
+
+-- 删除已处理的入会请求
+function DataManager.DeleteGuildJoinReq(joinReq)
+    PersonDataStack.guildManager:DeleteGuildJoinReq(joinReq)
+end
+
+-- 设置公会信息
+function DataManager.SetGuildMember(memberChanges)
+    PersonDataStack.guildManager:SetGuildMember(memberChanges)
+end
+
+-- 设置公会通知
+function DataManager.SetGuildNotice(societyNotice)
+    PersonDataStack.guildManager:SetGuildNotice(societyNotice)
+end
+
+-- 新增入会请求
+function DataManager.SetGuildJoinReq(joinReq)
+    PersonDataStack.guildManager:SetGuildJoinReq(joinReq)
+end
+
+-- 获得自己公会的职位
+function DataManager.GetOwnGuildIdentity()
+    return PersonDataStack.guildManager:GetOwnGuildIdentity(PersonDataStack.m_owner)
+end
+
+-- 刪除公会成员
+function DataManager.DeleteGuildMember(playerId)
+    PersonDataStack.guildManager:DeleteGuildMember(playerId)
+end
+
+-- 成员上下线
+function DataManager.SetGuildMemberOnline(playerId, online)
+    PersonDataStack.guildManager:SetGuildMemberOnline(playerId, online)
+end
+
+-- 成员权限变更
+function DataManager.SetGuildMemberIdentity(playerId, identity)
+    PersonDataStack.guildManager:SetGuildMemberIdentity(playerId, identity)
+end
+
+-- 改名字返回
+function DataManager.SetGuildSocietyName(bytesStrings)
+    PersonDataStack.guildManager:SetGuildSocietyName(bytesStrings)
+end
+
+-- 改介绍返回
+function DataManager.SetGuildIntroduction(bytesStrings)
+    PersonDataStack.guildManager:SetGuildIntroduction(bytesStrings)
+end
+
+-- 改宣言返回
+function DataManager.SetGuildDeclaration(bytesStrings)
+    PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+---------------------------------
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
     return PersonDataStack.m_buysBuilding
@@ -1263,7 +1352,16 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleStatusChange","gs.ByteBool",DataManager.n_OnReceiveRoleStatusChange)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteFriend","gs.Id",DataManager.n_OnReceiveDeleteFriend)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteBlacklist","gs.Id",DataManager.n_DeleteBlacklist)
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getSocietyInfo", "gs.SocietyInfo", DataManager.n_GetSocietyInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delJoinReq", "gs.JoinReq", DataManager.n_JoinReq)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","memberChange", "gs.MemberChanges", DataManager.n_MemberChanges)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","noticeAdd", "gs.SocietyNotice", DataManager.n_NoticeAdd)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq", "gs.JoinReq", DataManager.n_NewJoinReq)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","joinHandle", "gs.SocietyInfo", DataManager.n_JoinHandle)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", DataManager.n_ExitSociety)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifySocietyName","gs.BytesStrings", DataManager.n_ModifySocietyName)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", DataManager.n_ModifyIntroduction)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", DataManager.n_ModifyDeclaration)
 end
 
 --DataManager初始化
@@ -1538,6 +1636,79 @@ function DataManager.n_DeleteBlacklist(stream)
     local friendsId = stream
     DataManager.SetMyBlacklist({ id = friendsId.id })
     Event.Brocast("c_DeleteBlacklist", friendsId)
+end
+
+-- 查询公会消息返回
+function DataManager.n_GetSocietyInfo(societyInfo)
+    DataManager.SetGuildInfo(societyInfo)
+end
+
+-- 删除已处理的入会请求
+function DataManager.n_JoinReq(joinReq)
+    DataManager.DeleteGuildJoinReq(joinReq)
+end
+
+-- 成员变更
+function DataManager.n_MemberChanges(memberChanges)
+    for i, v in ipairs(memberChanges.changeLists) do
+        if v.type == "JOIN" then
+            -- 有玩家加入
+            DataManager.SetGuildMember(v.info)
+        elseif v.type == "EXIT" then
+            -- 有玩家退出
+            DataManager.DeleteGuildMember(v.playerId)
+        elseif v.type == "ONLINE" then
+            -- 有玩家上线
+            DataManager.SetGuildMemberOnline(v.playerId, true)
+        elseif v.type == "OFFLINE" then
+            -- 有玩家下线
+            DataManager.SetGuildMemberOnline(v.playerId, false)
+        elseif v.type == "IDENTITY" then
+            -- 有玩家的权限变更
+            DataManager.SetGuildMemberIdentity(v.playerId, v.identity)
+        end
+    end
+end
+
+-- 新增公会通知
+function DataManager.n_NoticeAdd(societyNotice)
+    DataManager.SetGuildNotice(societyNotice)
+end
+
+-- 新增入会请求
+function DataManager.n_NewJoinReq(joinReq)
+    DataManager.SetGuildJoinReq(joinReq)
+end
+
+-- 申请加入公会通过
+function DataManager.n_JoinHandle(societyInfo)
+    DataManager.SetGuildID(societyInfo.id)
+    DataManager.SetGuildInfo(societyInfo)
+end
+
+-- 退出公会
+function DataManager.n_ExitSociety(ByteBool)
+    DataManager.SetGuildID()
+    DataManager.SetGuildInfo()
+end
+
+-- 改名字返回
+function DataManager.n_ModifySocietyName(bytesStrings, msgId)
+    --异常处理
+    if msgId == 0 then
+        return
+    end
+    DataManager.SetGuildSocietyName(bytesStrings)
+end
+
+-- 改介绍返回
+function DataManager.n_ModifyIntroduction(bytesStrings)
+    DataManager.SetGuildIntroduction(bytesStrings)
+end
+
+-- 改宣言返回
+function DataManager.n_ModifyDeclaration(bytesStrings)
+    DataManager.SetGuildDeclaration(bytesStrings)
 end
 ----------
 

@@ -654,7 +654,12 @@ end
 --联盟
 function GameMainInterfaceCtrl:OnLeague()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:c_OnRadioInfo({type = 3,ts = 21})
+    local societyId = DataManager.GetGuildID()
+    if societyId then
+        ct.OpenCtrl("GuildOwnCtrl", societyId)
+    else
+        ct.OpenCtrl("GuildListCtrl")
+    end
 end
 
 --关闭updata

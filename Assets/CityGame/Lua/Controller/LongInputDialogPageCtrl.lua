@@ -45,11 +45,22 @@ function LongInputDialogPageCtrl:_getComponent(go)
     --language
     self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
     self.inputPlaceholderText = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
+    self.inputPlaceholder = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
 end
 ---初始化
 function LongInputDialogPageCtrl:_initData()
     if self.m_data.titleInfo then
         self.titleText.text = self.m_data.titleInfo
+    end
+    if self.m_data.inputContent then
+        self.input.text = self.m_data.inputContent
+    else
+        self.input.text = ""
+    end
+    if self.m_data.placeholderContent then
+        self.inputPlaceholder.text = self.m_data.placeholderContent
+    else
+        self.inputPlaceholder.text = "不超过60字"
     end
 end
 

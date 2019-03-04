@@ -5,9 +5,24 @@
 ---
 
 
-
-
-
+--local  cache
+--
+--function PlayerInfoManger.Awake()
+--    cache={}
+--
+--
+--end
+--
+--function PlayerInfoManger.GetInfoAndExcute(playerId,func,class)
+--    local info=cache[playerId]
+--
+--    if info then
+--        class:func(info)
+--    else
+--
+--    end
+--
+--end
 
 
 

@@ -53,14 +53,17 @@ end
 
 function AvtarCtrl:Refresh()
     DataManager.OpenDetailModel(MunicipalModel,OpenModelInsID.AvtarCtrl)
+    self:begin()
 end
 
 function  AvtarCtrl:Hide()
     UIPanel.Hide(self)
+    self:ClearCasch()
 end
 
 function AvtarCtrl:Close()
     UIPanel.Close(self)
+    self:ClearCasch()
 end
 
 function  AvtarCtrl:Awake(go)
@@ -74,11 +77,18 @@ function  AvtarCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.maleBtn.gameObject,self.c_OnClick_male,self);
     LuaBehaviour:AddClick(panel.feMaleBtn.gameObject,self.c_OnClick_faMale,self);
 
-    self:begin()
-
 end
 
 ---==========================================================================================业务代码===================================================================================================
+--清空缓存
+function AvtarCtrl:ClearCasch()
+    for sex, table in pairs(headPrefab) do
+        for i, v in pairs(table) do
+            destroy(v)
+        end
+    end
+end
+
 local appearance={}
 local pool={}
 local sex
@@ -381,10 +391,3 @@ function AvtarCtrl:c_OnClick_faMale(ins)
     ins:randomChange()
     ins:switchKinds(AvtarConfig.woMan[1].kinds)
 end
-
-
-
-
-
-
-

@@ -22,7 +22,7 @@ HeadSizeType={
 
 AvatarManger={}
 
-local  appearance={}
+local  appearance,unitPool={},{}
 local headPool,record={},{}
 
 local num,sex,currHead,headTypeId
@@ -30,12 +30,14 @@ local num,sex,currHead,headTypeId
 function  AvatarManger.Awake()
     headPool={}
     headPool[1],headPool[2]={},{}
+    unitPool[1],unitPool[2]={},{}
     for i = 1, 6 do
         headPool[1][i]= LuaGameObjectPool:new("Avatar"..i,creatGoods(HeadConfig.man[i].path),1,Vector3.New(0,0,0) )
     end
     for i = 1, 8 do
         headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),1,Vector3.New(0,0,0) )
     end
+
 end
 
  function AvatarManger.setSize(go,size)
@@ -223,8 +225,6 @@ local function GetAvatar(faceId,isSmall)
 end
 
 
-
-
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
    local AvatarData=GetAvatar(faceId,true)
@@ -245,6 +245,10 @@ end
 function AvatarManger.CollectAvatar()
     if #record>0 then
         for i, AvatarData in ipairs(record) do
+            for i =0, #AvatarData.go.transform.childs do
+
+
+            end
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
         end
     end

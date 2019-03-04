@@ -107,6 +107,11 @@ MapGameObjectsConfig = {
             ["InitCount"] = 64,
         },
         --]]
+        {   --地图地块
+            ["Name"] = "TerrainGround",
+            ["PlayerBuildingBaseDataID"] = 4000000,
+            ["InitCount"] = 1800,--巅峰值3600
+        },
         {   --我的地块
             ["Name"] = "my_Ground",
             ["PlayerBuildingBaseDataID"] = 4000001,
@@ -342,8 +347,155 @@ MapGameObjectsConfig = {
             ["RoadPrefabConfig"] = 240,
             ["InitCount"] = 0,
         },
+        --系统建筑
+        {   --系统道路1
+            ["Name"] = "SystemRoad1",
+            ["PlayerBuildingBaseDataID"] = 2000100,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路2
+            ["Name"] = "SystemRoad2",
+            ["PlayerBuildingBaseDataID"] = 2000200,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路3
+            ["Name"] = "SystemRoad3",
+            ["PlayerBuildingBaseDataID"] = 2000115,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路4
+            ["Name"] = "SystemRoad4",
+            ["PlayerBuildingBaseDataID"] = 2000103,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路5
+            ["Name"] = "SystemRoad5",
+            ["PlayerBuildingBaseDataID"] = 2000106,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路6
+            ["Name"] = "SystemRoad6",
+            ["PlayerBuildingBaseDataID"] = 2000112,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路7
+            ["Name"] = "SystemRoad7",
+            ["PlayerBuildingBaseDataID"] = 2000109,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路8
+            ["Name"] = "SystemRoad8",
+            ["PlayerBuildingBaseDataID"] = 2000107,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路9
+            ["Name"] = "SystemRoad9",
+            ["PlayerBuildingBaseDataID"] = 2000114,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路10
+            ["Name"] = "SystemRoad10",
+            ["PlayerBuildingBaseDataID"] = 2000113,
+            ["InitCount"] = 0,
+        },
+        {   --系统道路11
+            ["Name"] = "SystemRoad11",
+            ["PlayerBuildingBaseDataID"] = 2000111,
+            ["InitCount"] = 0,
+        },
+        {   --中心建筑
+            ["Name"] = "Centralbuilding",
+            ["PlayerBuildingBaseDataID"] = 2000500,
+            ["InitCount"] = 1,
+        },
+        {   --机场
+            ["Name"] = "Airport",
+            ["PlayerBuildingBaseDataID"] = 2000501,
+            ["InitCount"] = 0,
+        },
+        {   --港口
+            ["Name"] = "Port",
+            ["PlayerBuildingBaseDataID"] = 2000502,
+            ["InitCount"] = 0,
+        },
+        {   --学校
+            ["Name"] = "University",
+            ["PlayerBuildingBaseDataID"] = 2000503,
+            ["InitCount"] = 0,
+        },
+        {   --钟楼
+            ["Name"] = "BellTower",
+            ["PlayerBuildingBaseDataID"] = 2000504,
+            ["InitCount"] = 0,
+        },
+        {   --博物馆
+            ["Name"] = "Museum",
+            ["PlayerBuildingBaseDataID"] = 2000505,
+            ["InitCount"] = 0,
+        },
+        -----------------------------------------------河流
+        {   --河流1
+            ["Name"] = "RiversRoot01",
+            ["PlayerBuildingBaseDataID"] = 2000301,
+            ["InitCount"] = 0,
+        },
+        {   --河流2
+            ["Name"] = "RiversRoot02",
+            ["PlayerBuildingBaseDataID"] = 2000402,
+            ["InitCount"] = 0,
+        },
+        {   --河流3
+            ["Name"] = "RiversRoot03",
+            ["PlayerBuildingBaseDataID"] = 2000302,
+            ["InitCount"] = 0,
+        },
+        {   --河流4
+            ["Name"] = "RiversRoot04",
+            ["PlayerBuildingBaseDataID"] = 2000401,
+            ["InitCount"] = 0,
+        },
+        {   --河流5
+            ["Name"] = "RiversRoot05",
+            ["PlayerBuildingBaseDataID"] = 2000303,
+            ["InitCount"] = 0,
+        },
+        {   --河流6
+            ["Name"] = "RiversRoot06",
+            ["PlayerBuildingBaseDataID"] = 2000306,
+            ["InitCount"] = 0,
+        },
+        {   --河流7
+            ["Name"] = "RiversRoot07",
+            ["PlayerBuildingBaseDataID"] = 2000312,
+            ["InitCount"] = 0,
+        },
+        {   --河流8
+            ["Name"] = "RiversRoot08",
+            ["PlayerBuildingBaseDataID"] = 2000309,
+            ["InitCount"] = 0,
+        },
+        {   --河流9
+            ["Name"] = "RiversRoot09",
+            ["PlayerBuildingBaseDataID"] = 2000403,
+            ["InitCount"] = 0,
+        },
+        {   --河流10
+            ["Name"] = "RiversRoot10",
+            ["PlayerBuildingBaseDataID"] = 2000406,
+            ["InitCount"] = 0,
+        },
+        {   --河流11
+            ["Name"] = "RiversRoot11",
+            ["PlayerBuildingBaseDataID"] = 2000412,
+            ["InitCount"] = 0,
+        },
+        {   --河流12
+            ["Name"] = "RiversRoot12",
+            ["PlayerBuildingBaseDataID"] = 2000409,
+            ["InitCount"] = 0,
+        },
 
-        --TODO:系统道路/河流/湖泊/装饰物
+        --TODO:湖泊/装饰物
     },
     ["OnlyOne"] = {
         ["Centralbuilding"] = 2000000,      --中心建筑

@@ -314,7 +314,7 @@ function GameMainInterfaceCtrl:Awake()
     --头像
     local faceId = DataManager.GetFaceId()
 
-     AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.2)
+    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.2)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
@@ -326,6 +326,11 @@ function GameMainInterfaceCtrl:Awake()
     LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
     GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
 
+    local nowDay = tonumber(ts.year..ts.month..ts.day)
+    local nowHours = tonumber(ts.hour)
+    if WeatherConfig[nowDay] ~= nil and WeatherConfig[nowDay].weather[nowHours] ~= nil then
+        LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
+    end
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money

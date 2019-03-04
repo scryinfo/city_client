@@ -143,22 +143,22 @@ local function FindOrgan(transform)
         appearance["goatee"]={}
     end
 
-    appearance["body"].ima=transform:Find("body"):GetComponent("Image")
-    appearance["backHat"].ima=transform:Find("backHat"):GetComponent("Image")
-    appearance["head"].ima=transform:Find("head"):GetComponent("Image")
-    appearance["haircut"].ima=transform:Find("hair"):GetComponent("Image")
-    appearance["nose"].ima=transform:Find("nose"):GetComponent("Image")
-    appearance["brow"].ima=transform:Find("brow"):GetComponent("Image")
-    appearance["frontHat"].ima=transform:Find("frontHat"):GetComponent("Image")
-    appearance["eyes"].ima=transform:Find("eyes"):GetComponent("Image")
-    appearance["mouth"].ima=transform:Find("mouth"):GetComponent("Image")
+    appearance["body"].ima=transform:Find("body/body"):GetComponent("Image")
+    appearance["backHat"].ima=transform:Find("backHat/backHat"):GetComponent("Image")
+    appearance["head"].ima=transform:Find("head/head"):GetComponent("Image")
+    appearance["haircut"].ima=transform:Find("hair/hair"):GetComponent("Image")
+    appearance["nose"].ima=transform:Find("nose/nose"):GetComponent("Image")
+    appearance["brow"].ima=transform:Find("brow/brow"):GetComponent("Image")
+    appearance["frontHat"].ima=transform:Find("frontHat/frontHat"):GetComponent("Image")
+    appearance["eyes"].ima=transform:Find("eyes/eyes"):GetComponent("Image")
+    appearance["mouth"].ima=transform:Find("mouth/mouth"):GetComponent("Image")
 
-    appearance["decal"].ima=transform:Find("decal")
-    appearance["goatee"].ima=transform:Find("goatee")
+    appearance["decal"].ima=transform:Find("decal/decal")
+    appearance["goatee"].ima=transform:Find("goatee/goatee")
 
     if appearance["decal"].ima then
-        appearance["decal"].ima=transform:Find("decal"):GetComponent("Image")
-        appearance["goatee"].ima=transform:Find("goatee"):GetComponent("Image")
+        appearance["decal"].ima=transform:Find("decal/decal"):GetComponent("Image")
+        appearance["goatee"].ima=transform:Find("goatee/goatee"):GetComponent("Image")
     end
 
 end
@@ -228,6 +228,13 @@ function AvtarCtrl:changAparance(data)
 
         --已有的隐藏
         if currHead then
+            for i, config in ipairs(HeadSizeType) do
+                local trans=currHead.transform:Find(config.type)
+                if trans then
+                    local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
             currHead:SetActive(false)
         end
         --避免重复生成

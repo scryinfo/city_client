@@ -322,8 +322,8 @@ end
 
 --做中心偏移
 function MapCtrl:CenterOffset(beginScale,EndScale)
-    local TargetAnchoredPosition = MapPanel.rect_MiniMapBg.anchoredPosition * (EndScale/ beginScale)
-    local NowRangeSize = (EndScale - 1) * MapPanel.rect_MiniMapBg.sizeDelta.x / 2
+    local TargetAnchoredPosition = MapPanel.mapRootRect.anchoredPosition * (EndScale/ beginScale)
+    local NowRangeSize = (EndScale - 1) * MapPanel.mapRootRect.sizeDelta.x / 2
     if TargetAnchoredPosition.x > NowRangeSize then
         TargetAnchoredPosition.x = NowRangeSize
     elseif  TargetAnchoredPosition.x < -NowRangeSize then
@@ -334,7 +334,7 @@ function MapCtrl:CenterOffset(beginScale,EndScale)
     elseif  TargetAnchoredPosition.y < -NowRangeSize then
         TargetAnchoredPosition.y = -NowRangeSize
     end
-    MapPanel.rect_MiniMapBg:DOAnchorPos(TargetAnchoredPosition , self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
+    MapPanel.mapRootRect:DOAnchorPos(TargetAnchoredPosition , self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
 end
 
 --刷新当前地图的大小
@@ -342,6 +342,6 @@ function MapCtrl:RefreshMiniMapScale()
     --刷新Slider
     MapPanel.scaleSlider.value = self.my_Scale
     --TODO:做中心偏移
-    --MapPanel.rect_MiniMapBg:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
+    MapPanel.mapRootRect:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
 end
 ---

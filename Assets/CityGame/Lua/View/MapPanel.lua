@@ -25,6 +25,18 @@ function MapPanel.InitPanel()
     this.mapMatGoodRootItem = transform:Find("prefabRoot/MapMatGoodRootItem").gameObject  --原料商品详情根节点
     this.mapMatGoodSearchItem = transform:Find("prefabRoot/MapMatGoodSearchItem").gameObject  --原料商品详情
     this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject  --搜索类型
+    --
+    this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem")  --建筑气泡
+    this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
+    this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")  --搜索结果
+    this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem")  --搜索总览
+
+    --
+    this.mapRootRect = transform:Find("centerRoot/typeParent"):GetComponent("RectTransform")  --小地图
+    this.GroundTransformRoot = transform:Find("centerRoot/typeParent/GroundTransformRoot")  --交易气泡
+    this.GroundAuctionRoot = transform:Find("centerRoot/typeParent/GroundAuctionRoot")  --拍卖气泡
+    this.AlwaysShowRoot = transform:Find("centerRoot/typeParent/AlwaysShowRoot")  --一直显示的界面，自己的建筑&系统建筑
+    this.AllSearchRoot = transform:Find("centerRoot/typeParent/AllSearchRoot")  --搜索总览
 
     --左侧搜索类型
     this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform")  --打开左侧搜索框的按钮
@@ -37,6 +49,10 @@ function MapPanel.InitPanel()
     this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
     this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
+
+    --右侧详情界面
+    this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")
+
 end
 
 function MapPanel.showDetailPageByType(typeId)

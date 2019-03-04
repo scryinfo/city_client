@@ -342,7 +342,7 @@ function GameMainInterfaceCtrl:Awake()
 
     radioTime = 0
     radioIndex = 1
-    radio = {{type = 1,ts = 1},{type = 2,ts = 11}}
+    --radio = {{type = 1,ts = 1},{type = 2,ts = 11}}
 
     --初始化循环参数
     self.intTime = 1

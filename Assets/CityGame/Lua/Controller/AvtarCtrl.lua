@@ -236,9 +236,9 @@ function AvtarCtrl:changAparance(data)
                 end
             end
 
-            for key, pastApperance in pairs(pastApperanceID) do
-                UnLoadSprite(pastApperance.path)
-            end
+            --for key, pastApperance in pairs(pastApperanceID) do
+            --    UnLoadSprite(pastApperance.path)
+            --end
 
             currHead:SetActive(false)
         end

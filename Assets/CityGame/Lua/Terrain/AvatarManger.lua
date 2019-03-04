@@ -23,7 +23,7 @@ HeadSizeType={
 AvatarManger={}
 
 local  appearance,unitPool={},{}
-local headPool,record={},{}
+local headPool,record,recordPath={},{},{}
 
 local num,sex,currHead,headTypeId
 
@@ -125,11 +125,6 @@ local function changAparance(kind)
         end
         headTypeId=nums
 
-        if currHead then
-            for i, v in pairs(appearance) do
-                UnLoadSprite(v.path)
-            end
-        end
         currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
@@ -175,6 +170,8 @@ local function changAparance(kind)
     appearance[type].typeId=nums
     appearance[type].type=type
     appearance[type].path=path
+
+     table.insert(recordPath,path)
 
 
     if path=="" then
@@ -227,7 +224,7 @@ local function GetAvatar(faceId,isSmall)
     temp.sex=sex
     temp.headTypeId=headTypeId
     temp.go=currHead
-
+    --便于回收内存
     table.insert(record,temp)
 
     return temp
@@ -263,6 +260,12 @@ function AvatarManger.CollectAvatar()
             end
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
         end
+    end
+    if #recordPath>0 then
+        for i, path in pairs(recordPath) do
+            UnLoadSprite(path)
+        end
+        recordPath = {}
     end
 end
 

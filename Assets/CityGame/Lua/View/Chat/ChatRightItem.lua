@@ -15,7 +15,7 @@ function ChatRightItem:initialize(itemId, prefab, data)
 
     local transform = prefab.transform
     -- 头像图片
-    self.headImage = transform:Find("HeadBg/HeadImage"):GetComponent("Image")
+    self.headImage = transform:Find("HeadBg")
     -- 说话人的背景
     self.playerNameImage = transform:Find("PlayerNameImage")
     -- 说话人的名字
@@ -45,7 +45,8 @@ function ChatRightItem:initialize(itemId, prefab, data)
 
     if self.data.channel == "WORLD" then
         transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
-        LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
+        --LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
+        AvatarManger.GetSmallAvatar(self.data.image,self.headImage,0.2)
     else
         if self.data.id == DataManager.GetMyOwnerID() then
             LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)

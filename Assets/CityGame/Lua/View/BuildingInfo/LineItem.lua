@@ -109,6 +109,9 @@ function LineItem:GetStringTime(ms)
     local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
 end
+
+local LastTime = 0
+local nowTime = 0
 --刷新时间
 function LineItem:Update()
     ---总时间---
@@ -129,10 +132,17 @@ function LineItem:Update()
     self.nowTime = TimeSynchronized.GetTheCurrentServerTime()
     --已经生产的时间
     self.remainTime = self.nowTime - self.startTime
-    local timeSilder = self.productionSlider.maxValue - (math.ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime)) / 1000))
-    self.productionSlider.value = timeSilder
-    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
-
+    local thisTime =  (self.remainTime % self.OneTotalTime) --获得这一个产品当前生产的时间
+    nowTime = nowTime + UnityEngine.Time.unscaledDeltaTime * 1000
+    if LastTime ~= thisTime then
+        LastTime = thisTime
+        nowTime = thisTime
+    end
+    if (nowTime /self.OneTotalTime) >= 1 then
+        nowTime = 0
+    end
+    self.productionSlider.value = (nowTime /self.OneTotalTime)  * self.productionSlider.maxValue
+    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value + 1) * 1000 )
 end
 --刷新目前产量
 function LineItem:refreshNowConte(dataInfo)

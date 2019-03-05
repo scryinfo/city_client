@@ -42,7 +42,7 @@ function LineItem:InitializeData()
     local materialKey,goodsKey = 21,22  --商品类型
     if math.floor(self.itemId / 100000) == materialKey then
         --生产一个需要的时间
-        self.numOneTime = self:GetNumOneTime(Material[self.itemId].numOneSec,self.workerNum)
+        self.OneTotalTime = self:GetNumOneTime(Material[self.itemId].numOneSec,self.workerNum)
         self.brandbg.localScale = Vector3.New(0,0,0)
         self.brand.localScale = Vector3.New(0,0,0)
         self.quality.localScale = Vector3.New(0,0,0)
@@ -50,7 +50,7 @@ function LineItem:InitializeData()
         LoadSprite(Material[self.itemId].img,self.icon,false)
     elseif math.floor(self.itemId / 100000) == goodsKey then
         --生产一个需要的时间
-        self.numOneTime = self:GetNumOneTime(Good[self.itemId].numOneSec,self.workerNum)
+        self.OneTotalTime = self:GetNumOneTime(Good[self.itemId].numOneSec,self.workerNum)
         self.brandbg.localScale = Vector3.New(0,0,0)
         self.brand.localScale = Vector3.New(0,0,0)
         self.quality.localScale = Vector3.New(0,0,0)
@@ -75,9 +75,9 @@ function LineItem:InitializeData()
     number["col1"] = "blue"
     number["col2"] = "black"
     self.numberText.text = getColorString(number)
-    self.productionSlider.maxValue = self.numOneTime / 1000
-    self.productionSlider.value = math.ceil((self.numOneTime - (self.remainTime % self.numOneTime) )/ 1000)
-    self.countdownText.text = self:GetStringTime(self.productionSlider.value * 1000)
+    self.productionSlider.maxValue = math.ceil(self.OneTotalTime / 1000)
+    self.productionSlider.value = math.ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime) )/ 1000)
+    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
     self.timeText.text = self:GetTime(self.lineInfo.targetCount,self.lineInfo.nowCount,self.lineInfo.workerNum)
     UpdateBeat:Add(self.Update,self)
 end
@@ -88,11 +88,10 @@ function LineItem:GetTime(targetCount,nowCount,workerNum)
         return "00:00:00"
     end
     local materialKey,goodsKey = 21,22  --商品类型
-    local timeSpended = TimeSynchronized.GetTheCurrentServerTime() - self.lineInfo.ts
     if math.floor(self.itemId / 100000) == materialKey then
-        self.time = remainingNum / (Material[self.itemId].numOneSec * workerNum) - timeSpended
+        self.time = remainingNum / (Material[self.itemId].numOneSec * workerNum)
     elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.time = remainingNum / (Good[self.itemId].numOneSec * workerNum) - timeSpended
+        self.time = remainingNum / (Good[self.itemId].numOneSec * workerNum)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -106,14 +105,13 @@ function LineItem:GetNumOneTime(numOneSec,workerNum)
 end
 --转换时间 时分秒
 function LineItem:GetStringTime(ms)
-    self.oneTime = ms / 1000
     local timeTable = getTimeBySec(ms / 1000)
     local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
 end
 --刷新时间
 function LineItem:Update()
-    --总时间
+    ---总时间---
     if self.time <= 0 then
         self.timeText.text = "00:00:00"
         UpdateBeat:Remove(self.Update,self)
@@ -124,24 +122,17 @@ function LineItem:Update()
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     self.timeText.text = timeStr
 
-    --单个时间
-    self.oneTime = self.oneTime - UnityEngine.Time.unscaledDeltaTime
-    local timeTable1 = getTimeBySec(self.oneTime)
-    local timeStr1 = timeTable1.minute..":"..timeTable1.second
-    self.countdownText.text = timeStr1
-    --self.productionSlider.value = self.productionSlider.value + UnityEngine.Time.unscaledDeltaTime
+    ---单个时间---
     --生产开始的时间
     self.startTime = self.lineInfo.ts
     --服务器当前时间
     self.nowTime = TimeSynchronized.GetTheCurrentServerTime()
     --已经生产的时间
     self.remainTime = self.nowTime - self.startTime
-    self.productionSlider.value = self.productionSlider.maxValue - math.ceil((self.numOneTime - (self.remainTime % self.numOneTime) )/ 1000)
-    if self.oneTime <= 0 then
-        self.oneTime = self.numOneTime
-        self.countdownText.text = self:GetStringTime(self.oneTime)
-        self.productionSlider.value = 0
-    end
+    local timeSilder = self.productionSlider.maxValue - (math.ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime)) / 1000))
+    self.productionSlider.value = timeSilder
+    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
+
 end
 --刷新目前产量
 function LineItem:refreshNowConte(dataInfo)

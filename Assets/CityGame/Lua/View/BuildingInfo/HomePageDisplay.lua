@@ -1,8 +1,7 @@
 HomePageDisplay = class('HomePageDisplay')
 
 --初始化
-function HomePageDisplay:initialize(type,goodsDataInfo,prefab,...)
-    local arg = {...}
+function HomePageDisplay:initialize(type,goodsDataInfo,prefab)
     if type == ct.homePage.shelf then
         self:homePageShelf(goodsDataInfo,prefab)
     end

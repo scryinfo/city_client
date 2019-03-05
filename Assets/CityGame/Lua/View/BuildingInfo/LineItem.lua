@@ -4,7 +4,8 @@
 --- DateTime: 2019/3/4 15:50
 ---
 LineItem = class("LineItem")
-
+local LastTime = 0
+local nowTime = 0
 --主页生产线
 function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId)
     self.prefab = prefab;
@@ -109,14 +110,13 @@ function LineItem:GetStringTime(ms)
     local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
 end
-
-local LastTime = 0
-local nowTime = 0
 --刷新时间
 function LineItem:Update()
     ---总时间---
     if self.time <= 0 then
         self.timeText.text = "00:00:00"
+        self.countdownText.text = "00:00"
+        self.productionSlider.value = 0
         UpdateBeat:Remove(self.Update,self)
         return
     end
@@ -132,7 +132,8 @@ function LineItem:Update()
     self.nowTime = TimeSynchronized.GetTheCurrentServerTime()
     --已经生产的时间
     self.remainTime = self.nowTime - self.startTime
-    local thisTime =  (self.remainTime % self.OneTotalTime) --获得这一个产品当前生产的时间
+    --当前一个已经生产的时间
+    local thisTime = (self.remainTime % self.OneTotalTime)
     nowTime = nowTime + UnityEngine.Time.unscaledDeltaTime * 1000
     if LastTime ~= thisTime then
         LastTime = thisTime
@@ -141,8 +142,15 @@ function LineItem:Update()
     if (nowTime /self.OneTotalTime) >= 1 then
         nowTime = 0
     end
-    self.productionSlider.value = (nowTime /self.OneTotalTime)  * self.productionSlider.maxValue
-    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value + 1) * 1000 )
+    self.productionSlider.value = (nowTime /self.OneTotalTime) * self.productionSlider.maxValue
+    self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value + 1) * 1000)
+    --if self.time <= 0 then
+    --    self.timeText.text = "00:00:00"
+    --    self.countdownText.text = "00:00"
+    --    self.productionSlider.value = 0
+    --    UpdateBeat:Remove(self.Update,self)
+    --    return
+    --end
 end
 --刷新目前产量
 function LineItem:refreshNowConte(dataInfo)

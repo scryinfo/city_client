@@ -64,7 +64,12 @@ function MapCtrl:Awake(go)
     self.ScaleDuringTime = TerrainConfig.MiniMap.ScaleDuringTime
     self.MapLeftPageDuringTime = TerrainConfig.MiniMap.MapLeftPageDuringTime  --打开关闭左侧搜索界面的时间
 
-    self:_initData()
+    self.criticalScaleValue = TerrainConfig.MiniMap.SceneMapSize / 40  --AOI临界值
+    self.itemWidth = MapPanel.mapRootRect.sizeDelta.x / TerrainConfig.MiniMap.MapSize   --一格Item的Rect大小
+    MapBubbleManager.initMapSetting(self.itemWidth)
+    MapBubbleManager.createSystemItem()
+
+    self:_initUIData()
 end
 
 function MapCtrl:Active()
@@ -74,6 +79,8 @@ function MapCtrl:Active()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self:RefreshMiniMapScale()
+
+    MapBubbleManager.initItemData()
 end
 
 function MapCtrl:Refresh()
@@ -81,6 +88,8 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
+
+    MapBubbleManager.initItemData()
 end
 
 function MapCtrl:Hide()
@@ -95,14 +104,14 @@ function MapCtrl:Hide()
     self:refreshTypeItems()
     self:closeSearch()
     self:toggleDetailPage(false)
+
+    MapBubbleManager.cleanItems()
 end
 
---初始化
-function MapCtrl:_initData()
-    --MapPanel.mapRootRect.sizeDelta = Vector2.New(UnityEngine.Screen.width, UnityEngine.Screen.width)  --设置地图为正方形
-
+--
+function MapCtrl:_initUIData()
+    --UI搜索界面
     self.typeTable = {}
-    --先生成搜索type
     for i, value in ipairs(MapTypeConfig) do
         self:_createType(value)
     end
@@ -303,12 +312,16 @@ end
 ---地图缩放部分
 --放大地图[over]
 function MapCtrl:EnLargeMap()
-    if self.my_Scale ~= nil and  self.ScaleOffset ~= nil and self.ScaleMax ~= nil then
+    if self.my_Scale ~= nil and self.ScaleOffset ~= nil and self.ScaleMax ~= nil then
         local scale_value = self.my_Scale + self.ScaleOffset
         if scale_value >= self.ScaleMax then
             scale_value = self.ScaleMax
         end
         if self.my_Scale ~= scale_value then
+            if self.my_Scale >= self.criticalScaleValue then
+                --到达AOI范围
+            end
+
             self:CenterOffset(self.my_Scale,scale_value)
             self.my_Scale = scale_value
             self:RefreshMiniMapScale()
@@ -318,12 +331,16 @@ end
 
 --缩小地图[over]
 function MapCtrl:NarrowMap()
-    if self.my_Scale ~= nil and  self.ScaleOffset ~= nil and self.ScaleMin ~= nil then
+    if self.my_Scale ~= nil and self.ScaleOffset ~= nil and self.ScaleMin ~= nil then
         local scale_value = self.my_Scale - self.ScaleOffset
         if scale_value <= self.ScaleMin then
             scale_value = self.ScaleMin
         end
         if self.my_Scale ~= scale_value then
+            if self.my_Scale < self.criticalScaleValue then
+                --离开AOI范围
+            end
+
             self:CenterOffset(self.my_Scale,scale_value)
             self.my_Scale = scale_value
             self:RefreshMiniMapScale()
@@ -352,6 +369,8 @@ end
 function MapCtrl:RefreshMiniMapScale()
     --刷新Slider
     MapPanel.scaleSlider.value = self.my_Scale
+    --
+    Event.Brocast("c_MapBubbleScale", self.my_Scale)
     --TODO:做中心偏移
     MapPanel.mapRootRect:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
 end

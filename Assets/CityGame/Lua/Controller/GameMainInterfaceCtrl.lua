@@ -640,7 +640,7 @@ end
 function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("MiniMapCtrl")
+    ct.OpenCtrl("MapCtrl")
 end
 
 --中心建筑

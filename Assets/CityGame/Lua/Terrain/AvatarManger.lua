@@ -22,8 +22,8 @@ HeadSizeType={
 
 AvatarManger={}
 
-local  appearance,unitPool={},{}
-local headPool,record,recordPath={},{},{}
+
+local  appearance,unitPool,headPool,record,recordPath={},{},{},{},{}
 
 local num,sex,currHead,headTypeId
 
@@ -219,7 +219,7 @@ local function GetAvatar(faceId,isSmall)
         end
     end
 
-    --便于回收
+    --便于回收对象池
     local temp ={}
     temp.sex=sex
     temp.headTypeId=headTypeId
@@ -229,7 +229,6 @@ local function GetAvatar(faceId,isSmall)
 
     return temp
 end
-
 
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
@@ -246,7 +245,6 @@ function AvatarManger.GetBigAvatar(faceId,parent,size)
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
 end
-
 
 function AvatarManger.CollectAvatar()
     if #record>0 then

@@ -36,6 +36,8 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
                 ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
             elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
                 ct.OpenCtrl("ProcessWarehouseCtrl",self.warehouseData)
+            elseif self.warehouseData.buildingType == BuildingType.RetailShop then
+                ct.OpenCtrl("RetailWarehouseCtrl",self.warehouseData)
             end
         else
             Event.Brocast("SmallPop",GetLanguage(35040013),300)

@@ -1,16 +1,16 @@
 local transform;
 local gameObject;
 
-ProcessWarehousePanel = {};
-local this = ProcessWarehousePanel;
+RetailWarehousePanel = {};
+local this = RetailWarehousePanel;
 
-function ProcessWarehousePanel.Awake(obj)
+function RetailWarehousePanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
 
     this.InitPanel();
 end
-function ProcessWarehousePanel.InitPanel()
+function RetailWarehousePanel.InitPanel()
     --Button
     --this.searchBtn = transform:Find("Button/searchBtn");
     this.returnBtn = transform:Find("Button/ReturnBtn");
@@ -57,6 +57,6 @@ function ProcessWarehousePanel.InitPanel()
     this.TransportItem = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content/TransportItem").gameObject
 
 end
-function ProcessWarehousePanel.OnDestroy()
-    logWarn("OnDestroy ProcessWarehousePanel--->>>");
+function RetailWarehousePanel.OnDestroy()
+    logWarn("OnDestroy RetailWarehousePanel--->>>");
 end

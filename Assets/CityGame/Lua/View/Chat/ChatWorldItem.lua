@@ -38,5 +38,8 @@ function ChatWorldItem:_ShowChatContent(data)
     else
         self.chatText.transform.sizeDelta = Vector2.New(chatTextPreferredWidth, 60)
     end
+    for i = 1, self.headImage.childCount do
+        UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+    end
     AvatarManger.GetSmallAvatar(data.image,self.headImage,0.1)
 end

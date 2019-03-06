@@ -297,7 +297,11 @@ function ChatMgr:ShowPlayerInfo(index, data)
     ChatPanel.nameText.text = data.name
     ChatPanel.companyText.text = data.companyName
     self:SetActivePlayerData(data)
-    LoadSprite(PlayerHead[data.faceId].HalfBodyPath, ChatPanel.headImage, true)
+    --LoadSprite(PlayerHead[data.faceId].HalfBodyPath, ChatPanel.headImage, true)
+    for i = 1, ChatPanel.headImage.childCount do
+        UnityEngine.GameObject.Destroy(ChatPanel.headImage:GetChild(i-1).gameObject)
+    end
+    AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
     if index == 1 then -- 世界界面陌生人信息显示
         ChatPanel.shieldBtn:SetActive(true)
         ChatPanel.addFriendsBtn:SetActive(true)

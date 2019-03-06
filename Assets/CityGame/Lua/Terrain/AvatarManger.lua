@@ -236,6 +236,7 @@ function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
+    return AvatarData.go
 end
 
 function AvatarManger.GetBigAvatar(faceId,parent,size)
@@ -244,6 +245,7 @@ function AvatarManger.GetBigAvatar(faceId,parent,size)
 
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
+    return AvatarData.go
 end
 
 function AvatarManger.CollectAvatar()

@@ -134,7 +134,7 @@ end
 
 function ChatCtrl:_addListener()
     -- 监听Model层网络回调
-    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
@@ -147,7 +147,7 @@ function ChatCtrl:Hide()
 end
 
 function ChatCtrl:_removeListener()
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
@@ -288,7 +288,8 @@ function ChatCtrl:_queryFriendInfo()
     if idTemp[1] then
         ChatPanel.friendsNoContentRoot:SetActive(false)
         ChatPanel.friendsChatNoContentRoot:SetActive(true)
-        Event.Brocast("m_QueryPlayerInfoChat", idTemp)
+        --Event.Brocast("m_QueryPlayerInfoChat", idTemp)
+        PlayerInfoManger.GetInfos(idTemp, self.c_OnReceivePlayerInfo, self)
     else
         ChatPanel.friendsNum.text = "0"
         ChatPanel.friendsNoContentRoot:SetActive(true)
@@ -380,7 +381,8 @@ function ChatCtrl:_showStrangersInfo()
     end
     if strangersId[1] then
         ChatPanel.strangersNoContentRoot:SetActive(false)
-        Event.Brocast("m_QueryPlayerInfoChat", strangersId)
+        --Event.Brocast("m_QueryPlayerInfoChat", strangersId)
+        PlayerInfoManger.GetInfos(strangersId, self.c_OnReceivePlayerInfo, self)
     end
     ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
 end
@@ -579,14 +581,14 @@ end
 -- 查询玩家信息
 function ChatCtrl:c_OnReceivePlayerInfo(playerData)
     if ChatPanel.worldToggle.isOn then
-        playerData.info[1].company = "Scry"
-        ChatCtrl.static.chatMgr:ShowPlayerInfo(1, playerData.info[1])
+        playerData[1].company = "Scry"
+        ChatCtrl.static.chatMgr:ShowPlayerInfo(1, playerData[1])
     elseif ChatPanel.friendsToggle.isOn then
         ChatCtrl.friendInfo = {}
-        if playerData.info then
+        if playerData then
             local data = {}
             local friends = DataManager.GetMyFriends()
-            for _, v in ipairs(playerData.info) do
+            for _, v in ipairs(playerData) do
                 v.b = friends[v.id]
                 table.insert(data, v)
             end
@@ -599,7 +601,7 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
             local chatFriendsInfo = DataManager.GetMyChatInfo(2)
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
             local saveUnread = DataManager.GetUnread()
-            for _, m in ipairs(playerData.info) do
+            for _, m in ipairs(playerData) do
                 if m.id ~= ChatCtrl.static.chatMgr:GetActivePlayerId() then
                     local noticeNum = 0
                     if saveUnread and saveUnread[m.id] then
@@ -621,15 +623,15 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
         end
     elseif ChatPanel.strangersToggle.isOn then
         ChatCtrl.strangersInfo = {}
-        if playerData.info then
-            for _, v in ipairs(playerData.info) do
+        if playerData then
+            for _, v in ipairs(playerData) do
                 table.insert(ChatCtrl.strangersInfo, v)
                 ChatCtrl.static.chatMgr:CreatePlayerItem(2, v)
             end
 
             local chatStrangersInfo = DataManager.GetMyChatInfo(3)
             local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
-            for _, m in ipairs(playerData.info) do
+            for _, m in ipairs(playerData) do
                 if m.id ~= ChatCtrl.static.chatMgr:GetActivePlayerId() then
                     strangersPlayerItem[m.id]:SetNoticeText(chatStrangersInfo[m.id].unreadNum)
                 end

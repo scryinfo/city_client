@@ -9,7 +9,7 @@ PlayerInfoManger={}
 local  cache,playerIDs,num,temparrs
 
 function PlayerInfoManger.Awake()
-    cache,playerIDs={},{}
+    temparrs,  cache,playerIDs={},{},{}
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
 
@@ -70,7 +70,8 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
         end
     end
 
-
+   _func(_class,temparrs)
+    temparrs={}
 end
 
 

@@ -27,13 +27,16 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     self.noticeImage = transform:Find("NoticeImage").gameObject
     self.noticeText = transform:Find("NoticeImage/NoticeText"):GetComponent("Text")
     -- 头像
-    self.friendsImage = transform:Find("HeadBg/FriendsImage"):GetComponent("Image")
+    --self.friendsImage = transform:Find("HeadBg/FriendsImage"):GetComponent("Image")
+    self.friendsImage = transform:Find("HeadBg/FriendsImage")
 
     self.toggle.isOn = false
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     self.noticeImage:SetActive(false)
-    LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.friendsImage, true)
+    --LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.friendsImage, true)
+    self.headPrefab = AvatarManger.GetSmallAvatar(self.data.faceId, self.friendsImage,0.2)
+    self.headPrefabTrans = self.headPrefab.transform
 
     self.toggle.onValueChanged:AddListener(function (isOn)
         self:_toggleValueChange(isOn)
@@ -59,9 +62,17 @@ end
 
 function ChatFriendsItem:SetHeadColor(isOnline)
     if isOnline then
-        self.friendsImage.color = Color.New(1, 1, 1, 1)
+        --self.friendsImage.color = Color.New(1, 1, 1, 1)
+        for i = 1, self.headPrefabTrans.childCount do
+            --UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+            self.headPrefabTrans:GetChild(i-1):GetChild(0):GetComponent("Image").color = Color.New(1, 1, 1, 1)
+        end
     else
-        self.friendsImage.color = Color.New(83/255, 83/255, 83/255, 110/255)
+        --self.friendsImage.color = Color.New(83/255, 83/255, 83/255, 110/255)
+        for i = 1, self.headPrefabTrans.childCount do
+            --UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+            self.headPrefabTrans:GetChild(i-1):GetChild(0):GetComponent("Image").color = Color.New(1, 1, 1, 110/255)
+        end
     end
 end
 

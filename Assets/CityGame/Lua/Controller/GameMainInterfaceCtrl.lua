@@ -537,6 +537,9 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
+        if not self.ChatWorldData then
+            self.ChatWorldData = {}
+        end
         if #self.ChatWorldData == 0 then
             self.ChatWorldData[1] = chatData
             self.worldChatDouble[1]:_ShowPrefab(false)

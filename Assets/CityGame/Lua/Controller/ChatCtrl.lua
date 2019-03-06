@@ -493,10 +493,11 @@ end
 
 -- 显示公会玩家
 function ChatCtrl:_showGuildPlayerItem(playerData)
+    ChatCtrl.guildMembersData = {}
     for _, v in ipairs(playerData) do
         v.b = ChatCtrl.guildMembersOnline[v.id]
+        table.insert(ChatCtrl.guildMembersData, v)
     end
-    ChatCtrl.guildMembersData = playerData
     ChatPanel.guildMemberScroll:ActiveLoopScroll(self.guildPlayerSource, #ChatCtrl.guildMembersData, "View/Chat/ChatFriendsItem")
 end
 

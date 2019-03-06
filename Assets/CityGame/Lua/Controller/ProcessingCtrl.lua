@@ -119,7 +119,7 @@ function ProcessingCtrl:Hide()
     end
 end
 --清空生产线
-function MaterialCtrl:deleteProductionObj()
+function ProcessingCtrl:deleteProductionObj()
     if next(HomeProductionLineItem.lineItemTable) == nil then
         return
     else
@@ -131,7 +131,7 @@ function MaterialCtrl:deleteProductionObj()
     end
 end
 --清空货架
-function MaterialCtrl:deleteShelfObj()
+function ProcessingCtrl:deleteShelfObj()
     if next(ShelfRateItem.SmallShelfRateItemTab) == nil then
         return
     else
@@ -142,7 +142,7 @@ function MaterialCtrl:deleteShelfObj()
     end
 end
 --清空货架（其他玩家看到的）
-function MaterialCtrl:deleteOtherShelf()
+function ProcessingCtrl:deleteOtherShelf()
     if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
         return
     end

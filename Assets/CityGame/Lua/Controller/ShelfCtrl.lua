@@ -35,10 +35,10 @@ function ShelfCtrl:Active()
     self:RefreshBuyButton()
 end
 function ShelfCtrl:_addListener()
-    Event.AddListener("ShelfSelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
 end
 function ShelfCtrl:_removeListener()
-    Event.RemoveListener("ShelfSelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
 end
 function ShelfCtrl:Refresh()
     self.luabehaviour = shelf
@@ -119,6 +119,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
     buyDataInfo.number = ins.GetDataTableNum(ins.tempItemList)
     buyDataInfo.freight = GetClientPriceString(ChooseWarehouseCtrl:GetPrice())
     buyDataInfo.goodsPrice = ins:GetTotalPrice()
+    buyDataInfo.total = GetClientPriceString(buyDataInfo.number * GetServerPriceNumber(buyDataInfo.freight)) + buyDataInfo.goodsPrice
     buyDataInfo.btnClick = function()
         if buyDataInfo.number == 0 then
             Event.Brocast("SmallPop",GetLanguage(27020004),300)
@@ -130,6 +131,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
             end
         end
     end
+    ct.OpenCtrl("TransportBoxCtrl",buyDataInfo)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据
@@ -142,11 +144,16 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
                 value.numberText.text = value.num - dataInfo.item.n
                 value.goodsDataInfo.n = tonumber(value.numberText.text)
                 value.num = tonumber(value.numberText.text)
+                local stateBool = true
+                self:GoodsItemState(self.shelfDatas,stateBool)
             end
         end
+        self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
     end
-    self.ShelfImgSetActive(self.shelfDatas,5,0)
-    Event.Brocast("SmallPop",GetLanguage(27010003),300)
+    ShelfPanel.nameText.text = ""
+    self.ShelfImgSetActive(self.shelfDatas,5,1)
+    self:RefreshBuyButton()
+    Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品

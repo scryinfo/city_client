@@ -71,7 +71,7 @@ end
 --删除
 function DetailsItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("WarehouseSelectedGoodsItem", ins)
+    Event.Brocast("SelectedGoodsItem", ins)
 end
 --刷新滑动条
 function DetailsItem:scrollbarInfo()

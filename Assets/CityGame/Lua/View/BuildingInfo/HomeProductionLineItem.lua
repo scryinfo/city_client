@@ -46,7 +46,8 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
 
     Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
     Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
-    Event.AddListener("materialDeleteLine",self.deleteLine,self)
+    Event.AddListener("DeleteLineRefresh",self.DeleteLineRefresh,self)
+    Event.AddListener("DeleteLine",self.DeleteLine,self)
 end
 
 --获取是第几次点击了
@@ -131,7 +132,18 @@ function HomeProductionLineItem.loadingItemPrefab(itemPrefab,itemRoot)
     return obj
 end
 --删除主页面生产线
-function HomeProductionLineItem:deleteLine(dataInfo)
+function HomeProductionLineItem:DeleteLine(ins)
+    local data = {}
+    data.titleInfo = GetLanguage(28010004)
+    data.contentInfo = GetLanguage(28010005)
+    --data.tipInfo = GetLanguage(28010006)
+    data.btnCallBack = function()
+        Event.Brocast("m_ReqMaterialDeleteLine",ins.buildingId,ins.lineId)
+    end
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--删除主页面生产线回调
+function HomeProductionLineItem:DeleteLineRefresh(dataInfo)
     for key,value in pairs(HomeProductionLineItem.lineItemTable) do
         if dataInfo.lineId == value.lineId then
             value:closeEvent()

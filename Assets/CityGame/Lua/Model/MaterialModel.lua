@@ -16,6 +16,7 @@ function MaterialModel:OnCreate()
     Event.AddListener("m_ReqMaterialAddLine",self.m_ReqAddLine,self)
     Event.AddListener("m_ReqMaterialDeleteLine",self.m_ReqDeleteLine,self)
     Event.AddListener("m_ReqMaterialBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
+    Event.AddListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -23,10 +24,10 @@ function MaterialModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfAdd","gs.ShelfAdd",self.n_OnShelfAddInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
     ----货架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoods)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     ----生产线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
@@ -78,6 +79,10 @@ end
 function MaterialModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
 end
+--销毁仓库原料或商品
+function MaterialModel:m_ReqDelItem(buildingId,id,producerId,qty)
+    self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
+end
 ---服务器回调---
 --打开原料厂
 function MaterialModel:n_OnOpenMaterial(stream)
@@ -119,70 +124,17 @@ function MaterialModel:n_OnAddLineInfo(data)
 end
 --删除生产线
 function MaterialModel:n_OnDeleteLineInfo(data)
-    Event.Brocast("materialDeleteLine",data)
+    Event.Brocast("DeleteLineRefresh",data)
 end
 --生产线变化推送
 function MaterialModel:n_OnLineChangeInform(data)
     Event.Brocast("c_refreshNowConte",data)
 end
-
-
-
---[[
-local pbl = pbl
-
-MaterialModel = {};
-local this = MaterialModel;
-
---构建函数
-function MaterialModel.New()
-    return this;
+--货架购买
+function MaterialModel:n_OnBuyShelfGoodsInfo(data)
+    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
-
-function MaterialModel.Awake()
-    this:OnCreate();
+--销毁仓库原料或商品
+function MaterialModel:n_OnDelItemInfo(data)
+    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'DestroyAfterRefresh',data)
 end
-
-function MaterialModel.OnCreate()
-
-    --注册本地UI事件
-    Event.AddListener("m_ReqOpenMaterial",this.m_ReqOpenMaterial)
-
-    MaterialModel.registerAsNetMsg()
-end
-
-function MaterialModel.registerAsNetMsg()
-    --网络回调注册
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","detailMaterialFactory"),MaterialModel.n_OnOpenMaterial);
-end
-
-function MaterialModel.Close()
-    --清空本地UI事件
-end
---客户端请求--
---打开原料厂
-function MaterialModel.m_ReqOpenMaterial(id)
-    local msgId = pbl.enum("gscode.OpCode","detailMaterialFactory")
-    local lMsg = {id = id}
-    local pMsg = assert(pbl.encode("gs.Id", lMsg))
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
-end
-
---网络回调--
---打开原料厂
-function MaterialModel.n_OnOpenMaterial(stream)
-    if stream == nil or stream == "" then
-        return;
-    end
-    local msgMaterial = assert(pbl.decode("gs.MaterialFactory",stream),"MaterialModel.n_OnOpenMaterial")
-    if msgMaterial then
-        MaterialModel.dataDetailsInfo = msgMaterial;
-        MaterialModel.buildingId = msgMaterial.info.id;
-        MaterialModel.materialWarehouse = msgMaterial.store.inHand;
-        MaterialModel.materialShelf = msgMaterial.shelf.good;
-        MaterialModel.materialProductionLine = msgMaterial.line;
-        MaterialModel.buildingCode = msgMaterial.info.mId;
-    end
-    Event.Brocast("refreshMaterialDataInfo",MaterialModel.dataDetailsInfo)
-end
-]]

@@ -87,7 +87,7 @@ end
 --勾选物品
 function ShelfGoodsItem:OnClick_bgBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("ShelfSelectedGoodsItem",ins);
+    Event.Brocast("SelectedGoodsItem",ins);
 end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)

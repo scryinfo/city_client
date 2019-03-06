@@ -5,6 +5,7 @@ local warehouse
 local switchRightPanel
 local itemStateBool
 local switchIsShow    --false 打开上架  true 打开运输
+local itemNumber  --用来记录销毁的数量
 ct.itemPrefab =
 {
     shelfItem  = 0,  --上架
@@ -46,12 +47,15 @@ function WarehouseCtrl:Active()
     self:RefreshConfirmButton()
 end
 function WarehouseCtrl:_addListener()
-    Event.AddListener("WarehouseSelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
 end
 function WarehouseCtrl:_removeListener()
-    Event.RemoveListener("WarehouseSelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
 end
 function WarehouseCtrl:Refresh()
+    itemNumber = nil
     self.luabehaviour = warehouse
     self.store = self.m_data.store
     self.buildingId = self.m_data.info.id
@@ -182,7 +186,7 @@ function WarehouseCtrl:OnClick_returnBtn(ins)
     UIPanel.ClosePage()
 end
 ----------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
---刷新仓库数据
+--上架或运输刷新仓库数据
 function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
     for key,value in pairs(self.warehouseDatas) do
         if value.itemId == dataInfo.item.key.id then
@@ -207,6 +211,24 @@ function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
     end
 end
+--销毁仓库原料或商品刷新
+function WarehouseCtrl:DestroyAfterRefresh(dataInfo)
+    for key,value in pairs(self.warehouseDatas) do
+        if value.itemId == dataInfo.item.id then
+            self:deleteGoodsItem(self.warehouseDatas,key)
+        end
+    end
+    local numTab = {}
+    numTab["num1"] = WarehousePanel.Warehouse_Slider.value - itemNumber
+    numTab["num2"] = self.lockedNum
+    numTab["num3"] = WarehousePanel.Warehouse_Slider.maxValue
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "white"
+    WarehousePanel.numberText.text = getColorString(numTab)
+    itemNumber = nil
+    Event.Brocast("SmallPop",GetLanguage(26030003),300)
+end
 ----------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------------
 --勾选商品
 function WarehouseCtrl:SelectedGoodsItem(ins)
@@ -223,6 +245,18 @@ function WarehouseCtrl:SelectedGoodsItem(ins)
         self:DestoryGoodsDetailsList(self.tempItemList,self.recordIdList,ins.id)
     end
     self:RefreshConfirmButton()
+end
+--销毁仓库原料或商品
+function WarehouseCtrl:DestroyWarehouseItem(ins)
+    itemNumber = ins.n
+    local data = {}
+    data.titleInfo = GetLanguage(30030001)
+    data.contentInfo = GetLanguage(35030004)
+    data.tipInfo = GetLanguage(30030002)
+    data.btnCallBack = function()
+        Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
+    end
+    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

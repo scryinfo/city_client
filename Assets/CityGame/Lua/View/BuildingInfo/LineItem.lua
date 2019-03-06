@@ -13,6 +13,7 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId)
     self.itemId = lineInfo.itemId
     self.lineId = lineInfo.id
     self.workerNum = lineInfo.workerNum
+    self.buildingId = buildingId
 
     self.itemGoodsbg = self.prefab.transform:Find("itembg/itemGoodsbg")
     self.itemMaterialbg = self.prefab.transform:Find("itembg/itemMaterialbg")
@@ -32,10 +33,11 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId)
     self.countdownText = prefab.transform:Find("countdownText"):GetComponent("Text")
 
     self:InitializeData()
-    LuaBehaviour:AddClick(self.deleteBtn.gameObject,function()
-        PlayMusEff(1002)
-        Event.Brocast("m_ReqMaterialDeleteLine",buildingId,self.lineId)
-    end)
+    --LuaBehaviour:AddClick(self.deleteBtn.gameObject,function(go)
+    --    PlayMusEff(1002)
+    --    Event.Brocast("DeleteLine",go)
+    --end)
+    LuaBehaviour:AddClick(self.deleteBtn.gameObject,self.OnClick_deleteBtn,self)
     Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
 end
 --生产线初始化
@@ -167,6 +169,11 @@ function LineItem:refreshNowConte(dataInfo)
             value.numberText.text = getColorString(number)
         end
     end
+end
+--删除生产线
+function LineItem:OnClick_deleteBtn(go)
+    PlayMusEff(1002)
+    Event.Brocast("DeleteLine",go)
 end
 --移除事件
 function LineItem:closeEvent()

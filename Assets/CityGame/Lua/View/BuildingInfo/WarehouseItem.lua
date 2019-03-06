@@ -81,13 +81,12 @@ end
 --勾选物品
 function WarehouseItem:OnClick_bgBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("WarehouseSelectedGoodsItem", ins)
+    Event.Brocast("SelectedGoodsItem", ins)
 end
 --删除
 function WarehouseItem:OnClick_closeBtn(go)
     PlayMusEff(1002)
-    Event.Brocast("deleteWarehouseItem",go)
-    --go.manager:_WarehousedeleteGoods(go.id);
+    Event.Brocast("DestroyWarehouseItem",go)
 end
 --删除后刷新ID及显示
 function WarehouseItem:RefreshID(id)

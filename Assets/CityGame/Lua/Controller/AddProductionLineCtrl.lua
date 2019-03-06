@@ -2,8 +2,8 @@ AddProductionLineCtrl = class('AddProductionLineCtrl',UIPanel)
 UIPanel:ResgisterOpen(AddProductionLineCtrl)
 
 function AddProductionLineCtrl:initialize()
-    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    --UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function AddProductionLineCtrl:bundleName()

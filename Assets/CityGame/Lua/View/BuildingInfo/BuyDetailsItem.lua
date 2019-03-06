@@ -54,7 +54,7 @@ end
 --删除
 function BuyDetailsItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("ShelfSelectedGoodsItem",ins);
+    Event.Brocast("SelectedGoodsItem",ins);
 end
 --刷新滑动条
 function BuyDetailsItem:scrollbarInfo()

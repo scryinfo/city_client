@@ -42,20 +42,11 @@ function ProcessingCtrl:initializeData()
         DataManager.OpenDetailModel(ProcessingModel,self.m_data.info.id)
         DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenProcessing',self.m_data.info.id)
     end
-    --if self.m_data then
-    --    DataManager.OpenDetailModel(ProcessingModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenProcessing',self.m_data.insId)
-    --end
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
-    --local companyName = DataManager.GetMyPersonalHomepageInfo()
     ProcessingPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    --ProcessingPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
-
-    --self.buildingId = DataInfo.info.id
-    --self.m_data = DataInfo
     local insId = self.m_data.insId
     self.m_data = DataInfo
     self.m_data.insId = insId
@@ -120,45 +111,44 @@ function ProcessingCtrl:OnClick_backBtn(ins)
 end
 function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
-    self:deleteProductionObj()
-    self:deleteShelfObj()
-    self:deleteOtherShelf()
-end
---退出时删除
-function ProcessingCtrl:deleteProductionObj()
-    if not HomeProductionLineItem.productionTab or HomeProductionLineItem.productionTab == {} then
-        return
-    else
-        for i,v in pairs(HomeProductionLineItem.productionTab) do
-            v:closeEvent()
-            destroy(v.prefab.gameObject);
-        end
-        HomeProductionLineItem.productionTab = {}
-    end
-end
---退出时删除主页货架
-function ProcessingCtrl:deleteShelfObj()
-    if not ShelfRateItem.shelfTab or ShelfRateItem.shelfTab == {} then
-        return
-    else
-        for i,v in pairs(ShelfRateItem.shelfTab) do
-            destroy(v.prefab.gameObject)
-        end
-        ShelfRateItem.shelfTab = {}
-    end
-end
---退出时删除购买货架
-function ProcessingCtrl:deleteOtherShelf()
     if self.m_data.isOther == true then
-        if not HomeOtherPlayerShelfItem.shelfTab or HomeOtherPlayerShelfItem.shelfTab == {} then
-            return
-        end
-        for i,v in pairs(HomeOtherPlayerShelfItem.shelfTab) do
-            destroy(v.prefab.gameObject)
-        end
-        HomeOtherPlayerShelfItem.shelfTab = {}
+        self:deleteOtherShelf()
     else
+        self:deleteProductionObj()
+        self:deleteShelfObj()
+    end
+end
+--清空生产线
+function MaterialCtrl:deleteProductionObj()
+    if next(HomeProductionLineItem.lineItemTable) == nil then
         return
+    else
+        for key,value in pairs(HomeProductionLineItem.lineItemTable) do
+            value:closeEvent()
+            destroy(value.prefab.gameObject);
+            HomeProductionLineItem.lineItemTable[key] = nil
+        end
+    end
+end
+--清空货架
+function MaterialCtrl:deleteShelfObj()
+    if next(ShelfRateItem.SmallShelfRateItemTab) == nil then
+        return
+    else
+        for key,value in pairs(ShelfRateItem.SmallShelfRateItemTab) do
+            destroy(value.prefab.gameObject)
+            ShelfRateItem.SmallShelfRateItemTab[key] = nil
+        end
+    end
+end
+--清空货架（其他玩家看到的）
+function MaterialCtrl:deleteOtherShelf()
+    if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
+        return
+    end
+    for key,value in pairs(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) do
+        destroy(value.prefab.gameObject)
+        HomeOtherPlayerShelfItem.SmallShelfRateItemTab[key] = nil
     end
 end
 --打开信息界面

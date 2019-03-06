@@ -240,6 +240,9 @@ end
 
 --todo 城市广播
 function GameMainInterfaceCtrl:c_OnRadioInfo(info)
+    --if info.type == 2 then
+    --    GameMainInterfacePanel.PlayersbreakNum.text =
+    --end
     local index
     if radio == nil then
         radio = {}
@@ -797,10 +800,12 @@ function GameMainInterfaceCtrl:BroadcastRadio(table,index)
         return
     end
     local type = table[index].type
-    if type == 1 then
-
+    if type == 2 then
+        GameMainInterfacePanel. Playersbreak.localScale =Vector3.one;
+    else
+        GameMainInterfacePanel. Playersbreak.localScale =Vector3.zero;
     end
-    LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, false)
+    LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
 end
 
 --todo 交易量

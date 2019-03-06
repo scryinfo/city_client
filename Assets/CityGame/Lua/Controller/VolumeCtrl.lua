@@ -82,6 +82,8 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
     volumeBehaviour:AddClick(VolumePanel.foodBtn,self.OnFoodBtn,self)
 
+    self.insId = OpenModelInsID.VolumeCtrl
+
     --滑动互用
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.supplyDemand.mProvideData = VolumeCtrl.static.SupplyDemandProvideData
@@ -97,12 +99,22 @@ function VolumeCtrl:Active()
 
 end
 
+function VolumeCtrl:Refresh()
+    --打开Model
+    self:initInsData()
+end
+
 function VolumeCtrl:Hide()
     UIPanel.Hide(self)
 end
 
 function VolumeCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
+end
+
+function VolumeCtrl:initInsData()
+    DataManager.OpenDetailModel(VolumeModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
 end
 
 --初始化

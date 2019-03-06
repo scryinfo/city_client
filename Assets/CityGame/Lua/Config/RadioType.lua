@@ -5,7 +5,7 @@
 ---广播类型
 RadioType = {
     [1] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/picture.png",
-    [2] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/jianzhu.png",
+    [2] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/Playersbreak.png",
     [3] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/bonuspools.png",
     [4] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/processing.png",
     [5] = "Assets/CityGame/Resources/Atlas/GameMainInterface/mainInterface/house.png",

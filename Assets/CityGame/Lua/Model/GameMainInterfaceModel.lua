@@ -31,7 +31,10 @@ end
 
 function GameMainInterfaceModel:Close()
     --清空本地UI事件
-
+    Event.RemoveListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
+    Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
+    Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+    Event.RemoveListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
 end
 --客户端请求--
 --获取所有邮件

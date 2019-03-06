@@ -95,4 +95,10 @@ function GameMainInterfacePanel.InitPanel()
     this.leftRadioBtn = transform:Find("RadioCity/leftBtn").gameObject;
     this.leftRadioBtns = transform:Find("RadioCity/leftBtns");
     this.rightRadio = transform:Find("RadioCity/bg/rightBtn").gameObject;
+
+    this.Playersbreak = transform:Find("RadioCity/bg/radioImage/Playersbreak");   --玩家突破
+    this.PlayersbreakNum = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerNum"):GetComponent("Text");   --玩家突破数量
+    this.PlayersbreakTime = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerTime"):GetComponent("Text");   --玩家突破时间
+    this.PlayersbreakConter = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerConter"):GetComponent("Text");   --玩家突破内容；
+
 end

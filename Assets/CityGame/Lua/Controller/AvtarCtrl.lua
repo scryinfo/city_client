@@ -80,6 +80,10 @@ function  AvtarCtrl:Awake(go)
 end
 
 ---==========================================================================================业务代码===================================================================================================
+local appearance={}
+local pastApperanceID={}
+local pool={}
+local sex
 --清空缓存
 function AvtarCtrl:ClearCasch()
     for sex, table in pairs(headPrefab) do
@@ -87,11 +91,13 @@ function AvtarCtrl:ClearCasch()
             destroy(v)
         end
     end
+    for key, pastApperance in pairs(pastApperanceID) do
+        UnLoadSprite(pastApperance.path)
+    end
+    currHead=nil
 end
 
-local appearance={}
-local pool={}
-local sex
+
 --临时对象池是做法
 local  function InsAndObjectPool(config,class,prefabPath,parent,this)
     if not pool[class] then
@@ -181,8 +187,8 @@ function AvtarCtrl:begin()
         sex=1
         self:randomChange()
         self:switchKinds(AvtarConfig.man[1].kinds)
-        --加载五官
     end
+    --加载五官
     InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
 
 end
@@ -208,7 +214,6 @@ function AvtarCtrl:randomChange()
 
 end
 
-local pastApperanceID={}
 
 function AvtarCtrl:changAparance(data)
     local arr,path,type,nums
@@ -236,9 +241,9 @@ function AvtarCtrl:changAparance(data)
                 end
             end
 
-            --for key, pastApperance in pairs(pastApperanceID) do
-            --    UnLoadSprite(pastApperance.path)
-            --end
+            for key, pastApperance in pairs(pastApperanceID) do
+                UnLoadSprite(pastApperance.path)
+            end
 
             currHead:SetActive(false)
         end
@@ -305,8 +310,6 @@ function AvtarCtrl:changAparance(data)
         LoadSprite(path,appearance[type].ima)
     end
 end
-
-
 
 
 function GetAvtar(faceId)

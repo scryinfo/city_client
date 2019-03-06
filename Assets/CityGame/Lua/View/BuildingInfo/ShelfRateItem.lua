@@ -30,10 +30,6 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
     --预制
     self.ShelfRateItemPrefab = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content/SmallShelfRateItem").gameObject
 
-    --mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
-    --    PlayMusEff(1002)
-    --    clickOpenFunc(mgrTable,self.toggleData)
-    --end);
     mainPanelLuaBehaviour:AddClick(self.toDoBtns.gameObject,function()
         PlayMusEff(1002)
         if not self.viewRect.gameObject.activeSelf then
@@ -43,7 +39,7 @@ function ShelfRateItem:initialize(shelfData, clickOpenFunc, viewRect, mainPanelL
             if self.shelfData.buildingType == BuildingType.MaterialFactory then
                 ct.OpenCtrl("ShelfCtrl",self.shelfData)
             elseif self.shelfData.buildingType == BuildingType.ProcessingFactory then
-                ct.OpenCtrl("ShelfCtrl",self.shelfData)
+                ct.OpenCtrl("ProcessShelfCtrl",self.shelfData)
             elseif self.shelfData.buildingType == BuildingType.RetailShop then
                 ct.OpenCtrl("RetailShelfCtrl",self.shelfData)
             end

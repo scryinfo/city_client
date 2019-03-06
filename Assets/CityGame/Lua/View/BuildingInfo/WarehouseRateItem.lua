@@ -32,7 +32,11 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
         end
         PlayMusEff(1002)
         if self.warehouseData.info.state == "OPERATE" then
-            ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+            if self.warehouseData.buildingType == BuildingType.MaterialFactory then
+                ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+            elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
+                ct.OpenCtrl("ProcessWarehouseCtrl",self.warehouseData)
+            end
         else
             Event.Brocast("SmallPop",GetLanguage(35040013),300)
             return

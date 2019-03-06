@@ -85,6 +85,19 @@ function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
         end
     end
 end
+--生成摘要item
+function MapBubbleManager._createSummaryItems(data)
+    local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapAllSearchItem)
+    obj.transform:SetParent(MapPanel.allSearchRoot.transform)
+    obj.transform.localPosition = Vector3.zero
+    local item = MapAllSearchItem:new({num = data.num, poolName = MapAllSearchItemName}, obj.transform)
+    local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
+    local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
+    local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
+    this.summaryItems[collectionId] = item
+    local pos = Vector2.New(tempPos.x, -tempPos.z) * this.itemWidth
+    item:setScaleAndPos(Vector3.one, pos, 0)
+end
 --获取正确的icon路径
 function MapBubbleManager._getBuildingIconPath(buildingType)
     local path
@@ -106,6 +119,29 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
         path = this.TempBuildingIconPath.Laboratory
     end
     return path
+end
+--
+function MapBubbleManager.createSummaryItems(data, summaryType)
+    if summaryType == EMapSearchType.Material or summaryType == EMapSearchType.Goods then
+
+    elseif summaryType == EMapSearchType.Deal then
+
+    end
+    if this.summaryItems ~= nil then
+        for i, value in pairs(this.summaryItems) do
+            value:close()
+        end
+    end
+    this.summaryItems = {}
+    for i, value in pairs(data.info) do
+        if value.num > 0 then
+        end
+        this._createSummaryItems(value)
+    end
+end
+--点击缩略item，进入详情
+function MapBubbleManager.summaryToDetail(pos)
+
 end
 --
 function MapBubbleManager.toggleShowDetailBuilding(show)

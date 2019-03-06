@@ -3,16 +3,14 @@
 --- Created by xuyafang.
 --- DateTime: 2019/2/27 18:13
 ---小地图建筑气泡
-MapBuildingItem = class('MapBuildingItem')
+MapBuildingItem = class('MapBuildingItem', MapBubbleBase)
 
 --初始化方法
-function MapBuildingItem:initialize(data, viewRect)
-    self.viewRect = viewRect:GetComponent("RectTransform")
-    self.data = data
-
+function MapBuildingItem:_childInit()
     self.btn = self.viewRect.transform:Find("selfRoot/btn"):GetComponent("Button")
     self.buildingIcon = self.viewRect.transform:Find("selfRoot/btn/buildingIcon"):GetComponent("Image")
-    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")  --镜头拉近时显示大小
+    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
+    self.scaleRoot = self.viewRect.transform:Find("selfRoot")
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -21,7 +19,6 @@ function MapBuildingItem:initialize(data, viewRect)
     if self.data.tempPath ~= "" then
         LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
     end
-    Event.AddListener("c_MapBubbleScale", self._changeScale, self)
 end
 
 --不同建筑的点击效果不同
@@ -36,47 +33,4 @@ function MapBuildingItem:_clickFunc()
     elseif self.data.buildingType == BuildingType.MaterialFactory then
 
     end
-end
---初始设置设置缩放比以及位置
-function MapBuildingItem:setScaleAndPos(scale, pos, sizeDelta)
-    if scale ~= nil then
-        self.viewRect.transform.localScale = scale
-    end
-    if pos ~= nil then
-        self.viewRect.anchoredPosition = pos
-    end
-    if sizeDelta ~= nil then
-        self.startDelta = sizeDelta
-        self.detailShowImg.rectTransform.sizeDelta = sizeDelta
-        self.detailShowImg.transform.localScale = scale
-        self.detailShowImg.enabled = false
-    end
-end
---
-function MapBuildingItem:_changeScale(mapScale)
-    if mapScale == 0 or self.viewRect == nil then
-        return
-    end
-    local scale = 1 / mapScale
-    self.viewRect.transform.localScale = Vector3.one * scale
-    self.detailShowImg.transform.localScale = Vector3.one * mapScale
-end
---设置显示建筑大小
-function MapBuildingItem:toggleShowDetailImg(show)
-    if self.detailShowImg == nil then
-        return
-    end
-    if show == true then
-        self.detailShowImg.enabled = true
-    else
-        self.detailShowImg.enabled = false
-    end
-end
---
-function MapBuildingItem:close()
-    if self.viewRect ~= nil then
-        MapBubbleManager.recyclingObjToPool(self.data.poolName, self.viewRect.gameObject)
-    end
-    self.data = nil
-    self = nil
 end

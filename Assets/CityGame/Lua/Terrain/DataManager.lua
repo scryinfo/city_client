@@ -265,6 +265,15 @@ function DataManager.GetGroundDataByID(blockID)
     end
 end
 
+--根据大地块获取建筑基础信息
+--如果没有BaseBuildDatas，返回nil
+function DataManager.GetBuildingBaseByCollectionID(collectionID)
+    if BuildDataStack ~= nil and collectionID ~= nil and BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas
+    else
+        return nil
+    end
+end
 
 -------------------------------------------------------------------------------------道路数据集合--------------------------------
 --功能

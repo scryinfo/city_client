@@ -203,6 +203,11 @@ function TerrainManager.GetCameraCollectionIDAOIList()
     return CalculationAOICollectionIDList(CameraCollectionID)
 end
 
+--获取当前的中心地块Id
+function TerrainManager.GetCameraCollectionID()
+    return CameraCollectionID
+end
+
 --向服务器发送新的所在地块ID
 function TerrainManager.SendMoveToServer(tempBlockID)
     local msgId = pbl.enum("gscode.OpCode", "move")

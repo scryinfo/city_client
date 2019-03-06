@@ -232,7 +232,7 @@ function MapCtrl:refreshDetailItem(item)
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
-
+            MapModel.m_ReqQueryMarketSummary(item:getItemId())
         else
             ct.log("")
         end
@@ -306,6 +306,22 @@ function MapCtrl:_openPageItems(type)
     end
 end
 
+---服务器回调
+
+--原料商品搜索摘要
+function MapCtrl:_receiveMarketSummary(data)
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Material)
+end
+--土地交易搜索摘要
+function MapCtrl:_receiveGroundTransSummary(data)
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Deal)
+end
+--原料商品搜索详情
+function MapCtrl:_receiveMarketDetail(data)
+    ct.log("")
+end
+
+---
 
 ---地图缩放部分
 --放大地图[over]

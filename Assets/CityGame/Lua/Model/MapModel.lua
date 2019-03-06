@@ -3,47 +3,59 @@
 --- Created by xuyafang.
 --- DateTime: 2019/3/5 15:26
 ---
-MapModel  = class('MapModel',ModelBase)
+MapModel = {}
 local pbl = pbl
 
-function MapModel:initialize(insId)
-    self.insId = insId
-    self:OnCreate()
-end
-
-
 --启动事件--
-function MapModel:OnCreate()
+function MapModel.registerNetMsg()
     --网络回调注册
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMarketSummary","gs.MarketSummary",self.n_OnReceiveHouseDetailInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundSummary","gs.GroundSummary",self.n_OnReceiveHouseRentChange)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMarketDetail","gs.MarketDetail",self.n_OnReceiveHouseSalaryChange)
-
-    --本地的回调注册
-    Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
-    Event.AddListener("m_ReqHouseSetSalary", self.m_ReqHouseSetSalary, self)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketSummary"), MapModel.n_OnReceiveQueryMarketSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
 end
 
 
 --- 客户端请求 ---
 --请求原料商品搜索摘要
-function MapModel:m_ReqQueryMarketSummary(itemId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketSummary","gs.Num",{ num = itemId})
+function MapModel.m_ReqQueryMarketSummary(itemId)
+    if itemId ~= nil then
+        DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketSummary","gs.Num",{ num = itemId})
+    end
 end
 --请求土地交易搜索摘要
-function MapModel:m_ReqGroundTransSummary()
+function MapModel.m_ReqGroundTransSummary()
     local msgId = pbl.enum("gscode.OpCode", "queryGroundSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
 --请求原料商品搜索详情
-function MapModel:m_ReqHouseSetSalary(gridIndexPos, itemId)
+function MapModel.m_ReqMarketDetail(gridIndexPos, itemId)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = itemId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketDetail","gs.QueryMarketDetail", data)
 end
 
 --- 回调 ---
 --原料商品搜索摘要
-function MapModel:n_OnReceiveQueryMarketSummary(data)
-    DataManager.ControllerRpcNoRet(nil,"MapCtrl", '_receiveHouseDetailInfo', data)
+function MapModel.n_OnReceiveQueryMarketSummary(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.MarketSummary", stream), "MapModel.n_OnReceiveQueryMarketSummary: stream == nil")
+    MapCtrl._receiveMarketSummary(MapCtrl, data)
+end
+--土地交易搜索摘要
+function MapModel.n_OnReceiveGroundTransSummary(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.GroundSummary", stream), "MapModel.n_OnReceiveGroundTransSummary: stream == nil")
+    MapCtrl._receiveGroundTransSummary(MapCtrl, data)
+end
+--原料商品搜索详情
+function MapModel.n_OnReceiveQueryMarketDetail(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.MarketDetail", stream), "MapModel.n_OnReceiveQueryMarketDetail: stream == nil")
+    MapCtrl._receiveMarketDetail(MapCtrl, data)
 end

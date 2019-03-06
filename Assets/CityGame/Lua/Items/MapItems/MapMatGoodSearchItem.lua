@@ -58,7 +58,7 @@ function MapMatGoodSearchItem:getTypeId()
     return self.data.mapSearchType
 end
 function MapMatGoodSearchItem:getItemId()
-    return self.data.mapItemId
+    return self.data.itemId
 end
 function MapMatGoodSearchItem:getNameStr()
     return "wait"

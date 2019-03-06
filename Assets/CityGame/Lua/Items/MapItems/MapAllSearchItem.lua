@@ -3,16 +3,14 @@
 --- Created by xuyafang.
 --- DateTime: 2019/2/27 18:13
 ---小地图全局搜索结果
-MapAllSearchItem = class('MapAllSearchItem')
+MapAllSearchItem = class('MapAllSearchItem', MapBubbleBase)
 
 --初始化方法
-function MapAllSearchItem:initialize(data, selectFunc, viewRect)
-    self.viewRect = viewRect:GetComponent("RectTransform")
-    self.data = data
-    self.selectFunc = selectFunc
-
+function MapAllSearchItem:_childInit()
+    self.scaleRoot = self.viewRect.transform:Find("btn")
     self.btn = self.viewRect.transform:Find("btn"):GetComponent("Button")
     self.countText = self.viewRect.transform:Find("btn/Text"):GetComponent("Text")
+    self.countText.text = self.data.num
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -25,14 +23,4 @@ function MapAllSearchItem:_clickFunc()
         return
     end
 
-end
-
---设置缩放比以及位置
-function MapAllSearchItem:setScaleAndPos(scale, pos)
-    if scale ~= nil then
-        self.viewRect.transform.localScale = scale
-    end
-    if pos ~= nil then
-        self.viewRect.anchoredPosition = pos
-    end
 end

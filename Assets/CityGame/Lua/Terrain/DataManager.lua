@@ -1329,19 +1329,24 @@ function DataManager.SetGuildMemberIdentity(playerId, identity)
     PersonDataStack.guildManager:SetGuildMemberIdentity(playerId, identity)
 end
 
--- 改名字返回
+-- 设置名字
 function DataManager.SetGuildSocietyName(bytesStrings)
     PersonDataStack.guildManager:SetGuildSocietyName(bytesStrings)
 end
 
--- 改介绍返回
+-- 设置介绍
 function DataManager.SetGuildIntroduction(bytesStrings)
     PersonDataStack.guildManager:SetGuildIntroduction(bytesStrings)
 end
 
--- 改宣言返回
+-- 设置宣言
 function DataManager.SetGuildDeclaration(bytesStrings)
     PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+
+-- 获得公会成员
+function DataManager.GetGuildMembers()
+    return PersonDataStack.guildManager:GetGuildMembers()
 end
 ---------------------------------
 --获取自己所有的建筑详情

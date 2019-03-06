@@ -43,6 +43,13 @@ function ChatPanel.InitPanel()
     this.strangersOpenText  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Open/Text"):GetComponent("Text")
     this.strangersCloseText  = transform:Find("LeftRoot/TopRoot/StrangersToggle/Close/Text"):GetComponent("Text")
 
+    -- 公会分页
+    this.guildToggle = transform:Find("LeftRoot/TopRoot/GuildToggle"):GetComponent("Toggle")
+    this.guildOpen  = transform:Find("LeftRoot/TopRoot/GuildToggle/Open").gameObject
+    this.guildClose  = transform:Find("LeftRoot/TopRoot/GuildToggle/Close").gameObject
+    this.guildOpenText  = transform:Find("LeftRoot/TopRoot/GuildToggle/Open/Text"):GetComponent("Text")
+    this.guildCloseText  = transform:Find("LeftRoot/TopRoot/GuildToggle/Close/Text"):GetComponent("Text")
+
     -- 好友、陌生人红点
     this.friendsNoticeImage = transform:Find("LeftRoot/TopRoot/FriendsToggle/NoticeImage").gameObject
     this.strangersNoticeImage = transform:Find("LeftRoot/TopRoot/StrangersToggle/NoticeImage").gameObject
@@ -51,6 +58,7 @@ function ChatPanel.InitPanel()
     this.worldRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot").gameObject
     this.friendsRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot").gameObject
     this.strangersRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot").gameObject
+    this.guildRoot = transform:Find("LeftRoot/MiddleRoot/GuildRoot").gameObject
     this.expressionRoot = transform:Find("LeftRoot/ExpressionRoot").gameObject
 
     -- 表情显示、按钮、返回
@@ -93,6 +101,15 @@ function ChatPanel.InitPanel()
     this.strangersContent = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/Viewport/Content")
     this.strangersVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
+    -- 公会列表节点、个数
+    this.guildMemberScroll = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
+    this.guildMemberNum = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/GuildNum"):GetComponent("Text")
+
+    -- 公会聊天节点、滑动条
+    this.guildScrollView = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
+    this.guildContent = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View/Viewport/Content")
+    this.guildVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
+
     -- 玩家个人信息和公司信息显示按钮
     this.showPersonalInfoBtn = transform:Find("PlayerInfoRoot/ShowPersonalInfoBtn").gameObject
     this.showCompanyBtn = transform:Find("PlayerInfoRoot/ShowCompanyBtn").gameObject
@@ -124,4 +141,6 @@ function ChatPanel.InitPanel()
     this.strangersNoContentText = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
     this.strangersChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/NoContentRoot").gameObject
     this.strangersChatNoContentText = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/NoContentRoot/Bg/Text"):GetComponent("Text")
+    this.guildNoContentRoot = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/NoContentRoot").gameObject
+    this.guildNoContentText = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/NoContentRoot/Bg/Text"):GetComponent("Text")
 end

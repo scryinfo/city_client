@@ -35,6 +35,7 @@ function ChatMgr:initData()
     --self.isShowChatInfo = false
     self.chatRecordsItemTab = {} -- 保存聊天记录的Item们
     self.chatRecordsTimeItemTab = {} -- 保存聊天记录的时间Item们
+    self.guildItem = {} -- 公会聊天Item
 end
 
 -- 设置活动滑动条
@@ -45,6 +46,8 @@ function ChatMgr:SetRootScrollbar(scrollbar)
         self.rootScrollbar = ChatPanel.friendsVerticalScrollbar
     elseif scrollbar == 3 then
         self.rootScrollbar = ChatPanel.strangersVerticalScrollbar
+    elseif scrollbar == 4 then
+        self.rootScrollbar = ChatPanel.guildVerticalScrollbar
     end
 end
 
@@ -230,6 +233,14 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatRightItem = ChatRightItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatRightItem)
             DataManager.SetMyReadChatInfo(3, chatData.channelId)
+        elseif chatData.channel == "GROUP" then -- 代表世界频道
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.guildContent)
+            local chatRightItem = ChatRightItem:new(#self.guildItem + 1, prefab, chatData)
+            table.insert(self.guildItem, chatRightItem)
+            if #self.guildItem > ChatCtrl.WORLD_SHOW_NUM then
+                UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
+                table.remove(self.guildItem, 1)
+            end
         end
     else
         if chatData.channel == "WORLD" then -- 代表世界频道
@@ -272,6 +283,14 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatLeftItem = ChatLeftItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatLeftItem)
             DataManager.SetMyReadChatInfo(3, chatData.id)
+        elseif chatData.channel == "GROUP" then -- 代表世界频道
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.worldContent)
+            local chatLeftItem = ChatLeftItem:new(#self.guildItem + 1, prefab, chatData)
+            table.insert(self.guildItem, chatLeftItem)
+            if #self.guildItem > ChatCtrl.WORLD_SHOW_NUM then
+                UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
+                table.remove(self.guildItem, 1)
+            end
         end
     end
 end

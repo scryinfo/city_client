@@ -295,22 +295,12 @@ function BuildingInfoToggleGroupMgr:_creatMaterialInfo()
 end
 --创建加工厂主页左右信息
 function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
-    --分为左侧和右侧的item，如果是左边，creatItemObj返回的第二个参数是currentLeftPos，否则为currentRightPos
-    --如果是第一个，则必须为打开状态，creatItemObj方法传的最后一个参数为TOTAL_H，否则为TOP_H
-
-    -----营业额折线图Item --左边第一个
+    --营业额折线图Item  --左1
     local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
     self.leftData[1] = self:_createLineChart(lineToggleData)
 
     if self.toggleData.isOther then
         --其他玩家进入
-        --货架 --右边第一个
-        --local otherShelfViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.Material_SHELF_OTHER, self.rightRect)
-        --otherShelfViewRect.gameObject.name = "HomeOtherPlayerShelfItem";
-        --local otherShelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        --local otherShelfLuaItem = HomeOtherPlayerShelfItem:new(self.toggleData, self._clickItemFunc, otherShelfViewRect, self.mainPanelLuaBehaviour, otherShelfToggleData, self)
-        --self.rightData[1] = otherShelfLuaItem
-
         if self.otherShelfRateItem then
             self.otherShelfView.gameObject:SetActive(true)
         end
@@ -369,13 +359,13 @@ function BuildingInfoToggleGroupMgr:_creatProcessingInfo()
         local warehouseToggleData = {pos = BuildingInfoTogglePos.Left, index = 3}   --处于toggleMgr的位置
         self.leftData[3] = self:creatRefreshWarehouse(warehouseToggleData)
 
-        --货架 左4
-        local shelfToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}  --处于toggleMgr的位置
-        self.leftData[4] = self:creatRefreshShelf(shelfToggleData)
+        --货架 右1
+        local shelfToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
+        self.rightData[1] = self:creatRefreshShelf(shelfToggleData)
 
-        --生产线 --右1
-        local productionToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
-        self.rightData[1] = self:creatRefreshProductionLine(productionToggleData)
+        --生产线 --左4
+        local productionToggleData = { pos = BuildingInfoTogglePos.Left, index = 4}
+        self.leftData[4] = self:creatRefreshProductionLine(productionToggleData)
     end
 end
 --创建零售店左右信息

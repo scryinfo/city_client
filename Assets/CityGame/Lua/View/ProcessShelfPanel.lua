@@ -1,16 +1,16 @@
 local transform;
 local gameObject;
 
-ShelfPanel = {};
-local this = ShelfPanel;
+ProcessShelfPanel = {};
+local this = ProcessShelfPanel;
 
-function ShelfPanel.Awake(obj)
+function ProcessShelfPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
 
     this.InitPanel();
 end
-function ShelfPanel.InitPanel()
+function ProcessShelfPanel.InitPanel()
     --Button --Text
     this.search_Btn = transform:Find("search_Btn").gameObject;  --搜索按钮
     this.return_Btn = transform:Find("return_Btn").gameObject;  --返回按钮
@@ -42,6 +42,6 @@ function ShelfPanel.InitPanel()
     this.ShelfGoodsItem = transform:Find("Scroll View/Viewport/Content/ShelfGoodsItem").gameObject
     this.BuyDetailsItem = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content/BuyDetailsItem").gameObject
 end
-function ShelfPanel.OnDestroy()
+function ProcessShelfPanel.OnDestroy()
 
 end

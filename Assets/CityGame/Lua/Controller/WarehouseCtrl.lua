@@ -145,10 +145,14 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         end
     end
     --后边要改成如果上架的商品中有一个不匹配的，则全部都不能上架
-    noMatch = {}
-    --if next(noMatch) ~= nil then
-    --    --打印上架不成功的itemId
-    --end
+    if next(noMatch) ~= nil then
+        --打印上架不成功的itemId
+        local noMatchStr = GetLanguage(noMatch[1])
+        for i = 2, #noMatch do
+            noMatchStr = noMatchStr..","..GetLanguage(noMatch[i])
+        end
+        Event.Brocast("SmallPop",noMatchStr,400)
+    end
 end
 --运输确认
 function WarehouseCtrl:OnClick_transportConfirmBtn(ins)
@@ -327,6 +331,7 @@ function WarehouseCtrl:WhetherValidShelfOp(ins)
     if math.floor(ins.itemId / 100000) ~= materialKey then
         return false
     end
+
     return true
 end
 --检查架子上是否有这个商品

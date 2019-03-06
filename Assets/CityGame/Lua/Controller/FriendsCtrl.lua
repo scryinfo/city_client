@@ -77,7 +77,7 @@ end
 
 function FriendsCtrl:_addListener()
     -- 监听Model层网络回调
-    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
@@ -92,7 +92,7 @@ end
 
 function FriendsCtrl:_removeListener()
     -- 监听Model层网络回调
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
@@ -109,8 +109,9 @@ function FriendsCtrl:_refreshData()
         end
     end
     if friendsId[1] then
-        Event.Brocast("m_QueryPlayerInfo", friendsId)
+        --Event.Brocast("m_QueryPlayerInfo", friendsId)
         FriendsPanel.friendsNumberText.text = #friendsId
+        PlayerInfoManger.GetInfos(friendsId, self.c_OnReceivePlayerInfo, self)
         FriendsPanel.friendsNoContentRoot:SetActive(false)
         --FriendsPanel.groupNumberText.text = "5"
     else
@@ -259,7 +260,7 @@ end
 
 -- 网络回调
 function FriendsCtrl:c_OnReceivePlayerInfo(friendsData)
-    for _, v in ipairs(friendsData.info) do
+    for _, v in ipairs(friendsData) do
         table.insert(FriendsCtrl.friendInfo, v)
     end
     self:_showFriends()

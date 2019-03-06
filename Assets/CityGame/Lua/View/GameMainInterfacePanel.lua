@@ -18,21 +18,32 @@ end
 function GameMainInterfacePanel.InitPanel()
 
     this.head = transform:Find("LeftUpPanel/head").gameObject --头像
-    this.headItem = transform:Find("LeftUpPanel/head/headItem"):GetComponent("Image") --头像
-    this.name = transform:Find("LeftUpPanel/name"):GetComponent("Text");
-    this.male = transform:Find("LeftUpPanel/name/male");
-    this.woman = transform:Find("LeftUpPanel/name/woman");
+    this.headItem = transform:Find("LeftUpPanel/head/headBg/headItem"):GetComponent("Image") --头像
+    this.name = transform:Find("LeftUpPanel/bg/name"):GetComponent("Text");
+    this.companyBtn = transform:Find("LeftUpPanel/bg/company").gameObject
+    this.company = transform:Find("LeftUpPanel/bg/company/companyText"):GetComponent("Text");
+    this.male = transform:Find("LeftUpPanel/bg/name/male");
+    this.woman = transform:Find("LeftUpPanel/bg/name/woman");
     this.money = transform:Find("LeftUpPanel/gold/money"):GetComponent("Text");
 
-    this.noticeButton = transform:Find("NoticeButton").gameObject;
-    this.noticeItem = transform:Find("NoticeButton/noticeItem"); --通知红点
-    this.friendsButton = transform:Find("FriendsButton").gameObject --好友
-    this.friendsNotice = transform:Find("FriendsButton/NoticeItem").gameObject --好友红点提示
-    this.setButton = transform:Find("SetButton").gameObject;
+    this.noticeButton = transform:Find("ChatBg/closeBg/notice").gameObject;
+    this.noticeItem = transform:Find("ChatBg/closeBg/notice/noticeItem"); --通知红点
+    this.friendsButton = transform:Find("ChatBg/closeBg/friends").gameObject --好友
+    this.friendsNotice = transform:Find("ChatBg/closeBg/friends/friendsItem").gameObject --好友红点提示
+    this.setButton = transform:Find("ChatBg/closeBg/setting").gameObject;
+    this.guideBool = transform:Find("ChatBg/closeBg/guide").gameObject; --指南书--
+    this.chat = transform:Find("ChatBg/chat").gameObject   --聊天
+    this.chatItem = transform:Find("ChatBg/chat/chatItem")   --聊天红点
+
+    this.openBtn = transform:Find("ChatBg/openBg/openBtn").gameObject    --打来隐藏图标
+    this.openBg = transform:Find("ChatBg/openBg")    --打来隐藏图标背景
+    this.closeBtn = transform:Find("ChatBg/closeBg/closeBtn").gameObject    --关闭隐藏图标
+    this.closeBg = transform:Find("ChatBg/closeBg")    --关闭隐藏图标背景
 
     this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
     this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
+    this.temperature = transform:Find("Info/temperatureText"):GetComponent("Text");   --温度
     this.weather = transform:Find("Info/weather"):GetComponent("Image");   --天气
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
@@ -41,17 +52,19 @@ function GameMainInterfacePanel.InitPanel()
     this.auctionTime =  transform:Find("AuctionButton/time").gameObject:GetComponent("Text");--拍卖时间--
 
 
-    this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
-    this.worldChatContent = transform:Find("WorldChatPanel/Content")--世界内容--
-    this.worldChatNoticeItem = transform:Find("WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
+    --this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
+    this.worldChatContent = transform:Find("ChatBg/chat/WorldChatPanel/Content")--世界内容--
+    --this.chatNoticeItem = transform:Find("ChatBg/chat/chatItem").gameObject--世界聊天红点提示--
     
     this.smallMap = transform:Find("DownCreatePanel/SmallMap").gameObject;--小地图--
-    this.guideBool = transform:Find("GuideBoolButton").gameObject; --指南书--
-    this.centerBuilding = transform:Find("CenterBuildingButton").gameObject; --中心建筑
+    this.centerBuilding = transform:Find("DownCreatePanel/CenterBuildingButton").gameObject; --中心建筑
+    this.league = transform:Find("DownCreatePanel/League").gameObject; --联盟
 
     -- todo 收益
-    this.open = transform:Find("EarningsPanel/open").gameObject; --打开收益详情
-    this.close = transform:Find("EarningsPanel/bg/close").gameObject; --关闭收益详情
+    this.open = transform:Find("LeftUpPanel/gold/open").gameObject; --打开收益详情
+    this.opens = transform:Find("LeftUpPanel/gold/opens").gameObject; --打开收益详情
+    this.closes = transform:Find("LeftUpPanel/gold/closes").gameObject; --关闭收益详情
+    this.close = transform:Find("LeftUpPanel/gold/close").gameObject; --关闭收益详情
     this.simpleEarning = transform:Find("EarningsPanel/simpleEarning").gameObject; --点击简易收益
     this.xBtn = transform:Find("EarningsPanel/bg/xBtn").gameObject; --删除简易收益
     this.timeEarning = transform:Find("EarningsPanel/bg/time").gameObject; --收益时间
@@ -70,4 +83,16 @@ function GameMainInterfacePanel.InitPanel()
     this.bg = transform:Find("EarningsPanel/bg"):GetComponent("RectTransform");    --收益详情背景
     this.noMessage = transform:Find("EarningsPanel/bg/noMessage");    --收益详情背景
     this.earningsPanelBg = transform:Find("EarningsPanelBg").gameObject;    --收益背景
+
+    --交易记录
+    this.volume = transform:Find("Volume").gameObject;    --交易记录
+    this.volumeText = transform:Find("Volume/volumeImage/volumeText"):GetComponent("Text");
+
+    --广播
+    this.leftRadio = transform:Find("RadioCity/left"):GetComponent("RectTransform");
+    this.radioImage = transform:Find("RadioCity/bg/radioImage"):GetComponent("Image");
+    this.bgRadio = transform:Find("RadioCity/bg");
+    this.leftRadioBtn = transform:Find("RadioCity/leftBtn").gameObject;
+    this.leftRadioBtns = transform:Find("RadioCity/leftBtns");
+    this.rightRadio = transform:Find("RadioCity/bg/rightBtn").gameObject;
 end

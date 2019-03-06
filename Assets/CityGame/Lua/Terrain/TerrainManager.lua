@@ -21,10 +21,25 @@ function TerrainManager.ReMove()
     Event.RemoveListener("CameraMoveTo",TerrainManager.Refresh)
 end
 
+--创建系统建筑的GameObject
+function TerrainManager.CreateSystemBuildingGameObjects(CollectionID)
+    local systemMapTemp = SystemMapConfig[CollectionID]
+    if systemMapTemp ~= nil then
+        for blockId, PlayerDataID in pairs(systemMapTemp) do
+            local go = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[PlayerDataID].poolName)
+            local BuildPosition = TerrainManager.BlockIDTurnPosition(blockId)
+            BuildPosition.y =  BuildPosition.y + 0.02
+            go.transform.position = BuildPosition
+            --go.transform:SetParent(TerrainManager.TerrainRoot)
+            DataManager.AddSystemBuild(CollectionID,blockId,PlayerBuildingBaseData[PlayerDataID].poolName,go)
+        end
+    end
+end
+
 local function BuildCreateSuccess( value , buildingID , BuildPosition)
     local go  = MapObjectsManager.GetGameObjectByPool(PlayerBuildingBaseData[value.buildingID].poolName)
     --add height
-    BuildPosition.y =  BuildPosition.y + 0.01
+    BuildPosition.y =  BuildPosition.y + 0.02
     go.transform.position = BuildPosition
     if TerrainManager.TerrainRoot == nil  then
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
@@ -60,9 +75,10 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
             BuildCreateSuccess(value,value.buildingID, Vector3.New(value.x,0,value.y))
         end
     end
+    --[[
     for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
         TerrainManager.IsIncludeCentralBuilding(value)
-    end
+    end--]]
     --刷新AOI内的数据
     if CameraCollectionID ~= nil and CameraCollectionID ~= -1 then
         local AOIList = TerrainManager.GetCameraCollectionIDAOIList()
@@ -161,8 +177,15 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     local oldCollectionList =  CalculationAOICollectionIDList(oldCollectionID)
     local newCollectionList =  CalculationAOICollectionIDList(newCollectionID)
     local willRemoveList = ComputingTheComplementSetOfBinA(oldCollectionList,newCollectionList)
+    --删除旧有的AOI地块
     for i, tempDeteleCollectionID in pairs(willRemoveList) do
         DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
+        DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
+    end
+    --初始化新newCollectionList
+    local willInitList = ComputingTheComplementSetOfBinA(newCollectionList,oldCollectionList)
+    for i, tempInitCollectionID in pairs(willInitList) do
+        DataManager.InitBuildDatas(tempInitCollectionID)
     end
 end
 
@@ -341,12 +364,12 @@ function TerrainManager.TouchBuild(MousePos)
     end
 end
 
+--[[  Old Version
 local CentralBuildingBlockList = nil
 local CentralBuildingObj = nil
 local CentralBuildingBlockID = nil
 local CentralBuildingCollectionID = nil
 
---
 local function CreateCenterBuildSuccess(go,...)
     CentralBuildingObj = go
     local CentralBuildingMes = TerrainConfig.CentralBuilding
@@ -354,7 +377,7 @@ local function CreateCenterBuildSuccess(go,...)
     local TargetPos =CentralBuildingMes.CenterNodePos
     TargetPos.y = TargetPos.y + 0.01
     CentralBuildingObj.transform.position = TargetPos
-    CentralBuildingObj.transform.localScale = Vector3.New(5/7,5/7,5/7)
+    CentralBuildingObj.transform.localScale = Vector3.New(1,1,1)
     CentralBuildingObj.name = "CentralBuilding"
     --写入覆盖范围
     CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
@@ -366,6 +389,7 @@ local function CreateCenterBuildSuccess(go,...)
         DataManager.RefreshWaysByCollectionID(value)
     end
 end
+
 
 --创建中心建筑
 function TerrainManager.CreateCenterBuilding()
@@ -398,6 +422,7 @@ function TerrainManager.IsIncludeCentralBuilding(CollectionID)
         DataManager.RefreshBlockDataWhenNodeChange(CentralBuildingBlockID,PlayerBuildingBaseData[BuildingType].x,BuildingType)
     end
 end
+--]]
 
 --移动到中心建筑位置
 function TerrainManager.MoveToCentralBuidingPosition()

@@ -17,7 +17,7 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     -- 头像
     self.headBtn = transform:Find("HeadBg").gameObject
     -- 头像图片
-    self.headImage = transform:Find("HeadBg/HeadImage"):GetComponent("Image")
+    self.headImage = transform:Find("HeadBg/HeadImage")
     -- 说话人的背景
     self.playerNameImage = transform:Find("PlayerNameImage"):GetComponent("RectTransform")
     -- 说话人的名字
@@ -48,12 +48,15 @@ function ChatLeftItem:initialize(itemId, prefab, data)
     if self.data.channel == "WORLD" then
         transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
         ChatCtrl.static.luaBehaviour:AddClick(self.headBtn, self.OnHeadClick, self)
-        LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
+        --LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
+        AvatarManger.GetSmallAvatar(self.data.image, self.headImage,0.2)
     else
         if self.data.id == DataManager.GetMyOwnerID() then
-            LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
+            --LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
+            AvatarManger.GetSmallAvatar(DataManager.GetFaceId(), self.headImage,0.2)
         else
-            LoadSprite(PlayerHead[ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id)].ChatPath, self.headImage, true)
+            --LoadSprite(PlayerHead[ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id)].ChatPath, self.headImage, true)
+            AvatarManger.GetSmallAvatar(ChatCtrl.static.chatMgr:GetPlayerFaceId(self.data.id), self.headImage,0.2)
         end
     end
 end
@@ -68,6 +71,6 @@ function ChatLeftItem:OnHeadClick(go)
         ChatCtrl.static.chatMgr:SetActivePlayerId(go.data.id)
     else -- 查询陌生人信息
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)
-        Event.Brocast("m_QueryPlayerInfoChat", {go.data.id})
+        Event.Brocast("c_OnQueryWorldPlayerInfo", {go.data.id})
     end
 end

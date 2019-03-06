@@ -19,7 +19,7 @@ function MapObjectsManager.Init()
         end
     end
     --初始化中心建筑
-    TerrainManager.CreateCenterBuilding()
+    --TerrainManager.CreateCenterBuilding()
 end
 
 --向某个对象池请求获取一个可用的GameObject

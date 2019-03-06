@@ -90,13 +90,15 @@ function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
         if self.ownerInfo ~= nil then
             GroundTransOthersCheckInfoPanel.ANameText.text = self.ownerInfo.name
             GroundTransOthersCheckInfoPanel.ACompanyText.text = self.ownerInfo.companyName
-            LoadSprite(PlayerHead[self.ownerInfo.faceId].GroundTransSmallPath, GroundTransOthersCheckInfoPanel.APortraitImg, true)
+            AvatarManger.GetSmallAvatar(self.ownerInfo.faceId, GroundTransOthersCheckInfoPanel.APortraitImg.transform,0.2)
+
         end
         --
         if self.renterInfo ~= nil then
             GroundTransOthersCheckInfoPanel.BNameText.text = self.renterInfo.name
             GroundTransOthersCheckInfoPanel.BCompanyText.text = self.renterInfo.companyName
-            LoadSprite(PlayerHead[self.renterInfo.faceId].GroundTransSmallPath, GroundTransOthersCheckInfoPanel.BPortraitImg, true)
+            AvatarManger.GetSmallAvatar(self.renterInfo.faceId, GroundTransOthersCheckInfoPanel.BPortraitImg.transform,0.2)
+
         end
     end
 end

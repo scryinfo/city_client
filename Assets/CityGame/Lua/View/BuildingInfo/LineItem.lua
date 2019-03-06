@@ -144,13 +144,13 @@ function LineItem:Update()
     end
     self.productionSlider.value = (nowTime /self.OneTotalTime) * self.productionSlider.maxValue
     self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value + 1) * 1000)
-    --if self.time <= 0 then
-    --    self.timeText.text = "00:00:00"
-    --    self.countdownText.text = "00:00"
-    --    self.productionSlider.value = 0
-    --    UpdateBeat:Remove(self.Update,self)
-    --    return
-    --end
+    if self.time <= 0 then
+        self.timeText.text = "00:00:00"
+        self.countdownText.text = "00:00"
+        self.productionSlider.value = 0
+        UpdateBeat:Remove(self.Update,self)
+        return
+    end
 end
 --刷新目前产量
 function LineItem:refreshNowConte(dataInfo)

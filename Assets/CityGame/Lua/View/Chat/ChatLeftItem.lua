@@ -71,6 +71,6 @@ function ChatLeftItem:OnHeadClick(go)
         ChatCtrl.static.chatMgr:SetActivePlayerId(go.data.id)
     else -- 查询陌生人信息
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)
-        Event.Brocast("m_QueryPlayerInfoChat", {go.data.id})
+        Event.Brocast("c_OnQueryWorldPlayerInfo", {go.data.id})
     end
 end

@@ -134,7 +134,7 @@ end
 
 function ChatCtrl:_addListener()
     -- 监听Model层网络回调
-    --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    Event.AddListener("c_OnQueryWorldPlayerInfo", self.c_OnQueryWorldPlayerInfo, self)
     Event.AddListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.AddListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
@@ -147,7 +147,7 @@ function ChatCtrl:Hide()
 end
 
 function ChatCtrl:_removeListener()
-    --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
+    Event.RemoveListener("c_OnQueryWorldPlayerInfo", self.c_OnQueryWorldPlayerInfo, self)
     Event.RemoveListener("c_OnReceiveRoleCommunication", self.c_OnReceiveRoleCommunication, self)
     Event.RemoveListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
@@ -581,7 +581,7 @@ end
 -- 查询玩家信息
 function ChatCtrl:c_OnReceivePlayerInfo(playerData)
     if ChatPanel.worldToggle.isOn then
-        playerData[1].company = "Scry"
+        --playerData[1].company = "Scry"
         ChatCtrl.static.chatMgr:ShowPlayerInfo(1, playerData[1])
     elseif ChatPanel.friendsToggle.isOn then
         ChatCtrl.friendInfo = {}
@@ -761,4 +761,9 @@ function ChatCtrl:c_OnReceiveRoleStatusChange(roleData)
 
         end
     end
+end
+
+-- 查询世界陌生人的消息
+function ChatCtrl:c_OnQueryWorldPlayerInfo(idTemp)
+    PlayerInfoManger.GetInfos(idTemp, self.c_OnReceivePlayerInfo, self)
 end

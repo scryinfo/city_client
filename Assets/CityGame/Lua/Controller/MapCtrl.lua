@@ -64,7 +64,7 @@ function MapCtrl:Awake(go)
     self.ScaleDuringTime = TerrainConfig.MiniMap.ScaleDuringTime
     self.MapLeftPageDuringTime = TerrainConfig.MiniMap.MapLeftPageDuringTime  --打开关闭左侧搜索界面的时间
 
-    self.criticalScaleValue = TerrainConfig.MiniMap.SceneMapSize / 40  --AOI临界值
+    self.criticalScaleValue = TerrainConfig.MiniMap.MapSize / 40  --AOI临界值
     self.itemWidth = MapPanel.mapRootRect.sizeDelta.x / TerrainConfig.MiniMap.MapSize   --一格Item的Rect大小
     MapBubbleManager.initMapSetting(self.itemWidth)
     MapBubbleManager.createSystemItem()
@@ -79,8 +79,6 @@ function MapCtrl:Active()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self:RefreshMiniMapScale()
-
-    MapBubbleManager.initItemData()
 end
 
 function MapCtrl:Refresh()
@@ -93,7 +91,7 @@ function MapCtrl:Refresh()
 end
 
 function MapCtrl:Hide()
-    UIPanel:Hide()
+    UIPanel.Hide(self)
     Event.RemoveListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
     Event.RemoveListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.RemoveListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
@@ -318,8 +316,10 @@ function MapCtrl:EnLargeMap()
             scale_value = self.ScaleMax
         end
         if self.my_Scale ~= scale_value then
-            if self.my_Scale >= self.criticalScaleValue then
+            if scale_value >= self.criticalScaleValue then
                 --到达AOI范围
+                MapBubbleManager.toggleShowDetailBuilding(true)
+                ct.log()
             end
 
             self:CenterOffset(self.my_Scale,scale_value)
@@ -337,8 +337,9 @@ function MapCtrl:NarrowMap()
             scale_value = self.ScaleMin
         end
         if self.my_Scale ~= scale_value then
-            if self.my_Scale < self.criticalScaleValue then
+            if scale_value < self.criticalScaleValue then
                 --离开AOI范围
+                MapBubbleManager.toggleShowDetailBuilding(false)
             end
 
             self:CenterOffset(self.my_Scale,scale_value)

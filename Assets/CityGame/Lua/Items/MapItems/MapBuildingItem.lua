@@ -12,13 +12,14 @@ function MapBuildingItem:initialize(data, viewRect)
 
     self.btn = self.viewRect.transform:Find("selfRoot/btn"):GetComponent("Button")
     self.buildingIcon = self.viewRect.transform:Find("selfRoot/btn/buildingIcon"):GetComponent("Image")
+    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")  --镜头拉近时显示大小
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
 
     if self.data.tempPath ~= "" then
-        --LoadSprite(self.data.tempPath, self.buildingIcon, true)  建筑icon
+        LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
     end
     Event.AddListener("c_MapBubbleScale", self._changeScale, self)
 end
@@ -36,13 +37,19 @@ function MapBuildingItem:_clickFunc()
 
     end
 end
---设置缩放比以及位置
-function MapBuildingItem:setScaleAndPos(scale, pos)
+--初始设置设置缩放比以及位置
+function MapBuildingItem:setScaleAndPos(scale, pos, sizeDelta)
     if scale ~= nil then
         self.viewRect.transform.localScale = scale
     end
     if pos ~= nil then
         self.viewRect.anchoredPosition = pos
+    end
+    if sizeDelta ~= nil then
+        self.startDelta = sizeDelta
+        self.detailShowImg.rectTransform.sizeDelta = sizeDelta
+        self.detailShowImg.transform.localScale = scale
+        self.detailShowImg.enabled = false
     end
 end
 --
@@ -52,6 +59,18 @@ function MapBuildingItem:_changeScale(mapScale)
     end
     local scale = 1 / mapScale
     self.viewRect.transform.localScale = Vector3.one * scale
+    self.detailShowImg.transform.localScale = Vector3.one * mapScale
+end
+--设置显示建筑大小
+function MapBuildingItem:toggleShowDetailImg(show)
+    if self.detailShowImg == nil then
+        return
+    end
+    if show == true then
+        self.detailShowImg.enabled = true
+    else
+        self.detailShowImg.enabled = false
+    end
 end
 --
 function MapBuildingItem:close()

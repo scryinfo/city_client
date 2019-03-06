@@ -13,19 +13,19 @@ local MapAllSearchItemName = "MapAllSearchItem"
 
 MapBubbleManager.TempBuildingIconPath =
 {
-    House = "",
-    MaterialFactory = "",
+    House = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    MaterialFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Material.png",
     Municipal = "",
     MunicipalManage = "",
-    ProcessingFactory = "",
+    ProcessingFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Fatory.png",
     Laboratory = "",
-    RetailShop = "",
+    RetailShop = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-SuperMarket.png",
     TalentCenter = "",
 }
 
-function MapBubbleManager.initMapSetting(itemWidth, itemDelta)
+function MapBubbleManager.initMapSetting(itemWidth)
     this.itemWidth = itemWidth
-    this.itemDelta = itemDelta
+    this.itemDelta = Vector2.New(itemWidth, itemWidth)
     this.selfBuildings = {}
 
     prefabPools[MapBuildingItemName] = LuaGameObjectPool:new(MapBuildingItemName, MapPanel.mapBuildingItem, 5, Vector3.New(-999,-999,-999))
@@ -39,7 +39,9 @@ function MapBubbleManager.createSystemItem()
     obj.transform:SetParent(MapPanel.alwaysShowRoot.transform)
     local item = MapSystemItem:new({tempPath = ""}, obj.transform)
     local pos = Vector2.New(TerrainConfig.CentralBuilding.CenterNodePos.z ,- TerrainConfig.CentralBuilding.CenterNodePos.x ) * this.itemWidth
-    item:setScaleAndPos(Vector3.one, pos)
+    local delta = this.itemDelta * PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x
+    item:setScaleAndPos(Vector3.one, pos, delta)
+    this.centerItem = item
 
     --local objRect = obj:GetComponent("RectTransform")
     --local rectPos =
@@ -47,7 +49,7 @@ function MapBubbleManager.createSystemItem()
     ----objRect.sizeDelta = this.itemDelta *  PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x
     --rectPos.y = - rectPos.y
 end
-
+--
 function MapBubbleManager.initItemData()
     --根据配置表生成建筑Items
     local MyBuild = DataManager.GetMyAllBuildingDetail()
@@ -68,7 +70,7 @@ function MapBubbleManager.initItemData()
         this._createBuildingItems(MyBuild.retailShop, BuildingType.RetailShop)
     end
 end
-
+--
 function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
     for key, value in pairs(itemDatas) do
         if value.info ~= nil and value.info.pos ~= nil and value.info.pos.x ~= nil and value.info.pos.y ~= nil and value.info.mId ~= nil and PlayerBuildingBaseData[value.info.mId] ~= nil and PlayerBuildingBaseData[value.info.mId].x ~= nil  then
@@ -78,7 +80,8 @@ function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
             local item = MapBuildingItem:new({tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
             this.selfBuildings[value.info.id] = item
             local pos = Vector2.New( value.info.pos.y, - value.info.pos.x) * this.itemWidth
-            item:setScaleAndPos(Vector3.one, pos)
+            local delta = this.itemDelta *  PlayerBuildingBaseData[value.info.mId].x
+            item:setScaleAndPos(Vector3.one, pos, delta)
         end
     end
 end
@@ -101,6 +104,21 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
         path = this.TempBuildingIconPath.RetailShop
     elseif buildingType == BuildingType.Laboratory then
         path = this.TempBuildingIconPath.Laboratory
+    end
+    return path
+end
+--
+function MapBubbleManager.toggleShowDetailBuilding(show)
+    if show == nil then
+        return
+    end
+    if this.centerItem ~= nil then
+        this.centerItem:toggleShowDetailImg(show)
+    end
+    if this.selfBuildings ~= nil then
+        for i, value in pairs(this.selfBuildings) do
+            value:toggleShowDetailImg(show)
+        end
     end
 end
 --回收

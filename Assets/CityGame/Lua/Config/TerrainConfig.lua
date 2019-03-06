@@ -17,13 +17,12 @@ TerrainConfig = {
     },
     ["MiniMap"] = {
         ["ScaleMin"] = 1,
-        ["ScaleMax"] = 16.8,
-        ["ScaleOffset"] = 4.2,
+        ["ScaleMax"] = 4.2,
+        ["ScaleOffset"] = 0.8,
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
         ["MapLeftPageDuringTime"] = 1,
         ["MapSize"] = 101,
-        ["SceneMapSize"] = 500,  --场景中的地图大小
     },
     ["LoadingConfig"] = {
         ["MinDurationTime"] = 3,

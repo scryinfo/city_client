@@ -52,9 +52,9 @@ function GameMainInterfacePanel.InitPanel()
     this.auctionTime =  transform:Find("AuctionButton/time").gameObject:GetComponent("Text");--拍卖时间--
 
 
-    this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
-    this.worldChatContent = transform:Find("WorldChatPanel/Content")--世界内容--
-    this.worldChatNoticeItem = transform:Find("WorldChatPanel/NoticeItem").gameObject--世界聊天红点提示--
+    --this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--
+    this.worldChatContent = transform:Find("ChatBg/chat/WorldChatPanel/Content")--世界内容--
+    --this.chatNoticeItem = transform:Find("ChatBg/chat/chatItem").gameObject--世界聊天红点提示--
     
     this.smallMap = transform:Find("DownCreatePanel/SmallMap").gameObject;--小地图--
     this.centerBuilding = transform:Find("DownCreatePanel/CenterBuildingButton").gameObject; --中心建筑

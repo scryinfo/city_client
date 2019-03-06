@@ -56,4 +56,5 @@ function Game.OnPostInitOK()
     TerrainManager.Init()
     --Avatar管理器
     AvatarManger.Awake()
+    PlayerInfoManger.Awake()
 end

@@ -15,9 +15,7 @@ function RetailShelfCtrl:Awake(go)
     retailShelf = self.gameObject:GetComponent('LuaBehaviour')
     retailShelf:AddClick(RetailShelfPanel.return_Btn.gameObject, self.OnClick_return_Btn, self)
 
-
     self.shelfDatas = {}  --货架上的数据
-
 end
 function RetailShelfCtrl:Active()
     UIPanel.Active(self)

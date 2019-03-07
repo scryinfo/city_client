@@ -61,11 +61,11 @@ function WarehouseRateItem:initData()
     local lockedNum = self:getLockedNum(self.warehouseData.store);
     local numTab = {}
     numTab["num1"] = self.sizeSlider.value
-    numTab["num2"] = self.sizeSlider.maxValue
-    numTab["num3"] = lockedNum
+    numTab["num2"] = lockedNum
+    numTab["num3"] = self.sizeSlider.maxValue
     numTab["col1"] = "Cyan"
-    numTab["col2"] = "Black"
-    numTab["col3"] = "Teal"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "Black"
     self.numberText.text = getColorString(numTab);
     self.openName.text = GetLanguage(25020003)
     self.closeName.text = GetLanguage(25020003)

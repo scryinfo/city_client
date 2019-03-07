@@ -81,8 +81,11 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.back,self.OnBack,self)
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
     volumeBehaviour:AddClick(VolumePanel.foodBtn,self.OnFoodBtn,self)
-
     self.insId = OpenModelInsID.VolumeCtrl
+
+    DataManager.OpenDetailModel(VolumeModel,self.insId )
+
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum') --每种商品购买的npc数量
 
     --滑动互用
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -96,7 +99,7 @@ end
 
 function VolumeCtrl:Active()
     UIPanel.Active(self)
-
+    Event.AddListener("c_NpcNum",self.c_NpcNum,self)
 end
 
 function VolumeCtrl:Refresh()
@@ -106,6 +109,7 @@ end
 
 function VolumeCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_NpcNum",self.c_NpcNum,self)
 end
 
 function VolumeCtrl:OnCreate(obj)
@@ -115,6 +119,25 @@ end
 function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
+end
+
+--NPC数量
+function VolumeCtrl:c_NpcNum(countNpc)
+   local adult = 0
+   local old = 0
+   local youth = 0
+    for i, v in pairs(countNpc) do
+        if v.key == 10 then
+            old = old + v.value
+        elseif v.key == 11 then
+            youth = youth + v.value
+        else
+            adult = adult + v.value
+        end
+    end
+    VolumePanel.adult.text = adult
+    VolumePanel.old.text = old
+    VolumePanel.youth.text = youth
 end
 
 --初始化

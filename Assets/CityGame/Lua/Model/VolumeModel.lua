@@ -14,7 +14,8 @@ end
 function VolumeModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","CitizenDemand","gs.CitizenDemand",self.n_OnGetNpcNum,self) --npc类型数量
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --npc类型数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","gs.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
 
 end
 
@@ -26,7 +27,7 @@ end
 --------------------客服端发包---------------------
 --获取每种类型npc数量
 function VolumeModel:m_GetNpcNum()
-    local msgId = pbl.enum("gscode.OpCode","CitizenDemand")
+    local msgId = pbl.enum("gscode.OpCode","eachTypeNpcNum")
     ----2、 填充 protobuf 内部协议数据
     --local msglogion = pb.as.Login()
     --msglogion.account = this.username
@@ -37,7 +38,17 @@ function VolumeModel:m_GetNpcNum()
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
+--每种商品购买的npc数量
+function VolumeModel:m_GoodsNpcNum()
+    local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNum")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
 -------------------服务器回调---------------------
 function VolumeModel:n_OnGetNpcNum(lMsg)
+    Event.Brocast("c_NpcNum",lMsg.countNpcMap)
+end
+
+function VolumeModel:n_OnGoodsNpcNum(lMsg)
     local a = lMsg
 end

@@ -1,11 +1,10 @@
 DetailsItem = class('DetailsItem')
 
 --初始化方法
-function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id)
+function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab
     self.goodsDataInfo = goodsDataInfo
     self._luabehaviour = inluabehaviour
-    self.manager = mgr
     self.id = id
     self.itemId = goodsDataInfo.key.id
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon"):GetComponent("Image")
@@ -72,7 +71,7 @@ end
 --删除
 function DetailsItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("c_temporaryifNotGoods", ins.id)
+    Event.Brocast("SelectedGoodsItem", ins)
 end
 --刷新滑动条
 function DetailsItem:scrollbarInfo()

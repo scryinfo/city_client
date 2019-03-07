@@ -282,7 +282,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.smallMap.gameObject,self.OnSmallMap,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.worldChatPanel,self.OnChat,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.chat,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.league,self.OnLeague,self); --联盟
@@ -343,6 +343,23 @@ function GameMainInterfaceCtrl:Awake()
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
 
+    -- 初始化两个世界聊天的item
+    self.worldChatDouble = {}
+    for a = 1, 2 do
+        panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
+            if obj ~= nil then
+                local go = ct.InstantiatePrefab(obj)
+                local rect = go.transform:GetComponent("RectTransform")
+                go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+                if a == 1 then
+                    rect.transform.localScale = Vector3.New(0.6,0.6,0.6)
+                else
+                    rect.transform.localScale = Vector3.one
+                end
+                self.worldChatDouble[a] = ChatWorldItem:new(go)
+            end
+        end)
+    end
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -520,44 +537,52 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
-        if GameMainInterfacePanel.worldChatContent.childCount >= 4 then
-            for i = 1, GameMainInterfacePanel.worldChatContent.childCount - 3 do
-                UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
-            end
+        if not self.ChatWorldData then
+            self.ChatWorldData = {}
         end
-
-        local prefab = UnityEngine.GameObject.Instantiate(UnityEngine.Resources.Load("View/Chat/ChatWorldItem"))
-        local rect = prefab.transform:GetComponent("RectTransform")
-        prefab.transform:SetParent(GameMainInterfacePanel.worldChatContent)
-        rect.transform.localScale = Vector3.one
-
-        local chatWorldItem = ChatWorldItem:new(prefab, chatData)
+        if #self.ChatWorldData == 0 then
+            self.ChatWorldData[1] = chatData
+            self.worldChatDouble[1]:_ShowPrefab(false)
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
+        elseif #self.ChatWorldData == 1 then
+            self.ChatWorldData[2] = chatData
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowPrefab(true)
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
+        elseif #self.ChatWorldData == 2 then
+            self.ChatWorldData[3] = chatData
+            table.remove(self.ChatWorldData, 1)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
+        end
     else
-        GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+        GameMainInterfacePanel.chatItem.localScale = Vector3.one
     end
 end
 
-function GameMainInterfaceCtrl._showWorldChatNoticeItem()
-    GameMainInterfacePanel.worldChatNoticeItem:SetActive(false)
+function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
+    GameMainInterfacePanel.chatItem.localScale = Vector3.zero
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
     local saveUnread = DataManager.GetUnread()
     for _, v in pairs(chatFriendsInfo) do
         if v.unreadNum and v.unreadNum > 0 then
-            GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+            GameMainInterfacePanel.localScale = Vector3.one
             return
         end
     end
     for _, m in pairs(chatStrangersInfo) do
         if m.unreadNum and m.unreadNum > 0 then
-            GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+            GameMainInterfacePanel.chatItem.localScale = Vector3.one
             return
         end
     end
     if saveUnread then
         for _, n in pairs(saveUnread) do
             if n and n[1] then
-                GameMainInterfacePanel.worldChatNoticeItem:SetActive(true)
+                GameMainInterfacePanel.chatItem.localScale = Vector3.one
                 return
             end
         end
@@ -566,19 +591,19 @@ function GameMainInterfaceCtrl._showWorldChatNoticeItem()
     local data = DataManager.GetMyChatInfo(1)
     local worldInfoAllNum = #data
     if worldInfoAllNum >=1 then
-        for i = 1, GameMainInterfacePanel.worldChatContent.childCount do
-            UnityEngine.GameObject.Destroy(GameMainInterfacePanel.worldChatContent:GetChild(i-1).gameObject)
-        end
-        for j = math.max(1, worldInfoAllNum - 3), worldInfoAllNum do
-            panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
-                if obj ~= nil then
-                    local go = ct.InstantiatePrefab(obj)
-                    local rect = go.transform:GetComponent("RectTransform")
-                    go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
-                    rect.transform.localScale = Vector3.one
-                    local chatWorldItem = ChatWorldItem:new(go, data[j])
-                end
-            end)
+        self.ChatWorldData = {}
+        if  worldInfoAllNum ==1 then
+            self.ChatWorldData[1] = data[1]
+            self.worldChatDouble[1]:_ShowPrefab(false)
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
+        else
+            self.ChatWorldData[1] = data[worldInfoAllNum - 1]
+            self.ChatWorldData[2] = data[worldInfoAllNum]
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowPrefab(true)
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
         end
     end
 end

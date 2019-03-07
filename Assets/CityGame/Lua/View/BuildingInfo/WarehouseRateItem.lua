@@ -1,6 +1,3 @@
-require('Controller/WarehouseCtrl')
-
-
 WarehouseRateItem = class('WarehouseRateItem');
 --WarehouseRateItem.static.TOTAL_H = 475  --整个Item的高度
 --WarehouseRateItem.static.CONTENT_H = 410  --显示内容的高度
@@ -34,7 +31,16 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
             return
         end
         PlayMusEff(1002)
-        ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+        if self.warehouseData.info.state == "OPERATE" then
+            if self.warehouseData.buildingType == BuildingType.MaterialFactory then
+                ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
+            elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
+                ct.OpenCtrl("ProcessWarehouseCtrl",self.warehouseData)
+            end
+        else
+            Event.Brocast("SmallPop",GetLanguage(35040013),300)
+            return
+        end
     end);
     self:initData()
 

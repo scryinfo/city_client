@@ -37,6 +37,7 @@ function MapPanel.InitPanel()
     this.groundAuctionRoot = transform:Find("centerRoot/typeParent/GroundAuctionRoot")  --拍卖气泡
     this.alwaysShowRoot = transform:Find("centerRoot/typeParent/AlwaysShowRoot")  --一直显示的界面，自己的建筑&系统建筑
     this.allSearchRoot = transform:Find("centerRoot/typeParent/AllSearchRoot")  --搜索总览
+    this.detailSearchRoot = transform:Find("centerRoot/typeParent/DetailSearchRoot")  --搜索详情
 
     --左侧搜索类型
     this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform")  --打开左侧搜索框的按钮

@@ -78,6 +78,7 @@ function MapCtrl:Active()
     --设置地图大小和Slider初始值
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
+    self.AOIState = 0  --设置为远镜头
     self:RefreshMiniMapScale()
 end
 
@@ -318,7 +319,7 @@ function MapCtrl:_receiveGroundTransSummary(data)
 end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
-    ct.log("")
+
 end
 
 ---
@@ -334,8 +335,10 @@ function MapCtrl:EnLargeMap()
         if self.my_Scale ~= scale_value then
             if scale_value >= self.criticalScaleValue then
                 --到达AOI范围
-                MapBubbleManager.toggleShowDetailBuilding(true)
-                ct.log()
+                if self.AOIState == 0 then
+                    MapBubbleManager.toggleShowDetailBuilding(true)
+                    self.AOIState = 1
+                end
             end
 
             self:CenterOffset(self.my_Scale,scale_value)
@@ -355,7 +358,10 @@ function MapCtrl:NarrowMap()
         if self.my_Scale ~= scale_value then
             if scale_value < self.criticalScaleValue then
                 --离开AOI范围
-                MapBubbleManager.toggleShowDetailBuilding(false)
+                if self.AOIState == 1 then
+                    MapBubbleManager.toggleShowDetailBuilding(false)
+                    self.AOIState = 0
+                end
             end
 
             self:CenterOffset(self.my_Scale,scale_value)
@@ -390,5 +396,12 @@ function MapCtrl:RefreshMiniMapScale()
     Event.Brocast("c_MapBubbleScale", self.my_Scale)
     --TODO:做中心偏移
     MapPanel.mapRootRect:DOScale(Vector3.New(self.my_Scale,self.my_Scale,self.my_Scale),self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
+end
+
+--获取屏幕中心基于小地图的世界坐标
+function MapCtrl:getScreenCenterMapPos()
+    local x = (MapPanel.mapRootRect.sizeDelta.x / 2 - MapPanel.mapRootRect.anchoredPosition.x / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.x)
+    local y = (MapPanel.mapRootRect.sizeDelta.y / 2 - MapPanel.mapRootRect.anchoredPosition.y / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.y)
+    return Vector3.New(x, 0, y)
 end
 ---

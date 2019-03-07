@@ -116,7 +116,7 @@ function AddProductionLineMgr:_showDetails(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId, itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
+        local tempData = {itemId = itemData.itemId,itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
             self:_setLineShow(itemId, rectPosition, enableShow)
         end}
         local item = AddGoodDetailItem:new(go.transform, tempData, self.detailToggleGroup)
@@ -155,7 +155,6 @@ function AddProductionLineMgr:_resetDetails()
         self.tempDetailItemId = nil
     end
 end
-
 --
 function AddProductionLineMgr:_update()
     if self.sideValue == AddLineTogglesSideValue.Left then

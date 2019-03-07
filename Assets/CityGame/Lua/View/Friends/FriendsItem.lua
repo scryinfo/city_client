@@ -18,7 +18,8 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.bgBtn = transform:Find("Bg").gameObject
     self.headBtn = transform:Find("HeadBtn").gameObject
     -- 好友头像
-    self.headImage = transform:Find("HeadBtn/HeadImage"):GetComponent("Image")
+    --self.headImage = transform:Find("HeadBtn/HeadImage"):GetComponent("Image")
+    self.headImage = transform:Find("HeadBtn/HeadImage")
     -- 好友名
     self.nameText = transform:Find("NameText"):GetComponent("Text")
     -- 好友所在公司名字
@@ -45,7 +46,11 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     -- 拒绝好友申请
     self.refuseBtn  = transform:Find("RefuseBtn").gameObject
 
-    LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.headImage, true)
+    --LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.headImage, true)
+    for i = 1, self.headImage.childCount do
+        UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+    end
+    AvatarManger.GetSmallAvatar(self.data.faceId, self.headImage,0.2)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     if self.data.des == nil or self.data.des == "" then

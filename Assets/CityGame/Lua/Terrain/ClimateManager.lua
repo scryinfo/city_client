@@ -7,7 +7,10 @@ local m_DayAndNightID = nil
 
 
 local function ChangeWeather()
+    local WeatherSetting = DayAndNightConfig[m_DayAndNightID]
+    if WeatherSetting ~= nil then
 
+    end
 end
 
 local function ChangeDayAndNight()

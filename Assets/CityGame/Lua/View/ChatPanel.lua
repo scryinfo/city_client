@@ -102,13 +102,15 @@ function ChatPanel.InitPanel()
     this.strangersVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/StrangersRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
 
     -- 公会列表节点、个数
-    this.guildMemberScroll = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
+    --this.guildMemberScroll = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
+    this.guildMemberContent = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/Scroll View/Content")
     this.guildMemberNum = transform:Find("LeftRoot/MiddleRoot/GuildRoot/LeftRoot/GuildNum"):GetComponent("Text")
 
-    -- 公会聊天节点、滑动条
+    -- 公会聊天节点、滑动条、删除公会聊天
     this.guildScrollView = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View"):GetComponent("ScrollRect")
     this.guildContent = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View/Viewport/Content")
     this.guildVerticalScrollbar = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View/VerticalScrollbar"):GetComponent("Scrollbar")
+    this.guildDeleteChatBtn = transform:Find("LeftRoot/MiddleRoot/GuildRoot/ChatRoot/Scroll View/DeleteChatBtn").gameObject
 
     -- 玩家个人信息和公司信息显示按钮
     this.showPersonalInfoBtn = transform:Find("PlayerInfoRoot/ShowPersonalInfoBtn").gameObject

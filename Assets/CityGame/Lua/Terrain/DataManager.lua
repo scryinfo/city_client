@@ -1262,6 +1262,11 @@ function DataManager.SetChatRecords(index)
     return PersonDataStack.socialityManager:SetChatRecords(index)
 end
 
+-- 清空公会的聊天消息
+function DataManager.SetGuildChatInfo()
+    return PersonDataStack.socialityManager:SetGuildChatInfo()
+end
+
 -- 获得公会ID
 function DataManager.GetGuildID()
     return PersonDataStack.m_societyId

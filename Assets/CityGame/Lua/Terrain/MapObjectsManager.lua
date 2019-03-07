@@ -67,12 +67,23 @@ function MapObjectsManager.RecyclingGameObjectToPool(poolName,go)
 end
 
 
-function MapObjectsManager.ChangeShader()
-    local tempColor = getColorByInt(math.random(0, 255),math.random(0, 255),math.random(0, 255),1)
+function MapObjectsManager.ChangeShader(ShaderSetting)
+    local temp_DiffuseColor = ShaderSetting._DiffuseColor
+    local temp_DayLightColor = ShaderSetting._DayLightColor
+    local temp_DayLightStrength = ShaderSetting._DayLightStrength
+    local temp_LightStrengh = ShaderSetting._LightStrengh
     for i, tempMaterial in pairs(AllMaterial) do
-        tempMaterial:SetColor("_DiffuseColor",tempColor)
-        tempMaterial:SetColor("_DayLightColor",tempColor)
-        tempMaterial:SetFloat("_DayLightStrength",1)
-        tempMaterial:SetFloat("_LightStrengh",1)
+        if temp_DiffuseColor ~= nil then
+            tempMaterial:SetColor("_DiffuseColor",temp_DiffuseColor)
+        end
+        if temp_DayLightColor ~= nil then
+            tempMaterial:SetColor("_DayLightColor",temp_DayLightColor)
+        end
+        if temp_DayLightStrength ~= nil then
+            tempMaterial:SetFloat("_DayLightStrength",temp_DayLightStrength)
+        end
+        if temp_LightStrengh ~= nil then
+            tempMaterial:SetFloat("_LightStrengh",temp_LightStrengh)
+        end
     end
 end

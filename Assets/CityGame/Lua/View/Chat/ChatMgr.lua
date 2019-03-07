@@ -284,7 +284,7 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             table.insert(self.strangersItem, chatLeftItem)
             DataManager.SetMyReadChatInfo(3, chatData.id)
         elseif chatData.channel == "GROUP" then -- 代表世界频道
-            local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.worldContent)
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.guildContent)
             local chatLeftItem = ChatLeftItem:new(#self.guildItem + 1, prefab, chatData)
             table.insert(self.guildItem, chatLeftItem)
             if #self.guildItem > ChatCtrl.WORLD_SHOW_NUM then

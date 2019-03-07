@@ -46,18 +46,18 @@ function LineItem:InitializeData()
     if math.floor(self.itemId / 100000) == materialKey then
         --生产一个需要的时间
         self.OneTotalTime = self:GetNumOneTime(Material[self.itemId].numOneSec,self.workerNum)
-        self.brandbg.localScale = Vector3.New(0,0,0)
-        self.brand.localScale = Vector3.New(0,0,0)
-        self.quality.localScale = Vector3.New(0,0,0)
-        self.itemGoodsbg.localScale = Vector3.New(0,0,0)
+        self.brandbg.localScale = Vector3.zero
+        self.brand.localScale = Vector3.zero
+        self.quality.localScale = Vector3.zero
+        self.itemGoodsbg.localScale = Vector3.zero
         LoadSprite(Material[self.itemId].img,self.icon,false)
     elseif math.floor(self.itemId / 100000) == goodsKey then
         --生产一个需要的时间
         self.OneTotalTime = self:GetNumOneTime(Good[self.itemId].numOneSec,self.workerNum)
-        self.brandbg.localScale = Vector3.New(0,0,0)
-        self.brand.localScale = Vector3.New(0,0,0)
-        self.quality.localScale = Vector3.New(0,0,0)
-        self.itemMaterialbg.localScale = Vector3.New(0,0,0)
+        self.brandbg.localScale = Vector3.zero
+        self.brand.localScale = Vector3.zero
+        self.quality.localScale = Vector3.zero
+        self.itemMaterialbg.localScale = Vector3.zero
         LoadSprite(Good[self.itemId].img,self.icon,false)
         ---self.brandValue =
         ---self.qualityValue =
@@ -71,7 +71,7 @@ function LineItem:InitializeData()
 
     self.brandName.text = GetLanguage(4301011)
     self.nameText.text = GetLanguage(self.itemId)
-    self.accreditIcon.localScale = Vector3.New(0,0,0)
+    self.accreditIcon.localScale = Vector3.zero
     local number = {}
     number["num1"] = self.lineInfo.nowCount
     number["num2"] = self.lineInfo.targetCount

@@ -174,7 +174,7 @@ function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(ins)
             return
         else
             for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_MaterialTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
+                Event.Brocast("m_ProcessTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
             end
         end
     end

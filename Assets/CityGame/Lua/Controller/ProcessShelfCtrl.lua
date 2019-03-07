@@ -59,7 +59,7 @@ end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
 --自己
 function ProcessShelfCtrl:MeInitializeData()
-    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.zero;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(true)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
@@ -68,7 +68,7 @@ function ProcessShelfCtrl:MeInitializeData()
 end
 --别人
 function ProcessShelfCtrl:OthersInitializeData()
-    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.one;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(false)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)

@@ -118,7 +118,7 @@ function RetailWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         --如果架子上是空的
         if not ins.m_data.shelf.good then
             if ins:WhetherValidShelfOp(value1) == true then
-                Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                Event.Brocast("m_ReqRetailShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
             else
                 noMatch[#noMatch + 1] = value1.itemId
             end
@@ -128,16 +128,16 @@ function RetailWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
                 --如果有这个东西，需要发送两个协议，修改和上架
                 if ins:WhetherValidShelfOp(value1) == true then
                     --修改协议
-                    Event.Brocast("m_ReqMaterialModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqRetailModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                     --上架协议
-                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqRetailShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
                 end
             else
                 if ins:WhetherValidShelfOp(value1) == true then
                     --发送上架协议
-                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqRetailShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
                 end
@@ -174,7 +174,7 @@ function RetailWarehouseCtrl:OnClick_transportConfirmBtn(ins)
             return
         else
             for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_MaterialTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
+                Event.Brocast("m_RetailTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
             end
         end
     end

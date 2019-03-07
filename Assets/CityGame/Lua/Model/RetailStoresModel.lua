@@ -66,6 +66,11 @@ end
 --打开零售店
 function RetailStoresModel:n_OnOpenRetailShop(stream)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshRetailShopDataInfo',stream)
+    if stream ~= nil then
+        if not self.funModel then
+            self.funModel = BuildingBaseModel:new(self.insId)
+        end
+    end
 end
 --运输
 function RetailStoresModel:n_OnBuildingTransportInfo(data)

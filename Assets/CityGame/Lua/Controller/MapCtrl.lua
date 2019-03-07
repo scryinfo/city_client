@@ -66,7 +66,7 @@ function MapCtrl:Awake(go)
 
     self.criticalScaleValue = TerrainConfig.MiniMap.MapSize / 40  --AOI临界值
     self.itemWidth = MapPanel.mapRootRect.sizeDelta.x / TerrainConfig.MiniMap.MapSize   --一格Item的Rect大小
-    MapBubbleManager.initMapSetting(self.itemWidth)
+    MapBubbleManager.initMapSetting(self.itemWidth, self)  --传一个实例
     MapBubbleManager.createSystemItem()
 
     self:_initUIData()
@@ -87,6 +87,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
+    Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
 
     MapBubbleManager.initItemData()
 end
@@ -97,6 +98,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapSearchSelectType", self.refreshTypeItems, self)
     Event.RemoveListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
     Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
+    Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
 
     self.m_Timer:Stop()
     self:_cancelDetailSelect()
@@ -201,6 +203,7 @@ function MapCtrl:refreshTypeItems(selectId)
             if value:getTypeId() == selectId then
                 value:refreshShow(true)
                 self.selectId = selectId
+                --self.selectDetailItem = nil  --另一种选中需要清除
 
                 self:toggleDetailPage(false)
             else
@@ -224,16 +227,19 @@ function MapCtrl:refreshDetailItem(item)
             self.selectDetailItem:resetState()
         end
 
+        --self.selectId = nil  --另一种选中需要清除
         self.selectDetailItem = item
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
-            --tempItem:setShowName(item:getNameStr())
-
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
-            MapModel.m_ReqQueryMarketSummary(item:getItemId())
+            if self:_getIsDetailFunc() == true then
+                self:_judgeDetail()
+            else
+                MapModel.m_ReqQueryMarketSummary(item:getItemId())
+            end
         else
             ct.log("")
         end
@@ -307,6 +313,19 @@ function MapCtrl:_openPageItems(type)
     end
 end
 
+---服务器请求
+function MapCtrl:_reqMarketDetail(blockId)
+    --AOI范围外
+    if self.my_Scale < self.criticalScaleValue then
+        return
+    end
+    --目前只有原料商品需要走协议，其他信息暂时都能通过AOI拿到
+    if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() ~= nil then
+        local centerId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
+        MapModel.m_ReqMarketDetail(centerId, self.selectDetailItem:getItemId())
+    end
+end
+
 ---服务器回调
 
 --原料商品搜索摘要
@@ -319,7 +338,15 @@ function MapCtrl:_receiveGroundTransSummary(data)
 end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
-
+    if data ~= nil then
+        if self.selectDetailItem == nil or self.selectDetailItem:getItemId() ~= data.itemId then
+            MapBubbleManager.createDetailItems(data, true)
+            return
+        end
+        if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() == data.itemId then
+            MapBubbleManager.createDetailItems(data, false)
+        end
+    end
 end
 
 ---
@@ -338,6 +365,7 @@ function MapCtrl:EnLargeMap()
                 if self.AOIState == 0 then
                     MapBubbleManager.toggleShowDetailBuilding(true)
                     self.AOIState = 1
+                    self:_judgeDetail()
                 end
             end
 
@@ -361,6 +389,7 @@ function MapCtrl:NarrowMap()
                 if self.AOIState == 1 then
                     MapBubbleManager.toggleShowDetailBuilding(false)
                     self.AOIState = 0
+                    --显示缩略
                 end
             end
 
@@ -402,6 +431,30 @@ end
 function MapCtrl:getScreenCenterMapPos()
     local x = (MapPanel.mapRootRect.sizeDelta.x / 2 - MapPanel.mapRootRect.anchoredPosition.x / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.x)
     local y = (MapPanel.mapRootRect.sizeDelta.y / 2 - MapPanel.mapRootRect.anchoredPosition.y / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.y)
-    return Vector3.New(x, 0, y)
+    return Vector3.New(-y, 0, -x)
+end
+--
+function MapCtrl:_mapAOIMove()
+    if self.my_Scale < self.criticalScaleValue then
+        return
+    end
+    local pos = self:getScreenCenterMapPos()
+    Event.Brocast("CameraMoveTo", pos)
+end
+--放大过程中判断是否需要请求详情
+function MapCtrl:_judgeDetail()
+    if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() ~= nil then
+        local collectionId = TerrainManager.GetCameraCollectionID()
+        local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
+        local blockCollectionId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
+        MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
+    end
+end
+--
+function MapCtrl:_getIsDetailFunc()
+    if self.my_Scale ~= nil and self.my_Scale > self.criticalScaleValue then
+        return true
+    end
+    return false
 end
 ---

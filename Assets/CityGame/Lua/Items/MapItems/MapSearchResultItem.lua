@@ -3,22 +3,48 @@
 --- Created by xuyafang.
 --- DateTime: 2019/2/27 18:13
 ---小地图搜索详情气泡
-MapSearchResultItem = class('MapSearchResultItem')
+MapSearchResultItem = class('MapSearchResultItem', MapBubbleBase)
 
 --初始化方法
-function MapSearchResultItem:initialize(data, selectFunc, viewRect)
-    self.viewRect = viewRect:GetComponent("RectTransform")
-    self.data = data
-    self.selectFunc = selectFunc
-
+function MapSearchResultItem:_childInit()
     self.btn = self.viewRect.transform:Find("btn"):GetComponent("Button")
     self.protaitImg = self.viewRect.transform:Find("btn/bg/protaitImg"):GetComponent("Image")
+    self.detailShowImg = self.viewRect.transform:Find("detailShowImg")
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
 
-    --LoadSprite(data.disSelectIconPath, self.protaitImg, true)
+    self:_setPos()
+end
+--计算位置
+function MapSearchResultItem:_setPos()
+    if self.data.detailData ~= nil and self.data.detailData.pos ~= nil then
+        local data = self.data.detailData
+
+        local blockID = TerrainManager.GridIndexTurnBlockID(data.pos)
+        local tempInfo = DataManager.GetBaseBuildDataByID(blockID)
+        if tempInfo ~= nil and tempInfo.Data ~= nil then
+            local buildingBase = {}
+            buildingBase.pos = data.pos
+            if tempInfo.Data["id"] ~= nil then
+                buildingBase.buildingId = tempInfo.Data["id"]
+            end
+            if tempInfo.Data["ownerId"] ~= nil then
+                buildingBase.ownerId = tempInfo.Data["ownerId"]
+            end
+            if tempInfo.Data["name"] ~= nil then
+                buildingBase.name = tempInfo.Data["name"]
+            end
+            if tempInfo.Data["mId"] ~= nil then
+                buildingBase.mId = tempInfo.Data["mId"]
+                local delta = self.data.itemDelta *  PlayerBuildingBaseData[buildingBase.mId].x
+                self.viewRect.sizeDelta = delta
+                self.viewRect.transform.localScale = Vector3.one
+            end
+            self.data.buildingBase = buildingBase
+        end
+    end
 end
 
 --buildingId
@@ -27,14 +53,4 @@ function MapSearchResultItem:_clickFunc()
         return
     end
 
-end
-
---设置缩放比以及位置
-function MapSearchResultItem:setScaleAndPos(scale, pos)
-    if scale ~= nil then
-        self.viewRect.transform.localScale = scale
-    end
-    if pos ~= nil then
-        self.viewRect.anchoredPosition = pos
-    end
 end

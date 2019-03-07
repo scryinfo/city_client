@@ -23,14 +23,20 @@ MapBubbleManager.TempBuildingIconPath =
     TalentCenter = "",
 }
 
-function MapBubbleManager.initMapSetting(itemWidth)
+function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
     this.itemWidth = itemWidth
     this.itemDelta = Vector2.New(itemWidth, itemWidth)
     this.selfBuildings = {}
+    this.mapCtrl = mapCtrl
 
+    --TODO:实例化改成从池里拿
     prefabPools[MapBuildingItemName] = LuaGameObjectPool:new(MapBuildingItemName, MapPanel.mapBuildingItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapSearchResultItemName] = LuaGameObjectPool:new(MapSearchResultItemName, MapPanel.mapSearchResultItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapAllSearchItemName] = LuaGameObjectPool:new(MapAllSearchItemName, MapPanel.mapAllSearchItem, 5, Vector3.New(-999,-999,-999))
+end
+--设置地块移动改变时，旧的id
+function MapBubbleManager.setOldAOICenterID(id)
+    this.oldCollectionID = id
 end
 
 --创建系统建筑，暂时只有中心建筑
@@ -91,12 +97,21 @@ function MapBubbleManager._createSummaryItems(data)
     obj.transform:SetParent(MapPanel.allSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
     local item = MapAllSearchItem:new({num = data.num, poolName = MapAllSearchItemName}, obj.transform)
+
     local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
     local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
     local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
     this.summaryItems[collectionId] = item
     local pos = Vector2.New(tempPos.x, -tempPos.z) * this.itemWidth
     item:setScaleAndPos(Vector3.one, pos, 0)
+end
+--生成详情Item
+function MapBubbleManager._createDetailItems(data)
+    local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapSearchResultItem)
+    obj.transform:SetParent(MapPanel.detailSearchRoot.transform)
+    obj.transform.localPosition = Vector3.zero
+    local item = MapSearchResultItem:new({detailData = data, itemWidth = this.itemWidth, poolName = MapSearchResultItemName}, obj.transform)
+    return item
 end
 --获取正确的icon路径
 function MapBubbleManager._getBuildingIconPath(buildingType)
@@ -130,19 +145,84 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
     if this.summaryItems ~= nil then
         for i, value in pairs(this.summaryItems) do
             value:close()
+            value = nil
         end
     end
     this.summaryItems = {}
     for i, value in pairs(data.info) do
         if value.num > 0 then
+            this._createSummaryItems(value)
         end
-        this._createSummaryItems(value)
     end
 end
 --点击缩略item，进入详情
 function MapBubbleManager.summaryToDetail(pos)
 
 end
+--搜索详情  --是否是全新的搜索数据
+function MapBubbleManager.createDetailItems(data, isNew)
+    if isNew then
+        this.cleanAllCollectionDetails()
+    else
+        this.cleanAOIWillRemoveDatas()
+    end
+
+    if this.collectionDetails == nil then
+        this.collectionDetails = {}
+    end
+    if data ~= nil then
+        for i, value in pairs(data.info) do
+            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+            if value.b ~= nil then
+                for i, building in pairs(value.b) do
+                    if building.sale ~= nil then
+                        local detailData = {buildingId = building.id, sale = building.sale}
+                        --this.collectionDetails[collectionId] = {}
+                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
+                        this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
+                    end
+                end
+            end
+        end
+    end
+end
+--清除所有搜索数据
+function MapBubbleManager.cleanAllCollectionDetails()
+    if this.collectionDetails ~= nil then
+        for i, value in pairs(this.collectionDetails) do
+            if value.detailItems ~= nil then
+                for i, item in pairs(value.detailItems) do
+                    item:close()
+                    item = nil
+                end
+                value.detailItems = nil
+            end
+            value = nil
+        end
+    end
+end
+--清除多余的地块
+function MapBubbleManager.cleanAOIWillRemoveDatas()
+    if this.oldCollectionID ~= nil then
+        local list = TerrainManager.GetAOIWillRemoveCollectionIDs(this.oldCollectionID)
+        if list ~= nil then
+            for i, value in pairs(list) do
+                local tempValue = this.collectionDetails[value]
+                if tempValue ~= nil then
+                    if tempValue.detailItems ~= nil then
+                        for i, item in pairs(tempValue.detailItems) do
+                            item:close()
+                            item = nil
+                        end
+                        tempValue.detailItems = nil
+                    end
+                    tempValue = nil
+                end
+            end
+        end
+    end
+end
+
 --
 function MapBubbleManager.toggleShowDetailBuilding(show)
     if show == nil then
@@ -170,5 +250,11 @@ function MapBubbleManager.cleanItems()
             value:close()
             value = nil
         end
+    end
+end
+--小地图移动
+function MapBubbleManager.MapMoveFunc()
+    if this.mapCtrl ~= nil then
+        this.mapCtrl:_mapAOIMove()
     end
 end

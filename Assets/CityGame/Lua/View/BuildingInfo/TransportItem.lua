@@ -1,13 +1,12 @@
 TransportItem = class('TransportItem')
 
 --初始化方法
-function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,itemId)
+function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour;
-    self.manager = mgr;
     self.id = id;
-    self.itemId = itemId;
+    self.itemId = goodsDataInfo.key.id;
     self.goodsIcon = self.prefab.transform:Find("goodsbg/goodsIcon"):GetComponent("Image");
     self.nameText = self.prefab.transform:Find("nameText"):GetComponent("Text");
     self.inputNumber = self.prefab.transform:Find("InputNumber"):GetComponent("InputField");
@@ -49,7 +48,7 @@ end
 --删除
 function TransportItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("c_temporaryifNotGoods",ins.id);
+    Event.Brocast("SelectedGoodsItem",ins);
 end
 --刷新滑动条
 function TransportItem:scrollbarInfo()

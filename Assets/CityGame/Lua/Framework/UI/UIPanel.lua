@@ -424,8 +424,15 @@ function UIPanel.BackToPageInstance(backtoPageClass,instanceData)
             if instanceData == nil then
                 isIns = false
             else
+                --[[
                 for key, value in pairs(instanceData) do
-                    if Node.pageData[key] ~= value then
+                    if Node.pageData[key] ~=nil and Node.pageData[key] ~= value then
+                        isIns = false
+                    end
+                end
+                --]]
+                for key, value in pairs(Node.pageData) do
+                    if instanceData[key] == nil or instanceData[key] ~= value then
                         isIns = false
                     end
                 end

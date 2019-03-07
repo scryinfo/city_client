@@ -4,7 +4,7 @@ require "Controller/LoginCtrl"
 --require "Controller/MaterialCtrl"
 require "Controller/WagesAdjustBoxCtrl"
 require "Controller/ProcessingCtrl"
-require "Controller/WarehouseCtrl"
+--require "Controller/WarehouseCtrl"
 require "Controller/TransportCtrl"
 require "Controller/TransportOrderCtrl"
 require "Controller/AddTransportCtrl"
@@ -14,7 +14,7 @@ require "Controller/CreateAvatarCtrl"
 require "Controller/GameWorldCtrl"
 require "Controller/PlayerHeadCtrl"
 require "Controller/TargetHeadCtrl"
-require "Controller/ShelfCtrl"
+--require "Controller/ShelfCtrl"
 
 require "Controller/ChooseWarehouseCtrl"
 require "Controller/TransportBoxCtrl"
@@ -37,7 +37,7 @@ require"Model/ManageAdvertisementPosModel"
 --require "Model/GameMainInterfaceModel"
 require "Model/ServerListModel"
 require "Model/CreateRoleModel"
-require "Model/MaterialModel"
+--require "Model/MaterialModel"
 require "Model/RetailStoresModel"
 require "Model/ProcessingModel"
 require "Model/ShelfModel"
@@ -95,21 +95,20 @@ function CtrlManager.Init()
 	--modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	--modelList[ModelNames.Material] = MaterialModel.New();
 	--modelList[ModelNames.Processing] = ProcessingModel.New();
-	modelList[ModelNames.Shelf] = ShelfModel.New();
+	--modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	--modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	--modelList[ModelNames.Municipal]=MunicipalModel.New();
-	modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
-	modelList[ModelNames.tempTransport] = tempTransportModel.New();
-	modelList[ModelNames.Warehouse] = WarehouseModel.New();
+	--modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
+	--modelList[ModelNames.tempTransport] = tempTransportModel.New();
+	--modelList[ModelNames.Warehouse] = WarehouseModel.New();
 
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();
 	modelList[ModelNames.ScienceSellHall]=ScienceSellHallModel.New();
 	--饼图测试
 	modelList[ModelNames.PieChart] = PieChart.New();
-	modelList[ModelNames.tempTransport] = tempTransportModel.New();
 	--modelList[ModelNames.friends] = FriendsModel.New();
 	--modelList[ModelNames.Chat] = ChatModel.New();
 	return this;

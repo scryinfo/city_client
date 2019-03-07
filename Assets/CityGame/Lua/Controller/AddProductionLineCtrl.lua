@@ -2,8 +2,8 @@ AddProductionLineCtrl = class('AddProductionLineCtrl',UIPanel)
 UIPanel:ResgisterOpen(AddProductionLineCtrl)
 
 function AddProductionLineCtrl:initialize()
-    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
+    --UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function AddProductionLineCtrl:bundleName()
@@ -40,47 +40,35 @@ function AddProductionLineCtrl:_addListener()
 end
 
 function AddProductionLineCtrl:_initData()
-    --这里要区分是生产左边还是右边，然后把确定按钮打开
     AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
+    local data = {}
+    AddProductionLineCtrl.static.buildingType = self.m_data.buildingType
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.one
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.zero
 
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
-            --self:Hide();
-
-            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-                if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop",GetLanguage(26020007),300)
-                    return
-                end
-            end
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.leftItemId,self.m_data.info.id)
-            UIPanel.ClosePage();
+            data.itemId = self.leftItemId
+            data.mId = self.m_data.info.mId
+            data.insId = self.m_data.info.id
+            data.buildingType = self.m_data.buildingType
+            ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
         AddProductionLinePanel.rightBtnParent.transform.localScale = Vector3.one
 
-        --加工厂确定生产按钮
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-            --self:Hide()
-            for i,v in pairs(AdjustProductionLineCtrl.materialProductionLine) do
-                if v.itemId == self.leftItemId then
-                    Event.Brocast("SmallPop",GetLanguage(26020008),300)
-                    return
-                end
-            end
-            GoodsUnifyMgr:_creatProductionLine(self.luabehaviour,self.rightItemId,self.m_data.info.id)
-            UIPanel.ClosePage();
+            data.itemId = self.leftItemId
+            data.insId = self.m_data.info.id
+            ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     end
     self:_changeAddLineData(AddLineButtonPosValue.Left)
 end
 
-----
 function AddProductionLineCtrl:_changeAddLineData(posValue, itemId)
     --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
     if posValue == AddLineButtonPosValue.Left then
@@ -103,11 +91,14 @@ end
 function AddProductionLineCtrl.GetItemState(itemId)
     local data = {}
     data.enableShow = true
+    if AddProductionLineCtrl.static.buildingType == BuildingType.MaterialFactory then
 
-    if not AddProductionLineCtrl.goodLv[itemId] then
-        data.enableShow = false
-    else
-        data.enableShow = true
+    elseif AddProductionLineCtrl.static.buildingType == BuildingType.ProcessingFactory then
+        if not AddProductionLineCtrl.goodLv[itemId] then
+            data.enableShow = false
+        else
+            data.enableShow = true
+        end
     end
     return data
 end

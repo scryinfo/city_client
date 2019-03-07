@@ -99,6 +99,20 @@ function GameMainInterfacePanel.InitPanel()
     this.Playersbreak = transform:Find("RadioCity/bg/radioImage/Playersbreak");   --玩家突破
     this.PlayersbreakNum = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerNum"):GetComponent("Text");   --玩家突破数量
     this.PlayersbreakTime = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerTime"):GetComponent("Text");   --玩家突破时间
-    this.PlayersbreakConter = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerConter"):GetComponent("Text");   --玩家突破内容；
+    this.PlayersbreakConter = transform:Find("RadioCity/bg/radioImage/Playersbreak/playerConter"):GetComponent("Text");   --玩家突破内容
+
+    this.Budilingsbreak = transform:Find("RadioCity/bg/radioImage/Budilingsbreak");   --建筑突破
+    this.budiligNum = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budiligNum"):GetComponent("Text");   --建筑突破数量
+    this.PlayersbreakTime = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingTime"):GetComponent("Text");   --建筑突破时间
+    this.PlayersbreakConter = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingConter"):GetComponent("Text");   --建筑突破内容
+
+    this.majorTransaction = transform:Find("RadioCity/bg/radioImage/majorTransaction");   --重大交易
+    this.mTNum = transform:Find("RadioCity/bg/radioImage/majorTransaction/number"):GetComponent("Text");   --重大交易金额
+    this.mTTime = transform:Find("RadioCity/bg/radioImage/majorTransaction/time"):GetComponent("Text");   --重大交易时间
+    this.mTSell = transform:Find("RadioCity/bg/radioImage/majorTransaction/sellName"):GetComponent("Text");   --重大交易卖家名字
+    this.mTBuy = transform:Find("RadioCity/bg/radioImage/majorTransaction/buyName"):GetComponent("Text");   --重大交易买家名字
+    this.mTgoods = transform:Find("RadioCity/bg/radioImage/majorTransaction/goods"):GetComponent("Image");  --重大交易商品
+    this.sellHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/sellHead"):GetComponent("Image");  --重大交易卖家头像
+    this.buyHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/buyHead"):GetComponent("Image");  --重大交易买家头像
 
 end

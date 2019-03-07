@@ -340,7 +340,7 @@ function GameMainInterfaceCtrl:Awake()
 
     radioTime = 0
     radioIndex = 1
-    radio = {{type = 1,ts = 1},{type = 2,ts = 11}}
+    radio = {{type = 1,ts = 1},{type = 3,ts = 11}}
 
     --初始化循环参数
     self.intTime = 1
@@ -825,17 +825,25 @@ function GameMainInterfaceCtrl:BroadcastRadio(table,index)
         return
     end
     local type = table[index].type
-    if type == 2 then
-        GameMainInterfacePanel. Playersbreak.localScale =Vector3.one;
-    else
+    if type == 1 then
+        GameMainInterfacePanel. majorTransaction.localScale =Vector3.one;
+        GameMainInterfacePanel. Budilingsbreak.localScale =Vector3.zero;
         GameMainInterfacePanel. Playersbreak.localScale =Vector3.zero;
+    elseif type == 3 then
+       GameMainInterfacePanel. Playersbreak.localScale =Vector3.one;
+       GameMainInterfacePanel. Budilingsbreak.localScale =Vector3.zero;
+       GameMainInterfacePanel. majorTransaction.localScale =Vector3.zero;
+    elseif type == 5 then
+       GameMainInterfacePanel. Budilingsbreak.localScale =Vector3.one;
+       GameMainInterfacePanel. majorTransaction.localScale =Vector3.zero;
+       GameMainInterfacePanel. Playersbreak.localScale =Vector3.zero;
     end
-    LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
-end
+       LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
+    end
 
---todo 交易量
-function GameMainInterfaceCtrl:OnVolume()
+    --todo 交易量
+    function GameMainInterfaceCtrl:OnVolume()
     ct.OpenCtrl("VolumeCtrl")
-end
+    end
 
 

@@ -1,25 +1,25 @@
-ShelfCtrl = class('ShelfCtrl',BuildingBaseCtrl)
-UIPanel:ResgisterOpen(ShelfCtrl)--注册打开的方法
+ProcessShelfCtrl = class('ProcessShelfCtrl',BuildingBaseCtrl)
+UIPanel:ResgisterOpen(ProcessShelfCtrl)--注册打开的方法
 
 local shelf
 local itemStateBool
 local switchRightPanel
-function ShelfCtrl:initialize()
+function ProcessShelfCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
-function ShelfCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/ShelfPanel.prefab"
+function ProcessShelfCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/ProcessShelfPanel.prefab"
 end
-function ShelfCtrl:OnCreate(obj)
+function ProcessShelfCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
-function ShelfCtrl:Awake(go)
+function ProcessShelfCtrl:Awake(go)
     shelf = self.gameObject:GetComponent('LuaBehaviour')
-    shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn,self)
-    shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
-    shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self)
-    shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self)
-    shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
+    shelf:AddClick(ProcessShelfPanel.return_Btn,self.OnClick_return_Btn,self)
+    shelf:AddClick(ProcessShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
+    shelf:AddClick(ProcessShelfPanel.closeBtn,self.OnClick_playerBuy,self)
+    shelf:AddClick(ProcessShelfPanel.openBtn,self.OnClick_openBtn,self)
+    shelf:AddClick(ProcessShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
 
     itemStateBool = nil
     switchRightPanel = false
@@ -27,20 +27,20 @@ function ShelfCtrl:Awake(go)
     self.recordIdList = {}  --记录选中的id
     self.shelfDatas = {}  --货架上的数据
 end
-function ShelfCtrl:Active()
+function ProcessShelfCtrl:Active()
     UIPanel.Active(self)
-    ShelfPanel.tipText.text = GetLanguage(26040002)
-    LoadSprite(GetSprite("Shelf"), ShelfPanel.shelfImg:GetComponent("Image"), false)
+    ProcessShelfPanel.tipText.text = GetLanguage(26040002)
+    LoadSprite(GetSprite("Shelf"), ProcessShelfPanel.shelfImg:GetComponent("Image"), false)
     self:_addListener()
     self:RefreshBuyButton()
 end
-function ShelfCtrl:_addListener()
+function ProcessShelfCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
 end
-function ShelfCtrl:_removeListener()
+function ProcessShelfCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
 end
-function ShelfCtrl:Refresh()
+function ProcessShelfCtrl:Refresh()
     self.luabehaviour = shelf
     self.shelf = self.m_data.shelf
     self.isOther = self.m_data.isOther
@@ -51,32 +51,32 @@ function ShelfCtrl:Refresh()
         self:MeInitializeData()
     end
 end
-function ShelfCtrl:Hide()
+function ProcessShelfCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
 --自己
-function ShelfCtrl:MeInitializeData()
-    ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
-    ShelfPanel.shelfAddItem.gameObject:SetActive(true)
+function ProcessShelfCtrl:MeInitializeData()
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+    ProcessShelfPanel.shelfAddItem.gameObject:SetActive(true)
     if next(self.shelfDatas) == nil then
-        self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+        self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
     end
     self.ShelfImgSetActive(self.shelfDatas,5,0)
 end
 --别人
-function ShelfCtrl:OthersInitializeData()
-    ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
-    ShelfPanel.shelfAddItem.gameObject:SetActive(false)
+function ProcessShelfCtrl:OthersInitializeData()
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+    ProcessShelfPanel.shelfAddItem.gameObject:SetActive(false)
     if next(self.shelfDatas) == nil then
-        self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
+        self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
     end
     self.ShelfImgSetActive(self.shelfDatas,5,1)
 end
 ----------------------------------------------------------------------点击函数------------------------------------------------------------------------------------------
-function ShelfCtrl:OnClick_return_Btn(ins)
+function ProcessShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
     if switchRightPanel == true then
         ins:openPlayerBuy(not switchRightPanel)
@@ -85,7 +85,7 @@ function ShelfCtrl:OnClick_return_Btn(ins)
     UIPanel.ClosePage()
 end
 --点击打开购买Panel
-function ShelfCtrl:OnClick_playerBuy(ins)
+function ProcessShelfCtrl:OnClick_playerBuy(ins)
     PlayMusEff(1002)
     if ins.m_data.info.state == "OPERATE" then
         ins:openPlayerBuy(not switchRightPanel)
@@ -95,18 +95,18 @@ function ShelfCtrl:OnClick_playerBuy(ins)
     end
 end
 --跳转选择仓库
-function ShelfCtrl:OnClick_openBtn(ins)
+function ProcessShelfCtrl:OnClick_openBtn(ins)
     PlayMusEff(1002)
     local data = {}
     data.pos = {}
     data.pos.x = ins.m_data.info.pos.x
     data.pos.y = ins.m_data.info.pos.y
     data.buildingId = ins.buildingId
-    data.nameText = ShelfPanel.nameText
+    data.nameText = ProcessShelfPanel.nameText
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --购买确认
-function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
     PlayMusEff(1002)
     local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
     local buyDataInfo = {}
@@ -135,7 +135,7 @@ function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据
-function ShelfCtrl:RefreshShelfData(dataInfo)
+function ProcessShelfCtrl:RefreshShelfData(dataInfo)
     for key,value in pairs(self.shelfDatas) do
         if value.itemId == dataInfo.item.key.id then
             if value.num == dataInfo.item.n then
@@ -150,17 +150,17 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
         end
         self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
     end
-    ShelfPanel.nameText.text = ""
+    ProcessShelfPanel.nameText.text = ""
     self.ShelfImgSetActive(self.shelfDatas,5,1)
     self:RefreshBuyButton()
     Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品
-function ShelfCtrl:SelectedGoodsItem(ins)
+function ProcessShelfCtrl:SelectedGoodsItem(ins)
     if self.recordIdList[ins.id] == nil then
         self.recordIdList[ins.id] = ins.id
-        self:CreateGoodsDetails(ins.goodsDataInfo,ShelfPanel.BuyDetailsItem,ShelfPanel.buyContent,BuyDetailsItem,self.luabehaviour,ins.id,self.tempItemList)
+        self:CreateGoodsDetails(ins.goodsDataInfo,ProcessShelfPanel.BuyDetailsItem,ProcessShelfPanel.buyContent,BuyDetailsItem,self.luabehaviour,ins.id,self.tempItemList)
         self.shelfDatas[ins.id]:c_GoodsItemSelected()
     else
         self.shelfDatas[ins.id]:c_GoodsItemChoose()
@@ -170,37 +170,37 @@ function ShelfCtrl:SelectedGoodsItem(ins)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开购买Panel
-function ShelfCtrl:openPlayerBuy(isShow)
+function ProcessShelfCtrl:openPlayerBuy(isShow)
     if isShow then
         itemStateBool = true
-        ShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
-        ShelfPanel.Content.offsetMax = Vector2.New(-740,0)
+        ProcessShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+        ProcessShelfPanel.Content.offsetMax = Vector2.New(-740,0)
         self.ShelfImgSetActive(self.shelfDatas,3,1)
         self:GoodsItemState(self.shelfDatas,itemStateBool)
         self:RefreshBuyButton()
     else
         itemStateBool = false
-        ShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
-        ShelfPanel.Content.offsetMax = Vector2.New(0,0)
+        ProcessShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+        ProcessShelfPanel.Content.offsetMax = Vector2.New(0,0)
         self.ShelfImgSetActive(self.shelfDatas,5,1)
         self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
         self:GoodsItemState(self.shelfDatas,itemStateBool)
-        ShelfPanel.nameText.text = ""
+        ProcessShelfPanel.nameText.text = ""
     end
     switchRightPanel = isShow
 end
 --刷新确认购买按钮
-function ShelfCtrl:RefreshBuyButton()
-    if next(self.tempItemList) == nil or ShelfPanel.nameText.text == "" then
-        ShelfPanel.uncheckBtn.transform.localScale = Vector3.one
-        ShelfPanel.confirmBtn.transform.localScale = Vector3.zero
-    elseif next(self.tempItemList) ~= nil and ShelfPanel.nameText.text ~= "" then
-        ShelfPanel.uncheckBtn.transform.localScale = Vector3.zero
-        ShelfPanel.confirmBtn.transform.localScale = Vector3.one
+function ProcessShelfCtrl:RefreshBuyButton()
+    if next(self.tempItemList) == nil or ProcessShelfPanel.nameText.text == "" then
+        ProcessShelfPanel.uncheckBtn.transform.localScale = Vector3.one
+        ProcessShelfPanel.confirmBtn.transform.localScale = Vector3.zero
+    elseif next(self.tempItemList) ~= nil and ProcessShelfPanel.nameText.text ~= "" then
+        ProcessShelfPanel.uncheckBtn.transform.localScale = Vector3.zero
+        ProcessShelfPanel.confirmBtn.transform.localScale = Vector3.one
     end
 end
 --获取购买商品总价格
-function ShelfCtrl:GetTotalPrice()
+function ProcessShelfCtrl:GetTotalPrice()
     local price = 0
     for key,value in pairs(self.tempItemList) do
         price = price + GetServerPriceNumber(value.tempPrice)
@@ -213,8 +213,8 @@ end
 
 
 
---ShelfCtrl = class('ShelfCtrl',UIPanel)
---UIPanel:ResgisterOpen(ShelfCtrl) --注册打开的方法
+--ProcessShelfCtrl = class('ProcessShelfCtrl',UIPanel)
+--UIPanel:ResgisterOpen(ProcessShelfCtrl) --注册打开的方法
 --
 --local isShowList;
 --local switchIsShow;
@@ -222,47 +222,47 @@ end
 --local listTrue = Vector3.New(0,0,180);
 --local listFalse = Vector3.New(0,0,0);
 ----存放选中的物品，临时表
---ShelfCtrl.temporaryItems = {}
---function ShelfCtrl:initialize()
+--ProcessShelfCtrl.temporaryItems = {}
+--function ProcessShelfCtrl:initialize()
 --    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 --end
 --
---function ShelfCtrl:bundleName()
---    return "Assets/CityGame/Resources/View/ShelfPanel.prefab"
+--function ProcessShelfCtrl:bundleName()
+--    return "Assets/CityGame/Resources/View/ProcessShelfPanel.prefab"
 --end
 --
---function ShelfCtrl:OnCreate(obj)
+--function ProcessShelfCtrl:OnCreate(obj)
 --    UIPanel.OnCreate(self,obj)
 --end
 --
---function ShelfCtrl:Awake(go)
+--function ProcessShelfCtrl:Awake(go)
 --    shelf = self.gameObject:GetComponent('LuaBehaviour')
---    shelf:AddClick(ShelfPanel.return_Btn,self.OnClick_return_Btn, self);
---    shelf:AddClick(ShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
---    shelf:AddClick(ShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
---    shelf:AddClick(ShelfPanel.quantityBtn.gameObject,self.OnClick_OnNumber, self);
---    shelf:AddClick(ShelfPanel.priceBtn.gameObject,self.OnClick_OnpriceBtn, self);
---    shelf:AddClick(ShelfPanel.addBtn,self.OnClick_createGoods, self);
---    shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
---    shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self);
---    shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self);
---    shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self);
+--    shelf:AddClick(ProcessShelfPanel.return_Btn,self.OnClick_return_Btn, self);
+--    shelf:AddClick(ProcessShelfPanel.arrowBtn.gameObject,self.OnClick_OnSorting, self);
+--    shelf:AddClick(ProcessShelfPanel.nameBtn.gameObject,self.OnClick_OnName, self);
+--    shelf:AddClick(ProcessShelfPanel.quantityBtn.gameObject,self.OnClick_OnNumber, self);
+--    shelf:AddClick(ProcessShelfPanel.priceBtn.gameObject,self.OnClick_OnpriceBtn, self);
+--    shelf:AddClick(ProcessShelfPanel.addBtn,self.OnClick_createGoods, self);
+--    shelf:AddClick(ProcessShelfPanel.buy_Btn,self.OnClick_playerBuy,self);
+--    shelf:AddClick(ProcessShelfPanel.closeBtn,self.OnClick_playerBuy,self);
+--    shelf:AddClick(ProcessShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self);
+--    shelf:AddClick(ProcessShelfPanel.openBtn,self.OnClick_openBtn,self);
 --
 --    self.gameObject = go
 --    isShowList = false;
 --    switchIsShow = false;
---    ShelfPanel.nameText.text = GetLanguage(26040002)
+--    ProcessShelfPanel.nameText.text = GetLanguage(26040002)
 --    Event.AddListener("shelfRefreshUiInfo",self.refreshUiInfo,self)
 --end
---function ShelfCtrl:Active()
+--function ProcessShelfCtrl:Active()
 --    UIPanel.Active(self)
---    ShelfPanel.tipText.text = GetLanguage(26040002)
---    LoadSprite(GetSprite("Shelf"), ShelfPanel.shelfImg:GetComponent("Image"), false)
+--    ProcessShelfPanel.tipText.text = GetLanguage(26040002)
+--    LoadSprite(GetSprite("Shelf"), ProcessShelfPanel.shelfImg:GetComponent("Image"), false)
 --    Event.AddListener("_selectedBuyGoods",self._selectedBuyGoods,self);
 --    Event.AddListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
 --    Event.AddListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
 --end
---function ShelfCtrl:Refresh()
+--function ProcessShelfCtrl:Refresh()
 --    if self.m_data[1] ~= nil then
 --        self.m_data = self.m_data[1]
 --    end
@@ -273,26 +273,26 @@ end
 --    self.shelf.isOther = self.m_data.isOther
 --    self.shelf.buildingId = self.m_data.info.id
 --    self:isShowDetermineBtn()
---    if ShelfPanel.Content.childCount <= 1 then
+--    if ProcessShelfPanel.Content.childCount <= 1 then
 --        self.GoodsUnifyMgr = GoodsUnifyMgr:new(self.luabehaviour, self.shelf)
 --    end
 --    if self.m_data.isOther then
 --        if self.m_data.info.state == "OPERATE" then
---            ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+--            ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
 --        else
---            ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+--            ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
 --        end
---        ShelfPanel.shelfAddItem.gameObject:SetActive(false)
+--        ProcessShelfPanel.shelfAddItem.gameObject:SetActive(false)
 --        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
 --
 --    else
---        ShelfPanel.shelfAddItem.gameObject:SetActive(true)
---        ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+--        ProcessShelfPanel.shelfAddItem.gameObject:SetActive(true)
+--        ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
 --    end
 --
 --end
 ----选中物品
---function ShelfCtrl:_selectedBuyGoods(ins)
+--function ProcessShelfCtrl:_selectedBuyGoods(ins)
 --    if self.temporaryItems[ins.id] == nil then
 --        self.temporaryItems[ins.id] = ins.id
 --        self.GoodsUnifyMgr:_buyShelfGoods(ins,self.luabehaviour)
@@ -305,25 +305,25 @@ end
 --    self:isShowDetermineBtn()
 --end
 ----临时表里是否有这个物品
---function ShelfCtrl:c_tempTabNotGoods(id)
+--function ProcessShelfCtrl:c_tempTabNotGoods(id)
 --    self.temporaryItems[id] = nil
 --    self.GoodsUnifyMgr.shelfLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
 --    self.GoodsUnifyMgr:_deleteBuyGoods(id);
 --    self:isShowDetermineBtn()
 --end
 ----跳转选择仓库界面
---function ShelfCtrl:OnClick_openBtn(go)
+--function ProcessShelfCtrl:OnClick_openBtn(go)
 --    PlayMusEff(1002)
 --    local data = {}
 --    data.pos = {}
 --    data.pos.x = go.m_data.info.pos.x
 --    data.pos.y = go.m_data.info.pos.y
---    data.nameText = ShelfPanel.nameText
+--    data.nameText = ProcessShelfPanel.nameText
 --    data.buildingId = go.m_data.info.id
 --    ct.OpenCtrl("ChooseWarehouseCtrl",data)
 --end
 ----购买物品
---function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+--function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
 --    PlayMusEff(1002)
 --    if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
 --        return;
@@ -366,7 +366,7 @@ end
 --    end
 --end
 --
---function ShelfCtrl:OnClick_return_Btn(go)
+--function ProcessShelfCtrl:OnClick_return_Btn(go)
 --    go:deleteObjInfo();
 --    PlayMusEff(1002)
 --    UIPanel.ClosePage()
@@ -374,7 +374,7 @@ end
 --        go:openPlayerBuy(not switchIsShow)
 --    end
 --end
---function ShelfCtrl:Hide()
+--function ProcessShelfCtrl:Hide()
 --    Event.RemoveListener("_selectedBuyGoods",self._selectedBuyGoods,self);
 --    Event.RemoveListener("c_tempTabNotGoods",self.c_tempTabNotGoods,self);
 --    Event.RemoveListener("receiveBuyRefreshInfo",self.receiveBuyRefreshInfo,self);
@@ -382,64 +382,64 @@ end
 --    return {insId = self.m_data.info.id,self.m_data}
 --end
 ----根据名字排序
---function ShelfCtrl:OnClick_OnName(ins)
+--function ProcessShelfCtrl:OnClick_OnName(ins)
 --    PlayMusEff(1002)
---    ShelfPanel.nowText.text = "By name";
---    ShelfCtrl.OnClick_OpenList(not isShowList);
+--    ProcessShelfPanel.nowText.text = "By name";
+--    ProcessShelfCtrl.OnClick_OpenList(not isShowList);
 --    local nameType = ct.sortingItemType.Name
---    ShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.shelfLuaTab)
+--    ProcessShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.shelfLuaTab)
 --end
 ----根据数量排序
---function ShelfCtrl:OnClick_OnNumber(ins)
+--function ProcessShelfCtrl:OnClick_OnNumber(ins)
 --    PlayMusEff(1002)
---    ShelfPanel.nowText.text = "By quantity";
---    ShelfCtrl.OnClick_OpenList(not isShowList);
+--    ProcessShelfPanel.nowText.text = "By quantity";
+--    ProcessShelfCtrl.OnClick_OpenList(not isShowList);
 --    local quantityType = ct.sortingItemType.Quantity
---    ShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.shelfLuaTab)
+--    ProcessShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.shelfLuaTab)
 --end
 ----根据价格排序
---function ShelfCtrl:OnClick_OnpriceBtn(ins)
+--function ProcessShelfCtrl:OnClick_OnpriceBtn(ins)
 --    PlayMusEff(1002)
---    ShelfPanel.nowText.text = "By price";
---    ShelfCtrl.OnClick_OpenList(not isShowList);
+--    ProcessShelfPanel.nowText.text = "By price";
+--    ProcessShelfCtrl.OnClick_OpenList(not isShowList);
 --    local priceType = ct.sortingItemType.Price
---    ShelfCtrl:_getSortItems(priceType,ins.GoodsUnifyMgr.shelfLuaTab)
+--    ProcessShelfCtrl:_getSortItems(priceType,ins.GoodsUnifyMgr.shelfLuaTab)
 --end
 --
---function ShelfCtrl.OnClick_OnSorting(ins)
+--function ProcessShelfCtrl.OnClick_OnSorting(ins)
 --    PlayMusEff(1002)
---    ShelfCtrl.OnClick_OpenList(not isShowList);
+--    ProcessShelfCtrl.OnClick_OpenList(not isShowList);
 --end
 --
---function ShelfCtrl.OnClick_OpenList(isShow)
+--function ProcessShelfCtrl.OnClick_OpenList(isShow)
 --    if isShow then
---        ShelfPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
---        ShelfPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.arrowBtn:DORotate(listTrue,0.1):SetEase(DG.Tweening.Ease.OutCubic);
 --    else
---        ShelfPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
---        ShelfPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.list:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.arrowBtn:DORotate(listFalse,0.1):SetEase(DG.Tweening.Ease.OutCubic);
 --    end
 --    isShowList = isShow;
 --end
 ----其他玩家购买窗口
---function ShelfCtrl:OnClick_playerBuy(go)
+--function ProcessShelfCtrl:OnClick_playerBuy(go)
 --    PlayMusEff(1002)
 --    go:openPlayerBuy(not switchIsShow)
 --end
 --
---function ShelfCtrl:openPlayerBuy(isShow)
+--function ProcessShelfCtrl:openPlayerBuy(isShow)
 --    if isShow then
---        ShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
 --        Event.Brocast("c_buyGoodsItemChoose")
---        ShelfPanel.Content.offsetMax = Vector2.New(-740,0);
---        ShelfPanel.confirmBtn.localScale = Vector3.zero
---        ShelfPanel.uncheckBtn.localScale = Vector3.one
---        --ShelfPanel.nameText.text = "请选择仓库";
+--        ProcessShelfPanel.Content.offsetMax = Vector2.New(-740,0);
+--        ProcessShelfPanel.confirmBtn.localScale = Vector3.zero
+--        ProcessShelfPanel.uncheckBtn.localScale = Vector3.one
+--        --ProcessShelfPanel.nameText.text = "请选择仓库";
 --        --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
 --        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
 --    else
---        ShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
---        ShelfPanel.Content.offsetMax = Vector2.New(0,0);
+--        ProcessShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        ProcessShelfPanel.Content.offsetMax = Vector2.New(0,0);
 --        self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,5)
 --        if self.GoodsUnifyMgr.shelfBuyGoodslItems ~= nil then
 --            for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
@@ -453,7 +453,7 @@ end
 --    switchIsShow = isShow
 --end
 ----购买成功后回调
---function ShelfCtrl:receiveBuyRefreshInfo(Data)
+--function ProcessShelfCtrl:receiveBuyRefreshInfo(Data)
 --    if not Data then
 --        return;
 --    end
@@ -465,14 +465,14 @@ end
 --
 --                Event.Brocast("c_buyGoodsItemChoose")
 --
---                for i,v in pairs(ShelfCtrl.temporaryItems) do
+--                for i,v in pairs(ProcessShelfCtrl.temporaryItems) do
 --                    self.GoodsUnifyMgr:_deleteBuyGoods(v)
 --                    self:isShowDetermineBtn()
 --                end
 --            else
 --                v.numberText.text = v.goodsDataInfo.n - Data.item.n;
 --                v.goodsDataInfo.n = tonumber(v.numberText.text)
---                for i in pairs(ShelfCtrl.temporaryItems) do
+--                for i in pairs(ProcessShelfCtrl.temporaryItems) do
 --                    self:c_tempTabNotGoods(i)
 --                    --Event.Brocast("c_tempTabNotGoods", i)
 --                end
@@ -482,7 +482,7 @@ end
 --    end
 --end
 ------修改价格后刷新回调
---function ShelfCtrl:refreshUiInfo(msg)
+--function ProcessShelfCtrl:refreshUiInfo(msg)
 --    if not msg then
 --        return
 --    end
@@ -493,7 +493,7 @@ end
 --        end
 --    end
 --end
---function ShelfCtrl:OnClick_createGoods(go)
+--function ProcessShelfCtrl:OnClick_createGoods(go)
 --    PlayMusEff(1002)
 --    if go.m_data.info.state == "OPERATE" then
 --        if go.data == nil then
@@ -507,7 +507,7 @@ end
 --    end
 --end
 ----刷新购买确定按钮
---function ShelfCtrl:isShowDetermineBtn()
+--function ProcessShelfCtrl:isShowDetermineBtn()
 --    if not self.GoodsUnifyMgr then
 --        return
 --    end
@@ -518,16 +518,16 @@ end
 --    for i,v in pairs(self.GoodsUnifyMgr.shelfBuyGoodslItems) do
 --        num = num + i
 --    end
---    if num ~= 0 and ShelfPanel.nameText.text ~= nil then
---        ShelfPanel.confirmBtn.localScale = Vector3.one
---        ShelfPanel.uncheckBtn.localScale = Vector3.zero
+--    if num ~= 0 and ProcessShelfPanel.nameText.text ~= nil then
+--        ProcessShelfPanel.confirmBtn.localScale = Vector3.one
+--        ProcessShelfPanel.uncheckBtn.localScale = Vector3.zero
 --    else
---        ShelfPanel.confirmBtn.localScale = Vector3.zero
---        ShelfPanel.uncheckBtn.localScale = Vector3.one
+--        ProcessShelfPanel.confirmBtn.localScale = Vector3.zero
+--        ProcessShelfPanel.uncheckBtn.localScale = Vector3.one
 --    end
 --end
 ----架子隐藏和显示
---function ShelfCtrl:shelfImgSetActive(table,num)
+--function ProcessShelfCtrl:shelfImgSetActive(table,num)
 --    if not table then
 --        return
 --    end
@@ -540,12 +540,12 @@ end
 --    end
 --end
 ----排序
---function ShelfCtrl:_getSortItems(type,sortingTable)
+--function ProcessShelfCtrl:_getSortItems(type,sortingTable)
 --    if type == ct.sortingItemType.Name then
 --        table.sort(sortingTable, function (m, n) return m.name < n.name end )
 --        for i, v in ipairs(sortingTable) do
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.scrollView.transform);
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.Content.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.scrollView.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.Content.transform);
 --            v.id = i
 --            ShelfGoodsItem:RefreshData(v.goodsDataInfo,i)
 --        end
@@ -553,8 +553,8 @@ end
 --    if type == ct.sortingItemType.Quantity then
 --        table.sort(sortingTable, function (m, n) return m.num < n.num end )
 --        for i, v in ipairs(sortingTable) do
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.scrollView.transform);
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.Content.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.scrollView.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.Content.transform);
 --            v.id = i
 --            ShelfGoodsItem:RefreshData(v.goodsDataInfo,i)
 --        end
@@ -562,15 +562,15 @@ end
 --    if type == ct.sortingItemType.Price then
 --        table.sort(sortingTable, function (m, n) return m.price < n.price end )
 --        for i, v in ipairs(sortingTable) do
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.scrollView.transform);
---            v.prefab.gameObject.transform:SetParent(ShelfPanel.Content.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.scrollView.transform);
+--            v.prefab.gameObject.transform:SetParent(ProcessShelfPanel.Content.transform);
 --            v.id = i
 --            ShelfGoodsItem:RefreshData(v.goodsDataInfo,i)
 --        end
 --    end
 --end
 ------生成预制
-----function ShelfCtrl:_creatGoods(path,parent)
+----function ProcessShelfCtrl:_creatGoods(path,parent)
 ----    local prefab = UnityEngine.Resources.Load(path);
 ----    local go = UnityEngine.GameObject.Instantiate(prefab);
 ----    local rect = go.transform:GetComponent("RectTransform");
@@ -579,7 +579,7 @@ end
 ----    return go
 ----end
 ----关闭面板时清空UI信息，以备其他模块调用
---function ShelfCtrl:deleteObjInfo()
+--function ProcessShelfCtrl:deleteObjInfo()
 --    if not self.GoodsUnifyMgr.shelfLuaTab then
 --        return;
 --    else
@@ -589,6 +589,6 @@ end
 --        end
 --    end
 --end
---function ShelfCtrl.OnCloseBtn()
---    ShelfPanel.OnDestroy();
+--function ProcessShelfCtrl.OnCloseBtn()
+--    ProcessShelfPanel.OnDestroy();
 --end

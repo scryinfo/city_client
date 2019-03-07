@@ -609,7 +609,7 @@ function DataManager.ControllerRpcNoRet(insId, ctrlName, modelMethord, ...)
         return
     end
     local tempController = m_allPages[ctrlName]
-    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId  then
+    if (tempController ~= nil and tempController[modelMethord] ~= nil ) and tempController.m_data and tempController.m_data.insId == insId then
         tempController[modelMethord](tempController,...)
     end
 end
@@ -677,6 +677,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     protoID = protoData.info.id
                 elseif protoData.buildingId then
                     protoID = protoData.buildingId
+                elseif protoData.src then
+                    protoID = protoData.src
                 end
             end
             if protoID ~= nil then--服务器返回的数据有唯一ID

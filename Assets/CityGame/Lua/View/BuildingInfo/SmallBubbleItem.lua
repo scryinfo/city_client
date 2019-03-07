@@ -9,35 +9,38 @@ SmallBubbleItem = class('SmallBubbleItem')
 local ctrl
 ---初始化方法   数据（读配置表）
 function SmallBubbleItem:initialize(prefab,luaBehaviour,data,ctr)
-    self.prefab=prefab
-    self.ima=prefab.transform:Find("Image"):GetComponent("Image");
-
-    luaBehaviour:AddClick(prefab,self.c_OnClick_change,self);
-    self:saveData(data)
     ctrl=ctr
+    self.prefab=prefab
+    self.ima=prefab.transform:Find("icon"):GetComponent("Image");
+    self.frame=prefab.transform:Find("frame")
+
+    luaBehaviour:AddClick(prefab,self.c_OnClick_choose,self);
+    self:saveData(data)
 
 end
-
 
 function SmallBubbleItem:updateData(data)
     self:saveData(data)
 end
 
-function SmallBubbleItem:c_OnClick_change(ins)
-    ctrl:changAparance(ins.data)
+function SmallBubbleItem:c_OnClick_choose(ins)
+    if ctrl.select then
+        ctrl.select.localScale=Vector3.zero
+    end
+    ctrl.select=ins.frame
+    ctrl.bubbleId=ins.id
+    ins.frame.localScale=Vector3.one
 end
 
-
 function SmallBubbleItem:saveData(data)
-    self.data=data
-    local arr=split(data.path,",")
+    self.path=data.path
     self.id=data.id
-    self.type=arr[2]
-    if arr[1]=="" then
-        self.ima.transform.localScale=Vector3.zero
-    else
-        self.ima.transform.localScale=Vector3.one
-        LoadSprite(arr[1],self.ima)
+
+    if self.id==1 then
+        self.frame.localScale=Vector3.one
+        ctrl.select=self.frame
+        ctrl.bubbleId=1
     end
 
+    LoadSprite(data.path,self.ima)
 end

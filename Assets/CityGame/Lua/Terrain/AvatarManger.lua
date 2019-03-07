@@ -38,6 +38,7 @@ function  AvatarManger.Awake()
         headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),0,Vector3.New(0,0,0) )
     end
 
+
 end
 
  function AvatarManger.setSize(go,size)

@@ -13,7 +13,6 @@ function RetailStoresModel:OnCreate()
     Event.AddListener("m_ReqRetailShelfAdd",self.m_ReqShelfAdd,self)
     Event.AddListener("m_ReqRetailModifyShelf",self.m_ReqModifyShelf,self)
     Event.AddListener("m_ReqRetailShelfDel",self.m_ReqShelfDel,self)
-    Event.AddListener("m_ReqRetailBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.AddListener("m_ReqRetailDelItem",self.m_ReqDelItem,self)
 
     --网络回调
@@ -25,7 +24,6 @@ function RetailStoresModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
     --货架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
 end
 
 function RetailStoresModel:Close()
@@ -60,10 +58,6 @@ end
 function RetailStoresModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
     self.funModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
 end
---货架购买
-function RetailStoresModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
-    self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
-end
 --销毁仓库原料或商品
 function RetailStoresModel:m_ReqDelItem(buildingId,id,producerId,qty)
     self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
@@ -96,10 +90,6 @@ function RetailStoresModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
-end
---货架购买
-function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品

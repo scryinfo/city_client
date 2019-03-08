@@ -80,7 +80,8 @@ end
 function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
     for key, value in pairs(itemDatas) do
         if value.info ~= nil and value.info.pos ~= nil and value.info.pos.x ~= nil and value.info.pos.y ~= nil and value.info.mId ~= nil and PlayerBuildingBaseData[value.info.mId] ~= nil and PlayerBuildingBaseData[value.info.mId].x ~= nil  then
-            local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapBuildingItem)
+            --local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapBuildingItem)
+            local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
             obj.transform:SetParent(MapPanel.alwaysShowRoot.transform)
             obj.transform.localPosition = Vector3.zero
             local item = MapBuildingItem:new({tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
@@ -94,6 +95,7 @@ end
 --生成摘要item
 function MapBubbleManager._createSummaryItems(data)
     local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapAllSearchItem)
+    --local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
     obj.transform:SetParent(MapPanel.allSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
     local item = MapAllSearchItem:new({num = data.num, poolName = MapAllSearchItemName}, obj.transform)
@@ -107,7 +109,8 @@ function MapBubbleManager._createSummaryItems(data)
 end
 --生成详情Item
 function MapBubbleManager._createDetailItems(data)
-    local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapSearchResultItem)
+    --local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapSearchResultItem)
+    local obj = prefabPools[MapSearchResultItemName]:GetAvailableGameObject()
     obj.transform:SetParent(MapPanel.detailSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
     local item = MapSearchResultItem:new({detailData = data, itemWidth = this.itemWidth, poolName = MapSearchResultItemName}, obj.transform)
@@ -176,9 +179,10 @@ function MapBubbleManager.createDetailItems(data, isNew)
             if value.b ~= nil then
                 for i, building in pairs(value.b) do
                     if building.sale ~= nil then
-                        local detailData = {buildingId = building.id, sale = building.sale}
-                        --this.collectionDetails[collectionId] = {}
-                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
+                        local detailData = {buildingId = building.id, sale = building.sale, pos = building.pos}
+                        this.collectionDetails[collectionId] = {}
+                        this.collectionDetails[collectionId].detailItems = {}
+                        this.collectionDetails[collectionId].detailItems[building.id] = {}
                         this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
                     end
                 end

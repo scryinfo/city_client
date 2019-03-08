@@ -321,6 +321,14 @@ function MapCtrl:_openPageItems(type)
     end
 end
 
+--搜索完成后，选择具体的item，打开右侧原料商品界面
+function MapCtrl:_openRightMatGoodPage(item)
+    if item ~= nil then
+        self.rightSearchItem = item
+        MapPanel.rightMatGoodPageItem:refreshData(item.data)
+    end
+end
+
 ---服务器请求
 function MapCtrl:_reqMarketDetail(blockId)
     --AOI范围外

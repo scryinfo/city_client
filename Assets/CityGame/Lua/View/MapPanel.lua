@@ -53,6 +53,7 @@ function MapPanel.InitPanel()
 
     --右侧详情界面
     this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")
+    this.rightMatGoodPageItem = MapRightMatGoodPage:new(this.searchMatGoodRect.transform)
 
 end
 

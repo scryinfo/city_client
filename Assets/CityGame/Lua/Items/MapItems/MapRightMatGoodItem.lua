@@ -6,14 +6,13 @@
 MapRightMatGoodItem = class('MapRightMatGoodItem')
 
 --初始化方法
-function MapRightMatGoodItem:initialize(data, viewRect)
+function MapRightMatGoodItem:initialize(viewRect)
     self.viewRect = viewRect
-    self.data = data
 
     self.good = self.viewRect.transform:Find("good")
     self.goodIconImg = self.viewRect.transform:Find("good/iconImg"):GetComponent("Image")
     self.goodNameText = self.viewRect.transform:Find("good/goodNameText"):GetComponent("Text")
-    self.goodDetailNameText = self.viewRect.transform:Find("good/goodNameText/bg/detailNameText"):GetComponent("Text")
+    self.goodDetailNameText = self.viewRect.transform:Find("good/bg/detailNameText"):GetComponent("Text")
     self.mat = self.viewRect.transform:Find("mat")
     self.matIconImg = self.viewRect.transform:Find("mat/iconImg"):GetComponent("Image")
     self.matNameText = self.viewRect.transform:Find("mat/matNameText"):GetComponent("Text")
@@ -21,9 +20,6 @@ function MapRightMatGoodItem:initialize(data, viewRect)
     self.countText = self.viewRect.transform:Find("countText"):GetComponent("Text")
     self.priceText = self.viewRect.transform:Find("priceText"):GetComponent("Text")
 
-    --LoadSprite(data.selectIconPath, self.chooseIconImg, true)
-
-    Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
     self:resetState()
 end
 
@@ -40,15 +36,34 @@ function MapRightMatGoodItem:_language()
     --self.matNameText.text = GetLanguage(self.data.languageId)
     --self.goodDetailNameText.text = GetLanguage()  --显示"商品"
 
-    self.goodNameText.text = self.data.name
-    self.matNameText.text = self.data.name
     self.goodDetailNameText.text = "商品"
+end
+--
+function MapRightMatGoodItem:refreshData(data)
+    if data == nil then
+        return
+    end
+    self.data = data
+    local itemId = data.item.key.id
+    local num = data.item.n
+    self.countText.text = num
+    self.priceText.text = data.price
+
+    local matData = Material[itemId]
+    if matData ~= nil then
+        self.mat.localScale = Vector3.one
+        self.good.localScale = Vector3.zero
+        self.matNameText.text = matData.name  --需要换成多语言
+        LoadSprite(matData.img, self.matIconImg, true)
+    else
+        local goodData = Good[itemId]
+        self.mat.localScale = Vector3.zero
+        self.good.localScale = Vector3.one
+        self.goodNameText.text = goodData.name
+        LoadSprite(goodData.img, self.matIconImg, true)
+    end
 end
 
 function MapRightMatGoodItem:getIsSelect()
     return self.isSelect
-end
-
-function MapRightMatGoodItem:getTypeId()
-    return self.data.typeId
 end

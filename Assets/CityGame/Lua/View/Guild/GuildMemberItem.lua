@@ -75,6 +75,7 @@ end
 
 function GuildMemberItem:_showNameHead(playerData)
     self.nameText.text = playerData.name
+    self.data.playerData = playerData
     for i = 1, self.memberHeadBg.childCount do
         UnityEngine.GameObject.Destroy(self.memberHeadBg:GetChild(i-1).gameObject)
     end

@@ -52,12 +52,13 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
+    --Event.AddListener("updateWarehouseNum",self.updateWarehouseNum,self)
 end
 --初始化数据
 function WarehouseRateItem:initData()
-    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
-    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
+    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
+    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store)
     local lockedNum = self:getLockedNum(self.warehouseData.store);
     local numTab = {}
     numTab["num1"] = self.sizeSlider.value
@@ -144,3 +145,19 @@ function WarehouseRateItem:updateInfo(data)
     self.warehouseData.store = data.store
     self:initData();
 end
+----刷新建筑页面数量
+--function WarehouseRateItem:updateWarehouseNum()
+--    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
+--    self.nowValue
+--    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store)
+--    local lockedNum = self:getLockedNum(self.warehouseData.store);
+--    local numTab = {}
+--    numTab["num1"] = self.sizeSlider.value
+--    numTab["num2"] = lockedNum
+--    numTab["num3"] = self.sizeSlider.maxValue
+--    numTab["col1"] = "Cyan"
+--    numTab["col2"] = "Teal"
+--    numTab["col3"] = "Black"
+--    self.numberText.text = getColorString(numTab);
+--    --WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
+--end

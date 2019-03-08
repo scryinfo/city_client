@@ -45,11 +45,17 @@ function SystemSettingCtrl:Refresh()
         panel:InitDate(GetLanguage(14010007))
     end
 end
+
+
+---========================================================点击==============================================================================================
+
+
+
+
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
     CityEngineLua.LoginOut()
 end
-
 --开音乐
 function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
@@ -78,13 +84,11 @@ function SystemSettingCtrl:c_OnClick_MusicEffect(ins)
     UnityEngine.PlayerPrefs.SetInt("MusicEffect",1)
     PlayMusEff(1002)
 end
-
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn(ins)
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
-
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn1(ins)
     if panel.LanguagePanel.localScale.x==1 then
@@ -94,7 +98,6 @@ function SystemSettingCtrl:c_OnClick_backBtn1(ins)
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
-
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn2()
     panel.LanguagePanel.localScale=Vector3.zero
@@ -106,7 +109,6 @@ function SystemSettingCtrl:c_OnClick_changeLanguage()
     panel.LanguagePanel.localScale=Vector3.one
     panel.closeLan.localScale=Vector3.one
 end
-
 --中文
 function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
@@ -125,6 +127,15 @@ function SystemSettingCtrl:c_OnClick_english()
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
+
+
+
+
+
+
+
+
+
 
 function  SystemSettingCtrl:Hide()
     UIPanel.Hide(self)

@@ -11,6 +11,7 @@ function GuildItem:initialize(prefab, data)
     self.data = data
 
     local transform = prefab.transform
+    self.leaderHeadBg = transform:Find("LeaderHeadBg")
     self.nameText = transform:Find("NameText"):GetComponent("Text")
     self.leaderNameText = transform:Find("LeaderNameText"):GetComponent("Text")
     self.memberNumberText = transform:Find("MemberNumberText"):GetComponent("Text")
@@ -19,11 +20,13 @@ function GuildItem:initialize(prefab, data)
     self.applyBtn = transform:Find("ApplyBtn"):GetComponent("Button")
 
     self.nameText.text = self.data.name
-    self.leaderNameText.text = "Ariana Grande" --self.data.chairmanName
+
     self.memberNumberText.text = self.data.allCount
     local timeTab = getFormatUnixTime(self.data.createTs/1000)
     self.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
     self.introductionText.text = self.data.introduction
+
+    PlayerInfoManger.GetInfosOneByOne({data.chairmanId}, self._showNameHead, self)
 
     local societyId = DataManager.GetGuildID()
     if societyId then
@@ -35,7 +38,6 @@ function GuildItem:initialize(prefab, data)
             self:_applyGuild()
         end)
     end
-
 end
 
 function GuildItem:_applyGuild()
@@ -49,4 +51,12 @@ function GuildItem:_applyGuild()
         DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_JoinSociety', { id = self.data.id, desc = text })
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
+end
+
+function GuildItem:_showNameHead(playerData)
+    self.leaderNameText.text = playerData.name
+    for i = 1, self.leaderHeadBg.childCount do
+        UnityEngine.GameObject.Destroy(self.leaderHeadBg:GetChild(i-1).gameObject)
+    end
+    AvatarManger.GetSmallAvatar(playerData.faceId, self.leaderHeadBg,0.2)
 end

@@ -169,13 +169,16 @@ function LineItem:refreshNowConte(dataInfo)
             value.numberText.text = getColorString(number)
         end
     end
+    local nowGoodsData = {}
+    nowGoodsData.itemId = dataInfo.itemId
+    nowGoodsData.nowCountStore = dataInfo.nowCountInStore
+    Event.Brocast("updateWarehouseData",nowGoodsData)
     --Event.Brocast("updateWarehouseNum")
 end
 --删除生产线
 function LineItem:OnClick_deleteBtn(go)
     PlayMusEff(1002)
     Event.Brocast("DeleteLine",go)
-    nowNum = 0
 end
 --移除事件
 function LineItem:closeEvent()

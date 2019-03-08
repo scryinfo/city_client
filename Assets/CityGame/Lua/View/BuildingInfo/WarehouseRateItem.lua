@@ -53,6 +53,7 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
+    Event.AddListener("updateWarehouseData",self.updateWarehouseData,self)
     --Event.AddListener("updateWarehouseNum",self.updateWarehouseNum,self)
 end
 --初始化数据
@@ -72,6 +73,38 @@ function WarehouseRateItem:initData()
     self.closeName.text = GetLanguage(25020003)
     WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
 end
+
+--获取是第几个点击了
+function WarehouseRateItem:getToggleIndex()
+    return self.toggleData.index;
+end
+
+--打开
+function WarehouseRateItem:openToggleItem(targetMovePos)
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
+
+    self.openStateTran.localScale = Vector3.one;
+    self.closeStateTran.localScale = Vector3.zero;
+
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, WarehouseRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H - 5);
+end
+
+--关闭
+function WarehouseRateItem:closeToggleItem(targetMovePos)
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
+
+    self.openStateTran.localScale = Vector3.zero;
+    self.closeStateTran.localScale = Vector3.one;
+
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H - 5);
+end
+
 --获取仓库容量
 function WarehouseRateItem:getWarehouseCapacity(table)
     local warehouseCapacity = 0
@@ -108,44 +141,42 @@ function WarehouseRateItem:getLockedNum(table)
     end
     return lockedNum
 end
---获取是第几个点击了
-function WarehouseRateItem:getToggleIndex()
-    return self.toggleData.index;
-end
-
---打开
-function WarehouseRateItem:openToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
-
-    self.openStateTran.localScale = Vector3.one;
-    self.closeStateTran.localScale = Vector3.zero;
-
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, WarehouseRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H - 5);
-end
-
---关闭
-function WarehouseRateItem:closeToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
-
-    self.openStateTran.localScale = Vector3.zero;
-    self.closeStateTran.localScale = Vector3.one;
-
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H - 5);
-end
-
 --刷新数据
 function WarehouseRateItem:updateInfo(data)
     self.warehouseData = data
     self.warehouseData.store = data.store
     self:initData();
 end
-----刷新建筑页面数量
+--刷新刚生产出来的数据
+function WarehouseRateItem:updateWarehouseData(dataInfo)
+    if not dataInfo == nil then
+        return
+    end
+    if not self.warehouseData.store.inHand then
+        local inHand = {}
+        local goodData = {}
+        local key = {}
+        key.id = dataInfo.itemId
+        goodData.key = key
+        goodData.n = dataInfo.nowCountStore
+        inHand[#inHand + 1] = goodData
+        self.warehouseData.store.inHand = inHand
+    else
+        for key,value in pairs(self.warehouseData.store.inHand) do
+            if dataInfo.itemId == value.key.id then
+                value.n = dataInfo.nowCountStore
+                return
+            end
+        end
+        local goodData = {}
+        local key = {}
+        key.id = dataInfo.itemId
+        goodData.key = key
+        goodData.n = dataInfo.nowCountStore
+        self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+    end
+end
+--刷新建筑页面数量
 --function WarehouseRateItem:updateWarehouseNum()
 --    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
 --    self.nowValue

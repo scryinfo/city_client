@@ -264,7 +264,6 @@ function WarehouseCtrl:DestroyWarehouseItem(ins)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
---测试
 function WarehouseCtrl:UpdateLatestData(dataInfo)
     --根据dataInfo生成实例，放到self.warehouseDatas
     ct.log("fisher_w31_time","测试刷新仓库数据!!!!!!!!!!!!!!!"..dataInfo)

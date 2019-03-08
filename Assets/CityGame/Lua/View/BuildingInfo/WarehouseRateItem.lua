@@ -149,31 +149,60 @@ function WarehouseRateItem:updateInfo(data)
 end
 --刷新刚生产出来的数据
 function WarehouseRateItem:updateWarehouseData(dataInfo)
-    if not dataInfo == nil then
-        return
-    end
-    if not self.warehouseData.store.inHand then
-        local inHand = {}
-        local goodData = {}
-        local key = {}
-        key.id = dataInfo.itemId
-        goodData.key = key
-        goodData.n = dataInfo.nowCountStore
-        inHand[#inHand + 1] = goodData
-        self.warehouseData.store.inHand = inHand
-    else
-        for key,value in pairs(self.warehouseData.store.inHand) do
-            if dataInfo.itemId == value.key.id then
-                value.n = dataInfo.nowCountStore
-                return
+    --原料
+    if not dataInfo.producerId then
+        if not self.warehouseData.store.inHand then
+            local inHand = {}
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.itemId
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            inHand[#inHand + 1] = goodData
+            self.warehouseData.store.inHand = inHand
+        else
+            for key,value in pairs(self.warehouseData.store.inHand) do
+                if dataInfo.itemId == value.key.id then
+                    value.n = dataInfo.nowCountStore
+                    return
+                end
             end
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.itemId
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
         end
-        local goodData = {}
-        local key = {}
-        key.id = dataInfo.itemId
-        goodData.key = key
-        goodData.n = dataInfo.nowCountStore
-        self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+    else
+        --商品
+        if not self.warehouseData.store.inHand then
+            local inHand = {}
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.itemId
+            key.producerId = dataInfo.producerId
+            key.qty = dataInfo.qty
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            inHand[#inHand + 1] = goodData
+            self.warehouseData.store.inHand = inHand
+        else
+            for key,value in pairs(self.warehouseData.store.inHand) do
+                if dataInfo.itemId == value.key.id then
+                    value.n = dataInfo.nowCountStore
+                    return
+                end
+            end
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.itemId
+            key.producerId = dataInfo.producerId
+            key.qty = dataInfo.qty
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+        end
     end
 end
 --刷新建筑页面数量

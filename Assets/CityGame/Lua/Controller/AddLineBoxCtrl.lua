@@ -93,7 +93,11 @@ end
 function AddLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
         TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
-        UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            UIPanel.BackToPageInstance(ProcessingCtrl,self.m_data)
+        end
         Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end
 end

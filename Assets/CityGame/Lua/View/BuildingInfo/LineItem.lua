@@ -170,8 +170,15 @@ function LineItem:refreshNowConte(dataInfo)
         end
     end
     local nowGoodsData = {}
-    nowGoodsData.itemId = dataInfo.itemId
-    nowGoodsData.nowCountStore = dataInfo.nowCountInStore
+    if not dataInfo.iKey.producerId then
+        nowGoodsData.itemId = dataInfo.iKey.id
+        nowGoodsData.nowCountStore = dataInfo.nowCountInStore
+    else
+        nowGoodsData.itemId = dataInfo.iKey.id
+        nowGoodsData.producerId = dataInfo.iKey.producerId
+        nowGoodsData.qty = dataInfo.iKey.qty
+        nowGoodsData.nowCountStore = dataInfo.nowCountInStore
+    end
     Event.Brocast("updateWarehouseData",nowGoodsData)
     --Event.Brocast("updateWarehouseNum")
 end

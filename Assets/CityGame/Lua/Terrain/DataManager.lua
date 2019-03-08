@@ -142,6 +142,17 @@ end
 
 -------------------------------原子地块数据--------------------------------
 
+local function RefreshAllMapBuild(tempCollectionID)
+    ---生成系统土地------------
+    InitCollectionSystemTerrain(tempCollectionID)
+    ---生成系统建筑------------
+    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
+    ---生成河流
+    InitSystemRiverGameObject(tempCollectionID)
+    ---刷新一遍道路
+    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+end
+
 --功能
 --  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
@@ -178,14 +189,7 @@ local function CreateBlockDataTable(tempCollectionID)
         end
     end
     BuildDataStack[tempCollectionID].BlockDatas = TempTable
-    ---生成系统土地------------
-    InitCollectionSystemTerrain(tempCollectionID)
-    ---生成系统建筑------------
-    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
-    ---生成河流
-    InitSystemRiverGameObject(tempCollectionID)
-    ---刷新一遍道路
-    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+    RefreshAllMapBuild(tempCollectionID)
     collectgarbage("collect")
 end
 
@@ -195,6 +199,10 @@ function DataManager.InitBuildDatas(tempCollectionID)
     end
     if BuildDataStack[tempCollectionID].BlockDatas == nil then
         CreateBlockDataTable(tempCollectionID)
+    else
+        if BuildDataStack[tempCollectionID].SystemTerrainDatas == nil then
+            RefreshAllMapBuild(tempCollectionID)
+        end
     end
 end
 

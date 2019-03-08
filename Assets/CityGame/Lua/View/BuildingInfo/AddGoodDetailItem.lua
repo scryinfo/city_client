@@ -43,8 +43,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
             end
         end)
     end
-    self.numberText.text = AdjustProductionLineCtrl.getGoodInventoryNum(data.itemId)
-
+    self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)

@@ -73,10 +73,10 @@ function ServerListModel:m_GsOK()
     ServerListModel:registerGsNetMsg()
     -----------------------------------------------------------------------------
     --临时单独处理小孟的协议，后边统走datamanager
-    WarehouseModel.registerAsNetMsg()
-    ShelfModel.registerAsNetMsg()
-    AdjustProductionLineModel.registerAsNetMsg()
-    tempTransportModel.registerAsNetMsg()
+    --WarehouseModel.registerAsNetMsg()
+    --ShelfModel.registerAsNetMsg()
+    --AdjustProductionLineModel.registerAsNetMsg()
+    --tempTransportModel.registerAsNetMsg()
     StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调

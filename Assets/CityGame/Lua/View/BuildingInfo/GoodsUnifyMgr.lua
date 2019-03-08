@@ -52,7 +52,7 @@ function GoodsUnifyMgr:_creatStaffItemGoods(shelfData,goodState,buildingId)
     end
     for i,v in pairs(shelfData) do
         local prefab = self:_creatGoods(GoodsUnifyMgr.static.Shelf_PATH,ShelfPanel.Content)
-        local warehouseLuaItem = ShelfGoodsItem:new(v,prefab,self.behaviour,self,i,goodState,buildingId)
+        local warehouseLuaItem = ShelfGoodsItem:new(v,prefab,self.behaviour,i,goodState,buildingId)
         if not self.shelfLuaTab then
             self.shelfLuaTab = {}
         end
@@ -116,7 +116,7 @@ end
 function GoodsUnifyMgr:_creatShelfGoods(ins,luabehaviour)
     --预制的信息
     local prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Shelf_PATH,WarehousePanel.shelfContent)
-    local shelfLuaItem = DetailsItem:new(ins.goodsDataInfo,prefab,luabehaviour,self,ins.id)
+    local shelfLuaItem = DetailsItem:new(ins.goodsDataInfo,prefab,luabehaviour,ins.id)
     if not self.shelfPanelItem then
         self.shelfPanelItem = {}
     end
@@ -132,7 +132,7 @@ end
 function GoodsUnifyMgr:_creatTransportGoods(id,luabehaviour,itemId)
     local prefabData = {}
     prefabData._prefab = self:_creatGoods(GoodsUnifyMgr.static.Warehouse_Transport_PATH,WarehousePanel.transportContent);
-    local transportLuaItem = TransportItem:new(id.goodsDataInfo,prefabData._prefab,luabehaviour,self,id.id,id.itemId);
+    local transportLuaItem = TransportItem:new(id.goodsDataInfo,prefabData._prefab,luabehaviour,id.id,id.itemId);
 
     if not GoodsUnifyMgr.transportPanelItem then
         GoodsUnifyMgr.transportPanelItem = {}

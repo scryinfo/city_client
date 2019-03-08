@@ -29,7 +29,7 @@ function CompanyPanel.InitPanel()
     this.tipsTextCom = transform:Find("BottomRoot/BusinessRecordsRoot/TipsText"):GetComponent("Text")
 
     -- 基础信息显示
-    this.headImage = transform:Find("BottomRoot/BasicInfoRoot/HeadBg/HeadImage"):GetComponent("Image")
+    this.headImage = transform:Find("BottomRoot/BasicInfoRoot/HeadBg")
     this.companyText = transform:Find("BottomRoot/BasicInfoRoot/CompanyImage/CompanyText"):GetComponent("Text")
     this.nameText = transform:Find("BottomRoot/BasicInfoRoot/NameImage/NameText"):GetComponent("Text")
     this.incomeText = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/IncomeText"):GetComponent("Text")

@@ -49,6 +49,15 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     if index == 1 and not data.b then
         self:SetHeadColor(false)
     end
+
+    if index == 3 then
+        if self.data.id == DataManager.GetMyOwnerID() then
+            self.toggle.interactable = false
+        end
+        if  not data.b then
+            self:SetHeadColor(false)
+        end
+    end
 end
 
 function ChatFriendsItem:SetNoticeText(text)
@@ -93,7 +102,7 @@ function ChatFriendsItem:_toggleValueChange(isOn)
             --DataManager.SetMyReadChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
-        else
+        elseif self.data.index == 2 then
             if ChatPanel.strangersChatNoContentRoot.activeSelf then
                 ChatPanel.strangersChatNoContentRoot:SetActive(false)
             end
@@ -102,6 +111,8 @@ function ChatFriendsItem:_toggleValueChange(isOn)
             --DataManager.SetMyReadChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
+        elseif self.data.index == 3 then
+            ChatCtrl.static.chatMgr:ShowPlayerInfo(4, self.data)
         end
     end
 end

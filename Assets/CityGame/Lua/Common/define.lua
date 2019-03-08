@@ -95,7 +95,6 @@ ModelNames = {
 	Municipal="MunicipalModel",--市镇设施
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
-	tempTransport = "tempTransportModel",   --临时运输
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
 	Warehouse = "WarehouseModel",
 	friends = "FriendsModel", -- 好友

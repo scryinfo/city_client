@@ -142,7 +142,94 @@ end
 
 -------------------------------原子地块数据--------------------------------
 
+
+
+--计算路径值，返回路径值的拆分点的
+function DataManager.CalculatePathValues(tempNum)
+    if tempNum <= 0 or tempNum >15 then
+        return nil
+    end
+    local returnValue = 0
+    local tempTable = {}
+    for i = 8, 1, - i/2  do
+        returnValue = tempNum / i
+        if returnValue ~= 0 then
+            tempTable[i] = i
+        end
+        tempNum = tempNum % i
+    end
+    return tempTable
+end
+
+--初始化寻路基础数据
+--基础均为0
+--系统道路额外处理一波
+--系统建筑/建筑为自身数据
+--道路为道路值
+--寻路基础数据左上1 右上2 左下4 右下8
+local function CreatePathfindingBaseData(tempCollectionID)
+    local TempTable =  {}
+    BuildDataStack[tempCollectionID].BlockDatas = TempTable
+    local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
+    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
+    for key, value in pairs(idList) do
+        if TempTable[value] == nil then
+            TempTable[value] = 0
+        end
+    end
+    BuildDataStack[tempCollectionID].PathDatas = TempTable
+    collectgarbage("collect")
+end
+
+--赋值
+local function AddPathValue(tempBlockID,Value)
+    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].PathDatas == nil then
+        CreatePathfindingBaseData(tempCollectionID)
+    end
+    BuildDataStack[tempCollectionID].PathDatas[tempBlockID] = Value
+end
+
+
+--计算范围内建筑的路径值
+function DataManager.RefreshPathRangeBlock(startBlockID,size)
+    if size <= 0then
+        return
+    elseif size == 1 then
+        AddPathValue(startBlockID,15)
+    elseif size >= 2 then
+        local tempSize = (size - 1)
+        AddPathValue(startBlockID,1)
+        AddPathValue(startBlockID + tempSize,2)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize,4)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize + tempSize,8)
+        if size >= 3 then
+            for i = 1, tempSize - 1, 1  do
+                AddPathValue(startBlockID + i,3)
+                AddPathValue(startBlockID + tempSize + TerrainRangeSize * i,10)
+                AddPathValue(startBlockID + TerrainRangeSize * i,5)
+                AddPathValue(startBlockID + TerrainRangeSize * tempSize + i,12)
+            end
+        end
+    end
+end
+
+--删除建筑的路径值
+function DataManager.RemovePathRangeBlock(startBlockID,size)
+    local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
+    for key, value in pairs(idList) do
+        AddPathValue(value,0)
+    end
+end
+
+
+
 local function RefreshAllMapBuild(tempCollectionID)
+    ---生成寻路数据------------
+    CreatePathfindingBaseData(tempCollectionID)
     ---生成系统土地------------
     InitCollectionSystemTerrain(tempCollectionID)
     ---生成系统建筑------------
@@ -152,6 +239,7 @@ local function RefreshAllMapBuild(tempCollectionID)
     ---刷新一遍道路
     DataManager.RefreshWaysByCollectionID( tempCollectionID)
 end
+
 
 --功能
 --  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
@@ -190,6 +278,8 @@ local function CreateBlockDataTable(tempCollectionID)
     end
     BuildDataStack[tempCollectionID].BlockDatas = TempTable
     RefreshAllMapBuild(tempCollectionID)
+    --创建路径基础数据
+    CreatePathfindingBaseData(tempCollectionID)
     collectgarbage("collect")
 end
 

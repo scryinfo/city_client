@@ -49,10 +49,12 @@ end
 function WarehouseCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.AddListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
 end
 function WarehouseCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.RemoveListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
 end
 function WarehouseCtrl:Refresh()
     itemNumber = nil
@@ -261,6 +263,11 @@ function WarehouseCtrl:DestroyWarehouseItem(ins)
         Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--测试
+function WarehouseCtrl:UpdateLatestData(dataInfo)
+    --根据dataInfo生成实例，放到self.warehouseDatas
+    ct.log("fisher_w31_time","测试刷新仓库数据!!!!!!!!!!!!!!!"..dataInfo)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

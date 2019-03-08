@@ -160,10 +160,14 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
             goodData.n = dataInfo.nowCountStore
             inHand[#inHand + 1] = goodData
             self.warehouseData.store.inHand = inHand
+            local str = "仓库是空的，新加物品"
+            Event.Brocast("MaterialUpdateLatestData",str)
         else
             for key,value in pairs(self.warehouseData.store.inHand) do
                 if dataInfo.itemId == value.key.id then
                     value.n = dataInfo.nowCountStore
+                    local str = "仓库有这个物品，改变数量"
+                    Event.Brocast("MaterialUpdateLatestData",str)
                     return
                 end
             end
@@ -173,6 +177,8 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
             goodData.key = key
             goodData.n = dataInfo.nowCountStore
             self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+            local str = "仓库不是空的，新加物品"
+            Event.Brocast("MaterialUpdateLatestData",str)
         end
     else
         --商品

@@ -54,7 +54,7 @@ function LineItem:InitializeData()
     elseif math.floor(self.itemId / 100000) == goodsKey then
         --生产一个需要的时间
         self.OneTotalTime = self:GetNumOneTime(Good[self.itemId].numOneSec,self.workerNum)
-        self.brandbg.localScale = Vector3.zero
+        self.brandbg.localScale = Vector3.one
         self.brand.localScale = Vector3.zero
         self.quality.localScale = Vector3.zero
         self.itemMaterialbg.localScale = Vector3.zero

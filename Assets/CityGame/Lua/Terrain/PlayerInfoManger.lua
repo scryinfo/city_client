@@ -7,7 +7,7 @@
 PlayerInfoManger={}
 
 local  cache,playerIDs,num,temparrs
-
+local count=1
 function PlayerInfoManger.Awake()
     temparrs,  cache,playerIDs={},{},{}
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
@@ -19,7 +19,7 @@ local _func,_class
 ---==========================================================================================外部===================================================================================================
 
 function PlayerInfoManger.GetInfoAndExcute(playerIds,func,class)
-     num=1
+    num=1
 
     _func=func
     _class=class
@@ -40,7 +40,7 @@ function PlayerInfoManger.GetInfoAndExcute(playerIds,func,class)
         end
     end
 
-  
+
 end
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
@@ -52,17 +52,15 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
     local tempIds=playerIds
     for i, ids in ipairs(tempIds) do
 
-        local info=cache[tempIds[1]]
+        local info=cache[tempIds[i]]
 
         if info then--有缓存
-
+            count=i
             table.insert(temparrs,info)
-            table.remove(tempIds,1)
 
         else--无缓存
-
-            for i, ids in ipairs(tempIds) do
-                table.insert(playerIDs,ids)
+            for i = count, #tempIds do
+                table.insert(playerIDs,tempIds[i])
             end
             Event.Brocast("m_QueryPlayerInfoChat",playerIDs)
             return
@@ -70,7 +68,7 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
         end
     end
 
-   _func(_class,temparrs)
+    _func(_class,temparrs)
     temparrs={}
 end
 
@@ -88,7 +86,7 @@ end
 
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
-    if not _class and not _func then    return   end
+    if not _class and not _func  and #playerIDs<=0  then    return   end
 
     if num==1 then---第一种
 
@@ -107,9 +105,10 @@ function DataManager.n_OnReceivePlayerInfo(stream)
             table.insert(temparrs,info)
         end
 
-       _func(_class,temparrs)
+        _func(_class,temparrs)
     end
-
+    _func=nil
+    _class=nil
     temparrs={}
     playerIDs={}
 end

@@ -10,7 +10,7 @@ function SocialityManager:initialize()
     self.path = CityLuaUtil.getAssetsPath().."/client.data"
     self.m_friends = {}
     self.m_chatInfo = {}
-    self.m_chatByType = {{}, {}, {}}
+    self.m_chatByType = {{}, {}, {}, {}}
     self.m_friendsApply = {}
     self.m_blacklist = {}
     self.mySaveRoleCom = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
@@ -85,6 +85,8 @@ function SocialityManager:SetMyChatInfo(chatData)
             end
         end
         table.insert(self.m_chatByType[3][dataId].chatInfo, chatData)
+    elseif chatData.channel == "GROUP" then
+        table.insert(self.m_chatByType[4], chatData)
     end
 end
 
@@ -103,7 +105,7 @@ function SocialityManager:SetMyReadChatInfo(index, id)
     end
 end
 
---1 获取世界消息 2 获取好友消息 3 获取陌生人消息
+--1 获取世界消息 2 获取好友消息 3 获取陌生人消息 4获取公会消息
 function SocialityManager:GetMyChatInfo(index)
     return self.m_chatByType[index]
 end
@@ -232,4 +234,9 @@ end
 -- 删除聊天记录
 function SocialityManager:SetChatRecords(index)
     table.remove(self.mySaveRoleCom.readCommunication, index)
+end
+
+-- 清空公会的聊天消息
+function SocialityManager:SetGuildChatInfo()
+    self.m_chatByType[4] = {}
 end

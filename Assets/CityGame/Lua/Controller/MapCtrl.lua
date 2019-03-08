@@ -438,8 +438,8 @@ end
 --获取屏幕中心基于小地图的世界坐标
 function MapCtrl:getScreenCenterMapPos()
     local x = (MapPanel.mapRootRect.sizeDelta.x / 2 - MapPanel.mapRootRect.anchoredPosition.x / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.x)
-    local y = (MapPanel.mapRootRect.sizeDelta.y / 2 - MapPanel.mapRootRect.anchoredPosition.y / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.y)
-    return Vector3.New(-y, 0, -x)
+    local y = (MapPanel.mapRootRect.sizeDelta.y / 2 + MapPanel.mapRootRect.anchoredPosition.y / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.y)
+    return Vector3.New(y, 0, x)
 end
 --
 function MapCtrl:_mapAOIMove()
@@ -458,7 +458,7 @@ function MapCtrl:_judgeDetail()
         MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         return
     end
-    if self.selectSearchType ~= EMapSearchType.Default then
+    if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易详情
 

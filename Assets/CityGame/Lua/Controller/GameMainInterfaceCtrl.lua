@@ -352,7 +352,7 @@ function GameMainInterfaceCtrl:Awake()
                 local rect = go.transform:GetComponent("RectTransform")
                 go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
                 if a == 1 then
-                    rect.transform.localScale = Vector3.New(0.6,0.6,0.6)
+                    rect.transform.localScale = Vector3.New(0.8, 0.8, 0.8)
                 else
                     rect.transform.localScale = Vector3.one
                 end

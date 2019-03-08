@@ -79,7 +79,24 @@ function GuildMessageCtrl:_showView()
         local timeTab = getFormatUnixTime(societyInfo.createTs/1000)
         GuildMessagePanel.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
         GuildMessageCtrl.societyNotice = societyInfo.notice
-        GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
+
+        local idTemp = {}
+        local id = {}
+        for _, v in ipairs(societyInfo.notice) do
+            if v.createId then
+                id[v.createId] = true
+            end
+            if v.affectedId then
+                id[v.affectedId] = true
+            end
+        end
+        for j, k in pairs(id) do
+            table.insert(idTemp, j)
+        end
+
+        if idTemp[1] then
+            PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
+        end
 
         self:_showNotice()
     end
@@ -94,6 +111,10 @@ function GuildMessageCtrl:_showNotice()
             GuildMessagePanel.applyListNotice.localScale = Vector3.zero
         end
     end
+end
+
+function GuildMessageCtrl:_showScroll(playerData)
+    GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
 function GuildMessageCtrl:OnGuildList(go)

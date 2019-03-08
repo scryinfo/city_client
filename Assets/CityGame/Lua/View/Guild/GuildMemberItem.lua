@@ -14,12 +14,13 @@ function GuildMemberItem:initialize(prefab, data)
     self.data = data
 
     local transform = prefab.transform
+    self.memberHeadBg = transform:Find("MemberHeadBg")
     self.nameText = transform:Find("NameText"):GetComponent("Text")
     self.jobText = transform:Find("JobText"):GetComponent("Text")
     self.staffNumberText = transform:Find("StaffNumberText"):GetComponent("Text")
     self.joinTimeText = transform:Find("JoinTimeText"):GetComponent("Text")
 
-    self.nameText.text = self.data.id
+    --self.nameText.text = self.data.id
     if self.data.identity == "CHAIRMAN" then
         self.jobText.text = "会长"
     elseif self.data.identity == "VICE_CHAIRMAN" then
@@ -35,6 +36,8 @@ function GuildMemberItem:initialize(prefab, data)
 
     self.clickBtn = transform:Find("ClickBtn"):GetComponent("Button")
     self.clickImage = transform:Find("ClickBtn"):GetComponent("Image")
+
+    PlayerInfoManger.GetInfosOneByOne({data.id}, self._showNameHead, self)
 
     -- 自己的背景色为浅黄色且不能点击
     if data.id ==DataManager.GetMyOwnerID() then
@@ -68,4 +71,12 @@ end
 
 function GuildMemberItem:_setButtonInteractable(isinteractable)
     self.clickBtn.interactable = isinteractable
+end
+
+function GuildMemberItem:_showNameHead(playerData)
+    self.nameText.text = playerData.name
+    for i = 1, self.memberHeadBg.childCount do
+        UnityEngine.GameObject.Destroy(self.memberHeadBg:GetChild(i-1).gameObject)
+    end
+    AvatarManger.GetSmallAvatar(playerData.faceId, self.memberHeadBg,0.2)
 end

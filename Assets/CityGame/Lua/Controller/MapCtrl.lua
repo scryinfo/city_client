@@ -14,6 +14,7 @@ MapCtrl.static.ShowTypeBtnMovePos = Vector2.New(17, -80)  --打开界面的按�
 
 EMapSearchType =
 {
+    Default = 0,
     Material = 1,
     Goods = 2,
     Deal = 3,
@@ -171,11 +172,17 @@ end
 function MapCtrl:dealSelect()
     self:toggleDetailPage(false)
     self.m_Timer:Start()
+
+    self.selectDetailItem = nil  --另一种选项清空
+    self.selectSearchType = EMapSearchType.Deal
 end
 --选中拍卖
 function MapCtrl:auctionSelect()
     self:toggleDetailPage(false)
     self.m_Timer:Start()
+
+    self.selectDetailItem = nil  --另一种选项清空
+    self.selectSearchType = EMapSearchType.Auction
 end
 
 ---
@@ -184,6 +191,7 @@ function MapCtrl:nonePageCancelSelect(selectId)
     if self._cancelTypeSelect == selectId then
         self:refreshTypeItems()
         self.selectId = nil
+        self.selectSearchType = EMapSearchType.Default
     end
 end
 --
@@ -227,7 +235,7 @@ function MapCtrl:refreshDetailItem(item)
             self.selectDetailItem:resetState()
         end
 
-        --self.selectId = nil  --另一种选中需要清除
+        self.selectSearchType = EMapSearchType.Default  --选中的搜索type
         self.selectDetailItem = item
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
@@ -448,9 +456,15 @@ function MapCtrl:_judgeDetail()
         local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
         local blockCollectionId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
         MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
+        return
+    end
+    if self.selectSearchType ~= EMapSearchType.Default then
+        ct.log("")
+        --显示拍卖/土地交易详情
+
     end
 end
---
+--判断是否是
 function MapCtrl:_getIsDetailFunc()
     if self.my_Scale ~= nil and self.my_Scale > self.criticalScaleValue then
         return true

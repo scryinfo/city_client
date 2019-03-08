@@ -419,6 +419,10 @@ function SaveLanguageSettings(languageType)
 	end
 end
 
+function SaveBuildingBubbleSettings(bubbleType)
+		UnityEngine.PlayerPrefs.SetInt("BuildingBubble",bubbleType)
+end
+
 function GetLanguage(key,...)
 	local temp={...}
 	for Id, String in pairs(currentLanguage) do

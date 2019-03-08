@@ -17,6 +17,26 @@ function SystemSettingCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
+
+
+
+
+function SystemSettingCtrl:Refresh()
+    local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
+    if Languagenum==1 then
+        panel:InitDate(GetLanguage(14010006))
+    elseif Languagenum==0 then
+        panel:InitDate(GetLanguage(14010007))
+    end
+end
+
+function  SystemSettingCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function SystemSettingCtrl:Close()
+    UIPanel.Close(self)
+end
 function  SystemSettingCtrl:Awake(go)
     self.gameObject = go
     panel=SystemSettingPanel
@@ -33,24 +53,44 @@ function  SystemSettingCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
+    --气泡
+    LuaBehaviour:AddClick(panel.bubbleBtn.gameObject,self.c_OnClick_Bubble,self);
+    LuaBehaviour:AddClick(panel.allBigBtn.gameObject,self.c_OnClick_BubbleBig,self);
+    LuaBehaviour:AddClick(panel.allSmallBtn.gameObject,self.c_OnClick_BubbleSmall,self);
+    LuaBehaviour:AddClick(panel.allCloseBtn.gameObject,self.c_OnClick_BubbleClose,self);
+
 end
-
-
-
-function SystemSettingCtrl:Refresh()
-    local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
-    if Languagenum==1 then
-        panel:InitDate(GetLanguage(14010006))
-    elseif Languagenum==0 then
-        panel:InitDate(GetLanguage(14010007))
-    end
-end
-
-
 ---========================================================点击==============================================================================================
+--打开面板
+function SystemSettingCtrl:c_OnClick_Bubble(ins)
+    panel.bubblePanel.localScale=Vector3.one
+    panel.closeLan.localScale=Vector3.one
+end
+--气泡全大
+function SystemSettingCtrl:c_OnClick_BubbleBig(ins)
+    panel.bubblePanel.localScale=Vector3.zero
+    for i, bubbleIns in ipairs(BubblePrefabs) do
+        bubbleIns:changeLarge()
+    end
+    SaveBuildingBubbleSettings(BuildingBubbleType.big)
+end
+--气泡全小
+function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
+    panel.bubblePanel.localScale=Vector3.zero
+    for i, bubbleIns in ipairs(BubblePrefabs) do
+        bubbleIns:changeSmall()
+    end
+    SaveBuildingBubbleSettings(BuildingBubbleType.close)
+end
+--气泡全关
+function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
+    panel.bubblePanel.localScale=Vector3.zero
+    for i, bubbleIns in ipairs(BubblePrefabs) do
+        bubbleIns:CloesBubble()
+    end
+    SaveBuildingBubbleSettings(BuildingBubbleType.small)
 
-
-
+end
 
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
@@ -91,8 +131,9 @@ function SystemSettingCtrl:c_OnClick_backBtn(ins)
 end
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn1(ins)
-    if panel.LanguagePanel.localScale.x==1 then
+    if panel.LanguagePanel.localScale.x==1 or panel.bubblePanel.localScale.x  then
         panel.LanguagePanel.localScale=Vector3.zero
+        panel.bubblePanel.localScale=Vector3.zero
         return
     end
     UIPanel.ClosePage()
@@ -102,6 +143,7 @@ end
 function SystemSettingCtrl:c_OnClick_backBtn2()
     panel.LanguagePanel.localScale=Vector3.zero
     panel.closeLan.localScale=Vector3.zero
+    panel.bubblePanel.localScale=Vector3.zero
 end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
@@ -137,10 +179,4 @@ end
 
 
 
-function  SystemSettingCtrl:Hide()
-    UIPanel.Hide(self)
-end
 
-function SystemSettingCtrl:Close()
-    UIPanel.Close(self)
-end

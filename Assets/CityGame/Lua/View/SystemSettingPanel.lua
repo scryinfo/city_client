@@ -55,14 +55,14 @@ function SystemSettingPanel.InitPanel()
 
     this.bubblePanel = transform:Find("Panel/bodyRoot/bg/body/bubble")
 
-    this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
-    this.allBigBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allBig")
+    this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
+    this.allBigBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig")
 
-    this.allSmallBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allSmall/Text"):GetComponent("Text")
-    this.allSmallBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allSmall")
+    this.allSmallBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allSmall/Text"):GetComponent("Text")
+    this.allSmallBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allSmall")
 
-    this.allCloseBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allClose/Text"):GetComponent("Text")
-    this.allCloseBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/allClose")
+    this.allCloseBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allClose/Text"):GetComponent("Text")
+    this.allCloseBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allClose")
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)

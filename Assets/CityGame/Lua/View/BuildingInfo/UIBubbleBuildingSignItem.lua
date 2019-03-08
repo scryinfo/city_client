@@ -88,12 +88,18 @@ function UIBubbleBuildingSignItem:updateData(data)
     --赋值 姓名和 头像
     PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
 
+
     if not data.bubble then
-        self.rect.localScale=Vector3.one
+        self:CloesBubble()
     else
-        self.rect.localScale=Vector3.one
+        if UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==1 then
+            self:changeSmall()
+        elseif UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==2 then
+            self:changeLarge()
+        else
+            self:CloesBubble()
+        end
     end
-    UpdateBeat:Add(self.Update, self)
 
 end
 ---========================================================================点击函数============================================================
@@ -119,7 +125,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 --关闭
-function UIBubbleBuildingSignItem:CloesBubble(ins)
+function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.transform.localScale=Vector3.zero
     UpdateBeat:Remove(self.Update,self)
 end
@@ -130,11 +136,13 @@ function UIBubbleBuildingSignItem:Start()
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
+    self:Start()
     self.largeRec.localScale=Vector3.zero
     self.smallRec.localScale=Vector3.one
 end
 
 function UIBubbleBuildingSignItem:changeLarge()
+    self:Start()
     self.largeRec.localScale=Vector3.one
     self.smallRec.localScale=Vector3.zero
 end

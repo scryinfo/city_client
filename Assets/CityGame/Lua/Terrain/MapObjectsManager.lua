@@ -15,7 +15,9 @@ function MapObjectsManager.Init()
         if item.PlayerBuildingBaseDataID ~= nil then
             buildMgr:CreateBuild(PlayerBuildingBaseData[item.PlayerBuildingBaseDataID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
         elseif item.RoadPrefabConfig ~= nil then
-            buildMgr:CreateBuild(RoadPrefabConfig[item.RoadPrefabConfig]["prefabRoute"] ,CreateBasePrefabSuccess,item)
+            buildMgr:CreateBuild(RoadPrefabConfig[item.RoadPrefabConfigID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
+        elseif item.PathFindingConfigID ~= nil then
+            buildMgr:CreateBuild(PathFindingConfig[item.PathFindingConfigID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
         end
     end
     --初始化中心建筑

@@ -44,6 +44,10 @@ local RoadRootObj
 --local HeadId                  --头像的ID
 local pbl = pbl
 
+
+local Math_Floor = math.floor
+
+
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
 ---------------------------------------------------------------------------------- 建筑信息--------------------------------------------------------------------------------
@@ -142,25 +146,6 @@ end
 
 -------------------------------原子地块数据--------------------------------
 
-
-
---计算路径值，返回路径值的拆分点的
-function DataManager.CalculatePathValues(tempNum)
-    if tempNum <= 0 or tempNum >15 then
-        return nil
-    end
-    local returnValue = 0
-    local tempTable = {}
-    for i = 8, 1, - i/2  do
-        returnValue = tempNum / i
-        if returnValue ~= 0 then
-            tempTable[i] = i
-        end
-        tempNum = tempNum % i
-    end
-    return tempTable
-end
-
 --初始化寻路基础数据
 --基础均为0
 --系统道路额外处理一波
@@ -169,7 +154,6 @@ end
 --寻路基础数据左上1 右上2 左下4 右下8
 local function CreatePathfindingBaseData(tempCollectionID)
     local TempTable =  {}
-    BuildDataStack[tempCollectionID].BlockDatas = TempTable
     local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
     local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
     for key, value in pairs(idList) do
@@ -193,10 +177,16 @@ local function AddPathValue(tempBlockID,Value)
     BuildDataStack[tempCollectionID].PathDatas[tempBlockID] = Value
 end
 
+function  DataManager.GetPathDatas(tempCollectionID)
+    if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].PathDatas ~= nil  then
+        return BuildDataStack[tempCollectionID].PathDatas
+    end
+    return nil
+end
 
 --计算范围内建筑的路径值
 function DataManager.RefreshPathRangeBlock(startBlockID,size)
-    if size <= 0then
+    if size <= 0 then
         return
     elseif size == 1 then
         AddPathValue(startBlockID,15)
@@ -224,8 +214,6 @@ function DataManager.RemovePathRangeBlock(startBlockID,size)
         AddPathValue(value,0)
     end
 end
-
-
 
 local function RefreshAllMapBuild(tempCollectionID)
     ---生成寻路数据------------
@@ -1482,7 +1470,7 @@ end
 
 --判断该地块是不是自己可以用的（包含自己拥有和租的）
 function DataManager.IsOwnerGround(tempPos)
-    local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
+    local tempGridIndex =  { x = Math_Floor(tempPos.x) , y = Math_Floor(tempPos.z) }
     --在自己拥有的的地中判断
     if PersonDataStack.m_groundInfos ~= nil then
         for key, value in pairs(PersonDataStack.m_groundInfos) do

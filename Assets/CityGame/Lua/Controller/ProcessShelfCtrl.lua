@@ -126,7 +126,7 @@ function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
             return
         else
             for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_ReqMaterialBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
+                Event.Brocast("m_ReqProcessBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
                         value.goodsDataInfo.price,targetBuildingId,value.goodsDataInfo.k.producerId,value.goodsDataInfo.k.qty)
             end
         end

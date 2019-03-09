@@ -258,7 +258,7 @@ function RetailWarehouseCtrl:DestroyWarehouseItem(ins)
     data.contentInfo = GetLanguage(35030004)
     data.tipInfo = GetLanguage(30030002)
     data.btnCallBack = function()
-        Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
+        Event.Brocast("m_ReqRetailDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end

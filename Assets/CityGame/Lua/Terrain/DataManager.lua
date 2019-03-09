@@ -395,6 +395,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                         end
                     end
                     ThisRoteDatas[itemBlockID].roadNum = roadNum
+                    --TODO:
                     local go = MapObjectsManager.GetGameObjectByPool(RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
                     if nil ~= RoadRootObj then
                         go.transform:SetParent(RoadRootObj.transform)
@@ -408,12 +409,14 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                 elseif  roadNum == 0 and ThisRoteDatas[itemBlockID] ~= nil and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil then
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
+                    --TODO:
                 end
             else
                 if nil ~= ThisRoteDatas[itemBlockID] and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil  then
                     --删除之前的道路Obj
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
+                    --TODO:
                 end
             end
             break

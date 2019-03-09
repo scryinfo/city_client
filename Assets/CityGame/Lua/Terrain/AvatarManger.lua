@@ -270,7 +270,7 @@ function AvatarManger.CollectAllAvatar()
     end
 end
 
-function AvatarManger.CollectAllAvatar(AvatarData)
+function AvatarManger.CollectAvatar(AvatarData)
     if #record>0 and AvatarData then
 
             for i, config in ipairs(HeadSizeType) do

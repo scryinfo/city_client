@@ -50,8 +50,8 @@ function GuildApplyItem:_showNameHead(playerData)
     self.nameText.text = playerData.name
     self.companyText.text = playerData.companyName
 
-    for i = 1, self.headImage.childCount do
-        UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+    if self.avatarData then
+        AvatarManger.CollectAvatar(self.avatarData)
     end
-    AvatarManger.GetSmallAvatar(playerData.faceId, self.headImage,0.2)
+    self.avatarData = AvatarManger.GetSmallAvatar(playerData.faceId, self.headImage,0.2)
 end

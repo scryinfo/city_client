@@ -25,21 +25,22 @@ function PlayerInfoManger.GetInfosOneByOne(playerIds,func,class)
     num=1
     recardNums=recardNums+1
     _func=func
-    table.insert(_classes,class)
 
-    local tempIds=playerIds
-    for i, ids in ipairs(tempIds) do
+     local tempIds=playerIds
+
         local info=cache[tempIds[1]]
 
         if info then--有缓存
             func(class,info)
+            recardNums=recardNums-1
         else--无缓存
-            for j = 1, #tempIds do
-                table.insert(playerIDs,tempIds[j])
-            Event.Brocast("m_QueryPlayerInfoChat",{tempIds[j]})
-            end
+            table.insert(_classes,class)
+
+            table.insert(playerIDs,tempIds[1])
+            Event.Brocast("m_QueryPlayerInfoChat",{tempIds[1]})
+
         end
-    end
+
 
 end
 

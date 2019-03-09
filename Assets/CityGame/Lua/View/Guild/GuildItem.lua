@@ -55,8 +55,9 @@ end
 
 function GuildItem:_showNameHead(playerData)
     self.leaderNameText.text = playerData.name
-    for i = 1, self.leaderHeadBg.childCount do
-        UnityEngine.GameObject.Destroy(self.leaderHeadBg:GetChild(i-1).gameObject)
+    if  self.avatarData  then
+        AvatarManger.CollectAvatar(self.avatarData)
     end
-    AvatarManger.GetSmallAvatar(playerData.faceId, self.leaderHeadBg,0.2)
+
+    self.avatarData = AvatarManger.GetSmallAvatar(playerData.faceId, self.leaderHeadBg,0.2)
 end

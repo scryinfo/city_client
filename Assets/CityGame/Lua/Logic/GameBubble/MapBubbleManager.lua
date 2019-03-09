@@ -38,6 +38,19 @@ end
 function MapBubbleManager.setOldAOICenterID(id)
     this.oldCollectionID = id
 end
+--打开小地图之前的中心位置  --用于关闭小地图后的归位
+function MapBubbleManager.setBackCollectionID()
+    this.backCollectionId = TerrainManager.GetCameraCollectionID()
+end
+--关闭小地图，复原位置
+function MapBubbleManager.setCameraToBackID()
+    local tempId = TerrainManager.GetCameraCollectionID()
+    if tempId ~= this.backCollectionId then
+        local blockId = TerrainManager.CollectionIDTurnBlockID(this.backCollectionId)
+        local pos = TerrainManager.BlockIDTurnPosition(blockId)
+        Event.Brocast("CameraMoveTo", pos)
+    end
+end
 
 --创建系统建筑，暂时只有中心建筑
 function MapBubbleManager.createSystemItem()

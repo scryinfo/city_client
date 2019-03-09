@@ -38,6 +38,7 @@ function MapCtrl:Awake(go)
     local behaviour = self.gameObject:GetComponent('LuaBehaviour')
     behaviour:AddClick(MapPanel.backBtn.gameObject, function ()
         PlayMusEff(1002)
+        MapBubbleManager.setCameraToBackID()
         UIPanel.ClosePage()
     end)
     behaviour:AddClick(MapPanel.enlargeBtn.gameObject, function()
@@ -80,7 +81,10 @@ function MapCtrl:Active()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self.AOIState = 0  --设置为远镜头
+
+    self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
     self:RefreshMiniMapScale()
+    MapBubbleManager.setBackCollectionID()
 end
 
 function MapCtrl:Refresh()

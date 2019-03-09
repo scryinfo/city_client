@@ -500,7 +500,8 @@ function MapCtrl:_mapAOIMove()
         return
     end
     local pos = self:getScreenCenterMapPos()
-    Event.Brocast("CameraMoveTo", pos)
+    --Event.Brocast("CameraMoveTo", pos)
+    CameraMove.MoveCameraToPos(pos)
 end
 --放大过程中判断是否需要请求详情
 function MapCtrl:_judgeDetail()

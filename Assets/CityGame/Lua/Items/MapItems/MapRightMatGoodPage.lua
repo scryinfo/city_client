@@ -70,6 +70,8 @@ function MapRightMatGoodPage:refreshData(data)
         self.leftRightBtnRoot.localScale = Vector3.zero
         self.mapRightMatGoodItem:refreshData(data.detailData.sale[1])
     end
+
+    --self.baseBuildingModel =
 end
 --重置状态
 function MapRightMatGoodPage:resetState()
@@ -88,7 +90,7 @@ function MapRightMatGoodPage:_closeBtn()
 end
 --去地图上的一个建筑
 function MapRightMatGoodPage:_goHereBtn()
-
+    MapBubbleManager.GoHereFunc(self.data.buildingBase)
 end
 --左翻
 function MapRightMatGoodPage:_leftChangeBtn()

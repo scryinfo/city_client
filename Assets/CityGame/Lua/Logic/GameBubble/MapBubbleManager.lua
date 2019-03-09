@@ -300,3 +300,10 @@ function MapBubbleManager.cleanAllBubbleItems()
     this.cleanAllCollectionDetails()
     this.centerItem:resetState()
 end
+
+---传data.buildingBase
+function MapBubbleManager.GoHereFunc(data)
+    UIPanel.CloseAllPageExceptMain()
+    local pos = Vector3.New(data.pos.x,0,data.pos.y)
+    CameraMove.MoveCameraToPos(pos)
+end

@@ -112,17 +112,22 @@ function GuildManager:SetGuildMemberIdentity(playerId, identity)
     end
 end
 
--- 改名字返回
+-- 设置名字
 function GuildManager:SetGuildSocietyName(bytesStrings)
     self.guildInfo.name = bytesStrings.str
 end
 
--- 改介绍返回
+-- 设置介绍
 function GuildManager:SetGuildIntroduction(bytesStrings)
     self.guildInfo.introduction = bytesStrings.str
 end
 
--- 改宣言返回
+-- 设置宣言
 function GuildManager:SetGuildDeclaration(bytesStrings)
     self.guildInfo.declaration = bytesStrings.str
+end
+
+-- 获得公会成员
+function GuildManager:GetGuildMembers()
+    return self.guildInfo.members
 end

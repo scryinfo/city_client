@@ -49,10 +49,12 @@ end
 function ProcessWarehouseCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.AddListener("ProcessUpdateLatestData",self.UpdateLatestData,self)
 end
 function ProcessWarehouseCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.RemoveListener("ProcessUpdateLatestData",self.UpdateLatestData,self)
 end
 function ProcessWarehouseCtrl:Refresh()
     itemNumber = nil
@@ -261,6 +263,27 @@ function ProcessWarehouseCtrl:DestroyWarehouseItem(ins)
         Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--生产中刷新仓库的数据
+function ProcessWarehouseCtrl:UpdateLatestData(dataInfo)
+    if self.warehouseDatas then
+        for key,value in pairs(self.warehouseDatas) do
+            if dataInfo.itemId == value.itemId then
+                value.n = dataInfo.nowCountStore
+                value.numberText.text = dataInfo.nowCountStore
+                value.goodsDataInfo.n = dataInfo.nowCountStore
+                return
+            end
+        end
+    end
+    local inHand = {}
+    local key = {}
+    key.id = dataInfo.itemId
+    key.producerId = dataInfo.producerId
+    key.qty = dataInfo.qty
+    inHand.key = key
+    inHand.n = dataInfo.nowCountStore
+    self:RefreshCreateItem(inHand,ProcessWarehousePanel.warehouseItem,ProcessWarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

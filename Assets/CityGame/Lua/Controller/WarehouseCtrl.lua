@@ -67,8 +67,8 @@ function WarehouseCtrl:Refresh()
     end
 end
 function WarehouseCtrl:Hide()
-    UIPanel.Hide(self)
     self:_removeListener()
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -264,9 +264,24 @@ function WarehouseCtrl:DestroyWarehouseItem(ins)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
+--生产中刷新仓库数据
 function WarehouseCtrl:UpdateLatestData(dataInfo)
-    --根据dataInfo生成实例，放到self.warehouseDatas
-    ct.log("fisher_w31_time","测试刷新仓库数据!!!!!!!!!!!!!!!"..dataInfo)
+    if self.warehouseDatas then
+        for key,value in pairs(self.warehouseDatas) do
+            if dataInfo.itemId == value.itemId then
+                value.n = dataInfo.nowCountStore
+                value.numberText.text = dataInfo.nowCountStore
+                value.goodsDataInfo.n = dataInfo.nowCountStore
+                return
+            end
+        end
+    end
+    local inHand = {}
+    local key = {}
+    key.id = dataInfo.itemId
+    inHand.key = key
+    inHand.n = dataInfo.nowCountStore
+    self:RefreshCreateItem(inHand,WarehousePanel.warehouseItem,WarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

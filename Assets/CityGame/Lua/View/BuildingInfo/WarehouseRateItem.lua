@@ -151,41 +151,38 @@ end
 function WarehouseRateItem:updateWarehouseData(dataInfo)
     --原料
     if not dataInfo.producerId then
+        local inHand = {}
+        local goodData = {}
+        local key = {}
         if not self.warehouseData.store.inHand then
-            local inHand = {}
-            local goodData = {}
-            local key = {}
             key.id = dataInfo.itemId
             goodData.key = key
             goodData.n = dataInfo.nowCountStore
             inHand[#inHand + 1] = goodData
             self.warehouseData.store.inHand = inHand
-            local str = "仓库是空的，新加物品"
-            Event.Brocast("MaterialUpdateLatestData",str)
         else
             for key,value in pairs(self.warehouseData.store.inHand) do
                 if dataInfo.itemId == value.key.id then
                     value.n = dataInfo.nowCountStore
-                    local str = "仓库有这个物品，改变数量"
-                    Event.Brocast("MaterialUpdateLatestData",str)
+                    Event.Brocast("MaterialUpdateLatestData",dataInfo)
                     return
                 end
             end
-            local goodData = {}
-            local key = {}
             key.id = dataInfo.itemId
             goodData.key = key
             goodData.n = dataInfo.nowCountStore
             self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
-            local str = "仓库不是空的，新加物品"
-            Event.Brocast("MaterialUpdateLatestData",str)
         end
+        Event.Brocast("MaterialUpdateLatestData",dataInfo)
     else
         --商品
+        local inHand = {}
+        local goodData = {}
+        local key = {}
         if not self.warehouseData.store.inHand then
-            local inHand = {}
-            local goodData = {}
-            local key = {}
+            --local inHand = {}
+            --local goodData = {}
+            --local key = {}
             key.id = dataInfo.itemId
             key.producerId = dataInfo.producerId
             key.qty = dataInfo.qty
@@ -196,12 +193,13 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
         else
             for key,value in pairs(self.warehouseData.store.inHand) do
                 if dataInfo.itemId == value.key.id then
+                    Event.Brocast("ProcessUpdateLatestData",dataInfo)
                     value.n = dataInfo.nowCountStore
                     return
                 end
             end
-            local goodData = {}
-            local key = {}
+            --local goodData = {}
+            --local key = {}
             key.id = dataInfo.itemId
             key.producerId = dataInfo.producerId
             key.qty = dataInfo.qty
@@ -209,6 +207,7 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
             goodData.n = dataInfo.nowCountStore
             self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
         end
+        Event.Brocast("ProcessUpdateLatestData",dataInfo)
     end
 end
 --刷新建筑页面数量

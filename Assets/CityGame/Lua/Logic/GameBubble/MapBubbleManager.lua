@@ -279,7 +279,7 @@ function MapBubbleManager.recyclingObjToPool(poolName, go)
     end
 end
 --清除item
-function MapBubbleManager.cleanItems()
+function MapBubbleManager.cleanBuildingItems()
     if this.selfBuildings ~= nil then
         for i, value in pairs(this.selfBuildings) do
             value:close()
@@ -292,4 +292,11 @@ function MapBubbleManager.MapMoveFunc()
     if this.mapCtrl ~= nil then
         this.mapCtrl:_mapAOIMove()
     end
+end
+--关闭界面时的操作
+function MapBubbleManager.cleanAllBubbleItems()
+    this.cleanBuildingItems()
+    this.cleanSummaryItems()
+    this.cleanAllCollectionDetails()
+    this.centerItem:resetState()
 end

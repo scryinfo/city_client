@@ -17,7 +17,11 @@ function MapSystemItem:_childInit()
     end)
     --LoadSprite(data.disSelectIconPath, self.iconImg, true)
 end
-
+--
+function MapSystemItem:resetState()
+    self.detailShowImg.enabled = false
+    self.scaleRoot.localScale = Vector3.one
+end
 --
 function MapSystemItem:_clickFunc()
     if self.data == nil then

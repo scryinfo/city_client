@@ -74,6 +74,7 @@ end
 --重置状态
 function MapRightMatGoodPage:resetState()
     self:_language()
+    self.viewRect.anchoredPosition = Vector2.New(506, 0)
 end
 --多语言
 function MapRightMatGoodPage:_language()

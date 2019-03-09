@@ -77,13 +77,7 @@ end
 function MapCtrl:Active()
     UIPanel.Active(self)
 
-    --设置地图大小和Slider初始值
-    MapPanel.scaleSlider.minValue = self.ScaleMin
-    MapPanel.scaleSlider.maxValue = self.ScaleMax
-    self.AOIState = 0  --设置为远镜头
-
-    self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
-    self:RefreshMiniMapScale()
+    --self:RefreshMiniMapScale()
     MapBubbleManager.setBackCollectionID()
 end
 
@@ -107,15 +101,37 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
 
-    self.m_Timer:Stop()
+    self:_cleanDatas()
+end
+--
+function MapCtrl:_cleanDatas()
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
+
     self:_cancelDetailSelect()
+    self:_cleanChooseState()
     self:refreshTypeItems()
     self:closeSearch()
     self:toggleDetailPage(false)
 
-    MapBubbleManager.cleanItems()
-end
+    --设置地图大小和Slider初始值
+    MapPanel.scaleSlider.minValue = self.ScaleMin
+    MapPanel.scaleSlider.maxValue = self.ScaleMax
+    self.AOIState = 0  --设置为远镜头
 
+    self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
+    MapPanel.mapRootRect.transform.localScale = Vector3.one
+    MapPanel.mapRootRect.anchoredPosition = Vector2.zero
+    MapPanel.scaleSlider.value = self.my_Scale
+
+    MapBubbleManager.cleanAllBubbleItems()
+
+    --右侧的面板信息
+    if MapPanel.rightMatGoodPageItem ~= nil then
+        MapPanel.rightMatGoodPageItem:resetState()
+    end
+end
 --
 function MapCtrl:_initUIData()
     --UI搜索界面
@@ -124,11 +140,12 @@ function MapCtrl:_initUIData()
         self:_createType(value)
     end
 
+    --self:_cancelDetailSelect()
+    --self:refreshTypeItems()
+    --self:closeSearch()
+    --self:toggleDetailPage(false)  --默认关闭搜索界面
+    self:_cleanDatas()
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, 3, true)
-    self:_cancelDetailSelect()
-    self:refreshTypeItems()
-    self:closeSearch()
-    self:toggleDetailPage(false)  --默认关闭搜索界面
 end
 
 function MapCtrl:_itemTimer()
@@ -230,6 +247,12 @@ function MapCtrl:refreshTypeItems(selectId)
         end
     end
 end
+--清除所有选中状态
+function MapCtrl:_cleanChooseState()
+    for i, value in pairs(self.typeTable) do
+        value:resetState()
+    end
+end
 --
 function MapCtrl:refreshDetailItem(item)
     if item == nil then
@@ -271,6 +294,7 @@ function MapCtrl:_cancelDetailSelect()
         self.selectDetailItem:resetState()
         self.selectDetailItem = nil
     end
+    self.selectId = nil
 end
 
 ---

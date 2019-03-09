@@ -46,7 +46,7 @@ function MapBubbleManager.createSystemItem()
     local item = MapSystemItem:new({tempPath = ""}, obj.transform)
     local pos = Vector2.New(TerrainConfig.CentralBuilding.CenterNodePos.z ,- TerrainConfig.CentralBuilding.CenterNodePos.x ) * this.itemWidth
     local delta = this.itemDelta * PlayerBuildingBaseData[TerrainConfig.CentralBuilding.BuildingType].x
-    item:setScaleAndPos(Vector3.one, pos, delta)
+    item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
     this.centerItem = item
 
     --local objRect = obj:GetComponent("RectTransform")
@@ -88,7 +88,7 @@ function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
             this.selfBuildings[value.info.id] = item
             local pos = Vector2.New( value.info.pos.y, - value.info.pos.x) * this.itemWidth
             local delta = this.itemDelta *  PlayerBuildingBaseData[value.info.mId].x
-            item:setScaleAndPos(Vector3.one, pos, delta)
+            item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
         end
     end
 end
@@ -105,7 +105,7 @@ function MapBubbleManager._createSummaryItems(data)
     local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
     this.summaryItems[collectionId] = item
     local pos = Vector2.New(tempPos.x, -tempPos.z) * this.itemWidth
-    item:setScaleAndPos(Vector3.one, pos, 0)
+    item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, 0)
 end
 --生成详情Item
 function MapBubbleManager._createDetailItems(data)

@@ -14,6 +14,8 @@ function MapAllSearchItem:initialize(data, viewRect)
     self.countText = self.viewRect.transform:Find("btn/Text"):GetComponent("Text")
     self.countText.text = self.data.num
 
+    Event.AddListener("c_MapBubbleScale", self._changeScale, self)
+
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
@@ -30,9 +32,25 @@ end
 --设置缩放比以及位置
 function MapAllSearchItem:setScaleAndPos(scale, pos)
     if scale ~= nil then
-        self.viewRect.transform.localScale = scale
+        self.viewRect.transform.localScale = Vector3.one * scale
     end
     if pos ~= nil then
         self.viewRect.anchoredPosition = pos
     end
+end
+--
+function MapAllSearchItem:_changeScale(mapScale)
+    if mapScale == 0 or self.viewRect == nil then
+        return
+    end
+    local scale = 1 / mapScale
+    self.viewRect.transform.localScale = Vector3.one * scale
+end
+--
+function MapAllSearchItem:close()
+    if self.viewRect ~= nil and self.data.poolName ~= nil then
+        MapBubbleManager.recyclingObjToPool(self.data.poolName, self.viewRect.gameObject)
+    end
+    self.data = nil
+    self = nil
 end

@@ -17,7 +17,11 @@ end
 --初始设置设置缩放比以及位置
 function MapBubbleBase:setScaleAndPos(scale, pos, sizeDelta)
     if scale ~= nil then
-        self.viewRect.transform.localScale = scale
+        if scale == 0 then
+            scale = 1
+        end
+        local myScale = 1 / scale
+        self.scaleRoot.transform.localScale = Vector3.one * myScale  --设置子物体缩放大小
     end
     if pos ~= nil then
         self.viewRect.anchoredPosition = pos
@@ -26,9 +30,6 @@ function MapBubbleBase:setScaleAndPos(scale, pos, sizeDelta)
         self.viewRect.sizeDelta = sizeDelta  --设置父物体大小
         if self.detailShowImg ~= nil then
             self.detailShowImg.enabled = false
-        end
-        if self.scaleRoot ~= nil then
-            self.scaleRoot.localScale = scale
         end
     end
 end

@@ -175,7 +175,10 @@ function MapCtrl:dealSelect()
     self:toggleDetailPage(false)
     self.m_Timer:Start()
 
-    self.selectDetailItem = nil  --另一种选项清空
+    if self.selectDetailItem ~= nil then
+        self.selectDetailItem:resetState()
+        self.selectDetailItem = nil  --另一种选项清空
+    end
     self.selectSearchType = EMapSearchType.Deal
 end
 --选中拍卖
@@ -183,7 +186,10 @@ function MapCtrl:auctionSelect()
     self:toggleDetailPage(false)
     self.m_Timer:Start()
 
-    self.selectDetailItem = nil  --另一种选项清空
+    if self.selectDetailItem ~= nil then
+        self.selectDetailItem:resetState()
+        self.selectDetailItem = nil  --另一种选项清空
+    end
     self.selectSearchType = EMapSearchType.Auction
 end
 
@@ -213,8 +219,6 @@ function MapCtrl:refreshTypeItems(selectId)
             if value:getTypeId() == selectId then
                 value:refreshShow(true)
                 self.selectId = selectId
-                --self.selectDetailItem = nil  --另一种选中需要清除
-
                 self:toggleDetailPage(false)
             else
                 value:refreshShow(false)
@@ -226,14 +230,12 @@ end
 function MapCtrl:refreshDetailItem(item)
     if item == nil then
         if self.selectDetailItem ~= nil then
-            --self.typeTable[self.selectId]:setShowName()
             self.selectDetailItem:resetState()
             self.selectDetailItem = nil
         end
         Event.Brocast("c_ChooseTypeDetail")
     else
         if self.selectDetailItem ~= nil then
-            --self.typeTable[self.selectId]:setShowName()
             self.selectDetailItem:resetState()
         end
 
@@ -242,6 +244,9 @@ function MapCtrl:refreshDetailItem(item)
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
+            --隐藏右边UI
+            --self:toggleDetailPage(false)
+
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
@@ -454,6 +459,10 @@ function MapCtrl:getScreenCenterMapPos()
     local x = (MapPanel.mapRootRect.sizeDelta.x / 2 - MapPanel.mapRootRect.anchoredPosition.x / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.x)
     local y = (MapPanel.mapRootRect.sizeDelta.y / 2 + MapPanel.mapRootRect.anchoredPosition.y / self.my_Scale) * (TerrainConfig.MiniMap.MapSize / MapPanel.mapRootRect.sizeDelta.y)
     return Vector3.New(y, 0, x)
+end
+--获取当前缩放值
+function MapCtrl.getCurrentScaleValue()
+    return MapPanel.scaleSlider.value
 end
 --
 function MapCtrl:_mapAOIMove()

@@ -501,9 +501,14 @@ MapGameObjectsConfig = {
             ["PathFindingConfigID"] = 1,
             ["InitCount"] = 0,
         },
+        {   --行人2
+            ["Name"] = "People02",
+            ["PathFindingConfigID"] = 2,
+            ["InitCount"] = 0,
+        },
         {   --车辆1
             ["Name"] = "Car01",
-            ["PathFindingConfigID"] = 2,
+            ["PathFindingConfigID"] = 3,
             ["InitCount"] = 0,
         },
 

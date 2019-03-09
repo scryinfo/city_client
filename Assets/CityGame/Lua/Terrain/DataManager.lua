@@ -177,9 +177,18 @@ local function AddPathValue(tempBlockID,Value)
     BuildDataStack[tempCollectionID].PathDatas[tempBlockID] = Value
 end
 
-function  DataManager.GetPathDatas(tempCollectionID)
+function DataManager.GetPathDatas(tempCollectionID)
     if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].PathDatas ~= nil  then
         return BuildDataStack[tempCollectionID].PathDatas
+    end
+    return nil
+end
+
+function DataManager.GetPathDataByBlockID(tempBlockID)
+    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+    local tempData = DataManager.GetPathDatas(tempCollectionID)
+    if tempData ~= nil then
+        return tempData[tempBlockID]
     end
     return nil
 end
@@ -192,10 +201,10 @@ function DataManager.RefreshPathRangeBlock(startBlockID,size)
         AddPathValue(startBlockID,15)
     elseif size >= 2 then
         local tempSize = (size - 1)
-        AddPathValue(startBlockID,1)
-        AddPathValue(startBlockID + tempSize,2)
-        AddPathValue(startBlockID + TerrainRangeSize * tempSize,4)
-        AddPathValue(startBlockID + TerrainRangeSize * tempSize + tempSize,8)
+        AddPathValue(startBlockID,7)
+        AddPathValue(startBlockID + tempSize,11)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize,13)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize + tempSize,14)
         if size >= 3 then
             for i = 1, tempSize - 1, 1  do
                 AddPathValue(startBlockID + i,3)
@@ -209,7 +218,7 @@ end
 
 --删除建筑的路径值
 function DataManager.RemovePathRangeBlock(startBlockID,size)
-    local idList =  DataManager.CaculationTerrainRangeBlock(nodeID,nodeSize)
+    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,size)
     for key, value in pairs(idList) do
         AddPathValue(value,0)
     end

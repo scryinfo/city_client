@@ -89,6 +89,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         for key, value in pairs(AOIList) do
             DataManager.RefreshWaysByCollectionID( value)
         end
+        PathFindManager.CreateAOIListPalyer(AOIList)
     end
 end
 
@@ -184,8 +185,8 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     --删除旧有的AOI地块
     for i, tempDeteleCollectionID in pairs(willRemoveList) do
         DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
-        DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
     end
+    PathFindManager.RemoveAOIListPalyer(willRemoveList)
     --初始化新newCollectionList
     local willInitList = ComputingTheComplementSetOfBinA(newCollectionList,oldCollectionList)
     for i, tempInitCollectionID in pairs(willInitList) do

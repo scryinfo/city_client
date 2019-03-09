@@ -1,14 +1,21 @@
 PathFindingConfig ={
     [1] ={
         ["typeName"] ="行人1",
-        ["prefabRoute"] = "Building/SystemRoad1",
+        ["prefabRoute"] = "Ornament/Person_01",
         ["poolName"] = "People01",
-        ["playerEdgeDistance"] = 0.12,
+        ["playerEdgeDistance"] = 0.28,
     },
-    [2] = {
+    [2] ={
+        ["typeName"] ="行人2",
+        ["prefabRoute"] = "Ornament/Person_02",
+        ["poolName"] = "People02",
+        ["playerEdgeDistance"] = 0.28,
+    },
+    [3] = {
         ["typeName"] ="车辆1",
-        ["prefabRoute"] = "Building/SystemRoad2",
+        ["prefabRoute"] = "Ornament/Transport_01",
         ["poolName"] = "Car01",
-        ["playerEdgeDistance"] = 0.05,
+        ["playerEdgeDistance"] = 0.07,
     },
+
 }

@@ -14,7 +14,7 @@ function MapObjectsManager.Init()
     for i, item in pairs(PoolInstantiates) do
         if item.PlayerBuildingBaseDataID ~= nil then
             buildMgr:CreateBuild(PlayerBuildingBaseData[item.PlayerBuildingBaseDataID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
-        elseif item.RoadPrefabConfig ~= nil then
+        elseif item.RoadPrefabConfigID ~= nil then
             buildMgr:CreateBuild(RoadPrefabConfig[item.RoadPrefabConfigID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
         elseif item.PathFindingConfigID ~= nil then
             buildMgr:CreateBuild(PathFindingConfig[item.PathFindingConfigID]["prefabRoute"] ,CreateBasePrefabSuccess,item)

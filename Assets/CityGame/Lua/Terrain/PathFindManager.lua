@@ -3,6 +3,8 @@ PathFindManager = {}
 local m_AllPlayer = {}
 
 local Math_Random = math.random
+local Math_Floor = math.floor
+local my_CreatedCollectionID = {}
 
 function PathFindManager.Init()
     --初始化随机种子
@@ -36,10 +38,12 @@ local function CreateRangePalyer(tempCollectionID,PlayerCount)
     for i = 1, PlayerCount do
         tempPlayerSet = PathFindingConfig[Math_Random(1,#PathFindingConfig)]
         targerBlockID = CanUsedIDPath[Math_Random(1,#CanUsedIDPath)]
-        tempStartPos = TerrainManager.BlockIDTurnPosition(targerBlockID)
-        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,tempStartPos,tempPlayerSet.playerEdgeDistance)
+        --tempStartPos = TerrainManager.BlockIDTurnPosition(targerBlockID)
+        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,targerBlockID,tempPlayerSet.playerEdgeDistance)
+        ct.log("system","生成一个角色")
         table.insert(m_AllPlayer,tempPalyer)
     end
+    my_CreatedCollectionID[tempCollectionID] = 1
 end
 
 --删除在地块上的角色
@@ -52,11 +56,12 @@ local function RemoveRangePlayers(tempCollectionID)
             playerBlockID = TerrainManager.PositionTurnBlockID(playerPos)
             playerCollectionID = TerrainManager.BlockIDTurnCollectionID(playerBlockID)
             if tempCollectionID == playerCollectionID then
-                playerPos:Destory()
+                player:Destory()
                 table.remove(m_AllPlayer,i)
             end
         end
     end
+    my_CreatedCollectionID[tempCollectionID] = nil
 end
 
 --AOI时生成新的
@@ -64,10 +69,13 @@ function PathFindManager.CreateAOIListPalyer(tempCollectionIDList)
     if tempCollectionIDList == nil or type(tempCollectionIDList) ~= 'table' then
         return
     end
+    if  my_CreatedCollectionID[tempCollectionID] ~= nil then
+        return
+    end
     local count = 0
     for i, tempCollectionID in pairs(tempCollectionIDList) do
         --TODO:随机个数范围应该从配置表中读取
-        count =  Math_Random(30,50)
+        count =  Math_Random(10,20)
         CreateRangePalyer(tempCollectionID,count)
     end
 end
@@ -82,7 +90,6 @@ function PathFindManager.RemoveAOIListPalyer(tempCollectionIDList)
     end
 end
 
-
 --计算路径值，返回路径值的拆分点的
 function PathFindManager.CalculatePathValues(tempNum)
     if tempNum <= 0 or tempNum >15 then
@@ -90,12 +97,14 @@ function PathFindManager.CalculatePathValues(tempNum)
     end
     local returnValue = 0
     local tempTable = {}
-    for i = 8, 1, - i/2  do
-        returnValue = tempNum / i
+    local tempSize = 8
+    for i = 1, 4  do
+        returnValue = Math_Floor(tempNum / tempSize)
         if returnValue ~= 0 then
-            tempTable[i] = i
+            tempTable[tempSize] = tempSize
         end
-        tempNum = tempNum % i
+        tempNum = tempNum % tempSize
+        tempSize = tempSize / 2
     end
     return tempTable
 end

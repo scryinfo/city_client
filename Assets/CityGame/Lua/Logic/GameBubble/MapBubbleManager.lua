@@ -10,6 +10,7 @@ local prefabPools = {}
 local MapBuildingItemName = "MapBuildingItem"
 local MapSearchResultItemName = "MapSearchResultItem"
 local MapAllSearchItemName = "MapAllSearchItem"
+local TempCenterOffset = Vector3.New(10, 0, 10)
 
 MapBubbleManager.TempBuildingIconPath =
 {
@@ -47,7 +48,7 @@ function MapBubbleManager.setCameraToBackID()
     local tempId = TerrainManager.GetCameraCollectionID()
     if tempId ~= this.backCollectionId then
         local blockId = TerrainManager.CollectionIDTurnBlockID(this.backCollectionId)
-        local pos = TerrainManager.BlockIDTurnPosition(blockId)
+        local pos = TerrainManager.BlockIDTurnPosition(blockId) + TempCenterOffset
         --Event.Brocast("CameraMoveTo", pos)
         CameraMove.MoveCameraToPos(pos)
     end
@@ -118,8 +119,9 @@ function MapBubbleManager._createSummaryItems(data)
     local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
     local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
     this.summaryItems[collectionId] = item
-    local pos = Vector2.New(tempPos.x, -tempPos.z) * this.itemWidth
+    local pos = Vector2.New(tempPos.z + 10 ,-tempPos.x - 10) * this.itemWidth
     item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, 0)
+    obj.gameObject.name = data.idx.x..data.idx.y
 end
 --生成详情Item
 function MapBubbleManager._createDetailItems(data)

@@ -13,7 +13,16 @@ function MapMatGoodSearchItem:initialize(data, viewRect)
     self.iconImg = self.viewRect.transform:Find("bg/iconImg"):GetComponent("Image")
     self.selectImg = self.viewRect.transform:Find("selectImg")
     self.nameText = self.viewRect.transform:Find("nameText"):GetComponent("Text")
-    --LoadSprite(data.selectIconPath, self.iconImg, true)
+
+    local mat = Material[self.data.itemId]
+    if mat ~= nil then
+        self.nameText.text = mat.name
+        LoadSprite(mat.img, self.iconImg, true)
+    else
+        local good = Good[self.data.itemId]
+        self.nameText.text = good.name
+        LoadSprite(good.img, self.iconImg, true)
+    end
 
     self.toggle = self.viewRect.transform:GetComponent("Toggle")
     self:_setToggleGroup()
@@ -33,7 +42,10 @@ end
 --多语言
 function MapMatGoodSearchItem:_language()
     --self.nameText.text = GetLanguage(self.data.languageId)
-    self.nameText.text = "wait"
+    --self.nameText.text = mat.name
+    --local mat = Material[self.data.itemId]
+    --if mat ~= nil then
+    --end
 end
 --
 function MapMatGoodSearchItem:_toggle(isOn)
@@ -61,6 +73,7 @@ function MapMatGoodSearchItem:getItemId()
     return self.data.itemId
 end
 function MapMatGoodSearchItem:getNameStr()
-    return "wait"
+    --return "wait"
     --return GetLanguage(self.data.languageId)
+    return self.nameText.text
 end

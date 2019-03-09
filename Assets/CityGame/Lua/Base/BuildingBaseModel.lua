@@ -47,71 +47,13 @@ function BuildingBaseModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
     local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = tonumber(steffNumber)}
     DataManager.ModelSendNetMes("gscode.OpCode","ftyAddLine","gs.AddLine",lMsg)
 end
---修改生产线
-function BuildingBaseModel:m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
-    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = tonumber(steffNumber),lineId = lineId}
-    DataManager.ModelSendNetMes("gscode.OpCode","ftyChangeLine","gs.ChangeLine",lMsg)
-end
+----修改生产线
+--function BuildingBaseModel:m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
+--    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = tonumber(steffNumber),lineId = lineId}
+--    DataManager.ModelSendNetMes("gscode.OpCode","ftyChangeLine","gs.ChangeLine",lMsg)
+--end
 --删除生产线
 function BuildingBaseModel:m_ReqDeleteLine(buildingId,lineId)
     local lMsg = {buildingId = buildingId, lineId = lineId}
     DataManager.ModelSendNetMes("gscode.OpCode","ftyDelLine","gs.DelLine",lMsg)
 end
----服务器回调---
----仓库---
-----上架
---function BuildingBaseModel:n_OnShelfAddInfo(data)
---    Event.Brocast("n_shelfAdd",data)
---    Event.Brocast("SmallPop",GetLanguage(27020002),300)
---end
-----运输
---function BuildingBaseModel:n_OnBuildingTransportInfo(data)
---    local bagId = DataManager.GetBagId()
---    local n = data.item.n
---    local qty = data.item.key.qty
---    local itemId = data.item.key.id
---    local producerId = data.item.key.producerId
---    if data.dst == bagId then
---        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
---    end
---    Event.Brocast("n_transports",data)
---end
-----修改数量或价格
---function BuildingBaseModel:n_OnModifyShelfInfo(data)
---    --Event.Brocast("shelfRefreshUiInfo",data)
---end
-----销毁原料或商品
---function BuildingBaseModel:n_OnDelItemInfo(data)
---    Event.Brocast("deleteObjeCallback",data)
---end
------货架---
-----下架
---function BuildingBaseModel:n_OnShelfDelInfo(data)
---    Event.Brocast("delGoodRefreshInfo",data)
---end
-----购买
---function BuildingBaseModel:n_OnBuyShelfGoods(data)
---    Event.Brocast("receiveBuyRefreshInfo",data)
---end
------生产线---
-----添加生产线
---function BuildingBaseModel:n_OnAddLineInfo(data)
---    Event.Brocast("calculateTime",data)
---    Event.Brocast("refreshSubtractWorkerNum",data)
---    Event.Brocast("SmallPop",GetLanguage(28010007),300)
---end
-----修改生产线
---function BuildingBaseModel:n_OnModifyKLineInfo(data)
---    Event.Brocast("callbackDataInfo",data)
---    Event.Brocast("SmallPop",GetLanguage(27010005),300)
---end
-----删除生产线
---function BuildingBaseModel:n_OnDeleteLineInfo(data)
---    Event.Brocast("SmallPop",GetLanguage(28010006),300)
---    Event.Brocast("_deleteProductionLine",data)
---end
-----生产线变化推送
---function BuildingBaseModel:n_OnLineChangeInform(data)
---    Event.Brocast("refreshNowConte",data)
---    Event.Brocast("c_refreshNowConte",data)
---end

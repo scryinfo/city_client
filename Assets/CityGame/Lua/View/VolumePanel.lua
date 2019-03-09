@@ -23,12 +23,29 @@ function VolumePanel.InitPanel()
     --top
     this.back = transform:Find("return").gameObject --返回
     this.name = transform:Find("name"):GetComponent("Text");
+    this.volume = transform:Find("Volume/volumeImage").gameObject;  --交易量Bg
     this.volumeText = transform:Find("Volume/volumeImage/volumeText"):GetComponent("Text")  --交易量
+
+    this.volumetitle = transform:Find("Volume/title")  --交易量提示
+    this.total = transform:Find("Volume/title/total"):GetComponent("Text")
+    this.content = transform:Find("Volume/title/content"):GetComponent("Text")
+
     --left
 
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额
     this.money = transform:Find("leftBg/moneyBg/money/moneyText"):GetComponent("Text"); --营业额
+
+    this.cityTitle = transform:Find("leftBg/moneyBg/numberBg/city/title"); --城市市民提示
+    this.titleText = transform:Find("leftBg/moneyBg/numberBg/city/title/titleText"):GetComponent("Text"); --城市市民提示内容
+    this.funds = transform:Find("leftBg/moneyBg/numberBg/city/title/cityFundsBg/funds"):GetComponent("Text"); --城市奖金池
+    this.fundsText = transform:Find("leftBg/moneyBg/numberBg/city/title/cityFundsBg/fundsBg/cityFunds"):GetComponent("Text"); --城市奖金池
+    this.income = transform:Find("leftBg/moneyBg/numberBg/city/title/income/incomeText"):GetComponent("Text");
+    this.incomesText = transform:Find("leftBg/moneyBg/numberBg/city/title/income/incomes/incomesText"):GetComponent("Text");
+    this.income = transform:Find("leftBg/moneyBg/numberBg/city/title/expense/expenseText"):GetComponent("Text");
+    this.incomesText = transform:Find("leftBg/moneyBg/numberBg/city/title/expense/expenses/expensesText"):GetComponent("Text");
+
+    this.cityBg = transform:Find("leftBg/moneyBg/numberBg/city").gameObject; --城市市民Bg
     this.city = transform:Find("leftBg/moneyBg/numberBg/city/hint/Text"):GetComponent("Text"); --城市市民
     this.adult = transform:Find("leftBg/moneyBg/numberBg/adult/adultImage/adultText"):GetComponent("Text"); --成年人
     this.old = transform:Find("leftBg/moneyBg/numberBg/old/oldImage/oldText"):GetComponent("Text"); --老人
@@ -47,4 +64,6 @@ function VolumePanel.InitPanel()
     this.undateTime = transform:Find("rightBg/updateImage/undateTime"):GetComponent("Text"); --更新时间倒计时
     this.content = transform:Find("rightBg/Scroll View/Viewport/Content");
     this.scroll = transform:Find("rightBg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect");
+
+    this.titleBg = transform:Find("titleBg").gameObject; --提示框Bg
 end

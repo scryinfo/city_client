@@ -33,5 +33,4 @@ function SupplyDemandItem:initialize(dataInfo, viewRect)
     self.slider.maxValue = dataInfo.demand
     self.slider.value = dataInfo.supply
     self.demand.text = dataInfo.demand
-
 end

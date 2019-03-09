@@ -143,6 +143,8 @@ function GuildMenu:_onPersonalData()
     PlayMusEff(1002)
     self:SetPrefabShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
+    local playerInfo = GuildOwnCtrl.static.guildMgr:GetPlayerData().playerData
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", playerInfo)
 end
 
 function GuildMenu:_onAppointerPost(index)

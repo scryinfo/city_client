@@ -49,10 +49,12 @@ end
 function WarehouseCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.AddListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
 end
 function WarehouseCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.RemoveListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
 end
 function WarehouseCtrl:Refresh()
     itemNumber = nil
@@ -65,8 +67,8 @@ function WarehouseCtrl:Refresh()
     end
 end
 function WarehouseCtrl:Hide()
-    UIPanel.Hide(self)
     self:_removeListener()
+    UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -261,6 +263,26 @@ function WarehouseCtrl:DestroyWarehouseItem(ins)
         Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--生产中刷新仓库数据
+function WarehouseCtrl:UpdateLatestData(dataInfo)
+    self:InitializeCapacity()
+    if self.warehouseDatas then
+        for key,value in pairs(self.warehouseDatas) do
+            if dataInfo.itemId == value.itemId then
+                value.n = dataInfo.nowCountStore
+                value.numberText.text = dataInfo.nowCountStore
+                value.goodsDataInfo.n = dataInfo.nowCountStore
+                return
+            end
+        end
+    end
+    local inHand = {}
+    local key = {}
+    key.id = dataInfo.itemId
+    inHand.key = key
+    inHand.n = dataInfo.nowCountStore
+    self:RefreshCreateItem(inHand,WarehousePanel.warehouseItem,WarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

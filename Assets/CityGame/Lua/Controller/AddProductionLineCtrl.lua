@@ -19,10 +19,8 @@ function AddProductionLineCtrl:Awake(go)
     self.luabehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
-        --self:Hide();
         UIPanel.ClosePage();
     end,self)
-
     self:_addListener()
 end
 function AddProductionLineCtrl:Active()
@@ -61,8 +59,10 @@ function AddProductionLineCtrl:_initData()
 
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
-            data.itemId = self.leftItemId
+            data.itemId = self.rightItemId
+            data.mId = self.m_data.info.mId
             data.insId = self.m_data.info.id
+            data.buildingType = self.m_data.buildingType
             ct.OpenCtrl("AddLineBoxCtrl",data)
         end)
     end

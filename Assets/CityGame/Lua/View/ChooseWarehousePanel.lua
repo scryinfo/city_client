@@ -23,7 +23,7 @@ function ChooseWarehousePanel.InitPanel()
     this.timeBtn = transform:Find("Right/SortingBtn/ListTable/List/timeBtn");
     --Mine
     this.faceImg = transform:Find("Left/mine/FriendsLineItem/face");
-    this.faceItem = transform:Find("Left/mine/FriendsLineItem/face/faceItem"):GetComponent("Image");
+    this.faceItem = transform:Find("Left/mine/FriendsLineItem/face/faceItem");
     this.nameText = transform:Find("Left/mine/FriendsLineItem/name"):GetComponent("Text");
     this.mineName = transform:Find("Left/mine"):GetComponent("Text");
     this.addresslist = transform:Find("Left/Addresslist"):GetComponent("Text");

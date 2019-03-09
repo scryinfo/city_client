@@ -40,8 +40,6 @@ require "Model/CreateRoleModel"
 --require "Model/MaterialModel"
 require "Model/RetailStoresModel"
 require "Model/ProcessingModel"
-require "Model/ShelfModel"
-require "Model/AdjustProductionLineModel"
 require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
@@ -95,14 +93,11 @@ function CtrlManager.Init()
 	--modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	--modelList[ModelNames.Material] = MaterialModel.New();
 	--modelList[ModelNames.Processing] = ProcessingModel.New();
-	--modelList[ModelNames.Shelf] = ShelfModel.New();
 	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	--modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	--modelList[ModelNames.Municipal]=MunicipalModel.New();
-	--modelList[ModelNames.AdjustProductionLine] = AdjustProductionLineModel.New();
 	--modelList[ModelNames.tempTransport] = tempTransportModel.New();
-	--modelList[ModelNames.Warehouse] = WarehouseModel.New();
 
 	modelList[ModelNames.AdvertisementPos]=AdvertisementPosModel.New();
 	modelList[ModelNames.ManageAdvertisementPos]=ManageAdvertisementPosModel.New();

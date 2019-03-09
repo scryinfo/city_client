@@ -43,23 +43,15 @@ function RetailStoresCtrl:initializeData()
         DataManager.OpenDetailModel(RetailStoresModel,self.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenRetailShop',self.insId)
     end
-    --if self.m_data then
-    --    DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
-    --end
 end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
-    --local companyName = DataManager.GetMyPersonalHomepageInfo()
     RetailStoresPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    --RetailStoresPanel.buildingTypeNameText.text = PlayerBuildingBaseData[DataInfo.info.mId].sizeName..PlayerBuildingBaseData[DataInfo.info.mId].typeName
     RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
-
     local insId = self.m_data.insId
     self.m_data = DataInfo
     self.m_data.insId = insId
-
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
         RetailStoresPanel.changeNameBtn.localScale = Vector3.zero
@@ -121,15 +113,15 @@ function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
     self:deleteOtherShelf()
 end
---退出时删除
+--清空货架（其他玩家）
 function RetailStoresCtrl:deleteOtherShelf()
-    if not HomeOtherPlayerShelfItem.shelfTab or HomeOtherPlayerShelfItem.shelfTab == {} then
+    if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
         return
     end
-    for i,v in pairs(HomeOtherPlayerShelfItem.shelfTab) do
-        destroy(v.prefab.gameObject)
+    for key,value in pairs(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) do
+        destroy(value.prefab.gameObject)
+        HomeOtherPlayerShelfItem.SmallShelfRateItemTab[key] = nil
     end
-    HomeOtherPlayerShelfItem.shelfTab = {}
 end
 --打开信息界面
 function RetailStoresCtrl:OnClick_infoBtn()

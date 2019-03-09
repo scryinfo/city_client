@@ -19,5 +19,7 @@ OpenModelInsID = {
     ["GuildMessageCtrl"] = 13,
     ["GuildApplyCtrl"] = 14,
     ["AvtarCtrl"] = 15,
-    ["VolumeCtrl"] = 16,
+    ["BubbleMessageCtrl"] = 16,
+    ["VolumeCtrl"] = 17,
+
 }

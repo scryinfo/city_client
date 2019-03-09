@@ -112,7 +112,7 @@ function CompanyCtrl:_updateData()
         CompanyPanel.titleText.text = GetLanguage(17010007)
         CompanyPanel.coinBg:SetActive(false)
     end
-    AvatarManger.GetSmallAvatar(self.m_data.faceId,CompanyPanel.headImage.transform,0.2)
+    AvatarManger.GetSmallAvatar(self.m_data.faceId,CompanyPanel.headImage,0.2)
     CompanyPanel.companyText.text = self.m_data.companyName
     CompanyPanel.nameText.text = self.m_data.name
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)

@@ -213,6 +213,12 @@ LanguageType={
 	English=1,
 }
 
+BuildingBubbleType={
+	small=1,
+	big=2,
+    close=3,
+}
+
 --仓库 --货架 --运输(通用)
 BuildingInType =
 {

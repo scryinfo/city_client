@@ -29,12 +29,14 @@ function ChatMgr:initData()
     self.playerChoice = -- 好友、陌生人玩家信息Item、id
     {
         { item = {}, id = {} },
+        { item = {}, id = {} },
         { item = {}, id = {} }
     }
     --self.nowShowChatInfoNum = 0 -- 当前显示的index索引
     --self.isShowChatInfo = false
     self.chatRecordsItemTab = {} -- 保存聊天记录的Item们
     self.chatRecordsTimeItemTab = {} -- 保存聊天记录的时间Item们
+    self.guildItem = {} -- 公会聊天Item
 end
 
 -- 设置活动滑动条
@@ -45,6 +47,8 @@ function ChatMgr:SetRootScrollbar(scrollbar)
         self.rootScrollbar = ChatPanel.friendsVerticalScrollbar
     elseif scrollbar == 3 then
         self.rootScrollbar = ChatPanel.strangersVerticalScrollbar
+    elseif scrollbar == 4 then
+        self.rootScrollbar = ChatPanel.guildVerticalScrollbar
     end
 end
 
@@ -139,7 +143,7 @@ function ChatMgr:DestroyContentChildren(index)
         self.playerChoice[1].id = {}
     elseif index == 2 then -- 删除好友聊天Item
         for _, v in ipairs(self.friendsItem) do
-        UnityEngine.GameObject.Destroy(v.prefab)
+            UnityEngine.GameObject.Destroy(v.prefab)
         end
         for _, v in ipairs(self.friendsTimeItem) do
             UnityEngine.GameObject.Destroy(v.prefab)
@@ -167,6 +171,20 @@ function ChatMgr:DestroyContentChildren(index)
         end
         self.strangersItem = {}
         self.friendsTimeItem = {}
+    elseif index == 5 then -- 删除公会列表Item
+        if not self.playerChoice[3].item then
+            return
+        end
+        for _, v in pairs(self.playerChoice[3].item) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.playerChoice[3].item = {}
+        self.playerChoice[3].id = {}
+    elseif index == 6 then -- 删除公会聊天Item
+        for _, v in ipairs(self.guildItem) do
+            UnityEngine.GameObject.Destroy(v.prefab)
+        end
+        self.guildItem = {}
     end
 end
 
@@ -230,6 +248,14 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatRightItem = ChatRightItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatRightItem)
             DataManager.SetMyReadChatInfo(3, chatData.channelId)
+        elseif chatData.channel == "GROUP" then -- 代表世界频道
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.guildContent)
+            local chatRightItem = ChatRightItem:new(#self.guildItem + 1, prefab, chatData)
+            table.insert(self.guildItem, chatRightItem)
+            if #self.guildItem > ChatCtrl.WORLD_SHOW_NUM then
+                UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
+                table.remove(self.guildItem, 1)
+            end
         end
     else
         if chatData.channel == "WORLD" then -- 代表世界频道
@@ -272,6 +298,14 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatLeftItem = ChatLeftItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatLeftItem)
             DataManager.SetMyReadChatInfo(3, chatData.id)
+        elseif chatData.channel == "GROUP" then -- 代表世界频道
+            local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.guildContent)
+            local chatLeftItem = ChatLeftItem:new(#self.guildItem + 1, prefab, chatData)
+            table.insert(self.guildItem, chatLeftItem)
+            if #self.guildItem > ChatCtrl.WORLD_SHOW_NUM then
+                UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
+                table.remove(self.guildItem, 1)
+            end
         end
     end
 end
@@ -288,6 +322,11 @@ function ChatMgr:CreatePlayerItem(index, playerData, isFrist)
         local prefab = self:_createNoticePab(ChatMgr.static.ChatFriendsItemPath, ChatPanel.strangersPlayerContent)
         local chatFriendsItem = ChatFriendsItem:new(#self.playerChoice[2].id, 2, prefab, isFrist, playerData)
         self.playerChoice[2].item[playerData.id] = chatFriendsItem
+    elseif index == 3 then
+        table.insert(self.playerChoice[3].id, playerData.id)
+        local prefab = self:_createNoticePab(ChatMgr.static.ChatFriendsItemPath, ChatPanel.guildMemberContent)
+        local chatFriendsItem = ChatFriendsItem:new(#self.playerChoice[3].id, 3, prefab, isFrist, playerData)
+        self.playerChoice[3].item[playerData.id] = chatFriendsItem
     end
 end
 
@@ -298,15 +337,16 @@ function ChatMgr:ShowPlayerInfo(index, data)
     ChatPanel.companyText.text = data.companyName
     self:SetActivePlayerData(data)
     --LoadSprite(PlayerHead[data.faceId].HalfBodyPath, ChatPanel.headImage, true)
-    for i = 1, ChatPanel.headImage.childCount do
-        UnityEngine.GameObject.Destroy(ChatPanel.headImage:GetChild(i-1).gameObject)
+    if self.avatarData then
+        AvatarManger.CollectAvatar(self.avatarData)
     end
-    AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
+    self.avatarData = AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
     if index == 1 then -- 世界界面陌生人信息显示
         ChatPanel.shieldBtn:SetActive(true)
         ChatPanel.addFriendsBtn:SetActive(true)
         ChatPanel.chatBtn:SetActive(true)
         ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, -292)
+        ChatPanel.addFriendsBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(-125, -292)
     elseif index == 2 then -- 好友界面好友信息显示
         --ChatPanel.backChatBtn:SetActive(true)
         ChatPanel.shieldBtn:SetActive(true)
@@ -319,6 +359,20 @@ function ChatMgr:ShowPlayerInfo(index, data)
         ChatPanel.addFriendsBtn:SetActive(true)
         ChatPanel.chatBtn:SetActive(false)
         ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(125, -292)
+        ChatPanel.addFriendsBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(-125, -292)
+    elseif index == 4 then -- 公会界面玩家信息显示
+        -- 判断是否是自己的好友
+        local friendsBasicData = DataManager.GetMyFriends()
+        if friendsBasicData[data.id] == nil then
+            ChatPanel.shieldBtn:SetActive(false)
+            ChatPanel.addFriendsBtn:SetActive(true)
+            ChatPanel.chatBtn:SetActive(false)
+            ChatPanel.addFriendsBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, -292)
+        else
+            ChatPanel.shieldBtn:SetActive(false)
+            ChatPanel.addFriendsBtn:SetActive(false)
+            ChatPanel.chatBtn:SetActive(false)
+        end
     end
 end
 
@@ -502,6 +556,12 @@ function ChatMgr:DeleteChatRecords()
     end
     DataManager.SaveFriendsChat()
     self:DestroyChatRecordsItem()
+end
+
+-- 删除公会聊天记录
+function ChatMgr:DeleteGuildChatRecords()
+    self:DestroyContentChildren(6)
+    DataManager.SetGuildChatInfo()
 end
 
 --滑动到底部

@@ -50,6 +50,8 @@ function ChatLeftItem:initialize(itemId, prefab, data)
         ChatCtrl.static.luaBehaviour:AddClick(self.headBtn, self.OnHeadClick, self)
         --LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
         AvatarManger.GetSmallAvatar(self.data.image, self.headImage,0.2)
+    elseif self.data.channel == "GROUP" then
+        PlayerInfoManger.GetInfos({data.id}, self._showName, self)
     else
         if self.data.id == DataManager.GetMyOwnerID() then
             --LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
@@ -73,4 +75,9 @@ function ChatLeftItem:OnHeadClick(go)
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)
         Event.Brocast("c_OnQueryWorldPlayerInfo", {go.data.id})
     end
+end
+
+function ChatLeftItem:_showName(playerData)
+    self.playerNameText.text = playerData[1].name
+    AvatarManger.GetSmallAvatar(playerData[1].faceId, self.headImage,0.2)
 end

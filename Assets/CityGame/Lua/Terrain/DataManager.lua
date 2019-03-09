@@ -142,6 +142,17 @@ end
 
 -------------------------------原子地块数据--------------------------------
 
+local function RefreshAllMapBuild(tempCollectionID)
+    ---生成系统土地------------
+    InitCollectionSystemTerrain(tempCollectionID)
+    ---生成系统建筑------------
+    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
+    ---生成河流
+    InitSystemRiverGameObject(tempCollectionID)
+    ---刷新一遍道路
+    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+end
+
 --功能
 --  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
@@ -178,14 +189,7 @@ local function CreateBlockDataTable(tempCollectionID)
         end
     end
     BuildDataStack[tempCollectionID].BlockDatas = TempTable
-    ---生成系统土地------------
-    InitCollectionSystemTerrain(tempCollectionID)
-    ---生成系统建筑------------
-    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
-    ---生成河流
-    InitSystemRiverGameObject(tempCollectionID)
-    ---刷新一遍道路
-    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+    RefreshAllMapBuild(tempCollectionID)
     collectgarbage("collect")
 end
 
@@ -195,6 +199,10 @@ function DataManager.InitBuildDatas(tempCollectionID)
     end
     if BuildDataStack[tempCollectionID].BlockDatas == nil then
         CreateBlockDataTable(tempCollectionID)
+    else
+        if BuildDataStack[tempCollectionID].SystemTerrainDatas == nil then
+            RefreshAllMapBuild(tempCollectionID)
+        end
     end
 end
 
@@ -1264,6 +1272,11 @@ function DataManager.SetChatRecords(index)
     return PersonDataStack.socialityManager:SetChatRecords(index)
 end
 
+-- 清空公会的聊天消息
+function DataManager.SetGuildChatInfo()
+    return PersonDataStack.socialityManager:SetGuildChatInfo()
+end
+
 -- 获得公会ID
 function DataManager.GetGuildID()
     return PersonDataStack.m_societyId
@@ -1331,19 +1344,24 @@ function DataManager.SetGuildMemberIdentity(playerId, identity)
     PersonDataStack.guildManager:SetGuildMemberIdentity(playerId, identity)
 end
 
--- 改名字返回
+-- 设置名字
 function DataManager.SetGuildSocietyName(bytesStrings)
     PersonDataStack.guildManager:SetGuildSocietyName(bytesStrings)
 end
 
--- 改介绍返回
+-- 设置介绍
 function DataManager.SetGuildIntroduction(bytesStrings)
     PersonDataStack.guildManager:SetGuildIntroduction(bytesStrings)
 end
 
--- 改宣言返回
+-- 设置宣言
 function DataManager.SetGuildDeclaration(bytesStrings)
     PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+
+-- 获得公会成员
+function DataManager.GetGuildMembers()
+    return PersonDataStack.guildManager:GetGuildMembers()
 end
 ---------------------------------
 --获取自己所有的建筑详情
@@ -1510,6 +1528,8 @@ function DataManager.Init()
     DataManager.RegisterErrorNetMsg()
     --初始化自己的地块初始信息
     MyGround.Init()
+    --建筑气泡对象池
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1915,3 +1935,12 @@ function DataManager.GetBagNum()
     return n
 end
 
+--根据大地块获取建筑基础信息
+--如果没有BaseBuildDatas，返回nil
+function DataManager.GetBuildingBaseByCollectionID(collectionID)
+    if BuildDataStack ~= nil and collectionID ~= nil and BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas
+    else
+        return nil
+    end
+end

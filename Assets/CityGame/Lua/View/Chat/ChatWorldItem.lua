@@ -12,10 +12,10 @@ ChatWorldItem = class('ChatWorldItem')
 function ChatWorldItem:initialize(prefab)
     self.prefab = prefab
 
-    local transform = prefab.transform
+    self.transform = prefab.transform
     -- 聊天的内容
-    self.chatText = transform:Find("ChatText"):GetComponent("Text")
-    self.headImage = transform:Find("HeadImage")
+    self.chatText = self.transform:Find("ChatText"):GetComponent("Text")
+    self.headImage = self.transform:Find("HeadImage")
 
     --self.chatText.text = string.format("<color=%s><b>[%s]:</b></color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
     self:_ShowPrefab(false)
@@ -32,11 +32,13 @@ function ChatWorldItem:_ShowChatContent(data)
         local chatTextPreferredHeight = self.chatText.preferredHeight
         --if chatTextPreferredHeight > 60 then
             self.chatText.transform.sizeDelta = Vector2.New(470, chatTextPreferredHeight)
+            self.transform.sizeDelta = Vector2.New(624, chatTextPreferredHeight + 55)
         --else
         --    self.chatText.transform.sizeDelta = Vector2.New(470, 60)
         --end
     else
         self.chatText.transform.sizeDelta = Vector2.New(chatTextPreferredWidth, 60)
+        self.transform.sizeDelta = Vector2.New(chatTextPreferredWidth + 154, 108)
     end
     for i = 1, self.headImage.childCount do
         UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)

@@ -149,17 +149,17 @@ end
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
+        UIPanel.ClosePage()
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end
-    UIPanel.ClosePage()
 end
 --陌生人私聊
 function PersonalHomeDialogPageCtrl:_strangerChatBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
+        UIPanel.ClosePage()
         ct.OpenCtrl("ChatCtrl", {toggleId = 3, id = ins.m_data.id})
     end
-    UIPanel.ClosePage()
 end
 --公司
 function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)

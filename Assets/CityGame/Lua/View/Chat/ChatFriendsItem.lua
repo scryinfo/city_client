@@ -36,7 +36,7 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     self.noticeImage:SetActive(false)
     --LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.friendsImage, true)
     self.headPrefab = AvatarManger.GetSmallAvatar(self.data.faceId, self.friendsImage,0.2)
-    self.headPrefabTrans = self.headPrefab.transform
+    self.headPrefabTrans = self.headPrefab.go.transform
 
     self.toggle.onValueChanged:AddListener(function (isOn)
         self:_toggleValueChange(isOn)
@@ -48,6 +48,15 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
 
     if index == 1 and not data.b then
         self:SetHeadColor(false)
+    end
+
+    if index == 3 then
+        if self.data.id == DataManager.GetMyOwnerID() then
+            self.toggle.interactable = false
+        end
+        if  not data.b then
+            self:SetHeadColor(false)
+        end
     end
 end
 
@@ -93,7 +102,7 @@ function ChatFriendsItem:_toggleValueChange(isOn)
             --DataManager.SetMyReadChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(2, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
-        else
+        elseif self.data.index == 2 then
             if ChatPanel.strangersChatNoContentRoot.activeSelf then
                 ChatPanel.strangersChatNoContentRoot:SetActive(false)
             end
@@ -102,6 +111,8 @@ function ChatFriendsItem:_toggleValueChange(isOn)
             --DataManager.SetMyReadChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:ShowAllChatInfo(3, self.data.id)
             ChatCtrl.static.chatMgr:StartScrollBottom()
+        elseif self.data.index == 3 then
+            ChatCtrl.static.chatMgr:ShowPlayerInfo(4, self.data)
         end
     end
 end

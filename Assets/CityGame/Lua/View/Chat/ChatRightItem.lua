@@ -47,6 +47,8 @@ function ChatRightItem:initialize(itemId, prefab, data)
         transform.sizeDelta = Vector2.New(1380, transformSizeDelta.y)
         --LoadSprite(PlayerHead[self.data.image].ChatPath, self.headImage, true)
         AvatarManger.GetSmallAvatar(self.data.image, self.headImage,0.2)
+    elseif self.data.channel == "GROUP" then
+        PlayerInfoManger.GetInfos({data.id}, self._showName, self)
     else
         if self.data.id == DataManager.GetMyOwnerID() then
             --LoadSprite(PlayerHead[DataManager.GetFaceId()].ChatPath, self.headImage, true)
@@ -57,3 +59,8 @@ function ChatRightItem:initialize(itemId, prefab, data)
         end
     end
  end
+
+function ChatRightItem:_showName(playerData)
+    self.playerNameText.text = playerData[1].name
+    AvatarManger.GetSmallAvatar(playerData[1].faceId, self.headImage,0.2)
+end

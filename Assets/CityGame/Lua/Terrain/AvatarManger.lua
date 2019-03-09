@@ -38,6 +38,7 @@ function  AvatarManger.Awake()
         headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),0,Vector3.New(0,0,0) )
     end
 
+
 end
 
  function AvatarManger.setSize(go,size)
@@ -236,7 +237,7 @@ function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
-    return AvatarData.go
+    return AvatarData
 end
 
 function AvatarManger.GetBigAvatar(faceId,parent,size)
@@ -245,10 +246,10 @@ function AvatarManger.GetBigAvatar(faceId,parent,size)
 
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
-    return AvatarData.go
+    return AvatarData
 end
 
-function AvatarManger.CollectAvatar()
+function AvatarManger.CollectAllAvatar()
     if #record>0 then
         for i, AvatarData in ipairs(record) do
             for i, config in ipairs(HeadSizeType) do
@@ -267,5 +268,20 @@ function AvatarManger.CollectAvatar()
         end
         recordPath = {}
     end
+end
+
+function AvatarManger.CollectAvatar(AvatarData)
+    if #record>0 and AvatarData then
+
+            for i, config in ipairs(HeadSizeType) do
+                local trans=AvatarData.go.transform:Find(config.type)
+                if trans then
+                    local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
+            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
+    end
+    
 end
 

@@ -32,7 +32,10 @@ end
 --设置缩放比以及位置
 function MapAllSearchItem:setScaleAndPos(scale, pos)
     if scale ~= nil then
-        self.viewRect.transform.localScale = Vector3.one * scale
+        if scale == 0 then
+            scale = 1
+        end
+        self.viewRect.transform.localScale = Vector3.one * (1 / scale)
     end
     if pos ~= nil then
         self.viewRect.anchoredPosition = pos

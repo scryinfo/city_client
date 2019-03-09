@@ -47,7 +47,7 @@ function MapRightMatGoodItem:refreshData(data)
     local itemId = data.item.key.id
     local num = data.item.n
     self.countText.text = num
-    self.priceText.text = data.price
+    self.priceText.text = GetClientPriceString(data.price)
 
     local matData = Material[itemId]
     if matData ~= nil then
@@ -60,7 +60,7 @@ function MapRightMatGoodItem:refreshData(data)
         self.mat.localScale = Vector3.zero
         self.good.localScale = Vector3.one
         self.goodNameText.text = goodData.name
-        LoadSprite(goodData.img, self.matIconImg, true)
+        LoadSprite(goodData.img, self.goodIconImg, true)
     end
 end
 

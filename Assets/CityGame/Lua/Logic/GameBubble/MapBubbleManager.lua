@@ -145,13 +145,8 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
     elseif summaryType == EMapSearchType.Deal then
 
     end
-    if this.summaryItems ~= nil then
-        for i, value in pairs(this.summaryItems) do
-            value:close()
-            value = nil
-        end
-    end
-    this.summaryItems = {}
+
+    this.cleanSummaryItems()
     for i, value in pairs(data.info) do
         if value.num > 0 then
             this._createSummaryItems(value)
@@ -204,6 +199,7 @@ function MapBubbleManager.cleanAllCollectionDetails()
             value = nil
         end
     end
+    this.collectionDetails = {}
 end
 --清除多余的地块
 function MapBubbleManager.cleanAOIWillRemoveDatas()
@@ -227,7 +223,7 @@ function MapBubbleManager.cleanAOIWillRemoveDatas()
     end
 end
 
---
+--镜头低时显示建筑详细大小
 function MapBubbleManager.toggleShowDetailBuilding(show)
     if show == nil then
         return
@@ -241,6 +237,28 @@ function MapBubbleManager.toggleShowDetailBuilding(show)
         end
     end
 end
+
+--显示缩略或者详情
+function MapBubbleManager.showSummaryOrDetail(showDetail)
+    if showDetail == true then
+        --清除缩略
+        this.cleanSummaryItems()
+    else
+        --清除详情item
+        this.cleanAllCollectionDetails()
+    end
+end
+--
+function MapBubbleManager.cleanSummaryItems()
+    if this.summaryItems ~= nil then
+        for i, value in pairs(this.summaryItems) do
+            value:close()
+            value = nil
+        end
+    end
+    this.summaryItems = {}
+end
+
 --回收
 function MapBubbleManager.recyclingObjToPool(poolName, go)
     if prefabPools[poolName] ~= nil and go ~= nil then

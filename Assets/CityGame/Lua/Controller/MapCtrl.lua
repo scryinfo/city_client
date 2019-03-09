@@ -244,9 +244,6 @@ function MapCtrl:refreshDetailItem(item)
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
-            --隐藏右边UI
-            --self:toggleDetailPage(false)
-
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             self.m_Timer:Start()
             --向服务器发送请求  商品 原料
@@ -255,6 +252,9 @@ function MapCtrl:refreshDetailItem(item)
             else
                 MapModel.m_ReqQueryMarketSummary(item:getItemId())
             end
+
+            --隐藏右边UI
+            tempItem:_clickFunc()
         else
             ct.log("")
         end
@@ -390,8 +390,9 @@ function MapCtrl:EnLargeMap()
             if scale_value >= self.criticalScaleValue then
                 --到达AOI范围
                 if self.AOIState == 0 then
-                    MapBubbleManager.toggleShowDetailBuilding(true)
                     self.AOIState = 1
+                    MapBubbleManager.toggleShowDetailBuilding(true)
+                    MapBubbleManager.showSummaryOrDetail(true)
                     self:_judgeDetail()
                 end
             end
@@ -414,9 +415,10 @@ function MapCtrl:NarrowMap()
             if scale_value < self.criticalScaleValue then
                 --离开AOI范围
                 if self.AOIState == 1 then
-                    MapBubbleManager.toggleShowDetailBuilding(false)
                     self.AOIState = 0
-                    --显示缩略
+                    MapBubbleManager.toggleShowDetailBuilding(false)
+                    MapBubbleManager.showSummaryOrDetail(false)
+                    self:_judgeSummary()
                 end
             end
 
@@ -484,6 +486,18 @@ function MapCtrl:_judgeDetail()
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易详情
+
+    end
+end
+--缩小过程中判断是否需要请求缩略
+function MapCtrl:_judgeSummary()
+    if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() ~= nil then
+        MapModel.m_ReqQueryMarketSummary(self.selectDetailItem:getItemId())
+        return
+    end
+    if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
+        ct.log("")
+        --显示拍卖/土地交易缩略
 
     end
 end

@@ -40,6 +40,12 @@ function MapBubbleBase:_changeScale(mapScale)
     end
     local scale = 1 / mapScale
     self.scaleRoot.localScale = Vector3.one * scale
+
+    if self.detailShowImg ~= nil then
+        self.detailShowImg.transform.localScale = Vector3.one * scale
+        self.detailShowImg.rectTransform.sizeDelta = mapScale * self.viewRect.sizeDelta
+        ct.log("")
+    end
 end
 --设置显示建筑大小
 function MapBubbleBase:toggleShowDetailImg(show)
@@ -54,7 +60,7 @@ function MapBubbleBase:toggleShowDetailImg(show)
 end
 --
 function MapBubbleBase:close()
-    if self.viewRect ~= nil and self.data.poolName ~= nil then
+    if self.viewRect ~= nil and self.data ~= nil and self.data.poolName ~= nil then
         MapBubbleManager.recyclingObjToPool(self.data.poolName, self.viewRect.gameObject)
     end
     self.data = nil

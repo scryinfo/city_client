@@ -364,10 +364,10 @@ end
 function MapCtrl:_openRightMatGoodPage(item)
     if item ~= nil then
         if self.rightSearchItem ~= nil then
-            self.rightSearchItem:toggleOpenState(false)  --将之前的选中取消
+            self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
         end
         self.rightSearchItem = item
-        self.rightSearchItem:toggleOpenState(true)
+        self.rightSearchItem:toggleShowDetailImg(true)
         MapPanel.rightMatGoodPageItem:refreshData(item.data)
     end
 end

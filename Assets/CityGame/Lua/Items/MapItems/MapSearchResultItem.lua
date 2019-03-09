@@ -10,9 +10,9 @@ function MapSearchResultItem:_childInit()
     self.btn = self.viewRect.transform:Find("btn"):GetComponent("Button")
     self.detailShowImgBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.protaitImg = self.viewRect.transform:Find("btn/bg/protaitImg"):GetComponent("Image")
-    self.detailShowImg = self.viewRect.transform:Find("detailShowImg")
+    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
     self.scaleRoot = self.viewRect.transform:Find("btn")  --需要缩放的气泡
-    self:toggleOpenState(false)  --开始的时候隐藏
+    self:toggleShowDetailImg(false)  --开始的时候隐藏
 
     self.detailShowImgBtn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -44,7 +44,12 @@ function MapSearchResultItem:_setPos()
                 self.viewRect.transform.localScale = Vector3.one
             end
             self.viewRect.anchoredPosition = Vector2.New(data.pos.y, -data.pos.x) * self.data.itemWidth
-            self.scaleRoot.transform.localScale = Vector3.one * (1 / MapCtrl.getCurrentScaleValue())
+            local scale = Vector3.one * (1 / MapCtrl.getCurrentScaleValue())
+            self.scaleRoot.transform.localScale = scale
+
+            self.detailShowImg.transform.localScale = scale
+            self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
+
             self.data.buildingBase = buildingBase
         end
     end
@@ -56,12 +61,4 @@ function MapSearchResultItem:_clickFunc()
         return
     end
     Event.Brocast("c_MapOpenRightMatPage", self)
-end
-
-function MapSearchResultItem:toggleOpenState(open)
-    if open == true then
-        self.detailShowImg.localScale = Vector3.one
-    else
-        self.detailShowImg.localScale = Vector3.zero
-    end
 end

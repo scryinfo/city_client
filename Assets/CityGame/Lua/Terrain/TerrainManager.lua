@@ -192,6 +192,7 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     for i, tempInitCollectionID in pairs(willInitList) do
         DataManager.InitBuildDatas(tempInitCollectionID)
     end
+    --TODO:通知地块数据更新
 end
 
 function TerrainManager.IsBelongToCameraCollectionIDAOIList(tempCollectionID)
@@ -214,7 +215,6 @@ function TerrainManager.SendMoveToServer(tempBlockID)
     local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
     local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-    ct.log("system","自己所在位置".. lMsg.x .." <--> " .. lMsg.y)
 end
 
 --应该每帧调用传camera的位置

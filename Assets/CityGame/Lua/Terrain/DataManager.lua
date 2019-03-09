@@ -1528,6 +1528,8 @@ function DataManager.Init()
     DataManager.RegisterErrorNetMsg()
     --初始化自己的地块初始信息
     MyGround.Init()
+    --建筑气泡对象池
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1933,3 +1935,12 @@ function DataManager.GetBagNum()
     return n
 end
 
+--根据大地块获取建筑基础信息
+--如果没有BaseBuildDatas，返回nil
+function DataManager.GetBuildingBaseByCollectionID(collectionID)
+    if BuildDataStack ~= nil and collectionID ~= nil and BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas
+    else
+        return nil
+    end
+end

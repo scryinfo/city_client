@@ -52,7 +52,7 @@ end
 
 
 function AvtarCtrl:Refresh()
-    DataManager.OpenDetailModel(MunicipalModel,OpenModelInsID.AvtarCtrl)
+    DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
     self:begin()
 end
 

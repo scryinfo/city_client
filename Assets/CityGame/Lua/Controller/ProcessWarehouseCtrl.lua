@@ -153,7 +153,7 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         for i = 2, #noMatch do
             noMatchStr = noMatchStr..","..GetLanguage(noMatch[i])
         end
-        Event.Brocast("SmallPop",noMatchStr,400)
+        Event.Brocast("SmallPop",noMatchStr.."类型不符",400)
     end
 end
 --运输确认

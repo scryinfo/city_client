@@ -4,7 +4,6 @@
 --- DateTime: 2019/3/6 11:13
 ---交易量model
 VolumeModel = class("VolumeModel",ModelBase)
-local pbl = pbl
 
 function VolumeModel:initialize(insId)
     self.insId = insId
@@ -15,7 +14,9 @@ function VolumeModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --npc类型数量
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","gs.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","ss.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
 
 end
 
@@ -39,9 +40,23 @@ function VolumeModel:m_GetNpcNum()
 end
 
 --每种商品购买的npc数量
-function VolumeModel:m_GoodsNpcNum()
+function VolumeModel:m_GoodsNpcNum(time)
     local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNum")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+    local lMsg = { time = time }
+    local pMsg = assert(pbl.encode("ss.GoodNpcNumInfo", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--所有npc交易量
+function VolumeModel:m_NpcExchangeAmount()
+    local msgId = pbl.enum("sscode.OpCode","queryNpcExchangeAmount")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+end
+
+--所有交易量
+function VolumeModel:m_ExchangeAmount()
+    local msgId = pbl.enum("sscode.OpCode","queryExchangeAmount")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
 -------------------服务器回调---------------------
@@ -50,5 +65,13 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    local a = lMsg
+    Event.Brocast("c_OnGoodsNpcNum",lMsg)
+end
+
+function VolumeModel:n_OnNpcExchangeAmount(lMsg)
+    Event.Brocast("c_NpcExchangeAmount",lMsg.npcExchangeAmount)
+end
+
+function VolumeModel:n_OnExchangeAmount(lMsg)
+    Event.Brocast("c_ExchangeAmount",lMsg.exchangeAmount)
 end

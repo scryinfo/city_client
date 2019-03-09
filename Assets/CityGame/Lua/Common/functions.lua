@@ -374,6 +374,26 @@ function getPriceString(str, intSize, floatSize)
 
 	return finalStr
 end
+function getMoneyString(str)
+	local b
+	local index = string.find(str, '%.')
+	if not index then
+		index = #tostring(str)
+	else
+		index = index - 1
+	end
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local n = math.floor(index / 3)
+	local a = index % 3
+	local temp
+	b = string.sub(intString,1,a)
+	for i = 1, n do
+		temp = string.sub(intString,(a + 1) + 3*(i-1),(a + 3) + 3*(i-1))
+		b = b .. "," .. temp
+	end
+	return b..floatString
+end
 
 currentLanguage={}
 currentSprite={}

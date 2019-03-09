@@ -18,7 +18,7 @@ end
 function GameMainInterfacePanel.InitPanel()
 
     this.head = transform:Find("LeftUpPanel/head").gameObject --头像
-    this.headItem = transform:Find("LeftUpPanel/head/headBg/headItem"):GetComponent("Image") --头像
+    this.headItem = transform:Find("LeftUpPanel/head/headBg/headItem")
     this.name = transform:Find("LeftUpPanel/bg/name"):GetComponent("Text");
     this.companyBtn = transform:Find("LeftUpPanel/bg/company").gameObject
     this.company = transform:Find("LeftUpPanel/bg/company/companyText"):GetComponent("Text");
@@ -103,8 +103,8 @@ function GameMainInterfacePanel.InitPanel()
 
     this.Budilingsbreak = transform:Find("RadioCity/bg/radioImage/Budilingsbreak");   --建筑突破
     this.budiligNum = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budiligNum"):GetComponent("Text");   --建筑突破数量
-    this.PlayersbreakTime = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingTime"):GetComponent("Text");   --建筑突破时间
-    this.PlayersbreakConter = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingConter"):GetComponent("Text");   --建筑突破内容
+    this.budilingTime = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingTime"):GetComponent("Text");   --建筑突破时间
+    this.budilingConter = transform:Find("RadioCity/bg/radioImage/Budilingsbreak/budilingConter"):GetComponent("Text");   --建筑突破内容
 
     this.majorTransaction = transform:Find("RadioCity/bg/radioImage/majorTransaction");   --重大交易
     this.mTNum = transform:Find("RadioCity/bg/radioImage/majorTransaction/number"):GetComponent("Text");   --重大交易金额
@@ -112,7 +112,16 @@ function GameMainInterfacePanel.InitPanel()
     this.mTSell = transform:Find("RadioCity/bg/radioImage/majorTransaction/sellName"):GetComponent("Text");   --重大交易卖家名字
     this.mTBuy = transform:Find("RadioCity/bg/radioImage/majorTransaction/buyName"):GetComponent("Text");   --重大交易买家名字
     this.mTgoods = transform:Find("RadioCity/bg/radioImage/majorTransaction/goods"):GetComponent("Image");  --重大交易商品
-    this.sellHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/sellHead"):GetComponent("Image");  --重大交易卖家头像
-    this.buyHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/buyHead"):GetComponent("Image");  --重大交易买家头像
+    this.sellHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/sellHead")  --重大交易卖家头像
+    this.buyHead = transform:Find("RadioCity/bg/radioImage/majorTransaction/buyHead");  --重大交易买家头像
+
+    this.Npcbreak = transform:Find("RadioCity/bg/radioImage/Npcbreak");   --Npc突破
+    this.npcNum = transform:Find("RadioCity/bg/radioImage/Npcbreak/npcNum"):GetComponent("Text");   --Npc突破数量
+    this.npcTime = transform:Find("RadioCity/bg/radioImage/Npcbreak/npcTime"):GetComponent("Text");   --Npc突破时间及内容
+
+    this.Bonuspoolbreak = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak");   --奖金池突破
+    this.bonuspoolNum = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolNum"):GetComponent("Text");   --奖金池突破数量
+    this.bonuspoolTime = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolTime"):GetComponent("Text");   --奖金池突破时间
+    this.bonuspoolConter = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolConter"):GetComponent("Text");   --奖金池突破内容
 
 end

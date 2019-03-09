@@ -27,6 +27,7 @@ function BaseBuildModel:Refresh(data)
         self.Data[key] = value
     end
     DataManager.RefreshBlockDataWhenNodeChange(data.posID,PlayerBuildingBaseData[data.buildingID].x,data.posID)
+    DataManager.RefreshPathRangeBlock(data.posID,PlayerBuildingBaseData[data.buildingID].x)
     UIBubbleManager.startBubble()
     self:CheckBubbleState()
     if self.bubbleIns then
@@ -74,6 +75,8 @@ function BaseBuildModel:Close()
     self.bubbleIns=nil
     --删除节点
     DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
+    --删除路径数据
+    DataManager.RemovePathRangeBlock(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x)
     --清除建筑GameObject
     if self.go ~= nil then
         MapObjectsManager.RecyclingGameObjectToPool(PlayerBuildingBaseData[self.Data.buildingID].poolName,self.go)

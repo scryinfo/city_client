@@ -266,6 +266,7 @@ function WarehouseCtrl:DestroyWarehouseItem(ins)
 end
 --生产中刷新仓库数据
 function WarehouseCtrl:UpdateLatestData(dataInfo)
+    self:InitializeCapacity()
     if self.warehouseDatas then
         for key,value in pairs(self.warehouseDatas) do
             if dataInfo.itemId == value.itemId then

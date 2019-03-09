@@ -266,6 +266,8 @@ function ProcessWarehouseCtrl:DestroyWarehouseItem(ins)
 end
 --生产中刷新仓库的数据
 function ProcessWarehouseCtrl:UpdateLatestData(dataInfo)
+    --容量刷新时，会有跳的情况，正常(原料会减少)
+    self:InitializeCapacity()
     if self.warehouseDatas then
         for key,value in pairs(self.warehouseDatas) do
             if dataInfo.itemId == value.itemId then

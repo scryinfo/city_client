@@ -159,8 +159,18 @@ end
 
 -- 网络回调
 -- 新增提示
-function GuildMessageCtrl:c_MessageAdd()
-    GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
+function GuildMessageCtrl:c_MessageAdd(societyNotice)
+    local idTemp = {}
+    if societyNotice.createId then
+        table.insert(idTemp, societyNotice.createId)
+    end
+    if societyNotice.affectedId then
+        table.insert(idTemp, societyNotice.affectedId)
+    end
+    if idTemp[1] then
+        PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
+    end
+    --GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
 -- 退出公会返回

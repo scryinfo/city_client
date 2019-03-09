@@ -4,8 +4,12 @@
 --      1、商业建筑实例类堆栈 ArchitectureStack[]
 --      2、
 UnitTest = require ('test/testFrameWork/UnitTest')
---Framework/pbl/luaunit
 TerrainManager = {}
+
+local Math_Floor = math.floor
+local Math_Ceil =  math.ceil
+local Math_Abs =  math.abs
+
 local ArchitectureStack = {}
 --以下数据应与服务器同步
 local TerrainRange = Vector2.New(1000 , 1000)    --地图大小范围
@@ -85,6 +89,7 @@ function  TerrainManager.ReceiveArchitectureDatas(datas)
         for key, value in pairs(AOIList) do
             DataManager.RefreshWaysByCollectionID( value)
         end
+        PathFindManager.CreateAOIListPalyer(AOIList)
     end
 end
 
@@ -131,8 +136,8 @@ end
 --计算AOI范围内的地块ID
 local function CalculationAOICollectionIDList(centerCollectionID)
     local tempList = {}
-    local rowNum = math.ceil(TerrainRange.x /blockRange.x) --一行总个数
-    local columnNum = math.ceil(TerrainRange.y /blockRange.y) --一列总个数
+    local rowNum = Math_Ceil(TerrainRange.x /blockRange.x) --一行总个数
+    local columnNum = Math_Ceil(TerrainRange.y /blockRange.y) --一列总个数
     local remain = centerCollectionID % rowNum
     --是否靠近边缘
     local IsNearTopEdge = centerCollectionID <= rowNum
@@ -180,13 +185,14 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     --删除旧有的AOI地块
     for i, tempDeteleCollectionID in pairs(willRemoveList) do
         DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
-        DataManager.RemoveCollectionDatasByCollectionID(tempDeteleCollectionID)
     end
+    PathFindManager.RemoveAOIListPalyer(willRemoveList)
     --初始化新newCollectionList
     local willInitList = ComputingTheComplementSetOfBinA(newCollectionList,oldCollectionList)
     for i, tempInitCollectionID in pairs(willInitList) do
         DataManager.InitBuildDatas(tempInitCollectionID)
     end
+    --TODO:通知地块数据更新
 end
 
 --外部获取移动时，需要删除的地块
@@ -222,7 +228,6 @@ function TerrainManager.SendMoveToServer(tempBlockID)
     local lMsg = TerrainManager.BlockIDTurnCollectionGridIndex(tempBlockID)
     local pMsg = assert(pbl.encode("gs.GridIndex", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-    ct.log("system","自己所在位置".. lMsg.x .." <--> " .. lMsg.y)
 end
 
 --应该每帧调用传camera的位置
@@ -249,8 +254,8 @@ end
 --pos:Vector3
 --注：z为列，x为行（y = 0）
 function TerrainManager.PositionTurnBlockID(pos)
-    local tempX = math.floor(math.abs(pos.x))
-    local tempZ = math.floor(math.abs(pos.z))
+    local tempX = Math_Floor(Math_Abs(pos.x))
+    local tempZ = Math_Floor(Math_Abs(pos.z))
     return tempZ + tempX * TerrainRange.x + 1
 end
 
@@ -258,8 +263,8 @@ end
 --tempGridIndex ： x，y
 --注：z为列，x为行（y = 0）
 function TerrainManager.GridIndexTurnBlockID(tempGridIndex)
-    local tempX = math.floor(math.abs(tempGridIndex.x))
-    local tempZ = math.floor( math.abs(tempGridIndex.y))
+    local tempX = Math_Floor(Math_Abs(tempGridIndex.x))
+    local tempZ = Math_Floor( Math_Abs(tempGridIndex.y))
     return tempZ + tempX * TerrainRange.x + 1
 end
 
@@ -269,7 +274,7 @@ function TerrainManager.BlockIDTurnPosition(id)
     local idPos = Vector3.New(-100,0,-100) --初始到视线外
     if id >= 1 and id<= (TerrainRange.x * TerrainRange.y) then
         idPos.z = id % TerrainRange.x - 1
-        idPos.x =  math.floor(id / TerrainRange.x)
+        idPos.x =  Math_Floor(id / TerrainRange.x)
     end
     return idPos
 end
@@ -279,13 +284,13 @@ function TerrainManager.BlockIDTurnCollectionID(blockID)
     if blockID == nil then
         return -1
     end
-    local rowNum = math.ceil(TerrainRange.x /blockRange.x)
-    local Y = math.floor((blockID / TerrainRange.x) / blockRange.y) * rowNum    --行
+    local rowNum = Math_Ceil(TerrainRange.x /blockRange.x)
+    local Y = Math_Floor((blockID / TerrainRange.x) / blockRange.y) * rowNum    --行
     local Remainder = (blockID %  TerrainRange.x)
     if Remainder ~= 0 then
         Remainder = Remainder - 1
     end
-    local X = math.floor(Remainder / blockRange.x ) + 1            --列
+    local X = Math_Floor(Remainder / blockRange.x ) + 1            --列
     return X +  Y
 end
 
@@ -298,15 +303,15 @@ function TerrainManager.BlockIDTurnCollectionGridIndex(blockID)
     if Remainder ~= 0 then
         Remainder = Remainder - 1
     end
-    local X = math.floor((blockID / TerrainRange.x) / blockRange.y)
-    local Y = math.floor(Remainder/ blockRange.x)
+    local X = Math_Floor((blockID / TerrainRange.x) / blockRange.y)
+    local Y = Math_Floor(Remainder/ blockRange.x)
     return{ x = X,y = Y}
 end
 
 --通过BlockCollectionID转化为BlcokID
 function TerrainManager.CollectionIDTurnBlockID(collectionID)
-    local X = math.floor( collectionID / math.ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
-    local Y = ((collectionID % math.ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x + 1
+    local X = Math_Floor( collectionID / Math_Ceil(TerrainRange.x /blockRange.x) ) * blockRange.y * TerrainRange.x
+    local Y = ((collectionID % Math_Ceil(TerrainRange.x /blockRange.x)) -1 ) * blockRange.x + 1
     return X +  Y
 end
 
@@ -315,9 +320,9 @@ function TerrainManager.CollectionIDTurnCollectionGridIndex(collectionID)
 end
 
 function TerrainManager.AOIGridIndexTurnCollectionID(tempGridIndex)
-    local tempX = math.floor(math.abs(tempGridIndex.x))
-    local tempZ = math.floor(math.abs(tempGridIndex.y))
-    return tempZ + tempX * math.ceil(TerrainRange.x /blockRange.x) + 1
+    local tempX = Math_Floor(Math_Abs(tempGridIndex.x))
+    local tempZ = Math_Floor(Math_Abs(tempGridIndex.y))
+    return tempZ + tempX * Math_Ceil(TerrainRange.x /blockRange.x) + 1
 end
 
 --创建临时修建建筑物
@@ -381,66 +386,6 @@ function TerrainManager.TouchBuild(MousePos)
         end
     end
 end
-
---[[  Old Version
-local CentralBuildingBlockList = nil
-local CentralBuildingObj = nil
-local CentralBuildingBlockID = nil
-local CentralBuildingCollectionID = nil
-
-local function CreateCenterBuildSuccess(go,...)
-    CentralBuildingObj = go
-    local CentralBuildingMes = TerrainConfig.CentralBuilding
-    --临时提高一些
-    local TargetPos =CentralBuildingMes.CenterNodePos
-    TargetPos.y = TargetPos.y + 0.01
-    CentralBuildingObj.transform.position = TargetPos
-    CentralBuildingObj.transform.localScale = Vector3.New(1,1,1)
-    CentralBuildingObj.name = "CentralBuilding"
-    --写入覆盖范围
-    CentralBuildingBlockID = TerrainManager.PositionTurnBlockID(CentralBuildingMes.CenterNodePos)
-    CentralBuildingCollectionID = TerrainManager.BlockIDTurnCollectionID(CentralBuildingBlockID)
-    CentralBuildingBlockList = DataManager.CaculationTerrainRangeBlock(CentralBuildingBlockID, PlayerBuildingBaseData[CentralBuildingMes.BuildingType].x)
-    --刷新道路
-    for key, value in pairs(TerrainManager.GetCameraCollectionIDAOIList()) do
-        TerrainManager.IsIncludeCentralBuilding(value)
-        DataManager.RefreshWaysByCollectionID(value)
-    end
-end
-
-
---创建中心建筑
-function TerrainManager.CreateCenterBuilding()
-    if CentralBuildingObj == nil then
-        local CentralBuildingMes = TerrainConfig.CentralBuilding
-        if CentralBuildingMes.CenterNodePos ~= nil and CentralBuildingMes.BuildingType ~= nil and PlayerBuildingBaseData[CentralBuildingMes.BuildingType] ~= nil then
-            buildMgr:CreateBuild(PlayerBuildingBaseData[CentralBuildingMes.BuildingType].prefabRoute,CreateCenterBuildSuccess,nil)
-        end
-    end
-end
-
---判断是否点击到中心建筑
-function TerrainManager.IsTouchCentralBuilding(blockID)
-    if  CentralBuildingBlockList ~= nil then
-        for key, value in pairs(CentralBuildingBlockList) do
-            if blockID == value then
-                return true
-            end
-        end
-    end
-    return false
-end
-
---判断AOI地块是否包含中心建筑
---
-function TerrainManager.IsIncludeCentralBuilding(CollectionID)
-    local BuildingType = TerrainConfig.CentralBuilding.BuildingType
-    if CentralBuildingCollectionID == CollectionID then
-        --写入覆盖范围
-        DataManager.RefreshBlockDataWhenNodeChange(CentralBuildingBlockID,PlayerBuildingBaseData[BuildingType].x,BuildingType)
-    end
-end
---]]
 
 --移动到中心建筑位置
 function TerrainManager.MoveToCentralBuidingPosition()

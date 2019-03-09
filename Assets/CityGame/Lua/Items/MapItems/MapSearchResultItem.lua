@@ -11,6 +11,7 @@ function MapSearchResultItem:_childInit()
     self.protaitImg = self.viewRect.transform:Find("btn/bg/protaitImg"):GetComponent("Image")
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg")
     self.scaleRoot = self.viewRect.transform:Find("btn")  --需要缩放的气泡
+    self:toggleOpenState(false)  --开始的时候隐藏
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -49,8 +50,13 @@ function MapSearchResultItem:_clickFunc()
     if self.data == nil then
         return
     end
-    if self.data.buildingBase.buildingId == DataManager.GetMyOwnerID() then
-        ct.log("")
+    Event.Brocast("c_MapOpenRightMatPage", self)
+end
 
+function MapSearchResultItem:toggleOpenState(open)
+    if open == true then
+        self.detailShowImg.localScale = Vector3.one
+    else
+        self.detailShowImg.localScale = Vector3.zero
     end
 end

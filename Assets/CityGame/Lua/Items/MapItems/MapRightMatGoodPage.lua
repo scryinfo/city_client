@@ -28,16 +28,16 @@ function MapRightMatGoodPage:initialize(viewRect)
     self.goHereText01 = self.viewRect.transform:Find("bottomRoot/btnRoot/goHereBtn/Text"):GetComponent("Text")
     --old
     self.closeBtn.onClick:AddListener(function ()
-        self:_clickFunc()
+        self:_closeBtn()
     end)
     self.goHereBtn.onClick:AddListener(function ()
-        self:_clickFunc()
+        self:_goHereBtn()
     end)
     self.leftBtn.onClick:AddListener(function ()
-        self:_clickFunc()
+        self:_leftChangeBtn()
     end)
     self.rightBtn.onClick:AddListener(function ()
-        self:_clickFunc()
+        self:_rightChangeBtn()
     end)
     --
 
@@ -68,7 +68,7 @@ function MapRightMatGoodPage:refreshData(data)
         self:_rightChangeBtn()  --右翻
     else
         self.leftRightBtnRoot.localScale = Vector3.zero
-        self.mapRightMatGoodItem:refreshData(data.detailData.sale)
+        self.mapRightMatGoodItem:refreshData(data.detailData.sale[1])
     end
 end
 --重置状态

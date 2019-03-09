@@ -89,6 +89,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
+    Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
 
     MapBubbleManager.initItemData()
 end
@@ -100,6 +101,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
     Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
+    Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
 
     self.m_Timer:Stop()
     self:_cancelDetailSelect()
@@ -324,7 +326,11 @@ end
 --搜索完成后，选择具体的item，打开右侧原料商品界面
 function MapCtrl:_openRightMatGoodPage(item)
     if item ~= nil then
+        if self.rightSearchItem ~= nil then
+            self.rightSearchItem:toggleOpenState(false)  --将之前的选中取消
+        end
         self.rightSearchItem = item
+        self.rightSearchItem:toggleOpenState(true)
         MapPanel.rightMatGoodPageItem:refreshData(item.data)
     end
 end

@@ -183,7 +183,7 @@ function ChatCtrl:_refreshState()
             ChatPanel.chatRecordsRoot:SetActive(false)
             self:_queryFriendInfo()
         end
-        ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        --ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
     elseif self.m_data.toggleId == 3 then  -- 打开陌生人分页
         ChatPanel.strangersToggle.isOn = true
         self.channel = 3 -- 聊天频道
@@ -766,6 +766,7 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
         end
         ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
         if ChatCtrl.static.isShowClickFriends then
+            ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
             friendsPlayerItem.toggle.isOn = true
             ChatCtrl.static.isShowClickFriends = false

@@ -374,6 +374,26 @@ function getPriceString(str, intSize, floatSize)
 
 	return finalStr
 end
+function getMoneyString(str)
+	local b
+	local index = string.find(str, '%.')
+	if not index then
+		index = #tostring(str)
+	else
+		index = index - 1
+	end
+	local intString = string.sub(str, 1, index)
+	local floatString = string.sub(str, index + 1)
+	local n = math.floor(index / 3)
+	local a = index % 3
+	local temp
+	b = string.sub(intString,1,a)
+	for i = 1, n do
+		temp = string.sub(intString,(a + 1) + 3*(i-1),(a + 3) + 3*(i-1))
+		b = b .. "," .. temp
+	end
+	return b..floatString
+end
 
 currentLanguage={}
 currentSprite={}
@@ -417,6 +437,10 @@ function SaveLanguageSettings(languageType)
 		currentLanguage=english
 		currentSprite=sprite_eng
 	end
+end
+
+function SaveBuildingBubbleSettings(bubbleType)
+		UnityEngine.PlayerPrefs.SetInt("BuildingBubble",bubbleType)
 end
 
 function GetLanguage(key,...)
@@ -506,7 +530,7 @@ local AssetObjs  = {}
 function LoadSprite(path, Icon, bSetNativeSize)
 	local type = ct.getType(UnityEngine.Sprite)
 	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj ,ab)
-		if obj ~= nil then
+		if obj ~= nil and Icon.sprite then
 			local texture = ct.InstantiatePrefab(obj)
 			if Icon then
 				Icon.sprite = texture

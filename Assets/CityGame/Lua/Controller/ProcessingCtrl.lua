@@ -141,7 +141,7 @@ function ProcessingCtrl:deleteShelfObj()
         end
     end
 end
---清空货架（其他玩家看到的）
+--清空货架（其他玩家）
 function ProcessingCtrl:deleteOtherShelf()
     if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
         return

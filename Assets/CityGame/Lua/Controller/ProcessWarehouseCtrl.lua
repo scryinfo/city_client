@@ -49,10 +49,12 @@ end
 function ProcessWarehouseCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.AddListener("ProcessUpdateLatestData",self.UpdateLatestData,self)
 end
 function ProcessWarehouseCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
+    Event.RemoveListener("ProcessUpdateLatestData",self.UpdateLatestData,self)
 end
 function ProcessWarehouseCtrl:Refresh()
     itemNumber = nil
@@ -118,7 +120,7 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         --如果架子上是空的
         if not ins.m_data.shelf.good then
             if ins:WhetherValidShelfOp(value1) == true then
-                Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
             else
                 noMatch[#noMatch + 1] = value1.itemId
             end
@@ -128,16 +130,16 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
                 --如果有这个东西，需要发送两个协议，修改和上架
                 if ins:WhetherValidShelfOp(value1) == true then
                     --修改协议
-                    Event.Brocast("m_ReqMaterialModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqProcessModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                     --上架协议
-                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
                 end
             else
                 if ins:WhetherValidShelfOp(value1) == true then
                     --发送上架协议
-                    Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                    Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
                 end
@@ -151,7 +153,7 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         for i = 2, #noMatch do
             noMatchStr = noMatchStr..","..GetLanguage(noMatch[i])
         end
-        Event.Brocast("SmallPop",noMatchStr,400)
+        Event.Brocast("SmallPop",noMatchStr.."类型不符",400)
     end
 end
 --运输确认
@@ -174,7 +176,7 @@ function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(ins)
             return
         else
             for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_MaterialTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
+                Event.Brocast("m_ProcessTransport",ins.buildingId,targetBuildingId,value.itemId,value.inputNumber.text,value.goodsDataInfo.key.producerId,value.goodsDataInfo.key.qty)
             end
         end
     end
@@ -258,9 +260,32 @@ function ProcessWarehouseCtrl:DestroyWarehouseItem(ins)
     data.contentInfo = GetLanguage(35030004)
     data.tipInfo = GetLanguage(30030002)
     data.btnCallBack = function()
-        Event.Brocast("m_ReqMaterialDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
+        Event.Brocast("m_ReqProcessDelItem",self.buildingId,ins.itemId,ins.producerId,ins.qty)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--生产中刷新仓库的数据
+function ProcessWarehouseCtrl:UpdateLatestData(dataInfo)
+    --容量刷新时，会有跳的情况，正常(原料会减少)
+    self:InitializeCapacity()
+    if self.warehouseDatas then
+        for key,value in pairs(self.warehouseDatas) do
+            if dataInfo.itemId == value.itemId then
+                value.n = dataInfo.nowCountStore
+                value.numberText.text = dataInfo.nowCountStore
+                value.goodsDataInfo.n = dataInfo.nowCountStore
+                return
+            end
+        end
+    end
+    local inHand = {}
+    local key = {}
+    key.id = dataInfo.itemId
+    key.producerId = dataInfo.producerId
+    key.qty = dataInfo.qty
+    inHand.key = key
+    inHand.n = dataInfo.nowCountStore
+    self:RefreshCreateItem(inHand,ProcessWarehousePanel.warehouseItem,ProcessWarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

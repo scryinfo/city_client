@@ -3,11 +3,19 @@
 local class = require 'Framework/class'
 BaseBuildModel = class('BaseBuildModel')
 
+
+BubblePrefabs={}
+BubblePrefabsManger={}
+
 --初始化
 --将protobuf内数据拷贝出来
 function BaseBuildModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
+    --建筑气泡
+    self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()
+    self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BubblePrefabsManger.LuaBehaviour,data,BubblePrefabsManger)
+    table.insert(BubblePrefabs,self.bubbleIns)
 
     Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
@@ -22,6 +30,9 @@ function BaseBuildModel:Refresh(data)
     DataManager.RefreshPathRangeBlock(data.posID,PlayerBuildingBaseData[data.buildingID].x)
     UIBubbleManager.startBubble()
     self:CheckBubbleState()
+    if self.bubbleIns then
+        self.bubbleIns:updateData(data)
+    end
 end
 
 --打开界面
@@ -60,6 +71,8 @@ function BaseBuildModel:CheckBubbleState()
 end
 
 function BaseBuildModel:Close()
+    DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
+    self.bubbleIns=nil
     --删除节点
     DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --删除路径数据
@@ -67,6 +80,8 @@ function BaseBuildModel:Close()
     --清除建筑GameObject
     if self.go ~= nil then
         MapObjectsManager.RecyclingGameObjectToPool(PlayerBuildingBaseData[self.Data.buildingID].poolName,self.go)
+        DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubble)
+        self.bubbleIns=nil
     end
     if self.bubbleItem ~= nil then
         self.bubbleItem:Close()

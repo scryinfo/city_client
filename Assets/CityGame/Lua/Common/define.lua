@@ -84,8 +84,6 @@ ModelNames = {
 	Material = "MaterialModel",  --原料厂
 	RetailStores = "RetailStoresModel",  --零售店
 	Processing = "ProcessingModel",  --加工厂
-	Shelf = "ShelfModel",  --货架
-	AdjustProductionLine = "AdjustProductionLineModel",  --生产线调整
 	tempTransport = "tempTransportModel",   --临时运输
 	Exchange = "ExchangeModel",  --交易所
 	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
@@ -96,7 +94,6 @@ ModelNames = {
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
 	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	Warehouse = "WarehouseModel",
 	friends = "FriendsModel", -- 好友
 	Laboratory = "LaboratoryModel",  --研究所
 	Chat = "ChatModel", -- 聊天
@@ -211,6 +208,12 @@ Buildingowner=
 LanguageType={
 	Chinese=0,
 	English=1,
+}
+
+BuildingBubbleType={
+	small=1,
+	big=2,
+    close=3,
 }
 
 --仓库 --货架 --运输(通用)

@@ -59,7 +59,7 @@ end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
 --自己
 function ShelfCtrl:MeInitializeData()
-    ShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+    ShelfPanel.buy_Btn.transform.localScale = Vector3.zero;
     ShelfPanel.shelfAddItem.gameObject:SetActive(true)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
@@ -68,7 +68,7 @@ function ShelfCtrl:MeInitializeData()
 end
 --别人
 function ShelfCtrl:OthersInitializeData()
-    ShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+    ShelfPanel.buy_Btn.transform.localScale = Vector3.one;
     ShelfPanel.shelfAddItem.gameObject:SetActive(false)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ShelfPanel.ShelfGoodsItem,ShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
@@ -153,7 +153,7 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
     ShelfPanel.nameText.text = ""
     self.ShelfImgSetActive(self.shelfDatas,5,1)
     self:RefreshBuyButton()
-    Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
+    --Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品

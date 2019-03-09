@@ -45,7 +45,8 @@ function RetailShelfPanel.InitPanel()
     this.nameText = transform:Find("rightInformation/bg/buy/warehouseName/nameText"):GetComponent("RectTransform");
     this.openBtn = transform:Find("rightInformation/bg/buy/warehouseName/openBtn").gameObject;
     this.buyContent = transform:Find("rightInformation/bg/buy/ScrollView/Viewport/Content");
-
+    --预制
+    this.RetailGoodsItem = transform:Find("scrollView/viewport/content/RetailGoodsItem").gameObject
 end
 function RetailShelfPanel.OnDestroy()
 

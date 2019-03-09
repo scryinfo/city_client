@@ -25,10 +25,10 @@ function MaterialModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
-    ----货架
+    --货架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
-    ----生产线
+    --生产线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
@@ -101,7 +101,7 @@ function MaterialModel:n_OnBuildingTransportInfo(data)
     local qty = data.item.key.qty
     local producerId = data.item.key.producerId
     if data.dst == bagId then
-        --Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
     end
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
 end

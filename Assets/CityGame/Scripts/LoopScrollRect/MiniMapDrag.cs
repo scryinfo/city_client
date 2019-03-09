@@ -1,4 +1,5 @@
 ﻿
+using LuaFramework;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -55,6 +56,8 @@ public class MiniMapDrag : MonoBehaviour , IDragHandler
             targetPos.y = -NowRangeSizeY;
         }
         mRect.anchoredPosition = targetPos;
+
+        Util.CallMethod("MapBubbleManager", "MapMoveFunc");
     }
 
 }

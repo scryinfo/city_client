@@ -249,7 +249,7 @@ function AvatarManger.GetBigAvatar(faceId,parent,size)
     return AvatarData
 end
 
-function AvatarManger.CollectAvatar()
+function AvatarManger.CollectAllAvatar()
     if #record>0 then
         for i, AvatarData in ipairs(record) do
             for i, config in ipairs(HeadSizeType) do
@@ -268,5 +268,20 @@ function AvatarManger.CollectAvatar()
         end
         recordPath = {}
     end
+end
+
+function AvatarManger.CollectAllAvatar(AvatarData)
+    if #record>0 and AvatarData then
+
+            for i, config in ipairs(HeadSizeType) do
+                local trans=AvatarData.go.transform:Find(config.type)
+                if trans then
+                    local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
+            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
+    end
+    
 end
 

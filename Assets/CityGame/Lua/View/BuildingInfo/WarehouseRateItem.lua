@@ -54,7 +54,7 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     --    --end);
     Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
     Event.AddListener("updateWarehouseData",self.updateWarehouseData,self)
-    --Event.AddListener("updateWarehouseNum",self.updateWarehouseNum,self)
+    Event.AddListener("updateWarehouseNum",self.updateWarehouseNum,self)
 end
 --初始化数据
 function WarehouseRateItem:initData()
@@ -180,9 +180,6 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
         local goodData = {}
         local key = {}
         if not self.warehouseData.store.inHand then
-            --local inHand = {}
-            --local goodData = {}
-            --local key = {}
             key.id = dataInfo.itemId
             key.producerId = dataInfo.producerId
             key.qty = dataInfo.qty
@@ -198,8 +195,6 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
                     return
                 end
             end
-            --local goodData = {}
-            --local key = {}
             key.id = dataInfo.itemId
             key.producerId = dataInfo.producerId
             key.qty = dataInfo.qty
@@ -211,18 +206,17 @@ function WarehouseRateItem:updateWarehouseData(dataInfo)
     end
 end
 --刷新建筑页面数量
---function WarehouseRateItem:updateWarehouseNum()
---    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
---    self.nowValue
---    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store)
---    local lockedNum = self:getLockedNum(self.warehouseData.store);
---    local numTab = {}
---    numTab["num1"] = self.sizeSlider.value
---    numTab["num2"] = lockedNum
---    numTab["num3"] = self.sizeSlider.maxValue
---    numTab["col1"] = "Cyan"
---    numTab["col2"] = "Teal"
---    numTab["col3"] = "Black"
---    self.numberText.text = getColorString(numTab);
---    --WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
---end
+function WarehouseRateItem:updateWarehouseNum()
+    local count = 1
+    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
+    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store) + count
+    local lockedNum = self:getLockedNum(self.warehouseData.store);
+    local numTab = {}
+    numTab["num1"] = self.sizeSlider.value
+    numTab["num2"] = lockedNum
+    numTab["num3"] = self.sizeSlider.maxValue
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "Black"
+    self.numberText.text = getColorString(numTab);
+end

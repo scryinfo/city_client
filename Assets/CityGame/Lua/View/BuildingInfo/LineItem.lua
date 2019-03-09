@@ -179,8 +179,8 @@ function LineItem:refreshNowConte(dataInfo)
         nowGoodsData.qty = dataInfo.iKey.qty
         nowGoodsData.nowCountStore = dataInfo.nowCountInStore
     end
+    Event.Brocast("updateWarehouseNum")
     Event.Brocast("updateWarehouseData",nowGoodsData)
-    --Event.Brocast("updateWarehouseNum")
 end
 --删除生产线
 function LineItem:OnClick_deleteBtn(go)

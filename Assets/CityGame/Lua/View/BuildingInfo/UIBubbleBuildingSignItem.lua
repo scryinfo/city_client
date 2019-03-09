@@ -23,16 +23,16 @@ function UIBubbleBuildingSignItem:initialize(prefab,luaBehaviour,data,ctr)
 
     self.smallRec=prefab.transform:Find("small")
     self.smallBgBtn=prefab.transform:Find("small/bgBtn")
-    self.smallIma=prefab.transform:Find("small/bgBtn/Image")
+    self.smallIma=prefab.transform:Find("small/bgBtn/Image"):GetComponent("Image");
     self.smallExRec=prefab.transform:Find("small/Expection")
-    self.smallExIma=prefab.transform:Find("small/Expection/icon")
+    self.smallExIma=prefab.transform:Find("small/Expection/icon"):GetComponent("Image");
   
 
     self.largeRec=prefab.transform:Find("large")
     self.largeBgBtn=prefab.transform:Find("large/bgBtn")
-    self.largeIma=prefab.transform:Find("large/bgBtn/iconImg")
+    self.largeIma=prefab.transform:Find("large/bgBtn/iconImg"):GetComponent("Image");
     self.largeExRec=prefab.transform:Find("large/Expection")
-    self.largeExIma=prefab.transform:Find("large/Expection/icon")
+    self.largeExIma=prefab.transform:Find("large/Expection/icon"):GetComponent("Image");
     self.headIma=prefab.transform:Find("large/bgBtn/playerInfo/protait/bg/protaitImg")
     self.nameText=prefab.transform:Find("large/bgBtn/playerInfo/Image/nameText"):GetComponent("Text");
     self.desText=prefab.transform:Find("large/bgBtn/bg/desText"):GetComponent("Text");
@@ -50,7 +50,7 @@ function UIBubbleBuildingSignItem:updateData(data)
      --todo:系统设置判定
     --给小的赋值
     if data.emoticon then
-        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon],self.smallIma)
+        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.smallIma)
         if data.state~="OPERATE" then
             self.smallExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.smallExIma)
@@ -67,7 +67,7 @@ function UIBubbleBuildingSignItem:updateData(data)
 
     --给大的赋值
     if data.emoticon then
-        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon],self.largeIma)
+        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.largeIma)
         if data.state~="OPERATE" then    --停业
             self.largeExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.largeExIma)
@@ -92,12 +92,12 @@ function UIBubbleBuildingSignItem:updateData(data)
     if not data.bubble then
         self:CloesBubble()
     else
-        if UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==1 then
-            self:changeSmall()
+        if UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==3 then
+            self:CloesBubble()
         elseif UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==2 then
             self:changeLarge()
         else
-            self:CloesBubble()
+            self:changeSmall()
         end
     end
 

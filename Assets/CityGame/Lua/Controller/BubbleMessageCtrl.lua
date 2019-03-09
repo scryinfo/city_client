@@ -83,6 +83,7 @@ function BubbleMessageCtrl:Close()
 end
 
 function  BubbleMessageCtrl:Awake(go)
+    isShow=true
     self.gameObject = go
     this=self
     panel=BubbleMessagePanel
@@ -107,7 +108,7 @@ end
 
 --确定
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
-    Event.Brocast("m_setRoleFaceId",ins.m_data,panel.inputFrame.text,ins.bubbleId,isShow)
+    Event.Brocast("m_setBuildingInfo",ins.m_data,panel.inputFrame.text or " ",ins.bubbleId,isShow)
     ins:Hide()
 end
 

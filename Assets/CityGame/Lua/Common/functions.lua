@@ -510,7 +510,7 @@ local AssetObjs  = {}
 function LoadSprite(path, Icon, bSetNativeSize)
 	local type = ct.getType(UnityEngine.Sprite)
 	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj ,ab)
-		if obj ~= nil then
+		if obj ~= nil and Icon.sprite then
 			local texture = ct.InstantiatePrefab(obj)
 			if Icon then
 				Icon.sprite = texture

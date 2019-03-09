@@ -36,7 +36,7 @@ function PlayerInfoManger.GetInfosOneByOne(playerIds,func,class)
         else--无缓存
             for j = 1, #tempIds do
                 table.insert(playerIDs,tempIds[j])
-                Event.Brocast("m_QueryPlayerInfoChat",{tempIds[j]})
+            Event.Brocast("m_QueryPlayerInfoChat",{tempIds[j]})
             end
         end
     end

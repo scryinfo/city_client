@@ -131,6 +131,10 @@ function MapCtrl:_cleanDatas()
     if MapPanel.rightMatGoodPageItem ~= nil then
         MapPanel.rightMatGoodPageItem:resetState()
     end
+    if self.rightSearchItem ~= nil then
+        self.rightSearchItem:close()
+        self.rightSearchItem = nil
+    end
 end
 --
 function MapCtrl:_initUIData()

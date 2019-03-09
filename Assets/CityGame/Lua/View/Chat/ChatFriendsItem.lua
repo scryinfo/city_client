@@ -36,7 +36,7 @@ function ChatFriendsItem:initialize(itemId, index, prefab, isFrist, data)
     self.noticeImage:SetActive(false)
     --LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.friendsImage, true)
     self.headPrefab = AvatarManger.GetSmallAvatar(self.data.faceId, self.friendsImage,0.2)
-    self.headPrefabTrans = self.headPrefab.transform
+    self.headPrefabTrans = self.headPrefab.go.transform
 
     self.toggle.onValueChanged:AddListener(function (isOn)
         self:_toggleValueChange(isOn)

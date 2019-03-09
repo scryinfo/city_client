@@ -119,232 +119,232 @@ MapGameObjectsConfig = {
         },
         {   --道路边缘1
             ["Name"] = "Road_1",
-            ["RoadPrefabConfig"] = 1,
+            ["RoadPrefabConfigID"] = 1,
             ["InitCount"] = 0,
         },
         {   --道路边缘2
             ["Name"] = "Road_2",
-            ["RoadPrefabConfig"] = 2,
+            ["RoadPrefabConfigID"] = 2,
             ["InitCount"] = 0,
         },
         {   --道路边缘3
             ["Name"] = "Road_3",
-            ["RoadPrefabConfig"] = 3,
+            ["RoadPrefabConfigID"] = 3,
             ["InitCount"] = 0,
         },
         {   --道路边缘4
             ["Name"] = "Road_4",
-            ["RoadPrefabConfig"] = 4,
+            ["RoadPrefabConfigID"] = 4,
             ["InitCount"] = 0,
         },
         {   --道路边缘5
             ["Name"] = "Road_5",
-            ["RoadPrefabConfig"] = 5,
+            ["RoadPrefabConfigID"] = 5,
             ["InitCount"] = 0,
         },
         {   --道路边缘6
             ["Name"] = "Road_6",
-            ["RoadPrefabConfig"] = 6,
+            ["RoadPrefabConfigID"] = 6,
             ["InitCount"] = 0,
         },
         {   --道路边缘7
             ["Name"] = "Road_7",
-            ["RoadPrefabConfig"] = 7,
+            ["RoadPrefabConfigID"] = 7,
             ["InitCount"] = 0,
         },
         {   --道路边缘8
             ["Name"] = "Road_8",
-            ["RoadPrefabConfig"] = 8,
+            ["RoadPrefabConfigID"] = 8,
             ["InitCount"] = 0,
         },
         {   --道路边缘9
             ["Name"] = "Road_9",
-            ["RoadPrefabConfig"] = 9,
+            ["RoadPrefabConfigID"] = 9,
             ["InitCount"] = 0,
         },
         {   --道路边缘10
             ["Name"] = "Road_10",
-            ["RoadPrefabConfig"] = 10,
+            ["RoadPrefabConfigID"] = 10,
             ["InitCount"] = 0,
         },
         {   --道路边缘11
             ["Name"] = "Road_11",
-            ["RoadPrefabConfig"] = 11,
+            ["RoadPrefabConfigID"] = 11,
             ["InitCount"] = 0,
         },
         {   --道路边缘12
             ["Name"] = "Road_12",
-            ["RoadPrefabConfig"] = 12,
+            ["RoadPrefabConfigID"] = 12,
             ["InitCount"] = 0,
         },
         {   --道路边缘13
             ["Name"] = "Road_13",
-            ["RoadPrefabConfig"] = 13,
+            ["RoadPrefabConfigID"] = 13,
             ["InitCount"] = 0,
         },
         {   --道路边缘14
             ["Name"] = "Road_14",
-            ["RoadPrefabConfig"] = 14,
+            ["RoadPrefabConfigID"] = 14,
             ["InitCount"] = 0,
         },
         {   --道路边缘15
             ["Name"] = "Road_15",
-            ["RoadPrefabConfig"] = 15,
+            ["RoadPrefabConfigID"] = 15,
             ["InitCount"] = 0,
         },
         {   --道路边缘16
             ["Name"] = "Road_16",
-            ["RoadPrefabConfig"] = 16,
+            ["RoadPrefabConfigID"] = 16,
             ["InitCount"] = 0,
         },
         {   --道路边缘20
             ["Name"] = "Road_20",
-            ["RoadPrefabConfig"] = 20,
+            ["RoadPrefabConfigID"] = 20,
             ["InitCount"] = 0,
         },
         {   --道路边缘24
             ["Name"] = "Road_24",
-            ["RoadPrefabConfig"] = 24,
+            ["RoadPrefabConfigID"] = 24,
             ["InitCount"] = 0,
         },
         {   --道路边缘28
             ["Name"] = "Road_28",
-            ["RoadPrefabConfig"] = 28,
+            ["RoadPrefabConfigID"] = 28,
             ["InitCount"] = 0,
         },
         {   --道路边缘32
             ["Name"] = "Road_32",
-            ["RoadPrefabConfig"] = 32,
+            ["RoadPrefabConfigID"] = 32,
             ["InitCount"] = 0,
         },
         {   --道路边缘33
             ["Name"] = "Road_33",
-            ["RoadPrefabConfig"] = 33,
+            ["RoadPrefabConfigID"] = 33,
             ["InitCount"] = 0,
         },
         {   --道路边缘40
             ["Name"] = "Road_40",
-            ["RoadPrefabConfig"] = 40,
+            ["RoadPrefabConfigID"] = 40,
             ["InitCount"] = 0,
         },
         {   --道路边缘41
             ["Name"] = "Road_41",
-            ["RoadPrefabConfig"] = 41,
+            ["RoadPrefabConfigID"] = 41,
             ["InitCount"] = 0,
         },
         {   --道路边缘48
             ["Name"] = "Road_48",
-            ["RoadPrefabConfig"] = 48,
+            ["RoadPrefabConfigID"] = 48,
             ["InitCount"] = 0,
         },
         {   --道路边缘56
             ["Name"] = "Road_56",
-            ["RoadPrefabConfig"] = 56,
+            ["RoadPrefabConfigID"] = 56,
             ["InitCount"] = 0,
         },
         {   --道路边缘64
             ["Name"] = "Road_64",
-            ["RoadPrefabConfig"] = 64,
+            ["RoadPrefabConfigID"] = 64,
             ["InitCount"] = 0,
         },
         {   --道路边缘65
             ["Name"] = "Road_65",
-            ["RoadPrefabConfig"] = 65,
+            ["RoadPrefabConfigID"] = 65,
             ["InitCount"] = 0,
         },
         {   --道路边缘66
             ["Name"] = "Road_66",
-            ["RoadPrefabConfig"] = 66,
+            ["RoadPrefabConfigID"] = 66,
             ["InitCount"] = 0,
         },
         {   --道路边缘67
             ["Name"] = "Road_67",
-            ["RoadPrefabConfig"] = 67,
+            ["RoadPrefabConfigID"] = 67,
             ["InitCount"] = 0,
         },
         {   --道路边缘80
             ["Name"] = "Road_80",
-            ["RoadPrefabConfig"] = 80,
+            ["RoadPrefabConfigID"] = 80,
             ["InitCount"] = 0,
         },
         {   --道路边缘96
             ["Name"] = "Road_96",
-            ["RoadPrefabConfig"] = 96,
+            ["RoadPrefabConfigID"] = 96,
             ["InitCount"] = 0,
         },
         {   --道路边缘97
             ["Name"] = "Road_97",
-            ["RoadPrefabConfig"] = 97,
+            ["RoadPrefabConfigID"] = 97,
             ["InitCount"] = 0,
         },
         {   --道路边缘112
             ["Name"] = "Road_112",
-            ["RoadPrefabConfig"] = 112,
+            ["RoadPrefabConfigID"] = 112,
             ["InitCount"] = 0,
         },
         {   --道路边缘128
             ["Name"] = "Road_128",
-            ["RoadPrefabConfig"] = 128,
+            ["RoadPrefabConfigID"] = 128,
             ["InitCount"] = 0,
         },
         {   --道路边缘130
             ["Name"] = "Road_130",
-            ["RoadPrefabConfig"] = 130,
+            ["RoadPrefabConfigID"] = 130,
             ["InitCount"] = 0,
         },
         {   --道路边缘132
             ["Name"] = "Road_132",
-            ["RoadPrefabConfig"] = 132,
+            ["RoadPrefabConfigID"] = 132,
             ["InitCount"] = 0,
         },
         {   --道路边缘134
             ["Name"] = "Road_134",
-            ["RoadPrefabConfig"] = 134,
+            ["RoadPrefabConfigID"] = 134,
             ["InitCount"] = 0,
         },
         {   --道路边缘144
             ["Name"] = "Road_144",
-            ["RoadPrefabConfig"] = 144,
+            ["RoadPrefabConfigID"] = 144,
             ["InitCount"] = 0,
         },
         {   --道路边缘148
             ["Name"] = "Road_148",
-            ["RoadPrefabConfig"] = 148,
+            ["RoadPrefabConfigID"] = 148,
             ["InitCount"] = 0,
         },
         {   --道路边缘160
             ["Name"] = "Road_160",
-            ["RoadPrefabConfig"] = 160,
+            ["RoadPrefabConfigID"] = 160,
             ["InitCount"] = 0,
         },
         {   --道路边缘176
             ["Name"] = "Road_176",
-            ["RoadPrefabConfig"] = 176,
+            ["RoadPrefabConfigID"] = 176,
             ["InitCount"] = 0,
         },
         {   --道路边缘192
             ["Name"] = "Road_192",
-            ["RoadPrefabConfig"] = 192,
+            ["RoadPrefabConfigID"] = 192,
             ["InitCount"] = 0,
         },
         {   --道路边缘194
             ["Name"] = "Road_194",
-            ["RoadPrefabConfig"] = 194,
+            ["RoadPrefabConfigID"] = 194,
             ["InitCount"] = 0,
         },
         {   --道路边缘208
             ["Name"] = "Road_208",
-            ["RoadPrefabConfig"] = 208,
+            ["RoadPrefabConfigID"] = 208,
             ["InitCount"] = 0,
         },
         {   --道路边缘224
             ["Name"] = "Road_224",
-            ["RoadPrefabConfig"] = 224,
+            ["RoadPrefabConfigID"] = 224,
             ["InitCount"] = 0,
         },
         {   --道路边缘240
             ["Name"] = "Road_240",
-            ["RoadPrefabConfig"] = 240,
+            ["RoadPrefabConfigID"] = 240,
             ["InitCount"] = 0,
         },
         --系统建筑
@@ -495,7 +495,28 @@ MapGameObjectsConfig = {
             ["InitCount"] = 0,
         },
 
-        --TODO:湖泊/装饰物
+        ------------------------------------------------------------------行人/车辆---------------------------------------------------
+        {   --行人1
+            ["Name"] = "People01",
+            ["PathFindingConfigID"] = 1,
+            ["InitCount"] = 0,
+        },
+        {   --行人2
+            ["Name"] = "People02",
+            ["PathFindingConfigID"] = 2,
+            ["InitCount"] = 0,
+        },
+        {   --车辆1
+            ["Name"] = "Car01",
+            ["PathFindingConfigID"] = 3,
+            ["InitCount"] = 0,
+        },
+
+
+
+
+        --TODO:湖泊
+
     },
     ["OnlyOne"] = {
         ["Centralbuilding"] = 2000000,      --中心建筑

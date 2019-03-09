@@ -31,7 +31,9 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     if dataInfo.buyer == "PLAYER" then
         self.faceId = dataInfo.faceId
         self.playerId = dataInfo.buyerId
-        LoadSprite(PlayerHead[self.faceId].earningsPath, self.head, true)
+        self.head.color = Color.New(0,0,0,0)
+        --LoadSprite(PlayerHead[self.faceId].earningsPath, self.head, true)
+        AvatarManger.GetSmallAvatar(self.faceId,self.head.transform,0.125)
         self.name.localScale = Vector3.zero
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-apartment.png", self.picture, true)
@@ -51,6 +53,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         self.playerId = 0
         self.sell.localScale = Vector3.zero
         self.rent.localScale = Vector3.zero
+        self.head.color = Color.New(255,255,255,255)
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
         self.headName.text = GetLanguage(11020006)
         self.name.localScale = Vector3.one

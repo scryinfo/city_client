@@ -41,6 +41,8 @@ function ChatCtrl:Awake(go)
         ChatCtrl.static.chatMgr:DestroyContentChildren(1)
         ChatCtrl.static.chatMgr:DestroyContentChildren(2)
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(5)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(6)
         ChatCtrl.static.chatMgr:SetToggle()
         UIPanel.ClosePage()
     end)
@@ -56,6 +58,7 @@ function ChatCtrl:Awake(go)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.deleteChatRecordsBtn, self.OnDeleteChatRecords, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.prevBtn, self.OnPrev, self)
     ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.nextBtn, self.OnNext, self)
+    ChatCtrl.static.luaBehaviour:AddClick(ChatPanel.guildDeleteChatBtn, self.OnDeleteGuildChat, self)
 
     ChatPanel.worldToggle.onValueChanged:AddListener(function (isOn)
         self:_worldToggleValueChange(isOn)
@@ -67,6 +70,10 @@ function ChatCtrl:Awake(go)
 
     ChatPanel.strangersToggle.onValueChanged:AddListener(function (isOn)
         self:_strangersToggleValueChange(isOn)
+    end)
+
+    ChatPanel.guildToggle.onValueChanged:AddListener(function (isOn)
+        self:_guildToggleValueChange(isOn)
     end)
 
     --滑动部分
@@ -91,6 +98,7 @@ function ChatCtrl:Active()
     ChatPanel.strangersNoContentText.text = GetLanguage(15010012)
     ChatPanel.strangersChatNoContentText.text = GetLanguage(15010014)
     ChatPanel.showCompanyText.text = GetLanguage(15010020)
+    ChatPanel.guildNoContentText.text = GetLanguage(15010004)
 end
 
 -- 刷新
@@ -159,6 +167,7 @@ function ChatCtrl:_refreshState()
     self:_closePlayerInfo()
     ChatPanel.expressionRoot:SetActive(false)
     self:_showWorldInfo()
+    self:_showGuildToggle()
     if self.m_data.toggleId == 1 then  -- 打开世界分页
         ChatPanel.worldToggle.isOn = true
         self.channel = 0 -- 聊天频道
@@ -174,7 +183,7 @@ function ChatCtrl:_refreshState()
             ChatPanel.chatRecordsRoot:SetActive(false)
             self:_queryFriendInfo()
         end
-        ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        --ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
     elseif self.m_data.toggleId == 3 then  -- 打开陌生人分页
         ChatPanel.strangersToggle.isOn = true
         self.channel = 3 -- 聊天频道
@@ -236,14 +245,20 @@ function ChatCtrl:_worldToggleValueChange(isOn)
         ChatPanel.strangersRoot:SetActive(not isOn)
         ChatPanel.strangersOpen:SetActive(not isOn)
         ChatPanel.strangersClose:SetActive(isOn)
+        ChatPanel.guildRoot:SetActive(not isOn)
+        ChatPanel.guildOpen:SetActive(not isOn)
+        ChatPanel.guildClose:SetActive(isOn)
         ChatPanel.worldToggle.interactable = false
         ChatPanel.friendsToggle.interactable = true
         ChatPanel.strangersToggle.interactable = true
+        ChatPanel.guildToggle.interactable = true
 
         self.channel = 0 -- 世界频道
         ChatCtrl.static.chatMgr:DestroyContentChildren(1)
         ChatCtrl.static.chatMgr:DestroyContentChildren(2)
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(5)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(6)
         ChatCtrl.static.chatMgr:SetRootScrollbar(1)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatCtrl.static.chatMgr:SetActivePlayerData({})
@@ -309,12 +324,18 @@ function ChatCtrl:_friendsToggleValueChange(isOn)
         ChatPanel.strangersRoot:SetActive(not isOn)
         ChatPanel.strangersOpen:SetActive(not isOn)
         ChatPanel.strangersClose:SetActive(isOn)
+        ChatPanel.guildRoot:SetActive(not isOn)
+        ChatPanel.guildOpen:SetActive(not isOn)
+        ChatPanel.guildClose:SetActive(isOn)
         ChatPanel.worldToggle.interactable = true
         ChatPanel.friendsToggle.interactable = false
         ChatPanel.strangersToggle.interactable = true
+        ChatPanel.guildToggle.interactable = true
 
         self.channel = 1 -- 聊天频道
         ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(5)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(6)
         ChatCtrl.static.chatMgr:SetRootScrollbar(2)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatPanel.friendsNoticeImage:SetActive(false)
@@ -400,13 +421,19 @@ function ChatCtrl:_strangersToggleValueChange(isOn)
         ChatPanel.strangersRoot:SetActive(isOn)
         ChatPanel.strangersOpen:SetActive(isOn)
         ChatPanel.strangersClose:SetActive(not isOn)
+        ChatPanel.guildRoot:SetActive(not isOn)
+        ChatPanel.guildOpen:SetActive(not isOn)
+        ChatPanel.guildClose:SetActive(isOn)
         ChatPanel.worldToggle.interactable = true
         ChatPanel.friendsToggle.interactable = true
         ChatPanel.strangersToggle.interactable = false
+        ChatPanel.guildToggle.interactable = true
 
         self.channel = 3 -- 陌生人频道
         ChatCtrl.static.chatMgr:DestroyContentChildren(1)
         ChatCtrl.static.chatMgr:DestroyContentChildren(2)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(5)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(6)
         ChatCtrl.static.chatMgr:SetRootScrollbar(3)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatPanel.strangersNoticeImage:SetActive(false)
@@ -414,6 +441,114 @@ function ChatCtrl:_strangersToggleValueChange(isOn)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
         ChatPanel.playerInfoRoot:SetActive(false)
         self:_showStrangersInfo()
+    end
+end
+
+-- 公会分页
+function ChatCtrl:_guildToggleValueChange(isOn)
+    if isOn then
+        PlayMusEff(1002)
+        ChatPanel.worldRoot:SetActive(not isOn)
+        ChatPanel.worldOpen:SetActive(not isOn)
+        ChatPanel.worldClose:SetActive(isOn)
+        ChatPanel.friendsRoot:SetActive(not isOn)
+        ChatPanel.friendsOpen:SetActive(not isOn)
+        ChatPanel.friendsClose:SetActive(isOn)
+        ChatPanel.strangersRoot:SetActive(not isOn)
+        ChatPanel.strangersOpen:SetActive(not isOn)
+        ChatPanel.strangersClose:SetActive(isOn)
+        ChatPanel.guildRoot:SetActive(isOn)
+        ChatPanel.guildOpen:SetActive(isOn)
+        ChatPanel.guildClose:SetActive(not isOn)
+        ChatPanel.worldToggle.interactable = true
+        ChatPanel.friendsToggle.interactable = true
+        ChatPanel.strangersToggle.interactable = true
+        ChatPanel.guildToggle.interactable = false
+
+        self.channel = 2 -- 公会频道
+        ChatCtrl.static.chatMgr:DestroyContentChildren(1)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(2)
+        ChatCtrl.static.chatMgr:DestroyContentChildren(4)
+        ChatCtrl.static.chatMgr:SetRootScrollbar(4)
+        ChatCtrl.static.chatMgr:SetToggle()
+        ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        ChatPanel.playerInfoRoot:SetActive(false)
+
+        self:_showGuildPlayer()
+        self:_showGuildInfo()
+    end
+end
+
+-- 显示公会频道
+function ChatCtrl:_showGuildToggle()
+    local societyId = DataManager.GetGuildID()
+    if societyId then
+        ChatPanel.guildToggle.gameObject:SetActive(true)
+    else
+        ChatPanel.guildToggle.gameObject:SetActive(false)
+    end
+end
+
+-- 显示公会玩家
+function ChatCtrl:_showGuildPlayer()
+    local guildMembers = DataManager.GetGuildMembers()
+    ChatCtrl.guildMembersOnline = {}
+    if guildMembers and guildMembers[1] then
+        local idTemp = {}
+        local onlineNum = 0
+        for _, v in ipairs(guildMembers) do
+            table.insert(idTemp, v.id)
+            ChatCtrl.guildMembersOnline[v.id] = v.online
+            if v.online then
+                onlineNum = onlineNum + 1
+            end
+        end
+        ChatPanel.guildMemberNum.text = string.format("%d/%d", onlineNum, #idTemp)
+        PlayerInfoManger.GetInfos(idTemp, self._showGuildPlayerItem, self)
+    else
+        ChatPanel.guildMemberNum.text = "0"
+    end
+end
+
+-- 显示公会玩家
+function ChatCtrl:_showGuildPlayerItem(playerData)
+    local data = {}
+    for _, v in ipairs(playerData) do
+        v.b = ChatCtrl.guildMembersOnline[v.id]
+        table.insert(data, v)
+    end
+    ChatCtrl.guildMembersData = self:_getSortDatas(data)
+    for _, n in ipairs(ChatCtrl.guildMembersData) do
+        ChatCtrl.static.chatMgr:CreatePlayerItem(3, n)
+    end
+end
+
+-- 显示公会消息
+function ChatCtrl:_showGuildInfo()
+    local data = DataManager.GetMyChatInfo(4)
+    ChatCtrl.guildInfo = {}
+    local guildInfoAllNum = #data
+
+    if guildInfoAllNum <= 0 then
+        ChatPanel.guildNoContentRoot:SetActive(true)
+        ChatPanel.guildDeleteChatBtn:SetActive(false)
+        return
+    end
+
+    if guildInfoAllNum <= ChatCtrl.WORLD_SHOW_NUM then
+        ChatPanel.guildNoContentRoot:SetActive(false)
+        ChatPanel.guildDeleteChatBtn:SetActive(true)
+        for _, v in ipairs(data) do
+            table.insert(ChatCtrl.guildInfo, v)
+            ChatCtrl.static.chatMgr:CreateChatItem(v)
+        end
+    else
+        ChatPanel.guildNoContentRoot:SetActive(false)
+        ChatPanel.guildDeleteChatBtn:SetActive(true)
+        for i = guildInfoAllNum - ChatCtrl.WORLD_SHOW_NUM , guildInfoAllNum do
+            table.insert(ChatCtrl.guildInfo, data[i])
+            ChatCtrl.static.chatMgr:CreateChatItem(data[i])
+        end
     end
 end
 
@@ -445,6 +580,8 @@ function ChatCtrl:OnSend(go)
     local data
     if go.channel == 0 then
         data = {msg = chatStr, channel = go.channel}
+    elseif go.channel == 2 then
+        data = {channelId = DataManager.GetGuildID(), msg = chatStr, channel = go.channel}
     else
         if not ChatCtrl.static.chatMgr:GetActivePlayerId() then
             Event.Brocast("SmallPop", GetLanguage(15010016),80)
@@ -541,6 +678,19 @@ function ChatCtrl:OnNext(go)
     ChatCtrl.static.chatMgr:ShowPageInfo(ChatCtrl.static.chatMgr:GetCurrentPage() + 1)
 end
 
+-- 删除公会聊天记录
+function ChatCtrl:OnDeleteGuildChat(go)
+    --打开弹框
+    PlayMusEff(1002)
+    local data = {}
+    data.titleInfo = GetLanguage(15010006)
+    data.contentInfo = GetLanguage(15010019)
+    data.btnCallBack = function()
+        ChatCtrl.static.chatMgr:DeleteGuildChatRecords()
+    end
+    ct.OpenCtrl("BtnDialogPageCtrl", data)
+end
+
 -- 屏蔽玩家
 function ChatCtrl:OnShield(go)
     --打开弹框
@@ -616,6 +766,7 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
         end
         ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
         if ChatCtrl.static.isShowClickFriends then
+            ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
             friendsPlayerItem.toggle.isOn = true
             ChatCtrl.static.isShowClickFriends = false
@@ -692,6 +843,15 @@ function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
             end
         else
             ChatPanel.strangersNoticeImage:SetActive(true)
+        end
+    elseif chatData.channel == "GROUP" then
+        if ChatPanel.guildToggle.isOn then
+            if ChatPanel.guildNoContentRoot.activeSelf then
+                ChatPanel.guildNoContentRoot:SetActive(false)
+                ChatPanel.guildDeleteChatBtn:SetActive(true)
+            end
+            ChatCtrl.static.chatMgr:CreateChatItem(chatData)
+            ChatCtrl.static.chatMgr:StartScrollBottom()
         end
     end
 end

@@ -15,6 +15,7 @@ function LuaGameObjectPool:initialize(poolname,poolPrefab,poolInitSize,hidePosit
 end
 
 function LuaGameObjectPool:InitGameObjectPool()
+    MapObjectsManager.AddMaterial(self.m_poolPrefab )
     for i = 1, self.m_poolInitSize do
         self:AddGameObjectToPool(self:NewObjectInstance())
     end

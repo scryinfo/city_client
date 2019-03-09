@@ -24,6 +24,8 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnAllExchangeAmount,self) --所有交易量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
     -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
@@ -31,7 +33,10 @@ end
 
 function GameMainInterfaceModel:Close()
     --清空本地UI事件
-
+    Event.RemoveListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
+    Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
+    Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
+    Event.RemoveListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
 end
 --客户端请求--
 --获取所有邮件
@@ -50,6 +55,18 @@ end
 
 function GameMainInterfaceModel:m_GetFriendInfo(friendsId)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = {friendsId}})
+end
+
+--所有交易量
+function GameMainInterfaceModel:m_AllExchangeAmount()
+    local msgId = pbl.enum("sscode.OpCode","queryExchangeAmount")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+end
+
+--查询城市广播
+function GameMainInterfaceModel:m_queryCityBroadcast()
+    local msgId = pbl.enum("sscode.OpCode","queryCityBroadcast")
+    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
 --服务器回调--
@@ -93,6 +110,19 @@ end
 
 --城市广播回调
 function GameMainInterfaceModel:n_GsCityBroadcast(lMsg)
-    local a = lMsg
-    Event.Brocast("c_RadioInfo",lMsg)
+    if lMsg.type == 1 then
+        Event.Brocast("c_MajorTransaction",lMsg) --重大交易
+    else
+        Event.Brocast("c_RadioInfo",lMsg)
+    end
+end
+
+--所有交易量回调
+function GameMainInterfaceModel:n_OnAllExchangeAmount(lMsg)
+    Event.Brocast("c_AllExchangeAmount",lMsg.exchangeAmount)
+end
+
+--查询城市广播
+function GameMainInterfaceModel:n_OnCityBroadcasts(lMsg)
+   Event.Brocast("c_CityBroadcasts",lMsg.cityBroadcast)
 end

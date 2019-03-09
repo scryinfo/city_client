@@ -44,6 +44,10 @@ local RoadRootObj
 --local HeadId                  --头像的ID
 local pbl = pbl
 
+
+local Math_Floor = math.floor
+
+
 DataManager.TempDatas ={ constructObj = nil, constructID = nil, constructPosID = nil}
 
 ---------------------------------------------------------------------------------- 建筑信息--------------------------------------------------------------------------------
@@ -142,6 +146,98 @@ end
 
 -------------------------------原子地块数据--------------------------------
 
+--初始化寻路基础数据
+--基础均为0
+--系统道路额外处理一波
+--系统建筑/建筑为自身数据
+--道路为道路值
+--寻路基础数据左上1 右上2 左下4 右下8
+local function CreatePathfindingBaseData(tempCollectionID)
+    local TempTable =  {}
+    local startBlockID = TerrainManager.CollectionIDTurnBlockID(tempCollectionID)
+    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,CollectionRangeSize )
+    for key, value in pairs(idList) do
+        if TempTable[value] == nil then
+            TempTable[value] = 0
+        end
+    end
+    BuildDataStack[tempCollectionID].PathDatas = TempTable
+    collectgarbage("collect")
+end
+
+--赋值
+local function AddPathValue(tempBlockID,Value)
+    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+    if BuildDataStack[tempCollectionID] == nil then
+        BuildDataStack[tempCollectionID] = {}
+    end
+    if BuildDataStack[tempCollectionID].PathDatas == nil then
+        CreatePathfindingBaseData(tempCollectionID)
+    end
+    BuildDataStack[tempCollectionID].PathDatas[tempBlockID] = Value
+end
+
+function DataManager.GetPathDatas(tempCollectionID)
+    if BuildDataStack[tempCollectionID] ~= nil and BuildDataStack[tempCollectionID].PathDatas ~= nil  then
+        return BuildDataStack[tempCollectionID].PathDatas
+    end
+    return nil
+end
+
+function DataManager.GetPathDataByBlockID(tempBlockID)
+    local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
+    local tempData = DataManager.GetPathDatas(tempCollectionID)
+    if tempData ~= nil then
+        return tempData[tempBlockID]
+    end
+    return nil
+end
+
+--计算范围内建筑的路径值
+function DataManager.RefreshPathRangeBlock(startBlockID,size)
+    if size <= 0 then
+        return
+    elseif size == 1 then
+        AddPathValue(startBlockID,15)
+    elseif size >= 2 then
+        local tempSize = (size - 1)
+        AddPathValue(startBlockID,7)
+        AddPathValue(startBlockID + tempSize,11)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize,13)
+        AddPathValue(startBlockID + TerrainRangeSize * tempSize + tempSize,14)
+        if size >= 3 then
+            for i = 1, tempSize - 1, 1  do
+                AddPathValue(startBlockID + i,3)
+                AddPathValue(startBlockID + tempSize + TerrainRangeSize * i,10)
+                AddPathValue(startBlockID + TerrainRangeSize * i,5)
+                AddPathValue(startBlockID + TerrainRangeSize * tempSize + i,12)
+            end
+        end
+    end
+end
+
+--删除建筑的路径值
+function DataManager.RemovePathRangeBlock(startBlockID,size)
+    local idList =  DataManager.CaculationTerrainRangeBlock(startBlockID,size)
+    for key, value in pairs(idList) do
+        AddPathValue(value,0)
+    end
+end
+
+local function RefreshAllMapBuild(tempCollectionID)
+    ---生成寻路数据------------
+    CreatePathfindingBaseData(tempCollectionID)
+    ---生成系统土地------------
+    InitCollectionSystemTerrain(tempCollectionID)
+    ---生成系统建筑------------
+    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
+    ---生成河流
+    InitSystemRiverGameObject(tempCollectionID)
+    ---刷新一遍道路
+    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+end
+
+
 --功能
 --  创建一个新的原子地块集合，并将内部非系统建筑值置为 -1
 --参数
@@ -178,14 +274,9 @@ local function CreateBlockDataTable(tempCollectionID)
         end
     end
     BuildDataStack[tempCollectionID].BlockDatas = TempTable
-    ---生成系统土地------------
-    InitCollectionSystemTerrain(tempCollectionID)
-    ---生成系统建筑------------
-    TerrainManager.CreateSystemBuildingGameObjects(tempCollectionID)
-    ---生成河流
-    InitSystemRiverGameObject(tempCollectionID)
-    ---刷新一遍道路
-    DataManager.RefreshWaysByCollectionID( tempCollectionID)
+    RefreshAllMapBuild(tempCollectionID)
+    --创建路径基础数据
+    CreatePathfindingBaseData(tempCollectionID)
     collectgarbage("collect")
 end
 
@@ -195,6 +286,10 @@ function DataManager.InitBuildDatas(tempCollectionID)
     end
     if BuildDataStack[tempCollectionID].BlockDatas == nil then
         CreateBlockDataTable(tempCollectionID)
+    else
+        if BuildDataStack[tempCollectionID].SystemTerrainDatas == nil then
+            RefreshAllMapBuild(tempCollectionID)
+        end
     end
 end
 
@@ -300,6 +395,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                         end
                     end
                     ThisRoteDatas[itemBlockID].roadNum = roadNum
+                    --TODO:
                     local go = MapObjectsManager.GetGameObjectByPool(RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
                     if nil ~= RoadRootObj then
                         go.transform:SetParent(RoadRootObj.transform)
@@ -313,12 +409,14 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                 elseif  roadNum == 0 and ThisRoteDatas[itemBlockID] ~= nil and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil then
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
+                    --TODO:
                 end
             else
                 if nil ~= ThisRoteDatas[itemBlockID] and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil  then
                     --删除之前的道路Obj
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
+                    --TODO:
                 end
             end
             break
@@ -1264,6 +1362,11 @@ function DataManager.SetChatRecords(index)
     return PersonDataStack.socialityManager:SetChatRecords(index)
 end
 
+-- 清空公会的聊天消息
+function DataManager.SetGuildChatInfo()
+    return PersonDataStack.socialityManager:SetGuildChatInfo()
+end
+
 -- 获得公会ID
 function DataManager.GetGuildID()
     return PersonDataStack.m_societyId
@@ -1331,19 +1434,24 @@ function DataManager.SetGuildMemberIdentity(playerId, identity)
     PersonDataStack.guildManager:SetGuildMemberIdentity(playerId, identity)
 end
 
--- 改名字返回
+-- 设置名字
 function DataManager.SetGuildSocietyName(bytesStrings)
     PersonDataStack.guildManager:SetGuildSocietyName(bytesStrings)
 end
 
--- 改介绍返回
+-- 设置介绍
 function DataManager.SetGuildIntroduction(bytesStrings)
     PersonDataStack.guildManager:SetGuildIntroduction(bytesStrings)
 end
 
--- 改宣言返回
+-- 设置宣言
 function DataManager.SetGuildDeclaration(bytesStrings)
     PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+
+-- 获得公会成员
+function DataManager.GetGuildMembers()
+    return PersonDataStack.guildManager:GetGuildMembers()
 end
 ---------------------------------
 --获取自己所有的建筑详情
@@ -1374,7 +1482,7 @@ end
 
 --判断该地块是不是自己可以用的（包含自己拥有和租的）
 function DataManager.IsOwnerGround(tempPos)
-    local tempGridIndex =  { x = math.floor(tempPos.x) , y = math.floor(tempPos.z) }
+    local tempGridIndex =  { x = Math_Floor(tempPos.x) , y = Math_Floor(tempPos.z) }
     --在自己拥有的的地中判断
     if PersonDataStack.m_groundInfos ~= nil then
         for key, value in pairs(PersonDataStack.m_groundInfos) do
@@ -1510,6 +1618,8 @@ function DataManager.Init()
     DataManager.RegisterErrorNetMsg()
     --初始化自己的地块初始信息
     MyGround.Init()
+    --建筑气泡对象池
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1915,3 +2025,12 @@ function DataManager.GetBagNum()
     return n
 end
 
+--根据大地块获取建筑基础信息
+--如果没有BaseBuildDatas，返回nil
+function DataManager.GetBuildingBaseByCollectionID(collectionID)
+    if BuildDataStack ~= nil and collectionID ~= nil and BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].BaseBuildDatas ~= nil then
+        return BuildDataStack[collectionID].BaseBuildDatas
+    else
+        return nil
+    end
+end

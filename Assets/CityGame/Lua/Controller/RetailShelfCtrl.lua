@@ -70,6 +70,22 @@ function RetailShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
+----------------------------------------------------------------------回调函数------------------------------------------------------------------------------------------
+function RetailShelfCtrl:RefreshShelfData(dataInfo)
+    for key,value in pairs(self.shelfDatas) do
+        if value.itemId == dataInfo.item.key.id then
+            if value.goodsDataInfo.n == dataInfo.item.n then
+                self:deleteGoodsItem(self.shelfDatas,key)
+            else
+                value.numberText.text = value.num - dataInfo.item.n
+                value.goodsDataInfo.n = tonumber(value.numberText.text)
+                value.num = tonumber(value.numberText.text)
+                local stateBool = true
+                self:GoodsItemState(self.shelfDatas,stateBool)
+            end
+        end
+    end
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取货架容量
 function RetailShelfCtrl:GetShelfNum(dataTable)

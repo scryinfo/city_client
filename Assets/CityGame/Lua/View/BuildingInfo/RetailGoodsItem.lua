@@ -8,7 +8,7 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
     self.goodsDataInfo = goodsDataInfo;
     self.manager = mgr
     self.state = state
-    self.buildingId = buildingId
+    self.buildingId = id[2]
     self.itemId = goodsDataInfo.k.id
     self.producerId = goodsDataInfo.k.producerId
     self.qty = goodsDataInfo.k.qty
@@ -67,9 +67,7 @@ function RetailGoodsItem:initializeUiState()
 end
 function RetailGoodsItem:OnClick_inluabehaviour(go)
     PlayMusEff(1002)
-    Event.Brocast("m_ReqShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
-    Event.Brocast("SmallPop",GetLanguage(27010003),300)
-    go.manager:_deleteRetailShelf(go)
+    Event.Brocast("m_ReqRetailShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
 end
 function RetailGoodsItem:RefreshID(id)
     self.id = id

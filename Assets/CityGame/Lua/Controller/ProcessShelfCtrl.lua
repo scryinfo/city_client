@@ -153,7 +153,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
     ProcessShelfPanel.nameText.text = ""
     self.ShelfImgSetActive(self.shelfDatas,5,1)
     self:RefreshBuyButton()
-    Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
+    --Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品

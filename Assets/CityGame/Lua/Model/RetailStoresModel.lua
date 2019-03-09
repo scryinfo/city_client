@@ -80,7 +80,7 @@ function RetailStoresModel:n_OnBuildingTransportInfo(data)
     local qty = data.item.key.qty
     local producerId = data.item.key.producerId
     if data.dst == bagId then
-        --Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
     end
     DataManager.ControllerRpcNoRet(self.insId,"RetailWarehouseCtrl",'RefreshWarehouseData',data,true)
 end
@@ -95,7 +95,7 @@ function RetailStoresModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    DataManager.ControllerRpcNoRet(self.insId,"RetailShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品
 function RetailStoresModel:n_OnDelItemInfo(data)

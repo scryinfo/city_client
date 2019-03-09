@@ -102,7 +102,7 @@ function ProcessingModel:n_OnBuildingTransportInfo(data)
     local qty = data.item.key.qty
     local producerId = data.item.key.producerId
     if data.dst == bagId then
-        --Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
     end
     DataManager.ControllerRpcNoRet(self.insId,"ProcessWarehouseCtrl",'RefreshWarehouseData',data,true)
 end

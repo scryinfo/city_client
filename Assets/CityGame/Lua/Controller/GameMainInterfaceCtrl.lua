@@ -184,13 +184,13 @@ end
 --好友信息
 function GameMainInterfaceCtrl:c_OnReceivePlayerInfo(playerData)
     local info = {}
-    info.id = playerData.info[1].id
-    info.name = playerData.info[1].name
-    info.companyName = playerData.info[1].companyName
-    info.des = playerData.info[1].des
-    info.faceId = playerData.info[1].faceId
-    info.male = playerData.info[1].male
-    info.createTs = playerData.info[1].createTs
+    info.id = playerData.id
+    info.name = playerData.name
+    info.companyName = playerData.companyName
+    info.des = playerData.des
+    info.faceId = playerData.faceId
+    info.male = playerData.male
+    info.createTs = playerData.createTs
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", info)
 end
 
@@ -817,7 +817,7 @@ end
 
 function GameMainInterfaceCtrl:_OnHeadBtn(go)
     if go.playerId ~= 0 then
-        PlayerInfoManger.GetInfos({go.playerId}, go.c_OnReceivePlayerInfo, go)
+        PlayerInfoManger.GetInfosOneByOne({go.playerId},GameMainInterfaceCtrl.c_OnReceivePlayerInfo, GameMainInterfaceCtrl)
     end
 end
 

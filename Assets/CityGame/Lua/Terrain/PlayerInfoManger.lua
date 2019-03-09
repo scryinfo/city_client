@@ -61,18 +61,17 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
 
         else--无缓存
 
-            if #tempInfos>0 then
-                _func(_class,tempInfos)
+            --for j = count, #tempIds do
+            --    table.insert(playerIDs,tempIds[j])
+            --end
+            for i, v in ipairs(playerIds) do
+                table.insert(playerIDs,v)
             end
+                Event.Brocast("m_QueryPlayerInfoChat",playerIds)
+
+
             count=1
             tempInfos={}
-
-            for j = count, #tempIds do
-                table.insert(playerIDs,tempIds[j])
-            end
-            if #playerIDs>0 then
-                Event.Brocast("m_QueryPlayerInfoChat",playerIDs)
-            end
            return
         end
     end

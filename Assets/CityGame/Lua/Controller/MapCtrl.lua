@@ -72,12 +72,12 @@ function MapCtrl:Awake(go)
     MapBubbleManager.createSystemItem()
 
     self:_initUIData()
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllBuildingDetail","gs.BuildingSet",self.n_OnReceiveAllBuildingDetailInfo,self)
 end
 
 function MapCtrl:Active()
     UIPanel.Active(self)
 
-    --self:RefreshMiniMapScale()
     MapBubbleManager.setBackCollectionID()
 end
 
@@ -89,7 +89,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
 
-    MapBubbleManager.initItemData()
+    self:_reqAllBuildings()
 end
 
 function MapCtrl:Hide()
@@ -135,6 +135,18 @@ function MapCtrl:_cleanDatas()
         self.rightSearchItem:close()
         self.rightSearchItem = nil
     end
+end
+--
+function MapCtrl:n_OnReceiveAllBuildingDetailInfo(data)
+    if data then
+        DataManager.SetMyAllBuildingDetail(data)
+    end
+    MapBubbleManager.initItemData()
+end
+--
+function MapCtrl:_reqAllBuildings()
+    local msgId = pbl.enum("gscode.OpCode", "getAllBuildingDetail")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 --
 function MapCtrl:_initUIData()

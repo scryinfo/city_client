@@ -48,7 +48,8 @@ function MapBubbleManager.setCameraToBackID()
     if tempId ~= this.backCollectionId then
         local blockId = TerrainManager.CollectionIDTurnBlockID(this.backCollectionId)
         local pos = TerrainManager.BlockIDTurnPosition(blockId)
-        Event.Brocast("CameraMoveTo", pos)
+        --Event.Brocast("CameraMoveTo", pos)
+        CameraMove.MoveCameraToPos(pos)
     end
 end
 

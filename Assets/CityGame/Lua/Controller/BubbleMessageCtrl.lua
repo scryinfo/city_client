@@ -108,7 +108,11 @@ end
 
 --确定
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
-    Event.Brocast("m_setBuildingInfo",ins.m_data,panel.inputFrame.text or " ",ins.bubbleId,isShow)
+    local des
+    if panel.inputFrame.text=="" then
+        des=nil
+    end
+    Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
     ins:Hide()
 end
 

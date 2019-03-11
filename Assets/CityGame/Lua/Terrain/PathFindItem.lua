@@ -79,16 +79,21 @@ end
 function PathFindItem:FindNectTarget()
     --分为两步->1、在自己内部找2、在别的相邻两地块内部找
     local PosList = PathFindManager.CalculatePathValues(self.pathNum)
+    local CannotMoveList = PathFindManager.CalculatePathCanNotMove(self.pathNum)
     local AdjacentBlockIDList ={}
     local PointsAccessible = {}
     --TODO：考虑路缘位置
     if self.nowPathNum == 1 then
         --内部点
         if PosList[2] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+            if CannotMoveList ~= nil and CannotMoveList[100] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+            end
         end
         if PosList[4] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+            if CannotMoveList ~= nil and CannotMoveList[800] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+            end
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID - 1] = 2
@@ -96,10 +101,14 @@ function PathFindItem:FindNectTarget()
     elseif self.nowPathNum == 2 then
         --内部点
         if PosList[1] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+            if CannotMoveList ~= nil and CannotMoveList[100] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+            end
         end
         if PosList[8] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+            if CannotMoveList ~= nil and CannotMoveList[200] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+            end
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID + 1] = 1
@@ -107,10 +116,14 @@ function PathFindItem:FindNectTarget()
     elseif self.nowPathNum == 4 then
         --内部点
         if PosList[1] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+            if CannotMoveList ~= nil and CannotMoveList[800] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+            end
         end
         if PosList[8] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+            if CannotMoveList ~= nil and CannotMoveList[400] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+            end
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID - 1] = 8
@@ -118,10 +131,14 @@ function PathFindItem:FindNectTarget()
     elseif self.nowPathNum == 8 then
         --内部点
         if PosList[2] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+            if CannotMoveList ~= nil and CannotMoveList[200] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+            end
         end
         if PosList[4] ~= nil then
-            PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+            if CannotMoveList ~= nil and CannotMoveList[400] == nil  then
+                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+            end
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID + 1] = 4

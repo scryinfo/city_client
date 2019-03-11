@@ -387,6 +387,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
     end
     for itemBlockID, itemNodeID in pairs(BuildDataStack[tempCollectionID].BlockDatas) do
         local ThisRoteDatas = BuildDataStack[tempCollectionID].RoteDatas
+        local ThisPathNums = BuildDataStack[tempCollectionID].PathDatas
         while true do
             if itemNodeID <= 0 then
                 local roadNum = DataManager.CalculateRoadNum(tempCollectionID,itemBlockID)
@@ -405,6 +406,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     end
                     ThisRoteDatas[itemBlockID].roadNum = roadNum
                     --TODO:
+                    ThisPathNums[itemBlockID] = RoadPrefabConfig[RoadNumConfig[roadNum]].pathNum
                     local go = MapObjectsManager.GetGameObjectByPool(RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
                     if nil ~= RoadRootObj then
                         go.transform:SetParent(RoadRootObj.transform)
@@ -419,6 +421,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
                     --TODO:
+                    ThisPathNums[itemBlockID] = 0
                 end
             else
                 if nil ~= ThisRoteDatas[itemBlockID] and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil  then
@@ -426,6 +429,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
                     --TODO:
+                    ThisPathNums[itemBlockID] = 0
                 end
             end
             break

@@ -92,7 +92,6 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         return;
     end
     self.add:SetActive(false)
-    --local homePageType = ct.homePage.productionLine
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
         local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId)

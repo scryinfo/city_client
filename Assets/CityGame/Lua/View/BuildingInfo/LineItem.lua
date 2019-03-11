@@ -182,6 +182,10 @@ function LineItem:refreshNowConte(dataInfo)
     Event.Brocast("updateWarehouseNum")
     Event.Brocast("updateWarehouseData",nowGoodsData)
 end
+--如果生产中是商品，检查原料够不够
+function LineItem:CheckMaterial(itemId)
+
+end
 --删除生产线
 function LineItem:OnClick_deleteBtn(go)
     PlayMusEff(1002)

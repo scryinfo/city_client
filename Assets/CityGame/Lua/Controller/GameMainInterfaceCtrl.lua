@@ -365,7 +365,7 @@ function GameMainInterfaceCtrl:Awake()
     --头像
     local faceId = DataManager.GetFaceId()
 
-     AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.2)
+    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.2)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name

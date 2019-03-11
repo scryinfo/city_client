@@ -49,7 +49,6 @@ function GroundTransRentAndBuyCtrl:Awake(go)
 end
 
 function GroundTransRentAndBuyCtrl:Refresh()
-    Event.AddListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
     self:_initPanelData()
 end
 
@@ -67,7 +66,9 @@ end
 
 function GroundTransRentAndBuyCtrl:Hide()
     UIPanel.Hide(self)
-    Event.RemoveListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
+    if self.ownerAvatar ~= nil then
+        AvatarManger.CollectAvatar(self.ownerAvatar)
+    end
 end
 
 function GroundTransRentAndBuyCtrl:Close()
@@ -77,7 +78,7 @@ end
 ---初始化
 function GroundTransRentAndBuyCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
-        GroundTransModel.m_ReqPlayersInfo({[1] = self.m_data.groundInfo.ownerId})
+        PlayerInfoManger.GetInfosOneByOne({[1] = self.m_data.groundInfo.ownerId}, self._showPersonalInfo, self)
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
     end
 end
@@ -104,11 +105,9 @@ end
 
 --显示头像+名字信息
 function GroundTransRentAndBuyCtrl:_showPersonalInfo(roleInfo)
-    if roleInfo.info ~= nil and #roleInfo.info == 1 and roleInfo.info[1].id == self.m_data.groundInfo.ownerId then
-        self.roleInfo = roleInfo.info[1]
-        GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
-        AvatarManger.GetSmallAvatar(self.roleInfo.faceId,GroundTransRentAndBuyPanel.portraitImg.transform,0.2)
-    end
+    self.roleInfo = roleInfo
+    GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
+    self.ownerAvatar = AvatarManger.GetSmallAvatar(self.roleInfo.faceId, GroundTransRentAndBuyPanel.portraitImg.transform,0.2)
 end
 
 ---按钮方法

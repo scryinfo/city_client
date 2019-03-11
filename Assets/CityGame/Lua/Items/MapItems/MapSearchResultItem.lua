@@ -37,6 +37,7 @@ function MapSearchResultItem:_setPos()
             buildingBase.ownerId = tempInfo.Data["ownerId"]
             buildingBase.name = tempInfo.Data["name"]
 
+            PlayerInfoManger.GetInfosOneByOne({[1] = buildingBase.ownerId}, self._initPersonalInfo, self)
             if tempInfo.Data["mId"] ~= nil then
                 buildingBase.mId = tempInfo.Data["mId"]
                 local delta = self.data.itemWidth *  PlayerBuildingBaseData[buildingBase.mId].x
@@ -49,7 +50,6 @@ function MapSearchResultItem:_setPos()
 
             self.detailShowImg.transform.localScale = scale
             self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
-
             self.data.buildingBase = buildingBase
         end
     end
@@ -61,4 +61,11 @@ function MapSearchResultItem:_clickFunc()
         return
     end
     Event.Brocast("c_MapOpenRightMatPage", self)
+end
+--
+function MapSearchResultItem:_initPersonalInfo(data)
+    if data ~= nil then
+        self.data.playerInfo = data
+        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
+    end
 end

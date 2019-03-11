@@ -67,7 +67,7 @@ end
 function InputDialogPageCtrl:_onClickConfim(ins)
     PlayMusEff(1002)
     local inputValue = ins.rentInput.text
-    if inputValue == "" or #inputValue < 3 then
+    if inputValue == "" then
         return
     end
 

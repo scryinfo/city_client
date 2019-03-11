@@ -46,7 +46,7 @@ function HouseModel:m_ReqHouseSetSalary(id, price)
 end
 --改变建筑名字
 function HouseModel:m_ReqChangeHouseName(id, name)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
+    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = id, name = name})
 end
 
 --- 回调 ---

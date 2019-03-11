@@ -17,6 +17,7 @@ function VolumeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","ss.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNumCurve","ss.GoodsNpcNumCurve",self.n_OnGoodsNpcNumCurve,self) --所有交易量
 
 end
 
@@ -59,6 +60,12 @@ function VolumeModel:m_ExchangeAmount()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
+--所有交易量
+function VolumeModel:m_GoodsNpcNumCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNumCurve")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+end
+
 -------------------服务器回调---------------------
 function VolumeModel:n_OnGetNpcNum(lMsg)
     Event.Brocast("c_NpcNum",lMsg.countNpcMap)
@@ -74,4 +81,8 @@ end
 
 function VolumeModel:n_OnExchangeAmount(lMsg)
     Event.Brocast("c_ExchangeAmount",lMsg.exchangeAmount)
+end
+
+function VolumeModel:n_OnGoodsNpcNumCurve(lMsg)
+   local a = lMsg
 end

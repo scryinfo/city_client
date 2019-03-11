@@ -195,6 +195,14 @@ local function CalculateAOI(oldCollectionID,newCollectionID)
     --TODO:通知地块数据更新
 end
 
+--外部获取移动时，需要删除的地块
+function TerrainManager.GetAOIWillRemoveCollectionIDs(oldCollectionID)
+    local oldCollectionList =  CalculationAOICollectionIDList(oldCollectionID)
+    local newCollectionList =  CalculationAOICollectionIDList(CameraCollectionID)
+    local willRemoveList = ComputingTheComplementSetOfBinA(oldCollectionList,newCollectionList)
+    return willRemoveList
+end
+
 function TerrainManager.IsBelongToCameraCollectionIDAOIList(tempCollectionID)
     for i, value in pairs(CalculationAOICollectionIDList(CameraCollectionID)) do
         if value == tempCollectionID then
@@ -207,6 +215,11 @@ end
 --获取当前AOI的地块们
 function TerrainManager.GetCameraCollectionIDAOIList()
     return CalculationAOICollectionIDList(CameraCollectionID)
+end
+
+--获取当前的中心地块Id
+function TerrainManager.GetCameraCollectionID()
+    return CameraCollectionID
 end
 
 --向服务器发送新的所在地块ID
@@ -222,11 +235,16 @@ function TerrainManager.Refresh(pos)
     local tempBlockID = TerrainManager.PositionTurnBlockID(pos)
     local tempCollectionID = TerrainManager.BlockIDTurnCollectionID(tempBlockID)
     if CameraCollectionID ~= tempCollectionID then
+        --设置map的旧中心地块
+        MapBubbleManager.setOldAOICenterID(tempCollectionID)
+
         --CalculateAOI,删除无用信息
         CalculateAOI(CameraCollectionID,tempCollectionID)
         CameraCollectionID = tempCollectionID
         --向服务器发送新的所在地块ID
         TerrainManager.SendMoveToServer(tempBlockID)
+        Event.Brocast("c_MapReqMarketDetail", tempBlockID)  --发送请求搜索的详细信息
+
         UnitTest.Exec_now("Allen_w9_SendPosToServer", "c_SendPosToServer_self",self)
         UnitTest.Exec_now("abel_w13_SceneOpt", "c_abel_w13_SceneOpt",self)
     end

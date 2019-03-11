@@ -36,6 +36,8 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
                 ct.OpenCtrl("WarehouseCtrl",self.warehouseData)
             elseif self.warehouseData.buildingType == BuildingType.ProcessingFactory then
                 ct.OpenCtrl("ProcessWarehouseCtrl",self.warehouseData)
+            elseif self.warehouseData.buildingType == BuildingType.RetailShop then
+                ct.OpenCtrl("RetailWarehouseCtrl",self.warehouseData)
             end
         else
             Event.Brocast("SmallPop",GetLanguage(35040013),300)
@@ -50,25 +52,59 @@ function WarehouseRateItem:initialize(warehouseData, clickOpenFunc, viewRect, ma
     --Event.AddListener("c_onOccupancyValueChange", function (data)  --响应数据改变
     --    --    mgrTable:houseOccDataUpdate(data)
     --    --end);
-    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self);
+    Event.AddListener("c_onOccupancyValueChange",self.updateInfo,self)
+    Event.AddListener("updateWarehouseData",self.updateWarehouseData,self)
+    Event.AddListener("updateWarehouseNum",self.updateWarehouseNum,self)
 end
 --初始化数据
 function WarehouseRateItem:initData()
-    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity;
-    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store);
+    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
+    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store)
     local lockedNum = self:getLockedNum(self.warehouseData.store);
     local numTab = {}
     numTab["num1"] = self.sizeSlider.value
-    numTab["num2"] = self.sizeSlider.maxValue
-    numTab["num3"] = lockedNum
+    numTab["num2"] = lockedNum
+    numTab["num3"] = self.sizeSlider.maxValue
     numTab["col1"] = "Cyan"
-    numTab["col2"] = "Black"
-    numTab["col3"] = "Teal"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "Black"
     self.numberText.text = getColorString(numTab);
     self.openName.text = GetLanguage(25020003)
     self.closeName.text = GetLanguage(25020003)
     WarehouseRateItem.warehouseCapacity = self.sizeSlider.maxValue - self.sizeSlider.value
 end
+
+--获取是第几个点击了
+function WarehouseRateItem:getToggleIndex()
+    return self.toggleData.index;
+end
+
+--打开
+function WarehouseRateItem:openToggleItem(targetMovePos)
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
+
+    self.openStateTran.localScale = Vector3.one;
+    self.closeStateTran.localScale = Vector3.zero;
+
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, WarehouseRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H - 5);
+end
+
+--关闭
+function WarehouseRateItem:closeToggleItem(targetMovePos)
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
+
+    self.openStateTran.localScale = Vector3.zero;
+    self.closeStateTran.localScale = Vector3.one;
+
+    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
+
+    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H - 5);
+end
+
 --获取仓库容量
 function WarehouseRateItem:getWarehouseCapacity(table)
     local warehouseCapacity = 0
@@ -105,40 +141,82 @@ function WarehouseRateItem:getLockedNum(table)
     end
     return lockedNum
 end
---获取是第几个点击了
-function WarehouseRateItem:getToggleIndex()
-    return self.toggleData.index;
-end
-
---打开
-function WarehouseRateItem:openToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
-
-    self.openStateTran.localScale = Vector3.one;
-    self.closeStateTran.localScale = Vector3.zero;
-
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, WarehouseRateItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOTAL_H - 5);
-end
-
---关闭
-function WarehouseRateItem:closeToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
-
-    self.openStateTran.localScale = Vector3.zero;
-    self.closeStateTran.localScale = Vector3.one;
-
-    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
-
-    return Vector2.New(targetMovePos.x,targetMovePos.y - WarehouseRateItem.static.TOP_H - 5);
-end
-
 --刷新数据
 function WarehouseRateItem:updateInfo(data)
     self.warehouseData = data
     self.warehouseData.store = data.store
     self:initData();
+end
+--刷新刚生产出来的数据
+function WarehouseRateItem:updateWarehouseData(dataInfo)
+    --原料
+    if not dataInfo.producerId then
+        local inHand = {}
+        local goodData = {}
+        local key = {}
+        if not self.warehouseData.store.inHand then
+            key.id = dataInfo.itemId
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            inHand[#inHand + 1] = goodData
+            self.warehouseData.store.inHand = inHand
+        else
+            for key,value in pairs(self.warehouseData.store.inHand) do
+                if dataInfo.itemId == value.key.id then
+                    value.n = dataInfo.nowCountStore
+                    Event.Brocast("MaterialUpdateLatestData",dataInfo)
+                    return
+                end
+            end
+            key.id = dataInfo.itemId
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+        end
+        Event.Brocast("MaterialUpdateLatestData",dataInfo)
+    else
+        --商品
+        local inHand = {}
+        local goodData = {}
+        local key = {}
+        if not self.warehouseData.store.inHand then
+            key.id = dataInfo.itemId
+            key.producerId = dataInfo.producerId
+            key.qty = dataInfo.qty
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            inHand[#inHand + 1] = goodData
+            self.warehouseData.store.inHand = inHand
+        else
+            for key,value in pairs(self.warehouseData.store.inHand) do
+                if dataInfo.itemId == value.key.id then
+                    Event.Brocast("ProcessUpdateLatestData",dataInfo)
+                    value.n = dataInfo.nowCountStore
+                    return
+                end
+            end
+            key.id = dataInfo.itemId
+            key.producerId = dataInfo.producerId
+            key.qty = dataInfo.qty
+            goodData.key = key
+            goodData.n = dataInfo.nowCountStore
+            self.warehouseData.store.inHand[#self.warehouseData.store.inHand + 1] = goodData
+        end
+        Event.Brocast("ProcessUpdateLatestData",dataInfo)
+    end
+end
+--刷新建筑页面数量
+function WarehouseRateItem:updateWarehouseNum()
+    local count = 1
+    self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
+    self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store) + count
+    local lockedNum = self:getLockedNum(self.warehouseData.store);
+    local numTab = {}
+    numTab["num1"] = self.sizeSlider.value
+    numTab["num2"] = lockedNum
+    numTab["num3"] = self.sizeSlider.maxValue
+    numTab["col1"] = "Cyan"
+    numTab["col2"] = "Teal"
+    numTab["col3"] = "Black"
+    self.numberText.text = getColorString(numTab);
 end

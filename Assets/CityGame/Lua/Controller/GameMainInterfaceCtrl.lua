@@ -378,8 +378,9 @@ function GameMainInterfaceCtrl:Awake()
 
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
-    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
-    GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
+
+    --LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
+    --GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
 
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)
@@ -724,7 +725,7 @@ end
 function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:RemoveUpdata()
-    ct.OpenCtrl("MiniMapCtrl")
+    ct.OpenCtrl("MapCtrl")
 end
 
 --中心建筑

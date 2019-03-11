@@ -59,7 +59,7 @@ end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
 --自己
 function ProcessShelfCtrl:MeInitializeData()
-    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(0,0,0);
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.zero;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(true)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
@@ -68,7 +68,7 @@ function ProcessShelfCtrl:MeInitializeData()
 end
 --别人
 function ProcessShelfCtrl:OthersInitializeData()
-    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.New(1,1,1);
+    ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.one;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(false)
     if next(self.shelfDatas) == nil then
         self:CreateGoodsItems(self.shelf.good,ProcessShelfPanel.ShelfGoodsItem,ProcessShelfPanel.Content,ShelfGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
@@ -126,7 +126,7 @@ function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
             return
         else
             for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_ReqMaterialBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
+                Event.Brocast("m_ReqProcessBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
                         value.goodsDataInfo.price,targetBuildingId,value.goodsDataInfo.k.producerId,value.goodsDataInfo.k.qty)
             end
         end
@@ -153,7 +153,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
     ProcessShelfPanel.nameText.text = ""
     self.ShelfImgSetActive(self.shelfDatas,5,1)
     self:RefreshBuyButton()
-    Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
+    --Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品

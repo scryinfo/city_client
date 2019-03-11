@@ -17,10 +17,11 @@ TerrainConfig = {
     },
     ["MiniMap"] = {
         ["ScaleMin"] = 1,
-        ["ScaleMax"] = 4,
-        ["ScaleOffset"] = 1,
+        ["ScaleMax"] = 4.2,
+        ["ScaleOffset"] = 0.8,
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
+        ["MapLeftPageDuringTime"] = 1,
         ["MapSize"] = 101,
     },
     ["LoadingConfig"] = {

@@ -51,12 +51,14 @@ function AddLineBoxCtrl:InitializeData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         local speed = 1 / (Material[self.itemId].numOneSec * self.workerNum)
         AddLineBoxPanel.speedText.text = "<color=#00ffba>"..self:GetOneSecNum(speed).." sec.".."</color>/one"
-        AddLineBoxPanel.itemGoodsbg.localScale = Vector3.New(0,0,0)
+        AddLineBoxPanel.itemMaterialbg.localScale = Vector3.one
+        AddLineBoxPanel.itemGoodsbg.localScale = Vector3.zero
         LoadSprite(Material[self.itemId].img,AddLineBoxPanel.icon,false)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         local speed = 1 / (Good[self.itemId].numOneSec * self.workerNum)
         AddLineBoxPanel.speedText.text = "<color=#00ffba>"..self:GetOneSecNum(speed).." sec.".."</color>/one"
-        AddLineBoxPanel.itemMaterialbg.localScale = Vector3.New(0,0,0)
+        AddLineBoxPanel.itemGoodsbg.localScale = Vector3.one
+        AddLineBoxPanel.itemMaterialbg.localScale = Vector3.zero
         LoadSprite(Good[self.itemId].img,AddLineBoxPanel.icon,false)
     end
 end
@@ -81,6 +83,8 @@ function AddLineBoxCtrl:OnClick_confirmBtn(go)
     if go:NumberWhetherZero(number) == true then
         if go.m_data.buildingType == BuildingType.MaterialFactory then
             Event.Brocast("m_ReqMaterialAddLine",go.buildingId,number,go.workerNum,go.itemId)
+        elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
+            Event.Brocast("m_ReqProcessAddLine",go.buildingId,number,go.workerNum,go.itemId)
         end
     end
 end
@@ -89,7 +93,11 @@ end
 function AddLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
         TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
-        UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            UIPanel.BackToPageInstance(MaterialCtrl,self.m_data)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            UIPanel.BackToPageInstance(ProcessingCtrl,self.m_data)
+        end
         Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end
 end

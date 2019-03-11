@@ -242,13 +242,16 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
     for i, groundData in ipairs(self.groundDatas) do
         local Ids={}
         table.insert(Ids,groundData.Data.ownerId)
-        Event.Brocast("m_QueryPlayerInfoChat",Ids)
+        --Event.Brocast("m_QueryPlayerInfoChat",Ids)
+        PlayerInfoManger.GetInfosOneByOne(Ids,self.SaveData,self)
     end
 
     --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
-    Event.Brocast("m_QueryPlayerInfoChat",ids)
+    PlayerInfoManger.GetInfosOneByOne(ids,self.SaveData,self)
+
+
 
 end
 

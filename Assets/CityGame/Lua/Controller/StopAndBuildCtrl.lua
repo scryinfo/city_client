@@ -169,8 +169,10 @@ end
 function StopAndBuildCtrl:updatePersonInfo(data)
 
     local peronInfo=data.ctrl.groundOwnerDatas[#data.ctrl.groundOwnerDatas]
-    --panel.rightPerIma.sprite=peronInfo
-    AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
+    if  self.avatarRightData then
+        AvatarManger.CollectAvatar(self.avatarRightData)
+    end
+   self.avatarRightData= AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
 
     panel.rightnameInp.text=peronInfo.name
     panel.rightcommanyInp.text=peronInfo.companyName
@@ -187,9 +189,11 @@ end
 function StopAndBuildCtrl:updateGroundInfo(data)
     local personData=data.personData
     local groundData=data.groundData
-    --**des=""
-    panel.personIma.sprite=personData.des
-    AvatarManger.GetSmallAvatar(personData.faceId,panel.personIma.transform,0.2)
+    if self.avatarLeftData then
+        AvatarManger.CollectAvatar(self.avatarLeftData)
+    end
+
+  self.avatarLeftData= AvatarManger.GetSmallAvatar(personData.faceId,panel.personIma.transform,0.2)
 
     panel.nameInp.text=personData.name
     panel.commanyInp.text=personData.companyName

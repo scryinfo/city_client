@@ -62,6 +62,9 @@ function BuildingTopItem:refreshData(data, closeCallBack)
     if data.ownerId ~= DataManager.GetMyOwnerID() then
         self.changeNameBtn.transform.localScale = Vector3.zero
         self.changeSignBtn.transform.localScale = Vector3.zero
+        if data.des == nil then
+            self.messageText.text = "玩家暂时没有设置建筑签名"
+        end
     else
         self.changeNameBtn.transform.localScale = Vector3.one
         self.changeSignBtn.transform.localScale = Vector3.one

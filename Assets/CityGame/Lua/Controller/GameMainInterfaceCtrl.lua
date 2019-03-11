@@ -586,7 +586,11 @@ end
 --好友红点--
 function GameMainInterfaceCtrl._showFriendsNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
-    GameMainInterfacePanel.friendsNotice:SetActive(#friendsApply > 0)
+    if #friendsApply > 0 then
+        GameMainInterfacePanel.friendsNotice.localScale = Vector3.one
+    else
+        GameMainInterfacePanel.friendsNotice.localScale = Vector3.zero
+    end
 end
 
 function GameMainInterfaceCtrl:c_OnReceiveAddFriendReq()

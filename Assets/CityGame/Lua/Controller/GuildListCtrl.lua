@@ -38,6 +38,7 @@ function GuildListCtrl:OnCreate(go)
 end
 
 function GuildListCtrl:Awake(go)
+    GuildListCtrl.static.guildTab = {}
     ct.log("tina_w30_guild", "GuildListCtrl:Awake")
     self.guildSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.guildSource.mProvideData = GuildListCtrl.static.GuildProvideData
@@ -206,7 +207,11 @@ end
 -- 滑动复用
 GuildListCtrl.static.GuildProvideData = function(transform, idx)
     idx = idx + 1
-    GuildItem:new(transform, GuildListCtrl.societyList[idx])
+    local transformId = transform:GetInstanceID()
+    if GuildListCtrl.static.guildTab[transformId] then
+        GuildListCtrl.static.guildTab[transformId]:CloseAvatar()
+    end
+    GuildListCtrl.static.guildTab[transformId] = GuildItem:new(transform, GuildListCtrl.societyList[idx])
 end
 
 GuildListCtrl.static.GuildClearData = function(transform)

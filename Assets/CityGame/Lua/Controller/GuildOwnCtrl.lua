@@ -33,8 +33,10 @@ function GuildOwnCtrl:OnCreate(go)
 end
 
 function GuildOwnCtrl:Awake()
-    --初始化管理器
+    -- 初始化管理器
     GuildOwnCtrl.static.guildMgr = GuildMgr:new()
+    -- 初始化item tab
+    GuildOwnCtrl.static.guildMemberTab = {}
 
     self.guildMemberSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.guildMemberSource.mProvideData = GuildOwnCtrl.static.GuildProvideData
@@ -244,7 +246,11 @@ end
 -- 滑动复用
 GuildOwnCtrl.static.GuildProvideData = function(transform, idx)
     idx = idx + 1
-    GuildMemberItem:new(transform, GuildOwnCtrl.societyMembers[idx])
+    local transformId = transform:GetInstanceID()
+    if GuildOwnCtrl.static.guildMemberTab[transformId] then
+        GuildOwnCtrl.static.guildMemberTab[transformId]:CloseAvatar()
+    end
+    GuildOwnCtrl.static.guildMemberTab[transformId] = GuildMemberItem:new(transform, GuildOwnCtrl.societyMembers[idx])
 end
 
 GuildOwnCtrl.static.GuildClearData = function(transform)

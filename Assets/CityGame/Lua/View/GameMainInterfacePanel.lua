@@ -29,7 +29,7 @@ function GameMainInterfacePanel.InitPanel()
     this.noticeButton = transform:Find("ChatBg/closeBg/notice").gameObject;
     this.noticeItem = transform:Find("ChatBg/closeBg/notice/noticeItem"); --通知红点
     this.friendsButton = transform:Find("ChatBg/closeBg/friends").gameObject --好友
-    this.friendsNotice = transform:Find("ChatBg/closeBg/friends/friendsItem").gameObject --好友红点提示
+    this.friendsNotice = transform:Find("ChatBg/closeBg/friends/friendsItem") --好友红点提示
     this.setButton = transform:Find("ChatBg/closeBg/setting").gameObject;
     this.guideBool = transform:Find("ChatBg/closeBg/guide").gameObject; --指南书--
     this.chat = transform:Find("ChatBg/chat").gameObject   --聊天

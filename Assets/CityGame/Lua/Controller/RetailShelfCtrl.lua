@@ -14,6 +14,7 @@ end
 function RetailShelfCtrl:Awake(go)
     retailShelf = self.gameObject:GetComponent('LuaBehaviour')
     retailShelf:AddClick(RetailShelfPanel.return_Btn.gameObject, self.OnClick_return_Btn, self)
+    retailShelf:AddClick(RetailShelfPanel.addBtn.gameObject,self.OnClick_addBtn,self)
 
     self.shelfDatas = {}  --货架上的数据
 end
@@ -69,6 +70,12 @@ end
 function RetailShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
     UIPanel.ClosePage()
+end
+--打开仓库
+function RetailShelfCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
+    go.m_data.isShelf = true
+    ct.OpenCtrl("ProcessWarehouseCtrl",go.m_data)
 end
 ----------------------------------------------------------------------回调函数------------------------------------------------------------------------------------------
 function RetailShelfCtrl:RefreshShelfData(dataInfo)

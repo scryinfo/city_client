@@ -19,6 +19,7 @@ function ShelfCtrl:Awake(go)
     shelf:AddClick(ShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
     shelf:AddClick(ShelfPanel.closeBtn,self.OnClick_playerBuy,self)
     shelf:AddClick(ShelfPanel.openBtn,self.OnClick_openBtn,self)
+    shelf:AddClick(ShelfPanel.addBtn,self.OnClick_addBtn, self)
     shelf:AddClick(ShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
 
     itemStateBool = nil
@@ -76,62 +77,69 @@ function ShelfCtrl:OthersInitializeData()
     self.ShelfImgSetActive(self.shelfDatas,5,1)
 end
 ----------------------------------------------------------------------点击函数------------------------------------------------------------------------------------------
-function ShelfCtrl:OnClick_return_Btn(ins)
+function ShelfCtrl:OnClick_return_Btn(go)
     PlayMusEff(1002)
     if switchRightPanel == true then
-        ins:openPlayerBuy(not switchRightPanel)
+        go:openPlayerBuy(not switchRightPanel)
     end
-    ins:CloseDestroy(ins.shelfDatas)
+    go:CloseDestroy(go.shelfDatas)
     UIPanel.ClosePage()
 end
 --点击打开购买Panel
-function ShelfCtrl:OnClick_playerBuy(ins)
+function ShelfCtrl:OnClick_playerBuy(go)
     PlayMusEff(1002)
-    if ins.m_data.info.state == "OPERATE" then
-        ins:openPlayerBuy(not switchRightPanel)
+    if go.m_data.info.state == "OPERATE" then
+        go:openPlayerBuy(not switchRightPanel)
     else
         Event.Brocast("SmallPop",GetLanguage(35040013),300)
         return
     end
 end
 --跳转选择仓库
-function ShelfCtrl:OnClick_openBtn(ins)
+function ShelfCtrl:OnClick_openBtn(go)
     PlayMusEff(1002)
     local data = {}
     data.pos = {}
-    data.pos.x = ins.m_data.info.pos.x
-    data.pos.y = ins.m_data.info.pos.y
-    data.buildingId = ins.buildingId
+    data.pos.x = go.m_data.info.pos.x
+    data.pos.y = go.m_data.info.pos.y
+    data.buildingId = go.buildingId
     data.nameText = ShelfPanel.nameText
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 --购买确认
-function ShelfCtrl:OnClcik_buyConfirmBtn(ins)
+function ShelfCtrl:OnClcik_buyConfirmBtn(go)
     PlayMusEff(1002)
     local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
     local buyDataInfo = {}
-    buyDataInfo.currentLocationName = ins.m_data.info.name
+    buyDataInfo.currentLocationName = go.m_data.info.name
     buyDataInfo.targetLocationName = ChooseWarehouseCtrl:GetName()
     local pos = {}
-    pos.x = ins.m_data.info.pos.x
-    pos.y = ins.m_data.info.pos.y
+    pos.x = go.m_data.info.pos.x
+    pos.y = go.m_data.info.pos.y
     buyDataInfo.distance = ChooseWarehouseCtrl:GetDistance(pos)
-    buyDataInfo.number = ins.GetDataTableNum(ins.tempItemList)
+    buyDataInfo.number = go.GetDataTableNum(go.tempItemList)
     buyDataInfo.freight = GetClientPriceString(ChooseWarehouseCtrl:GetPrice())
-    buyDataInfo.goodsPrice = ins:GetTotalPrice()
+    buyDataInfo.goodsPrice = go:GetTotalPrice()
     buyDataInfo.total = GetClientPriceString(buyDataInfo.number * GetServerPriceNumber(buyDataInfo.freight)) + buyDataInfo.goodsPrice
     buyDataInfo.btnClick = function()
         if buyDataInfo.number == 0 then
             Event.Brocast("SmallPop",GetLanguage(27020004),300)
             return
         else
-            for key,value in pairs(ins.tempItemList) do
-                Event.Brocast("m_ReqMaterialBuyShelfGoods",ins.buildingId,value.itemId,value.inputNumber.text,
+            for key,value in pairs(go.tempItemList) do
+                Event.Brocast("m_ReqMaterialBuyShelfGoods",go.buildingId,value.itemId,value.inputNumber.text,
                         value.goodsDataInfo.price,targetBuildingId,value.goodsDataInfo.k.producerId,value.goodsDataInfo.k.qty)
             end
         end
     end
     ct.OpenCtrl("TransportBoxCtrl",buyDataInfo)
+end
+--打开仓库
+function ShelfCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
+    go:CloseDestroy(go.shelfDatas)
+    go.m_data.isShelf = true
+    ct.OpenCtrl("WarehouseCtrl",go.m_data)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据

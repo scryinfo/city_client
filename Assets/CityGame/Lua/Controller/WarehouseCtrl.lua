@@ -65,9 +65,16 @@ function WarehouseCtrl:Refresh()
     if next(self.warehouseDatas) == nil then
         self:CreateGoodsItems(self.store.inHand,WarehousePanel.warehouseItem,WarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
     end
+    --如果是从货架进来的
+    if self.m_data.isShelf == true then
+        switchIsShow = false
+        WarehousePanel.shelfCloseBtn.transform.localScale = Vector3.zero
+        self:OpenRightPanel(not switchRightPanel,switchIsShow)
+    end
 end
 function WarehouseCtrl:Hide()
     self:_removeListener()
+    self.m_data.isShow = false
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
@@ -93,6 +100,7 @@ end
 function WarehouseCtrl:ClickRightShelfBtn(ins)
     PlayMusEff(1002)
     switchIsShow = false
+    WarehousePanel.shelfCloseBtn.transform.localScale = Vector3.one
     ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
 --点击打开运输Panel

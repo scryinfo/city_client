@@ -19,6 +19,7 @@ function ProcessShelfCtrl:Awake(go)
     shelf:AddClick(ProcessShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
     shelf:AddClick(ProcessShelfPanel.closeBtn,self.OnClick_playerBuy,self)
     shelf:AddClick(ProcessShelfPanel.openBtn,self.OnClick_openBtn,self)
+    shelf:AddClick(ProcessShelfPanel.addBtn,self.OnClick_addBtn,self)
     shelf:AddClick(ProcessShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
 
     itemStateBool = nil
@@ -132,6 +133,13 @@ function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
         end
     end
     ct.OpenCtrl("TransportBoxCtrl",buyDataInfo)
+end
+--打开仓库
+function ProcessShelfCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
+    go:CloseDestroy(go.shelfDatas)
+    go.m_data.isShelf = true
+    ct.OpenCtrl("ProcessWarehouseCtrl",go.m_data)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据

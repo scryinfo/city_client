@@ -143,7 +143,7 @@ function ProcessShelfCtrl:OnClick_addBtn(go)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据
-function ProcessShelfCtrl:RefreshShelfData(dataInfo)
+function ProcessShelfCtrl:RefreshShelfData(dataInfo,whether)
     for key,value in pairs(self.shelfDatas) do
         if value.itemId == dataInfo.item.key.id then
             if value.num == dataInfo.item.n then
@@ -161,7 +161,11 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
     ProcessShelfPanel.nameText.text = ""
     self.ShelfImgSetActive(self.shelfDatas,5,1)
     self:RefreshBuyButton()
-    --Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
+    if whether == true then
+        Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
+    else
+        Event.Brocast("SmallPop",GetLanguage(27010003),300)
+    end
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品

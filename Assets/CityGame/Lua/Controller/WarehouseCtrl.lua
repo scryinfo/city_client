@@ -224,6 +224,9 @@ function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
     else
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
     end
+    if self.m_data.isShelf == true then
+        self:SetShelfData(dataInfo)
+    end
 end
 --销毁仓库原料或商品刷新
 function WarehouseCtrl:DestroyAfterRefresh(dataInfo)
@@ -401,7 +404,27 @@ function WarehouseCtrl:RefreshCapacity(dataInfo,whether)
         WarehousePanel.numberText.text = getColorString(numTab)
     end
 end
-
+--如果是从货架上架要改变self.m_data数据返回
+function WarehouseCtrl:SetShelfData(dataInfo)
+    local good = {}
+    local goodData = {}
+    local key = {}
+    if not self.m_data.shelf.good then
+        key.id = dataInfo.item.key.id
+        goodData.k = key
+        goodData.n = dataInfo.item.n
+        goodData.price = dataInfo.price
+        good[#good + 1] = goodData
+        self.m_data.shelf.good = good
+    else
+        for key,value in pairs(self.m_data.shelf.good) do
+            if dataInfo.item.key.id == value.k.id then
+                value.n = value.n + dataInfo.item.n
+                value.price = dataInfo.price
+            end
+        end
+    end
+end
 
 
 --[[

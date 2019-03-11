@@ -75,7 +75,7 @@ end
 function RetailShelfCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     go.m_data.isShelf = true
-    ct.OpenCtrl("ProcessWarehouseCtrl",go.m_data)
+    ct.OpenCtrl("RetailWarehouseCtrl",go.m_data)
 end
 ----------------------------------------------------------------------回调函数------------------------------------------------------------------------------------------
 function RetailShelfCtrl:RefreshShelfData(dataInfo)
@@ -92,6 +92,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
             end
         end
     end
+    Event.Brocast("SmallPop",GetLanguage(27010003),300)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取货架容量

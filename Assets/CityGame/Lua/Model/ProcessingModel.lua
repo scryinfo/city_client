@@ -117,7 +117,7 @@ function ProcessingModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function ProcessingModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ProcessShelfCtrl",'RefreshShelfData',data)
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessShelfCtrl",'RefreshShelfData',data,false)
 end
 --添加生产线
 function ProcessingModel:n_OnAddLineInfo(data)
@@ -133,7 +133,7 @@ function ProcessingModel:n_OnLineChangeInform(data)
 end
 --货架购买
 function ProcessingModel:n_OnBuyShelfGoodsInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ProcessShelfCtrl",'RefreshShelfData',data)
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessShelfCtrl",'RefreshShelfData',data,true)
 end
 --销毁仓库原料或商品
 function ProcessingModel:n_OnDelItemInfo(data)

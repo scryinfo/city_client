@@ -187,7 +187,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
             end
             self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
         end
-        ShelfPanel.nameText.text = ""
+        ProcessShelfPanel.nameText.text = ""
         self.ShelfImgSetActive(self.shelfDatas,5,1)
         self:RefreshBuyButton()
         Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
@@ -248,6 +248,7 @@ end
 --货架点击Item详情弹框
 function ProcessShelfCtrl:OpenDetailsBox(ins)
     ins.buildingType = self.m_data.buildingType
+    ins.isOther = self.m_data.isOther
     ct.OpenCtrl("DETAILSBoxCtrl",ins)
 end
 

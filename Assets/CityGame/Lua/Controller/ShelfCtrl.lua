@@ -248,6 +248,7 @@ end
 --货架点击Item详情弹框
 function ShelfCtrl:OpenDetailsBox(ins)
     ins.buildingType = self.m_data.buildingType
+    ins.isOther = self.m_data.isOther
     ct.OpenCtrl("DETAILSBoxCtrl",ins)
 end
 

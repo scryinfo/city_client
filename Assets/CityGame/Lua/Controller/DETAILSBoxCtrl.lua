@@ -179,7 +179,6 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
             return
         end
     end
-
 end
 --刷新滑动条
 function DETAILSBoxCtrl:numberInputInfo()

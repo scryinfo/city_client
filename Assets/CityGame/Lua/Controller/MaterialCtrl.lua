@@ -29,6 +29,7 @@ end
 function MaterialCtrl:Active()
     UIPanel.Active(self)
     MaterialPanel.Text.text = GetLanguage(25010001)
+    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 function MaterialCtrl:Refresh()
     this:initializeData()
@@ -118,11 +119,18 @@ function MaterialCtrl:OnClick_backBtn(ins)
 end
 function MaterialCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     if self.m_data.isOther == true then
         self:deleteOtherShelf()
     else
         self:deleteProductionObj()
         self:deleteShelfObj()
+    end
+end
+--更改基础建筑信息
+function MaterialCtrl:_changeItemData(data)
+    if data ~= nil and MaterialPanel.topItem ~= nil then
+        MaterialPanel.topItem:changeItemData(data)
     end
 end
 --清空生产线

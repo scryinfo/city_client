@@ -27,6 +27,7 @@ end
 function ProcessingCtrl:Active()
     UIPanel.Active(self)
     ProcessingPanel.Text.text = GetLanguage(29010001)
+    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 function ProcessingCtrl:Refresh()
     this:initializeData()
@@ -117,11 +118,18 @@ function ProcessingCtrl:OnClick_backBtn(ins)
 end
 function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     if self.m_data.isOther == true then
         self:deleteOtherShelf()
     else
         self:deleteProductionObj()
         self:deleteShelfObj()
+    end
+end
+--更改基础建筑信息
+function RetailStoresCtrl:_changeItemData(data)
+    if data ~= nil and ProcessingPanel.topItem ~= nil then
+        ProcessingPanel.topItem:changeItemData(data)
     end
 end
 --清空生产线

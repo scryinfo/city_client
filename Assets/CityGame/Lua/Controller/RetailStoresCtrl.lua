@@ -28,6 +28,7 @@ end
 function RetailStoresCtrl:Active()
     UIPanel.Active(self)
     RetailStoresPanel.Text.text = GetLanguage(33010001)
+    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 function RetailStoresCtrl:Refresh()
     this:initializeData()
@@ -117,7 +118,14 @@ function RetailStoresCtrl:OnClick_backBtn(ins)
 end
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     self:deleteOtherShelf()
+end
+--更改基础建筑信息
+function RetailStoresCtrl:_changeItemData(data)
+    if data ~= nil and RetailStoresPanel.topItem ~= nil then
+        RetailStoresPanel.topItem:changeItemData(data)
+    end
 end
 --清空货架（其他玩家）
 function RetailStoresCtrl:deleteOtherShelf()

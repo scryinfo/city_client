@@ -21,6 +21,10 @@ function BuildingTopItem:initialize(viewRect)
 
     self.backBtn.onClick:AddListener(function ()
         if self.closeCallBack ~= nil then
+            if self.avatar ~= nil then
+                AvatarManger.CollectAvatar(self.avatar)
+                self.avatar = nil
+            end
             self.closeCallBack()
         end
     end)
@@ -34,8 +38,18 @@ function BuildingTopItem:initialize(viewRect)
         end
     end)
 end
-
 --
+function BuildingTopItem:changeItemData(data)
+    if data ~= nil then
+        if data.des ~= nil then
+            self.messageText.text = data.des
+        end
+        if data.emoticon ~= nil then
+            local path = BubbleMessageCtrl.configPath[data.emoticon].path
+            LoadSprite(path, self.iconImg, true)
+        end
+    end
+end
 
 --刷新数据
 function BuildingTopItem:refreshData(data, closeCallBack)
@@ -44,6 +58,10 @@ function BuildingTopItem:refreshData(data, closeCallBack)
             return
         end
     end
+    if self.avatar == nil and data.ownerId ~= nil then
+        PlayerInfoManger.GetInfosOneByOne({[1] = data.ownerId}, self.initPlayerInfo, self)
+    end
+
     self.data = data
     self.closeCallBack = closeCallBack
     self.nameText.text = data.name or "SRCY CITY"
@@ -77,13 +95,15 @@ function BuildingTopItem:changeBuildingName()
     data.titleInfo = GetLanguage(25040001)
     data.btnCallBack = function(name)
         if self.data.id ~= nil then
-            DataManager.DetailModelRpcNoRet(self.data.id, 'm_ReqChangeHouseName', self.data.id, name)
+            DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = self.data.id, name = name})
             self.nameText.text = name
         end
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 --
-function BuildingTopItem:close()
-
+function BuildingTopItem:initPlayerInfo(data)
+    if data ~= nil then
+        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.headImg.transform,0.2)
+    end
 end

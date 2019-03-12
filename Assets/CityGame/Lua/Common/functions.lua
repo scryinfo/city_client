@@ -553,11 +553,24 @@ end
 
 
 function UnLoadSprite(path)
+	local temp={}
 	if AssetObjs ~= nil and AssetObjs[path] ~= nil then
 		local v = AssetObjs[path]
 		AssetObjs[path] = nil
-		UnityEngine.AssetBundle.Unload(v,true)
+
+		--UnityEngine.AssetBundle.Unload(v,true) --这个是不考虑引用的强制卸载，可能会导致某些image显示不出图片
+		--UnityEngine.AssetBundle.Unload(v,false)
+		for paths, ab in pairs(temp) do
+			if ab ~=v then
+				temp[path]=v
+			end
+		end
 	end
+
+	for i, v in pairs(temp) do
+		resMgr:UnloadAssetBundle(v, false)
+	end
+
 end
 
 

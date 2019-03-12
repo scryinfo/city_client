@@ -18,15 +18,16 @@ function ProcessingCtrl:Awake(go)
     this = self
     self.gameObject = go;
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    --self.processingBehaviour:AddClick(ProcessingPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     --self.processingBehaviour:AddClick(ProcessingPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
-    self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    --self.processingBehaviour:AddClick(ProcessingPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.processingBehaviour:AddClick(ProcessingPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.processingBehaviour:AddClick(ProcessingPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 end
 function ProcessingCtrl:Active()
     UIPanel.Active(self)
     ProcessingPanel.Text.text = GetLanguage(29010001)
+    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 function ProcessingCtrl:Refresh()
     this:initializeData()
@@ -45,18 +46,18 @@ function ProcessingCtrl:initializeData()
 end
 --刷新加工厂信息
 function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
-    ProcessingPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
+    --ProcessingPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
+    --ProcessingPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
     local insId = self.m_data.insId
     self.m_data = DataInfo
     self.m_data.insId = insId
 
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
-        ProcessingPanel.changeNameBtn.localScale = Vector3.zero
+        --ProcessingPanel.changeNameBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        ProcessingPanel.changeNameBtn.localScale = Vector3.one
+        --ProcessingPanel.changeNameBtn.localScale = Vector3.one
     end
 
     if self.m_data.info.state=="OPERATE" then
@@ -67,6 +68,12 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
 
     Event.Brocast("c_GetBuildingInfo",DataInfo.info)
 
+    if ProcessingPanel.topItem ~= nil then
+        ProcessingPanel.topItem:refreshData(DataInfo.info,function()
+            PlayMusEff(1002)
+            UIPanel.ClosePage()
+        end)
+    end
     self.m_data.buildingType = BuildingType.ProcessingFactory
     if not self.processingToggleGroup then
         self.processingToggleGroup = BuildingInfoToggleGroupMgr:new(ProcessingPanel.leftRootTran, ProcessingPanel.rightRootTran, self.processingBehaviour, self.m_data)
@@ -111,11 +118,18 @@ function ProcessingCtrl:OnClick_backBtn(ins)
 end
 function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     if self.m_data.isOther == true then
         self:deleteOtherShelf()
     else
         self:deleteProductionObj()
         self:deleteShelfObj()
+    end
+end
+--更改基础建筑信息
+function ProcessingCtrl:_changeItemData(data)
+    if data ~= nil and ProcessingPanel.topItem ~= nil then
+        ProcessingPanel.topItem:changeItemData(data)
     end
 end
 --清空生产线

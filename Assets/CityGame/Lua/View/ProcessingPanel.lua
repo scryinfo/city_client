@@ -22,14 +22,15 @@ function ProcessingPanel.InitPanel()
     this.rightRootTran = transform:Find("rightRoot");
     this.leftRootTran = transform:Find("leftRoot");
     this.topRootTran = transform:Find("topRoot");
-    this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
-    this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
-    this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
-    this.backBtn = transform:Find("topRoot/backBtn");
-    this.headImgBtn = transform:Find("topRoot/headBg/headImgBtn");
+    --this.buildingTypeNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text");
+    --this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text");
+    --this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn");
+    --this.backBtn = transform:Find("topRoot/backBtn");
+    --this.headImgBtn = transform:Find("topRoot/headBg/headImgBtn");
     this.buildInfo = transform:Find("buildInfo");
     this.stopIconRoot = transform:Find("stopIconROOT");
     this.Text = transform:Find("stopIconROOT/Text"):GetComponent("Text");
+    this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
 end
 --数据初始化
 function ProcessingPanel.InitDate(processingData)

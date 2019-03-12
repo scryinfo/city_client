@@ -6,14 +6,17 @@
 LineItem = class("LineItem")
 local LastTime = 0
 local nowTime = 0
+local Math_Floor = math.floor
+local Math_Ceil = math.ceil
 --主页生产线
-function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId)
+function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialData)
     self.prefab = prefab;
     self.lineInfo = lineInfo
     self.itemId = lineInfo.itemId
     self.lineId = lineInfo.id
     self.workerNum = lineInfo.workerNum
     self.buildingId = buildingId
+    self.materialData = materialData
 
     self.itemGoodsbg = self.prefab.transform:Find("itembg/itemGoodsbg")
     self.itemMaterialbg = self.prefab.transform:Find("itembg/itemMaterialbg")
@@ -31,6 +34,7 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId)
     self.numberText = prefab.transform:Find("numberText"):GetComponent("Text")
     self.deleteBtn = prefab.transform:Find("deleteBtn")
     self.countdownText = prefab.transform:Find("countdownText"):GetComponent("Text")
+    self.tip = prefab.transform:Find("tipImg")
 
     self:InitializeData()
     --LuaBehaviour:AddClick(self.deleteBtn.gameObject,function(go)
@@ -43,7 +47,7 @@ end
 --生产线初始化
 function LineItem:InitializeData()
     local materialKey,goodsKey = 21,22  --商品类型
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         --生产一个需要的时间
         self.OneTotalTime = self:GetNumOneTime(Material[self.itemId].numOneSec,self.workerNum)
         self.brandbg.localScale = Vector3.zero
@@ -51,7 +55,7 @@ function LineItem:InitializeData()
         self.quality.localScale = Vector3.zero
         self.itemGoodsbg.localScale = Vector3.zero
         LoadSprite(Material[self.itemId].img,self.icon,false)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         --生产一个需要的时间
         self.OneTotalTime = self:GetNumOneTime(Good[self.itemId].numOneSec,self.workerNum)
         self.brandbg.localScale = Vector3.one
@@ -78,11 +82,20 @@ function LineItem:InitializeData()
     number["col1"] = "blue"
     number["col2"] = "black"
     self.numberText.text = getColorString(number)
-    self.productionSlider.maxValue = math.ceil(self.OneTotalTime / 1000)
-    self.productionSlider.value = math.ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime) )/ 1000)
+    self.productionSlider.maxValue = Math_Ceil(self.OneTotalTime / 1000)
+    self.productionSlider.value = Math_Ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime) )/ 1000)
     self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
     self.timeText.text = self:GetTime(self.lineInfo.targetCount,self.lineInfo.nowCount,self.lineInfo.workerNum)
-    UpdateBeat:Add(self.Update,self)
+    if Math_Floor(self.itemId / 100000) == materialKey then
+        UpdateBeat:Add(self.Update,self)
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
+        --初始化时判断原料是否足够
+        if self:CheckMaterial(self.itemId) == true then
+            UpdateBeat:Add(self.Update,self)
+        elseif self:CheckMaterial(self.itemId) == false then
+            UpdateBeat:Remove(self.Update,self);
+        end
+    end
 end
 --计算总时间
 function LineItem:GetTime(targetCount,nowCount,workerNum)
@@ -91,9 +104,9 @@ function LineItem:GetTime(targetCount,nowCount,workerNum)
         return "00:00:00"
     end
     local materialKey,goodsKey = 21,22  --商品类型
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.time = remainingNum / (Material[self.itemId].numOneSec * workerNum)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.time = remainingNum / (Good[self.itemId].numOneSec * workerNum)
     end
     local timeTable = getTimeBySec(self.time)
@@ -181,6 +194,48 @@ function LineItem:refreshNowConte(dataInfo)
     end
     Event.Brocast("updateWarehouseNum")
     Event.Brocast("updateWarehouseData",nowGoodsData)
+end
+--如果生产中是商品，检查原料够不够
+function LineItem:CheckMaterial(itemId)
+    --如果仓库是空的
+    if next(self.materialData) == nil then
+        --打开提示原料不足，关闭时间刷新
+        self.tip.transform.localScale = Vector3.one
+        UpdateBeat:Remove(self.Update,self);
+        return false
+    end
+    --如果仓库不是空的
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    local materialNum = {}
+    local isMeet = false
+    --生产中商品需要的原料
+    for key,value in pairs(material) do
+        --仓库中有的原料
+        for key1,value1 in pairs(self.materialData.inHand) do
+            if value1.key.id == value.itemId then
+                materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
+                isMeet = true
+            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
+        end
+    end
+    table.sort(materialNum)
+    local minValue = materialNum[1]
+    if minValue <= 0 then
+        --打开提示原料不足，关闭时间刷新
+        self.tip.transform.localScale = Vector3.one
+        self.productionSlider.value = 0
+        self.countdownText.text = "00:00"
+        UpdateBeat:Remove(self.Update,self);
+        return false
+    else
+        --关闭提示原料不足，打开时间刷新
+        self.tip.transform.localScale = Vector3.zero
+        UpdateBeat:Add(self.Update,self)
+        return true
+    end
 end
 --删除生产线
 function LineItem:OnClick_deleteBtn(go)

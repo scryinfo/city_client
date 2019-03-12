@@ -32,15 +32,29 @@ function HouseCtrl:Awake(go)
 end
 
 function HouseCtrl:Refresh()
-    --self:_initData()
     this:_initData()
 end
 
+function HouseCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
+end
+
 function HouseCtrl:Hide()
+    Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+
     if self.houseToggleGroup then
         self.houseToggleGroup:cleanItems()
     end
+    self.m_data = nil
     UIPanel.Hide(self)
+end
+
+--更改基础建筑信息
+function HouseCtrl:_changeItemData(data)
+    if data ~= nil and HousePanel.topItem ~= nil then
+        HousePanel.topItem:changeItemData(data)
+    end
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id

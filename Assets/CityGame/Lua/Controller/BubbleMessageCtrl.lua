@@ -110,7 +110,7 @@ end
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
     local des=panel.inputFrame.text
     if panel.inputFrame.text=="" then
-        des=nil
+        des=" "
     end
     Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
     UIPanel.ClosePage()

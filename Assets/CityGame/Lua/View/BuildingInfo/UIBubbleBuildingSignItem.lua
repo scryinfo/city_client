@@ -43,26 +43,20 @@ function UIBubbleBuildingSignItem:initialize(prefab,luaBehaviour,data,ctr)
 
     self:updateData(data)
 
-
 end
 
 function UIBubbleBuildingSignItem:updateData(data)
-     --todo:系统设置判定
+
     --给小的赋值
     if data.emoticon  then
         LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.smallIma)
         if data.state~="OPERATE" then
             self.smallExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.smallExIma)
-
-        --elseif data.happy==0 then            --停工
-        --
-        --    self.smallExRec.localScale=Vector3.one
-        --    LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.smallExIma)
-
         else--没有异常
             self.smallExRec.localScale=Vector3.zero
         end
+
     end
 
     --给大的赋值
@@ -71,12 +65,6 @@ function UIBubbleBuildingSignItem:updateData(data)
         if data.state~="OPERATE" then    --停业
             self.largeExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.largeExIma)
-
-        --elseif data.happy==0 then        --停工
-        --
-        --    self.largeExRec.localScale=Vector3.one
-        --    LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.largeExIma)
-
         else                           --没有异常
             self.largeExRec.localScale=Vector3.zero
         end
@@ -111,11 +99,15 @@ function UIBubbleBuildingSignItem:c_OnClick_small(ins)
         ctrl.smallRec.localScale=Vector3.one
     end
     --变大
+
+    ins:updateData(ins.data)
     ins:changeLarge()
 
     ctrl.largeRec=ins.largeRec
     ctrl.smallRec=ins.smallRec
-
+    if ins .avatarData then
+        AvatarManger.CollectAvatar(ins .avatarData)
+    end
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large(ins)
@@ -159,7 +151,7 @@ end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
     self.nameText.text=info[1].name
-    AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
+   self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
 end
 
 function UIBubbleBuildingSignItem:Update()

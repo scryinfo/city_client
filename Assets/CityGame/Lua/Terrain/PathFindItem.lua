@@ -225,6 +225,9 @@ end
 --tempPathNum:具体的PathNUm
 function PathFindItem:CalculateTargetPosition(tempBlockID,tempPosPathNum)
     local tempNum = DataManager.GetPathDataByBlockID(tempBlockID)
+    if tempNum == nil then
+        return
+    end
     local PosList = PathFindManager.CalculatePathValues(tempNum)
     if PosList ~= nil and type(PosList) ==  'table' then
         if PosList[tempPosPathNum] ~= nil then

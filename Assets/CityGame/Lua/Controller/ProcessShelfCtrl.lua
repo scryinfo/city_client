@@ -19,6 +19,7 @@ function ProcessShelfCtrl:Awake(go)
     shelf:AddClick(ProcessShelfPanel.buy_Btn,self.OnClick_playerBuy,self)
     shelf:AddClick(ProcessShelfPanel.closeBtn,self.OnClick_playerBuy,self)
     shelf:AddClick(ProcessShelfPanel.openBtn,self.OnClick_openBtn,self)
+    shelf:AddClick(ProcessShelfPanel.addBtn,self.OnClick_addBtn,self)
     shelf:AddClick(ProcessShelfPanel.confirmBtn.gameObject,self.OnClcik_buyConfirmBtn,self)
 
     itemStateBool = nil
@@ -36,9 +37,11 @@ function ProcessShelfCtrl:Active()
 end
 function ProcessShelfCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.AddListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function ProcessShelfCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.RemoveListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function ProcessShelfCtrl:Refresh()
     self.luabehaviour = shelf
@@ -133,27 +136,62 @@ function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
     end
     ct.OpenCtrl("TransportBoxCtrl",buyDataInfo)
 end
+--打开仓库
+function ProcessShelfCtrl:OnClick_addBtn(go)
+    PlayMusEff(1002)
+    go:CloseDestroy(go.shelfDatas)
+    go.m_data.isShelf = true
+    ct.OpenCtrl("ProcessWarehouseCtrl",go.m_data)
+end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据
 function ProcessShelfCtrl:RefreshShelfData(dataInfo)
-    for key,value in pairs(self.shelfDatas) do
-        if value.itemId == dataInfo.item.key.id then
-            if value.num == dataInfo.item.n then
-                self:deleteGoodsItem(self.shelfDatas,key)
-            else
-                value.numberText.text = value.num - dataInfo.item.n
-                value.goodsDataInfo.n = tonumber(value.numberText.text)
-                value.num = tonumber(value.numberText.text)
-                local stateBool = true
-                self:GoodsItemState(self.shelfDatas,stateBool)
+    --如果货架调整框
+    if not dataInfo.wareHouseId then
+        --如果是调整价格
+        if dataInfo.price then
+            for key,value in pairs(self.shelfDatas) do
+                if value.itemId == dataInfo.item.key.id then
+                    value.moneyText.text = GetClientPriceString(dataInfo.price)
+                end
+            end
+            Event.Brocast("SmallPop",GetLanguage(27010005),300)
+            return
+        end
+        --如果是调整数量
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == dataInfo.item.key.id then
+                if value.num == dataInfo.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.numberText.text = value.num - dataInfo.item.n
+                    value.goodsDataInfo.n = tonumber(value.numberText.text)
+                    value.num = tonumber(value.numberText.text)
+                end
             end
         end
-        self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
+        Event.Brocast("SmallPop",GetLanguage(27010003),300)
+    else
+        --如果是购买
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == dataInfo.item.key.id then
+                if value.num == dataInfo.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.numberText.text = value.num - dataInfo.item.n
+                    value.goodsDataInfo.n = tonumber(value.numberText.text)
+                    value.num = tonumber(value.numberText.text)
+                    local stateBool = true
+                    self:GoodsItemState(self.shelfDatas,stateBool)
+                end
+            end
+            self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
+        end
+        ProcessShelfPanel.nameText.text = ""
+        self.ShelfImgSetActive(self.shelfDatas,5,1)
+        self:RefreshBuyButton()
+        Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
     end
-    ProcessShelfPanel.nameText.text = ""
-    self.ShelfImgSetActive(self.shelfDatas,5,1)
-    self:RefreshBuyButton()
-    --Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
 --勾选商品
@@ -207,7 +245,12 @@ function ProcessShelfCtrl:GetTotalPrice()
     end
     return GetClientPriceString(price)
 end
-
+--货架点击Item详情弹框
+function ProcessShelfCtrl:OpenDetailsBox(ins)
+    ins.buildingType = self.m_data.buildingType
+    ins.isOther = self.m_data.isOther
+    ct.OpenCtrl("DETAILSBoxCtrl",ins)
+end
 
 
 

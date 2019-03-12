@@ -21,7 +21,6 @@ function DETAILSBoxCtrl:Awake(go)
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 
-    --
     details:AddClick(DETAILSBoxPanel.infoBtn.gameObject, function ()
         --DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.one
         ct.OpenCtrl("FixedTotalScoreCtrl", {pos = DETAILSBoxPanel.infoBtn.transform.position, type = "Goods"})
@@ -79,8 +78,11 @@ function DETAILSBoxCtrl:Hide()
 end
 
 function DETAILSBoxCtrl:Refresh()
-    --self.obj = self.m_data
-    --self.uiInfo = self.m_data.goodsDataInfo
+    if self.m_data.isOther == true then
+        DETAILSBoxPanel.confirmBtn.transform.localScale = Vector3.zero
+    else
+        DETAILSBoxPanel.confirmBtn.transform.localScale = Vector3.one
+    end
     self.itemId = self.m_data.itemId
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
@@ -131,31 +133,54 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         return
     end
     local price = GetServerPriceNumber(DETAILSBoxPanel.priceInput.text)
-
-    if number ~= ins.m_data.num and price ~= ins.m_data.price then
-        local num = ins.m_data.num - number
-        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
-        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
-        UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
-    end
-    if number == ins.m_data.num and price == ins.m_data.price then
-        UIPanel.ClosePage()
-        return;
-    end
-    if number ~= ins.m_data.num and price == ins.m_data.price then
-        local num = ins.m_data.num - number
-        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
-        UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
-    end
-    if number == ins.m_data.num and price ~= ins.m_data.price then
-        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
-        UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
+    --如果当前是原料厂
+    if ins.m_data.buildingType == 1 then
+        if number ~= ins.m_data.num and price ~= ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqMaterialShelfDel",ins.m_data.buildingId,ins.itemId,num)
+            Event.Brocast("m_ReqMaterialModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price == ins.m_data.price then
+            UIPanel.ClosePage()
+            return
+        end
+        if number ~= ins.m_data.num and price == ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqMaterialShelfDel",ins.m_data.buildingId,ins.itemId,num)
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price ~= ins.m_data.price then
+            Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+            UIPanel.ClosePage()
+            return
+        end
+        --如果是加工厂
+    elseif ins.m_data.buildingType == 4 then
+        if number ~= ins.m_data.num and price ~= ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqProcessShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price == ins.m_data.price then
+            UIPanel.ClosePage()
+            return
+        end
+        if number ~= ins.m_data.num and price == ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqProcessShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price ~= ins.m_data.price then
+            Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
     end
 end
 --刷新滑动条

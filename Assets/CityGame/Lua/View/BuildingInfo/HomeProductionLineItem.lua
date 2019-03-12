@@ -12,9 +12,9 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     self.viewRect = viewRect;
     self.productionData = productionData;
     self.buildingId = productionData.insId
-    HomeProductionLineItem.storeData = productionData.store.inHand
     self.toggleData = toggleData;    --位于toggle的第4个   左边
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
+    HomeProductionLineItem.storeData = productionData.store.inHand
 
     self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
     self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
@@ -92,10 +92,9 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
         return;
     end
     self.add:SetActive(false)
-    --local homePageType = ct.homePage.productionLine
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
-        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId)
+        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId,self.productionData.store)
         table.insert(HomeProductionLineItem.lineItemTable,lineItem)
     end
 end

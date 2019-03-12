@@ -40,6 +40,9 @@ function SmallBubbleItem:saveData(data)
         self.frame.localScale=Vector3.one
         ctrl.select=self.frame
         ctrl.bubbleId=1
+
+    else
+        self.frame.localScale=Vector3.zero
     end
 
     LoadSprite(data.path,self.ima)

@@ -19,6 +19,7 @@ TerrainConfig = {
         ["ScaleMin"] = 1,
         ["ScaleMax"] = 4.2,
         ["ScaleOffset"] = 0.8,
+        ["DetailScale"] = 2.6,  --显示详情的档位
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
         ["MapLeftPageDuringTime"] = 1,

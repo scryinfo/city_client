@@ -8,6 +8,7 @@ TestGroup.active_TestGroup("abel_w11_showFps")
 --TestGroup.active_TestGroup("byj_w27_robetTest")
 
 TestGroup.active_TestGroup("abel_wk27_hartbeat")
+TestGroup.active_TestGroup("abel_TimefunPrecision")
 --TestGroup.active_TestGroup("abel_w27_processNetMsgError")
 
 --TestGroup.active_TestGroup("wk24_abel_mutiConnect")

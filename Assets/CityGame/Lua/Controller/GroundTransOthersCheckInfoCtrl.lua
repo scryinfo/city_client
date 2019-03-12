@@ -27,7 +27,6 @@ function GroundTransOthersCheckInfoCtrl:Awake(go)
 end
 
 function GroundTransOthersCheckInfoCtrl:Refresh()
-    Event.AddListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
     self:_initPanelData()
 end
 
@@ -41,7 +40,12 @@ end
 
 function GroundTransOthersCheckInfoCtrl:Hide()
     UIPanel.Hide(self)
-    Event.RemoveListener("c_GroundTranReqPlayerInfo",self._showPersonalInfo, self)
+    if self.ownerAvatar ~= nil then
+        AvatarManger.CollectAvatar(self.ownerAvatar)
+    end
+    if self.renterAvatar ~= nil then
+        AvatarManger.CollectAvatar(self.renterAvatar)
+    end
 end
 
 function GroundTransOthersCheckInfoCtrl:Close()
@@ -55,7 +59,8 @@ function GroundTransOthersCheckInfoCtrl:_initPanelData()
         if self.m_data.groundInfo.rent and self.m_data.groundInfo.rent.renterId then
             ids[2] = self.m_data.groundInfo.rent.renterId
         end
-        GroundTransModel.m_ReqPlayersInfo(ids)
+        PlayerInfoManger.GetInfos(ids, self._showPersonalInfo, self)
+
         self:_setShowState(self.m_data.groundInfo)
     end
 end
@@ -74,7 +79,7 @@ end
 
 --显示头像+名字信息
 function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
-    local roleInfo = tempInfo.info
+    local roleInfo = tempInfo
     if roleInfo ~= nil then
         for i, info in pairs(roleInfo) do
             if info.id == self.m_data.groundInfo.ownerId then
@@ -90,15 +95,13 @@ function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
         if self.ownerInfo ~= nil then
             GroundTransOthersCheckInfoPanel.ANameText.text = self.ownerInfo.name
             GroundTransOthersCheckInfoPanel.ACompanyText.text = self.ownerInfo.companyName
-            AvatarManger.GetSmallAvatar(self.ownerInfo.faceId, GroundTransOthersCheckInfoPanel.APortraitImg.transform,0.2)
-
+            self.ownerAvatar = AvatarManger.GetSmallAvatar(self.ownerInfo.faceId, GroundTransOthersCheckInfoPanel.APortraitImg.transform,0.2)
         end
         --
         if self.renterInfo ~= nil then
             GroundTransOthersCheckInfoPanel.BNameText.text = self.renterInfo.name
             GroundTransOthersCheckInfoPanel.BCompanyText.text = self.renterInfo.companyName
-            AvatarManger.GetSmallAvatar(self.renterInfo.faceId, GroundTransOthersCheckInfoPanel.BPortraitImg.transform,0.2)
-
+            self.renterAvatar = AvatarManger.GetSmallAvatar(self.renterInfo.faceId, GroundTransOthersCheckInfoPanel.BPortraitImg.transform,0.2)
         end
     end
 end

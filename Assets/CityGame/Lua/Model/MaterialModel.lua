@@ -111,8 +111,7 @@ function MaterialModel:n_OnShelfAddInfo(data)
 end
 --修改货架数量或价格
 function MaterialModel:n_OnModifyShelfInfo(data)
-    local aaa = data
-    -----------------------------------------
+    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --下架
 function MaterialModel:n_OnShelfDelInfo(data)

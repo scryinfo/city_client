@@ -241,9 +241,9 @@ function AvtarCtrl:changAparance(data)
                 end
             end
 
-            for key, pastApperance in pairs(pastApperanceID) do
-                UnLoadSprite(pastApperance.path)
-            end
+            --for key, pastApperance in pairs(pastApperanceID) do
+            --    UnLoadSprite(pastApperance.path)
+            --end
 
             currHead:SetActive(false)
         end
@@ -349,6 +349,10 @@ end
 --返回
 function AvtarCtrl:c_OnClick_backBtn(ins)
     ins:Hide()
+    --for key, pastApperance in pairs(pastApperanceID) do
+    --    UnLoadSprite(pastApperance.path)
+    --end
+
 end
 
 --确定
@@ -365,7 +369,9 @@ function AvtarCtrl:c_OnClick_confirm()
     local temp={}
     temp.faceId=faceId
 
-
+    for key, pastApperance in pairs(pastApperanceID) do
+        UnLoadSprite(pastApperance.path)
+    end
 
     if DataManager.GetFaceId() then
         Event.Brocast("m_setRoleFaceId",faceId)

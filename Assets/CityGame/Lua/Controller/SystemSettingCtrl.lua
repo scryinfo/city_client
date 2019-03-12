@@ -66,21 +66,23 @@ function SystemSettingCtrl:c_OnClick_Bubble(ins)
     panel.bubblePanel.localScale=Vector3.one
     panel.closeLan.localScale=Vector3.one
 end
---气泡全大
+--气泡全小
 function SystemSettingCtrl:c_OnClick_BubbleBig(ins)
+    panel.bubblePanel.localScale=Vector3.zero
+    for i, bubbleIns in ipairs(BubblePrefabs) do
+        bubbleIns:changeSmall()
+    end
+    SaveBuildingBubbleSettings(BuildingBubbleType.small)
+
+
+end
+--气泡全大
+function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
     panel.bubblePanel.localScale=Vector3.zero
     for i, bubbleIns in ipairs(BubblePrefabs) do
         bubbleIns:changeLarge()
     end
     SaveBuildingBubbleSettings(BuildingBubbleType.big)
-end
---气泡全小
-function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
-    panel.bubblePanel.localScale=Vector3.zero
-    for i, bubbleIns in ipairs(BubblePrefabs) do
-        bubbleIns:changeSmall()
-    end
-    SaveBuildingBubbleSettings(BuildingBubbleType.close)
 end
 --气泡全关
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
@@ -88,8 +90,7 @@ function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
     for i, bubbleIns in ipairs(BubblePrefabs) do
         bubbleIns:CloesBubble()
     end
-    SaveBuildingBubbleSettings(BuildingBubbleType.small)
-
+    SaveBuildingBubbleSettings(BuildingBubbleType.close)
 end
 
 --退出

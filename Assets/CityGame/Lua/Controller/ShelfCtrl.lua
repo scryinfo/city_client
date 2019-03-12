@@ -37,9 +37,11 @@ function ShelfCtrl:Active()
 end
 function ShelfCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.AddListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function ShelfCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
+    Event.RemoveListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function ShelfCtrl:Refresh()
     self.luabehaviour = shelf
@@ -243,7 +245,11 @@ function ShelfCtrl:GetTotalPrice()
     end
     return GetClientPriceString(price)
 end
-
+--货架点击Item详情弹框
+function ShelfCtrl:OpenDetailsBox(ins)
+    ins.buildingType = self.m_data.buildingType
+    ct.OpenCtrl("DETAILSBoxCtrl",ins)
+end
 
 
 

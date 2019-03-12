@@ -113,11 +113,12 @@ function MapBubbleManager._createSummaryItems(data)
     --local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
     obj.transform:SetParent(MapPanel.allSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
-    local item = MapAllSearchItem:new({num = data.num, poolName = MapAllSearchItemName}, obj.transform)
 
     local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
     local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
     local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
+    local item = MapAllSearchItem:new({num = data.num, pos = tempPos, poolName = MapAllSearchItemName}, obj.transform)
+
     this.summaryItems[collectionId] = item
     local pos = Vector2.New(tempPos.z + 10 ,-tempPos.x - 10) * this.itemWidth
     item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, 0)

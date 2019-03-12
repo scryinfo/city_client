@@ -556,7 +556,7 @@ function MapCtrl:_getIsDetailFunc()
     return false
 end
 --点击缩略图缩放到详情大小
-function MapCtrl:_mapAllResearchToDetail(summaryPos)
+function MapCtrl:_mapAllResearchToDetail(summaryPos, scenePos)
     local targetScale = TerrainConfig.MiniMap.DetailScale
     if self.AOIState == 0 then
         self.AOIState = 1
@@ -569,9 +569,10 @@ function MapCtrl:_mapAllResearchToDetail(summaryPos)
     self.my_Scale = targetScale
     self:RefreshMiniMapScale()
     --移动相机
-
+    --local pos = scenePos + Vector3.New(10, 0, 10)
+    --CameraMove.MoveCameraToPos(scenePos)
 end
---
+--左上角的item的偏移
 function MapCtrl:_posOffset(beginScale, EndScale, summaryPos)
     --因为item的锚点在左上，所以做个偏移
     local itemPos = Vector2.New(summaryPos.x - MapPanel.mapRootRect.sizeDelta.x / 2, summaryPos.y + MapPanel.mapRootRect.sizeDelta.x / 2)

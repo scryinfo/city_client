@@ -10,7 +10,8 @@ function SupplyDemandItem:initialize(dataInfo, viewRect)
     self.viewRect = viewRect
     local viewTrans = self.viewRect
 
-    self.goods = viewTrans:Find("bg/goods"):GetComponent("Image")  --物品图片
+    self.bg = viewTrans:Find("bg").gameObject  --背景
+    self.goods = viewTrans:Find("goodsbg/goods"):GetComponent("Image")  --物品图片
     self.name = viewTrans:Find("name"):GetComponent("Text")  --物品名字
     self.slider = viewTrans:Find("Slider"):GetComponent("Slider")
     self.demand = viewTrans:Find("Slider/Text"):GetComponent("Text")        --需求

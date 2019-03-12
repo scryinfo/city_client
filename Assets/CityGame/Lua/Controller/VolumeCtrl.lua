@@ -226,10 +226,17 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
 
     local supplyDemand = {}
     supplyDemand[idx] = item
+
+    volumeBehaviour:AddClick(transform:Find("bg").gameObject,VolumeCtrl.OnBg,VolumeCtrl)
 end
 
 VolumeCtrl.static.SupplyDemandClearData = function(transform)
+    volumeBehaviour:RemoveClick( transform:Find("bg/headImage/head").gameObject, VolumeCtrl._OnHeadBtn)
+end
 
+--点击背景
+function VolumeCtrl:OnBg()
+    --ct.OpenCtrl("HistoryCurveCtrl")
 end
 
 --倒计时

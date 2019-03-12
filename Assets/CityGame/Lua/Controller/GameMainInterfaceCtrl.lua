@@ -52,15 +52,15 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     --PlayerTempModel.tempTestReqAddItem(2101003,99)
     --PlayerTempModel.tempTestReqAddItem(2101004,99)
     --
-    --PlayerTempModel.tempTestReqAddItem(2103001,99)
-    --PlayerTempModel.tempTestReqAddItem(2103002,99)
-    --PlayerTempModel.tempTestReqAddItem(2103003,99)
-    --PlayerTempModel.tempTestReqAddItem(2103004,99)
-    --
-    --PlayerTempModel.tempTestReqAddItem(2251101,99)
-    --PlayerTempModel.tempTestReqAddItem(2251102,99)
-    --PlayerTempModel.tempTestReqAddItem(2251103,99)
-    --PlayerTempModel.tempTestReqAddItem(2251201,99)
+    PlayerTempModel.tempTestReqAddItem(2103001,99)
+    PlayerTempModel.tempTestReqAddItem(2103002,99)
+    PlayerTempModel.tempTestReqAddItem(2103003,99)
+    PlayerTempModel.tempTestReqAddItem(2103004,99)
+
+    PlayerTempModel.tempTestReqAddItem(2251101,99)
+    PlayerTempModel.tempTestReqAddItem(2251102,99)
+    PlayerTempModel.tempTestReqAddItem(2251103,99)
+    PlayerTempModel.tempTestReqAddItem(2251201,99)
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -306,7 +306,7 @@ function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
     table.insert(idTemp,info.sellerId)
     table.insert(idTemp,info.buyerId)
 
-    PlayerInfoManger.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
+    PlayerInfoMangerEx.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
 end
 
 --重大交易人物信息
@@ -340,23 +340,82 @@ function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
 end
 
 --所有交易量
+local infos
 function GameMainInterfaceCtrl:c_AllExchangeAmount(info)
     GameMainInterfacePanel.volumeText.text ="E"..getMoneyString(GetClientPriceString(info))
 end
 
+
+
+
 --获取所有城市广播
 function GameMainInterfaceCtrl:c_CityBroadcasts(info)
-    for i, v in ipairs(info) do
-        if v.type == 1 then
-            GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
-        else
-            if radio == nil then
-                radio = {}
-                table.insert(radio,v)
+
+    if info == nil then
+        return
+    end
+    --infos=info
+    --local tempIds={}
+    --for i, Info in ipairs(info) do
+    --    if Info.type==1 then
+    --        table.insert(tempIds,Info.sellerId)
+    --        table.insert(tempIds,Info.buyerId)
+    --    end
+    --end
+    --
+    --self.nums=0
+    --local arr={}
+    --if #tempIds >0 then
+    --   local number=#tempIds
+    --
+    --    for i = 1, number do
+    --        table.insert(arr,tempIds[i])
+    --
+    --        if i%10==0 then
+    --            self.nums=  self.nums+1
+    --            PlayerInfoManger.GetInfos(arr, self.c_test ,self)
+    --            arr={}
+    --        end
+    --
+    --    end
+    --
+    --    if ((#tempIds )- (self.nums*10 ))>0 then
+    --        self.nums=self.nums+1
+    --    end
+    --    PlayerInfoManger.GetInfos(arr, self.c_test ,self)
+    --
+    --end
+
+
+
+        for i, v in ipairs(info) do
+            if v.type == 1 then
+                GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
+            else
+                if radio == nil then
+                    radio = {}
+                    table.insert(radio,v)
+                end
             end
         end
-    end
+
 end
+
+--function GameMainInterfaceCtrl:c_test(info)
+--    local a = info
+--    for i, v in ipairs(infos) do
+--        if v.type == 1 then
+--            GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
+--        else
+--            if radio == nil then
+--                radio = {}
+--                table.insert(radio,v)
+--            end
+--        end
+--    end
+--end
+
+
 
 function GameMainInterfaceCtrl:Awake()
     CityEngineLua.login_tradeapp(true)
@@ -415,8 +474,8 @@ function GameMainInterfaceCtrl:Awake()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
-    --LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
-    --GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
+    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour)], GameMainInterfacePanel.weather,true)
+    GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour)].."℃"
 
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)

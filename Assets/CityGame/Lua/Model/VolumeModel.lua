@@ -60,10 +60,10 @@ function VolumeModel:m_ExchangeAmount()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
---所有交易量
+--曲线图数据
 function VolumeModel:m_GoodsNpcNumCurve()
     local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNumCurve")
-    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
 -------------------服务器回调---------------------

@@ -113,6 +113,7 @@ function BubbleMessageCtrl:c_OnClick_confirm(ins)
         des=" "
     end
     Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
+    Event.Brocast("c_BuildingTopChangeData", {des = des, emoticon = ins.bubbleId})
     UIPanel.ClosePage()
 end
 

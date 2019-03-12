@@ -44,6 +44,13 @@ end
 function PersonalHomeDialogPageCtrl:Close()
     UIPanel.Close(self)
 end
+
+function PersonalHomeDialogPageCtrl:Hide()
+    UIPanel.Hide(self)
+    if self.playerAvatar then
+        AvatarManger.CollectAvatar(self.playerAvatar)
+    end
+end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("root/topBg/closeBtn")
@@ -106,8 +113,7 @@ function PersonalHomeDialogPageCtrl:_initData()
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 45, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
-    AvatarManger.GetSmallAvatar(self.m_data.faceId,self.roleProtaitImg.transform,0.2)
-
+    self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.1)
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)

@@ -63,6 +63,9 @@ function MapBubbleBase:close()
     if self.viewRect ~= nil and self.data ~= nil and self.data.poolName ~= nil then
         MapBubbleManager.recyclingObjToPool(self.data.poolName, self.viewRect.gameObject)
     end
+    if self.avatar ~= nil then
+        AvatarManger.CollectAvatar(self.avatar)
+    end
     self.data = nil
     self = nil
 end

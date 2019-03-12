@@ -63,6 +63,12 @@ function RetailWarehouseCtrl:Refresh()
     if next(self.warehouseDatas) == nil then
         self:CreateGoodsItems(self.store.inHand,RetailWarehousePanel.warehouseItem,RetailWarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
     end
+    --如果是从货架进来的
+    if self.m_data.isShelf == true then
+        switchIsShow = false
+        RetailWarehousePanel.shelfCloseBtn.transform.localScale = Vector3.zero
+        self:OpenRightPanel(not switchRightPanel,switchIsShow)
+    end
 end
 function RetailWarehouseCtrl:Hide()
     UIPanel.Hide(self)
@@ -91,6 +97,7 @@ end
 function RetailWarehouseCtrl:ClickRightShelfBtn(ins)
     PlayMusEff(1002)
     switchIsShow = false
+    RetailWarehousePanel.shelfCloseBtn.transform.localScale = Vector3.one
     ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
 --点击打开运输Panel
@@ -213,6 +220,9 @@ function RetailWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
         Event.Brocast("SmallPop",GetLanguage(26040010),300)
     else
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
+    end
+    if self.m_data.isShelf == true then
+        self:SetShelfData(dataInfo)
     end
 end
 --销毁仓库原料或商品刷新
@@ -371,7 +381,29 @@ function RetailWarehouseCtrl:RefreshCapacity(dataInfo,whether)
         RetailWarehousePanel.numberText.text = getColorString(numTab)
     end
 end
-
+--如果是从货架上架要改变self.m_data数据返回
+function RetailWarehouseCtrl:SetShelfData(dataInfo)
+    local good = {}
+    local goodData = {}
+    local key = {}
+    if not self.m_data.shelf.good then
+        key.id = dataInfo.item.key.id
+        key.producerId = dataInfo.item.key.producerId
+        key.qty = dataInfo.item.key.qty
+        goodData.k = key
+        goodData.n = dataInfo.item.n
+        goodData.price = dataInfo.price
+        good[#good + 1] = goodData
+        self.m_data.shelf.good = good
+    else
+        for key,value in pairs(self.m_data.shelf.good) do
+            if dataInfo.item.key.id == value.k.id then
+                value.n = value.n + dataInfo.item.n
+                value.price = dataInfo.price
+            end
+        end
+    end
+end
 
 
 --[[

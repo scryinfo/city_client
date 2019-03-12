@@ -110,10 +110,9 @@ end
 function ProcessingModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessWarehouseCtrl",'RefreshWarehouseData',data,false)
 end
---修改货架数量或价格
+--修改货架价格
 function ProcessingModel:n_OnModifyShelfInfo(data)
-    local aaa = data
-    -----------------------------------------
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessShelfCtrl",'RefreshShelfData',data)
 end
 --下架
 function ProcessingModel:n_OnShelfDelInfo(data)

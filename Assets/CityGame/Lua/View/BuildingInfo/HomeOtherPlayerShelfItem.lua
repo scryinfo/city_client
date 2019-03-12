@@ -27,7 +27,9 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         end
         if self.productionData.buildingType == BuildingType.RetailShop then
             ct.OpenCtrl("RetailShelfCtrl",self.productionData)
-        else
+        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+            ct.OpenCtrl("ProcessShelfCtrl",self.productionData)
+        elseif self.productionData.buildingType == BuildingType.MaterialFactory then
             ct.OpenCtrl("ShelfCtrl",self.productionData)
         end
     end);

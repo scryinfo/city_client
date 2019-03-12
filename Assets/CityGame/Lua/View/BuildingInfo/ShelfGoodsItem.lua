@@ -103,11 +103,10 @@ function ShelfGoodsItem:OnClicl_XBtn(go)
     elseif math.floor(go.itemId / 100000) == 22 then
         Event.Brocast("m_ReqProcessShelfDel",go.buildingId,go.itemId,go.numberText.text,go.goodsDataInfo.k.producerId,go.goodsDataInfo.k.qty)
     end
-    --Event.Brocast("SmallPop",GetLanguage(27010003),300)
 end
 function ShelfGoodsItem:OnClick_detailsBtn(ins)
     PlayMusEff(1002)
-    ct.OpenCtrl("DETAILSBoxCtrl",ins);
+    Event.Brocast("OpenDetailsBox",ins)
 end
 --删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)

@@ -92,7 +92,7 @@ end
 ---==========================================================================================回调===================================================================================================
 
 --查询玩家信息返回
-function DataManager.n_OnReceivePlayerInfo(stream)
+function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     if not _func and  #playerIDs<=0  then    return   end
 
     if num==1 then---第一种

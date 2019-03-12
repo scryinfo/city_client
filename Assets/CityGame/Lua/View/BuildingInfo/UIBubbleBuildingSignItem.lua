@@ -74,7 +74,7 @@ function UIBubbleBuildingSignItem:updateData(data)
        self. desText.text=data.des
     end
     --赋值 姓名和 头像
-    PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
+    PlayerInfoManger.GetInfosOneByOne({data.ownerId},self.LoadHeadImaAndName,self)
 
 
     if not data.bubble then
@@ -150,8 +150,10 @@ function UIBubbleBuildingSignItem:changeLarge()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
-    self.nameText.text=info[1].name
-   self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
+
+    self.nameText.text=info.name
+   self.avatarData= AvatarManger.GetSmallAvatar(info.faceId,self.headIma,0.2)
+
 end
 
 function UIBubbleBuildingSignItem:Update()

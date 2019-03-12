@@ -18,6 +18,7 @@ function FriendsCtrl:bundleName()
 end
 
 function FriendsCtrl:Awake(go)
+    FriendsCtrl.static.friendsItemTab = {}
     ct.log("tina_w7_friends", "FriendsCtrl:Awake")
     self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --好友
     self.friendsSource.mProvideData = FriendsCtrl.static.FriendsProvideData
@@ -50,7 +51,11 @@ end
 
 FriendsCtrl.static.FriendsProvideData = function(transform, idx)
     idx = idx + 1
-    local item = FriendsItem:new(idx, 1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.friendInfo[idx])
+    local transformId = transform:GetInstanceID()
+    if FriendsCtrl.static.friendsItemTab[transformId] then
+        FriendsCtrl.static.friendsItemTab[transformId]:CloseAvatar()
+    end
+    FriendsCtrl.static.friendsItemTab[transformId] = FriendsItem:new(idx, 1, FriendsCtrl.luaBehaviour, transform, FriendsCtrl.friendInfo[idx])
 end
 
 FriendsCtrl.static.FriendsClearData = function(transform)

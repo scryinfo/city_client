@@ -31,6 +31,11 @@ UnitTest.Exec("abel_w4", "test_pb11111",  function ()
     ct.log("abel_w4","[test_pb11111]  balabalabalabala...............")
 end)
 
+UnitTest.Exec("abel_TimefunPrecision", "test_timefunPrecision",  function ()
+    ct.log("abel_TimefunPrecision","[test_timefunPrecision]  os.time(): ",os.time())
+    ct.log("abel_TimefunPrecision","[test_timefunPrecision]  tolua.gettime(): ",tolua.gettime())
+end)
+
 UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
     ct.testUpdate = false
     --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")

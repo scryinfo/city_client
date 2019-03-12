@@ -25,8 +25,8 @@ function HouseCtrl:Awake(go)
     this = self
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
-    self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
+    --self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
+    --self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
     self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
     self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
@@ -34,6 +34,13 @@ end
 function HouseCtrl:Refresh()
     --self:_initData()
     this:_initData()
+end
+
+function HouseCtrl:Hide()
+    if self.houseToggleGroup then
+        self.houseToggleGroup:cleanItems()
+    end
+    UIPanel.Hide(self)
 end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
@@ -47,6 +54,14 @@ end
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     Event.Brocast("c_GetBuildingInfo", houseDetailData.info)
+
+    if HousePanel.topItem ~= nil then
+        HousePanel.topItem:refreshData(houseDetailData.info, function ()
+            PlayMusEff(1002)
+            UIPanel.ClosePage()
+        end)
+    end
+
     if houseDetailData.info.state == "OPERATE" then
         HousePanel.stopRootTran.localScale = Vector3.zero
     else
@@ -54,8 +69,8 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         HousePanel.stopText01.text = GetLanguage(40010016)
     end
 
-    HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
-    HousePanel.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].typeName)
+    --HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
+    --HousePanel.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].typeName)
     local insId = self.m_data.insId
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp
@@ -63,11 +78,11 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     HousePanel.stopIconBtn.localScale = Vector3.one
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
-        HousePanel.changeNameBtn.localScale = Vector3.zero
+        --HousePanel.changeNameBtn.localScale = Vector3.zero
         HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        HousePanel.changeNameBtn.localScale = Vector3.one
+        --HousePanel.changeNameBtn.localScale = Vector3.one
     end
     self.m_data.buildingType = BuildingType.House
     if not self.houseToggleGroup then
@@ -76,30 +91,32 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         self.houseToggleGroup:updateInfo(self.m_data)
     end
 end
+
 ---更改名字
-function HouseCtrl:_changeName(ins)
-    PlayMusEff(1002)
-    local data = {}
-    data.titleInfo = GetLanguage(25040001)
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
-end
+--function HouseCtrl:_changeName(ins)
+--    PlayMusEff(1002)
+--    local data = {}
+--    data.titleInfo = GetLanguage(25040001)
+--    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
+--    data.btnCallBack = function(name)
+--        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
+--        ins:_updateName(name)
+--    end
+--    ct.OpenCtrl("InputDialogPageCtrl", data)
+--end
 ---返回
-function HouseCtrl:_backBtn(ins)
-    PlayMusEff(1002)
-    if ins.houseToggleGroup then
-        ins.houseToggleGroup:cleanItems()
-    end
-    UIPanel.ClosePage()
-end
+--function HouseCtrl:_backBtn(ins)
+--    PlayMusEff(1002)
+--    if ins.houseToggleGroup then
+--        ins.houseToggleGroup:cleanItems()
+--    end
+--    UIPanel.ClosePage()
+--end
+
 ---更改名字成功
-function HouseCtrl:_updateName(name)
-    HousePanel.nameText.text = name
-end
+--function HouseCtrl:_updateName(name)
+--    HousePanel.nameText.text = name
+--end
 
 --点击中间按钮的方法
 function HouseCtrl:_centerBtnFunc(ins)

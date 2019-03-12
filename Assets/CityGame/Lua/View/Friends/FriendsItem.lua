@@ -47,10 +47,10 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.refuseBtn  = transform:Find("RefuseBtn").gameObject
 
     --LoadSprite(PlayerHead[self.data.faceId].FriendsPath, self.headImage, true)
-    for i = 1, self.headImage.childCount do
-        UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
-    end
-    AvatarManger.GetSmallAvatar(self.data.faceId, self.headImage,0.2)
+    --for i = 1, self.headImage.childCount do
+    --    UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+    --end
+    self.avatarData = AvatarManger.GetSmallAvatar(self.data.faceId, self.headImage,0.2)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     if self.data.des == nil or self.data.des == "" then
@@ -150,6 +150,12 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
         luaBehaviour:AddClick(self.agreeBtn, self.OnAgree, self)
         self.refuseBtn:GetComponent("Button").onClick:RemoveAllListeners()
         luaBehaviour:AddClick(self.refuseBtn, self.OnRefuse, self)
+    end
+end
+
+function FriendsItem:CloseAvatar()
+    if self.avatarData then
+        AvatarManger.CollectAvatar(self.avatarData)
     end
 end
 

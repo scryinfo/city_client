@@ -21,16 +21,10 @@ function GAucHistoryItem:initialize(data, viewRect)
         self:_clickProtaitFunc()
     end)
 
-    if data.biderId ~= nil then
-        Event.AddListener("c_GAucHistoryGetInfo", self._getInfo, self)
-        GAucModel.m_ReqPlayersInfo({[1] = data.biderId})
-    end
-
     self:_initData(data)
 end
 function GAucHistoryItem:_initData(data)
     self.data = data
-    --self.nameText.text = ""
     if data.isFirst == true then
         self.firstbg.localScale = Vector3.one
         self.firstTran.localScale = Vector3.one
@@ -42,6 +36,9 @@ function GAucHistoryItem:_initData(data)
         self.otherTran.localScale = Vector3.one
         self.otherPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
     end
+    if data.biderId ~= nil then
+        PlayerInfoManger.GetInfosOneByOne({[1] = data.biderId}, self._getInfo, self)
+    end
 end
 --点击头像
 function GAucHistoryItem:_clickProtaitFunc()
@@ -52,24 +49,17 @@ function GAucHistoryItem:_clickProtaitFunc()
 end
 --拿到信息
 function GAucHistoryItem:_getInfo(playerData)
-    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == self.data.biderId then
-        local info = {}
-        info.id = playerData.info[1].id
-        info.name = playerData.info[1].name
-        info.companyName = playerData.info[1].companyName
-        info.des = playerData.info[1].des
-        info.faceId = playerData.info[1].faceId
-        info.male = playerData.info[1].male
-        info.createTs = playerData.info[1].createTs
-        self.playerInfo = info
-
-        self.nameText.text = info.name
-        LoadSprite(PlayerHead[info.faceId].GroundTransSmallPath, self.protaitImg, true)
+    if playerData ~= nil and playerData.id == self.data.biderId then
+        self.playerInfo = playerData
+        self.nameText.text = playerData.name
+        self.avatar = AvatarManger.GetSmallAvatar(playerData.faceId, self.protaitImg.transform,0.2)
     end
 end
 
 function GAucHistoryItem:close()
-    Event.RemoveListener("c_GAucHistoryGetInfo", self._getInfo, self)
+    if self.avatar ~= nil then
+        AvatarManger.CollectAvatar(self.avatar)
+    end
     Event.Brocast("c_ReturnGAucHistoryObj", self.viewRect.gameObject)  --回收item
     self.data = nil
     self.playerInfo = nil

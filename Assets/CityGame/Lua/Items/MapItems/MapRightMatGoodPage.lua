@@ -47,6 +47,7 @@ end
 function MapRightMatGoodPage:refreshData(data)
     self.viewRect.anchoredPosition = Vector2.zero
     self.data = data
+
     if data.playerInfo ~= nil then
         self.nameText.text = data.playerInfo.name
         self.companyText.text = data.playerInfo.companyName
@@ -57,7 +58,7 @@ function MapRightMatGoodPage:refreshData(data)
             self.manIconTran.localScale = Vector3.zero
             self.femaleIconTran.localScale = Vector3.one
         end
-        --self.protaitImg = data.playerInfo.faceId
+        self.avatar = AvatarManger.GetSmallAvatar(data.playerInfo.faceId, self.protaitImg.transform,0.2)
     end
     self.buildingNameText.text = data.buildingBase.name
     if #data.detailData.sale > 1 then
@@ -70,13 +71,14 @@ function MapRightMatGoodPage:refreshData(data)
         self.leftRightBtnRoot.localScale = Vector3.zero
         self.mapRightMatGoodItem:refreshData(data.detailData.sale[1])
     end
-
-    --self.baseBuildingModel =
 end
 --重置状态
 function MapRightMatGoodPage:resetState()
     self:_language()
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
+    if self.avatar ~= nil then
+        AvatarManger.CollectAvatar(self.avatar)
+    end
 end
 --多语言
 function MapRightMatGoodPage:_language()
@@ -87,6 +89,9 @@ end
 --关闭
 function MapRightMatGoodPage:_closeBtn()
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
+    if self.avatar ~= nil then
+        AvatarManger.CollectAvatar(self.avatar)
+    end
 end
 --去地图上的一个建筑
 function MapRightMatGoodPage:_goHereBtn()
@@ -116,5 +121,20 @@ function MapRightMatGoodPage:_rightChangeBtn()
         if self.currentIndex == self.totalCount then
             self.rightBtn.localScale = Vector3.zero
         end
+    end
+end
+--
+function MapRightMatGoodPage:_initPersonalInfo(data)
+    if data ~= nil then
+        self.nameText.text = data.name
+        self.companyText.text = data.companyName
+        if data.male == true then
+            self.manIconTran.localScale = Vector3.one
+            self.femaleIconTran.localScale = Vector3.zero
+        else
+            self.manIconTran.localScale = Vector3.zero
+            self.femaleIconTran.localScale = Vector3.one
+        end
+        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.2)
     end
 end

@@ -299,6 +299,16 @@ function GameMainInterfaceCtrl:c_OnMajorTransaction(info)
     PlayerInfoManger.GetInfos(idTemp, self.c_OnMajorTransactionInfo, self)
 end
 
+function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
+    cost = info.cost
+    time = info.ts
+    local idTemp = {}
+    table.insert(idTemp,info.sellerId)
+    table.insert(idTemp,info.buyerId)
+
+    PlayerInfoManger.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
+end
+
 --重大交易人物信息
 function GameMainInterfaceCtrl:c_OnMajorTransactionInfo(info)
     local data = {}
@@ -312,6 +322,23 @@ function GameMainInterfaceCtrl:c_OnMajorTransactionInfo(info)
     GameMainInterfaceCtrl:c_OnRadioInfo(data)
 end
 
+function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
+    local data = {}
+    data.sellName = info[1].name
+    data.sellFaceId = info[1].faceId
+    data.buyName = info[2].name
+    data.buyFaceId = info[2].faceId
+    data.cost = cost
+    data.ts = time
+    data.type = 1
+    if radio == nil then
+       radio = {}
+        table.insert(radio,data)
+    end
+   table.insert(radio,data)
+    local a= radio
+end
+
 --所有交易量
 function GameMainInterfaceCtrl:c_AllExchangeAmount(info)
     GameMainInterfacePanel.volumeText.text ="E"..getMoneyString(GetClientPriceString(info))
@@ -319,7 +346,16 @@ end
 
 --获取所有城市广播
 function GameMainInterfaceCtrl:c_CityBroadcasts(info)
-    radio = info
+    for i, v in ipairs(info) do
+        if v.type == 1 then
+            GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
+        else
+            if radio == nil then
+                radio = {}
+                table.insert(radio,v)
+            end
+        end
+    end
 end
 
 function GameMainInterfaceCtrl:Awake()
@@ -495,6 +531,9 @@ function GameMainInterfaceCtrl:RefreshWeather()
     -- todo  城市广播
     radioTime = radioTime -1
     if radioTime <= 0 then
+        if newRadio == nil and radio == nil then
+            return
+        end
         radioTime = 10
         if newRadio ~= nil then
             GameMainInterfaceCtrl:BroadcastRadio(newRadio,1)
@@ -506,7 +545,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
             if radio == nil then
                 return
             end
-            GameMainInterfaceCtrl:BroadcastRadio(radio,radioIndex)
+                GameMainInterfaceCtrl:BroadcastRadio(radio,radioIndex)
             radioIndex = radioIndex + 1
             if radioIndex > #radio then
                 radioIndex = radioIndex - #radio
@@ -888,13 +927,13 @@ function GameMainInterfaceCtrl:BroadcastRadio(table,index)
             GameMainInterfacePanel.majorTransaction.localScale =Vector3.one
             GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
             GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
+            GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
+            GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
 
-        GameMainInterfacePanel.mTNum.text = GetClientPriceString(table[index].cost)
-        GameMainInterfacePanel.mTTime.text = time
-        GameMainInterfacePanel.mTSell.text = table[index].sellName
-        GameMainInterfacePanel.mTBuy.text = table[index].buyName
+            GameMainInterfacePanel.mTNum.text = GetClientPriceString(table[index].cost)
+            GameMainInterfacePanel.mTTime.text = time
+            GameMainInterfacePanel.mTSell.text = table[index].sellName
+            GameMainInterfacePanel.mTBuy.text = table[index].buyName
 
         if GameMainInterfacePanel.sellHead.transform.childCount == 0 then
            AvatarManger.GetSmallAvatar(table[index].sellFaceId,GameMainInterfacePanel.sellHead.transform,0.15)

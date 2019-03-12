@@ -127,7 +127,7 @@ function ProcessingCtrl:Hide()
     end
 end
 --更改基础建筑信息
-function RetailStoresCtrl:_changeItemData(data)
+function ProcessingCtrl:_changeItemData(data)
     if data ~= nil and ProcessingPanel.topItem ~= nil then
         ProcessingPanel.topItem:changeItemData(data)
     end

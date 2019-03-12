@@ -59,12 +59,7 @@ function GroundTransOthersCheckInfoCtrl:_initPanelData()
         if self.m_data.groundInfo.rent and self.m_data.groundInfo.rent.renterId then
             ids[2] = self.m_data.groundInfo.rent.renterId
         end
-        --GroundTransModel.m_ReqPlayersInfo(ids)
-        if #ids == 1 then
-            PlayerInfoManger.GetInfosOneByOne(ids, self._showPersonalInfo, self)
-        else
-            PlayerInfoManger.GetInfos(ids, self._showPersonalInfo, self)
-        end
+        PlayerInfoManger.GetInfos(ids, self._showPersonalInfo, self)
 
         self:_setShowState(self.m_data.groundInfo)
     end

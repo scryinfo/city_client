@@ -77,7 +77,7 @@ function BuildingTopItem:changeBuildingName()
     data.titleInfo = GetLanguage(25040001)
     data.btnCallBack = function(name)
         if self.data.id ~= nil then
-            DataManager.DetailModelRpcNoRet(self.data.id, 'm_ReqChangeHouseName', self.data.id, name)
+            DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = self.data.id, name = name})
             self.nameText.text = name
         end
     end

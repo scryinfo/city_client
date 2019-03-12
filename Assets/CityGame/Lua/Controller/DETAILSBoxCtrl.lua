@@ -21,7 +21,6 @@ function DETAILSBoxCtrl:Awake(go)
     details:AddClick(DETAILSBoxPanel.confirmBtn.gameObject,self.OnClick_confirmBtn,self);
     Event.AddListener("refreshUiInfo",self.RefreshUiInfo,self)
 
-    --
     details:AddClick(DETAILSBoxPanel.infoBtn.gameObject, function ()
         --DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.one
         ct.OpenCtrl("FixedTotalScoreCtrl", {pos = DETAILSBoxPanel.infoBtn.transform.position, type = "Goods"})
@@ -134,28 +133,25 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
 
     if number ~= ins.m_data.num and price ~= ins.m_data.price then
         local num = ins.m_data.num - number
-        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
-        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+        Event.Brocast("m_ReqMaterialShelfDel",ins.m_data.buildingId,ins.itemId,num)
+        Event.Brocast("m_ReqMaterialModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
+        return
     end
     if number == ins.m_data.num and price == ins.m_data.price then
         UIPanel.ClosePage()
-        return;
+        return
     end
     if number ~= ins.m_data.num and price == ins.m_data.price then
         local num = ins.m_data.num - number
-        Event.Brocast("m_ReqShelfDel",ins.m_data.buildingId,ins.itemId,num)
+        Event.Brocast("m_ReqMaterialShelfDel",ins.m_data.buildingId,ins.itemId,num)
         UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
+        return
     end
     if number == ins.m_data.num and price ~= ins.m_data.price then
-        Event.Brocast("m_ReqModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+        Event.Brocast("m_ReqMaterialModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
         UIPanel.ClosePage()
-        Event.Brocast("SmallPop",GetLanguage(27010005),300)
-        return;
+        return
     end
 end
 --刷新滑动条

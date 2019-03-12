@@ -143,28 +143,52 @@ function ShelfCtrl:OnClick_addBtn(go)
 end
 ----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
 --刷新货架数据
-function ShelfCtrl:RefreshShelfData(dataInfo,whether)
-    for key,value in pairs(self.shelfDatas) do
-        if value.itemId == dataInfo.item.key.id then
-            if value.num == dataInfo.item.n then
-                self:deleteGoodsItem(self.shelfDatas,key)
-            else
-                value.numberText.text = value.num - dataInfo.item.n
-                value.goodsDataInfo.n = tonumber(value.numberText.text)
-                value.num = tonumber(value.numberText.text)
-                local stateBool = true
-                self:GoodsItemState(self.shelfDatas,stateBool)
+function ShelfCtrl:RefreshShelfData(dataInfo)
+    --如果货架调整框
+    if not dataInfo.wareHouseId then
+        --如果是调整价格
+        if dataInfo.price then
+            for key,value in pairs(self.shelfDatas) do
+                if value.itemId == dataInfo.item.key.id then
+                    value.moneyText.text = GetClientPriceString(dataInfo.price)
+                end
+            end
+            Event.Brocast("SmallPop",GetLanguage(27010005),300)
+            return
+        end
+        --如果是调整数量
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == dataInfo.item.key.id then
+                if value.num == dataInfo.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.numberText.text = value.num - dataInfo.item.n
+                    value.goodsDataInfo.n = tonumber(value.numberText.text)
+                    value.num = tonumber(value.numberText.text)
+                end
             end
         end
-        self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
-    end
-    ShelfPanel.nameText.text = ""
-    self.ShelfImgSetActive(self.shelfDatas,5,1)
-    self:RefreshBuyButton()
-    if whether == true then
-        Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
-    else
         Event.Brocast("SmallPop",GetLanguage(27010003),300)
+    else
+        --如果是购买
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == dataInfo.item.key.id then
+                if value.num == dataInfo.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.numberText.text = value.num - dataInfo.item.n
+                    value.goodsDataInfo.n = tonumber(value.numberText.text)
+                    value.num = tonumber(value.numberText.text)
+                    local stateBool = true
+                    self:GoodsItemState(self.shelfDatas,stateBool)
+                end
+            end
+            self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
+        end
+        ShelfPanel.nameText.text = ""
+        self.ShelfImgSetActive(self.shelfDatas,5,1)
+        self:RefreshBuyButton()
+        Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
     end
 end
 ----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------

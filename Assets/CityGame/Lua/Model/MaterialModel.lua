@@ -111,12 +111,11 @@ function MaterialModel:n_OnShelfAddInfo(data)
 end
 --修改货架数量或价格
 function MaterialModel:n_OnModifyShelfInfo(data)
-    local aaa = data
-    -----------------------------------------
+    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --下架
 function MaterialModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data,false)
+    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --添加生产线
 function MaterialModel:n_OnAddLineInfo(data)
@@ -132,7 +131,7 @@ function MaterialModel:n_OnLineChangeInform(data)
 end
 --货架购买
 function MaterialModel:n_OnBuyShelfGoodsInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data,true)
+    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品
 function MaterialModel:n_OnDelItemInfo(data)

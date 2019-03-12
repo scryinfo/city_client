@@ -18,9 +18,9 @@ function RetailStoresCtrl:Awake(go)
     this = self
     self.gameObject = go;
     self.retailShopBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    --self.retailShopBehaviour:AddClick(RetailStoresPanel.backBtn.gameObject,self.OnClick_backBtn,self);
     --self.retailShopBehaviour:AddClick(RetailStoresPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
-    self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    --self.retailShopBehaviour:AddClick(RetailStoresPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     self.retailShopBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
@@ -47,17 +47,17 @@ end
 
 --刷新零售店信息
 function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
-    RetailStoresPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
+    --RetailStoresPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
+    --RetailStoresPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
     local insId = self.m_data.insId
     self.m_data = DataInfo
     self.m_data.insId = insId
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
-        RetailStoresPanel.changeNameBtn.localScale = Vector3.zero
+        --RetailStoresPanel.changeNameBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        RetailStoresPanel.changeNameBtn.localScale = Vector3.one
+        --RetailStoresPanel.changeNameBtn.localScale = Vector3.one
     end
 
     if self.m_data.info.state=="OPERATE" then
@@ -68,6 +68,12 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
 
     Event.Brocast("c_GetBuildingInfo",DataInfo.info)
 
+    if RetailStoresPanel.topItem ~= nil then
+        RetailStoresPanel.topItem:refreshData(DataInfo.info,function()
+            PlayMusEff(1002)
+            UIPanel.ClosePage()
+        end)
+    end
     self.m_data.buildingType = BuildingType.RetailShop
     if not self.retailShopToggleGroup then
         self.retailShopToggleGroup = BuildingInfoToggleGroupMgr:new(RetailStoresPanel.leftRootTran, RetailStoresPanel.rightRootTran, self.retailShopBehaviour, self.m_data)

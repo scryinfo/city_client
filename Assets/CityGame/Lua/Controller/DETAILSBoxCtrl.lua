@@ -80,8 +80,14 @@ end
 function DETAILSBoxCtrl:Refresh()
     if self.m_data.isOther == true then
         DETAILSBoxPanel.confirmBtn.transform.localScale = Vector3.zero
+        DETAILSBoxPanel.numberSlider.interactable = false
+        DETAILSBoxPanel.priceInput.interactable = false
+        DETAILSBoxPanel.numberInput.interactable = false
     else
         DETAILSBoxPanel.confirmBtn.transform.localScale = Vector3.one
+        DETAILSBoxPanel.numberSlider.interactable = true
+        DETAILSBoxPanel.priceInput.interactable = true
+        DETAILSBoxPanel.numberInput.interactable = true
     end
     self.itemId = self.m_data.itemId
     local materialKey,goodsKey = 21,22

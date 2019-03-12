@@ -88,6 +88,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_reqAllBuildings()
 end
@@ -100,6 +101,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_cleanDatas()
 end
@@ -552,5 +554,39 @@ function MapCtrl:_getIsDetailFunc()
         return true
     end
     return false
+end
+--点击缩略图缩放到详情大小
+function MapCtrl:_mapAllResearchToDetail(summaryPos)
+    local targetScale = TerrainConfig.MiniMap.DetailScale
+    if self.AOIState == 0 then
+        self.AOIState = 1
+        MapBubbleManager.toggleShowDetailBuilding(true)
+        MapBubbleManager.showSummaryOrDetail(true)
+        self:_judgeDetail()
+    end
+
+    self:_posOffset(self.my_Scale, targetScale, summaryPos)
+    self.my_Scale = targetScale
+    self:RefreshMiniMapScale()
+    --移动相机
+
+end
+--
+function MapCtrl:_posOffset(beginScale, EndScale, summaryPos)
+    --因为item的锚点在左上，所以做个偏移
+    local itemPos = Vector2.New(summaryPos.x - MapPanel.mapRootRect.sizeDelta.x / 2, summaryPos.y + MapPanel.mapRootRect.sizeDelta.x / 2)
+    local TargetAnchoredPosition = (MapPanel.mapRootRect.anchoredPosition - itemPos) * (EndScale/ beginScale)
+    local NowRangeSize = (EndScale - 1) * MapPanel.mapRootRect.sizeDelta.x / 2
+    if TargetAnchoredPosition.x > NowRangeSize then
+        TargetAnchoredPosition.x = NowRangeSize
+    elseif  TargetAnchoredPosition.x < -NowRangeSize then
+        TargetAnchoredPosition.x = -NowRangeSize
+    end
+    if TargetAnchoredPosition.y > NowRangeSize then
+        TargetAnchoredPosition.y = NowRangeSize
+    elseif  TargetAnchoredPosition.y < -NowRangeSize then
+        TargetAnchoredPosition.y = -NowRangeSize
+    end
+    MapPanel.mapRootRect:DOAnchorPos(TargetAnchoredPosition , self.ScaleDuringTime):SetEase(DG.Tweening.Ease.OutCubic)
 end
 ---

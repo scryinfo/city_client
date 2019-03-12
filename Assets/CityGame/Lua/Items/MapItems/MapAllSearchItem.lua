@@ -26,7 +26,9 @@ function MapAllSearchItem:_clickFunc()
     if self.data == nil then
         return
     end
-
+    if self.viewRect ~= nil then
+        Event.Brocast("c_MapAllSearchToDetail", self.viewRect.anchoredPosition)
+    end
 end
 
 --设置缩放比以及位置

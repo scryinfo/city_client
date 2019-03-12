@@ -180,14 +180,17 @@ function PathFindItem:FindNectTarget()
     end
     --此时得到内外部可以去的点
     local targetParameter
-     if #PointsAccessible >=1 then
+    if #PointsAccessible >=1 then
         targetParameter = PointsAccessible[Math_Random(1,#PointsAccessible)]
     else
-         ct.log("system","移动出错了！！！！！")
-         return
+        ct.log("system","移动出错了！！！！！")
+        return
     end
     --此时得到目标点
     local targetPosition = self.CalculateTargetPosition(self,targetParameter.id,targetParameter.num)
+    if targetPosition == nil then
+        return
+    end
     local offsetX =  targetPosition.x - self.targetPos.x
     local offsetZ =  targetPosition.z - self.targetPos.z
     --计算人物朝向
@@ -264,11 +267,12 @@ end
 
 --删除角色
 function PathFindItem:Destory()
-    if self.playerNam ~= nil and self.go ~= nil then
-        MapObjectsManager.RecyclingGameObjectToPool(self.poolName,self.go)
-    end
     if self.handle then
         UpdateBeat:RemoveListener(self.handle)
     end
+    if self.playerNam ~= nil and self.go ~= nil then
+        MapObjectsManager.RecyclingGameObjectToPool(self.poolName,self.go)
+    end
+
     self = nil
 end

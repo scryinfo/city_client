@@ -527,9 +527,12 @@ end
 local AssetObjs  = {}
 
 --第三个参数为是否设置img为原图大小
-function LoadSprite(path, Icon, bSetNativeSize)
+function LoadSprite(path, iIcon, bSetNativeSize)
 	local type = ct.getType(UnityEngine.Sprite)
-	panelMgr:LoadPrefab_A(path, type, nil, function(staticData, obj ,ab)
+	panelMgr:LoadPrefab_A(path, type, iIcon, function(Icon, obj ,ab)
+		if Icon == nil then
+			return
+		end
 		if obj ~= nil and Icon.sprite then
 			local texture = ct.InstantiatePrefab(obj)
 			if Icon then

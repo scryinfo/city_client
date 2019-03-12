@@ -26,6 +26,7 @@ function GuildApplyCtrl:OnCreate(go)
 end
 
 function GuildApplyCtrl:Awake()
+    GuildApplyCtrl.static.guildApplyTab = {}
     self.guildApplySource = UnityEngine.UI.LoopScrollDataSource.New()
     self.guildApplySource.mProvideData = GuildApplyCtrl.static.GuildApplyProvideData
     self.guildApplySource.mClearData = GuildApplyCtrl.static.GuildApplyClearData
@@ -74,7 +75,11 @@ end
 -- 滑动复用
 GuildApplyCtrl.static.GuildApplyProvideData = function(transform, idx)
     idx = idx + 1
-    GuildApplyItem:new(transform, GuildApplyCtrl.societyApplyInfo[idx])
+    local transformId = transform:GetInstanceID()
+    if GuildApplyCtrl.static.guildApplyTab[transformId] then
+        GuildApplyCtrl.static.guildApplyTab[transformId]:CloseAvatar()
+    end
+    GuildApplyCtrl.static.guildApplyTab[transformId] = GuildApplyItem:new(transform, GuildApplyCtrl.societyApplyInfo[idx])
 end
 
 GuildApplyCtrl.static.GuildApplyClearData = function(transform)
@@ -100,5 +105,6 @@ end
 
 -- 新增入会请求
 function GuildApplyCtrl:c_NewJoinReq(joinReq)
-    GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
+    --GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
+    self:_showView()
 end

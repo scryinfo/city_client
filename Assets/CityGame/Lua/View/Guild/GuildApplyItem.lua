@@ -49,9 +49,11 @@ end
 function GuildApplyItem:_showNameHead(playerData)
     self.nameText.text = playerData.name
     self.companyText.text = playerData.companyName
+    self.avatarData = AvatarManger.GetSmallAvatar(playerData.faceId, self.headImage,0.2)
+end
 
+function GuildApplyItem:CloseAvatar()
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)
     end
-    self.avatarData = AvatarManger.GetSmallAvatar(playerData.faceId, self.headImage,0.2)
 end

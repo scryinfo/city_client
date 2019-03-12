@@ -42,6 +42,12 @@ end
 
 function GroundTransContractCtrl:Hide()
     UIPanel.Hide(self)
+    if self.partAAvatar ~= nil then
+        AvatarManger.CollectAvatar(self.partAAvatar)
+    end
+    if self.partBAvatar ~= nil then
+        AvatarManger.CollectAvatar(self.partBAvatar)
+    end
 end
 
 function GroundTransContractCtrl:Close()
@@ -74,8 +80,8 @@ function GroundTransContractCtrl:_setShowState(data)
     end
     GroundTransContractPanel.rentAreaText.text = "1x1"
     GroundTransContractPanel.buyAreaText.text = "1x1"
-    AvatarManger.GetSmallAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.2)
-    AvatarManger.GetSmallAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.2)
+    self.partAAvatar = AvatarManger.GetSmallAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
+    self.partBAvatar = AvatarManger.GetSmallAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
     GroundTransContractPanel.ANameText.text = data.ownerInfo.name
     GroundTransContractPanel.BNameText.text = DataManager.GetMyPersonalHomepageInfo().name
 end

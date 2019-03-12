@@ -497,6 +497,12 @@ public class Packager {
         pkginfo.assetBundleName = null;
 
         AddBuildMapOp(ref curPath, ref patterns, false);
+        //Avatar大图单独打包
+        curPath = "Assets/CityGame/Resources/Atlas/Avtar/Man";
+        AddBuildMapOp(ref curPath, ref patterns, false);
+        curPath = "Assets/CityGame/Resources/Atlas/Avtar/Woman";
+        AddBuildMapOp(ref curPath, ref patterns, false);
+        //
         curPath = "Assets/CityGame/Resources/Atlas";
         AddBuildMapOp(ref curPath, ref patterns, true);
         curPath = "Assets/CityGame/Resources/Building";

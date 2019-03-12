@@ -20,12 +20,42 @@ function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDis
     self.speed = 0.2
     self.InitPlayerRandomPosition(self)
 
+    --获取左右朝向的朝向
+    self.m_OrientationDown = self.transform:Find("Orientation_down")
+    self.m_OrientationUp = self.transform:Find("Orientation_up")
+
     self.running = true
     if not self.handle then
         self.handle = UpdateBeat:CreateListener(self.Update, self)
     end
     UpdateBeat:AddListener(self.handle)
     self.ResetmTimer(self,0)
+end
+
+--UpOrDown : true 为UP
+--LeftOrRight ： true 为Left
+function PathFindItem:PlayerOrientation(UpOrDown,LeftOrRight)
+    if UpOrDown == nil or LeftOrRight == nil then
+        UpOrDown = true
+        LeftOrRight =true
+    end
+    local UpScale = self.m_OrientationUp.localScale
+    local DownScale = self.m_OrientationDown.localScale
+    if type(UpOrDown) == "boolean" then
+        self.m_OrientationDown.gameObject:SetActive(UpOrDown)
+        self.m_OrientationUp.gameObject:SetActive(not UpOrDown)
+    end
+    if type(LeftOrRight) == "boolean" then
+        if LeftOrRight == true then
+            UpScale.x = Math_Abs(UpScale.x)
+            DownScale.x = Math_Abs(DownScale.x)
+        else
+            UpScale.x = -Math_Abs(UpScale.x)
+            DownScale.x = -Math_Abs(DownScale.x)
+        end
+    end
+    self.m_OrientationUp.localScale = UpScale
+    self.m_OrientationDown.localScale = UpScale
 end
 
 function PathFindItem:ResetmTimer(durationTime)
@@ -43,7 +73,6 @@ function PathFindItem:Update()
         self.FindNectTarget(self)
     end
 end
-
 
 --初始化角色随机位置
 function PathFindItem:InitPlayerRandomPosition()
@@ -161,15 +190,30 @@ function PathFindItem:FindNectTarget()
     local targetPosition = self.CalculateTargetPosition(self,targetParameter.id,targetParameter.num)
     local offsetX =  targetPosition.x - self.targetPos.x
     local offsetZ =  targetPosition.z - self.targetPos.z
+    --计算人物朝向
+    local IsUp ,IsLeft
+    if offsetX < 0 and offsetZ == 0 then --右下
+        IsLeft = true
+        IsUp = false
+    elseif offsetX > 0 and offsetZ == 0 then --左上
+        IsLeft = true
+        IsUp = true
+    elseif offsetZ < 0 and offsetX == 0 then --右上
+        IsLeft = false
+        IsUp = true
+    elseif offsetZ > 0 and offsetX == 0 then --左下
+        IsLeft = false
+        IsUp = false
+    end
+    self:PlayerOrientation(IsUp,IsLeft)
+    --计算移动时间
     local MoveDistance = Math_Abs(offsetX) + Math_Abs(offsetZ)
     local MoveTime = MoveDistance / self.speed
-
     --赋值新的位置
     self.m_BlockID = targetParameter.id
     self.targetPos = targetPosition
     self.pathNum = DataManager.GetPathDataByBlockID(self.m_BlockID)
     self.nowPathNum = targetParameter.num
-
     --执行位置
     self.transform:DOMove(targetPosition,MoveTime):SetEase(DG.Tweening.Ease.Linear)
     self.ResetmTimer(self,MoveTime)
@@ -185,6 +229,7 @@ function PathFindItem:CalculateTargetPosition(tempBlockID,tempPosPathNum)
     if PosList ~= nil and type(PosList) ==  'table' then
         if PosList[tempPosPathNum] ~= nil then
             local targetPos = TerrainManager.BlockIDTurnPosition(tempBlockID)
+            targetPos.y = targetPos.y + 0.04
             if self.edgeDistance ~= nil then
                 if tempPosPathNum == 1 then
                     targetPos.x = targetPos.x + self.edgeDistance

@@ -229,7 +229,7 @@ function PathFindItem:CalculateTargetPosition(tempBlockID,tempPosPathNum)
     if PosList ~= nil and type(PosList) ==  'table' then
         if PosList[tempPosPathNum] ~= nil then
             local targetPos = TerrainManager.BlockIDTurnPosition(tempBlockID)
-            targetPos.y = targetPos.y + 0.04
+            targetPos.y = targetPos.y + 0.05
             if self.edgeDistance ~= nil then
                 if tempPosPathNum == 1 then
                     targetPos.x = targetPos.x + self.edgeDistance

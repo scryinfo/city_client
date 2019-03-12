@@ -61,7 +61,7 @@ function  BubbleMessageCtrl:bundleName()
 end
 
 function BubbleMessageCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
 function BubbleMessageCtrl:OnCreate(obj)
@@ -103,17 +103,17 @@ end
 ---==========================================================================================点击函数===================================================================================================
 --返回
 function BubbleMessageCtrl:c_OnClick_backBtn(ins)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 
 --确定
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
-    local des
+    local des=panel.inputFrame.text
     if panel.inputFrame.text=="" then
         des=nil
     end
     Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
-    ins:Hide()
+    UIPanel.ClosePage()
 end
 
 --是否展示气泡

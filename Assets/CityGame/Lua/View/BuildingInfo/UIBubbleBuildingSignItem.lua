@@ -49,16 +49,16 @@ end
 function UIBubbleBuildingSignItem:updateData(data)
      --todo:系统设置判定
     --给小的赋值
-    if data.emoticon then
+    if data.emoticon  then
         LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.smallIma)
         if data.state~="OPERATE" then
             self.smallExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.smallExIma)
 
-        elseif data.happy==0 then            --停工
-
-            self.smallExRec.localScale=Vector3.one
-            LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.smallExIma)
+        --elseif data.happy==0 then            --停工
+        --
+        --    self.smallExRec.localScale=Vector3.one
+        --    LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.smallExIma)
 
         else--没有异常
             self.smallExRec.localScale=Vector3.zero
@@ -72,10 +72,10 @@ function UIBubbleBuildingSignItem:updateData(data)
             self.largeExRec.localScale=Vector3.one
             LoadSprite(UIBubbleBuildingSignItem.stopPath,self.largeExIma)
 
-        elseif data.happy==0 then        --停工
-
-            self.largeExRec.localScale=Vector3.one
-            LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.largeExIma)
+        --elseif data.happy==0 then        --停工
+        --
+        --    self.largeExRec.localScale=Vector3.one
+        --    LoadSprite(UIBubbleBuildingSignItem.unNormalPath,self.largeExIma)
 
         else                           --没有异常
             self.largeExRec.localScale=Vector3.zero
@@ -119,6 +119,9 @@ function UIBubbleBuildingSignItem:c_OnClick_small(ins)
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large(ins)
+    if UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==2 then
+        return
+    end
     --变小
     ins:changeSmall()
 end
@@ -136,12 +139,19 @@ function UIBubbleBuildingSignItem:Start()
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
+    if not self.data.bubble then
+        return
+    end
+
     self:Start()
     self.largeRec.localScale=Vector3.zero
     self.smallRec.localScale=Vector3.one
 end
 
 function UIBubbleBuildingSignItem:changeLarge()
+    if not self.data.bubble then
+        return
+    end
     self:Start()
     self.largeRec.localScale=Vector3.one
     self.smallRec.localScale=Vector3.zero
@@ -155,6 +165,5 @@ end
 function UIBubbleBuildingSignItem:Update()
     self.rect.anchoredPosition =
     ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint( Vector3.New(self.data.x, 0, self.data.y) + Vector3.New(-0.1, 0, 2)))
-
 end
 

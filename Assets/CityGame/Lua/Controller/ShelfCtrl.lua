@@ -57,7 +57,6 @@ end
 function ShelfCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
-    local aaa = self.m_data
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -181,9 +180,16 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
                             end
                         end
                     end
-                    --for key1,value1 in pairs(self.m_data.shelf.good) do
-                    --    table.remove(self.m_data.good,value1)
-                    --end
+                    for key1,value1 in pairs(self.m_data.shelf.good) do
+                        if value1.k.id == dataInfo.item.key.id then
+                            table.remove(self.m_data.shelf.good,key1)
+                        end
+                    end
+                    for key2,value2 in pairs(self.m_data.store.locked) do
+                        if value2.key.id == dataInfo.item.key.id then
+                            table.remove(self.m_data.store.locked,key2)
+                        end
+                    end
                 else
                     value.numberText.text = value.num - dataInfo.item.n
                     value.goodsDataInfo.n = tonumber(value.numberText.text)

@@ -82,6 +82,7 @@ end
 function GuildListCtrl:Hide()
     GuildListPanel.guildListScroll:RefillCells()
     GuildListCtrl.societyList = nil
+    GuildListCtrl.rankId = nil
     self:_removeListener()
     UIPanel.Hide(self)
 end
@@ -235,6 +236,9 @@ function GuildListCtrl:c_OnSocietyList(societyList)
         GuildListPanel.timeBtnClose.localScale =Vector3.zero
         GuildListPanel.timeBtnDefault1.localScale =Vector3.one
         GuildListPanel.timeBtnDefault2.localScale =Vector3.one
+        if GuildListCtrl.rankId then
+            self:_sort(GuildListCtrl.rankId)
+        end
     else
 
     end

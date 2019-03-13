@@ -178,6 +178,8 @@ end
 
 function GuildListCtrl:OnClickCreateBack(go)
     GuildListPanel.createRoot.localScale =Vector3.zero
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
 end
 
 function GuildListCtrl:OnSure(go)
@@ -195,6 +197,8 @@ function GuildListCtrl:OnSure(go)
     end
 
     GuildListPanel.createRoot.localScale =Vector3.zero
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
 
     --打开弹框
     local showData = {}
@@ -225,7 +229,6 @@ end
 function GuildListCtrl:c_OnSocietyList(societyList)
     if societyList.listInfo then
         GuildListCtrl.societyList = societyList.listInfo
-        GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
 
         if GuildListCtrl.rankId then
             self:_sort(GuildListCtrl.rankId)
@@ -239,13 +242,14 @@ function GuildListCtrl:c_OnSocietyList(societyList)
             GuildListPanel.timeBtnClose.localScale =Vector3.zero
             GuildListPanel.timeBtnDefault1.localScale =Vector3.one
             GuildListPanel.timeBtnDefault2.localScale =Vector3.one
+            GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
         end
-    else
-
     end
 end
 
 function GuildListCtrl:c_OnSocietyInfo(societyInfo)
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
     Event.Brocast("SmallPop","创建公会成功！",80)
     DataManager.SetGuildID(societyInfo.id)
     DataManager.SetGuildInfo(societyInfo)

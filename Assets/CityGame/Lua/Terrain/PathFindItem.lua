@@ -10,14 +10,17 @@ local Math_Ceil = math.ceil
 --playerName：角色名称（对象池名称）
 --PlayerStartBlockID:角色初始化位置BlockID
 --PlayerEdgeDistance:角色和边界的距离（车和行人是不一样的）
-function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDistance)
+function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDistance,insID)
+    self.insID = insID
     self.go = MapObjectsManager.GetGameObjectByPool(playerPoolName)
+    self.go.name = insID
     self.transform = self.go.transform
     self.poolName = playerPoolName
     self.edgeDistance = PlayerEdgeDistance
     self.m_BlockID = PlayerStartBlockID
     self.pathNum = DataManager.GetPathDataByBlockID(self.m_BlockID)
-    self.speed = 0.2
+    --TODO:速度应为配置表中读取速度范围随机
+    self.speed = Math_Random(10,30) / 100
     self.InitPlayerRandomPosition(self)
 
     --获取左右朝向的朝向
@@ -90,6 +93,13 @@ function PathFindItem:InitPlayerRandomPosition()
         end
     else
         ct.log("system","初始化角色随机位置失败")
+        self:CloseSelf()
+    end
+end
+
+function PathFindItem:CloseSelf()
+    if self.insID ~= nil then
+        PathFindManager.RemoveThePalyerByInsID(self.insID)
     end
 end
 
@@ -111,7 +121,6 @@ function PathFindItem:FindNectTarget()
     local CannotMoveList = PathFindManager.CalculatePathCanNotMove(self.pathNum)
     local AdjacentBlockIDList ={}
     local PointsAccessible = {}
-    --TODO：考虑路缘位置
     if self.nowPathNum == 1 then
         --内部点
         if PosList[2] ~= nil then
@@ -184,11 +193,13 @@ function PathFindItem:FindNectTarget()
         targetParameter = PointsAccessible[Math_Random(1,#PointsAccessible)]
     else
         ct.log("system","移动出错了！！！！！")
+        self:CloseSelf()
         return
     end
     --此时得到目标点
     local targetPosition = self.CalculateTargetPosition(self,targetParameter.id,targetParameter.num)
     if targetPosition == nil then
+        self:CloseSelf()
         return
     end
     local offsetX =  targetPosition.x - self.targetPos.x
@@ -270,9 +281,9 @@ function PathFindItem:Destory()
     if self.handle then
         UpdateBeat:RemoveListener(self.handle)
     end
-    if self.playerNam ~= nil and self.go ~= nil then
+    self.transform:DOKill()
+    if self.poolName ~= nil and self.go ~= nil then
         MapObjectsManager.RecyclingGameObjectToPool(self.poolName,self.go)
     end
-
     self = nil
 end

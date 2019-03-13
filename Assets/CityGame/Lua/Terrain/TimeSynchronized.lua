@@ -7,7 +7,11 @@ local m_TimeOffset = nil
 
 --同步服务器时间
 function  TimeSynchronized.SynchronizationServerTime(ServerTime)
+    if m_TimeOffset == nil then
+        ClimateManager.Init()
+    end
     m_TimeOffset = ServerTime - tolua.gettime() * 1000
+
 end
 
 --本地判断时间是否同步

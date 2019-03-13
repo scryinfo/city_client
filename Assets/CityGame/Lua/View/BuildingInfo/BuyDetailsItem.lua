@@ -19,24 +19,12 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.inputNumber.characterLimit = string.len(goodsDataInfo.n)
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
     if Math_Floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Material[self.itemId].img,self.goodsIcon,false)
     elseif Math_Floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,self.goodsIcon,false)
     end
+    self.nameText.text = GetLanguage(self.itemId);
     self.inputNumber.text = 0;
     self.numberScrollbar.maxValue = self.goodsDataInfo.n;
     self.numberScrollbar.value = 0;

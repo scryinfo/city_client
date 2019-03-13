@@ -2,6 +2,7 @@ AddLineBoxCtrl = class('AddLineBoxCtrl',BuildingBaseCtrl)
 UIPanel:ResgisterOpen(AddLineBoxCtrl)
 
 local addLineBox
+local Math_Floor = math.floor
 function AddLineBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal)
 end
@@ -140,9 +141,9 @@ function AddLineBoxCtrl:GetTime(targetCount,workerNum)
     end
     local materialKey,goodsKey = 21,22  --商品类型
     local time
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         time = targetCount / (Material[self.itemId].numOneSec * workerNum)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         time = targetCount / (Good[self.itemId].numOneSec * workerNum)
     end
     local timeTable = getTimeBySec(time)

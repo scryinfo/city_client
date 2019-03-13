@@ -1,5 +1,6 @@
 DetailsItem = class('DetailsItem')
 
+local Math_Floor = math.floor
 --初始化方法
 function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab
@@ -26,28 +27,16 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberScrollbar.value = 0
     self.numberScrollbar.minValue = 0
     self.numberScrollbar.maxValue = goodsDataInfo.n
+    self.nameText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
     self.inputPrice.onValueChanged:RemoveAllListeners()
-    if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = GetLanguage(self.itemId)
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+    if Math_Floor(self.itemId / 100000) == materialKey then
+        LoadSprite(Material[self.itemId].img,self.goodsIcon,false)
         self.scoreRootTrans.transform.localScale = Vector3.zero
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(0), self.itemId)
-        self.nameText.text = GetLanguage(self.itemId)
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,self.goodsIcon,false)
         self.scoreRootTrans.transform.localScale = Vector3.one
         self.inputPrice.onValueChanged:AddListener(function (inputValue)
             if inputValue == nil or inputValue == "" then
@@ -91,7 +80,7 @@ end
 
 function DetailsItem:_getValuableScore(rentPrice, buildingType)
     local value = (1 - (rentPrice / TempBrandConfig[buildingType])) *100
-    value = math.floor(value)
+    value = Math_Floor(value)
     if value <= 0 then
         return "000"
     end

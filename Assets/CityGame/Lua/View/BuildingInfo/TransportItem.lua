@@ -1,5 +1,6 @@
 TransportItem = class('TransportItem')
 
+local Math_Floor = math.floor
 --初始化方法
 function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab;
@@ -18,24 +19,13 @@ function TransportItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberScrollbar.value = 0;
     self.numberScrollbar.minValue = 0;
     self.numberScrollbar.maxValue = goodsDataInfo.n
+    self.nameText.text = GetLanguage(self.itemId);
+
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+    if Math_Floor(self.itemId / 100000) == materialKey then
+        LoadSprite(Material[self.itemId].img,self.goodsIcon,false)
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
+        LoadSprite(Good[self.itemId].img,self.goodsIcon,false)
     end
     self.numberScrollbar.onValueChanged:AddListener(function ()
         self:scrollbarInfo();

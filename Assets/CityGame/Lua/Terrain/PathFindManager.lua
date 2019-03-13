@@ -1,7 +1,7 @@
 PathFindManager = {}
 
 local m_AllPlayer = {}
-
+local idCount = 1
 local Math_Random = math.random
 local Math_Floor = math.floor
 local my_CreatedCollectionID = {}
@@ -10,6 +10,7 @@ function PathFindManager.Init()
     --初始化随机种子
     math.randomseed(os.time())
     m_AllPlayer = {}
+    idCount = 1
 end
 
 --创建角色
@@ -38,15 +39,17 @@ local function CreateRangePalyer(tempCollectionID,PlayerCount)
     for i = 1, PlayerCount do
         tempPlayerSet = PathFindingConfig[Math_Random(1,#PathFindingConfig)]
         targerBlockID = CanUsedIDPath[Math_Random(1,#CanUsedIDPath)]
-        --tempStartPos = TerrainManager.BlockIDTurnPosition(targerBlockID)
-        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,targerBlockID,tempPlayerSet.playerEdgeDistance)
-        ct.log("system","生成一个角色")
-        table.insert(m_AllPlayer,tempPalyer)
+        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,targerBlockID,tempPlayerSet.playerEdgeDistance,idCount)
+        m_AllPlayer[idCount] = tempPalyer
+        idCount = idCount + 1
     end
     my_CreatedCollectionID[tempCollectionID] = 1
 end
 
---删除在地块上的角色
+
+
+
+--删除在AOI地块上的角色
 local function RemoveRangePlayers(tempCollectionID)
     --向所有角色遍历询问位置，在范围内的删除
     local playerPos,playerBlockID,playerCollectionID
@@ -57,7 +60,7 @@ local function RemoveRangePlayers(tempCollectionID)
             playerCollectionID = TerrainManager.BlockIDTurnCollectionID(playerBlockID)
             if tempCollectionID == playerCollectionID then
                 player:Destory()
-                table.remove(m_AllPlayer,i)
+                m_AllPlayer[i] = nil
             end
         end
     end
@@ -69,14 +72,13 @@ function PathFindManager.CreateAOIListPalyer(tempCollectionIDList)
     if tempCollectionIDList == nil or type(tempCollectionIDList) ~= 'table' then
         return
     end
-    if  my_CreatedCollectionID[tempCollectionID] ~= nil then
-        return
-    end
     local count = 0
     for i, tempCollectionID in pairs(tempCollectionIDList) do
         --TODO:随机个数范围应该从配置表中读取
-        count =  Math_Random(10,20)
-        CreateRangePalyer(tempCollectionID,count)
+        if my_CreatedCollectionID[tempCollectionID] == nil then
+            count =  Math_Random(10,20)
+            CreateRangePalyer(tempCollectionID,count)
+        end
     end
 end
 
@@ -90,14 +92,25 @@ function PathFindManager.RemoveAOIListPalyer(tempCollectionIDList)
     end
 end
 
+--删除某个具体角色
+function PathFindManager.RemoveThePalyerByInsID(InsID)
+    if m_AllPlayer[InsID] ~= nil then
+        m_AllPlayer[InsID]:Destory()
+        m_AllPlayer[InsID] = nil
+    end
+end
+
 --计算路径值，返回路径值的拆分点的
 function PathFindManager.CalculatePathValues(tempNum)
+    local tempTable = {}
+    if tempNum == nil then
+        return tempTable
+    end
     tempNum = tempNum % 100
     if tempNum <= 0 or tempNum >15 then
         return nil
     end
     local returnValue = 0
-    local tempTable = {}
     local tempSize = 8
     for i = 1, 4  do
         returnValue = Math_Floor(tempNum / tempSize)
@@ -113,7 +126,7 @@ end
 --计算内部不能移动的路径
 function PathFindManager.CalculatePathCanNotMove(tempNum)
     local tempTable = {}
-    if tempNum < 100  then
+    if tempNum == nil or tempNum < 100  then
         return tempTable
     end
     local returnValue = 0

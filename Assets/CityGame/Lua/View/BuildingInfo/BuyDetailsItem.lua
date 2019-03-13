@@ -1,5 +1,6 @@
 BuyDetailsItem = class('BuyDetailsItem')
 
+local Math_Floor = math.floor
 --初始化方法
 function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab;
@@ -19,7 +20,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -27,7 +28,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
                 self.goodsIcon.sprite = texture
             end
         end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then

@@ -127,7 +127,8 @@ end
 
 function GuildMessageCtrl:OnQuit(go)
     local ownIdentity = GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()
-    if ownIdentity == "CHAIRMAN" then
+    local societyInfoMembers = DataManager.GetGuildMembers()
+    if ownIdentity == "CHAIRMAN" and #societyInfoMembers ~= 1 then
         --打开弹框
         local showData = {}
         showData.titleInfo = "提示"

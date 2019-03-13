@@ -227,17 +227,18 @@ function GuildListCtrl:c_OnSocietyList(societyList)
         GuildListCtrl.societyList = societyList.listInfo
         GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
 
-        GuildListPanel.memberNumberBtnOpen.localScale =Vector3.zero
-        GuildListPanel.memberNumberBtnClose.localScale =Vector3.zero
-        GuildListPanel.memberNumberBtnDefault1.localScale =Vector3.one
-        GuildListPanel.memberNumberBtnDefault2.localScale =Vector3.one
-
-        GuildListPanel.timeBtnOpen.localScale =Vector3.zero
-        GuildListPanel.timeBtnClose.localScale =Vector3.zero
-        GuildListPanel.timeBtnDefault1.localScale =Vector3.one
-        GuildListPanel.timeBtnDefault2.localScale =Vector3.one
         if GuildListCtrl.rankId then
             self:_sort(GuildListCtrl.rankId)
+        else
+            GuildListPanel.memberNumberBtnOpen.localScale =Vector3.zero
+            GuildListPanel.memberNumberBtnClose.localScale =Vector3.zero
+            GuildListPanel.memberNumberBtnDefault1.localScale =Vector3.one
+            GuildListPanel.memberNumberBtnDefault2.localScale =Vector3.one
+
+            GuildListPanel.timeBtnOpen.localScale =Vector3.zero
+            GuildListPanel.timeBtnClose.localScale =Vector3.zero
+            GuildListPanel.timeBtnDefault1.localScale =Vector3.one
+            GuildListPanel.timeBtnDefault2.localScale =Vector3.one
         end
     else
 
@@ -267,6 +268,6 @@ end
 
 -- 申请加入公会失败
 function GuildListCtrl:c_OnJoinSociety()
-    Event.Brocast("SmallPop", "申请加入公会失败！",80)
+    Event.Brocast("SmallPop", "申请失败，该联盟已解散！",80)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_GetSocietyList')
 end

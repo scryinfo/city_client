@@ -76,7 +76,6 @@ function WarehouseCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
     self.m_data.isShow = false
-    local aaa = self.m_data
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------

@@ -194,6 +194,17 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
                     value.numberText.text = value.num - dataInfo.item.n
                     value.goodsDataInfo.n = tonumber(value.numberText.text)
                     value.num = tonumber(value.numberText.text)
+                    --下架数量改变后同时改变模拟服务器数据
+                    for key,value in pairs(self.m_data.store.inHand) do
+                        if value.key.id == dataInfo.item.key.id then
+                            value.n = value.n + dataInfo.item.n
+                        end
+                    end
+                    for key1,value1 in pairs(self.m_data.store.locked) do
+                        if value1.key.id == dataInfo.item.key.id then
+                            value1.n = value1.n - dataInfo.item.n
+                        end
+                    end
                 end
             end
         end

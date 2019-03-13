@@ -250,8 +250,6 @@ function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
             if value.key.id == dataInfo.item.key.id then
                 if value.n == dataInfo.item.n then
                     table.remove(self.m_data.store.inHand,key)
-                else
-                    --value.n = value.n - dataInfo.item.n
                 end
             end
         end
@@ -449,13 +447,6 @@ function WarehouseCtrl:SetShelfData(dataInfo)
         goodData.price = dataInfo.price
         good[#good + 1] = goodData
         self.m_data.shelf.good = good
-    else
-        --for key,value in pairs(self.m_data.shelf.good) do
-        --    if dataInfo.item.key.id == value.k.id then
-        --        value.n = value.n + dataInfo.item.n
-        --        value.price = dataInfo.price
-        --    end
-        --end
     end
 end
 

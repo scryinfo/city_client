@@ -165,16 +165,18 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
                     self:deleteGoodsItem(self.shelfDatas,key)
 
                     --下架后要把下架的商品数量添加到仓库
-                    if not self.m_data.store.inHand then
+                    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                         local inHand = {}
                         local goodsData = {}
                         local key = {}
                         key.id = dataInfo.item.key.id
                         key.producerId = dataInfo.item.key.producerId
-                        key.qty = dataInfo.item.key.qty
+                        key.qty = dataInfo.dataInfo.item.key.qty
                         goodsData.key = key
                         goodsData.n = dataInfo.item.n
-                        inHand[#inHand + 1] = goodsData
+                        inHand = goodsData
+                        self.m_data.store.inHand = {}
+                        self.m_data.store.inHand[#self.m_data.store.inHand + 1] = inHand
                     else
                         for key,value in pairs(self.m_data.store.inHand) do
                             if value.key.id == dataInfo.item.key.id then

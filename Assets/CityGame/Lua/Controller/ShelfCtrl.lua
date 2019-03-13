@@ -165,7 +165,7 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
                     self:deleteGoodsItem(self.shelfDatas,key)
 
                     --下架后要把下架的商品数量添加到仓库
-                    if next(self.m_data.store.inHand) == nil then
+                    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                         local inHand = {}
                         local goodsData = {}
                         local key = {}
@@ -173,6 +173,7 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
                         goodsData.key = key
                         goodsData.n = dataInfo.item.n
                         inHand = goodsData
+                        self.m_data.store.inHand = {}
                         self.m_data.store.inHand[#self.m_data.store.inHand + 1] = inHand
                     else
                         for key,value in pairs(self.m_data.store.inHand) do

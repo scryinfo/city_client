@@ -19,7 +19,8 @@ function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDis
     self.edgeDistance = PlayerEdgeDistance
     self.m_BlockID = PlayerStartBlockID
     self.pathNum = DataManager.GetPathDataByBlockID(self.m_BlockID)
-    self.speed = 0.2
+    --TODO:速度应为配置表中读取速度范围随机
+    self.speed = Math_Random(10,30) / 100
     self.InitPlayerRandomPosition(self)
 
     --获取左右朝向的朝向

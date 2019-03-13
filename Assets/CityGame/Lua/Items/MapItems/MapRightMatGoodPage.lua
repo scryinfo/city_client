@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2019/2/27 18:13
 ---小地图搜索类型
-MapRightMatGoodPage = class('MapRightMatGoodPage')
+MapRightMatGoodPage = class('MapRightMatGoodPage', MapRightPageBase)
 
 --初始化方法
 function MapRightMatGoodPage:initialize(viewRect)
@@ -39,9 +39,6 @@ function MapRightMatGoodPage:initialize(viewRect)
     self.rightBtn.onClick:AddListener(function ()
         self:_rightChangeBtn()
     end)
-    --
-
-    self:resetState()
 end
 --
 function MapRightMatGoodPage:refreshData(data)
@@ -71,14 +68,13 @@ function MapRightMatGoodPage:refreshData(data)
         self.leftRightBtnRoot.localScale = Vector3.zero
         self.mapRightMatGoodItem:refreshData(data.detailData.sale[1])
     end
+
+    self:openShow()
 end
 --重置状态
-function MapRightMatGoodPage:resetState()
+function MapRightMatGoodPage:openShow()
     self:_language()
-    self.viewRect.anchoredPosition = Vector2.New(506, 0)
-    if self.avatar ~= nil then
-        AvatarManger.CollectAvatar(self.avatar)
-    end
+    self.viewRect.anchoredPosition = Vector2.zero
 end
 --多语言
 function MapRightMatGoodPage:_language()

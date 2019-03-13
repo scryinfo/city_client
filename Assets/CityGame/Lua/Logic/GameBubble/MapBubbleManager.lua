@@ -170,10 +170,6 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
         end
     end
 end
---点击缩略item，进入详情
-function MapBubbleManager.summaryToDetail(pos)
-
-end
 --搜索详情  --是否是全新的搜索数据
 function MapBubbleManager.createDetailItems(data, isNew)
     if isNew then

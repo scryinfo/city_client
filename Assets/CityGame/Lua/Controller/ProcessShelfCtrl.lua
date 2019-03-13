@@ -163,10 +163,52 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
             if value.itemId == dataInfo.item.key.id then
                 if value.num == dataInfo.item.n then
                     self:deleteGoodsItem(self.shelfDatas,key)
+
+                    --下架后要把下架的商品数量添加到仓库
+                    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+                        local inHand = {}
+                        local goodsData = {}
+                        local key = {}
+                        key.id = dataInfo.item.key.id
+                        key.producerId = dataInfo.item.key.producerId
+                        key.qty = dataInfo.dataInfo.item.key.qty
+                        goodsData.key = key
+                        goodsData.n = dataInfo.item.n
+                        inHand = goodsData
+                        self.m_data.store.inHand = {}
+                        self.m_data.store.inHand[#self.m_data.store.inHand + 1] = inHand
+                    else
+                        for key,value in pairs(self.m_data.store.inHand) do
+                            if value.key.id == dataInfo.item.key.id then
+                                value.n = value.n + dataInfo.item.n
+                            end
+                        end
+                    end
+                    for key1,value1 in pairs(self.m_data.shelf.good) do
+                        if value1.k.id == dataInfo.item.key.id then
+                            table.remove(self.m_data.shelf.good,key1)
+                        end
+                    end
+                    for key2,value2 in pairs(self.m_data.store.locked) do
+                        if value2.key.id == dataInfo.item.key.id then
+                            table.remove(self.m_data.store.locked,key2)
+                        end
+                    end
                 else
                     value.numberText.text = value.num - dataInfo.item.n
                     value.goodsDataInfo.n = tonumber(value.numberText.text)
                     value.num = tonumber(value.numberText.text)
+                    --下架数量改变后同时改变模拟服务器数据
+                    for key,value in pairs(self.m_data.store.inHand) do
+                        if value.key.id == dataInfo.item.key.id then
+                            value.n = value.n + dataInfo.item.n
+                        end
+                    end
+                    for key1,value1 in pairs(self.m_data.store.locked) do
+                        if value1.key.id == dataInfo.item.key.id then
+                            value1.n = value1.n - dataInfo.item.n
+                        end
+                    end
                 end
             end
         end

@@ -57,6 +57,7 @@ function GuildListCtrl:_addListener()
     Event.AddListener("c_OnSocietyList", self.c_OnSocietyList, self)
     Event.AddListener("c_OnSocietyInfo", self.c_OnSocietyInfo, self)
     Event.AddListener("c_JoinHandle", self.c_JoinHandle, self)
+    Event.AddListener("c_OnJoinSociety", self.c_OnJoinSociety, self)
 end
 
 --注销model层网络回调h
@@ -64,6 +65,7 @@ function GuildListCtrl:_removeListener()
     Event.RemoveListener("c_OnSocietyList", self.c_OnSocietyList, self)
     Event.RemoveListener("c_OnSocietyInfo", self.c_OnSocietyInfo, self)
     Event.RemoveListener("c_JoinHandle", self.c_JoinHandle, self)
+    Event.RemoveListener("c_OnJoinSociety", self.c_OnJoinSociety, self)
 end
 
 function GuildListCtrl:Refresh()
@@ -80,6 +82,7 @@ end
 function GuildListCtrl:Hide()
     GuildListPanel.guildListScroll:RefillCells()
     GuildListCtrl.societyList = nil
+    GuildListCtrl.rankId = nil
     self:_removeListener()
     UIPanel.Hide(self)
 end
@@ -175,6 +178,8 @@ end
 
 function GuildListCtrl:OnClickCreateBack(go)
     GuildListPanel.createRoot.localScale =Vector3.zero
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
 end
 
 function GuildListCtrl:OnSure(go)
@@ -192,6 +197,8 @@ function GuildListCtrl:OnSure(go)
     end
 
     GuildListPanel.createRoot.localScale =Vector3.zero
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
 
     --打开弹框
     local showData = {}
@@ -222,23 +229,27 @@ end
 function GuildListCtrl:c_OnSocietyList(societyList)
     if societyList.listInfo then
         GuildListCtrl.societyList = societyList.listInfo
-        GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
 
-        GuildListPanel.memberNumberBtnOpen.localScale =Vector3.zero
-        GuildListPanel.memberNumberBtnClose.localScale =Vector3.zero
-        GuildListPanel.memberNumberBtnDefault1.localScale =Vector3.one
-        GuildListPanel.memberNumberBtnDefault2.localScale =Vector3.one
+        if GuildListCtrl.rankId then
+            self:_sort(GuildListCtrl.rankId)
+        else
+            GuildListPanel.memberNumberBtnOpen.localScale =Vector3.zero
+            GuildListPanel.memberNumberBtnClose.localScale =Vector3.zero
+            GuildListPanel.memberNumberBtnDefault1.localScale =Vector3.one
+            GuildListPanel.memberNumberBtnDefault2.localScale =Vector3.one
 
-        GuildListPanel.timeBtnOpen.localScale =Vector3.zero
-        GuildListPanel.timeBtnClose.localScale =Vector3.zero
-        GuildListPanel.timeBtnDefault1.localScale =Vector3.one
-        GuildListPanel.timeBtnDefault2.localScale =Vector3.one
-    else
-
+            GuildListPanel.timeBtnOpen.localScale =Vector3.zero
+            GuildListPanel.timeBtnClose.localScale =Vector3.zero
+            GuildListPanel.timeBtnDefault1.localScale =Vector3.one
+            GuildListPanel.timeBtnDefault2.localScale =Vector3.one
+            GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
+        end
     end
 end
 
 function GuildListCtrl:c_OnSocietyInfo(societyInfo)
+    GuildListPanel.guildNameInput.text = ""
+    GuildListPanel.describeInput.text = ""
     Event.Brocast("SmallPop","创建公会成功！",80)
     DataManager.SetGuildID(societyInfo.id)
     DataManager.SetGuildInfo(societyInfo)
@@ -257,4 +268,10 @@ function GuildListCtrl:c_JoinHandle(societyInfo)
     showData.contentInfo = "申请商业联盟通过"
     showData.tipInfo = ""
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
+end
+
+-- 申请加入公会失败
+function GuildListCtrl:c_OnJoinSociety()
+    Event.Brocast("SmallPop", "申请失败，该联盟已解散！",80)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_GetSocietyList')
 end

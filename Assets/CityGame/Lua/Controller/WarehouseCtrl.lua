@@ -76,7 +76,6 @@ function WarehouseCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
     self.m_data.isShow = false
-    local aaa = self.m_data
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -224,7 +223,38 @@ function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
         Event.Brocast("SmallPop",GetLanguage(26040010),300)
     else
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
+        --如果上架成功，模拟服务器数据放到货架
+        if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
+            local locked = {}
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.item.key.id
+            goodData.key = key
+            goodData.n = dataInfo.item.n
+            locked[#locked + 1] = goodData
+            self.m_data.store.locked = locked
+        else
+            for key1,value1 in pairs(self.m_data.store.locked) do
+                if value1.key.id == dataInfo.item.key.id then
+                    value1.n = value1.n + dataInfo.item.n
+                end
+            end
+            for key2,value2 in pairs(self.m_data.shelf.good) do
+                if value2.k.id == dataInfo.item.key.id then
+                    value2.n = value2.n + dataInfo.item.n
+                end
+            end
+        end
+        --上架成功后模拟服务器数据改变m_data
+        for key,value in pairs(self.m_data.store.inHand) do
+            if value.key.id == dataInfo.item.key.id then
+                if value.n == dataInfo.item.n then
+                    table.remove(self.m_data.store.inHand,key)
+                end
+            end
+        end
     end
+    --如果货架上没有东西改变货架m_data
     if self.m_data.isShelf == true then
         self:SetShelfData(dataInfo)
     end
@@ -410,20 +440,13 @@ function WarehouseCtrl:SetShelfData(dataInfo)
     local good = {}
     local goodData = {}
     local key = {}
-    if not self.m_data.shelf.good then
+    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
         key.id = dataInfo.item.key.id
         goodData.k = key
         goodData.n = dataInfo.item.n
         goodData.price = dataInfo.price
         good[#good + 1] = goodData
         self.m_data.shelf.good = good
-    else
-        for key,value in pairs(self.m_data.shelf.good) do
-            if dataInfo.item.key.id == value.k.id then
-                value.n = value.n + dataInfo.item.n
-                value.price = dataInfo.price
-            end
-        end
     end
 end
 

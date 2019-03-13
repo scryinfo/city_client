@@ -216,3 +216,26 @@ function UIBubbleManager.closeItem(item, id)
         end
     end
 end
+--
+function UIBubbleManager.getAucItemsTable()
+    return this.aucItemsTable
+end
+--
+function UIBubbleManager.getCollectionAucData()
+    if this.aucItemsTable ~= nil then
+        local tempTable = {}
+        for i, value in pairs(this.aucItemsTable) do
+            local data = value:getValuableData()
+            --local blockId = GroundAucConfig[data.id].firstBlockId
+            local blockId = TerrainManager.GridIndexTurnBlockID(GroundAucConfig[data.id].area[2])
+            local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+            local index = tempTable[collectionId]
+            if index ~= nil then
+                tempTable[collectionId] = index + 1
+            else
+                tempTable[collectionId] = 1
+            end
+        end
+        return tempTable
+    end
+end

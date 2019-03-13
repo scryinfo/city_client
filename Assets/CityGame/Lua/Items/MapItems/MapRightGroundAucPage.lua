@@ -31,7 +31,6 @@ function MapRightGroundAucPage:initialize(viewRect)
 
     self.personFlowText01 = viewRect:Find("root/rangeNpcRoot/Text"):GetComponent("Text")
     self.soonFloorText02 = viewRect:Find("root/soonRoot/floorRoot/Text01"):GetComponent("Text")
-    self.nowBidText03 = viewRect:Find("root/nowRoot/Text01"):GetComponent("Text")
     self.nowFloorPriceText05 = viewRect:Find("root/nowRoot/noneHistoryRoot/floorRoot/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
@@ -50,6 +49,7 @@ function MapRightGroundAucPage:refreshData(data)
         return
     end
 
+    self:_addListener()
     self.m_Timer:Reset(slot(self._itemTimer, self), 1, -1, true)
     self.m_Timer:Start()
     self.averageRangeText.text = 0
@@ -92,6 +92,9 @@ function MapRightGroundAucPage:_language()
 end
 --关闭
 function MapRightGroundAucPage:close()
+    if self.data == nil then
+        return
+    end
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
     if self.m_Timer ~= nil then
         self.m_Timer:Stop()
@@ -102,6 +105,7 @@ function MapRightGroundAucPage:close()
     self:_removeListener()
     self:_cleanHistoryObj()
     self.bidHistory = {}
+    self.data = nil
 end
 --去地图上的一个建筑
 function MapRightGroundAucPage:_goHereBtn()

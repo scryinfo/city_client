@@ -28,7 +28,7 @@ function MapRightMatGoodPage:initialize(viewRect)
     self.goHereText01 = self.viewRect.transform:Find("bottomRoot/btnRoot/goHereBtn/Text"):GetComponent("Text")
     --old
     self.closeBtn.onClick:AddListener(function ()
-        self:_closeBtn()
+        self:close()
     end)
     self.goHereBtn.onClick:AddListener(function ()
         self:_goHereBtn()
@@ -83,7 +83,7 @@ function MapRightMatGoodPage:_language()
     self.goHereText01.text = "Go here"
 end
 --关闭
-function MapRightMatGoodPage:_closeBtn()
+function MapRightMatGoodPage:close()
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)

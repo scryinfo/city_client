@@ -72,7 +72,7 @@ function MapRightGroundTransPage:_language()
     self.totalPriceText05.text = GetLanguage(24040005)
 end
 --关闭
-function MapRightGroundTransPage:_closeBtn()
+function MapRightGroundTransPage:close()
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
@@ -90,7 +90,7 @@ function MapRightGroundTransPage:_initPersonalInfo(data)
     end
 end
 --
-function MapRightMatGoodPage:_clickPlayerInfoBtn()
+function MapRightGroundTransPage:_clickPlayerInfoBtn()
     if self.data.playerInfo == nil then
         return
     end

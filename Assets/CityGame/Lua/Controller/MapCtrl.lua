@@ -230,6 +230,8 @@ function MapCtrl:auctionSelect()
         self.selectDetailItem = nil  --另一种选项清空
     end
     self.selectSearchType = EMapSearchType.Auction
+
+    MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
 end
 
 ---
@@ -533,7 +535,9 @@ function MapCtrl:_judgeDetail()
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易详情
-
+        if self.selectSearchType == EMapSearchType.Auction then
+            MapBubbleManager.createGroundTransDetailItems()
+        end
     end
 end
 --缩小过程中判断是否需要请求缩略
@@ -545,7 +549,9 @@ function MapCtrl:_judgeSummary()
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易缩略
-
+        if self.selectSearchType == EMapSearchType.Auction then
+            MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+        end
     end
 end
 --判断是否是

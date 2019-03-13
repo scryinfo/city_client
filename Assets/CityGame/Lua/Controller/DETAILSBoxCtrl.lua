@@ -35,7 +35,6 @@ function DETAILSBoxCtrl:Awake(go)
         if DETAILSBoxPanel.scoreText.transform.localScale == Vector3.zero or self.itemId == nil then
             return
         end
-
         DETAILSBoxPanel.scoreText.text = self:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), self.itemId)
     end)
 end
@@ -73,7 +72,6 @@ function DETAILSBoxCtrl:OnClick_XBtn(obj)
     UIPanel.ClosePage()
 end
 function DETAILSBoxCtrl:Hide()
-    --Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
     UIPanel.Hide(self)
 end
 
@@ -91,18 +89,11 @@ function DETAILSBoxCtrl:Refresh()
     end
     self.itemId = self.m_data.itemId
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
     if Math_Floor(self.itemId / 100000) == materialKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.zero
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.one
         DETAILSBoxPanel.materialNameText.text = Material[self.itemId].name
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                DETAILSBoxPanel.materialIcon.sprite = texture
-            end
-        end)
-
+        LoadSprite(Material[self.itemId].img,DETAILSBoxPanel.materialIcon,false)
         DETAILSBoxPanel.scoreText.transform.localScale = Vector3.zero
         DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.zero
         DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
@@ -117,12 +108,7 @@ function DETAILSBoxCtrl:Refresh()
         --DETAILSBoxPanel.playerName.text =
         --DETAILSBoxPanel.companyNameText.text =
         --DETAILSBoxPanel.headImg =
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                DETAILSBoxPanel.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,DETAILSBoxPanel.goodsIcon,false)
     end
     --DETAILSBoxPanel.GoodNameText.text = self.m_data.name
     DETAILSBoxPanel.numberInput.text = self.m_data.num

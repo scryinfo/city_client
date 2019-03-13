@@ -73,9 +73,10 @@ function WarehouseCtrl:Refresh()
     end
 end
 function WarehouseCtrl:Hide()
+    UIPanel.Hide(self)
     self:_removeListener()
     self.m_data.isShow = false
-    UIPanel.Hide(self)
+    local aaa = self.m_data
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------

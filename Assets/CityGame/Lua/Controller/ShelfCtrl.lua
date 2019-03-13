@@ -57,6 +57,7 @@ end
 function ShelfCtrl:Hide()
     UIPanel.Hide(self)
     self:_removeListener()
+    local aaa = self.m_data
     return {insId = self.m_data.info.id,self.m_data}
 end
 ----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
@@ -163,6 +164,26 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
             if value.itemId == dataInfo.item.key.id then
                 if value.num == dataInfo.item.n then
                     self:deleteGoodsItem(self.shelfDatas,key)
+
+                    --下架后要把下架的商品数量添加到仓库
+                    if not self.m_data.store.inHand then
+                        local inHand = {}
+                        local goodsData = {}
+                        local key = {}
+                        key.id = dataInfo.item.key.id
+                        goodsData.key = key
+                        goodsData.n = dataInfo.item.n
+                        inHand[#inHand + 1] = goodsData
+                    else
+                        for key,value in pairs(self.m_data.store.inHand) do
+                            if value.key.id == dataInfo.item.key.id then
+                                value.n = value.n + dataInfo.item.n
+                            end
+                        end
+                    end
+                    --for key1,value1 in pairs(self.m_data.shelf.good) do
+                    --    table.remove(self.m_data.good,value1)
+                    --end
                 else
                     value.numberText.text = value.num - dataInfo.item.n
                     value.goodsDataInfo.n = tonumber(value.numberText.text)

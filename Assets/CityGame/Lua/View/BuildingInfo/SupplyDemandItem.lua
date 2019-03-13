@@ -21,7 +21,12 @@ function SupplyDemandItem:initialize(dataInfo, viewRect)
 
     LoadSprite(SupplyDemandGood[dataInfo.itemId], self.goods, true)
     self.name.text = GetLanguage(dataInfo.itemId)
-
+    if dataInfo.demand == nil then
+        dataInfo.demand = 0
+    end
+    if dataInfo.supply == nil then
+        dataInfo.supply = 0
+    end
     if dataInfo.supply > dataInfo.demand  then
         self.beyond.localScale = Vector3.one
         self.supply.transform.localScale = Vector3.zero

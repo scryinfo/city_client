@@ -236,7 +236,7 @@ end
 
 --点击背景
 function VolumeCtrl:OnBg()
-    --ct.OpenCtrl("HistoryCurveCtrl")
+    ct.OpenCtrl("HistoryCurveCtrl")
 end
 
 --倒计时

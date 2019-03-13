@@ -218,6 +218,8 @@ public static class CustomSettings
         _GT(typeof(UnityEngine.EventSystems.EventSystem)),
         _GT(typeof(Battle.FOWLogic)),
         _GT(typeof(FOWSystem)),
+        _GT(typeof(Slide)),
+        _GT(typeof(FunctionalGraph)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

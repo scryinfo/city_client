@@ -37,10 +37,6 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialDat
     self.tip = prefab.transform:Find("tipImg")
 
     self:InitializeData()
-    --LuaBehaviour:AddClick(self.deleteBtn.gameObject,function(go)
-    --    PlayMusEff(1002)
-    --    Event.Brocast("DeleteLine",go)
-    --end)
     LuaBehaviour:AddClick(self.deleteBtn.gameObject,self.OnClick_deleteBtn,self)
     Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
 end

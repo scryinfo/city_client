@@ -28,26 +28,15 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberText.text = self.n
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
+    --local type = ct.getType(UnityEngine.Sprite)
+    self.nameText.text = GetLanguage(self.itemId);
     if Math_Floor(self.itemId / 100000) == materialKey then
         self:materialRoot()
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.icon.sprite = texture
-            end
-        end)
+        LoadSprite(Material[self.itemId].img,self.icon,false)
     elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self:goodsRoot()
         self.qualityScore.text = self.goodsDataInfo.key.qty
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.icon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,self.icon,false)
     end
 
     --初始化ItemUI状态
@@ -96,25 +85,14 @@ end
 function WarehouseItem:materialRoot()
     self.brandBg.localScale = Vector3.zero
     self.icon:GetComponent("RectTransform").localPosition = Vector3.New(0,40, 0)
-    local type = ct.getType(UnityEngine.Sprite)
-    panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods-white-s .png",type,nil,function(goodData,obj)
-        if obj ~= nil then
-            local texture = ct.InstantiatePrefab(obj)
-            self.bgBtn.sprite = texture
-        end
-    end)
+    LoadSprite("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods-white-s .png",self.bgBtn,false)
+
 end
 --商品
 function WarehouseItem:goodsRoot()
     self.brandBg.localScale = Vector3.one
     self.icon:GetComponent("RectTransform").localPosition = Vector3.New(0,0, 0)
-    local type = ct.getType(UnityEngine.Sprite)
-    panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods 1.png",type,nil,function(goodData,obj)
-        if obj ~= nil then
-            local texture = ct.InstantiatePrefab(obj)
-            self.bgBtn.sprite = texture
-        end
-    end)
+    LoadSprite("Assets/CityGame/Resources/Atlas/Warehouse/bg-goods 1.png",self.bgBtn,false)
 end
 function WarehouseItem:RefreshData(data,id)
     self.id = id

@@ -28,7 +28,6 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberText.text = self.n
 
     local materialKey,goodsKey = 21,22
-    --local type = ct.getType(UnityEngine.Sprite)
     self.nameText.text = GetLanguage(self.itemId);
     if Math_Floor(self.itemId / 100000) == materialKey then
         self:materialRoot()

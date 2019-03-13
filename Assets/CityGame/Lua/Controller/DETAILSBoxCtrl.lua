@@ -101,7 +101,6 @@ function DETAILSBoxCtrl:Refresh()
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.one
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.zero
         DETAILSBoxPanel.GoodNameText.text = Good[self.itemId].name
-
         DETAILSBoxPanel.scoreText.transform.localScale = Vector3.one
         DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.one
         DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero

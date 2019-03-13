@@ -222,6 +222,25 @@ function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
         Event.Brocast("SmallPop",GetLanguage(26040010),300)
     else
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
+        --如果上架成功，模拟服务器数据放到货架
+        if not self.m_data.store.locked then
+            local locked = {}
+            local goodData = {}
+            local key = {}
+            key.id = dataInfo.item.key.id
+            key.producerId = dataInfo.item.key.producerId
+            key.qty = dataInfo.item.key.qty
+            goodData.key = key
+            goodData.n = dataInfo.item.n
+            locked[#locked + 1] = goodData
+            self.m_data.store.locked = locked
+        else
+            for key1,value1 in pairs(self.m_data.store.locked) do
+                if value1.key.id == dataInfo.item.key.id then
+                    value1.n = value1.n + dataInfo.item.n
+                end
+            end
+        end
     end
     if self.m_data.isShelf == true then
         self:SetShelfData(dataInfo)

@@ -22,21 +22,6 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         width = gameObject.GetComponent<RectTransform>().rect.width;
         size = gameObject.GetComponent<RectTransform>().sizeDelta;
         position = gameObject.GetComponent<RectTransform>().localPosition;
-        //string[] str = { "1","2","3","4","5","6","7","8" };
-        //SetXScaleValue(str);
-        //List<Vector3[]> it = new List<Vector3[]>();
-        //Vector3[] v1 = { new Vector2(300, 100), new Vector2(200, 0), new Vector2(100, 300), new Vector2(0, 200) };
-        //Vector3[] v2 = { new Vector2(300, 200), new Vector2(200, 100), new Vector2(100, 250), new Vector2(0, 300) };
-        //Vector3[] v3 = { new Vector2(300, 300), new Vector2(200, 50), new Vector2(100, 150), new Vector2(0, 100) };
-        //it.Add(v1);
-        //it.Add(v2);
-        //it.Add(v3);
-
-        //List<Color> ScaleColor = new List<Color>();
-        //ScaleColor.Add(new Color(53 / 255f, 218 / 255f, 233 / 255f, 255 / 255f));
-        //ScaleColor.Add(new Color(233 / 255f, 34 / 255f, 104 / 255f, 255 / 255f));
-        //ScaleColor.Add(new Color(21 / 255f, 48 / 255f, 233 / 255f, 255 / 255f));
-        //SetCoordinate(it, ScaleColor);
     }
     public void OnPointerDown(PointerEventData eventData)
     {

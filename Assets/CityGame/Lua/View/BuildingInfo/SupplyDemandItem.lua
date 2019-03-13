@@ -8,6 +8,7 @@ SupplyDemandItem = class('SupplyDemandItem')
 function SupplyDemandItem:initialize(dataInfo, viewRect)
     self.dataInfo = dataInfo
     self.viewRect = viewRect
+    self.itemId = dataInfo.itemId
     local viewTrans = self.viewRect
 
     self.bg = viewTrans:Find("bg").gameObject  --背景

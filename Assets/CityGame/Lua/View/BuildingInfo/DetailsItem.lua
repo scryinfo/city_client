@@ -27,28 +27,16 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberScrollbar.value = 0
     self.numberScrollbar.minValue = 0
     self.numberScrollbar.maxValue = goodsDataInfo.n
+    self.nameText.text = GetLanguage(self.itemId)
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
     self.inputPrice.onValueChanged:RemoveAllListeners()
     if Math_Floor(self.itemId / 100000) == materialKey then
-        self.nameText.text = GetLanguage(self.itemId)
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Material[self.itemId].img,self.goodsIcon,false)
         self.scoreRootTrans.transform.localScale = Vector3.zero
     elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.scoreText.text = self:_getValuableScore(GetServerPriceNumber(0), self.itemId)
-        self.nameText.text = GetLanguage(self.itemId)
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,self.goodsIcon,false)
         self.scoreRootTrans.transform.localScale = Vector3.one
         self.inputPrice.onValueChanged:AddListener(function (inputValue)
             if inputValue == nil or inputValue == "" then

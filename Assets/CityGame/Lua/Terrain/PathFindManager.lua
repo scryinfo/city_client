@@ -92,12 +92,35 @@ end
 
 --计算路径值，返回路径值的拆分点的
 function PathFindManager.CalculatePathValues(tempNum)
+    local tempTable = {}
+    if tempNum == nil then
+        return tempTable
+    end
+    tempNum = tempNum % 100
     if tempNum <= 0 or tempNum >15 then
         return nil
     end
     local returnValue = 0
-    local tempTable = {}
     local tempSize = 8
+    for i = 1, 4  do
+        returnValue = Math_Floor(tempNum / tempSize)
+        if returnValue ~= 0 then
+            tempTable[tempSize] = tempSize
+        end
+        tempNum = tempNum % tempSize
+        tempSize = tempSize / 2
+    end
+    return tempTable
+end
+
+--计算内部不能移动的路径
+function PathFindManager.CalculatePathCanNotMove(tempNum)
+    local tempTable = {}
+    if tempNum == nil or tempNum < 100  then
+        return tempTable
+    end
+    local returnValue = 0
+    local tempSize = 800
     for i = 1, 4  do
         returnValue = Math_Floor(tempNum / tempSize)
         if returnValue ~= 0 then

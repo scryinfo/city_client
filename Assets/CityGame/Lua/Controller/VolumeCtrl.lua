@@ -95,6 +95,7 @@ end
 function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve')
 end
 
 --更新时间
@@ -158,13 +159,13 @@ function VolumeCtrl:initData()
     local foodIndex = 1
     for i, v in pairs(Good) do
         if math.floor(v.itemId / 1000) == 2251 then
-            clothes[clothesIndex] = {}
-            clothes[clothesIndex].itemId = v.itemId
-            clothesIndex = clothesIndex +1
-        else
             food[foodIndex] = {}
             food[foodIndex].itemId = v.itemId
             foodIndex = foodIndex +1
+        else
+            clothes[clothesIndex] = {}
+            clothes[clothesIndex].itemId = v.itemId
+            clothesIndex = clothesIndex +1
         end
     end
 end
@@ -225,10 +226,17 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
 
     local supplyDemand = {}
     supplyDemand[idx] = item
+
+    volumeBehaviour:AddClick(transform:Find("bg").gameObject,VolumeCtrl.OnBg,VolumeCtrl)
 end
 
 VolumeCtrl.static.SupplyDemandClearData = function(transform)
+    volumeBehaviour:RemoveClick( transform:Find("bg/headImage/head").gameObject, VolumeCtrl._OnHeadBtn)
+end
 
+--点击背景
+function VolumeCtrl:OnBg()
+    --ct.OpenCtrl("HistoryCurveCtrl")
 end
 
 --倒计时
@@ -238,7 +246,7 @@ function VolumeCtrl:Countdown()
 
     if tonumber(ts.second) % 10 == 0 then
         DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
-       -- DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
     end
 
     minute = 59-tonumber(ts.minute)
@@ -254,9 +262,12 @@ end
 
 --给表赋值
 function VolumeCtrl:AssignmentDemand(table , countNpc , time)
+    if table == nil then
+        return
+    end
     local temp = 0
     local tempTable = {}
-    for i, v in ipairs(table) do
+    for i, v in pairs(table) do
         tempTable[i] = {}
         for k, z in pairs(npcConsumption[time]) do
             if countNpc[k % 9] == nil then
@@ -267,7 +278,7 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
         end
         tempTable[i] = temp
     end
-    for i, v in ipairs(tempTable) do
+    for i, v in pairs(tempTable) do
         table[i].demand = v
     end
 end

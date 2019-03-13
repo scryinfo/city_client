@@ -9,10 +9,11 @@ PlayerInfoManger={}
 local  cache,playerIDs,num,tempInfos
 local count,curr=1,1
 local recardNums=0
-local _func,_class,_classes
+local _func,_class,_classes,_funcs
 
 function PlayerInfoManger.Awake()
     _classes={}
+    _funcs={}
     tempInfos,  cache,playerIDs={},{},{}
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
@@ -35,7 +36,7 @@ function PlayerInfoManger.GetInfosOneByOne(playerIds,func,class)
             recardNums=recardNums-1
         else--无缓存
             table.insert(_classes,class)
-
+            table.insert(_funcs,func)
             table.insert(playerIDs,tempIds[1])
             Event.Brocast("m_QueryPlayerInfoChat",{tempIds[1]})
 
@@ -91,7 +92,7 @@ end
 ---==========================================================================================回调===================================================================================================
 
 --查询玩家信息返回
-function DataManager.n_OnReceivePlayerInfo(stream)
+function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     if not _func and  #playerIDs<=0  then    return   end
 
     if num==1 then---第一种
@@ -100,7 +101,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
             --写入缓存
             cache[playerIDs[curr]]=info
             --调用函数
-            _func(_classes[curr],info)
+            _funcs[curr](_classes[curr],info)
         end
         curr=curr+1
         recardNums=recardNums-1
@@ -111,6 +112,7 @@ function DataManager.n_OnReceivePlayerInfo(stream)
             playerIDs={}
             curr=1
             _classes={}
+            _funcs={}
         end
 
     else---第二种

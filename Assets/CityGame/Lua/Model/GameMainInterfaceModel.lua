@@ -26,7 +26,6 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnAllExchangeAmount,self) --所有交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
-    -- CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","getAllMails"),GameMainInterfaceModel.n_OnGetAllMails);
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
 end
@@ -66,7 +65,7 @@ end
 --查询城市广播
 function GameMainInterfaceModel:m_queryCityBroadcast()
     local msgId = pbl.enum("sscode.OpCode","queryCityBroadcast")
-    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
 --服务器回调--

@@ -57,5 +57,6 @@ function Game.OnPostInitOK()
     --Avatar管理器
     AvatarManger.Awake()
     PlayerInfoManger.Awake()
+    PlayerInfoMangerEx.Awake()
     PathFindManager.Init()
 end

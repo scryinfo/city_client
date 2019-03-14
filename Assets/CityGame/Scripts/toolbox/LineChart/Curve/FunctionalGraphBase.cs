@@ -100,6 +100,7 @@ public class FunctionalGraphBase : MonoBehaviour {
     [Range(2f, 20f)] public float LineWidth = 2.0f;
     ///分隔线的颜色
     ///
+    [SerializeField]
     public Color BoundaryColor = Color.gray;
     
 

@@ -47,17 +47,6 @@ public class FunctionalGraph : MaskableGraphic
     private void Init()
     {
         _myRect = this.rectTransform;
-        //Vector3[] v1 = { new Vector2(300, 100),new Vector2(200, 0),new Vector2(100, 300),new Vector2(0, 200)};
-        //Vector3[] v2 = { new Vector2(300, 200),new Vector2(200, 100),new Vector2(100, 250),new Vector2(0, 300)};
-        //Vector3[] v3 = { new Vector2(300, 300),new Vector2(200, 50),new Vector2(100, 150),new Vector2(0, 100)};
-        //line.Add(v1);
-        //line.Add(v2);
-        //line.Add(v3);
-        //lineColor.Add(new Color(53/255f, 218/255f, 233/255f, 255/255f));
-        //lineColor.Add(new Color(233/255f, 34/255f, 104/255f, 255/255f));
-        //lineColor.Add(new Color(21/255f, 48/255f, 233/255f, 255/255f));
-        //float[] f = { 300f };
-        //BoundaryLine(f);
     }
     /// 
     /// 重写这个类以绘制UI
@@ -102,7 +91,7 @@ public class FunctionalGraph : MaskableGraphic
         #region 绘制折线
         for (int i = 0; i < line.Count; i++)
         {
-            for (int v = 0; v < line[i].Length-1; v++)
+            for (int v = 1; v < line[i].Length-1; v++)
             {
                 vh.AddUIVertexQuad(GetQuad(line[i][v], line[i][v+1], lineColor[i], GraphBase.LineWidth));
             }        
@@ -212,7 +201,7 @@ public class FunctionalGraph : MaskableGraphic
                 break;
         }
         // 分界线
-        for (int i = 0; i < boundary.Length; i++)
+        for (int i = 1; i < boundary.Length; i++)
         {
             Vector2 firstPoint = Vector2.zero + new Vector2(boundary[i], 0);
             Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
@@ -322,6 +311,11 @@ public class FunctionalGraph : MaskableGraphic
     //画折线
     public void DrawLine(Vector2[] lines,Color color)
     {
+        if (line.Count >= 2)
+        {
+            line.RemoveAt(0);
+            lineColor.RemoveAt(0);
+        }
         line.Add(lines);
         lineColor.Add(color);
     }

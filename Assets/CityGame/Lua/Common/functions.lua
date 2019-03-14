@@ -392,6 +392,9 @@ function getMoneyString(str)
 		temp = string.sub(intString,(a + 1) + 3*(i-1),(a + 3) + 3*(i-1))
 		b = b .. "," .. temp
 	end
+	if a == 0 then
+		b = string.sub(b,2)
+	end
 	return b..floatString
 end
 

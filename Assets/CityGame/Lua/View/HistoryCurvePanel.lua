@@ -23,6 +23,7 @@ function HistoryCurvePanel.InitPanel()
     --top
     this.xBtn = transform:Find("history/xBtn").gameObject --返回
     this.name = transform:Find("history/name"):GetComponent("Text");
+    this.curve = transform:Find("history/curveBg/curve"):GetComponent("RectTransform");
     this.slide = transform:Find("history/curveBg/curve"):GetComponent("Slide");  --滑动
     this.graph = transform:Find("history/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
     this.goods = transform:Find("history/downBg/goods/goodsImage"):GetComponent("Image")  --商品图片

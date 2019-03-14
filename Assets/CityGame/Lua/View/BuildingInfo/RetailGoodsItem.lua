@@ -1,17 +1,18 @@
 RetailGoodsItem = class('RetailGoodsItem')
 
 --初始化
-function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,state,buildingId)
+function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state)
     self.id = id;
     self.prefab = prefab;
     self.inluabehaviour = inluabehaviour;
     self.goodsDataInfo = goodsDataInfo;
-    self.manager = mgr
-    self.state = state
-    self.buildingId = id[2]
+    self.state = state[1]
+    self.buildingId = state[2]
     self.itemId = goodsDataInfo.k.id
     self.producerId = goodsDataInfo.k.producerId
     self.qty = goodsDataInfo.k.qty
+    self.num = goodsDataInfo.n
+    self.price = goodsDataInfo.price
 
     self.shelfImg = self.prefab.transform:Find("shelfImg").gameObject;
     self.goodsicon = self.prefab.transform:Find("details/goodsicon"):GetComponent("Image");
@@ -52,22 +53,27 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,mgr,id,s
             self.goodsicon.sprite = texture
         end
     end)
-    self.inluabehaviour:AddClick(self.XBtn.gameObject,self.OnClick_inluabehaviour,self)
+    self.inluabehaviour:AddClick(self.XBtn.gameObject,self.OnClick_XBtn,self)
+    self.inluabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self)
     self:initializeUiState()
 end
 --初始化UI状态
 function RetailGoodsItem:initializeUiState()
     if self.state then
         self.XBtn.transform.localScale = Vector3.zero
-        self.detailsBtn.transform.localScale = Vector3.zero
+        --self.detailsBtn.transform.localScale = Vector3.zero
     else
         self.XBtn.transform.localScale = Vector3.one
-        self.detailsBtn.transform.localScale = Vector3.one
+        --self.detailsBtn.transform.localScale = Vector3.one
     end
 end
-function RetailGoodsItem:OnClick_inluabehaviour(go)
+function RetailGoodsItem:OnClick_XBtn(go)
     PlayMusEff(1002)
     Event.Brocast("m_ReqRetailShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
+end
+function RetailGoodsItem:OnClick_detailsBtn(ins)
+    PlayMusEff(1002)
+    Event.Brocast("OpenDetailsBox",ins)
 end
 function RetailGoodsItem:RefreshID(id)
     self.id = id

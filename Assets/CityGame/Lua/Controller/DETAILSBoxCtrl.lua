@@ -172,6 +172,29 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
             UIPanel.ClosePage()
             return
         end
+    elseif ins.m_data.buildingType == 6 then
+        if number ~= ins.m_data.num and price ~= ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqRetailShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            Event.Brocast("m_ReqRetailModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price == ins.m_data.price then
+            UIPanel.ClosePage()
+            return
+        end
+        if number ~= ins.m_data.num and price == ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqRetailShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price ~= ins.m_data.price then
+            Event.Brocast("m_ReqRetailModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
     end
 end
 --刷新滑动条

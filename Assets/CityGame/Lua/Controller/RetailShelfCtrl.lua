@@ -23,10 +23,10 @@ function RetailShelfCtrl:Active()
     self:_addListener()
 end
 function RetailShelfCtrl:_addListener()
-
+    Event.AddListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function RetailShelfCtrl:_removeListener()
-
+    Event.RemoveListener("OpenDetailsBox",self.OpenDetailsBox,self)
 end
 function RetailShelfCtrl:Refresh()
     self.luabehaviour = retailShelf
@@ -83,12 +83,80 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
         if value.itemId == dataInfo.item.key.id then
             if value.goodsDataInfo.n == dataInfo.item.n then
                 self:deleteGoodsItem(self.shelfDatas,key)
+
+                --下架后要把下架的商品数量添加到仓库
+                if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+                    local inHand = {}
+                    local goodsData = {}
+                    local key = {}
+                    key.id = dataInfo.item.key.id
+                    key.producerId = dataInfo.item.key.producerId
+                    key.qty = dataInfo.item.key.qty
+                    goodsData.key = key
+                    goodsData.n = dataInfo.item.n
+                    inHand = goodsData
+                    self.m_data.store.inHand = {}
+                    self.m_data.store.inHand[#self.m_data.store.inHand + 1] = inHand
+                else
+                    for key,value in pairs(self.m_data.store.inHand) do
+                        if value.key.id == dataInfo.item.key.id then
+                            value.n = value.n + dataInfo.item.n
+                        end
+                    end
+                end
+                for key1,value1 in pairs(self.m_data.shelf.good) do
+                    if value1.k.id == dataInfo.item.key.id then
+                        table.remove(self.m_data.shelf.good,key1)
+                    end
+                end
+                for key2,value2 in pairs(self.m_data.store.locked) do
+                    if value2.key.id == dataInfo.item.key.id then
+                        table.remove(self.m_data.store.locked,key2)
+                    end
+                end
             else
                 value.numberText.text = value.num - dataInfo.item.n
                 value.goodsDataInfo.n = tonumber(value.numberText.text)
                 value.num = tonumber(value.numberText.text)
-                local stateBool = true
-                self:GoodsItemState(self.shelfDatas,stateBool)
+                --下架数量改变后同时改变模拟服务器数据
+                if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+                    local goodsData = {}
+                    local key = {}
+                    key.id = dataInfo.item.key.id
+                    key.producerId = dataInfo.item.key.producerId
+                    key.qty = dataInfo.item.key.qty
+                    goodsData.key = key
+                    goodsData.n = dataInfo.item.n
+                    if not self.m_data.store.inHand then
+                        self.m_data.store.inHand = {}
+                    end
+                    self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goodsData
+                else
+                    for key,value in pairs(self.m_data.store.inHand) do
+                        if value.key.id == dataInfo.item.key.id then
+                            value.n = value.n + dataInfo.item.n
+                        end
+                    end
+                end
+                if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
+                    local goodsData = {}
+                    local key = {}
+                    key.id = dataInfo.item.key.id
+                    key.producerId = dataInfo.item.key.producerId
+                    key.qty = dataInfo.item.key.qty
+                    goodsData.key = key
+                    goodsData.n = dataInfo.item.n
+                    if not self.m_data.store.locked then
+                        self.m_data.store.locked = {}
+                    end
+                    self.m_data.store.locked[#self.m_data.store.locked + 1] = goodsData
+                else
+                    for key1,value1 in pairs(self.m_data.store.locked) do
+                        if value1.key.id == dataInfo.item.key.id then
+                            value1.n = value1.n - dataInfo.item.n
+                        end
+                    end
+                end
             end
         end
     end
@@ -107,7 +175,12 @@ function RetailShelfCtrl:GetShelfNum(dataTable)
         return warehouseNum
     end
 end
-
+--货架点击Item详情弹框
+function RetailShelfCtrl:OpenDetailsBox(ins)
+    ins.buildingType = self.m_data.buildingType
+    ins.isOther = self.m_data.isOther
+    ct.OpenCtrl("DETAILSBoxCtrl",ins)
+end
 
 --RetailShelfCtrl = class('RetailShelfCtrl',UIPanel)
 --UIPanel:ResgisterOpen(RetailShelfCtrl)

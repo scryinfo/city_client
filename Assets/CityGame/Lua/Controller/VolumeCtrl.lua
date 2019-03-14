@@ -309,7 +309,7 @@ end
 function VolumeCtrl:OnBg(ins)
     --ct.OpenCtrl("HistoryCurveCtrl",ins.itemId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcNumCurve',ins.itemId)
-    --DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcTypeNum',ins.itemId)
+    --DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcTypeNum')
 end
 
 --倒计时

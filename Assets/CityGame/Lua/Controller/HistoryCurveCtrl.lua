@@ -20,6 +20,8 @@ end
 function HistoryCurveCtrl:Awake()
     curveBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     curveBehaviour:AddClick(HistoryCurvePanel.xBtn,self.OnBack,self)
+    --HistoryCurvePanel.curve.anchoredPosition3D = Vector3.New(-18524, 56,0)
+    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
     self:initData()
 end
 
@@ -62,6 +64,9 @@ function HistoryCurveCtrl:initData()
     HistoryCurvePanel.slide:SetCoordinate(self.m_data.supplyNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
     HistoryCurvePanel.slide:SetXScaleValue(self.m_data.time,116)
     HistoryCurvePanel.graph:BoundaryLine(self.m_data.boundaryLine)
+
+
+
 end
 
 function HistoryCurveCtrl:OnBack()

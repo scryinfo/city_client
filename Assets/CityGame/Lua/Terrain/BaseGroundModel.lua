@@ -9,7 +9,7 @@ function BaseGroundModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
 
-    Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
+    --Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
 
 --刷新数据
@@ -86,17 +86,20 @@ function BaseGroundModel:CheckBubbleState()
     end
     --如果之前有气泡则直接干掉实例
     if self.bubbleItem ~= nil then
-        self.bubbleItem:Close()
+        local blockId = TerrainManager.GridIndexTurnBlockID(data.pos)
+        UIBubbleManager.closeGTransItem(self.bubbleItem, blockId)
         self.bubbleItem = nil
     end
 end
 
 function BaseGroundModel:Close()
+    if self.bubbleItem ~= nil then
+        local blockId = TerrainManager.GridIndexTurnBlockID(self.Data.pos)
+        UIBubbleManager.closeGTransItem(self.bubbleItem, blockId)
+        self.bubbleItem = nil
+    end
     for key, value in pairs(self.Data) do
         value = nil
-    end
-    if self.bubbleItem ~= nil then
-        self.bubbleItem:Close()
     end
     self.groundState = nil
     self = nil

@@ -181,16 +181,26 @@ function UIBubbleManager._openGroundAucCtrl(index)
 end
 --通过类型获取一个气泡
 function UIBubbleManager.getBubbleByType(bubbleType, groundState, serverPos, uiCenterPos)
-    if bubbleType == UIBubbleType.GroundTrans or bubbleType == UIBubbleType.BuildingSelf then
-        local data = {bubbleType = bubbleType, groundState = groundState, uiCenterPos = uiCenterPos}
-        local obj = UIBubbleManager.getBubbleObj(bubbleType)
-        if serverPos ~= nil then
-            data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
-            obj.name = "bubble "..serverPos.x..serverPos.y
-        end
-        local bubbleItem = UIBubbleTransAndBuildingItem:new(data, obj)
-        return bubbleItem
+    if bubbleType ~= UIBubbleType.GroundTrans and bubbleType ~= UIBubbleType.BuildingSelf then
+        return nil
     end
+
+    local data = {bubbleType = bubbleType, groundState = groundState, uiCenterPos = uiCenterPos}
+    local obj = UIBubbleManager.getBubbleObj(bubbleType)
+    if serverPos ~= nil then
+        data.blockId = TerrainManager.GridIndexTurnBlockID(serverPos)
+        obj.name = "bubble "..serverPos.x..serverPos.y
+    end
+    local bubbleItem = UIBubbleTransAndBuildingItem:new(data, obj)
+    if bubbleType == UIBubbleType.GroundTrans then
+        if this.gTransItemsTable == nil then
+            this.gTransItemsTable = {}
+        end
+        this.gTransItemsTable[data.blockId] = bubbleItem
+        --MapBubbleManager  --更新啊更新
+    end
+
+    return bubbleItem
 end
 function UIBubbleManager.getBubbleObj(type)
     local go
@@ -206,8 +216,17 @@ function UIBubbleManager.getBubbleObj(type)
         --拍卖类型的预制
     end
 end
-
---回收item
+--回收土地交易气泡
+function UIBubbleManager.closeGTransItem(item, blockId)
+    item:Close()
+    if this.gTransItemsTable ~= nil then
+        local temp = this.gTransItemsTable[blockId]
+        if temp ~= nil then
+            this.gTransItemsTable[blockId] = nil
+        end
+    end
+end
+--回收拍卖item
 function UIBubbleManager.closeItem(item, id)
     item:Close()
     if id ~= nil then
@@ -238,4 +257,8 @@ function UIBubbleManager.getCollectionAucData()
         end
         return tempTable
     end
+end
+--
+function UIBubbleManager.getTransItemsTable()
+    return this.gTransItemsTable
 end

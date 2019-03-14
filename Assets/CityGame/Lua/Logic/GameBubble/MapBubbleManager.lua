@@ -198,6 +198,10 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
 
     this.cleanSummaryItems()
     for i, value in pairs(data.info) do
+        if value.num == nil then
+            value.num = value.sellingN + value.rentingN
+        end
+
         if value.num > 0 then
             this._createSummaryItems(value)
         end
@@ -273,12 +277,36 @@ function MapBubbleManager.cleanAOIWillRemoveDatas()
     end
 end
 --生成土地交易
-function MapBubbleManager.createGroundTransItems()
+function MapBubbleManager.createGroundTransDetailItems()
     --获取到需要生成的交易信息
+    this.cleanAllGTransData()
 
+    local tempDatas = UIBubbleManager.getTransItemsTable()
+    if tempDatas ~= nil then
+        for id, value in pairs(tempDatas) do
+            if value ~= nil then
+                local data = value:getValuableData()
+                local blockId = data.blockId
+                local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+                if this.gTransData[collectionId] == nil then
+                    this.gTransData[collectionId] = {}
+                end
+                if this.gTransData[collectionId].detailItems == nil then
+                    this.gTransData[collectionId].detailItems = {}
+                end
+                local item = this._createGTransItems(data)
+
+                local serverPos = TerrainManager.BlockIDTurnPosition(blockId)
+                local pos = Vector2.New(serverPos.x, -serverPos.z) * this.itemWidth
+                local delta = this.itemDelta *  1  --一个地块的大小
+                item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+                this.gTransData[collectionId].detailItems[blockId] = item
+            end
+        end
+    end
 end
 --生成土地拍卖
-function MapBubbleManager.createGroundTransDetailItems()
+function MapBubbleManager.createGAucDetailItems()
     this.cleanAllGroundAucData()
 
     local tempDatas = UIBubbleManager.getAucItemsTable()
@@ -322,6 +350,22 @@ function MapBubbleManager.cleanAllGroundAucData()
     end
     this.groundAucData = {}
 end
+--清除所有土地交易
+function MapBubbleManager.cleanAllGTransData()
+    if this.gTransData ~= nil then
+        for i, value in pairs(this.gTransData) do
+            if value.detailItems ~= nil then
+                for i, item in pairs(value.detailItems) do
+                    item:close()
+                    item = nil
+                end
+                value.detailItems = nil
+            end
+            value = nil
+        end
+    end
+    this.gTransData = {}
+end
 --镜头低时显示建筑详细大小
 function MapBubbleManager.toggleShowDetailBuilding(show)
     if show == nil then
@@ -346,6 +390,7 @@ function MapBubbleManager.showSummaryOrDetail(showDetail)
         --清除详情item
         this.cleanAllCollectionDetails()
         this.cleanAllGroundAucData()
+        this.cleanAllGTransData()
     end
 end
 --
@@ -386,6 +431,7 @@ function MapBubbleManager.cleanAllBubbleItems()
     this.cleanSummaryItems()
     this.cleanAllCollectionDetails()
     this.cleanAllGroundAucData()
+    this.cleanAllGTransData()
 
     this.centerItem:resetState()
 end

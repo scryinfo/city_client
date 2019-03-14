@@ -19,7 +19,7 @@ function MapRightGroundTransPage:initialize(viewRect)
 
     self.rentRoot = viewRect:Find("root/rentRoot")
     self.dayRentalText = viewRect:Find("root/rentRoot/rentalText"):GetComponent("Text")
-    --self.totalRentalText = viewRect:Find("root/rentRoot/totalRentalText"):GetComponent("Text")
+    self.rentDayText = viewRect:Find("root/rentRoot/rentDayText"):GetComponent("Text")
     self.goHereBtn = viewRect:Find("root/goHereBtn"):GetComponent("Button")
 
     self.titleText01 = viewRect:Find("root/titleText"):GetComponent("Text")
@@ -42,18 +42,18 @@ function MapRightGroundTransPage:refreshData(data)
     self.viewRect.anchoredPosition = Vector2.zero
     self.data = data
 
-    if data.state == GroundTransState.Sell then
-        self.groundSell.localScale = Vector3.one
-        self.groundRent.localScale = Vector3.zero
-        self.sellPriceText.text = "E"..getPriceString(GetClientPriceString(data.sell.price), 24, 20)
-    elseif data.state == GroundTransState.Rent then
-        self.groundRent.localScale = Vector3.one
-        self.groundSell.localScale = Vector3.zero
-        self.dayRentalText.text = "E"..getPriceString(GetClientPriceString(data.rent.rentPreDay), 24, 20)
-        local day = data.rent.rentDays
-        --if day ~= nil then
-        --    self.totalRentalText.text = "E"..getPriceString(GetClientPriceString(data.rent.rentPreDay * day),24,20)
-        --end
+    local groundInfo = DataManager.GetGroundDataByID(self.data.detailData.blockId).Data
+    PlayerInfoManger.GetInfosOneByOne({[1] = groundInfo.ownerId}, self._initPersonalInfo, self)
+
+    if data.detailData.groundState == GroundTransState.Sell then
+        self.sellRoot.localScale = Vector3.one
+        self.rentRoot.localScale = Vector3.zero
+        self.sellPriceText.text = "E"..getPriceString(GetClientPriceString(groundInfo.sell.price), 24, 20)
+    elseif data.detailData.groundState == GroundTransState.Rent then
+        self.rentRoot.localScale = Vector3.one
+        self.sellRoot.localScale = Vector3.zero
+        self.rentDayText.text = groundInfo.rent.rentDaysMin.."-"..groundInfo.rent.rentDaysMax
+        self.dayRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay), 24, 20)
     end
     self:openShow()
 end
@@ -78,13 +78,15 @@ function MapRightGroundTransPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundTransPage:_goHereBtn()
-    --MapBubbleManager.GoHereFunc(self.data.buildingBase)
+    local temp = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
+    MapBubbleManager.GoHereFunc({pos = temp})
 end
 --
 function MapRightGroundTransPage:_initPersonalInfo(data)
     if data ~= nil then
         self.nameText.text = data.name
-        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.2)
+        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.portraitImg.transform,0.2)
+        self.data.playerInfo = data
     end
 end
 --
@@ -92,5 +94,5 @@ function MapRightGroundTransPage:_clickPlayerInfoBtn()
     if self.data.playerInfo == nil then
         return
     end
-
+    ct.OpenCtrl("PersonalHomeDialogPageCtrl", self.data.playerInfo)
 end

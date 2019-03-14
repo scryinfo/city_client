@@ -89,6 +89,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
     Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+    Event.AddListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
 
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -104,6 +105,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
     Event.RemoveListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+    Event.RemoveListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
 
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -221,6 +223,12 @@ function MapCtrl:dealSelect()
         self.selectDetailItem = nil  --另一种选项清空
     end
     self.selectSearchType = EMapSearchType.Deal
+
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqGroundTransSummary()
+    end
 end
 --选中拍卖
 function MapCtrl:auctionSelect()
@@ -233,7 +241,11 @@ function MapCtrl:auctionSelect()
     end
     self.selectSearchType = EMapSearchType.Auction
 
-    MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+    end
 end
 
 ---
@@ -403,12 +415,7 @@ end
 --打开土地交易
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
-        if self.rightSearchItem ~= nil then
-            self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
-        end
-        self.rightSearchItem = item
-        self.rightSearchItem:toggleShowDetailImg(true)
-        MapPanel.rightMatGoodPageItem:refreshData(item.data)
+        MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
 
@@ -560,6 +567,8 @@ function MapCtrl:_judgeDetail()
         ct.log("")
         --显示拍卖/土地交易详情
         if self.selectSearchType == EMapSearchType.Auction then
+            MapBubbleManager.createGAucDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Deal then
             MapBubbleManager.createGroundTransDetailItems()
         end
     end
@@ -575,6 +584,8 @@ function MapCtrl:_judgeSummary()
         --显示拍卖/土地交易缩略
         if self.selectSearchType == EMapSearchType.Auction then
             MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+        elseif self.selectSearchType == EMapSearchType.Deal then
+            MapModel.m_ReqGroundTransSummary()
         end
     end
 end

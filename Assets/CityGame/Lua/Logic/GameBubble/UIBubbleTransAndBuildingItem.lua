@@ -48,6 +48,13 @@ function UIBubbleTransAndBuildingItem:_initFunc(data)
         self.data.uiCenterPos = Vector3.New(self.data.uiCenterPos[1], self.data.uiCenterPos[2], self.data.uiCenterPos[3])
     end
 end
+--外部获取有效的信息
+function UIBubbleTransAndBuildingItem:getValuableData()
+    if self.data.bubbleType == UIBubbleType.GroundTrans then
+        local data = {blockId = self.data.blockId, groundState = self.data.groundState}
+        return data
+    end
+end
 
 function UIBubbleTransAndBuildingItem:_hideFunc()
     if self.gameObject ~= nil then

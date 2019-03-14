@@ -444,7 +444,7 @@ function ProcessWarehouseCtrl:SetShelfData(dataInfo)
     local good = {}
     local goodData = {}
     local key = {}
-    if not self.m_data.shelf.good then
+    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
         key.id = dataInfo.item.key.id
         key.producerId = dataInfo.item.key.producerId
         key.qty = dataInfo.item.key.qty

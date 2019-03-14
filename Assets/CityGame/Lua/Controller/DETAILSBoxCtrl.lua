@@ -1,7 +1,7 @@
 DETAILSBoxCtrl = class('DETAILSBoxCtrl',UIPanel);
 UIPanel:ResgisterOpen(DETAILSBoxCtrl)
 
-local itemId
+local Math_Floor = math.floor
 function DETAILSBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal);
 end
@@ -35,14 +35,13 @@ function DETAILSBoxCtrl:Awake(go)
         if DETAILSBoxPanel.scoreText.transform.localScale == Vector3.zero or self.itemId == nil then
             return
         end
-
         DETAILSBoxPanel.scoreText.text = self:_getValuableScore(GetServerPriceNumber(tonumber(inputValue)), self.itemId)
     end)
 end
 
 function DETAILSBoxCtrl:_getValuableScore(rentPrice, buildingType)
     local value = (1 - (rentPrice / TempBrandConfig[buildingType])) *100
-    value = math.floor(value)
+    value = Math_Floor(value)
     if value <= 0 then
         return "000"
     end
@@ -73,7 +72,6 @@ function DETAILSBoxCtrl:OnClick_XBtn(obj)
     UIPanel.ClosePage()
 end
 function DETAILSBoxCtrl:Hide()
-    --Event.RemoveListener("refreshUiInfo",self.RefreshUiInfo,self)
     UIPanel.Hide(self)
 end
 
@@ -91,38 +89,25 @@ function DETAILSBoxCtrl:Refresh()
     end
     self.itemId = self.m_data.itemId
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.zero
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.one
         DETAILSBoxPanel.materialNameText.text = Material[self.itemId].name
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                DETAILSBoxPanel.materialIcon.sprite = texture
-            end
-        end)
-
+        LoadSprite(Material[self.itemId].img,DETAILSBoxPanel.materialIcon,false)
         DETAILSBoxPanel.scoreText.transform.localScale = Vector3.zero
         DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.zero
         DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.one
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.zero
         DETAILSBoxPanel.GoodNameText.text = Good[self.itemId].name
-
         DETAILSBoxPanel.scoreText.transform.localScale = Vector3.one
         DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.one
         DETAILSBoxPanel.infoRootBtn.transform.localScale = Vector3.zero
         --DETAILSBoxPanel.playerName.text =
         --DETAILSBoxPanel.companyNameText.text =
         --DETAILSBoxPanel.headImg =
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                DETAILSBoxPanel.goodsIcon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,DETAILSBoxPanel.goodsIcon,false)
     end
     --DETAILSBoxPanel.GoodNameText.text = self.m_data.name
     DETAILSBoxPanel.numberInput.text = self.m_data.num
@@ -159,7 +144,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
             return
         end
         if number == ins.m_data.num and price ~= ins.m_data.price then
-            Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+            Event.Brocast("m_ReqMaterialModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
             UIPanel.ClosePage()
             return
         end
@@ -184,6 +169,29 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         end
         if number == ins.m_data.num and price ~= ins.m_data.price then
             Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
+    elseif ins.m_data.buildingType == 6 then
+        if number ~= ins.m_data.num and price ~= ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqRetailShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            Event.Brocast("m_ReqRetailModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price == ins.m_data.price then
+            UIPanel.ClosePage()
+            return
+        end
+        if number ~= ins.m_data.num and price == ins.m_data.price then
+            local num = ins.m_data.num - number
+            Event.Brocast("m_ReqRetailShelfDel",ins.m_data.buildingId,ins.itemId,num,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty)
+            UIPanel.ClosePage()
+            return
+        end
+        if number == ins.m_data.num and price ~= ins.m_data.price then
+            Event.Brocast("m_ReqRetailModifyShelf",ins.m_data.buildingId,ins.itemId,number,price,ins.m_data.goodsDataInfo.k.producerId,ins.m_data.goodsDataInfo.k.qty);
             UIPanel.ClosePage()
             return
         end

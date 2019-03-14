@@ -37,10 +37,6 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialDat
     self.tip = prefab.transform:Find("tipImg")
 
     self:InitializeData()
-    --LuaBehaviour:AddClick(self.deleteBtn.gameObject,function(go)
-    --    PlayMusEff(1002)
-    --    Event.Brocast("DeleteLine",go)
-    --end)
     LuaBehaviour:AddClick(self.deleteBtn.gameObject,self.OnClick_deleteBtn,self)
     Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
 end
@@ -76,6 +72,7 @@ function LineItem:InitializeData()
     self.brandName.text = GetLanguage(4301011)
     self.nameText.text = GetLanguage(self.itemId)
     self.accreditIcon.localScale = Vector3.zero
+
     local number = {}
     number["num1"] = self.lineInfo.nowCount
     number["num2"] = self.lineInfo.targetCount
@@ -86,6 +83,7 @@ function LineItem:InitializeData()
     self.productionSlider.value = Math_Ceil((self.OneTotalTime - (self.remainTime % self.OneTotalTime) )/ 1000)
     self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
     self.timeText.text = self:GetTime(self.lineInfo.targetCount,self.lineInfo.nowCount,self.lineInfo.workerNum)
+
     if Math_Floor(self.itemId / 100000) == materialKey then
         UpdateBeat:Add(self.Update,self)
     elseif Math_Floor(self.itemId / 100000) == goodsKey then

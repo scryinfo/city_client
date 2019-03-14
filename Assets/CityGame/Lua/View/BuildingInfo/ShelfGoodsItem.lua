@@ -1,5 +1,6 @@
 ShelfGoodsItem = class('ShelfGoodsItem')
 
+local Math_Floor = math.floor
 --初始化方法   数据（接受服务器）
 function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,info)
     self.id = id
@@ -25,31 +26,18 @@ function ShelfGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,info)
     self.goodsbg = self.prefab.transform:Find("goodsbg")  --商品bg
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
-        --self.nameText.text = Material[self.itemId].name;
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.materialbg.transform.localScale = Vector3.one
         self.goodsbg.transform.localScale = Vector3.zero
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsicon.sprite = texture
-            end
-        end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+        LoadSprite(Material[self.itemId].img,self.goodsicon,false)
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.materialbg.transform.localScale = Vector3.zero
         self.goodsbg.transform.localScale = Vector3.one
-        self.nameText.text = GetLanguage(self.itemId);
-        panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.goodsicon.sprite = texture
-            end
-        end)
+        LoadSprite(Good[self.itemId].img,self.goodsicon,false)
     end
     --赋值
     self.numberText.text = self.num
+    self.nameText.text = GetLanguage(self.itemId);
     self.moneyText.text = GetClientPriceString(self.price)
     --点击事件
     self._luabehaviour:AddClick(self.bgBtn.gameObject,self.OnClick_bgBtn,self);
@@ -98,9 +86,9 @@ end
 --点击删除
 function ShelfGoodsItem:OnClicl_XBtn(go)
     PlayMusEff(1002)
-    if math.floor(go.itemId / 100000) == 21 then
+    if Math_Floor(go.itemId / 100000) == 21 then
         Event.Brocast("m_ReqMaterialShelfDel",go.buildingId,go.itemId,go.numberText.text,go.producerId,go.qty)
-    elseif math.floor(go.itemId / 100000) == 22 then
+    elseif Math_Floor(go.itemId / 100000) == 22 then
         Event.Brocast("m_ReqProcessShelfDel",go.buildingId,go.itemId,go.numberText.text,go.goodsDataInfo.k.producerId,go.goodsDataInfo.k.qty)
     end
 end
@@ -111,11 +99,6 @@ end
 --删除后刷新ID及刷新架子显示
 function ShelfGoodsItem:RefreshID(id)
     self.id = id
-    --if id % 5 == 0 then
-    --    self.shelfImg:SetActive(true);
-    --else
-    --    self.shelfImg:SetActive(false);
-    --end
 end
 --function ShelfGoodsItem:RefreshData(data,id)
 --    self.id = id

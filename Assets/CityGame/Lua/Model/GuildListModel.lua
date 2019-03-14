@@ -58,8 +58,13 @@ function GuildListModel:m_JoinSociety(applyGuildInfo)
 end
 
 -- 申请加入返回
-function GuildListModel:n_OnJoinSociety(guildIdDes)
+function GuildListModel:n_OnJoinSociety(guildIdDes, msgId)
     --Event.Brocast("SmallPop", string.format("已提交申请公会%s", guildIdDes.id),80)
+    --异常处理
+    if msgId == 0 then
+        Event.Brocast("c_OnJoinSociety")
+        return
+    end
     Event.Brocast("SmallPop", "已提交申请公会",80)
 end
 

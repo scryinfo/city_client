@@ -43,12 +43,12 @@ function VolumeCtrl:Awake()
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
+    currentTime = math.floor(currentTime - 3600)
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
 
     self.initData()
-
     --滑动互用
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.supplyDemand.mProvideData = VolumeCtrl.static.SupplyDemandProvideData
@@ -69,8 +69,8 @@ function VolumeCtrl:Active()
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
     Event.AddListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
     Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图
 end
-
 function VolumeCtrl:Refresh()
     --打开Model
     VolumeCtrl:Countdown()
@@ -85,7 +85,8 @@ function VolumeCtrl:Hide()
     Event.RemoveListener("c_NpcNum",self.c_NpcNum,self)
     Event.RemoveListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
     Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
-    Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.RemoveListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图
 end
 
 function VolumeCtrl:OnCreate(obj)
@@ -95,14 +96,15 @@ end
 function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve')
 end
 
 --更新时间
 function VolumeCtrl:Update()
     VolumeCtrl:Countdown()
     if tonumber(minute) == 0 and tonumber(second) == 0 then
-        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum') --每种商品购买的npc数量
+        local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+        currentTime = math.floor(currentTime - 3600000)
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime) --每种商品购买的npc数量
     end
 end
 
@@ -149,6 +151,11 @@ end
 --所有交易量
 function VolumeCtrl:c_ExchangeAmount(info)
     VolumePanel.volumeText.text = "E"..getMoneyString(GetClientPriceString(info))
+end
+
+--每种商品购买的npc数量曲线图
+function VolumeCtrl:c_GoodsNpcNumCurve()
+
 end
 
 --初始化
@@ -227,7 +234,7 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
     local supplyDemand = {}
     supplyDemand[idx] = item
 
-    volumeBehaviour:AddClick(transform:Find("bg").gameObject,VolumeCtrl.OnBg,VolumeCtrl)
+    volumeBehaviour:AddClick(transform:Find("bg").gameObject,VolumeCtrl.OnBg,item)
 end
 
 VolumeCtrl.static.SupplyDemandClearData = function(transform)
@@ -235,8 +242,9 @@ VolumeCtrl.static.SupplyDemandClearData = function(transform)
 end
 
 --点击背景
-function VolumeCtrl:OnBg()
-    --ct.OpenCtrl("HistoryCurveCtrl")
+function VolumeCtrl:OnBg(ins)
+    --ct.OpenCtrl("HistoryCurveCtrl",ins.itemId)
+    --DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcNumCurve',ins.itemId)
 end
 
 --倒计时
@@ -270,7 +278,7 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
     for i, v in pairs(table) do
         tempTable[i] = {}
         for k, z in pairs(npcConsumption[time]) do
-            if countNpc[k % 9] == nil then
+            if countNpc == nil or countNpc[k % 9] == nil then
                 temp = temp + 0
             else
                 temp = temp + math.floor(countNpc[k % 9].value * z[v.itemId]/10000)

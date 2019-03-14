@@ -88,10 +88,9 @@ end
 function RetailStoresModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"RetailWarehouseCtrl",'RefreshWarehouseData',data,false)
 end
---修改货架数量或价格
+--修改货架价格
 function RetailStoresModel:n_OnModifyShelfInfo(data)
-    local aaa = data
-    -----------------------------------------
+    DataManager.ControllerRpcNoRet(self.insId,"RetailShelfCtrl",'RefreshShelfData',data)
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)

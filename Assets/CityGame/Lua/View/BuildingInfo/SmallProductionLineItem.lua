@@ -1,6 +1,6 @@
 SmallProductionLineItem = class('SmallProductionLineItem')
 
-local remainTime
+local Math_Floor = math.floor
 --初始化方法
 function SmallProductionLineItem:initialize(goodsDataInfo,prefab,inluabehaviour,isEnableChange,manager)
     self.prefab = prefab;
@@ -70,7 +70,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
     self.itemId = infoData.itemId
     self.inputNumber.text = 0;
     local materialKey,goodsKey = 21,22
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.pNumberScrollbar.maxValue = self.warehouseCapacity;
     else
         self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
@@ -89,7 +89,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
     --self.staffText.text = GetLanguage(self.itemId)
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -97,7 +97,7 @@ function SmallProductionLineItem:initUiInfo(infoData)
                 self.goodsIcon.sprite = texture
             end
         end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -131,9 +131,9 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
     self.numberText.text = infoTab.nowCount.."/"..infoTab.targetCount
     --判断是原料还是商品
     local materialKey,goodsKey = 21,22
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.pNumberScrollbar.maxValue = self.warehouseCapacity
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.pNumberScrollbar.maxValue = self:getGoodMaxValue(self.itemId)
         self.inputNumber.characterLimit = string.len(self:getGoodMaxValue(self.itemId))
     end
@@ -147,7 +147,7 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
 
     local materialKey,goodsKey = 21,22
     local type = ct.getType(UnityEngine.Sprite)
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Material[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -155,7 +155,7 @@ function SmallProductionLineItem:RefreshUiInfo(infoTab,i)
                 self.goodsIcon.sprite = texture
             end
         end)
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.nameText.text = GetLanguage(self.itemId);
         panelMgr:LoadPrefab_A(Good[self.itemId].img,type,nil,function(goodData,obj)
             if obj ~= nil then
@@ -309,9 +309,9 @@ function SmallProductionLineItem:getTimeNumber(infoData)
     end
     local materialKey,goodsKey = 21,22
     self.time = 0
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
     end
     --self.time = self.time + UnityEngine.Time.unscaledDeltaTime
@@ -353,12 +353,12 @@ function SmallProductionLineItem:getMinuteNum(infoData)
     end
     local number = 0
     local materialKey,goodsKey = 21,22
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         number = Material[self.itemId].numOneSec * infoData.workerNum * 60
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         number = Good[self.itemId].numOneSec * infoData.workerNum * 60
     end
-    local numStr = "("..math.floor(number).."/min"..")"
+    local numStr = "("..Math_Floor(number).."/min"..")"
     return numStr
 end
 --刷新刚刚刷新的时间
@@ -373,9 +373,9 @@ function SmallProductionLineItem:getRefreshTimeNumber(infoData)
     end
     local materialKey,goodsKey = 21,22
     self.time = 0
-    if math.floor(self.itemId / 100000) == materialKey then
+    if Math_Floor(self.itemId / 100000) == materialKey then
         self.time = 1 / Material[self.itemId].numOneSec / infoData.workerNum * remainingNum
-    elseif math.floor(self.itemId / 100000) == goodsKey then
+    elseif Math_Floor(self.itemId / 100000) == goodsKey then
         self.time = 1 / Good[self.itemId].numOneSec / infoData.workerNum * remainingNum
     end
     self.remainingTime = self.time
@@ -420,7 +420,7 @@ function SmallProductionLineItem:getGoodMaxValue(itemId)
         end
         table.sort(materialNum)
         local value = materialNum[1]
-        return math.floor(value)
+        return Math_Floor(value)
     else
         local number = 0
         return number

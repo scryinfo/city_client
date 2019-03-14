@@ -78,7 +78,8 @@ function MapRightGroundTransPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundTransPage:_goHereBtn()
-    local temp = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
+    local tempServerPos = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
+    local temp = {x = tempServerPos.x, y = tempServerPos.z}
     MapBubbleManager.GoHereFunc({pos = temp})
 end
 --

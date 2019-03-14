@@ -50,9 +50,6 @@ function MapGroundTransItem:_openGroundTransPage()
     if self.data == nil then
         return
     end
-    --出租:日租金，租期
-    --出售:价格
-    --位置信息，头像，用户名
     Event.Brocast("c_MapOpenRightGTransPage", self)
 end
 --

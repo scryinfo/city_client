@@ -73,6 +73,10 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     if MaterialPanel.topItem ~= nil then
         MaterialPanel.topItem:refreshData(DataInfo.info,function()
             PlayMusEff(1002)
+            Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
+            if self.materialToggleGroup then
+                self.materialToggleGroup:cleanItems()
+            end
             UIPanel.ClosePage()
         end)
     end
@@ -108,15 +112,15 @@ end
 function MaterialCtrl:_updateName(name)
     MaterialPanel.nameText.text = name
 end
---返回
-function MaterialCtrl:OnClick_backBtn(ins)
-    PlayMusEff(1002)
-    if ins.materialToggleGroup then
-        ins.materialToggleGroup:cleanItems()
-    end
-    Event.Brocast("m_ReqCloseMaterial",ins.m_data.insId)
-    UIPanel.ClosePage()
-end
+----返回
+--function MaterialCtrl:OnClick_backBtn(ins)
+--    PlayMusEff(1002)
+--    Event.Brocast("m_ReqCloseMaterial",ins.m_data.insId)
+--    if ins.materialToggleGroup then
+--        ins.materialToggleGroup:cleanItems()
+--    end
+--    UIPanel.ClosePage()
+--end
 function MaterialCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)

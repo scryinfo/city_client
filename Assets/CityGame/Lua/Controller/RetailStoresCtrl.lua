@@ -72,6 +72,10 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
     if RetailStoresPanel.topItem ~= nil then
         RetailStoresPanel.topItem:refreshData(DataInfo.info,function()
             PlayMusEff(1002)
+            Event.Brocast("mReqCloseRetailStores",self.m_data.insId)
+            if self.materialToggleGroup then
+                self.materialToggleGroup:cleanItems()
+            end
             UIPanel.ClosePage()
         end)
     end
@@ -107,15 +111,15 @@ end
 function RetailStoresCtrl:_updateName(name)
     RetailStoresPanel.nameText.text = name
 end
---返回
-function RetailStoresCtrl:OnClick_backBtn(ins)
-    PlayMusEff(1002)
-    if ins.materialToggleGroup then
-        ins.materialToggleGroup:cleanItems()
-    end
-    Event.Brocast("mReqCloseRetailStores",ins.m_data.insId)
-    UIPanel.ClosePage()
-end
+----返回
+--function RetailStoresCtrl:OnClick_backBtn(ins)
+--    PlayMusEff(1002)
+--    if ins.materialToggleGroup then
+--        ins.materialToggleGroup:cleanItems()
+--    end
+--    Event.Brocast("mReqCloseRetailStores",ins.m_data.insId)
+--    UIPanel.ClosePage()
+--end
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)

@@ -23,26 +23,14 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     end
 
     local tempData
-    local type = ct.getType(UnityEngine.Sprite)
     if data.itemType == 0 then
         tempData = Material[data.itemId]
-        self.nameText.text = GetLanguage(data.itemId)
-        panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
+        LoadSprite(Material[data.itemId].img,self.iconImg,false)
     else
         tempData = Good[data.itemId]
-        self.nameText.text = GetLanguage(data.itemId)
-        panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
+        LoadSprite(Good[data.itemId].img,self.iconImg,false)
     end
+    self.nameText.text = GetLanguage(data.itemId)
     self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)

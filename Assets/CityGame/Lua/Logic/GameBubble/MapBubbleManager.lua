@@ -221,9 +221,13 @@ function MapBubbleManager.createDetailItems(data, isNew)
                 for i, building in pairs(value.b) do
                     if building.sale ~= nil then
                         local detailData = {buildingId = building.id, sale = building.sale, pos = building.pos}
-                        this.collectionDetails[collectionId] = {}
-                        this.collectionDetails[collectionId].detailItems = {}
-                        this.collectionDetails[collectionId].detailItems[building.id] = {}
+                        if this.collectionDetails[collectionId] == nil then
+                            this.collectionDetails[collectionId] = {}
+                        end
+                        if this.collectionDetails[collectionId].detailItems == nil then
+                            this.collectionDetails[collectionId].detailItems = {}
+                        end
+                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
                         this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
                     end
                 end
@@ -283,11 +287,21 @@ function MapBubbleManager.createGroundTransDetailItems()
             if value ~= nil then
                 local data = value:getValuableData()
                 --local blockId = GroundAucConfig[data.id].firstBlockId
-                local blockId = TerrainManager.GridIndexTurnBlockID(GroundAucConfig[data.id].area[2])
+                local info = GroundAucConfig[data.id].area[2]
+                local blockId = TerrainManager.GridIndexTurnBlockID(info)
                 local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
-                this.groundAucData[collectionId] = {}
-                this.groundAucData[collectionId].detailItems = {}
-                this.groundAucData[collectionId].detailItems[blockId] = this._createGAucItems(data)
+                if this.groundAucData[collectionId] == nil then
+                    this.groundAucData[collectionId] = {}
+                end
+                if this.groundAucData[collectionId].detailItems == nil then
+                    this.groundAucData[collectionId].detailItems = {}
+                end
+                local item = this._createGAucItems(data)
+
+                local pos = Vector2.New(info.y, -info.x) * this.itemWidth
+                local delta = this.itemDelta *  5  --一个地块的大小
+                item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+                this.groundAucData[collectionId].detailItems[blockId] = item
             end
         end
     end
@@ -331,6 +345,7 @@ function MapBubbleManager.showSummaryOrDetail(showDetail)
     else
         --清除详情item
         this.cleanAllCollectionDetails()
+        this.cleanAllGroundAucData()
     end
 end
 --
@@ -370,6 +385,8 @@ function MapBubbleManager.cleanAllBubbleItems()
     this.cleanBuildingItems()
     this.cleanSummaryItems()
     this.cleanAllCollectionDetails()
+    this.cleanAllGroundAucData()
+
     this.centerItem:resetState()
 end
 

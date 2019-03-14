@@ -88,6 +88,8 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_reqAllBuildings()
@@ -101,6 +103,8 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.RemoveListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_cleanDatas()
@@ -376,6 +380,28 @@ end
 
 --搜索完成后，选择具体的item，打开右侧原料商品界面
 function MapCtrl:_openRightMatGoodPage(item)
+    if item ~= nil then
+        if self.rightSearchItem ~= nil then
+            self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
+        end
+        self.rightSearchItem = item
+        self.rightSearchItem:toggleShowDetailImg(true)
+        MapPanel.rightMatGoodPageItem:refreshData(item.data)
+    end
+end
+--打开拍卖
+function MapCtrl:_openRightGAucPage(item)
+    if item ~= nil then
+        --if self.rightSearchItem ~= nil then
+        --    self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
+        --end
+        --self.rightSearchItem = item
+        --self.rightSearchItem:toggleShowDetailImg(true)
+        MapPanel.rightGroundAucPageItem:refreshData(item.data)
+    end
+end
+--打开土地交易
+function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
         if self.rightSearchItem ~= nil then
             self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消

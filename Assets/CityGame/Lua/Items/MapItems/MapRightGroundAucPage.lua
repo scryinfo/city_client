@@ -44,7 +44,7 @@ end
 --
 function MapRightGroundAucPage:refreshData(data)
     self.viewRect.anchoredPosition = Vector2.zero
-    self.data = data
+    self.data = data.detailData
     if self.data == nil then
         return
     end
@@ -87,7 +87,6 @@ end
 function MapRightGroundAucPage:_language()
     self.personFlowText01.text = GetLanguage(22010004)
     self.soonFloorText02.text = GetLanguage(22010002)
-    self.nowBidText03.text = GetLanguage(22010002)
     self.nowFloorPriceText05.text = GetLanguage(22010002)
 end
 --关闭
@@ -109,7 +108,8 @@ function MapRightGroundAucPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundAucPage:_goHereBtn()
-    --MapBubbleManager.GoHereFunc(self.data.buildingBase)
+    local temp = GroundAucConfig[self.data.id].area[1]
+    MapBubbleManager.GoHereFunc({pos = temp})
 end
 
 ------------------

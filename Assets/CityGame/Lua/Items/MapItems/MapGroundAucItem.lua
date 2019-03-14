@@ -38,9 +38,9 @@ function MapGroundAucItem:initData(data)
     self.data = data
 
     self.timeDown = true
-    if self.data.isStartAuc == true then
+    if self.data.detailData.isStartAuc == true then
         --判断是否有出价
-        if data.bidHistory == nil or #data.bidHistory == 0 then
+        if data.detailData.bidHistory == nil or #data.detailData.bidHistory == 0 then
             self.isStartBid = false
             self.noneBidText02.transform.localScale = Vector3.one
             self.nowBinding.localScale = Vector3.zero
@@ -48,13 +48,13 @@ function MapGroundAucItem:initData(data)
             self.isStartBid = true
             self.noneBidText02.transform.localScale = Vector3.zero
             self.nowBinding.localScale = Vector3.one
-            table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
-            self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
+            table.sort(self.data.detailData.bidHistory, function (m, n) return m.ts > n.ts end)
+            self.data.detailData.endTs = self.data.detailData.bidHistory[1].ts + GAucModel.BidTime
         end
     end
 
-    local pos = Vector3.New(GroundAucConfig[self.data.id].area[1].x, 0, GroundAucConfig[self.data.id].area[1].y)
-    if self.data.isStartAuc == true then
+    local pos = Vector3.New(GroundAucConfig[data.detailData.id].area[1].x, 0, GroundAucConfig[data.detailData.id].area[1].y)
+    if data.detailData.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero
     else
@@ -65,59 +65,48 @@ function MapGroundAucItem:initData(data)
     self.m_Timer:Start()
 end
 --
-function UIBubbleGroundAucItem:_itemTimer()
+function MapGroundAucItem:_itemTimer()
     if self.timeDown == true then
         self:NowTimeDownFunc()
         self:SoonTimeDownFunc()
     end
 end
 --打开右侧地图拍卖page
-function UIBubbleGroundAucItem:_openGroundAucFunc()
+function MapGroundAucItem:_openGroundAucFunc()
     if self.data == nil then
         return
     end
-
+    Event.Brocast("c_MapOpenRightGAucPage", self)
 end
 
 --信息更新
-function UIBubbleGroundAucItem:_bidInfoUpdate(data)
-    if data.id == self.data.id then
-        if self.data.bidHistory == nil then
-            self.data.bidHistory = {}
+function MapGroundAucItem:_bidInfoUpdate(data)
+    if data.id == self.data.detailData.id then
+        if self.data.detailData.bidHistory == nil then
+            self.data.detailData.bidHistory = {}
         end
-        self.data.endTs = data.ts + GAucModel.BidTime
+        self.data.detailData.endTs = data.ts + GAucModel.BidTime
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.bidHistory, 1, temp)
+        table.insert(self.data.detailData.bidHistory, 1, temp)
         self.isStartBid = true
         self.noneBidText02.transform.localScale = Vector3.zero
         self.nowBinding.localScale = Vector3.one
     end
 end
 --
-function UIBubbleGroundAucItem:_hideFunc()
-    if self.bubbleObj ~= nil then
-        self.bubbleObj.transform.localScale = Vector3.zero
-    end
-end
-function UIBubbleGroundAucItem:_showFunc()
-    if self.bubbleObj ~= nil then
-        self.bubbleObj.transform.localScale = Vector3.one
-    end
-end
-
-function UIBubbleGroundAucItem:_childClose()
+function MapGroundAucItem:_childClose()
     self.timeDown = false
     if self.m_Timer ~= nil then
         self.m_Timer:Stop()
     end
 end
 --正在拍卖的倒计时
-function UIBubbleGroundAucItem:NowTimeDownFunc()
+function MapGroundAucItem:NowTimeDownFunc()
     if self.isStartBid == true then
-        if self.data.endTs == nil then
+        if self.data.detailData.endTs == nil then
             return
         end
-        local finishTime = self.data.endTs
+        local finishTime = self.data.detailData.endTs
         local remainTime = finishTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.timeDown = false
@@ -132,18 +121,21 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
     end
 end
 --即将拍卖的倒计时
-function UIBubbleGroundAucItem:SoonTimeDownFunc()
-    if self.data.isStartAuc == false then
-        local startAucTime = GroundAucConfig[self.data.id].beginTime * 1000
+function MapGroundAucItem:SoonTimeDownFunc()
+    if self == nil or self.data == nil then
+        return
+    end
+    if self.data.detailData.isStartAuc == false then
+        local startAucTime = GroundAucConfig[self.data.detailData.id].beginTime * 1000
         local remainTime = startAucTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
-            self.data.isStartAuc = true
+            self.data.detailData.isStartAuc = true
             --开始拍卖
             self.now.transform.localScale = Vector3.one
             self.soon.transform.localScale = Vector3.zero
             self.noneBidText02.transform.localScale = Vector3.one
             self.nowBinding.localScale = Vector3.zero
-            Event.Brocast("c_BidStart", self.data)  --切换界面
+            Event.Brocast("c_BidStart", self.data.detailData)  --切换界面
             return
         end
 

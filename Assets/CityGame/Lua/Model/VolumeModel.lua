@@ -61,9 +61,11 @@ function VolumeModel:m_ExchangeAmount()
 end
 
 --曲线图数据
-function VolumeModel:m_GoodsNpcNumCurve()
+function VolumeModel:m_GoodsNpcNumCurve(itemId)
     local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNumCurve")
-    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+    local lMsg = { id = itemId }
+    local pMsg = assert(pbl.encode("ss.GoodsNpcNumCurve", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
 -------------------服务器回调---------------------
@@ -72,7 +74,7 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.goodNpcNumInfo)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)
@@ -84,5 +86,5 @@ function VolumeModel:n_OnExchangeAmount(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNumCurve(lMsg)
-   local a = lMsg
+   Event.Brocast("c_GoodsNpcNumCurve",lMsg.goodsNpcNumCurveMap)
 end

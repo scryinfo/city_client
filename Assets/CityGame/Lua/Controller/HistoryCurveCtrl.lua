@@ -39,7 +39,21 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-    --local a = { "1","2","3","4","5","6","7","8","9","10"}
-    local a = { [1] = "1",[2] = "2"}
-    HistoryCurvePanel.slide:SetXScaleValue(a)
+    local a = { "1","2","3","4","5","6","7","8","9","10"}
+    --local a = { [1] = "1",[2] = "2"}
+    local b = {{ Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200) },
+               { Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250), Vector2.New(0, 300)}
+    }
+    local c = {{ Color.New(53 / 255, 218 / 255, 233 / 255, 255 / 255)},
+               { Color.New(233 / 255, 34 / 255, 104 / 255, 255 / 255) }
+    }
+    local d = {Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200)}
+    HistoryCurvePanel.slide:SetXScaleValue(a,116)
+    HistoryCurvePanel.slide:SetCoordinate(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.graph:DrawLine(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.graph:BoundaryLine({300})
+end
+
+function HistoryCurveCtrl:OnBack()
+    UIPanel.ClosePage()
 end

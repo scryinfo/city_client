@@ -19,6 +19,7 @@ EMapSearchType =
     Goods = 2,
     Deal = 3,
     Auction = 4,
+    SelfBuilding = 5,
 }
 
 function MapCtrl:initialize()
@@ -90,6 +91,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
     Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
     Event.AddListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
+    Event.AddListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
 
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -106,6 +108,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
     Event.RemoveListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
     Event.RemoveListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
+    Event.RemoveListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
 
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -420,6 +423,13 @@ function MapCtrl:_openRightGTransPage(item)
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
+--打开土地交易
+function MapCtrl:_openRightSelfBuildingPage(item)
+    if item ~= nil then
+        MapPanel.selfBuildingPageItem:refreshData(item.data)
+    end
+end
+
 
 ---服务器请求
 function MapCtrl:_reqMarketDetail(blockId)

@@ -28,9 +28,5 @@ function MapBuildingItem:_clickFunc()
         return
     end
 
-    if self.data.buildingType == BuildingType.House then
-
-    elseif self.data.buildingType == BuildingType.MaterialFactory then
-
-    end
+    Event.Brocast("c_MapSelectSelfBuildingPage", self)
 end

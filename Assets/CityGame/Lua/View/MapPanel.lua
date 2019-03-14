@@ -60,7 +60,8 @@ function MapPanel.InitPanel()
     this.rightGroundAucPageItem = MapRightGroundAucPage:new(this.searchGroundAucRect.transform)
     this.searchGroundTransRect = transform:Find("rightPageRoot/searchGroundTrans"):GetComponent("RectTransform")  --土地交易
     this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
-
+    this.selfBuildingRect = transform:Find("rightPageRoot/selectBuilding"):GetComponent("RectTransform")  --自己建筑temp
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
 end
 --
 function MapPanel.showDetailPageByType(typeId)
@@ -78,14 +79,25 @@ function MapPanel.showRightPageByType(type, data)
         this.rightMatGoodPageItem:close()
         this.rightGroundAucPageItem:refreshData(data)
         this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:close()
+
     elseif type == EMapSearchType.Deal then
         this.rightMatGoodPageItem:close()
         this.rightGroundAucPageItem:close()
         this.rightGroundTransPageItem:refreshData(data)
+        this.selfBuildingPageItem:close()
+
     elseif type == EMapSearchType.Material or type == EMapSearchType.Goods then
         this.rightMatGoodPageItem:refreshData(data)
         this.rightGroundAucPageItem:close()
         this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:close()
+
+    elseif type == EMapSearchType.SelfBuilding then
+        this.rightMatGoodPageItem:close()
+        this.rightGroundAucPageItem:close()
+        this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:refreshData(data)
     end
 end
 --
@@ -93,4 +105,5 @@ function MapPanel.closeAllRightPage()
     this.rightMatGoodPageItem:close()
     this.rightGroundAucPageItem:close()
     this.rightGroundTransPageItem:close()
+    this.selfBuildingPageItem:close()
 end

@@ -103,7 +103,7 @@ function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
             local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
             obj.transform:SetParent(MapPanel.alwaysShowRoot.transform)
             obj.transform.localPosition = Vector3.zero
-            local item = MapBuildingItem:new({tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
+            local item = MapBuildingItem:new({buildingId = value.info.id, tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
             this.selfBuildings[value.info.id] = item
             local pos = Vector2.New( value.info.pos.y, - value.info.pos.x) * this.itemWidth
             local delta = this.itemDelta *  PlayerBuildingBaseData[value.info.mId].x

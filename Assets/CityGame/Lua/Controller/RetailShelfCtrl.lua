@@ -160,6 +160,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
             end
         end
     end
+    self:RefreshCapacity(dataInfo)
     Event.Brocast("SmallPop",GetLanguage(27010003),300)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -174,6 +175,17 @@ function RetailShelfCtrl:GetShelfNum(dataTable)
         end
         return warehouseNum
     end
+end
+--刷新货架容量
+function RetailShelfCtrl:RefreshCapacity(dataInfo)
+    RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+    RetailShelfPanel.capacitySlider.value = RetailShelfPanel.capacitySlider.value - dataInfo.item.n
+    local numTab = {}
+    numTab["num1"] = RetailShelfPanel.capacitySlider.value
+    numTab["num2"] = RetailShelfPanel.capacitySlider.maxValue
+    numTab["col1"] ="blue"
+    numTab["col2"] ="white"
+    RetailShelfPanel.numberText.text = getColorString(numTab)
 end
 --货架点击Item详情弹框
 function RetailShelfCtrl:OpenDetailsBox(ins)

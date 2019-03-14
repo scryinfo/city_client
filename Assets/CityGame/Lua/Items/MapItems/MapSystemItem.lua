@@ -27,5 +27,5 @@ function MapSystemItem:_clickFunc()
     if self.data == nil then
         return
     end
-    ct.log("")
+    Event.Brocast("c_MapSelectSystemPage", self)
 end

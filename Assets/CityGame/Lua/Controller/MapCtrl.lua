@@ -92,6 +92,7 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
     Event.AddListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
     Event.AddListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
+    Event.AddListener("c_MapSelectSystemPage", self._openRightSystemPage, self)
 
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -109,6 +110,7 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
     Event.RemoveListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
     Event.RemoveListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
+    Event.RemoveListener("c_MapSelectSystemPage", self._openRightSystemPage, self)
 
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
@@ -427,6 +429,12 @@ end
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
         MapPanel.selfBuildingPageItem:refreshData(item.data)
+    end
+end
+--打开土地交易
+function MapCtrl:_openRightSystemPage(item)
+    if item ~= nil then
+        MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end
 

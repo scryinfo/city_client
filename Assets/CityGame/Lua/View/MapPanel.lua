@@ -62,6 +62,8 @@ function MapPanel.InitPanel()
     this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
     this.selfBuildingRect = transform:Find("rightPageRoot/selectBuilding"):GetComponent("RectTransform")  --自己建筑temp
     this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
+    this.systemBuildingRect = transform:Find("rightPageRoot/selectSystemBuilding"):GetComponent("RectTransform")  --系统建筑
+    this.systemBuildingPageItem = MapRightSystemPage:new(this.systemBuildingRect.transform)
 end
 --
 function MapPanel.showDetailPageByType(typeId)
@@ -106,4 +108,5 @@ function MapPanel.closeAllRightPage()
     this.rightGroundAucPageItem:close()
     this.rightGroundTransPageItem:close()
     this.selfBuildingPageItem:close()
+    this.systemBuildingPageItem:close()
 end

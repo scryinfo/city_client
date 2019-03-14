@@ -10,8 +10,8 @@ function MapRightGroundTransPage:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
 
     self.nameText = viewRect:Find("root/nameBg/nameText"):GetComponent("Text")
-    self.closeBtn = viewRect:Find("root/closeBtn")
-    self.ownerBtn = viewRect:Find("root/ownerBtn")
+    self.closeBtn = viewRect:Find("root/closeBtn"):GetComponent("Button")
+    self.ownerBtn = viewRect:Find("root/ownerBtn"):GetComponent("Button")
     self.portraitImg = viewRect:Find("root/ownerBtn/portraitImg")
 
     self.sellRoot = viewRect:Find("root/sellRoot")
@@ -19,14 +19,13 @@ function MapRightGroundTransPage:initialize(viewRect)
 
     self.rentRoot = viewRect:Find("root/rentRoot")
     self.dayRentalText = viewRect:Find("root/rentRoot/rentalText"):GetComponent("Text")
-    self.totalRentalText = viewRect:Find("root/rentRoot/totalRentalText"):GetComponent("Text")
+    --self.totalRentalText = viewRect:Find("root/rentRoot/totalRentalText"):GetComponent("Text")
     self.goHereBtn = viewRect:Find("root/goHereBtn"):GetComponent("Button")
 
     self.titleText01 = viewRect:Find("root/titleText"):GetComponent("Text")
     self.sellPriceText02 = viewRect:Find("root/sellRoot/Text"):GetComponent("Text")
     self.tenancyText03 = viewRect:Find("root/rentRoot/Text01"):GetComponent("Text")
     self.rentalText04 = viewRect:Find("root/rentRoot/Text02"):GetComponent("Text")
-    self.totalPriceText05 = viewRect:Find("root/rentRoot/Text03"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
@@ -52,9 +51,9 @@ function MapRightGroundTransPage:refreshData(data)
         self.groundSell.localScale = Vector3.zero
         self.dayRentalText.text = "E"..getPriceString(GetClientPriceString(data.rent.rentPreDay), 24, 20)
         local day = data.rent.rentDays
-        if day ~= nil then
-            self.totalRentalText.text = "E"..getPriceString(GetClientPriceString(data.rent.rentPreDay * day),24,20)
-        end
+        --if day ~= nil then
+        --    self.totalRentalText.text = "E"..getPriceString(GetClientPriceString(data.rent.rentPreDay * day),24,20)
+        --end
     end
     self:openShow()
 end
@@ -69,7 +68,6 @@ function MapRightGroundTransPage:_language()
     self.sellPriceText02.text = GetLanguage(24040004)
     self.tenancyText03.text = GetLanguage(24050005)
     self.rentalText04.text = GetLanguage(24050006)
-    self.totalPriceText05.text = GetLanguage(24040005)
 end
 --关闭
 function MapRightGroundTransPage:close()

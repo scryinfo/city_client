@@ -130,9 +130,7 @@ function MapCtrl:_cleanDatas()
     MapBubbleManager.cleanAllBubbleItems()
 
     --右侧的面板信息
-    if MapPanel.rightMatGoodPageItem ~= nil then
-        MapPanel.rightMatGoodPageItem:resetState()
-    end
+    MapPanel.closeAllRightPage()
     if self.rightSearchItem ~= nil then
         self.rightSearchItem:close()
         self.rightSearchItem = nil

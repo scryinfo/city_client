@@ -9,7 +9,7 @@ MapRightGroundAucPage = class('MapRightGroundAucPage', MapRightPageBase)
 function MapRightGroundAucPage:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
 
-    self.closeBtn = viewRect:Find("root/closeBtn")
+    self.closeBtn = viewRect:Find("root/closeBtn"):GetComponent("Button")
     self.soonRoot = viewRect:Find("root/soonRoot")
     self.soonTimeDownText = viewRect:Find("root/soonRoot/soonTimeDownText"):GetComponent("Text")
     self.startTimeText = viewRect:Find("root/soonRoot/startTimeText"):GetComponent("Text")

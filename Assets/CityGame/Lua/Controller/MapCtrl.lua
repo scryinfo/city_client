@@ -133,7 +133,7 @@ function MapCtrl:_cleanDatas()
     MapPanel.mapRootRect.anchoredPosition = Vector2.zero
     MapPanel.scaleSlider.value = self.my_Scale
 
-    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.closePanelFunc()
 
     --右侧的面板信息
     MapPanel.closeAllRightPage()
@@ -224,6 +224,7 @@ function MapCtrl:dealSelect()
     end
     self.selectSearchType = EMapSearchType.Deal
 
+    MapBubbleManager.cleanAllBubbleItems()
     if self:_getIsDetailFunc() == true then
         self:_judgeDetail()
     else
@@ -241,6 +242,7 @@ function MapCtrl:auctionSelect()
     end
     self.selectSearchType = EMapSearchType.Auction
 
+    MapBubbleManager.cleanAllBubbleItems()
     if self:_getIsDetailFunc() == true then
         self:_judgeDetail()
     else
@@ -436,15 +438,18 @@ end
 
 --原料商品搜索摘要
 function MapCtrl:_receiveMarketSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Material)
 end
 --土地交易搜索摘要
 function MapCtrl:_receiveGroundTransSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Deal)
 end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
+        MapBubbleManager.cleanAllBubbleItems()
         if self.selectDetailItem == nil or self.selectDetailItem:getItemId() ~= data.itemId then
             MapBubbleManager.createDetailItems(data, true)
             return
@@ -608,6 +613,8 @@ function MapCtrl:_mapAllResearchToDetail(summaryPos, scenePos)
 
     self:_posOffset(self.my_Scale, targetScale, summaryPos)
     self.my_Scale = targetScale
+
+    MapBubbleManager.toggleShowDetailBuilding(true)
     self:RefreshMiniMapScale()
     --移动相机
     --local pos = scenePos + Vector3.New(10, 0, 10)

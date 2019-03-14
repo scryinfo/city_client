@@ -432,10 +432,12 @@ function MapBubbleManager.cleanAllBubbleItems()
     this.cleanAllCollectionDetails()
     this.cleanAllGroundAucData()
     this.cleanAllGTransData()
-
-    this.centerItem:resetState()
 end
-
+--
+function MapBubbleManager.closePanelFunc()
+    this.centerItem:resetState()
+    this.cleanAllBubbleItems()
+end
 ---传data.buildingBase
 function MapBubbleManager.GoHereFunc(data)
     UIPanel.CloseAllPageExceptMain()

@@ -81,6 +81,17 @@ end
 function RetailShelfCtrl:RefreshShelfData(dataInfo)
     for key,value in pairs(self.shelfDatas) do
         if value.itemId == dataInfo.item.key.id then
+            --如果是调整价格
+            if dataInfo.price then
+                for key,value in pairs(self.shelfDatas) do
+                    if value.itemId == dataInfo.item.key.id then
+                        value.moneyText.text = GetClientPriceString(dataInfo.price)
+                        value.price = dataInfo.price
+                    end
+                end
+                Event.Brocast("SmallPop",GetLanguage(27010005),300)
+                return
+            end
             if value.goodsDataInfo.n == dataInfo.item.n then
                 self:deleteGoodsItem(self.shelfDatas,key)
 

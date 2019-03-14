@@ -39,20 +39,14 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state
     -----------------------------------------------------------------------------
 
     --UI信息赋值
-    self.nameText.text = Good[self.goodsDataInfo.k.id].name
+    self.nameText.text = GetLanguage(self.goodsDataInfo.k.id)
     self.numberText.text = self.goodsDataInfo.n
-    self.brandName.text = "Addypolly"
+    self.brandName.text = GetLanguage(4301011)
     self.brandValue.text = "0"
     self.qualityValue.text = self.goodsDataInfo.k.qty
     self.moneyText.text = "E"..GetClientPriceString(self.goodsDataInfo.price)
 
-    local type = ct.getType(UnityEngine.Sprite)
-    panelMgr:LoadPrefab_A(Good[self.goodsDataInfo.k.id].img,type,nil,function(goodData,obj)
-        if obj ~= nil then
-            local texture = ct.InstantiatePrefab(obj)
-            self.goodsicon.sprite = texture
-        end
-    end)
+    LoadSprite(Good[self.goodsDataInfo.k.id].img,self.goodsicon,false)
     self.inluabehaviour:AddClick(self.XBtn.gameObject,self.OnClick_XBtn,self)
     self.inluabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self)
     self:initializeUiState()

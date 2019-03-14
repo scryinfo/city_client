@@ -109,7 +109,7 @@ end
 function MaterialModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,false)
 end
---修改货架数量或价格
+--修改货架价格
 function MaterialModel:n_OnModifyShelfInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end

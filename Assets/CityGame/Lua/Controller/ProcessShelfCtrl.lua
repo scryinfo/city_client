@@ -153,6 +153,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
             for key,value in pairs(self.shelfDatas) do
                 if value.itemId == dataInfo.item.key.id then
                     value.moneyText.text = GetClientPriceString(dataInfo.price)
+                    value.price = dataInfo.price
                 end
             end
             Event.Brocast("SmallPop",GetLanguage(27010005),300)

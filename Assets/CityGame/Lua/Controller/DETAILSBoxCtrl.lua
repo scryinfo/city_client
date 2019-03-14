@@ -144,7 +144,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
             return
         end
         if number == ins.m_data.num and price ~= ins.m_data.price then
-            Event.Brocast("m_ReqProcessModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
+            Event.Brocast("m_ReqMaterialModifyShelf",ins.m_data.buildingId,ins.itemId,number,price);
             UIPanel.ClosePage()
             return
         end

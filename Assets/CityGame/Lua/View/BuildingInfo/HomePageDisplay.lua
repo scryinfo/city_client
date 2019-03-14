@@ -19,26 +19,14 @@ function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.moneyText = self.prefab.transform:Find("pricetag/MoneyText"):GetComponent("Text")
 
     local materialKey,goodsKey = 21,22
-    local type = ct.getType(UnityEngine.Sprite)
     if math.floor(homePageShelfInfo.k.id / 100000) == materialKey then
         self.materBg.transform.localScale = Vector3.one
         self.goodsBg.transform.localScale = Vector3.zero
-        --self.nameText.text = GetLanguage(homePageShelfInfo.k.id)
-        panelMgr:LoadPrefab_A(Material[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
+        LoadSprite(Material[homePageShelfInfo.k.id].img,self.iconImg,false)
     elseif math.floor(homePageShelfInfo.k.id / 100000) == goodsKey then
         self.materBg.transform.localScale = Vector3.zero
         self.goodsBg.transform.localScale = Vector3.one
-        panelMgr:LoadPrefab_A(Good[homePageShelfInfo.k.id].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
+        LoadSprite(Good[homePageShelfInfo.k.id].img,self.iconImg,false)
     end
     self.nameText.text = GetLanguage(homePageShelfInfo.k.id)
     self.numberText.text = homePageShelfInfo.n

@@ -71,6 +71,10 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
     if ProcessingPanel.topItem ~= nil then
         ProcessingPanel.topItem:refreshData(DataInfo.info,function()
             PlayMusEff(1002)
+            Event.Brocast("mReqCloseProcessing",self.m_data.insId)
+            if self.processingToggleGroup then
+                self.processingToggleGroup:cleanItems()
+            end
             UIPanel.ClosePage()
         end)
     end
@@ -107,15 +111,15 @@ end
 function ProcessingCtrl:_updateName(name)
     ProcessingPanel.nameText.text = name
 end
---返回
-function ProcessingCtrl:OnClick_backBtn(ins)
-    PlayMusEff(1002)
-    if ins.processingToggleGroup then
-        ins.processingToggleGroup:cleanItems()
-    end
-    Event.Brocast("mReqCloseProcessing",ins.m_data.insId)
-    UIPanel.ClosePage()
-end
+----返回
+--function ProcessingCtrl:OnClick_backBtn(ins)
+--    PlayMusEff(1002)
+--    if ins.processingToggleGroup then
+--        ins.processingToggleGroup:cleanItems()
+--    end
+--    Event.Brocast("mReqCloseProcessing",ins.m_data.insId)
+--    UIPanel.ClosePage()
+--end
 function ProcessingCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)

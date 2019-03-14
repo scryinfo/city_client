@@ -533,7 +533,7 @@ function LoadSprite(path, iIcon, bSetNativeSize)
 		if Icon == nil then
 			return
 		end
-		if obj ~= nil then
+		if obj ~= nil  then
 			local texture = ct.InstantiatePrefab(obj)
 			if Icon then
 				Icon.sprite = texture

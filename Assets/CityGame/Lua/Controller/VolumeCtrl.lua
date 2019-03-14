@@ -154,8 +154,72 @@ function VolumeCtrl:c_ExchangeAmount(info)
 end
 
 --每种商品购买的npc数量曲线图
-function VolumeCtrl:c_GoodsNpcNumCurve()
-
+function VolumeCtrl:c_GoodsNpcNumCurve(info)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    end
+    currentTime = math.floor(currentTime)
+    local sevenDaysAgoTime = currentTime - 604800
+    local sevenDaysAgo = sevenDaysAgoTime
+    local supplyNum = {}
+    local supplyNumVet = {}
+    local time = {}
+    local boundaryLine = {}
+    local data = {}
+    for i = 1, 168 do
+        sevenDaysAgo = sevenDaysAgo + 3600
+        time[i] = sevenDaysAgo
+        supplyNum[i] = {}
+        supplyNum[i].ts = sevenDaysAgo
+        supplyNum[i].num = 0
+        if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
+            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
+            table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
+        else
+            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+        end
+    end
+    data.time = time
+    data.boundaryLine = boundaryLine
+    if next(info) ~= nil then
+        local temp = {}
+        for i, v in ipairs(supplyNum) do
+            temp[i] = {}
+            for k, z in ipairs(info) do
+                if v.ts == z.key then
+                    temp[i].num = z.value
+                else
+                    temp[i].num = 0
+                end
+            end
+        end
+        for i, v in ipairs(temp) do
+            supplyNum[i].num = v.num
+        end
+        for i, v in ipairs(supplyNum) do
+            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+        end
+    else
+        for i, v in ipairs(supplyNum) do
+            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+        end
+    end
+    table.insert(supplyNumVet,1,Vector2.New(0,0))
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+    data.supplyNumVet = supplyNumVet
+    ct.OpenCtrl("HistoryCurveCtrl",data)
 end
 
 --初始化
@@ -244,7 +308,8 @@ end
 --点击背景
 function VolumeCtrl:OnBg(ins)
     --ct.OpenCtrl("HistoryCurveCtrl",ins.itemId)
-    --DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcNumCurve',ins.itemId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcNumCurve',ins.itemId)
+    --DataManager.DetailModelRpcNoRet(OpenModelInsID.VolumeCtrl , 'm_GoodsNpcTypeNum',ins.itemId)
 end
 
 --倒计时

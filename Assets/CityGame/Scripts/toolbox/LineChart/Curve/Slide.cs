@@ -13,8 +13,9 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     Vector2 size;
     Vector3 position;
     private FunctionalGraphBase GraphBase;
-    private List<Vector2[]> coordinate = new List<Vector2[]>();
     public string path;
+    private List<GameObject> XScaleValue = new List<GameObject>();
+    private List<GameObject> Coordinate = new List<GameObject>();
 
     private void Start()
     {
@@ -48,38 +49,78 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 gameObject.GetComponent<RectTransform>().sizeDelta = size;
                 gameObject.GetComponent<RectTransform>().localPosition = position;
             }
+            if (gameObject.GetComponent<RectTransform>().rect.width >= 37900)
+            {
+                isDown = false;
+                gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(37000, 450);
+                gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-18406f, 56f, 0);
+            }
         } 
     }
     public void SetXScaleValue(string[] str ,int value)
     {
-        for (int i = 0; i < str.Length; i++)
+        if (str.Length > XScaleValue.Count)
         {
-           GameObject obj = Resources.Load<GameObject>(path);
-           GameObject gameObject = Instantiate(obj);
-           RectTransform go = gameObject.GetComponent<RectTransform>();
-           go.transform.parent = transform;
-           go.localScale = Vector3.one;
-           go.localPosition = new Vector3(value * i - 60, -60, 0);
-           go.GetComponent<Text>().text = str[i];
+            if (XScaleValue.Count != 0)
+            {
+                for (int i = 0; i < XScaleValue.Count; i++)
+                {
+                    XScaleValue[i].transform.localPosition = new Vector3(value * i - 60, -60, 0);
+                    XScaleValue[i].GetComponent<Text>().text = str[i];
+                }
+            }
+            for (int i = XScaleValue.Count + 1; i < str.Length; i++)
+            {
+                GameObject obj = Resources.Load<GameObject>(path);
+                GameObject gameObject = Instantiate(obj);
+                RectTransform go = gameObject.GetComponent<RectTransform>();
+                go.transform.parent = transform;
+                go.localScale = Vector3.one;
+                go.localPosition = new Vector3(value * i - 60, -60, 0);
+                go.GetComponent<Text>().text = str[i];
+                XScaleValue.Add(go.gameObject);
+            }
         }
+        else
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                XScaleValue[i].transform.localPosition = new Vector3(value * i - 60, -60, 0);
+                XScaleValue[i].GetComponent<Text>().text = str[i];
+            }
+        }      
     }
     /// <summary>
     /// 将点的坐标显示出来
     /// </summary>
     public void SetCoordinate(Vector2[] str,Color color)
     {
-        for (int i = 0; i < str.Length; i++)
+        if (Coordinate.Count >= str.Length * 2)
         {
-            GameObject obj = Resources.Load<GameObject>(path);
-            GameObject gameObject = Instantiate(obj);
-            RectTransform go = gameObject.GetComponent<RectTransform>();
-            go.transform.parent = transform;
-            go.localScale = Vector3.one;
-            go.localPosition = str[i];
-            go.GetComponent<Text>().color = color;
-            go.GetComponent<Text>().text = str[i].y.ToString();
-            go.GetComponent<Text>().alignment = TextAnchor.LowerLeft;
+            for (int i = 0; i < str.Length; i++)
+            {
+                Coordinate[i].transform.localPosition = str[i];
+                Coordinate[i].GetComponent<Text>().color = color;
+                Coordinate[i].GetComponent<Text>().text = str[i].y.ToString();
+            }
         }
+        else
+        {
+            for (int i = 1; i < str.Length; i++)
+            {
+                GameObject obj = Resources.Load<GameObject>(path);
+                GameObject gameObject = Instantiate(obj);
+                RectTransform go = gameObject.GetComponent<RectTransform>();
+                go.transform.parent = transform;
+                go.localScale = Vector3.one;
+                go.GetComponent<Text>().alignment = TextAnchor.LowerLeft;
+                go.localPosition = str[i];
+                go.GetComponent<Text>().color = color;
+                go.GetComponent<Text>().text = str[i].y.ToString();
+                Coordinate.Add(go.gameObject);
+            }
+        }
+        
     }
 
 }

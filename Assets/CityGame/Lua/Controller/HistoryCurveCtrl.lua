@@ -20,7 +20,7 @@ end
 function HistoryCurveCtrl:Awake()
     curveBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     curveBehaviour:AddClick(HistoryCurvePanel.xBtn,self.OnBack,self)
-    self.initData()
+    self:initData()
 end
 
 function HistoryCurveCtrl:Active()
@@ -39,19 +39,29 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-    local a = { "1","2","3","4","5","6","7","8","9","10"}
-    --local a = { [1] = "1",[2] = "2"}
-    local b = {{ Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200) },
-               { Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250), Vector2.New(0, 300)}
-    }
-    local c = {{ Color.New(53 / 255, 218 / 255, 233 / 255, 255 / 255)},
-               { Color.New(233 / 255, 34 / 255, 104 / 255, 255 / 255) }
-    }
-    local d = {Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200)}
-    HistoryCurvePanel.slide:SetXScaleValue(a,116)
-    HistoryCurvePanel.slide:SetCoordinate(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.graph:DrawLine(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.graph:BoundaryLine({300})
+    --local a = { "1","2","3","4","5","6","7","8","9","10"}
+    ----local a = { [1] = "1",[2] = "2"}
+    --local b = {{ Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200) },
+    --           { Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250), Vector2.New(0, 300)}
+    --}
+    --local c = {{ Color.New(53 / 255, 218 / 255, 233 / 255, 255 / 255)},
+    --           { Color.New(233 / 255, 34 / 255, 104 / 255, 255 / 255) }
+    --}
+    --local d = {Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200)}
+    --local f = {Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250),  Vector2.New(0, 300)}
+    --local g = {Vector2.New(300, 300), Vector2.New(200, 200), Vector2.New(100, 100),  Vector2.New(0, 400)}
+    --HistoryCurvePanel.slide:SetXScaleValue(a,116)
+    --HistoryCurvePanel.slide:SetCoordinate(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    --HistoryCurvePanel.slide:SetCoordinate(f,Color.New(204 / 255, 108 / 255, 210 / 255, 255 / 255))
+    --HistoryCurvePanel.slide:SetCoordinate(g,Color.New(240 / 255, 158 / 255, 111 / 255, 255 / 255))
+    --HistoryCurvePanel.graph:DrawLine(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    --HistoryCurvePanel.graph:DrawLine(f,Color.New(204 / 255, 108 / 255, 210 / 255, 255 / 255))
+    --HistoryCurvePanel.graph:DrawLine(g,Color.New(240 / 255, 158 / 255, 111 / 255, 255 / 255))
+    --HistoryCurvePanel.graph:BoundaryLine({300})
+    HistoryCurvePanel.graph:DrawLine(self.m_data.supplyNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(self.m_data.supplyNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetXScaleValue(self.m_data.time,116)
+    HistoryCurvePanel.graph:BoundaryLine(self.m_data.boundaryLine)
 end
 
 function HistoryCurveCtrl:OnBack()

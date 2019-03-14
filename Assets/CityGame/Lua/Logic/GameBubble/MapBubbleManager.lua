@@ -427,7 +427,6 @@ function MapBubbleManager.MapMoveFunc()
 end
 --关闭界面时的操作
 function MapBubbleManager.cleanAllBubbleItems()
-    this.cleanBuildingItems()
     this.cleanSummaryItems()
     this.cleanAllCollectionDetails()
     this.cleanAllGroundAucData()
@@ -437,6 +436,7 @@ end
 function MapBubbleManager.closePanelFunc()
     this.centerItem:resetState()
     this.cleanAllBubbleItems()
+    this.cleanBuildingItems()
 end
 ---传data.buildingBase
 function MapBubbleManager.GoHereFunc(data)

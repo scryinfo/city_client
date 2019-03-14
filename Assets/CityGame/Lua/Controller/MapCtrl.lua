@@ -262,6 +262,7 @@ function MapCtrl:nonePageCancelSelect(selectId)
         self:refreshTypeItems()
         self.selectId = nil
         self.selectSearchType = EMapSearchType.Default
+        MapBubbleManager.cleanAllBubbleItems()
     end
 end
 --
@@ -416,24 +417,28 @@ function MapCtrl:_openRightGAucPage(item)
         --end
         --self.rightSearchItem = item
         --self.rightSearchItem:toggleShowDetailImg(true)
+        MapPanel.closeAllRightPage()
         MapPanel.rightGroundAucPageItem:refreshData(item.data)
     end
 end
 --打开土地交易
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
---打开土地交易
+--打开自己的建筑
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.selfBuildingPageItem:refreshData(item.data)
     end
 end
---打开土地交易
+--打开系统建筑
 function MapCtrl:_openRightSystemPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end

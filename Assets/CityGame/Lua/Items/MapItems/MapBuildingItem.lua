@@ -10,9 +10,13 @@ function MapBuildingItem:_childInit()
     self.btn = self.viewRect.transform:Find("selfRoot/btn"):GetComponent("Button")
     self.buildingIcon = self.viewRect.transform:Find("selfRoot/btn/buildingIcon"):GetComponent("Image")
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
+    self.detailShowBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.scaleRoot = self.viewRect.transform:Find("selfRoot")
 
     self.btn.onClick:AddListener(function ()
+        self:_clickFunc()
+    end)
+    self.detailShowBtn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
 

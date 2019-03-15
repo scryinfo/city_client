@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// x,y坐标轴数据
 /// </summary>
-public class FunctionalGraphBase : MonoBehaviour {
+public class FunctionalGraphBase {
     /// 
     /// 是否显示刻度
     ///
@@ -100,7 +100,7 @@ public class FunctionalGraphBase : MonoBehaviour {
     [Range(2f, 20f)] public float LineWidth = 2.0f;
     ///分隔线的颜色
     ///
-    [SerializeField]
+    //[SerializeField]
     public Color BoundaryColor = Color.gray;
     
 

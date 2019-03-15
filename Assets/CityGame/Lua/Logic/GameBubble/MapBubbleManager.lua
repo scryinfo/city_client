@@ -471,3 +471,26 @@ function MapBubbleManager.groundTransChange(blockId, data)
         this.gTransData[collectionId].detailItems[blockId] = item
     end
 end
+--土地拍卖查询变化  --客户端直接管理
+function MapBubbleManager.groundAucChange(groundId)
+    if this.mapCtrl ~= nil and this.mapCtrl:getNonePageSearchType() == EMapSearchType.Auction and this.mapCtrl:_getIsDetailFunc() == true then
+        if this.groundAucData == nil then
+            return
+        end
+        local info = GroundAucConfig[groundId].area[2]
+        local blockId = TerrainManager.GridIndexTurnBlockID(info)
+        local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+        if this.groundAucData[collectionId] == nil then
+            this.groundAucData[collectionId] = {}
+        end
+        if this.groundAucData[collectionId].detailItems == nil then
+            this.groundAucData[collectionId].detailItems = {}
+        end
+        local item = this._createGAucItems({id = groundId, isStartAuc = false})
+
+        local pos = Vector2.New(info.y, -info.x) * this.itemWidth
+        local delta = this.itemDelta *  5  --一个地块的大小
+        item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+        this.groundAucData[collectionId].detailItems[blockId] = item
+    end
+end

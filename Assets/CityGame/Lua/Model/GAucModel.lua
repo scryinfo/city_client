@@ -103,6 +103,7 @@ function GAucModel.updateSoonItem(id)
         end
         if GroundAucConfig[i].beginTime >= time then
             UIBubbleManager._creatGroundAucBubbleItem({id = i}, false)
+            MapBubbleManager.groundAucChange(i)
             UIBubbleManager.startBubble()
             return
         end

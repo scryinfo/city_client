@@ -212,7 +212,6 @@ function LineItem:refreshNowConte(dataInfo)
     end
     self.Capacity = self.Capacity - 1
     --ct.log("fisher_w31_time","当前仓库剩余容量是==="..self.Capacity)
-
     if Math_Floor(self.itemId / 100000) == 22 then
         self.lineMinValue = self.lineMinValue - 1
         --ct.log("fisher_w31_time","当前原料还能生产==="..self.lineMinValue.."  个")
@@ -276,7 +275,7 @@ function LineItem:CheckMaterial(itemId)
 end
 --生产中检查仓库容量是否足够
 function LineItem:CheckCapacity()
-    if self.Capacity <= 0 then
+    if self.Capacity == 0 then
         return false
     end
     return true

@@ -14,6 +14,12 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     --商品
     self.brandBg = self.prefab.transform:Find("brandBg");
     self.brandName = self.prefab.transform:Find("brandBg/brandName"):GetComponent("Text");
+
+    ----------------------------------------------------暂时隐藏
+    self.brand = self.prefab.transform:Find("brandBg/brand")
+    self.quality = self.prefab.transform:Find("brandBg/quality")
+    ----------------------------------------------------暂时隐藏
+
     self.brandScore = self.prefab.transform:Find("brandBg/brand/brandScore"):GetComponent("Text");
     self.qualityScore = self.prefab.transform:Find("brandBg/quality/qualityScore"):GetComponent("Text");
     --原料
@@ -25,8 +31,12 @@ function WarehouseItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberText = self.prefab.transform:Find("numberText"):GetComponent("Text");  --数量
     self.closeBtn = self.prefab.transform:Find("closeBtn"):GetComponent("RectTransform");  --删除btn  默认true
 
-    self.numberText.text = self.n
 
+    ----------------------------------------------------暂时隐藏
+    self.brand.transform.localScale = Vector3.zero
+    self.quality.transform.localScale = Vector3.zero
+    ----------------------------------------------------暂时隐藏
+    self.numberText.text = self.n
     local materialKey,goodsKey = 21,22
     self.nameText.text = GetLanguage(self.itemId);
     if Math_Floor(self.itemId / 100000) == materialKey then

@@ -4,8 +4,8 @@ local class = require 'Framework/class'
 BaseBuildModel = class('BaseBuildModel')
 
 
-BubblePrefabs={}
-BubblePrefabsManger={}
+BuilldingBubbleIns={}
+
 
 --初始化
 --将protobuf内数据拷贝出来
@@ -14,8 +14,8 @@ function BaseBuildModel:initialize(data)
     self:Refresh(data)
     --建筑气泡
     self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()
-    self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BubblePrefabsManger.LuaBehaviour,data,BubblePrefabsManger)
-    table.insert(BubblePrefabs,self.bubbleIns)
+    self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BuilldingBubbleInsManger.LuaBehaviour,data,BuilldingBubbleInsManger)
+    table.insert(BuilldingBubbleIns,self.bubbleIns)
 
     Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end

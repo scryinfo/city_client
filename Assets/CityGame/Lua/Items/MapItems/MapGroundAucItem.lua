@@ -53,7 +53,6 @@ function MapGroundAucItem:initData(data)
         end
     end
 
-    local pos = Vector3.New(GroundAucConfig[data.detailData.id].area[1].x, 0, GroundAucConfig[data.detailData.id].area[1].y)
     if data.detailData.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero

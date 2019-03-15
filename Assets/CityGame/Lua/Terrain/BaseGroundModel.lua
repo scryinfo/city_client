@@ -86,7 +86,7 @@ function BaseGroundModel:CheckBubbleState()
     end
     --如果之前有气泡则直接干掉实例
     if self.bubbleItem ~= nil then
-        local blockId = TerrainManager.GridIndexTurnBlockID(data.pos)
+        local blockId = TerrainManager.GridIndexTurnBlockID({x = data.x, y = data.y})
         UIBubbleManager.closeGTransItem(self.bubbleItem, blockId)
         self.bubbleItem = nil
     end
@@ -94,7 +94,7 @@ end
 
 function BaseGroundModel:Close()
     if self.bubbleItem ~= nil then
-        local blockId = TerrainManager.GridIndexTurnBlockID(self.Data.pos)
+        local blockId = TerrainManager.GridIndexTurnBlockID({x = self.Data.x, y = self.Data.y})
         UIBubbleManager.closeGTransItem(self.bubbleItem, blockId)
         self.bubbleItem = nil
     end

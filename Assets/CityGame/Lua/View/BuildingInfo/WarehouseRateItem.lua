@@ -60,10 +60,10 @@ end
 function WarehouseRateItem:initData()
     self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
     self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store)
-    local lockedNum = self:getLockedNum(self.warehouseData.store);
+    self.lockedNum = self:getLockedNum(self.warehouseData.store);
     local numTab = {}
     numTab["num1"] = self.sizeSlider.value
-    numTab["num2"] = lockedNum
+    numTab["num2"] = self.lockedNum
     numTab["num3"] = self.sizeSlider.maxValue
     numTab["col1"] = "Cyan"
     numTab["col2"] = "Teal"
@@ -147,7 +147,7 @@ function WarehouseRateItem:updateInfo(data)
     self.warehouseData.store = data.store
     self:initData();
 end
---刷新刚生产出来的数据
+--刷新刚生产出来的数据，添加到仓库
 function WarehouseRateItem:updateWarehouseData(dataInfo)
     --原料
     if not dataInfo.producerId then
@@ -210,10 +210,10 @@ function WarehouseRateItem:updateWarehouseNum()
     local count = 1
     self.sizeSlider.maxValue = PlayerBuildingBaseData[self.warehouseData.info.mId].storeCapacity
     self.sizeSlider.value = self:getWarehouseCapacity(self.warehouseData.store) + count
-    local lockedNum = self:getLockedNum(self.warehouseData.store);
+    self.lockedNum = self:getLockedNum(self.warehouseData.store);
     local numTab = {}
     numTab["num1"] = self.sizeSlider.value
-    numTab["num2"] = lockedNum
+    numTab["num2"] = self.lockedNum
     numTab["num3"] = self.sizeSlider.maxValue
     numTab["col1"] = "Cyan"
     numTab["col2"] = "Teal"

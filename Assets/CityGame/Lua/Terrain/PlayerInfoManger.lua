@@ -45,6 +45,7 @@ function PlayerInfoManger.GetInfosOneByOne(playerIds,func,class)
             table.insert(_funcs,func)
             table.insert(playerIDs,playerIds[1])
             Event.Brocast("m_QueryPlayerInfoChat",{playerIds[1]})
+            prints("查询好友"..recardNums)
         end
 
 end
@@ -54,7 +55,7 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
     methodNum=2
 
 
-     for i, id in ipairs(playerIds) do
+    for i, id in ipairs(playerIds) do
 
         local info=cache[id]
 
@@ -85,7 +86,10 @@ end
 
 --查询玩家信息返回
 function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
+    prints("收到查询好友"..curr)
+
     if  #playerIDs<=0  then    return   end
+
 
     if methodNum==1 then---第一种
 

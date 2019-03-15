@@ -132,6 +132,7 @@ function MapCtrl:_cleanDatas()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self.AOIState = 0  --设置为远镜头
+    self.selectSearchType = EMapSearchType.Default
 
     self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
     MapPanel.mapRootRect.transform.localScale = Vector3.one
@@ -442,7 +443,10 @@ function MapCtrl:_openRightSystemPage(item)
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end
-
+--
+function MapCtrl:getNonePageSearchType()
+    return self.selectSearchType
+end
 
 ---服务器请求
 function MapCtrl:_reqMarketDetail(blockId)

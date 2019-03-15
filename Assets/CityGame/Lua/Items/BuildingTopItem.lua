@@ -53,10 +53,8 @@ end
 
 --刷新数据
 function BuildingTopItem:refreshData(data, closeCallBack)
-    if self.data ~= nil then
-        if self.data.id ~= data.id then  --判断是否为同一个建筑
-            return
-        end
+    if data == nil then
+        return
     end
     if self.avatar == nil and data.ownerId ~= nil then
         PlayerInfoManger.GetInfosOneByOne({[1] = data.ownerId}, self.initPlayerInfo, self)

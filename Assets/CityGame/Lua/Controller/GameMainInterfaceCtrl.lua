@@ -309,7 +309,7 @@ function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
     table.insert(idTemp,info.sellerId)
     table.insert(idTemp,info.buyerId)
 
-    PlayerInfoMangerEx.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
+    PlayerInfoManger.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
 end
 
 --重大交易人物信息

@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// x,y坐标轴数据
 /// </summary>
-public class FunctionalGraphBase {
+public class FunctionalGraphBase:MonoBehaviour
+{
     /// 
     /// 是否显示刻度
     ///

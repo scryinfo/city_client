@@ -28,6 +28,8 @@ function HistoryCurveCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图（供应）
     Event.AddListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图(需求)
+    LoadSprite(SupplyDemandGood[self.m_data], HistoryCurvePanel.goods, true)
+    HistoryCurvePanel.goodsText.text = GetLanguage(self.m_data)
 end
 
 function HistoryCurveCtrl:Refresh()
@@ -47,7 +49,6 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-
     HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
 
@@ -159,10 +160,14 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
         sevenDaysAgo = sevenDaysAgo + 3600
         demandNumTab[i] = {}
         demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
-        for k, v in ipairs(info) do
-            if math.floor(v.t/1000) == sevenDaysAgo then
-                demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
-                        .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
+        if info == nil then
+            demandNumTab[i].num = 0
+        else
+            for k, v in ipairs(info) do
+                if math.floor(v.t/1000) == sevenDaysAgo then
+                    demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
+                            .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
+                end
             end
         end
     end

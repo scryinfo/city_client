@@ -265,6 +265,9 @@ end
 
 --给表赋值
 function VolumeCtrl:AssignmentDemand(table , countNpc , time)
+    if countNpc == nil then
+        countNpc = {}
+    end
     if table == nil then
         return
     end

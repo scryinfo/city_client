@@ -41,7 +41,7 @@ function SystemSettingPanel.InitPanel()
     this.LanguageText = transform:Find("Panel/bodyRoot/bg/body/LanguagetBtn/Text"):GetComponent("Text")
     this.LanguageBtnText = transform:Find("Panel/bodyRoot/bg/body/LanguagetBtn/musicyellow/Text"):GetComponent("Text")
 
-    this.LanguagePanel = transform:Find("Panel/bodyRoot/bg/body/languange")
+    this.LanguagePanel = transform:Find("Panel/bodyRoot/bg/languange")
 
     this.chineseBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/Chinese/Text"):GetComponent("Text")
     this.chineseBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/Chinese")
@@ -53,7 +53,7 @@ function SystemSettingPanel.InitPanel()
     this.bubbleText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/Text"):GetComponent("Text")
     this.bubbleBtnText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/musicyellow/Text"):GetComponent("Text")
 
-    this.bubblePanel = transform:Find("Panel/bodyRoot/bg/body/bubble")
+    this.bubblePanel = transform:Find("Panel/bodyRoot/bg/bubble")
 
     this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
     this.allBigBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig")

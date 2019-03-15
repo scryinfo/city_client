@@ -37,7 +37,7 @@ function MapSearchResultItem:_setPos()
             buildingBase.ownerId = tempInfo.Data["ownerId"]
             buildingBase.name = tempInfo.Data["name"]
 
-            PlayerInfoManger.GetInfosOneByOne({[1] = buildingBase.ownerId}, self._initPersonalInfo, self)
+            PlayerInfoManger.GetInfos({[1] = buildingBase.ownerId}, self._initPersonalInfo, self)
             if tempInfo.Data["mId"] ~= nil then
                 buildingBase.mId = tempInfo.Data["mId"]
                 local delta = self.data.itemWidth *  PlayerBuildingBaseData[buildingBase.mId].x

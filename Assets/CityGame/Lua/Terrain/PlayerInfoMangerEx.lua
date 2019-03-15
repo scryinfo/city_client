@@ -21,7 +21,7 @@ end
 
 ---==========================================================================================外部===================================================================================================
 
-function PlayerInfoMangerEx.GetInfosOneByOne(playerIds,func,class)
+function PlayerInfoMangerEx.GetInfos(playerIds,func,class)
     num=1
     recardNums=recardNums+1
     _func=func

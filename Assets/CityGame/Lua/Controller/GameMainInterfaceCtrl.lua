@@ -13,9 +13,10 @@ local radioIndex     --索引
 local radio          --广播信息表(有序)
 local newRadio       --未播放的广播信息表
 
-local cost          --重大交易金额
-local time          --重大交易时间
-
+local  cost = {}          --重大交易金额
+local time = {}          --重大交易时间
+local index = 0
+local indexs = 0
 
 function  GameMainInterfaceCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
@@ -243,13 +244,13 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
         local Ids={}
         table.insert(Ids,groundData.Data.ownerId)
         --Event.Brocast("m_QueryPlayerInfoChat",Ids)
-        PlayerInfoManger.GetInfosOneByOne(Ids,self.SaveData,self)
+        PlayerInfoManger.GetInfos(Ids,self.SaveData,self)
     end
 
     --请求建筑主人的信息
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
-    PlayerInfoManger.GetInfosOneByOne(ids,self.SaveData,self)
+    PlayerInfoManger.GetInfos(ids,self.SaveData,self)
 
 
 
@@ -293,6 +294,8 @@ end
 
 --todo 重大交易
 function GameMainInterfaceCtrl:c_OnMajorTransaction(info)
+    cost = nil
+    time = nil
     cost = info.cost
     time = info.ts
     local idTemp = {}
@@ -303,8 +306,9 @@ function GameMainInterfaceCtrl:c_OnMajorTransaction(info)
 end
 
 function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
-    cost = info.cost
-    time = info.ts
+    index = index +1
+    cost[index] = info.cost
+    time[index] = info.ts
     local idTemp = {}
     table.insert(idTemp,info.sellerId)
     table.insert(idTemp,info.buyerId)
@@ -326,30 +330,29 @@ function GameMainInterfaceCtrl:c_OnMajorTransactionInfo(info)
 end
 
 function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
+    indexs = indexs + 1
     local data = {}
     data.sellName = info[1].name
     data.sellFaceId = info[1].faceId
     data.buyName = info[2].name
     data.buyFaceId = info[2].faceId
-    data.cost = cost
-    data.ts = time
+    data.cost = cost[indexs]
+    data.ts = time[indexs]
     data.type = 1
     if radio == nil then
-       radio = {}
+        radio = {}
+        table.insert(radio,data)
+    else
         table.insert(radio,data)
     end
-   table.insert(radio,data)
-    local a= radio
+    table.sort(radio, function (m, n) return m.ts < n.ts end)
+    local a = radio
 end
 
 --所有交易量
-local infos
 function GameMainInterfaceCtrl:c_AllExchangeAmount(info)
     GameMainInterfacePanel.volumeText.text ="E"..getMoneyString(GetClientPriceString(info))
 end
-
-
-
 
 --获取所有城市广播
 function GameMainInterfaceCtrl:c_CityBroadcasts(info)
@@ -357,39 +360,6 @@ function GameMainInterfaceCtrl:c_CityBroadcasts(info)
     if info == nil then
         return
     end
-    --infos=info
-    --local tempIds={}
-    --for i, Info in ipairs(info) do
-    --    if Info.type==1 then
-    --        table.insert(tempIds,Info.sellerId)
-    --        table.insert(tempIds,Info.buyerId)
-    --    end
-    --end
-    --
-    --self.nums=0
-    --local arr={}
-    --if #tempIds >0 then
-    --   local number=#tempIds
-    --
-    --    for i = 1, number do
-    --        table.insert(arr,tempIds[i])
-    --
-    --        if i%10==0 then
-    --            self.nums=  self.nums+1
-    --            PlayerInfoManger.GetInfos(arr, self.c_test ,self)
-    --            arr={}
-    --        end
-    --
-    --    end
-    --
-    --    if ((#tempIds )- (self.nums*10 ))>0 then
-    --        self.nums=self.nums+1
-    --    end
-    --    PlayerInfoManger.GetInfos(arr, self.c_test ,self)
-    --
-    --end
-
-
 
         for i, v in ipairs(info) do
             if v.type == 1 then
@@ -403,21 +373,6 @@ function GameMainInterfaceCtrl:c_CityBroadcasts(info)
         end
 
 end
-
---function GameMainInterfaceCtrl:c_test(info)
---    local a = info
---    for i, v in ipairs(infos) do
---        if v.type == 1 then
---            GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
---        else
---            if radio == nil then
---                radio = {}
---                table.insert(radio,v)
---            end
---        end
---    end
---end
-
 
 
 function GameMainInterfaceCtrl:Awake()
@@ -923,7 +878,7 @@ end
 
 function GameMainInterfaceCtrl:_OnHeadBtn(go)
     if go.playerId ~= 0 then
-        PlayerInfoManger.GetInfosOneByOne({go.playerId},GameMainInterfaceCtrl.c_OnReceivePlayerInfo, GameMainInterfaceCtrl)
+        PlayerInfoManger.GetInfos({go.playerId},GameMainInterfaceCtrl.c_OnReceivePlayerInfo, GameMainInterfaceCtrl)
     end
 end
 

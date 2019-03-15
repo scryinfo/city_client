@@ -18,7 +18,7 @@ function MapObjectsManager.AddMaterial(ParentObj)
         local allrender = ParentObj:GetComponentsInChildren(RendererType):ToTable()
         if allrender ~= nil then
             for i, tempRender in pairs(allrender) do
-                for i, tempMaterial in pairs(tempRender.materials:ToTable()) do
+                for i, tempMaterial in pairs(tempRender.sharedMaterials:ToTable()) do
                     local tempInsId = tempMaterial:GetInstanceID()
                     if  AllMaterial[tempInsId] == nil then
                         AllMaterial[tempInsId] = tempMaterial

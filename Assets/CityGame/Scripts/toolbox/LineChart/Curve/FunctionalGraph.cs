@@ -89,13 +89,17 @@ public class FunctionalGraph : MaskableGraphic
         }
 
         #region 绘制折线
-        for (int i = 0; i < line.Count; i++)
+        if (line.Count >= 1)
         {
-            for (int v = 1; v < line[i].Length-1; v++)
+            for (int i = 0; i < line.Count; i++)
             {
-                vh.AddUIVertexQuad(GetQuad(line[i][v], line[i][v+1], lineColor[i], GraphBase.LineWidth));
-            }        
+                for (int v = 1; v < line[i].Length - 1; v++)
+                {
+                    vh.AddUIVertexQuad(GetQuad(line[i][v], line[i][v + 1], lineColor[i], GraphBase.LineWidth));
+                }
+            }
         }
+      
         #endregion
         if (GraphBase.ShowXAxisUnit)
         {
@@ -201,12 +205,16 @@ public class FunctionalGraph : MaskableGraphic
                 break;
         }
         // 分界线
-        for (int i = 1; i < boundary.Length; i++)
+        if (boundary != null)
         {
-            Vector2 firstPoint = Vector2.zero + new Vector2(boundary[i], 0);
-            Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-            GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.BoundaryColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            for (int i = 1; i < boundary.Length; i++)
+            {
+                Vector2 firstPoint = Vector2.zero + new Vector2(boundary[i], 0);
+                Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
+                GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.BoundaryColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            }
         }
+      
         #endregion
         #endregion
     }

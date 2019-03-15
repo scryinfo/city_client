@@ -10,6 +10,9 @@ local prefabPools = {}
 local MapBuildingItemName = "MapBuildingItem"
 local MapSearchResultItemName = "MapSearchResultItem"
 local MapAllSearchItemName = "MapAllSearchItem"
+local MapGroundAucItemName = "MapGroundAucItem"
+local MapGroundTransItemName = "MapGroundTransItem"
+
 local TempCenterOffset = Vector3.New(10, 0, 10)
 
 MapBubbleManager.TempBuildingIconPath =
@@ -34,6 +37,8 @@ function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
     prefabPools[MapBuildingItemName] = LuaGameObjectPool:new(MapBuildingItemName, MapPanel.mapBuildingItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapSearchResultItemName] = LuaGameObjectPool:new(MapSearchResultItemName, MapPanel.mapSearchResultItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapAllSearchItemName] = LuaGameObjectPool:new(MapAllSearchItemName, MapPanel.mapAllSearchItem, 5, Vector3.New(-999,-999,-999))
+    prefabPools[MapGroundAucItemName] = LuaGameObjectPool:new(MapGroundAucItemName, MapPanel.mapGroundAucItem, 5, Vector3.New(-999,-999,-999))
+    prefabPools[MapGroundTransItemName] = LuaGameObjectPool:new(MapGroundTransItemName, MapPanel.mapGroundTransItem, 5, Vector3.New(-999,-999,-999))
 end
 --设置地块移动改变时，旧的id
 function MapBubbleManager.setOldAOICenterID(id)
@@ -95,11 +100,10 @@ end
 function MapBubbleManager._createBuildingItems(itemDatas, buildingType)
     for key, value in pairs(itemDatas) do
         if value.info ~= nil and value.info.pos ~= nil and value.info.pos.x ~= nil and value.info.pos.y ~= nil and value.info.mId ~= nil and PlayerBuildingBaseData[value.info.mId] ~= nil and PlayerBuildingBaseData[value.info.mId].x ~= nil  then
-            --local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapBuildingItem)
             local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
             obj.transform:SetParent(MapPanel.alwaysShowRoot.transform)
             obj.transform.localPosition = Vector3.zero
-            local item = MapBuildingItem:new({tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
+            local item = MapBuildingItem:new({buildingId = value.info.id, tempPath = this._getBuildingIconPath(buildingType), poolName = MapBuildingItemName}, obj.transform)
             this.selfBuildings[value.info.id] = item
             local pos = Vector2.New( value.info.pos.y, - value.info.pos.x) * this.itemWidth
             local delta = this.itemDelta *  PlayerBuildingBaseData[value.info.mId].x
@@ -110,27 +114,46 @@ end
 --生成摘要item
 function MapBubbleManager._createSummaryItems(data)
     local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapAllSearchItem)
-    --local obj = prefabPools[MapBuildingItemName]:GetAvailableGameObject()
     obj.transform:SetParent(MapPanel.allSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
 
-    local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
+    local collectionId
+    if data.idx ~= nil then
+        collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
+    else
+        collectionId = data.collectionId
+    end
     local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
+
     local tempPos = TerrainManager.BlockIDTurnPosition(blockId)
     local item = MapAllSearchItem:new({num = data.num, pos = tempPos, poolName = MapAllSearchItemName}, obj.transform)
 
     this.summaryItems[collectionId] = item
     local pos = Vector2.New(tempPos.z + 10 ,-tempPos.x - 10) * this.itemWidth
     item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, 0)
-    obj.gameObject.name = data.idx.x..data.idx.y
 end
 --生成详情Item
 function MapBubbleManager._createDetailItems(data)
-    --local obj = UnityEngine.GameObject.Instantiate(MapPanel.mapSearchResultItem)
     local obj = prefabPools[MapSearchResultItemName]:GetAvailableGameObject()
     obj.transform:SetParent(MapPanel.detailSearchRoot.transform)
     obj.transform.localPosition = Vector3.zero
     local item = MapSearchResultItem:new({detailData = data, itemWidth = this.itemWidth, poolName = MapSearchResultItemName}, obj.transform)
+    return item
+end
+--生成土地拍卖
+function MapBubbleManager._createGAucItems(data)
+    local obj = prefabPools[MapGroundAucItemName]:GetAvailableGameObject()
+    obj.transform:SetParent(MapPanel.groundAuctionRoot.transform)
+    obj.transform.localPosition = Vector3.zero
+    local item = MapGroundAucItem:new({detailData = data, itemWidth = this.itemWidth, poolName = MapGroundAucItemName}, obj.transform)
+    return item
+end
+--生成土地交易
+function MapBubbleManager._createGTransItems(data)
+    local obj = prefabPools[MapGroundTransItemName]:GetAvailableGameObject()
+    obj.transform:SetParent(MapPanel.groundTransformRoot.transform)
+    obj.transform.localPosition = Vector3.zero
+    local item = MapGroundTransItem:new({detailData = data, itemWidth = this.itemWidth, poolName = MapGroundTransItemName}, obj.transform)
     return item
 end
 --获取正确的icon路径
@@ -157,22 +180,32 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
 end
 --
 function MapBubbleManager.createSummaryItems(data, summaryType)
-    if summaryType == EMapSearchType.Material or summaryType == EMapSearchType.Goods then
+    if summaryType == EMapSearchType.Auction then  --土地拍卖是客户端维护的，所以做特殊处理
+        if data == nil then
+            local tempDatas = UIBubbleManager.getCollectionAucData()
+            data = {}
+            for i, value in pairs(tempDatas) do
+                data[#data + 1] = {num = value, collectionId = i}
+            end
 
-    elseif summaryType == EMapSearchType.Deal then
-
+            this.cleanSummaryItems()
+            for i, value in pairs(data) do
+                this._createSummaryItems(value)
+            end
+        end
+        return
     end
 
     this.cleanSummaryItems()
     for i, value in pairs(data.info) do
+        if value.num == nil then
+            value.num = value.sellingN + value.rentingN
+        end
+
         if value.num > 0 then
             this._createSummaryItems(value)
         end
     end
-end
---点击缩略item，进入详情
-function MapBubbleManager.summaryToDetail(pos)
-
 end
 --搜索详情  --是否是全新的搜索数据
 function MapBubbleManager.createDetailItems(data, isNew)
@@ -192,9 +225,13 @@ function MapBubbleManager.createDetailItems(data, isNew)
                 for i, building in pairs(value.b) do
                     if building.sale ~= nil then
                         local detailData = {buildingId = building.id, sale = building.sale, pos = building.pos}
-                        this.collectionDetails[collectionId] = {}
-                        this.collectionDetails[collectionId].detailItems = {}
-                        this.collectionDetails[collectionId].detailItems[building.id] = {}
+                        if this.collectionDetails[collectionId] == nil then
+                            this.collectionDetails[collectionId] = {}
+                        end
+                        if this.collectionDetails[collectionId].detailItems == nil then
+                            this.collectionDetails[collectionId].detailItems = {}
+                        end
+                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
                         this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
                     end
                 end
@@ -239,7 +276,96 @@ function MapBubbleManager.cleanAOIWillRemoveDatas()
         end
     end
 end
+--生成土地交易
+function MapBubbleManager.createGroundTransDetailItems()
+    --获取到需要生成的交易信息
+    this.cleanAllGTransData()
 
+    local tempDatas = UIBubbleManager.getTransItemsTable()
+    if tempDatas ~= nil then
+        for id, value in pairs(tempDatas) do
+            if value ~= nil then
+                local data = value:getValuableData()
+                local blockId = data.blockId
+                local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+                if this.gTransData[collectionId] == nil then
+                    this.gTransData[collectionId] = {}
+                end
+                if this.gTransData[collectionId].detailItems == nil then
+                    this.gTransData[collectionId].detailItems = {}
+                end
+                local item = this._createGTransItems(data)
+
+                local serverPos = TerrainManager.BlockIDTurnPosition(blockId)
+                local pos = Vector2.New(serverPos.x, -serverPos.z) * this.itemWidth
+                local delta = this.itemDelta *  1  --一个地块的大小
+                item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+                this.gTransData[collectionId].detailItems[blockId] = item
+            end
+        end
+    end
+end
+--生成土地拍卖
+function MapBubbleManager.createGAucDetailItems()
+    this.cleanAllGroundAucData()
+
+    local tempDatas = UIBubbleManager.getAucItemsTable()
+    if tempDatas ~= nil then
+        for id, value in pairs(tempDatas) do
+            if value ~= nil then
+                local data = value:getValuableData()
+                --local blockId = GroundAucConfig[data.id].firstBlockId
+                local info = GroundAucConfig[data.id].area[2]
+                local blockId = TerrainManager.GridIndexTurnBlockID(info)
+                local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+                if this.groundAucData[collectionId] == nil then
+                    this.groundAucData[collectionId] = {}
+                end
+                if this.groundAucData[collectionId].detailItems == nil then
+                    this.groundAucData[collectionId].detailItems = {}
+                end
+                local item = this._createGAucItems(data)
+
+                local pos = Vector2.New(info.y, -info.x) * this.itemWidth
+                local delta = this.itemDelta *  5  --一个地块的大小
+                item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+                this.groundAucData[collectionId].detailItems[blockId] = item
+            end
+        end
+    end
+end
+--清除所有土地拍卖信息
+function MapBubbleManager.cleanAllGroundAucData()
+    if this.groundAucData ~= nil then
+        for i, value in pairs(this.groundAucData) do
+            if value.detailItems ~= nil then
+                for i, item in pairs(value.detailItems) do
+                    item:close()
+                    item = nil
+                end
+                value.detailItems = nil
+            end
+            value = nil
+        end
+    end
+    this.groundAucData = {}
+end
+--清除所有土地交易
+function MapBubbleManager.cleanAllGTransData()
+    if this.gTransData ~= nil then
+        for i, value in pairs(this.gTransData) do
+            if value.detailItems ~= nil then
+                for i, item in pairs(value.detailItems) do
+                    item:close()
+                    item = nil
+                end
+                value.detailItems = nil
+            end
+            value = nil
+        end
+    end
+    this.gTransData = {}
+end
 --镜头低时显示建筑详细大小
 function MapBubbleManager.toggleShowDetailBuilding(show)
     if show == nil then
@@ -263,6 +389,8 @@ function MapBubbleManager.showSummaryOrDetail(showDetail)
     else
         --清除详情item
         this.cleanAllCollectionDetails()
+        this.cleanAllGroundAucData()
+        this.cleanAllGTransData()
     end
 end
 --
@@ -299,12 +427,17 @@ function MapBubbleManager.MapMoveFunc()
 end
 --关闭界面时的操作
 function MapBubbleManager.cleanAllBubbleItems()
-    this.cleanBuildingItems()
     this.cleanSummaryItems()
     this.cleanAllCollectionDetails()
-    this.centerItem:resetState()
+    this.cleanAllGroundAucData()
+    this.cleanAllGTransData()
 end
-
+--
+function MapBubbleManager.closePanelFunc()
+    this.centerItem:resetState()
+    this.cleanAllBubbleItems()
+    this.cleanBuildingItems()
+end
 ---传data.buildingBase
 function MapBubbleManager.GoHereFunc(data)
     UIPanel.CloseAllPageExceptMain()

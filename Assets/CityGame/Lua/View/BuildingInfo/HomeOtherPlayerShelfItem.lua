@@ -25,12 +25,17 @@ function HomeOtherPlayerShelfItem:initialize(OtherPlayerShelfData, clickOpenFunc
         if not self.viewRect.gameObject.activeSelf then
             return
         end
-        if self.productionData.buildingType == BuildingType.RetailShop then
-            ct.OpenCtrl("RetailShelfCtrl",self.productionData)
-        elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
-            ct.OpenCtrl("ProcessShelfCtrl",self.productionData)
-        elseif self.productionData.buildingType == BuildingType.MaterialFactory then
-            ct.OpenCtrl("ShelfCtrl",self.productionData)
+        if self.productionData.info.state == "OPERATE" then
+            if self.productionData.buildingType == BuildingType.RetailShop then
+                ct.OpenCtrl("RetailShelfCtrl",self.productionData)
+            elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+                ct.OpenCtrl("ProcessShelfCtrl",self.productionData)
+            elseif self.productionData.buildingType == BuildingType.MaterialFactory then
+                ct.OpenCtrl("ShelfCtrl",self.productionData)
+            end
+        else
+            Event.Brocast("SmallPop",GetLanguage(35040013),300)
+            return
         end
     end);
     self.openName.text = GetLanguage(25020004)

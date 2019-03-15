@@ -10,9 +10,13 @@ function MapSystemItem:_childInit()
     self.btn = self.viewRect.transform:Find("bubble/btn"):GetComponent("Button")
     self.iconImg = self.viewRect.transform:Find("bubble/btn/bg/protaitImg"):GetComponent("Image")
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")  --镜头拉近时显示大小
+    self.detailShowBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.scaleRoot = self.viewRect.transform:Find("bubble")  --需要缩放的气泡
 
     self.btn.onClick:AddListener(function ()
+        self:_clickFunc()
+    end)
+    self.detailShowBtn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
     --LoadSprite(data.disSelectIconPath, self.iconImg, true)
@@ -27,5 +31,5 @@ function MapSystemItem:_clickFunc()
     if self.data == nil then
         return
     end
-    ct.log("")
+    Event.Brocast("c_MapSelectSystemPage", self)
 end

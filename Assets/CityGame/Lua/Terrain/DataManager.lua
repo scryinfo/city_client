@@ -370,6 +370,21 @@ function DataManager.GetBuildingBaseByCollectionID(collectionID)
     end
 end
 
+--通过建筑唯一ID获取详情
+--没有则返回nil
+function DataManager.GetSelfBuildingDetailByBlockId(buildingId)
+    if PersonDataStack.m_buysBuilding ~= nil then
+        for type, value in pairs(PersonDataStack.m_buysBuilding) do
+            for key, data in pairs(value) do
+                if data ~= nil and data.info ~= nil and data.info.id ~= nil and buildingId == data.info.id then
+                    return PersonDataStack.m_buysBuilding[type][key]
+                end
+            end
+        end
+    end
+    return nil
+end
+
 -------------------------------------------------------------------------------------道路数据集合--------------------------------
 --功能
 --  依据BlockDatas创建道路的基础数据，管理GameObject

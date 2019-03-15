@@ -142,6 +142,19 @@ function UIBubbleGroundAucItem:_changeLanguageFunc()
     self.noneBidText02.text = GetLanguage(22010001)
 end
 
+--小地图需要的数据
+function UIBubbleGroundAucItem:getValuableData()
+    if self.data ~= nil then
+        local temp = {}
+        temp.id = self.data.id
+        temp.isStartAuc = self.data.isStartAuc
+        temp.bidHistory = self.data.bidHistory
+        temp.isStartBid = self.isStartBid
+        temp.endTs = self.data.endTs
+        return temp
+    end
+end
+
 function UIBubbleGroundAucItem:Close()
     self.timeDown = false
     if self.m_Timer ~= nil then

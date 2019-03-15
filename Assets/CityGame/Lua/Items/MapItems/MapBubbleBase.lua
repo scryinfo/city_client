@@ -16,6 +16,7 @@ end
 
 --初始设置设置缩放比以及位置
 function MapBubbleBase:setScaleAndPos(scale, pos, sizeDelta)
+    self.viewRect.transform.localScale = Vector3.one
     if scale ~= nil then
         if scale == 0 then
             scale = 1
@@ -44,7 +45,6 @@ function MapBubbleBase:_changeScale(mapScale)
     if self.detailShowImg ~= nil then
         self.detailShowImg.transform.localScale = Vector3.one * scale
         self.detailShowImg.rectTransform.sizeDelta = mapScale * self.viewRect.sizeDelta
-        ct.log("")
     end
 end
 --设置显示建筑大小
@@ -66,10 +66,14 @@ function MapBubbleBase:close()
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
     end
+    self:_childClose()
     self.data = nil
     self = nil
 end
 
 --
 function MapBubbleBase:_childInit() end
+--
+function MapBubbleBase:_childClose() end
+
 

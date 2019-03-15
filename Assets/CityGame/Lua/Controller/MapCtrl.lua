@@ -19,6 +19,7 @@ EMapSearchType =
     Goods = 2,
     Deal = 3,
     Auction = 4,
+    SelfBuilding = 5,
 }
 
 function MapCtrl:initialize()
@@ -88,6 +89,11 @@ function MapCtrl:Refresh()
     Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+    Event.AddListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
+    Event.AddListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
+    Event.AddListener("c_MapSelectSystemPage", self._openRightSystemPage, self)
+
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_reqAllBuildings()
@@ -101,6 +107,11 @@ function MapCtrl:Hide()
     Event.RemoveListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
     Event.RemoveListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.RemoveListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
+    Event.RemoveListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
+    Event.RemoveListener("c_MapOpenRightGTransPage", self._openRightGTransPage, self)
+    Event.RemoveListener("c_MapSelectSelfBuildingPage", self._openRightSelfBuildingPage, self)
+    Event.RemoveListener("c_MapSelectSystemPage", self._openRightSystemPage, self)
+
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
     self:_cleanDatas()
@@ -121,18 +132,17 @@ function MapCtrl:_cleanDatas()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self.AOIState = 0  --设置为远镜头
+    self.selectSearchType = EMapSearchType.Default
 
     self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
     MapPanel.mapRootRect.transform.localScale = Vector3.one
     MapPanel.mapRootRect.anchoredPosition = Vector2.zero
     MapPanel.scaleSlider.value = self.my_Scale
 
-    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.closePanelFunc()
 
     --右侧的面板信息
-    if MapPanel.rightMatGoodPageItem ~= nil then
-        MapPanel.rightMatGoodPageItem:resetState()
-    end
+    MapPanel.closeAllRightPage()
     if self.rightSearchItem ~= nil then
         self.rightSearchItem:close()
         self.rightSearchItem = nil
@@ -219,6 +229,13 @@ function MapCtrl:dealSelect()
         self.selectDetailItem = nil  --另一种选项清空
     end
     self.selectSearchType = EMapSearchType.Deal
+
+    MapBubbleManager.cleanAllBubbleItems()
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqGroundTransSummary()
+    end
 end
 --选中拍卖
 function MapCtrl:auctionSelect()
@@ -230,6 +247,13 @@ function MapCtrl:auctionSelect()
         self.selectDetailItem = nil  --另一种选项清空
     end
     self.selectSearchType = EMapSearchType.Auction
+
+    MapBubbleManager.cleanAllBubbleItems()
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+    end
 end
 
 ---
@@ -239,6 +263,7 @@ function MapCtrl:nonePageCancelSelect(selectId)
         self:refreshTypeItems()
         self.selectId = nil
         self.selectSearchType = EMapSearchType.Default
+        MapBubbleManager.cleanAllBubbleItems()
     end
 end
 --
@@ -385,6 +410,43 @@ function MapCtrl:_openRightMatGoodPage(item)
         MapPanel.rightMatGoodPageItem:refreshData(item.data)
     end
 end
+--打开拍卖
+function MapCtrl:_openRightGAucPage(item)
+    if item ~= nil then
+        --if self.rightSearchItem ~= nil then
+        --    self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
+        --end
+        --self.rightSearchItem = item
+        --self.rightSearchItem:toggleShowDetailImg(true)
+        MapPanel.closeAllRightPage()
+        MapPanel.rightGroundAucPageItem:refreshData(item.data)
+    end
+end
+--打开土地交易
+function MapCtrl:_openRightGTransPage(item)
+    if item ~= nil then
+        MapPanel.closeAllRightPage()
+        MapPanel.rightGroundTransPageItem:refreshData(item.data)
+    end
+end
+--打开自己的建筑
+function MapCtrl:_openRightSelfBuildingPage(item)
+    if item ~= nil then
+        MapPanel.closeAllRightPage()
+        MapPanel.selfBuildingPageItem:refreshData(item.data)
+    end
+end
+--打开系统建筑
+function MapCtrl:_openRightSystemPage(item)
+    if item ~= nil then
+        MapPanel.closeAllRightPage()
+        MapPanel.systemBuildingPageItem:refreshData(item.data)
+    end
+end
+--
+function MapCtrl:getNonePageSearchType()
+    return self.selectSearchType
+end
 
 ---服务器请求
 function MapCtrl:_reqMarketDetail(blockId)
@@ -403,15 +465,18 @@ end
 
 --原料商品搜索摘要
 function MapCtrl:_receiveMarketSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Material)
 end
 --土地交易搜索摘要
 function MapCtrl:_receiveGroundTransSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Deal)
 end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
+        MapBubbleManager.cleanAllBubbleItems()
         if self.selectDetailItem == nil or self.selectDetailItem:getItemId() ~= data.itemId then
             MapBubbleManager.createDetailItems(data, true)
             return
@@ -533,7 +598,11 @@ function MapCtrl:_judgeDetail()
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易详情
-
+        if self.selectSearchType == EMapSearchType.Auction then
+            MapBubbleManager.createGAucDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Deal then
+            MapBubbleManager.createGroundTransDetailItems()
+        end
     end
 end
 --缩小过程中判断是否需要请求缩略
@@ -545,7 +614,11 @@ function MapCtrl:_judgeSummary()
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
         ct.log("")
         --显示拍卖/土地交易缩略
-
+        if self.selectSearchType == EMapSearchType.Auction then
+            MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+        elseif self.selectSearchType == EMapSearchType.Deal then
+            MapModel.m_ReqGroundTransSummary()
+        end
     end
 end
 --判断是否是
@@ -567,6 +640,8 @@ function MapCtrl:_mapAllResearchToDetail(summaryPos, scenePos)
 
     self:_posOffset(self.my_Scale, targetScale, summaryPos)
     self.my_Scale = targetScale
+
+    MapBubbleManager.toggleShowDetailBuilding(true)
     self:RefreshMiniMapScale()
     --移动相机
     --local pos = scenePos + Vector3.New(10, 0, 10)

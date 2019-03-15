@@ -46,7 +46,7 @@ function UIBubbleBuildingSignItem:initialize(prefab,luaBehaviour,data,ctr)
 end
 
 function UIBubbleBuildingSignItem:updateData(data)
-
+    self.data=data
     --给小的赋值
     if data.emoticon  then
         LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.smallIma)
@@ -122,12 +122,12 @@ end
 --关闭
 function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.transform.localScale=Vector3.zero
-    UpdateBeat:Remove(self.Update,self)
+    FixedUpdateBeat:Remove(self.Update,self)
 end
 --开始
 function UIBubbleBuildingSignItem:Start()
     self.prefab.transform.localScale=Vector3.one
-    UpdateBeat:Add(self.Update, self)
+    FixedUpdateBeat:Add(self.Update, self)
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
@@ -151,12 +151,15 @@ end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
 
-    self.nameText.text=info.name
+   self.nameText.text=info.name
    self.avatarData= AvatarManger.GetSmallAvatar(info.faceId,self.headIma,0.2)
 
 end
 
 function UIBubbleBuildingSignItem:Update()
+
+
+
     self.rect.anchoredPosition =
     ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint( Vector3.New(self.data.x, 0, self.data.y) + Vector3.New(-0.1, 0, 2)))
 end

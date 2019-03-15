@@ -30,6 +30,8 @@ function MapPanel.InitPanel()
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
     this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")  --搜索结果
     this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem")  --搜索总览
+    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItem")  --土地拍卖
+    this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem")  --土地交易
 
     --
     this.mapRootRect = transform:Find("centerRoot/typeParent"):GetComponent("RectTransform")  --小地图
@@ -52,11 +54,18 @@ function MapPanel.InitPanel()
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
 
     --右侧详情界面
-    this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")
+    this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")  --原料商品
     this.rightMatGoodPageItem = MapRightMatGoodPage:new(this.searchMatGoodRect.transform)
-
+    this.searchGroundAucRect = transform:Find("rightPageRoot/searchGroundAuc"):GetComponent("RectTransform")  --拍卖
+    this.rightGroundAucPageItem = MapRightGroundAucPage:new(this.searchGroundAucRect.transform)
+    this.searchGroundTransRect = transform:Find("rightPageRoot/searchGroundTrans"):GetComponent("RectTransform")  --土地交易
+    this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
+    this.selfBuildingRect = transform:Find("rightPageRoot/selectBuilding"):GetComponent("RectTransform")  --自己建筑temp
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
+    this.systemBuildingRect = transform:Find("rightPageRoot/selectSystemBuilding"):GetComponent("RectTransform")  --系统建筑
+    this.systemBuildingPageItem = MapRightSystemPage:new(this.systemBuildingRect.transform)
 end
-
+--
 function MapPanel.showDetailPageByType(typeId)
     if typeId == EMapSearchType.Material then
         MapPanel.matPageToggleGroup.transform.localScale = Vector3.one
@@ -65,4 +74,39 @@ function MapPanel.showDetailPageByType(typeId)
         MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
         MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.one
     end
+end
+--
+function MapPanel.showRightPageByType(type, data)
+    if type == EMapSearchType.Auction then
+        this.rightMatGoodPageItem:close()
+        this.rightGroundAucPageItem:refreshData(data)
+        this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:close()
+
+    elseif type == EMapSearchType.Deal then
+        this.rightMatGoodPageItem:close()
+        this.rightGroundAucPageItem:close()
+        this.rightGroundTransPageItem:refreshData(data)
+        this.selfBuildingPageItem:close()
+
+    elseif type == EMapSearchType.Material or type == EMapSearchType.Goods then
+        this.rightMatGoodPageItem:refreshData(data)
+        this.rightGroundAucPageItem:close()
+        this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:close()
+
+    elseif type == EMapSearchType.SelfBuilding then
+        this.rightMatGoodPageItem:close()
+        this.rightGroundAucPageItem:close()
+        this.rightGroundTransPageItem:close()
+        this.selfBuildingPageItem:refreshData(data)
+    end
+end
+--
+function MapPanel.closeAllRightPage()
+    this.rightMatGoodPageItem:close()
+    this.rightGroundAucPageItem:close()
+    this.rightGroundTransPageItem:close()
+    this.selfBuildingPageItem:close()
+    this.systemBuildingPageItem:close()
 end

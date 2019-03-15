@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 public class FunctionalGraph : MaskableGraphic
 {
-    public FunctionalGraphBase GraphBase = new FunctionalGraphBase();
+    public FunctionalGraphBase GraphBase;
     private RectTransform _myRect;
     private Vector2 _xPoint;
     private Vector2 _yPoint;
@@ -46,6 +46,7 @@ public class FunctionalGraph : MaskableGraphic
     /// 
     private void Init()
     {
+        GraphBase = new FunctionalGraphBase();
         _myRect = this.rectTransform;
     }
     /// 

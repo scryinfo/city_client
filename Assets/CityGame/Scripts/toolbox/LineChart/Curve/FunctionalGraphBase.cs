@@ -78,7 +78,7 @@ public class FunctionalGraphBase:MonoBehaviour
     /// 
     /// 网格类型
     /// 
-    public E_MeshType MeshType = E_MeshType.ImaglinaryLine;
+    public E_MeshType MeshType = E_MeshType.None;
     ///
     /// 网格线段宽度
     /// 
@@ -101,7 +101,6 @@ public class FunctionalGraphBase:MonoBehaviour
     [Range(2f, 20f)] public float LineWidth = 2.0f;
     ///分隔线的颜色
     ///
-    //[SerializeField]
     public Color BoundaryColor = Color.gray;
     
 

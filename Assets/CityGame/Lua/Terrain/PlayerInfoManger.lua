@@ -13,7 +13,7 @@ function PlayerInfoManger.Awake()
     _classes={}    _funcs={}     tempInfos={}
 
     cache={}       playerIDs={}
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
 
 
@@ -68,7 +68,7 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
             _funcs[recardNums]=func
             _classes[recardNums]=class
             Event.Brocast("m_QueryPlayerInfoChat",playerIds)
-
+            prints("查询好友"..recardNums)
             tempInfos={}
             return
         end
@@ -89,6 +89,7 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     prints("收到查询好友"..curr)
 
     if  #playerIDs<=0  then    return   end
+    prints("收到查询好友"..curr.."进入")
 
 
     if methodNum==1 then---第一种

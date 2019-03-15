@@ -1614,9 +1614,7 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendReq","gs.RequestFriend",DataManager.n_OnReceiveAddFriendReq)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendSucess","gs.RoleInfo",DataManager.n_OnReceiveAddFriendSucess)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getBlacklist","gs.RoleInfos",DataManager.n_OnReceiveGetBlacklist)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoMangerEx.n_OnReceivePlayerInfo)
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",DataManager.n_OnReceivePlayerInfo)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","labRoll","gs.IntNum",DataManager.n_OnReceiveLabRoll)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newItem","gs.IntNum",DataManager.n_OnReceiveNewItem)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleCommunication","gs.CommunicationProces",DataManager.n_OnReceiveRoleCommunication)
@@ -1817,22 +1815,10 @@ function DataManager.n_OnReceiveGetBlacklist(stream)
     end
 end
 
-----查询玩家信息返回
---function DataManager.n_OnReceivePlayerInfo(stream)
---    local playerData = stream
---    --for _, v in ipairs(playerData.info) do
---    --    DataManager.SetMyFriendsInfo(v)
---    --end
---    Event.Brocast("c_OnReceivePlayerInfo", playerData)
---    Event.Brocast("c_receiveOwnerDatas",playerData.info[1])
---
---    Event.Brocast("c_GroundTranReqPlayerInfo", playerData)  --土地交易部分请求玩家数据
---    Event.Brocast("c_GAucHistoryGetInfo", playerData)  --历史记录请求
---
---    if playerData ~= nil and #playerData.info == 1 and playerData.info[1].id == PersonDataStack.m_owner then
---        DataManager.SetMyPersonalHomepageInfo(playerData.info[1])
---    end
---end
+--查询玩家信息返回
+function DataManager.n_OnReceivePlayerInfo(stream)
+   PlayerInfoManger.n_OnReceivePlayerInfo(stream)
+end
 
 --研究所Roll回复信息
 function DataManager.n_OnReceiveLabRoll(stream)

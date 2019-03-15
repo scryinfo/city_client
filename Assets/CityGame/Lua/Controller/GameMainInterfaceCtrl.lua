@@ -346,7 +346,6 @@ function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
         table.insert(radio,data)
     end
     table.sort(radio, function (m, n) return m.ts < n.ts end)
-    local a = radio
 end
 
 --所有交易量

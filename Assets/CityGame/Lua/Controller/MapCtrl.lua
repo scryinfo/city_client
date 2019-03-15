@@ -645,7 +645,7 @@ function MapCtrl:_mapAllResearchToDetail(summaryPos, scenePos)
     self:RefreshMiniMapScale()
     --移动相机
     --local pos = scenePos + Vector3.New(10, 0, 10)
-    --CameraMove.MoveCameraToPos(scenePos)
+    CameraMove.MoveCameraToPos(scenePos)
 end
 --左上角的item的偏移
 function MapCtrl:_posOffset(beginScale, EndScale, summaryPos)

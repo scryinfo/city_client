@@ -57,7 +57,7 @@ function BuildingTopItem:refreshData(data, closeCallBack)
         return
     end
     if self.avatar == nil and data.ownerId ~= nil then
-        PlayerInfoManger.GetInfosOneByOne({[1] = data.ownerId}, self.initPlayerInfo, self)
+        PlayerInfoManger.GetInfos({[1] = data.ownerId}, self.initPlayerInfo, self)
     end
 
     self.data = data

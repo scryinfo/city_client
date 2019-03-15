@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// x,y坐标轴数据
 /// </summary>
-public class FunctionalGraphBase {
+public class FunctionalGraphBase:MonoBehaviour
+{
     /// 
     /// 是否显示刻度
     ///
@@ -77,7 +78,7 @@ public class FunctionalGraphBase {
     /// 
     /// 网格类型
     /// 
-    public E_MeshType MeshType = E_MeshType.ImaglinaryLine;
+    public E_MeshType MeshType = E_MeshType.None;
     ///
     /// 网格线段宽度
     /// 
@@ -100,7 +101,6 @@ public class FunctionalGraphBase {
     [Range(2f, 20f)] public float LineWidth = 2.0f;
     ///分隔线的颜色
     ///
-    //[SerializeField]
     public Color BoundaryColor = Color.gray;
     
 

@@ -43,7 +43,7 @@ function MapRightGroundTransPage:refreshData(data)
     self.data = data
 
     local groundInfo = DataManager.GetGroundDataByID(self.data.detailData.blockId).Data
-    PlayerInfoManger.GetInfosOneByOne({[1] = groundInfo.ownerId}, self._initPersonalInfo, self)
+    PlayerInfoManger.GetInfos({[1] = groundInfo.ownerId}, self._initPersonalInfo, self)
 
     if data.detailData.groundState == GroundTransState.Sell then
         self.sellRoot.localScale = Vector3.one

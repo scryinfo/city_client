@@ -21,5 +21,6 @@ OpenModelInsID = {
     ["AvtarCtrl"] = 15,
     ["BubbleMessageCtrl"] = 16,
     ["VolumeCtrl"] = 17,
+    ["HistoryCurveCtrl"] = 18,
 
 }

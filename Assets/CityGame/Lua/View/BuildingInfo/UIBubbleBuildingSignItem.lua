@@ -77,7 +77,7 @@ function UIBubbleBuildingSignItem:updateData(data)
        self. desText.text=data.des
     end
     --赋值 姓名和 头像
-    PlayerInfoManger.GetInfosOneByOne({data.ownerId},self.LoadHeadImaAndName,self)
+    PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
 
     if not data.bubble then
         self:CloesBubble()

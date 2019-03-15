@@ -9,7 +9,7 @@ local nowTime = 0
 local Math_Floor = math.floor
 local Math_Ceil = math.ceil
 --主页生产线
-function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialData)
+function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialData,Capacity)
     self.prefab = prefab;
     self.lineInfo = lineInfo
     self.itemId = lineInfo.itemId
@@ -17,6 +17,7 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialDat
     self.workerNum = lineInfo.workerNum
     self.buildingId = buildingId
     self.materialData = materialData
+    self.Capacity = Capacity
 
     self.itemGoodsbg = self.prefab.transform:Find("itembg/itemGoodsbg")
     self.itemMaterialbg = self.prefab.transform:Find("itembg/itemMaterialbg")
@@ -35,6 +36,7 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialDat
     self.deleteBtn = prefab.transform:Find("deleteBtn")
     self.countdownText = prefab.transform:Find("countdownText"):GetComponent("Text")
     self.tip = prefab.transform:Find("tipImg")
+    self.tipText = prefab.transform:Find("tipImg/Text"):GetComponent("Text")
 
     self:InitializeData()
     LuaBehaviour:AddClick(self.deleteBtn.gameObject,self.OnClick_deleteBtn,self)
@@ -84,13 +86,31 @@ function LineItem:InitializeData()
     self.countdownText.text = self:GetStringTime((self.productionSlider.maxValue - self.productionSlider.value) * 1000)
     self.timeText.text = self:GetTime(self.lineInfo.targetCount,self.lineInfo.nowCount,self.lineInfo.workerNum)
 
+
+    --生产中检查仓库容量是否足够
+    if self:CheckCapacity() == false then
+        self.tip.transform.localScale = Vector3.one
+        self.tipText.text = "仓库已满"
+        self.productionSlider.value = 0
+        self.countdownText.text = "00:00"
+        UpdateBeat:Remove(self.Update,self);
+        return
+    end
+
     if Math_Floor(self.itemId / 100000) == materialKey then
         UpdateBeat:Add(self.Update,self)
     elseif Math_Floor(self.itemId / 100000) == goodsKey then
         --初始化时判断原料是否足够
         if self:CheckMaterial(self.itemId) == true then
+            --关闭提示原料不足，打开时间刷新
+            self.tip.transform.localScale = Vector3.zero
             UpdateBeat:Add(self.Update,self)
         elseif self:CheckMaterial(self.itemId) == false then
+            --打开提示原料不足，关闭时间刷新
+            self.tip.transform.localScale = Vector3.one
+            self.tipText.text = "Raw material shortage"
+            self.productionSlider.value = 0
+            self.countdownText.text = "00:00"
             UpdateBeat:Remove(self.Update,self);
         end
     end
@@ -125,7 +145,27 @@ function LineItem:GetStringTime(ms)
 end
 --刷新时间
 function LineItem:Update()
-    ---总时间---
+    --生产中检查仓库容量是否足够
+    if self:CheckCapacity() == false then
+        self.tip.transform.localScale = Vector3.one
+        self.tipText.text = "仓库已满"
+        self.productionSlider.value = 0
+        self.countdownText.text = "00:00"
+        UpdateBeat:Remove(self.Update,self);
+        return
+    end
+    --如果是商品，检查原料够不够
+    if Math_Floor(self.itemId / 100000) == 22 then
+        if self.lineMinValue < 0 then
+            --打开提示原料不足，关闭时间刷新
+            self.tip.transform.localScale = Vector3.one
+            self.tipText.text = "Raw material shortage"
+            self.productionSlider.value = 0
+            self.countdownText.text = "00:00"
+            UpdateBeat:Remove(self.Update,self)
+        end
+    end
+    --检查生产线总时间
     if self.time <= 0 then
         self.timeText.text = "00:00:00"
         self.countdownText.text = "00:00"
@@ -170,6 +210,13 @@ function LineItem:refreshNowConte(dataInfo)
     if not dataInfo then
         return
     end
+    self.Capacity = self.Capacity - 1
+    --ct.log("fisher_w31_time","当前仓库剩余容量是==="..self.Capacity)
+    if Math_Floor(self.itemId / 100000) == 22 then
+        self.lineMinValue = self.lineMinValue - 1
+        --ct.log("fisher_w31_time","当前原料还能生产==="..self.lineMinValue.."  个")
+    end
+
     local number = {}
     number["num1"] = dataInfo.nowCount
     number["num2"] = self.lineInfo.targetCount
@@ -197,9 +244,6 @@ end
 function LineItem:CheckMaterial(itemId)
     --如果仓库是空的
     if next(self.materialData) == nil then
-        --打开提示原料不足，关闭时间刷新
-        self.tip.transform.localScale = Vector3.one
-        UpdateBeat:Remove(self.Update,self);
         return false
     end
     --如果仓库不是空的
@@ -220,20 +264,21 @@ function LineItem:CheckMaterial(itemId)
         end
     end
     table.sort(materialNum)
+    --最少能生产的数量
+    self.lineMinValue = materialNum[1]
     local minValue = materialNum[1]
     if minValue <= 0 then
-        --打开提示原料不足，关闭时间刷新
-        self.tip.transform.localScale = Vector3.one
-        self.productionSlider.value = 0
-        self.countdownText.text = "00:00"
-        UpdateBeat:Remove(self.Update,self);
         return false
     else
-        --关闭提示原料不足，打开时间刷新
-        self.tip.transform.localScale = Vector3.zero
-        UpdateBeat:Add(self.Update,self)
         return true
     end
+end
+--生产中检查仓库容量是否足够
+function LineItem:CheckCapacity()
+    if self.Capacity == 0 then
+        return false
+    end
+    return true
 end
 --删除生产线
 function LineItem:OnClick_deleteBtn(go)

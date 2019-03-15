@@ -37,7 +37,7 @@ function GAucHistoryItem:_initData(data)
         self.otherPriceText.text = getPriceString(GetClientPriceString(data.price), 30, 24)
     end
     if data.biderId ~= nil then
-        PlayerInfoManger.GetInfosOneByOne({[1] = data.biderId}, self._getInfo, self)
+        PlayerInfoManger.GetInfos({[1] = data.biderId}, self._getInfo, self)
     end
 end
 --点击头像

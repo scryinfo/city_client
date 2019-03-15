@@ -86,7 +86,9 @@ end
 function HomeProductionLineItem:initializeInfo(productionLineData)
     self.openName.text = GetLanguage(25020005)
     self.closeName.text = GetLanguage(25020005)
-    local aaa = getFormatUnixTime(TimeSynchronized.GetTheCurrentServerTime() / 1000)
+    self.buildingCapacity = PlayerBuildingBaseData[self.productionData.info.mId].storeCapacity
+    self.Capacity = self:GetWarehouseCapacity(self.productionData.store)
+
     if not productionLineData then
         self.add:SetActive(true)
         return;
@@ -94,7 +96,7 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
     self.add:SetActive(false)
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
-        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId,self.productionData.store)
+        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId,self.productionData.store,self.Capacity)
         table.insert(HomeProductionLineItem.lineItemTable,lineItem)
     end
 end
@@ -102,7 +104,8 @@ end
 function HomeProductionLineItem:updateInfo(data)
     self.productionData = data
     self.buildingId = data.insId
-    self.productionData.line = data.line
+    self.productionData = data
+    --self.productionData.line = data.line
     self:initializeInfo(self.productionData.line)
     HomeProductionLineItem.storeData = data.store.inHand
 end
@@ -119,6 +122,27 @@ function HomeProductionLineItem.GetInventoryNum(itemId)
     end
     local number = 0
     return number
+end
+--计算当前建筑剩余容量
+function HomeProductionLineItem:GetWarehouseCapacity(dataInfo)
+    local warehouseCapacity = 0
+    local lockedCapacity = 0
+    if not dataInfo.inHand or next(dataInfo.inHand) == nil then
+        warehouseCapacity = 0
+    else
+        for key,value in pairs(dataInfo.inHand) do
+            warehouseCapacity = warehouseCapacity + value.n
+        end
+    end
+    if not dataInfo.locked or next(dataInfo.locked) == nil then
+        lockedCapacity = 0
+    else
+        for key,value in pairs(dataInfo.locked) do
+            lockedCapacity = lockedCapacity + value.n
+        end
+    end
+    local remainingCapacity = self.buildingCapacity - (warehouseCapacity + lockedCapacity)
+    return remainingCapacity
 end
 --加载实例化Prefab
 function HomeProductionLineItem.loadingItemPrefab(itemPrefab,itemRoot)

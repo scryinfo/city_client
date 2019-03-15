@@ -17,9 +17,6 @@ function VolumeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","ss.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNumCurve","ss.GoodsNpcNumCurve",self.n_OnGoodsNpcNumCurve,self) --供应曲线
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcTypeNum","ss.NpcTypeNum",self.n_OnGoodsNpcTypeNum,self) --需求曲线
-
 end
 
 function VolumeModel:Close()
@@ -89,14 +86,4 @@ end
 
 function VolumeModel:n_OnExchangeAmount(lMsg)
     Event.Brocast("c_ExchangeAmount",lMsg.exchangeAmount)
-end
-
-function VolumeModel:n_OnGoodsNpcNumCurve(lMsg)
-   --Event.Brocast("c_GoodsNpcNumCurve",lMsg.goodsNpcNumCurveMap)
-   Event.Brocast("c_GoodsNpcNumCurve",lMsg)
-end
-
-function VolumeModel:n_OnGoodsNpcTypeNum(lMsg)
-   --Event.Brocast("c_GoodsNpcNumCurve",lMsg.goodsNpcNumCurveMap)
-   Event.Brocast("c_GoodsNpcTypeNum",lMsg)
 end

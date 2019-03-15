@@ -78,7 +78,7 @@ end
 ---初始化
 function GroundTransRentAndBuyCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
-        PlayerInfoManger.GetInfosOneByOne({[1] = self.m_data.groundInfo.ownerId}, self._showPersonalInfo, self)
+        PlayerInfoManger.GetInfos({[1] = self.m_data.groundInfo.ownerId}, self._showPersonalInfo, self)
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
     end
 end

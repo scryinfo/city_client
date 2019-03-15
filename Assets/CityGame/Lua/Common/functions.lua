@@ -601,3 +601,7 @@ function GetServerPriceNumber(clientValue)
 	end
 	return valuableNum
 end
+
+function prints(str)
+	ct.log("system","=================================================="..str)
+end

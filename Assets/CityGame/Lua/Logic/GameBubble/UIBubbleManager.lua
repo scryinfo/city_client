@@ -197,7 +197,8 @@ function UIBubbleManager.getBubbleByType(bubbleType, groundState, serverPos, uiC
             this.gTransItemsTable = {}
         end
         this.gTransItemsTable[data.blockId] = bubbleItem
-        --MapBubbleManager  --更新啊更新
+        --MapBubbleManager更新
+        MapBubbleManager.groundTransChange(data.blockId, bubbleItem:getValuableData())
     end
 
     return bubbleItem
@@ -222,6 +223,7 @@ function UIBubbleManager.closeGTransItem(item, blockId)
     if this.gTransItemsTable ~= nil then
         local temp = this.gTransItemsTable[blockId]
         if temp ~= nil then
+            MapBubbleManager.groundTransChange(blockId, nil)
             this.gTransItemsTable[blockId] = nil
         end
     end

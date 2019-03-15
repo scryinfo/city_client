@@ -48,6 +48,7 @@ function Game.OnInitOK()
 end
 
 function Game.OnPostInitOK()
+    BuilldingBubbleInsManger.Awake()
     --开业停业
     StopAndBuildModel:Awake()
     --单元测试入口

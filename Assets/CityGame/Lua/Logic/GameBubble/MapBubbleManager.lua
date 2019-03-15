@@ -297,7 +297,7 @@ function MapBubbleManager.createGroundTransDetailItems()
                 local item = this._createGTransItems(data)
 
                 local serverPos = TerrainManager.BlockIDTurnPosition(blockId)
-                local pos = Vector2.New(serverPos.x, -serverPos.z) * this.itemWidth
+                local pos = Vector2.New(serverPos.z, -serverPos.x) * this.itemWidth
                 local delta = this.itemDelta *  1  --一个地块的大小
                 item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
                 this.gTransData[collectionId].detailItems[blockId] = item
@@ -443,4 +443,54 @@ function MapBubbleManager.GoHereFunc(data)
     UIPanel.CloseAllPageExceptMain()
     local pos = Vector3.New(data.pos.x,0,data.pos.y)
     CameraMove.MoveCameraToPos(pos)
+end
+--土地交易查询变化  --AOI
+function MapBubbleManager.groundTransChange(blockId, data)
+    if this.mapCtrl ~= nil and this.mapCtrl:getNonePageSearchType() == EMapSearchType.Deal and this.mapCtrl:_getIsDetailFunc() == true then
+
+        local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+        if data == nil then  --清除item
+            local item = this.gTransData[collectionId].detailItems[blockId]
+            item:close()
+            item = nil
+            this.gTransData[collectionId].detailItems[blockId] = nil
+            return
+        end
+        if this.gTransData[collectionId] == nil then
+            this.gTransData[collectionId] = {}
+        end
+        if this.gTransData[collectionId].detailItems == nil then
+            this.gTransData[collectionId].detailItems = {}
+        end
+        local item = this._createGTransItems(data)  --创建新的item
+
+        local serverPos = TerrainManager.BlockIDTurnPosition(blockId)
+        local pos = Vector2.New(serverPos.z, -serverPos.x) * this.itemWidth
+        local delta = this.itemDelta *  1  --一个地块的大小
+        item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+        this.gTransData[collectionId].detailItems[blockId] = item
+    end
+end
+--土地拍卖查询变化  --客户端直接管理
+function MapBubbleManager.groundAucChange(groundId)
+    if this.mapCtrl ~= nil and this.mapCtrl:getNonePageSearchType() == EMapSearchType.Auction and this.mapCtrl:_getIsDetailFunc() == true then
+        if this.groundAucData == nil then
+            return
+        end
+        local info = GroundAucConfig[groundId].area[2]
+        local blockId = TerrainManager.GridIndexTurnBlockID(info)
+        local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
+        if this.groundAucData[collectionId] == nil then
+            this.groundAucData[collectionId] = {}
+        end
+        if this.groundAucData[collectionId].detailItems == nil then
+            this.groundAucData[collectionId].detailItems = {}
+        end
+        local item = this._createGAucItems({id = groundId, isStartAuc = false})
+
+        local pos = Vector2.New(info.y, -info.x) * this.itemWidth
+        local delta = this.itemDelta *  5  --一个地块的大小
+        item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
+        this.groundAucData[collectionId].detailItems[blockId] = item
+    end
 end

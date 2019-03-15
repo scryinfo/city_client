@@ -40,6 +40,9 @@ function UIBubbleBuildingSignItem:initialize(prefab,luaBehaviour,data,ctr)
     luaBehaviour:AddClick(self.smallBgBtn.gameObject,self.c_OnClick_small,self);
     luaBehaviour:AddClick(self.largeBgBtn.gameObject,self.c_OnClick_large,self);
 
+    self.x=PlayerBuildingBaseData[data.mId].deviationPos[1]
+    self.y=PlayerBuildingBaseData[data.mId].deviationPos[2]
+    self.z=PlayerBuildingBaseData[data.mId].deviationPos[3]
 
     self:updateData(data)
 
@@ -75,7 +78,6 @@ function UIBubbleBuildingSignItem:updateData(data)
     end
     --赋值 姓名和 头像
     PlayerInfoManger.GetInfosOneByOne({data.ownerId},self.LoadHeadImaAndName,self)
-
 
     if not data.bubble then
         self:CloesBubble()
@@ -122,12 +124,12 @@ end
 --关闭
 function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.transform.localScale=Vector3.zero
-    FixedUpdateBeat:Remove(self.Update,self)
+  --  LateUpdateBeat:Remove(self.Update,self)
 end
 --开始
 function UIBubbleBuildingSignItem:Start()
     self.prefab.transform.localScale=Vector3.one
-    FixedUpdateBeat:Add(self.Update, self)
+   -- LateUpdateBeat:Add(self.Update, self)
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
@@ -157,10 +159,7 @@ function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
 end
 
 function UIBubbleBuildingSignItem:Update()
-
-
-
     self.rect.anchoredPosition =
-    ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint( Vector3.New(self.data.x, 0, self.data.y) + Vector3.New(-0.1, 0, 2)))
+    ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint( Vector3.New(self.data.x, 0, self.data.y) +  Vector3.New(self.x,self.y,self.z))) --Vector3.New(-0.1, 0, 2)))
 end
 

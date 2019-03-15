@@ -79,12 +79,12 @@ function UIBubbleTransAndBuildingItem:_setBubbleState(state)
         self.groundSell.localScale = Vector3.one
         self.groundRent.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
-        LoadSprite(GetSprite("UIBubbleSell"), self.sellImg01, true)
+        self.sellText01.text = GetLanguage(11020004)
     elseif state == GroundTransState.Rent then
         self.groundRent.localScale = Vector3.one
         self.groundSell.localScale = Vector3.zero
         self.selfBuilding.localScale = Vector3.zero
-        LoadSprite(GetSprite("UIBubbleRent"), self.rentImg02, true)
+        self.rentText02.text = GetLanguage(11020003)
     elseif state == UIBubbleType.BuildingSelf then
         self.selfBuilding.localScale = Vector3.one
         self.groundRent.localScale = Vector3.zero

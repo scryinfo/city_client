@@ -20,20 +20,26 @@ end
 function HistoryCurveCtrl:Awake()
     curveBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     curveBehaviour:AddClick(HistoryCurvePanel.xBtn,self.OnBack,self)
-    --HistoryCurvePanel.curve.anchoredPosition3D = Vector3.New(-18524, 56,0)
-    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    self.insId = OpenModelInsID.HistoryCurveCtrl
     self:initData()
 end
 
 function HistoryCurveCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图（供应）
+    Event.AddListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图(需求)
 end
 
 function HistoryCurveCtrl:Refresh()
+    DataManager.OpenDetailModel(HistoryCurveModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve',self.m_data)
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcTypeNum')
 end
 
 function HistoryCurveCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图(供应)
+    Event.RemoveListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图（需求）
 end
 
 function HistoryCurveCtrl:OnCreate(obj)
@@ -41,34 +47,132 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-    --local a = { "1","2","3","4","5","6","7","8","9","10"}
-    ----local a = { [1] = "1",[2] = "2"}
-    --local b = {{ Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200) },
-    --           { Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250), Vector2.New(0, 300)}
-    --}
-    --local c = {{ Color.New(53 / 255, 218 / 255, 233 / 255, 255 / 255)},
-    --           { Color.New(233 / 255, 34 / 255, 104 / 255, 255 / 255) }
-    --}
-    --local d = {Vector2.New(300, 100), Vector2.New(200, 0), Vector2.New(100, 300),  Vector2.New(0, 200)}
-    --local f = {Vector2.New(300, 200), Vector2.New(200, 100), Vector2.New(100, 250),  Vector2.New(0, 300)}
-    --local g = {Vector2.New(300, 300), Vector2.New(200, 200), Vector2.New(100, 100),  Vector2.New(0, 400)}
-    --HistoryCurvePanel.slide:SetXScaleValue(a,116)
-    --HistoryCurvePanel.slide:SetCoordinate(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    --HistoryCurvePanel.slide:SetCoordinate(f,Color.New(204 / 255, 108 / 255, 210 / 255, 255 / 255))
-    --HistoryCurvePanel.slide:SetCoordinate(g,Color.New(240 / 255, 158 / 255, 111 / 255, 255 / 255))
-    --HistoryCurvePanel.graph:DrawLine(d,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    --HistoryCurvePanel.graph:DrawLine(f,Color.New(204 / 255, 108 / 255, 210 / 255, 255 / 255))
-    --HistoryCurvePanel.graph:DrawLine(g,Color.New(240 / 255, 158 / 255, 111 / 255, 255 / 255))
-    --HistoryCurvePanel.graph:BoundaryLine({300})
-    HistoryCurvePanel.graph:DrawLine(self.m_data.supplyNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(self.m_data.supplyNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetXScaleValue(self.m_data.time,116)
-    HistoryCurvePanel.graph:BoundaryLine(self.m_data.boundaryLine)
 
+    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
 
 
 end
 
 function HistoryCurveCtrl:OnBack()
+    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
     UIPanel.ClosePage()
 end
+
+--每种商品购买的npc数量曲线图
+function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
+    if info == nil then
+        info = {}
+    end
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    end
+    currentTime = math.floor(currentTime)
+    local sevenDaysAgoTime = currentTime - 604800
+    local sevenDaysAgo = sevenDaysAgoTime
+    local supplyNum = {}
+    local supplyNumVet = {}
+    local time = {}
+    local boundaryLine = {}
+    local data = {}
+    for i = 1, 168 do
+        sevenDaysAgo = sevenDaysAgo + 3600
+        time[i] = sevenDaysAgo
+        supplyNum[i] = {}
+        supplyNum[i].ts = sevenDaysAgo
+        supplyNum[i].num = 0
+        if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
+            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
+            table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
+        else
+            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+        end
+    end
+    data.time = time
+    data.boundaryLine = boundaryLine
+    if next(info) ~= nil then
+        local temp = {}
+        for i, v in ipairs(supplyNum) do
+            temp[i] = {}
+            for k, z in ipairs(info) do
+                if v.ts == z.key then
+                    temp[i].num = z.value
+                else
+                    temp[i].num = 0
+                end
+            end
+        end
+        for i, v in ipairs(temp) do
+            supplyNum[i].num = v.num
+        end
+        for i, v in ipairs(supplyNum) do
+            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+        end
+    else
+        for i, v in ipairs(supplyNum) do
+            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+        end
+    end
+    table.insert(supplyNumVet,1,Vector2.New(0,0))
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+    data.supplyNumVet = supplyNumVet
+
+    HistoryCurvePanel.graph:DrawLine(data.supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(data.supplyNumVet,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetXScaleValue(data.time,116)
+    HistoryCurvePanel.graph:BoundaryLine(data.boundaryLine)
+end
+
+function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    end
+    currentTime = math.floor(currentTime)
+    local demandNumTab = {}
+    local sevenDaysAgo = currentTime - 604800
+    local sevenDaysAgoTime = sevenDaysAgo
+    for i = 1, 168 do
+        sevenDaysAgo = sevenDaysAgo + 3600
+        demandNumTab[i] = {}
+        demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
+        for k, v in ipairs(info) do
+            if math.floor(v.t/1000) == sevenDaysAgo then
+                demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
+                        .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
+            end
+        end
+    end
+    local demandNumVet = {}
+    for i, v in ipairs(demandNumTab) do
+        demandNumVet[i] = Vector2.New(v.ts,v.num)
+    end
+    table.insert(demandNumVet,1,Vector2.New(0,0))
+
+    HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+end
+

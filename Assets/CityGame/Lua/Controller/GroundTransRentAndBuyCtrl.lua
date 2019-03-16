@@ -105,7 +105,7 @@ end
 
 --显示头像+名字信息
 function GroundTransRentAndBuyCtrl:_showPersonalInfo(roleInfo)
-    self.roleInfo = roleInfo
+    self.roleInfo = roleInfo[1]
     GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
     self.ownerAvatar = AvatarManger.GetSmallAvatar(self.roleInfo.faceId, GroundTransRentAndBuyPanel.portraitImg.transform,0.2)
 end

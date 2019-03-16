@@ -63,7 +63,8 @@ function MapSearchResultItem:_clickFunc()
     Event.Brocast("c_MapOpenRightMatPage", self)
 end
 --
-function MapSearchResultItem:_initPersonalInfo(data)
+function MapSearchResultItem:_initPersonalInfo(info)
+    local data = info[1]
     if data ~= nil then
         self.data.playerInfo = data
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)

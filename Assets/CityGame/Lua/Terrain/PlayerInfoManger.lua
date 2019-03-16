@@ -5,7 +5,6 @@
 ---
 
 PlayerInfoManger={}
-local   methodNum
 local  cache,playerIDs,tempInfos
 local _classes,_funcs
 
@@ -15,7 +14,6 @@ function PlayerInfoManger.Awake()
     cache={}       playerIDs={}
     Event.AddListener("m_QueryPlayerInfoChat", PlayerInfoManger.m_QueryPlayerInfoChat)
 
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
 
 -- 向服务器查询好友信息
@@ -33,32 +31,10 @@ function PlayerInfoManger.ClearCache()
     cache={}
 end
 
-
 local recardNums=0
-local curr=1
-
---function PlayerInfoManger.GetInfos(playerIds,func,class)
---        methodNum=1
---
---        local info=cache[playerIds[1]]
---
---        if info then--有缓存
---            func(class,info)
---        else--无缓存
---            recardNums=recardNums+1
---            table.insert(_classes,class)
---            table.insert(_funcs,func)
---            table.insert(playerIDs,playerIds[1])
---            Event.Brocast("m_QueryPlayerInfoChat",{playerIds[1]})
---            prints("查询好友"..recardNums)
---        end
---
---end
-
+local curr=0
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
-    methodNum=2
-
 
     for i, id in ipairs(playerIds) do
 
@@ -68,12 +44,10 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
             table.insert(tempInfos,info)
         else--无缓存
             recardNums=recardNums+1
-
             playerIDs[recardNums]=playerIds
             _funcs[recardNums]=func
             _classes[recardNums]=class
             Event.Brocast("m_QueryPlayerInfoChat",playerIds)
-            prints("查询好友"..recardNums)
             tempInfos={}
             return
         end
@@ -81,12 +55,9 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
     end
 
     --有缓存  直接调用
-    if #tempInfos==1 then
-        func(class,tempInfos[1])
 
-    else
-        func(class,tempInfos)
-    end
+    func(class,tempInfos)
+
 
     tempInfos={}
 end
@@ -97,58 +68,28 @@ end
 
 --查询玩家信息返回
 function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
-    prints("收到查询好友"..curr)
 
     if  #playerIDs<=0  then    return   end
-    prints("收到查询好友"..curr.."进入")
-
-
-    if methodNum==1 then---第一种
-
-        for i, info in ipairs(stream.info) do
-            --写入缓存
-            cache[playerIDs[curr]]=info
-            --调用函数
-            _funcs[curr](_classes[curr],info)
-        end
         curr=curr+1
-        recardNums=recardNums-1
-
-        if recardNums==0 then
-            playerIDs={}
-            _classes={}
-            _funcs={}
-            curr=1
-        end
-
-    else---第二种
 
         for i, info in ipairs(stream.info) do
             --写入缓存
-            cache[playerIDs[curr][i]]=info
+            local id=playerIDs[curr][i]
+            local infoId=info.id
+            cache[id]=info
             table.insert(tempInfos,info)
         end
-        if #tempInfos==1 then
-            _funcs[curr](_classes[curr],tempInfos[1])
 
-        else
-            _funcs[curr](_classes[curr],tempInfos)
-
-        end
-
+        _funcs[curr](_classes[curr],tempInfos)
 
         tempInfos={}
-        curr=curr+1
         recardNums=recardNums-1
 
         if recardNums == 0 then
             playerIDs={}
             _classes={}
             _funcs={}
-            curr=1
+            curr=0
         end
-
-
-    end
 
 end

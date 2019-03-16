@@ -54,8 +54,8 @@ function GuildItem:_applyGuild()
 end
 
 function GuildItem:_showNameHead(playerData)
-    self.leaderNameText.text = playerData.name
-    self.avatarData = AvatarManger.GetSmallAvatar(playerData.faceId, self.leaderHeadBg,0.2)
+    self.leaderNameText.text = playerData[1].name
+    self.avatarData = AvatarManger.GetSmallAvatar(playerData[1].faceId, self.leaderHeadBg,0.2)
 end
 
 function GuildItem:CloseAvatar()

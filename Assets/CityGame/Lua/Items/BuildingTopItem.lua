@@ -100,7 +100,8 @@ function BuildingTopItem:changeBuildingName()
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 --
-function BuildingTopItem:initPlayerInfo(data)
+function BuildingTopItem:initPlayerInfo(info)
+    local data = info[1]
     if data ~= nil then
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.headImg.transform,0.2)
     end

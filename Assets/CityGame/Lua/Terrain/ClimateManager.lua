@@ -15,9 +15,9 @@ local function ChangeWeather()
     if m_WeatherID == 0 then        --晴天/阴天
 
     elseif m_WeatherID == 1 then    --下雨
-        m_Rain:SetActive(true)
+        --m_Rain:SetActive(true)
     elseif m_WeatherID == 2 then    --下雪
-        m_Snow:SetActive(true)
+        --m_Snow:SetActive(true)
     end
 end
 

@@ -111,7 +111,7 @@ end
 
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
-        table.insert(self.groundOwnerDatas,ownerData)
+        table.insert(self.groundOwnerDatas,ownerData[1])
     end
 end
 
@@ -185,13 +185,13 @@ end
 --好友信息
 function GameMainInterfaceCtrl:c_OnReceivePlayerInfo(playerData)
     local info = {}
-    info.id = playerData.id
-    info.name = playerData.name
-    info.companyName = playerData.companyName
-    info.des = playerData.des
-    info.faceId = playerData.faceId
-    info.male = playerData.male
-    info.createTs = playerData.createTs
+    info.id = playerData[1].id
+    info.name = playerData[1].name
+    info.companyName = playerData[1].companyName
+    info.des = playerData[1].des
+    info.faceId = playerData[1].faceId
+    info.male = playerData[1].male
+    info.createTs = playerData[1].createTs
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", info)
 end
 

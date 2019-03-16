@@ -212,7 +212,7 @@ public class FunctionalGraph : MaskableGraphic
             {
                 Vector2 firstPoint = Vector2.zero + new Vector2(boundary[i], 0);
                 Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-                GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.BoundaryColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+                GetImaglinaryLine(ref vh, firstPoint, secondPoint, new Color(0, 138 / 255f, 283 / 255f, 1), GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
             }
         }
       

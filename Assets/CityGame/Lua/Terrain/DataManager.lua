@@ -1818,6 +1818,9 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
    PlayerInfoManger.n_OnReceivePlayerInfo(stream)
+    if stream ~= nil and stream.info ~= nil and #stream.info == 1 and stream.info[1].id == DataManager.GetMyOwnerID() then
+        DataManager.SetMyPersonalHomepageInfo(stream.info[1])
+    end
 end
 
 --研究所Roll回复信息

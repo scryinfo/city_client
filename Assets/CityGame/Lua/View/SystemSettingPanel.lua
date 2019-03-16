@@ -43,11 +43,11 @@ function SystemSettingPanel.InitPanel()
 
     this.LanguagePanel = transform:Find("Panel/bodyRoot/bg/languange")
 
-    this.chineseBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/Chinese/Text"):GetComponent("Text")
-    this.chineseBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/Chinese")
+    this.chineseBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Chinese/Text"):GetComponent("Text")
+    this.chineseBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Chinese")
 
-    this.englishBtnText = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
-    this.englishBtn = transform:Find("Panel/bodyRoot/bg/body/languange/bg/Scroll View/Viewport/Content/English")
+    this.englishBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
+    this.englishBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English")
 ---气泡
     this.bubbleBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/musicyellow");
     this.bubbleText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/Text"):GetComponent("Text")
@@ -55,14 +55,14 @@ function SystemSettingPanel.InitPanel()
 
     this.bubblePanel = transform:Find("Panel/bodyRoot/bg/bubble")
 
-    this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
-    this.allBigBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allBig")
+    this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
+    this.allBigBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allBig")
 
-    this.allSmallBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allSmall/Text"):GetComponent("Text")
-    this.allSmallBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allSmall")
+    this.allSmallBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allSmall/Text"):GetComponent("Text")
+    this.allSmallBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allSmall")
 
-    this.allCloseBtnText = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allClose/Text"):GetComponent("Text")
-    this.allCloseBtn = transform:Find("Panel/bodyRoot/bg/body/bubble/bg/Scroll View/Viewport/Content/allClose")
+    this.allCloseBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allClose/Text"):GetComponent("Text")
+    this.allCloseBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allClose")
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)

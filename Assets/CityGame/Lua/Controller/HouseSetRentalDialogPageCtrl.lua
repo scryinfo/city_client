@@ -66,9 +66,10 @@ function HouseSetRentalDialogPageCtrl:_initData()
     if self.m_data == nil then
         return
     end
+    local rentNum = ct.deepCopy(self.m_data.rent)
     self.m_data.rent = GetClientPriceString(self.m_data.rent) or 0
     self.input.text = tostring(self.m_data.rent)
-    self.scoreText.text = self:_getValuableScore(self.m_data.rent, self.m_data.buildingTypeId)
+    self.scoreText.text = self:_getValuableScore(rentNum, self.m_data.buildingTypeId)
 
     self.roomCountText.text = string.format("%d<color=%s>/%d</color>", self.m_data.renter, HouseSetRentalDialogPageCtrl.static.BlackColor, self.m_data.totalCount)
     local trueTextW = self.roomDesTextRect.preferredWidth + 8
@@ -111,7 +112,7 @@ function HouseSetRentalDialogPageCtrl:_onClickRefreshBtn(ins)
 end
 
 function HouseSetRentalDialogPageCtrl:_getValuableScore(rentPrice, buildingType)
-    local value = (1 - (rentPrice / TempBrandConfig[buildingType])) *100
+    local value = (1 - (tonumber(rentPrice) / TempBrandConfig[buildingType])) *100
     value = math.floor(value)
     if value <= 0 then
         return "000"

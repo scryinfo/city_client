@@ -79,24 +79,25 @@ function GuildMessageCtrl:_showView()
         local timeTab = getFormatUnixTime(societyInfo.createTs/1000)
         GuildMessagePanel.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
         GuildMessageCtrl.societyNotice = societyInfo.notice
+        GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 
-        local idTemp = {}
-        local id = {}
-        for _, v in ipairs(societyInfo.notice) do
-            if v.createId then
-                id[v.createId] = true
-            end
-            if v.affectedId then
-                id[v.affectedId] = true
-            end
-        end
-        for j, k in pairs(id) do
-            table.insert(idTemp, j)
-        end
-
-        if idTemp[1] then
-            PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
-        end
+        --local idTemp = {}
+        --local id = {}
+        --for _, v in ipairs(societyInfo.notice) do
+        --    if v.createId then
+        --        id[v.createId] = true
+        --    end
+        --    if v.affectedId then
+        --        id[v.affectedId] = true
+        --    end
+        --end
+        --for j, k in pairs(id) do
+        --    table.insert(idTemp, j)
+        --end
+        --
+        --if idTemp[1] then
+        --    PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
+        --end
 
         self:_showNotice()
     end
@@ -161,17 +162,17 @@ end
 -- 网络回调
 -- 新增提示
 function GuildMessageCtrl:c_MessageAdd(societyNotice)
-    local idTemp = {}
-    if societyNotice.createId then
-        table.insert(idTemp, societyNotice.createId)
-    end
-    if societyNotice.affectedId then
-        table.insert(idTemp, societyNotice.affectedId)
-    end
-    if idTemp[1] then
-        PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
-    end
-    --GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
+    --local idTemp = {}
+    --if societyNotice.createId then
+    --    table.insert(idTemp, societyNotice.createId)
+    --end
+    --if societyNotice.affectedId then
+    --    table.insert(idTemp, societyNotice.affectedId)
+    --end
+    --if idTemp[1] then
+    --    PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
+    --end
+    GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
 -- 退出公会返回

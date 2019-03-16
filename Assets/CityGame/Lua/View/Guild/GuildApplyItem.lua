@@ -23,7 +23,7 @@ function GuildApplyItem:initialize(prefab, data)
 
     self.validationMsgText.text = self.data.description
 
-    PlayerInfoManger.GetInfosOneByOne({data.playerId}, self._showNameHead, self)
+    PlayerInfoManger.GetInfos({data.playerId}, self._showNameHead, self)
 
     self.agreeBtn.onClick:RemoveAllListeners()
     self.agreeBtn.onClick:AddListener(function ()

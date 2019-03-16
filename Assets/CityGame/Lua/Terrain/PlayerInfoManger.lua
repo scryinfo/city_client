@@ -13,10 +13,15 @@ function PlayerInfoManger.Awake()
     _classes={}    _funcs={}     tempInfos={}
 
     cache={}       playerIDs={}
+    Event.AddListener("m_QueryPlayerInfoChat", PlayerInfoManger.m_QueryPlayerInfoChat)
+
     --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
 
-
+-- 向服务器查询好友信息
+function PlayerInfoManger.m_QueryPlayerInfoChat(friendsIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
+end
 
 ---==========================================================================================外部===================================================================================================
 
@@ -32,23 +37,23 @@ end
 local recardNums=0
 local curr=1
 
-function PlayerInfoManger.GetInfosOneByOne(playerIds,func,class)
-        methodNum=1
-
-        local info=cache[playerIds[1]]
-
-        if info then--有缓存
-            func(class,info)
-        else--无缓存
-            recardNums=recardNums+1
-            table.insert(_classes,class)
-            table.insert(_funcs,func)
-            table.insert(playerIDs,playerIds[1])
-            Event.Brocast("m_QueryPlayerInfoChat",{playerIds[1]})
-            prints("查询好友"..recardNums)
-        end
-
-end
+--function PlayerInfoManger.GetInfos(playerIds,func,class)
+--        methodNum=1
+--
+--        local info=cache[playerIds[1]]
+--
+--        if info then--有缓存
+--            func(class,info)
+--        else--无缓存
+--            recardNums=recardNums+1
+--            table.insert(_classes,class)
+--            table.insert(_funcs,func)
+--            table.insert(playerIDs,playerIds[1])
+--            Event.Brocast("m_QueryPlayerInfoChat",{playerIds[1]})
+--            prints("查询好友"..recardNums)
+--        end
+--
+--end
 
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
@@ -76,7 +81,13 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
     end
 
     --有缓存  直接调用
-    func(class,tempInfos)
+    if #tempInfos==1 then
+        func(class,tempInfos[1])
+
+    else
+        func(class,tempInfos)
+    end
+
     tempInfos={}
 end
 
@@ -117,9 +128,16 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
             cache[playerIDs[curr][i]]=info
             table.insert(tempInfos,info)
         end
+        if #tempInfos==1 then
+            _funcs[curr](_classes[curr],tempInfos[1])
 
-        _funcs[curr](_classes[curr],tempInfos)
+        else
+            _funcs[curr](_classes[curr],tempInfos)
 
+        end
+
+
+        tempInfos={}
         curr=curr+1
         recardNums=recardNums-1
 
@@ -129,7 +147,7 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
             _funcs={}
             curr=1
         end
-        tempInfos={}
+
 
     end
 

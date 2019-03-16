@@ -26,7 +26,7 @@ function GuildItem:initialize(prefab, data)
     self.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
     self.introductionText.text = self.data.introduction
 
-    PlayerInfoManger.GetInfosOneByOne({data.chairmanId}, self._showNameHead, self)
+    PlayerInfoManger.GetInfos({data.chairmanId}, self._showNameHead, self)
 
     local societyId = DataManager.GetGuildID()
     if societyId then

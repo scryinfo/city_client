@@ -43,11 +43,11 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             vo = vn;
             gameObject.GetComponent<RectTransform>().localPosition += new Vector3(dis, 0, 0);
             gameObject.GetComponent<RectTransform>().sizeDelta += new Vector2(-dis, 0);
-            if (gameObject.GetComponent<RectTransform>().rect.width <= width - 10.0f)
+            if (gameObject.GetComponent<RectTransform>().rect.width <= 990)
             {
                 isDown = false;
-                gameObject.GetComponent<RectTransform>().sizeDelta = size;
-                gameObject.GetComponent<RectTransform>().localPosition = position;
+                gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 450);
+                gameObject.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(6, 56, 0);
             }
             if (gameObject.GetComponent<RectTransform>().rect.width >= 19550)
             {
@@ -98,12 +98,25 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (Coordinate.Count >= str.Length * 2)
         {
-            for (int i = 0; i < str.Length; i++)
+            if ((Coordinate.Count / str.Length) % 2 == 1)
             {
-                Coordinate[i].transform.localPosition = str[i];
-                Coordinate[i].GetComponent<Text>().color = color;
-                Coordinate[i].GetComponent<Text>().text = str[i].y.ToString();
+                for (int i = 1; i < str.Length; i++)
+                {
+                    Coordinate[i-1].transform.localPosition = str[i];
+                    Coordinate[i-1].GetComponent<Text>().color = color;
+                    Coordinate[i-1].GetComponent<Text>().text = str[i].y.ToString();
+                }              
             }
+            else
+            {
+                for (int i = 1; i < str.Length; i++)
+                {
+                    Coordinate[i+167].transform.localPosition = str[i];
+                    Coordinate[i+167].GetComponent<Text>().color = color;
+                    Coordinate[i+167].GetComponent<Text>().text = str[i].y.ToString();
+                }
+            }
+            
         }
         else
         {

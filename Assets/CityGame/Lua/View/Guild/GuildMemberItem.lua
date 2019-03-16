@@ -37,7 +37,7 @@ function GuildMemberItem:initialize(prefab, data)
     self.clickBtn = transform:Find("ClickBtn"):GetComponent("Button")
     self.clickImage = transform:Find("ClickBtn"):GetComponent("Image")
 
-    PlayerInfoManger.GetInfosOneByOne({data.id}, self._showNameHead, self)
+    PlayerInfoManger.GetInfos({data.id}, self._showNameHead, self)
 
     -- 自己的背景色为浅黄色且不能点击
     if data.id ==DataManager.GetMyOwnerID() then

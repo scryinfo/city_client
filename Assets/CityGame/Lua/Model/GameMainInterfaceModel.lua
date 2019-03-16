@@ -12,7 +12,6 @@ function GameMainInterfaceModel:initialize(insId)
 end
 
 function GameMainInterfaceModel:OnCreate()
-    Event.AddListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
     Event.AddListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
@@ -32,7 +31,7 @@ end
 
 function GameMainInterfaceModel:Close()
     --清空本地UI事件
-    Event.RemoveListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
+    --Event.RemoveListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
     Event.RemoveListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
@@ -86,10 +85,7 @@ function GameMainInterfaceModel.m_ReqHouseSetSalary(self,id, price)
     DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
 end
 
--- 向服务器查询好友信息
-function GameMainInterfaceModel.m_QueryPlayerInfoChat(ins,friendsIds)
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
-end
+
 
 --停止推送消息
 function GameMainInterfaceModel.m_stopListenBuildingDetailInform(ins,buildingId)

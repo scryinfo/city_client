@@ -13,10 +13,15 @@ function PlayerInfoManger.Awake()
     _classes={}    _funcs={}     tempInfos={}
 
     cache={}       playerIDs={}
+    Event.AddListener("m_QueryPlayerInfoChat", PlayerInfoManger.m_QueryPlayerInfoChat)
+
     --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",PlayerInfoManger.n_OnReceivePlayerInfo)
 end
 
-
+-- 向服务器查询好友信息
+function PlayerInfoManger.m_QueryPlayerInfoChat(ins,friendsIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
+end
 
 ---==========================================================================================外部===================================================================================================
 

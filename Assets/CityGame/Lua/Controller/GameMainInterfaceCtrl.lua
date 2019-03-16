@@ -53,15 +53,15 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     --PlayerTempModel.tempTestReqAddItem(2101003,99)
     --PlayerTempModel.tempTestReqAddItem(2101004,99)
     --
-    PlayerTempModel.tempTestReqAddItem(2103001,99)
-    PlayerTempModel.tempTestReqAddItem(2103002,99)
-    PlayerTempModel.tempTestReqAddItem(2103003,99)
-    PlayerTempModel.tempTestReqAddItem(2103004,99)
-
-    PlayerTempModel.tempTestReqAddItem(2251101,99)
-    PlayerTempModel.tempTestReqAddItem(2251102,99)
-    PlayerTempModel.tempTestReqAddItem(2251103,99)
-    PlayerTempModel.tempTestReqAddItem(2251201,99)
+    --PlayerTempModel.tempTestReqAddItem(2103001,99)
+    --PlayerTempModel.tempTestReqAddItem(2103002,99)
+    --PlayerTempModel.tempTestReqAddItem(2103003,99)
+    --PlayerTempModel.tempTestReqAddItem(2103004,99)
+    --
+    --PlayerTempModel.tempTestReqAddItem(2251101,99)
+    --PlayerTempModel.tempTestReqAddItem(2251102,99)
+    --PlayerTempModel.tempTestReqAddItem(2251103,99)
+    --PlayerTempModel.tempTestReqAddItem(2251201,99)
 end
 
 function GameMainInterfaceCtrl:Active()

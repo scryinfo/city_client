@@ -37,13 +37,11 @@ function VolumeCtrl:Awake()
     local ts = getFormatUnixTime(currentTime)
     local minute = tonumber(ts.minute)
     local second = tonumber(ts.second)
-    if second ~= 0 then
-        currentTime = currentTime - second
+    if second % 10 == 0 then
+        currentTime = math.floor(currentTime - 10)
+    else
+        currentTime = math.floor(currentTime - (second % 10 + 10 ))
     end
-    if minute ~= 0 then
-        currentTime = currentTime - minute * 60
-    end
-    currentTime = math.floor(currentTime - 3600)
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
@@ -99,12 +97,24 @@ end
 
 --更新时间
 function VolumeCtrl:Update()
-    VolumeCtrl:Countdown()
-    if tonumber(minute) == 0 and tonumber(second) == 0 then
-        local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-        currentTime = math.floor(currentTime - 3600000)
-        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime) --每种商品购买的npc数量
+
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+
+    if tonumber(ts.second) % 10 == 0 then
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
+        currentTime = math.floor(currentTime - 10)
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     end
+    second = 10 - tonumber(ts.second) % 10
+    if second < 10 then
+        second = "0"..second
+    end
+    if tonumber(second) <= 0 then
+        second = 10
+    end
+    VolumePanel.undateTime.text = second
 end
 
 --NPC数量
@@ -244,23 +254,7 @@ end
 
 --倒计时
 function VolumeCtrl:Countdown()
-    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-    local ts = getFormatUnixTime(currentTime)
 
-    if tonumber(ts.second) % 10 == 0 then
-        DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
-        DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
-    end
-
-    minute = 59-tonumber(ts.minute)
-    second = 59-tonumber(ts.second)
-    if minute < 10 then
-        minute = "0"..minute
-    end
-    if second < 10 then
-        second = "0"..second
-    end
-    VolumePanel.undateTime.text = minute .. ":" .. second
 end
 
 --给表赋值

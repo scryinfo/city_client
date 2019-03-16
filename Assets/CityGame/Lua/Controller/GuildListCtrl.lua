@@ -188,11 +188,11 @@ function GuildListCtrl:OnSure(go)
     if string.len(guildNameInputText) == 0 or guildNameInputText == "" or string.len(describeInputText) == 0 or describeInputText == "" then
         Event.Brocast("SmallPop", GetLanguage(15010017),80)
         return
-    elseif string.len(guildNameInputText) > 13 then
-        Event.Brocast("SmallPop",GetLanguage(15010018),80)
+    elseif string.len(guildNameInputText) > 21 then
+        Event.Brocast("SmallPop","联盟名字过长",80)
         return
     elseif string.len(describeInputText) > 100 then
-        Event.Brocast("SmallPop",GetLanguage(15010018),80)
+        Event.Brocast("SmallPop","联盟介绍过长",80)
         return
     end
 

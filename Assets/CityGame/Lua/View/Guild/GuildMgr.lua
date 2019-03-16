@@ -42,7 +42,11 @@ function GuildMgr:SetSelectMemberItem(item)
 end
 
 function GuildMgr:GetPlayerId()
-    return self.memberItem.data.id
+    local memberItemId
+    if self.memberItem then
+        memberItemId = self.memberItem.data.id
+    end
+    return memberItemId
 end
 
 function GuildMgr:SetClickInteractable()

@@ -19,7 +19,7 @@ function PlayerInfoManger.Awake()
 end
 
 -- 向服务器查询好友信息
-function PlayerInfoManger.m_QueryPlayerInfoChat(ins,friendsIds)
+function PlayerInfoManger.m_QueryPlayerInfoChat(friendsIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
 end
 

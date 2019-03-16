@@ -167,6 +167,7 @@ end
 --运输确认
 function WarehouseCtrl:OnClick_transportConfirmBtn(ins)
     PlayMusEff(1002)
+    local targetBuildingCapacity = ChooseWarehouseCtrl:GetCapacity()
     local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
     local transportDatasInfo = {}
     transportDatasInfo.currentLocationName = ins.m_data.info.name
@@ -179,6 +180,10 @@ function WarehouseCtrl:OnClick_transportConfirmBtn(ins)
     transportDatasInfo.freight = GetClientPriceString(ChooseWarehouseCtrl:GetPrice())
     transportDatasInfo.total = GetClientPriceString(transportDatasInfo.number * GetServerPriceNumber(transportDatasInfo.freight))
     transportDatasInfo.btnClick = function ()
+        if targetBuildingCapacity < transportDatasInfo.number then
+            Event.Brocast("SmallPop",GetLanguage(26040012),300)
+            return
+        end
         if transportDatasInfo.number == 0 then
             Event.Brocast("SmallPop",GetLanguage(27020004),300)
             return

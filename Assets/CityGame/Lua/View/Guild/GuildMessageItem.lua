@@ -65,9 +65,9 @@ function GuildMessageItem:_showNameHead(playerData)
         str = playerData[1].name .. "同意" .. playerData[2].name .. "加入了商业联盟"
         --str = string.format("<color=%s>%s</color><color=%s>同意</color><color=%s>%s</color><color=%s>加入了商业联盟</color>", GuildMessageItem.static.NAME_COLOR, playerData[1].name, GuildMessageItem.static.NORMAL_COLOR, GuildMessageItem.static.NAME_COLOR, playerData[2].name, GuildMessageItem.static.NORMAL_COLOR)
     elseif data.type == "EXIT_SOCIETY" then
-        str = playerData[1].name .. "退出了商业联盟"
+        str = playerData.name .. "退出了商业联盟"
     elseif data.type == "CREATE_SOCIETY" then
-        str = playerData[1].name .. "创建了商业联盟"
+        str = playerData.name .. "创建了商业联盟"
     elseif data.type == "KICK_OUT_SOCIETY" then
         str = playerData[1].name .. "被" .. playerData[2].name .. "踢出了商业联盟"
     elseif data.type == "APPOINT_TO_MEMBER" then
@@ -79,11 +79,11 @@ function GuildMessageItem:_showNameHead(playerData)
     elseif data.type == "APPOINT_TO_ADMINISTRATOR" then
         str = playerData[1].name .. "被" .. playerData[2].name .. "任命为管理"
     elseif data.type == "MODIFY_NAME" then
-        str = playerData[1].name .. "修改了联盟名字"
+        str = playerData.name .. "修改了联盟名字"
     elseif data.type == "MODIFY_DECLARATION" then
-        str = playerData[1].name .. "修改了商业宣言"
+        str = playerData.name .. "修改了商业宣言"
     elseif data.type == "MODIFY_INTRODUCTION" then
-        str = playerData[1].name .. "修改了商业介绍"
+        str = playerData.name .. "修改了商业介绍"
     end
     self.describeText.text = str
 end

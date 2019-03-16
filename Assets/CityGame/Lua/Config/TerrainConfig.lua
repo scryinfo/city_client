@@ -26,7 +26,7 @@ TerrainConfig = {
         ["MapSize"] = 101,
     },
     ["LoadingConfig"] = {
-        ["MinDurationTime"] = 3,
+        ["MinDurationTime"] = 5,
         ["RotateSpeed"] = 200,
         ["RotateDirection"] = Vector3.back,
     }

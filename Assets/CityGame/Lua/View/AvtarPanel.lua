@@ -29,8 +29,12 @@ function AvtarPanel.InitPanel()
     this.maleSelect=transform:Find("kindsScroll/male/select")
     this.feMaleSelect=transform:Find("kindsScroll/faMale/select")
 
+    this.topticText=transform:Find("topRoot/name"):GetComponent("Text")
+
 end
 --数据初始化
-function AvtarPanel.InitDate(MunicipalData)
-    this.materialData = MunicipalData;
+function AvtarPanel.InitLanguage(MunicipalData)
+    --this.topticText.text=GetLanguage(14010001)
 end
+
+

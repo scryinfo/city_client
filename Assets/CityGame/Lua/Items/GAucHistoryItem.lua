@@ -48,7 +48,8 @@ function GAucHistoryItem:_clickProtaitFunc()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", self.playerInfo)
 end
 --拿到信息
-function GAucHistoryItem:_getInfo(playerData)
+function GAucHistoryItem:_getInfo(data)
+    local playerData = data[1]
     if playerData ~= nil and playerData.id == self.data.biderId then
         self.playerInfo = playerData
         self.nameText.text = playerData.name

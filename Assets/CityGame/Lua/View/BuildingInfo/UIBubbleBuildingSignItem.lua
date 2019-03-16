@@ -153,8 +153,8 @@ end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
 
-   self.nameText.text=info.name
-   self.avatarData= AvatarManger.GetSmallAvatar(info.faceId,self.headIma,0.2)
+   self.nameText.text=info[1].name
+   self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
 
 end
 

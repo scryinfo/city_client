@@ -83,7 +83,8 @@ function MapRightGroundTransPage:_goHereBtn()
     MapBubbleManager.GoHereFunc({pos = temp})
 end
 --
-function MapRightGroundTransPage:_initPersonalInfo(data)
+function MapRightGroundTransPage:_initPersonalInfo(info)
+    local data = info[1]
     if data ~= nil then
         self.nameText.text = data.name
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.portraitImg.transform,0.2)

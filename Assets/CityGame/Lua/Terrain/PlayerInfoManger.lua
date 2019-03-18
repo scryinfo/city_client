@@ -72,11 +72,17 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     if  #playerIDs<=0  then    return   end
         curr=curr+1
 
-        for i, info in ipairs(stream.info) do
-            --写入缓存
-            local id=playerIDs[curr][i]
-            local infoId=info.id
-            prints(tostring(id==infoId))
+    for i, info in ipairs(stream.info) do
+        --写入缓存
+        local id=playerIDs[curr][i]
+        local infoId=info.id
+
+        --if id==infoId then
+        --    prints("Yes")
+        --else
+        --    prints("No")
+        --end
+        prints("玩家管理器信息是否一致："..tostring(id==infoId))
             cache[id]=info
             table.insert(tempInfos,info)
         end

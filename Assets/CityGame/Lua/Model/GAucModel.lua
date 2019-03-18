@@ -10,7 +10,7 @@ local pbl = pbl
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
-GAucModel.BidTime = 30000
+GAucModel.BidTime = 180000
 
 --构建函数--
 function GAucModel.New()

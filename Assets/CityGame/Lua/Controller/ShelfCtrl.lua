@@ -200,7 +200,7 @@ function ShelfCtrl:RefreshShelfData(dataInfo)
 
                     --下架数量改变后，同时改变self.m_data数据
                     --self:SetWarehouseDataInfo(dataInfo)
-                    --下架数量改变后同时改变模拟服务器数据
+                    ----下架数量改变后同时改变模拟服务器数据
                     if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                         local goodsData = {}
                         local key = {}
@@ -319,43 +319,43 @@ function ShelfCtrl:OpenDetailsBox(ins)
     ins.isOther = self.m_data.isOther
     ct.OpenCtrl("DETAILSBoxCtrl",ins)
 end
-----下架数量改变后，同时改变self.m_data数据
---function ShelfCtrl:SetWarehouseDataInfo(dataInfo)
---    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
---        local goodsData = {}
---        local key = {}
---        key.id = dataInfo.item.key.id
---        goodsData.key = key
---        goodsData.n = dataInfo.item.n
---        if not self.m_data.store.inHand then
---            self.m_data.store.inHand = {}
---        end
---        self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goodsData
---    else
---        for key,value in pairs(self.m_data.store.inHand) do
---            if value.key.id == dataInfo.item.key.id then
---                value.n = value.n + dataInfo.item.n
---            end
---        end
---    end
---    if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
---        local goodsData = {}
---        local key = {}
---        key.id = dataInfo.item.key.id
---        goodsData.key = key
---        goodsData.n = dataInfo.item.n
---        if not self.m_data.store.locked then
---            self.m_data.store.locked = {}
---        end
---        self.m_data.store.locked[#self.m_data.store.locked + 1] = goodsData
---    else
---        for key1,value1 in pairs(self.m_data.store.locked) do
---            if value1.key.id == dataInfo.item.key.id then
---                value1.n = value1.n - dataInfo.item.n
---            end
---        end
---    end
---end
+--下架数量改变后，同时改变self.m_data数据
+function ShelfCtrl:SetWarehouseDataInfo(dataInfo)
+    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        local goodsData = {}
+        local key = {}
+        key.id = dataInfo.item.key.id
+        goodsData.key = key
+        goodsData.n = dataInfo.item.n
+        if not self.m_data.store.inHand then
+            self.m_data.store.inHand = {}
+        end
+        self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goodsData
+    else
+        for key,value in pairs(self.m_data.store.inHand) do
+            if value.key.id == dataInfo.item.key.id then
+                value.n = value.n + dataInfo.item.n
+            end
+        end
+    end
+    if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
+        local goodsData = {}
+        local key = {}
+        key.id = dataInfo.item.key.id
+        goodsData.key = key
+        goodsData.n = dataInfo.item.n
+        if not self.m_data.store.locked then
+            self.m_data.store.locked = {}
+        end
+        self.m_data.store.locked[#self.m_data.store.locked + 1] = goodsData
+    else
+        for key1,value1 in pairs(self.m_data.store.locked) do
+            if value1.key.id == dataInfo.item.key.id then
+                value1.n = value1.n - dataInfo.item.n
+            end
+        end
+    end
+end
 
 
 

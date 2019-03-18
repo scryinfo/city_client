@@ -76,6 +76,7 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
             --写入缓存
             local id=playerIDs[curr][i]
             local infoId=info.id
+            prints(tostring(id==infoId))
             cache[id]=info
             table.insert(tempInfos,info)
         end

@@ -152,7 +152,6 @@ function UIBubbleBuildingSignItem:changeLarge()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
-
    self.nameText.text=info[1].name
    self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
 

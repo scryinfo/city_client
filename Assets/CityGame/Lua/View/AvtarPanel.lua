@@ -20,7 +20,7 @@ function AvtarPanel.InitPanel()
     this.cofirmBtn = transform:Find("topRoot/confirmBtn")
     this.randomBtn = transform:Find("randomBtn")
 
-    this.showContent=transform:Find("showContent/bg")
+    this.showContent=transform:Find("showContent/bg/Image")
     this.fiveContent=transform:Find("fiveScroll/Viewport/Content")
     this.kindsContent=transform:Find("kindsScroll/Viewport/Content")
     this.maleBtn=transform:Find("kindsScroll/male")

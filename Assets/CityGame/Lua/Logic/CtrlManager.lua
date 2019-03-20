@@ -27,7 +27,6 @@ require "Controller/HouseCtrl"
 require "Controller/GameMainInterfaceCtrl"
 require "Controller/BtnDialogPageCtrl"
 require "Controller/InputDialogPageCtrl"
-require "Controller/ExchangeCtrl"
 require "Model/LoginModel"
 require "Model/BuildingInfoModel"
 require "Model/HouseModel"
@@ -43,10 +42,6 @@ require "Model/ProcessingModel"
 require "Model/tempTransportModel"
 require "Model/CenterWareHouseModel"
 require "Logic/PieChart/PieChart"
-
---测试
-require "Controller/TestExchangeCtrl"
-require "Controller/TestExchangeScrollItemCtrl"
 
 CtrlManager = {};
 local this = CtrlManager;
@@ -93,7 +88,6 @@ function CtrlManager.Init()
 	--modelList[ModelNames.CreateRole] = CreateRoleModel.New();
 	--modelList[ModelNames.Material] = MaterialModel.New();
 	--modelList[ModelNames.Processing] = ProcessingModel.New();
-	modelList[ModelNames.Exchange] = ExchangeModel.New();
 	modelList[ModelNames.PlayerTemp] = PlayerTempModel.New();
 	--modelList[ModelNames.CenterWareHouse] = CenterWareHouseModel.New();
 	--modelList[ModelNames.Municipal]=MunicipalModel.New();

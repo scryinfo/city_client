@@ -45,7 +45,7 @@ function StopAndBuildCtrl:Awake(go)
 end
 
 --返回
-function StopAndBuildCtrl:OnClick_backBtn()
+function StopAndBuildCtrl:OnClick_backBtn(ins)
     panel:CloseBtn()
     UIPanel.CloseAllPageExceptMain()
     PlayMusEff(1002)
@@ -53,7 +53,7 @@ function StopAndBuildCtrl:OnClick_backBtn()
 end
 
 --返回
-function StopAndBuildCtrl:OnClick_backBtn1()
+function StopAndBuildCtrl:OnClick_backBtn1(ins)
     panel:CloseBtn()
     UIPanel.ClosePage()
     PlayMusEff(1002)
@@ -172,7 +172,7 @@ function StopAndBuildCtrl:updatePersonInfo(data)
     if  self.avatarRightData then
         AvatarManger.CollectAvatar(self.avatarRightData)
     end
-   self.avatarRightData= AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
+    self.avatarRightData= AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
 
     panel.rightnameInp.text=peronInfo.name
     panel.rightcommanyInp.text=peronInfo.companyName
@@ -193,7 +193,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
         AvatarManger.CollectAvatar(self.avatarLeftData)
     end
 
-  self.avatarLeftData= AvatarManger.GetSmallAvatar(personData.faceId,panel.personIma.transform,0.2)
+    self.avatarLeftData= AvatarManger.GetSmallAvatar(personData.faceId,panel.personIma.transform,0.2)
 
     panel.nameInp.text=personData.name
     panel.commanyInp.text=personData.companyName

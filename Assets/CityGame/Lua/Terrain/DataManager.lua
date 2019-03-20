@@ -1649,7 +1649,7 @@ function DataManager.Init()
     --初始化自己的地块初始信息
     MyGround.Init()
     --建筑气泡对象池
-    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubble",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')

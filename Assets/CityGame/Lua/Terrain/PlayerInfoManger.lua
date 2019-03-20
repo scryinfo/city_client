@@ -69,34 +69,30 @@ end
 --查询玩家信息返回
 function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
 
-    if  #playerIDs<=0  then    return   end
-        curr=curr+1
+    if #playerIDs <= 0 then
+        return
+    end
+    curr = curr+1
 
     for i, info in ipairs(stream.info) do
         --写入缓存
-        local id=playerIDs[curr][i]
+        local id = playerIDs[curr][i]
         local infoId=info.id
+       -- prints("玩家管理器信息是否一致："..tostring(id==infoId))
+        cache[id]=info
+        table.insert(tempInfos,info)
+    end
 
-        --if id==infoId then
-        --    prints("Yes")
-        --else
-        --    prints("No")
-        --end
-        prints("玩家管理器信息是否一致："..tostring(id==infoId))
-            cache[id]=info
-            table.insert(tempInfos,info)
-        end
+    _funcs[curr](_classes[curr],tempInfos)
 
-        _funcs[curr](_classes[curr],tempInfos)
+    tempInfos={}
+    recardNums=recardNums-1
 
-        tempInfos={}
-        recardNums=recardNums-1
-
-        if recardNums == 0 then
-            playerIDs={}
-            _classes={}
-            _funcs={}
-            curr=0
-        end
+    if recardNums == 0 then
+        playerIDs={}
+        _classes={}
+        _funcs={}
+        curr=0
+    end
 
 end

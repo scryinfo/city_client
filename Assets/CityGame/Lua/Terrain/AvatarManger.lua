@@ -49,9 +49,9 @@ end
      rect:SetSizeWithCurrentAnchors(V,(rect.sizeDelta.x)*size)
      rect:SetSizeWithCurrentAnchors(H,(rect.sizeDelta.y)*size)
 
-     --归位
-     go.transform.localScale = Vector3.one
-     go.transform.localPosition=Vector3.zero
+     ----归位
+     --go.transform.localScale = Vector3.one
+     --go.transform.localPosition=Vector3.zero
 
      for i, sizeData in ipairs(HeadSizeType) do
 
@@ -71,6 +71,9 @@ end
         end
 
     end
+     --归位
+     go.transform.localScale = Vector3.one
+     go.transform.localPosition=Vector3.zero
     return go
 end
 
@@ -124,8 +127,11 @@ local function changAparance(kind)
         else
             config=HeadConfig.woMan
         end
-        headTypeId=nums
 
+        if currHead then
+            headPool[sex][headTypeId]:RecyclingGameObjectToPool(currHead)
+        end
+        headTypeId=nums
         currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
@@ -190,6 +196,7 @@ local function GetAvatar(faceId,isSmall)
     sex=tonumber(arr[1])
     --加载小人头像
     currHead =headPool[sex][1]:GetAvailableGameObject()
+    headTypeId=1
     FindOrgan(currHead.transform)
     --配置表
     if isSmall then
@@ -234,7 +241,7 @@ end
 function AvatarManger.GetSmallAvatar(faceId,parent,size)
 
    local AvatarData=GetAvatar(faceId,true)
-
+    AvatarData.size=1/size
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
     return AvatarData
@@ -243,19 +250,42 @@ end
 function AvatarManger.GetBigAvatar(faceId,parent,size)
 
     local AvatarData=GetAvatar(faceId,false)
-
+    AvatarData.size=1/size
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
     return AvatarData
+end
+
+
+function AvatarManger.CollectAvatar(AvatarData)
+    if  AvatarData then
+            for i, config in ipairs(HeadSizeType) do
+                local trans=AvatarData.go.transform:Find(config.type)
+                if trans then
+                    local ima= trans:GetComponent("Image")
+                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                end
+            end
+
+            AvatarManger.setSize(AvatarData.go,AvatarData.size)
+            --local  func=function(go)
+            --    local cRect=AvatarData.go.transform:GetComponent("RectTransform")
+            --    local oRect=go.transform:GetComponent("RectTransform")
+            --    cRect.sizeDelta=oRect.sizeDelta
+            --    cRect.anchoredPosition=oRect.anchoredPosition
+            --end
+            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go,func)
+    end
+
 end
 
 function AvatarManger.CollectAllAvatar()
     if #record>0 then
         for i, AvatarData in ipairs(record) do
             for i, config in ipairs(HeadSizeType) do
-                 local trans=AvatarData.go.transform:Find(config.type)
+                local trans=AvatarData.go.transform:Find(config.type)
                 if trans then
-                   local ima= trans:GetComponent("Image")
+                    local ima= trans:GetComponent("Image")
                     LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
                 end
             end
@@ -269,19 +299,3 @@ function AvatarManger.CollectAllAvatar()
         recordPath = {}
     end
 end
-
-function AvatarManger.CollectAvatar(AvatarData)
-    if #record>0 and AvatarData then
-
-            for i, config in ipairs(HeadSizeType) do
-                local trans=AvatarData.go.transform:Find(config.type)
-                if trans then
-                    local ima= trans:GetComponent("Image")
-                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
-                end
-            end
-            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
-    end
-    
-end
-

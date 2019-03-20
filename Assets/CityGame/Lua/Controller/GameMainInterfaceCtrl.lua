@@ -95,6 +95,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
     GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+    self:RemoveUpdata()
 end
 
 function GameMainInterfaceCtrl:Close()
@@ -375,6 +376,8 @@ end
 
 
 function GameMainInterfaceCtrl:Awake()
+    --PlayerTempModel.tempTestCreateAll()
+    Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -424,10 +427,6 @@ function GameMainInterfaceCtrl:Awake()
     self.company = info.companyName
     self.gender = info.male
 
-    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
-
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
@@ -468,6 +467,13 @@ function GameMainInterfaceCtrl:Awake()
             end
         end)
     end
+end
+
+--連接ss成功回調
+function GameMainInterfaceCtrl:c_OnSSSuccess()
+    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -568,6 +574,9 @@ function GameMainInterfaceCtrl:RefreshWeather()
             end
         end
     end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        PlayerTempModel.tempTestCreateAll()
+    end
 end
 
 --获取所有邮件
@@ -617,7 +626,6 @@ end
 
 function GameMainInterfaceCtrl.OnNotice(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
@@ -628,7 +636,6 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
@@ -742,14 +749,12 @@ end
 --设置--
 function GameMainInterfaceCtrl.Onset()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
     CameraMove.ChangeCameraState(TouchStateType.ConstructState)
@@ -763,34 +768,29 @@ end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData.info.id)
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ScienceSellHallCtrl")
 end
 
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
 --小地图
 function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("MapCtrl")
 end
 
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     --TerrainManager.MoveToCentralBuidingPosition()
     ct.OpenCtrl("CenterBuildingCtrl")
 end

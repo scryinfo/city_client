@@ -206,6 +206,14 @@ function PlayerTempModel.tempTestReqAddItem(itemId, num)
     local pMsg = assert(pbl.encode("gs.Str", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
+
+--createAll
+function PlayerTempModel.tempTestCreateAll()
+    local msgId = pbl.enum("gscode.OpCode", "cheat")
+    local lMsg = {str = string.format("createAll")}
+    local pMsg = assert(pbl.encode("gs.Str", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
 --add ground
 function PlayerTempModel.tempTestReqAddGroung(x1, y1, x2, y2)
     local msgId = pbl.enum("gscode.OpCode", "cheat")

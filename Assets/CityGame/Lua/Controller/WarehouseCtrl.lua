@@ -239,16 +239,18 @@ function WarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
             locked[#locked + 1] = goodData
             self.m_data.store.locked = locked
         else
-            for key1,value1 in pairs(self.m_data.store.locked) do
-                if value1.key.id == dataInfo.item.key.id then
-                    value1.n = value1.n + dataInfo.item.n
-                end
-            end
-            for key2,value2 in pairs(self.m_data.shelf.good) do
-                if value2.k.id == dataInfo.item.key.id then
-                    value2.n = value2.n + dataInfo.item.n
-                end
-            end
+            --for key1,value1 in pairs(self.m_data.store.locked) do
+            --    if value1.key.id == dataInfo.item.key.id then
+            --        value1.n = value1.n + dataInfo.item.n
+            --    end
+            --end
+            self:SetShelfLocked(dataInfo)
+            --for key2,value2 in pairs(self.m_data.shelf.good) do
+            --    if value2.k.id == dataInfo.item.key.id then
+            --        value2.n = value2.n + dataInfo.item.n
+            --    end
+            --end
+            self:SetShelfGood(dataInfo)
         end
         --上架成功后模拟服务器数据改变m_data
         for key,value in pairs(self.m_data.store.inHand) do
@@ -447,12 +449,56 @@ function WarehouseCtrl:SetShelfData(dataInfo)
     local key = {}
     if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
         key.id = dataInfo.item.key.id
+        --key.producerId = dataInfo.item.key.producerId
+        --key.qty = dataInfo.item.key.qty
         goodData.k = key
         goodData.n = dataInfo.item.n
         goodData.price = dataInfo.price
-        good[#good + 1] = goodData
-        self.m_data.shelf.good = good
+        --good[#good + 1] = goodData
+        if not self.m_data.shelf.good then
+            self.m_data.shelf.good = {}
+        end
+        self.m_data.shelf.good[#self.m_data.shelf.good + 1] = goodData
     end
+end
+--
+function WarehouseCtrl:SetShelfLocked(dataInfo)
+    for key,value in pairs(self.m_data.store.locked) do
+        if value.key.id == dataInfo.item.key.id then
+            value.n = value.n + dataInfo.item.n
+            return
+        end
+    end
+    local locked = {}
+    local goodData = {}
+    local key = {}
+    key.id = dataInfo.item.key.id
+    --key.producerId = dataInfo.item.key.producerId
+    --key.qty = dataInfo.item.key.qty
+    goodData.key = key
+    goodData.n = dataInfo.item.n
+    --locked[#locked + 1] = goodData
+    self.m_data.store.locked[#self.m_data.store.locked + 1] = goodData
+end
+--
+function WarehouseCtrl:SetShelfGood(dataInfo)
+    for key,value in pairs(self.m_data.shelf.good) do
+        if value.k.id == dataInfo.item.key.id then
+            value.n = value.n + dataInfo.item.n
+            return
+        end
+    end
+    local good = {}
+    local goodData = {}
+    local key = {}
+    key.id = dataInfo.item.key.id
+    --key.producerId = dataInfo.item.key.producerId
+    --key.qty = dataInfo.item.key.qty
+    goodData.k = key
+    goodData.n = dataInfo.item.n
+    goodData.price = dataInfo.price
+    --good[#good + 1] = goodData
+    self.m_data.shelf.good[#self.m_data.shelf.good + 1] = goodData
 end
 
 

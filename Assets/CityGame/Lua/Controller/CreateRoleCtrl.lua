@@ -37,8 +37,6 @@ function CreateRoleCtrl:Active()
     CreateRolePanel.nicknameText.text = GetLanguage(10040008)
     CreateRolePanel.companynameText.text = GetLanguage(10040009)
     CreateRolePanel.name.text = GetLanguage(10040001)
-    CreateRolePanel.maleText.text = GetLanguage(10040002)
-    CreateRolePanel.femaleText.text = GetLanguage(10040003)
     CreateRolePanel.duplicateText.text = GetLanguage(10040004)
     CreateRolePanel.Companyname.text = GetLanguage(10040005)
 end

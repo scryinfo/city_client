@@ -157,15 +157,6 @@ function convertTimeForm(second)
 	return data
 end
 
-
---表格排序
-function tableSort(table,gameObject)
-	TableSort.tableSort(table,gameObject)
-end
---修改表数据
-function UpdataTable(table,gameObject,prefabs)
-	TableSort:UpdataTable(table,gameObject,prefabs)
-end
 --将秒转换成小时分秒的格式，非时间戳
 function getTimeBySec(secTime)
 	local tb = {}
@@ -604,4 +595,13 @@ end
 
 function prints(str)
 	ct.log("system","=================================================="..str)
+end
+
+--给曲线图Y轴动态赋值(根据传入数据的最大值)
+function SetYScale(transform, max)
+    local scale = math.ceil(max / (transform.childCount - 1))
+	for i = 1, transform.childCount - 1 do
+		transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+	end
+	return scale
 end

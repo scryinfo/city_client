@@ -29,9 +29,6 @@ BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageIn
 BuildingInfoToggleGroupMgr.static.Laboratory_Path = "View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
 BuildingInfoToggleGroupMgr.static.BuildingBrand_Path = "View/BuildingMainPageInfoItem/BuildingBrandItem"  --品牌品质
 
-BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
-BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/ExcavateTalentsItem"  --挖掘人才
-
 
 --初始化
 --最后一个参数是品牌品质的父物体，可有可无
@@ -57,8 +54,6 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
         self:_creatResearchLineInfo()
     elseif buildingData.buildingType == BuildingType.RetailShop then
         self:_creatRetailShop()
-    elseif buildingData.buildingType == BuildingType.TalentCenter then
-        self:_creatTalentInfo()
     end
 
     --创建完之后调整item位置
@@ -78,8 +73,6 @@ function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
-    elseif buildingData.buildingType == BuildingType.TalentCenter then
-        self:_creatTalentInfo()
     elseif buildingData.buildingType == BuildingType.RetailShop then
         self:_creatRetailShop()
     end
@@ -460,29 +453,6 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
     ---研究线 --右1
     local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     self.rightData[1] = self:_creatResearchLine(researchLineToggleData)
-end
---人才中心
-function BuildingInfoToggleGroupMgr:_creatTalentInfo()
-   -- 员工  左1
-   -- local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
-   -- self.leftData[1] = self:_createStaff(staffToggleData)
-
-    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    self.leftData[1] = self:_createLineChart(lineToggleData)
-    --人才管理  左2
-    local management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
-    management.gameObject.name = "TalentManagement"
-    local managementToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local managementLuaItem = ManagementItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
-    self.leftData[2] = managementLuaItem
-
-    --挖掘人才
-    local excavate
-    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path, self.rightRect)
-    excavate.gameObject.name = "ExcavateTalents"
-    local excavateToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
-    local excavateLuaItem = ExcavateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
-    self.rightData[1] = excavateLuaItem
 end
 
 ---通用部分

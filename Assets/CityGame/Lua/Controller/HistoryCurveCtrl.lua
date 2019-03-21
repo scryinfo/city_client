@@ -7,7 +7,8 @@ HistoryCurveCtrl = class('HistoryCurveCtrl',UIPanel)
 UIPanel:ResgisterOpen(HistoryCurveCtrl)
 --HistoryCurveCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
-local curveBehaviour;
+local curveBehaviour
+local maxValue = 0
 
 function  HistoryCurveCtrl:bundleName()
     return "Assets/CityGame/Resources/View/HistoryCurvePanel.prefab"
@@ -84,7 +85,7 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     local sevenDaysAgoTime = currentTime - 604800
     local sevenDaysAgo = sevenDaysAgoTime
     local supplyNum = {}
-    local supplyNumVet = {}
+    local supplyNumValue = {}
     local time = {}
     local boundaryLine = {}
     local data = {}
@@ -119,20 +120,32 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
             supplyNum[i].num = v.num
         end
         for i, v in ipairs(supplyNum) do
-            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+            supplyNumValue[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
         end
     else
         for i, v in ipairs(supplyNum) do
-            supplyNumVet[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+            supplyNumValue[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
         end
     end
-    table.insert(supplyNumVet,1,Vector2.New(0,0))
+    table.insert(supplyNumValue,1,Vector2.New(0,0))
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
-    data.supplyNumVet = supplyNumVet
+    data.supplyNumValue = supplyNumValue
+    local max = 0
+    for i, v in ipairs(data.supplyNumValue) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    maxValue = max
+    local scale =  SetYScale(HistoryCurvePanel.yScale,maxValue)
+    --data.supplyNumVet = {}
+    --for i, v in ipairs(data.supplyNumValue) do
+    --    data.supplyNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+    --end
 
-    HistoryCurvePanel.graph:DrawLine(data.supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(data.supplyNumVet,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.graph:DrawLine(data.supplyNumValue,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(data.supplyNumValue,data.supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
     HistoryCurvePanel.slide:SetXScaleValue(data.time,116)
     HistoryCurvePanel.graph:BoundaryLine(data.boundaryLine)
 end
@@ -171,13 +184,30 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
             end
         end
     end
-    local demandNumVet = {}
+    local demandNumValue = {}
     for i, v in ipairs(demandNumTab) do
-        demandNumVet[i] = Vector2.New(v.ts,v.num)
+        demandNumValue[i] = Vector2.New(v.ts,v.num)
     end
-    table.insert(demandNumVet,1,Vector2.New(0,0))
+    table.insert(demandNumValue,1,Vector2.New(0,0))
+
+    local max = 0
+    for i, v in ipairs(demandNumValue) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    local scale
+    if max > maxValue then
+        maxValue = max
+        scale = SetYScale(HistoryCurvePanel.yScale,maxValue)
+    end
+
+    local demandNumVet = {}
+    for i, v in ipairs(demandNumValue) do
+        demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+    end
 
     HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(demandNumVet,demandNumValue,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
 end
 

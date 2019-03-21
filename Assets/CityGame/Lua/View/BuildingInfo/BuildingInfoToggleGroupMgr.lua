@@ -3,21 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 10:17
 ---管理建筑首页的信息toggle mgr
-require 'View/BuildingInfo/OccupancyRateItem'
-require 'View/BuildingInfo/RentalItem'
-
-require 'View/BuildingInfo/LineChartRateItem'
-require 'View/BuildingInfo/AdLineChartItem'
-require 'View/BuildingInfo/StaffRateItem'
-require 'View/BuildingInfo/WarehouseRateItem'
-require 'View/BuildingInfo/ShelfRateItem'
-require 'View/BuildingInfo/HomeProductionLineItem'
-require 'View/BuildingInfo/AdvertisementShowItem'
-require'View/BuildingInfo/ParkInfoItem'
-require 'View/BuildingInfo/TicketItem'
-
-
-
 BuildingInfoToggleGroupMgr = class('BuildingInfoToggleGroupMgr')
 
 BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME = 0.5  --item动画时间
@@ -27,9 +12,7 @@ BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
 BuildingInfoToggleGroupMgr.static.MIDDLE_POS=Vector2.New(0,50)
 
 BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH = "View/BuildingMainPageInfoItem/HouseOccupancyRateItem"  --住宅入住率预制路径
-BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH = "View/BuildingMainPageInfoItem/HouseRentalItem"  --住宅租金
 
-BuildingInfoToggleGroupMgr.static.HOUSE_STAFF_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --员工管理预制
 BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH = "View/BuildingMainPageInfoItem/LineChartRateItem" --折线图预制
 BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH = "View/BuildingMainPageInfoItem/WarehouseRateItem" --仓库
 BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH = "View/BuildingMainPageInfoItem/ShelfRateItem"  --货架
@@ -590,30 +573,6 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
 
     self.occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return self.occupancyLuaItem
-end
---租金
-function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
-    if not self.rentalViewRect then
-        if rentalToggleData.pos == BuildingInfoTogglePos.Left then
-            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.leftRect)
-        else
-            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
-        end
-        self.rentalViewRect.gameObject.name = "Rental"
-    end
-
-    local rentalData = {}
-    rentalData.buildingId = self.toggleData.info.id
-    rentalData.buildingTypeId = self.toggleData.info.mId
-    rentalData.rent = self.toggleData.rent
-    rentalData.suggestRent = self.toggleData.rent
-    --rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
-    local endStr = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
-    rentalData.effectiveDate = endStr
-
-    rentalData.isOther = self.toggleData.isOther  --
-    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
-    return rentalLuaItem
 end
 ---研究所部分
 --研究线

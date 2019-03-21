@@ -6,7 +6,7 @@
 
 BuilldingBubbleInsManger={}
 
-function BuilldingBubbleInsManger.Awake()
+function BuilldingBubbleInsManger.Init()
     Event.AddListener("BuilldingBubbleInsManger_Refresh",BuilldingBubbleInsManger.BuilldingBubbleInsManger_Refresh,BuilldingBubbleInsManger)
 end
 

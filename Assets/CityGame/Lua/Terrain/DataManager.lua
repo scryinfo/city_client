@@ -1616,7 +1616,7 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendReq","gs.RequestFriend",DataManager.n_OnReceiveAddFriendReq)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendSucess","gs.RoleInfo",DataManager.n_OnReceiveAddFriendSucess)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getBlacklist","gs.RoleInfos",DataManager.n_OnReceiveGetBlacklist)
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",DataManager.n_OnReceivePlayerInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",DataManager.n_OnReceivePlayerInfo)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","labRoll","gs.IntNum",DataManager.n_OnReceiveLabRoll)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newItem","gs.IntNum",DataManager.n_OnReceiveNewItem)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleCommunication","gs.CommunicationProces",DataManager.n_OnReceiveRoleCommunication)
@@ -1820,9 +1820,6 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
    PlayerInfoManger.n_OnReceivePlayerInfo(stream)
-    --if stream ~= nil and stream.info ~= nil and #stream.info == 1 and stream.info[1].id == DataManager.GetMyOwnerID() then
-    --    DataManager.SetMyPersonalHomepageInfo(stream.info[1])
-    --end
 end
 
 --研究所Roll回复信息

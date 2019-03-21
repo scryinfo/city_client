@@ -41,15 +41,11 @@ function GameMainInterfacePanel.InitPanel()
     this.closeBg = transform:Find("ChatBg/closeBg")    --关闭隐藏图标背景
 
     this.time = transform:Find("Info/time"):GetComponent("Text");   --时间
-    this.date = transform:Find("Info/date"):GetComponent("Text");   --日期
     this.city = transform:Find("Info/city"):GetComponent("Text");   --城市
     this.temperature = transform:Find("Info/temperatureText"):GetComponent("Text");   --温度
     this.weather = transform:Find("Info/weather"):GetComponent("Image");   --天气
 
     this.buildButton = transform:Find("BuildButton").gameObject;--建筑--
-    this.auctionButton =  transform:Find("AuctionButton").gameObject;--拍卖--
-    this.isAuction =  transform:Find("AuctionButton/auction/isAuction");--正在拍卖--
-    this.auctionTime =  transform:Find("AuctionButton/time").gameObject:GetComponent("Text");--拍卖时间--
 
 
     --this.worldChatPanel = transform:Find("WorldChatPanel").gameObject;--世界聊天--

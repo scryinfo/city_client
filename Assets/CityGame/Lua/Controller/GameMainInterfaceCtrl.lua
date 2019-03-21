@@ -3,8 +3,6 @@ UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 
 local gameMainInterfaceBehaviour;
 local Mails
-local countDown = 0
-local groundState
 local incomeNotify    --收益详情表
 local lastTime   --上一次时间
 --todo 城市广播
@@ -30,38 +28,12 @@ end
 --启动事件--
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    --for key, v in pairs(Good) do
-    --    PlayerTempModel.tempTestReqAddItem(key,500)
-    --end
-    --
-    --for key, v in pairs(Material) do
-    --    PlayerTempModel.tempTestReqAddItem(key,500)
-    --end
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
     Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
-    --
-    --PlayerTempModel.tempTestReqAddItem(2102002,99)
-    --PlayerTempModel.tempTestReqAddItem(2102003,99)
-    --PlayerTempModel.tempTestReqAddItem(2102004,99)
-    --
-    --PlayerTempModel.tempTestReqAddItem(2101001,99)
-    --PlayerTempModel.tempTestReqAddItem(2101002,99)
-    --PlayerTempModel.tempTestReqAddItem(2101003,99)
-    --PlayerTempModel.tempTestReqAddItem(2101004,99)
-    --
-    --PlayerTempModel.tempTestReqAddItem(2103001,99)
-    --PlayerTempModel.tempTestReqAddItem(2103002,99)
-    --PlayerTempModel.tempTestReqAddItem(2103003,99)
-    --PlayerTempModel.tempTestReqAddItem(2103004,99)
-    --
-    --PlayerTempModel.tempTestReqAddItem(2251101,99)
-    --PlayerTempModel.tempTestReqAddItem(2251102,99)
-    --PlayerTempModel.tempTestReqAddItem(2251103,99)
-    --PlayerTempModel.tempTestReqAddItem(2251201,99)
 end
 
 function GameMainInterfaceCtrl:Active()
@@ -95,6 +67,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
     GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+    self:RemoveUpdata()
 end
 
 function GameMainInterfaceCtrl:Close()
@@ -112,29 +85,6 @@ end
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData[1])
-    end
-end
-
---获取拍卖状态
-function GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
-   local state =  UIBubbleManager._getNowAndSoonState() --获取状态
-    if state ~= nil and state.groundState ~= nil then
-        if state.groundState == 0 then
-            GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
-            GameMainInterfacePanel.isAuction.localScale = Vector3.zero
-            local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-            countDown = state.beginTime - currentTime   --倒计时间
-            groundState = GetLanguage(11020002)
-        elseif state.groundState == 1 then
-            GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.one
-            GameMainInterfacePanel.isAuction.localScale = Vector3.one
-            local endTime = state.beginTime + state.durationSec    --结束时间
-            local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-            countDown = endTime - currentTime
-            groundState = GetLanguage(11020001)
-        end
-    else
-        GameMainInterfacePanel.auctionButton.transform.localScale = Vector3.zero
     end
 end
 
@@ -378,6 +328,8 @@ end
 
 
 function GameMainInterfaceCtrl:Awake()
+    --PlayerTempModel.tempTestCreateAll()
+    Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -427,10 +379,6 @@ function GameMainInterfaceCtrl:Awake()
     self.company = info.companyName
     self.gender = info.male
 
-    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
-
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
@@ -440,8 +388,6 @@ function GameMainInterfaceCtrl:Awake()
     local gold = DataManager.GetMoneyByString()
     self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money
-
-    GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc() --获取土地拍卖状态
 
     --收益倒计时条件
     self.isTimmer = false
@@ -471,6 +417,13 @@ function GameMainInterfaceCtrl:Awake()
             end
         end)
     end
+end
+
+--連接ss成功回調
+function GameMainInterfaceCtrl:c_OnSSSuccess()
+    DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -509,8 +462,6 @@ function GameMainInterfaceCtrl:RefreshWeather()
     end
 
     GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
-    --GameMainInterfacePanel.date.text = os.date("%d").."," ..os.date("%B %a")
-    GameMainInterfacePanel.date.text = ts.year.."-"..ts.month.."-"..ts.day
     date = tonumber(ts.year..ts.month..ts.day)
     hour = tonumber(ts.hour)
     if self.weatherDay == nil then
@@ -525,15 +476,6 @@ function GameMainInterfaceCtrl:RefreshWeather()
         if WeatherConfig[date].weather[hour] ~= nil then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[date].weather[hour], GameMainInterfacePanel.weather,true)
             GameMainInterfacePanel.temperature.text = WeatherConfig[date].temperature[hour].."℃"
-        end
-    end
-    if groundState ~= nil then
-        countDown = countDown - 1
-        local ts = getFormatUnixTime(countDown)
-        local time = ts.minute..":"..ts.second
-        GameMainInterfacePanel.auctionTime.text = time
-        if countDown <= 0 then
-            GameMainInterfaceCtrl:m_MainCtrlShowGroundAuc()
         end
     end
     if  self.isTimmer then
@@ -570,6 +512,9 @@ function GameMainInterfaceCtrl:RefreshWeather()
                 radioIndex = radioIndex - #radio
             end
         end
+    end
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        PlayerTempModel.tempTestCreateAll()
     end
 end
 
@@ -620,7 +565,6 @@ end
 
 function GameMainInterfaceCtrl.OnNotice(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
@@ -631,7 +575,6 @@ end
 --聊天--
 function GameMainInterfaceCtrl.OnChat()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ChatCtrl", {toggleId = 1})
 end
 
@@ -745,14 +688,12 @@ end
 --设置--
 function GameMainInterfaceCtrl.Onset()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("SystemSettingCtrl")
 end
 
 --建筑--
 function GameMainInterfaceCtrl.OnBuild()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl('ConstructCtrl')
     --相机切换到建造状态
     CameraMove.ChangeCameraState(TouchStateType.ConstructState)
@@ -766,34 +707,29 @@ end
 
 --住宅--
 function GameMainInterfaceCtrl.OnHouse()
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("HouseCtrl", PlayerTempModel.tempHouseData.info.id)
 end
 
 --原料厂--
 function GameMainInterfaceCtrl.OnRawMaterialFactory()
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("ScienceSellHallCtrl")
 end
 
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("GuidBookCtrl")
 end
 
 --小地图
 function GameMainInterfaceCtrl:OnSmallMap()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     ct.OpenCtrl("MapCtrl")
 end
 
 --中心建筑
 function GameMainInterfaceCtrl:OnCenterBuilding()
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:RemoveUpdata()
     --TerrainManager.MoveToCentralBuidingPosition()
     ct.OpenCtrl("CenterBuildingCtrl")
 end

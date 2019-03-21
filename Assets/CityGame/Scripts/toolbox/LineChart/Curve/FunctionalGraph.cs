@@ -46,7 +46,7 @@ public class FunctionalGraph : MaskableGraphic
     /// 
     private void Init()
     {
-        GraphBase = new FunctionalGraphBase();
+        GraphBase = transform.GetComponent<FunctionalGraphBase>();
         _myRect = this.rectTransform;
     }
     /// 
@@ -320,7 +320,7 @@ public class FunctionalGraph : MaskableGraphic
     //画折线
     public void DrawLine(Vector2[] lines,Color color)
     {
-        if (line.Count >= 2)
+        if (line.Count >= GraphBase.MaxNum)
         {
             line.RemoveAt(0);
             lineColor.RemoveAt(0);

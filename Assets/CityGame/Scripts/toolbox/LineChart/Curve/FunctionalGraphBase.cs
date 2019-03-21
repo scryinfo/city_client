@@ -102,6 +102,24 @@ public class FunctionalGraphBase:MonoBehaviour
     ///分隔线的颜色
     ///
     public Color BoundaryColor = Color.gray;
-    
-
+    ///
+    ///最多生成线的数量
+    ///
+    public int MaxNum = 2;
+    ///
+    ///滑动最小的位置
+    ///
+    public Vector2 MinPos = Vector2.one;
+    ///
+    ///滑动最大的位置
+    ///
+    public Vector2 MaxPos = Vector2.one;
+    ///
+    ///最小的宽高
+    ///
+    public Vector2 MinWidth = Vector2.one;
+    ///
+    ///最大的宽高
+    ///
+    public Vector2 MaxWidth = Vector2.one;
 }

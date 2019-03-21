@@ -51,7 +51,8 @@ function Game.OnPostInitOK()
     BuilldingBubbleInsManger.Awake()
     --开业停业
     StopAndBuildModel:Awake()
-    PlayerInfoManger.Awake()
+    PlayerInfoManager.Init()
+    --PlayerInfoManger.Awake()
     --单元测试入口
     lu.LuaUnit.run()
     DataManager.Init()

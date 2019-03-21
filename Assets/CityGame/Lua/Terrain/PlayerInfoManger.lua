@@ -9,11 +9,12 @@ local  cache,playerIDs,tempInfos
 local _classes,_funcs
 
 function PlayerInfoManger.Awake()
-    _classes={}    _funcs={}     tempInfos={}
-
-    cache={}       playerIDs={}
+    _classes={}
+    _funcs={}
+    tempInfos={}
+    cache={}
+    playerIDs={}
     Event.AddListener("m_QueryPlayerInfoChat", PlayerInfoManger.m_QueryPlayerInfoChat)
-
 end
 
 -- 向服务器查询好友信息
@@ -35,14 +36,11 @@ local recardNums=0
 local curr=0
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
-
     for i, id in ipairs(playerIds) do
-
         local info=cache[id]
-
-        if info then--有缓存
+        if info then                            --有缓存
             table.insert(tempInfos,info)
-        else--无缓存
+        else                                    --无缓存
             recardNums=recardNums+1
             playerIDs[recardNums]=playerIds
             _funcs[recardNums]=func
@@ -51,14 +49,9 @@ function PlayerInfoManger.GetInfos(playerIds,func,class)
             tempInfos={}
             return
         end
-
     end
-
     --有缓存  直接调用
-
     func(class,tempInfos)
-
-
     tempInfos={}
 end
 
@@ -68,12 +61,10 @@ end
 
 --查询玩家信息返回
 function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
-
     if #playerIDs <= 0 then
         return
     end
     curr = curr+1
-
     for i, info in ipairs(stream.info) do
         --写入缓存
         local id = playerIDs[curr][i]
@@ -82,17 +73,13 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
         cache[id]=info
         table.insert(tempInfos,info)
     end
-
     _funcs[curr](_classes[curr],tempInfos)
-
     tempInfos={}
     recardNums=recardNums-1
-
     if recardNums == 0 then
         playerIDs={}
         _classes={}
         _funcs={}
         curr=0
     end
-
 end

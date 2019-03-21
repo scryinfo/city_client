@@ -80,7 +80,7 @@ function UIBubbleBuildingSignItem:updateData(data)
     if self .avatarData then
         AvatarManger.CollectAvatar(self .avatarData)
     end
-       PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
+    PlayerInfoManager.GetPalayerInfo({data.ownerId},self.LoadHeadImaAndName,self)
 
     if not data.bubble then
         self:CloesBubble()

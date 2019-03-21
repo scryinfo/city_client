@@ -34,10 +34,6 @@ function CenterWareHousePanel.InitPanel()
 
     this.content = transform:Find("Scroll View/Viewport/Content"):GetComponent("RectTransform");
     this.scrollView = transform:Find("Scroll View"):GetComponent("RectTransform");
-    this.addItem = transform:Find("Scroll View/Viewport/Content/AddItem").gameObject;--扩容
-    this.addBtn = transform:Find("Scroll View/Viewport/Content/AddItem/AddButton").gameObject; --扩容按钮
-    this.addCapacity = transform:Find("Scroll View/Viewport/Content/AddItem/WareHouseBG/AddCapacity").gameObject--容量
-    this.money = transform:Find("Scroll View/Viewport/Content/AddItem/MoneyBG/Money").gameObject--所需金额
 
     this.bg = transform:Find("rightRoot/bg"):GetComponent("RectTransform");
     this.transport = transform:Find("rightRoot/bg/transport").gameObject;

@@ -42,7 +42,6 @@ function CenterWareHouseCtrl:Awake()
     switchIsShow = false;
 
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.backBtn,self.c_OnBackBtn,self);
-    centerWareHousetBehaviour:AddClick(CenterWareHousePanel.addBtn,self.c_OnAddBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportBtn,self.c_TransportBtn,self);
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportCloseBtn,self.c_transportCloseBtn,self)
     centerWareHousetBehaviour:AddClick(CenterWareHousePanel.transportConfirmBtn,self.c_transportConfirmBtn,self)
@@ -99,7 +98,6 @@ function CenterWareHouseCtrl:_initData()
     CenterWareHousePanel.number:GetComponent("Text").text = getColorString(numTab);
     CenterWareHousePanel.slider:GetComponent("Slider").maxValue = self.totalCapacity;
     CenterWareHousePanel.slider:GetComponent("Slider").value = self.number;
-    CenterWareHousePanel.money:GetComponent("Text").text = self.money;
 end
 
 --点击删除物品
@@ -236,7 +234,6 @@ end
 --运输按钮
 function CenterWareHouseCtrl:c_TransportBtn(go)
     PlayMusEff(1002)
-    CenterWareHousePanel.addItem:SetActive(false);
     isSelect = false;
     WareHouseGoodsMgr:_setActiva(isSelect)
     CenterWareHouseCtrl:OnClick_transportBtn(not switchIsShow);

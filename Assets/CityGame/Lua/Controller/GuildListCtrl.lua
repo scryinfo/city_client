@@ -60,7 +60,7 @@ function GuildListCtrl:_addListener()
     Event.AddListener("c_OnJoinSociety", self.c_OnJoinSociety, self)
 end
 
---注销model层网络回调h
+--注销model层网络回调
 function GuildListCtrl:_removeListener()
     Event.RemoveListener("c_OnSocietyList", self.c_OnSocietyList, self)
     Event.RemoveListener("c_OnSocietyInfo", self.c_OnSocietyInfo, self)
@@ -74,6 +74,7 @@ function GuildListCtrl:Refresh()
     self:_showView()
 end
 
+-- 打开model
 function GuildListCtrl:initInsData()
     DataManager.OpenDetailModel(GuildListModel, OpenModelInsID.GuildListCtrl)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_GetSocietyList')
@@ -87,6 +88,7 @@ function GuildListCtrl:Hide()
     UIPanel.Hide(self)
 end
 
+-- 根据自己有无公会判断进入的公会列表界面是否需要显示创建公会的按钮
 function GuildListCtrl:_showView()
     local societyId = DataManager.GetGuildID()
     if societyId then
@@ -98,6 +100,7 @@ function GuildListCtrl:_showView()
     end
 end
 
+-- 按照公会的人员数量排序
 function GuildListCtrl:OnMemberNumber(go)
     PlayMusEff(1002)
     if GuildListCtrl.rankId == 1 then
@@ -126,6 +129,7 @@ function GuildListCtrl:OnMemberNumber(go)
     go:_sort(GuildListCtrl.rankId)
 end
 
+-- 按照公会建立的时间排序
 function GuildListCtrl:OnTime(go)
     PlayMusEff(1002)
     if GuildListCtrl.rankId == 3 then
@@ -154,6 +158,7 @@ function GuildListCtrl:OnTime(go)
     go:_sort(GuildListCtrl.rankId)
 end
 
+-- 给数据排序
 function GuildListCtrl:_sort(rankId)
     if GuildListCtrl.societyList == nil then
         return
@@ -172,16 +177,19 @@ function GuildListCtrl:_sort(rankId)
     GuildListPanel.guildListScroll:RefillCells()
 end
 
+-- 显示创建公会界面
 function GuildListCtrl:OnClickCreate(go)
     GuildListPanel.createRoot.localScale =Vector3.one
 end
 
+-- 返回公会列表界面，关闭创建公会界面
 function GuildListCtrl:OnClickCreateBack(go)
     GuildListPanel.createRoot.localScale =Vector3.zero
     GuildListPanel.guildNameInput.text = ""
     GuildListPanel.describeInput.text = ""
 end
 
+-- 点击创建公会按钮
 function GuildListCtrl:OnSure(go)
     local guildNameInputText = GuildListPanel.guildNameInput.text
     local describeInputText = GuildListPanel.describeInput.text
@@ -247,6 +255,7 @@ function GuildListCtrl:c_OnSocietyList(societyList)
     end
 end
 
+-- 创建公会成功，关闭公会列表界面，打开公会界面
 function GuildListCtrl:c_OnSocietyInfo(societyInfo)
     GuildListPanel.guildNameInput.text = ""
     GuildListPanel.describeInput.text = ""

@@ -53,6 +53,7 @@ function GuildMemberItem:initialize(prefab, data)
     end
 end
 
+-- 点击成员item打开操作菜单
 function GuildMemberItem:_openMenu()
     local position = self.prefab.transform.position
     GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
@@ -61,6 +62,7 @@ function GuildMemberItem:_openMenu()
     self:_setButtonInteractable(false)
 end
 
+-- 设置item的背景色
 function GuildMemberItem:_setClickImageColor(isDefault)
     if isDefault then
         self.clickImage.color = getColorByVector3(GuildMemberItem.static.NomalColor)
@@ -69,16 +71,19 @@ function GuildMemberItem:_setClickImageColor(isDefault)
     end
 end
 
+-- 设置item是否能点击
 function GuildMemberItem:_setButtonInteractable(isinteractable)
     self.clickBtn.interactable = isinteractable
 end
 
+-- 显示成员头像名字等基本信息
 function GuildMemberItem:_showNameHead(playerData)
     self.nameText.text = playerData[1].name
     self.data.playerData = playerData[1]
     self.avatarData = AvatarManger.GetSmallAvatar(playerData[1].faceId, self.memberHeadBg,0.2)
 end
 
+-- 删除头像
 function GuildMemberItem:CloseAvatar()
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)

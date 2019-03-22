@@ -76,18 +76,18 @@ end
 function NoticeItem:OnBg(go)
     PlayMusEff(1002)
     if go.typeId == 12 then
-        go:GetPlayerId(go.uuidParas[1])
         type = go.typeId
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
     elseif go.typeId == 13 then
+        type = go.typeId
         pos.x = go.goodsDataInfo.intParasArr[1]
         pos.y = go.goodsDataInfo.intParasArr[2]
-        go:GetPlayerId(go.uuidParas[1])
-        type = go.typeId
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
     elseif go.typeId == 14 then
+        type = go.typeId
         pos.x = go.goodsDataInfo.intParasArr[1]
         pos.y = go.goodsDataInfo.intParasArr[2]
-        go:GetPlayerId(go.uuidParas[1])
-        type = go.typeId
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
     elseif go.typeId == 9 then
         go.content = GetLanguage(13010043,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
@@ -95,6 +95,7 @@ function NoticeItem:OnBg(go)
         go.content = GetLanguage(13010047,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
     elseif go.typeId == 3 then
+        type = go.typeId
         nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
         goodsName = GetLanguage(go.goodsDataInfo.intParasArr[1])
         num = go.goodsDataInfo.intParasArr[2]
@@ -103,15 +104,14 @@ function NoticeItem:OnBg(go)
         else
             go:GetProduceDepartment(go.uuidParas[1])
         end
-        type = go.typeId
     elseif go.typeId == 2 then
+        type = go.typeId
         nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
         if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
             go:GetMateralDetailInfo(go.uuidParas[1])
         elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
             go:GetProduceDepartment(go.uuidParas[1])
         end
-        type = go.typeId
     end
     Event.Brocast("c_onBg",go)
 end
@@ -122,7 +122,7 @@ end
 
 --获取玩家信息
 function NoticeItem:GetPlayerId(playerid)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
+    --DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
 end
 
 --获取原料厂建筑详情
@@ -157,20 +157,18 @@ function NoticeItem:_removeListener()
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
-    if self.hide then
-        self.name = playerData.info[1].name
-        if type == 12 then
-            self.content = GetLanguage(13010051,self.name)
-            GameNoticePanel.rightContent.text = self.content
-        elseif type == 13 then
-            self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
-            GameNoticePanel.rightContent.text = self.content
-        elseif type == 14 then
-            self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
-            GameNoticePanel.rightContent.text = self.content
-        end
-        --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
+    self.name = playerData[1].name
+    if type == 12 then
+        self.content = GetLanguage(13010051,self.name)
+        GameNoticePanel.rightContent.text = self.content
+    elseif type == 13 then
+        self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
+        GameNoticePanel.rightContent.text = self.content
+    elseif type == 14 then
+        self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
+        GameNoticePanel.rightContent.text = self.content
     end
+    --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
 end
 
 function NoticeItem:c_MaterialInfo(name)

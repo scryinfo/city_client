@@ -9,11 +9,11 @@ Sprite_Chinese =
     ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-sell.png",
     ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-rent.png",
     --中心建筑
-    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon-cityinfo-C.png",
-    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse-C.png",
-    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon-C.png",
+    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon-cityinfo-C.png",
+    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse-C.png",
+    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon-C.png",
     --中心仓库
-    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-centerwarehouse-C.png",
+    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse-C.png",
     --建筑自带仓库、货架
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse-C.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf-C.png",
@@ -24,11 +24,11 @@ Sprite_English={
    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
    --中心建筑
-   ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon -city info.png",
-   ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/central warehouse1.png",
-   ["CBSoon"] = "Assets/CityGame/Resources/Atlas/multilanguage/coming soon.png",
+   ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
+   ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
+   ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
    --中心仓库
-   ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-centerwarehouse.png",
+   ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
     --建筑自带仓库、货架
    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",

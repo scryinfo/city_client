@@ -3,21 +3,6 @@
 --- Created by xuyafang.
 --- DateTime: 2018/9/19 10:17
 ---管理建筑首页的信息toggle mgr
-require 'View/BuildingInfo/OccupancyRateItem'
-require 'View/BuildingInfo/RentalItem'
-
-require 'View/BuildingInfo/LineChartRateItem'
-require 'View/BuildingInfo/AdLineChartItem'
-require 'View/BuildingInfo/StaffRateItem'
-require 'View/BuildingInfo/WarehouseRateItem'
-require 'View/BuildingInfo/ShelfRateItem'
-require 'View/BuildingInfo/HomeProductionLineItem'
-require 'View/BuildingInfo/AdvertisementShowItem'
-require'View/BuildingInfo/ParkInfoItem'
-require 'View/BuildingInfo/TicketItem'
-
-
-
 BuildingInfoToggleGroupMgr = class('BuildingInfoToggleGroupMgr')
 
 BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME = 0.5  --item动画时间
@@ -27,9 +12,7 @@ BuildingInfoToggleGroupMgr.static.RIGHT_POS = Vector2.New(0, 50)
 BuildingInfoToggleGroupMgr.static.MIDDLE_POS=Vector2.New(0,50)
 
 BuildingInfoToggleGroupMgr.static.HOUSE_OCC_PATH = "View/BuildingMainPageInfoItem/HouseOccupancyRateItem"  --住宅入住率预制路径
-BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH = "View/BuildingMainPageInfoItem/HouseRentalItem"  --住宅租金
 
-BuildingInfoToggleGroupMgr.static.HOUSE_STAFF_PATH = "View/BuildingMainPageInfoItem/StaffRateItem"  --员工管理预制
 BuildingInfoToggleGroupMgr.static.Material_lINECHART_PATH = "View/BuildingMainPageInfoItem/LineChartRateItem" --折线图预制
 BuildingInfoToggleGroupMgr.static.Material_WAREHOUSE_PATH = "View/BuildingMainPageInfoItem/WarehouseRateItem" --仓库
 BuildingInfoToggleGroupMgr.static.Material_SHELF_PATH = "View/BuildingMainPageInfoItem/ShelfRateItem"  --货架
@@ -45,9 +28,6 @@ BuildingInfoToggleGroupMgr.static.Municipal_ParkInfo_Path="View/BuildingMainPage
 BuildingInfoToggleGroupMgr.static.Municipal_Ticket_Path="View/BuildingMainPageInfoItem/TicketItem"--门票信息
 BuildingInfoToggleGroupMgr.static.Laboratory_Path = "View/BuildingMainPageInfoItem/LabBuildingInfoResearchItem"  --研究线
 BuildingInfoToggleGroupMgr.static.BuildingBrand_Path = "View/BuildingMainPageInfoItem/BuildingBrandItem"  --品牌品质
-
-BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path = "View/TalentCenterItem/TalentManagementItem"  --人才管理
-BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path = "View/TalentCenterItem/ExcavateTalentsItem"  --挖掘人才
 
 
 --初始化
@@ -74,8 +54,6 @@ function BuildingInfoToggleGroupMgr:initialize(leftRect, rightRect, mainPanelLua
         self:_creatResearchLineInfo()
     elseif buildingData.buildingType == BuildingType.RetailShop then
         self:_creatRetailShop()
-    elseif buildingData.buildingType == BuildingType.TalentCenter then
-        self:_creatTalentInfo()
     end
 
     --创建完之后调整item位置
@@ -95,8 +73,6 @@ function BuildingInfoToggleGroupMgr:updateInfo(buildingData)
         self:_creatProcessingInfo()
     elseif buildingData.buildingType == BuildingType.Laboratory then
         self:_creatResearchLineInfo()
-    elseif buildingData.buildingType == BuildingType.TalentCenter then
-        self:_creatTalentInfo()
     elseif buildingData.buildingType == BuildingType.RetailShop then
         self:_creatRetailShop()
     end
@@ -478,29 +454,6 @@ function BuildingInfoToggleGroupMgr:_creatResearchLineInfo()
     local researchLineToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}
     self.rightData[1] = self:_creatResearchLine(researchLineToggleData)
 end
---人才中心
-function BuildingInfoToggleGroupMgr:_creatTalentInfo()
-   -- 员工  左1
-   -- local staffToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}
-   -- self.leftData[1] = self:_createStaff(staffToggleData)
-
-    local lineToggleData = { pos = BuildingInfoTogglePos.Left, index = 1}  --处于toggleMgr的位置
-    self.leftData[1] = self:_createLineChart(lineToggleData)
-    --人才管理  左2
-    local management = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.TalentManagementItem_Path, self.leftRect)
-    management.gameObject.name = "TalentManagement"
-    local managementToggleData = { pos = BuildingInfoTogglePos.Left, index = 2}  --处于toggleMgr的位置
-    local managementLuaItem = ManagementItem:new(nil, self._clickItemFunc, management, self.mainPanelLuaBehaviour, managementToggleData, self)
-    self.leftData[2] = managementLuaItem
-
-    --挖掘人才
-    local excavate
-    excavate = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.ExcavateTalentsItem_Path, self.rightRect)
-    excavate.gameObject.name = "ExcavateTalents"
-    local excavateToggleData = { pos = BuildingInfoTogglePos.Right, index = 1}  --处于toggleMgr的位置
-    local excavateLuaItem = ExcavateItem:new(nil, self._clickItemFunc, excavate, self.mainPanelLuaBehaviour, excavateToggleData, self)
-    self.rightData[1] = excavateLuaItem
-end
 
 ---通用部分
 --折线图
@@ -620,30 +573,6 @@ function BuildingInfoToggleGroupMgr:_creatOccupancy(occToggleData)
 
     self.occupancyLuaItem = OccupancyRateItem:new(occData, self._clickItemFunc, self.occupancyViewRect, self.mainPanelLuaBehaviour, occToggleData, self)
     return self.occupancyLuaItem
-end
---租金
-function BuildingInfoToggleGroupMgr:_creatRental(rentalToggleData)
-    if not self.rentalViewRect then
-        if rentalToggleData.pos == BuildingInfoTogglePos.Left then
-            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.leftRect)
-        else
-            self.rentalViewRect = self:_creatItemObj(BuildingInfoToggleGroupMgr.static.HOUSE_RENTAL_PATH, self.rightRect)
-        end
-        self.rentalViewRect.gameObject.name = "Rental"
-    end
-
-    local rentalData = {}
-    rentalData.buildingId = self.toggleData.info.id
-    rentalData.buildingTypeId = self.toggleData.info.mId
-    rentalData.rent = self.toggleData.rent
-    rentalData.suggestRent = self.toggleData.rent
-    --rentalData.effectiveDate = "2018/09/21/08:00:00"  --有效时间有待修改，为第二天的8点，需要读配置
-    local endStr = os.date("%Y/%m/%d %H:%M", os.time() + 86400)
-    rentalData.effectiveDate = endStr
-
-    rentalData.isOther = self.toggleData.isOther  --
-    local rentalLuaItem = RentalItem:new(rentalData, self._clickItemFunc, self.rentalViewRect, self.mainPanelLuaBehaviour, rentalToggleData, self)
-    return rentalLuaItem
 end
 ---研究所部分
 --研究线

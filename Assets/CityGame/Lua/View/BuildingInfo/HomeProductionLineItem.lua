@@ -90,10 +90,10 @@ function HomeProductionLineItem:initializeInfo(productionLineData)
     self.Capacity = self:GetWarehouseCapacity(self.productionData.store)
 
     if not productionLineData then
-        self.add:SetActive(true)
+        --self.add:SetActive(true)
         return;
     end
-    self.add:SetActive(false)
+    --self.add:SetActive(false)
     for key,value in pairs(productionLineData) do
         local prefab = self.loadingItemPrefab(self.LineItem,self.content)
         local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId,self.productionData.store,self.Capacity)
@@ -181,6 +181,6 @@ function HomeProductionLineItem:DeleteLineRefresh(dataInfo)
             HomeProductionLineItem.lineItemTable[key] = nil
         end
     end
-    self.add:SetActive(true)
+    --self.add:SetActive(true)
     Event.Brocast("SmallPop",GetLanguage(28010006),300)
 end

@@ -57,6 +57,7 @@ function GuildMessageItem:initialize(prefab, data)
     end
 end
 
+-- 显示成员信息
 function GuildMessageItem:_showNameHead(playerData)
     local str = "1111"
     local data = self.data

@@ -16,10 +16,6 @@ end
 --初始化面板--
 function CreateRolePanel.InitPanel()
     this.createRoleBtn = transform:Find("CreateRoleButton").gameObject;
-    this.male = transform:Find("male").gameObject;
-    this.maleText = transform:Find("male/Text").gameObject:GetComponent("Text");
-    this.female = transform:Find("female").gameObject;
-    this.femaleText = transform:Find("female/Text").gameObject:GetComponent("Text");
     this.nickname = transform:Find("InputField_Nickname").gameObject;
     this.name = transform:Find("InputField_Nickname/Nickname").gameObject:GetComponent("Text");
     this.nicknameText = transform:Find("InputField_Nickname/Placeholder").gameObject:GetComponent("Text");

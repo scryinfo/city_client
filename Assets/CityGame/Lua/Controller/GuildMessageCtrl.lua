@@ -61,6 +61,7 @@ function GuildMessageCtrl:Refresh()
     self:_showView()
 end
 
+-- 打开model
 function GuildMessageCtrl:initInsData()
     DataManager.OpenDetailModel(GuildMessageModel, OpenModelInsID.GuildMessageCtrl)
     --DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildMessageCtrl, "m_GetSocietyInfo", {id = self.m_data})
@@ -71,6 +72,7 @@ function GuildMessageCtrl:Hide()
     UIPanel.Hide(self)
 end
 
+-- 显示界面各项信息
 function GuildMessageCtrl:_showView()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
@@ -103,6 +105,7 @@ function GuildMessageCtrl:_showView()
     end
 end
 
+-- 是否显示申请红点
 function GuildMessageCtrl:_showNotice()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
@@ -114,18 +117,22 @@ function GuildMessageCtrl:_showNotice()
     end
 end
 
+-- 显示消息提示
 function GuildMessageCtrl:_showScroll(playerData)
     GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
+-- 打开公会列表界面
 function GuildMessageCtrl:OnGuildList(go)
     ct.OpenCtrl("GuildListCtrl")
 end
 
+-- 打开公会申请界面
 function GuildMessageCtrl:OnApplyList(go)
     ct.OpenCtrl("GuildApplyCtrl")
 end
 
+-- 点击退出按钮
 function GuildMessageCtrl:OnQuit(go)
     local ownIdentity = GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()
     local societyInfoMembers = DataManager.GetGuildMembers()

@@ -43,7 +43,7 @@ function GuildApplyCtrl:_addListener()
     Event.AddListener("c_NewJoinReq", self.c_NewJoinReq, self)
 end
 
---注销model层网络回调h
+--注销model层网络回调
 function GuildApplyCtrl:_removeListener()
     Event.RemoveListener("c_DelJoinReq", self.c_DelJoinReq, self)
     Event.RemoveListener("c_NewJoinReq", self.c_NewJoinReq, self)
@@ -54,6 +54,7 @@ function GuildApplyCtrl:Refresh()
     self:_showView()
 end
 
+-- 打开model
 function GuildApplyCtrl:initInsData()
     DataManager.OpenDetailModel(GuildApplyModel, OpenModelInsID.GuildApplyCtrl)
     --DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildApplyCtrl, "m_GetSocietyInfo", {id = self.m_data})
@@ -64,6 +65,7 @@ function GuildApplyCtrl:Hide()
     UIPanel.Hide(self)
 end
 
+-- 显示申请列表
 function GuildApplyCtrl:_showView()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo and societyInfo.reqs then

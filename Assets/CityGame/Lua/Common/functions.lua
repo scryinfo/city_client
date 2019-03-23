@@ -598,10 +598,12 @@ function prints(str)
 end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)
-function SetYScale(transform, max)
-    local scale = math.ceil(max / (transform.childCount - 1))
-	for i = 1, transform.childCount - 1 do
-		transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+function SetYScale(max,count,transform)
+    local scale = math.ceil(max / (count))
+	if transform ~= nil then
+		for i = 1, count do
+			transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+		end
 	end
 	return scale
 end

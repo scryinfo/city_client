@@ -2,7 +2,7 @@ require('Controller/AdjustProductionLineCtrl')
 
 HomeProductionLineItem = class('HomeProductionLineItem')
 HomeProductionLineItem.static.TOTAL_H = 308  --整个Item的高度
-HomeProductionLineItem.static.CONTENT_H = 223  --显示内容的高度
+HomeProductionLineItem.static.CONTENT_H = 379  --显示内容的高度
 HomeProductionLineItem.static.TOP_H = 100  --top条的高度
 HomeProductionLineItem.static.Line_PATH = "View/GoodsItem/LineItem"
 HomeProductionLineItem.storeData = {}
@@ -48,6 +48,7 @@ function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRe
     Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
     Event.AddListener("DeleteLineRefresh",self.DeleteLineRefresh,self)
     Event.AddListener("DeleteLine",self.DeleteLine,self)
+    Event.AddListener("SetLineOrder",self.SetLineOrder,self)
 end
 
 --获取是第几次点击了
@@ -160,17 +161,34 @@ function HomeProductionLineItem:DeleteLine(ins)
     data.titleInfo = GetLanguage(28010004)
     data.contentInfo = GetLanguage(28010005)
     --data.tipInfo = GetLanguage(28010006)
-    local materialKey,goodsKey = 21,22
-    if math.floor(ins.itemId / 100000) == materialKey then
+    --local materialKey,goodsKey = 21,22
+    if self.productionData.buildingType == BuildingType.MaterialFactory then
         data.btnCallBack = function()
             Event.Brocast("m_ReqMaterialDeleteLine",ins.buildingId,ins.lineId)
         end
-    elseif math.floor(ins.itemId / 100000) == goodsKey then
+    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
         data.btnCallBack = function()
             Event.Brocast("m_ReqProcessDeleteLine",ins.buildingId,ins.lineId)
         end
     end
+    --if math.floor(ins.itemId / 100000) == materialKey then
+    --    data.btnCallBack = function()
+    --        Event.Brocast("m_ReqMaterialDeleteLine",ins.buildingId,ins.lineId)
+    --    end
+    --elseif math.floor(ins.itemId / 100000) == goodsKey then
+    --    data.btnCallBack = function()
+    --        Event.Brocast("m_ReqProcessDeleteLine",ins.buildingId,ins.lineId)
+    --    end
+    --end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
+end
+--生产线置顶
+function HomeProductionLineItem:SetLineOrder(ins)
+    if self.productionData.buildingType == BuildingType.MaterialFactory then
+        Event.Brocast("m_ReqMaterialSetLineOrder",ins.buildingId,ins.lineId,2)
+    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
+        Event.Brocast("m_ReqMaterialSetLineOrder",ins.buildingId,ins.lineId,2)
+    end
 end
 --删除主页面生产线回调
 function HomeProductionLineItem:DeleteLineRefresh(dataInfo)

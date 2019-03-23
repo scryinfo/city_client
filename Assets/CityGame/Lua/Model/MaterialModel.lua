@@ -17,6 +17,7 @@ function MaterialModel:OnCreate()
     Event.AddListener("m_ReqMaterialDeleteLine",self.m_ReqDeleteLine,self)
     Event.AddListener("m_ReqMaterialBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.AddListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
+    Event.AddListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -33,6 +34,7 @@ function MaterialModel:OnCreate()
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
 end
 
 function MaterialModel:Close()
@@ -82,6 +84,10 @@ end
 --销毁仓库原料或商品
 function MaterialModel:m_ReqDelItem(buildingId,id,producerId,qty)
     self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
+end
+--生产线置顶
+function MaterialModel:m_ReqSetLineOrder(buildingId,lineId,pos)
+    self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
 ---服务器回调---
 --打开原料厂
@@ -136,4 +142,9 @@ end
 --销毁仓库原料或商品
 function MaterialModel:n_OnDelItemInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'DestroyAfterRefresh',data)
+end
+--生产线置顶
+function MaterialModel:n_OnSetLineOrderInform(data)
+    local aaa = data
+    local bbb = ""
 end

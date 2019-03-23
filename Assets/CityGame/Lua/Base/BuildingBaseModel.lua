@@ -57,3 +57,8 @@ function BuildingBaseModel:m_ReqDeleteLine(buildingId,lineId)
     local lMsg = {buildingId = buildingId, lineId = lineId}
     DataManager.ModelSendNetMes("gscode.OpCode","ftyDelLine","gs.DelLine",lMsg)
 end
+--生产线置顶
+function BuildingBaseModel:m_ReqSetLineOrder(buildingId,lineId,pos)
+    local lMsg = {buildingId = buildingId,lineId = lineId,lineOrder = pos}
+    DataManager.ModelSendNetMes("gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",lMsg)
+end

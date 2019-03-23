@@ -37,9 +37,11 @@ function LineItem:initialize(lineInfo,prefab,LuaBehaviour,buildingId,materialDat
     self.countdownText = prefab.transform:Find("countdownText"):GetComponent("Text")
     self.tip = prefab.transform:Find("tipImg")
     self.tipText = prefab.transform:Find("tipImg/Text"):GetComponent("Text")
+    self.Button = prefab.transform:Find("Button")
 
     self:InitializeData()
     LuaBehaviour:AddClick(self.deleteBtn.gameObject,self.OnClick_deleteBtn,self)
+    LuaBehaviour:AddClick(self.Button.gameObject,self.OnClick_Button,self)
     Event.AddListener("c_refreshNowConte",self.refreshNowConte,self)
 end
 --生产线初始化
@@ -166,7 +168,7 @@ function LineItem:Update()
         end
     end
     --检查生产线总时间
-    if self.time <= 0 then
+    if self.time == nil or self.time <= 0 then
         self.timeText.text = "00:00:00"
         self.countdownText.text = "00:00"
         self.productionSlider.value = 0
@@ -284,6 +286,11 @@ end
 function LineItem:OnClick_deleteBtn(go)
     PlayMusEff(1002)
     Event.Brocast("DeleteLine",go)
+end
+--置顶
+function LineItem:OnClick_Button(go)
+    PlayMusEff(1002)
+    Event.Brocast("SetLineOrder",go)
 end
 --移除事件
 function LineItem:closeEvent()

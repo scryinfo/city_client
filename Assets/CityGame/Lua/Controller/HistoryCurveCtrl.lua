@@ -52,8 +52,6 @@ end
 function HistoryCurveCtrl:initData()
     HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
-
-
 end
 
 function HistoryCurveCtrl:OnBack()
@@ -131,14 +129,14 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
     data.supplyNumValue = supplyNumValue
-    local max = 0
-    for i, v in ipairs(data.supplyNumValue) do
-        if v.y > max then
-            max = v.y
-        end
-    end
-    maxValue = max
-    local scale =  SetYScale(HistoryCurvePanel.yScale,maxValue)
+    --local max = 0
+    --for i, v in ipairs(data.supplyNumValue) do
+    --    if v.y > max then
+    --        max = v.y
+    --    end
+    --end
+    --maxValue = max
+    --local scale =  SetYScale(HistoryCurvePanel.yScale,maxValue)
     --data.supplyNumVet = {}
     --for i, v in ipairs(data.supplyNumValue) do
     --    data.supplyNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
@@ -199,15 +197,18 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
     local scale
     if max > maxValue then
         maxValue = max
-        scale = SetYScale(HistoryCurvePanel.yScale,maxValue)
+        scale = SetYScale(maxValue,6,HistoryCurvePanel.yScale)
     end
 
     local demandNumVet = {}
     for i, v in ipairs(demandNumValue) do
         demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
-    end
+end
 
     HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
     HistoryCurvePanel.slide:SetCoordinate(demandNumVet,demandNumValue,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+
+    HistoryCurvePanel.curve.localPosition = HistoryCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    HistoryCurvePanel.curve.sizeDelta = HistoryCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 

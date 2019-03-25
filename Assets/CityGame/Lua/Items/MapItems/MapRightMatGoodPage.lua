@@ -92,6 +92,12 @@ end
 --去地图上的一个建筑
 function MapRightMatGoodPage:_goHereBtn()
     MapBubbleManager.GoHereFunc(self.data.buildingBase)
+    local blockId = TerrainManager.GridIndexTurnBlockID(self.data.buildingBase.pos)
+    local tempValue = DataManager.GetBaseBuildDataByID(blockId)
+    if tempValue ~= nil then
+        tempValue:OpenPanel()
+        CameraMove.MoveIntoUILayer(blockId)
+    end
 end
 --左翻
 function MapRightMatGoodPage:_leftChangeBtn()

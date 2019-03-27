@@ -685,5 +685,9 @@ UnitTest.Exec("wk24_abel_mutiConnect_revMsg", "wk24_abel_mutiConnect_revMsg",  f
     end)
 end)
 
+UnitTest.Exec("cycle_0327_testSlider", "cycle_0327",  function ()
+    ct.OpenCtrl("BuildingSetSalaryCtrl")
+end)
+
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

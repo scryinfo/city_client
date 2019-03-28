@@ -599,6 +599,9 @@ end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)
 function SetYScale(max,count,transform)
+	if max == 0 then
+		return 0
+	end
     local scale = math.ceil(max / (count))
 	if transform ~= nil then
 		for i = 1, count do

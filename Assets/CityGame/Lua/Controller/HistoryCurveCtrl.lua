@@ -5,7 +5,6 @@
 ---历史曲线图ctrl
 HistoryCurveCtrl = class('HistoryCurveCtrl',UIPanel)
 UIPanel:ResgisterOpen(HistoryCurveCtrl)
---HistoryCurveCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local curveBehaviour
 local maxValue = 0

@@ -85,8 +85,6 @@ function ServerListModel:registerGsNetMsg()
     --gs网络回调注册
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","login","gs.LoginACK",self.n_GsLoginSuccessfully,self)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),ServerListModel.n_GsLoginSuccessfully);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),ServerListModel.n_OnRoleLogin);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleLogin","gs.Role",self.n_OnRoleLogin,self)
 end
 function ServerListModel:n_GsLoginSuccessfully( lMsg )

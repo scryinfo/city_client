@@ -9,7 +9,9 @@ function BasePartDetail:initialize(groupClass,go)
     self.groupClass =  groupClass
     self.go = go
     self.transform = go.transform
+    self:_InitTransform()
 end
+
 
 --显示详情
 function BasePartDetail:Show()
@@ -19,6 +21,11 @@ end
 
 --TODO://子类需要重写刷新详情
 function BasePartDetail:RefreshData(data)
+
+end
+
+--TODO://子类务必重写，初始化独特组件
+function BasePartDetail:_InitTransform()
 
 end
 

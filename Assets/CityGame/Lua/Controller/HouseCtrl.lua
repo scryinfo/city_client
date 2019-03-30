@@ -25,8 +25,8 @@ function HouseCtrl:Awake(go)
     this = self
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
-    self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+    --self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
+    --self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
 function HouseCtrl:Refresh()
@@ -85,29 +85,22 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp
 
-    HousePanel.stopIconBtn.localScale = Vector3.one
+    --HousePanel.stopIconBtn.localScale = Vector3.one
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
-        HousePanel.stopIconBtn.localScale = Vector3.zero
+        --HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
     end
     self.m_data.buildingType = BuildingType.House
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans)
-        self.groupMgr:AddParts()
+        self.groupMgr:AddParts(BuildingSalaryPart, 1)
     else
         --self.groupMgr:updateInfo(self.m_data)
     end
 end
 
---点击中间按钮的方法
-function HouseCtrl:_centerBtnFunc(ins)
-    PlayMusEff(1002)
-    if ins.m_data then
-        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
-    end
-end
 --点击开业按钮方法
 function HouseCtrl:_openBuildingBtnFunc(ins)
     PlayMusEff(1002)

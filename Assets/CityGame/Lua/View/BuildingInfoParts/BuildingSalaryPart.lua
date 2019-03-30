@@ -24,7 +24,6 @@ function BuildingSalaryPart:RefreshData(data)
 end
 --
 function BuildingSalaryPart:_getComponent(transform)
-    self.openBtn = transform:Find("bottom/normal/btn"):GetComponent("Button")
     self.salaryPercentText = transform:Find("Top/salaryPercentText"):GetComponent("Text")
 end
 --

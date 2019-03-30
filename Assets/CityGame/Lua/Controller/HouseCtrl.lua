@@ -75,10 +75,10 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 
     if houseDetailData.info.state == "OPERATE" then
-        HousePanel.stopRootTran.localScale = Vector3.zero
+        --HousePanel.stopRootTran.localScale = Vector3.zero
     else
-        HousePanel.stopRootTran.localScale = Vector3.one
-        HousePanel.stopText01.text = GetLanguage(40010016)
+        --HousePanel.stopRootTran.localScale = Vector3.one
+        --HousePanel.stopText01.text = GetLanguage(40010016)
     end
 
     local insId = self.m_data.insId
@@ -94,8 +94,9 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
     self.m_data.buildingType = BuildingType.House
     if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans)
+        self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
         self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:TurnOffAllOptions()
     else
         --self.groupMgr:updateInfo(self.m_data)
     end

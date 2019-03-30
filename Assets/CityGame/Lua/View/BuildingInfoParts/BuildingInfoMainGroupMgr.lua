@@ -13,9 +13,8 @@ function BuildingInfoMainGroupMgr:initialize(mainGroupGO,mainPanelLuaBehaviour,a
     if mainGroupGO ~= nil then
         self.mainGroupTrans = mainGroupGO.transform
     end
+    self.m_data = nil
 end
-
-
 
 ------------------------------------------------------------------公共函数---------------------------------------------
 --初始化某个Part
@@ -55,9 +54,12 @@ end
 
 --刷新整体数据
 function BuildingInfoMainGroupMgr:RefreshData(data)
+    if data ~= nil and self.m_data == nil then
+        self.m_data = data
+    end
     if self.myParts ~= nil then
         for key, value in ipairs(self.myParts) do
-            value:RefreshData(data) --刷新数据
+            value:RefreshData(self.m_data) --刷新数据
         end
     end
 end

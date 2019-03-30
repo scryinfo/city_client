@@ -5,13 +5,11 @@ function BasePartDetail.PrefabName()
     return "BasePartDetail"
 end
 
-function BasePartDetail:initialize(groupClass,go)
+function BasePartDetail:initialize(groupClass,trans)
     self.groupClass =  groupClass
-    self.go = go
-    self.transform = go.transform
-    self:_InitTransform()
+    self.go = trans.gameObject
+    self.transform = trans
 end
-
 
 --显示详情
 function BasePartDetail:Show()
@@ -21,11 +19,6 @@ end
 
 --TODO://子类需要重写刷新详情
 function BasePartDetail:RefreshData(data)
-
-end
-
---TODO://子类务必重写，初始化独特组件
-function BasePartDetail:_InitTransform()
 
 end
 

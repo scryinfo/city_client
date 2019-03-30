@@ -1,7 +1,6 @@
 BuildingInfoMainGroupMgr = class('BuildingInfoMainGroupMgr')
-BuildingInfoMainGroupMgr.static.ITEM_MOVE_TIME = 0.5   --item动画时间
 
-
+--BuildingInfoMainGroupMgr.static.ITEM_MOVE_TIME = 0.5   --item动画时间
 
 --初始化基础数据
 --alignType ： 对齐方式 （左对齐/右对齐/中心对齐）
@@ -14,6 +13,26 @@ function BuildingInfoMainGroupMgr:initialize(mainGroupGO,mainPanelLuaBehaviour,a
         self.mainGroupTrans = mainGroupGO.transform
     end
     self.m_data = nil
+end
+
+-------------------------------------------------------------------私有函数--------------------------------------------
+
+--计算初始化的时候的X位置
+function BuildingInfoMainGroupMgr:_CaculationPartPositionX()
+    local posX = - (self.totalWidthPercentage * 1920) * Game.ScreenRatio
+    return posX
+end
+
+--计算初始化的时候的Part宽度
+function BuildingInfoMainGroupMgr:_CaculationPartWidthByWidthPercentage(widthPercentage)
+    local sizeWidth = (widthPercentage * 1920) * Game.ScreenRatio
+    return sizeWidth
+end
+
+--计算初始化的时候的Part宽度
+function BuildingInfoMainGroupMgr:_CaculationPartWidthByPixel(widthPixel)
+    local sizeWidth = (widthPixel) * Game.ScreenRatio
+    return sizeWidth
 end
 
 ------------------------------------------------------------------公共函数---------------------------------------------
@@ -82,22 +101,12 @@ function BuildingInfoMainGroupMgr:GetPartDatailGameObject(partDetailName)
 end
 
 
--------------------------------------------------------------------私有函数--------------------------------------------
---计算初始化的时候的X位置
-function BuildingInfoMainGroupMgr:_CaculationPartPositionX()
-    local posX = - (self.totalWidthPercentage * 1920) * Game.ScreenRatio
-    return posX
+--关闭页面，应清除所有实例，并将UI显示还原，注销监听事件
+function BuildingInfoMainGroupMgr:Destroy()
+    if self.myParts ~= nil then
+        for key, value in ipairs(self.myParts) do
+            value:Destroy() --注销Part
+        end
+    end
+    self = nil
 end
---计算初始化的时候的Part宽度
-function BuildingInfoMainGroupMgr:_CaculationPartWidthByWidthPercentage(widthPercentage)
-    local sizeWidth = (widthPercentage * 1920) * Game.ScreenRatio
-    return sizeWidth
-end
---计算初始化的时候的Part宽度
-function BuildingInfoMainGroupMgr:_CaculationPartWidthByPixel(widthPixel)
-    local sizeWidth = (widthPixel) * Game.ScreenRatio
-    return sizeWidth
-end
-
-
--------------------------------------------------------------------具体需求实现--------------------------------------------

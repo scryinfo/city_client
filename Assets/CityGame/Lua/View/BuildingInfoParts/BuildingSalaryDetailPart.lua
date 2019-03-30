@@ -9,52 +9,57 @@ function BuildingSalaryDetailPart:PrefabName()
     return "BuildingSalaryDetailPart"
 end
 --
+function  BuildingSalaryDetailPart:_InitEvent()
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
+end
+--
+function BuildingSalaryDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.wageSlider.onValueChanged:AddListener(function (value)
+        local tempValue = math.floor(value)
+        self:_showPercentValue(tempValue)
+    end)
+
+    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
+        self:clickCloseBtn()
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
+        self:clickConfirmBtn()
+    end , self)
+end
+--
+function BuildingSalaryDetailPart:_ResetTransform()
+    self.totalText.text = "E0.0000"
+    self.staffNumText.text = 0
+    self.standardWageText.text = "E0.0000"
+    self.totalText.text = "E0.0000"
+    self.effectiveDateText.text = ""
+    self.effectText.text = "0%"
+    self.effectExpWordText.text = ""
+
+    self.wageSlider.value = 0
+    self:_showPercentValue(0)
+end
+--
+function BuildingSalaryDetailPart:_RemoveEvent()
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
+end
+--
+function BuildingSalaryDetailPart:_RemoveClick()
+    self.wageSlider.onValueChanged:RemoveAllListeners()
+    self.closeBtn.onClick:RemoveAllListeners()
+    self.confirmBtn.onClick:RemoveAllListeners()
+end
+--
 function BuildingSalaryDetailPart:RefreshData(data)
+    if data == nil then
+        return
+    end
     self.m_data = data
     self:_initFunc()
 end
 --
 function BuildingSalaryDetailPart:_InitTransform()
     self:_getComponent(self.transform)
-    self:_Awake()
-end
---关掉界面时的操作
-function BuildingSalaryDetailPart:_Hide()
-
-end
-
-
---function BuildingSalaryDetailPart:Refresh()
---    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
---end
---
---function BuildingSalaryDetailPart:Hide()
---    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
---end
-
-
---
-function BuildingSalaryDetailPart:_Awake()
-    self.wageSlider.onValueChanged:AddListener(function (value)
-        local tempValue = math.floor(value)
-        self:_showPercentValue(tempValue)
-    end)
-
-    --self.closeBtn.onClick:RemoveAllListeners()
-    self.closeBtn.onClick:AddListener(function ()
-        self:clickCloseBtn()
-    end)
-    --self.confirmBtn.onClick:RemoveAllListeners()
-    self.confirmBtn.onClick:AddListener(function ()
-        self:clickConfirmBtn()
-    end)
-
-    --self.luaBehaviour:AddClick(self.closeBtn, function ()
-    --    self:clickCloseBtn()
-    --end , self)
-    --self.luaBehaviour:AddClick(self.confirmBtn, function ()
-    --    self:clickConfirmBtn()
-    --end , self)
 end
 --
 function BuildingSalaryDetailPart:_getComponent(transform)
@@ -82,14 +87,8 @@ function BuildingSalaryDetailPart:_getComponent(transform)
 end
 --
 function BuildingSalaryDetailPart:_initFunc()
-    if self.m_data == nil or self.m_data.info == nil then
-        self.wageSlider.value = 0
-        self:_showPercentValue(0)
-        return
-    end
-
     if self.m_data.info.salary ~= nil then
-        local value = (self.m_data.info.salary - 50) / 15
+        local value = (self.m_data.info.salary - 50) / 25
         if value < 0 then
             value = 0
         end
@@ -107,13 +106,14 @@ function BuildingSalaryDetailPart:_initFunc()
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-        self.totalText.text = "E"..self.m_data.info.salary * staffNum * GetClientPriceString(standardWage)
+        local value = self.m_data.info.salary * staffNum * standardWage
+        self.totalText.text = "E"..GetClientPriceString(value)
     end
 
     local trueTextW = self.effectiveDateText.preferredWidth
     self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
     self.effectTime = TimeSynchronized.GetTheCurrentTime()
-    self.effectiveDateText.text = os.date("%Y/%m%d %H:%M:%S", self.effectTime)
+    self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
 end
 
 --根据选中的档位显示数据
@@ -160,9 +160,20 @@ function BuildingSalaryDetailPart:_getStandardWage(data)
 end
 --
 function BuildingSalaryDetailPart:clickConfirmBtn()
-
+    local value = self.wageSlider.value * 25 + 50
+    if value == self.m_data.info.salary then
+        Event.Brocast("SmallPop", "设置没有更改", 300)
+        return
+    end
+    self:_ReqSetSalary(self.m_data.info.id, TimeSynchronized.GetTheCurrentServerTime(), value)
 end
 --
 function BuildingSalaryDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
+end
+--
+function BuildingSalaryDetailPart:_ReqSetSalary(insId, ts, salary)
+    local msgId = pbl.enum("gscode.OpCode","setSalary")
+    local pMsg = assert(pbl.encode("gs.SetSalary", {buildingId = insId, ts = ts, Salary = salary}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end

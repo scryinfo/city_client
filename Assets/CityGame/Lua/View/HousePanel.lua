@@ -17,10 +17,10 @@ function HousePanel.InitPanel()
     this.groupTrans = transform:Find("bottomRoot")
     this.topRootTran = transform:Find("topRoot")
     this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
+    this.stopIconBtn = transform:Find("topRoot/openBtn")
 
     --this.centerBtn = transform:Find("centerBtn")
     --this.stopRootTran = transform:Find("stopRoot")
-    --this.stopIconBtn = transform:Find("stopRoot/stopIconBtn")
     --
     --this.stopText01 = transform:Find("stopRoot/Text"):GetComponent("Text")
 end

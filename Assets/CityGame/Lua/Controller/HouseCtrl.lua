@@ -75,9 +75,9 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 
     if houseDetailData.info.state == "OPERATE" then
-        --HousePanel.stopRootTran.localScale = Vector3.zero
+        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
-        --HousePanel.stopRootTran.localScale = Vector3.one
+        HousePanel.stopIconBtn.localScale = Vector3.one
         --HousePanel.stopText01.text = GetLanguage(40010016)
     end
 
@@ -85,10 +85,8 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp
 
-    --HousePanel.stopIconBtn.localScale = Vector3.one
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
-        --HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
     end
@@ -108,5 +106,13 @@ function HouseCtrl:_openBuildingBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data then
         Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+    end
+end
+--
+function HouseCtrl:_refreshSalary(data)
+    if self.m_data ~= nil then
+        self.m_data.info.salary = data.Salary
+        self.m_data.info.setSalaryTs = data.ts
+        self.groupMgr:RefreshData(self.m_data)
     end
 end

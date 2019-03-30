@@ -13,12 +13,18 @@ function BuildingSalaryPart:GetDetailClass()
     return BuildingSalaryDetailPart
 end
 --
+function  BuildingSalaryPart:_ResetTransform()
+    self.salaryPercentText.text = "0%"
+end
+--
 function BuildingSalaryPart:_InitTransform()
     self:_getComponent(self.transform)
 end
 --
 function BuildingSalaryPart:RefreshData(data)
-    self.partDetail:RefreshData(data)
+    if data == nil then
+        return
+    end
     self.m_data = data
     self:_initFunc()
 end
@@ -28,10 +34,6 @@ function BuildingSalaryPart:_getComponent(transform)
 end
 --
 function BuildingSalaryPart:_initFunc()
-    if self.m_data == nil then
-        return
-    end
-
     if self.m_data.info.salary ~= nil then
         self.salaryPercentText.text = self.m_data.info.salary.."%"
     end

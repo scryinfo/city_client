@@ -59,6 +59,6 @@ function HouseModel:n_OnReceiveHouseRentChange(rentData)
     Event.Brocast("c_onReceiveHouseRentChange", rentData)
 end
 --员工工资改变
-function HouseModel:n_OnReceiveHouseSalaryChange(salaryData)
-    Event.Brocast("c_onReceiveHouseSalaryChange", salaryData)
+function HouseModel:n_OnReceiveHouseSalaryChange(data)
+    DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_refreshSalary', data)
 end

@@ -43,8 +43,9 @@ function BuildingSetSalaryCtrl:Hide()
 end
 --
 function BuildingSetSalaryCtrl:_getComponent(go)
-    self.closeBtn = go.transform:Find("root/closeBtn").gameObject
-    self.okBtn = go.transform:Find("root/okBtn").gameObject
+    local transform = go.transform
+    self.closeBtn = transform:Find("root/closeBtn").gameObject
+    self.okBtn = transform:Find("root/okBtn").gameObject
     self.staffNumText = go.transform:Find("root/staffNum/staffNumText"):GetComponent("Text")
     self.standardWageText = go.transform:Find("root/wage/standardWageText"):GetComponent("Text")
     self.wageSlider = go.transform:Find("root/wageSlider"):GetComponent("Slider")
@@ -58,6 +59,7 @@ function BuildingSetSalaryCtrl:_getComponent(go)
     self.simple100Text = go.transform:Find("root/wageLevel/02/Text")
 
     self.effectText = go.transform:Find("root/bg/bg01/effectText"):GetComponent("Text")
+    self.effectExpWordText = transform:Find("root/bg/bg01/Text01"):GetComponent("Text")
     self.totalText = go.transform:Find("root/bg/bg02/totalText"):GetComponent("Text")
 end
 --
@@ -71,6 +73,21 @@ function BuildingSetSalaryCtrl:_initData()
     else
         self:_showPercentValue(2)
     end
+
+
+
+    self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
+    local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+    self.staffNumText.text = staffNum
+    local standardWage = DataManager.GetBuildingStandardWage()
+    if standardWage == nil then
+        DataManager.m_ReqStandardWage(self.m_data.info.mId)
+    else
+        self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
+        self.totalText.text = "E"..self.m_data.info.salary * staffNum * GetClientPriceString(standardWage)
+    end
+
+
 
     local standardWage = DataManager.GetBuildingStandardWage()
     if standardWage == nil then

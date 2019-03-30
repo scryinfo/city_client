@@ -73,7 +73,7 @@ end
 --TODO:调用加载
 function BuildingInfoMainGroupMgr:GetPartDatailGameObject(partDetailName)
     if self.mainGroupTrans ~= nil then
-        local tempGo = self.mainGroupTrans:Find("PartsDetails/".. partName)
+        local tempGo = self.mainGroupTrans:Find("PartsDetails/".. partDetailName)
         tempGo.transform.localScale = Vector3.one
         return tempGo
     end

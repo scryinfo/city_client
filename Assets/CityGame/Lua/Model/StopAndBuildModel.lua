@@ -4,13 +4,7 @@
 --- DateTime: 2018/12/25/025 17:54
 ---
 
---StopAndBuildModel=class('StopAndBuildModel',ModelBase)
 local pbl = pbl
---function StopAndBuildModel:initialize()
---    self:OnCreate()
---    UpdateBeat:Add(self._updateTime, self);
---end
-
 StopAndBuildModel={}
 local this=StopAndBuildModel
 
@@ -27,7 +21,6 @@ function StopAndBuildModel:OnCreate()
     ----注册 AccountServer消息
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","startBusiness"),this.n_startBusiness);--开业
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shutdownBusiness"),this.n_shutdownBusiness);--停业
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delBuilding"),this.n_delBuilding);--拆建筑
 end
 ---开业发包
 function StopAndBuildModel:m_startBusiness(buildingID)

@@ -205,8 +205,6 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
     table.insert(ids,buildingInfo.ownerId)
     PlayerInfoManger.GetInfos(ids,self.SaveData,self)
 
-
-
 end
 
 --todo 城市广播

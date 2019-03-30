@@ -15,63 +15,90 @@ function StopAndBuildPanel.Awake(obj)
 end
 
 function StopAndBuildPanel.InitPanel()
-    this.backBtn=transform:Find("topRoot/backBtn")
-    this.backBtn1=transform:Find("Button")
-    this.groundInfoText=transform:Find("leftRoot/topRoot/landInfo/Text"):GetComponent("Text");
-    this.personIma=transform:Find("leftRoot/topRoot/PersonInfo/Avtar/personIma"):GetComponent("Image");
-    this.nameInp=transform:Find("leftRoot/topRoot/PersonInfo/nameInp"):GetComponent("InputField")
-    this.commanyInp=transform:Find("leftRoot/topRoot/PersonInfo/commanyInp"):GetComponent("InputField")
----***********************************************************************************************************---
-    this.greenBtn1=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image1/Button")
-    this.select1=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image1/select")
+    this.backBtn=transform:Find("topRoot/top/backBtn")
+    this.topicText=transform:Find("topRoot/top/backBtn/Text"):GetComponent("Text");
 
-    this.greenBtn2=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image2/Button")
-    this.select2=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image2/select")
+    this.buildingInfoBtn=transform:Find("topRoot/botton/body/buildingInfo/normol");
+    this.buildingInfoText=transform:Find("topRoot/botton/body/buildingInfo/normol/Text"):GetComponent("Text");
+    this.buildingSelectedInfoBtn=transform:Find("topRoot/botton/body/buildingInfo/selected");
+    this.buildingSelectedInfoText=transform:Find("topRoot/botton/body/buildingInfo/selected/Text"):GetComponent("Text");
 
-    this.greenBtn3=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image3/Button")
-    this.select3=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image3/select")
+    this.landInfomationBtn=transform:Find("topRoot/botton/body/Land infomation/normol");
+    this.landInfomationText=transform:Find("topRoot/botton/body/Land infomation/normol/Text"):GetComponent("Text");
+    this.landInfomationSelectedBtn=transform:Find("topRoot/botton/body/Land infomation/selected");
+    this.landInfomationSelectedText=transform:Find("topRoot/botton/body/Land infomation/selected/Text"):GetComponent("Text");
 
-    this.greenBtn4=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image4/Button")
-    this.select4=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image4/select")
+    this.buildingInfoRoot=transform:Find("buildingInfoRoot")
+    this.landInfoRoot=transform:Find("landInfoRoot")
 
-    this.greenBtn5=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image5/Button")
-    this.select5=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image5/select")
+    this.buildingNameText=transform:Find("buildingInfoRoot/body/changName/Text"):GetComponent("Text")
+    this.nameBtn=transform:Find("buildingInfoRoot/body/changName/btn")
+    this.buildingIconIma=transform:Find("buildingInfoRoot/body/icon"):GetComponent("Image")
 
-    this.greenBtn6=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image6/Button")
-    this.select6=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image6/select")
+    this.buildTimeNameText=transform:Find("buildingInfoRoot/body/time/Text"):GetComponent("Text")
+    this.buildTimeText=transform:Find("buildingInfoRoot/body/time/Text (1)"):GetComponent("Text")
 
-    this.greenBtn7=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image7/Button")
-    this.select7=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image7/select")
+    this.stopBtn=transform:Find("buildingInfoRoot/body/operate/close")
+    this.removeBtn=transform:Find("buildingInfoRoot/body/operate/destory")
+    ---********************************************************************LandInfo**************************************************************************
+    this.lease=transform:Find("landInfoRoot/body/leasePersonInfo/Avtar/personIma")
+    this.leasePersonInfoRoot=transform:Find("landInfoRoot/body/leasePersonInfo")
+    this.nameText=transform:Find("landInfoRoot/body/leasePersonInfo/nameRoot/Text"):GetComponent("Text")
+    this.sexIma=transform:Find("landInfoRoot/body/leasePersonInfo/nameRoot/Text/sex"):GetComponent("Image")
+    this.commpanyNameText=transform:Find("landInfoRoot/body/leasePersonInfo/commpanyRoot/Text"):GetComponent("Text")
 
-    this.greenBtn8=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image8/Button")
-    this.select8=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image8/select")
+    this.leaseNameText=transform:Find("landInfoRoot/body/leasePersonInfo/lease/nameText"):GetComponent("Text")
+    this.leaseText=transform:Find("landInfoRoot/body/leasePersonInfo/lease/Text"):GetComponent("Text")
 
-    this.greenBtn9=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image9/Button")
-    this.select9=transform:Find("leftRoot/bottonRoot/Scroll View/Viewport/Content/Image9/select")
-  ------------************************* TODO:Left info **************************************---------------
-    this.dateText=transform:Find("leftRoot/bottonRoot/infoRoot/tenancyRoot/nameText"):GetComponent("Text")
-    this.date=transform:Find("leftRoot/bottonRoot/infoRoot/tenancyRoot/Text"):GetComponent("Text")
+    this.rentNameText=transform:Find("landInfoRoot/body/leasePersonInfo/rent/nameText"):GetComponent("Text")
+    this.rentText=transform:Find("landInfoRoot/body/leasePersonInfo/rent/Text"):GetComponent("Text")
 
-    this.dailyRentText=transform:Find("leftRoot/bottonRoot/infoRoot/daily/nameText"):GetComponent("Text")
-    this.dailyRent=transform:Find("leftRoot/bottonRoot/infoRoot/daily/Text"):GetComponent("Text")
+    --续租按钮预制上有   代码上没找过
+    this.owenerPersonInfoRoot=transform:Find("landInfoRoot/body/owenerPersonInfo")
 
-    this.depositText=transform:Find("leftRoot/bottonRoot/infoRoot/deposit/nameText"):GetComponent("Text")
-    this.deposit=transform:Find("leftRoot/bottonRoot/infoRoot/deposit/Text"):GetComponent("Text")
-    ------------************************* TODO:Right info **************************************---------------
-    this.rightPerIma=transform:Find("rightRoot/topRoot/PersonInfo/Avtar/personIma"):GetComponent("Image")
-    this.operatorText=transform:Find("rightRoot/topRoot/landInfo/Text"):GetComponent("Text");
-    this.rightnameInp=transform:Find("rightRoot/topRoot/PersonInfo/nameInp"):GetComponent("InputField")
-    this.rightcommanyInp=transform:Find("rightRoot/topRoot/PersonInfo/commanyInp"):GetComponent("InputField")
-    this.scaleText=transform:Find("rightRoot/bottonRoot/infoRoot/scale/nameText"):GetComponent("Text");
-    this.scale=transform:Find("rightRoot/bottonRoot/infoRoot/scale/Text"):GetComponent("Text");
-    this.constructText=transform:Find("rightRoot/bottonRoot/infoRoot/construct/nameText"):GetComponent("Text");
-    this.construct=transform:Find("rightRoot/bottonRoot/infoRoot/construct/Text"):GetComponent("Text");
-    this.tips=transform:Find("rightRoot/bottonRoot/Panel/tips"):GetComponent("Text");
-    this.stopBtn=transform:Find("rightRoot/bottonRoot/Panel/stop")
-    this.removeBtn=transform:Find("rightRoot/bottonRoot/Panel/remove")
-    this.stopIconRoot=transform:Find("stopIconROOT")
-    this.stopText=transform:Find("stopIconROOT/Text"):GetComponent("Text")
+    this.buyTimeNameText=transform:Find("landInfoRoot/body/owenerPersonInfo/lease/nameText"):GetComponent("Text")
+    this.buyTimeText=transform:Find("landInfoRoot/body/owenerPersonInfo/lease/Text"):GetComponent("Text")
 
+    this.ownerRentNameText=transform:Find("landInfoRoot/body/owenerPersonInfo/rent/nameText"):GetComponent("Text")
+    this.ownerRentText=transform:Find("landInfoRoot/body/owenerPersonInfo/rent/Text"):GetComponent("Text")
+
+
+    ---***********************************************************************************************************---
+    this.greenBtn1=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image1/Button")
+    this.blueBtn1=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image1/Button (1)")
+    this.select1=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image1/select")
+
+    this.greenBtn2=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image2/Button")
+    this.blueBtn2=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image2/Button (1)")
+    this.select2=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image2/select")
+
+    this.greenBtn3=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image3/Button")
+    this.blueBtn3=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image3/Button (1)")
+    this.select3=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image3/select")
+
+    this.greenBtn4=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image4/Button")
+    this.blueBtn4=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image4/Button (1)")
+    this.select4=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image4/select")
+
+    this.greenBtn5=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image5/Button")
+    this.blueBtn5=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image5/Button (1)")
+    this.select5=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image5/select")
+
+    this.greenBtn6=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image6/Button")
+    this.blueBtn6=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image6/Button (1)")
+    this.select6=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image6/select")
+
+    this.greenBtn7=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image7/Button")
+    this.blueBtn7=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image7/Button (1)")
+    this.select7=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image7/select")
+
+    this.greenBtn8=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image8/Button")
+    this.blueBtn8=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image8/Button (1)")
+    this.select8=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image8/select")
+
+    this.greenBtn9=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image9/Button")
+    this.blueBtn9=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image9/Button (1)")
+    this.select9=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image9/select")
 end
 --数据初始化
 function StopAndBuildPanel.InitDate(MunicipalData)
@@ -88,19 +115,37 @@ function StopAndBuildPanel:CloseBtn()
     this.greenBtn7.localScale=Vector3.zero
     this.greenBtn8.localScale=Vector3.zero
     this.greenBtn9.localScale=Vector3.zero
+
+    this.blueBtn1.localScale=Vector3.zero
+    this.blueBtn2.localScale=Vector3.zero
+    this.blueBtn3.localScale=Vector3.zero
+    this.blueBtn4.localScale=Vector3.zero
+    this.blueBtn5.localScale=Vector3.zero
+    this.blueBtn6.localScale=Vector3.zero
+    this.blueBtn7.localScale=Vector3.zero
+    this.blueBtn8.localScale=Vector3.zero
+    this.blueBtn9.localScale=Vector3.zero
     this.select1.localScale=Vector3.zero
 
 end
 
 --数据初始化
 function StopAndBuildPanel:ChangeLanguage()
-    this.operatorText.text=GetLanguage(40010002)
-    this.groundInfoText.text=GetLanguage(40010001)
-    this.scaleText.text=GetLanguage(40010003)
-    this.constructText.text=GetLanguage(40010004)
-    this.tips.text=GetLanguage(40010007)
-    this.dateText.text=GetLanguage(40010005)
-    this.dailyRentText.text=GetLanguage(40010006)
-    this.depositText.text=GetLanguage(40010017)
-    this.stopText.text=GetLanguage(40010016)
+    --this.topicText
+    --this.buildingInfoText
+    --this.buildingSelectedInfoText
+    --this.landInfomationText
+    --landInfomationSelectedText
+    --this.buildTimeNameText
+    --this.buyTimeNameText
+    --this.ownerRentNameText
+    --this.operatorText.text=GetLanguage(40010002)
+    --this.groundInfoText.text=GetLanguage(40010001)
+    --this.scaleText.text=GetLanguage(40010003)
+    --this.constructText.text=GetLanguage(40010004)
+    --this.tips.text=GetLanguage(40010007)
+    --this.dateText.text=GetLanguage(40010005)
+    --this.dailyRentText.text=GetLanguage(40010006)
+    --this.depositText.text=GetLanguage(40010017)
+    --this.stopText.text=GetLanguage(40010016)
 end

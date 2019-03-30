@@ -3,6 +3,9 @@
 --- Created by Administrator.
 --- DateTime: 2018/12/25/025 17:50
 ---
+
+---====================================================================================框架函数==============================================================================================
+
 StopAndBuildCtrl = class('StopAndBuildCtrl',UIPanel)
 UIPanel:ResgisterOpen(StopAndBuildCtrl) --注册打开的方法
 --构建函数
@@ -18,6 +21,26 @@ function StopAndBuildCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
 local panel
+
+--todo：刷新
+function StopAndBuildCtrl:Refresh()
+    panel:ChangeLanguage()
+    local data=self.m_data
+    self:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
+
+    ----刷新人物信息
+    self:updateBuildingInfo(data)
+    ----刷新按钮
+    self:updateBtn(data)
+end
+function  StopAndBuildCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
+function StopAndBuildCtrl:Close()
+    UIPanel.Close(self)
+end
+
 function StopAndBuildCtrl:Awake(go)
 
     panel=StopAndBuildPanel
@@ -25,17 +48,31 @@ function StopAndBuildCtrl:Awake(go)
     self.materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(panel.stopBtn.gameObject,self.OnClick_stop,self);
     self.materialBehaviour:AddClick(panel.removeBtn.gameObject,self.OnClick_remove,self);
-    self.materialBehaviour:AddClick(panel.backBtn1.gameObject,self.OnClick_backBtn1,self);
+    self.materialBehaviour:AddClick(panel.removeBtn.gameObject,self.OnClick_remove,self);
+    self.materialBehaviour:AddClick(panel.buildingInfoBtn.gameObject,self.OnClick_build,self);
+    self.materialBehaviour:AddClick(panel.landInfomationBtn.gameObject,self.OnClick_land,self);
+    self.materialBehaviour:AddClick(panel.nameBtn.gameObject,self.OnClick_changeName,self);
+----------------------------------------------------------------------------------------------------------
+    self.materialBehaviour:AddClick((panel.greenBtn1).gameObject,self.OnClick_greenBtn1,self);
+    self.materialBehaviour:AddClick((panel.greenBtn2).gameObject,self.OnClick_greenBtn2,self);
+    self.materialBehaviour:AddClick((panel.greenBtn3).gameObject,self.OnClick_greenBtn3,self);
+    self.materialBehaviour:AddClick((panel.greenBtn4).gameObject,self.OnClick_greenBtn4,self);
+    self.materialBehaviour:AddClick((panel.greenBtn5).gameObject,self.OnClick_greenBtn5,self);
+    self.materialBehaviour:AddClick((panel.greenBtn6).gameObject,self.OnClick_greenBtn6,self);
+    self.materialBehaviour:AddClick((panel.greenBtn7).gameObject,self.OnClick_greenBtn7,self);
+    self.materialBehaviour:AddClick((panel.greenBtn8).gameObject,self.OnClick_greenBtn8,self);
+    self.materialBehaviour:AddClick((panel.greenBtn9).gameObject,self.OnClick_greenBtn9,self);
+    ----------------------------------------------------------------------------------------------------------
+    self.materialBehaviour:AddClick((panel.blueBtn1).gameObject,self.OnClick_greenBtn1,self);
+    self.materialBehaviour:AddClick((panel.blueBtn2).gameObject,self.OnClick_greenBtn2,self);
+    self.materialBehaviour:AddClick((panel.blueBtn3).gameObject,self.OnClick_greenBtn3,self);
+    self.materialBehaviour:AddClick((panel.blueBtn4).gameObject,self.OnClick_greenBtn4,self);
+    self.materialBehaviour:AddClick((panel.blueBtn5).gameObject,self.OnClick_greenBtn5,self);
+    self.materialBehaviour:AddClick((panel.blueBtn6).gameObject,self.OnClick_greenBtn6,self);
+    self.materialBehaviour:AddClick((panel.blueBtn7).gameObject,self.OnClick_greenBtn7,self);
+    self.materialBehaviour:AddClick((panel.blueBtn8).gameObject,self.OnClick_greenBtn8,self);
+    self.materialBehaviour:AddClick((panel.blueBtn9).gameObject,self.OnClick_greenBtn9,self);
 
-      self.materialBehaviour:AddClick((panel.greenBtn1).gameObject,self.OnClick_greenBtn1,self);
-      self.materialBehaviour:AddClick((panel.greenBtn2).gameObject,self.OnClick_greenBtn2,self);
-      self.materialBehaviour:AddClick((panel.greenBtn3).gameObject,self.OnClick_greenBtn3,self);
-      self.materialBehaviour:AddClick((panel.greenBtn4).gameObject,self.OnClick_greenBtn4,self);
-      self.materialBehaviour:AddClick((panel.greenBtn5).gameObject,self.OnClick_greenBtn5,self);
-      self.materialBehaviour:AddClick((panel.greenBtn6).gameObject,self.OnClick_greenBtn6,self);
-      self.materialBehaviour:AddClick((panel.greenBtn7).gameObject,self.OnClick_greenBtn7,self);
-      self.materialBehaviour:AddClick((panel.greenBtn8).gameObject,self.OnClick_greenBtn8,self);
-      self.materialBehaviour:AddClick((panel.greenBtn9).gameObject,self.OnClick_greenBtn9,self);
     panel:CloseBtn()
     self.datas={}
     for i = 1, 9 do
@@ -44,21 +81,30 @@ function StopAndBuildCtrl:Awake(go)
     end
 end
 
+---====================================================================================点击函数==============================================================================================
+--改名
+function StopAndBuildCtrl:OnClick_changeName(ins)
+
+end
+
+
 --返回
-function StopAndBuildCtrl:OnClick_backBtn(ins)
+function StopAndBuildCtrl:OnClick_backBtn()
     panel:CloseBtn()
     UIPanel.CloseAllPageExceptMain()
     PlayMusEff(1002)
-
 end
 
---返回
-function StopAndBuildCtrl:OnClick_backBtn1(ins)
-    panel:CloseBtn()
-    UIPanel.ClosePage()
-    PlayMusEff(1002)
-
+--点击建筑信息
+function StopAndBuildCtrl:OnClick_build(ins)
+    ins:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
 end
+
+--点击土地信息
+function StopAndBuildCtrl:OnClick_land(ins)
+    ins:switchRoot(panel.landInfoRoot,panel.landInfomationSelectedBtn)
+end
+
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
     local data={}
@@ -82,44 +128,51 @@ function StopAndBuildCtrl:OnClick_stop(ins)
     data.mainText=GetLanguage(40010009)
     data.callback=function() Event.Brocast("m_shutdownBusiness",ins.m_data.id)
         panel.removeBtn.localScale=Vector3.one
-        panel.stopIconRoot.localScale=Vector3.one
+        panel.stopBtn.localScale=Vector3.zero
     end
 
     ct.OpenCtrl('ReminderCtrl',data)
     PlayMusEff(1002)
-
 end
 
-
---todo：刷新
-function StopAndBuildCtrl:Refresh()
-    panel:ChangeLanguage()
-     local data=self.m_data
-    --刷新人物信息
-    self:updatePersonInfo(data)
-    --刷新按钮
-    self:updateBtn(data)
+function StopAndBuildCtrl:OnClick_greenBtn1(ins)
+    ins:switchGroundBtn(ins,1,self)
 end
-
-function  StopAndBuildCtrl:Hide()
-    UIPanel.Hide(self)
+function StopAndBuildCtrl:OnClick_greenBtn2(ins)
+    ins:switchGroundBtn(ins,2,self)
 end
-
-function StopAndBuildCtrl:Close()
-    UIPanel.Close(self)
+function StopAndBuildCtrl:OnClick_greenBtn3(ins)
+    ins:switchGroundBtn(ins,3,self)
 end
-
-
+function StopAndBuildCtrl:OnClick_greenBtn4(ins)
+    ins:switchGroundBtn(ins,4,self)
+end
+function StopAndBuildCtrl:OnClick_greenBtn5(ins)
+    ins:switchGroundBtn(ins,5,self)
+end
+function StopAndBuildCtrl:OnClick_greenBtn6(ins)
+    ins:switchGroundBtn(ins,6,self)
+end
+function StopAndBuildCtrl:OnClick_greenBtn7(ins)
+    ins:switchGroundBtn(ins,7,self)
+end
+function StopAndBuildCtrl:OnClick_greenBtn8(ins)
+    ins:switchGroundBtn(ins,8,self)
+end
+function StopAndBuildCtrl:OnClick_greenBtn9(ins)
+    ins:switchGroundBtn(ins,9,self)
+end
+---====================================================================================业务代码==============================================================================================
+local root,btn
 local select
 --刷新按钮
 function StopAndBuildCtrl:updateBtn(buildinghInfo)
     if buildinghInfo.state=="OPERATE" then
         panel.stopBtn.localScale=Vector3.one
         panel.removeBtn.localScale=Vector3.zero
-        panel.stopIconRoot.localScale=Vector3.zero
     else
+        panel.stopBtn.localScale=Vector3.zero
         panel.removeBtn.localScale=Vector3.one
-        panel.stopIconRoot.localScale=Vector3.one
     end
 
     if DataManager.GetMyOwnerID()~=buildinghInfo.ownerId then
@@ -134,6 +187,9 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
       panel.greenBtn1.localScale=Vector3.one
         self.datas[1].personData=groundOwnerDatas[1]
         self.datas[1].groundData=groundDatas[1]
+        if groundDatas[1].Data.rent then
+            panel["blueBtn1"].localScale=Vector3.one
+        end
     elseif  x==2 then
         panel.greenBtn1.localScale=Vector3.one
         panel.greenBtn2.localScale=Vector3.one
@@ -143,6 +199,9 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
         for i, v in ipairs(table) do
             self.datas[v].personData=groundOwnerDatas[i]
             self.datas[v].groundData=groundDatas[i]
+            if groundDatas[i].Data.rent then
+                panel[("blueBtn"..tostring(i))].localScale=Vector3.one
+            end
         end
     else
         panel.greenBtn1.localScale=Vector3.one
@@ -157,55 +216,73 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
         for i, v in ipairs(self.datas) do
             self.datas[i].personData=groundOwnerDatas[i]
             self.datas[i].groundData=groundDatas[i]
+            if groundDatas[i].Data.rent then
+                panel[("blueBtn"..tostring(i))].localScale=Vector3.one
+            end
         end
     end
+
     self:updateGroundInfo(self.datas[1])
     panel.select1.localScale=Vector3.one
     select=panel.select1
     panel.greenBtn1.parent:SetAsLastSibling()
 end
 
---刷新人物信息
-function StopAndBuildCtrl:updatePersonInfo(data)
+--刷新建筑信息
+function StopAndBuildCtrl:updateBuildingInfo(data)
 
     local peronInfo=data.ctrl.groundOwnerDatas[#data.ctrl.groundOwnerDatas]
-    if  self.avatarRightData then
-        AvatarManger.CollectAvatar(self.avatarRightData)
-    end
-    self.avatarRightData= AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
 
-    panel.rightnameInp.text=peronInfo.name
-    panel.rightcommanyInp.text=peronInfo.companyName
+    --if  self.avatarRightData then
+    --    AvatarManger.CollectAvatar(self.avatarRightData)
+    --end
+    --self.avatarRightData= AvatarManger.GetSmallAvatar(peronInfo.faceId,panel.rightPerIma.transform,0.2)
+
+    --panel.rightnameInp.text=peronInfo.name
+    panel.buildingNameText.text=data.name
     ---*-226188068
-    local x=PlayerBuildingBaseData[data.mId].x
-    panel.scale.text=x.."x"..x
+    --local x=PlayerBuildingBaseData[data.mId].x
+    --panel.scale.text=x.."x"..x
+    LoadSprite(PlayerBuildingBaseData[data.mId].imgPath,panel.buildingIconIma)
     local time=getFormatUnixTime(string.sub(data.constructCompleteTs,1,10))
-    panel.construct.text=time.year.."/"..time.month.."/"..time.day
-
+    panel.buildTimeText.text=time.year.."/"..time.month.."/"..time.day
 end
 
-
---刷新左边信息
+--刷新土地信息
 function StopAndBuildCtrl:updateGroundInfo(data)
     local personData=data.personData
     local groundData=data.groundData
-    if self.avatarLeftData then
-        AvatarManger.CollectAvatar(self.avatarLeftData)
-    end
 
-    self.avatarLeftData= AvatarManger.GetSmallAvatar(personData.faceId,panel.personIma.transform,0.2)
+    if groundData  and  groundData.Data and  groundData.Data.rent then            --租聘者
+        panel.leasePersonInfoRoot.localScale=Vector3.one
+        panel.owenerPersonInfoRoot.localScale=Vector3.zero
 
-    panel.nameInp.text=personData.name
-    panel.commanyInp.text=personData.companyName
-    --- ******************** ---
-    if groundData  and  groundData.Data and  groundData.Data.rent then
-        panel.date.transform.parent.parent.localScale=Vector3.one
+        if self.avatarLeftData then
+            AvatarManger.CollectAvatar(self.avatarLeftData)
+        end
+
+        self.avatarLeftData= AvatarManger.GetSmallAvatar(personData.faceId,panel.lease.transform,0.2)
+        panel.nameText.text=personData.name
+        panel.commpanyNameText.text=personData.companyName
+
         local time=getFormatUnixTime(string.sub(groundData.Data.rent.rentBeginTs,1,10))
-        panel.date.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.rent.rentDays)
-        panel.dailyRent.text=groundData.Data.rent.rentPreDay
-        panel.deposit.text=groundData.Data.rent.deposit
-    else
-        panel.date.transform.parent.parent.localScale=Vector3.zero
+        panel.leaseText.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.rent.rentDays)
+        panel.rentText.text=groundData.Data.rent.rentPreDay/10000
+        if personData.male then
+            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/male.png",panel.sexIma)
+        else
+            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/famale.png",panel.sexIma)
+        end
+
+    else                                                                            --土地主人
+        panel.leasePersonInfoRoot.localScale=Vector3.zero
+        panel.owenerPersonInfoRoot.localScale=Vector3.one
+
+        panel.ownerRentText.text=(groundData.Data.auctionPrice/10000)
+        local time=getFormatUnixTime(string.sub(groundData.Data.auctionTs,1,10))
+        panel.buyTimeText.text=time.year.."/"..time.month.."/"..time.day
+
+        --panel.buyTimeText.text=groundData.Data.rent.rentPreDay
     end
 
     if select then
@@ -213,41 +290,29 @@ function StopAndBuildCtrl:updateGroundInfo(data)
     end
 end
 
-function StopAndBuildCtrl:change(ins,num,btn)
+--切换土地按钮
+function StopAndBuildCtrl:switchGroundBtn(ins,num,btn)
     ins:updateGroundInfo(ins.datas[num])
     btn.transform.parent:Find("select").localScale=Vector3.one
     select=btn.transform.parent:Find("select")
     select.transform.parent:SetAsLastSibling()
     PlayMusEff(1002)
-
 end
 
-function StopAndBuildCtrl:OnClick_greenBtn1(ins)
-    ins:change(ins,1,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn2(ins)
-    ins:change(ins,2,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn3(ins)
-    ins:change(ins,3,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn4(ins)
-    ins:change(ins,4,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn5(ins)
-    ins:change(ins,5,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn6(ins)
-    ins:change(ins,6,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn7(ins)
-    ins:change(ins,7,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn8(ins)
-    ins:change(ins,8,self)
-end
-function StopAndBuildCtrl:OnClick_greenBtn9(ins)
-    ins:change(ins,9,self)
+--切换面板
+function StopAndBuildCtrl:switchRoot(panel,btN)
+    if root then
+        --root.localScale=Vector3.zero
+        --btn.localScale=Vector3.zero
+        root.gameObject:SetActive(false)
+        btn.gameObject:SetActive(false)
+    end
+    --panel.localScale=Vector3.one
+    --btN.localScale=Vector3.one
+    panel.gameObject:SetActive(true)
+    btN.gameObject:SetActive(true)
+    root=panel
+    btn=btN
 end
 
 

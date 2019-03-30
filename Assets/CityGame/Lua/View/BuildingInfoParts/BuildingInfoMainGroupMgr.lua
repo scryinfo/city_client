@@ -25,7 +25,7 @@ function BuildingInfoMainGroupMgr:AddParts(partClass,widthPercentage)
     --Part初始函数因传值:Self,posX,sizeWidth，Index
     local partIndex = #self.myParts + 1
     local partGo = self:GetPartGameObject(partClass.PrefabName())
-    local tmepPart = partClass:New(partGo,self,self:_CaculationPartPositionX(),self:_CaculationPartWidthByWidthPercentage(widthPercentage),partIndex,self.mainPanelLuaBehaviour)
+    local tmepPart = partClass:new(partGo,self,self:_CaculationPartPositionX(),self:_CaculationPartWidthByWidthPercentage(widthPercentage),partIndex,self.mainPanelLuaBehaviour)
     self.myParts[partIndex] = tmepPart
     self.totalWidthPercentage = self.totalWidthPercentage + widthPercentage
 end

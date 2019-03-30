@@ -22,7 +22,7 @@ function BasePart:initialize(go,groupClass,posX,sizeWidth,partIndex,mainPanelLua
     --创建详情
     local detailClass = self:GetDetailClass()
     local partDetailGo = groupClass:GetPartDatailGameObject(detailClass.PrefabName())
-    self.partDetail = detailClass:New(groupClass,partDetailGo)
+    self.partDetail = detailClass:new(groupClass,partDetailGo)
     --通用组件的查找
     self.selectTransform =  self.transform:Find("SelectBtn")
     self.unselectTransform =  self.transform:Find("UnselectBtn")

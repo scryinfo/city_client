@@ -1,5 +1,8 @@
 BasePartDetail = class('BasePartDetail')
 
+BasePartDetail.static.OpenDetailPartTime = 0.1
+BasePartDetail.static.OpenDetailPartEase = DG.Tweening.Ease.OutCubic
+
 function BasePartDetail:initialize(groupClass,trans,mainPanelLuaBehaviour)
     self.groupClass =  groupClass
     self.go = trans.gameObject
@@ -14,7 +17,9 @@ end
 
 --显示详情
 function BasePartDetail:Show(data)
-    self.transform.localScale = Vector3.one
+    --self.transform.localScale = Vector3.one
+    self.transform.localScale = Vector3.New(1,0,1)
+    self.transform:DOScale(Vector3.one,BasePartDetail.static.OpenDetailPartTime):SetEase(BasePartDetail.static.OpenDetailPartEase)
     self:RefreshData(data)
 end
 

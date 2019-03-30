@@ -1,7 +1,7 @@
 BasePart = class('BasePart')
 
+BasePart.static.OpenDetailPartTime = 0.1
 BasePart.static.sizeHeight = 200
-BasePart.static.DetailClass = BasePartDetail
 
 --Self,posX,sizeWidth，Index
 function BasePart:initialize(trans,groupClass,posX,sizeWidth,partIndex,mainPanelLuaBehaviour)

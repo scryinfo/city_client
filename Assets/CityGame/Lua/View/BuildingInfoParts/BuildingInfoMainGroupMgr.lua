@@ -5,14 +5,16 @@ BuildingInfoMainGroupMgr.static.ITEM_MOVE_TIME = 0.5   --item动画时间
 
 --初始化基础数据
 --alignType ： 对齐方式 （左对齐/右对齐/中心对齐）
-function BuildingInfoMainGroupMgr:initialize(mainGroupGO,alignType)
+function BuildingInfoMainGroupMgr:initialize(mainGroupGO,alignType,mainPanelLuaBehaviour)
     self.myParts ={}
     self.totalWidthPercentage = 0
     self.mainGroupGo = mainGroupGO
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     if mainGroupGO ~= nil then
         self.mainGroupTrans = mainGroupGO.transform
     end
 end
+
 
 
 ------------------------------------------------------------------公共函数---------------------------------------------
@@ -23,7 +25,7 @@ function BuildingInfoMainGroupMgr:AddParts(partClass,widthPercentage)
     --Part初始函数因传值:Self,posX,sizeWidth，Index
     local partIndex = #self.myParts + 1
     local partGo = self:GetPartGameObject(partClass.PrefabName())
-    local tmepPart = partClass:New(partGo,self,self:_CaculationPartPositionX(),self:_CaculationPartWidthByWidthPercentage(widthPercentage),partIndex)
+    local tmepPart = partClass:New(partGo,self,self:_CaculationPartPositionX(),self:_CaculationPartWidthByWidthPercentage(widthPercentage),partIndex,self.mainPanelLuaBehaviour)
     self.myParts[partIndex] = tmepPart
     self.totalWidthPercentage = self.totalWidthPercentage + widthPercentage
 end

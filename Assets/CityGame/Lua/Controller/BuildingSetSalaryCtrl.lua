@@ -69,12 +69,10 @@ function BuildingSetSalaryCtrl:_initData()
     end
 
     if self.m_data.salary ~= nil then
-        self:_showPercentValue((self.m_data.salary - 50) / 15)  --工资比率
+        self:_showPercentValue((self.m_data.salary - 50) / 25)  --工资比率
     else
         self:_showPercentValue(2)
     end
-
-
 
     self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
@@ -84,25 +82,14 @@ function BuildingSetSalaryCtrl:_initData()
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-        self.totalText.text = "E"..self.m_data.info.salary * staffNum * GetClientPriceString(standardWage)
+        local value = self.m_data.info.salary * staffNum * standardWage
+        self.totalText.text = "E"..GetClientPriceString(value)
     end
 
-
-
-    local standardWage = DataManager.GetBuildingStandardWage()
-    if standardWage == nil then
-        DataManager.m_ReqStandardWage(self.m_data.buildingType)
-    else
-        self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-    end
-
-    local staffNum = PlayerBuildingBaseData[self.m_data.buildingType].maxWorkerNum
-    self.staffNumText.text = staffNum
     local trueTextW = self.effectiveDateText.preferredWidth
     self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
-
     self.effectTime = TimeSynchronized.GetTheCurrentTime()
-    self.effectiveDateText.text = os.date("%Y/%m%d %H:%M:%S", self.effectTime)
+    self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
 end
 --根据选中的档位显示数据
 function BuildingSetSalaryCtrl:_showPercentValue(level)
@@ -142,7 +129,7 @@ end
 --
 function BuildingSetSalaryCtrl:_onClickConfirm(ins)
     if ins.m_data.callBackFunc ~= nil then
-        local sliderValue = ins.wageSlider.value * 15 + 50
+        local sliderValue = ins.wageSlider.value * 25 + 50
         ins.m_data.callBackFunc(sliderValue)
     end
     UIPanel.ClosePage()

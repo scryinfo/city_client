@@ -78,7 +78,7 @@ function BuildingInfoMainGroupMgr:RefreshData(data)
     end
     if self.myParts ~= nil then
         for key, value in ipairs(self.myParts) do
-            value:RefreshData(self.m_data) --刷新数据
+            value:Refresh(self.m_data) --刷新数据
         end
     end
 end

@@ -31,9 +31,9 @@ function BasePartDetail:RefreshData(data)
 end
 
 --显示详情
-function BasePartDetail:Show()
+function BasePartDetail:Show(data)
     self.transform.localScale = Vector3.one
-    self:Refresh()
+    self:RefreshData(data)
 end
 
 --隐藏详情

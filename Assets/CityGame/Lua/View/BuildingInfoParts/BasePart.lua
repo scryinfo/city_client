@@ -73,12 +73,12 @@ function BasePart:RefreshData(data)
 end
 
 --选中状态，并显示详情
-function BasePart:ShowDetail()
+function BasePart:ShowDetail(data)
     --切换为选中状态
     self.selectTransform.localScale = Vector3.one
     self.unselectTransform.localScale = Vector3.zero
     --显示详情
-    self.partDetail:Show()
+    self.partDetail:Show(data)
 end
 
 --未选中状态，并隐藏详情

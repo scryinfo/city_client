@@ -75,9 +75,9 @@ function BasePart:HideDetail()
 end
 
 --刷新数据--
-function BasePart:RefreshData(data)
+function BasePart:Refresh(data)
     --刷新自身数据
-    self:Refresh(data)
+    self:RefreshData(data)
     --刷新详情数据
     self.partDetail:RefreshData(data)
 end
@@ -107,7 +107,7 @@ end
 
 --TODO://子类务必重写
 --刷新数据--
-function BasePart:Refresh(data)
+function BasePart:RefreshData(data)
 
 end
 

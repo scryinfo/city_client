@@ -1,7 +1,5 @@
 BuildingInfoMainGroupMgr = class('BuildingInfoMainGroupMgr')
 
---BuildingInfoMainGroupMgr.static.ITEM_MOVE_TIME = 0.5   --item动画时间
-
 --初始化基础数据
 --alignType ： 对齐方式 （左对齐/右对齐/中心对齐）
 function BuildingInfoMainGroupMgr:initialize(mainGroupGO,mainPanelLuaBehaviour,alignType)

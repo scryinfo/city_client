@@ -5,10 +5,10 @@ function BasePartDetail.PrefabName()
     return "BasePartDetail"
 end
 
-function BasePartDetail:initialize(groupClass,go)
+function BasePartDetail:initialize(groupClass,trans)
     self.groupClass =  groupClass
-    self.go = go
-    self.transform = go.transform
+    self.go = trans.gameObject
+    self.transform = trans
 end
 
 --显示详情

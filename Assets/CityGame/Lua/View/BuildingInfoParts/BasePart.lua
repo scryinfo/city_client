@@ -14,9 +14,9 @@ function BasePart:GetDetailClass()
 end
 
 --Self,posX,sizeWidth，Index
-function BasePart:initialize(go,groupClass,posX,sizeWidth,partIndex,mainPanelLuaBehaviour)
-    self.go = go
-    self.transform = go.transform
+function BasePart:initialize(trans,groupClass,posX,sizeWidth,partIndex,mainPanelLuaBehaviour)
+    self.go = trans.gameObject
+    self.transform = trans
     self.groupClass =  groupClass
     self.partIndex = partIndex
     --创建详情

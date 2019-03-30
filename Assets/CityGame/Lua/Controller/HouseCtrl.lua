@@ -92,13 +92,14 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     else
         self.m_data.isOther = false
     end
-    self.m_data.buildingType = BuildingType.House
+    --self.m_data.buildingType = BuildingType.House
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
         self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else
-        --self.groupMgr:updateInfo(self.m_data)
+        self.groupMgr:RefreshData(self.m_data)
     end
 end
 

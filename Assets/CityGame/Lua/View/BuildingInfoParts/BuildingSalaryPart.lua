@@ -32,7 +32,7 @@ function BuildingSalaryPart:_initFunc()
         return
     end
 
-    if self.m_data.salary ~= nil then
-        self.salaryPercentText.text = self.m_data.salary
+    if self.m_data.info.salary ~= nil then
+        self.salaryPercentText.text = self.m_data.info.salary.."%"
     end
 end

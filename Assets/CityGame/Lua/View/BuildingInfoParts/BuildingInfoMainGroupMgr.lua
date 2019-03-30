@@ -35,7 +35,7 @@ function BuildingInfoMainGroupMgr:SwitchingOptions(partIndex)
     if self.myParts ~= nil and self.myParts[partIndex]  ~= nil then
         for key, value in ipairs(self.myParts) do
             if  key == partIndex then
-                value:ShowDetail() --打开详情进行显示
+                value:ShowDetail(self.m_data) --打开详情进行显示
             else
                 value:HideDetail() --隐藏详情进行显示
             end

@@ -31,20 +31,6 @@ end
 function HouseModel:m_ReqHouseDetailInfo(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailApartment","gs.Id",{ id = buildingId})
 end
-----改变房租
---function HouseModel:m_ReqHouseChangeRent(id, price)
---    if id ~= self.insId then
---        return
---    end
---    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = id, rent = price})
---end
-----改变员工工资
---function HouseModel:m_ReqHouseSetSalary(id, price)
---    if id ~= self.insId then
---        return
---    end
---    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.SetSalary",{ buildingId = id, salary = price})
---end
 --改变建筑名字
 function HouseModel:m_ReqChangeHouseName(id, name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = id, name = name})

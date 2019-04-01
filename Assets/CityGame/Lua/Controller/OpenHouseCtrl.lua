@@ -94,12 +94,12 @@ function OpenHouseCtrl:_initData()
     self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNumText.text = staffNum
-    local standardWage = DataManager.GetBuildingStandardWage()
+    local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
     if standardWage == nil then
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-        local value = self.m_data.info.salary * staffNum * standardWage
+        local value = self.m_data.info.salary * staffNum * standardWage / 100
         self.totalText.text = "E"..GetClientPriceString(value)
         self.standardWage = standardWage
     end

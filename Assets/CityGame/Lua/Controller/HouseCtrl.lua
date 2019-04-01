@@ -42,7 +42,7 @@ function HouseCtrl:Hide()
     Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
 
     if self.groupMgr ~= nil then
-        self.groupMgr:cleanItems()
+        self.groupMgr:Destroy()
     end
     self.m_data = nil
     UIPanel.Hide(self)
@@ -65,8 +65,6 @@ function HouseCtrl:_initData()
 end
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
-    Event.Brocast("c_GetBuildingInfo", houseDetailData.info)
-
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()
             PlayMusEff(1002)
@@ -75,10 +73,10 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 
     if houseDetailData.info.state == "OPERATE" then
-        HousePanel.stopIconBtn.localScale = Vector3.zero
+        HousePanel.openBusinessItem:toggleState(false)  --如果已经开业则不能显示按钮
     else
-        HousePanel.stopIconBtn.localScale = Vector3.one
-        --HousePanel.stopText01.text = GetLanguage(40010016)
+        HousePanel.openBusinessItem:toggleState(true)
+        HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)
     end
 
     local insId = self.m_data.insId
@@ -90,7 +88,6 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     else
         self.m_data.isOther = false
     end
-    --self.m_data.buildingType = BuildingType.House
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
         self.groupMgr:AddParts(BuildingSalaryPart, 1)
@@ -113,6 +110,13 @@ function HouseCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
+        self.groupMgr:RefreshData(self.m_data)
+    end
+end
+--
+function HouseCtrl:_refreshRent(data)
+    if self.m_data ~= nil then
+        self.m_data.rent = data.rent
         self.groupMgr:RefreshData(self.m_data)
     end
 end

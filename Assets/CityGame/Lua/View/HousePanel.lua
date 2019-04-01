@@ -17,10 +17,6 @@ function HousePanel.InitPanel()
     this.groupTrans = transform:Find("bottomRoot")
     this.topRootTran = transform:Find("topRoot")
     this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
-    this.stopIconBtn = transform:Find("topRoot/openBtn")
 
-    --this.centerBtn = transform:Find("centerBtn")
-    --this.stopRootTran = transform:Find("stopRoot")
-    --
-    --this.stopText01 = transform:Find("stopRoot/Text"):GetComponent("Text")
+    this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessBtn"))
 end

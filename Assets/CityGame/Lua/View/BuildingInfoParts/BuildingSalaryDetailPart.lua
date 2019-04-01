@@ -95,6 +95,7 @@ function BuildingSalaryDetailPart:_initFunc()
         self.wageSlider.value = value
         self:_showPercentValue(value)  --工资比率
     else
+        self.wageSlider.value = 2
         self:_showPercentValue(2)
     end
 

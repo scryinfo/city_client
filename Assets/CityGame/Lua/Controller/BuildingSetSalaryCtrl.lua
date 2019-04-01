@@ -6,6 +6,9 @@
 BuildingSetSalaryCtrl = class('BuildingSetSalaryCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingSetSalaryCtrl)
 
+local black = "#333333"
+local red = "#D65151"
+
 function BuildingSetSalaryCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
@@ -68,14 +71,21 @@ function BuildingSetSalaryCtrl:_initData()
         return
     end
 
-    if self.m_data.salary ~= nil then
-        self:_showPercentValue((self.m_data.salary - 50) / 25)  --工资比率
+    if self.m_data.info.salary ~= nil then
+        local value = (self.m_data.info.salary - 50) / 25
+        if value < 0 then
+            value = 0
+        end
+        self.wageSlider.value = value
+        self:_showPercentValue(value)  --工资比率
     else
+        self.wageSlider.value = 2
         self:_showPercentValue(2)
     end
 
     self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+    self.staffNum = staffNum
     self.staffNumText.text = staffNum
     local standardWage = DataManager.GetBuildingStandardWage()
     if standardWage == nil then
@@ -93,6 +103,9 @@ function BuildingSetSalaryCtrl:_initData()
 end
 --根据选中的档位显示数据
 function BuildingSetSalaryCtrl:_showPercentValue(level)
+    if self.m_data == nil then
+        return
+    end
     if level == 0 then
         self.simple50Text.localScale = Vector3.zero
         self.simple75Text.localScale = Vector3.one
@@ -101,6 +114,7 @@ function BuildingSetSalaryCtrl:_showPercentValue(level)
         self.select50Text.localScale = Vector3.one
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.zero
+        self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect50)
     elseif level == 1 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.zero
@@ -109,6 +123,7 @@ function BuildingSetSalaryCtrl:_showPercentValue(level)
         self.select50Text.localScale = Vector3.zero
         self.select75Text.localScale = Vector3.one
         self.select100Text.localScale = Vector3.zero
+        self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect75)
     elseif level == 2 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.one
@@ -117,6 +132,7 @@ function BuildingSetSalaryCtrl:_showPercentValue(level)
         self.select50Text.localScale = Vector3.zero
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.one
+        self.effectText.text = string.format("<color=%s>%s</color>", black, BuildingSalaryEffectConfig[self.m_data.info.mId].effect100)
     end
 end
 --

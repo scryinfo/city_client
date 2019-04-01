@@ -60,6 +60,7 @@ function GuildMenu:initialize(prefab)
     end)
 end
 
+-- 设置任命面板是否显示
 function GuildMenu:SetAppointRoot(isShow)
     if isShow then
         self.appointRoot.localScale = Vector3.one
@@ -68,10 +69,12 @@ function GuildMenu:SetAppointRoot(isShow)
     end
 end
 
+-- 设置操作菜单是否显示
 function GuildMenu:SetPrefabShow(isShow)
     self.prefab:SetActive(isShow)
 end
 
+-- 设置任命的按钮的颜色
 function GuildMenu:SetAppointImageColor(isShow)
     if isShow then
         self.appointImage.color = getColorByVector3(GuildMenu.static.NomalColor, 230)
@@ -80,6 +83,7 @@ function GuildMenu:SetAppointImageColor(isShow)
     end
 end
 
+-- 点击踢出按钮
 function GuildMenu:_onOut()
     PlayMusEff(1002)
     self:SetPrefabShow(false)
@@ -95,6 +99,7 @@ function GuildMenu:_onOut()
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
+-- 点击任命按钮
 function GuildMenu:_onAppoint()
     PlayMusEff(1002)
     self:SetAppointRoot(true)
@@ -123,6 +128,7 @@ function GuildMenu:_onAppoint()
     --end
 end
 
+-- 点击加好友按钮
 function GuildMenu:_onAddFriends()
     PlayMusEff(1002)
     self:SetPrefabShow(false)
@@ -139,6 +145,7 @@ function GuildMenu:_onAddFriends()
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
 
+-- 显示个人信息
 function GuildMenu:_onPersonalData()
     PlayMusEff(1002)
     self:SetPrefabShow(false)
@@ -147,6 +154,7 @@ function GuildMenu:_onPersonalData()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", playerInfo)
 end
 
+-- 任命某职位
 function GuildMenu:_onAppointerPost(index)
     PlayMusEff(1002)
     self:SetPrefabShow(false)
@@ -172,6 +180,7 @@ function GuildMenu:_onAppointerPost(index)
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
+-- 设置可任命的具体职位
 function GuildMenu:_SetIdentity()
     local playerDataIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetPlayerData().identity].index
     local ownIdentityIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()].index

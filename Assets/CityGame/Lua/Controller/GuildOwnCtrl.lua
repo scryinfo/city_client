@@ -86,6 +86,7 @@ function GuildOwnCtrl:Refresh()
     --self:_clickHomepage()
 end
 
+-- 打开model
 function GuildOwnCtrl:initInsData()
     DataManager.OpenDetailModel(GuildOwnModel, OpenModelInsID.GuildOwnCtrl)
 end
@@ -95,6 +96,7 @@ function GuildOwnCtrl:Hide()
     UIPanel.Hide(self)
 end
 
+-- 是否显示红点提示
 function GuildOwnCtrl:_showNotice()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
@@ -106,6 +108,7 @@ function GuildOwnCtrl:_showNotice()
     end
 end
 
+-- 判断是否显示修改按钮
 function GuildOwnCtrl:_showModifyBtn(ownIdentity)
     if ownIdentity == "MEMBER" then
         GuildOwnPanel.modifyNameBtn.localScale = Vector3.zero
@@ -118,6 +121,7 @@ function GuildOwnCtrl:_showModifyBtn(ownIdentity)
     end
 end
 
+-- 改公会名字
 function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = "不超过7字", btnCallBack = function (str)
@@ -134,6 +138,7 @@ function GuildOwnCtrl:OnModifyName(go)
     end})
 end
 
+-- 改公会介绍
 function GuildOwnCtrl:OnModifyIntroduction(go)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = "不超过10字", btnCallBack = function (str)
@@ -149,6 +154,7 @@ function GuildOwnCtrl:OnModifyIntroduction(go)
     end})
 end
 
+-- 改公会宣言
 function GuildOwnCtrl:OnModifyDeclaration(go)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
@@ -164,11 +170,13 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
     end})
 end
 
+-- 打开公会信息面板
 function GuildOwnCtrl:OnMoreAction(go)
     PlayMusEff(1002)
     ct.OpenCtrl("GuildMessageCtrl")
 end
 
+-- 点击员工个数排序按钮
 function GuildOwnCtrl:OnStaffNumber(go)
     PlayMusEff(1002)
     if GuildOwnCtrl.rankId == 1 then
@@ -197,6 +205,7 @@ function GuildOwnCtrl:OnStaffNumber(go)
     go:_sort(GuildOwnCtrl.rankId)
 end
 
+-- 点击加入时间排序按钮
 function GuildOwnCtrl:OnJoinTime(go)
     PlayMusEff(1002)
     if GuildOwnCtrl.rankId == 3 then
@@ -225,6 +234,7 @@ function GuildOwnCtrl:OnJoinTime(go)
     go:_sort(GuildOwnCtrl.rankId)
 end
 
+-- 数据排序及显示公会成员
 function GuildOwnCtrl:_sort(rankId)
     if GuildOwnCtrl.societyMembers == nil then
         return

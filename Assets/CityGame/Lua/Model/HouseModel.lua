@@ -18,7 +18,7 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnReceiveHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.SetRent",self.n_OnReceiveHouseRentChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","Id",self.n_OnReceiveOpenBusiness)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)

@@ -4,6 +4,10 @@
 --- DateTime: 2019/2/27 18:13
 ---建筑主界面调整工资
 BuildingSalaryDetailPart = class('BuildingSalaryDetailPart', BasePartDetail)
+
+local black = "#333333"
+local red = "#D65151"
+
 --
 function BuildingSalaryDetailPart:PrefabName()
     return "BuildingSalaryDetailPart"
@@ -107,7 +111,7 @@ function BuildingSalaryDetailPart:_initFunc()
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-        local value = self.m_data.info.salary * staffNum * standardWage
+        local value = self.m_data.info.salary * staffNum * standardWage / 100  --因为工资百分比是整数
         self.totalText.text = "E"..GetClientPriceString(value)
     end
 
@@ -130,7 +134,7 @@ function BuildingSalaryDetailPart:_showPercentValue(level)
         self.select50Text.localScale = Vector3.one
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.zero
-        self.effectText.text = BuildingSalaryEffectConfig[self.m_data.info.mId].effect50
+        self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect50)
     elseif level == 1 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.zero
@@ -139,7 +143,7 @@ function BuildingSalaryDetailPart:_showPercentValue(level)
         self.select50Text.localScale = Vector3.zero
         self.select75Text.localScale = Vector3.one
         self.select100Text.localScale = Vector3.zero
-        self.effectText.text = BuildingSalaryEffectConfig[self.m_data.info.mId].effect75
+        self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect75)
     elseif level == 2 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.one
@@ -148,7 +152,7 @@ function BuildingSalaryDetailPart:_showPercentValue(level)
         self.select50Text.localScale = Vector3.zero
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.one
-        self.effectText.text = BuildingSalaryEffectConfig[self.m_data.info.mId].effect100
+        self.effectText.text = string.format("<color=%s>%s</color>", black, BuildingSalaryEffectConfig[self.m_data.info.mId].effect100)
     end
 end
 --
@@ -156,7 +160,8 @@ function BuildingSalaryDetailPart:_getStandardWage(data)
     if data.industryWages ~= nil then
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(data.industryWages))
-        self.totalText.text = "E"..self.m_data.info.salary * PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum * GetClientPriceString(data.industryWages)
+        local value = self.m_data.info.salary * PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum * data.industryWages / 100
+        self.totalText.text = "E"..GetClientPriceString(value)
     end
 end
 --

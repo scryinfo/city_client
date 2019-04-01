@@ -40,11 +40,6 @@ end
 
 function HouseCtrl:Hide()
     Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
-
-    if self.groupMgr ~= nil then
-        self.groupMgr:Destroy()
-    end
-    self.m_data = nil
     UIPanel.Hide(self)
 end
 
@@ -67,8 +62,7 @@ end
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()
-            PlayMusEff(1002)
-            UIPanel.ClosePage()
+            self:_clickCloseBtn(self)
         end)
     end
 
@@ -104,6 +98,16 @@ function HouseCtrl:_openBuildingBtnFunc(ins)
     if ins.m_data then
         Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
     end
+end
+--
+function HouseCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+    self.m_data = nil
+    UIPanel.ClosePage()
 end
 --
 function HouseCtrl:_refreshSalary(data)

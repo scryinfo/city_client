@@ -82,7 +82,7 @@ function OpenHouseCtrl:_initData()
         if value < 0 then
             value = 0
         end
-        --self.wageSlider.value = value
+        self.wageSlider.value = value
         self:_showPercentValue(value)  --工资比率
     else
         self.wageSlider.value = 2
@@ -139,6 +139,17 @@ function OpenHouseCtrl:_showPercentValue(level)
         self.select100Text.localScale = Vector3.one
         self.effectText.text = string.format("<color=%s>%s</color>", black, BuildingSalaryEffectConfig[self.m_data.info.mId].effect100)
     end
+end
+--
+function OpenHouseCtrl:_changeTotalWage(level)
+    local value
+    if level == 0 then
+        value = self.m_data.info.salary * staffNum * standardWage
+    elseif level == 1 then
+    elseif level == 2 then
+    end
+
+    self.totalText.text = "E"..GetClientPriceString(value)
 end
 --
 function OpenHouseCtrl:_getStandardWage(data)

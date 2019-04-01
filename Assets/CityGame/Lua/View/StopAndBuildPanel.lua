@@ -105,30 +105,6 @@ function StopAndBuildPanel.InitDate(MunicipalData)
     this.MunicipalData = MunicipalData;
 end
 
-function StopAndBuildPanel:CloseBtn()
-    this.greenBtn1.localScale=Vector3.zero
-    this.greenBtn2.localScale=Vector3.zero
-    this.greenBtn3.localScale=Vector3.zero
-    this.greenBtn4.localScale=Vector3.zero
-    this.greenBtn5.localScale=Vector3.zero
-    this.greenBtn6.localScale=Vector3.zero
-    this.greenBtn7.localScale=Vector3.zero
-    this.greenBtn8.localScale=Vector3.zero
-    this.greenBtn9.localScale=Vector3.zero
-
-    this.blueBtn1.localScale=Vector3.zero
-    this.blueBtn2.localScale=Vector3.zero
-    this.blueBtn3.localScale=Vector3.zero
-    this.blueBtn4.localScale=Vector3.zero
-    this.blueBtn5.localScale=Vector3.zero
-    this.blueBtn6.localScale=Vector3.zero
-    this.blueBtn7.localScale=Vector3.zero
-    this.blueBtn8.localScale=Vector3.zero
-    this.blueBtn9.localScale=Vector3.zero
-    this.select1.localScale=Vector3.zero
-
-end
-
 --数据初始化
 function StopAndBuildPanel:ChangeLanguage()
     --this.topicText

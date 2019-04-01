@@ -73,6 +73,8 @@ function OpenHouseCtrl:_getComponent(go)
 end
 --
 function OpenHouseCtrl:_initData()
+    self.rentInput.text = ""
+
     if self.m_data == nil then
         return
     end
@@ -99,6 +101,7 @@ function OpenHouseCtrl:_initData()
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
         local value = self.m_data.info.salary * staffNum * standardWage
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.standardWage = standardWage
     end
 
     local trueTextW = self.effectiveDateText.preferredWidth
@@ -120,6 +123,7 @@ function OpenHouseCtrl:_showPercentValue(level)
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.zero
         self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect50)
+        self:_changeTotalWage(0)
     elseif level == 1 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.zero
@@ -129,6 +133,7 @@ function OpenHouseCtrl:_showPercentValue(level)
         self.select75Text.localScale = Vector3.one
         self.select100Text.localScale = Vector3.zero
         self.effectText.text = string.format("<color=%s>%s</color>", red, BuildingSalaryEffectConfig[self.m_data.info.mId].effect75)
+        self:_changeTotalWage(1)
     elseif level == 2 then
         self.simple50Text.localScale = Vector3.one
         self.simple75Text.localScale = Vector3.one
@@ -138,17 +143,24 @@ function OpenHouseCtrl:_showPercentValue(level)
         self.select75Text.localScale = Vector3.zero
         self.select100Text.localScale = Vector3.one
         self.effectText.text = string.format("<color=%s>%s</color>", black, BuildingSalaryEffectConfig[self.m_data.info.mId].effect100)
+        self:_changeTotalWage(2)
     end
 end
 --
 function OpenHouseCtrl:_changeTotalWage(level)
-    local value
-    if level == 0 then
-        value = self.m_data.info.salary * staffNum * standardWage
-    elseif level == 1 then
-    elseif level == 2 then
+    if self.standardWage == nil then
+        self.totalText.text = "E0.0000"
+        return
     end
 
+    local value
+    if level == 0 then
+        value = 50 * PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum * self.standardWage / 100
+    elseif level == 1 then
+        value = 75 * PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum * self.standardWage / 100
+    elseif level == 2 then
+        value = 100 * PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum * self.standardWage / 100
+    end
     self.totalText.text = "E"..GetClientPriceString(value)
 end
 --
@@ -156,6 +168,8 @@ function OpenHouseCtrl:_getStandardWage(data)
     if data.industryWages ~= nil then
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
         self.standardWageText.text = string.format("E%s/d", GetClientPriceString(data.industryWages))
+        self.standardWage = data.industryWages
+        self:_changeTotalWage(self.wageSlider.value)
     end
 end
 --

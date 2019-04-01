@@ -31,16 +31,16 @@ function OpenBusinessBtnItem:_clickOpenBtn()
     if self.data.type == BuildingType.House then
         ct.OpenCtrl("OpenHouseCtrl", {info = self.data.info, callBackFunc = function (salary, rent)
             if salary ~= nil and rent ~= nil then
-                self:_reqOpenBusiness(self.data.info.id)
                 self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
                 self:_reqHouseChangeRent(self.data.info.id, rent)
+                self:_reqOpenBusiness(self.data.info.id)
             end
         end})
     else
         ct.OpenCtrl("BuildingSetSalaryCtrl", {info = self.data.info, callBackFunc = function (salary)
             if salary ~= nil then
-                self:_reqOpenBusiness(self.data.info.id)
                 self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
+                self:_reqOpenBusiness(self.data.info.id)
             end
         end})
     end

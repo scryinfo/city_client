@@ -71,7 +71,7 @@ end
 
 --刷新整体数据
 function BuildingInfoMainGroupMgr:RefreshData(data)
-    if data ~= nil and self.m_data == nil then
+    if data ~= nil then
         self.m_data = data
     end
     if self.myParts ~= nil then

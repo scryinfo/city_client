@@ -112,6 +112,9 @@ end
 --
 function HouseCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置工资成功", 300)
+        end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
         self.groupMgr:RefreshData(self.m_data)

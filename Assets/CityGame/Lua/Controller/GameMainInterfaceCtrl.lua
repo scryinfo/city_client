@@ -174,8 +174,11 @@ end
 
 function GameMainInterfaceCtrl:c_openBuildingInfo(buildingInfo)
     --打开界面
-    buildingInfo.ctrl=self
-    ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
+    if buildingInfo then
+        buildingInfo.ctrl=self
+        ct.OpenCtrl('StopAndBuildCtrl',buildingInfo)
+    end
+
 end
 
 function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
@@ -201,8 +204,6 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
     local ids={}
     table.insert(ids,buildingInfo.ownerId)
     PlayerInfoManger.GetInfos(ids,self.SaveData,self)
-
-
 
 end
 

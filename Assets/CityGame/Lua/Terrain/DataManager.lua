@@ -971,7 +971,8 @@ local function LoginSuccessAndGameStart()
     ------------------------------------打开我自己可用的地块
     MyGround.CreateMyGrounds()
     --请求自己的信息
-    GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
+    --GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
+    PlayerInfoManger.GetInfos({[1] = PersonDataStack.m_owner}, DataManager.SetMyPersonalHomepageInfo, DataManager)
 end
 
 --土地集合
@@ -1303,7 +1304,8 @@ function DataManager.GetMyPersonalHomepageInfo()
 end
 
 --刷新自己的信息
-function DataManager.SetMyPersonalHomepageInfo(data)
+function DataManager.SetMyPersonalHomepageInfo(this,info)
+    local data = info[1]
     PersonDataStack.m_roleInfo.name = data.name
     PersonDataStack.m_roleInfo.companyName = data.companyName
     PersonDataStack.m_roleInfo.des = data.des
@@ -1689,7 +1691,7 @@ function DataManager.Init()
     --初始化自己的地块初始信息
     MyGround.Init()
     --建筑气泡对象池
-    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubble",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1860,9 +1862,6 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
    PlayerInfoManger.n_OnReceivePlayerInfo(stream)
-    if stream ~= nil and stream.info ~= nil and #stream.info == 1 and stream.info[1].id == DataManager.GetMyOwnerID() then
-        DataManager.SetMyPersonalHomepageInfo(stream.info[1])
-    end
 end
 
 --研究所Roll回复信息

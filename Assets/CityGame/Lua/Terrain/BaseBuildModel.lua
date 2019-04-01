@@ -12,10 +12,6 @@ BuilldingBubbleIns={}
 function BaseBuildModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
-    --建筑气泡
-    self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()
-    self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BuilldingBubbleInsManger.LuaBehaviour,data,BuilldingBubbleInsManger)
-    table.insert(BuilldingBubbleIns,self.bubbleIns)
 
     Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
@@ -30,8 +26,21 @@ function BaseBuildModel:Refresh(data)
     DataManager.RefreshPathRangeBlock(data.posID,PlayerBuildingBaseData[data.buildingID].x)
     UIBubbleManager.startBubble()
     self:CheckBubbleState()
+    --建筑气泡
     if self.bubbleIns then
-        self.bubbleIns:updateData(data)
+        if data.bubble then
+            self.bubbleIns:updateData(data)
+        else
+            DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
+            AvatarManger.CollectAvatar(self.bubbleIns.avatarData)
+        end
+    else
+        if data.bubble then
+            self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()
+            self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BuilldingBubbleInsManger.LuaBehaviour,data,BuilldingBubbleInsManger)
+            table.insert(BuilldingBubbleIns,self.bubbleIns)
+            prints(data.name.."生成气泡")
+        end
     end
 end
 
@@ -71,8 +80,12 @@ function BaseBuildModel:CheckBubbleState()
 end
 
 function BaseBuildModel:Close()
-    DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
-    self.bubbleIns=nil
+    if self.bubbleIns then
+        DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
+        AvatarManger.CollectAvatar(self.bubbleIns.avatarData)
+        self.bubbleIns = nil
+    end
+
     --删除节点
     DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --删除路径数据
@@ -80,8 +93,6 @@ function BaseBuildModel:Close()
     --清除建筑GameObject
     if self.go ~= nil then
         MapObjectsManager.RecyclingGameObjectToPool(PlayerBuildingBaseData[self.Data.buildingID].poolName,self.go)
-        DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubble)
-        self.bubbleIns=nil
     end
     if self.bubbleItem ~= nil then
         self.bubbleItem:Close()

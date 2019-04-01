@@ -13,8 +13,8 @@ function  PromoteCompanyCtrl:bundleName()
 end
 
 function PromoteCompanyCtrl:initialize()
-    --UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    --UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
@@ -30,9 +30,7 @@ function PromoteCompanyCtrl:Active()
 end
 
 function PromoteCompanyCtrl:Refresh()
-    DataManager.OpenDetailModel(HistoryCurveModel,self.insId )
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcTypeNum')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve',self.m_data)
+
 end
 
 function PromoteCompanyCtrl:Hide()

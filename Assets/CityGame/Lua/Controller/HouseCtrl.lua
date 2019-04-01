@@ -25,10 +25,8 @@ function HouseCtrl:Awake(go)
     this = self
     self.gameObject = go
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    --self.houseBehaviour:AddClick(HousePanel.backBtn.gameObject, self._backBtn, self)
-    --self.houseBehaviour:AddClick(HousePanel.changeNameBtn.gameObject, self._changeName, self)
-    self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
-    self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+    --self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
+    --self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
 function HouseCtrl:Refresh()
@@ -43,8 +41,8 @@ end
 function HouseCtrl:Hide()
     Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
 
-    if self.houseToggleGroup then
-        self.houseToggleGroup:cleanItems()
+    if self.groupMgr ~= nil then
+        self.groupMgr:cleanItems()
     end
     self.m_data = nil
     UIPanel.Hide(self)
@@ -77,72 +75,44 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 
     if houseDetailData.info.state == "OPERATE" then
-        HousePanel.stopRootTran.localScale = Vector3.zero
+        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
-        HousePanel.stopRootTran.localScale = Vector3.one
-        HousePanel.stopText01.text = GetLanguage(40010016)
+        HousePanel.stopIconBtn.localScale = Vector3.one
+        --HousePanel.stopText01.text = GetLanguage(40010016)
     end
 
-    --HousePanel.nameText.text = houseDetailData.info.name or "SRCY CITY"
-    --HousePanel.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[houseDetailData.info.mId].typeName)
     local insId = self.m_data.insId
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp
 
-    HousePanel.stopIconBtn.localScale = Vector3.one
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
-        --HousePanel.changeNameBtn.localScale = Vector3.zero
-        HousePanel.stopIconBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        --HousePanel.changeNameBtn.localScale = Vector3.one
     end
-    self.m_data.buildingType = BuildingType.House
-    if not self.houseToggleGroup then
-        self.houseToggleGroup = BuildingInfoToggleGroupMgr:new(HousePanel.leftRootTran, HousePanel.rightRootTran, self.houseBehaviour, self.m_data, HousePanel.brandRootTran)
+    --self.m_data.buildingType = BuildingType.House
+    if self.groupMgr == nil then
+        self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
+        self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:RefreshData(self.m_data)
+        self.groupMgr:TurnOffAllOptions()
     else
-        self.houseToggleGroup:updateInfo(self.m_data)
+        self.groupMgr:RefreshData(self.m_data)
     end
 end
 
----更改名字
---function HouseCtrl:_changeName(ins)
---    PlayMusEff(1002)
---    local data = {}
---    data.titleInfo = GetLanguage(25040001)
---    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
---    data.btnCallBack = function(name)
---        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeHouseName', ins.m_data.insId, name)
---        ins:_updateName(name)
---    end
---    ct.OpenCtrl("InputDialogPageCtrl", data)
---end
----返回
---function HouseCtrl:_backBtn(ins)
---    PlayMusEff(1002)
---    if ins.houseToggleGroup then
---        ins.houseToggleGroup:cleanItems()
---    end
---    UIPanel.ClosePage()
---end
-
----更改名字成功
---function HouseCtrl:_updateName(name)
---    HousePanel.nameText.text = name
---end
-
---点击中间按钮的方法
-function HouseCtrl:_centerBtnFunc(ins)
-    PlayMusEff(1002)
-    if ins.m_data then
-        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
-    end
-end
 --点击开业按钮方法
 function HouseCtrl:_openBuildingBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data then
         Event.Brocast("c_beginBuildingInfo", ins.m_data.info, ins.Refresh)
+    end
+end
+--
+function HouseCtrl:_refreshSalary(data)
+    if self.m_data ~= nil then
+        self.m_data.info.salary = data.Salary
+        self.m_data.info.setSalaryTs = data.ts
+        self.groupMgr:RefreshData(self.m_data)
     end
 end

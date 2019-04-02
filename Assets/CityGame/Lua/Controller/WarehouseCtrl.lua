@@ -50,11 +50,13 @@ function WarehouseCtrl:_addListener()
     Event.AddListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.AddListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
     Event.AddListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
+    Event.AddListener("SetAutoReplenish",self.SetAutoReplenish,self)
 end
 function WarehouseCtrl:_removeListener()
     Event.RemoveListener("SelectedGoodsItem",self.SelectedGoodsItem,self)
     Event.RemoveListener("DestroyWarehouseItem",self.DestroyWarehouseItem,self)
     Event.RemoveListener("MaterialUpdateLatestData",self.UpdateLatestData,self)
+    Event.RemoveListener("SetAutoReplenish",self.SetAutoReplenish,self)
 end
 function WarehouseCtrl:Refresh()
     itemNumber = nil
@@ -128,7 +130,8 @@ function WarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         --如果架子上是空的
         if not ins.m_data.shelf.good then
             if ins:WhetherValidShelfOp(value1) == true then
-                Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
+                Event.Brocast("m_ReqMaterialShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty,value1.ToggleBtn.isOn)
+                --Event.Brocast("m_ReqMaterialSetAutoReplenish",ins.buildingId,value1.itemId,value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty,ins.ToggleBtn)
             else
                 noMatch[#noMatch + 1] = value1.itemId
             end
@@ -332,6 +335,11 @@ function WarehouseCtrl:UpdateLatestData(dataInfo)
     inHand.key = key
     inHand.n = dataInfo.nowCountStore
     self:RefreshCreateItem(inHand,WarehousePanel.warehouseItem,WarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
+end
+--自动补货
+function WarehouseCtrl:SetAutoReplenish(ins)
+    self.ToggleBtn = ins.ToggleBtn.isOn
+    --Event.Brocast("m_ReqMaterialSetAutoReplenish",self.buildingId,ins.goodsDataInfo.key.id,ins.goodsDataInfo.key.producerId,ins.goodsDataInfo.key.qty,ins.ToggleBtn.isOn)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开上架或运输Panel

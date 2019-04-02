@@ -18,6 +18,7 @@ function MaterialModel:OnCreate()
     Event.AddListener("m_ReqMaterialBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.AddListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
     Event.AddListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
+    Event.AddListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -29,6 +30,7 @@ function MaterialModel:OnCreate()
     --货架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     --生产线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
@@ -39,6 +41,17 @@ end
 
 function MaterialModel:Close()
     --清空本地UI事件
+    Event.RemoveListener("m_ReqCloseMaterial",self.m_ReqCloseMaterial,self)
+    Event.RemoveListener("m_MaterialTransport",self.m_ReqBuildingTransport,self)
+    Event.RemoveListener("m_ReqMaterialShelfAdd",self.m_ReqShelfAdd,self)
+    Event.RemoveListener("m_ReqMaterialModifyShelf",self.m_ReqModifyShelf,self)
+    Event.RemoveListener("m_ReqMaterialShelfDel",self.m_ReqShelfDel,self)
+    Event.RemoveListener("m_ReqMaterialAddLine",self.m_ReqAddLine,self)
+    Event.RemoveListener("m_ReqMaterialDeleteLine",self.m_ReqDeleteLine,self)
+    Event.RemoveListener("m_ReqMaterialBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
+    Event.RemoveListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
+    Event.RemoveListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
+    Event.RemoveListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
 end
 ---客户端请求---
 --打开原料厂
@@ -58,8 +71,8 @@ function MaterialModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
-function MaterialModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
-    self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
+function MaterialModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --修改货架价格
 function MaterialModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
@@ -89,6 +102,11 @@ end
 function MaterialModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
+----自动补货
+function MaterialModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+end
+
 ---服务器回调---
 --打开原料厂
 function MaterialModel:n_OnOpenMaterial(stream)
@@ -145,6 +163,11 @@ function MaterialModel:n_OnDelItemInfo(data)
 end
 --生产线置顶
 function MaterialModel:n_OnSetLineOrderInform(data)
+    local aaa = data
+    local bbb = ""
+end
+--自动补货
+function MaterialModel:n_OnSetAutoReplenish(data)
     local aaa = data
     local bbb = ""
 end

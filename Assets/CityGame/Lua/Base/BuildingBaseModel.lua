@@ -11,8 +11,8 @@ end
 ---客户端请求---
 ---仓库---
 --上架
-function BuildingBaseModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty)
-    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price)}
+function BuildingBaseModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price),autoRepOn = autoRepOn}
     DataManager.ModelSendNetMes("gscode.OpCode","shelfAdd","gs.ShelfAdd",lMsg)
 end
 --运输
@@ -61,4 +61,9 @@ end
 function BuildingBaseModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     local lMsg = {buildingId = buildingId,lineId = lineId,lineOrder = pos}
     DataManager.ModelSendNetMes("gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",lMsg)
+end
+--自动补货
+function BuildingBaseModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+    local lMsg = {buildingId = buildingId,iKey = {id = itemId,producerId = producerId,qty = qty},autoRepOn = autoRepOn}
+    DataManager.ModelSendNetMes("gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",lMsg)
 end

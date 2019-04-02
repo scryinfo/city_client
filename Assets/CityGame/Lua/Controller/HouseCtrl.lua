@@ -65,13 +65,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
             self:_clickCloseBtn(self)
         end)
     end
-
-    if houseDetailData.info.state == "OPERATE" then
-        HousePanel.openBusinessItem:toggleState(false)  --如果已经开业则不能显示按钮
-    else
-        HousePanel.openBusinessItem:toggleState(true)
-        HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)
-    end
+    HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)  --初始化
 
     local insId = self.m_data.insId
     self.m_data = houseDetailData

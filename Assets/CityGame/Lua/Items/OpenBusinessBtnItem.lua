@@ -19,6 +19,11 @@ end
 function OpenBusinessBtnItem:initData(info, type)
     if info ~= nil and type ~= nil then
         self.data = {info = info, type = type}
+        if info.state == "OPERATE" then
+            self:toggleState(false)
+        else
+            self:toggleState(true)
+        end
     end
 end
 --

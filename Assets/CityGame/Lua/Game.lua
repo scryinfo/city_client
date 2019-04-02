@@ -43,21 +43,23 @@ function Game.OnInitOK()
     --初始化屏幕适配比例--
     InitScreenRatio()
 
-    ct.OpenCtrl('LoadingCtrl')
+    ct.OpenCtrl('LoadingCtrl')--StopAndBuildCtrl--LoadingCtrl
     --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end
 
 function Game.OnPostInitOK()
-    BuilldingBubbleInsManger.Awake()
+    BuilldingBubbleInsManger.Init()
     --开业停业
     StopAndBuildModel:Awake()
+    --PlayerInfoManager.Init()
+    PlayerInfoManger.Awake()
     --单元测试入口
     lu.LuaUnit.run()
     DataManager.Init()
     TerrainManager.Init()
     --Avatar管理器
     AvatarManger.Awake()
-    PlayerInfoManger.Awake()
+
     PathFindManager.Init()
     --营收详情
     RevenueDetailsMsg.Awake()

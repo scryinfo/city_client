@@ -15,7 +15,7 @@ local ctrl
 function UIBubbleBuildingSignItem:initialize(prefab,luaBehaviour,data,ctr)
     ctrl=ctr
     self.prefab=prefab
-    self.rect= prefab.transform:GetComponent("RectTransform");
+    self.rect= prefab.transform:GetComponent("RectTransform")
     self.rect:SetParent(UIBubbleManager.BubbleParent.transform)
     self.rect.transform.localPosition=Vector3.zero
 
@@ -77,6 +77,9 @@ function UIBubbleBuildingSignItem:updateData(data)
        self. desText.text=data.des
     end
     --赋值 姓名和 头像
+    if self .avatarData then
+        AvatarManger.CollectAvatar(self .avatarData)
+    end
     PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
 
     if not data.bubble then
@@ -101,15 +104,10 @@ function UIBubbleBuildingSignItem:c_OnClick_small(ins)
         ctrl.smallRec.localScale=Vector3.one
     end
     --变大
-
-    ins:updateData(ins.data)
     ins:changeLarge()
 
     ctrl.largeRec=ins.largeRec
     ctrl.smallRec=ins.smallRec
-    if ins .avatarData then
-        AvatarManger.CollectAvatar(ins .avatarData)
-    end
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large(ins)
@@ -124,12 +122,10 @@ end
 --关闭
 function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.transform.localScale=Vector3.zero
-  --  LateUpdateBeat:Remove(self.Update,self)
 end
 --开始
 function UIBubbleBuildingSignItem:Start()
     self.prefab.transform.localScale=Vector3.one
-   -- LateUpdateBeat:Add(self.Update, self)
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
@@ -152,10 +148,8 @@ function UIBubbleBuildingSignItem:changeLarge()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
-
    self.nameText.text=info[1].name
    self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
-
 end
 
 function UIBubbleBuildingSignItem:Update()

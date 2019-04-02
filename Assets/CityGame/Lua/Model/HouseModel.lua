@@ -18,6 +18,7 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnReceiveHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.SetRent",self.n_OnReceiveHouseRentChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
@@ -30,20 +31,6 @@ end
 function HouseModel:m_ReqHouseDetailInfo(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailApartment","gs.Id",{ id = buildingId})
 end
---改变房租
-function HouseModel:m_ReqHouseChangeRent(id, price)
-    if id ~= self.insId then
-        return
-    end
-    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = id, rent = price})
-end
---改变员工工资
-function HouseModel:m_ReqHouseSetSalary(id, price)
-    if id ~= self.insId then
-        return
-    end
-    DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.SetSalary",{ buildingId = id, salary = price})
-end
 --改变建筑名字
 function HouseModel:m_ReqChangeHouseName(id, name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = id, name = name})
@@ -55,10 +42,16 @@ function HouseModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
     DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_receiveHouseDetailInfo',houseDetailInfo)
 end
 --房租改变
-function HouseModel:n_OnReceiveHouseRentChange(rentData)
-    Event.Brocast("c_onReceiveHouseRentChange", rentData)
+function HouseModel:n_OnReceiveHouseRentChange(data)
+    DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_refreshRent', data)
 end
 --员工工资改变
 function HouseModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_refreshSalary', data)
+end
+--开业成功，再次请求建筑详情
+function HouseModel:n_OnReceiveOpenBusiness(data)
+    if data ~= nil and data.id == self.insId then
+        self:m_ReqHouseDetailInfo(self.insId)
+    end
 end

@@ -3,3 +3,6 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/10/19 16:24
 ---
+require "View/BuildingInfoParts/BasePart"
+require "View/BuildingInfoParts/BasePartDetail"
+require "View/BuildingInfoParts/BuildingInfoMainGroupMgr"

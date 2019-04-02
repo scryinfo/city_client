@@ -19,13 +19,5 @@ end
 
 --初始化面板--
 function PromoteCompanyPanel.InitPanel()
-    --top
-    --this.xBtn = transform:Find("history/xBtn").gameObject --返回
-    --this.name = transform:Find("history/name"):GetComponent("Text");
-    --this.yScale = transform:Find("history/yScale"):GetComponent("RectTransform");  --Y轴
-    --this.curve = transform:Find("history/curveBg/curve"):GetComponent("RectTransform");
-    --this.slide = transform:Find("history/curveBg/curve"):GetComponent("Slide");  --滑动
-    --this.graph = transform:Find("history/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
-    --this.goods = transform:Find("history/downBg/goods/goodsImage"):GetComponent("Image")  --商品图片
-    --this.goodsText = transform:Find("history/downBg/goods/goodsText"):GetComponent("Text")  --商品名字
+    this.groupTrans = transform:Find("MainGroup")
 end

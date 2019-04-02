@@ -8,7 +8,7 @@ UIPanel:ResgisterOpen(PromoteCompanyCtrl)
 
 local promoteBehaviour
 
-function  PromoteCompanyCtrl:bundleName()
+function PromoteCompanyCtrl:bundleName()
     return "Assets/CityGame/Resources/View/PromoteCompanyPanel.prefab"
 end
 
@@ -25,18 +25,21 @@ end
 
 function PromoteCompanyCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图（供应）
-    --Event.AddListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图(需求)
 end
 
 function PromoteCompanyCtrl:Refresh()
-
+    --if self.groupMgr == nil then
+    --    self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+    --    --self.groupMgr:AddParts(AdvertisementPart, 1)
+    --    --self.groupMgr:RefreshData(self.m_data)
+    --    self.groupMgr:TurnOffAllOptions()
+    --else
+    --    --self.groupMgr:RefreshData(self.m_data)
+    --end
 end
 
 function PromoteCompanyCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图(供应)
-    --Event.RemoveListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图（需求）
 
 end
 

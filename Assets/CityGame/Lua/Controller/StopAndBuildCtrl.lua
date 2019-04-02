@@ -318,24 +318,45 @@ end
 
 --初始化的时候，将所有按钮隐藏
 function StopAndBuildCtrl.CloseBtn()
-    StopAndBuildPanel.greenBtn1.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn2.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn3.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn4.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn5.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn6.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn7.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn8.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn9.localScale = Vector3.zero
+    panel.greenBtn1.localScale = Vector3.zero
+    panel.greenBtn2.localScale = Vector3.zero
+    panel.greenBtn3.localScale = Vector3.zero
+    panel.greenBtn4.localScale = Vector3.zero
+    panel.greenBtn5.localScale = Vector3.zero
+    panel.greenBtn6.localScale = Vector3.zero
+    panel.greenBtn7.localScale = Vector3.zero
+    panel.greenBtn8.localScale = Vector3.zero
+    panel.greenBtn9.localScale = Vector3.zero
 
-    StopAndBuildPanel.blueBtn1.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn2.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn3.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn4.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn5.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn6.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn7.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn8.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn9.localScale = Vector3.zero
-    StopAndBuildPanel.select1.localScale = Vector3.zero
+    panel.blueBtn1.localScale = Vector3.zero
+    panel.blueBtn2.localScale = Vector3.zero
+    panel.blueBtn3.localScale = Vector3.zero
+    panel.blueBtn4.localScale = Vector3.zero
+    panel.blueBtn5.localScale = Vector3.zero
+    panel.blueBtn6.localScale = Vector3.zero
+    panel.blueBtn7.localScale = Vector3.zero
+    panel.blueBtn8.localScale = Vector3.zero
+    panel.blueBtn9.localScale = Vector3.zero
+    panel.select1.localScale = Vector3.zero
+end
+
+--多语言
+function StopAndBuildCtrl.ChangeLanguage()
+    --panel.topicText
+    --panel.buildingInfoText
+    --panel.buildingSelectedInfoText
+    --panel.landInfomationText
+    --panel.landInfomationSelectedText
+    --panel.buildTimeNameText
+    --panel.buyTimeNameText
+    --panel.ownerRentNameText
+    --panel.operatorText.text=GetLanguage(40010002)
+    --panel.groundInfoText.text=GetLanguage(40010001)
+    --panel.scaleText.text=GetLanguage(40010003)
+    --panel.constructText.text=GetLanguage(40010004)
+    --panel.tips.text=GetLanguage(40010007)
+    --panel.dateText.text=GetLanguage(40010005)
+    --panel.dailyRentText.text=GetLanguage(40010006)
+    --panel.depositText.text=GetLanguage(40010017)
+    --panel.stopText.text=GetLanguage(40010016)
 end

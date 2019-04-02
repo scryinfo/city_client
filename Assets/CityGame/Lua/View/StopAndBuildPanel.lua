@@ -101,28 +101,4 @@ function StopAndBuildPanel.InitPanel()
     this.blueBtn9=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image9/Button (1)")
     this.select9=transform:Find("landInfoRoot/body/landInfoScroll/Viewport/Content/Image9/select")
 end
---数据初始化
-function StopAndBuildPanel.InitDate(MunicipalData)
-    this.MunicipalData = MunicipalData;
-end
 
---数据初始化
-function StopAndBuildPanel:ChangeLanguage()
-    --this.topicText
-    --this.buildingInfoText
-    --this.buildingSelectedInfoText
-    --this.landInfomationText
-    --landInfomationSelectedText
-    --this.buildTimeNameText
-    --this.buyTimeNameText
-    --this.ownerRentNameText
-    --this.operatorText.text=GetLanguage(40010002)
-    --this.groundInfoText.text=GetLanguage(40010001)
-    --this.scaleText.text=GetLanguage(40010003)
-    --this.constructText.text=GetLanguage(40010004)
-    --this.tips.text=GetLanguage(40010007)
-    --this.dateText.text=GetLanguage(40010005)
-    --this.dailyRentText.text=GetLanguage(40010006)
-    --this.depositText.text=GetLanguage(40010017)
-    --this.stopText.text=GetLanguage(40010016)
-end

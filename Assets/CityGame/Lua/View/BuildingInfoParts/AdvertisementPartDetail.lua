@@ -19,9 +19,10 @@ function  AdvertisementPartDetail:_InitEvent()
 end
 --
 function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
-    mainPanelLuaBehaviour:AddClick(self.closeBtn, self.OnXBtn, self)
+    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
     mainPanelLuaBehaviour:AddClick(self.goods, self.OnGoods, self)
     mainPanelLuaBehaviour:AddClick(self.building, self.OnBuilding, self)
+    mainPanelLuaBehaviour:AddClick(self.open, self.OnOpen, self)
 end
 --
 function AdvertisementPartDetail:_ResetTransform()
@@ -50,6 +51,7 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.goods = transform:Find("bg/top/goods/goodsBg").gameObject      --商品
     self.goodsText = transform:Find("bg/top/goods/goodsText")
     self.building = transform:Find("bg/top/building/buildingBg").gameObject      --建筑
+    self.open = transform:Find("bg/top/priceTime/open").gameObject      --对外开放
     self.buildingText = transform:Find("bg/top/building/buildingText")
     self.price = transform:Find("bg/top/priceTime/price"):GetComponent("Text")    --价格
     self.priceText = transform:Find("bg/top/priceTime/price/priceText"):GetComponent("Text")    --价格
@@ -66,8 +68,8 @@ function AdvertisementPartDetail:_initFunc()
 end
 --
 
-function AdvertisementPartDetail:OnXBtn()
-    UIPanel.ClosePage()
+function AdvertisementPartDetail:OnXBtn(go)
+    go.groupClass.TurnOffAllOptions(go.groupClass)
 end
 
 --点击商品
@@ -80,4 +82,9 @@ end
 function AdvertisementPartDetail:OnBuilding(go)
     go.goods.transform.localScale = Vector3.one
     go.building.transform.localScale = Vector3.zero
+end
+
+--对外开放
+function AdvertisementPartDetail:OnOpen()
+
 end

@@ -42,8 +42,7 @@ function StopAndBuildCtrl:Close()
 end
 
 function StopAndBuildCtrl:Awake(go)
-
-    panel=StopAndBuildPanel
+    panel = StopAndBuildPanel
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     self.materialBehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
     self.materialBehaviour:AddClick(panel.stopBtn.gameObject,self.OnClick_stop,self);
@@ -73,7 +72,7 @@ function StopAndBuildCtrl:Awake(go)
     self.materialBehaviour:AddClick((panel.blueBtn8).gameObject,self.OnClick_greenBtn8,self);
     self.materialBehaviour:AddClick((panel.blueBtn9).gameObject,self.OnClick_greenBtn9,self);
 
-    panel:CloseBtn()
+    self.CloseBtn()
     self.datas={}
     for i = 1, 9 do
         local data={}
@@ -89,8 +88,8 @@ end
 
 
 --返回
-function StopAndBuildCtrl:OnClick_backBtn()
-    panel:CloseBtn()
+function StopAndBuildCtrl:OnClick_backBtn(ins)
+    ins.CloseBtn()
     UIPanel.CloseAllPageExceptMain()
     PlayMusEff(1002)
 end
@@ -167,34 +166,34 @@ local root,btn
 local select
 --刷新按钮
 function StopAndBuildCtrl:updateBtn(buildinghInfo)
-    if buildinghInfo.state=="OPERATE" then
-        panel.stopBtn.localScale=Vector3.one
-        panel.removeBtn.localScale=Vector3.zero
+    if buildinghInfo.state == "OPERATE" then
+        panel.stopBtn.localScale = Vector3.one
+        panel.removeBtn.localScale = Vector3.zero
     else
-        panel.stopBtn.localScale=Vector3.zero
-        panel.removeBtn.localScale=Vector3.one
+        panel.stopBtn.localScale = Vector3.zero
+        panel.removeBtn.localScale = Vector3.one
     end
 
-    if DataManager.GetMyOwnerID()~=buildinghInfo.ownerId then
-        panel.removeBtn.localScale=Vector3.zero
-        panel.stopBtn.localScale=Vector3.zero
+    if DataManager.GetMyOwnerID() ~= buildinghInfo.ownerId then
+        panel.removeBtn.localScale = Vector3.zero
+        panel.stopBtn.localScale = Vector3.zero
     end
 
-    local groundOwnerDatas=buildinghInfo.ctrl.groundOwnerDatas
-    local groundDatas=buildinghInfo.ctrl.groundDatas
-    local x=PlayerBuildingBaseData[buildinghInfo.mId].x
-    if x==1 then
-      panel.greenBtn1.localScale=Vector3.one
-        self.datas[1].personData=groundOwnerDatas[1]
-        self.datas[1].groundData=groundDatas[1]
+    local groundOwnerDatas = buildinghInfo.ctrl.groundOwnerDatas
+    local groundDatas = buildinghInfo.ctrl.groundDatas
+    local x = PlayerBuildingBaseData[buildinghInfo.mId].x
+    if x == 1 then
+      panel.greenBtn1.localScale = Vector3.one
+        self.datas[1].personData = groundOwnerDatas[1]
+        self.datas[1].groundData = groundDatas[1]
         if groundDatas[1].Data.rent then
             panel["blueBtn1"].localScale=Vector3.one
         end
-    elseif  x==2 then
-        panel.greenBtn1.localScale=Vector3.one
-        panel.greenBtn2.localScale=Vector3.one
-        panel.greenBtn4.localScale=Vector3.one
-        panel.greenBtn5.localScale=Vector3.one
+    elseif  x == 2 then
+        panel.greenBtn1.localScale = Vector3.one
+        panel.greenBtn2.localScale = Vector3.one
+        panel.greenBtn4.localScale = Vector3.one
+        panel.greenBtn5.localScale = Vector3.one
         local table={1,2,4,5}
         for i, v in ipairs(table) do
             self.datas[v].personData=groundOwnerDatas[i]
@@ -276,7 +275,6 @@ function StopAndBuildCtrl:updateGroundInfo(data)
             panel.sexIma.localScale=Vector3.zero
             panel.sexIma1.localScale=Vector3.one
         end
-
     else                                                                            --土地主人
         panel.leasePersonInfoRoot.localScale=Vector3.zero
         panel.owenerPersonInfoRoot.localScale=Vector3.one
@@ -318,4 +316,26 @@ function StopAndBuildCtrl:switchRoot(panel,btN)
     btn=btN
 end
 
+--初始化的时候，将所有按钮隐藏
+function StopAndBuildCtrl.CloseBtn()
+    StopAndBuildPanel.greenBtn1.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn2.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn3.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn4.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn5.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn6.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn7.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn8.localScale = Vector3.zero
+    StopAndBuildPanel.greenBtn9.localScale = Vector3.zero
 
+    StopAndBuildPanel.blueBtn1.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn2.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn3.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn4.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn5.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn6.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn7.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn8.localScale = Vector3.zero
+    StopAndBuildPanel.blueBtn9.localScale = Vector3.zero
+    StopAndBuildPanel.select1.localScale = Vector3.zero
+end

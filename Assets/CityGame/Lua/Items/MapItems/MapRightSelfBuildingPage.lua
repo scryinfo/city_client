@@ -72,6 +72,12 @@ end
 --去地图上的一个建筑
 function MapRightSelfBuildingPage:_goHereBtn()
     MapBubbleManager.GoHereFunc(self.data)
+    local blockId = TerrainManager.GridIndexTurnBlockID(self.data.pos)
+    local tempValue = DataManager.GetBaseBuildDataByID(blockId)
+    if tempValue ~= nil then
+        tempValue:OpenPanel()
+        CameraMove.MoveIntoUILayer(blockId)
+    end
 end
 --
 function MapRightSelfBuildingPage:_initPersonalInfo(data)

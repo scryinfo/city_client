@@ -31,7 +31,7 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     LoadSprite(data.selectIconPath, self.chooseIconImg, true)
     LoadSprite(data.disSelectIconPath, self.disSelectIconImg, true)
 
-    Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
+    --Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
     Event.AddListener("c_ChooseTypeDetail", self._chooseTypeDetail, self)  --选中搜索某个东西
     self:resetState()
 end
@@ -61,6 +61,14 @@ end
 --loading
 function MapSearchTypeItemBase:_endLoading()
     self.loadBtnTran.transform.localScale = Vector3.zero
+end
+--
+function MapSearchTypeItemBase:toggleLoadingState(isShow)
+    if isShow == true then
+        self.loadBtnTran.transform.localScale = Vector3.zero
+    else
+        self.loadBtnTran.transform.localScale = Vector3.one
+    end
 end
 
 function MapSearchTypeItemBase:getIsSelect()

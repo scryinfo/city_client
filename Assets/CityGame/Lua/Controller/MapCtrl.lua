@@ -123,9 +123,9 @@ function MapCtrl:_cleanDatas()
     end
 
     self:_cancelDetailSelect()
-    self:_cleanChooseState()
     self:refreshTypeItems()
     self:closeSearch()
+    self:_cleanChooseState()
     self:toggleDetailPage(false)
 
     --设置地图大小和Slider初始值
@@ -177,7 +177,8 @@ function MapCtrl:_initUIData()
 end
 
 function MapCtrl:_itemTimer()
-    Event.Brocast("c_SearchEndLoading")
+    --Event.Brocast("c_SearchEndLoading")
+    self:toggleLoadingState(true)
     self.m_Timer:Stop()
 end
 
@@ -206,22 +207,28 @@ function MapCtrl:_createType(data)
     end
 end
 
+--loading
+function MapCtrl:toggleLoadingState(isShow)
+    if self.typeTable ~= nil then
+        for i, value in pairs(self.typeTable) do
+            value:toggleLoadingState(isShow)
+        end
+    end
+end
 --打开原料详情界面
 function MapCtrl:matSelect()
     self:toggleDetailPage(true)
     self:_openPageItems(EMapSearchType.Material)
-
-    self.m_Timer:Start()
 end
 --打开商品详情界面
 function MapCtrl:goodsSelect()
     self:toggleDetailPage(true)
     self:_openPageItems(EMapSearchType.Goods)
-    self.m_Timer:Start()
 end
 --选中土地交易
 function MapCtrl:dealSelect()
-    self:toggleDetailPage(false)
+    self:toggleLoadingState(false)
+    self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
     self.m_Timer:Start()
 
     if self.selectDetailItem ~= nil then
@@ -239,7 +246,8 @@ function MapCtrl:dealSelect()
 end
 --选中拍卖
 function MapCtrl:auctionSelect()
-    self:toggleDetailPage(false)
+    self:toggleLoadingState(false)
+    self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
     self.m_Timer:Start()
 
     if self.selectDetailItem ~= nil then
@@ -315,7 +323,6 @@ function MapCtrl:refreshDetailItem(item)
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
-            self.m_Timer:Start()
             --向服务器发送请求  商品 原料
             if self:_getIsDetailFunc() == true then
                 self:_judgeDetail()
@@ -325,6 +332,10 @@ function MapCtrl:refreshDetailItem(item)
 
             --隐藏右边UI
             tempItem:_clickFunc()
+            --cd
+            self:toggleLoadingState(false)
+            self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
+            self.m_Timer:Start()
         else
             ct.log("")
         end

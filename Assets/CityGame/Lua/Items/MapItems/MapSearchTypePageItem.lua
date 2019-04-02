@@ -11,15 +11,11 @@ function MapSearchTypePageItem:refreshShow(isSelect)
         if self.isSelect == false then
             self.selectFunc()  --由未选中变为选中状态
         end
-        --self.choose.localScale = Vector3.one
-        --self.disChoose.localScale = Vector3.zero
         self.pageOpenImg.localScale = Vector3.one
     else
-        --self.choose.localScale = Vector3.zero
-        --self.disChoose.localScale = Vector3.one
         self.pageOpenImg.localScale = Vector3.zero
     end
-    self.loadBtnTran.transform.localScale = Vector3.one
+    --self.loadBtnTran.transform.localScale = Vector3.one
     self.isSelect = isSelect
 end
 --点击事件

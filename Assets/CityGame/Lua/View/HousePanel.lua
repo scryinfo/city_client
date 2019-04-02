@@ -14,20 +14,9 @@ function HousePanel.Awake(obj)
 end
 
 function HousePanel.InitPanel()
-    this.rightRootTran = transform:Find("rightRoot")
-    this.leftRootTran = transform:Find("leftRoot")
+    this.groupTrans = transform:Find("bottomRoot")
     this.topRootTran = transform:Find("topRoot")
-    this.brandRootTran = transform:Find("topRoot/brandRoot")
-
-    --this.buildingNameText = transform:Find("topRoot/titleBg/buildingTypeNameText"):GetComponent("Text")
-    --this.nameText = transform:Find("topRoot/titleBg/nameText"):GetComponent("Text")
-    --this.changeNameBtn = transform:Find("topRoot/titleBg/changeNameBtn")
-    --this.backBtn = transform:Find("topRoot/backBtn")
     this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
 
-    this.centerBtn = transform:Find("centerBtn")
-    this.stopRootTran = transform:Find("stopRoot")
-    this.stopIconBtn = transform:Find("stopRoot/stopIconBtn")
-    --
-    this.stopText01 = transform:Find("stopRoot/Text"):GetComponent("Text")
+    this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessBtn"))
 end

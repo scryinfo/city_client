@@ -805,6 +805,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     protoID = protoData.buildingId
                 elseif protoData.src then
                     protoID = protoData.src
+                elseif protoData.id then
+                    protoID = protoData.id
                 end
             end
             if protoID ~= nil then--服务器返回的数据有唯一ID
@@ -919,6 +921,21 @@ function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaSt
         --]]
     end
 end
+--
+--移除 无实例Id的消息回调
+function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,ins)
+    local newMsgId = pbl.enum(protoNameStr,protoNumStr)
+
+    local noParameters = ModelNetMsgStack[newMsgId]["NoParameters"]
+    if noParameters ~= nil then
+        for i, value in pairs(noParameters) do
+            if noParameters.self ~= nil and noParameters.self == ins then
+                table.remove(ModelNetMsgStack[newMsgId]["NoParameters"],value)
+                return
+            end
+        end
+    end
+end
 
 ---------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
 local updataTimer = 0
@@ -954,7 +971,8 @@ local function LoginSuccessAndGameStart()
     ------------------------------------打开我自己可用的地块
     MyGround.CreateMyGrounds()
     --请求自己的信息
-    GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
+    --GAucModel.m_ReqPlayersInfo({[1] = PersonDataStack.m_owner})
+    PlayerInfoManger.GetInfos({[1] = PersonDataStack.m_owner}, DataManager.SetMyPersonalHomepageInfo, DataManager)
 end
 
 --土地集合
@@ -1170,6 +1188,22 @@ function DataManager.RemoveMyRentGroundInfo(groundInfoData)
     end
 end
 
+--获取行业标准工资
+function DataManager.GetBuildingStandardWage(buildingTypeId)
+    if DataManager.BuildingStandardWage == nil or DataManager.BuildingStandardWage[buildingTypeId] == nil then
+        return nil
+    end
+    return DataManager.BuildingStandardWage[buildingTypeId]
+end
+
+--更新行业标准工资
+function DataManager.SetBuildingStandardWage(buildingType, wage)
+    if DataManager.BuildingStandardWage == nil then
+        DataManager.BuildingStandardWage = {}
+    end
+    DataManager.BuildingStandardWage[buildingType] = wage
+end
+
 --获取自已的所有的建筑评分
 function DataManager.GetMyBuildingBrands()
     return PersonDataStack.m_buildingBrands
@@ -1270,7 +1304,8 @@ function DataManager.GetMyPersonalHomepageInfo()
 end
 
 --刷新自己的信息
-function DataManager.SetMyPersonalHomepageInfo(data)
+function DataManager.SetMyPersonalHomepageInfo(this,info)
+    local data = info[1]
     PersonDataStack.m_roleInfo.name = data.name
     PersonDataStack.m_roleInfo.companyName = data.companyName
     PersonDataStack.m_roleInfo.des = data.des
@@ -1591,6 +1626,15 @@ function DataManager.m_ReqCancelSellGround(coord)
     local pMsg = assert(pbl.encode("gs.MiniIndexCollection", {coord = coord}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
+--获取行业标准工资
+function DataManager.m_ReqStandardWage(buildingType)
+    if buildingType == nil then
+        return
+    end
+    local msgId = pbl.enum("gscode.OpCode","queryIndustryWages")
+    local pMsg = assert(pbl.encode("gs.QueryIndustryWages", {type = buildingType}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
 
 
 --注册所有消息回调
@@ -1647,7 +1691,7 @@ function DataManager.Init()
     --初始化自己的地块初始信息
     MyGround.Init()
     --建筑气泡对象池
-    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubblesManger",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
+    DataManager.buildingBubblePool= LuaGameObjectPool:new("BuildingBubble",creatGoods("View/Items/BuildingBubbleItems/UIBubbleBuildingSignItem"),5,Vector3.New(0,0,0) )
     ------------------------------------打开相机
     local cameraCenter = UnityEngine.GameObject.New("CameraTool")
     local luaCom = CityLuaUtil.AddLuaComponent(cameraCenter,'Terrain/CameraMove')
@@ -1818,9 +1862,6 @@ end
 --查询玩家信息返回
 function DataManager.n_OnReceivePlayerInfo(stream)
    PlayerInfoManger.n_OnReceivePlayerInfo(stream)
-    if stream ~= nil and stream.info ~= nil and #stream.info == 1 and stream.info[1].id == DataManager.GetMyOwnerID() then
-        DataManager.SetMyPersonalHomepageInfo(stream.info[1])
-    end
 end
 
 --研究所Roll回复信息

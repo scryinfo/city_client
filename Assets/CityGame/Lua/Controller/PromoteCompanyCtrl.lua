@@ -28,14 +28,14 @@ function PromoteCompanyCtrl:Active()
 end
 
 function PromoteCompanyCtrl:Refresh()
-    --if self.groupMgr == nil then
-    --    self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-    --    --self.groupMgr:AddParts(AdvertisementPart, 1)
-    --    --self.groupMgr:RefreshData(self.m_data)
-    --    self.groupMgr:TurnOffAllOptions()
-    --else
-    --    --self.groupMgr:RefreshData(self.m_data)
-    --end
+    if self.groupMgr == nil then
+        self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+        self.groupMgr:AddParts(AdvertisementPart, 1)
+        --self.groupMgr:RefreshData(self.m_data)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        --self.groupMgr:RefreshData(self.m_data)
+    end
 end
 
 function PromoteCompanyCtrl:Hide()

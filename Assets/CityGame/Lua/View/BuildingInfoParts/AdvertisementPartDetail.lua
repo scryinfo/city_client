@@ -71,13 +71,13 @@ function AdvertisementPartDetail:OnXBtn()
 end
 
 --点击商品
-function AdvertisementPartDetail:OnGoods()
-    self.goods.transform.localScale = Vector3.zero
-    self.building.transform.localScale = Vector3.one
+function AdvertisementPartDetail:OnGoods(go)
+    go.goods.transform.localScale = Vector3.zero
+    go.building.transform.localScale = Vector3.one
 end
 
 --点击建筑
-function AdvertisementPartDetail:OnBuilding()
-    self.goods.transform.localScale = Vector3.one
-    self.building.transform.localScale = Vector3.zero
+function AdvertisementPartDetail:OnBuilding(go)
+    go.goods.transform.localScale = Vector3.one
+    go.building.transform.localScale = Vector3.zero
 end

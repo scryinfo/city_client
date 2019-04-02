@@ -4,7 +4,6 @@
 --- DateTime: 2019/4/1 16:48
 ---建筑主界面底部广告推广
 AdvertisementPart = class('AdvertisementPart', BasePart)
-local aaa = AdvertisementPart
 --
 function AdvertisementPart:PrefabName()
     return "AdvertisementPart"

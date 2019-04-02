@@ -45,6 +45,7 @@ function StopAndBuildPanel.InitPanel()
     this.leasePersonInfoRoot=transform:Find("landInfoRoot/body/leasePersonInfo")
     this.nameText=transform:Find("landInfoRoot/body/leasePersonInfo/nameRoot/Text"):GetComponent("Text")
     this.sexIma=transform:Find("landInfoRoot/body/leasePersonInfo/nameRoot/Text/sex"):GetComponent("Image")
+    this.sexIma1=transform:Find("landInfoRoot/body/leasePersonInfo/nameRoot/Text/sex (1)"):GetComponent("Image")
     this.commpanyNameText=transform:Find("landInfoRoot/body/leasePersonInfo/commpanyRoot/Text"):GetComponent("Text")
 
     this.leaseNameText=transform:Find("landInfoRoot/body/leasePersonInfo/lease/nameText"):GetComponent("Text")

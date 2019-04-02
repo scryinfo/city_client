@@ -222,8 +222,9 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
         end
     end
 
+    --默认开启左上角（第一个）
     self:updateGroundInfo(self.datas[1])
-    panel.select1.localScale=Vector3.one
+    panel.select1.localScale = Vector3.one
     select=panel.select1
     panel.greenBtn1.parent:SetAsLastSibling()
 end
@@ -269,9 +270,11 @@ function StopAndBuildCtrl:updateGroundInfo(data)
         panel.leaseText.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.rent.rentDays)
         panel.rentText.text=groundData.Data.rent.rentPreDay/10000
         if personData.male then
-            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/male.png",panel.sexIma)
+            panel.sexIma.localScale=Vector3.one
+            panel.sexIma1.localScale=Vector3.zero
         else
-            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/famale.png",panel.sexIma)
+            panel.sexIma.localScale=Vector3.zero
+            panel.sexIma1.localScale=Vector3.one
         end
 
     else                                                                            --土地主人

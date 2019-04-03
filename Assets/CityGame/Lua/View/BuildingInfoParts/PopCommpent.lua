@@ -22,7 +22,6 @@ function PopCommpent:OnClick_confirm(ins)
         local funcs=ins.m_data[2]
         --调用
         funcs(instance)
-        -- ins.m_data[2](ins.m_data[1])
     end
     UIPanel.ClosePage()
     PlayMusEff(1002)

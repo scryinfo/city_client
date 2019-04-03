@@ -8,8 +8,9 @@ OpenBusinessBtnItem = class('OpenBusinessBtnItem')
 --初始化方法
 function OpenBusinessBtnItem:initialize(viewRect)
     self.viewRect = viewRect
-    self.openBtn = viewRect:GetComponent("Button")
-    self.openText = viewRect.transform:Find("Text"):GetComponent("Text")
+    self.openBtn = viewRect.transform:Find("openBtn"):GetComponent("Button")
+    self.otherOpenImgTrans = viewRect.transform:Find("otherOpenImg")
+    self.showText = viewRect.transform:Find("showText"):GetComponent("Text")
 
     self.openBtn.onClick:AddListener(function ()
         self:_clickOpenBtn()
@@ -20,9 +21,18 @@ function OpenBusinessBtnItem:initData(info, type)
     if info ~= nil and type ~= nil then
         self.data = {info = info, type = type}
         if info.state == "OPERATE" then
-            self:toggleState(false)
+            self.viewRect.transform.localScale = Vector3.zero
         else
-            self:toggleState(true)
+            self.viewRect.transform.localScale = Vector3.one
+            if info.ownerId == DataManager.GetMyOwnerID() then
+                self.openBtn.transform.localScale = Vector3.one
+                self.otherOpenImgTrans.localScale = Vector3.zero
+                self.showText.text = "Open"
+            else
+                self.openBtn.transform.localScale = Vector3.zero
+                self.otherOpenImgTrans.localScale = Vector3.one
+                self.showText.text = "Not yet open"
+            end
         end
     end
 end
@@ -48,15 +58,6 @@ function OpenBusinessBtnItem:_clickOpenBtn()
                 self:_reqOpenBusiness(self.data.info.id)
             end
         end})
-    end
-end
---
-function OpenBusinessBtnItem:toggleState(canShow)
-    if canShow == true then
-        self.viewRect.transform.localScale = Vector3.one
-        self.openText.text = GetLanguage(12345678)
-    else
-        self.viewRect.transform.localScale = Vector3.zero
     end
 end
 -------------------------------------------------------------------------

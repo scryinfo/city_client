@@ -14,22 +14,20 @@ function ReminderCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
 
-local panel,popCompent,LuaBehaviour
 function ReminderCtrl:Awake(go)
-    panel = ReminderPanel
-    LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    popCompent = PopCommpent:new(go,LuaBehaviour)
+    self.panel = ReminderPanel
+    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.popCompent = PopCommpent:new(go,LuaBehaviour)
 end
-
 
 function ReminderCtrl:Refresh()
     local data = self.m_data
     self:updateText(data)
-    popCompent:Refesh(data)
+    self.popCompent:Refesh(data)
 end
 
 
 function ReminderCtrl:updateText(data)
-        panel.mainText.text=GetLanguage(40010009)
+    self.panel.mainText.text = GetLanguage(40010009)
 end
 

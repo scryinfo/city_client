@@ -6,10 +6,10 @@ function PopCommpent:initialize(panelPrefab,LuaBehaviour)
 
     self.closeBtn=transform:Find("PopCommpent/closeBtn")
     self.confirmBtn=transform:Find("PopCommpent/confimBtn")
-    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text');
+    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
 
-    LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self);
-    LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self);
+    LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self)
+    LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self)
 end
 
 ---====================================================================================点击函数==============================================================================================

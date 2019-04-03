@@ -19,18 +19,14 @@ function ReminderPanel.Awake(obj)
 end
 --初始化界面
 function ReminderPanel.InitPanle()
-    this.confirmBtn = transform:Find("root/confimBtn")
-    this.closeBtn = transform:Find("root/closeBtn")
 
-    this.titleText = transform:Find("root/titleText"):GetComponent("Text");
-    this.mainText=transform:Find("root/mainContentText"):GetComponent("Text");
-    this.tipText=transform:Find("root/tipContentText"):GetComponent("Text");
+    this.mainText=transform:Find("PopCommpent/mainContentText"):GetComponent("Text");
 
-    this.tipsWitnIma=transform:Find("root/tipwthIma")
-    this.one=transform:Find("root/tipwthIma/one"):GetComponent("Text");
-    this.second=transform:Find("root/tipwthIma/second"):GetComponent("Text");
-    this.third=transform:Find("root/tipwthIma/third"):GetComponent("Text");
-    this.fourth=transform:Find("root/tipwthIma/fourth"):GetComponent("Text");
+    --this.tipsWitnIma=transform:Find("root/tipwthIma")
+    --this.one=transform:Find("root/tipwthIma/one"):GetComponent("Text");
+    --this.second=transform:Find("root/tipwthIma/second"):GetComponent("Text");
+    --this.third=transform:Find("root/tipwthIma/third"):GetComponent("Text");
+    --this.fourth=transform:Find("root/tipwthIma/fourth"):GetComponent("Text");
 
 end
 

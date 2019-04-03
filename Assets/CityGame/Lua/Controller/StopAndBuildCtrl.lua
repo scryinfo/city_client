@@ -20,11 +20,12 @@ end
 function StopAndBuildCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
+
 local panel
 
 --todo：刷新
 function StopAndBuildCtrl:Refresh()
-    panel:ChangeLanguage()
+    self:ChangeLanguage()
     local data=self.m_data
     self:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
 
@@ -33,6 +34,7 @@ function StopAndBuildCtrl:Refresh()
     ----刷新按钮
     self:updateBtn(data)
 end
+
 function  StopAndBuildCtrl:Hide()
     UIPanel.Hide(self)
 end
@@ -86,7 +88,6 @@ function StopAndBuildCtrl:OnClick_changeName(ins)
 
 end
 
-
 --返回
 function StopAndBuildCtrl:OnClick_backBtn(ins)
     ins.CloseBtn()
@@ -106,32 +107,27 @@ end
 
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
-    local data={}
+    local data={ ins, function()
+                        Event.Brocast("m_delBuilding",ins.m_data.id )
+                        Event.Brocast("SmallPop",GetLanguage(40010015),300)
+                        DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
+                        UIPanel.CloseAllPageExceptMain()
+                       end  }
 
-    data.type="remove"
-    data.mainText=GetLanguage(40010013)
-    data.callback=function() Event.Brocast("m_delBuilding",ins.m_data.id )
-        Event.Brocast("SmallPop",GetLanguage(40010015),300)
-        DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
-        UIPanel.CloseAllPageExceptMain()
-    end
-    ct.OpenCtrl('ReminderCtrl',data)
+    ct.OpenCtrl('ReminderTipsCtrl',data)
     PlayMusEff(1002)
-
 end
 
 --停业
 function StopAndBuildCtrl:OnClick_stop(ins)
-    local data={}
-    data.type="stop"
-    data.mainText=GetLanguage(40010009)
-    data.callback=function() Event.Brocast("m_shutdownBusiness",ins.m_data.id)
-        panel.removeBtn.localScale=Vector3.one
-        panel.stopBtn.localScale=Vector3.zero
-    end
+     local data={ins, function()
+                       Event.Brocast("m_shutdownBusiness",ins.m_data.id)
+                       panel.removeBtn.localScale=Vector3.one
+                       panel.stopBtn.localScale=Vector3.zero
+                       end  }
 
-    ct.OpenCtrl('ReminderCtrl',data)
-    PlayMusEff(1002)
+     ct.OpenCtrl('ReminderCtrl',data)
+     PlayMusEff(1002)
 end
 
 function StopAndBuildCtrl:OnClick_greenBtn1(ins)

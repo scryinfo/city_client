@@ -48,6 +48,7 @@ end
 local function _tostring(self) return "class " .. self.name end
 local function _call(self, ...) return self:new(...) end
 
+
 local function _createClass(name, super)
   local dict = {}
   dict.__index = dict

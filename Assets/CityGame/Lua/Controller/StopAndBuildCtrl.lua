@@ -107,7 +107,7 @@ end
 
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
-    local data={ ins, function()
+    local data={ ins= ins,func= function()
                         Event.Brocast("m_delBuilding",ins.m_data.id )
                         Event.Brocast("SmallPop",GetLanguage(40010015),300)
                         DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
@@ -120,7 +120,7 @@ end
 
 --停业
 function StopAndBuildCtrl:OnClick_stop(ins)
-     local data={ins, function()
+     local data={ins = ins,func = function()
                        Event.Brocast("m_shutdownBusiness",ins.m_data.id)
                        panel.removeBtn.localScale=Vector3.one
                        panel.stopBtn.localScale=Vector3.zero

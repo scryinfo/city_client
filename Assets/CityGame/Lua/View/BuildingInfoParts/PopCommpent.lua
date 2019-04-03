@@ -17,9 +17,9 @@ end
 function PopCommpent:OnClick_confirm(ins)
     if ins.m_data then
         --实例
-        local instance=ins.m_data[1]
+        local instance=ins.m_data.ins
         --回调
-        local funcs=ins.m_data[2]
+        local funcs=ins.m_data.func
         --调用
         funcs(instance)
     end

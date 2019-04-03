@@ -6,10 +6,10 @@ function PopCommpent:initialize(panelPrefab,LuaBehaviour)
 
     self.closeBtn=transform:Find("PopCommpent/closeBtn")
     self.confirmBtn=transform:Find("PopCommpent/confimBtn")
-    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text');
+    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
 
-    LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self);
-    LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self);
+    LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self)
+    LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self)
 end
 
 ---====================================================================================点击函数==============================================================================================
@@ -17,9 +17,9 @@ end
 function PopCommpent:OnClick_confirm(ins)
     if ins.m_data then
         --实例
-        local instance=ins.m_data[1]
+        local instance = ins.m_data.instance
         --回调
-        local funcs=ins.m_data[2]
+        local funcs = ins.m_data.funcs
         --调用
         funcs(instance)
     end

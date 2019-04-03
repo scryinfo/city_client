@@ -29,7 +29,7 @@ function ReminderTipsCtrl:Refresh()
 end
 
 
-function ReminderTipsCtrl:changeLan(data)
+function ReminderTipsCtrl:changeLan()
     panel.mainText.text=GetLanguage(40010013)
     panel.one.text=GetLanguage(40010010)
     panel.second.text=GetLanguage(40010011)

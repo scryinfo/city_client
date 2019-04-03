@@ -25,12 +25,14 @@ end
 
 function PromoteCompanyCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function PromoteCompanyCtrl:Refresh()
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-        self.groupMgr:AddParts(AdvertisementPart, 1)
+        self.groupMgr:AddParts(AdvertisementPart, 0.29)
+        self.groupMgr:AddParts(TurnoverPart, 0.23)
         --self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else
@@ -40,7 +42,11 @@ end
 
 function PromoteCompanyCtrl:Hide()
     UIPanel.Hide(self)
-
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
 end
 
 function PromoteCompanyCtrl:OnCreate(obj)
@@ -49,4 +55,10 @@ end
 
 function PromoteCompanyCtrl:initData()
 
+
+end
+
+--今日营业额
+function TurnoverPart:c_Revenue(info)
+    self.groupMgr:RefreshData(info)
 end

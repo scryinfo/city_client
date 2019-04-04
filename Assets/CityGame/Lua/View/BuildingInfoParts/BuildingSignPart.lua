@@ -17,7 +17,7 @@ function BuildingSignPart:PrefabName()
 end
 --
 function BuildingSignPart:GetDetailClass()
-    return BuildingSalaryDetailPart
+    return BuildingSignDetailPart
 end
 --
 function  BuildingSignPart:_ResetTransform()

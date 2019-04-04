@@ -25,10 +25,9 @@ function  BuildingSignDetailPart:_InitEvent()
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
-    self.timeSlider.onValueChanged:AddListener(function (value)
-        local tempValue = math.floor(value)
-        self:_showPercentValue(tempValue)
-    end)
+    --self.timeSlider.onValueChanged:AddListener(function (value)
+    --
+    --end)
 
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
         self:clickCloseBtn()
@@ -65,6 +64,7 @@ function BuildingSignDetailPart:_RemoveClick()
 end
 --
 function BuildingSignDetailPart:RefreshData(data)
+    self:_ResetTransform()
     if data == nil then
         return
     end
@@ -112,10 +112,10 @@ function BuildingSignDetailPart:_getComponent(transform)
     self.selfSignLiftText06 = transform:Find("root/stateRoot/signing/selfSign/lift"):GetComponent("Text")
     self.selfSignUsedTimeText = transform:Find("root/stateRoot/signing/selfSign/usedTime/usedTimeText"):GetComponent("Text")  --已经加成的时间
     self.selfSignUsedTimeText07 = transform:Find("root/stateRoot/signing/selfSign/usedTime"):GetComponent("Text")
-    self.selfSignDelBtn = transform:Find("root/stateRoot/signing/delBtn"):GetComponent("Button")
+    self.selfSignDelBtn = transform:Find("root/stateRoot/signing/selfSign/delBtn"):GetComponent("Button")
 
     --尚未签约
-    self.waitToSignState = transform:Find("root/stateRoot/waitToSign")
+    self.waitToSign = transform:Find("root/stateRoot/waitToSign")
     self.waitToSignPriceText = transform:Find("root/stateRoot/waitToSign/priceText"):GetComponent("Text")
     self.waitToSignPriceText08 = transform:Find("root/stateRoot/waitToSign/Text01"):GetComponent("Text")
     self.waitToSignSignTime = transform:Find("root/stateRoot/waitToSign/signTime/signTimeText"):GetComponent("Text")
@@ -125,12 +125,12 @@ function BuildingSignDetailPart:_getComponent(transform)
 end
 --text调整宽度，放在多语言之后
 function BuildingSignDetailPart:_setTextSuitableWidth()
-    self.otherSignTimeText02.rectTransform.sizeDelta = Vector2.New(self.otherSignTimeText02.preferredWidth, self.otherSignTimeText02.sizeDelta.y)
-    self.selfSeeLiftText03.rectTransform.sizeDelta = Vector2.New(self.selfSeeLiftText03.preferredWidth, self.selfSeeLiftText03.sizeDelta.y)
-    self.selfSeeUnitPriceText04.rectTransform.sizeDelta = Vector2.New(self.selfSeeUnitPriceText04.preferredWidth, self.selfSeeUnitPriceText04.sizeDelta.y)
-    self.otherSeeLiftText05.rectTransform.sizeDelta = Vector2.New(self.otherSeeLiftText05.preferredWidth, self.otherSeeLiftText05.sizeDelta.y)
-    self.selfSignLiftText06.rectTransform.sizeDelta = Vector2.New(self.selfSignLiftText06.preferredWidth, self.selfSignLiftText06.sizeDelta.y)
-    self.waitToSignSignTime09.rectTransform.sizeDelta = Vector2.New(self.waitToSignSignTime09.preferredWidth, self.waitToSignSignTime09.sizeDelta.y)
+    self.otherSignTimeText02.rectTransform.sizeDelta = Vector2.New(self.otherSignTimeText02.preferredWidth, self.otherSignTimeText02.rectTransform.sizeDelta.y)
+    self.selfSeeLiftText03.rectTransform.sizeDelta = Vector2.New(self.selfSeeLiftText03.preferredWidth, self.selfSeeLiftText03.rectTransform.sizeDelta.y)
+    self.selfSeeUnitPriceText04.rectTransform.sizeDelta = Vector2.New(self.selfSeeUnitPriceText04.preferredWidth, self.selfSeeUnitPriceText04.rectTransform.sizeDelta.y)
+    self.otherSeeLiftText05.rectTransform.sizeDelta = Vector2.New(self.otherSeeLiftText05.preferredWidth, self.otherSeeLiftText05.rectTransform.sizeDelta.y)
+    self.selfSignLiftText06.rectTransform.sizeDelta = Vector2.New(self.selfSignLiftText06.preferredWidth, self.selfSignLiftText06.rectTransform.sizeDelta.y)
+    self.waitToSignSignTime09.rectTransform.sizeDelta = Vector2.New(self.waitToSignSignTime09.preferredWidth, self.waitToSignSignTime09.rectTransform.sizeDelta.y)
 end
 --
 function BuildingSignDetailPart:_language()
@@ -283,7 +283,7 @@ function BuildingSignDetailPart:_toggleShowState(state)
 end
 --
 function BuildingSignDetailPart:clickSettingBtn()
-    ct.OpenCtrl("BuildingSignSetDialogPage")
+    ct.OpenCtrl("BuildingSignSetDialogPageCtrl", self.m_data)
 end
 --
 function BuildingSignDetailPart:clickOtherSignBtn()

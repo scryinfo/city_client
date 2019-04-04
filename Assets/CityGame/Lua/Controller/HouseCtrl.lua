@@ -78,7 +78,8 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-        self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:AddParts(BuildingSignPart, 0.5)
+        self.groupMgr:AddParts(BuildingSalaryPart, 0.5)
         self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else
@@ -120,4 +121,9 @@ function HouseCtrl:_refreshRent(data)
         self.m_data.rent = data.rent
         self.groupMgr:RefreshData(self.m_data)
     end
+end
+--关闭显示
+function HouseCtrl:_selfCloseSign()
+    self.m_data.contractInfo.isOpen = false
+    self.groupMgr:refreshData(self.m_data)
 end

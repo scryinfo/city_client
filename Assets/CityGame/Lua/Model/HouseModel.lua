@@ -19,6 +19,11 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.SetRent",self.n_OnReceiveHouseRentChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
+    --
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","closeContract","gs.Id",self.n_OnReceiveCloseContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","settingContract","gs.ContractSetting",self.n_OnReceiveChangeContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","cancelContract","gs.Id",self.n_OnReceiveCancelContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","signContract","gs.Contract",self.n_OnReceiveSignContract)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
@@ -54,5 +59,29 @@ function HouseModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqHouseDetailInfo(self.insId)
         Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
+    end
+end
+--
+function HouseModel:n_OnReceiveCloseContract(data)
+    if data ~= nil and data.id == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_selfCloseSign', data)
+    end
+end
+--
+function HouseModel:n_OnReceiveChangeContract(data)
+    if data ~= nil and data.buildingId == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_changeSignInfo', data)
+    end
+end
+--
+function HouseModel:n_OnReceiveCancelContract(data)
+    if data ~= nil and data.id == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_selfCancelSign', data)
+    end
+end
+--签约成功
+function HouseModel:n_OnReceiveSignContract(data)
+    if data ~= nil and data.buildingId == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_signSuccess', data)
     end
 end

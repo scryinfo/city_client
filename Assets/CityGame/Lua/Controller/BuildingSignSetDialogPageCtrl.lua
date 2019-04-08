@@ -183,6 +183,14 @@ function BuildingSignSetDialogPageCtrl:_onClickConfirm()
             Event.Brocast("SmallPop", "信息未修改", 300)
             return
         end
+        if tonumber(priceValue) > 9999999.9999 then
+            Event.Brocast("SmallPop", "请输入小于9999999.9999的价格", 300)
+            return
+        end
+        if tonumber(timeValue) > 9999 then
+            Event.Brocast("SmallPop", "请输入小于9999的时间", 300)
+            return
+        end
         self:m_ReqSettingContract(self.m_data.info.id, GetServerPriceNumber(priceValue), timeValue)
         UIPanel.ClosePage()
         return

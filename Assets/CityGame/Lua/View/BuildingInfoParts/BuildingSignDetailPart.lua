@@ -20,10 +20,6 @@ function BuildingSignDetailPart:PrefabName()
     return "BuildingSignDetailPart"
 end
 --
-function  BuildingSignDetailPart:_InitEvent()
-    --DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
-end
---
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
         self:clickCloseBtn()
@@ -50,16 +46,10 @@ function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
 end
 --
 function BuildingSignDetailPart:_ResetTransform()
-    --self.totalText.text = "E0.0000"
-
     self.timeSlider.value = 0
     self.tipRoot.localScale = Vector3.zero
     self:_language()
     self:_setTextSuitableWidth()
-end
---
-function BuildingSignDetailPart:_RemoveEvent()
-    --DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
 end
 --
 function BuildingSignDetailPart:_RemoveClick()
@@ -192,7 +182,7 @@ function BuildingSignDetailPart:_initFunc()
                 self.selfSignDelBtn.transform.localScale = Vector3.zero
             end
 
-            self.selfSignLiftText.text = contractInfo.contract.lift.."%"
+            self.selfSignLiftText.text = self:_getSuitableLiftStr(contractInfo.contract.lift)
             self.selfSignUsedTimeText.text = self:_getSuitableHourStr(contractInfo.contract.hours)
             self.otherSign.localScale = Vector3.zero
             self.selfSign.localScale = Vector3.one
@@ -221,13 +211,13 @@ function BuildingSignDetailPart:_initFunc()
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.OtherSigningSignerOpen)
                 self.selfSee.localScale = Vector3.one
                 self.otherSee.localScale = Vector3.zero
-                self.selfSeeUnitPriceText.text = GetClientPriceString(contractInfo.contract.price)
-                self.selfSeeLiftText.text = contractInfo.contract.lift.."%"
+                self.selfSeeUnitPriceText.text = "E"..GetClientPriceString(contractInfo.contract.price)
+                self.selfSeeLiftText.text = self:_getSuitableLiftStr(contractInfo.contract.lift)
             else
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.OtherSigningThirdOpen)
                 self.otherSee.localScale = Vector3.one
                 self.selfSee.localScale = Vector3.zero
-                self.otherSeeLiftText.text = contractInfo.contract.lift.."%"
+                self.otherSeeLiftText.text = self:_getSuitableLiftStr(contractInfo.contract.lift)
             end
 
         end
@@ -241,9 +231,9 @@ function BuildingSignDetailPart:_initFunc()
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.WaitSignOtherOpen)
             end
             local price = contractInfo.price
-            self.waitToSignPriceText.text = GetClientPriceString(price).."/h"
+            self.waitToSignPriceText.text = "E"..GetClientPriceString(price).."/h"
             self.waitToSignSignTime.text = tempHours.."h"
-            self.waitToSignTotalPriceText.text = GetClientPriceString(price * tempHours)
+            self.waitToSignTotalPriceText.text = "E"..GetClientPriceString(price * tempHours)
         else
             --尚未设置签约信息
             self:_toggleShowState(BuildingSignDetailPart.EOpenState.SelfNotSet)
@@ -268,6 +258,11 @@ function BuildingSignDetailPart:_getSuitableHourStr(hours)
         showStr = hour.."h"
     end
     return showStr
+end
+--
+function BuildingSignDetailPart:_getSuitableLiftStr(liftValue)
+    local liftTemp = string.format("%0.2f", liftValue).."%"
+    return liftTemp
 end
 --
 function BuildingSignDetailPart:_toggleShowState(state)
@@ -311,7 +306,12 @@ end
 function BuildingSignDetailPart:clickOtherSignBtn()
     --打开签约界面  --暂时没有
     --直接发送签约请求
-    self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
+    local needPrice = self.m_data.contractInfo.price * self.m_data.contractInfo.hours
+    if DataManager.GetMoney() >= needPrice then
+        self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
+    else
+        Event.Brocast("SmallPop", "您的钱不够", 300)
+    end
 end
 --
 function BuildingSignDetailPart:clickSelfSignDelBtn()

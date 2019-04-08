@@ -29,6 +29,16 @@ function BuildingSignPart:_InitTransform()
     self:_getComponent(self.transform)
 end
 --
+function BuildingSignPart:_InitChildClick(mainPanelLuaBehaviour)
+    mainPanelLuaBehaviour:AddClick(self.notSetBtn.gameObject, function ()
+        self:clickNotSetSignBtn()
+    end , self)
+end
+--
+function BuildingSignPart:_RemoveChildClick()
+    self.notSetBtn.onClick:RemoveAllListeners()
+end
+--
 function BuildingSignPart:RefreshData(data)
     if data == nil then
         return
@@ -63,7 +73,7 @@ function BuildingSignPart:_initFunc()
         if contractInfo.contract == nil then
             self:toggleSignState(BuildingSignPart.ESignState.WaitToSign)
             local price = GetClientPriceString(contractInfo.price)
-            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>%s</size></color>", GetLanguage(12345678), price)
+            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", GetLanguage(12345678), price)
             self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", GetLanguage(12345678), contractInfo.hours)
         else
             self:toggleSignState(BuildingSignPart.ESignState.Signing)
@@ -109,4 +119,8 @@ function BuildingSignPart:toggleSignState(state)
         self.signing.localScale = Vector3.zero
         self.notSet.localScale = Vector3.zero
     end
+end
+--
+function BuildingSignPart:clickNotSetSignBtn()
+    Event.Brocast("SmallPop", "尚未开启签约", 300)
 end

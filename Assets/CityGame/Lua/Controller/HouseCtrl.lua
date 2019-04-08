@@ -125,6 +125,8 @@ end
 --关闭显示
 function HouseCtrl:_selfCloseSign()
     self.m_data.contractInfo.isOpen = false
+    self.m_data.contractInfo.price = nil
+    self.m_data.contractInfo.hours = nil
     self.groupMgr:RefreshData(self.m_data)
 end
 --开启/调整签约

@@ -8,8 +8,9 @@ BaseGroundModel = class('BaseGroundModel')
 function BaseGroundModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
-
     --Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
+    --玩家土地需要先初始化
+    self:CreateMyGroundMaterial()
 end
 
 --刷新数据
@@ -92,7 +93,33 @@ function BaseGroundModel:CheckBubbleState()
     end
 end
 
+--创建玩家土地的土地材质
+function BaseGroundModel:CreateMyGroundMaterial()
+    self.poolName = PlayerBuildingBaseData[4000002].poolName
+    self.go =MapObjectsManager.GetGameObjectByPool(self.poolName)
+    --计算地块位置
+    local data = self.Data
+    if data ~= nil and data.x ~= nil and data.y ~= nil  then
+        local blockID = TerrainManager.GridIndexTurnBlockID({x = data.x, y = data.y})
+        --赋值玩家地块位置
+        self.go.transform.position = TerrainManager.BlockIDTurnPosition(blockID)
+        --移除系统土地建筑
+        DataManager.RemoveSystemTerrainByBlock(blockID)
+    end
+end
+
+--删除玩家的土地材质
+function BaseGroundModel:DestoryMyGroundMaterial()
+    if self.go ~= nil and self.poolName ~= nil then
+        MapObjectsManager.RecyclingGameObjectToPool(self.poolName,self.go)
+    end
+end
+
+
 function BaseGroundModel:Close()
+    --删除玩家的土地材质
+    self:DestoryMyGroundMaterial()
+    --
     if self.bubbleItem ~= nil then
         local blockId = TerrainManager.GridIndexTurnBlockID({x = self.Data.x, y = self.Data.y})
         UIBubbleManager.closeGTransItem(self.bubbleItem, blockId)

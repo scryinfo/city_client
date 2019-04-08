@@ -916,6 +916,10 @@ PlayerBuildingBaseData=
         ["prefabRoute"] = "Building/my_Ground",  --我的地块
         ["poolName"] = "my_Ground",
     },
+    [4000002] ={
+        ["prefabRoute"] = "Building/PlayerGround",  --玩家地块
+        ["poolName"] = "PlayerGround",
+    },
     [13] ={
         ["typeName"] ="Supermarket",
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png"

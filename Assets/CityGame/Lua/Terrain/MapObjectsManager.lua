@@ -55,7 +55,7 @@ end
 
 --向某个对象池请求获取一个可用的GameObject
 function MapObjectsManager.GetGameObjectByPool(poolName)
-    if AllObjectPools[poolName] ~= nil then
+    if poolName ~= nil and AllObjectPools[poolName] ~= nil then
         return AllObjectPools[poolName]:GetAvailableGameObject()
     end
     return nil
@@ -63,11 +63,10 @@ end
 
 --向某个对象池还回不再使用的GameObject
 function MapObjectsManager.RecyclingGameObjectToPool(poolName,go)
-    if AllObjectPools[poolName] ~= nil and go ~= nil then
+    if poolName ~= nil and AllObjectPools[poolName] ~= nil and go ~= nil then
         AllObjectPools[poolName]:RecyclingGameObjectToPool(go)
     end
 end
-
 
 function MapObjectsManager.ChangeShader(ShaderSetting)
     local temp_DiffuseColor = ShaderSetting._DiffuseColor

@@ -25,10 +25,6 @@ function  BuildingSignDetailPart:_InitEvent()
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
-    --self.timeSlider.onValueChanged:AddListener(function (value)
-    --
-    --end)
-
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
         self:clickCloseBtn()
     end , self)
@@ -41,12 +37,23 @@ function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.selfSignDelBtn.gameObject, function ()
         self:clickSelfSignDelBtn()
     end , self)
+    --
+    mainPanelLuaBehaviour:AddClick(self.tipClose01Btn.gameObject, function ()
+        self:clickTipBtn()
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.tipClose02Btn.gameObject, function ()
+        self:clickTipBtn()
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.infoBtn.gameObject, function ()
+        self:clickOpenTipBtn()
+    end , self)
 end
 --
 function BuildingSignDetailPart:_ResetTransform()
     --self.totalText.text = "E0.0000"
 
     self.timeSlider.value = 0
+    self.tipRoot.localScale = Vector3.zero
     self:_language()
     self:_setTextSuitableWidth()
 end
@@ -122,6 +129,13 @@ function BuildingSignDetailPart:_getComponent(transform)
     self.waitToSignSignTime09 = transform:Find("root/stateRoot/waitToSign/signTime"):GetComponent("Text")
     self.waitToSignTotalPriceText = transform:Find("root/stateRoot/waitToSign/otherSeeTotal/totalPriceText"):GetComponent("Text")
     self.waitToSignTotalPriceText10 = transform:Find("root/stateRoot/waitToSign/otherSeeTotal"):GetComponent("Text")
+
+    --提示
+    self.infoBtn = transform:Find("root/stateRoot/infoBtn")
+    self.tipRoot = transform:Find("root/tipRoot")
+    self.tipClose01Btn = transform:Find("root/tipRoot/close01Btn")
+    self.tipText11 = transform:Find("root/tipRoot/close01Btn/Text"):GetComponent("Text")
+    self.tipClose02Btn = transform:Find("root/tipRoot/close02Btn")
 end
 --text调整宽度，放在多语言之后
 function BuildingSignDetailPart:_setTextSuitableWidth()
@@ -144,6 +158,7 @@ function BuildingSignDetailPart:_language()
     self.waitToSignPriceText08.text = "单价:"
     self.waitToSignSignTime09.text = "签约时间:"
     self.waitToSignTotalPriceText10.text = "总价:"
+    self.tipText11.text = "Human traffic can improve the promotion ability of the promotion company!"
 end
 --签约者信息
 function BuildingSignDetailPart:_getSignerInfo(info)
@@ -167,7 +182,7 @@ function BuildingSignDetailPart:_initFunc()
         PlayerInfoManger.GetInfos({[1] = contractInfo.contract.signId}, self._getSignerInfo, self)
 
         --自己签自己
-        if contractInfo.contract.signId == DataManager.GetMyOwnerID() then
+        if contractInfo.contract.signId == self.m_data.info.ownerId then
             if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.SelfSigningSelfOpen)
                 self.selfSignDelBtn.transform.localScale = Vector3.one
@@ -188,20 +203,21 @@ function BuildingSignDetailPart:_initFunc()
 
             local hours = contractInfo.contract.hours
             self.otherSignTimeText.text = self:_getSuitableHourStr(hours)
-            local usedHour = (TimeSynchronized.GetTheCurrentTime() - contractInfo.contract.startTs) / 3600
+            local usedHour = (TimeSynchronized.GetTheCurrentServerTime() - contractInfo.contract.startTs) / 3600 / 1000
             self.timeSlider.value = usedHour / hours
             local usedStr = self:_getSuitableHourStr(usedHour)
             self.usedTimeText.text = usedStr
             --如果显示的文字超过slider的显示位置，则靠右显示
-            if self.usedTimeText.rectTransform.preferredWidth > self.timeSlider.value * 305 then
+            if self.usedTimeText.preferredWidth > self.timeSlider.value * 305 then
                 self.usedTimeSmallText.text = usedStr
                 self.usedTimeSmallText.transform.localScale = Vector3.one
-                self.usedTimeText.transform.localScale = Vector3.one
+                self.usedTimeText.transform.localScale = Vector3.zero
             else
-                self.usedTimeSmallText.transform.localScale = Vector3.one
+                self.usedTimeSmallText.transform.localScale = Vector3.zero
+                self.usedTimeText.transform.localScale = Vector3.one
             end
 
-            if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
+            if self.m_data.info.ownerId == DataManager.GetMyOwnerID() or contractInfo.contract.signId == DataManager.GetMyOwnerID() then
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.OtherSigningSignerOpen)
                 self.selfSee.localScale = Vector3.one
                 self.otherSee.localScale = Vector3.zero
@@ -306,6 +322,14 @@ end
 --
 function BuildingSignDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
+end
+--点击提示按钮
+function BuildingSignDetailPart:clickOpenTipBtn()
+    self.tipRoot.localScale = Vector3.one
+end
+--点击提示框
+function BuildingSignDetailPart:clickTipBtn()
+    self.tipRoot.localScale = Vector3.zero
 end
 ---------------------------------------------------------------------------------------
 --自己取消签约

@@ -61,19 +61,19 @@ function HouseModel:n_OnReceiveOpenBusiness(data)
         Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end
---
+--关闭签约
 function HouseModel:n_OnReceiveCloseContract(data)
     if data ~= nil and data.id == self.insId then
         DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_selfCloseSign', data)
     end
 end
---
+--开启/调整签约
 function HouseModel:n_OnReceiveChangeContract(data)
     if data ~= nil and data.buildingId == self.insId then
         DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_changeSignInfo', data)
     end
 end
---
+--自己取消自己的签约
 function HouseModel:n_OnReceiveCancelContract(data)
     if data ~= nil and data.id == self.insId then
         DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_selfCancelSign', data)

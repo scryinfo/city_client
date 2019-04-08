@@ -120,8 +120,8 @@ function BuildingSignDetailPart:_getComponent(transform)
     self.waitToSignPriceText08 = transform:Find("root/stateRoot/waitToSign/Text01"):GetComponent("Text")
     self.waitToSignSignTime = transform:Find("root/stateRoot/waitToSign/signTime/signTimeText"):GetComponent("Text")
     self.waitToSignSignTime09 = transform:Find("root/stateRoot/waitToSign/signTime"):GetComponent("Text")
-    self.waitToSignTotalPriceText = transform:Find("root/stateRoot/waitToSign/otherSeeTotal"):GetComponent("Text")  --如果是自己，就
-    self.waitToSignTotalPriceText10 = transform:Find("root/stateRoot/waitToSign/otherSeeTotal/totalPriceText"):GetComponent("Text")
+    self.waitToSignTotalPriceText = transform:Find("root/stateRoot/waitToSign/otherSeeTotal/totalPriceText"):GetComponent("Text")
+    self.waitToSignTotalPriceText10 = transform:Find("root/stateRoot/waitToSign/otherSeeTotal"):GetComponent("Text")
 end
 --text调整宽度，放在多语言之后
 function BuildingSignDetailPart:_setTextSuitableWidth()
@@ -149,7 +149,7 @@ end
 function BuildingSignDetailPart:_getSignerInfo(info)
     local data = info[1]
     if data ~= nil then
-        self.signerInfo = info
+        self.signerInfo = data
         self.avatar = AvatarManger.GetSmallAvatar(self.signerInfo.faceId, self.signerPortrait.transform,0.2)
         self.signerNameText.text = self.signerInfo.name
         self.signerCompanyText.text = self.signerInfo.companyName
@@ -178,9 +178,14 @@ function BuildingSignDetailPart:_initFunc()
             end
 
             self.selfSignLiftText.text = contractInfo.contract.lift.."%"
-            self.selfSignUsedTimeText.text = self:_getSuitableHourStr(contractInfo.contract.lift / 3600)
+            self.selfSignUsedTimeText.text = self:_getSuitableHourStr(contractInfo.contract.hours)
+            self.otherSign.localScale = Vector3.zero
+            self.selfSign.localScale = Vector3.one
         else
             --别人签
+            self.otherSign.localScale = Vector3.one
+            self.selfSign.localScale = Vector3.zero
+
             local hours = contractInfo.contract.hours
             self.otherSignTimeText.text = self:_getSuitableHourStr(hours)
             local usedHour = (TimeSynchronized.GetTheCurrentTime() - contractInfo.contract.startTs) / 3600
@@ -213,6 +218,7 @@ function BuildingSignDetailPart:_initFunc()
     else
         --待签约状态
         if contractInfo.price ~= nil and contractInfo.hours ~= nil then
+            local tempHours = contractInfo.hours
             if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
                 self:_toggleShowState(BuildingSignDetailPart.EOpenState.WaitSignSelfOpen)
             else
@@ -220,8 +226,8 @@ function BuildingSignDetailPart:_initFunc()
             end
             local price = contractInfo.price
             self.waitToSignPriceText.text = GetClientPriceString(price).."/h"
-            self.waitToSignSignTime.text = contractInfo.hours.."h"
-            self.waitToSignTotalPriceText.text = GetClientPriceString(price * contractInfo.hours)
+            self.waitToSignSignTime.text = tempHours.."h"
+            self.waitToSignTotalPriceText.text = GetClientPriceString(price * tempHours)
         else
             --尚未设置签约信息
             self:_toggleShowState(BuildingSignDetailPart.EOpenState.SelfNotSet)
@@ -289,13 +295,28 @@ end
 function BuildingSignDetailPart:clickOtherSignBtn()
     --打开签约界面  --暂时没有
     --直接发送签约请求
+    self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
 end
 --
 function BuildingSignDetailPart:clickSelfSignDelBtn()
     --打开弹窗
     --请求删除签约
+    self:m_ReqSelfCancelContract(self.m_data.info.id)
 end
 --
 function BuildingSignDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
+end
+---------------------------------------------------------------------------------------
+--自己取消签约
+function BuildingSignDetailPart:m_ReqSelfCancelContract(buildingId)
+    local msgId = pbl.enum("gscode.OpCode","cancelContract")
+    local pMsg = assert(pbl.encode("gs.Id", {id = buildingId}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+--签约按钮
+function BuildingSignDetailPart:m_ReqContract(buildingId, price, hours)
+    local msgId = pbl.enum("gscode.OpCode","signContract")
+    local pMsg = assert(pbl.encode("gs.SignContract", {buildingId = buildingId, price = price, hours = hours}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end

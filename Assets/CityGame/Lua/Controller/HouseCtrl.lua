@@ -125,5 +125,25 @@ end
 --关闭显示
 function HouseCtrl:_selfCloseSign()
     self.m_data.contractInfo.isOpen = false
-    self.groupMgr:refreshData(self.m_data)
+    self.groupMgr:RefreshData(self.m_data)
+end
+--开启/调整签约
+function HouseCtrl:_changeSignInfo(data)
+    self.m_data.contractInfo.isOpen = true
+    self.m_data.contractInfo.price = data.price
+    self.m_data.contractInfo.hours = data.hours
+    self.groupMgr:RefreshData(self.m_data)
+end
+--自己取消自己的签约
+function HouseCtrl:_selfCancelSign()
+    self.m_data.contractInfo.isOpen = false
+    self.m_data.contractInfo.price = nil
+    self.m_data.contractInfo.hours = nil
+    self.m_data.contractInfo.contract = nil
+    self.groupMgr:RefreshData(self.m_data)
+end
+--签约成功
+function HouseCtrl:_signSuccess(data)
+    self.m_data.contractInfo.contract = data
+    self.groupMgr:RefreshData(self.m_data)
 end

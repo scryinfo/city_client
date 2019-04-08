@@ -92,14 +92,14 @@ function BuildingSignSetDialogPageCtrl:_initData()
     self:toggleUseState(false)
     if self.m_data.contractInfo.isOpen == true then
         --设置过
-        self.priceInput.value = self.m_data.contractInfo.price
-        self.timeInput.value = self.m_data.contractInfo.hours
+        self.priceInput.text = GetClientPriceString(self.m_data.contractInfo.price)
+        self.timeInput.text = self.m_data.contractInfo.hours
         self:toggleSwitchState(true)
     else
         --没设置过
         self.priceInput.text = ""
         self.timeInput.text = ""
-        self:toggleSwitchState(true)
+        self:toggleSwitchState(false)
     end
 end
 --
@@ -179,11 +179,11 @@ function BuildingSignSetDialogPageCtrl:_onClickConfirm()
             Event.Brocast("SmallPop", "请确认价格和时间是否填写完成", 300)
             return
         end
-        if GetServerPriceNumber(priceValue) == self.m_data.contractInfo.price or GetServerPriceNumber(timeValue) == self.m_data.contractInfo.hours then
+        if GetServerPriceNumber(priceValue) == self.m_data.contractInfo.price and GetServerPriceNumber(timeValue) == self.m_data.contractInfo.hours then
             Event.Brocast("SmallPop", "信息未修改", 300)
             return
         end
-        self:m_ReqSettingContract(self.m_data.info.id, GetServerPriceNumber(priceValue), GetServerPriceNumber(timeValue))
+        self:m_ReqSettingContract(self.m_data.info.id, GetServerPriceNumber(priceValue), timeValue)
         UIPanel.ClosePage()
         return
     end
@@ -210,12 +210,12 @@ end
 --开启/调整签约
 function BuildingSignSetDialogPageCtrl:m_ReqSettingContract(buildingId, price, hours)
     local msgId = pbl.enum("gscode.OpCode","settingContract")
-    local pMsg = assert(pbl.encode("gs.ContractSetting", {id = buildingId, price = price, hours = hours}))
+    local pMsg = assert(pbl.encode("gs.ContractSetting", {buildingId = buildingId, price = price, hours = hours}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 --发起签约
 function BuildingSignSetDialogPageCtrl:m_ReqContract(buildingId)
     local msgId = pbl.enum("gscode.OpCode","signContract")
-    local pMsg = assert(pbl.encode("gs.SignContract", {id = buildingId}))
+    local pMsg = assert(pbl.encode("gs.SignContract", {buildingId = buildingId}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end

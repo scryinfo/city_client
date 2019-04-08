@@ -9,7 +9,10 @@ LuaGameObjectPool = class('LuaGameObjectPool')
 function LuaGameObjectPool:initialize(poolname,poolPrefab,poolInitSize,hidePosition,PoolsRoot)
     self.m_poolName = poolname                      --对象池名字
     self.poolRoot = UnityEngine.GameObject.New("Pool_"..tostring(poolname)).transform   --可用GameObject对象池物体节点（其实不必要）
-    self.poolRoot:SetParent(PoolsRoot)
+    --挂在对象池根节点下
+    if PoolsRoot ~= nil then
+        self.poolRoot:SetParent(PoolsRoot)
+    end
     poolPrefab.transform:SetParent(self.poolRoot)
     poolPrefab.transform.position = hidePosition
     poolPrefab.name = poolname

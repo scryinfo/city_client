@@ -7,10 +7,13 @@
 GAucModel= {}
 local this = GAucModel
 local pbl = pbl
+local prefabPools = {}
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
 GAucModel.BidTime = 30000
+local GroundNowPoolName = "GroundNowObj"
+local GroundSoonPoolName = "GroundSoonObj"
 
 --构建函数--
 function GAucModel.New()
@@ -68,6 +71,9 @@ end
 function GAucModel._preLoadGroundAucObj()
     this.groundAucNowObj = UnityEngine.Resources.Load(GAucModel.StartAucPath)  --已经拍卖
     this.groundAucSoonObj = UnityEngine.Resources.Load(GAucModel.WillAucPath)  --即将拍卖
+
+    prefabPools[GroundNowPoolName] = LuaGameObjectPool:new(GroundNowPoolName, this.groundAucNowObj, 25, Vector3.New(-999,-999,-999))
+    prefabPools[GroundSoonPoolName] = LuaGameObjectPool:new(GroundSoonPoolName, this.groundAucSoonObj, 25, Vector3.New(-999,-999,-999))
 end
 
 --拍卖信息更新 bidChangeInform
@@ -115,48 +121,90 @@ function GAucModel.bindEndFunc(endId)
     Event.Brocast("c_BidEnd", endId)  --关闭界面
 end
 
---移动到拍卖的位置
---function GAucModel._moveToAucPos()
---    if GAucModel.valuableStartAucObj ~= nil and GAucModel.valuableStartAucObj.transform.localScale ~= Vector3.zero then
---        CameraMove.MoveCameraToPos(GAucModel.valuableStartAucObj.transform.position)
---        return
---    end
---    if GAucModel.valuableWillAucObj ~= nil and GAucModel.valuableWillAucObj.transform.localScale ~= Vector3.zero then
---        CameraMove.MoveCameraToPos(GAucModel.valuableWillAucObj.transform.position)
+--获取一个有效的item
+--function GAucModel._getValuableStartAucObj()
+--    if this.valuableStartAucList == nil or #this.valuableStartAucList == 0 then
+--        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+--        go.transform.localScale = Vector3.one
+--        go.gameObject.name = "拍卖中"
+--        return go
+--    else
+--        local go = this.valuableStartAucList[1]
+--        go.transform.localScale = Vector3.one
+--        table.remove(this.valuableStartAucList, 1)
+--        return go
 --    end
 --end
-
---获取一个有效的item
-function GAucModel._getValuableStartAucObj()
-    if this.valuableStartAucList == nil or #this.valuableStartAucList == 0 then
-        local go = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
-        go.transform.localScale = Vector3.one
-        go.gameObject.name = "拍卖中"
-        return go
-    else
-        local go = this.valuableStartAucList[1]
-        go.transform.localScale = Vector3.one
-        table.remove(this.valuableStartAucList, 1)
-        return go
-    end
-end
 --回收obj
-function GAucModel._returnHistoryObj(go)
-    if this.valuableStartAucList == nil then
-        this.valuableStartAucList = {}
-    end
-    go.transform.localScale = Vector3.zero
-    table.insert(this.valuableStartAucList, 1, go)
-end
-
-
+--function GAucModel._returnHistoryObj(go)
+--    if this.valuableStartAucList == nil then
+--        this.valuableStartAucList = {}
+--    end
+--    go.transform.localScale = Vector3.zero
+--    table.insert(this.valuableStartAucList, 1, go)
+--end
 --获取有效的即将拍卖的土地预制
-function GAucModel._getValuableWillAucObj()
-    if GAucModel.valuableWillAucObj == nil then
-        GAucModel.valuableWillAucObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
+--function GAucModel._getValuableWillAucObj()
+--    if GAucModel.valuableWillAucObj == nil then
+--        GAucModel.valuableWillAucObj = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
+--    end
+--    GAucModel.valuableWillAucObj.transform.localScale = Vector3.one
+--    return GAucModel.valuableWillAucObj
+--end
+
+--获取拍卖中的预制
+function GAucModel._getValuableStartAucObj(groundData)
+    local table
+    if groundData ~= nil then
+        table = {}
+        for i, value in ipairs(groundData) do
+            local obj = prefabPools[GroundNowPoolName]:GetAvailableGameObject()
+            local pos = Vector3.New(value.x, 0, value.y)
+            obj.transform.position = pos
+            table[i] = obj
+        end
     end
-    GAucModel.valuableWillAucObj.transform.localScale = Vector3.one
-    return GAucModel.valuableWillAucObj
+    return table
+end
+--获取即将拍卖的预制
+function GAucModel._getValuableWillAucObj(groundData)
+    local table
+    if groundData ~= nil then
+        table = {}
+        for i, value in ipairs(groundData) do
+            local obj = prefabPools[GroundSoonPoolName]:GetAvailableGameObject()
+            local pos = Vector3.New(value.x, 0, value.y)
+            obj.transform.position = pos
+            table[i] = obj
+        end
+    end
+    return table
+end
+--Soon回收
+function GAucModel._returnSoonToPool(table)
+    if prefabPools[GroundSoonPoolName] == nil then
+        return
+    end
+    if table ~= nil then
+        for i, obj in pairs(table) do
+            if obj ~= nil then
+                prefabPools[GroundSoonPoolName]:RecyclingGameObjectToPool(obj.gameObject)
+            end
+        end
+    end
+end
+--Now回收
+function GAucModel._returnNowToPool(table)
+    if prefabPools[GroundNowPoolName] == nil then
+        return
+    end
+    if table ~= nil then
+        for i, obj in pairs(table) do
+            if obj ~= nil then
+                prefabPools[GroundNowPoolName]:RecyclingGameObjectToPool(obj.gameObject)
+            end
+        end
+    end
 end
 
 --- 客户端请求 ---

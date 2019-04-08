@@ -52,18 +52,18 @@ function UIBubbleGroundAucItem:initialize(data)
         end
     end
 
-    local pos = Vector3.New(GroundAucConfig[self.data.id].area[1].x, 0, GroundAucConfig[self.data.id].area[1].y)
+    local groundConfigData = GroundAucConfig[self.data.id].area
+    local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData.y)
     if self.data.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero
-        self.groundGo = GAucModel._getValuableStartAucObj()  --设置场景中的拍卖gameobject
+        self.groundGo = GAucModel._getValuableStartAucObj(groundConfigData)  --设置场景中的拍卖gameobject
     else
         self.now.transform.localScale = Vector3.zero
         self.soon.transform.localScale = Vector3.one
-        self.groundGo = GAucModel._getValuableWillAucObj()
+        self.groundGo = GAucModel._getValuableWillAucObj(groundConfigData)
     end
-    self.groundGo.transform.position = pos
-    self.data.targetPos = self.groundGo.transform.position
+    self.data.targetPos = pos
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
     self.m_Timer:Start()
 
@@ -187,7 +187,7 @@ function UIBubbleGroundAucItem:NowTimeDownFunc()
         if remainTime <= 0 then
             self.timeDown = false
             self.isStartBid = false
-            GAucModel._returnHistoryObj(self.groundGo.gameObject)
+            GAucModel._returnNowToPool(self.groundGo)
             --拍卖结束
             UIBubbleManager.closeItem(self, self.data.id)
             return
@@ -210,8 +210,8 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
             self.soon.transform.localScale = Vector3.zero
             self.noneBidText02.transform.localScale = Vector3.one
             self.nowBinding.localScale = Vector3.zero
-            self.groundGo = GAucModel._getValuableStartAucObj()
-            self.groundGo.transform.position = self.data.targetPos
+            GAucModel._returnSoonToPool(self.groundGo)
+            self.groundGo = GAucModel._getValuableStartAucObj(GroundAucConfig[self.data.id].area)
             GAucModel.updateSoonItem(self.data.id + 1)
             Event.Brocast("c_BidStart", self.data)  --切换界面
             return

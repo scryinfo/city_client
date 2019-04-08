@@ -1,9 +1,15 @@
 LuaGameObjectPool = class('LuaGameObjectPool')
 
-
-function LuaGameObjectPool:initialize(poolname,poolPrefab,poolInitSize,hidePosition)
+-----初始化函数
+---poolname：对象池名字（根据名字进行回收）
+---poolPrefab：对象池的基础拷贝物体
+---poolInitSize：对象池初始化大小（个数）
+---hidePosition：对象隐藏时的位置
+---PoolsRoot：所有Pool的根节点
+function LuaGameObjectPool:initialize(poolname,poolPrefab,poolInitSize,hidePosition,PoolsRoot)
     self.m_poolName = poolname                      --对象池名字
     self.poolRoot = UnityEngine.GameObject.New("Pool_"..tostring(poolname)).transform   --可用GameObject对象池物体节点（其实不必要）
+    self.poolRoot:SetParent(PoolsRoot)
     poolPrefab.transform:SetParent(self.poolRoot)
     poolPrefab.transform.position = hidePosition
     poolPrefab.name = poolname

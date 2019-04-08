@@ -2,12 +2,13 @@ MapObjectsManager = {}
 local AllMaterial = {}
 local AllObjectPools = {}
 local RendererType = nil
+local PoolsRoot = nil
 
 --创建Prefab成功后初始对应Pool
 local function CreateBasePrefabSuccess(tempPrefab,item)
     if tempPrefab ~= nil then
         --初始化对象池
-        AllObjectPools[item.Name] = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition)
+        AllObjectPools[item.Name] = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition,PoolsRoot)
     end
 end
 
@@ -37,6 +38,7 @@ end
 function MapObjectsManager.Init()
     AllMaterial = {}
     AllObjectPools = {}
+    PoolsRoot = UnityEngine.GameObject.New("PoolsRoot").transform
     RendererType = typeof(UnityEngine.Renderer)
     --初始化基础建筑Prefeb（异步）
     local PoolInstantiates = MapGameObjectsConfig.PoolInstantiate

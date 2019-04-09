@@ -71,9 +71,11 @@ end
 function GAucModel._preLoadGroundAucObj()
     this.groundAucNowObj = UnityEngine.Resources.Load(GAucModel.StartAucPath)  --已经拍卖
     this.groundAucSoonObj = UnityEngine.Resources.Load(GAucModel.WillAucPath)  --即将拍卖
+    this.tempNow = UnityEngine.GameObject.Instantiate(this.groundAucNowObj)
+    this.tempSoon = UnityEngine.GameObject.Instantiate(this.groundAucSoonObj)
 
-    prefabPools[GroundNowPoolName] = LuaGameObjectPool:new(GroundNowPoolName, this.groundAucNowObj, 25, Vector3.New(-999,-999,-999))
-    prefabPools[GroundSoonPoolName] = LuaGameObjectPool:new(GroundSoonPoolName, this.groundAucSoonObj, 25, Vector3.New(-999,-999,-999))
+    prefabPools[GroundNowPoolName] = LuaGameObjectPool:new(GroundNowPoolName, this.tempNow, 25, Vector3.New(-999,-999,-999))
+    prefabPools[GroundSoonPoolName] = LuaGameObjectPool:new(GroundSoonPoolName, this.tempSoon, 25, Vector3.New(-999,-999,-999))
 end
 
 --拍卖信息更新 bidChangeInform

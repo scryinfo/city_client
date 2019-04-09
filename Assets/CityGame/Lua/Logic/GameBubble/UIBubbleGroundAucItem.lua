@@ -53,7 +53,7 @@ function UIBubbleGroundAucItem:initialize(data)
     end
 
     local groundConfigData = GroundAucConfig[self.data.id].area
-    local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData.y)
+    local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData[1].y)
     if self.data.isStartAuc == true then
         self.now.transform.localScale = Vector3.one
         self.soon.transform.localScale = Vector3.zero

@@ -117,6 +117,11 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 4000001,
             ["InitCount"] = 0,
         },
+        {   --玩家地块
+            ["Name"] = "PlayerGround",
+            ["PlayerBuildingBaseDataID"] = 4000002,
+            ["InitCount"] = 0,
+        },
         {   --道路边缘1
             ["Name"] = "Road_1",
             ["RoadPrefabConfigID"] = 1,

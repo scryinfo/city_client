@@ -20,11 +20,12 @@ end
 function StopAndBuildCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
+
 local panel
 
 --todo：刷新
 function StopAndBuildCtrl:Refresh()
-    panel:ChangeLanguage()
+    self:ChangeLanguage()
     local data=self.m_data
     self:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
 
@@ -33,6 +34,7 @@ function StopAndBuildCtrl:Refresh()
     ----刷新按钮
     self:updateBtn(data)
 end
+
 function  StopAndBuildCtrl:Hide()
     UIPanel.Hide(self)
 end
@@ -86,7 +88,6 @@ function StopAndBuildCtrl:OnClick_changeName(ins)
 
 end
 
-
 --返回
 function StopAndBuildCtrl:OnClick_backBtn(ins)
     ins.CloseBtn()
@@ -106,32 +107,27 @@ end
 
 --拆除
 function StopAndBuildCtrl:OnClick_remove(ins)
-    local data={}
+    local data={ ins= ins,func= function()
+                        Event.Brocast("m_delBuilding",ins.m_data.id )
+                        Event.Brocast("SmallPop",GetLanguage(40010015),300)
+                        DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
+                        UIPanel.CloseAllPageExceptMain()
+                       end  }
 
-    data.type="remove"
-    data.mainText=GetLanguage(40010013)
-    data.callback=function() Event.Brocast("m_delBuilding",ins.m_data.id )
-        Event.Brocast("SmallPop",GetLanguage(40010015),300)
-        DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
-        UIPanel.CloseAllPageExceptMain()
-    end
-    ct.OpenCtrl('ReminderCtrl',data)
+    ct.OpenCtrl('ReminderTipsCtrl',data)
     PlayMusEff(1002)
-
 end
 
 --停业
 function StopAndBuildCtrl:OnClick_stop(ins)
-    local data={}
-    data.type="stop"
-    data.mainText=GetLanguage(40010009)
-    data.callback=function() Event.Brocast("m_shutdownBusiness",ins.m_data.id)
-        panel.removeBtn.localScale=Vector3.one
-        panel.stopBtn.localScale=Vector3.zero
-    end
+     local data={ins = ins,func = function()
+                       Event.Brocast("m_shutdownBusiness",ins.m_data.id)
+                       panel.removeBtn.localScale=Vector3.one
+                       panel.stopBtn.localScale=Vector3.zero
+                       end  }
 
-    ct.OpenCtrl('ReminderCtrl',data)
-    PlayMusEff(1002)
+     ct.OpenCtrl('ReminderCtrl',data)
+     PlayMusEff(1002)
 end
 
 function StopAndBuildCtrl:OnClick_greenBtn1(ins)
@@ -221,8 +217,9 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
         end
     end
 
+    --默认开启左上角（第一个）
     self:updateGroundInfo(self.datas[1])
-    panel.select1.localScale=Vector3.one
+    panel.select1.localScale = Vector3.one
     select=panel.select1
     panel.greenBtn1.parent:SetAsLastSibling()
 end
@@ -268,9 +265,11 @@ function StopAndBuildCtrl:updateGroundInfo(data)
         panel.leaseText.text=time.year.."/"..time.month.."/"..time.day.."-"..time.year.."/"..time.month.."/"..(time.day+groundData.Data.rent.rentDays)
         panel.rentText.text=groundData.Data.rent.rentPreDay/10000
         if personData.male then
-            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/male.png",panel.sexIma)
+            panel.sexIma.localScale=Vector3.one
+            panel.sexIma1.localScale=Vector3.zero
         else
-            LoadSprite("Assets/CityGame/Resources/Atlas/buildAndstop/buildAndstop1/famale.png",panel.sexIma)
+            panel.sexIma.localScale=Vector3.zero
+            panel.sexIma1.localScale=Vector3.one
         end
     else                                                                            --土地主人
         panel.leasePersonInfoRoot.localScale=Vector3.zero
@@ -315,24 +314,45 @@ end
 
 --初始化的时候，将所有按钮隐藏
 function StopAndBuildCtrl.CloseBtn()
-    StopAndBuildPanel.greenBtn1.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn2.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn3.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn4.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn5.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn6.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn7.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn8.localScale = Vector3.zero
-    StopAndBuildPanel.greenBtn9.localScale = Vector3.zero
+    panel.greenBtn1.localScale = Vector3.zero
+    panel.greenBtn2.localScale = Vector3.zero
+    panel.greenBtn3.localScale = Vector3.zero
+    panel.greenBtn4.localScale = Vector3.zero
+    panel.greenBtn5.localScale = Vector3.zero
+    panel.greenBtn6.localScale = Vector3.zero
+    panel.greenBtn7.localScale = Vector3.zero
+    panel.greenBtn8.localScale = Vector3.zero
+    panel.greenBtn9.localScale = Vector3.zero
 
-    StopAndBuildPanel.blueBtn1.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn2.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn3.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn4.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn5.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn6.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn7.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn8.localScale = Vector3.zero
-    StopAndBuildPanel.blueBtn9.localScale = Vector3.zero
-    StopAndBuildPanel.select1.localScale = Vector3.zero
+    panel.blueBtn1.localScale = Vector3.zero
+    panel.blueBtn2.localScale = Vector3.zero
+    panel.blueBtn3.localScale = Vector3.zero
+    panel.blueBtn4.localScale = Vector3.zero
+    panel.blueBtn5.localScale = Vector3.zero
+    panel.blueBtn6.localScale = Vector3.zero
+    panel.blueBtn7.localScale = Vector3.zero
+    panel.blueBtn8.localScale = Vector3.zero
+    panel.blueBtn9.localScale = Vector3.zero
+    panel.select1.localScale = Vector3.zero
+end
+
+--多语言
+function StopAndBuildCtrl.ChangeLanguage()
+    --panel.topicText
+    --panel.buildingInfoText
+    --panel.buildingSelectedInfoText
+    --panel.landInfomationText
+    --panel.landInfomationSelectedText
+    --panel.buildTimeNameText
+    --panel.buyTimeNameText
+    --panel.ownerRentNameText
+    --panel.operatorText.text=GetLanguage(40010002)
+    --panel.groundInfoText.text=GetLanguage(40010001)
+    --panel.scaleText.text=GetLanguage(40010003)
+    --panel.constructText.text=GetLanguage(40010004)
+    --panel.tips.text=GetLanguage(40010007)
+    --panel.dateText.text=GetLanguage(40010005)
+    --panel.dailyRentText.text=GetLanguage(40010006)
+    --panel.depositText.text=GetLanguage(40010017)
+    --panel.stopText.text=GetLanguage(40010016)
 end

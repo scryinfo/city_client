@@ -73,7 +73,7 @@ function DataManager.RemoveSystemBuild(collectionID)
     BuildDataStack[collectionID].SystemBuildDatas = nil
 end
 -------------------------------基础地块生成--------------------------------
-
+--添加系统土地到数据管理
 function DataManager.AddSystemTerrain(collectionID,blockID,poolName,go)
     if BuildDataStack[collectionID].SystemTerrainDatas == nil then
         BuildDataStack[collectionID].SystemTerrainDatas = {}
@@ -84,7 +84,8 @@ function DataManager.AddSystemTerrain(collectionID,blockID,poolName,go)
     }
 end
 
-function DataManager.RemoveSystemTerrain(collectionID)
+--删除一整块系统土地
+function DataManager.RemoveSystemTerrainAllCollection(collectionID)
     local tempSystemBuild =  BuildDataStack[collectionID].SystemTerrainDatas
     if tempSystemBuild == nil then
         return
@@ -93,6 +94,18 @@ function DataManager.RemoveSystemTerrain(collectionID)
         MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
     end
     BuildDataStack[collectionID].SystemTerrainDatas = nil
+end
+
+--删除某一个系统土地
+function DataManager.RemoveSystemTerrainByBlock(blockID)
+    local collectionID = TerrainManager.BlockIDTurnCollectionID(blockID)
+    if BuildDataStack ~= nil and BuildDataStack[collectionID] ~= nil and BuildDataStack[collectionID].SystemTerrainDatas~=nil then
+        local tempTable = BuildDataStack[collectionID].SystemTerrainDatas[blockID]
+        if tempTable ~= nil and tempTable.gameObject ~= nil and  tempTable.poolName ~= nil then
+            MapObjectsManager.RecyclingGameObjectToPool(tempTable.poolName,tempTable.gameObject)
+            BuildDataStack[collectionID].SystemTerrainDatas[blockID] = nil
+        end
+    end
 end
 
 -------------------------------系统河流数据--------------------------------
@@ -604,7 +617,7 @@ function DataManager.RemoveCollectionDatasByCollectionID(tempCollectionID)
     --删除所有系统建筑数据
     DataManager.RemoveSystemBuild(tempCollectionID)
     --删除所有系统道路数据
-    DataManager.RemoveSystemTerrain(tempCollectionID)
+    DataManager.RemoveSystemTerrainAllCollection(tempCollectionID)
     --删除所有系统河流数据
     DataManager.RemoveSystemRiver(tempCollectionID)
     --删除所有地块信息BaseGroundModel（GroundDatas）

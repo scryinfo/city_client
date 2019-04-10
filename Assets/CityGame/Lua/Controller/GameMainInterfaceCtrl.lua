@@ -159,16 +159,18 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     end
 
     local data = {workerNum=workerNum ,dayWage=dayWage ,buildInfo= buildingInfo,callback=function ()
-            Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)
-            Event.Brocast("m_startBusiness",buildingInfo.id)
+        Event.Brocast("m_ReqHouseSetSalary1",buildingInfo.id,100)
+        Event.Brocast("m_startBusiness",buildingInfo.id)
     end}
 
     ct.OpenCtrl("WagesAdjustBoxCtrl",data)
 
-    Event.AddListener("c_successBuilding",function ()
-            func()
-        Event.Brocast("SmallPop",GetLanguage(40010020),300)
-    end ,self)
+    Event.AddListener("c_successBuilding",
+        function ()
+         func()
+         Event.Brocast("SmallPop",GetLanguage(40010020),300)
+         end
+    ,self)
 
 end
 

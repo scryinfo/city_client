@@ -56,8 +56,10 @@ function BuildingSignPart:_getComponent(transform)
     self.signingCompanyText = transform:Find("Top/signing/companyText"):GetComponent("Text")
     self.notSet = transform:Find("Top/notSet")
     self.notSetText02 = transform:Find("Top/notSet/Text"):GetComponent("Text")
-
     self.notSetBtn = transform:Find("notSetBtn"):GetComponent("Button")
+    --
+    self.unSelectText03 = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText04 = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 --
 function BuildingSignPart:_initFunc()
@@ -85,6 +87,13 @@ end
 function BuildingSignPart:_language()
     self.signingText01.text = "签约公司:"
     self.notSetText02.text = "暂未开启签约"
+    self.unSelectText03.text = "签约"
+    self.selectText04.text = "签约"
+
+    local trueTextW01 = self.unSelectText03.preferredWidth
+    self.unSelectText03.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText03.rectTransform.sizeDelta.y)
+    local trueTextW02 = self.selectText04.preferredWidth
+    self.selectText04.rectTransform.sizeDelta = Vector2.New(trueTextW02, self.selectText04.rectTransform.sizeDelta.y)
 end
 --签约者信息
 function BuildingSignPart:_getSignerInfo(info)

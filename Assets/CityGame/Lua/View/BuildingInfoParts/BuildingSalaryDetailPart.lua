@@ -42,6 +42,8 @@ function BuildingSalaryDetailPart:_ResetTransform()
 
     self.wageSlider.value = 0
     self:_showPercentValue(0)
+
+    self:_language()
 end
 --
 function BuildingSalaryDetailPart:_RemoveEvent()
@@ -89,6 +91,20 @@ function BuildingSalaryDetailPart:_getComponent(transform)
     self.effectText = transform:Find("root/bg/bg01/effectText"):GetComponent("Text")
     self.effectExpWordText = transform:Find("root/bg/bg01/Text01"):GetComponent("Text")
     self.totalText = transform:Find("root/bg/bg02/totalText"):GetComponent("Text")
+    --
+    self.wagesText01 = transform:Find("root/Text01"):GetComponent("Text")
+    self.totalText02 = transform:Find("root/bg/bg02/Text02"):GetComponent("Text")
+    self.staffNumText03 = transform:Find("root/staffNum/Text"):GetComponent("Text")
+    self.standardWageText04 = transform:Find("root/wage/Text"):GetComponent("Text")
+    self.effectTimeText05 = transform:Find("root/effectiveDateText/Text"):GetComponent("Text")
+end
+--
+function BuildingSalaryDetailPart:_language()
+    self.wagesText01.text = "Giving wage:"
+    self.totalText02.text = "Total:"
+    self.staffNumText03.text = "Number of staff:"
+    self.standardWageText04.text = "Standard wages:"
+    self.effectTimeText05.text = "Wage settlement time:"
 end
 --
 function BuildingSalaryDetailPart:_initFunc()
@@ -117,10 +133,10 @@ function BuildingSalaryDetailPart:_initFunc()
         self.standardWage = standardWage
     end
 
-    local trueTextW = self.effectiveDateText.preferredWidth
-    self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
     self.effectTime = TimeSynchronized.GetTheCurrentTime()
     self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
+    local trueTextW = self.effectiveDateText.preferredWidth
+    self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
 end
 
 --根据选中的档位显示数据

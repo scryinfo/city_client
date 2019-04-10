@@ -6,6 +6,7 @@
 LaboratoryCtrl = class('LaboratoryCtrl',UIPanel)
 UIPanel:ResgisterOpen(LaboratoryCtrl)
 
+---====================================================================================框架函数==============================================================================================
 function LaboratoryCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
@@ -15,67 +16,37 @@ end
 function LaboratoryCtrl:OnCreate(obj)
     UIPanel.OnCreate(self, obj)
 end
-local this
-function LaboratoryCtrl:Awake(go)
-    this = self
-    self.gameObject = go
-    self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.changeNameBtn.gameObject, self._changeName, self)
-
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.centerBtn.gameObject, self._centerBtnFunc, self)
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
-end
+local this,panel
 function LaboratoryCtrl:Refresh()
-    --self:_initData()
     this:_initData()
 end
+function LaboratoryCtrl:Awake(go)
+    this = self
+    panel=LaboratoryPanel
+    self.luaBehaviour= self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(panel.backBtn.gameObject, self._backBtn, self)
+    self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
 
---创建好建筑之后，每个建筑会存基本数据，比如id
-function LaboratoryCtrl:_initData()
-    if self.hasOpened then
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryCurrentInfo')
-    else
-        if self.m_data then
-            DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
-        end
-    end
+    self.luaBehaviour:AddClick(panel.centerBtn.gameObject, self._centerBtnFunc, self)
+    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
-function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
-    Event.Brocast("c_GetBuildingInfo", info)
-    if info.state == "OPERATE" then
-        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
-    else
-        LaboratoryPanel.stopRootTran.localScale = Vector3.one
-    end
+---===================================================================================点击函数==============================================================================================
 
-    self.hasOpened = true
-    LaboratoryPanel.nameText.text = info.name or "SRCY CITY"
-    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
-    LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
-    self.m_data.ownerId = info.ownerId
-    self.m_data.mId = info.mId
-    self.m_data.orderLineData = orderLineData
-    self.m_data.info = info
-    self.m_data.store = store
-    if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
-        self.m_data.isOther = true
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
-    else
-        self.m_data.isOther = false
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.one
-    end
-    self.m_data.buildingType = BuildingType.Laboratory
-    if self.laboratoryToggleGroup == nil then
-        self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
-    else
-        self.laboratoryToggleGroup:updateInfo(self.m_data)
+--点击中间按钮的方法
+function LaboratoryCtrl:_centerBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
     end
 end
-
+--点击开业按钮方法
+function LaboratoryCtrl:_openBuildingBtnFunc(ins)
+    if ins.m_data then
+        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, function()
+            DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
+        end)
+    end
+end
 ---更改名字
 function LaboratoryCtrl:_changeName(ins)
     local data = {}
@@ -98,22 +69,47 @@ function LaboratoryCtrl:_backBtn(ins)
     DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', true)
     UIPanel.ClosePage()
 end
+---===================================================================================业务代码==============================================================================================
+
+--创建好建筑之后，每个建筑会存基本数据，比如id
+function LaboratoryCtrl:_initData()
+    --请求建筑详情
+    DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+end
+
+function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
+    self.m_data=buildingInfo
+    local info=buildingInfo.info
+    --开业停业
+    Event.Brocast("c_GetBuildingInfo", info)
+    if info.state == "OPERATE" then
+        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
+    else
+        LaboratoryPanel.stopRootTran.localScale = Vector3.one
+    end
+    --建筑名字
+    panel.nameText.text = info.name or "SRCY CITY"
+    panel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
+    --判断是自己还是别人打开了界面
+    if info.ownerId ~= DataManager.GetMyOwnerID() then
+        LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
+        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
+    else
+        LaboratoryPanel.changeNameBtn.localScale = Vector3.one
+    end
+    --刷新底部组件
+    if self.groupMgr == nil then
+        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+        self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:RefreshData(buildingInfo)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(buildingInfo)
+    end
+end
+
 ---更改名字成功
 function LaboratoryCtrl:_updateName(name)
     LaboratoryPanel.nameText.text = name
-end
-
---点击中间按钮的方法
-function LaboratoryCtrl:_centerBtnFunc(ins)
-    if ins.m_data then
-        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
-    end
-end
---点击开业按钮方法
-function LaboratoryCtrl:_openBuildingBtnFunc(ins)
-    if ins.m_data then
-        Event.Brocast("c_beginBuildingInfo", ins.m_data.info, function()
-            DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
-        end)
-    end
 end

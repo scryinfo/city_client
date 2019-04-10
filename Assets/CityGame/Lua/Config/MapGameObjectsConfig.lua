@@ -60,7 +60,7 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1400003,
             ["InitCount"] = 64,
         },
-        --[[
+
         {   --研究所1
             ["Name"] = "TechnologyBuilding_1",
             ["PlayerBuildingBaseDataID"] = 1500001,
@@ -76,36 +76,36 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1500003,
             ["InitCount"] = 64,
         },
-        {   --公园1
-            ["Name"] = "Park_1",
-            ["PlayerBuildingBaseDataID"] = 1600001,
-            ["InitCount"] = 64,
-        },
-        {   --公园2
-            ["Name"] = "Park_2",
-            ["PlayerBuildingBaseDataID"] = 1600002,
-            ["InitCount"] = 64,
-        },
-        {   --公园3
-            ["Name"] = "Park_3",
-            ["PlayerBuildingBaseDataID"] = 1600003,
-            ["InitCount"] = 64,
-        },
-        {   --人才中心1
-            ["Name"] = "ExpertTradingCenter_1",
-            ["PlayerBuildingBaseDataID"] = 1700001,
-            ["InitCount"] = 64,
-        },
-        {   --人才中心2
-            ["Name"] = "ExpertTradingCenter_2",
-            ["PlayerBuildingBaseDataID"] = 1700002,
-            ["InitCount"] = 64,
-        },
-        {   --人才中心3
-            ["Name"] = "ExpertTradingCenter_3",
-            ["PlayerBuildingBaseDataID"] = 1700003,
-            ["InitCount"] = 64,
-        },
+        --{   --公园1
+        --    ["Name"] = "Park_1",
+        --    ["PlayerBuildingBaseDataID"] = 1600001,
+        --    ["InitCount"] = 64,
+        --},
+        --{   --公园2
+        --    ["Name"] = "Park_2",
+        --    ["PlayerBuildingBaseDataID"] = 1600002,
+        --    ["InitCount"] = 64,
+        --},
+        --{   --公园3
+        --    ["Name"] = "Park_3",
+        --    ["PlayerBuildingBaseDataID"] = 1600003,
+        --    ["InitCount"] = 64,
+        --},
+        --{   --人才中心1
+        --    ["Name"] = "ExpertTradingCenter_1",
+        --    ["PlayerBuildingBaseDataID"] = 1700001,
+        --    ["InitCount"] = 64,
+        --},
+        --{   --人才中心2
+        --    ["Name"] = "ExpertTradingCenter_2",
+        --    ["PlayerBuildingBaseDataID"] = 1700002,
+        --    ["InitCount"] = 64,
+        --},
+        --{   --人才中心3
+        --    ["Name"] = "ExpertTradingCenter_3",
+        --    ["PlayerBuildingBaseDataID"] = 1700003,
+        --    ["InitCount"] = 64,
+        --},
         --]]
         {   --地图地块
             ["Name"] = "TerrainGround",

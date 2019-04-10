@@ -5,33 +5,59 @@
 ---
 
 CompanyModel = class("CompanyModel",ModelBase)
---local pbl = pbl
+
 function CompanyModel:initialize(insId)
     self.insId = insId
     self:OnCreate()
 end
 
 function CompanyModel:OnCreate()
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerEconomy","ss.EconomyInfos",self.n_OnReceivePlayerEconomy,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getGroundInfo","gs.GroundChange",self.n_OnGetGroundInfo,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBuildings","gs.MyBuildingInfos",self.n_OnQueryMyBuildings,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
 end
 
--- 查询玩家的交易消息返回
-function CompanyModel:m_QueryPlayerEconomy(id)
+-- 查询玩家的土地消息
+function CompanyModel:m_GetGroundInfo()
     --gs 登录
     --1、 获取协议id
-    local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
+    local msgId = pbl.enum("gscode.OpCode","getGroundInfo")
     --2、 填充 protobuf 内部协议数据
-    local lMsg = { id = id}
-    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    --local lMsg = { id = id}
+    --local pMsg = assert(pbl.encode("ss.Id", lMsg))
     --3、 创建包，填入数据并发包
-    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
--- 服务器返回的消息信息
-function CompanyModel:n_OnReceivePlayerEconomy(economyInfos, msgId)
+-- 服务器返回的土地消息
+function CompanyModel:n_OnGetGroundInfo(groundInfos)
     --异常处理
-    if msgId == 0 then
-        economyInfos = nil
-    end
-    Event.Brocast("c_OnReceivePlayerEconomy", economyInfos)
+    --if msgId == 0 then
+    --    economyInfos = nil
+    --end
+    Event.Brocast("c_OnGetGroundInfo", groundInfos)
+end
+
+-- 查询玩家的建筑信息
+function CompanyModel.m_QueryMyBuildings()
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBuildings","gs.QueryMyBuildings",{id = DataManager.GetMyOwnerID()})
+end
+
+-- 服务器返回的建筑信息
+function CompanyModel:n_OnQueryMyBuildings(buildingInfos)
+    --异常处理
+    --if msgId == 0 then
+    --    economyInfos = nil
+    --end
+    Event.Brocast("c_OnQueryMyBuildings", buildingInfos)
+end
+
+-- 查询玩家的Eva信息
+function CompanyModel.m_QueryMyEva()
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyEva","gs.Id",{id = DataManager.GetMyOwnerID()})
+end
+
+-- 服务器返回的Eva信息
+function CompanyModel:n_OnQueryMyEva(evas)
+    Event.Brocast("c_OnQueryMyEva", evas)
 end

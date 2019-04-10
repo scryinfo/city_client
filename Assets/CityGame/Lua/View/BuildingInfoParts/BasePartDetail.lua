@@ -26,6 +26,7 @@ end
 --隐藏详情
 function BasePartDetail:Hide()
     self.transform.localScale = Vector3.zero
+    self:_ChildHide()
 end
 
 --删除Parts
@@ -79,6 +80,12 @@ end
 --TODO://子类务必重写
 --刷新数据--
 function BasePartDetail:RefreshData(data)
+
+end
+
+--TODO://用到则重写
+--隐藏时的处理--
+function BasePartDetail:_ChildHide()
 
 end
 

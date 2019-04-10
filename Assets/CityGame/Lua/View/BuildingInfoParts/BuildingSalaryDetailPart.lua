@@ -56,6 +56,12 @@ function BuildingSalaryDetailPart:_RemoveClick()
     self.confirmBtn.onClick:RemoveAllListeners()
 end
 --
+function BuildingSalaryDetailPart:_ChildHide()
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
+end
+--
 function BuildingSalaryDetailPart:RefreshData(data)
     self:_ResetTransform()
     if data == nil then
@@ -67,6 +73,7 @@ end
 --
 function BuildingSalaryDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
 end
 --
 function BuildingSalaryDetailPart:_getComponent(transform)
@@ -108,6 +115,9 @@ function BuildingSalaryDetailPart:_language()
 end
 --
 function BuildingSalaryDetailPart:_initFunc()
+    if self.m_data.info.state ~= "OPERATE" then
+        return
+    end
     if self.m_data.info.salary ~= nil then
         local value = (self.m_data.info.salary - 50) / 25
         if value < 0 then
@@ -133,10 +143,43 @@ function BuildingSalaryDetailPart:_initFunc()
         self.standardWage = standardWage
     end
 
-    self.effectTime = TimeSynchronized.GetTheCurrentTime()
+    self.m_Timer:Reset(slot(self._itemTimer, self), 1, -1, true)
+    self.m_Timer:Start()
+    self:_checkShowTime()
+
     self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
     local trueTextW = self.effectiveDateText.preferredWidth
     self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
+end
+--
+function BuildingSalaryDetailPart:_itemTimer()
+    self:_checkShowTime()
+end
+--
+function BuildingSalaryDetailPart:_checkShowTime()
+    local nowTs = TimeSynchronized.GetTheCurrentTime()
+    --local salaryTime = self.m_data.info.setSalaryTs
+    local salaryTime = 1554977340
+    local dateTable = getFormatUnixTimeNumber(salaryTime)
+    local nowDateTable = getFormatUnixTimeNumber(nowTs)
+    if dateTable.hour < nowDateTable.hour then
+        nowDateTable.day = nowDateTable.day + 1
+
+    elseif dateTable.hour == nowDateTable.hour then
+        if dateTable.min < nowDateTable.min then
+            nowDateTable.day = nowDateTable.day + 1
+
+        elseif dateTable.min == nowDateTable.min then
+            if dateTable.sec < nowDateTable.sec then
+                nowDateTable.day = nowDateTable.day + 1
+            end
+        end
+    end
+    nowDateTable.hour = dateTable.hour
+    nowDateTable.min = dateTable.min
+    nowDateTable.sec = dateTable.sec
+    self.effectTime = os.time(nowDateTable)
+    self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
 end
 
 --根据选中的档位显示数据

@@ -147,6 +147,18 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--把时间 秒转换成xx时xx分xx秒格式
+function getFormatUnixTimeNumber(time)
+	local tb = {}
+	time = math.floor(time)
+	tb.year = tonumber(os.date("%Y", time)) or 0
+	tb.month = tonumber(os.date("%m", time)) or 0
+	tb.day = tonumber(os.date("%d", time)) or 0
+	tb.hour = tonumber(os.date("%H", time)) or 0
+	tb.min = tonumber(os.date("%M", time)) or 0
+	tb.sec = tonumber(os.date("%S", time)) or 0
+	return tb
+end
 
 function convertTimeForm(second)
 	local data={}

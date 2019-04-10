@@ -230,7 +230,7 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     HistoryCurvePanel.slide:SetCoordinate(demandNumVet,value,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
 
     --供应线
-    HistoryCurvePanel.graph:DrawLine(supplyNumValue,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(supplyNumValue,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.graph:DrawLine(supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.slide:SetCoordinate(supplyNumVet,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
 end
 

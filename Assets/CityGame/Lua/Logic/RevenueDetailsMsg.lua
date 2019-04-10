@@ -16,7 +16,7 @@ function RevenueDetailsMsg.Awake()
 end
 
 function RevenueDetailsMsg.InitialNetMessages()
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addBuilding","gs.BuildingInfo",DataManager.n_OnReceiveAddBuilding)
+
 end
 
 --更新
@@ -45,10 +45,6 @@ function RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "getPrivateBuildingCommonInfo","gs.Bytes",{ids = {buildingId}})
 end
 
-function RevenueDetailsMsg.GetRevenueDetails(budiling)
-    --DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
-end
-
 
 --------------------------------------------------------
 
@@ -57,8 +53,4 @@ end
 --今日营收
 function RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info)
     Event.Brocast("c_Revenue",info)
-end
-
-function RevenueDetailsMsg:n_RevenueDetails()
-
 end

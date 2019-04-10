@@ -86,5 +86,5 @@ end
 
 --对外开放
 function AdvertisementPartDetail:OnOpen()
-
+   ct.OpenCtrl("SetOpenUpCtrl")
 end

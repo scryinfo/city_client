@@ -34,5 +34,5 @@ function TurnoverPart:_getComponent(transform)
 end
 --
 function TurnoverPart:_initFunc()
-    self.turnover.text = self.m_data
+    self.turnover.text = GetClientPriceString(self.m_data.turnover)
 end

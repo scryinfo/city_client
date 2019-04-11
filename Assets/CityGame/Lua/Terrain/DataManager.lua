@@ -1688,6 +1688,7 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifySocietyName","gs.BytesStrings", DataManager.n_ModifySocietyName)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", DataManager.n_ModifyIntroduction)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", DataManager.n_ModifyDeclaration)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPrivateBuildingCommonInfo","gs.PrivateBuildingInfos",DataManager.n_OnGetPrivateBuildingCommonInfo)
 end
 
 --DataManager初始化
@@ -2106,4 +2107,9 @@ function DataManager.GetBuildingBaseByCollectionID(collectionID)
     else
         return nil
     end
+end
+
+--今日营业回调
+function DataManager.n_OnGetPrivateBuildingCommonInfo(info)
+    RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info.infos[1].todayIncome)
 end

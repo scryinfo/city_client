@@ -60,7 +60,6 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1400003,
             ["InitCount"] = 64,
         },
-        --[[
         {   --研究所1
             ["Name"] = "TechnologyBuilding_1",
             ["PlayerBuildingBaseDataID"] = 1500001,
@@ -75,7 +74,7 @@ MapGameObjectsConfig = {
             ["Name"] = "TechnologyBuilding_3",
             ["PlayerBuildingBaseDataID"] = 1500003,
             ["InitCount"] = 64,
-        },
+        },--[[
         {   --公园1
             ["Name"] = "Park_1",
             ["PlayerBuildingBaseDataID"] = 1600001,

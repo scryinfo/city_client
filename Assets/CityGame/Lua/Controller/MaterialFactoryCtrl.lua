@@ -1,41 +1,41 @@
-MaterialCtrl = class('MaterialCtrl',UIPanel)
-UIPanel:ResgisterOpen(MaterialCtrl) --注册打开的方法
+MaterialFactoryCtrl = class('MaterialFactoryCtrl',UIPanel)
+UIPanel:ResgisterOpen(MaterialFactoryCtrl) --注册打开的方法
 
 local this
 --构建函数
-function MaterialCtrl:initialize()
+function MaterialFactoryCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
-function MaterialCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/MaterialPanel.prefab";
+function MaterialFactoryCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/MaterialFactoryPanel.prefab";
 end
 
-function MaterialCtrl:OnCreate(obj)
+function MaterialFactoryCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
 
-function MaterialCtrl:Awake(go)
+function MaterialFactoryCtrl:Awake(go)
     this = self
     self.gameObject = go;
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    --self.materialBehaviour:AddClick(MaterialPanel.backBtn.gameObject,self.OnClick_backBtn,self);
-    --self.materialBehaviour:AddClick(MaterialPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
-    --self.materialBehaviour:AddClick(MaterialPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
-    self.materialBehaviour:AddClick(MaterialPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
-    self.materialBehaviour:AddClick(MaterialPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+    --self.materialBehaviour:AddClick(MaterialFactoryPanel.backBtn.gameObject,self.OnClick_backBtn,self);
+    --self.materialBehaviour:AddClick(MaterialFactoryPanel.headImgBtn.gameObject,self.OnClick_infoBtn,self);
+    --self.materialBehaviour:AddClick(MaterialFactoryPanel.changeNameBtn.gameObject,self.OnClick_changeName,self);
+    self.materialBehaviour:AddClick(MaterialFactoryPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    self.materialBehaviour:AddClick(MaterialFactoryPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-function MaterialCtrl:Active()
+function MaterialFactoryCtrl:Active()
     UIPanel.Active(self)
-    MaterialPanel.Text.text = GetLanguage(25010001)
+    MaterialFactoryPanel.Text.text = GetLanguage(25010001)
     Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
-function MaterialCtrl:Refresh()
+function MaterialFactoryCtrl:Refresh()
     this:initializeData()
 end
 
-function MaterialCtrl:initializeData()
+function MaterialFactoryCtrl:initializeData()
     if self.m_data.insId then
         self.insId=self.m_data.insId
         DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
@@ -48,30 +48,30 @@ function MaterialCtrl:initializeData()
 end
 
 --刷新原料厂信息
-function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
-    --MaterialPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    --MaterialPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
+function MaterialFactoryCtrl:refreshMaterialDataInfo(DataInfo)
+    --MaterialFactoryPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
+    --MaterialFactoryPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
     local insId = self.m_data.insId
     self.m_data = DataInfo
     self.m_data.insId = insId
     if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
-        --MaterialPanel.changeNameBtn.localScale = Vector3.zero
+        --MaterialFactoryPanel.changeNameBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
-        --MaterialPanel.changeNameBtn.localScale = Vector3.one
+        --MaterialFactoryPanel.changeNameBtn.localScale = Vector3.one
     end
 
     if self.m_data.info.state=="OPERATE" then
-        MaterialPanel.stopIconRoot.localScale=Vector3.zero
+        MaterialFactoryPanel.stopIconRoot.localScale=Vector3.zero
     else
-        MaterialPanel.stopIconRoot.localScale=Vector3.one
+        MaterialFactoryPanel.stopIconRoot.localScale=Vector3.one
     end
 
     Event.Brocast("c_GetBuildingInfo",DataInfo.info)
 
-    if MaterialPanel.topItem ~= nil then
-        MaterialPanel.topItem:refreshData(DataInfo.info,function()
+    if MaterialFactoryPanel.topItem ~= nil then
+        MaterialFactoryPanel.topItem:refreshData(DataInfo.info,function()
             PlayMusEff(1002)
             Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
             if self.materialToggleGroup then
@@ -83,22 +83,22 @@ function MaterialCtrl:refreshMaterialDataInfo(DataInfo)
     end
     self.m_data.buildingType = BuildingType.MaterialFactory
     if not self.materialToggleGroup then
-        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialPanel.leftRootTran, MaterialPanel.rightRootTran, self.materialBehaviour, self.m_data)
+        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialFactoryPanel.leftRootTran, MaterialFactoryPanel.rightRootTran, self.materialBehaviour, self.m_data)
     else
         self.materialToggleGroup:updateInfo(self.m_data)
     end
 end
 
-function MaterialCtrl:OnClick_buildInfo(ins)
+function MaterialFactoryCtrl:OnClick_buildInfo(ins)
     PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
-function MaterialCtrl:OnClick_prepareOpen(ins)
+function MaterialFactoryCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
-function MaterialCtrl:OnClick_changeName(ins)
+function MaterialFactoryCtrl:OnClick_changeName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME"
@@ -110,11 +110,11 @@ function MaterialCtrl:OnClick_changeName(ins)
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 --更改名字成功
-function MaterialCtrl:_updateName(name)
-    MaterialPanel.nameText.text = name
+function MaterialFactoryCtrl:_updateName(name)
+    MaterialFactoryPanel.nameText.text = name
 end
 ----返回
---function MaterialCtrl:OnClick_backBtn(ins)
+--function MaterialFactoryCtrl:OnClick_backBtn(ins)
 --    PlayMusEff(1002)
 --    Event.Brocast("m_ReqCloseMaterial",ins.m_data.insId)
 --    if ins.materialToggleGroup then
@@ -122,7 +122,7 @@ end
 --    end
 --    UIPanel.ClosePage()
 --end
-function MaterialCtrl:Hide()
+function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     if self.m_data.isOther == true then
@@ -133,13 +133,13 @@ function MaterialCtrl:Hide()
     end
 end
 --更改基础建筑信息
-function MaterialCtrl:_changeItemData(data)
-    if data ~= nil and MaterialPanel.topItem ~= nil then
-        MaterialPanel.topItem:changeItemData(data)
+function MaterialFactoryCtrl:_changeItemData(data)
+    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
+        MaterialFactoryPanel.topItem:changeItemData(data)
     end
 end
 --清空生产线
-function MaterialCtrl:deleteProductionObj()
+function MaterialFactoryCtrl:deleteProductionObj()
     if next(HomeProductionLineItem.lineItemTable) == nil then
         return
     else
@@ -151,7 +151,7 @@ function MaterialCtrl:deleteProductionObj()
     end
 end
 --清空货架
-function MaterialCtrl:deleteShelfObj()
+function MaterialFactoryCtrl:deleteShelfObj()
     if next(ShelfRateItem.SmallShelfRateItemTab) == nil then
         return
     else
@@ -162,7 +162,7 @@ function MaterialCtrl:deleteShelfObj()
     end
 end
 --清空货架（其他玩家）
-function MaterialCtrl:deleteOtherShelf()
+function MaterialFactoryCtrl:deleteOtherShelf()
     if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
         return
     end
@@ -172,20 +172,20 @@ function MaterialCtrl:deleteOtherShelf()
     end
 end
 --打开信息界面
-function MaterialCtrl:OnClick_infoBtn()
+function MaterialFactoryCtrl:OnClick_infoBtn()
 end
 UnitTest.TestBlockStart()---------------------------------------------------------
 UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
     ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
     Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPanel:ShowPage(MaterialCtrl);
-        ct.OpenCtrl("MaterialCtrl")
+        --UIPanel:ShowPage(MaterialFactoryCtrl);
+        ct.OpenCtrl("MaterialFactoryCtrl")
     end)
 end)
 
-UnitTest.Exec("fisher_w11_OpenMaterialCtrl", "test_MaterialModel_ShowPage",  function ()
-    ct.log("fisher_w11_OpenMaterialCtrl","[test_RemoveClick_self]  测试开始")
-    ct.OpenCtrl('MaterialCtrl',Vector2.New(0, -300)) --注意传入的是类名
+UnitTest.Exec("fisher_w11_OpenMaterialFactoryCtrl", "test_MaterialModel_ShowPage",  function ()
+    ct.log("fisher_w11_OpenMaterialFactoryCtrl","[test_RemoveClick_self]  测试开始")
+    ct.OpenCtrl('MaterialFactoryCtrl',Vector2.New(0, -300)) --注意传入的是类名
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

@@ -61,4 +61,6 @@ function Game.OnPostInitOK()
     AvatarManger.Awake()
 
     PathFindManager.Init()
+    --营收详情
+    RevenueDetailsMsg.Awake()
 end

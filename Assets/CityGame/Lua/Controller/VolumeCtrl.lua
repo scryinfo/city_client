@@ -35,7 +35,6 @@ function VolumeCtrl:Awake()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
-    local minute = tonumber(ts.minute)
     local second = tonumber(ts.second)
     if second % 10 == 0 then
         currentTime = math.floor(currentTime - 10)

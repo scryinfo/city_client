@@ -75,11 +75,13 @@ end
 function LaboratoryCtrl:_initData()
     --请求建筑详情
     DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+    LaboratoryCtrl.static.insId= self.m_data.insId
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     self.m_data=buildingInfo
+    buildingInfo.insId=buildingInfo.info.id
     local info=buildingInfo.info
     --开业停业
     Event.Brocast("c_GetBuildingInfo", info)
@@ -101,9 +103,10 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     --刷新底部组件
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
-        self.groupMgr:AddParts(BuildingSalaryPart, 1)
+        self.groupMgr:AddParts(ResearchPart,0.33)
+        self.groupMgr:AddParts(TurnoverPart,0.33)
+        self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
 
-        self.groupMgr:AddParts(TurnoverPart,2)
         self.groupMgr:RefreshData(buildingInfo)
         self.groupMgr:TurnOffAllOptions()
     else

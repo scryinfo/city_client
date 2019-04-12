@@ -56,10 +56,11 @@ end
 function TurnoverDetailPart:_initFunc()
     --获取营收曲线图 发包
     local msgId = pbl.enum("sscode.OpCode","queryBuildingIncomeMap")
-    local lMsg = { id = self.m_data.insId }
+    local lMsg = { id = self.m_data.insId  }
     local pMsg = assert(pbl.encode("ss.Id", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
+
 
 function TurnoverDetailPart:OnXBtn(go)
     go.groupClass.TurnOffAllOptions(go.groupClass)

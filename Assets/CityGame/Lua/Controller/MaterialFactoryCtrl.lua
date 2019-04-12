@@ -41,59 +41,45 @@ end
 function MaterialFactoryCtrl:initializeData()
     if self.m_data then
         --向服务器请求建筑详情
-        DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
+        DataManager.OpenDetailModel(MaterialFactoryModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
     end
-    --if self.m_data.insId then
-    --    self.insId=self.m_data.insId
-    --    DataManager.OpenDetailModel(MaterialModel,self.m_data.insId)
-    --    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
-    --else
-    --    self.m_data.insId=self.insId
-    --    DataManager.OpenDetailModel(MaterialModel,self.insId)
-    --    DataManager.DetailModelRpcNoRet(self.insId, 'm_ReqOpenMaterial',self.insId)
-    --end
 end
 
 --刷新原料厂信息
-function MaterialFactoryCtrl:refreshMaterialDataInfo(DataInfo)
-    --MaterialFactoryPanel.nameText.text = DataInfo.info.name or "SRCY CITY"
-    --MaterialFactoryPanel.buildingTypeNameText.text = GetLanguage(DataInfo.info.mId)
-    local insId = self.m_data.insId
-    self.m_data = DataInfo
-    self.m_data.insId = insId
-    if DataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
-        self.m_data.isOther = true
-        --MaterialFactoryPanel.changeNameBtn.localScale = Vector3.zero
-    else
-        self.m_data.isOther = false
-        --MaterialFactoryPanel.changeNameBtn.localScale = Vector3.one
-    end
-
-    if self.m_data.info.state=="OPERATE" then
-        MaterialFactoryPanel.stopIconRoot.localScale=Vector3.zero
-    else
-        MaterialFactoryPanel.stopIconRoot.localScale=Vector3.one
-    end
-
-    Event.Brocast("c_GetBuildingInfo",DataInfo.info)
-
+function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     if MaterialFactoryPanel.topItem ~= nil then
-        MaterialFactoryPanel.topItem:refreshData(DataInfo.info,function()
+        MaterialFactoryPanel.topItem:refreshData(materialDataInfo.info,function()
             PlayMusEff(1002)
+            --关闭原料厂推送
             Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
-            if self.materialToggleGroup then
-                self.materialToggleGroup:cleanItems()
-            end
-            UIPanel.ClosePage()
+            --关闭当前建筑Model
             DataManager.CloseDetailModel(self.m_data.insId)
+            UIPanel.ClosePage()
         end)
     end
-    self.m_data.buildingType = BuildingType.MaterialFactory
-    if not self.materialToggleGroup then
-        self.materialToggleGroup = BuildingInfoToggleGroupMgr:new(MaterialFactoryPanel.leftRootTran, MaterialFactoryPanel.rightRootTran, self.materialBehaviour, self.m_data)
+
+    local insId = self.m_data.insId
+    self.m_data = materialDataInfo
+    self.m_data.insId = insId
+
+    --初始化
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+
+    --判断是自己还是别人打开了界面
+    if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.m_data.isOther = true
     else
-        self.materialToggleGroup:updateInfo(self.m_data)
+        self.m_data.isOther = false
+    end
+    if self.groupMgr == nil then
+        self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+        self.groupMgr:AddParts(TurnoverPart,0.3)
+        self.groupMgr:AddParts(BuildingWarehousePart,0.3)
+        --self.groupMgr:RefreshData(self.m_data)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        --self.groupMgr:RefreshData(self.m_data)
     end
 end
 

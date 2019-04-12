@@ -3,8 +3,8 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/12 15:07
 ---建筑主界面生产线详情界面
-BuildingProductionDetailPart = class('BuildingProductionDetailPart',BasePartDetail)
-
+BuildingProductionDetailPart = class('BuildingProductionDetailPart',BuildingBaseDetailPart)
+local aaa = 0
 function BuildingProductionDetailPart:PrefabName()
     return "BuildingProductionDetailPart"
 end

@@ -74,6 +74,7 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     end
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+        self.groupMgr:AddParts(BuildingShelfPart,0.3)
         self.groupMgr:AddParts(TurnoverPart,0.3)
         self.groupMgr:AddParts(BuildingWarehousePart,0.3)
         self.groupMgr:RefreshData(self.m_data)
@@ -120,49 +121,12 @@ function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     if self.m_data.isOther == true then
-        self:deleteOtherShelf()
-    else
-        self:deleteProductionObj()
-        self:deleteShelfObj()
     end
 end
 --更改基础建筑信息
 function MaterialFactoryCtrl:_changeItemData(data)
     if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
         MaterialFactoryPanel.topItem:changeItemData(data)
-    end
-end
---清空生产线
-function MaterialFactoryCtrl:deleteProductionObj()
-    if next(HomeProductionLineItem.lineItemTable) == nil then
-        return
-    else
-        for key,value in pairs(HomeProductionLineItem.lineItemTable) do
-            value:closeEvent()
-            destroy(value.prefab.gameObject);
-            HomeProductionLineItem.lineItemTable[key] = nil
-        end
-    end
-end
---清空货架
-function MaterialFactoryCtrl:deleteShelfObj()
-    if next(ShelfRateItem.SmallShelfRateItemTab) == nil then
-        return
-    else
-        for key,value in pairs(ShelfRateItem.SmallShelfRateItemTab) do
-            destroy(value.prefab.gameObject)
-            ShelfRateItem.SmallShelfRateItemTab[key] = nil
-        end
-    end
-end
---清空货架（其他玩家）
-function MaterialFactoryCtrl:deleteOtherShelf()
-    if next(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) == nil then
-        return
-    end
-    for key,value in pairs(HomeOtherPlayerShelfItem.SmallShelfRateItemTab) do
-        destroy(value.prefab.gameObject)
-        HomeOtherPlayerShelfItem.SmallShelfRateItemTab[key] = nil
     end
 end
 --打开信息界面

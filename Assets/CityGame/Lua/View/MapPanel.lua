@@ -7,6 +7,9 @@ local transform
 MapPanel = {}
 local this = MapPanel
 
+MapPanel.MapShowInfoPoolName = "MapShowInfo"
+MapPanel.MapShowInfoHasImgPoolName = "MapShowInfoHasImg"
+
 --启动事件--
 function MapPanel.Awake(obj)
     transform = obj.transform
@@ -60,10 +63,18 @@ function MapPanel.InitPanel()
     this.rightGroundAucPageItem = MapRightGroundAucPage:new(this.searchGroundAucRect.transform)
     this.searchGroundTransRect = transform:Find("rightPageRoot/searchGroundTrans"):GetComponent("RectTransform")  --土地交易
     this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
-    this.selfBuildingRect = transform:Find("rightPageRoot/selectBuilding"):GetComponent("RectTransform")  --自己建筑temp
+    this.selfBuildingRect = transform:Find("rightPageRoot/selectSelfBuilding"):GetComponent("RectTransform")  --自己建筑
     this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
     this.systemBuildingRect = transform:Find("rightPageRoot/selectSystemBuilding"):GetComponent("RectTransform")  --系统建筑
     this.systemBuildingPageItem = MapRightSystemPage:new(this.systemBuildingRect.transform)
+
+    --
+    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")
+    this.mapShowInfoItemTran = transform:Find("rightPageRoot/itemsRoot/noIconShowItem")  --不带icon的数据显示
+    this.mapShowInfoIconItemTran = transform:Find("rightPageRoot/itemsRoot/hasIconShowItem")  --带有icon的数据显示
+    this.prefabPools = {}
+    this.prefabPools[this.MapShowInfoPoolName] = LuaGameObjectPool:new(this.MapShowInfoPoolName, this.mapShowInfoItemTran, 5, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
+    this.prefabPools[this.MapShowInfoHasImgPoolName] = LuaGameObjectPool:new(this.MapShowInfoHasImgPoolName, this.mapShowInfoIconItemTran, 1, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
 end
 --
 function MapPanel.showDetailPageByType(typeId)

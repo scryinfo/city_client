@@ -11,7 +11,7 @@ function BuildingProductionPart:PrefabName()
 end
 
 function BuildingProductionPart:GetDetailClass()
-    return BuildingShelfDetailPart
+    return BuildingProductionDetailPart
 end
 
 function BuildingProductionPart:_InitTransform()
@@ -34,6 +34,14 @@ function BuildingProductionPart:_getComponent(transform)
     if transform == nil then
         return
     end
+    self.TopLineInfo = transform:Find("Top/TopLineInfo")
+    self.goodsIcon = transform:Find("Top/TopLineInfo/goodsIcon"):GetComponent("Image")
+    self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
+    self.numberSlider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
+    self.numberText = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")
+    self.tipText = transform:Find("Top/tipText"):GetComponent("Text")
+    self.unselectTitleText = transform:Find("UnselectBtn/titleText"):GetComponent("Text")
+    self.selectTitleText = transform:Find("SelectBtn/titleText"):GetComponent("Text")
 end
 
 function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
@@ -42,12 +50,16 @@ end
 
 function BuildingProductionPart:_initFunc()
     self:initializeComponent()
-    self.salaryPercentText.text = 0
+    self.timeText.text = "00:00:00"
+    self.numberSlider.maxValue = 0
+    self.numberSlider.value = 0
+    self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --重置组件
 function BuildingProductionPart:initializeComponent()
-
+    self.unselectTitleText.text = "生产线"
+    self.selectTitleText.text = "生产线"
 end
 
 

@@ -145,65 +145,65 @@ public class FunctionalGraph : MaskableGraphic
             case FunctionalGraphBase.E_MeshType.None:
                 break;
             case FunctionalGraphBase.E_MeshType.FullLine:
-                // X 轴的正方向
-                for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x ; i++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
-                    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-                    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
-                }
-                // X 轴的负方向
-                for (int i = 1; i * -GraphBase.XScaleValue> -_myRect.sizeDelta.x ; i++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
-                    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-                    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
-                }
-                // Y 轴正方向
-                for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y ; y++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x, y * GraphBase.YScaleValue);
-                    Vector2 secongPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
-                    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
-                }
-                // Y 轴负方向
-                for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
-                    Vector2 secongPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
-                    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
-                }
-                break;
-            case FunctionalGraphBase.E_MeshType.ImaglinaryLine:
-                // X 轴的正方向
-                for (int i = 1; i * GraphBase.XScaleValue< _myRect.sizeDelta.x; i++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
-                    Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-                    GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
-                }
-                // X 轴的负方向
-                for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x ; i++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
-                    Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
-                   // GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
-                }
+                //// X 轴的正方向
+                //for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x ; i++ )
+                //{
+                //    Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
+                //    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
+                //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
+                //}
+                //// X 轴的负方向
+                //for (int i = 1; i * -GraphBase.XScaleValue> -_myRect.sizeDelta.x ; i++ )
+                //{
+                //    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
+                //    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
+                //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
+                //}
                 // Y 轴正方向
                 for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y ; y++ )
                 {
                     Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
-                    Vector2 secondPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
-                    GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+                    Vector2 secongPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
+                    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
                 }
-                // Y 轴负方向
-                for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
-                {
-                    Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
-                    Vector2 secondPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
-                   // GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
-                }
+                //// Y 轴负方向
+                //for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
+                //{
+                //    Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
+                //    Vector2 secongPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
+                //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
+                //}
                 break;
+            //case FunctionalGraphBase.E_MeshType.ImaglinaryLine:
+            //    // X 轴的正方向
+            //    for (int i = 1; i * GraphBase.XScaleValue< _myRect.sizeDelta.x; i++ )
+            //    {
+            //        Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
+            //        Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
+            //        //GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            //    }
+            //    // X 轴的负方向
+            //    for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x ; i++ )
+            //    {
+            //        Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
+            //        Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
+            //       // GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            //    }
+            //    // Y 轴正方向
+            //    for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y ; y++ )
+            //    {
+            //        Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
+            //        Vector2 secondPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
+            //        GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            //    }
+            //    // Y 轴负方向
+            //    for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
+            //    {
+            //        Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
+            //        Vector2 secondPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
+            //       // GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
+            //    }
+            //    break;
         }
         // 分界线
         if (boundary != null)

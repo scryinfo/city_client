@@ -27,7 +27,7 @@ function BuildingProductionPart:RefreshData(data)
 end
 
 function BuildingProductionPart:_ResetTransform()
-    self:initializeComponent()
+
 end
 
 function BuildingProductionPart:_getComponent(transform)
@@ -49,19 +49,43 @@ function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
 end
 
 function BuildingProductionPart:_initFunc()
-    self:initializeComponent()
-    self.timeText.text = "00:00:00"
-    self.numberSlider.maxValue = 0
-    self.numberSlider.value = 0
+    self:_language()
     self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
+    if not self.m_data.line then
+        self.TopLineInfo.transform.localScale = Vector3.zero
+        self.tipText.transform.localScale = Vector3.one
+    else
+        self.TopLineInfo.transform.localScale = Vector3.one
+        self.tipText.transform.localScale = Vector3.zero
+
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            LoadSprite(Material[self.m_data.line[1].itemId].img,self.goodsIcon,false)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            LoadSprite(Good[self.m_data.line[1].itemId].img,self.goodsIcon,false)
+        end
+    end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
---重置组件
-function BuildingProductionPart:initializeComponent()
+--设置多语言
+function BuildingProductionPart:_language()
     self.unselectTitleText.text = "生产线"
     self.selectTitleText.text = "生产线"
 end
-
+--计算总时间
+function BuildingProductionPart:GetTime(targetCount,nowCount,workerNum)
+    local remainingNum = targetCount - nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        self.time = remainingNum / (Material[self.m_data.line[1].itemId].numOneSec * workerNum)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        self.time = remainingNum / (Good[self.m_data.line[1].itemId].numOneSec * workerNum)
+    end
+    local timeTable = getTimeBySec(self.time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
+end
 
 
 

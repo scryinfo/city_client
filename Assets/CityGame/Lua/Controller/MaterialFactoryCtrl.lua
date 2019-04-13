@@ -62,6 +62,7 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     local insId = self.m_data.insId
     self.m_data = materialDataInfo
     self.m_data.insId = insId
+    self.m_data.buildingType = BuildingType.MaterialFactory
 
     --初始化
     MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
@@ -77,8 +78,8 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
         self.groupMgr:AddParts(BuildingShelfPart,0.2)
         self.groupMgr:AddParts(TurnoverPart,0.2)
         self.groupMgr:AddParts(BuildingSalaryPart,0.2)
-        self.groupMgr:AddParts(BuildingWarehousePart,0.2)
         self.groupMgr:AddParts(BuildingProductionPart,0.2)
+        self.groupMgr:AddParts(BuildingWarehousePart,0.2)
         self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else

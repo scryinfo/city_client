@@ -30,18 +30,108 @@ function BuildingProductionDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
+    self.closeBtn = transform:Find("topRoot/closeBtn"):GetComponent("Button")
+
+    self.addBtn = transform:Find("contentRoot/addBtnBg")
+    self.addBtnBg = transform:Find("contentRoot/addBtnBg/addBtn"):GetComponent("Button")
+    self.content = transform:Find("contentRoot/content")
+    self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
+    --leftRoot
+    self.nameBg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/nameBg")
+    self.goods = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods")
+
+    self.iconImg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/iconImg"):GetComponent("Image")
+    self.nameText = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/nameBg/nameText"):GetComponent("Text")
+    self.levelImg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/levelImg"):GetComponent("Image")
+    self.brandNameText = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/detailsBg/brandNameText"):GetComponent("Text")
+    self.brandValue = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/detailsBg/scoreBg/brandIcon/brandValue"):GetComponent("Text")
+    self.qualityValue = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
+    self.numberText = transform:Find("contentRoot/content/leftRoot/lineInfo/numberText"):GetComponent("Text")
+    self.timeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeBg/timeText"):GetComponent("Text")
+    self.deleBtn = transform:Find("contentRoot/content/leftRoot/lineInfo/deleBtn"):GetComponent("Button")
+    self.timeSlider = transform:Find("contentRoot/content/leftRoot/lineInfo/timeSlider"):GetComponent("Slider")
+    self.oneTimeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeText"):GetComponent("Text")
+    --rightRoot
+    self.numberTipText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText"):GetComponent("Text")
+    self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
+    self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
+    self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip")
+    self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
 end
 
 function BuildingProductionDetailPart:_InitClick(mainPanelLuaBehaviour)
-
+    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
+        self:clickCloseBtn()
+    end,self)
+    mainPanelLuaBehaviour:AddClick(self.addBtnBg.gameObject,function()
+        self:clickAddBtnBg()
+    end,self)
 end
 
 function BuildingProductionDetailPart:_RemoveClick()
-
+    self.closeBtn.onClick:RemoveAllListeners()
 end
 
 function BuildingProductionDetailPart:_initFunc()
-
+    self:_language()
+    self:initializeUiInfoData(self.m_data.line)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--设置多语言
+function BuildingProductionDetailPart:_language()
+    self.addTip.text = "增加一条生产线"
+    self.numberTipText.text = "数量"
+end
+--初始化UI数据
+function BuildingProductionDetailPart:initializeUiInfoData(lineData)
+    if not lineData then
+        self.addBtn.transform.localScale = Vector3.one
+        self.content.transform.localScale = Vector3.zero
+    else
+        self.addBtn.transform.localScale = Vector3.zero
+        self.content.transform.localScale = Vector3.one
+        self.nameText.text = GetLanguage(lineData[1].itemId)
+        self.timeText.text = self:GetTime(lineData[1])
+        self.numberText.text = lineData[1].nowCount.."/"..lineData[1].targetCount
+        --self.numberSlider.maxValue = self.m_data.line[1].targetCount
+        --self.numberSlider.value = self.m_data.line[1].nowCount
+        --开始做滑动条
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
 
-
+            LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
+        end
+    end
+end
+-----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
+--关闭详情
+function BuildingProductionDetailPart:clickCloseBtn()
+    self.groupClass.TurnOffAllOptions(self.groupClass)
+end
+--打开添加生产线界面
+function BuildingProductionDetailPart:clickAddBtnBg()
+    PlayMusEff(1002)
+    if self.m_data.info.state == "OPERATE" then
+        ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
+    else
+        Event.Brocast("SmallPop",GetLanguage(35040013),300)
+        return
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--计算总时间
+function BuildingProductionDetailPart:GetTime(lineData)
+    local remainingNum = lineData.targetCount - lineData.nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+    end
+    local timeTable = getTimeBySec(self.time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
+end

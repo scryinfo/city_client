@@ -149,7 +149,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data)
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"AddLineBoxCtrl",'SucceedUpdatePanel',data)
+    DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线
 function MaterialFactoryModel:n_OnDeleteLineInfo(data)

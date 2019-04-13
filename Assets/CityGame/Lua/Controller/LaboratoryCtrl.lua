@@ -66,7 +66,7 @@ function LaboratoryCtrl:_backBtn(ins)
     end
     ins.hasOpened = false
     --关闭界面时再发一遍详情
-    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', true)
+    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'mReqCloseRetailStores')
     UIPanel.ClosePage()
 end
 ---===================================================================================业务代码==============================================================================================
@@ -86,35 +86,37 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     --开业停业
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
+        panel.stopRootTran.localScale = Vector3.zero
     else
-        LaboratoryPanel.stopRootTran.localScale = Vector3.one
+        panel.stopRootTran.localScale = Vector3.one
     end
     --建筑名字
     panel.nameText.text = info.name or "SRCY CITY"
     panel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     --判断是自己还是别人打开了界面
     if info.ownerId ~= DataManager.GetMyOwnerID() then
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
+        panel.changeNameBtn.localScale = Vector3.zero
+        panel.stopIconBtn.localScale = Vector3.zero
     else
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.one
+        panel.changeNameBtn.localScale = Vector3.one
     end
     --刷新底部组件
     if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
-        self.groupMgr:AddParts(ResearchPart,0.33)
-        self.groupMgr:AddParts(TurnoverPart,0.33)
-        self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
 
-        self.groupMgr:RefreshData(buildingInfo)
-        self.groupMgr:TurnOffAllOptions()
+    self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+
+    self.groupMgr:AddParts(ResearchPart,0.33)
+    self.groupMgr:AddParts(TurnoverPart,0.33)
+    self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
+
+    self.groupMgr:RefreshData(buildingInfo)
+    self.groupMgr:TurnOffAllOptions()
     else
-        self.groupMgr:RefreshData(buildingInfo)
+    self.groupMgr:RefreshData(buildingInfo)
     end
 end
 
 ---更改名字成功
 function LaboratoryCtrl:_updateName(name)
-    LaboratoryPanel.nameText.text = name
+    panel.nameText.text = name
 end

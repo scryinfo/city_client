@@ -9,6 +9,16 @@ local pbl = pbl
 function LaboratoryModel:initialize(insId)
     self.insId = insId
     self:_addListener()
+    UpdateBeat:Add(self.Update, self)
+
+end
+
+function LaboratoryModel:Update()
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        prints("刹车农户")
+        self:m_ReqLabDeleteLine(self.data.inProcess[1].id)
+
+    end
 end
 
 --启动事件--
@@ -16,10 +26,10 @@ function LaboratoryModel:_addListener()
     --网络回调注册
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabAddLine",self.n_OnReceiveLabLineAdd)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLine",self.n_OnReceiveLabLineAdd)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine);
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform)
 
     ------本地的事件注册
     --Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
@@ -35,15 +45,19 @@ end
 function LaboratoryModel:m_ReqLaboratoryDetailInfo()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})
 end
+--关闭研究所详情推送
+function LaboratoryModel:mReqCloseRetailStores()
+    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id =  self.insId})
+end
 --设置研究是否他人可用
 function LaboratoryModel:m_labSettings(exclusive)
     DataManager.ModelSendNetMes("gscode.OpCode", "labExclusive","gs.LabExclusive",
             { buildingId = self.insId ,exclusive = exclusive})
 end
 --设置研究价格
-function LaboratoryModel:m_labSetting( pricePreTime , maxTimes )
+function LaboratoryModel:m_labSetting( pricePreTime , sellTimes )
     DataManager.ModelSendNetMes("gscode.OpCode", "labSetting","gs.LabSetting",
-            { buildingId = self.insId ,pricePreTime = pricePreTime, maxTimes = maxTimes})
+            { buildingId = self.insId ,pricePreTime = pricePreTime, sellTimes = sellTimes})
 end
 --添加线
 function LaboratoryModel:m_ReqLabAddLine( itemId, count )
@@ -68,22 +82,31 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 end
 --研究所设置
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
-
+    prints("他人可用")
 end
 --添加研究发明线
-function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
-   prints("添加成功")
+function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
+    if not self.data.inProcess then
+        self.data.inProcess={}
+    end
+    table.insert(self.data.inProcess,msg.line)
+    ct.OpenCtrl("QueneCtrl",self.data.inProcess)
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
-    prints("删除成功")
-end
---更新某条线的具体数据 --只有roll之后才会发这个
-function LaboratoryModel:n_OnReceiveLineChange(lineData)
-   prints("开箱回调")
-end
+    for i,line in ipairs(self.data.inProcess) do
+        if line.id == lineData.lineId and DataManager.GetMyOwnerID()== line.proposerId then
+            table.remove(self.data.inProcess,i)
+        end
+    end
 
---是否他人可用
+    Event.Brocast("c_updateQuque",self.data.inProcess)
+end
+--开箱
 function LaboratoryModel:n_OnReceiveLineChange(lineData)
-    prints("他人可用")
+    prints("开箱回调")
+end
+--更新箱子
+function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData)
+    prints("更新箱子")
 end

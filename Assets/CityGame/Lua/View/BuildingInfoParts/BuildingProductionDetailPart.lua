@@ -93,11 +93,10 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.nameText.text = GetLanguage(lineData[1].itemId)
         self.timeText.text = self:GetTime(lineData[1])
         self.numberText.text = lineData[1].nowCount.."/"..lineData[1].targetCount
-        --self.numberSlider.maxValue = self.m_data.line[1].targetCount
-        --self.numberSlider.value = self.m_data.line[1].nowCount
-        --开始做滑动条
+        --时间进度条
         if self.m_data.buildingType == BuildingType.MaterialFactory then
-
+            self.nameBg.transform.localPosition = Vector3(-140,-100,0)
+            self.goods.transform.localScale = Vector3.zero
             LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)

@@ -23,6 +23,9 @@ function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.goods, self.OnGoods, self)
     mainPanelLuaBehaviour:AddClick(self.building, self.OnBuilding, self)
     mainPanelLuaBehaviour:AddClick(self.open, self.OnOpen, self)
+    mainPanelLuaBehaviour:AddClick(self.quene, self.OnQuene, self)
+    mainPanelLuaBehaviour:AddClick(self.supermarket, self.OnSupermarket, self)
+    mainPanelLuaBehaviour:AddClick(self.house, self.OnHouse, self)
 end
 --
 function AdvertisementPartDetail:_ResetTransform()
@@ -59,8 +62,12 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.timeText = transform:Find("bg/top/priceTime/time/timeText"):GetComponent("Text")    --时间
 
     --down
-    self.quene = transform:Find("bg/down/quene/queneImage/queneText"):GetComponent("Text");
+    self.quene = transform:Find("bg/down/quene").gameObject;      --队列
+    self.queneText = transform:Find("bg/down/quene/queneImage/queneText"):GetComponent("Text");
     self.content = transform:Find("bg/down/Scroll View/Viewport/Content"):GetComponent("RectTransform");
+    self.buildingBg = transform:Find("bg/down/buildingBg");
+    self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
+    self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
 end
 --
 function AdvertisementPartDetail:_initFunc()
@@ -76,15 +83,32 @@ end
 function AdvertisementPartDetail:OnGoods(go)
     go.goods.transform.localScale = Vector3.zero
     go.building.transform.localScale = Vector3.one
+    go.buildingBg.localScale = Vector3.zero
 end
 
 --点击建筑
 function AdvertisementPartDetail:OnBuilding(go)
     go.goods.transform.localScale = Vector3.one
     go.building.transform.localScale = Vector3.zero
+    go.buildingBg.localScale = Vector3.one
 end
 
 --对外开放
 function AdvertisementPartDetail:OnOpen()
    ct.OpenCtrl("SetOpenUpCtrl")
+end
+
+--队列
+function AdvertisementPartDetail:OnQuene()
+    ct.OpenCtrl("PromoteQueueCtrl")
+end
+
+--零售店
+function AdvertisementPartDetail:OnSupermarket()
+   ct.OpenCtrl("PromoteBuildingExtensionCtrl",1)
+end
+
+--住宅
+function AdvertisementPartDetail:OnHouse()
+    ct.OpenCtrl("PromoteBuildingExtensionCtrl",2)
 end

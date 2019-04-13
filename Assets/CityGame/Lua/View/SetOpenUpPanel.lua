@@ -25,6 +25,6 @@ function SetOpenUpPanel.InitPanel()
     this.time = transform:Find("set/content/time"):GetComponent("InputField")
     this.open = transform:Find("set/content/external/open").gameObject
     this.close = transform:Find("set/content/external/close").gameObject
-    this.confirm = transform:Find("set/content/confirm").gameObject
+    this.confirm = transform:Find("set/confirm").gameObject
 
 end

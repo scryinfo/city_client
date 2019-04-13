@@ -31,13 +31,18 @@ function SetOpenUpCtrl:Active()
 end
 
 function SetOpenUpCtrl:Refresh()
-    self.openUp = self.m_data.openUp
+    --self.openUp = self.m_data.openUp
+    self.openUp = false
     if self.openUp then
         SetOpenUpPanel.open.transform.localScale = Vector3.one
         SetOpenUpPanel.close.transform.localScale = Vector3.zero
+        SetOpenUpPanel.price.interactable = true
+        SetOpenUpPanel.time.interactable = true
     else
         SetOpenUpPanel.open.transform.localScale = Vector3.zero
         SetOpenUpPanel.close.transform.localScale = Vector3.one
+        SetOpenUpPanel.price.interactable = false
+        SetOpenUpPanel.time.interactable = false
     end
 end
 
@@ -58,18 +63,30 @@ function SetOpenUpCtrl:OnxBtn()
 end
 
 --开启对外开放
-function SetOpenUpCtrl:OnOpen()
-    self.openUp = true
+function SetOpenUpCtrl:OnOpen(go)
+    go.openUp = false
+    SetOpenUpPanel.close.transform.localScale = Vector3.one
+    SetOpenUpPanel.open.transform.localScale = Vector3.zero
+    SetOpenUpPanel.price.text = ""
+    SetOpenUpPanel.time.text = ""
+    SetOpenUpPanel.price.interactable = false
+    SetOpenUpPanel.time.interactable = false
 end
 
 --关闭对外开放
-function SetOpenUpCtrl:OnClose()
-    self.openUp = false
-   SetOpenUpPanel.price.text = "0"
-   SetOpenUpPanel.time.text = "0"
+function SetOpenUpCtrl:OnClose(go)
+    go.openUp = true
+    SetOpenUpPanel.close.transform.localScale = Vector3.zero
+    SetOpenUpPanel.open.transform.localScale = Vector3.one
+    SetOpenUpPanel.price.interactable = true
+    SetOpenUpPanel.time.interactable = true
 end
 
 --点击确定
-function SetOpenUpCtrl:OnConfirm()
-
+function SetOpenUpCtrl:OnConfirm(go)
+    if go.openUp then
+        if SetOpenUpPanel.time.text == "" or tonumber(SetOpenUpPanel.time.text ) == 0 then
+            Event.Brocast("SmallPop","时间不能为0",300)
+        end
+    end
 end

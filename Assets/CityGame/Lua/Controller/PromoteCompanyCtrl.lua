@@ -29,6 +29,7 @@ function PromoteCompanyCtrl:Active()
 end
 
 function PromoteCompanyCtrl:Refresh()
+    --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(buildingId)
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
         self.groupMgr:AddParts(AdvertisementPart, 0.29)
@@ -60,5 +61,6 @@ end
 
 --今日营业额
 function TurnoverPart:c_Revenue(info)
-    self.groupMgr:RefreshData(info)
+    self.m_data.turnover = info
+    self.groupMgr:RefreshData(self.m_data)
 end

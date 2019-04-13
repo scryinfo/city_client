@@ -112,6 +112,12 @@ function NoticeItem:OnBg(go)
         elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
             go:GetProduceDepartment(go.uuidParas[1])
         end
+    elseif go.typeId == 18 then
+        type = go.typeId
+        go:GetSocietyInfo(go.uuidParas[1])
+    elseif go.typeId == 17 then
+        type = go.typeId
+        go:GetSocietyInfo(go.uuidParas[1])
     end
     Event.Brocast("c_onBg",go)
 end
@@ -127,17 +133,22 @@ end
 
 --获取原料厂建筑详情
 function NoticeItem:GetMateralDetailInfo(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMateralDetailInfo',buildingId)--获取好友信息
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMateralDetailInfo',buildingId)
 end
 
 --获取加工厂建筑详情
 function NoticeItem:GetProduceDepartment(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetProduceDepartment',buildingId)--获取好友信息
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetProduceDepartment',buildingId)
 end
 
 --获取零售店建筑详情
 function NoticeItem:GetRetailShop(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetRetailShop',buildingId)--获取好友信息
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetRetailShop',buildingId)
+end
+
+--获取公会信息
+function NoticeItem:GetSocietyInfo(id)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
 end
 
 -- 监听Model层网络回调
@@ -146,6 +157,7 @@ function NoticeItem:_addListener()
     Event.AddListener("c_MaterialInfo", self.c_MaterialInfo, self) --原料厂建筑详情回调
     Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
     Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
+    Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
 end
 
 --注销model层网络回调
@@ -154,6 +166,7 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_MaterialInfo", self.c_MaterialInfo, self)--原料厂建筑详情回调
     Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
     Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
+    Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
@@ -193,6 +206,15 @@ end
 
 function NoticeItem:c_RetailShopInfo(name)
     self.content = GetLanguage(13010017,name,nameSize)
+    GameNoticePanel.rightContent.text = self.content
+end
+
+function NoticeItem:c_SocietyInfo(name)
+    if type == 17 then
+        self.content = GetLanguage(13010068,name)
+    elseif type == 18 then
+        self.content = GetLanguage(13010066,name)
+    end
     GameNoticePanel.rightContent.text = self.content
 end
 

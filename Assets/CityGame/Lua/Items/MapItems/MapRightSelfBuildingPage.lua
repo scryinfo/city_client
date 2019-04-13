@@ -93,7 +93,7 @@ function MapRightSelfBuildingPage:_createHouse()
     local occData = {infoTypeStr = "HouseOccupancy", value = occStr}  --入住率
     self.items[#self.items + 1] = self:_createShowItem(occData)
 
-    local rentStr = string.format("<color=#%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
+    local rentStr = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
     local rentData = {infoTypeStr = "HouseRent", value = rentStr}  --租金
     self.items[#self.items + 1] = self:_createShowItem(rentData)
 end

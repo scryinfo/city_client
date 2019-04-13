@@ -2,50 +2,50 @@
 MapBuildingInfoConfig={
     ["Revenue"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Revenue",
     },
     ["Salary"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Salary",
     },
     ["Warehouse"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Warehouse",
     },
     ["OrderCenter"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "OrderCenter",
     },
     ["Production"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Production",
     },
     ["Sign"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Sign",
     },
     ["HouseOccupancy"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "HouseOccupancy",
     },
     ["HouseRent"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "HouseRent",
     },
     ["WarehouseOrder"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "WarehouseOrder",
     },
     ["WarehouseRent"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "WarehouseRent",
     },
     ["ADSign"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "ADSign",
     },
     ["Queued"] = {
         ["imgPath"] = "",
-        ["languageId"] = 1234567,
+        ["languageId"] = "Queued",
     },
 }

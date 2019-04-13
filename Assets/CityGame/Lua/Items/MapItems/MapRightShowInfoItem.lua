@@ -8,10 +8,11 @@ MapRightShowInfoItem = class('MapRightShowInfoItem')
 function MapRightShowInfoItem:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
 
-    self.iconImg = viewRect:Find("iconImg"):GetComponent("Image")
-    self.showText = viewRect:Find("showText"):GetComponent("Text")
-    self.valueText = viewRect:Find("valueText"):GetComponent("Text")
-    local detailTran = viewRect:Find("valueText/detailImg")
+    local trans = self.viewRect.transform
+    self.iconImg = trans:Find("iconImg"):GetComponent("Image")
+    self.showText = trans:Find("showText"):GetComponent("Text")
+    self.valueText = trans:Find("valueText"):GetComponent("Text")
+    local detailTran = trans:Find("valueText/detailImg")
     if detailTran ~= nil then
         self.detailImg = detailTran:GetComponent("Image")
     end
@@ -19,9 +20,11 @@ end
 --数据初始化
 function MapRightShowInfoItem:initData(data)
     local temp = MapBuildingInfoConfig[data.infoTypeStr]
-    self.showText.text = GetLanguage(temp.languageId)
-    self.valueText.text = data.value
+    --self.showText.text = GetLanguage(temp.languageId)  --多语言
     --LoadSprite(temp.imgPath, self.iconImg, true)
+    self.valueText.text = data.value
+    --Temp
+    self.showText.text = temp.languageId
     LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
 
     if self.detailImg ~= nil and data.detailImgPath ~= nil then

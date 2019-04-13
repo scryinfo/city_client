@@ -89,6 +89,7 @@ function BuildingSalaryDetailPart:_getComponent(transform)
     self.effectExpWordText = transform:Find("root/bg/bg01/Text01"):GetComponent("Text")
     self.totalText = transform:Find("root/bg/bg02/totalText"):GetComponent("Text")
 end
+
 --
 function BuildingSalaryDetailPart:_initFunc()
     if self.m_data.info.salary ~= nil then

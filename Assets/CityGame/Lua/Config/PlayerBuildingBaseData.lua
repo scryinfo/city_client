@@ -498,7 +498,7 @@ PlayerBuildingBaseData=
 	[1700001] ={
         ["sizeName"] =41010001,
         ["typeName"] =41020007,
-        ["des"] ="小型人才中心的说明",
+        ["des"] ="小型仓库的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-1x1.png",
         ["prefabRoute"] = "Building/ExpertTradingCenter_1x1",
         ["LuaRoute"]  = "Terrain/ArchitectureView",
@@ -519,7 +519,7 @@ PlayerBuildingBaseData=
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4},
         ["salary"] = 55,
-        ["poolName"] = "ExpertTradingCenter_1",
+        ["poolName"] = "ExpertTradingCenter_1", --对象池名字
     },
     [1700002] ={
         ["sizeName"] =41010002,

@@ -60,7 +60,7 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1400003,
             ["InitCount"] = 64,
         },
-        --[[
+
         {   --研究所1
             ["Name"] = "TechnologyBuilding_1",
             ["PlayerBuildingBaseDataID"] = 1500001,
@@ -91,12 +91,12 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1600003,
             ["InitCount"] = 64,
         },
-        {   --人才中心1
+        {   --仓库1
             ["Name"] = "ExpertTradingCenter_1",
             ["PlayerBuildingBaseDataID"] = 1700001,
             ["InitCount"] = 64,
         },
-        {   --人才中心2
+        {   --仓库2
             ["Name"] = "ExpertTradingCenter_2",
             ["PlayerBuildingBaseDataID"] = 1700002,
             ["InitCount"] = 64,
@@ -106,7 +106,6 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1700003,
             ["InitCount"] = 64,
         },
-        --]]
         {   --地图地块
             ["Name"] = "TerrainGround",
             ["PlayerBuildingBaseDataID"] = 4000000,

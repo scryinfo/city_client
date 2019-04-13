@@ -14,7 +14,7 @@ ConstructConfig ={
     [4] = {
         buildName = 41020005,
         prefabRoute = {1400001, 1400002,1400003},
-	},--[[
+	},
     [5] = {
         buildName = 41020006,
         prefabRoute = {1500001, 1500002,1500003},
@@ -24,7 +24,7 @@ ConstructConfig ={
         prefabRoute = {1600001, 1600002,1600003},
 	},
 	[7] = {
-        buildName = 41020007,
+        buildName = 41020007, --多语言ID
         prefabRoute = {1700001, 1700002,1700003},
-	}--]]
+	}
 }

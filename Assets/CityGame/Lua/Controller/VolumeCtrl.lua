@@ -42,10 +42,10 @@ function VolumeCtrl:Awake()
     else
         currentTime = math.floor(currentTime - (second % 10 + 10 ))
     end
+
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
-
     self.initData()
     --滑动互用
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情

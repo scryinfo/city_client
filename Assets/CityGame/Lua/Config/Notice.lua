@@ -78,5 +78,10 @@ Notice = {
         header = 13010065,
         content = "您好，{0}公会已同意您的加入申请",
         redirect=""
+    },
+    [19] = {
+        header = 13010069,
+        content = "您好，{0}公会已拒绝您的加入申请",
+        redirect=""
     }
 }

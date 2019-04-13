@@ -118,6 +118,9 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 17 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
+    elseif go.typeId == 19 then
+        type = go.typeId
+        go:GetSocietyInfo(go.uuidParas[1])
     end
     Event.Brocast("c_onBg",go)
 end
@@ -214,6 +217,8 @@ function NoticeItem:c_SocietyInfo(name)
         self.content = GetLanguage(13010068,name)
     elseif type == 18 then
         self.content = GetLanguage(13010066,name)
+    elseif type == 19 then
+        self.content = GetLanguage(13010070,name)
     end
     GameNoticePanel.rightContent.text = self.content
 end

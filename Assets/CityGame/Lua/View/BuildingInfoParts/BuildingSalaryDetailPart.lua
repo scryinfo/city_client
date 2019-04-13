@@ -55,6 +55,7 @@ function BuildingSalaryDetailPart:_RemoveClick()
 end
 --
 function BuildingSalaryDetailPart:RefreshData(data)
+    self:_ResetTransform()
     if data == nil then
         return
     end

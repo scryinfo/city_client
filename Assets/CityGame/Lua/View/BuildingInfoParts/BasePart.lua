@@ -19,10 +19,10 @@ function BasePart:initialize(trans,groupClass,posX,sizeWidth,partIndex,mainPanel
     self.unselectTransform =  self.transform:Find("UnselectBtn")
     --初始化位置
     self:_Init(posX,sizeWidth)
-    --通用按钮的事件
-    self:_InitClick(mainPanelLuaBehaviour)
     --留给子类实现的方法
     self:_InitTransform()
+    --通用按钮的事件
+    self:_InitClick(mainPanelLuaBehaviour)
 end
 
 -------------------------------------------------------------------私有函数--------------------------------------------
@@ -46,12 +46,14 @@ function BasePart:_InitClick(mainPanelLuaBehaviour)
         --关闭所有界面
         self.groupClass.TurnOffAllOptions(self.groupClass)
     end)
+    self:_InitChildClick(mainPanelLuaBehaviour)
 end
 
 --移除监听
 function  BasePart:_RemoveClick()
     self.go.transform:GetComponent("Button").onClick:RemoveAllListeners()
     self.selectTransform:GetComponent("Button").onClick:RemoveAllListeners()
+    self:_RemoveChildClick()
 end
 
 -----------------------------------------------------------------外部调用方法-----------------------------------------------------------------
@@ -92,6 +94,18 @@ function BasePart:Destroy()
 end
 
 -----------------------------------------------------------------子类需重写方法-----------------------------------------------------------------
+
+--TODO://子类需要则重写
+--特殊按钮
+function  BasePart:_InitChildClick(mainPanelLuaBehaviour)
+
+end
+
+--TODO://子类需要则重写
+--特殊按钮移除事件
+function  BasePart:_RemoveChildClick()
+
+end
 
 --TODO://子类务必重写
 --初始化独特组件

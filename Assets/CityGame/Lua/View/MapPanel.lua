@@ -28,6 +28,8 @@ function MapPanel.InitPanel()
     this.mapMatGoodRootItem = transform:Find("prefabRoot/MapMatGoodRootItem").gameObject  --原料商品详情根节点
     this.mapMatGoodSearchItem = transform:Find("prefabRoot/MapMatGoodSearchItem").gameObject  --原料商品详情
     this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject  --搜索类型
+    this.mapPromotionDetailItem = transform:Find("prefabRoot/MapPromotionDetailItem").gameObject  --推广item
+    this.mapTechnologyDetailItem = transform:Find("prefabRoot/MapTechnologyDetailItem").gameObject  --科研
     --
     this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem")  --建筑气泡
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
@@ -55,18 +57,15 @@ function MapPanel.InitPanel()
     this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
     this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
+    this.promotionPageGroup = transform:Find("leftRoot/detailPages/promotionPage"):GetComponent("ToggleGroup")  --推广
+    this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup")  --科研
 
     --右侧详情界面
-    this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")  --原料商品
-    this.rightMatGoodPageItem = MapRightMatGoodPage:new(this.searchMatGoodRect.transform)
-    this.searchGroundAucRect = transform:Find("rightPageRoot/searchGroundAuc"):GetComponent("RectTransform")  --拍卖
-    this.rightGroundAucPageItem = MapRightGroundAucPage:new(this.searchGroundAucRect.transform)
-    this.searchGroundTransRect = transform:Find("rightPageRoot/searchGroundTrans"):GetComponent("RectTransform")  --土地交易
-    this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
-    this.selfBuildingRect = transform:Find("rightPageRoot/selectSelfBuilding"):GetComponent("RectTransform")  --自己建筑
-    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
-    this.systemBuildingRect = transform:Find("rightPageRoot/selectSystemBuilding"):GetComponent("RectTransform")  --系统建筑
-    this.systemBuildingPageItem = MapRightSystemPage:new(this.systemBuildingRect.transform)
+    this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))
+    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))
+    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))
+    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding"))
 
     --
     this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")

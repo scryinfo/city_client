@@ -20,6 +20,10 @@ EMapSearchType =
     Deal = 3,
     Auction = 4,
     SelfBuilding = 5,
+    Warehouse = 6,
+    Promotion = 7,
+    Technology = 8,
+    Signing = 9,
 }
 
 function MapCtrl:initialize()
@@ -204,9 +208,29 @@ function MapCtrl:_createType(data)
         self.typeTable[typeId] = MapSearchTypeNonePageItem:new(data, function ()
             self:auctionSelect()
         end , go)
+    elseif typeId == EMapSearchType.Warehouse then
+        self.typeTable[typeId] = MapSearchTypeNonePageItem:new(data, function ()
+            self:warehouseSelect()
+        end , go)
+    elseif typeId == EMapSearchType.Promotion then
+        self.typeTable[typeId] = MapSearchTypePageItem:new(data, function ()
+            self:promotionSelect()
+        end , go)
+    elseif typeId == EMapSearchType.Technology then
+        self.typeTable[typeId] = MapSearchTypePageItem:new(data, function ()
+            self:technologySelect()
+        end , go)
+    elseif typeId == EMapSearchType.Signing then
+        self.typeTable[typeId] = MapSearchTypeNonePageItem:new(data, function ()
+            self:signSelect()
+        end , go)
     end
 end
-
+--
+function MapCtrl:setSelectSearch(type, detail)
+    self.selectSearchType = type
+    self.selectId = detail
+end
 --loading
 function MapCtrl:toggleLoadingState(isShow)
     if self.typeTable ~= nil then
@@ -225,8 +249,18 @@ function MapCtrl:goodsSelect()
     self:toggleDetailPage(true)
     self:_openPageItems(EMapSearchType.Goods)
 end
---选中土地交易
-function MapCtrl:dealSelect()
+--推广二级菜单
+function MapCtrl:promotionSelect()
+    self:toggleDetailPage(true)
+    self:_openPageItems(EMapSearchType.Promotion)
+end
+--科研二级菜单
+function MapCtrl:technologySelect()
+    self:toggleDetailPage(true)
+    self:_openPageItems(EMapSearchType.Technology)
+end
+--无二级菜单的类型搜索
+function MapCtrl:_noPageTypeSelect()
     self:toggleLoadingState(false)
     self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
     self.m_Timer:Start()
@@ -235,6 +269,10 @@ function MapCtrl:dealSelect()
         self.selectDetailItem:resetState()
         self.selectDetailItem = nil  --另一种选项清空
     end
+end
+--选中土地交易
+function MapCtrl:dealSelect()
+    self:_noPageTypeSelect()
     self.selectSearchType = EMapSearchType.Deal
 
     MapBubbleManager.cleanAllBubbleItems()
@@ -246,14 +284,7 @@ function MapCtrl:dealSelect()
 end
 --选中拍卖
 function MapCtrl:auctionSelect()
-    self:toggleLoadingState(false)
-    self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
-    self.m_Timer:Start()
-
-    if self.selectDetailItem ~= nil then
-        self.selectDetailItem:resetState()
-        self.selectDetailItem = nil  --另一种选项清空
-    end
+    self:_noPageTypeSelect()
     self.selectSearchType = EMapSearchType.Auction
 
     MapBubbleManager.cleanAllBubbleItems()
@@ -261,6 +292,30 @@ function MapCtrl:auctionSelect()
         self:_judgeDetail()
     else
         MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
+    end
+end
+--仓库
+function MapCtrl:warehouseSelect()
+    self:_noPageTypeSelect()
+    self.selectSearchType = EMapSearchType.Warehouse
+
+    MapBubbleManager.cleanAllBubbleItems()
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqWarehouseSummary()
+    end
+end
+--签约
+function MapCtrl:signSelect()
+    self:_noPageTypeSelect()
+    self.selectSearchType = EMapSearchType.Signing
+
+    MapBubbleManager.cleanAllBubbleItems()
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqSigningSummary()
     end
 end
 
@@ -399,7 +454,7 @@ function MapCtrl:_openPageItems(type)
         end
 
         go.transform.localScale = Vector3.one
-        self.detailPageItems[type] = MapDetailPageItem:new(type, go)
+        self.detailPageItems[type] = MapMatDetailPageItem:new(type, go)
     end
     for i, value in pairs(self.detailPageItems) do
         if value:getTypeId() == type then
@@ -483,6 +538,16 @@ end
 function MapCtrl:_receiveGroundTransSummary(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Deal)
+end
+--科研
+function MapCtrl:_receiveLabSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Technology)
+end
+--推广
+function MapCtrl:_receivePromotionSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Promotion)
 end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)

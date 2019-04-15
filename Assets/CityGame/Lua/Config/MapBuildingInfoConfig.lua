@@ -70,3 +70,37 @@ MapBuildingInfoConfig={
         ["languageId"] = "SignTime",
     },
 }
+------------------------------------------------------
+--小地图点开推广搜索之后展示的信息
+MapPromotionInfoConfig={
+    [1] = {
+        ["imgPath"] = "",
+        ["languageId"] = "Food",
+    },
+    [2] = {
+        ["imgPath"] = "",
+        ["languageId"] = "Clothes",
+    },
+    [3] = {
+        ["imgPath"] = "",
+        ["languageId"] = "Accessory",
+    },
+    [4] = {
+        ["imgPath"] = "",
+        ["languageId"] = "SuperMarket",
+    },
+    [5] = {
+        ["imgPath"] = "",
+        ["languageId"] = "House",
+    },
+}
+------------------------------------------------------
+--小地图点开科研展示的信息
+MapPromotionInfoConfig={
+    [1] = {
+        ["languageId"] = "发明新产品",
+    },
+    [2] = {
+        ["languageId"] = "Eva能力",
+    },
+}

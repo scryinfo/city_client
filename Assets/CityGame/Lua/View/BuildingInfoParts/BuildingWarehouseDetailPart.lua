@@ -3,7 +3,7 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/12 09:24
 ---建筑主界面仓库详情界面
-BuildingWarehouseDetailPart = class('BuildingWarehouseDetailPart',BasePartDetail)
+BuildingWarehouseDetailPart = class('BuildingWarehouseDetailPart',BuildingBaseDetailPart)
 
 function BuildingWarehouseDetailPart:PrefabName()
     return "BuildingWarehouseDetailPart"
@@ -11,6 +11,8 @@ end
 
 function BuildingWarehouseDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    --仓库数据
+    self.warehouseDatas = {}
 end
 
 function BuildingWarehouseDetailPart:RefreshData(data)
@@ -30,10 +32,25 @@ function BuildingWarehouseDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
+    --TopRoot
+    self.closeBtn = transform:Find("topRoot/closeBtn")
+    self.sortingBtn = transform:Find("topRoot/sortingBtn")
+    self.nowStateText = transform:Find("topRoot/sortingBtn/nowStateText")
+    self.transportBtn = transform:Find("topRoot/transportBtn")
+    self.numberText = transform:Find("topRoot/number/numberText"):GetComponent("Text")
+    self.warehouseCapacitySlider = transform:Find("topRoot/warehouseCapacitySlider")
+    self.capacityNumberText = transform:Find("topRoot/warehouseCapacitySlider/numberText"):GetComponent("Text")
+    self.capacityText = transform:Find("topRoot/capacityText"):GetComponent("Text")
+
+    --ContentRoot
+    self.noTip = transform:Find("contentRoot/noTip")
+    self.tipText = transform:Find("contentRoot/noTip/tipText"):GetComponent("Text")
+    self.Content = transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.WarehouseItem = transform:Find("contentRoot/ScrollView/Viewport/Content/WarehouseItem").gameObject
 end
 
 function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
-
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
 end
 
 function BuildingWarehouseDetailPart:_RemoveClick()
@@ -41,12 +58,28 @@ function BuildingWarehouseDetailPart:_RemoveClick()
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
-
+    self:_language()
+    self:initializeUiInfoData(self.m_data.store.inHand)
 end
-
-
-
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--设置多语言
+function BuildingWarehouseDetailPart:_language()
+    self.capacityText.text = "容量"
+    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+end
+--初始化UI数据
+function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
+    if not storeData then
+        self.noTip.transform.localScale = Vector3.one
+    else
+        self.noTip.transform.localScale = Vector3.zero
+        if #storeData == #self.warehouseDatas then
+            return
+        else
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType)
+        end
+    end
+end
 
 
 

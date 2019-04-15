@@ -6,13 +6,13 @@
 BuildingBaseDetailPart = class('BuildingBaseDetailPart',BasePartDetail)
 
 --生成itemPrefab(生成多个)
-function BuildingBaseDetailPart:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable)
+function BuildingBaseDetailPart:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable,goodsType)
     if not dataInfo then
         return
     end
     for key,value in pairs(dataInfo) do
         local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
-        local itemGoodsIns = className:new(value,obj,behaviour,key)
+        local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType)
         table.insert(instanceTable,itemGoodsIns)
     end
 end

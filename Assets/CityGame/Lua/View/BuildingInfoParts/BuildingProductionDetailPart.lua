@@ -32,10 +32,10 @@ function BuildingProductionDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("topRoot/closeBtn"):GetComponent("Button")
+    self.closeBtn = transform:Find("topRoot/closeBtn")
 
     self.addBtn = transform:Find("contentRoot/addBtnBg")
-    self.addBtnBg = transform:Find("contentRoot/addBtnBg/addBtn"):GetComponent("Button")
+    self.addBtnBg = transform:Find("contentRoot/addBtnBg/addBtn")
     self.content = transform:Find("contentRoot/content")
     self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
     --leftRoot
@@ -50,7 +50,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.qualityValue = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.numberText = transform:Find("contentRoot/content/leftRoot/lineInfo/numberText"):GetComponent("Text")
     self.timeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeBg/timeText"):GetComponent("Text")
-    self.deleBtn = transform:Find("contentRoot/content/leftRoot/lineInfo/deleBtn"):GetComponent("Button")
+    self.deleBtn = transform:Find("contentRoot/content/leftRoot/lineInfo/deleBtn")
     self.timeSlider = transform:Find("contentRoot/content/leftRoot/lineInfo/timeSlider"):GetComponent("Slider")
     self.oneTimeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeText"):GetComponent("Text")
     --rightRoot
@@ -58,7 +58,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
-    self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
+    self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn")
 
     self.lineItemPrefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/LineItem").gameObject
 end
@@ -78,6 +78,8 @@ end
 
 function BuildingProductionDetailPart:_RemoveClick()
     self.closeBtn.onClick:RemoveAllListeners()
+    self.addBtnBg.onClick:RemoveAllListeners()
+    self.rightAddBg.onClick:RemoveAllListeners()
 end
 
 function BuildingProductionDetailPart:_initFunc()

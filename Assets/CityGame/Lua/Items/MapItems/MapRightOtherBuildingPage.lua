@@ -26,13 +26,15 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     self.promotionInfo = trans:Find("bottomRoot/promotionInfo")  --推广公司
     self.promotionShowRoot = trans:Find("bottomRoot/promotionInfo/showInfoRoot")
     self.pIconImg = trans:Find("bottomRoot/promotionInfo/abilityRoot/iconImg"):GetComponent("Image")
-    self.pIconImg = trans:Find("bottomRoot/promotionInfo/abilityRoot/iconImg"):GetComponent("Image")
-    self.pIconImg = trans:Find("bottomRoot/promotionInfo/abilityRoot/iconImg"):GetComponent("Image")
-    self.pIconImg = trans:Find("bottomRoot/promotionInfo/abilityRoot/iconImg"):GetComponent("Image")
+    self.pInfoText = trans:Find("bottomRoot/promotionInfo/abilityRoot/infoText"):GetComponent("Text")
+    self.pText01 = trans:Find("bottomRoot/promotionInfo/abilityRoot/Text01"):GetComponent("Text")
+    self.pValueText = trans:Find("bottomRoot/promotionInfo/abilityRoot/valueText"):GetComponent("Text")
 
     self.technologyInfo = trans:Find("bottomRoot/technologyInfo")  --研究所
     self.technologyShowRoot = trans:Find("bottomRoot/technologyInfo/showInfoRoot")
-
+    self.techInfoText = trans:Find("bottomRoot/technologyInfo/abilityRoot/infoText"):GetComponent("Text")
+    self.techText01 = trans:Find("bottomRoot/technologyInfo/abilityRoot/Text01"):GetComponent("Text")
+    self.techValueText = trans:Find("bottomRoot/technologyInfo/abilityRoot/valueText"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
@@ -91,74 +93,49 @@ function MapRightOtherBuildingPage:_sortInfoItems()
 end
 --
 function MapRightOtherBuildingPage:_createInfoByType(buildingType)
-    local revenueData = {infoTypeStr = "Revenue", value = ""}  --今日营收
-    self.items[#self.items + 1] = self:_createShowItem(revenueData)
-
-    local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary}  --工资
-    self.items[#self.items + 1] = self:_createShowItem(salaryData)
-
-    if buildingType == BuildingType.House then
-        self:_createHouse()
+    if buildingType == BuildingType.House or buildingType == BuildingType.RetailShop then  --签约
+        self:_createSign()
     elseif buildingType == BuildingType.MaterialFactory then
-        self:_createMaterial()
+        --self:_createMaterial()
+    elseif buildingType == BuildingType.Laboratory then
+        self:_createTech()
     end
 end
---住宅
-function MapRightOtherBuildingPage:_createHouse()
-    local occStr = string.format("%d/%d", self.data.renter, PlayerBuildingBaseData[self.data.info.mId].npc)
-    local occData = {infoTypeStr = "HouseOccupancy", value = occStr}  --入住率
-    self.items[#self.items + 1] = self:_createShowItem(occData)
+--签约
+function MapRightOtherBuildingPage:_createSign()
+    local signInfo = self.data.contractInfo
+    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(signInfo.price))
+    local data2 = {infoTypeStr = "Price", value = str2}  --价格
+    self.items[#self.items + 1] = self:_createShowItem(data2, self.simpleShowRoot)
 
-    local rentStr = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
-    local rentData = {infoTypeStr = "HouseRent", value = rentStr}  --租金
-    self.items[#self.items + 1] = self:_createShowItem(rentData)
+    local str1 = signInfo.hours.."h"
+    local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
 end
---原料厂
-function MapRightOtherBuildingPage:_createMaterial()
-    local used = self:_getWarehouseCapacity(self.data.store)
-    local str1 = string.format("%d/%d", used, PlayerBuildingBaseData[self.data.info.mId].storeCapacity)
-    local data1 = {infoTypeStr = "Warehouse", value = str1}  --仓库容量
-    self.items[#self.items + 1] = self:_createShowItem(data1)
+--科研
+function MapRightOtherBuildingPage:_createTech()
+    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.pricePreTime))
+    local data2 = {infoTypeStr = "Price", value = str2}  --价格
+    self.items[#self.items + 1] = self:_createShowItem(data2, self.technologyShowRoot)
 
-    if self.data.line == nil then  --生产线
-        local str2 = GetLanguage(12345678)
-        local data2 = {infoTypeStr = "Production", value = str2}
-        self.items[#self.items + 1] = self:_createShowItem(data2)
-    else
-        local detailImgPath = Material[self.data.line[1].itemId].img
-        local data2 = {infoTypeStr = "Production", value = GetLanguage(12345678), detailImgPath = detailImgPath}
-        self.items[#self.items + 1] = self:_createShowItem(data2, true)
-    end
-end
---计算仓库容量
-function MapRightOtherBuildingPage:_getWarehouseCapacity(store)
-    local warehouseNowCount = 0
-    local lockedNowCount = 0
-    if store.inHand == nil then
-        warehouseNowCount = 0
-    else
-        for key,value in pairs(store.inHand) do
-            warehouseNowCount = warehouseNowCount + value.n
-        end
-    end
-    if store.locked == nil then
-        lockedNowCount = 0
-    else
-        for key,value in pairs(store.locked) do
-            lockedNowCount = lockedNowCount + value.n
-        end
-    end
-    return warehouseNowCount + lockedNowCount
+    local str1 = self.data.sellTimes.."h"
+    local data1 = {infoTypeStr = "ResearchTime", value = str1}  --科研时间
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.technologyShowRoot)
+
+    --TODO: 等白尤俊的实现接口
+    local str3 = self.data.sellTimes.."h"
+    local data3 = {infoTypeStr = "Queued", value = str3}  --队列
+    self.items[#self.items + 1] = self:_createShowItem(data3, self.technologyShowRoot)
 end
 --
-function MapRightOtherBuildingPage:_createShowItem(data, hasDetail)
+function MapRightOtherBuildingPage:_createShowItem(data, parentTrans, hasDetail)
     local obj
     if hasDetail == true then
         obj = MapPanel.prefabPools[MapPanel.MapShowInfoHasImgPoolName]:GetAvailableGameObject()
     else
         obj = MapPanel.prefabPools[MapPanel.MapShowInfoPoolName]:GetAvailableGameObject()
     end
-    obj.transform:SetParent(self.showRoot)
+    obj.transform:SetParent(parentTrans)
     obj.transform.localScale = Vector3.one
     local item = MapRightShowInfoItem:new(obj)
     item:initData(data)

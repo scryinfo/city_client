@@ -48,4 +48,25 @@ MapBuildingInfoConfig={
         ["imgPath"] = "",
         ["languageId"] = "Queued",
     },
+    --点击其他人建筑显示的信息
+    ["Price"] = {
+        ["imgPath"] = "",
+        ["languageId"] = "Price",
+    },
+    ["PromotionTime"] = {
+        ["imgPath"] = "",
+        ["languageId"] = "PromotionTime",
+    },
+    ["ResearchTime"] = {
+        ["imgPath"] = "",
+        ["languageId"] = "ResearchTime",
+    },
+    ["WarehouseTime"] = {
+        ["imgPath"] = "",
+        ["languageId"] = "WarehouseTime",
+    },
+    ["SignTime"] = {
+        ["imgPath"] = "",
+        ["languageId"] = "SignTime",
+    },
 }

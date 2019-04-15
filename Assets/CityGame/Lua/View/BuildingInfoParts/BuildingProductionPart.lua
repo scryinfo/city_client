@@ -50,6 +50,8 @@ end
 
 function BuildingProductionPart:_initFunc()
     self:_language()
+    self.numberSlider.maxValue = self.m_data.line[1].targetCount
+    self.numberSlider.value = self.m_data.line[1].nowCount
     self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
     if not self.m_data.line then
         self.TopLineInfo.transform.localScale = Vector3.zero

@@ -16,6 +16,15 @@ function BuildingBaseDetailPart:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         table.insert(instanceTable,itemGoodsIns)
     end
 end
+--生成生产线代生产队列
+function BuildingBaseDetailPart:CreatedWaitingQueue(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable,goodsType)
+    if not dataInfo then
+        return
+    end
+    local objPrefab = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
+    local lineItemIns = className:new(dataInfo,objPrefab,behaviour,goodsType)
+    table.insert(instanceTable,lineItemIns)
+end
 --生成itemPrefab(生成一个)
 function BuildingBaseDetailPart:CreateGoodsItem(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable)
     if not dataInfo then

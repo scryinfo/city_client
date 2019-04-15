@@ -4,13 +4,15 @@
 --- DateTime: 2019/4/12 15:07
 ---建筑主界面生产线详情界面
 BuildingProductionDetailPart = class('BuildingProductionDetailPart',BuildingBaseDetailPart)
-local aaa = 0
+local Math_Ceil = math.ceil
 function BuildingProductionDetailPart:PrefabName()
     return "BuildingProductionDetailPart"
 end
 
 function BuildingProductionDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    --待生产
+    self.waitingQueueIns = {}
 end
 
 function BuildingProductionDetailPart:RefreshData(data)
@@ -55,15 +57,21 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.numberTipText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText"):GetComponent("Text")
     self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
-    self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip")
+    self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
     self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
+
+    self.lineItemPrefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/LineItem").gameObject
 end
 
 function BuildingProductionDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
         self:clickCloseBtn()
     end,self)
     mainPanelLuaBehaviour:AddClick(self.addBtnBg.gameObject,function()
+        self:clickAddBtnBg()
+    end,self)
+    mainPanelLuaBehaviour:AddClick(self.rightAddBg.gameObject,function()
         self:clickAddBtnBg()
     end,self)
 end
@@ -93,13 +101,45 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.nameText.text = GetLanguage(lineData[1].itemId)
         self.timeText.text = self:GetTime(lineData[1])
         self.numberText.text = lineData[1].nowCount.."/"..lineData[1].targetCount
-        --时间进度条
+
+        --当前生产中线开始的时间
+        self.startTime = lineData[1].ts
+        --当前服务器时间
+        self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+        --当前生产中线已经生产的时间
+        self.pastTime = self.serverNowTime - self.startTime
+
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.nameBg.transform.localPosition = Vector3(-140,-100,0)
             self.goods.transform.localScale = Vector3.zero
             LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
+            self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
+            self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+        end
+        self.timeSlider.maxValue = Math_Ceil(self.oneTotalTime / 1000)
+        self.timeSlider.value = Math_Ceil((self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000)
+        --实验直接使用已经生产的时间赋值
+        --self.timeSlider.value = Math_Ceil(self.pastTime / 1000)
+        self.oneTimeText.text = self:GetStringTime(self.timeSlider.maxValue - self.timeSlider.value)
+    end
+
+    self.lineNumberText.text = #lineData.."/"..#lineData
+    --判断当前有没有代生产队列
+    if #lineData == 1 then
+        self.noLineTip.text = "you can add some production lines."
+        self.noLineTip.transform.localScale = Vector3.one
+    elseif #lineData > 1 then
+        self.noLineTip.transform.localScale = Vector3.zero
+        --判断当前是否已经创建好了队列
+        if #lineData - 1 == #self.waitingQueueIns then
+            self.Content.transform.localPosition = Vector3(0,0,0)
+            return
+        else
+            for i = 2, #lineData do
+                self:CreatedWaitingQueue(lineData[i],self.lineItemPrefab,self.Content,LineItem,self.mainPanelLuaBehaviour,self.waitingQueueIns,self.m_data.buildingType)
+            end
         end
     end
 end
@@ -113,6 +153,7 @@ function BuildingProductionDetailPart:clickAddBtnBg()
     PlayMusEff(1002)
     if self.m_data.info.state == "OPERATE" then
         ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
+        self:CloseDestroy(self.waitingQueueIns)
     else
         Event.Brocast("SmallPop",GetLanguage(35040013),300)
         return
@@ -132,5 +173,17 @@ function BuildingProductionDetailPart:GetTime(lineData)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
+end
+--计算当前生产一个需要的时间(毫秒级)
+function BuildingProductionDetailPart:GetOneNumTime(numOneSec,workerNum)
+    local seconds = 1 / (numOneSec * workerNum)
+    local ms = seconds * 1000
+    return ms
+end
+--生产一个的时间转换 时分秒
+function BuildingProductionDetailPart:GetStringTime(ms)
+    local timeTable = getTimeBySec(ms / 1000)
+    local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
 end

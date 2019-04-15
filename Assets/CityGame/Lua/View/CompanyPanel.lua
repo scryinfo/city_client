@@ -65,8 +65,17 @@ function CompanyPanel.InitPanel()
 
     -- Eva显示
     this.myEvaText = transform:Find("BottomRoot/EvaRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
+    this.introductionBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/IntroductionBtn").gameObject
     this.optionOneScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content")
     this.optionTwoScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
     this.propertyScroll = transform:Find("BottomRoot/EvaRoot/PropertyRoot/PropertyScroll/Content")
+
+    -- Eva界面调整
+    this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")
+    this.bg2Rt = transform:Find("BottomRoot/EvaRoot/OptionRoot/Bg2")
+    this.optionOneRt = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content"):GetComponent("RectTransform")
+    this.optionTwoT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll")
+    this.optionThereT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll")
+    this.propertyRootRt = transform:Find("BottomRoot/EvaRoot/PropertyRoot"):GetComponent("RectTransform")
 end

@@ -32,8 +32,9 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.backBtn, self.OnBack, self)
     luaBehaviour:AddClick(CompanyPanel.infoBtn.gameObject, self.OnInfo, self)
     luaBehaviour:AddClick(CompanyPanel.landBtn.gameObject, self.OnLand, self)
-    luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
     luaBehaviour:AddClick(CompanyPanel.buildingBtn.gameObject, self.OnBuilding, self)
+    luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
+    luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
 
     -- 土地节点
     self.landSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -59,26 +60,6 @@ function CompanyCtrl:Awake()
     self:_initData()
 end
 
-function CompanyCtrl:_allItemType()
-    --CompanyCtrl.static.AllItem = {
-    --    SELL_GROUND = {itemId = 1000, income = 0, expenses = 0}, -- 土地买卖
-    --    RENT_GROUND = {itemId = 1001, income = 0, expenses = 0}, -- 土地租赁
-    --    TRANSFER = {itemId = 1002, expenses = 0}, -- 运输费用
-    --    SALARY = {itemId = 1003, expenses = 0}, -- 员工工资
-    --    RENT_ROOM = {itemId = 1004, income = 0} -- 住宅房租
-    --}
-    --CompanyCtrl.static.AllItemId = {"SELL_GROUND", "RENT_GROUND", "TRANSFER","SALARY","RENT_ROOM",}
-    --for k, v in pairs(Material) do
-    --    CompanyCtrl.static.AllItem[k] = {itemId = v.itemId, name = v.name, income = 0, expenses = 0}
-    --    table.insert(CompanyCtrl.static.AllItemId, k)
-    --end
-    --for i, j in pairs(Good) do
-    --    CompanyCtrl.static.AllItem[i] = {itemId = j.itemId, name = j.name, income = 0, expenses = 0}
-    --    table.insert(CompanyCtrl.static.AllItemId, i)
-    --end
-end
-
-
 -- 注册监听事件
 function CompanyCtrl:Active()
     UIPanel.Active(self)
@@ -91,7 +72,6 @@ function CompanyCtrl:Active()
 end
 
 function CompanyCtrl:Refresh()
-    self:_allItemType()
     self:_updateData()
     self:initInsData()
     --CityEngineLua.login_tradeapp(true)
@@ -108,6 +88,7 @@ function CompanyCtrl:_addListener()
     Event.AddListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.AddListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
     Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    Event.AddListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
 end
 
 -- 注销model层网络回调
@@ -115,6 +96,7 @@ function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.RemoveListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
     Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    Event.RemoveListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
 end
 
 -- 打开model
@@ -161,10 +143,21 @@ function CompanyCtrl:OnEva(go)
     PlayMusEff(1002)
     go:_showMainRoot(4)
     -- Eva选项生成
+    go.isClickEva = true
     CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     go:ShowOptionTwo(0)
     go:ShowOptionThere(0)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
+    if CompanyCtrl.static.companyMgr:GetBuildingTitleItem() then
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
+    else
+        CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
+    end
+end
+
+--显示eva介绍
+function CompanyCtrl:OnIntroduction(go)
+    PlayMusEff(1002)
+    ct.OpenCtrl("CompanyIntroductionCtrl")
 end
 
 -- 初始数据
@@ -199,10 +192,12 @@ end
 -- 初始化基本数据
 function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
+        CompanyPanel.evaBtn.transform.localScale = Vector3.one
         CompanyPanel.titleText.text = GetLanguage(17010001)
         CompanyPanel.coinBg:SetActive(true)
         CompanyPanel.coinText.text = DataManager.GetMoneyByString()
     else
+        CompanyPanel.evaBtn.transform.localScale = Vector3.zero
         CompanyPanel.titleText.text = GetLanguage(17010007)
         CompanyPanel.coinBg:SetActive(false)
     end
@@ -241,7 +236,7 @@ end
 -- Eva选项2信息显示
 CompanyCtrl.static.evaOptionTwoData = function(transform, idx)
     idx = idx + 1
-    local item = OptionItem:new(transform, 2, idx)
+    CompanyCtrl.optionTwoScript[idx] = OptionItem:new(transform, 2, idx)
 end
 
 CompanyCtrl.static.evaOptionTwoClearData = function(transform)
@@ -250,7 +245,7 @@ end
 -- Eva选项3信息显示
 CompanyCtrl.static.evaOptionThereData = function(transform, idx)
     idx = idx + 1
-    local item = OptionItem:new(transform, 3, idx)
+    CompanyCtrl.optionThereScript[idx] = OptionItem:new(transform, 3, idx)
 end
 
 CompanyCtrl.static.evaOptionThereClearData = function(transform)
@@ -361,14 +356,36 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     end
 end
 
+-- 查询Eva
 function CompanyCtrl:c_OnQueryMyEva(evas)
+    CompanyCtrl.static.companyMgr:SetEvaData(evas)
+    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
+end
 
+-- 更新Eva
+function CompanyCtrl:c_OnUpdateMyEva(eva)
+    local data = {}
+    data.id = eva.id
+    data.at = eva.at
+    data.b = eva.b
+    data.cexp = eva.cexp
+    data.lv = eva.lv
+    data.pid = eva.pid
+    data.bt = eva.bt
+    local evaPoint = DataManager.GetEvaPoint()
+    evaPoint = evaPoint - eva.decEva
+    CompanyPanel.myEvaText.text = tostring(evaPoint)
+    DataManager.SetEvaPoint(evaPoint)
+    CompanyCtrl.static.companyMgr:UpdateMyEva(data)
+    CompanyCtrl.static.companyMgr:UpdateMyEvaProperty(data)
 end
 
 function CompanyCtrl:ShowOptionTwo(itemNumber)
+    CompanyCtrl.optionTwoScript = {}
     CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EmptyBtnTitleItem")
 end
 
 function CompanyCtrl:ShowOptionThere(itemNumber)
+    CompanyCtrl.optionThereScript = {}
     CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EmptyBtnTitleItem")
 end

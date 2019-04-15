@@ -1056,6 +1056,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_faceId = tempData.faceId
     --初始化自己的公会ID
     PersonDataStack.m_societyId = tempData.societyId
+    --初始化自己的Eva点数
+    PersonDataStack.m_evaPoint = tempData.eva
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =
@@ -1523,6 +1525,16 @@ end
 -- 设置宣言
 function DataManager.SetGuildDeclaration(bytesStrings)
     PersonDataStack.guildManager:SetGuildDeclaration(bytesStrings)
+end
+
+-- 获得Eva点数
+function DataManager.GetEvaPoint()
+    return PersonDataStack.m_evaPoint
+end
+
+-- 设置Eva点数
+function DataManager.SetEvaPoint(evaPoint)
+    PersonDataStack.m_evaPoint = evaPoint
 end
 
 -- 获得公会成员

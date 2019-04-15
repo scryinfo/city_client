@@ -15,6 +15,7 @@ function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getGroundInfo","gs.GroundChange",self.n_OnGetGroundInfo,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBuildings","gs.MyBuildingInfos",self.n_OnQueryMyBuildings,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEva","gs.Eva",self.n_OnUpdateMyEva,self)
 end
 
 -- 查询玩家的土地消息
@@ -60,4 +61,14 @@ end
 -- 服务器返回的Eva信息
 function CompanyModel:n_OnQueryMyEva(evas)
     Event.Brocast("c_OnQueryMyEva", evas)
+end
+
+-- Eva加点
+function CompanyModel:m_UpdateMyEva(eva)
+    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEva","gs.Eva",eva)
+end
+
+-- 服务器返回的Eva加点
+function CompanyModel:n_OnUpdateMyEva(eva)
+    Event.Brocast("c_OnUpdateMyEva", eva)
 end

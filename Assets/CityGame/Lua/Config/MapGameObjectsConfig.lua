@@ -516,12 +516,7 @@ MapGameObjectsConfig = {
             ["PathFindingConfigID"] = 3,
             ["InitCount"] = 0,
         },
-
-
-
-
         --TODO:湖泊
-
     },
     ["OnlyOne"] = {
         ["Centralbuilding"] = 2000000,      --中心建筑

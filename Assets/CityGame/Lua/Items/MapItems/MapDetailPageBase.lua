@@ -9,7 +9,7 @@ MapDetailPageBase = class('MapDetailPageBase')
 function MapDetailPageBase:initialize(mapSearchType, viewRect)
     self.viewRect = viewRect
     self.mapSearchType = mapSearchType
-    self:childInit()
+    self:childInit(self.viewRect.transform)
     self:createItems()
 end
 --重置状态

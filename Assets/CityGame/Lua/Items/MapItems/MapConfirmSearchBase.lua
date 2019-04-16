@@ -7,7 +7,7 @@ MapConfirmSearchBase = class('MapConfirmSearchBase')
 
 --初始化方法
 function MapConfirmSearchBase:initialize(data, viewRect)
-    self.viewRect = viewRect
+    self.viewRect = viewRect:GetComponent("RectTransform")
     self.data = data
     self.toggle = self.viewRect.transform:GetComponent("Toggle")
     self.toggle.onValueChanged:AddListener(function(isOn)
@@ -44,6 +44,10 @@ end
 function MapConfirmSearchBase:getItemId()
     return self.data.itemId
 end
+--
+function MapConfirmSearchBase:setPos(pos)
+    self.viewRect.anchoredPosition = pos
+end
 
 --
 function MapConfirmSearchBase:childInit(viewRect) end
@@ -51,3 +55,5 @@ function MapConfirmSearchBase:childInit(viewRect) end
 function MapConfirmSearchBase:initLanguage() end
 --设置toggle的group
 function MapConfirmSearchBase:setToggleGroup(toggle) end
+--获取显示的名字
+function MapConfirmSearchBase:getNameStr() end

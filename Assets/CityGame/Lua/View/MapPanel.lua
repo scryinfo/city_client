@@ -75,15 +75,36 @@ function MapPanel.InitPanel()
     this.prefabPools[this.MapShowInfoPoolName] = LuaGameObjectPool:new(this.MapShowInfoPoolName, this.mapShowInfoItemTran, 5, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
     this.prefabPools[this.MapShowInfoHasImgPoolName] = LuaGameObjectPool:new(this.MapShowInfoHasImgPoolName, this.mapShowInfoIconItemTran, 1, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
 end
---
+--根据类型显示二级菜单
 function MapPanel.showDetailPageByType(typeId)
+    MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
+    MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
+    MapPanel.promotionPageGroup.transform.localScale = Vector3.zero
+    MapPanel.technologyPageGroup.transform.localScale = Vector3.zero
+
     if typeId == EMapSearchType.Material then
         MapPanel.matPageToggleGroup.transform.localScale = Vector3.one
-        MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
     elseif typeId == EMapSearchType.Goods then
-        MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
         MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Promotion then
+        MapPanel.promotionPageGroup.transform.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Technology then
+        MapPanel.technologyPageGroup.transform.localScale = Vector3.one
     end
+end
+--返回二级菜单trans
+function MapPanel.getPageByType(typeId)
+    local go
+    if typeId == EMapSearchType.Material then
+        go = MapPanel.matPageToggleGroup.gameObject
+    elseif typeId == EMapSearchType.Goods then
+        go = MapPanel.goodsPageToggleGroup.gameObject
+    elseif typeId == EMapSearchType.Promotion then
+        go = MapPanel.promotionPageGroup.gameObject
+    elseif typeId == EMapSearchType.Technology then
+        go = MapPanel.technologyPageGroup.gameObject
+    end
+    return go
 end
 --
 function MapPanel.showRightPageByType(type, data)

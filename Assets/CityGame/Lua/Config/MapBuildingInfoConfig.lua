@@ -96,7 +96,7 @@ MapPromotionInfoConfig={
 }
 ------------------------------------------------------
 --小地图点开科研展示的信息
-MapPromotionInfoConfig={
+MapTechnologyInfoConfig={
     [1] = {
         ["languageId"] = "发明新产品",
     },

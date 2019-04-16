@@ -11,20 +11,37 @@ MapCtrl.static.DetailSize = Vector2.New(500, 796)  --详细界面的大小
 MapCtrl.static.CloseSearchBtnSize = Vector2.New(59, 277)  --关闭搜索的按钮的大小
 MapCtrl.static.TypeMovePos = Vector2.New(0, -400)  --类型隐藏显示的X位置，x为显示位置，y为隐藏位置
 MapCtrl.static.ShowTypeBtnMovePos = Vector2.New(17, -80)  --打开界面的按钮隐藏显示的X位置，x为显示位置，y为隐藏位置
-
+--小地图左侧搜索的类型
 EMapSearchType =
 {
     Default = 0,
     Material = 1,
     Goods = 2,
-    Deal = 3,
-    Auction = 4,
-    SelfBuilding = 5,
-    Warehouse = 6,
-    Promotion = 7,
-    Technology = 8,
-    Signing = 9,
+    Warehouse = 3,
+    Promotion = 4,
+    Deal = 5,
+    Auction = 6,
+    Technology = 7,
+    Signing = 8,
+    SelfBuilding = 9,
 }
+--科研推广查询的不同类型
+EMapPromotionType =
+{
+    Default = 0,
+    Food = 1,
+    Clothes = 2,
+    Accessory = 3,
+    SuperMarket = 4,
+    House = 5,
+}
+EMapTechnologyType =
+{
+    Default = 0,
+    TechNewItem = 1,
+    TechEva = 2,
+}
+--需要与配置表的Id一一对应
 
 function MapCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -87,10 +104,10 @@ function MapCtrl:Active()
 end
 
 function MapCtrl:Refresh()
-    Event.AddListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
-    Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)
-    Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)
-    Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)
+    Event.AddListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)  --无二级菜单的类型，取消选中自己
+    Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)  --选中左侧类型
+    Event.AddListener("c_MapSearchSelectDetail", self.refreshDetailItem, self)  --二级菜单选中具体的item
+    Event.AddListener("c_MapCloseDetailPage", self.typeToggleSelectPage, self)  --选中带二级菜单之后关闭右侧详情界面
     Event.AddListener("c_MapReqMarketDetail", self._reqMarketDetail, self)
     Event.AddListener("c_MapOpenRightMatPage", self._openRightMatGoodPage, self)
     Event.AddListener("c_MapOpenRightGAucPage", self._openRightGAucPage, self)
@@ -136,7 +153,7 @@ function MapCtrl:_cleanDatas()
     MapPanel.scaleSlider.minValue = self.ScaleMin
     MapPanel.scaleSlider.maxValue = self.ScaleMax
     self.AOIState = 0  --设置为远镜头
-    self.selectSearchType = EMapSearchType.Default
+    self.selectSearchType = EMapSearchType.Default  --选中的无二级菜单的搜索类型
 
     self.my_Scale = TerrainConfig.MiniMap.ScaleStart  --重置镜头
     MapPanel.mapRootRect.transform.localScale = Vector3.one
@@ -229,7 +246,7 @@ end
 --
 function MapCtrl:setSelectSearch(type, detail)
     self.selectSearchType = type
-    self.selectId = detail
+    self.uiSelectId = detail
 end
 --loading
 function MapCtrl:toggleLoadingState(isShow)
@@ -324,18 +341,18 @@ end
 function MapCtrl:nonePageCancelSelect(selectId)
     if self._cancelTypeSelect == selectId then
         self:refreshTypeItems()
-        self.selectId = nil
+        self.uiSelectId = nil
         self.selectSearchType = EMapSearchType.Default
         MapBubbleManager.cleanAllBubbleItems()
     end
 end
 --
 function MapCtrl:typeToggleSelectPage(selectId, open)
-    if self.selectId == selectId then
+    if self.uiSelectId == selectId then
         self:toggleDetailPage(open)
     end
 end
---每次切换选择的类型的时候都应调用该方法
+--选中的左侧类型的UI显示
 function MapCtrl:refreshTypeItems(selectId)
     if selectId == nil then
         for i, value in pairs(self.typeTable) do
@@ -345,7 +362,7 @@ function MapCtrl:refreshTypeItems(selectId)
         for i, value in pairs(self.typeTable) do
             if value:getTypeId() == selectId then
                 value:refreshShow(true)
-                self.selectId = selectId
+                self.uiSelectId = selectId
                 self:toggleDetailPage(false)
             else
                 value:refreshShow(false)
@@ -378,22 +395,65 @@ function MapCtrl:refreshDetailItem(item)
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
-            --向服务器发送请求  商品 原料
-            if self:_getIsDetailFunc() == true then
-                self:_judgeDetail()
-            else
-                MapModel.m_ReqQueryMarketSummary(item:getItemId())
+            --判断是否是科研推广
+            if typeId == EMapSearchType.Promotion or typeId == EMapSearchType.Technology then
+                self:checkPromotionTechReq(typeId, item:getItemId())
+            elseif typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
+                self:matGoodsReq(item:getItemId())
             end
 
-            --隐藏右边UI
-            tempItem:_clickFunc()
-            --cd
-            self:toggleLoadingState(false)
+            tempItem:_clickFunc()  --隐藏右边UI
+            self:toggleLoadingState(false)  --cd
             self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
             self.m_Timer:Start()
-        else
-            ct.log("")
         end
+    end
+end
+--
+function MapCtrl:matGoodsReq(typeId)
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqQueryMarketSummary(typeId)
+    end
+end
+--如果是推广和科研，则需要做特殊处理
+--不是选中detail之后就向服务器发消息
+--验证是否需要向服务器发送请求
+function MapCtrl:checkPromotionTechReq(typeId, detailId)
+    if typeId == self.uiSelectId then
+        local time = self.searchTime[typeId]
+        local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
+        if remainTime >= 0 then
+            self:promotionTechReq(typeId, detailId)
+        else
+            MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
+        end
+    else
+        self:promotionTechReq(typeId, detailId)
+    end
+end
+--推广研究
+function MapCtrl:promotionTechReq(typeId, detailId)
+    if self.searchTime == nil then
+        self.searchTime = {}
+    end
+    self.searchTime[typeId] = TimeSynchronized.GetTheCurrentTime()
+    MapCtrl.SelectTypeId = typeId
+    MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
+    --
+    if self:_getIsDetailFunc() == true then
+        --self:_judgeDetail()
+    else
+        self:switchNoDataReq(typeId)
+    end
+end
+--
+function MapCtrl:switchNoDataReq(typeId)
+    if typeId == EMapSearchType.Technology then
+        MapModel.m_ReqLabSummary()
+    elseif typeId == EMapSearchType.Promotion then
+        MapModel.m_ReqPromotionSummary()
     end
 end
 
@@ -403,7 +463,7 @@ function MapCtrl:_cancelDetailSelect()
         self.selectDetailItem:resetState()
         self.selectDetailItem = nil
     end
-    self.selectId = nil
+    self.uiSelectId = nil
 end
 
 ---
@@ -446,15 +506,10 @@ function MapCtrl:_openPageItems(type)
         self.detailPageItems = {}
     end
     if self.detailPageItems[type] == nil then
-        local go
-        if type == EMapSearchType.Material then
-            go = MapPanel.matPageToggleGroup.gameObject
-        elseif type == EMapSearchType.Goods then
-            go = MapPanel.goodsPageToggleGroup.gameObject
-        end
+        local go = MapPanel.getPageByType(type)
+        MapPanel.showDetailPageByType(type)
 
-        go.transform.localScale = Vector3.one
-        self.detailPageItems[type] = MapMatDetailPageItem:new(type, go)
+        self.detailPageItems[type] = self:getDetailPageByType(type, go)
     end
     for i, value in pairs(self.detailPageItems) do
         if value:getTypeId() == type then
@@ -463,6 +518,18 @@ function MapCtrl:_openPageItems(type)
             value:toggleState(false)
         end
     end
+end
+--
+function MapCtrl:getDetailPageByType(typeId, go)
+    local item
+    if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
+        item = MapMatDetailPageItem:new(typeId, go)
+    elseif typeId == EMapSearchType.Technology then
+        item = MapTechnologyPageItem:new(typeId, go)
+    elseif typeId == EMapSearchType.Promotion then
+        item = MapPromotionPageItem:new(typeId, go)
+    end
+    return item
 end
 
 --搜索完成后，选择具体的item，打开右侧原料商品界面
@@ -512,6 +579,11 @@ end
 --
 function MapCtrl:getNonePageSearchType()
     return self.selectSearchType
+end
+--获取当前选择的详情ID
+--用于右侧建筑UI显示科研推广的效果
+function MapCtrl.getNowSelectDetailId()
+    return MapCtrl.SelectDetailId
 end
 
 ---服务器请求
@@ -664,20 +736,30 @@ function MapCtrl:_mapAOIMove()
 end
 --放大过程中判断是否需要请求详情
 function MapCtrl:_judgeDetail()
-    if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() ~= nil then
-        local collectionId = TerrainManager.GetCameraCollectionID()
-        local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
-        local blockCollectionId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
-        MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
+    --只有Mat Good 需要向服务器请求
+    if self.selectDetailItem ~= nil then
+        if self.selectDetailItem:getTypeId() == EMapSearchType.Material or self.selectDetailItem:getTypeId() == EMapSearchType.Goods then
+            local collectionId = TerrainManager.GetCameraCollectionID()
+            local blockId = TerrainManager.CollectionIDTurnBlockID(collectionId)
+            local blockCollectionId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
+            MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
+        end
         return
     end
+    --其他搜索 做对应处理
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
-        ct.log("")
-        --显示拍卖/土地交易详情
         if self.selectSearchType == EMapSearchType.Auction then
             MapBubbleManager.createGAucDetailItems()
         elseif self.selectSearchType == EMapSearchType.Deal then
             MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Warehouse then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Signing then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Promotion then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Technology then
+            --MapBubbleManager.createGroundTransDetailItems()
         end
     end
 end
@@ -688,12 +770,18 @@ function MapCtrl:_judgeSummary()
         return
     end
     if self.selectSearchType ~= nil and self.selectSearchType ~= EMapSearchType.Default then
-        ct.log("")
-        --显示拍卖/土地交易缩略
         if self.selectSearchType == EMapSearchType.Auction then
             MapBubbleManager.createSummaryItems(nil, self.selectSearchType)
         elseif self.selectSearchType == EMapSearchType.Deal then
             MapModel.m_ReqGroundTransSummary()
+        elseif self.selectSearchType == EMapSearchType.Warehouse then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Signing then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Promotion then
+            --MapBubbleManager.createGroundTransDetailItems()
+        elseif self.selectSearchType == EMapSearchType.Technology then
+            --MapBubbleManager.createGroundTransDetailItems()
         end
     end
 end

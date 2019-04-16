@@ -91,7 +91,7 @@ end
 --返回
 function StopAndBuildCtrl:OnClick_backBtn(ins)
     ins.CloseBtn()
-    UIPanel.CloseAllPageExceptMain()
+    UIPanel.ClosePage()
     PlayMusEff(1002)
 end
 

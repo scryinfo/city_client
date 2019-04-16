@@ -29,6 +29,8 @@ function LaboratoryModel:_addListener()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange,self)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform,self)
 
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
     ------本地的事件注册
     --Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
     --Event.AddListener("m_labSetting", self.m_labSetting, self)
@@ -125,5 +127,19 @@ function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData)
             Event.Brocast("c_creatRollItem",lineData.line)
             return
         end
+    end
+end
+
+
+
+--员工工资改变
+function LaboratoryModel:n_OnReceiveHouseSalaryChange(data)
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_refreshSalary', data)
+end
+--开业成功，再次请求建筑详情
+function LaboratoryModel:n_OnReceiveOpenBusiness(data)
+    if data ~= nil and data.id == self.insId then
+        self:m_ReqLaboratoryDetailInfo(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end

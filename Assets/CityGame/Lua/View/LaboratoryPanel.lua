@@ -28,4 +28,5 @@ function LaboratoryPanel.InitPanel()
 
     this.mainGroup = transform:Find("MainGroup")
 
+    this.openBusinessItem=OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
 end

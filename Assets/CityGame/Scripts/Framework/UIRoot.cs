@@ -49,12 +49,12 @@ namespace City
             go.layer = LayerMask.NameToLayer("UI");
             m_Instance = go.AddComponent<UIRoot>();
             go.AddComponent<RectTransform>();
-            /*
+           
             Canvas can = go.AddComponent<Canvas>();
             can.renderMode = RenderMode.ScreenSpaceCamera;
             can.pixelPerfect = true;
             go.AddComponent<GraphicRaycaster>();
-            */
+           
             m_Instance.root = go.transform;
 
             GameObject camObj = new GameObject("UICamera");
@@ -65,7 +65,7 @@ namespace City
             cam.clearFlags = CameraClearFlags.Depth;
             cam.orthographic = true;
             cam.farClipPlane = 200f;
-            //can.worldCamera = cam;
+            can.worldCamera = cam;
             cam.cullingMask = 1 << 5;
             cam.nearClipPlane = -50f;
             cam.farClipPlane = 50f;
@@ -76,12 +76,12 @@ namespace City
             camObj.AddComponent<AudioListener>();
             camObj.AddComponent<GUILayer>();
 
-            /*
+           
             CanvasScaler cs = go.AddComponent<CanvasScaler>();
             cs.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             cs.referenceResolution = new Vector2(1920f, 1080f);
             cs.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            */
+     
             ////add auto scale camera fix size.
             //TTCameraScaler tcs = go.AddComponent<TTCameraScaler>();
             //tcs.scaler = cs;
@@ -95,28 +95,28 @@ namespace City
             m_Instance.bubbleRoot = subRoot.transform;
             m_Instance.bubbleRoot.transform.localScale = Vector3.one;
             //添加Bubble画布
-            CreateCanvans(subRoot, cam);
+            //CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "NormalRoot";
             m_Instance.normalRoot = subRoot.transform;
             m_Instance.normalRoot.transform.localScale = Vector3.zero;
             //添加NormalRoot画布
-            CreateCanvans(subRoot, cam);
+            //CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "PopupRoot";
             m_Instance.popupRoot = subRoot.transform;
             m_Instance.popupRoot.transform.localScale = Vector3.one;
             //添加PopupRoot画布
-            CreateCanvans(subRoot, cam);
+            //CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "FixedRoot";
             m_Instance.fixedRoot = subRoot.transform;
             m_Instance.fixedRoot.transform.localScale = Vector3.one;
             //添加FixedRoot画布
-            CreateCanvans(subRoot, cam);
+            //CreateCanvans(subRoot, cam);
 
             //add Event System
             GameObject esObj = GameObject.Find("EventSystem");

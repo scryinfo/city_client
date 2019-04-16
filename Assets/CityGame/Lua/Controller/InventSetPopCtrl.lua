@@ -24,10 +24,10 @@ function InventSetPopCtrl:Refresh()
 end
 
 function InventSetPopCtrl:Awake(go)
-    self.isOpen=false
     panel = InventSetPopPanel
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
+
     LuaBehaviour:AddClick(panel.isOpenBtn.gameObject,self.OnClick_isOpen,self);
     panel.priceInp.onValueChanged:AddListener(function (string)
         self.price=tonumber(string)

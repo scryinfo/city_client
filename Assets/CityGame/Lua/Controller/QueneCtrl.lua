@@ -25,11 +25,11 @@ local panel,luabehaviour,this
 
 --todo：刷新
 function QueneCtrl:Refresh()
-    local data=self.m_data
+
+    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
     self:ChangeLanguage()
 
-    panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, #data)
-
+    self:c_updateQuque(self.m_data)
 end
 
 
@@ -43,7 +43,7 @@ function QueneCtrl:Awake(go)
     self.loopScrollDataSource.mProvideData =self.ReleaseData
     self.loopScrollDataSource.mClearData = self.CollectClearData
 
-    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
+
 end
 
 ---====================================================================================点击函数==============================================================================================
@@ -60,6 +60,30 @@ end
 
 
 ---====================================================================================业务代码==============================================================================================
+--对数据处理
+local function handleData( data )
+   local reminderTime=0
+   local mselfData,others={},{}
+   table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
+    --处理时间
+    for i, lineData in ipairs(data) do
+        lineData.queneTime = reminderTime
+        reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))* 3600000)
+    end
+    --自已的置顶
+    for i, lineData in ipairs(data) do
+        if lineData.proposerId == DataManager.GetMyOwnerID()  then
+            table.insert(mselfData,lineData)
+        else
+            table.insert(others,lineData)
+        end
+    end
+    for i, lineData in ipairs(others) do
+        table.insert(mselfData,lineData)
+    end
+
+    return mselfData
+end
 
 --多语言
 function QueneCtrl.ChangeLanguage()
@@ -84,13 +108,25 @@ end
 
 --刷新队列
 function QueneCtrl:c_updateQuque(data)
-    self.m_data=data
-    panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, #data)
+    if data.data  then
+        if data.func then
+            self.m_data.data = data.func(data.ins,data.data)
+        else
+            self.m_data.data = handleData(data.data)
+        end
+
+        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, #self.m_data.data,data.name)
+
+    else
+        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, 0,data.name)
+    end
 end
+
+
 
 function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
-    local data=  this.m_data[idx]
+    local data=  this.m_data.data[idx]
     InventGoodItem:new(data, transform,luabehaviour)
 end
 

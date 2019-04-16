@@ -20,6 +20,7 @@ function QuenePanel.InitPanel()
 
     this.loopScrol=transform:Find("joinInfoRoot/Scroll"):GetComponent("ActiveLoopScrollRect")
 
+    this.loopScrols=transform:Find("joinInfoRoot/Scroll"):GetComponent("LoopVerticalScrollRect")
 
 ---********************************************************************LandInfo**************************************************************************
 

@@ -15,7 +15,8 @@ end
 ---==========================================================================================点击函数=============================================================================
 --删除
 function InventGoodItem:c_OnClick_Delete(ins)
-    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+  --  DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+    ct.OpenCtrl("RollCtrl" , ins.data)
 end
 ---==========================================================================================业务逻辑=============================================================================
 

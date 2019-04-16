@@ -9,27 +9,25 @@ local pbl = pbl
 function LaboratoryModel:initialize(insId)
     self.insId = insId
     self:_addListener()
-    UpdateBeat:Add(self.Update, self)
+    --UpdateBeat:Add(self.Update, self)
 
 end
 
 function LaboratoryModel:Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        prints("刹车农户")
         self:m_ReqLabDeleteLine(self.data.inProcess[1].id)
-
     end
 end
 
 --启动事件--
 function LaboratoryModel:_addListener()
     --网络回调注册
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine);
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine,self);
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform,self)
 
     ------本地的事件注册
     --Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
@@ -72,12 +70,20 @@ end
 --开箱
 function LaboratoryModel:m_ReqLabRoll(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
-    DataManager.ModelSendNetMes("gscode.OpCode", "labRoll","gs.labRoll",lMsg)
+    DataManager.ModelSendNetMes("gscode.OpCode", "labRoll","gs.LabRoll",lMsg)
 end
 ---===================================================================================回调===============================================================================
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.data=data
+    if data.completed  then
+        if not data.inProcess then
+            data.inProcess={}
+        end
+        for i, v in ipairs(data.completed) do
+             table.insert( data.inProcess ,v )
+        end
+    end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
 end
 --研究所设置
@@ -87,26 +93,37 @@ end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
     if not self.data.inProcess then
-        self.data.inProcess={}
+        self.data.inProcess = {}
     end
     table.insert(self.data.inProcess,msg.line)
-    ct.OpenCtrl("QueneCtrl",self.data.inProcess)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodItem",data = self.data.inProcess}  )
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
     for i,line in ipairs(self.data.inProcess) do
-        if line.id == lineData.lineId and DataManager.GetMyOwnerID()== line.proposerId then
+        if line.id == lineData.lineId and DataManager.GetMyOwnerID() == line.proposerId then
             table.remove(self.data.inProcess,i)
         end
     end
 
-    Event.Brocast("c_updateQuque",self.data.inProcess)
+    Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
 end
 --开箱
 function LaboratoryModel:n_OnReceiveLineChange(lineData)
     prints("开箱回调")
+    if lineData .itemId or  lineData .evaPoint then
+        prints("成功")
+    end
 end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData)
     prints("更新箱子")
+    for i, v in ipairs(self.data.inProcess) do
+        if v.id == lineData.line.id  then
+            self.data.inProcess[i]=lineData.line
+            Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
+            Event.Brocast("c_creatRollItem",lineData.line)
+            return
+        end
+    end
 end

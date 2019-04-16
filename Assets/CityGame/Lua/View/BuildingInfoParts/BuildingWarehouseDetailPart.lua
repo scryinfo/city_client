@@ -13,6 +13,8 @@ function BuildingWarehouseDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --仓库数据
     self.warehouseDatas = {}
+    --运输列表(运输成功后或退出建筑时清空)
+    self.transportTab = {}
 end
 
 function BuildingWarehouseDetailPart:_ResetTransform()
@@ -60,6 +62,16 @@ function BuildingWarehouseDetailPart:_RemoveClick()
 
 end
 
+function BuildingWarehouseDetailPart:_InitEvent()
+    Event.AddListener("addTransportList",self.addTransportList,self)
+    Event.AddListener("deleTransportList",self.deleTransportList,self)
+end
+
+function BuildingWarehouseDetailPart:_RemoveEvent()
+    Event.RemoveListener("addTransportList",self.addTransportList,self)
+    Event.RemoveListener("deleTransportList",self.deleTransportList,self)
+end
+
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
     self:initializeUiInfoData(self.m_data.store.inHand)
@@ -73,7 +85,6 @@ end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
     self.number.transform.localScale = Vector3.zero
-
     if not storeData then
         self.noTip.transform.localScale = Vector3.one
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -96,7 +107,18 @@ end
 function BuildingWarehouseDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
+-----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
+--添加运输列表
+function BuildingWarehouseDetailPart:addTransportList(data)
+    --添加到运输列表
+    table.insert(self.transportTab,data)
+    self.number.transform.localScale = Vector3.one
+    self.numberText.text = #self.transportTab
+end
+--删除运输列表
+function BuildingWarehouseDetailPart:deleTransportList(data)
 
+end
 
 
 

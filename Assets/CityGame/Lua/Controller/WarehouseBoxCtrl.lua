@@ -25,7 +25,8 @@ function WarehouseBoxCtrl:Awake(go)
     self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self.clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
 
     self.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
@@ -109,8 +110,17 @@ function WarehouseBoxCtrl:SlidingUpdateText()
 end
 ---------------------------------------------------------------点击函数-------------------------------------------------------------------------------------
 --关闭
-function WarehouseBoxCtrl:clickCloseBtn()
+function WarehouseBoxCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
-
+--添加运输列表
+function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
+    local goods = {}
+    goods.itemId = ins.m_data.key.id
+    goods.popularity = ins.m_data.key.popularity
+    goods.quality = ins.m_data.key.quality
+    goods.level = ins.m_data.key.level
+    goods.number = ins.numberSlider.value
+    Event.Brocast("addTransportList",goods)
+end

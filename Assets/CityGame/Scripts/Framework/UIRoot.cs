@@ -49,24 +49,23 @@ namespace City
             go.layer = LayerMask.NameToLayer("UI");
             m_Instance = go.AddComponent<UIRoot>();
             go.AddComponent<RectTransform>();
-
+            /*
             Canvas can = go.AddComponent<Canvas>();
             can.renderMode = RenderMode.ScreenSpaceCamera;
             can.pixelPerfect = true;
-
             go.AddComponent<GraphicRaycaster>();
-
+            */
             m_Instance.root = go.transform;
 
             GameObject camObj = new GameObject("UICamera");
             camObj.layer = LayerMask.NameToLayer("UI");
             camObj.transform.parent = go.transform;
-            camObj.transform.localPosition = new Vector3(0, 0, -100f);
+            camObj.transform.localPosition = new Vector3(0, 0, 0);
             Camera cam = camObj.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.Depth;
             cam.orthographic = true;
             cam.farClipPlane = 200f;
-            can.worldCamera = cam;
+            //can.worldCamera = cam;
             cam.cullingMask = 1 << 5;
             cam.nearClipPlane = -50f;
             cam.farClipPlane = 50f;
@@ -77,11 +76,12 @@ namespace City
             camObj.AddComponent<AudioListener>();
             camObj.AddComponent<GUILayer>();
 
+            /*
             CanvasScaler cs = go.AddComponent<CanvasScaler>();
             cs.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             cs.referenceResolution = new Vector2(1920f, 1080f);
             cs.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-
+            */
             ////add auto scale camera fix size.
             //TTCameraScaler tcs = go.AddComponent<TTCameraScaler>();
             //tcs.scaler = cs;
@@ -94,21 +94,29 @@ namespace City
             subRoot.name = "BubbleRoot";
             m_Instance.bubbleRoot = subRoot.transform;
             m_Instance.bubbleRoot.transform.localScale = Vector3.one;
+            //添加Bubble画布
+            CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "NormalRoot";
             m_Instance.normalRoot = subRoot.transform;
-            m_Instance.normalRoot.transform.localScale = Vector3.one;
+            m_Instance.normalRoot.transform.localScale = Vector3.zero;
+            //添加NormalRoot画布
+            CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "PopupRoot";
             m_Instance.popupRoot = subRoot.transform;
             m_Instance.popupRoot.transform.localScale = Vector3.one;
+            //添加PopupRoot画布
+            CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "FixedRoot";
             m_Instance.fixedRoot = subRoot.transform;
             m_Instance.fixedRoot.transform.localScale = Vector3.one;
+            //添加FixedRoot画布
+            CreateCanvans(subRoot, cam);
 
             //add Event System
             GameObject esObj = GameObject.Find("EventSystem");
@@ -145,6 +153,26 @@ namespace City
             return go;
         }
 
+        static void CreateCanvans(GameObject subRoot, Camera cam)
+        {
+            Canvas can_subRoot;
+            CanvasScaler cs_subRoot;
+            subRoot.AddComponent<RectTransform>();
+            subRoot.layer = LayerMask.NameToLayer("UI");
+            can_subRoot = subRoot.AddComponent<Canvas>();
+            can_subRoot.renderMode = RenderMode.ScreenSpaceCamera;
+            can_subRoot.planeDistance = 0;
+            can_subRoot.pixelPerfect = true;
+            can_subRoot.worldCamera = cam;
+            subRoot.AddComponent<GraphicRaycaster>();
+            cs_subRoot = subRoot.AddComponent<CanvasScaler>();
+            cs_subRoot.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            cs_subRoot.referenceResolution = new Vector2(1920f, 1080f);
+            cs_subRoot.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+
+        }
+
+
         static Transform getRoot()
         {
             return m_Instance.root;
@@ -179,3 +207,4 @@ namespace City
         }
     }
 }
+ 

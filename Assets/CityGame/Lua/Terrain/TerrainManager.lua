@@ -49,9 +49,11 @@ local function BuildCreateSuccess( value , buildingID , BuildPosition)
         TerrainManager.TerrainRoot = UnityEngine.GameObject.Find("Terrain").transform
     end
     go.transform:SetParent(TerrainManager.TerrainRoot)
+    --[[无用
     if PlayerBuildingBaseData[buildingID]["LuaRoute"] ~= nil then
         ArchitectureStack[buildingID] = CityLuaUtil.AddLuaComponent(go,PlayerBuildingBaseData[buildingID]["LuaRoute"])
     end
+    --]]
     --将建筑GameObject保存到对应Model中
     local  tempBaseBuildModel = DataManager.GetBaseBuildDataByID(TerrainManager.PositionTurnBlockID(BuildPosition))
     if TerrainManager.BuildObjQueue ~= nil then

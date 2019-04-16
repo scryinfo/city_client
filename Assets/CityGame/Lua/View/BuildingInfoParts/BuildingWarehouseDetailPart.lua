@@ -15,17 +15,16 @@ function BuildingWarehouseDetailPart:_InitTransform()
     self.warehouseDatas = {}
 end
 
+function BuildingWarehouseDetailPart:_ResetTransform()
+
+end
+
 function BuildingWarehouseDetailPart:RefreshData(data)
-    self:_ResetTransform()
     if data == nil then
         return
     end
     self.m_data = data
     self:_initFunc()
-end
-
-function BuildingWarehouseDetailPart:_ResetTransform()
-
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -37,8 +36,9 @@ function BuildingWarehouseDetailPart:_getComponent(transform)
     self.sortingBtn = transform:Find("topRoot/sortingBtn")
     self.nowStateText = transform:Find("topRoot/sortingBtn/nowStateText")
     self.transportBtn = transform:Find("topRoot/transportBtn")
+    self.number = transform:Find("topRoot/number")
     self.numberText = transform:Find("topRoot/number/numberText"):GetComponent("Text")
-    self.warehouseCapacitySlider = transform:Find("topRoot/warehouseCapacitySlider")
+    self.warehouseCapacitySlider = transform:Find("topRoot/warehouseCapacitySlider"):GetComponent("Slider")
     self.capacityNumberText = transform:Find("topRoot/warehouseCapacitySlider/numberText"):GetComponent("Text")
     self.capacityText = transform:Find("topRoot/capacityText"):GetComponent("Text")
 
@@ -51,6 +51,9 @@ end
 
 function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
+    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
+        self:clickCloseBtn()
+    end,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveClick()
@@ -69,10 +72,18 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
+    self.number.transform.localScale = Vector3.zero
+
     if not storeData then
         self.noTip.transform.localScale = Vector3.one
+        self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.warehouseCapacitySlider.value = 0
+        self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     else
         self.noTip.transform.localScale = Vector3.zero
+        self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.warehouseCapacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
+        self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
         if #storeData == #self.warehouseDatas then
             return
         else
@@ -80,7 +91,11 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         end
     end
 end
-
+-----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
+--关闭详情
+function BuildingWarehouseDetailPart:clickCloseBtn()
+    self.groupClass.TurnOffAllOptions(self.groupClass)
+end
 
 
 

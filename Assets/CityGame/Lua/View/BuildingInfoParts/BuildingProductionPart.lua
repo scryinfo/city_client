@@ -50,9 +50,6 @@ end
 
 function BuildingProductionPart:_initFunc()
     self:_language()
-    self.numberSlider.maxValue = self.m_data.line[1].targetCount
-    self.numberSlider.value = self.m_data.line[1].nowCount
-    self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
     if not self.m_data.line then
         self.TopLineInfo.transform.localScale = Vector3.zero
         self.tipText.transform.localScale = Vector3.one
@@ -65,6 +62,9 @@ function BuildingProductionPart:_initFunc()
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[self.m_data.line[1].itemId].img,self.goodsIcon,false)
         end
+        self.numberSlider.maxValue = self.m_data.line[1].targetCount
+        self.numberSlider.value = self.m_data.line[1].nowCount
+        self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------

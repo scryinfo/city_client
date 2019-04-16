@@ -26,7 +26,7 @@ function BuildingWarehousePart:RefreshData(data)
 end
 
 function BuildingWarehousePart:_ResetTransform()
-    self:initializeComponent()
+    self:_language()
 end
 
 function BuildingWarehousePart:_getComponent(transform)
@@ -46,12 +46,12 @@ function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)
 end
 
 function BuildingWarehousePart:_initFunc()
-    self:initializeComponent()
+    self:_language()
     self:_initializeWarehouseCapacity()
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --重置组件
-function BuildingWarehousePart:initializeComponent()
+function BuildingWarehousePart:_language()
     --暂时  需要修改多语言
     self.topText.text = "仓库容量"
     self.unselectTitleText.text = "仓库"
@@ -60,30 +60,29 @@ end
 --初始化仓库容量
 function BuildingWarehousePart:_initializeWarehouseCapacity()
     self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-    self.capacitySlider.value = self:_getWarehouseCapacity()
+    self.capacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
     self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
 end
 --计算仓库容量
-function BuildingWarehousePart:_getWarehouseCapacity()
+function BuildingWarehousePart:_getWarehouseCapacity(dataTable)
     local warehouseNowCount = 0
     local lockedNowCount = 0
-    if not self.m_data.store.inHand then
+    if not dataTable.inHand then
         warehouseNowCount = 0
     else
-        for key,value in pairs(self.m_data.store.inHand) do
+        for key,value in pairs(dataTable.inHand) do
             warehouseNowCount = warehouseNowCount + value.n
         end
     end
-    if not self.m_data.store.locked then
+    if not dataTable.locked then
         lockedNowCount = 0
     else
-        for key,value in pairs(self.m_data.store.locked) do
+        for key,value in pairs(dataTable.locked) do
             lockedNowCount = lockedNowCount + value.n
         end
     end
     return warehouseNowCount + lockedNowCount
 end
-
 
 
 

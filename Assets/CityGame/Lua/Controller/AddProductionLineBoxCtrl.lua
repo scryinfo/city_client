@@ -35,7 +35,7 @@ function AddProductionLineBoxCtrl:Active()
     --addLineBox:AddClick(AddLineBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self)
 
     AddProductionLineBoxPanel.numberSlider.onValueChanged:AddListener(function()
-        self:SlidingUpdateInput()
+        self:SlidingUpdateText()
     end)
 end
 function AddProductionLineBoxCtrl:Refresh()
@@ -119,7 +119,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-----保留小数点后两位
+--保留小数点后两位
 function AddProductionLineBoxCtrl:GetOneSecNum(str)
     local index = string.find(str, '%.')
     if not index then
@@ -128,20 +128,13 @@ function AddProductionLineBoxCtrl:GetOneSecNum(str)
     local secStr = string.sub(str,1,index + 2)
     return secStr
 end
+
 --滑动条刷新输入框值
-function AddProductionLineBoxCtrl:SlidingUpdateInput()
+function AddProductionLineBoxCtrl:SlidingUpdateText()
     AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
-----输入刷新滑动条
---function AddProductionLineBoxCtrl:InputUpdateSlider()
---    if AddLineBoxPanel.inputNumber.text ~= "" then
---        AddLineBoxPanel.numberScrollbar.value = AddLineBoxPanel.inputNumber.text
---        AddLineBoxPanel.timeText.text = self:GetTime(AddLineBoxPanel.numberScrollbar.value,self.workerNum)
---    else
---        AddLineBoxPanel.timeText.text = "00:00:00"
---    end
---end
+
 --检查要生产的数量是否为零
 function AddProductionLineBoxCtrl:NumberWhetherZero(number)
     if number == 0 then

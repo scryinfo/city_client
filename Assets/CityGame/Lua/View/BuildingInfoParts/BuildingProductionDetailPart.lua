@@ -16,7 +16,6 @@ function BuildingProductionDetailPart:_InitTransform()
 end
 
 function BuildingProductionDetailPart:RefreshData(data)
-    self:_ResetTransform()
     if data == nil then
         return
     end
@@ -32,10 +31,10 @@ function BuildingProductionDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("topRoot/closeBtn")
+    self.closeBtn = transform:Find("topRoot/closeBtn"):GetComponent("Button")
 
     self.addBtn = transform:Find("contentRoot/addBtnBg")
-    self.addBtnBg = transform:Find("contentRoot/addBtnBg/addBtn")
+    self.addBtnBg = transform:Find("contentRoot/addBtnBg/addBtn"):GetComponent("Button")
     self.content = transform:Find("contentRoot/content")
     self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
     --leftRoot
@@ -58,7 +57,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
-    self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn")
+    self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
 
     self.lineItemPrefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/LineItem").gameObject
 end
@@ -97,6 +96,8 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
     if not lineData then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
+        self.lineNumberText.text = 0 .."/"..0
+
     else
         self.addBtn.transform.localScale = Vector3.zero
         self.content.transform.localScale = Vector3.one
@@ -125,22 +126,22 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         --实验直接使用已经生产的时间赋值
         --self.timeSlider.value = Math_Ceil(self.pastTime / 1000)
         self.oneTimeText.text = self:GetStringTime(self.timeSlider.maxValue - self.timeSlider.value)
-    end
 
-    self.lineNumberText.text = #lineData.."/"..#lineData
-    --判断当前有没有代生产队列
-    if #lineData == 1 then
-        self.noLineTip.text = "you can add some production lines."
-        self.noLineTip.transform.localScale = Vector3.one
-    elseif #lineData > 1 then
-        self.noLineTip.transform.localScale = Vector3.zero
-        --判断当前是否已经创建好了队列
-        if #lineData - 1 == #self.waitingQueueIns then
-            self.Content.transform.localPosition = Vector3(0,0,0)
-            return
-        else
-            for i = 2, #lineData do
-                self:CreatedWaitingQueue(lineData[i],self.lineItemPrefab,self.Content,LineItem,self.mainPanelLuaBehaviour,self.waitingQueueIns,self.m_data.buildingType)
+        self.lineNumberText.text = #lineData.."/"..#lineData
+        --判断当前有没有代生产队列
+        if #lineData == 1 then
+            self.noLineTip.text = "you can add some production lines."
+            self.noLineTip.transform.localScale = Vector3.one
+        elseif #lineData > 1 then
+            self.noLineTip.transform.localScale = Vector3.zero
+            --判断当前是否已经创建好了队列
+            if #lineData - 1 == #self.waitingQueueIns then
+                self.Content.transform.localPosition = Vector3(0,0,0)
+                return
+            else
+                for i = 2, #lineData do
+                    self:CreatedWaitingQueue(lineData[i],self.lineItemPrefab,self.Content,LineItem,self.mainPanelLuaBehaviour,self.waitingQueueIns,self.m_data.buildingType)
+                end
             end
         end
     end

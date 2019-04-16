@@ -24,6 +24,7 @@ function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType)
     self.qualityValue = prefab.transform:Find("goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.detailsBtn = prefab.transform:Find("detailsBtn")
 
+    luaBehaviour:AddClick(self.detailsBtn.gameObject,self._clickDetailsBtn,self)
     self:InitializeData()
 end
 
@@ -42,6 +43,11 @@ function WarehouseItem:InitializeData()
         --self.brandValue
         --self.qualityValue
     end
+end
+--打开详情
+function WarehouseItem:_clickDetailsBtn(ins)
+    PlayMusEff(1002)
+    ct.OpenCtrl("WarehouseBoxCtrl",ins)
 end
 --WarehouseItem = class('WarehouseItem')
 --

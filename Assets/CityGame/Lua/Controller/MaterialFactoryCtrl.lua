@@ -50,22 +50,16 @@ end
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     if MaterialFactoryPanel.topItem ~= nil then
         MaterialFactoryPanel.topItem:refreshData(materialDataInfo.info,function()
-            PlayMusEff(1002)
-            --关闭原料厂推送
-            Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
-            --关闭当前建筑Model
-            DataManager.CloseDetailModel(self.m_data.insId)
-            UIPanel.ClosePage()
+            self:_clickCloseBtn(self)
         end)
     end
+    --初始化
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
 
     local insId = self.m_data.insId
     self.m_data = materialDataInfo
     self.m_data.insId = insId
     self.m_data.buildingType = BuildingType.MaterialFactory
-
-    --初始化
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
 
     --判断是自己还是别人打开了界面
     if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -111,20 +105,10 @@ end
 function MaterialFactoryCtrl:_updateName(name)
     MaterialFactoryPanel.nameText.text = name
 end
-----返回
---function MaterialFactoryCtrl:OnClick_backBtn(ins)
---    PlayMusEff(1002)
---    Event.Brocast("m_ReqCloseMaterial",ins.m_data.insId)
---    if ins.materialToggleGroup then
---        ins.materialToggleGroup:cleanItems()
---    end
---    UIPanel.ClosePage()
---end
+
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
-    if self.m_data.isOther == true then
-    end
 end
 --更改基础建筑信息
 function MaterialFactoryCtrl:_changeItemData(data)
@@ -132,21 +116,17 @@ function MaterialFactoryCtrl:_changeItemData(data)
         MaterialFactoryPanel.topItem:changeItemData(data)
     end
 end
---打开信息界面
-function MaterialFactoryCtrl:OnClick_infoBtn()
+--
+function MaterialFactoryCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+    --关闭原料厂推送
+    Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
+    --关闭当前建筑Model
+    DataManager.CloseDetailModel(self.m_data.insId)
+    self.m_data = nil
+    UIPanel.ClosePage()
 end
-UnitTest.TestBlockStart()---------------------------------------------------------
-UnitTest.Exec("fisher_w8_RemoveClick", "test_MaterialModel_ShowPage",  function ()
-    ct.log("fisher_w8_RemoveClick","[test_RemoveClick_self]  测试开始")
-    Event.AddListener("c_MaterialModel_ShowPage", function (obj)
-        --UIPanel:ShowPage(MaterialFactoryCtrl);
-        ct.OpenCtrl("MaterialFactoryCtrl")
-    end)
-end)
-
-UnitTest.Exec("fisher_w11_OpenMaterialFactoryCtrl", "test_MaterialModel_ShowPage",  function ()
-    ct.log("fisher_w11_OpenMaterialFactoryCtrl","[test_RemoveClick_self]  测试开始")
-    ct.OpenCtrl('MaterialFactoryCtrl',Vector2.New(0, -300)) --注意传入的是类名
-end)
-
-UnitTest.TestBlockEnd()-----------------------------------------------------------

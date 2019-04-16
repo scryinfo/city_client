@@ -14,7 +14,6 @@ function BuildingShelfDetailPart:_InitTransform()
 end
 
 function BuildingShelfDetailPart:RefreshData(data)
-    self:_ResetTransform()
     if data == nil then
         return
     end

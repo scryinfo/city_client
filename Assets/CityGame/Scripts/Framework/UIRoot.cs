@@ -60,7 +60,7 @@ namespace City
             GameObject camObj = new GameObject("UICamera");
             camObj.layer = LayerMask.NameToLayer("UI");
             camObj.transform.parent = go.transform;
-            camObj.transform.localPosition = new Vector3(0, 0, 0);
+            camObj.transform.localPosition = new Vector3(0, 0, -100);
             Camera cam = camObj.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.Depth;
             cam.orthographic = true;
@@ -100,7 +100,7 @@ namespace City
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "NormalRoot";
             m_Instance.normalRoot = subRoot.transform;
-            m_Instance.normalRoot.transform.localScale = Vector3.zero;
+            m_Instance.normalRoot.transform.localScale = Vector3.one;
             //添加NormalRoot画布
             //CreateCanvans(subRoot, cam);
 

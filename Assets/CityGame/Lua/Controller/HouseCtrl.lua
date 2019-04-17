@@ -78,8 +78,10 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
     if self.groupMgr == nil then
         self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-        self.groupMgr:AddParts(BuildingSignPart, 0.5)
-        self.groupMgr:AddParts(BuildingSalaryPart, 0.5)
+        self.groupMgr:AddParts(BuildingRentPart, 0.25)
+        self.groupMgr:AddParts(TurnoverPart, 0.25)
+        self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
+        self.groupMgr:AddParts(BuildingSignPart, 0.25)
         self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else

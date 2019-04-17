@@ -61,7 +61,8 @@ function MapPanel.InitPanel()
     this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup")  --科研
 
     --右侧详情界面
-    this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))
+    --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))  --old
+    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))
     this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))
     this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))
     this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))
@@ -109,25 +110,25 @@ end
 --
 function MapPanel.showRightPageByType(type, data)
     if type == EMapSearchType.Auction then
-        this.rightMatGoodPageItem:close()
+        this.rightOtherBuildingPageItem:close()
         this.rightGroundAucPageItem:refreshData(data)
         this.rightGroundTransPageItem:close()
         this.selfBuildingPageItem:close()
 
     elseif type == EMapSearchType.Deal then
-        this.rightMatGoodPageItem:close()
+        this.rightOtherBuildingPageItem:close()
         this.rightGroundAucPageItem:close()
         this.rightGroundTransPageItem:refreshData(data)
         this.selfBuildingPageItem:close()
 
     elseif type == EMapSearchType.Material or type == EMapSearchType.Goods then
-        this.rightMatGoodPageItem:refreshData(data)
+        this.rightOtherBuildingPageItem:refreshData(data)
         this.rightGroundAucPageItem:close()
         this.rightGroundTransPageItem:close()
         this.selfBuildingPageItem:close()
 
     elseif type == EMapSearchType.SelfBuilding then
-        this.rightMatGoodPageItem:close()
+        this.rightOtherBuildingPageItem:close()
         this.rightGroundAucPageItem:close()
         this.rightGroundTransPageItem:close()
         this.selfBuildingPageItem:refreshData(data)

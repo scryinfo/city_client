@@ -60,7 +60,7 @@ function MapSearchResultItem:_clickFunc()
     if self.data == nil then
         return
     end
-    Event.Brocast("c_MapOpenRightMatPage", self)
+    Event.Brocast("c_MapOpenRightOthersPage", self)
 end
 --
 function MapSearchResultItem:_initPersonalInfo(info)

@@ -19,22 +19,18 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     self.buildingNameText = trans:Find("topRoot/bg/buildingNameText"):GetComponent("Text")
     self.femaleIconTran = trans:Find("topRoot/nameText/femaleIcon")
     self.manIconTran = trans:Find("topRoot/nameText/manIcon")
-    --底部信息展示
+
     self.simpleInfo = trans:Find("bottomRoot/simpleInfo")  --其他只显示简单信息的建筑
     self.simpleShowRoot = trans:Find("bottomRoot/simpleInfo/showInfoRoot")
 
     self.promotionInfo = trans:Find("bottomRoot/promotionInfo")  --推广公司
-    self.promotionShowRoot = trans:Find("bottomRoot/promotionInfo/showInfoRoot")
-    self.pIconImg = trans:Find("bottomRoot/promotionInfo/abilityRoot/iconImg"):GetComponent("Image")
-    self.pInfoText = trans:Find("bottomRoot/promotionInfo/abilityRoot/infoText"):GetComponent("Text")
-    self.pText01 = trans:Find("bottomRoot/promotionInfo/abilityRoot/Text01"):GetComponent("Text")
-    self.pValueText = trans:Find("bottomRoot/promotionInfo/abilityRoot/valueText"):GetComponent("Text")
+    self.promotionItem = MapRightOtherPromotePage:new(self.promotionInfo)
 
     self.technologyInfo = trans:Find("bottomRoot/technologyInfo")  --研究所
-    self.technologyShowRoot = trans:Find("bottomRoot/technologyInfo/showInfoRoot")
-    self.techInfoText = trans:Find("bottomRoot/technologyInfo/abilityRoot/infoText"):GetComponent("Text")
-    self.techText01 = trans:Find("bottomRoot/technologyInfo/abilityRoot/Text01"):GetComponent("Text")
-    self.techValueText = trans:Find("bottomRoot/technologyInfo/abilityRoot/valueText"):GetComponent("Text")
+    self.technologyItem = MapRightOtherTechnologyPage:new(self.technologyInfo)
+
+    self.matGoodInfo = trans:Find("bottomRoot/matGoodInfo")  --显示Mat Good的建筑
+    self.matGoodItem = MapRightOtherMatGoodPage:new(self.matGoodInfo)
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
@@ -45,21 +41,65 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     --
     self.goHereText01 = self.viewRect.transform:Find("goHereBtn/Text"):GetComponent("Text")
 end
---
-function MapRightOtherBuildingPage:refreshData(data)
+--详细数据 & 当前搜索的数据
+function MapRightOtherBuildingPage:refreshData(data, typeData)
     self.viewRect.anchoredPosition = Vector2.zero
     self:_cleanItems()
 
-    local buildingDetail = DataManager.GetSelfBuildingDetailByBlockId(data.buildingId)
-    self.data = buildingDetail
-    self.buildingNameText.text = buildingDetail.info.name
-    PlayerInfoManger.GetInfos({[1] = buildingDetail.info.ownerId}, self._initPersonalInfo, self)
-
-    local buildingType = GetBuildingTypeById(buildingDetail.info.mId)
-    self:_createInfoByType(buildingType)
-    self:_sortInfoItems()
-
+    self.data = data
+    self:switchShowTrans(typeData.typeId)
+    self:showByType(typeData)
     self:openShow()
+end
+--根据搜索类型显示详情
+function MapRightOtherBuildingPage:switchShowTrans(typeId)
+    self.matGoodInfo.localScale = Vector3.zero
+    self.promotionInfo.localScale = Vector3.zero
+    self.technologyInfo.localScale = Vector3.zero
+    self.simpleInfo.localScale = Vector3.zero
+
+    if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
+        self.matGoodInfo.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Promotion then
+        self.promotionInfo.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Technology then
+        self.technologyInfo.localScale = Vector3.one
+    else
+        self.simpleInfo.localScale = Vector3.one
+    end
+end
+--
+function MapRightOtherBuildingPage:showByType(typeData)
+    --直接搜索类型
+    if typeData.detailId == nil then
+        if typeData.typeId == EMapSearchType.Warehouse then
+            self:_createWarehouse()
+            self:_sortInfoItems()
+        elseif typeData.typeId == EMapSearchType.Signing then
+            self.buildingNameText.text = self.data.buildingName
+            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
+
+            self:_createSign()
+            self:_sortInfoItems()
+        end
+    else
+        if typeData.typeId == EMapSearchType.Material or typeData.typeId == EMapSearchType.Goods then
+            self.buildingNameText.text = self.data.name
+            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
+            self.matGoodItem:refreshData(self.data)
+
+        elseif typeData.typeId == EMapSearchType.Promotion then
+            --self.buildingNameText.text = self.data.name
+            --PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
+            self.promotionItem:refreshData(self.data)
+
+        elseif typeData.typeId == EMapSearchType.Technology then
+            self.buildingNameText.text = self.data.name
+            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
+            self.technologyItem:refreshData(self.data)
+
+        end
+    end
 end
 --
 function MapRightOtherBuildingPage:_initPersonalInfo(info)
@@ -112,20 +152,9 @@ function MapRightOtherBuildingPage:_createSign()
     local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
 end
---科研
-function MapRightOtherBuildingPage:_createTech()
-    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.pricePreTime))
-    local data2 = {infoTypeStr = "Price", value = str2}  --价格
-    self.items[#self.items + 1] = self:_createShowItem(data2, self.technologyShowRoot)
+--仓库
+function MapRightOtherBuildingPage:_createWarehouse()
 
-    local str1 = self.data.sellTimes.."h"
-    local data1 = {infoTypeStr = "ResearchTime", value = str1}  --科研时间
-    self.items[#self.items + 1] = self:_createShowItem(data1, self.technologyShowRoot)
-
-    --TODO: 等白尤俊的实现接口
-    local str3 = self.data.sellTimes.."h"
-    local data3 = {infoTypeStr = "Queued", value = str3}  --队列
-    self.items[#self.items + 1] = self:_createShowItem(data3, self.technologyShowRoot)
 end
 --
 function MapRightOtherBuildingPage:_createShowItem(data, parentTrans, hasDetail)

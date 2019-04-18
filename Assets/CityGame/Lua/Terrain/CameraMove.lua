@@ -163,8 +163,8 @@ function CameraMove:LateUpdate(gameObject)
         return
     end
     --cycle需要的每帧调用接口
-   -- Event.Brocast("c_UIBubbleLateUpdate")
-   -- Event.Brocast("BuilldingBubbleInsManger_Refresh")
+    Event.Brocast("c_UIBubbleLateUpdate")
+    Event.Brocast("BuilldingBubbleInsManger_Refresh")
 
 end
 

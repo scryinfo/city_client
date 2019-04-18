@@ -32,7 +32,7 @@ function BuildingWarehouseDetailPart:_getComponent(transform)
     --TopRoot
     self.closeBtn = transform:Find("topRoot/closeBtn")
     self.sortingBtn = transform:Find("topRoot/sortingBtn")
-    self.nowStateText = transform:Find("topRoot/sortingBtn/nowStateText")
+    self.nowStateText = transform:Find("topRoot/sortingBtn/nowStateText"):GetComponent("Text")
     self.transportBtn = transform:Find("topRoot/transportBtn")
     self.number = transform:Find("topRoot/number")
     self.numberText = transform:Find("topRoot/number/numberText"):GetComponent("Text")

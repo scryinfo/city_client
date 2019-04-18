@@ -216,16 +216,6 @@ BuildingBubbleType={
     close=3,
 }
 
---仓库 --货架 --运输(通用)
-BuildingInType =
-{
-	Shelf = 0,  --货架
-	Warehouse = 1,  --仓库
-	Transport = 2,  --运输
-	ProductionLine = 3,  --生产线
-	RetailShelf = 4,  --零售店货架
-}
-
 --单输入框会响应的服务器协议类型
 InputDialogPageServerType =
 {

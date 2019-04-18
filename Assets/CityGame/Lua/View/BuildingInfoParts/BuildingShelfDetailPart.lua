@@ -21,17 +21,36 @@ function BuildingShelfDetailPart:RefreshData(data)
     self:_initFunc()
 end
 
-function BuildingShelfDetailPart:_ResetTransform()
-
-end
-
 function BuildingShelfDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
+    --TopRoot
+    self.closeBtn = transform:Find("topRoot/closeBtn")
+    self.sortingBtn = transform:Find("topRoot/sortingBtn")
+    self.nowStateText = transform:Find("topRoot/sortingBtn/nowStateText"):GetComponent("Text")
+    self.buyBtn = transform:Find("topRoot/buyBtn")
+    self.number = transform:Find("topRoot/number")
+    self.numberText = transform:Find("topRoot/number/numberText"):GetComponent("Text")
+
+    --ContentRoot
+    self.noTip = transform:Find("contentRoot/noTip")
+    self.tipText = transform:Find("contentRoot/noTip/tipText"):GetComponent("Text")
+    self.addbg = transform:Find("contentRoot/noTip/addbg")
+    self.addBtn = transform:Find("contentRoot/noTip/addbg/addBtn")
+    self.ScrollView = transform:Find("contentRoot/ScrollView")
+    self.Content = transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.contentAddBtn = transform:Find("contentRoot/ScrollView/Viewport/Content/addbg/addBtn")
+    self.ShelfItem = transform:Find("contentRoot/ScrollView/Viewport/Content/ShelfItem").gameObject
 end
 
 function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
+    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
+        self:clickCloseBtn()
+    end,self)
+end
+
+function BuildingShelfDetailPart:_ResetTransform()
 
 end
 
@@ -40,10 +59,41 @@ function BuildingShelfDetailPart:_RemoveClick()
 end
 
 function BuildingShelfDetailPart:_initFunc()
-
+    self:_language()
+    self:initializeUiInfoData(self.m_data.shelf)
 end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--设置多语言
+function BuildingShelfDetailPart:_language()
+    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+end
+--初始化UI数据
+function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
+    if next(shelfData) == nil then
+        self.number.transform.localScale = Vector3.zero
+        self.noTip.transform.localScale = Vector3.one
+        self.ScrollView.transform.localScale = Vector3.zero
+    else
+        self.noTip.transform.localScale = Vector3.zero
+        self.ScrollView.transform.localScale = Vector3.one
 
-
+        --if next(self.transportTab) == nil then
+        --    self.number.transform.localScale = Vector3.zero
+        --else
+        --    self.number.transform.localScale = Vector3.one
+        --end
+        --if #shelfData == #self.warehouseDatas then
+        --    return
+        --else
+        --    self:CreateGoodsItems(shelfData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType)
+        --end
+    end
+end
+-----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
+--关闭详情
+function BuildingShelfDetailPart:clickCloseBtn()
+    self.groupClass.TurnOffAllOptions(self.groupClass)
+end
 
 
 

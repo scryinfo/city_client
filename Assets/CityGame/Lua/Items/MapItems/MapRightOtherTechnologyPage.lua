@@ -16,25 +16,24 @@ function MapRightOtherTechnologyPage:initialize(viewRect)
     self.valueText = self.viewTrans:Find("abilityRoot/valueText"):GetComponent("Text")
 end
 --
-function MapRightOtherTechnologyPage:refreshData(data)
+function MapRightOtherTechnologyPage:refreshData(data, typeData)
     self.viewTrans.localScale = Vector3.one
     self.data = data
 
-    if MapCtrl.getNowSelectTypeId() == EMapSearchType.Technology then
-        if MapCtrl.getNowSelectDetailId() == EMapTechnologyType.TechNewItem then
+    if typeData.typeId == EMapSearchType.Technology then
+        if typeData.detailId == EMapTechnologyType.TechNewItem then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Inventing new goods"
             self.valueText.text = self.data.goodProb.."%"
-        elseif MapCtrl.getNowSelectDetailId() == EMapTechnologyType.TechEva then
+        elseif typeData.detailId == EMapTechnologyType.TechEva then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Eva"
             self.valueText.text = self.data.evaProb.."%"
         end
+        self:_language()
+        self:_createTech()
+        self:_sortInfoItems()
     end
-
-    self:_language()
-    self:_createPromotion()
-    self:_sortInfoItems()
 end
 --
 function MapRightOtherTechnologyPage:_sortInfoItems()

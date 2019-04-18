@@ -427,10 +427,17 @@ end
 --验证是否需要向服务器发送请求
 function MapCtrl:checkPromotionTechReq(typeId, detailId)
     if typeId == self.uiSelectId then
+        if self.searchTime == nil then
+            self.searchTime = {}
+        end
+        if self.searchTime[typeId] == nil then
+            self:promotionTechReq(typeId, detailId)
+            return
+        end
+
         local time = self.searchTime[typeId]
         local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
         if remainTime >= 0 then
-            self:promotionTechReq(typeId, detailId)
         else
             MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
         end
@@ -448,7 +455,7 @@ function MapCtrl:promotionTechReq(typeId, detailId)
     MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
     --
     if self:_getIsDetailFunc() == true then
-        --self:_judgeDetail()
+        self:_judgeDetail()
     else
         self:switchNoDataReq(typeId)
     end
@@ -669,17 +676,23 @@ function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
         MapBubbleManager.cleanAllBubbleItems()
         if self.selectDetailItem == nil or self.selectDetailItem:getItemId() ~= data.itemId then
-            MapBubbleManager.createDetailItems(data, true)
+            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
             return
         end
         if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() == data.itemId then
-            MapBubbleManager.createDetailItems(data, false)
+            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
         end
     end
 end
 --签约详情
 function MapCtrl:_receiveSignDetail(data)
-    
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createDetailItems(data, EMapSearchType.Signing, true)
+end
+--科研
+function MapCtrl:_receiveTechDetail(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createDetailItems(data, EMapSearchType.Technology, true)
 end
 
 ---

@@ -39,14 +39,14 @@ function MapRightOtherBuildingPage:initialize(viewRect)
         self:_goHereBtn()
     end)
     --
-    self.goHereText01 = self.viewRect.transform:Find("goHereBtn/Text"):GetComponent("Text")
+    self.goHereText01 = self.viewRect.transform:Find("bottomRoot/goHereBtn/Text"):GetComponent("Text")
 end
 --详细数据 & 当前搜索的数据
 function MapRightOtherBuildingPage:refreshData(data, typeData)
     self.viewRect.anchoredPosition = Vector2.zero
     self:_cleanItems()
 
-    self.data = data
+    self.data = data.detailData
     self:switchShowTrans(typeData.typeId)
     self:showByType(typeData)
     self:openShow()
@@ -86,17 +86,17 @@ function MapRightOtherBuildingPage:showByType(typeData)
         if typeData.typeId == EMapSearchType.Material or typeData.typeId == EMapSearchType.Goods then
             self.buildingNameText.text = self.data.name
             PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
-            self.matGoodItem:refreshData(self.data)
+            self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
             --self.buildingNameText.text = self.data.name
             --PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
-            self.promotionItem:refreshData(self.data)
+            self.promotionItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Technology then
             self.buildingNameText.text = self.data.name
             PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
-            self.technologyItem:refreshData(self.data)
+            self.technologyItem:refreshData(self.data, typeData)
 
         end
     end
@@ -143,12 +143,11 @@ function MapRightOtherBuildingPage:_createInfoByType(buildingType)
 end
 --签约
 function MapRightOtherBuildingPage:_createSign()
-    local signInfo = self.data.contractInfo
-    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(signInfo.price))
+    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.price))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.simpleShowRoot)
 
-    local str1 = signInfo.hours.."h"
+    local str1 = self.data.hours.."h"
     local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
 end

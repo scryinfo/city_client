@@ -197,18 +197,33 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
     end
 
     this.cleanSummaryItems()
-    for i, value in pairs(data.info) do
-        if value.num == nil then
-            value.num = value.sellingN + value.rentingN
+    if summaryType == EMapSearchType.Deal then
+        for i, value in pairs(data.info) do
+            local num = value.sellingN + value.rentingN
+            if num > 0 then
+                local temp = {num = num, idx = value.idx}
+                this._createSummaryItems(temp)
+            end
         end
-
-        if value.num > 0 then
-            this._createSummaryItems(value)
+    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing then
+        for i, value in pairs(data.info) do
+            if value.count > 0 then
+                local temp = {num = value.count, idx = value.idx}
+                this._createSummaryItems(temp)
+            end
+        end
+    elseif summaryType == EMapSearchType.Material or summaryType == EMapSearchType.Goods then
+        for i, value in pairs(data.info) do
+            if value.num > 0 then
+                local temp = {num = value.num, idx = value.idx, itemId = value.itemId}
+                this._createSummaryItems(temp)
+            end
         end
     end
+
 end
 --搜索详情  --是否是全新的搜索数据
-function MapBubbleManager.createDetailItems(data, isNew)
+function MapBubbleManager.createDetailItems(data, typeId, isNew)
     if isNew then
         this.cleanAllCollectionDetails()
     else
@@ -218,25 +233,46 @@ function MapBubbleManager.createDetailItems(data, isNew)
     if this.collectionDetails == nil then
         this.collectionDetails = {}
     end
-    if data ~= nil then
+    this._createDetailByType(typeId, data)
+end
+--因为数据结构不同，所以处理数据的方式也不同
+function MapBubbleManager._createDetailByType(typeId, data)
+    if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
+        for i, value in pairs(data.info) do
+            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+            for i, building in pairs(value.b) do
+                this._checkDetailTable(collectionId)
+                local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+            end
+        end
+    elseif typeId == EMapSearchType.Technology then
         for i, value in pairs(data.info) do
             local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
             if value.b ~= nil then
                 for i, building in pairs(value.b) do
-                    if building.sale ~= nil then
-                        local detailData = {buildingId = building.id, sale = building.sale, pos = building.pos}
-                        if this.collectionDetails[collectionId] == nil then
-                            this.collectionDetails[collectionId] = {}
-                        end
-                        if this.collectionDetails[collectionId].detailItems == nil then
-                            this.collectionDetails[collectionId].detailItems = {}
-                        end
-                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
-                        this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
-                    end
+                    this._checkDetailTable(collectionId)
+                    local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
                 end
             end
         end
+    elseif typeId == EMapSearchType.Signing then
+        local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
+        for i, value in pairs(data.info) do
+            this._checkDetailTable(collectionId)
+            local blockId = TerrainManager.GridIndexTurnBlockID(value.pos)
+            this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(value)
+        end
+    end
+end
+--判断table是否为空
+function MapBubbleManager._checkDetailTable(collectionId)
+    if this.collectionDetails[collectionId] == nil then
+        this.collectionDetails[collectionId] = {}
+    end
+    if this.collectionDetails[collectionId].detailItems == nil then
+        this.collectionDetails[collectionId].detailItems = {}
     end
 end
 --清除所有搜索数据

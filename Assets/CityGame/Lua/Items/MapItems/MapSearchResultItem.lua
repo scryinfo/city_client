@@ -29,18 +29,13 @@ function MapSearchResultItem:_setPos()
         local data = self.data.detailData
 
         local blockID = TerrainManager.GridIndexTurnBlockID(data.pos)
+        PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
+
         local tempInfo = DataManager.GetBaseBuildDataByID(blockID)
         if tempInfo ~= nil and tempInfo.Data ~= nil then
-            local buildingBase = {}
-            buildingBase.pos = data.pos
-            buildingBase.buildingId = tempInfo.Data["id"]
-            buildingBase.ownerId = tempInfo.Data["ownerId"]
-            buildingBase.name = tempInfo.Data["name"]
-
-            PlayerInfoManger.GetInfos({[1] = buildingBase.ownerId}, self._initPersonalInfo, self)
-            if tempInfo.Data["mId"] ~= nil then
-                buildingBase.mId = tempInfo.Data["mId"]
-                local delta = self.data.itemWidth *  PlayerBuildingBaseData[buildingBase.mId].x
+            local mId = tempInfo.Data["mId"]
+            if mId ~= nil then
+                local delta = self.data.itemWidth *  PlayerBuildingBaseData[mId].x
                 self.viewRect.sizeDelta = Vector2.New(delta, delta)
                 self.viewRect.transform.localScale = Vector3.one
             end
@@ -50,7 +45,6 @@ function MapSearchResultItem:_setPos()
 
             self.detailShowImg.transform.localScale = scale
             self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
-            self.data.buildingBase = buildingBase
         end
     end
 end

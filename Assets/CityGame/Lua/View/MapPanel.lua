@@ -136,7 +136,7 @@ function MapPanel.showRightPageByType(type, data)
 end
 --
 function MapPanel.closeAllRightPage()
-    this.rightMatGoodPageItem:close()
+    this.rightOtherBuildingPageItem:close()
     this.rightGroundAucPageItem:close()
     this.rightGroundTransPageItem:close()
     this.selfBuildingPageItem:close()

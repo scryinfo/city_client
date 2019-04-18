@@ -17,13 +17,23 @@ function MapRightOtherPromotePage:initialize(viewRect)
     self.valueText = self.viewTrans:Find("abilityRoot/valueText"):GetComponent("Text")
 end
 --
-function MapRightOtherPromotePage:refreshData(data)
+function MapRightOtherPromotePage:refreshData(data, typeData)
     self.viewTrans.localScale = Vector3.one
     self.data = data
 
-    self:_language()
-    self:_createPromotion()
-    self:_sortInfoItems()
+    if typeData.typeId == EMapSearchType.Promotion then
+        if typeData.detailId == EMapPromotionType.Food then
+            --LoadSprite(MapPromotionInfoConfig[1].imgPath, self.iconImg, true)
+            --self.infoText.text = "Inventing new goods"
+            --self.valueText.text = self.data.goodProb.."%"
+            --self.infoText.text = GetLanguage(12345678)
+        elseif typeData.detailId == EMapTechnologyType.TechEva then
+
+        end
+        self:_language()
+        self:_createPromotion()
+        self:_sortInfoItems()
+    end
 end
 --
 function MapRightOtherPromotePage:_sortInfoItems()
@@ -79,7 +89,7 @@ function MapRightOtherPromotePage:_cleanItems()
 end
 --多语言
 function MapRightOtherPromotePage:_language()
-
+    self.text01.text = GetLanguage(12345678)
 end
 --关闭
 function MapRightOtherPromotePage:close()

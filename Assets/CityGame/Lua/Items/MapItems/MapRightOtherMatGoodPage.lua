@@ -10,10 +10,10 @@ MapRightOtherMatGoodPage.moneyColor = "#F4AD07FF"
 function MapRightOtherMatGoodPage:initialize(viewRect)
     self.viewTrans = viewRect.transform
 
-    self.leftBtn = self.viewTrans:Find("bottomRoot/leftRightBtnRoot/leftBtn"):GetComponent("Button")
-    self.rightBtn = self.viewTrans:Find("bottomRoot/leftRightBtnRoot/rightBtn"):GetComponent("Button")
-    self.leftRightBtnRoot = self.viewTrans:Find("bottomRoot/leftRightBtnRoot")
-    self.mapRightMatGoodPrefab = self.viewTrans:Find("bottomRoot/MapRightMatGoodItem")
+    self.leftBtn = self.viewTrans:Find("leftRightBtnRoot/leftBtn"):GetComponent("Button")
+    self.rightBtn = self.viewTrans:Find("leftRightBtnRoot/rightBtn"):GetComponent("Button")
+    self.leftRightBtnRoot = self.viewTrans:Find("leftRightBtnRoot")
+    self.mapRightMatGoodPrefab = self.viewTrans:Find("MapRightMatGoodItem")
     self.mapRightMatGoodItem = MapRightMatGoodItem:new(self.mapRightMatGoodPrefab.transform)
 
     self.leftBtn.onClick:AddListener(function ()
@@ -28,15 +28,15 @@ function MapRightOtherMatGoodPage:refreshData(data)
     self.viewTrans.localScale = Vector3.one
     self.data = data
 
-    if #data.detailData.sale > 1 then
+    if #data.sale > 1 then
         self.leftRightBtnRoot.localScale = Vector3.one
 
         self.currentIndex = 0
-        self.totalCount = #data.detailData.sale
+        self.totalCount = #data.sale
         self:_rightChangeBtn()  --右翻
     else
         self.leftRightBtnRoot.localScale = Vector3.zero
-        self.mapRightMatGoodItem:refreshData(data.detailData.sale[1])
+        self.mapRightMatGoodItem:refreshData(data.sale[1])
     end
 
     self:_language()

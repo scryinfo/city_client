@@ -5,6 +5,9 @@
 ---广告业务Ctrl
 ---
 AdvertisementPartDetail = class('AdvertisementPartDetail', BasePartDetail)
+local insId = nil
+local isShow = false
+local promoteAbility = {}
 --
 function AdvertisementPartDetail:PrefabName()
     return "AdvertisementPartDetail"
@@ -12,10 +15,12 @@ end
 --
 function AdvertisementPartDetail:_InitTransform()
     self:_getComponent(self.transform)
+    self:_initData()
 end
 --
 function  AdvertisementPartDetail:_InitEvent()
-
+    Event.AddListener("c_PromoteCapacity",self.PromoteCapacity,self)
+    Event.AddListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
 end
 --
 function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
@@ -29,11 +34,15 @@ function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
 end
 --
 function AdvertisementPartDetail:_ResetTransform()
-
+    for i, v in pairs(promoteAbility) do
+        destroy(v.prefab.gameObject)
+    end
+    promoteAbility = {}
 end
 --
 function AdvertisementPartDetail:_RemoveEvent()
-
+    Event.RemoveListener("c_PromoteCapacity",self.PromoteCapacity,self)
+    Event.RemoveListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
 end
 --
 function AdvertisementPartDetail:_RemoveClick()
@@ -41,11 +50,7 @@ function AdvertisementPartDetail:_RemoveClick()
 end
 --
 function AdvertisementPartDetail:RefreshData(data)
-    if data == nil then
-        return
-    end
-    self.m_data = data
-    self:_initFunc()
+
 end
 --
 function AdvertisementPartDetail:_getComponent(transform)
@@ -68,10 +73,29 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.buildingBg = transform:Find("bg/down/buildingBg");
     self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
     self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
+    self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/spped"):GetComponent("Text");   --零售店
+    self.houseSpeed = transform:Find("bg/down/buildingBg/house/spped"):GetComponent("Text");   --住宅
+
+end
+
+function AdvertisementPartDetail:_initData()
+    for i, v in ipairs(GoodsTypeConfig) do
+        local function callback(prefab)
+            promoteAbility[i] = PromoteAbilityItem:new(prefab)
+        end
+        createPrefab("Assets/CityGame/Resources/View/GoodsItem/PromoteAbilityItem.prefab",self.content, callback)
+    end
 end
 --
 function AdvertisementPartDetail:_initFunc()
+        local typeIds = {}
+        for i, v in pairs(GoodsTypeConfig) do
+            typeIds[i] = v.typeId
+        end
+        local buildingType = {[1] = 1300, [2] = 1400}
 
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,typeIds)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType)
 end
 --
 
@@ -79,11 +103,39 @@ function AdvertisementPartDetail:OnXBtn(go)
     go.groupClass.TurnOffAllOptions(go.groupClass)
 end
 
+function AdvertisementPartDetail:Show(data)
+    BasePartDetail.Show(self)
+    self.m_data = data
+    self:_initFunc()
+end
+
+function AdvertisementPartDetail:Hide()
+    BasePartDetail.Hide(self)
+end
+
 --点击商品
 function AdvertisementPartDetail:OnGoods(go)
     go.goods.transform.localScale = Vector3.zero
     go.building.transform.localScale = Vector3.one
     go.buildingBg.localScale = Vector3.zero
+    go.content.localScale = Vector3.one
+    local typeIds = {}
+    for i, v in pairs(GoodsTypeConfig) do
+        typeIds[i] = v.typeId
+    end
+    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_queryPromoCurAbilitys',go.m_data.insId,typeIds)
+end
+
+--初始化商品推广能力
+function AdvertisementPartDetail:PromoteCapacity()
+    for i, v in ipairs(GoodsTypeConfig) do
+        promoteAbility[i]:InitData(v)
+    end
+end
+--初始化建筑推广能力
+function AdvertisementPartDetail:PromoteBuildingCapacity(CurAbilitys)
+    self.supermarketSpeed.text = "+" .. CurAbilitys[1] .."/h"
+    self.houseSpeed.text = "+" .. CurAbilitys[2] .."/h"
 end
 
 --点击建筑
@@ -91,6 +143,10 @@ function AdvertisementPartDetail:OnBuilding(go)
     go.goods.transform.localScale = Vector3.one
     go.building.transform.localScale = Vector3.zero
     go.buildingBg.localScale = Vector3.one
+    go.content.localScale = Vector3.zero
+
+    local buildingType = {[1] = 1300, [2] = 1400}
+    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_queryPromoCurAbilitys',go.m_data.insId,buildingType)
 end
 
 --对外开放

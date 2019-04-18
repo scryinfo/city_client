@@ -19,6 +19,7 @@ end
 function PromoteBuildingExtensionCtrl:Awake()
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
+    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
     self:initData()
 end
 
@@ -50,4 +51,9 @@ end
 --返回
 function PromoteBuildingExtensionCtrl:OnXBtn()
     UIPanel.ClosePage()
+end
+
+--打开曲线图
+function PromoteBuildingExtensionCtrl:OnCurve()
+    ct.OpenCtrl("PromoteCurveCtrl")
 end

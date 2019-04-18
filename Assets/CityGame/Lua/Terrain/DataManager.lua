@@ -820,6 +820,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     protoID = protoData.src
                 elseif protoData.id then
                     protoID = protoData.id
+                elseif protoData.sellerBuildingId then
+                    protoID = protoData.sellerBuildingId
                 end
             end
             if protoID ~= nil then--服务器返回的数据有唯一ID

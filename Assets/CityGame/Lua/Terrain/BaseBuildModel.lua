@@ -64,7 +64,7 @@ function BaseBuildModel:OpenPanel()
         ct.OpenCtrl("LaboratoryCtrl", {insId = instanceID})
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
         --Event.Brocast("m_detailPublicFacility",instanceID)
-        ct.OpenCtrl("MunicipalCtrl",{insId=instanceID})
+        ct.OpenCtrl("PromoteCompanyCtrl",{insId=instanceID})
     end
 end
 

@@ -20,6 +20,7 @@ end
 --初始化面板--
 function PromoteBuildingExtensionPanel.InitPanel()
     this.xBtn = transform:Find("contentRoot/top/xBtn").gameObject
+    this.curve = transform:Find("contentRoot/curve").gameObject
     this.supermarket = transform:Find("contentRoot/supermarket")    --零售店
     this.house = transform:Find("contentRoot/house")    --住宅
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间

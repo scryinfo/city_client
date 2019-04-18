@@ -18,7 +18,8 @@ function PromoteGoodsExtensionCtrl:initialize()
 end
 function PromoteGoodsExtensionCtrl:Awake()
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
+    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
+    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
     self:initData()
 end
 
@@ -40,10 +41,24 @@ function PromoteGoodsExtensionCtrl:OnCreate(obj)
 end
 
 function PromoteGoodsExtensionCtrl:initData()
-
+    if self.m_data.subclass == nil then
+        return
+    end
+    self.PromoteGoods = {}
+    for i, v in ipairs(self.m_data.subclass) do
+        local function callback(prefab)
+           self.PromoteGoods[i] = PromoteGoodsItem:new(prefab,v)
+        end
+        createPrefab("Assets/CityGame/Resources/View/GoodsItem/PromoteGoodsItem.prefab",PromoteGoodsExtensionPanel.content, callback)
+    end
 end
 
 --返回
 function PromoteGoodsExtensionCtrl:OnXBtn()
     UIPanel.ClosePage()
+end
+
+--打开曲线图
+function PromoteGoodsExtensionCtrl:OnCurve()
+    ct.OpenCtrl("PromoteCurveCtrl")
 end

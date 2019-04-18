@@ -4,10 +4,11 @@
 --- DateTime: 2019/4/10 14:40
 ---
 PromoteAbilityItem = class('PromoteAbilityItem')
-function PromoteAbilityItem:initialize(prefab,DataInfo)
+function PromoteAbilityItem:initialize(prefab)
     self.prefab = prefab;
-
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
+    self.speed = self.prefab.transform:Find("speed").gameObject:GetComponent("Text");
+
 
     self.bg.onClick:AddListener(function()
         self:OnBG(self);
@@ -15,5 +16,10 @@ function PromoteAbilityItem:initialize(prefab,DataInfo)
 end
 
 function PromoteAbilityItem:OnBG()
-    ct.OpenCtrl("PromoteCurveCtrl")
+    ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.DataInfo)
+end
+
+function PromoteAbilityItem:InitData(DataInfo)
+    self.DataInfo = DataInfo
+    self.speed.text ="+".. DataInfo.capacity .. "/h"
 end

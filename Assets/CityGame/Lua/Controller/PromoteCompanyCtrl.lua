@@ -7,7 +7,7 @@ PromoteCompanyCtrl = class('PromoteCompanyCtrl',UIPanel)
 UIPanel:ResgisterOpen(PromoteCompanyCtrl)
 
 local promoteBehaviour
-
+local this
 function PromoteCompanyCtrl:bundleName()
     return "Assets/CityGame/Resources/View/PromoteCompanyPanel.prefab"
 end
@@ -16,10 +16,11 @@ function PromoteCompanyCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
     --UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
+
 function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    --curveBehaviour:AddClick(HistoryCurvePanel.xBtn,self.OnBack,self)
-    --self.insId = OpenModelInsID.PromoteCompanyCtrl
+    promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
+    --this = self
     self:initData() 
 end
 
@@ -29,16 +30,14 @@ function PromoteCompanyCtrl:Active()
 end
 
 function PromoteCompanyCtrl:Refresh()
-    --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(buildingId)
-    if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-        self.groupMgr:AddParts(AdvertisementPart, 0.29)
-        self.groupMgr:AddParts(TurnoverPart, 0.23)
-        --self.groupMgr:RefreshData(self.m_data)
-        self.groupMgr:TurnOffAllOptions()
-    else
-        --self.groupMgr:RefreshData(self.m_data)
-    end
+    DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
+
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId)
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
+
 end
 
 function PromoteCompanyCtrl:Hide()
@@ -56,11 +55,60 @@ end
 
 function PromoteCompanyCtrl:initData()
 
+end
 
+--返回
+function PromoteCompanyCtrl:OnBack()
+    UIPanel.ClosePage()
+end
+
+--建筑详情回调
+function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
+    local insId = self.m_data.insId
+    self.m_data = detailData
+    self.m_data.insId = insId  --temp
+    if self.groupMgr == nil then
+        self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+        self.groupMgr:AddParts(AdvertisementPart, 0.29)
+        self.groupMgr:AddParts(TurnoverPart, 0.23)
+        self.groupMgr:RefreshData(self.m_data)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(self.m_data)
+    end
+    PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
+end
+
+--推广能力回调
+function PromoteCompanyCtrl:_queryPromoCurAbilitys(info)
+    if info.CurAbilitys == nil then
+        return
+    end
+    for i, v in pairs(info.CurAbilitys) do
+        GoodsTypeConfig[i].capacity = v
+    end
+    if info.typeIds[1] == 1300 or info.typeIds[1] == 1400 then
+        Event.Brocast("c_PromoteBuildingCapacity",info.CurAbilitys)
+        return
+    else
+      Event.Brocast("c_PromoteCapacity")
+    end
+end
+
+--员工工资改变
+function PromoteCompanyCtrl:_refreshSalary(data)
+    if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置工资成功", 300)
+        end
+        self.m_data.info.salary = data.Salary
+        self.m_data.info.setSalaryTs = data.ts
+        self.groupMgr:RefreshData(self.m_data)
+    end
 end
 
 --今日营业额
-function TurnoverPart:c_Revenue(info)
+function PromoteCompanyCtrl:c_Revenue(info)
     self.m_data.turnover = info
-    self.groupMgr:RefreshData(self.m_data)
+    --self.groupMgr:RefreshData(self.m_data)
 end

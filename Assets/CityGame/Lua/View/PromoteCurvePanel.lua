@@ -20,10 +20,10 @@ end
 --初始化面板--
 function PromoteCurvePanel.InitPanel()
     this.back = transform:Find("bg").gameObject
-    this.slide = transform:find("contentBg/curveBg/curve"):GetComponent("Slide")
-    this.graph = transform:find("contentBg/curveBg/curve"):GetComponent("FunctionalGraph")
-    this.yScale = transform:find("contentBg/YScale/curve"):GetComponent("RectTransform")
-    this.goods = transform:find("contentBg/signBg/goods"):GetComponent("Image")   --物品图片
-    this.goodsText = transform:find("contentBg/signBg/goods/goodsText"):GetComponent("Text")   --物品名字
+    this.slide = transform:Find("contentBg/curveBg/curve"):GetComponent("Slide")
+    this.graph = transform:Find("contentBg/curveBg/curve"):GetComponent("FunctionalGraph")
+    this.yScale = transform:Find("contentBg/YScale"):GetComponent("RectTransform")
+    this.goods = transform:Find("contentBg/signBg/goods"):GetComponent("Image")   --物品图片
+    this.goodsText = transform:Find("contentBg/signBg/goods/goodsText"):GetComponent("Text")   --物品名字
 
 end

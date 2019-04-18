@@ -19,7 +19,7 @@ end
 --
 function AdvertisementPart:_ResetTransform()
     self.price.text = "E0.0000"
-    self.waitingTime.text = "00:00:00"
+    self.waitingTime.text = "00"
 end
 --
 function AdvertisementPart:RefreshData(data)
@@ -31,10 +31,19 @@ function AdvertisementPart:RefreshData(data)
 end
 --
 function AdvertisementPart:_getComponent(transform)
-    self.price = transform:Find("top/priceText"):GetComponent("Text")
-    self.waitingTime = transform:Find("top/waitingTimeText"):GetComponent("Text")
+    self.price = transform:Find("top/price/priceText"):GetComponent("Text")
+    self.waitingTime = transform:Find("top/waitingTime/waitingTimeText"):GetComponent("Text")
 end
 --
 function AdvertisementPart:_initFunc()
+    if self.m_data.takeOnNewOrder then
+        self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+        --local ts = TimeSynchronized.GetTheCurrentServerTime() - self.m_data.newPromoStartTs
+        --local time = tonumber(getFormatUnixTime(ts/1000).hour)
+        --self.waitingTime.text = time - self.m_data.promRemainTime
+    else
+        self.price.text = "E0.0000"
+        self.waitingTime.text = "00"
+    end
 
 end

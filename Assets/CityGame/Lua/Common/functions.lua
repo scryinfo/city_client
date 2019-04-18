@@ -473,6 +473,22 @@ function creatGoods(path,parent)
 	return go
 end
 
+--生成预制(新版)
+function createPrefab(path, parent, callback)
+	panelMgr:LoadPrefab_A(path, nil, nil, function(ins, obj )
+		if obj ~= nil then
+			local go = ct.InstantiatePrefab(obj)
+			local rect = go.transform:GetComponent("RectTransform")
+			if parent then
+				go.transform:SetParent(parent);--.transform
+			end
+			rect.transform.localScale = Vector3.one
+			rect.transform.localPosition=Vector3.zero
+			callback(go)
+		end
+	end)
+end
+
 function ct.file_saveString(filename, str)
 	local file
 	if filename == nil then

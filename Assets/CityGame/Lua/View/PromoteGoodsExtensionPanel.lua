@@ -20,7 +20,9 @@ end
 --初始化面板--
 function PromoteGoodsExtensionPanel.InitPanel()
     this.xBtn = transform:Find("contentRoot/top/xBtn").gameObject
+    this.curve = transform:Find("contentRoot/curve").gameObject     --曲线图
     this.content = transform:Find("contentRoot/Scroll View/Viewport/Content")
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间
+    this.content = transform:Find("contentRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
 
 end

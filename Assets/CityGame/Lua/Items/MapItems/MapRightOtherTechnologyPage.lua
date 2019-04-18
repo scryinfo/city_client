@@ -48,6 +48,9 @@ function MapRightOtherTechnologyPage:_sortInfoItems()
 end
 --科研
 function MapRightOtherTechnologyPage:_createTech()
+    if self.items == nil then
+        self.items = {}
+    end
     local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.price))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)

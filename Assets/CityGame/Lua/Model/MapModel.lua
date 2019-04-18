@@ -112,7 +112,7 @@ function MapModel.n_OnReceiveLabSummary(stream)
     MapCtrl._receiveLabSummary(MapCtrl, data)
 end
 --推广摘要
-function MapModel.n_OnReceiveLabSummary(stream)
+function MapModel.n_OnReceivePromoteSummary(stream)
     if stream == nil or stream == "" then
         return
     end

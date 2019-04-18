@@ -12,6 +12,7 @@
 MapCtrl = class('MapCtrl',UIPanel)
 UIPanel:ResgisterOpen(MapCtrl)
 
+MapCtrl.static.reqServerTime = 10  --刷新时间
 MapCtrl.static.DetailSize = Vector2.New(500, 796)  --详细界面的大小
 MapCtrl.static.CloseSearchBtnSize = Vector2.New(59, 277)  --关闭搜索的按钮的大小
 MapCtrl.static.TypeMovePos = Vector2.New(0, -400)  --类型隐藏显示的X位置，x为显示位置，y为隐藏位置
@@ -438,6 +439,7 @@ function MapCtrl:checkPromotionTechReq(typeId, detailId)
         local time = self.searchTime[typeId]
         local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
         if remainTime >= 0 then
+            self:promotionTechReq(typeId, detailId)
         else
             MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
         end
@@ -803,9 +805,9 @@ function MapCtrl:_judgeDetail()
 
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
-        elseif self.selectSearchType == EMapSearchType.Promotion then
+        elseif typeId == EMapSearchType.Promotion then
             MapModel.m_ReqWarehouseDetail(blockCollectionId)
-        elseif self.selectSearchType == EMapSearchType.Technology then
+        elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
         end
         return

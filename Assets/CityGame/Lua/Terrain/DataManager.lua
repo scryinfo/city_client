@@ -467,9 +467,10 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     --TODO:
                     ThisPathNums[itemBlockID] = RoadPrefabConfig[RoadNumConfig[roadNum]].pathNum
                     go = MapObjectsManager.GetGameObjectByPool(RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
+                    --[[
                     if nil ~= RoadRootObj then
                         go.transform:SetParent(RoadRootObj.transform)
-                    end
+                    end--]]
                     --add height
                     Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
                     Vec.y = Vec.y + 0.02

@@ -46,12 +46,16 @@ function UIBubbleGroundAucItem:initialize(data)
         --判断是否有出价
         if data.bidHistory == nil or #data.bidHistory == 0 then
             self.isStartBid = false
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+            --self.noneBidText02.transform.localScale = Vector3.one
+            --self.nowBinding.localScale = Vector3.zero
+            self.noneBidText02.gameObject:SetActive(true)
+            self.nowBinding.gameObject:SetActive(false)
         else
             self.isStartBid = true
-            self.noneBidText02.transform.localScale = Vector3.zero
-            self.nowBinding.localScale = Vector3.one
+            --self.noneBidText02.transform.localScale = Vector3.zero
+            --self.nowBinding.localScale = Vector3.one
+            self.noneBidText02.gameObject:SetActive(false)
+            self.nowBinding.gameObject:SetActive(true)
             table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
             self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
         end
@@ -60,12 +64,16 @@ function UIBubbleGroundAucItem:initialize(data)
     local groundConfigData = GroundAucConfig[self.data.id].area
     local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData[1].y)
     if self.data.isStartAuc == true then
-        self.now.transform.localScale = Vector3.one
-        self.soon.transform.localScale = Vector3.zero
+        --self.now.transform.localScale = Vector3.one
+        --self.soon.transform.localScale = Vector3.zero
+        self.now.gameObject:SetActive(true)
+        self.soon.gameObject:SetActive(false)
         self.groundGo = GAucModel._getValuableStartAucObj(groundConfigData)  --设置场景中的拍卖gameobject
     else
-        self.now.transform.localScale = Vector3.zero
-        self.soon.transform.localScale = Vector3.one
+        --self.now.transform.localScale = Vector3.zero
+        --self.soon.transform.localScale = Vector3.one
+        self.now.gameObject:SetActive(false)
+        self.soon.gameObject:SetActive(true)
         self.groundGo = GAucModel._getValuableWillAucObj(groundConfigData)
     end
     self.data.targetPos = pos
@@ -142,8 +150,10 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
         table.insert(self.data.bidHistory, 1, temp)
         self.isStartBid = true
-        self.noneBidText02.transform.localScale = Vector3.zero
-        self.nowBinding.localScale = Vector3.one
+        --self.noneBidText02.transform.localScale = Vector3.zero
+        --self.nowBinding.localScale = Vector3.one
+        self.noneBidText02.gameObject:SetActive(false)
+        self.nowBinding.gameObject:SetActive(true)
     end
 end
 --获取是否点击到对应地块
@@ -249,10 +259,14 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
         if remainTime <= 0 then
             self.data.isStartAuc = true
             --开始拍卖
-            self.now.transform.localScale = Vector3.one
-            self.soon.transform.localScale = Vector3.zero
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+           --self.now.transform.localScale = Vector3.one
+           --self.soon.transform.localScale = Vector3.zero
+           --self.noneBidText02.transform.localScale = Vector3.one
+           --self.nowBinding.localScale = Vector3.zero
+            self.now.gameObject:SetActive(true)
+            self.soon.gameObject:SetActive(false)
+            self.noneBidText02.gameObject:SetActive(true)
+            self.nowBinding.gameObject:SetActive(false)
             GAucModel._returnSoonToPool(self.groundGo)
             self.groundGo = GAucModel._getValuableStartAucObj(GroundAucConfig[self.data.id].area)
             GAucModel.updateSoonItem(self.data.id + 1)

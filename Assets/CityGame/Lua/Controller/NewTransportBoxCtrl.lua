@@ -55,7 +55,8 @@ function NewTransportBoxCtrl:_getComponent(go)
     --buttonRoot
     self.chooseWarehouseBtn = go.transform:Find("contentRoot/buttonRoot/chooseWarehouseBtn")
     self.startBtn = go.transform:Find("contentRoot/buttonRoot/startBtn")
-    self.warehouseNameText = go.transform:Find("contentRoot/buttonRoot/targetWarehouse/warehouseNameText"):GetComponent("Text")
+    self.targetWarehouse = go.transform:Find("contentRoot/buttonRoot/targetWarehouse"):GetComponent("InputField")
+    self.placeholderText = go.transform:Find("contentRoot/buttonRoot/targetWarehouse/Placeholder"):GetComponent("Text")
     self.priceText = go.transform:Find("contentRoot/buttonRoot/totalPrice/priceText"):GetComponent("Text")
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +76,7 @@ end
 function NewTransportBoxCtrl:_language()
     self.topNameText.text = "TRANSPORTATION LIST"
     self.tipContentText.text = "Tgere is no goods yet!"
-    self.warehouseNameText.text = "请选择仓库"
+    self.placeholderText.text = "请选择仓库"
     self.priceText.text = "0.0000"
 end
 -----------------------------------------------------------------点击函数----------------------------------------------------------------------------
@@ -92,7 +93,7 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     data.pos.x = ins.m_data.buildingInfo.pos.x
     data.pos.y = ins.m_data.buildingInfo.pos.y
     data.buildingId = ins.m_data.buildingId
-    data.nameText = ins.warehouseNameText
+    data.nameText = ins.targetWarehouse
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------

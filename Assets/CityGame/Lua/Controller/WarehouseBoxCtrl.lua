@@ -121,7 +121,11 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     goods.popularity = ins.m_data.dataInfo.key.popularity
     goods.quality = ins.m_data.dataInfo.key.quality
     goods.level = ins.m_data.dataInfo.key.level
-    goods.number = ins.numberSlider.value
+    if ins.numberSlider.value == 0 then
+        return
+    else
+        goods.number = ins.numberSlider.value
+    end
     Event.Brocast("addTransportList",goods)
     UIPanel.ClosePage()
 end

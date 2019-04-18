@@ -35,20 +35,20 @@ end
 
 function HouseCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
+    --Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
 end
 
 function HouseCtrl:Hide()
-    Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
     UIPanel.Hide(self)
 end
 
 --更改基础建筑信息
-function HouseCtrl:_changeItemData(data)
-    if data ~= nil and HousePanel.topItem ~= nil then
-        HousePanel.topItem:changeItemData(data)
-    end
-end
+--function HouseCtrl:_changeItemData(data)
+--    if data ~= nil and HousePanel.topItem ~= nil then
+--        HousePanel.topItem:changeItemData(data)
+--    end
+--end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
@@ -120,6 +120,9 @@ end
 --
 function HouseCtrl:_refreshRent(data)
     if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置日租金成功", 300)
+        end
         self.m_data.rent = data.rent
         self.groupMgr:RefreshData(self.m_data)
     end

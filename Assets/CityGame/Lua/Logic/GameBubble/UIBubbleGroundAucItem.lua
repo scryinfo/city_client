@@ -4,6 +4,11 @@
 --- DateTime: 2018/11/21 16:35
 ---土地拍卖已经开始气泡
 UIBubbleGroundAucItem = class('UIBubbleGroundAucItem')
+local selfBoxwidth = 200    --给出200像素的富裕空间  其实只需要最大宽高的一半
+local minAnchorX = nil
+local maxAnchorX = nil
+local minAnchorY = nil
+local maxAnchorY = nil
 function UIBubbleGroundAucItem:initialize(data)
     self.data = data
     --self.data.aucInfo.isStartAuc = data.isStartAuc
@@ -72,6 +77,43 @@ function UIBubbleGroundAucItem:initialize(data)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
     Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+
+    --显示范围内才显示
+    if minAnchorX == nil then
+        minAnchorX = - selfBoxwidth
+        maxAnchorX = UnityEngine.Screen.width * Game.ScreenRatio + selfBoxwidth
+        minAnchorY = - selfBoxwidth
+        maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
+    end
+    self.m_anchoredPos =  self.bubbleRect.anchoredPosition
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+end
+
+--判断是否在屏幕内
+function UIBubbleGroundAucItem:JudgeSelfIsShow()
+    if  self.m_anchoredPos ~= nil then
+        if self.m_anchoredPos.x >= minAnchorX and  self.m_anchoredPos.x <= maxAnchorX and self.m_anchoredPos.y >= minAnchorY and  self.m_anchoredPos.y <= maxAnchorY  then
+            return true
+        end
+    end
+    return false
+end
+
+--判断是否在屏幕内
+function UIBubbleGroundAucItem:IsMove()
+    --先判断是否是在屏幕显示范围内，做显示/隐藏处理
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+    --根据是否在屏幕范围内显示隐藏自身
+    if self.IsShow then
+        self.bubbleRect.anchoredPosition = self.m_anchoredPos
+    end
+end
+
+function UIBubbleGroundAucItem:ShowOrHideSelf(tempBool)
+    if type(tempBool) == "boolean" and tempBool ~= self.IsShow then
+        self.IsShow = tempBool
+        self.bubbleObj:SetActive(self.IsShow)
+    end
 end
 
 function UIBubbleGroundAucItem:_itemTimer()
@@ -173,7 +215,8 @@ end
 
 function UIBubbleGroundAucItem:LateUpdate()
     if self.bubbleObj ~= nil then
-        self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
+        self.m_anchoredPos  = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
+        self:IsMove()
     end
 end
 --正在拍卖的倒计时

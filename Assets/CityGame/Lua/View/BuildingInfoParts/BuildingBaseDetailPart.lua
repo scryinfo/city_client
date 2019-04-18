@@ -110,7 +110,7 @@ end
 --        self:DestoryGoodsDetailsList(instanceList,idList,key)
 --    end
 --end
---关闭时清空界面及数据
+--关闭时清空数据
 function BuildingBaseDetailPart:CloseDestroy(dataTable)
     if next(dataTable) == nil then
         return
@@ -161,27 +161,6 @@ end
 --        lockedNum = lockedNum + value.n
 --    end
 --    return lockedNum
---end
-----架子隐藏和显示
---function BuildingBaseDetailPart.ShelfImgSetActive(table,num1,num2)
---    if next(table) == nil then
---        return
---    end
---    for key,valueObj in pairs(table) do
---        if key % num1 == num2 then
---            valueObj.shelfImg:SetActive(true)
---        else
---            valueObj.shelfImg:SetActive(false)
---        end
---    end
---end
-----获取临时表购买或运输的数量
---function BuildingBaseDetailPart.GetDataTableNum(dataTable)
---    local number = 0
---    for key,value in pairs(dataTable) do
---        number = number + value.numberScrollbar.value
---    end
---    return number
 --end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

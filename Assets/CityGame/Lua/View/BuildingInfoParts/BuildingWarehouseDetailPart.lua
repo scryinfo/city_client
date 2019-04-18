@@ -17,10 +17,6 @@ function BuildingWarehouseDetailPart:_InitTransform()
     self.transportTab = {}
 end
 
-function BuildingWarehouseDetailPart:_ResetTransform()
-
-end
-
 function BuildingWarehouseDetailPart:RefreshData(data)
     if data == nil then
         return
@@ -56,6 +52,16 @@ function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
         self:clickCloseBtn()
     end,self)
+    mainPanelLuaBehaviour:AddClick(self.transportBtn.gameObject,function()
+        self:clickTransportBtn()
+    end,self)
+end
+
+function BuildingWarehouseDetailPart:_ResetTransform()
+    --关闭时清空Item数据
+    if next(self.warehouseDatas) ~= nil then
+        self:CloseDestroy(self.warehouseDatas)
+    end
 end
 
 function BuildingWarehouseDetailPart:_RemoveClick()
@@ -84,8 +90,8 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    self.number.transform.localScale = Vector3.zero
     if not storeData then
+        self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = 0
@@ -95,6 +101,11 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+        if next(self.transportTab) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+        end
         if #storeData == #self.warehouseDatas then
             return
         else
@@ -107,6 +118,15 @@ end
 function BuildingWarehouseDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
+--打开运输弹窗
+function BuildingWarehouseDetailPart:clickTransportBtn()
+    local data = {}
+    data.buildingId = self.m_data.insId
+    data.buildingInfo = self.m_data.info
+    data.buildingType = self.m_data.buildingType
+    data.transportTab = self.transportTab
+    ct.OpenCtrl("NewTransportBoxCtrl",data)
+end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
 --添加运输列表
 function BuildingWarehouseDetailPart:addTransportList(data)
@@ -116,8 +136,19 @@ function BuildingWarehouseDetailPart:addTransportList(data)
     self.numberText.text = #self.transportTab
 end
 --删除运输列表
-function BuildingWarehouseDetailPart:deleTransportList(data)
-
+function BuildingWarehouseDetailPart:deleTransportList(id)
+    --删除指定的数据
+    if not id then
+        return
+    else
+        table.remove(self.transportTab,id)
+        if next(self.transportTab) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+            self.numberText.text = #self.transportTab
+        end
+    end
 end
 
 

@@ -117,10 +117,11 @@ end
 --添加运输列表
 function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     local goods = {}
-    goods.itemId = ins.m_data.key.id
-    goods.popularity = ins.m_data.key.popularity
-    goods.quality = ins.m_data.key.quality
-    goods.level = ins.m_data.key.level
+    goods.itemId = ins.m_data.dataInfo.key.id
+    goods.popularity = ins.m_data.dataInfo.key.popularity
+    goods.quality = ins.m_data.dataInfo.key.quality
+    goods.level = ins.m_data.dataInfo.key.level
     goods.number = ins.numberSlider.value
     Event.Brocast("addTransportList",goods)
+    UIPanel.ClosePage()
 end

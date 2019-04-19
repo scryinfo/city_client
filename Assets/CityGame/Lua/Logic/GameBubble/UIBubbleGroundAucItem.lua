@@ -224,7 +224,7 @@ function UIBubbleGroundAucItem:Close()
 end
 
 function UIBubbleGroundAucItem:LateUpdate()
-    if self.bubbleObj ~= nil then
+    if self.bubbleObj ~= nil and self.data.targetPos ~=nil then
         self.m_anchoredPos  = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
         self:IsMove()
     end

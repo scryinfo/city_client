@@ -40,7 +40,6 @@ else
     AutoRequire.getInstance():require("test")
     AutoRequire.getInstance():require("test/testMain")
 end
-AutoRequire.getInstance():require("Base")
 AutoRequire.getInstance():require("Logic/GameBubble")
 AutoRequire.getInstance():require("Logic/PieChart")
 AutoRequire.getInstance():require("Logic/ToggleSort")

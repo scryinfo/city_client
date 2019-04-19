@@ -31,7 +31,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
         LoadSprite(Good[data.itemId].img,self.iconImg,false)
     end
     self.nameText.text = GetLanguage(data.itemId)
-    self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
+    --self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)

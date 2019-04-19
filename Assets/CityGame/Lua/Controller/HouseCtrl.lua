@@ -77,13 +77,26 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         self.m_data.isOther = false
     end
     if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-        self.groupMgr:AddParts(BuildingRentPart, 0.25)
-        self.groupMgr:AddParts(TurnoverPart, 0.25)
-        self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
-        self.groupMgr:AddParts(BuildingSignPart, 0.25)
-        self.groupMgr:RefreshData(self.m_data)
-        self.groupMgr:TurnOffAllOptions()
+        if houseDetailData.info.state == "OPERATE" then -- 营业中
+            self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
+            if self.m_data.isOther then -- 别人
+                self.groupMgr:AddParts(BuildingSignPart, 1)
+                self.groupMgr:AddParts(BuildingRentPart, 0)
+                self.groupMgr:AddParts(TurnoverPart, 0)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0)
+            else
+                self.groupMgr:AddParts(BuildingRentPart, 0.25)
+                self.groupMgr:AddParts(TurnoverPart, 0.25)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
+                self.groupMgr:AddParts(BuildingSignPart, 0.25)
+
+            end
+            HousePanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:RefreshData(self.m_data)
+            self.groupMgr:TurnOffAllOptions()
+        else -- 未营业
+            HousePanel.groupTrans.localScale = Vector3.zero
+        end
     else
         self.groupMgr:RefreshData(self.m_data)
     end
@@ -114,6 +127,16 @@ function HouseCtrl:_refreshSalary(data)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
+
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
+            self.groupMgr:AddParts(BuildingRentPart, 0.25)
+            self.groupMgr:AddParts(TurnoverPart, 0.25)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
+            self.groupMgr:AddParts(BuildingSignPart, 0.25)
+            HousePanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:TurnOffAllOptions()
+        end
         self.groupMgr:RefreshData(self.m_data)
     end
 end

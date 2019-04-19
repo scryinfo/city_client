@@ -558,19 +558,25 @@ function MapCtrl:_openRightOthersPage(item)
         end
         self.rightSearchItem = item
         self.rightSearchItem:toggleShowDetailImg(true)
-        local typeData = {}
         --判断是直接搜索还是展开二级界面的搜索
-        if self.selectDetailItem ~= nil then
-            typeData.detailId = self.selectDetailItem:getItemId()
-            typeData.typeId = self.selectDetailItem:getTypeId()
-        else
-            if self.selectSearchType ~= nil then
-                typeData.typeId = self.selectSearchType
-            end
-        end
+        local typeData = self:_getSearchData()
         MapPanel.closeAllRightPage()
+
         MapPanel.rightOtherBuildingPageItem:refreshData(item.data, typeData)
     end
+end
+--获取当前搜索的类型
+function MapCtrl:_getSearchData()
+    local typeData = {}
+    if self.selectDetailItem ~= nil then
+        typeData.detailId = self.selectDetailItem:getItemId()
+        typeData.typeId = self.selectDetailItem:getTypeId()
+    else
+        if self.selectSearchType ~= nil then
+            typeData.typeId = self.selectSearchType
+        end
+    end
+    return typeData
 end
 --打开拍卖
 function MapCtrl:_openRightGAucPage(item)

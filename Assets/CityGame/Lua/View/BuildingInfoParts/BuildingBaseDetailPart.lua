@@ -6,14 +6,23 @@
 BuildingBaseDetailPart = class('BuildingBaseDetailPart',BasePartDetail)
 
 --生成itemPrefab(生成多个)
-function BuildingBaseDetailPart:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable,goodsType)
+function BuildingBaseDetailPart:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable,goodsType,...)
     if not dataInfo then
         return
     end
-    for key,value in pairs(dataInfo) do
-        local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
-        local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType)
-        table.insert(instanceTable,itemGoodsIns)
+    local arg = {...}
+    if next(arg) == nil then
+        for key,value in pairs(dataInfo) do
+            local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
+            local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType)
+            table.insert(instanceTable,itemGoodsIns)
+        end
+    else
+        for key,value in pairs(dataInfo) do
+            local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
+            local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)
+            table.insert(instanceTable,itemGoodsIns)
+        end
     end
 end
 --生成生产线代生产队列

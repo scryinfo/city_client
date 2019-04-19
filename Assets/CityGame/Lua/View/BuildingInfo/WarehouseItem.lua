@@ -4,10 +4,12 @@
 --- DateTime: 2019/4/15 17:24
 ---
 WarehouseItem = class('WarehouseItem')
-function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType)
+function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,stateType)
     self.keyId = keyId
     self.prefab = prefab
     self.dataInfo = dataInfo
+    self.stateType = stateType[1]
+    self.buildingId = stateType[2]
     self.goodsType = goodsType
     self.itemId = dataInfo.key.id
 
@@ -47,7 +49,13 @@ end
 --打开详情
 function WarehouseItem:_clickDetailsBtn(ins)
     PlayMusEff(1002)
-    ct.OpenCtrl("WarehouseBoxCtrl",ins)
+    if ins.stateType == GoodsItemStateType.addShelf then
+        --上架
+        ct.OpenCtrl("ShelfBoxCtrl",ins)
+    elseif ins.stateType == GoodsItemStateType.transport then
+        --运输
+        ct.OpenCtrl("WarehouseBoxCtrl",ins)
+    end
 end
 --WarehouseItem = class('WarehouseItem')
 --

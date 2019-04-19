@@ -109,7 +109,8 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         if #storeData == #self.warehouseDatas then
             return
         else
-            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType)
+            self.transportBool = GoodsItemStateType.transport
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
         end
     end
 end

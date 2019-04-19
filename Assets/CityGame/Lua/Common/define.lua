@@ -221,6 +221,12 @@ InputDialogPageServerType =
 {
 	UpdateBuildingName = 0,  --修改建筑名称
 }
+--商品Item状态类型
+GoodsItemStateType =
+{
+	addShelf = 1,   --上架
+	transport = 2,  --运输
+}
 
 --相机移动状态类型
 TouchStateType =

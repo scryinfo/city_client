@@ -48,6 +48,12 @@ function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
         self:clickCloseBtn()
     end,self)
+    mainPanelLuaBehaviour:AddClick(self.addBtn.gameObject,function()
+        self:clickaddShelfBtn()
+    end,self)
+    mainPanelLuaBehaviour:AddClick(self.contentAddBtn.gameObject,function()
+        self:clickaddShelfBtn()
+    end,self)
 end
 
 function BuildingShelfDetailPart:_ResetTransform()
@@ -94,7 +100,14 @@ end
 function BuildingShelfDetailPart:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
-
+--点击上架
+function BuildingShelfDetailPart:clickaddShelfBtn()
+    local data = {}
+    data.info = self.m_data.info
+    data.store = self.m_data.store
+    data.buildingType = self.m_data.buildingType
+    ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
+end
 
 
 

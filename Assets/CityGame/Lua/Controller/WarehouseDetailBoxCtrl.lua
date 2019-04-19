@@ -23,7 +23,7 @@ function WarehouseDetailBoxCtrl:Awake(go)
     self:_getComponent(go)
     self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
 end
 
 function WarehouseDetailBoxCtrl:Refresh()
@@ -32,18 +32,75 @@ end
 
 function WarehouseDetailBoxCtrl:Hide()
     UIPanel.Hide(self)
-
+    self:CloseDestroy()
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WarehouseDetailBoxCtrl:_getComponent(go)
-
+    --topRoot
+    self.closeBtn = go.transform:Find("topRoot/closeBtn")
+    self.sortingBtn = go.transform:Find("topRoot/sortingBtn")
+    --contentRoot
+    self.noTip = go.transform:Find("contentRoot/noTip")
+    self.tipText = go.transform:Find("contentRoot/noTip/tipText"):GetComponent("Text")
+    self.Content = go.transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.WarehouseItem = go.transform:Find("contentRoot/ScrollView/Viewport/Content/WarehouseItem").gameObject
 end
-----------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseDetailBoxCtrl:initializeUiInfoData()
-
+    if next(self.m_data.store) == nil then
+        self.noTip.transform.localScale = Vector3.one
+        return
+    else
+        if not self.goodsItemTable then
+            self.goodsItemTable = {}
+        end
+        self.noTip.transform.localScale = Vector3.zero
+        self.addShelfBool = GoodsItemStateType.addShelf
+        self:CreateGoodsItems(self.m_data.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.buildingType,self.addShelfBool,self.m_data.info.id)
+    end
 end
 --设置多语言
 function WarehouseDetailBoxCtrl:_language()
-
+    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+end
+-------------------------------------------------------------点击函数-------------------------------------------------------------------------------
+--关闭
+function WarehouseDetailBoxCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    UIPanel.ClosePage()
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------
+--生成itemPrefab
+function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
+    if not dataInfo then
+        return
+    end
+    local arg = {...}
+    for key,value in pairs(dataInfo.inHand) do
+        local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
+        local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)
+        table.insert(self.goodsItemTable,itemGoodsIns)
+    end
+end
+--加载实例化Prefab
+function WarehouseDetailBoxCtrl:loadingItemPrefab(itemPrefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
+    local objRect = obj.transform:GetComponent("RectTransform");
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one;
+    --obj.transform:SetSiblingIndex(1)
+    obj:SetActive(true)
+    return obj
+end
+--退出时清空Item数据
+function WarehouseDetailBoxCtrl:CloseDestroy()
+    if not self.goodsItemTable or next(self.goodsItemTable) == nil then
+        return
+    else
+        for key,valueObj in pairs(self.goodsItemTable) do
+            destroy(valueObj.prefab.gameObject)
+            self.goodsItemTable[key] = nil
+        end
+    end
 end

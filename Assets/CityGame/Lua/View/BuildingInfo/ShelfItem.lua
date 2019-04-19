@@ -3,4 +3,45 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/19 16:40
 ---
+ShelfItem = class('ShelfItem')
+function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,stateType)
+    self.keyId = keyId
+    self.prefab = prefab
+    self.dataInfo = dataInfo
+    self.buildingId = stateType[1]
+    self.goodsType = goodsType
+    self.itemId = dataInfo.k.id
 
+    self.iconImg = prefab.transform:Find("iconImg"):GetComponent("Image")
+    self.numberText = prefab.transform:Find("numberBg/numberText"):GetComponent("Text")
+    self.nameBg = prefab.transform:Find("nameBg")
+    self.nameText = prefab.transform:Find("nameBg/nameText"):GetComponent("Text")
+
+    --需要隐藏的商品信息
+    self.goods = prefab.transform:Find("goods")
+    self.levelImg = prefab.transform:Find("goods/levelImg"):GetComponent("Image")
+    self.brandNameText = prefab.transform:Find("goods/detailsBg/brandNameText"):GetComponent("Text")
+    self.brandValue = prefab.transform:Find("goods/detailsBg/scoreBg/brandIcon/brandValue"):GetComponent("Text")
+    self.qualityValue = prefab.transform:Find("goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
+    self.priceText = prefab.transform:Find("priceBg/priceText"):GetComponent("Text")
+    self.detailsBtn = prefab.transform:Find("detailsBtn")
+
+    self:InitializeData()
+end
+function ShelfItem:InitializeData()
+    self.nameText.text = GetLanguage(self.itemId)
+    self.numberText.text = "×"..self.dataInfo.n
+    self.priceText.text = GetClientPriceString(self.dataInfo.price)
+    if self.goodsType == BuildingType.MaterialFactory then
+        self.goods.transform.localScale = Vector3.zero
+        self.nameBg.transform.localPosition = Vector3(-140,-100,0)
+        LoadSprite(Material[self.itemId].img,self.iconImg,false)
+    elseif self.goodsType == BuildingType.ProcessingFactory then
+        self.goods.transform.localScale = Vector3.one
+        LoadSprite(Good[self.itemId].img,self.iconImg,false)
+        --self.levelImg
+        --self.brandNameText
+        --self.brandValue
+        --self.qualityValue
+    end
+end

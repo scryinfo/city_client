@@ -27,6 +27,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
+    self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -98,7 +99,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
-    elseif Math_Floor(self.m_data.itemId / 100000) == materialKey then
+    elseif Math_Floor(self.m_data.itemId / 100000) == goodsKey then
         self.popularity.transform.localScale = Vector3.one
         self.quality.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one
@@ -122,7 +123,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
     self.numberSlider.value = 0
     self.numberText.text = "×"..self.numberSlider.value
     self.tipBg.transform.localScale = Vector3.zero
-    self.priceInput.text = "0000.0000"
+    self.priceInput.text = "0"
     self.advicePriceText.text = "0000.0000"
 end
 --设置多语言
@@ -143,11 +144,20 @@ function ShelfBoxCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
-
 --打开关闭提示
 function ShelfBoxCtrl:_clickTipBtn(ins)
     PlayMusEff(1002)
     ins:openTipText(not isShow)
+end
+--点击上架
+function ShelfBoxCtrl:_clickAddShelfBtn(ins)
+    local materialKey,goodsKey = 21,22
+    if Math_Floor(ins.m_data.itemId / 100000) == materialKey then
+        Event.Brocast("m_ReqMaterialShelfAdd",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,GetServerPriceNumber(ins.priceInput.text),ins.m_data.dataInfo.key.producerId,
+                ins.m_data.dataInfo.key.qty,ins.automaticSwitch.isOn)
+    elseif Math_Floor(ins.m_data.itemId / 100000) == goodsKey then
+
+    end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关

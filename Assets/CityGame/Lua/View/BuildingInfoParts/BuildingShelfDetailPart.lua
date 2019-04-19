@@ -3,7 +3,7 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/12 11:37
 ---建筑主界面货架详情界面
-BuildingShelfDetailPart = class('BuildingShelfDetailPart',BasePartDetail)
+BuildingShelfDetailPart = class('BuildingShelfDetailPart',BuildingBaseDetailPart)
 
 function BuildingShelfDetailPart:PrefabName()
     return "BuildingShelfDetailPart"
@@ -11,6 +11,8 @@ end
 
 function BuildingShelfDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    --货架数据
+    self.shelfDatas = {}
 end
 
 function BuildingShelfDetailPart:RefreshData(data)
@@ -45,6 +47,7 @@ function BuildingShelfDetailPart:_getComponent(transform)
 end
 
 function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
         self:clickCloseBtn()
     end,self)
@@ -57,7 +60,10 @@ function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
 end
 
 function BuildingShelfDetailPart:_ResetTransform()
-
+    --关闭时清空Item数据
+    if next(self.shelfDatas) ~= nil then
+        self:CloseDestroy(self.shelfDatas)
+    end
 end
 
 function BuildingShelfDetailPart:_RemoveClick()
@@ -66,7 +72,7 @@ end
 
 function BuildingShelfDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.shelf)
+    self:initializeUiInfoData(self.m_data.shelf.good)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -75,7 +81,7 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
-    if next(shelfData) == nil then
+    if not shelfData then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.ScrollView.transform.localScale = Vector3.zero
@@ -88,11 +94,11 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         --else
         --    self.number.transform.localScale = Vector3.one
         --end
-        --if #shelfData == #self.warehouseDatas then
-        --    return
-        --else
-        --    self:CreateGoodsItems(shelfData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType)
-        --end
+        if #shelfData == #self.shelfDatas then
+            return
+        else
+            self:CreateGoodsItems(shelfData,self.ShelfItem,self.Content,ShelfItem,self.mainPanelLuaBehaviour,self.shelfDatas,self.m_data.buildingType,self.m_data.insId)
+        end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------

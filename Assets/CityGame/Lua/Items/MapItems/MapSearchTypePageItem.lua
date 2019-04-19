@@ -49,7 +49,7 @@ function MapSearchTypePageItem:setShowName(str)
     end
 end
 --
-function MapSearchTypePageItem:_chooseTypeDetail(typeId, showStr)
+function MapSearchTypePageItem:chooseTypeDetail(typeId, showStr)
     if typeId == self.data.typeId and showStr ~= nil then
         self.chooseShowNameText.text = showStr
         self.choose.localScale = Vector3.one

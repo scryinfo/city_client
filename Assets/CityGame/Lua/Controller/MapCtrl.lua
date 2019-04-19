@@ -195,10 +195,6 @@ function MapCtrl:_initUIData()
         self:_createType(value)
     end
 
-    --self:_cancelDetailSelect()
-    --self:refreshTypeItems()
-    --self:closeSearch()
-    --self:toggleDetailPage(false)  --默认关闭搜索界面
     self:_cleanDatas()
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, 3, true)
 end
@@ -284,6 +280,7 @@ function MapCtrl:technologySelect()
 end
 --无二级菜单的类型搜索
 function MapCtrl:_noPageTypeSelect()
+    MapPanel.closeAllRightPage()
     self:toggleLoadingState(false)
     self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
     self.m_Timer:Start()
@@ -345,10 +342,13 @@ end
 ---
 --nonePage类型，取消选中状态
 function MapCtrl:nonePageCancelSelect(selectId)
-    if self._cancelTypeSelect == selectId then
+    if self.selectSearchType == selectId then
         self:refreshTypeItems()
         self.uiSelectId = nil
         self.selectSearchType = EMapSearchType.Default
+        self.selectDetailItem = nil
+
+        MapPanel.closeAllRightPage()
         MapBubbleManager.cleanAllBubbleItems()
     end
 end
@@ -363,6 +363,7 @@ function MapCtrl:refreshTypeItems(selectId)
     if selectId == nil then
         for i, value in pairs(self.typeTable) do
             value:refreshShow(false)
+            value:chooseTypeDetail()  --无二级菜单的type取消选中
         end
     else
         for i, value in pairs(self.typeTable) do
@@ -384,6 +385,8 @@ function MapCtrl:_cleanChooseState()
 end
 --
 function MapCtrl:refreshDetailItem(item)
+    MapPanel.closeAllRightPage()
+
     if item == nil then
         if self.selectDetailItem ~= nil then
             self.selectDetailItem:resetState()
@@ -572,33 +575,24 @@ end
 --打开拍卖
 function MapCtrl:_openRightGAucPage(item)
     if item ~= nil then
-        --if self.rightSearchItem ~= nil then
-        --    self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
-        --end
-        --self.rightSearchItem = item
-        --self.rightSearchItem:toggleShowDetailImg(true)
-        MapPanel.closeAllRightPage()
         MapPanel.rightGroundAucPageItem:refreshData(item.data)
     end
 end
 --打开土地交易
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
-        MapPanel.closeAllRightPage()
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
 --打开自己的建筑
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
-        MapPanel.closeAllRightPage()
         MapPanel.selfBuildingPageItem:refreshData(item.data)
     end
 end
 --打开系统建筑
 function MapCtrl:_openRightSystemPage(item)
     if item ~= nil then
-        MapPanel.closeAllRightPage()
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end

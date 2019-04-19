@@ -27,7 +27,6 @@ function LoginCtrl:Awake(go)
 
 	--注册点击事件
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-	BuilldingBubbleInsManger.LuaBehaviour=LuaBehaviour
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);

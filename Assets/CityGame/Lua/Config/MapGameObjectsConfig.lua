@@ -74,7 +74,7 @@ MapGameObjectsConfig = {
             ["Name"] = "TechnologyBuilding_3",
             ["PlayerBuildingBaseDataID"] = 1500003,
             ["InitCount"] = 64,
-        },--[[
+        },
         {   --公园1
             ["Name"] = "Park_1",
             ["PlayerBuildingBaseDataID"] = 1600001,
@@ -105,7 +105,6 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1700003,
             ["InitCount"] = 64,
         },
-        --]]
         {   --地图地块
             ["Name"] = "TerrainGround",
             ["PlayerBuildingBaseDataID"] = 4000000,

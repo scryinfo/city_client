@@ -1,5 +1,5 @@
 BuildingInfoMainGroupMgr = class('BuildingInfoMainGroupMgr')
-
+local Part_ScreenWidth = nil
 --初始化基础数据
 --alignType ： 对齐方式 （左对齐/右对齐/中心对齐）
 function BuildingInfoMainGroupMgr:initialize(mainGroupGO,mainPanelLuaBehaviour,alignType)
@@ -11,19 +11,22 @@ function BuildingInfoMainGroupMgr:initialize(mainGroupGO,mainPanelLuaBehaviour,a
         self.mainGroupTrans = mainGroupGO.transform
     end
     self.m_data = nil
+    if Part_ScreenWidth == nil then
+        Part_ScreenWidth = UnityEngine.Screen.width
+    end
 end
 
 -------------------------------------------------------------------私有函数--------------------------------------------
 
 --计算初始化的时候的X位置
 function BuildingInfoMainGroupMgr:_CaculationPartPositionX()
-    local posX = - (self.totalWidthPercentage * 1920) * Game.ScreenRatio
+    local posX = - (self.totalWidthPercentage * Part_ScreenWidth) * Game.ScreenRatio
     return posX
 end
 
 --计算初始化的时候的Part宽度
 function BuildingInfoMainGroupMgr:_CaculationPartWidthByWidthPercentage(widthPercentage)
-    local sizeWidth = (widthPercentage * 1920) * Game.ScreenRatio
+    local sizeWidth = (widthPercentage * Part_ScreenWidth) * Game.ScreenRatio
     return sizeWidth
 end
 
@@ -97,7 +100,6 @@ function BuildingInfoMainGroupMgr:GetPartDatailGameObject(partDetailName)
         return tempGo
     end
 end
-
 
 --关闭页面，应清除所有实例，并将UI显示还原，注销监听事件
 function BuildingInfoMainGroupMgr:Destroy()

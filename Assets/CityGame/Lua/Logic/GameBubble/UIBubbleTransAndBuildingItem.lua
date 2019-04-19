@@ -4,6 +4,11 @@
 --- DateTime: 2019/1/16 10:03
 ---
 UIBubbleTransAndBuildingItem = class('UIBubbleTransAndBuildingItem')
+local selfBoxwidth = 200    --给出200像素的富裕空间  其实只需要最大宽高的一半
+local minAnchorX = nil
+local maxAnchorX = nil
+local minAnchorY = nil
+local maxAnchorY = nil
 function UIBubbleTransAndBuildingItem:initialize(data, obj)
     self.data = data
     self.gameObject = obj
@@ -32,6 +37,43 @@ function UIBubbleTransAndBuildingItem:initialize(data, obj)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
     Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+    --显示范围内才显示
+    if minAnchorX == nil then
+        minAnchorX = - selfBoxwidth
+        maxAnchorX = UnityEngine.Screen.width * Game.ScreenRatio + selfBoxwidth
+        minAnchorY = - selfBoxwidth
+        maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
+    end
+    self.m_anchoredPos =  self.rect.anchoredPosition
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+end
+
+
+--判断是否在屏幕内
+function UIBubbleTransAndBuildingItem:JudgeSelfIsShow()
+    if  self.m_anchoredPos ~= nil then
+        if self.m_anchoredPos.x >= minAnchorX and  self.m_anchoredPos.x <= maxAnchorX and self.m_anchoredPos.y >= minAnchorY and  self.m_anchoredPos.y <= maxAnchorY  then
+            return true
+        end
+    end
+    return false
+end
+
+--判断是否在屏幕内
+function UIBubbleTransAndBuildingItem:IsMove()
+    --先判断是否是在屏幕显示范围内，做显示/隐藏处理
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+    --根据是否在屏幕范围内显示隐藏自身
+    if self.IsShow then
+        self.rect.anchoredPosition = self.m_anchoredPos
+    end
+end
+
+function UIBubbleTransAndBuildingItem:ShowOrHideSelf(tempBool)
+    if type(tempBool) == "boolean" and tempBool ~= self.IsShow then
+        self.IsShow = tempBool
+        self.gameObject:SetActive(self.IsShow)
+    end
 end
 
 function UIBubbleTransAndBuildingItem:_initFunc(data)
@@ -76,19 +118,28 @@ end
 
 function UIBubbleTransAndBuildingItem:_setBubbleState(state)
     if state == GroundTransState.Sell then
-        self.groundSell.localScale = Vector3.one
-        self.groundRent.localScale = Vector3.zero
-        self.selfBuilding.localScale = Vector3.zero
+        --self.groundSell.localScale = Vector3.one
+        --self.groundRent.localScale = Vector3.zero
+        --self.selfBuilding.localScale = Vector3.zero
+        self.groundSell.gameObject:SetActive(true)
+        self.groundRent.gameObject:SetActive(false)
+        self.selfBuilding.gameObject:SetActive(false)
         self.sellText01.text = GetLanguage(11020004)
     elseif state == GroundTransState.Rent then
-        self.groundRent.localScale = Vector3.one
-        self.groundSell.localScale = Vector3.zero
-        self.selfBuilding.localScale = Vector3.zero
+        --self.groundRent.localScale = Vector3.one
+        --self.groundSell.localScale = Vector3.zero
+        --self.selfBuilding.localScale = Vector3.zero
+        self.groundRent.gameObject:SetActive(true)
+        self.groundSell.gameObject:SetActive(false)
+        self.selfBuilding.gameObject:SetActive(false)
         self.rentText02.text = GetLanguage(11020003)
     elseif state == UIBubbleType.BuildingSelf then
-        self.selfBuilding.localScale = Vector3.one
-        self.groundRent.localScale = Vector3.zero
-        self.groundSell.localScale = Vector3.zero
+        --self.selfBuilding.localScale = Vector3.one
+        --self.groundRent.localScale = Vector3.zero
+        --self.groundSell.localScale = Vector3.zero
+        self.selfBuilding.gameObject:SetActive(true)
+        self.groundRent.gameObject:SetActive(false)
+        self.groundSell.gameObject:SetActive(false)
     end
 end
 
@@ -107,12 +158,14 @@ function UIBubbleTransAndBuildingItem:Close()
     if self.gameObject ~= nil then
         destroyImmediate(self.gameObject)
     end
+    self.gameObject = nil
     self.pos = nil
     self = nil
 end
 
 function UIBubbleTransAndBuildingItem:LateUpdate()
-    if self.pos ~= nil then
-        self.rect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos))
+    if self.pos ~= nil and self.gameObject ~= nil then
+        self.m_anchoredPos  = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos))
+        self:IsMove()
     end
 end

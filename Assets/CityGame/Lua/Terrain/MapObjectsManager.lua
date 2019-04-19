@@ -13,8 +13,8 @@ local function CreateBasePrefabSuccess(tempPrefab,item)
 end
 
 function MapObjectsManager.AddMaterial(ParentObj)
-    collectgarbage("collect")
-    local c1 = collectgarbage("count")
+    --collectgarbage("collect")
+    --local c1 = collectgarbage("count")
     if RendererType ~= nil then
         local allrender = ParentObj:GetComponentsInChildren(RendererType):ToTable()
         if allrender ~= nil then
@@ -28,9 +28,9 @@ function MapObjectsManager.AddMaterial(ParentObj)
             end
         end
     end
-    local c2 = collectgarbage("count")
-    ct.log("system",   c2 -c1)
-    collectgarbage("collect")
+    --local c2 = collectgarbage("count")
+    --ct.log("system",   c2 -c1)
+    --collectgarbage("collect")
 end
 
 
@@ -54,11 +54,19 @@ function MapObjectsManager.Init()
     --初始化中心建筑
     --TerrainManager.CreateCenterBuilding()
 end
-
+local starttime ,endtime
+local go_GetGameObjectByPool
+local tempPool_GetGameObjectByPool
 --向某个对象池请求获取一个可用的GameObject
 function MapObjectsManager.GetGameObjectByPool(poolName)
     if poolName ~= nil and AllObjectPools[poolName] ~= nil then
-        return AllObjectPools[poolName]:GetAvailableGameObject()
+        --starttime = os.clock()
+        tempPool_GetGameObjectByPool = AllObjectPools[poolName]
+        go_GetGameObjectByPool  = tempPool_GetGameObjectByPool:GetAvailableGameObject()
+        --endtime = os.clock()
+        --ct.log("system","从众多池里取一个耗时"..endtime - starttime)
+        return go_GetGameObjectByPool
+        --return UnityEngine.GameObject.New()
     end
     return nil
 end

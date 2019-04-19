@@ -70,6 +70,8 @@ local function handleData( data )
         lineData.queneTime = reminderTime
         reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))* 3600000)
     end
+
+
     --自已的置顶
     for i, lineData in ipairs(data) do
         if lineData.proposerId == DataManager.GetMyOwnerID()  then

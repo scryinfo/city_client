@@ -111,22 +111,43 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
     Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
 end
 --开箱
-function LaboratoryModel:n_OnReceiveLineChange(lineData)
+function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
+
     prints("开箱回调")
-    if lineData .itemId or  lineData .evaPoint then
+    if LabRollACK .itemId or  LabRollACK .evaPoint then
         prints("成功")
     end
+
+    local line
+    for i, v in ipairs(self.data.inProcess) do
+        if LabRollACK.lineId == v.id  then
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll-1
+            self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
+            line = self.data.inProcess[i]
+            break
+        end
+    end
+
+
+    self:n_OnReceivelabLineChangeInform({line=line},true)
 end
 --更新箱子
-function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData)
+function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
     prints("更新箱子")
     for i, v in ipairs(self.data.inProcess) do
         if v.id == lineData.line.id  then
-            self.data.inProcess[i]=lineData.line
+            local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
+            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and  isFinished then
+                table.remove(self.data.inProcess,i)
+            else
+                self.data.inProcess[i]=lineData.line
+            end
             Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
-            Event.Brocast("c_creatRollItem",lineData.line)
-            return
+            break
         end
+    end
+    if not isNotContine then
+        Event.Brocast("c_creatRollItem",lineData.line)
     end
 end
 

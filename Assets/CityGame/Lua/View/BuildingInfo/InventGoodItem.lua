@@ -15,17 +15,33 @@ end
 ---==========================================================================================点击函数=============================================================================
 --删除
 function InventGoodItem:c_OnClick_Delete(ins)
-  --  DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+end
+
+--删除
+function InventGoodItem:c_OnClick_Roll(ins)
     ct.OpenCtrl("RollCtrl" , ins.data)
 end
+
+
 ---==========================================================================================业务逻辑=============================================================================
 
-function InventGoodItem:updateData(data)
+function InventGoodItem:updateData( data )
     self.data=data
 end
 
 function InventGoodItem:updateUI(data)
     --LoadSprite()
+
+    if data.beginProcessTs > 0 then
+        local curTime = TimeSynchronized.GetTheCurrentServerTime()
+        local hasRunTime = curTime - data.beginProcessTs
+
+
+
+    end
+
+
 end
 
 function InventGoodItem:Refresh(data)

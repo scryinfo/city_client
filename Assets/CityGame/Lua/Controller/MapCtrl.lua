@@ -831,9 +831,9 @@ function MapCtrl:_judgeSummary()
 
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqQueryMarketSummary(self.selectDetailItem:getItemId())
-        elseif self.selectSearchType == EMapSearchType.Promotion then
+        elseif typeId == EMapSearchType.Promotion then
             MapModel.m_ReqPromotionSummary()
-        elseif self.selectSearchType == EMapSearchType.Technology then
+        elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqLabSummary()
         end
         return

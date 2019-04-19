@@ -387,19 +387,17 @@ end
 function MapCtrl:refreshDetailItem(item)
     MapPanel.closeAllRightPage()
 
-    if item == nil then
-        if self.selectDetailItem ~= nil then
-            self.selectDetailItem:resetState()
-            self.selectDetailItem = nil
-        end
+    if item == self.selectDetailItem then
+        --self.selectDetailItem:resetState()
+        --self.selectDetailItem = nil
         Event.Brocast("c_ChooseTypeDetail")
     else
         if self.selectDetailItem ~= nil then
             self.selectDetailItem:resetState()
         end
 
-        self.selectSearchType = EMapSearchType.Default  --选中的搜索type
-        self.selectDetailItem = item
+        --self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+        --self.selectDetailItem = item
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
@@ -415,6 +413,9 @@ function MapCtrl:refreshDetailItem(item)
             self:toggleLoadingState(false)  --cd
             self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
             self.m_Timer:Start()
+
+            self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+            self.selectDetailItem = item
         end
     end
 end
@@ -430,7 +431,8 @@ end
 --不是选中detail之后就向服务器发消息
 --验证是否需要向服务器发送请求
 function MapCtrl:checkPromotionTechReq(typeId, detailId)
-    if typeId == self.uiSelectId then
+    local typeData = self:_getSearchData()
+    if typeId == typeData.typeId then
         if self.searchTime == nil then
             self.searchTime = {}
         end
@@ -443,8 +445,6 @@ function MapCtrl:checkPromotionTechReq(typeId, detailId)
         local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
         if remainTime >= 0 then
             self:promotionTechReq(typeId, detailId)
-        else
-            MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
         end
     else
         self:promotionTechReq(typeId, detailId)
@@ -456,8 +456,6 @@ function MapCtrl:promotionTechReq(typeId, detailId)
         self.searchTime = {}
     end
     self.searchTime[typeId] = TimeSynchronized.GetTheCurrentTime()
-    MapCtrl.SelectTypeId = typeId
-    MapCtrl.SelectDetailId = detailId  --推广科研的具体类型
     --
     if self:_getIsDetailFunc() == true then
         self:_judgeDetail()
@@ -609,15 +607,6 @@ end
 --
 function MapCtrl:getNonePageSearchType()
     return self.selectSearchType
-end
---获取当前选择的详情ID
---用于右侧建筑UI显示科研推广的效果
-function MapCtrl.getNowSelectDetailId()
-    return MapCtrl.SelectDetailId
-end
---获取当前选择的类型ID
-function MapCtrl.getNowSelectTypeId()
-    return MapCtrl.SelectTypeId
 end
 
 ---服务器请求

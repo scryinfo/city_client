@@ -33,7 +33,7 @@ function MapConfirmSearchBase:_toggle(isOn)
         Event.Brocast("c_MapSearchSelectDetail", self)  --选中item，关闭详情界面
     else
         self.selectImg.localScale = Vector3.zero
-        Event.Brocast("c_MapSearchSelectDetail")  --取消选中
+        Event.Brocast("c_MapSearchSelectDetail", self)  --取消选中
     end
 end
 --

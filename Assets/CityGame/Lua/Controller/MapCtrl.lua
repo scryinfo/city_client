@@ -568,31 +568,35 @@ function MapCtrl:_openRightOthersPage(item)
                 typeData.typeId = self.selectSearchType
             end
         end
-
+        MapPanel.closeAllRightPage()
         MapPanel.rightOtherBuildingPageItem:refreshData(item.data, typeData)
     end
 end
 --打开拍卖
 function MapCtrl:_openRightGAucPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.rightGroundAucPageItem:refreshData(item.data)
     end
 end
 --打开土地交易
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
 --打开自己的建筑
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.selfBuildingPageItem:refreshData(item.data)
     end
 end
 --打开系统建筑
 function MapCtrl:_openRightSystemPage(item)
     if item ~= nil then
+        MapPanel.closeAllRightPage()
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end

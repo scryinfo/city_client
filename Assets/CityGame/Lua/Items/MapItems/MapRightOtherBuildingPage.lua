@@ -204,6 +204,7 @@ function MapRightOtherBuildingPage:close()
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
     end
+
 end
 --去地图上的一个建筑
 function MapRightOtherBuildingPage:_goHereBtn()

@@ -108,33 +108,6 @@ function MapPanel.getPageByType(typeId)
     return go
 end
 --
-function MapPanel.showRightPageByType(type, data)
-    if type == EMapSearchType.Auction then
-        this.rightOtherBuildingPageItem:close()
-        this.rightGroundAucPageItem:refreshData(data)
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.Deal then
-        this.rightOtherBuildingPageItem:close()
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:refreshData(data)
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.Material or type == EMapSearchType.Goods then
-        this.rightOtherBuildingPageItem:refreshData(data)
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.SelfBuilding then
-        this.rightOtherBuildingPageItem:close()
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:refreshData(data)
-    end
-end
---
 function MapPanel.closeAllRightPage()
     this.rightOtherBuildingPageItem:close()
     this.rightGroundAucPageItem:close()

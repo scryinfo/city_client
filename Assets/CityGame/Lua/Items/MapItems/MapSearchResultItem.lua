@@ -29,16 +29,23 @@ function MapSearchResultItem:_setPos()
         local data = self.data.detailData
 
         local blockID = TerrainManager.GridIndexTurnBlockID(data.pos)
-        PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
-
         local tempInfo = DataManager.GetBaseBuildDataByID(blockID)
         if tempInfo ~= nil and tempInfo.Data ~= nil then
             local mId = tempInfo.Data["mId"]
-            if mId ~= nil then
-                local delta = self.data.itemWidth *  PlayerBuildingBaseData[mId].x
-                self.viewRect.sizeDelta = Vector2.New(delta, delta)
-                self.viewRect.transform.localScale = Vector3.one
+            local delta = self.data.itemWidth *  PlayerBuildingBaseData[mId].x
+            self.viewRect.sizeDelta = Vector2.New(delta, delta)
+            self.viewRect.transform.localScale = Vector3.one
+
+            if data.ownerId == DataManager.GetMyOwnerID() then
+                local type = GetBuildingTypeById(mId)
+                local path = MapBubbleManager._getBuildingIconPath(type)
+                LoadSprite(path, self.protaitImg)
+                self.protaitImg.enabled = true
+            else
+                PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
+                self.protaitImg.enabled = false
             end
+
             self.viewRect.anchoredPosition = Vector2.New(data.pos.y, -data.pos.x) * self.data.itemWidth
             local scale = Vector3.one * (1 / MapCtrl.getCurrentScaleValue())
             self.scaleRoot.transform.localScale = scale

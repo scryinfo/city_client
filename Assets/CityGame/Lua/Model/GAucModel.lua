@@ -161,7 +161,7 @@ function GAucModel._getValuableStartAucObj(groundData)
         table = {}
         for i, value in ipairs(groundData) do
             local obj = prefabPools[GroundNowPoolName]:GetAvailableGameObject()
-            local pos = Vector3.New(value.x, 0.02, value.y)
+            local pos = Vector3.New(value.x, 0.01, value.y)
             obj.transform.position = pos
             table[i] = obj
         end
@@ -175,7 +175,7 @@ function GAucModel._getValuableWillAucObj(groundData)
         table = {}
         for i, value in ipairs(groundData) do
             local obj = prefabPools[GroundSoonPoolName]:GetAvailableGameObject()
-            local pos = Vector3.New(value.x, 0.02, value.y)
+            local pos = Vector3.New(value.x, 0.01, value.y)
             obj.transform.position = pos
             table[i] = obj
         end

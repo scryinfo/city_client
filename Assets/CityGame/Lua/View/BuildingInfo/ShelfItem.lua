@@ -4,13 +4,15 @@
 --- DateTime: 2019/4/19 16:40
 ---
 ShelfItem = class('ShelfItem')
-function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,stateType)
+local ToNumber = tonumber
+local StringSun = string.sub
+function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
     self.dataInfo = dataInfo
     self.buildingId = stateType[1]
     self.isOther = stateType[2]
-    self.goodsType = goodsType
+    self.buildingType = buildingType
     self.itemId = dataInfo.k.id
 
     self.iconImg = prefab.transform:Find("iconImg"):GetComponent("Image")
@@ -35,11 +37,12 @@ function ShelfItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.n
     self.priceText.text = GetClientPriceString(self.dataInfo.price)
-    if self.goodsType == BuildingType.MaterialFactory then
+    local materialKey,goodsKey = 21,22
+    if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         LoadSprite(Material[self.itemId].img,self.iconImg,false)
-    elseif self.goodsType == BuildingType.ProcessingFactory then
+    elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
         --self.levelImg

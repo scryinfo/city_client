@@ -6,7 +6,8 @@
 BuyBoxCtrl = class('BuyBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuyBoxCtrl)
 
-local Math_Floor = math.floor
+local ToNumber = tonumber
+local StringSun = string.sub
 function BuyBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -24,8 +25,11 @@ function BuyBoxCtrl:Awake(go)
     self:_getComponent(go)
     self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-
-
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.buyBtn.gameObject,self._clickBuyBtn,self)
+    self.numberSlider.onValueChanged:AddListener(function()
+        self:SlidingUpdateText()
+    end)
 end
 
 function BuyBoxCtrl:Refresh()
@@ -60,16 +64,56 @@ function BuyBoxCtrl:_getComponent(go)
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
     self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
+    self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     --bottom
     self.buyBtn = go.transform:Find("contentRoot/bottom/buyBtn")
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --初始化UI数据
 function BuyBoxCtrl:initializeUiInfoData()
-    local aaa = self.m_data
-    local aa = ""
+    local materialKey,goodsKey = 21,22
+    if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
+        self.popularity.transform.localScale = Vector3.zero
+        self.quality.transform.localScale = Vector3.zero
+        self.levelBg.transform.localScale = Vector3.zero
+        self.number.transform.localPosition = Vector3.New(183,-50,0)
+        LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
+    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
+        self.popularity.transform.localScale = Vector3.one
+        self.quality.transform.localScale = Vector3.one
+        self.levelBg.transform.localScale = Vector3.one
+        self.number.transform.localPosition = Vector3.New(183,-135,0)
+        LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
+        --self.popularityValue.text =
+        --self.qualityValue.text =
+        --self.levelValue.text =
+    end
+    self.nameText.text = GetLanguage(self.m_data.itemId)
+    self.numberSlider.maxValue = self.m_data.dataInfo.n
+    self.numberSlider.value = 0
+    self.numberText.text = "×"..self.numberSlider.value
 end
 --设置多语言
 function BuyBoxCtrl:_language()
+    self.topName.text = "详情"
+    self.tipText.text = "购买数量"
+end
+--滑动更新文本
+function BuyBoxCtrl:SlidingUpdateText()
+    self.numberText.text = "×"..self.numberSlider.value
+end
+---------------------------------------------------------------点击函数-------------------------------------------------------------------------------------
+--关闭
+function BuyBoxCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    UIPanel.ClosePage()
+end
+--添加购物车
+function BuyBoxCtrl:_clickBuyBtn(ins)
+    if ins.m_data.goodsType == BuildingType.MaterialFactory then
+        --原料厂
 
+    elseif ins.m_data.goodsType == BuildingType.ProcessingFactory then
+        --加工厂
+    end
 end

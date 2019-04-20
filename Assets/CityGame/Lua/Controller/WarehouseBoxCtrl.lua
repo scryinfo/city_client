@@ -6,7 +6,8 @@
 WarehouseBoxCtrl = class('WarehouseBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(WarehouseBoxCtrl)
 
-local Math_Floor = math.floor
+local ToNumber = tonumber
+local StringSun = string.sub
 function WarehouseBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -24,7 +25,6 @@ function WarehouseBoxCtrl:Awake(go)
     self:_getComponent(go)
     self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
 
@@ -75,13 +75,13 @@ end
 --初始化UI数据
 function WarehouseBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
-    if Math_Floor(self.m_data.itemId / 100000) == materialKey then
+    if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self.popularity.transform.localScale = Vector3.zero
         self.quality.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
-    elseif Math_Floor(self.m_data.itemId / 100000) == materialKey then
+    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self.popularity.transform.localScale = Vector3.one
         self.quality.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one

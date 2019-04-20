@@ -67,3 +67,8 @@ function BuildingBaseModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qt
     local lMsg = {buildingId = buildingId,iKey = {id = itemId,producerId = producerId,qty = qty},autoRepOn = autoRepOn}
     DataManager.ModelSendNetMes("gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",lMsg)
 end
+--添加购物车
+function BuildingBaseModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+    local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(number)},price = tonumber(price)}
+    DataManager.ModelSendNetMes("gscode.OpCode","addShopCart","gs.GoodInfo",lMsg)
+end

@@ -25,6 +25,7 @@ function MaterialFactoryModel:OnCreate()
     Event.AddListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
     Event.AddListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
+    Event.AddListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -37,6 +38,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
@@ -58,6 +60,8 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
     Event.RemoveListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
+    Event.RemoveListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
+
 end
 ---客户端请求---
 --打开原料厂
@@ -112,7 +116,10 @@ end
 function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 end
-
+--添加购物车
+function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+end
 ---服务器回调---
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
@@ -174,6 +181,11 @@ function MaterialFactoryModel:n_OnSetLineOrderInform(data)
 end
 --自动补货
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
+    local aaa = data
+    local bbb = ""
+end
+--添加购物车
+function MaterialFactoryModel:n_OnAddShoppingCart(data)
     local aaa = data
     local bbb = ""
 end

@@ -110,10 +110,10 @@ function BuyBoxCtrl:_clickCloseBtn()
 end
 --添加购物车
 function BuyBoxCtrl:_clickBuyBtn(ins)
-    if ins.m_data.goodsType == BuildingType.MaterialFactory then
-        --原料厂
-
-    elseif ins.m_data.goodsType == BuildingType.ProcessingFactory then
-        --加工厂
-    end
+    --if ins.m_data.buildingType == BuildingType.MaterialFactory then
+    --    --原料厂
+    --    Event.Brocast("m_ReqMaterialAddShoppingCart",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,ins.m_data.dataInfo.price,ins.m_data.dataInfo.k.producerId,ins.m_data.dataInfo.k.qty)
+    --elseif ins.m_data.buildingType == BuildingType.ProcessingFactory then
+    --    --加工厂
+    --end
 end

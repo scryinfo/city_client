@@ -13,6 +13,8 @@ function BuildingShelfDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --货架数据
     self.shelfDatas = {}
+    --购买列表(暂时购买成功后或退出建筑时清空)
+    self.buyDatas = {}
 end
 
 function BuildingShelfDetailPart:RefreshData(data)

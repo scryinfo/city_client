@@ -170,10 +170,14 @@ function MapCtrl:_cleanDatas()
 
     --右侧的面板信息
     MapPanel.closeAllRightPage()
-    if self.rightSearchItem ~= nil then
-        self.rightSearchItem:close()
-        self.rightSearchItem = nil
+    if MapCtrl.selectItem ~= nil then
+        MapCtrl.selectItem:close()
+        MapCtrl.selectItem = nil
     end
+    --if self.rightSearchItem ~= nil then
+    --    self.rightSearchItem:close()
+    --    self.rightSearchItem = nil
+    --end
 end
 --
 function MapCtrl:n_OnReceiveAllBuildingDetailInfo(data)
@@ -244,11 +248,6 @@ function MapCtrl:_createType(data)
             self:signSelect()
         end , go)
     end
-end
---
-function MapCtrl:setSelectSearch(type, detail)
-    self.selectSearchType = type
-    self.uiSelectId = detail
 end
 --loading
 function MapCtrl:toggleLoadingState(isShow)
@@ -546,16 +545,29 @@ function MapCtrl:getDetailPageByType(typeId, go)
     end
     return item
 end
-
+--所有有点击效果的选中item
+function MapCtrl.selectCenterItem(item)
+    if MapCtrl.selectItem == nil then
+        MapCtrl.selectItem = item
+        item:toggleShowSelect(true)
+    else
+        if MapCtrl.selectItem ~= item then
+            MapCtrl.selectItem:toggleShowSelect(false)
+            MapCtrl.selectItem = item
+            item:toggleShowSelect(true)
+        end
+    end
+end
 --搜索完成后，选择具体的item，打开右侧原料商品界面
 --item 是MapSearchResultItem 用来显示选中与未选中效果
 function MapCtrl:_openRightOthersPage(item)
     if item ~= nil then
-        if self.rightSearchItem ~= nil then
-            self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
-        end
-        self.rightSearchItem = item
-        self.rightSearchItem:toggleShowDetailImg(true)
+        --if self.rightSearchItem ~= nil then
+        --    self.rightSearchItem:toggleShowDetailImg(false)  --将之前的选中取消
+        --end
+        --self.rightSearchItem = item
+        --self.rightSearchItem:toggleShowDetailImg(true)
+
         --判断是直接搜索还是展开二级界面的搜索
         local typeData = self:_getSearchData()
         MapPanel.closeAllRightPage()

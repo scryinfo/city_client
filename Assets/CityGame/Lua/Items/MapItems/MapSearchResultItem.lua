@@ -7,16 +7,11 @@ MapSearchResultItem = class('MapSearchResultItem', MapBubbleBase)
 
 --初始化方法
 function MapSearchResultItem:_childInit()
-    self.btn = self.viewRect.transform:Find("btn"):GetComponent("Button")
-    self.detailShowImgBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
-    self.protaitImg = self.viewRect.transform:Find("btn/bg/protaitImg"):GetComponent("Image")
-    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
-    self.scaleRoot = self.viewRect.transform:Find("btn")  --需要缩放的气泡
-    self:toggleShowDetailImg(false)  --开始的时候隐藏
+    self.btn = self.viewRect.transform:Find("root/btn"):GetComponent("Button")
+    self.protaitImg = self.viewRect.transform:Find("root/bg/protaitImg"):GetComponent("Image")
+    self.selectTran = self.viewRect.transform:Find("root/detailShowImg")
+    self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的气泡
 
-    self.detailShowImgBtn.onClick:AddListener(function ()
-        self:_clickFunc()
-    end)
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
@@ -50,8 +45,8 @@ function MapSearchResultItem:_setPos()
             local scale = Vector3.one * (1 / MapCtrl.getCurrentScaleValue())
             self.scaleRoot.transform.localScale = scale
 
-            self.detailShowImg.transform.localScale = scale
-            self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
+            --self.detailShowImg.transform.localScale = scale
+            --self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
         end
     end
 end
@@ -61,6 +56,7 @@ function MapSearchResultItem:_clickFunc()
     if self.data == nil then
         return
     end
+    MapCtrl.selectCenterItem(self)
     Event.Brocast("c_MapOpenRightOthersPage", self)
 end
 --

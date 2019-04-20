@@ -50,6 +50,7 @@ function MapGroundTransItem:_openGroundTransPage()
     if self.data == nil then
         return
     end
+    MapCtrl.selectCenterItem(self)
     Event.Brocast("c_MapOpenRightGTransPage", self)
 end
 --

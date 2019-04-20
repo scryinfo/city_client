@@ -3,16 +3,11 @@
 local class = require 'Framework/class'
 BaseBuildModel = class('BaseBuildModel')
 
-
-BuilldingBubbleIns={}
-
-
 --初始化
 --将protobuf内数据拷贝出来
 function BaseBuildModel:initialize(data)
     self.Data = {}
     self:Refresh(data)
-
     Event.AddListener("c_GroundBuildingCheck", self.CheckBubbleState, self)
 end
 
@@ -37,8 +32,7 @@ function BaseBuildModel:Refresh(data)
     else
         if data.bubble then
             self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()
-            self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,BuilldingBubbleInsManger.LuaBehaviour,data,BuilldingBubbleInsManger)
-            table.insert(BuilldingBubbleIns,self.bubbleIns)
+            self.bubbleIns= UIBubbleBuildingSignItem:new(self.bubble,data,BuilldingBubbleInsManger)
             prints(data.name.."生成气泡")
         end
     end
@@ -81,11 +75,11 @@ end
 
 function BaseBuildModel:Close()
     if self.bubbleIns then
-        DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
         AvatarManger.CollectAvatar(self.bubbleIns.avatarData)
+        self.bubbleIns:Close()
+        self.bubble = nil
         self.bubbleIns = nil
     end
-
     --删除节点
     DataManager.RefreshBlockDataWhenNodeChange(self.Data.posID,PlayerBuildingBaseData[self.Data.buildingID].x,-1)
     --删除路径数据

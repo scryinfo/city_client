@@ -105,7 +105,6 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1700003,
             ["InitCount"] = 64,
         },
-
         {   --地图地块
             ["Name"] = "TerrainGround",
             ["PlayerBuildingBaseDataID"] = 4000000,

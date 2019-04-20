@@ -4,6 +4,12 @@
 --- DateTime: 2018/11/21 16:35
 ---土地拍卖已经开始气泡
 UIBubbleGroundAucItem = class('UIBubbleGroundAucItem')
+local selfBoxwidth = 200    --给出200像素的富裕空间  其实只需要最大宽高的一半
+local minAnchorX = nil
+local maxAnchorX = nil
+local minAnchorY = nil
+local maxAnchorY = nil
+local mainCamera = nil
 function UIBubbleGroundAucItem:initialize(data)
     self.data = data
     --self.data.aucInfo.isStartAuc = data.isStartAuc
@@ -41,12 +47,16 @@ function UIBubbleGroundAucItem:initialize(data)
         --判断是否有出价
         if data.bidHistory == nil or #data.bidHistory == 0 then
             self.isStartBid = false
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+            --self.noneBidText02.transform.localScale = Vector3.one
+            --self.nowBinding.localScale = Vector3.zero
+            self.noneBidText02.gameObject:SetActive(true)
+            self.nowBinding.gameObject:SetActive(false)
         else
             self.isStartBid = true
-            self.noneBidText02.transform.localScale = Vector3.zero
-            self.nowBinding.localScale = Vector3.one
+            --self.noneBidText02.transform.localScale = Vector3.zero
+            --self.nowBinding.localScale = Vector3.one
+            self.noneBidText02.gameObject:SetActive(false)
+            self.nowBinding.gameObject:SetActive(true)
             table.sort(self.data.bidHistory, function (m, n) return m.ts > n.ts end)
             self.data.endTs = self.data.bidHistory[1].ts + GAucModel.BidTime
         end
@@ -55,12 +65,16 @@ function UIBubbleGroundAucItem:initialize(data)
     local groundConfigData = GroundAucConfig[self.data.id].area
     local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData[1].y)
     if self.data.isStartAuc == true then
-        self.now.transform.localScale = Vector3.one
-        self.soon.transform.localScale = Vector3.zero
+        --self.now.transform.localScale = Vector3.one
+        --self.soon.transform.localScale = Vector3.zero
+        self.now.gameObject:SetActive(true)
+        self.soon.gameObject:SetActive(false)
         self.groundGo = GAucModel._getValuableStartAucObj(groundConfigData)  --设置场景中的拍卖gameobject
     else
-        self.now.transform.localScale = Vector3.zero
-        self.soon.transform.localScale = Vector3.one
+        --self.now.transform.localScale = Vector3.zero
+        --self.soon.transform.localScale = Vector3.one
+        self.now.gameObject:SetActive(false)
+        self.soon.gameObject:SetActive(true)
         self.groundGo = GAucModel._getValuableWillAucObj(groundConfigData)
     end
     self.data.targetPos = pos
@@ -72,6 +86,44 @@ function UIBubbleGroundAucItem:initialize(data)
     Event.AddListener("c_BubbleAllHide", self._hideFunc, self)
     Event.AddListener("c_BubbleAllShow", self._showFunc, self)
     Event.AddListener("c_ChangeLanguage", self._changeLanguageFunc, self)
+
+    --显示范围内才显示
+    if minAnchorX == nil then
+        minAnchorX = - selfBoxwidth
+        maxAnchorX = UnityEngine.Screen.width * Game.ScreenRatio + selfBoxwidth
+        minAnchorY = - selfBoxwidth
+        maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
+        mainCamera = UnityEngine.Camera.main
+    end
+    self.m_anchoredPos =  self.bubbleRect.anchoredPosition
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+end
+
+--判断是否在屏幕内
+function UIBubbleGroundAucItem:JudgeSelfIsShow()
+    if  self.m_anchoredPos ~= nil then
+        if self.m_anchoredPos.x >= minAnchorX and  self.m_anchoredPos.x <= maxAnchorX and self.m_anchoredPos.y >= minAnchorY and  self.m_anchoredPos.y <= maxAnchorY  then
+            return true
+        end
+    end
+    return false
+end
+
+--判断是否在屏幕内
+function UIBubbleGroundAucItem:IsMove()
+    --先判断是否是在屏幕显示范围内，做显示/隐藏处理
+    self:ShowOrHideSelf(self:JudgeSelfIsShow())
+    --根据是否在屏幕范围内显示隐藏自身
+    if self.IsShow then
+        self.bubbleRect.anchoredPosition = self.m_anchoredPos
+    end
+end
+
+function UIBubbleGroundAucItem:ShowOrHideSelf(tempBool)
+    if type(tempBool) == "boolean" and tempBool ~= self.IsShow then
+        self.IsShow = tempBool
+        self.bubbleObj:SetActive(self.IsShow)
+    end
 end
 
 function UIBubbleGroundAucItem:_itemTimer()
@@ -100,8 +152,10 @@ function UIBubbleGroundAucItem:_bidInfoUpdate(data)
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
         table.insert(self.data.bidHistory, 1, temp)
         self.isStartBid = true
-        self.noneBidText02.transform.localScale = Vector3.zero
-        self.nowBinding.localScale = Vector3.one
+        --self.noneBidText02.transform.localScale = Vector3.zero
+        --self.nowBinding.localScale = Vector3.one
+        self.noneBidText02.gameObject:SetActive(false)
+        self.nowBinding.gameObject:SetActive(true)
     end
 end
 --获取是否点击到对应地块
@@ -172,8 +226,9 @@ function UIBubbleGroundAucItem:Close()
 end
 
 function UIBubbleGroundAucItem:LateUpdate()
-    if self.bubbleObj ~= nil then
-        self.bubbleRect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
+    if self.bubbleObj ~= nil and self.data.targetPos ~=nil then
+        self.m_anchoredPos  = ScreenPosTurnActualPos(mainCamera:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
+        self:IsMove()
     end
 end
 --正在拍卖的倒计时
@@ -206,10 +261,14 @@ function UIBubbleGroundAucItem:SoonTimeDownFunc()
         if remainTime <= 0 then
             self.data.isStartAuc = true
             --开始拍卖
-            self.now.transform.localScale = Vector3.one
-            self.soon.transform.localScale = Vector3.zero
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+           --self.now.transform.localScale = Vector3.one
+           --self.soon.transform.localScale = Vector3.zero
+           --self.noneBidText02.transform.localScale = Vector3.one
+           --self.nowBinding.localScale = Vector3.zero
+            self.now.gameObject:SetActive(true)
+            self.soon.gameObject:SetActive(false)
+            self.noneBidText02.gameObject:SetActive(true)
+            self.nowBinding.gameObject:SetActive(false)
             GAucModel._returnSoonToPool(self.groundGo)
             self.groundGo = GAucModel._getValuableStartAucObj(GroundAucConfig[self.data.id].area)
             GAucModel.updateSoonItem(self.data.id + 1)

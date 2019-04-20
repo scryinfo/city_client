@@ -33,7 +33,7 @@ function PromoteCompanyCtrl:Refresh()
     DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
 
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId)
     RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)

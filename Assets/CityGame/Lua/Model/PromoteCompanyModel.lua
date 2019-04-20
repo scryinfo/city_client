@@ -36,16 +36,22 @@ function PromoteCompanyModel:m_detailPublicFacility(buildingId)
 end
 
 --添加推广
-function PromoteCompanyModel:m_AddPromote(buildingId)
-   local player = DataManager.GetMyPersonalHomepageInfo()
-   local time = TimeSynchronized.GetTheCurrentServerTime()
-    local lMsg = {sellerBuildingId = buildingId,buyerPlayerId = player.id,companyName = player.companyName,promDuration = 0.0277777777777778,promStartTs = time,productionType = 2251101}
+function PromoteCompanyModel:m_AddPromote(buildingId,time,goodId)
+   local playerId = DataManager.GetMyPersonalHomepageInfo()
+   local currentTime = TimeSynchronized.GetTheCurrentServerTime()
+    local lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,productionType = goodId}
     DataManager.ModelSendNetMes("gscode.OpCode", "adAddNewPromoOrder","gs.AdAddNewPromoOrder",lMsg)
 end
 
 --推广设置
-function PromoteCompanyModel:m_PromotionSetting(buildingId)
-    local lMsg = {sellerBuildingId = buildingId,pricePerHour = GetServerPriceNumber(100),remainTime = 100,takeOnNewOrder = true}
+function PromoteCompanyModel:m_PromotionSetting(buildingId , takeOnNewOrder , price , time)
+    if price then
+        price = GetServerPriceNumber(price)
+    end
+    if time then
+        time = time*3600*1000
+    end
+    local lMsg = {sellerBuildingId = buildingId,pricePerHour = price,remainTime = time,takeOnNewOrder = takeOnNewOrder}
     DataManager.ModelSendNetMes("gscode.OpCode", "adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",lMsg)
 end
 
@@ -69,11 +75,15 @@ end
 --添加推广回调
 function PromoteCompanyModel:n_OnAddPromote(info)
     local a = info
+    PromoteCompanyModel:m_detailPublicFacility(info.sellerBuildingId)
+    Event.Brocast("c_ClosePromoteGoodsExtension")
 end
 
 --推广设置回调
 function PromoteCompanyModel:n_OnPromotionSetting(info)
     local a = info
+    PromoteCompanyModel:m_detailPublicFacility(info.sellerBuildingId)
+    Event.Brocast("c_CloseSetOpenUp")
 end
 
 --推广列表回调

@@ -20,6 +20,6 @@ function PromoteGoodsItem:initialize(prefab,dataInfo)
     end)
 end
 
-function PromoteGoodsItem:OnSeleteBtn()
-
+function PromoteGoodsItem:OnSeleteBtn(go)
+    Event.Brocast("c_PromoteGoodsId",go.dataInfo)
 end

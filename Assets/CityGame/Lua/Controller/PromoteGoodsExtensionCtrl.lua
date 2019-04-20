@@ -5,6 +5,7 @@
 ---推广公司商品扩展
 PromoteGoodsExtensionCtrl = class('PromoteGoodsExtensionCtrl',UIPanel)
 UIPanel:ResgisterOpen(PromoteGoodsExtensionCtrl)
+local myOwnerID = nil
 
 local buildingExtensionBehaviour
 
@@ -20,20 +21,51 @@ function PromoteGoodsExtensionCtrl:Awake()
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
     buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
-    self:initData()
+    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
+    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
+
+    PromoteGoodsExtensionPanel.slider.onValueChanged:AddListener(function()
+        self:onSlider()
+    end)
+    PromoteGoodsExtensionPanel.otherTime.onValueChanged:AddListener(function()
+        self:onInputField()
+    end)
+
+    myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
+    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime
+    PromoteGoodsExtensionPanel.time.text = 0
 end
 
 function PromoteGoodsExtensionCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
+    Event.AddListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
 end
 
 function PromoteGoodsExtensionCtrl:Refresh()
-
+    self:initData()
+    --判断是自己还是别人打开了界面
+    if self.m_data.DataInfo.info.ownerId == myOwnerID then
+        PromoteGoodsExtensionPanel.myTime.localScale = Vector3.one
+        PromoteGoodsExtensionPanel.queue.transform.localScale = Vector3.one
+        PromoteGoodsExtensionPanel.otherTimeBg.localScale = Vector3.zero
+        PromoteGoodsExtensionPanel.moneyBg.localScale = Vector3.zero
+    else
+        PromoteGoodsExtensionPanel.myTime.localScale = Vector3.zero
+        PromoteGoodsExtensionPanel.queue.transform.localScale = Vector3.zero
+        PromoteGoodsExtensionPanel.otherTimeBg.localScale = Vector3.one
+        PromoteGoodsExtensionPanel.moneyBg.localScale = Vector3.one
+    end
 end
 
 function PromoteGoodsExtensionCtrl:Hide()
     UIPanel.Hide(self)
-
+    Event.RemoveListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
+    Event.RemoveListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
+    for i, v in pairs(self.PromoteGoods) do
+        destroy(v.prefab.gameObject)
+    end
+    self.PromoteGoods = {}
 end
 
 function PromoteGoodsExtensionCtrl:OnCreate(obj)
@@ -41,16 +73,26 @@ function PromoteGoodsExtensionCtrl:OnCreate(obj)
 end
 
 function PromoteGoodsExtensionCtrl:initData()
-    if self.m_data.subclass == nil then
+    if self.m_data.Data.subclass == nil then
         return
     end
     self.PromoteGoods = {}
-    for i, v in ipairs(self.m_data.subclass) do
+    for i, v in ipairs(self.m_data.Data.subclass) do
         local function callback(prefab)
            self.PromoteGoods[i] = PromoteGoodsItem:new(prefab,v)
         end
         createPrefab("Assets/CityGame/Resources/View/GoodsItem/PromoteGoodsItem.prefab",PromoteGoodsExtensionPanel.content, callback)
     end
+end
+
+--滑动slider
+function PromoteGoodsExtensionCtrl:onSlider()
+    PromoteGoodsExtensionPanel.otherTime.text = PromoteGoodsExtensionPanel.slider.value
+end
+
+--输入框
+function PromoteGoodsExtensionCtrl:onInputField()
+    PromoteGoodsExtensionPanel.slider.value = PromoteGoodsExtensionPanel.otherTime.text
 end
 
 --返回
@@ -61,4 +103,34 @@ end
 --打开曲线图
 function PromoteGoodsExtensionCtrl:OnCurve()
     ct.OpenCtrl("PromoteCurveCtrl")
+end
+
+--选择的商品
+function PromoteGoodsExtensionCtrl:c_PromoteGoodsId(goodId)
+    self.goodId = goodId
+end
+
+--确定(自己)
+function PromoteGoodsExtensionCtrl:OnQueue(go)
+    if not go.goodId then
+        Event.Brocast("SmallPop","请选择推广的商品",300)
+        return
+    end
+    if PromoteGoodsExtensionPanel.time.text == "" then
+        Event.Brocast("SmallPop","请输入推广时间",300)
+    elseif tonumber(PromoteGoodsExtensionPanel.time.text) == 0 then
+        Event.Brocast("SmallPop","推广时间不能为0",300)
+    else
+        DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.time.text),go.goodId)
+    end
+end
+
+--确定(别人)
+function PromoteGoodsExtensionCtrl:OnOtherQueue()
+
+end
+
+--关闭界面
+function PromoteGoodsExtensionCtrl:c_ClosePromoteGoodsExtension()
+    UIPanel.ClosePage()
 end

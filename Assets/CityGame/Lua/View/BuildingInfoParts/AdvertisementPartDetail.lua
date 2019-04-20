@@ -50,7 +50,20 @@ function AdvertisementPartDetail:_RemoveClick()
 end
 --
 function AdvertisementPartDetail:RefreshData(data)
-
+    if data then
+        self.timeText.text = math.floor(data.promRemainTime/3600000)
+        self.priceText.text = GetClientPriceString(data.curPromPricePerHour)
+        self.queneValue.text = data.selledPromCount
+        if data.selledPromCount == 0 then
+            local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
+            self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
+            return
+        end
+        if data.newPromoStartTs ~= -1 then
+            local ts = getFormatUnixTime(data.newPromoStartTs/1000)
+            self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
+        end
+    end
 end
 --
 function AdvertisementPartDetail:_getComponent(transform)
@@ -59,22 +72,24 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.goods = transform:Find("bg/top/goods/goodsBg").gameObject      --商品
     self.goodsText = transform:Find("bg/top/goods/goodsText")
     self.building = transform:Find("bg/top/building/buildingBg").gameObject      --建筑
-    self.open = transform:Find("bg/top/priceTime/open").gameObject      --对外开放
+    self.open = transform:Find("bg/top/priceTime").gameObject      --对外开放
     self.buildingText = transform:Find("bg/top/building/buildingText")
-    self.price = transform:Find("bg/top/priceTime/price"):GetComponent("Text")    --价格
-    self.priceText = transform:Find("bg/top/priceTime/price/priceText"):GetComponent("Text")    --价格
-    self.time = transform:Find("bg/top/priceTime/time"):GetComponent("Text")    --时间
-    self.timeText = transform:Find("bg/top/priceTime/time/timeText"):GetComponent("Text")    --时间
+    self.price = transform:Find("bg/top/priceTime/priceImage/price"):GetComponent("Text")    --价格
+    self.priceText = transform:Find("bg/top/priceTime/priceImage/price/priceText"):GetComponent("Text")    --价格
+    self.time = transform:Find("bg/top/priceTime/timeImage/time"):GetComponent("Text")    --时间
+    self.timeText = transform:Find("bg/top/priceTime/timeImage/time/timeText"):GetComponent("Text")    --时间
 
     --down
     self.quene = transform:Find("bg/down/quene").gameObject;      --队列
     self.queneText = transform:Find("bg/down/quene/queneImage/queneText"):GetComponent("Text");
+    self.queneValue = transform:Find("bg/down/quene/queneImage/queneText/queneValue"):GetComponent("Text");
     self.content = transform:Find("bg/down/Scroll View/Viewport/Content"):GetComponent("RectTransform");
     self.buildingBg = transform:Find("bg/down/buildingBg");
     self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
     self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
     self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/spped"):GetComponent("Text");   --零售店
     self.houseSpeed = transform:Find("bg/down/buildingBg/house/spped"):GetComponent("Text");   --住宅
+    self.startTime = transform:Find("bg/down/startTimeBg/startTime/time"):GetComponent("Text");   --新推广开始时间
 
 end
 
@@ -107,6 +122,10 @@ function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)
     self.m_data = data
     self:_initFunc()
+    if data.selledPromCount == 0 then
+        local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
+        self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
+    end
 end
 
 function AdvertisementPartDetail:Hide()
@@ -129,7 +148,7 @@ end
 --初始化商品推广能力
 function AdvertisementPartDetail:PromoteCapacity()
     for i, v in ipairs(GoodsTypeConfig) do
-        promoteAbility[i]:InitData(v)
+        promoteAbility[i]:InitData(v,self.m_data)
     end
 end
 --初始化建筑推广能力
@@ -150,8 +169,8 @@ function AdvertisementPartDetail:OnBuilding(go)
 end
 
 --对外开放
-function AdvertisementPartDetail:OnOpen()
-   ct.OpenCtrl("SetOpenUpCtrl")
+function AdvertisementPartDetail:OnOpen(go)
+   ct.OpenCtrl("SetOpenUpCtrl",go.m_data)
 end
 
 --队列
@@ -160,11 +179,13 @@ function AdvertisementPartDetail:OnQuene()
 end
 
 --零售店
-function AdvertisementPartDetail:OnSupermarket()
-   ct.OpenCtrl("PromoteBuildingExtensionCtrl",1)
+function AdvertisementPartDetail:OnSupermarket(go)
+    go.m_data.type = 1
+   ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)
 end
 
 --住宅
-function AdvertisementPartDetail:OnHouse()
-    ct.OpenCtrl("PromoteBuildingExtensionCtrl",2)
+function AdvertisementPartDetail:OnHouse(go)
+    go.m_data.type = 2
+    ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)
 end

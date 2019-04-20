@@ -24,7 +24,6 @@ end
 
 function PromoteCurveCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function PromoteCurveCtrl:Refresh()

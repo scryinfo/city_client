@@ -16,10 +16,12 @@ function PromoteAbilityItem:initialize(prefab)
 end
 
 function PromoteAbilityItem:OnBG()
-    ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.DataInfo)
+    ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.m_data)
 end
 
-function PromoteAbilityItem:InitData(DataInfo)
-    self.DataInfo = DataInfo
-    self.speed.text ="+".. DataInfo.capacity .. "/h"
+function PromoteAbilityItem:InitData(Data,DataInfo)
+    self.m_data = {}
+    self.m_data.DataInfo = DataInfo
+    self.m_data.Data = Data
+    self.speed.text ="+".. Data.capacity .. "/h"
 end

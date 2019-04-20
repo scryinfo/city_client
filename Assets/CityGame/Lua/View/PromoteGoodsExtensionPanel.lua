@@ -20,9 +20,17 @@ end
 --初始化面板--
 function PromoteGoodsExtensionPanel.InitPanel()
     this.xBtn = transform:Find("contentRoot/top/xBtn").gameObject
-    this.curve = transform:Find("contentRoot/curve").gameObject     --曲线图
-    this.content = transform:Find("contentRoot/Scroll View/Viewport/Content")
+    this.curve = transform:Find("contentRoot/curveBg").gameObject     --曲线图
+    this.queue = transform:Find("contentRoot/queue").gameObject     --确定(自己)
+    this.myTime = transform:Find("contentRoot/time")     --时间(自己)
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间
+    this.otherTimeBg = transform:Find("contentRoot/otherTime")    --别人打开的时间
+    this.otherTime = transform:Find("contentRoot/otherTime/time/InputField"):GetComponent("InputField")     --别人打开的时间
+    this.slider = transform:Find("contentRoot/otherTime/Slider"):GetComponent("Slider")
     this.content = transform:Find("contentRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
+    this.select = transform:Find("contentRoot/select"):GetComponent("Text")
+    this.moneyBg = transform:Find("contentRoot/moneyBg")   --别人打开的money
+    this.money = transform:Find("contentRoot/moneyBg/moneyImage/moenyText")   --money
+    this.otherQueue = transform:Find("contentRoot/moneyBg/queue").gameObject   --确定(别人)
 
 end

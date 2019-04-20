@@ -36,14 +36,7 @@ function AdvertisementPart:_getComponent(transform)
 end
 --
 function AdvertisementPart:_initFunc()
-    if self.m_data.takeOnNewOrder then
-        self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
-        --local ts = TimeSynchronized.GetTheCurrentServerTime() - self.m_data.newPromoStartTs
-        --local time = tonumber(getFormatUnixTime(ts/1000).hour)
-        --self.waitingTime.text = time - self.m_data.promRemainTime
-    else
-        self.price.text = "E0.0000"
-        self.waitingTime.text = "00"
-    end
+    self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+    self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
 
 end

@@ -7,6 +7,7 @@ PromoteBuildingExtensionCtrl = class('PromoteBuildingExtensionCtrl',UIPanel)
 UIPanel:ResgisterOpen(PromoteBuildingExtensionCtrl)
 
 local buildingExtensionBehaviour
+local myOwnerID = nil
 
 function PromoteBuildingExtensionCtrl:bundleName()
     return "Assets/CityGame/Resources/View/PromoteBuildingExtensionPanel.prefab"
@@ -21,6 +22,8 @@ function PromoteBuildingExtensionCtrl:Awake()
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
     self:initData()
+
+    myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一ids
 end
 
 function PromoteBuildingExtensionCtrl:Active()
@@ -28,10 +31,24 @@ function PromoteBuildingExtensionCtrl:Active()
 end
 
 function PromoteBuildingExtensionCtrl:Refresh()
-    if self.m_data == 1 then
+    --判断是自己还是别人打开了界面
+    if self.m_data.info.ownerId == myOwnerID then
+        PromoteBuildingExtensionPanel.myTime.localScale = Vector3.one
+        PromoteBuildingExtensionPanel.queue.transform.localScale = Vector3.one
+        PromoteBuildingExtensionPanel.otherTimeBg.localScale = Vector3.zero
+        PromoteBuildingExtensionPanel.moneyBg.localScale = Vector3.zero
+    else
+        PromoteBuildingExtensionPanel.myTime.localScale = Vector3.zero
+        PromoteBuildingExtensionPanel.queue.transform.localScale = Vector3.zero
+        PromoteBuildingExtensionPanel.otherTimeBg.localScale = Vector3.one
+        PromoteBuildingExtensionPanel.moneyBg.localScale = Vector3.one
+    end
+    if self.m_data.type == 1 then
         PromoteBuildingExtensionPanel.house.localScale = Vector3.zero
-    elseif self.m_data == 2 then
+        PromoteBuildingExtensionPanel.supermarket.localScale = Vector3.one
+    elseif self.m_data.type == 2 then
         PromoteBuildingExtensionPanel.house.localScale = Vector3.one
+        PromoteBuildingExtensionPanel.supermarket.localScale = Vector3.zero
     end
 end
 

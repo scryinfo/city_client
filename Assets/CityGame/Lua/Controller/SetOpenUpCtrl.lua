@@ -27,12 +27,15 @@ end
 
 function SetOpenUpCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_Revenue",self.c_Revenue,self)
+    Event.AddListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
+    if self.m_data.takeOnNewOrder then
+        SetOpenUpPanel.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+        SetOpenUpPanel.time.text = math.floor(self.m_data.promRemainTime/3600000)
+    end
 end
 
 function SetOpenUpCtrl:Refresh()
-    --self.openUp = self.m_data.openUp
-    self.openUp = false
+    self.openUp = self.m_data.takeOnNewOrder
     if self.openUp then
         SetOpenUpPanel.open.transform.localScale = Vector3.one
         SetOpenUpPanel.close.transform.localScale = Vector3.zero
@@ -48,7 +51,7 @@ end
 
 function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
-
+    Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
 end
 
 function SetOpenUpCtrl:OnCreate(obj)
@@ -67,8 +70,6 @@ function SetOpenUpCtrl:OnOpen(go)
     go.openUp = false
     SetOpenUpPanel.close.transform.localScale = Vector3.one
     SetOpenUpPanel.open.transform.localScale = Vector3.zero
-    SetOpenUpPanel.price.text = ""
-    SetOpenUpPanel.time.text = ""
     SetOpenUpPanel.price.interactable = false
     SetOpenUpPanel.time.interactable = false
 end
@@ -78,15 +79,40 @@ function SetOpenUpCtrl:OnClose(go)
     go.openUp = true
     SetOpenUpPanel.close.transform.localScale = Vector3.zero
     SetOpenUpPanel.open.transform.localScale = Vector3.one
+    SetOpenUpPanel.price.text = GetClientPriceString(go.m_data.curPromPricePerHour)
+    SetOpenUpPanel.time.text = math.floor(go.m_data.promRemainTime/3600000)
     SetOpenUpPanel.price.interactable = true
     SetOpenUpPanel.time.interactable = true
 end
 
 --点击确定
 function SetOpenUpCtrl:OnConfirm(go)
+    if SetOpenUpPanel.price.text == "" or SetOpenUpPanel.time.text == "" then
+        Event.Brocast("SmallPop","时间或价格不能为空",300)
+        return
+    end
     if go.openUp then
-        if SetOpenUpPanel.time.text == "" or tonumber(SetOpenUpPanel.time.text ) == 0 then
+        if tonumber(SetOpenUpPanel.time.text ) == 0 then
             Event.Brocast("SmallPop","时间不能为0",300)
+        else
+            local price = tonumber(SetOpenUpPanel.price.text)
+            local time = tonumber(SetOpenUpPanel.time.text)
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,true,price,time)
+        end
+    else
+        if not go.m_data.takeOnNewOrder then
+            UIPanel.ClosePage()
+        else
+            if  tonumber(SetOpenUpPanel.time.text ) == 0 then
+                Event.Brocast("SmallPop","时间不能为0",300)
+            else
+                DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,false,tonumber(SetOpenUpPanel.price.text), tonumber(SetOpenUpPanel.time.text))
+            end
         end
     end
+end
+
+--关闭界面
+function SetOpenUpCtrl:c_CloseSetOpenUp()
+    UIPanel.ClosePage()
 end

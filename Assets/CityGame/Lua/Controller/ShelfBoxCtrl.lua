@@ -109,21 +109,28 @@ function ShelfBoxCtrl:initializeUiInfoData()
         --self.qualityValue.text =
         --self.levelValue.text =
     end
+    --自己在货架打开时
     if not self.m_data.stateType then
         self.downShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.one
         self.addShelfBtn.transform.localScale = Vector3.zero
+        self.automaticSwitch.isOn = self.m_data.dataInfo.autoReplenish
+        self.numberSlider.maxValue = self.m_data.dataInfo.n
+        self.numberSlider.value = self.m_data.dataInfo.n
+        self.numberText.text = "×"..self.numberSlider.value
+        self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
     else
+        --上架的时候打开时
         self.downShelfBtn.transform.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.zero
         self.addShelfBtn.transform.localScale = Vector3.one
+        self.numberSlider.maxValue = self.m_data.dataInfo.n
+        self.numberSlider.value = 0
+        self.numberText.text = "×"..self.numberSlider.value
+        self.priceInput.text = "0"
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
-    self.numberSlider.maxValue = self.m_data.dataInfo.n
-    self.numberSlider.value = 0
-    self.numberText.text = "×"..self.numberSlider.value
     self.tipBg.transform.localScale = Vector3.zero
-    self.priceInput.text = "0"
     self.advicePriceText.text = "0000.0000"
 end
 --设置多语言

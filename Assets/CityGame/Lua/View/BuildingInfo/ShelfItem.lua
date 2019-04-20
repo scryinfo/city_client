@@ -9,6 +9,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,state
     self.prefab = prefab
     self.dataInfo = dataInfo
     self.buildingId = stateType[1]
+    self.isOther = stateType[2]
     self.goodsType = goodsType
     self.itemId = dataInfo.k.id
 
@@ -25,6 +26,8 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,state
     self.qualityValue = prefab.transform:Find("goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.priceText = prefab.transform:Find("priceBg/priceText"):GetComponent("Text")
     self.detailsBtn = prefab.transform:Find("detailsBtn")
+
+    luaBehaviour:AddClick(self.detailsBtn.gameObject,self._clickDetailsBtn,self)
 
     self:InitializeData()
 end
@@ -43,5 +46,15 @@ function ShelfItem:InitializeData()
         --self.brandNameText
         --self.brandValue
         --self.qualityValue
+    end
+end
+--点击详情购买
+function ShelfItem:_clickDetailsBtn(ins)
+    --货架上如果是自己点击
+    if ins.isOther == false then
+        ct.OpenCtrl("ShelfBoxCtrl",ins)
+    else
+        --别人点击
+
     end
 end

@@ -42,6 +42,7 @@ function BuildingShelfDetailPart:_getComponent(transform)
     self.addBtn = transform:Find("contentRoot/noTip/addbg/addBtn")
     self.ScrollView = transform:Find("contentRoot/ScrollView")
     self.Content = transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.contentAddBg = transform:Find("contentRoot/ScrollView/Viewport/Content/addbg")
     self.contentAddBtn = transform:Find("contentRoot/ScrollView/Viewport/Content/addbg/addBtn")
     self.ShelfItem = transform:Find("contentRoot/ScrollView/Viewport/Content/ShelfItem").gameObject
 end
@@ -81,6 +82,15 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
+    if self.m_data.isOther == true then
+        self.contentAddBg.gameObject:SetActive(false)
+        self.buyBtn.transform.localScale = Vector3.one
+        self.number.transform.localScale = Vector3.zero
+    else
+        self.contentAddBg.gameObject:SetActive(true)
+        self.buyBtn.transform.localScale = Vector3.zero
+        self.number.transform.localScale = Vector3.zero
+    end
     if not shelfData then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -97,7 +107,7 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         if #shelfData == #self.shelfDatas then
             return
         else
-            self:CreateGoodsItems(shelfData,self.ShelfItem,self.Content,ShelfItem,self.mainPanelLuaBehaviour,self.shelfDatas,self.m_data.buildingType,self.m_data.insId)
+            self:CreateGoodsItems(shelfData,self.ShelfItem,self.Content,ShelfItem,self.mainPanelLuaBehaviour,self.shelfDatas,self.m_data.buildingType,self.m_data.insId,self.m_data.isOther)
         end
     end
 end

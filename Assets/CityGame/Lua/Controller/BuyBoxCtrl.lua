@@ -66,7 +66,8 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --初始化UI数据
 function BuyBoxCtrl:initializeUiInfoData()
-
+    local aaa = self.m_data
+    local aa = ""
 end
 --设置多语言
 function BuyBoxCtrl:_language()

@@ -55,6 +55,6 @@ function ShelfItem:_clickDetailsBtn(ins)
         ct.OpenCtrl("ShelfBoxCtrl",ins)
     else
         --别人点击
-
+        ct.OpenCtrl("BuyBoxCtrl",ins)
     end
 end

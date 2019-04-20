@@ -35,9 +35,10 @@ end
 
 --点击中间按钮的方法
 function LaboratoryCtrl:_centerBtnFunc(ins)
-    if ins.m_data then
-        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
-    end
+    --if ins.m_data then
+    --    Event.Brocast("c_openBuildingInfo", ins.m_data.info)
+    --end
+    ct.OpenCtrl("BubbleMessageCtrl",ins.m_data.insId)
 end
 --点击开业按钮方法
 function LaboratoryCtrl:_openBuildingBtnFunc(ins)
@@ -46,18 +47,6 @@ function LaboratoryCtrl:_openBuildingBtnFunc(ins)
             DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
         end)
     end
-end
----更改名字
-function LaboratoryCtrl:_changeName(ins)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeBuildingName', ins.m_data.insId, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 ---返回
 function LaboratoryCtrl:_backBtn(ins)
@@ -117,10 +106,6 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     end
 end
 
----更改名字成功
-function LaboratoryCtrl:_updateName(name)
-    panel.nameText.text = name
-end
 
 function LaboratoryCtrl:_refreshSalary(data)
     if self.m_data ~= nil then

@@ -184,6 +184,7 @@ function UIBubbleBuildingSignItem:changeLarge()
     self:Start()
     self.largeRec.gameObject:SetActive(true)
     self.smallRec.gameObject:SetActive(false)
+    self.prefab.transform:SetAsLastSibling()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)

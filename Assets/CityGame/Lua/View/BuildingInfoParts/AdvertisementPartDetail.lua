@@ -181,11 +181,13 @@ end
 --零售店
 function AdvertisementPartDetail:OnSupermarket(go)
     go.m_data.type = 1
+    go.m_data.buildingId = 1300
    ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)
 end
 
 --住宅
 function AdvertisementPartDetail:OnHouse(go)
     go.m_data.type = 2
+    go.m_data.buildingId = 1400
     ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)
 end

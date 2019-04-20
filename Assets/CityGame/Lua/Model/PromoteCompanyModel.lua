@@ -39,7 +39,12 @@ end
 function PromoteCompanyModel:m_AddPromote(buildingId,time,goodId)
    local playerId = DataManager.GetMyPersonalHomepageInfo()
    local currentTime = TimeSynchronized.GetTheCurrentServerTime()
-    local lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,productionType = goodId}
+    local lMsg = {}
+    if goodId == 1300 or 1400 then
+        lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,buildingType = goodId}
+    else
+        lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,productionType = goodId}
+    end
     DataManager.ModelSendNetMes("gscode.OpCode", "adAddNewPromoOrder","gs.AdAddNewPromoOrder",lMsg)
 end
 

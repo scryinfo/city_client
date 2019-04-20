@@ -21,9 +21,20 @@ function PromoteBuildingExtensionCtrl:Awake()
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
+    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.queue,self.OnQueue,self);
     self:initData()
 
+    PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
+    PromoteBuildingExtensionPanel.slider.onValueChanged:AddListener(function()
+        self:onSlider(self)
+    end)
+    PromoteBuildingExtensionPanel.otherTime.onValueChanged:AddListener(function()
+        self:onInputField(self)
+    end)
+
     myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一ids
+
+    PromoteBuildingExtensionPanel.time.text = 0
 end
 
 function PromoteBuildingExtensionCtrl:Active()
@@ -74,3 +85,30 @@ end
 function PromoteBuildingExtensionCtrl:OnCurve()
     ct.OpenCtrl("PromoteCurveCtrl")
 end
+
+--点击确定(自己)
+function PromoteBuildingExtensionCtrl:OnQueue(go)
+    if PromoteBuildingExtensionPanel.time.text == "" then
+        Event.Brocast("SmallPop","请输入推广时间",300)
+    elseif tonumber(PromoteBuildingExtensionPanel.time.text) == 0 then
+        Event.Brocast("SmallPop","推广时间不能为0",300)
+    else
+        DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteBuildingExtensionPanel.time.text),go.m_data.buildingId)
+    end
+end
+
+--滑动slider
+function PromoteBuildingExtensionCtrl:onSlider(go)
+    PromoteBuildingExtensionPanel.otherTime.text = PromoteBuildingExtensionPanel.slider.value
+    PromoteBuildingExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteBuildingExtensionPanel.otherTime.text) * go.m_data.curPromPricePerHour)
+end
+
+--输入框
+function PromoteBuildingExtensionCtrl:onInputField(go)
+    if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > 10 then
+        PromoteBuildingExtensionPanel.otherTime.text = 10
+    end
+    PromoteBuildingExtensionPanel.slider.value = PromoteBuildingExtensionPanel.otherTime.text
+    PromoteBuildingExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteBuildingExtensionPanel.otherTime.text) * go.m_data.curPromPricePerHour)
+end
+

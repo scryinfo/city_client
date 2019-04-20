@@ -24,15 +24,15 @@ function PromoteGoodsExtensionCtrl:Awake()
     buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
     buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
 
+    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     PromoteGoodsExtensionPanel.slider.onValueChanged:AddListener(function()
-        self:onSlider()
+        self:onSlider(self)
     end)
     PromoteGoodsExtensionPanel.otherTime.onValueChanged:AddListener(function()
-        self:onInputField()
+        self:onInputField(self)
     end)
 
     myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
-    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime
     PromoteGoodsExtensionPanel.time.text = 0
 end
 
@@ -76,6 +76,7 @@ function PromoteGoodsExtensionCtrl:initData()
     if self.m_data.Data.subclass == nil then
         return
     end
+    PromoteGoodsExtensionPanel.popularity.text = "+".. self.m_data.Data.capacity .. "/h"
     self.PromoteGoods = {}
     for i, v in ipairs(self.m_data.Data.subclass) do
         local function callback(prefab)
@@ -86,13 +87,18 @@ function PromoteGoodsExtensionCtrl:initData()
 end
 
 --滑动slider
-function PromoteGoodsExtensionCtrl:onSlider()
+function PromoteGoodsExtensionCtrl:onSlider(go)
     PromoteGoodsExtensionPanel.otherTime.text = PromoteGoodsExtensionPanel.slider.value
+    PromoteGoodsExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteGoodsExtensionPanel.otherTime.text) * go.m_data.DataInfo.curPromPricePerHour)
 end
 
 --输入框
-function PromoteGoodsExtensionCtrl:onInputField()
+function PromoteGoodsExtensionCtrl:onInputField(go)
+    if tonumber(PromoteGoodsExtensionPanel.otherTime.text) > 10 then
+        PromoteGoodsExtensionPanel.otherTime.text = 10
+    end
     PromoteGoodsExtensionPanel.slider.value = PromoteGoodsExtensionPanel.otherTime.text
+    PromoteGoodsExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteGoodsExtensionPanel.otherTime.text) * go.m_data.DataInfo.curPromPricePerHour)
 end
 
 --返回
@@ -126,8 +132,22 @@ function PromoteGoodsExtensionCtrl:OnQueue(go)
 end
 
 --确定(别人)
-function PromoteGoodsExtensionCtrl:OnOtherQueue()
-
+function PromoteGoodsExtensionCtrl:OnOtherQueue(go)
+    if not go.goodId then
+        Event.Brocast("SmallPop","请选择推广的商品",300)
+        return
+    end
+    if go.m_data.DataInfo.promRemainTime == 0 then
+        Event.Brocast("SmallPop","建筑上设置的推广时间也用完",300)
+        return
+    end
+    if PromoteGoodsExtensionPanel.otherTime.text == "" then
+        Event.Brocast("SmallPop","请输入推广时间",300)
+    elseif tonumber(PromoteGoodsExtensionPanel.otherTime.text) == 0 then
+        Event.Brocast("SmallPop","推广时间不能为0",300)
+    else
+        DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.otherTime.text),go.goodId)
+    end
 end
 
 --关闭界面

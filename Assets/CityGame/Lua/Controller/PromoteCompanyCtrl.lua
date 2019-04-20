@@ -7,7 +7,7 @@ PromoteCompanyCtrl = class('PromoteCompanyCtrl',UIPanel)
 UIPanel:ResgisterOpen(PromoteCompanyCtrl)
 
 local promoteBehaviour
-local this
+local myOwnerID
 function PromoteCompanyCtrl:bundleName()
     return "Assets/CityGame/Resources/View/PromoteCompanyPanel.prefab"
 end
@@ -20,8 +20,8 @@ end
 function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
-    --this = self
-    self:initData() 
+    self:initData()
+    myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
 end
 
 function PromoteCompanyCtrl:Active()
@@ -35,7 +35,7 @@ function PromoteCompanyCtrl:Refresh()
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId)
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId)
     RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
 
 end
@@ -67,14 +67,26 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     local insId = self.m_data.insId
     self.m_data = detailData
     self.m_data.insId = insId  --temp
-    if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-        self.groupMgr:AddParts(AdvertisementPart, 0.29)
-        self.groupMgr:AddParts(TurnoverPart, 0.23)
-        self.groupMgr:RefreshData(self.m_data)
-        self.groupMgr:TurnOffAllOptions()
+    if self.m_data.info.ownerId == myOwnerID then
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+            self.groupMgr:AddParts(AdvertisementPart, 0.29)
+            self.groupMgr:AddParts(TurnoverPart, 0.23)
+            self.groupMgr:RefreshData(self.m_data)
+            self.groupMgr:TurnOffAllOptions()
+        else
+            self.groupMgr:RefreshData(self.m_data)
+        end
     else
-        self.groupMgr:RefreshData(self.m_data)
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+            self.groupMgr:AddParts(TurnoverPart, 0)
+            self.groupMgr:AddParts(AdvertisementPart,1)
+            self.groupMgr:RefreshData(self.m_data)
+            self.groupMgr:TurnOffAllOptions()
+        else
+            self.groupMgr:RefreshData(self.m_data)
+        end
     end
     PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
 end

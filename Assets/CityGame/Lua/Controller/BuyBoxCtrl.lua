@@ -3,3 +3,72 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/20 11:35
 ---购买弹窗
+BuyBoxCtrl = class('BuyBoxCtrl',UIPanel)
+UIPanel:ResgisterOpen(BuyBoxCtrl)
+
+local Math_Floor = math.floor
+function BuyBoxCtrl:initialize()
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+end
+
+function BuyBoxCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/BuyBoxPanel.prefab"
+end
+
+function BuyBoxCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+end
+
+function BuyBoxCtrl:Awake(go)
+    self.gameObject = go
+    self:_getComponent(go)
+    self:_language()
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+
+
+end
+
+function BuyBoxCtrl:Refresh()
+    self:initializeUiInfoData()
+end
+
+function BuyBoxCtrl:Hide()
+    UIPanel.Hide(self)
+
+end
+-------------------------------------------------------------获取组件-------------------------------------------------------------------------------
+function BuyBoxCtrl:_getComponent(go)
+    --top
+    self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
+    self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
+    --content
+    self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
+    self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/name/nameText"):GetComponent("Text")
+    --如果是原料关闭商品属性展示,否则打开
+    self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
+    self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
+    self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
+    self.quality = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
+    self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
+    self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
+    self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
+    self.levelImg = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg"):GetComponent("Image")
+    self.levelText = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
+    self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
+
+    self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
+    self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
+    self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
+    self.numberSlider = go.transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
+    --bottom
+    self.buyBtn = go.transform:Find("contentRoot/bottom/buyBtn")
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------
+--初始化UI数据
+function BuyBoxCtrl:initializeUiInfoData()
+
+end
+--设置多语言
+function BuyBoxCtrl:_language()
+
+end

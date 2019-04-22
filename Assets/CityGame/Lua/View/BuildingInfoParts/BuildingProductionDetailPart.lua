@@ -4,7 +4,10 @@
 --- DateTime: 2019/4/12 15:07
 ---建筑主界面生产线详情界面
 BuildingProductionDetailPart = class('BuildingProductionDetailPart',BuildingBaseDetailPart)
+
 local Math_Ceil = math.ceil
+local nowTime = 0
+local LastTime = 0
 function BuildingProductionDetailPart:PrefabName()
     return "BuildingProductionDetailPart"
 end
@@ -13,8 +16,20 @@ function BuildingProductionDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --待生产
     self.waitingQueueIns = {}
+    UpdateBeat:Add(self.Update,self)
+    --self.intTime = 1
+    --self.m_Timer = Timer.New(slot(self.Update, self), 1, -1, true)
 end
-
+--function BuildingProductionDetailPart:Show()
+--    BasePartDetail.Show(self)
+--    --self.m_Timer:Start()
+--end
+--function BuildingProductionDetailPart:Hide()
+--    BasePartDetail.Hide(self)
+--    if self.m_Timer ~= nil then
+--        self.m_Timer:Stop()
+--    end
+--end
 function BuildingProductionDetailPart:RefreshData(data)
     if data == nil then
         return
@@ -24,7 +39,7 @@ function BuildingProductionDetailPart:RefreshData(data)
 end
 
 function BuildingProductionDetailPart:_ResetTransform()
-
+    UpdateBeat:Remove(self.Update,self)
 end
 
 function BuildingProductionDetailPart:_getComponent(transform)
@@ -102,9 +117,21 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.addBtn.transform.localScale = Vector3.zero
         self.content.transform.localScale = Vector3.one
         self.nameText.text = GetLanguage(lineData[1].itemId)
-        self.timeText.text = self:GetTime(lineData[1])
+        if self.time == nil then
+            self.timeText.text = self:GetTime(lineData[1])
+        end
         self.numberText.text = lineData[1].nowCount.."/"..lineData[1].targetCount
-
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.nameBg.transform.localPosition = Vector3(-140,-100,0)
+            self.goods.transform.localScale = Vector3.zero
+            LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
+            --生产一个需要的时间(毫秒)
+            self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
+            --生产一个需要的时间(毫秒)
+            self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+        end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
         --当前服务器时间
@@ -112,20 +139,9 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         --当前生产中线已经生产的时间
         self.pastTime = self.serverNowTime - self.startTime
 
-        if self.m_data.buildingType == BuildingType.MaterialFactory then
-            self.nameBg.transform.localPosition = Vector3(-140,-100,0)
-            self.goods.transform.localScale = Vector3.zero
-            LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
-            self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
-        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
-            self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
-        end
         self.timeSlider.maxValue = Math_Ceil(self.oneTotalTime / 1000)
         self.timeSlider.value = Math_Ceil((self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000)
-        --实验直接使用已经生产的时间赋值
-        --self.timeSlider.value = Math_Ceil(self.pastTime / 1000)
-        self.oneTimeText.text = self:GetStringTime(self.timeSlider.maxValue - self.timeSlider.value)
+        self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value) * 1000)
 
         self.lineNumberText.text = #lineData.."/"..#lineData
         --判断当前有没有代生产队列
@@ -189,4 +205,41 @@ function BuildingProductionDetailPart:GetStringTime(ms)
     local timeTable = getTimeBySec(ms / 1000)
     local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--刷新时间
+function BuildingProductionDetailPart:Update()
+    ---刷新总时间
+    --检查正在生产中的总时间
+    if self.time == nil or self.time <= 0 then
+        self.timeText.text = "00:00:00"
+        self.oneTimeText.text = "00:00"
+        self.timeSlider.value = 0
+        UpdateBeat:Remove(self.Update,self)
+        return
+    end
+    self.time = self.time - UnityEngine.Time.unscaledDeltaTime
+    local timeTable = getTimeBySec(self.time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    self.timeText.text = timeStr
+
+    ---刷新单个时间
+    --当前生产中线开始的时间
+    self.startTime = self.m_data.line[1].ts
+    --当前服务器时间
+    self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+    --当前生产中线已经生产的时间
+    self.pastTime = self.serverNowTime - self.startTime
+    --当前一个已经生产的时间
+    local thisTime = (self.pastTime % self.oneTotalTime)
+    nowTime = nowTime + UnityEngine.Time.unscaledDeltaTime * 1000
+    if LastTime ~= thisTime then
+        LastTime = thisTime
+        nowTime = thisTime
+    end
+    if (nowTime / self.oneTotalTime) >= 1 then
+        nowTime = 0
+    end
+    self.timeSlider.value = (nowTime / self.oneTotalTime) * self.timeSlider.maxValue
+    self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value + 1) * 1000)
 end

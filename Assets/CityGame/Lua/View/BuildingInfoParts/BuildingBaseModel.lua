@@ -47,7 +47,7 @@ function BuildingBaseModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
     local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = tonumber(steffNumber)}
     DataManager.ModelSendNetMes("gscode.OpCode","ftyAddLine","gs.AddLine",lMsg)
 end
-----修改生产线
+--修改生产线
 --function BuildingBaseModel:m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
 --    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = tonumber(steffNumber),lineId = lineId}
 --    DataManager.ModelSendNetMes("gscode.OpCode","ftyChangeLine","gs.ChangeLine",lMsg)

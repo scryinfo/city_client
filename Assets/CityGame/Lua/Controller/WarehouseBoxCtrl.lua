@@ -117,9 +117,10 @@ end
 --添加运输列表
 function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     local goods = {}
+    goods.state = GoodsItemStateType.transport
     goods.itemId = ins.m_data.dataInfo.key.id
-    goods.popularity = ins.m_data.dataInfo.key.popularity
-    goods.quality = ins.m_data.dataInfo.key.quality
+    goods.popularity = ins.m_data.dataInfo.key.producerId
+    goods.quality = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
         return

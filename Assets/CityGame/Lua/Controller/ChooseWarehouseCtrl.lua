@@ -239,6 +239,9 @@ end
 
 --获取运输单价
 function ChooseWarehouseCtrl:GetPrice()
+    if buildingInfo == nil then
+        return 0
+    end
     return buildingInfo.price
 end
 

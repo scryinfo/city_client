@@ -226,6 +226,7 @@ GoodsItemStateType =
 {
 	addShelf = 1,   --上架
 	transport = 2,  --运输
+	buy = 3,		--购买
 }
 
 --相机移动状态类型

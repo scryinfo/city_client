@@ -110,9 +110,23 @@ function BuyBoxCtrl:_clickCloseBtn()
 end
 --添加购物车
 function BuyBoxCtrl:_clickBuyBtn(ins)
+    local goods = {}
+    goods.state = GoodsItemStateType.buy
+    goods.itemId = ins.m_data.dataInfo.k.id
+    goods.popularity = ins.m_data.dataInfo.k.popularity
+    goods.quality = ins.m_data.dataInfo.k.qty
+    goods.level = ins.m_data.dataInfo.k.level
+    goods.price = ins.m_data.dataInfo.price
+    if ins.numberSlider.value == 0 then
+        return
+    else
+        goods.number = ins.numberSlider.value
+    end
+    Event.Brocast("addBuyList",goods)
+    UIPanel.ClosePage()
     --if ins.m_data.buildingType == BuildingType.MaterialFactory then
     --    --原料厂
-    --    Event.Brocast("m_ReqMaterialAddShoppingCart",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,ins.m_data.dataInfo.price,ins.m_data.dataInfo.k.producerId,ins.m_data.dataInfo.k.qty)
+    --    --Event.Brocast("m_ReqMaterialAddShoppingCart",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,ins.m_data.dataInfo.price,ins.m_data.dataInfo.k.producerId,ins.m_data.dataInfo.k.qty)
     --elseif ins.m_data.buildingType == BuildingType.ProcessingFactory then
     --    --加工厂
     --end

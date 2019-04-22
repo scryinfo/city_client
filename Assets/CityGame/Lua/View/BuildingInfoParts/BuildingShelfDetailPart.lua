@@ -58,7 +58,10 @@ function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
         self:clickaddShelfBtn()
     end,self)
     mainPanelLuaBehaviour:AddClick(self.contentAddBtn.gameObject,function()
-        self:clickaddShelfBtn()
+        self:clickBuyBtn()
+    end,self)
+    mainPanelLuaBehaviour:AddClick(self.buyBtn.gameObject,function()
+        self:clickBuyBtn()
     end,self)
 end
 
@@ -71,6 +74,16 @@ end
 
 function BuildingShelfDetailPart:_RemoveClick()
 
+end
+
+function BuildingShelfDetailPart:_InitEvent()
+    Event.AddListener("addBuyList",self.addBuyList,self)
+    Event.AddListener("deleBuyList",self.deleBuyList,self)
+end
+
+function BuildingShelfDetailPart:_RemoveEvent()
+    Event.RemoveListener("addBuyList",self.addBuyList,self)
+    Event.RemoveListener("deleBuyList",self.deleBuyList,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -101,11 +114,11 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         self.noTip.transform.localScale = Vector3.zero
         self.ScrollView.transform.localScale = Vector3.one
 
-        --if next(self.transportTab) == nil then
-        --    self.number.transform.localScale = Vector3.zero
-        --else
-        --    self.number.transform.localScale = Vector3.one
-        --end
+        if next(self.buyDatas) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+        end
         if #shelfData == #self.shelfDatas then
             return
         else
@@ -126,10 +139,38 @@ function BuildingShelfDetailPart:clickaddShelfBtn()
     data.buildingType = self.m_data.buildingType
     ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
 end
-
-
-
-
+--打开购买弹窗
+function BuildingShelfDetailPart:clickBuyBtn()
+    local data = {}
+    data.buildingId = self.m_data.insId
+    data.buildingInfo = self.m_data.info
+    data.buildingType = self.m_data.buildingType
+    data.itemPrefabTab = self.buyDatas
+    ct.OpenCtrl("NewTransportBoxCtrl",data)
+end
+-----------------------------------------------------------------------------时间函数--------------------------------------------------------------------------------------
+--添加到购买列表
+function BuildingShelfDetailPart:addBuyList(data)
+    --添加到购买列表
+    table.insert(self.buyDatas,data)
+    self.number.transform.localScale = Vector3.one
+    self.numberText.text = #self.buyDatas
+end
+--删除购买列表
+function BuildingShelfDetailPart:deleBuyList(id)
+    --删除指定的数据
+    if not id then
+        return
+    else
+        table.remove(self.buyDatas,id)
+        if next(self.buyDatas) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+            self.numberText.text = #self.buyDatas
+        end
+    end
+end
 
 
 

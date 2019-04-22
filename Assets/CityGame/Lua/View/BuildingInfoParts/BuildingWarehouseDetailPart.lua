@@ -125,7 +125,7 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.buildingId = self.m_data.insId
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
-    data.transportTab = self.transportTab
+    data.itemPrefabTab = self.transportTab
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------

@@ -446,7 +446,8 @@ function SaveLanguageSettings(languageType)
 end
 
 function SaveBuildingBubbleSettings(bubbleType)
-		UnityEngine.PlayerPrefs.SetInt("BuildingBubble",bubbleType)
+	BuilldingBubbleInsManger.ChangeBuilldingBubbleType(bubbleType)
+	UnityEngine.PlayerPrefs.SetInt("BuildingBubble",bubbleType)
 end
 
 function GetLanguage(key,...)

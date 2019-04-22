@@ -69,27 +69,19 @@ end
 --气泡全小
 function SystemSettingCtrl:c_OnClick_BubbleBig(ins)
     panel.bubblePanel.localScale=Vector3.zero
-    for i, bubbleIns in ipairs(BuilldingBubbleIns) do
-        bubbleIns:changeSmall()
-    end
+    Event.Brocast("c_BuildingBubbleALlSmall")
     SaveBuildingBubbleSettings(BuildingBubbleType.small)
-
-
 end
 --气泡全大
 function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
     panel.bubblePanel.localScale=Vector3.zero
-    for i, bubbleIns in ipairs(BuilldingBubbleIns) do
-        bubbleIns:changeLarge()
-    end
+    Event.Brocast("c_BuildingBubbleALlLarge")
     SaveBuildingBubbleSettings(BuildingBubbleType.big)
 end
 --气泡全关
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
     panel.bubblePanel.localScale=Vector3.zero
-    for i, bubbleIns in ipairs(BuilldingBubbleIns) do
-        bubbleIns:CloesBubble()
-    end
+    Event.Brocast("c_BuildingBubbleHide")
     SaveBuildingBubbleSettings(BuildingBubbleType.close)
 end
 

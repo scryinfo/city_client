@@ -6,14 +6,13 @@
 
 BuilldingBubbleInsManger={}
 
+
 function BuilldingBubbleInsManger.Init()
-    Event.AddListener("BuilldingBubbleInsManger_Refresh",BuilldingBubbleInsManger.BuilldingBubbleInsManger_Refresh,BuilldingBubbleInsManger)
+    if BuilldingBubbleInsManger.type == nil then
+        BuilldingBubbleInsManger.type = UnityEngine.PlayerPrefs.GetInt("BuildingBubble")
+    end
 end
 
-function BuilldingBubbleInsManger:BuilldingBubbleInsManger_Refresh()
-
-    for i, ins in ipairs(BuilldingBubbleIns) do
-        ins:Update()
-    end
-
+function BuilldingBubbleInsManger.ChangeBuilldingBubbleType(type)
+    BuilldingBubbleInsManger.type = type
 end

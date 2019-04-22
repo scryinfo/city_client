@@ -5,8 +5,6 @@
 ---广告业务Ctrl
 ---
 AdvertisementPartDetail = class('AdvertisementPartDetail', BasePartDetail)
-local insId = nil
-local isShow = false
 local promoteAbility = {}
 --
 function AdvertisementPartDetail:PrefabName()
@@ -69,27 +67,28 @@ end
 function AdvertisementPartDetail:_getComponent(transform)
     --top
     self.xBtn = transform:Find("bg/top/xBtn").gameObject --返回
-    self.goods = transform:Find("bg/top/goods/goodsBg").gameObject      --商品
-    self.goodsText = transform:Find("bg/top/goods/goodsText")
-    self.building = transform:Find("bg/top/building/buildingBg").gameObject      --建筑
-    self.open = transform:Find("bg/top/priceTime").gameObject      --对外开放
-    self.buildingText = transform:Find("bg/top/building/buildingText")
-    self.price = transform:Find("bg/top/priceTime/priceImage/price"):GetComponent("Text")    --价格
-    self.priceText = transform:Find("bg/top/priceTime/priceImage/price/priceText"):GetComponent("Text")    --价格
-    self.time = transform:Find("bg/top/priceTime/timeImage/time"):GetComponent("Text")    --时间
-    self.timeText = transform:Find("bg/top/priceTime/timeImage/time/timeText"):GetComponent("Text")    --时间
 
     --down
-    self.quene = transform:Find("bg/down/quene").gameObject;      --队列
-    self.queneText = transform:Find("bg/down/quene/queneImage/queneText"):GetComponent("Text");
-    self.queneValue = transform:Find("bg/down/quene/queneImage/queneText/queneValue"):GetComponent("Text");
+    self.goods = transform:Find("bg/down/GoodsBg/goods/goodsBg").gameObject      --商品
+    self.goodsText = transform:Find("bg/down/GoodsBg/goods/goodsText"):GetComponent("Text")
+    self.goodsClickText = transform:Find("bg/down/GoodsBg/goods/goodsClickText"):GetComponent("Text")
+    self.building = transform:Find("bg/down/GoodsBg/building/buildingBg").gameObject      --建筑
+    self.buildingClickText = transform:Find("bg/down/GoodsBg/building/buildingClickText"):GetComponent("Text")
+    self.open = transform:Find("bg/down/openOther/openBg/open").gameObject      --对外开放
+    self.price = transform:Find("bg/down/openOther/openBg/priceImage/price"):GetComponent("Text")    --价格
+    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/price/priceImage/priceText"):GetComponent("Text")    --价格
+    self.time = transform:Find("bg/down/openOther/openBg/timeImage/time"):GetComponent("Text")    --时间
+    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/time/timeImage/timeText"):GetComponent("Text")    --时间
+    self.quene = transform:Find("bg/down/openOther/startTimeBg/quene").gameObject;      --队列
+    self.queneText = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText"):GetComponent("Text");
+    self.queneValue = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText/queneValue"):GetComponent("Text");
     self.content = transform:Find("bg/down/Scroll View/Viewport/Content"):GetComponent("RectTransform");
     self.buildingBg = transform:Find("bg/down/buildingBg");
     self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
     self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
     self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/spped"):GetComponent("Text");   --零售店
     self.houseSpeed = transform:Find("bg/down/buildingBg/house/spped"):GetComponent("Text");   --住宅
-    self.startTime = transform:Find("bg/down/startTimeBg/startTime/time"):GetComponent("Text");   --新推广开始时间
+    self.startTime = transform:Find("bg/down/openOther/startTimeBg/startTime/timeImage/time"):GetComponent("Text");   --新推广开始时间
 
 end
 
@@ -135,7 +134,9 @@ end
 --点击商品
 function AdvertisementPartDetail:OnGoods(go)
     go.goods.transform.localScale = Vector3.zero
+    go.goodsClickText.transform.localScale = Vector3.zero
     go.building.transform.localScale = Vector3.one
+    go.buildingClickText.transform.localScale = Vector3.one
     go.buildingBg.localScale = Vector3.zero
     go.content.localScale = Vector3.one
     local typeIds = {}
@@ -153,6 +154,8 @@ function AdvertisementPartDetail:PromoteCapacity()
 end
 --初始化建筑推广能力
 function AdvertisementPartDetail:PromoteBuildingCapacity(CurAbilitys)
+    self.m_data.supermarketSpeed = CurAbilitys[1]
+    self.m_data.houseSpeed = CurAbilitys[2]
     self.supermarketSpeed.text = "+" .. CurAbilitys[1] .."/h"
     self.houseSpeed.text = "+" .. CurAbilitys[2] .."/h"
 end
@@ -160,7 +163,9 @@ end
 --点击建筑
 function AdvertisementPartDetail:OnBuilding(go)
     go.goods.transform.localScale = Vector3.one
+    go.goodsClickText.transform.localScale = Vector3.one
     go.building.transform.localScale = Vector3.zero
+    go.buildingClickText.transform.localScale = Vector3.zero
     go.buildingBg.localScale = Vector3.one
     go.content.localScale = Vector3.zero
 

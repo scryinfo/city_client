@@ -94,8 +94,8 @@ end
 
 --输入框
 function PromoteGoodsExtensionCtrl:onInputField(go)
-    if tonumber(PromoteGoodsExtensionPanel.otherTime.text) > 10 then
-        PromoteGoodsExtensionPanel.otherTime.text = 10
+    if tonumber(PromoteGoodsExtensionPanel.otherTime.text) > go.m_data.DataInfo.promRemainTime/3600000 then
+        PromoteGoodsExtensionPanel.otherTime.text = go.m_data.DataInfo.promRemainTime/3600000
     end
     PromoteGoodsExtensionPanel.slider.value = PromoteGoodsExtensionPanel.otherTime.text
     PromoteGoodsExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteGoodsExtensionPanel.otherTime.text) * go.m_data.DataInfo.curPromPricePerHour)

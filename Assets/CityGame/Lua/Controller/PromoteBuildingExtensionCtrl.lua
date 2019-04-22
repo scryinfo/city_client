@@ -22,6 +22,7 @@ function PromoteBuildingExtensionCtrl:Awake()
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.queue,self.OnQueue,self);
+    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.otherQueue,self.OnOtherQueue,self);
     self:initData()
 
     PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
@@ -39,6 +40,7 @@ end
 
 function PromoteBuildingExtensionCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_ClosePromoteBuildingExtension",self.c_ClosePromoteBuildingExtension,self)
 end
 
 function PromoteBuildingExtensionCtrl:Refresh()
@@ -57,15 +59,17 @@ function PromoteBuildingExtensionCtrl:Refresh()
     if self.m_data.type == 1 then
         PromoteBuildingExtensionPanel.house.localScale = Vector3.zero
         PromoteBuildingExtensionPanel.supermarket.localScale = Vector3.one
+        PromoteBuildingExtensionPanel.popularity.text = "+".. self.m_data.supermarketSpeed .. "/h"
     elseif self.m_data.type == 2 then
         PromoteBuildingExtensionPanel.house.localScale = Vector3.one
         PromoteBuildingExtensionPanel.supermarket.localScale = Vector3.zero
+        PromoteBuildingExtensionPanel.popularity.text = "+".. self.m_data.houseSpeed .. "/h"
     end
 end
 
 function PromoteBuildingExtensionCtrl:Hide()
     UIPanel.Hide(self)
-
+    Event.RemoveListener("c_ClosePromoteBuildingExtension",self.c_ClosePromoteBuildingExtension,self)
 end
 
 function PromoteBuildingExtensionCtrl:OnCreate(obj)
@@ -93,7 +97,18 @@ function PromoteBuildingExtensionCtrl:OnQueue(go)
     elseif tonumber(PromoteBuildingExtensionPanel.time.text) == 0 then
         Event.Brocast("SmallPop","推广时间不能为0",300)
     else
-        DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteBuildingExtensionPanel.time.text),go.m_data.buildingId)
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.time.text),go.m_data.buildingId)
+    end
+end
+
+--点击确定(别人)
+function PromoteBuildingExtensionCtrl:OnOtherQueue(go)
+    if PromoteBuildingExtensionPanel.otherTime.text == "" then
+        Event.Brocast("SmallPop","请输入推广时间",300)
+    elseif tonumber(PromoteBuildingExtensionPanel.otherTime.text) == 0 then
+        Event.Brocast("SmallPop","推广时间不能为0",300)
+    else
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.otherTime.text),go.m_data.buildingId)
     end
 end
 
@@ -105,10 +120,14 @@ end
 
 --输入框
 function PromoteBuildingExtensionCtrl:onInputField(go)
-    if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > 10 then
-        PromoteBuildingExtensionPanel.otherTime.text = 10
+    if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > go.m_data.promRemainTime/3600000 then
+        PromoteBuildingExtensionPanel.otherTime.text = go.m_data.promRemainTime/3600000
     end
     PromoteBuildingExtensionPanel.slider.value = PromoteBuildingExtensionPanel.otherTime.text
     PromoteBuildingExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteBuildingExtensionPanel.otherTime.text) * go.m_data.curPromPricePerHour)
 end
 
+--关闭界面
+function PromoteBuildingExtensionCtrl:c_ClosePromoteBuildingExtension()
+    UIPanel.ClosePage()
+end

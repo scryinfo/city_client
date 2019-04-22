@@ -32,7 +32,6 @@ function PromoteBuildingExtensionPanel.InitPanel()
     this.slider = transform:Find("contentRoot/otherTime/Slider"):GetComponent("Slider")
     this.moneyBg = transform:Find("contentRoot/moneyBg")
     this.money = transform:Find("contentRoot/moneyBg/moneyImage/moneyText"):GetComponent("Text")   --money
-    this.slider = transform:Find("contentRoot/moneyBg/moneyImage/moneyText"):GetComponent("Text")
-    this.otherQueue = transform:Find("contentRoot/queue").gameObject    --确定(别人)
+    this.otherQueue = transform:Find("contentRoot/moneyBg/queue").gameObject    --确定(别人)
 
 end

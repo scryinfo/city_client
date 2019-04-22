@@ -4,13 +4,13 @@
 --- DateTime: 2019/4/10 14:40
 ---
 PromoteAbilityItem = class('PromoteAbilityItem')
-function PromoteAbilityItem:initialize(prefab)
-    self.prefab = prefab;
-    self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
-    self.speed = self.prefab.transform:Find("speed").gameObject:GetComponent("Text");
+    function PromoteAbilityItem:initialize(prefab)
+        self.prefab = prefab;
+        self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
+        self.speed = self.prefab.transform:Find("speed").gameObject:GetComponent("Text");
 
 
-    self.bg.onClick:AddListener(function()
+        self.bg.onClick:AddListener(function()
         self:OnBG(self);
     end)
 end

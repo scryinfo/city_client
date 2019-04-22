@@ -40,7 +40,7 @@ function PromoteCompanyModel:m_AddPromote(buildingId,time,goodId)
    local playerId = DataManager.GetMyPersonalHomepageInfo()
    local currentTime = TimeSynchronized.GetTheCurrentServerTime()
     local lMsg = {}
-    if goodId == 1300 or 1400 then
+    if goodId == 1300 or goodId ==1400 then
         lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,buildingType = goodId}
     else
         lMsg = {sellerBuildingId = buildingId,buyerPlayerId = playerId.id,companyName = playerId.companyName,promDuration = time*3600000,promStartTs = currentTime,productionType = goodId}
@@ -79,9 +79,12 @@ end
 
 --添加推广回调
 function PromoteCompanyModel:n_OnAddPromote(info)
-    local a = info
     PromoteCompanyModel:m_detailPublicFacility(info.sellerBuildingId)
-    Event.Brocast("c_ClosePromoteGoodsExtension")
+    if info.buildingType == 1300 or info.buildingType == 1400 then
+        Event.Brocast("c_ClosePromoteBuildingExtension")
+    else
+        Event.Brocast("c_ClosePromoteGoodsExtension")
+    end
 end
 
 --推广设置回调

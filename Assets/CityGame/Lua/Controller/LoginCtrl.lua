@@ -31,7 +31,7 @@ function LoginCtrl:Awake(go)
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
-	self.root=self.gameObject.transform.root;
+	self.root=self.gameObject.transform.root:Find("FixedRoot");
 end
 
 function LoginCtrl:Active()

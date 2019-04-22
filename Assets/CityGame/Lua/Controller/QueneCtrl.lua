@@ -63,8 +63,10 @@ end
 --对数据处理
 local function handleData( data )
    local reminderTime=0
+
    local mselfData,others={},{}
    table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
+
     --处理时间
     for i, lineData in ipairs(data) do
         lineData.queneTime = reminderTime
@@ -74,7 +76,7 @@ local function handleData( data )
 
     --自已的置顶
     for i, lineData in ipairs(data) do
-        if lineData.proposerId == DataManager.GetMyOwnerID()  then
+        if lineData.proposerId == DataManager.GetMyOwnerID()   then
             table.insert(mselfData,lineData)
         else
             table.insert(others,lineData)
@@ -129,7 +131,7 @@ end
 function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
-    InventGoodItem:new(data, transform,luabehaviour)
+    this.m_data.insClass:new(data, transform,luabehaviour)
 end
 
 function QueneCtrl.CollectClearData(transform)

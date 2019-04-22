@@ -91,6 +91,8 @@ end
 --研究所设置
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
     prints("他人可用")
+    Event.Brocast("SmallPop",GetLanguage(40010015),300)
+
 end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
@@ -98,7 +100,7 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
         self.data.inProcess = {}
     end
     table.insert(self.data.inProcess,msg.line)
-    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodItem",data = self.data.inProcess}  )
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodItem",data = self.data.inProcess ,insClass=InventGoodItem}  )
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)

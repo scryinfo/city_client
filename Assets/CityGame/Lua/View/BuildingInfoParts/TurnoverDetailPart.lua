@@ -66,6 +66,7 @@ function TurnoverDetailPart:_initFunc()
     insId = self.m_data.insId
 end
 
+
 function TurnoverDetailPart:OnXBtn(go)
     go.groupClass.TurnOffAllOptions(go.groupClass)
 end

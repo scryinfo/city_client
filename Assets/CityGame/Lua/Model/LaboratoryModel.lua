@@ -9,316 +9,160 @@ local pbl = pbl
 function LaboratoryModel:initialize(insId)
     self.insId = insId
     self:_addListener()
+    --UpdateBeat:Add(self.Update, self)
+
+end
+
+function LaboratoryModel:Update()
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
+        self:m_ReqLabDeleteLine(self.data.inProcess[1].id)
+    end
 end
 
 --启动事件--
 function LaboratoryModel:_addListener()
     --网络回调注册
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineAddInform","gs.LabLineInform",self.n_OnReceiveLabLineAdd)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLaunchLine","gs.LabLaunchLine",self.n_OnReceiveLaunchLine)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineDel","gs.LabDelLine",self.n_OnReceiveDelLine)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChange","gs.LabLineInform",self.n_OnReceiveLineChange)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","newItem","gs.IdNum",self.n_OnReceiveNewItem)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineSetWorkerNum","gs.LabSetLineWorkerNum",self.n_OnReceiveWorkerNumChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine,self);
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform,self)
 
-    --本地的回调注册
-    Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
-    Event.AddListener("m_ReqLabAddLine", self.m_ReqLabAddLine, self)
-    Event.AddListener("m_ReqLabLaunchLine", self.m_ReqLabLaunchLine, self)
-    Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
-    Event.AddListener("m_ReqSetWorkerNum", self.m_ReqSetWorkerNum, self)
-    Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll, self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
+    ------本地的事件注册
+    --Event.AddListener("m_ReqLaboratoryDetailInfo", self.m_ReqLaboratoryDetailInfo, self)
+    --Event.AddListener("m_labSetting", self.m_labSetting, self)
+    --Event.AddListener("m_ReqLabAddLine", self.m_ReqLabAddLine, self)
+    --Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
+    --Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll, self)
+
 end
 
---- 客户端请求 ---
+---===================================================================================客户端请求===============================================================================
 --获取建筑详情
-function LaboratoryModel:m_ReqLaboratoryDetailInfo(isClose)
-    self.isClose = isClose
+function LaboratoryModel:m_ReqLaboratoryDetailInfo()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})
 end
---添加线
-function LaboratoryModel:m_ReqLabAddLine(itemId, type, workerNum, rollTarget)
-    --记录一个临时的线
-    self.tempLine = { itemId = itemId, type = type, workerNum = workerNum, phase = rollTarget}
-
-    --研究的时候，必须已经有等级才行
-    local level = DataManager.GetMyGoodLv()
-    if type == 0 then
-        if level and level[itemId] then
-            local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
-            DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
-        end
-    else
-        if level and level[itemId] == nil then
-            local lMsg = { buildingId = self.insId, itemId = itemId, type = type, workerNum = workerNum }
-            DataManager.ModelSendNetMes("gscode.OpCode", "labLineAdd","gs.LabAddLine",lMsg)
-        end
-    end
+--关闭研究所详情推送
+function LaboratoryModel:mReqCloseRetailStores()
+    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id =  self.insId})
 end
---开工
-function LaboratoryModel:m_ReqLabLaunchLine(lineId, rollTarget)
-    local lMsg = { buildingId = self.insId, lineId = lineId, phase = rollTarget }
-    DataManager.ModelSendNetMes("gscode.OpCode", "labLaunchLine","gs.LabLaunchLine",lMsg)
+--设置研究是否他人可用
+function LaboratoryModel:m_labSettings(exclusive)
+    DataManager.ModelSendNetMes("gscode.OpCode", "labExclusive","gs.LabExclusive",
+            { buildingId = self.insId ,exclusive = exclusive})
+end
+--设置研究价格
+function LaboratoryModel:m_labSetting( pricePreTime , sellTimes )
+    DataManager.ModelSendNetMes("gscode.OpCode", "labSetting","gs.LabSetting",
+            { buildingId = self.insId ,pricePreTime = pricePreTime, sellTimes = sellTimes})
+end
+--添加线
+function LaboratoryModel:m_ReqLabAddLine( itemId, count )
+    DataManager.ModelSendNetMes("gscode.OpCode", "labAddLine","gs.LabAddLine",
+            { buildingId = self.insId,goodCategory = itemId,times = count })
 end
 --删除线
 function LaboratoryModel:m_ReqLabDeleteLine(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
-    DataManager.ModelSendNetMes("gscode.OpCode", "labLineDel","gs.LabDelLine",lMsg)
+    DataManager.ModelSendNetMes("gscode.OpCode", "labCancelLine","gs.LabCancelLine",lMsg)
 end
---改变员工数
-function LaboratoryModel:m_ReqSetWorkerNum(lineId, staffCount)
-    local lMsg = { buildingId = self.insId, lineId = lineId, n = staffCount }
-    DataManager.ModelSendNetMes("gscode.OpCode", "labLineSetWorkerNum","gs.LabSetLineWorkerNum",lMsg)
-end
---roll
+--开箱
 function LaboratoryModel:m_ReqLabRoll(lineId)
     local lMsg = { buildingId = self.insId, lineId = lineId }
     DataManager.ModelSendNetMes("gscode.OpCode", "labRoll","gs.LabRoll",lMsg)
 end
---改变建筑名字
-function LaboratoryModel:m_ReqChangeBuildingName(id, name)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
-end
-
---- 回调 ---
+---===================================================================================回调===============================================================================
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
-    --增加判定，如果是close，则不刷新数据
-    if self.isClose then
-        return
-    end
-
-    self.info = data.info
-    self.hashLineData = {}  --以lineId为key存储所有的线的信息
-    self.orderLineData = {}  --由创建时间排序的所有line信息
-    self.remainWorker = 0
-    if data.line then
-        for i, lineInfo in pairs(data.line) do
-            lineInfo.totalTime = lineInfo.leftSec / lineInfo.workerNum
-            lineInfo.finishTime = lineInfo.totalTime + os.time()  --计算结束时间
-            lineInfo.startTime = os.time()
-
-            self.hashLineData[lineInfo.id] = lineInfo
-            self.orderLineData[#self.orderLineData + 1] = lineInfo
+    self.data=data
+    if data.completed  then
+        if not data.inProcess then
+            data.inProcess={}
         end
-        table.sort(self.orderLineData, function (m, n) return m.createTs > n.createTs end)
-
-        for i, lineItem in pairs(data.line) do
-            self.remainWorker = self.remainWorker + lineItem.workerNum
+        for i, v in ipairs(data.completed) do
+             table.insert( data.inProcess ,v )
         end
     end
-    self.maxWorkerNum = PlayerBuildingBaseData[data.info.mId].maxWorkerNum
-    self.remainWorker = self.maxWorkerNum - self.remainWorker
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
+end
+--研究所设置
+function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
+    prints("他人可用")
+    Event.Brocast("SmallPop",GetLanguage(40010015),300)
 
-    self.store = getItemStore(data.store)  --获取item个数的表
-    self.tempStore = data.store
-    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, data.info, self.tempStore)
 end
 --添加研究发明线
-function LaboratoryModel:n_OnReceiveLabLineAdd(lineData)
-    local data = lineData.line
-    --先删除临时线
-    self:m_DelTempLineData(data)
-    --减去消耗的材料
-    if not self.tempUsedStore then
-        self:m_UpdateLabStore(self.tempUsedStore)
-        self.tempUsedStore = nil
+function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
+    if not self.data.inProcess then
+        self.data.inProcess = {}
     end
-
-    table.insert(self.orderLineData, 1, data)
-    if not self.hashLineData[data.id] then
-        self.hashLineData[data.id] = data
-    end
-    self.remainWorker = self.remainWorker - data.workerNum
-
-    self:m_ReqLabLaunchLine(data.id, self.tempLine.rollTarget or 1)
-    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)
-end
---开工
-function LaboratoryModel:n_OnReceiveLaunchLine(data)
-    local line = self.hashLineData[data.lineId]
-    line.run = true
-    line.rollTarget = line.phase + data.phase
-    line.totalTime = FormularConfig[line.type][line.itemId].phaseSec / line.workerNum
-    line.finishTime = line.totalTime + os.time()  --计算结束时间
-    line.startTime = os.time()
-    self.tempLine = nil
-    self.tempType = nil
-
-    self:_getScientificLine()
-    if self.hashLineData[data.lineId].type == 0 then
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
-    else
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
-    end
+    table.insert(self.data.inProcess,msg.line)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodItem",data = self.data.inProcess ,insClass=InventGoodItem}  )
 end
 --删除line
-function LaboratoryModel:n_OnReceiveDelLine(data)
-    local type
-    if self.hashLineData[data.lineId] then
-        type = self.hashLineData[data.lineId].type
-        self.remainWorker = self.remainWorker + self.hashLineData[data.lineId].workerNum
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)  --刷新员工数
-
-        self.hashLineData[data.lineId] = nil
-    else
-        ct.log("cycle_w15_laboratory03", "不存在线但是请求删除")
-        return
-    end
-    for i, item in ipairs(self.orderLineData) do
-        if item.id == data.lineId then
-            table.remove(self.orderLineData, i)
+function LaboratoryModel:n_OnReceiveDelLine(lineData)
+    for i,line in ipairs(self.data.inProcess) do
+        if line.id == lineData.lineId and DataManager.GetMyOwnerID() == line.proposerId then
+            table.remove(self.data.inProcess,i)
         end
     end
-    self:_getScientificLine()
-    if type == 0 then
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabResearchData', self.researchLines)
-    else
-        DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", 'onReceiveLabInventionData', self.inventionLines)
-    end
-end
---更新某条线的具体数据 --只有roll之后才会发这个
-function LaboratoryModel:n_OnReceiveLineChange(lineData)
-    local data = lineData.line
-    local line = self.hashLineData[data.id]
-    if line then
-        line.lv = data.lv
-        line.leftSec = data.leftSec
 
-        line.totalTime = line.leftSec / line.workerNum
-        line.finishTime = line.totalTime + os.time()  --计算结束时间
-        line.startTime = os.time()
+    Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
+end
+--开箱
+function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
 
-        line.phase = data.phase
-        line.run = data.run
-        line.roll = data.roll
-        --Event.Brocast("c_LabLineInfoUpdate", line)  --某条线信息更新
-    else
-        ct.log("cycle_w15_laboratory03", "找不到对应lineId的线路")
-    end
-end
---员工数量改变
-function LaboratoryModel:n_OnReceiveWorkerNumChange(data)
-    local line = self.hashLineData[data.lineId]
-    self.remainWorker = self.remainWorker + line.workerNum
-    line.workerNum = data.n
-    self.remainWorker = self.remainWorker - line.workerNum
-
-    local oldTotalTime = line.totalTime
-    line.totalTime = (line.finishTime - os.time()) / data.n + line.totalTime  --重新计算
-    line.finishTime = os.time() + line.totalTime
-    Event.Brocast("c_LabLineWorkerNumChange", data.lineId, line.totalTime, line.finishTime, data.n)
-    DataManager.ControllerRpcNoRet(self.insId,"LabScientificLineCtrl", '_updateWorker', self.remainWorker, self.maxWorkerNum)
-end
-
----本地消息---
---主界面获取建筑详情
-function LaboratoryModel:m_ReqLaboratoryCurrentInfo()
-    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', self.orderLineData, self.info, self.tempStore)
-end
---根据id获取库存量 --传入单个itemId
-function LaboratoryModel:m_GetItemStoreCount(itemId)
-    return self.store[itemId] or 0
-end
---根据传入的原料合成表返回包含仓库含量的表
-function LaboratoryModel:m_GetFormularData(matTable)
-    for i, item in ipairs(matTable) do
-        item.haveCount = self.store[item.matId] or 0
-    end
-    return matTable
-end
---获取空闲员工数
-function LaboratoryModel:m_GetWorkerCount()
-    return self.remainWorker
-end
-
---获取科技线界面所需要的信息 --研究线，发明线以及员工数量
-function LaboratoryModel:m_GetScientificData()
-    if (not self.researchLines) or (not self.inventionLines) then
-        self:_getScientificLine()
+    prints("开箱回调")
+    if LabRollACK .itemId or  LabRollACK .evaPoint then
+        prints("成功")
     end
 
-    return self.researchLines, self.inventionLines, self.maxWorkerNum, self.remainWorker, self.tempType
-end
---获取最新的科技线信息
-function LaboratoryModel:_getScientificLine()
-    self.researchLines = {}
-    self.inventionLines = {}
-    for i, lineItem in ipairs(self.orderLineData) do
-        if lineItem.type == 0 then
-            self.researchLines[#self.researchLines + 1] = lineItem
-        else
-            self.inventionLines[#self.inventionLines + 1] = lineItem
+    local line
+    for i, v in ipairs(self.data.inProcess) do
+        if LabRollACK.lineId == v.id  then
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll-1
+            self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
+            line = self.data.inProcess[i]
+            break
         end
     end
-end
---客户端显示 --添加临时线
-function LaboratoryModel:m_AddTempLineData(data, tempUsedStore)
-    local tempLine = {}
-    tempLine.itemId = data.itemId
-    tempLine.rollTarget = data.rollTarget
-    tempLine.workerNum = data.workerNum
-    tempLine.type = data.type
-    tempLine.buildingId = self.insId
-    self.tempType = data.type
-    self.tempUsedStore = tempUsedStore
 
-    if data.type == 0 then
-        table.insert(self.researchLines, 1, tempLine)
-    else
-        table.insert(self.inventionLines, 1, tempLine)
-    end
+
+    self:n_OnReceivelabLineChangeInform({line=line},true)
 end
---客户端显示 --删除临时线
-function LaboratoryModel:m_DelTempLineData(data)
-    if data.type == 0 then
-        if self.researchLines[1].lineId then
-            ct.log("cycle_w15_laboratory03", "错误错误错误")
-        end
-        table.remove(self.researchLines, 1)
-    else
-        if self.inventionLines[1].lineId then
-            ct.log("cycle_w15_laboratory03", "错误错误错误")
-        end
-        table.remove(self.inventionLines, 1)
-    end
-    self.tempType = nil
-end
---获取正在发明的item
-function LaboratoryModel:m_GetInventingItem()
-    local tempIds = {}
-    for i, line in pairs(self.inventionLines) do
-        tempIds[line.itemId] = line.lv
-    end
-    return tempIds
-end
---获取正在研究的item
-function LaboratoryModel:m_GetResearchingItem()
-    local tempIds = {}
-    for i, line in pairs(self.researchLines) do
-        tempIds[line.itemId] = line.lv
-    end
-    return tempIds
-end
---更新仓库库存
-function LaboratoryModel:m_UpdateLabStore(usedData)
-    if self.store == nil or usedData.materials == nil then
-        return
-    end
-    for i, itemData in pairs(usedData.materials) do
-        if type(itemData) ~= "function" and self.store[itemData.matId] then
-            self.store[itemData.matId] = self.store[itemData.matId] - itemData.matCount
-        else
-            ct.log("", "没有库存但是研究/发明按钮点击了")
+--更新箱子
+function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
+    prints("更新箱子")
+    for i, v in ipairs(self.data.inProcess) do
+        if v.id == lineData.line.id  then
+            local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
+            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and  isFinished then
+                table.remove(self.data.inProcess,i)
+            else
+                self.data.inProcess[i]=lineData.line
+            end
+            Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
+            break
         end
     end
+    if not isNotContine then
+        Event.Brocast("c_creatRollItem",lineData.line)
+    end
 end
---客户端roll之后，更新线的信息
-function LaboratoryModel:m_UpdateLabLineInfoAfterRoll(lineInfo)
-    local line = self.hashLineData[lineInfo.id]
-    if line ~= nil then
-        line.roll = lineInfo.roll
-        line.run = lineInfo.run
+
+
+
+--员工工资改变
+function LaboratoryModel:n_OnReceiveHouseSalaryChange(data)
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_refreshSalary', data)
+end
+--开业成功，再次请求建筑详情
+function LaboratoryModel:n_OnReceiveOpenBusiness(data)
+    if data ~= nil and data.id == self.insId then
+        self:m_ReqLaboratoryDetailInfo(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end

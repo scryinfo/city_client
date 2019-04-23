@@ -30,8 +30,8 @@ function VolumePanel.InitPanel()
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")
     this.content = transform:Find("Volume/title/content"):GetComponent("Text")
     this.playercurrRoot = transform:Find("playercurr");
-    this.firstScroll = transform:Find("topRoot/firstScroll/Viewport/Content");
-    this.secondScroll = transform:Find("topRoot/secondScroll/Viewport/Content");
+    this.firstScroll =this. playercurrRoot:Find("topRoot/firstScroll/Viewport/Content");
+    this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/Content");
 
     --left
     this.citzenRect = transform:Find("leftBg/citzen"):GetComponent("RectTransform");

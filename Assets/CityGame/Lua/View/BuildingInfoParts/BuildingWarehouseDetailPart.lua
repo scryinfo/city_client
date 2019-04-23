@@ -82,7 +82,7 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.store.inHand)
+    self:initializeUiInfoData(self.m_data.store)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -109,11 +109,15 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
-            return
+        if #storeData.inHand == #self.warehouseDatas then
+            for key,value in pairs(storeData.inHand) do
+                for key1,value1 in pairs(self.warehouseDatas) do
+                    value1:updateNumber(value)
+                end
+            end
         else
             self.transportBool = GoodsItemStateType.transport
-            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+            self:CreateGoodsItems(storeData.inHand,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
         end
     end
 end
@@ -162,6 +166,13 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+
+        for key,value in pairs(self.warehouseDatas) do
+            if value.itemId == data.iKey.id then
+                value.dataInfo.n = value.dataInfo.n + 1
+                value.numberText.text = "×"..value.dataInfo.n
+            end
+        end
     end
 end
 

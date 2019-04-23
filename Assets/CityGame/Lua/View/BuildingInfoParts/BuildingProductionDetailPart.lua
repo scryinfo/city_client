@@ -289,9 +289,7 @@ function BuildingProductionDetailPart:SettopSuccess(data)
 end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
-    if data == nil then
-        return
-    else
+    if data ~= nil then
         self.numberText.text = data.nowCount.."/"..self.targetCount
     end
 end

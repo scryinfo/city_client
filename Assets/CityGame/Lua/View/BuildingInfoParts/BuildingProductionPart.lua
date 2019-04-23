@@ -103,12 +103,11 @@ end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --刷新当前产量
 function BuildingProductionPart:updateNowCount(data)
-    if data == nil then
-        return
-    else
+    if data ~= nil then
         self.numberSlider.maxValue = self.m_data.line[1].targetCount
         self.numberSlider.value = data.nowCount
         self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
+        self.m_data.line[1].nowCount = data.nowCount
     end
 end
 

@@ -60,6 +60,13 @@ function WarehouseItem:_clickDetailsBtn(ins)
         ct.OpenCtrl("WarehouseBoxCtrl",ins)
     end
 end
+--刷新数量
+function WarehouseItem:updateNumber(data)
+    self.dataInfo.n = data.n
+    self.numberText.text = "×"..self.dataInfo.n
+end
+
+
 --WarehouseItem = class('WarehouseItem')
 --
 --local Math_Floor = math.floor

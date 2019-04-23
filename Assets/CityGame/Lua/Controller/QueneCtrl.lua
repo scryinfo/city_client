@@ -75,7 +75,6 @@ local function handleData( data )
         end
     end
 
-
     --自已的置顶
     for i, lineData in ipairs(data) do
         if lineData.proposerId == DataManager.GetMyOwnerID()   then

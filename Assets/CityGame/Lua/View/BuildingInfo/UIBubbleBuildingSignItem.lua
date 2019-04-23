@@ -101,8 +101,8 @@ function UIBubbleBuildingSignItem:updateData(data)
     self.data=data
     if self.m_EmojiData == nil or  self.m_EmojiData ~= BubbleMessageCtrl.configPath[data.emoticon].path then
         self.m_EmojiData = BubbleMessageCtrl.configPath[data.emoticon].path
-        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.smallIma)
-        LoadSprite(BubbleMessageCtrl.configPath[data.emoticon].path,self.largeIma)
+        self.smallImageIsCreate = false
+        self.largeImageIsCreate = false
     end
     --给小的赋值
     if data.emoticon  then
@@ -120,8 +120,6 @@ function UIBubbleBuildingSignItem:updateData(data)
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)
     end
-    PlayerInfoManger.GetInfos({data.ownerId},self.LoadHeadImaAndName,self)
-
     if not data.bubble then
         self:CloesBubble()
     else
@@ -171,20 +169,35 @@ function UIBubbleBuildingSignItem:changeSmall()
     if not self.data.bubble then
         return
     end
-
     self:Start()
     self.largeRec.gameObject:SetActive(false)
     self.smallRec.gameObject:SetActive(true)
+    if self.smallImageIsCreate == nil or self.smallImageIsCreate == false then
+        LoadSprite(self.m_EmojiData,self.smallIma)
+        self.smallImageIsCreate = true
+    end
 end
 
 function UIBubbleBuildingSignItem:changeLarge()
     if not self.data.bubble then
         return
     end
+    if self.avatarIsCreate == nil then
+        PlayerInfoManger.GetInfos({self.data.ownerId},self.LoadHeadImaAndName,self)
+        self.avatarIsCreate = true
+    end
     self:Start()
     self.largeRec.gameObject:SetActive(true)
     self.smallRec.gameObject:SetActive(false)
     self.prefab.transform:SetAsLastSibling()
+    if self.largeImageIsCreate == nil or self.largeImageIsCreate == false then
+        if self.smallImageIsCreate ~= nil and self.smallImageIsCreate == true then --如果小头像已经加载了  直接拷贝一下
+            self.largeIma.sprite = self.smallIma.sprite
+        else
+            LoadSprite(self.m_EmojiData,self.largeIma)
+        end
+        self.largeImageIsCreate = true
+    end
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)

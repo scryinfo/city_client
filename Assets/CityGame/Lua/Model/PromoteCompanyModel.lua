@@ -97,6 +97,15 @@ end
 --推广列表回调
 function PromoteCompanyModel:n_OnQueryPromotion(info)
     local a = info
+    local data = {}
+    for i, v in pairs(info.Promotions) do
+        data[i] = v
+        data[i].createTs = v.promStartTs
+        data[i].queneTime = v.promStartTs
+        data[i].proposerId = v.buyerId
+        data[i].availableRoll = v.promStartTs
+    end
+    ct.OpenCtrl("QueneCtrl",{name = "View/GoodsItem/QueueItem",data = data,insClass = PromoteQueueItem})
 end
 
 --推广能力回调

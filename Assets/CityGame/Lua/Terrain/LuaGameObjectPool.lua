@@ -1,5 +1,10 @@
 LuaGameObjectPool = class('LuaGameObjectPool')
 
+local tableRemove =table.remove
+local tableInsert =table.insert
+--local starttime ,endtime
+local go_GetAvailableGameObject
+local  UnityGameObject
 -----初始化函数
 ---poolname：对象池名字（根据名字进行回收）
 ---poolPrefab：对象池的基础拷贝物体
@@ -13,6 +18,7 @@ function LuaGameObjectPool:initialize(poolname,poolPrefab,poolInitSize,hidePosit
     if PoolsRoot ~= nil then
         self.poolRoot:SetParent(PoolsRoot)
     end
+    UnityGameObject = UnityEngine.GameObject
     poolPrefab.transform:SetParent(self.poolRoot)
     poolPrefab.transform.position = hidePosition
     poolPrefab.name = poolname
@@ -30,9 +36,11 @@ function LuaGameObjectPool:InitGameObjectPool()
     end
 end
 
+local tempObj_NewObjectInstance
 function LuaGameObjectPool:NewObjectInstance()
     if self.m_poolPrefab ~= nil then
-        return UnityEngine.GameObject.Instantiate(self.m_poolPrefab)
+        tempObj_NewObjectInstance = UnityGameObject.Instantiate(self.m_poolPrefab)
+        return tempObj_NewObjectInstance
     end
     return nil
 end
@@ -41,18 +49,20 @@ function LuaGameObjectPool:AddGameObjectToPool(go)
     if go ~= nil then
         go.transform:SetParent(self.poolRoot)
         go.transform.position = self.m_hideGameObjectPosition
-        table.insert(self.m_availableObjPool,go)
+        tableInsert(self.m_availableObjPool,go)
     end
 end
 
+local tempObj_GetAvailableGameObject
 --从可用对象池中获取对象
 function LuaGameObjectPool:GetAvailableGameObject()
     if #self.m_availableObjPool <= 0 then
-        self:AddGameObjectToPool(self:NewObjectInstance())
+        tempObj_GetAvailableGameObject = self:NewObjectInstance()
+        self:AddGameObjectToPool(tempObj_GetAvailableGameObject)
     end
-    local go =  self.m_availableObjPool[#self.m_availableObjPool]
-    table.remove(self.m_availableObjPool,#self.m_availableObjPool)
-    return go
+    go_GetAvailableGameObject = self.m_availableObjPool[#self.m_availableObjPool]
+    tableRemove(self.m_availableObjPool,#self.m_availableObjPool)
+    return go_GetAvailableGameObject
 end
 
 --回收对象到可用对象池中

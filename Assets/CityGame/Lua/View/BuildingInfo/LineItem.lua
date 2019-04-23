@@ -5,10 +5,13 @@
 ---待生产中的生产线
 LineItem = class("LineItem")
 
-function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,goodsType)
+local ToNumber = tonumber
+local StringSun = string.sub
+function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,buildingType)
     self.prefab = prefab
-    self.goodsType = goodsType
+    self.buildingType = buildingType
     self.lineDataInfo = lineDataInfo
+    self.lineId = lineDataInfo.id
     self.itemId = lineDataInfo.itemId
 
     self.iconImg = prefab.transform:Find("goodsInfo/iconImg"):GetComponent("Image")
@@ -26,17 +29,21 @@ function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,goodsType)
     --需要隐藏的商品信息
     self.goods = prefab.transform:Find("goodsInfo/goods")
 
+    luaBehaviour:AddClick(self.placedTopBtn.gameObject,self.clickPlacedTopBtn,self)
+
     self:InitializeData()
 end
 function LineItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.stateText.text = "waiting"
     self.numberText.text = self.lineDataInfo.nowCount.."/"..self.lineDataInfo.targetCount
-    if self.goodsType == BuildingType.MaterialFactory then
+
+    local materialKey,goodsKey = 21,22
+    if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         LoadSprite(Material[self.itemId].img,self.iconImg,false)
-    elseif self.goodsType == BuildingType.ProcessingFactory then
+    elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
         --self.levelImg
@@ -44,6 +51,11 @@ function LineItem:InitializeData()
         --self.brandValue
         --self.qualityValue
     end
+end
+--置顶
+function LineItem:clickPlacedTopBtn(ins)
+    PlayMusEff(1002)
+    Event.Brocast("ProductionLineSettop",ins)
 end
 --LineItem = class("LineItem")
 --local LastTime = 0

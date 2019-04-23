@@ -96,6 +96,16 @@ function BuildingProductionDetailPart:_RemoveClick()
     self.rightAddBg.onClick:RemoveAllListeners()
 end
 
+function BuildingProductionDetailPart:_InitEvent()
+    Event.AddListener("ProductionLineSettop",self.ProductionLineSettop,self)
+    Event.AddListener("SettopSuccess",self.SettopSuccess,self)
+end
+
+function BuildingProductionDetailPart:_RemoveEvent()
+    Event.RemoveListener("ProductionLineSettop",self.ProductionLineSettop,self)
+    Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
+end
+
 function BuildingProductionDetailPart:_initFunc()
     self:_language()
     self:initializeUiInfoData(self.m_data.line)
@@ -158,6 +168,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 for i = 2, #lineData do
                     self:CreatedWaitingQueue(lineData[i],self.lineItemPrefab,self.Content,LineItem,self.mainPanelLuaBehaviour,self.waitingQueueIns,self.m_data.buildingType)
                 end
+                self.waitingQueueIns[1].placedTopBtn.transform.localScale = Vector3.zero
             end
         end
     end
@@ -242,4 +253,29 @@ function BuildingProductionDetailPart:Update()
     end
     self.timeSlider.value = (nowTime / self.oneTotalTime) * self.timeSlider.maxValue
     self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value + 1) * 1000)
+end
+------------------------------------------------------------------------------------事件函数------------------------------------------------------------------------------------
+--置顶
+function BuildingProductionDetailPart:ProductionLineSettop(data)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        Event.Brocast("m_ReqMaterialSetLineOrder",self.m_data.insId,data.lineId,2)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+
+    end
+end
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--置顶成功后调整位置
+function BuildingProductionDetailPart:SettopSuccess(data)
+    --调整gameObject位置,实例表位置
+    self.waitingQueueIns[1].placedTopBtn.transform.localScale = Vector3.one
+    for key,value in pairs(self.waitingQueueIns) do
+        if value.lineId == data.lineId then
+            value.prefab.transform:SetSiblingIndex(1)
+            value.placedTopBtn.transform.localScale = Vector3.zero
+            local temporaryValue = value
+            table.remove(self.waitingQueueIns,key)
+            table.insert(self.waitingQueueIns,1,temporaryValue)
+        end
+    end
+    local aaa = ""
 end

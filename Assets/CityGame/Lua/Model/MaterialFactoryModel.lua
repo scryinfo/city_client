@@ -116,10 +116,10 @@ end
 function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 end
---添加购物车
-function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
-    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
-end
+----添加购物车
+--function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+--    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+--end
 ---服务器回调---
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
@@ -176,8 +176,9 @@ function MaterialFactoryModel:n_OnDelItemInfo(data)
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)
-    local aaa = data
-    local bbb = ""
+    --DataManager.ControllerRpcNoRet(self.insId,"BuildingProductionDetailPart",'SettopSuccess',data)
+    local aaa = ""
+    Event.Brocast("SettopSuccess",data)
 end
 --自动补货
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)

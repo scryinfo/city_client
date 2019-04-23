@@ -100,6 +100,7 @@ function BuildingProductionPart:Update()
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     self.timeText.text = timeStr
 end
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --刷新当前产量
 function BuildingProductionPart:updateNowCount(data)
     if data == nil then

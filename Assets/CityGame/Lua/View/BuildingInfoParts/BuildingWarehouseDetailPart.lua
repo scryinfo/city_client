@@ -71,11 +71,13 @@ end
 function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
+    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
+    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -98,8 +100,9 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     else
         self.noTip.transform.localScale = Vector3.zero
+        self.Capacity = self:_getWarehouseCapacity(self.m_data.store)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-        self.warehouseCapacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
+        self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
         if next(self.transportTab) == nil then
             self.number.transform.localScale = Vector3.zero
@@ -151,6 +154,17 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
         end
     end
 end
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--刷新生产线生产出来商品，当前的仓库容量
+function BuildingWarehouseDetailPart:updateCapacity(data)
+    if data ~= nil then
+        self.Capacity = self.Capacity + 1
+        self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.warehouseCapacitySlider.value = self.Capacity
+        self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+    end
+end
+
 
 
 

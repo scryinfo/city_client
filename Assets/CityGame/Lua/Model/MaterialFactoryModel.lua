@@ -166,6 +166,8 @@ end
 function MaterialFactoryModel:n_OnLineChangeInform(data)
     Event.Brocast("partUpdateNowCount",data)
     Event.Brocast("detailPartUpdateNowCount",data)
+    Event.Brocast("partUpdateCapacity",data)
+    Event.Brocast("detailPartUpdateCapacity",data)
 end
 --货架购买
 function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)

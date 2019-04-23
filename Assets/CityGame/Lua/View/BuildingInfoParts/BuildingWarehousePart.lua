@@ -27,6 +27,8 @@ end
 
 function BuildingWarehousePart:_ResetTransform()
     self:_language()
+    Event.RemoveListener("partUpdateCapacity",self.updateCapacity,self)
+
 end
 
 function BuildingWarehousePart:_getComponent(transform)
@@ -43,6 +45,7 @@ end
 
 function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)
 
+    Event.AddListener("partUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehousePart:_initFunc()
@@ -59,8 +62,10 @@ function BuildingWarehousePart:_language()
 end
 --初始化仓库容量
 function BuildingWarehousePart:_initializeWarehouseCapacity()
+    --缓存仓库已用容量
+    self.Capacity = self:_getWarehouseCapacity(self.m_data.store)
     self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-    self.capacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
+    self.capacitySlider.value = self.Capacity
     self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
 end
 --计算仓库容量
@@ -83,7 +88,16 @@ function BuildingWarehousePart:_getWarehouseCapacity(dataTable)
     end
     return warehouseNowCount + lockedNowCount
 end
-
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--刷新生产线生产出来商品，当前的仓库容量
+function BuildingWarehousePart:updateCapacity(data)
+    if data ~= nil then
+        self.Capacity = self.Capacity + 1
+        self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.capacitySlider.value = self.Capacity
+        self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
+    end
+end
 
 
 

@@ -39,7 +39,12 @@ function BuildingProductionDetailPart:RefreshData(data)
 end
 
 function BuildingProductionDetailPart:_ResetTransform()
+    --关闭Update
     UpdateBeat:Remove(self.Update,self)
+    --清空生产队列Item数据
+    if next(self.waitingQueueIns) ~= nil then
+        self:CloseDestroy(self.waitingQueueIns)
+    end
 end
 
 function BuildingProductionDetailPart:_getComponent(transform)
@@ -98,11 +103,13 @@ end
 
 function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("ProductionLineSettop",self.ProductionLineSettop,self)
+    Event.AddListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("ProductionLineSettop",self.ProductionLineSettop,self)
+    Event.RemoveListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
 end
 
@@ -130,7 +137,9 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         if self.time == nil then
             self.timeText.text = self:GetTime(lineData[1])
         end
-        self.numberText.text = lineData[1].nowCount.."/"..lineData[1].targetCount
+        --缓存正在生产中的线的目标产量
+        self.targetCount = lineData[1].targetCount
+        self.numberText.text = lineData[1].nowCount.."/"..self.targetCount
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.nameBg.transform.localPosition = Vector3(-140,-100,0)
             self.goods.transform.localScale = Vector3.zero
@@ -277,5 +286,12 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             table.insert(self.waitingQueueIns,1,temporaryValue)
         end
     end
-    local aaa = ""
+end
+--刷新当前产量
+function BuildingProductionDetailPart:updateNowCount(data)
+    if data == nil then
+        return
+    else
+        self.numberText.text = data.nowCount.."/"..self.targetCount
+    end
 end

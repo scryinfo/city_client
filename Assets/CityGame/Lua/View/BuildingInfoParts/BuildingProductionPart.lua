@@ -16,6 +16,7 @@ end
 
 function BuildingProductionPart:_InitTransform()
     self:_getComponent(self.transform)
+    UpdateBeat:Add(self.Update,self)
 end
 
 function BuildingProductionPart:RefreshData(data)
@@ -27,7 +28,9 @@ function BuildingProductionPart:RefreshData(data)
 end
 
 function BuildingProductionPart:_ResetTransform()
-
+    --关闭Update
+    UpdateBeat:Remove(self.Update,self)
+    Event.RemoveListener("partUpdateNowCount",self.updateNowCount,self)
 end
 
 function BuildingProductionPart:_getComponent(transform)
@@ -46,6 +49,7 @@ end
 
 function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
 
+    Event.AddListener("partUpdateNowCount",self.updateNowCount,self)
 end
 
 function BuildingProductionPart:_initFunc()
@@ -65,6 +69,7 @@ function BuildingProductionPart:_initFunc()
         self.numberSlider.maxValue = self.m_data.line[1].targetCount
         self.numberSlider.value = self.m_data.line[1].nowCount
         self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
+        self.timeText.text = self:GetTime(self.m_data.line[1])
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -74,22 +79,37 @@ function BuildingProductionPart:_language()
     self.selectTitleText.text = "生产线"
 end
 --计算总时间
-function BuildingProductionPart:GetTime(targetCount,nowCount,workerNum)
-    local remainingNum = targetCount - nowCount
+function BuildingProductionPart:GetTime(lineData)
+    local remainingNum = lineData.targetCount - lineData.nowCount
     if remainingNum == 0 then
         return "00:00:00"
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.time = remainingNum / (Material[self.m_data.line[1].itemId].numOneSec * workerNum)
+        self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.time = remainingNum / (Good[self.m_data.line[1].itemId].numOneSec * workerNum)
+        self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
-
-
+--刷新时间
+function BuildingProductionPart:Update()
+    self.time = self.time - UnityEngine.Time.unscaledDeltaTime
+    local timeTable = getTimeBySec(self.time)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    self.timeText.text = timeStr
+end
+--刷新当前产量
+function BuildingProductionPart:updateNowCount(data)
+    if data == nil then
+        return
+    else
+        self.numberSlider.maxValue = self.m_data.line[1].targetCount
+        self.numberSlider.value = data.nowCount
+        self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
+    end
+end
 
 
 

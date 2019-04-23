@@ -30,7 +30,6 @@ function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,buildingType)
     self.goods = prefab.transform:Find("goodsInfo/goods")
 
     luaBehaviour:AddClick(self.placedTopBtn.gameObject,self.clickPlacedTopBtn,self)
-
     self:InitializeData()
 end
 function LineItem:InitializeData()
@@ -57,6 +56,7 @@ function LineItem:clickPlacedTopBtn(ins)
     PlayMusEff(1002)
     Event.Brocast("ProductionLineSettop",ins)
 end
+
 --LineItem = class("LineItem")
 --local LastTime = 0
 --local nowTime = 0

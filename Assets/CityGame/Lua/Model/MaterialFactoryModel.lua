@@ -164,7 +164,8 @@ function MaterialFactoryModel:n_OnDeleteLineInfo(data)
 end
 --生产线变化推送
 function MaterialFactoryModel:n_OnLineChangeInform(data)
-    Event.Brocast("c_refreshNowConte",data)
+    Event.Brocast("partUpdateNowCount",data)
+    Event.Brocast("detailPartUpdateNowCount",data)
 end
 --货架购买
 function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
@@ -176,8 +177,6 @@ function MaterialFactoryModel:n_OnDelItemInfo(data)
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)
-    --DataManager.ControllerRpcNoRet(self.insId,"BuildingProductionDetailPart",'SettopSuccess',data)
-    local aaa = ""
     Event.Brocast("SettopSuccess",data)
 end
 --自动补货
@@ -187,6 +186,5 @@ function MaterialFactoryModel:n_OnSetAutoReplenish(data)
 end
 --添加购物车
 function MaterialFactoryModel:n_OnAddShoppingCart(data)
-    local aaa = data
-    local bbb = ""
+
 end

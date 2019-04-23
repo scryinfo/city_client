@@ -8,6 +8,7 @@ MapTechnologyPageItem = class('MapTechnologyPageItem', MapDetailPageBase)
 --初始化
 function MapTechnologyPageItem:childInit(viewRect)
     self.content = viewRect:Find("scroll/content")
+    self.bgImg = viewRect:Find("Image"):GetComponent("Image")
     self.text01 = viewRect:Find("Image/Text"):GetComponent("Text")
 end
 --创建items
@@ -25,7 +26,10 @@ function MapTechnologyPageItem:createItems()
 end
 --
 function MapTechnologyPageItem:initLanguage()
-    self.text01.text = GetLanguage(12345678)
+    --self.text01.text = GetLanguage(12345678)
+    self.text01.text = "科研"
+    local width = self.text01.preferredWidth + 35
+    self.bgImg.rectTransform.sizeDelta = Vector2.New(width, 50)
 end
 --
 function MapTechnologyPageItem:sortItemPos(itemTable)

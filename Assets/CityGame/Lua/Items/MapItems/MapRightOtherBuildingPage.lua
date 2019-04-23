@@ -13,12 +13,12 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     local trans = self.viewRect.transform
     self.closeBtn = trans:Find("topRoot/closeBtn"):GetComponent("Button")
     self.goHereBtn = trans:Find("bottomRoot/goHereBtn"):GetComponent("Button")
-    self.portraitImg = trans:Find("topRoot/portraitRoot/bg")
+    self.portraitImg = trans:Find("topRoot/protaitRoot/bg")
     self.nameText = trans:Find("topRoot/nameText"):GetComponent("Text")
     self.companyText = trans:Find("topRoot/companyText"):GetComponent("Text")
     self.buildingNameText = trans:Find("topRoot/bg/buildingNameText"):GetComponent("Text")
-    self.femaleIconTran = trans:Find("topRoot/nameText/femaleIcon")
-    self.manIconTran = trans:Find("topRoot/nameText/manIcon")
+    --self.femaleIconTran = trans:Find("topRoot/nameText/femaleIcon")
+    --self.manIconTran = trans:Find("topRoot/nameText/manIcon")
 
     self.simpleInfo = trans:Find("bottomRoot/simpleInfo")  --其他只显示简单信息的建筑
     self.simpleShowRoot = trans:Find("bottomRoot/simpleInfo/showInfoRoot")
@@ -110,13 +110,13 @@ function MapRightOtherBuildingPage:_initPersonalInfo(info)
         self.nameText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.nameText.rectTransform.sizeDelta.y)
 
         self.companyText.text = data.companyName
-        if data.male == true then
-            self.manIconTran.localScale = Vector3.one
-            self.femaleIconTran.localScale = Vector3.zero
-        else
-            self.manIconTran.localScale = Vector3.zero
-            self.femaleIconTran.localScale = Vector3.one
-        end
+        --if data.male == true then
+        --    self.manIconTran.localScale = Vector3.one
+        --    self.femaleIconTran.localScale = Vector3.zero
+        --else
+        --    self.manIconTran.localScale = Vector3.zero
+        --    self.femaleIconTran.localScale = Vector3.one
+        --end
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.portraitImg.transform,0.2)
     end
 end

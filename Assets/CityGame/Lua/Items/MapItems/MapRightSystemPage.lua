@@ -11,8 +11,8 @@ function MapRightSystemPage:initialize(viewRect)
 
     self.closeBtn = self.viewRect.transform:Find("topRoot/closeBtn"):GetComponent("Button")
     --btn
-    self.goHereBtn = self.viewRect.transform:Find("bottomRoot/btnRoot/goHereBtn"):GetComponent("Button")
-    self.goHereText01 = self.viewRect.transform:Find("bottomRoot/btnRoot/goHereBtn/Text"):GetComponent("Text")
+    self.goHereBtn = self.viewRect.transform:Find("bottomRoot/goHereBtn"):GetComponent("Button")
+    self.goHereText01 = self.viewRect.transform:Find("bottomRoot/goHereBtn/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()

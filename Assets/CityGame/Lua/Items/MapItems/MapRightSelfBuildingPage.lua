@@ -9,11 +9,14 @@ MapRightSelfBuildingPage.moneyColor = "#F4AD07FF"
 --初始化方法
 function MapRightSelfBuildingPage:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
+    local tran = self.viewRect.transform
 
-    self.closeBtn = self.viewRect.transform:Find("closeBtn"):GetComponent("Button")
-    self.goHereBtn = self.viewRect.transform:Find("goHereBtn"):GetComponent("Button")
-    self.buildingNameText = self.viewRect.transform:Find("buildingNameText"):GetComponent("Text")
-    self.showRoot = self.viewRect.transform:Find("showRoot")
+    self.closeBtn = tran:Find("closeBtn"):GetComponent("Button")
+    self.goHereBtn = tran:Find("goHereBtn"):GetComponent("Button")
+    self.buildingNameText = tran:Find("buildingNameText"):GetComponent("Text")
+    self.showRoot = tran:Find("showRoot")
+    self.notOpenTran = tran:Find("notOpenTran")
+    self.notOpenText01 = tran:Find("notOpenTran/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
@@ -24,30 +27,6 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     --
     self.goHereText01 = self.viewRect.transform:Find("goHereBtn/Text"):GetComponent("Text")
 end
--- old
---function MapRightSelfBuildingPage:refreshData(data)
---    self.viewRect.anchoredPosition = Vector2.zero
---    self.data = data
---
---    local buildingDetail = DataManager.GetSelfBuildingDetailByBlockId(data.buildingId).info
---    self.data.pos = buildingDetail.pos
---    local playerInfo = DataManager.GetMyPersonalHomepageInfo()
---    if playerInfo ~= nil then
---        self.nameText.text = playerInfo.name
---        self.companyText.text = playerInfo.companyName
---        if playerInfo.male == true then
---            self.manIconTran.localScale = Vector3.one
---            self.femaleIconTran.localScale = Vector3.zero
---        else
---            self.manIconTran.localScale = Vector3.zero
---            self.femaleIconTran.localScale = Vector3.one
---        end
---        self.avatar = AvatarManger.GetSmallAvatar(playerInfo.faceId, self.protaitImg.transform,0.2)
---    end
---    self.buildingNameText.text = buildingDetail.name
---    self:openShow()
---end
-
 --
 function MapRightSelfBuildingPage:refreshData(data)
     self.viewRect.anchoredPosition = Vector2.zero
@@ -56,10 +35,14 @@ function MapRightSelfBuildingPage:refreshData(data)
     local buildingDetail = DataManager.GetSelfBuildingDetailByBlockId(data.buildingId)
     self.data = buildingDetail
     self.buildingNameText.text = buildingDetail.info.name
-    local buildingType = GetBuildingTypeById(buildingDetail.info.mId)
-    self:_createInfoByType(buildingType)
-    self:_sortInfoItems()
-
+    if buildingDetail.info.state == "OPERATE" then
+        self.notOpenTran.localScale = Vector3.zero
+        local buildingType = GetBuildingTypeById(buildingDetail.info.mId)
+        self:_createInfoByType(buildingType)
+        self:_sortInfoItems()
+    else
+        self.notOpenTran.localScale = Vector3.one
+    end
     self:openShow()
 end
 --
@@ -176,6 +159,7 @@ function MapRightSelfBuildingPage:_language()
     --正式代码
     --self.goHereText01.text = GetLanguage()
     self.goHereText01.text = "Go here"
+    self.notOpenText01.text = "Not open"
 end
 --关闭
 function MapRightSelfBuildingPage:close()

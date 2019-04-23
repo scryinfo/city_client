@@ -98,9 +98,11 @@ MapPromotionInfoConfig={
 --小地图点开科研展示的信息
 MapTechnologyInfoConfig={
     [1] = {
+        ["imgPath"] = "",
         ["languageId"] = "发明新产品",
     },
     [2] = {
+        ["imgPath"] = "",
         ["languageId"] = "Eva能力",
     },
 }

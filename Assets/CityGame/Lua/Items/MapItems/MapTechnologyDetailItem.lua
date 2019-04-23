@@ -7,8 +7,14 @@ MapTechnologyDetailItem = class('MapTechnologyDetailItem', MapConfirmSearchBase)
 
 --初始化方法
 function MapTechnologyDetailItem:childInit(viewRect)
+    self.iconImg = self.viewRect.transform:Find("iconImg"):GetComponent("Image")
     self.selectImg = self.viewRect.transform:Find("selectImg")
     self.typeText = self.viewRect.transform:Find("Text"):GetComponent("Text")
+
+    if self.data.promotionIndex ~= nil then
+        local temp = MapTechnologyInfoConfig[self.data.technologyIndex]
+        --LoadSprite(temp.imgPath, self.iconImg, true)
+    end
 end
 --
 function MapTechnologyDetailItem:initLanguage()

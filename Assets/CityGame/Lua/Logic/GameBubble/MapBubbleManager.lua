@@ -246,7 +246,7 @@ function MapBubbleManager._createDetailByType(typeId, data)
                 this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
             end
         end
-    elseif typeId == EMapSearchType.Technology then
+    elseif typeId == EMapSearchType.Technology and data.info ~= nil then
         for i, value in pairs(data.info) do
             local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
             if value.b ~= nil then
@@ -257,7 +257,7 @@ function MapBubbleManager._createDetailByType(typeId, data)
                 end
             end
         end
-    elseif typeId == EMapSearchType.Signing then
+    elseif typeId == EMapSearchType.Signing and data.info ~= nil then
         local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(data.idx)
         for i, value in pairs(data.info) do
             this._checkDetailTable(collectionId)

@@ -12,7 +12,7 @@ function MapRightShowInfoItem:initialize(viewRect)
     self.iconImg = trans:Find("iconImg"):GetComponent("Image")
     self.showText = trans:Find("showText"):GetComponent("Text")
     self.valueText = trans:Find("valueText"):GetComponent("Text")
-    local detailTran = trans:Find("valueText/detailImg")
+    local detailTran = trans:Find("detailImg")
     if detailTran ~= nil then
         self.detailImg = detailTran:GetComponent("Image")
     end
@@ -23,14 +23,19 @@ function MapRightShowInfoItem:initData(data)
     --self.showText.text = GetLanguage(temp.languageId)  --多语言
     --LoadSprite(temp.imgPath, self.iconImg, true)
     self.valueText.text = data.value
+    self.valueText.transform.localScale = Vector3.one
+    if self.detailImg ~= nil then
+        self.detailImg.transform.localScale = Vector3.zero
+    end
+
     --Temp
     self.showText.text = temp.languageId
     LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
 
     if self.detailImg ~= nil and data.detailImgPath ~= nil then
         LoadSprite(data.detailImgPath, self.detailImg, true)
-        local trueTextW = self.valueText.preferredWidth
-        self.valueText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.valueText.rectTransform.sizeDelta.y)
+        self.valueText.transform.localScale = Vector3.zero
+        self.detailImg.transform.localScale = Vector3.one
     end
 end
 --设置位置

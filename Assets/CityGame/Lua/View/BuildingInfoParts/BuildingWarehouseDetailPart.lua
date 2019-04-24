@@ -82,7 +82,7 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.store)
+    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -93,6 +93,7 @@ end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
     if not storeData then
+        self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -109,15 +110,15 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData.inHand == #self.warehouseDatas then
-            for key,value in pairs(storeData.inHand) do
+        if #storeData == #self.warehouseDatas then
+            for key,value in pairs(storeData) do
                 for key1,value1 in pairs(self.warehouseDatas) do
                     value1:updateNumber(value)
                 end
             end
         else
             self.transportBool = GoodsItemStateType.transport
-            self:CreateGoodsItems(storeData.inHand,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
         end
     end
 end

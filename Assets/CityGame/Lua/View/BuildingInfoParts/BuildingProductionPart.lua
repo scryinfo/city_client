@@ -16,7 +16,6 @@ end
 
 function BuildingProductionPart:_InitTransform()
     self:_getComponent(self.transform)
-    UpdateBeat:Add(self.Update,self)
 end
 
 function BuildingProductionPart:RefreshData(data)
@@ -69,7 +68,10 @@ function BuildingProductionPart:_initFunc()
         self.numberSlider.maxValue = self.m_data.line[1].targetCount
         self.numberSlider.value = self.m_data.line[1].nowCount
         self.numberText.text = self.numberSlider.value.."/"..self.numberSlider.maxValue
-        self.timeText.text = self:GetTime(self.m_data.line[1])
+        if self.time == nil then
+            self.timeText.text = self:GetTime(self.m_data.line[1])
+            UpdateBeat:Add(self.Update,self)
+        end
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,6 +97,11 @@ function BuildingProductionPart:GetTime(lineData)
 end
 --刷新时间
 function BuildingProductionPart:Update()
+    if self.time == nil or self.time <= 0 then
+        self.TopLineInfo.transform.localScale = Vector3.zero
+        self.tipText.transform.localScale = Vector3.one
+        UpdateBeat:Remove(self.Update,self)
+    end
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second

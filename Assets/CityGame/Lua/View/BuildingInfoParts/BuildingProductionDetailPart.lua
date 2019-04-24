@@ -16,7 +16,6 @@ function BuildingProductionDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --待生产
     self.waitingQueueIns = {}
-    UpdateBeat:Add(self.Update,self)
     --self.intTime = 1
     --self.m_Timer = Timer.New(slot(self.Update, self), 1, -1, true)
 end
@@ -24,12 +23,15 @@ end
 --    BasePartDetail.Show(self)
 --    --self.m_Timer:Start()
 --end
---function BuildingProductionDetailPart:Hide()
---    BasePartDetail.Hide(self)
---    if self.m_Timer ~= nil then
---        self.m_Timer:Stop()
---    end
---end
+function BuildingProductionDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    if next(self.waitingQueueIns) ~= nil then
+        self:CloseDestroy(self.waitingQueueIns)
+    end
+    --if self.m_Timer ~= nil then
+    --    self.m_Timer:Stop()
+    --end
+end
 function BuildingProductionDetailPart:RefreshData(data)
     if data == nil then
         return
@@ -136,6 +138,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.nameText.text = GetLanguage(lineData[1].itemId)
         if self.time == nil then
             self.timeText.text = self:GetTime(lineData[1])
+            UpdateBeat:Add(self.Update,self)
         end
         --缓存正在生产中的线的目标产量
         self.targetCount = lineData[1].targetCount

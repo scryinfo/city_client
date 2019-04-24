@@ -60,6 +60,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.content = transform:Find("contentRoot/content")
     self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
     --leftRoot
+    self.lineInfo = transform:Find("contentRoot/content/leftRoot/lineInfo")
     self.nameBg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/nameBg")
     self.goods = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods")
 
@@ -71,7 +72,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.qualityValue = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.numberText = transform:Find("contentRoot/content/leftRoot/lineInfo/numberText"):GetComponent("Text")
     self.timeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeBg/timeText"):GetComponent("Text")
-    self.deleBtn = transform:Find("contentRoot/content/leftRoot/lineInfo/deleBtn")
+    self.deleBtn = transform:Find("contentRoot/content/leftRoot/lineInfo/deleBtn"):GetComponent("Button")
     self.timeSlider = transform:Find("contentRoot/content/leftRoot/lineInfo/timeSlider"):GetComponent("Slider")
     self.oneTimeText = transform:Find("contentRoot/content/leftRoot/lineInfo/timeText"):GetComponent("Text")
     --rightRoot
@@ -95,24 +96,30 @@ function BuildingProductionDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.rightAddBg.gameObject,function()
         self:clickAddBtnBg()
     end,self)
+    mainPanelLuaBehaviour:AddClick(self.deleBtn.gameObject,function()
+        self:clickDeleBtn()
+    end,self)
 end
 
 function BuildingProductionDetailPart:_RemoveClick()
     self.closeBtn.onClick:RemoveAllListeners()
     self.addBtnBg.onClick:RemoveAllListeners()
     self.rightAddBg.onClick:RemoveAllListeners()
+    self.deleBtn.onClick:RemoveAllListeners()
 end
 
 function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("ProductionLineSettop",self.ProductionLineSettop,self)
     Event.AddListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
+    Event.AddListener("updateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("ProductionLineSettop",self.ProductionLineSettop,self)
     Event.RemoveListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
+    Event.RemoveListener("updateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -127,14 +134,14 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
-    if not lineData then
+    if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
         self.lineNumberText.text = 0 .."/"..0
 
     else
-        self.addBtn.transform.localScale = Vector3.zero
         self.content.transform.localScale = Vector3.one
+        self.addBtn.transform.localScale = Vector3.zero
         self.nameText.text = GetLanguage(lineData[1].itemId)
         if self.time == nil then
             self.timeText.text = self:GetTime(lineData[1])
@@ -174,9 +181,10 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             self.noLineTip.transform.localScale = Vector3.zero
             --判断当前是否已经创建好了队列
             if #lineData - 1 == #self.waitingQueueIns then
-                self.Content.transform.localPosition = Vector3(0,0,0)
+                self.Content.transform.localPosition = Vector3.zero
                 return
             else
+                self.Content.transform.localPosition = Vector3.one
                 for i = 2, #lineData do
                     self:CreatedWaitingQueue(lineData[i],self.lineItemPrefab,self.Content,LineItem,self.mainPanelLuaBehaviour,self.waitingQueueIns,self.m_data.buildingType)
                 end
@@ -199,6 +207,15 @@ function BuildingProductionDetailPart:clickAddBtnBg()
     else
         Event.Brocast("SmallPop",GetLanguage(35040013),300)
         return
+    end
+end
+--删除当前正在生产中的线
+function BuildingProductionDetailPart:clickDeleBtn()
+    PlayMusEff(1002)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,self.m_data.line[1].id)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+
     end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -294,5 +311,20 @@ end
 function BuildingProductionDetailPart:updateNowCount(data)
     if data ~= nil then
         self.numberText.text = data.nowCount.."/"..self.targetCount
+    end
+end
+--删除正在生产中的线
+function BuildingProductionDetailPart:updateNowLine(data)
+    if data ~= nil then
+        table.remove(self.m_data.line,1)
+        UpdateBeat:Remove(self.Update,self)
+        if next(self.waitingQueueIns) == nil then
+            self.lineInfo.transform.localScale = Vector3.zero
+            self.addBtn.transform.localScale = Vector3.one
+            self.content.transform.localScale = Vector3.zero
+            self.lineNumberText.text = 0 .."/"..0
+        else
+
+        end
     end
 end

@@ -27,7 +27,7 @@ function WarehouseBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
-
+    self.luaBehaviour:AddClick(self.deleBtn.gameObject,self._clickDeleBtn,self)
     self.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
     end)
@@ -129,4 +129,8 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     end
     Event.Brocast("addTransportList",goods)
     UIPanel.ClosePage()
+end
+--销毁商品
+function WarehouseBoxCtrl:_clickDeleBtn()
+
 end

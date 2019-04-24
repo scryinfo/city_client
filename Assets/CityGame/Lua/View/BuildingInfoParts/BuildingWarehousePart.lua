@@ -28,7 +28,6 @@ end
 function BuildingWarehousePart:_ResetTransform()
     self:_language()
     Event.RemoveListener("partUpdateCapacity",self.updateCapacity,self)
-
 end
 
 function BuildingWarehousePart:_getComponent(transform)
@@ -44,7 +43,6 @@ function BuildingWarehousePart:_getComponent(transform)
 end
 
 function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)
-
     Event.AddListener("partUpdateCapacity",self.updateCapacity,self)
 end
 
@@ -96,6 +94,26 @@ function BuildingWarehousePart:updateCapacity(data)
         self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.capacitySlider.value = self.Capacity
         self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
+
+        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+            local goods = {}
+            local key = {}
+            goods.key = key
+            goods.key.id = data.iKey.id
+            goods.key.producerId = data.iKey.producerId
+            goods.key.qty = data.iKey.qty
+            goods.n = data.nowCount
+            if not self.m_data.store.inHand then
+                self.m_data.store.inHand = {}
+            end
+            self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+        else
+            for key,value in pairs(self.m_data.store.inHand) do
+                if value.key.id == data.iKey.id then
+                    value.n = value.n + 1
+                end
+            end
+        end
     end
 end
 

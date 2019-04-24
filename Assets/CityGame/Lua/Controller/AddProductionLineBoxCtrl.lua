@@ -99,7 +99,7 @@ function AddProductionLineBoxCtrl:clickConfirmBtn(go)
         if go.m_data.buildingType == BuildingType.MaterialFactory then
             Event.Brocast("m_ReqMaterialAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-            Event.Brocast("m_ReqProcessAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
+
         end
     else
         Event.Brocast("SmallPop",GetLanguage(26020003),300)
@@ -113,7 +113,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             UIPanel.BackToPageInstance(MaterialFactoryCtrl,self.m_data)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            UIPanel.BackToPageInstance(MaterialFactoryCtrl,self.m_data)
+
         end
         Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end

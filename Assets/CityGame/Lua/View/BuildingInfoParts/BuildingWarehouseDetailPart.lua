@@ -16,13 +16,24 @@ function BuildingWarehouseDetailPart:_InitTransform()
     --运输列表(运输成功后或退出建筑时清空)
     self.transportTab = {}
 end
-
+function BuildingWarehouseDetailPart:Show(data)
+    BasePartDetail.Show(self,data)
+    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
+end
+function BuildingWarehouseDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
+    if next(self.warehouseDatas) ~= nil then
+        self:CloseDestroy(self.warehouseDatas)
+    end
+end
 function BuildingWarehouseDetailPart:RefreshData(data)
     if data == nil then
         return
     end
     self.m_data = data
     self:_initFunc()
+    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -71,18 +82,17 @@ end
 function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
-    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
+
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
-    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
+
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -110,16 +120,16 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
-            for key,value in pairs(storeData) do
-                for key1,value1 in pairs(self.warehouseDatas) do
-                    value1:updateNumber(value)
-                end
-            end
-        else
-            self.transportBool = GoodsItemStateType.transport
-            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-        end
+        --if #storeData == #self.warehouseDatas then
+        --    for key,value in pairs(storeData) do
+        --        for key1,value1 in pairs(self.warehouseDatas) do
+        --            value1:updateNumber(value)
+        --        end
+        --    end
+        --else
+        self.transportBool = GoodsItemStateType.transport
+        self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        --end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
@@ -170,7 +180,7 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
 
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.iKey.id then
-                value.dataInfo.n = value.dataInfo.n + 1
+                --value.dataInfo.n = value.dataInfo.n + 1
                 value.numberText.text = "×"..value.dataInfo.n
             end
         end

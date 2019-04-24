@@ -5,6 +5,12 @@
 ---
 
 LandTitleItem = class("LandTitleItem")
+LandTitleItem.static.NomalNameColor = Vector3.New(51, 51, 51) -- 默认的名字颜色
+LandTitleItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
+LandTitleItem.static.NomalNumberColor = Vector3.New(153, 153, 153) -- 默认的数量颜色
+LandTitleItem.static.SelectNumberColor = Vector3.New(91, 162, 249) -- 被选中的数量颜色
+LandTitleItem.static.NomalNumberBgColor = Vector3.New(238, 238, 238) -- 默认的数量背景色
+LandTitleItem.static.SelectNumberBgColor = Vector3.New(255, 255, 255) -- 被选中的数量背景色
 
 -- 初始化
 function LandTitleItem:initialize(prefab, data)
@@ -15,11 +21,12 @@ function LandTitleItem:initialize(prefab, data)
     local transform = prefab.transform
 
     self.landSelectBtn = transform:GetComponent("Button")
-    self.nameText = transform:Find("Label"):GetComponent("Text")
-    self.numberText = transform:Find("Text"):GetComponent("Text")
+    self.nameText = transform:Find("NameText"):GetComponent("Text")
+    self.numberText = transform:Find("NumberText"):GetComponent("Text")
+    self.bgImage = transform:Find("Bg"):GetComponent("Image")
     self:SetName()
     self:SetNumber()
-    --self:SetSelect()
+    self:SetSelect(true)
 
     self.landSelectBtn.onClick:RemoveAllListeners()
     self.landSelectBtn.onClick:AddListener(function ()
@@ -56,6 +63,12 @@ end
 -- 设置是否选中
 function LandTitleItem:SetSelect(isSelect)
     self.landSelectBtn.interactable = isSelect
+    local nameTextV3 = isSelect and LandTitleItem.static.NomalNameColor or LandTitleItem.static.SelectNameColor
+    local numberTextV3 = isSelect and LandTitleItem.static.NomalNumberColor or LandTitleItem.static.SelectNumberColor
+    local bgV3 = isSelect and LandTitleItem.static.NomalNumberBgColor or LandTitleItem.static.SelectNumberBgColor
+    self.nameText.color = getColorByVector3(nameTextV3)
+    self.numberText.color = getColorByVector3(numberTextV3)
+    self.bgImage.color = getColorByVector3(bgV3)
 end
 
 -- 点击刷新

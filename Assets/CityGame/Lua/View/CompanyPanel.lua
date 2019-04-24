@@ -61,6 +61,7 @@ function CompanyPanel.InitPanel()
 
     -- 建筑显示
     this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content")
+    this.buildingTitleRt = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content"):GetComponent("RectTransform")
     this.buildingScroll = transform:Find("BottomRoot/BuildingRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
     -- Eva显示

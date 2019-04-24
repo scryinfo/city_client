@@ -5,6 +5,12 @@
 ---
 
 BuildingTitleItem = class("BuildingTitleItem")
+BuildingTitleItem.static.NomalNameColor = Vector3.New(51, 51, 51) -- 默认的名字颜色
+BuildingTitleItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
+BuildingTitleItem.static.NomalNumberColor = Vector3.New(153, 153, 153) -- 默认的数量颜色
+BuildingTitleItem.static.SelectNumberColor = Vector3.New(91, 162, 249) -- 被选中的数量颜色
+BuildingTitleItem.static.NomalNumberBgColor = Vector3.New(238, 238, 238) -- 默认的数量背景色
+BuildingTitleItem.static.SelectNumberBgColor = Vector3.New(255, 255, 255) -- 被选中的数量背景色
 
 -- 初始化
 function BuildingTitleItem:initialize(prefab, data)
@@ -15,11 +21,12 @@ function BuildingTitleItem:initialize(prefab, data)
     local transform = prefab.transform
 
     self.buildingSelectBtn = transform:GetComponent("Button")
-    self.nameText = transform:Find("Label"):GetComponent("Text")
-    self.numberText = transform:Find("Text"):GetComponent("Text")
+    self.nameText = transform:Find("NameText"):GetComponent("Text")
+    self.numberText = transform:Find("NumberText"):GetComponent("Text")
+    self.bgImage = transform:Find("Bg"):GetComponent("Image")
     self:SetName()
     self:SetNumber()
-    --self:SetSelect()
+    self:SetSelect(true)
 
     self.buildingSelectBtn.onClick:RemoveAllListeners()
     self.buildingSelectBtn.onClick:AddListener(function ()
@@ -60,6 +67,12 @@ end
 -- 设置是否选中
 function BuildingTitleItem:SetSelect(isSelect)
     self.buildingSelectBtn.interactable = isSelect
+    local nameTextV3 = isSelect and BuildingTitleItem.static.NomalNameColor or BuildingTitleItem.static.SelectNameColor
+    local numberTextV3 = isSelect and BuildingTitleItem.static.NomalNumberColor or BuildingTitleItem.static.SelectNumberColor
+    local bgV3 = isSelect and BuildingTitleItem.static.NomalNumberBgColor or BuildingTitleItem.static.SelectNumberBgColor
+    self.nameText.color = getColorByVector3(nameTextV3)
+    self.numberText.color = getColorByVector3(numberTextV3)
+    self.bgImage.color = getColorByVector3(bgV3)
 end
 
 -- 点击刷新

@@ -134,6 +134,7 @@ function CompanyCtrl:OnBuilding(go)
     CompanyCtrl.static.companyMgr.buildingTypeNum = 0 -- 0 全部 1 原料厂 2 加工厂 3 零售店 4 推广公司 5 学院 6 住宅 7 仓库
     if CompanyCtrl.static.companyMgr:GetBuildingTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
+        CompanyPanel.buildingTitleRt.anchoredPosition = Vector2.New(0,0)
     else
         CompanyCtrl.static.companyMgr:CreateBuildingTitleItem()
     end
@@ -147,10 +148,10 @@ function CompanyCtrl:OnEva(go)
     CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     go:ShowOptionTwo(0)
     go:ShowOptionThere(0)
-    if CompanyCtrl.static.companyMgr:GetBuildingTitleItem() then
+    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
+    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-    else
-        CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
+        CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
     end
 end
 
@@ -254,7 +255,6 @@ end
 -- 网络回调
 function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     if groundInfos.info then
-        CompanyPanel.landScroll:RefillCells()
         CompanyCtrl.landTypeInfo = {{}, {}, {}, {}, {}}
         for _, v in ipairs(groundInfos.info) do
             if v.ownerId == DataManager.GetMyOwnerID() then
@@ -294,8 +294,16 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
             end
         end
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, #CompanyCtrl.landInfos, "View/Company/LandInfoItem")
+        CompanyPanel.landScroll:RefillCells()
     else
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, 0, "View/Company/LandInfoItem")
+        local landTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetLandTitleItem()
+        for i, v in ipairs(landTitleItemMgrTab) do
+            v:SetNumber()
+            if i - 1 ~= CompanyCtrl.static.companyMgr.landTypeNum then
+                v:SetSelect(true)
+            end
+        end
     end
 end
 
@@ -353,6 +361,13 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, #CompanyCtrl.buildingInfos, "View/Company/BuildingInfoItem")
     else
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
+        local buildingTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetBuildingTitleItem()
+        for i, v in ipairs(buildingTitleItemMgrTab) do
+            v:SetNumber()
+            if i - 1 ~= CompanyCtrl.static.companyMgr.buildingTypeNum then
+                v:SetSelect(true)
+            end
+        end
     end
 end
 

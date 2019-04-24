@@ -20,22 +20,12 @@ end
 
 -- 查询玩家的土地消息
 function CompanyModel:m_GetGroundInfo()
-    --gs 登录
-    --1、 获取协议id
     local msgId = pbl.enum("gscode.OpCode","getGroundInfo")
-    --2、 填充 protobuf 内部协议数据
-    --local lMsg = { id = id}
-    --local pMsg = assert(pbl.encode("ss.Id", lMsg))
-    --3、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
 -- 服务器返回的土地消息
 function CompanyModel:n_OnGetGroundInfo(groundInfos)
-    --异常处理
-    --if msgId == 0 then
-    --    economyInfos = nil
-    --end
     Event.Brocast("c_OnGetGroundInfo", groundInfos)
 end
 
@@ -46,10 +36,6 @@ end
 
 -- 服务器返回的建筑信息
 function CompanyModel:n_OnQueryMyBuildings(buildingInfos)
-    --异常处理
-    --if msgId == 0 then
-    --    economyInfos = nil
-    --end
     Event.Brocast("c_OnQueryMyBuildings", buildingInfos)
 end
 

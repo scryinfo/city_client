@@ -520,11 +520,13 @@ function split(input, delimiter)
 end
 
 local AssetObjs  = {}
-
+local SpriteType = nil
 --第三个参数为是否设置img为原图大小
 function LoadSprite(path, iIcon, bSetNativeSize)
-	local type = ct.getType(UnityEngine.Sprite)
-	panelMgr:LoadPrefab_A(path, type, iIcon, function(Icon, obj ,ab)
+	if SpriteType == nil then
+		SpriteType = ct.getType(UnityEngine.Sprite)
+	end
+	panelMgr:LoadPrefab_A(path, SpriteType, iIcon, function(Icon, obj ,ab)
 		if Icon == nil then
 			return
 		end

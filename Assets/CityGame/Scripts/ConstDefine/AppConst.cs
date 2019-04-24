@@ -30,6 +30,7 @@ namespace LuaFramework {
 
         public const int TimerInterval = 1;
         public const int GameFrameRate = 30;                        //游戏帧频
+        public const int vSyncCount = 0;                            //垂直同步，0为关
 
         public const string AppName = "CityGame";               //应用程序名称
         public const string LuaTempDir = "Lua/";                    //临时目录

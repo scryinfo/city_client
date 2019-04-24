@@ -99,7 +99,7 @@ end
 
 function UIBubbleBuildingSignItem:updateData(data)
     self.data=data
-    if self.m_EmojiData == nil or  self.m_EmojiData ~= BubbleMessageCtrl.configPath[data.emoticon].path then
+    if self.m_EmojiData == nil or self.m_EmojiData ~= BubbleMessageCtrl.configPath[data.emoticon].path then
         self.m_EmojiData = BubbleMessageCtrl.configPath[data.emoticon].path
         self.smallImageIsCreate = false
         self.largeImageIsCreate = false
@@ -148,7 +148,7 @@ function UIBubbleBuildingSignItem:c_OnClick_small()
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large()
-    if UnityEngine.PlayerPrefs.GetInt("BuildingBubble")==2 then
+    if BuilldingBubbleInsManger.type == 2 then
         return
     end
     --变小
@@ -173,7 +173,7 @@ function UIBubbleBuildingSignItem:changeSmall()
     self.largeRec.gameObject:SetActive(false)
     self.smallRec.gameObject:SetActive(true)
     if self.smallImageIsCreate == nil or self.smallImageIsCreate == false then
-        LoadSprite(self.m_EmojiData,self.smallIma)
+        BubbleMessageCtrl.SetEmojiIconSpite(self.m_EmojiData,self.smallIma)
         self.smallImageIsCreate = true
     end
 end
@@ -194,7 +194,7 @@ function UIBubbleBuildingSignItem:changeLarge()
         if self.smallImageIsCreate ~= nil and self.smallImageIsCreate == true then --如果小头像已经加载了  直接拷贝一下
             self.largeIma.sprite = self.smallIma.sprite
         else
-            LoadSprite(self.m_EmojiData,self.largeIma)
+            BubbleMessageCtrl.SetEmojiIconSpite(self.m_EmojiData,self.largeIma)
         end
         self.largeImageIsCreate = true
     end

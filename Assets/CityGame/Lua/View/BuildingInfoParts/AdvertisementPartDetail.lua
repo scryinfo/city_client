@@ -6,6 +6,7 @@
 ---
 AdvertisementPartDetail = class('AdvertisementPartDetail', BasePartDetail)
 local promoteAbility = {}
+local myOwnerID = nil
 --
 function AdvertisementPartDetail:PrefabName()
     return "AdvertisementPartDetail"
@@ -14,6 +15,7 @@ end
 function AdvertisementPartDetail:_InitTransform()
     self:_getComponent(self.transform)
     self:_initData()
+    myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
 end
 --
 function  AdvertisementPartDetail:_InitEvent()
@@ -86,8 +88,8 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.buildingBg = transform:Find("bg/down/buildingBg");
     self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
     self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
-    self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/spped"):GetComponent("Text");   --零售店
-    self.houseSpeed = transform:Find("bg/down/buildingBg/house/spped"):GetComponent("Text");   --住宅
+    self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/center/speed"):GetComponent("Text");   --零售店
+    self.houseSpeed = transform:Find("bg/down/buildingBg/house/center/speed"):GetComponent("Text");   --住宅
     self.startTime = transform:Find("bg/down/openOther/startTimeBg/startTime/timeImage/time"):GetComponent("Text");   --新推广开始时间
 
 end
@@ -119,6 +121,9 @@ end
 
 function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)
+    if data.info.ownerId ~= myOwnerID then
+        self.open.transform.localScale = Vector3.zero
+    end
     self.m_data = data
     self:_initFunc()
     if data.selledPromCount == 0 then
@@ -179,8 +184,16 @@ function AdvertisementPartDetail:OnOpen(go)
 end
 
 --队列
-function AdvertisementPartDetail:OnQuene()
-    ct.OpenCtrl("PromoteQueueCtrl")
+function AdvertisementPartDetail:OnQuene(go)
+    if tonumber( go.queneValue.text) == 0 then
+        Event.Brocast("SmallPop","暂无队列",300)
+        return
+    end
+    if go.m_data.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+    else
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+    end
 end
 
 --零售店

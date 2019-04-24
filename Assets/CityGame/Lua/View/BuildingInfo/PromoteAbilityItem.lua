@@ -7,8 +7,10 @@ PromoteAbilityItem = class('PromoteAbilityItem')
     function PromoteAbilityItem:initialize(prefab)
         self.prefab = prefab;
         self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
-        self.speed = self.prefab.transform:Find("speed").gameObject:GetComponent("Text");
-
+        self.icon = self.prefab.transform:Find("icon").gameObject:GetComponent("Image");
+        self.name = self.prefab.transform:Find("icon/name").gameObject:GetComponent("Text");
+        self.speed = self.prefab.transform:Find("center/speed").gameObject:GetComponent("Text");
+        self.down = self.prefab.transform:Find("down").gameObject:GetComponent("Image");
 
         self.bg.onClick:AddListener(function()
         self:OnBG(self);
@@ -20,6 +22,14 @@ function PromoteAbilityItem:OnBG()
 end
 
 function PromoteAbilityItem:InitData(Data,DataInfo)
+    if Data.typeId == 2251 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", self.icon)
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-food.png", self.down)
+    elseif Data.typeId == 2252 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", self.icon)
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-clothes.png", self.down)
+    end
+    self.name.text = Data.name
     self.m_data = {}
     self.m_data.DataInfo = DataInfo
     self.m_data.Data = Data

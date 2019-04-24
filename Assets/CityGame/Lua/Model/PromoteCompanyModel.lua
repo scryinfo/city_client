@@ -21,6 +21,7 @@ function PromoteCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromotion","gs.AdQueryPromotion",self.n_OnQueryPromotion) -- 推广列表
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",self.n_OnAdQueryPromoCurAbilitys) -- 推广能力列表
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",self.n_OnPromotionSetting) -- 推广设置
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adRemovePromoOrder","gs.AdRemovePromoOrder",self.n_OnRemovePromo) -- 删除推广
 
 end
 
@@ -48,6 +49,11 @@ function PromoteCompanyModel:m_AddPromote(buildingId,time,goodId)
     DataManager.ModelSendNetMes("gscode.OpCode", "adAddNewPromoOrder","gs.AdAddNewPromoOrder",lMsg)
 end
 
+--删除推广
+function PromoteCompanyModel:m_RemovePromote(buildingId,promotionId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "adRemovePromoOrder","gs.AdRemovePromoOrder",{buildingId = buildingId,promotionId = promotionId})
+end
+
 --推广设置
 function PromoteCompanyModel:m_PromotionSetting(buildingId , takeOnNewOrder , price , time)
     if price then
@@ -61,9 +67,9 @@ function PromoteCompanyModel:m_PromotionSetting(buildingId , takeOnNewOrder , pr
 end
 
 --推广列表
-function PromoteCompanyModel:m_QueryPromote(buildingId)
+function PromoteCompanyModel:m_QueryPromote(buildingId,isSeller)
     local player = DataManager.GetMyPersonalHomepageInfo()
-    local lMsg = {isSeller = true , playerId = player.id , sellerBuildingId = buildingId}
+    local lMsg = {isSeller = isSeller , playerId = player.id , sellerBuildingId = buildingId}
     DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromotion","gs.AdQueryPromotion",lMsg)
 end
 
@@ -87,30 +93,34 @@ function PromoteCompanyModel:n_OnAddPromote(info)
     end
 end
 
+--删除推广回调
+function PromoteCompanyModel:n_OnRemovePromo(info)
+    PromoteCompanyModel:m_QueryPromote(info.buildingId,true)
+end
+
 --推广设置回调
 function PromoteCompanyModel:n_OnPromotionSetting(info)
-    local a = info
     PromoteCompanyModel:m_detailPublicFacility(info.sellerBuildingId)
     Event.Brocast("c_CloseSetOpenUp")
 end
 
 --推广列表回调
 function PromoteCompanyModel:n_OnQueryPromotion(info)
-    local a = info
+    if not info.Promotions then
+       return
+    end
     local data = {}
     for i, v in pairs(info.Promotions) do
         data[i] = v
         data[i].createTs = v.promStartTs
         data[i].queneTime = v.promStartTs
         data[i].proposerId = v.buyerId
-        data[i].availableRoll = v.promStartTs
     end
     ct.OpenCtrl("QueneCtrl",{name = "View/GoodsItem/QueueItem",data = data,insClass = PromoteQueueItem})
 end
 
 --推广能力回调
 function PromoteCompanyModel:n_OnAdQueryPromoCurAbilitys(info)
-    local a = info
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurAbilitys', info)
 end
 
@@ -118,7 +128,6 @@ end
 function PromoteCompanyModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_refreshSalary', data)
 end
-
 --开业成功，再次请求建筑详情
 function PromoteCompanyModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then

@@ -4,37 +4,40 @@
 --- DateTime: 2019/4/22 15:57
 ---推广队列item
 PromoteQueueItem = class('PromoteQueueItem')
-function PromoteQueueItem:initialize(prefab,dataInfo)
-    self.prefab = prefab;
+function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
+    self.transform = transform;
     self.dataInfo = dataInfo;
-    self.bg = self.prefab.transform:Find("bg")
-    self.myBg = self.prefab.transform:Find("myBg")
-    self.head = self.prefab.transform:Find("player/head")
-    self.goodsImage = self.prefab.transform:Find("goods/goodsImage"):GetComponent("Image")
-    self.goodsText = self.prefab.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
-    self.slider = self.prefab.transform:Find("details/Slider"):GetComponent("Slider")
-    self.nowTime = self.prefab.transform:Find("details/Slider/time"):GetComponent("Text")
-    self.timePrice = self.prefab.transform:Find("details/timePrice")
-    self.time = self.prefab.transform:Find("details/timePrice/time"):GetComponent("Text")
-    self.price = self.prefab.transform:Find("details/timePrice/price"):GetComponent("Text")
-    self.startTime = self.prefab.transform:Find("startTime/time"):GetComponent("Text")
-    self.delete = self.prefab.transform:Find("startTime/time/delete"):GetComponent("Button")
+    self.id = dataInfo.promotionId
+    self.bg = self.transform:Find("bg")
+    self.myBg = self.transform:Find("myBg")
+    self.head = self.transform:Find("player/head/headBg")
+    self.name = self.transform:Find("player/head/headBg/name"):GetComponent("Text")
+    self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
+    self.goodsText = self.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
+    self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
+    self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
+    self.timePrice = self.transform:Find("details/timePrice")
+    self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
+    self.price = self.transform:Find("details/timePrice/price"):GetComponent("Text")
+    self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
+    self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
 
     self.delete.transform.localScale = Vector3.zero
     local ts = getFormatUnixTime(dataInfo.promStartTs/1000)
-    self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ts.minute
+    self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. " " .. ts.minute
 
     local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
     if currentTime >= dataInfo.promStartTs and currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
-        self.slider.maxValue = dataInfo.promDuration/3600000
-        self.slider.value = dataInfo.promProgress/3600000
-        self.nowTime.text = dataInfo.promProgress/3600000 .. "/" .. dataInfo.promDuration/3600000 .. "h"
+        --self.slider.maxValue = dataInfo.promDuration/3600000
+        --(currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
+        self.slider.value = (currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
+        self.nowTime.text = math.floor(dataInfo.promProgress/3600000) .. "/" .. math.ceil(dataInfo.promDuration/3600000 ).. "h"
     else
         self.timePrice.localScale = Vector3.one
         self.slider.transform.localScale = Vector3.zero
-        self.time.text = ts.hour
+        self.time.text = dataInfo.promDuration/3600000
         --self.price.text =
     end
     if dataInfo.buildingType == 1300 then
@@ -47,21 +50,30 @@ function PromoteQueueItem:initialize(prefab,dataInfo)
 
     PlayerInfoManger.GetInfos({dataInfo.buyerId}, self.c_OnHead, self)
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
-    if playerId == dataInfo.sellerId then
-        if playerId == dataInfo.buyerId then
-           self.delete.transform.localScale = Vector3.one
+    if playerId == dataInfo.buyerId then
+        self.myBg.localScale = Vector3.one
+        if playerId == dataInfo.sellerId then
+            self.delete.transform.localScale = Vector3.one
         end
+    else
+        self.myBg.localScale = Vector3.zero
     end
 
-    self.delete.onClick:AddListener(function()
-        self:OnDelete(self);
-    end)
+    --self.delete.onClick:AddListener(function()
+    --    self:OnDelete(self);
+    --end)
+    luaBehaviour:AddClick(self.delete,self.OnDelete,self)
 end
 
-function PromoteQueueItem:OnDelete()
-    ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.m_data)
+function PromoteQueueItem:OnDelete(go)
+    local data={ins = go,content = "Make sure to take down all of the goods.",func = function()
+        DataManager.DetailModelRpcNoRet(go.dataInfo.sellerBuildingId, 'm_RemovePromote',go.dataInfo.sellerBuildingId,go.id)
+    end  }
+    ct.OpenCtrl('ReminderCtrl',data)
+
 end
 
 function PromoteQueueItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
+    self.name.text = info[1].name
 end

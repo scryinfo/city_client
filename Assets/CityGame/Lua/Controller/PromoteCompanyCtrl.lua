@@ -20,6 +20,7 @@ end
 function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
+    promoteBehaviour:AddClick(PromoteCompanyPanel.queue,self.OnQueue,self)
     self:initData()
     myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
 end
@@ -35,8 +36,7 @@ function PromoteCompanyCtrl:Refresh()
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId)
-    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
+    --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
 
 end
 
@@ -62,11 +62,26 @@ function PromoteCompanyCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
+--点击队列
+function PromoteCompanyCtrl:OnQueue(go)
+    if tonumber(PromoteCompanyPanel.queneValue.text) == 0 then
+        Event.Brocast("SmallPop","暂无队列",300)
+        return
+        end
+        if go.m_data.info.ownerId == myOwnerID then
+    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+    else
+    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+        end
+
+end
+
 --建筑详情回调
 function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     local insId = self.m_data.insId
     self.m_data = detailData
     self.m_data.insId = insId  --temp
+    PromoteCompanyPanel.queneValue.text = self.m_data.selledPromCount
     if self.m_data.info.ownerId == myOwnerID then
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)

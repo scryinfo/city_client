@@ -19,12 +19,12 @@ MapBubbleManager.TempBuildingIconPath =
 {
     House = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
     MaterialFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Material.png",
-    Municipal = "",
-    MunicipalManage = "",
+    Municipal = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    MunicipalManage = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
     ProcessingFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Fatory.png",
-    Laboratory = "",
+    Laboratory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
     RetailShop = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-SuperMarket.png",
-    TalentCenter = "",
+    TalentCenter = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
 }
 
 function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
@@ -205,7 +205,7 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
                 this._createSummaryItems(temp)
             end
         end
-    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing then
+    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing or summaryType == EMapSearchType.Warehouse then
         for i, value in pairs(data.info) do
             if value.count > 0 then
                 local temp = {num = value.count, idx = value.idx}
@@ -263,6 +263,17 @@ function MapBubbleManager._createDetailByType(typeId, data)
             this._checkDetailTable(collectionId)
             local blockId = TerrainManager.GridIndexTurnBlockID(value.pos)
             this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(value)
+        end
+    elseif typeId == EMapSearchType.Warehouse and data.info ~= nil then
+        for i, value in pairs(data.info) do
+            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+            if value.b ~= nil then
+                for i, building in pairs(value.b) do
+                    this._checkDetailTable(collectionId)
+                    local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                end
+            end
         end
     end
 end

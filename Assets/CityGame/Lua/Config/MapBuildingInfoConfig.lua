@@ -38,7 +38,7 @@ MapBuildingInfoConfig={
     },
     ["WarehouseRent"] = {
         ["imgPath"] = "",
-        ["languageId"] = "WarehouseRent",
+        ["languageId"] = "Warehouse",
     },
     ["ADSign"] = {
         ["imgPath"] = "",
@@ -50,47 +50,47 @@ MapBuildingInfoConfig={
     },
     --点击其他人建筑显示的信息
     ["Price"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "Price",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
+        ["languageId"] = "Price:",
     },
     ["PromotionTime"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "PromotionTime",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "PromotionTime:",
     },
     ["ResearchTime"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "ResearchTime",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "ResearchTime:",
     },
     ["WarehouseTime"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "WarehouseTime",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "RentTime:",
     },
     ["SignTime"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "SignTime",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "SignTime:",
     },
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息
 MapPromotionInfoConfig={
     [1] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-food-w.png",
         ["languageId"] = "Food",
     },
     [2] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-clothes-w.png",
         ["languageId"] = "Clothes",
     },
     [3] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Accessory-w.png",
         ["languageId"] = "Accessory",
     },
     [4] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
         ["languageId"] = "SuperMarket",
     },
     [5] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
         ["languageId"] = "House",
     },
 }
@@ -98,11 +98,11 @@ MapPromotionInfoConfig={
 --小地图点开科研展示的信息
 MapTechnologyInfoConfig={
     [1] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
         ["languageId"] = "发明新产品",
     },
     [2] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eva.png",
         ["languageId"] = "Eva能力",
     },
 }

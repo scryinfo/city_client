@@ -13,7 +13,7 @@ function MapPromotionDetailItem:childInit(viewRect)
 
     if self.data.promotionIndex ~= nil then
         local temp = MapPromotionInfoConfig[self.data.promotionIndex]
-        --LoadSprite(temp.imgPath, self.iconImg, true)
+        LoadSprite(temp.imgPath, self.iconImg, true)
     end
 end
 --

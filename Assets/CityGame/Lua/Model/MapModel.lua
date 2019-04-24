@@ -13,9 +13,12 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabSummary"), MapModel.n_OnReceiveLabSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractGridDetail"), MapModel.n_OnReceiveSignDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
 end
 
 
@@ -43,8 +46,8 @@ function MapModel.m_ReqPromotionSummary()
 end
 --仓库摘要
 function MapModel.m_ReqWarehouseSummary()
-    --local msgId = pbl.enum("gscode.OpCode", "queryGroundSummary")
-    --CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    local msgId = pbl.enum("gscode.OpCode", "queryWareHouseSummary")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 --签约摘要
 function MapModel.m_ReqSigningSummary()
@@ -59,8 +62,8 @@ function MapModel.m_ReqMarketDetail(gridIndexPos, itemId)
 end
 --请求仓库详情
 function MapModel.m_ReqWarehouseDetail(gridIndexPos)
-    --local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
-    --DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketDetail","gs.QueryMarketDetail", data)
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryWareHouseDetail","gs.QueryWareHouseDetail", data)
 end
 --请求签约详情
 function MapModel.m_ReqSigningDetail(gridIndexPos)
@@ -124,8 +127,8 @@ function MapModel.n_OnReceiveWarehouseSummary(stream)
     if stream == nil or stream == "" then
         return
     end
-    --local data = assert(pbl.decode("gs.MarketDetail", stream), "MapModel.n_OnReceiveLabSummary: stream == nil")
-    --MapCtrl._receivePromotionSummary(MapCtrl, data)
+    local data = assert(pbl.decode("gs.WareHouseSummary", stream), "MapModel.n_OnReceiveLabSummary: stream == nil")
+    MapCtrl._receiveWarehouseSummary(MapCtrl, data)
 end
 
 
@@ -153,4 +156,12 @@ function MapModel.n_OnReceiveTechDetail(stream)
     end
     local data = assert(pbl.decode("gs.LabDetail", stream), "MapModel.n_OnReceiveTechDetail: stream == nil")
     MapCtrl._receiveTechDetail(MapCtrl, data)
+end
+--仓库
+function MapModel.n_OnReceiveWarehouseDetail(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.WareHouseDetail", stream), "MapModel.n_OnReceiveWarehouseDetail: stream == nil")
+    MapCtrl._receiveWarehouseDetail(MapCtrl, data)
 end

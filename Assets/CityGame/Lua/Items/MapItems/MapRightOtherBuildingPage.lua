@@ -70,34 +70,32 @@ function MapRightOtherBuildingPage:switchShowTrans(typeId)
 end
 --
 function MapRightOtherBuildingPage:showByType(typeData)
+    PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
+
     --直接搜索类型
     if typeData.detailId == nil then
         if typeData.typeId == EMapSearchType.Warehouse then
+            self.buildingNameText.text = self.data.name
             self:_createWarehouse()
             self:_sortInfoItems()
+
         elseif typeData.typeId == EMapSearchType.Signing then
             self.buildingNameText.text = self.data.buildingName
-            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
-
             self:_createSign()
             self:_sortInfoItems()
         end
     else
         if typeData.typeId == EMapSearchType.Material or typeData.typeId == EMapSearchType.Goods then
             self.buildingNameText.text = self.data.name
-            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
             self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
             --self.buildingNameText.text = self.data.name
-            --PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
             self.promotionItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Technology then
             self.buildingNameText.text = self.data.name
-            PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
             self.technologyItem:refreshData(self.data, typeData)
-
         end
     end
 end
@@ -153,7 +151,17 @@ function MapRightOtherBuildingPage:_createSign()
 end
 --仓库
 function MapRightOtherBuildingPage:_createWarehouse()
+    local str2 = string.format("<color=%s>E%s</color>/h", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
+    local data2 = {infoTypeStr = "Price", value = str2}  --价格
+    self.items[#self.items + 1] = self:_createShowItem(data2, self.simpleShowRoot)
 
+    local str1 = string.format("%dh - %dh", self.data.minHourToRent, self.data.maxHourToRent)
+    local data1 = {infoTypeStr = "WarehouseTime", value = str1}  --时间
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
+
+    local str3 = self.data.availableSize
+    local data3 = {infoTypeStr = "WarehouseRent", value = str3}  --可用仓位
+    self.items[#self.items + 1] = self:_createShowItem(data3, self.simpleShowRoot)
 end
 --
 function MapRightOtherBuildingPage:_createShowItem(data, parentTrans, hasDetail)

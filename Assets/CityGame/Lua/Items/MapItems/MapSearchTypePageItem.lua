@@ -51,7 +51,16 @@ end
 --
 function MapSearchTypePageItem:chooseTypeDetail(typeId, showStr)
     if typeId == self.data.typeId and showStr ~= nil then
+        if #showStr > 9 then
+            showStr = showStr..""
+        end
         self.chooseShowNameText.text = showStr
+        --local sizeDelta = self.chooseShowNameText.rectTransform.sizeDelta
+        --local width = self.chooseShowNameText.preferredWidth
+        --self.chooseShowNameText.rectTransform.sizeDelta = Vector2.New(width, sizeDelta.y)
+        --if width > 125 then
+        --
+        --end
         self.choose.localScale = Vector3.one
         self.disChoose.localScale = Vector3.zero
     else

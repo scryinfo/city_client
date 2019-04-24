@@ -11,9 +11,9 @@ function MapTechnologyDetailItem:childInit(viewRect)
     self.selectImg = self.viewRect.transform:Find("selectImg")
     self.typeText = self.viewRect.transform:Find("Text"):GetComponent("Text")
 
-    if self.data.promotionIndex ~= nil then
+    if self.data.technologyIndex ~= nil then
         local temp = MapTechnologyInfoConfig[self.data.technologyIndex]
-        --LoadSprite(temp.imgPath, self.iconImg, true)
+        LoadSprite(temp.imgPath, self.iconImg, true)
     end
 end
 --

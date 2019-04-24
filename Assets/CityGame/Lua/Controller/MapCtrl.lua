@@ -13,7 +13,7 @@ MapCtrl = class('MapCtrl',UIPanel)
 UIPanel:ResgisterOpen(MapCtrl)
 
 MapCtrl.static.reqServerTime = 10  --刷新时间
-MapCtrl.static.DetailSize = Vector2.New(500, 796)  --详细界面的大小
+MapCtrl.static.DetailSize = Vector2.New(500, 876)  --详细界面的大小
 MapCtrl.static.CloseSearchBtnSize = Vector2.New(59, 277)  --关闭搜索的按钮的大小
 MapCtrl.static.TypeMovePos = Vector2.New(0, -400)  --类型隐藏显示的X位置，x为显示位置，y为隐藏位置
 MapCtrl.static.ShowTypeBtnMovePos = Vector2.New(17, -80)  --打开界面的按钮隐藏显示的X位置，x为显示位置，y为隐藏位置
@@ -678,6 +678,11 @@ function MapCtrl:_receiveSigningSummary(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Signing)
 end
+--仓库
+function MapCtrl:_receiveWarehouseSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Warehouse)
+end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
@@ -700,6 +705,11 @@ end
 function MapCtrl:_receiveTechDetail(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createDetailItems(data, EMapSearchType.Technology, true)
+end
+--仓库
+function MapCtrl:_receiveWarehouseDetail(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createDetailItems(data, EMapSearchType.Warehouse, true)
 end
 
 ---

@@ -21,7 +21,9 @@ end
 function MapRightShowInfoItem:initData(data)
     local temp = MapBuildingInfoConfig[data.infoTypeStr]
     --self.showText.text = GetLanguage(temp.languageId)  --多语言
-    --LoadSprite(temp.imgPath, self.iconImg, true)
+    if temp.imgPath ~= nil and temp.imgPath ~= "" then
+        LoadSprite(temp.imgPath, self.iconImg, true)
+    end
     self.valueText.text = data.value
     self.valueText.transform.localScale = Vector3.one
     if self.detailImg ~= nil then
@@ -30,7 +32,7 @@ function MapRightShowInfoItem:initData(data)
 
     --Temp
     self.showText.text = temp.languageId
-    LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
+    --LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
 
     if self.detailImg ~= nil and data.detailImgPath ~= nil then
         LoadSprite(data.detailImgPath, self.detailImg, true)

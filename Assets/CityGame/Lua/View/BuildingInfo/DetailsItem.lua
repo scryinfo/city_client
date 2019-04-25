@@ -15,6 +15,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     --self.averageText = self.prefab.transform:Find("buttombg/moneyText"):GetComponent("Text")
     self.inputPrice = self.prefab.transform:Find("buttombg/InputPrice"):GetComponent("InputField")
     self.closeBtn = self.prefab.transform:Find("closeBtn")
+    self.ToggleBtn = self.prefab.transform:Find("ToggleBtn"):GetComponent("Toggle")
 
     --总分
     self.scoreRootTrans = self.prefab.transform:Find("buttombg/scoreRoot")
@@ -28,6 +29,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberScrollbar.minValue = 0
     self.numberScrollbar.maxValue = goodsDataInfo.n
     self.nameText.text = GetLanguage(self.itemId)
+    self.ToggleBtn.isOn = false
 
     local materialKey,goodsKey = 21,22
     self.inputPrice.onValueChanged:RemoveAllListeners()
@@ -51,6 +53,9 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     end)
     self.inputNumber.onValueChanged:AddListener(function ()
         self:inputInfo()
+    end)
+    self.ToggleBtn.onValueChanged:AddListener(function()
+        self:SendMessage()
     end)
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_closeBtn,self)
     self._luabehaviour:AddClick(self.infoBtn.gameObject, function ()
@@ -93,4 +98,16 @@ function DetailsItem:_getValuableScore(rentPrice, buildingType)
     if value >= 100 then
         return "100"
     end
+end
+--是否开启自动补货
+function DetailsItem:SendMessage()
+    --if isOn == true then
+    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，发送消息:开启自动补货")
+    --    Event.Brocast("SetAutoReplenish",self)
+    --else
+    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，发送消息:关闭自动补货")
+    --    Event.Brocast("SetAutoReplenish",self)
+    --end
+
+    Event.Brocast("SetAutoReplenish",self)
 end

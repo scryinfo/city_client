@@ -77,6 +77,7 @@ function RetailStoresCtrl:refreshRetailShopDataInfo(DataInfo)
                 self.materialToggleGroup:cleanItems()
             end
             UIPanel.ClosePage()
+            DataManager.CloseDetailModel(self.m_data.insId)
         end)
     end
     self.m_data.buildingType = BuildingType.RetailShop

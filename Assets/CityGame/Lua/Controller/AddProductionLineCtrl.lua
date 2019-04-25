@@ -51,7 +51,7 @@ function AddProductionLineCtrl:_initData()
             data.mId = self.m_data.info.mId
             data.insId = self.m_data.info.id
             data.buildingType = self.m_data.buildingType
-            ct.OpenCtrl("AddLineBoxCtrl",data)
+            ct.OpenCtrl("AddProductionLineBoxCtrl",data)
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         AddProductionLinePanel.leftBtnParent.transform.localScale = Vector3.zero
@@ -63,7 +63,7 @@ function AddProductionLineCtrl:_initData()
             data.mId = self.m_data.info.mId
             data.insId = self.m_data.info.id
             data.buildingType = self.m_data.buildingType
-            ct.OpenCtrl("AddLineBoxCtrl",data)
+            ct.OpenCtrl("AddProductionLineBoxCtrl",data)
         end)
     end
     self:_changeAddLineData(AddLineButtonPosValue.Left)

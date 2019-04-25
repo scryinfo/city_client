@@ -27,7 +27,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.xBtn.onClick:RemoveAllListeners()
+--    self.xBtn.onClick:RemoveAllListeners()
 end
 --
 function TurnoverDetailPart:RefreshData(data)

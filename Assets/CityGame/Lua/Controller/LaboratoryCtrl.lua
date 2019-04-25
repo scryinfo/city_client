@@ -13,9 +13,6 @@ end
 function LaboratoryCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
-function LaboratoryCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self, obj)
-end
 local this,panel
 function LaboratoryCtrl:Refresh()
     this:_initData()
@@ -31,6 +28,21 @@ function LaboratoryCtrl:Awake(go)
     self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
+function LaboratoryCtrl:Hide()
+    UIPanel.Hide(self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+end
+
+function LaboratoryCtrl:Close()
+    UIPanel.Close(self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+end
 ---===================================================================================点击函数==============================================================================================
 
 --点击中间按钮的方法
@@ -85,27 +97,11 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     panel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     --判断是自己还是别人打开了界面
     if info.ownerId ~= DataManager.GetMyOwnerID() then
-        panel.changeNameBtn.localScale = Vector3.zero
-        panel.stopIconBtn.localScale = Vector3.zero
+        self:other(buildingInfo)
     else
-        panel.changeNameBtn.localScale = Vector3.one
-    end
-    --刷新底部组件
-    if self.groupMgr == nil then
-
-    self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
-
-    self.groupMgr:AddParts(ResearchPart,0.33)
-    self.groupMgr:AddParts(TurnoverPart,0.33)
-    self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
-
-    self.groupMgr:RefreshData(buildingInfo)
-    self.groupMgr:TurnOffAllOptions()
-    else
-    self.groupMgr:RefreshData(buildingInfo)
+        self:owner(buildingInfo)
     end
 end
-
 
 function LaboratoryCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
@@ -117,3 +113,34 @@ function LaboratoryCtrl:_refreshSalary(data)
         self.groupMgr:RefreshData(self.m_data)
     end
 end
+--自已
+function LaboratoryCtrl:owner(buildingInfo)
+    --刷新底部组件s
+    if self.groupMgr == nil then
+
+        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+
+        self.groupMgr:AddParts(ResearchPart,0.33)
+        self.groupMgr:AddParts(TurnoverPart,0.33)
+        self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
+
+        self.groupMgr:RefreshData(buildingInfo)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(buildingInfo)
+    end
+end
+--他人
+function LaboratoryCtrl:other(buildingInfo)
+    --刷新底部组件
+    if self.groupMgr == nil then
+
+        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+        self.groupMgr:AddParts(ResearchPart,1)
+        self.groupMgr:RefreshData(buildingInfo)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(buildingInfo)
+    end
+end
+

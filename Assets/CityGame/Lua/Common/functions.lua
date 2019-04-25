@@ -568,6 +568,19 @@ function UnLoadSprite(path)
 
 end
 
+function findByName(transform ,name)
+    local trim = transform:Find(name)
+	if trim  then
+		return trim
+	end
+	for i = 1, transform.childCount do
+		trim = findByName(transform:GetChild(i-1),name)
+		if trim then
+			return  trim
+		end
+	end
+   return nil
+end
 
 --屏幕坐标转化为真实坐标
 function ScreenPosTurnActualPos(targetScreenPos)

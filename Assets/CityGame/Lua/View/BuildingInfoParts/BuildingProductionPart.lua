@@ -30,6 +30,7 @@ function BuildingProductionPart:_ResetTransform()
     --关闭Update
     UpdateBeat:Remove(self.Update,self)
     Event.RemoveListener("partUpdateNowCount",self.updateNowCount,self)
+    Event.RemoveListener("partUpdateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionPart:_getComponent(transform)
@@ -49,11 +50,12 @@ end
 function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
 
     Event.AddListener("partUpdateNowCount",self.updateNowCount,self)
+    Event.AddListener("partUpdateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionPart:_initFunc()
     self:_language()
-    if not self.m_data.line then
+    if not self.m_data.line or next(self.m_data.line) == nil then
         self.TopLineInfo.transform.localScale = Vector3.zero
         self.tipText.transform.localScale = Vector3.one
     else
@@ -117,16 +119,15 @@ function BuildingProductionPart:updateNowCount(data)
         self.m_data.line[1].nowCount = data.nowCount
     end
 end
-
-
-
-
-
-
-
-
-
-
+--删除正在生产中的线
+function BuildingProductionPart:updateNowLine(data)
+    if data ~= nil then
+        self.time = nil
+        UpdateBeat:Remove(self.Update,self)
+        --重新初始化界面
+        self:_initFunc()
+    end
+end
 
 
 

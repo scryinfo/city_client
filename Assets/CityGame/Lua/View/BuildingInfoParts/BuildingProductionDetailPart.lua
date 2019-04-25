@@ -112,14 +112,14 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("ProductionLineSettop",self.ProductionLineSettop,self)
     Event.AddListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
-    Event.AddListener("updateNowLine",self.updateNowLine,self)
+    Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("ProductionLineSettop",self.ProductionLineSettop,self)
     Event.RemoveListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
-    Event.RemoveListener("updateNowLine",self.updateNowLine,self)
+    Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -317,14 +317,13 @@ end
 function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
         table.remove(self.m_data.line,1)
+        self.time = nil
         UpdateBeat:Remove(self.Update,self)
-        if next(self.waitingQueueIns) == nil then
-            self.lineInfo.transform.localScale = Vector3.zero
-            self.addBtn.transform.localScale = Vector3.one
-            self.content.transform.localScale = Vector3.zero
-            self.lineNumberText.text = 0 .."/"..0
-        else
-
+        --清空生产队列Item数据
+        if next(self.waitingQueueIns) ~= nil then
+            self:CloseDestroy(self.waitingQueueIns)
         end
+        --重新初始化界面及数据
+        self:initializeUiInfoData(self.m_data.line)
     end
 end

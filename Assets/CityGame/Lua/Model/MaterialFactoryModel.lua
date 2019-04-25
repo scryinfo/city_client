@@ -177,7 +177,8 @@ function MaterialFactoryModel:n_OnAddLineInfo(data)
 end
 --删除生产线
 function MaterialFactoryModel:n_OnDeleteLineInfo(data)
-    Event.Brocast("updateNowLine",data)
+    Event.Brocast("detailPartUpdateNowLine",data)
+    Event.Brocast("partUpdateNowLine",data)
 end
 --生产线变化推送
 function MaterialFactoryModel:n_OnLineChangeInform(data)

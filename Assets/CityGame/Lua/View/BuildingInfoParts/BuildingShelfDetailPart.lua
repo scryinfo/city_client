@@ -58,7 +58,7 @@ function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
         self:clickaddShelfBtn()
     end,self)
     mainPanelLuaBehaviour:AddClick(self.contentAddBtn.gameObject,function()
-        self:clickBuyBtn()
+        self:clickaddShelfBtn()
     end,self)
     mainPanelLuaBehaviour:AddClick(self.buyBtn.gameObject,function()
         self:clickBuyBtn()
@@ -79,11 +79,13 @@ end
 function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("addBuyList",self.addBuyList,self)
     Event.AddListener("deleBuyList",self.deleBuyList,self)
+    Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("addBuyList",self.addBuyList,self)
     Event.RemoveListener("deleBuyList",self.deleBuyList,self)
+    Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -146,7 +148,7 @@ function BuildingShelfDetailPart:clickBuyBtn()
     data.itemPrefabTab = self.buyDatas
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
------------------------------------------------------------------------------时间函数--------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------
 --添加到购买列表
 function BuildingShelfDetailPart:addBuyList(data)
     --添加到购买列表
@@ -169,7 +171,14 @@ function BuildingShelfDetailPart:deleBuyList(id)
         end
     end
 end
-
+--刷新最新数据
+function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
+    self.m_data = dataInfo.info
+    if next(self.shelfDatas) ~= nil then
+        self:CloseDestroy(self.shelfDatas)
+    end
+    self:initializeUiInfoData(self.m_data.shelf.good)
+end
 
 
 

@@ -161,7 +161,7 @@ function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
 end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,false)
+    DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
 end
 --修改货架价格
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)

@@ -166,6 +166,7 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
         data.number = ins.numberSlider.value
         data.price = GetServerPriceNumber(ins.priceInput.text)
         data.switch = ins.automaticSwitch.isOn
+        Event.Brocast("addShelf",data)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -196,7 +197,7 @@ function ShelfBoxCtrl:SlidingUpdateText()
 end
 --上架时检查操作是否成功
 function ShelfBoxCtrl:WhetherValidShelfOp(ins)
-    if GetServerPriceNumber(ins.priceInput.text) == 0 then
+    if GetServerPriceNumber(ins.priceInput.text) == 0 or ins.priceInput.text == "" then
         ct.log("fisher_w31_time","价格不能为0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         return false
     end

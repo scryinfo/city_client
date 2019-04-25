@@ -82,13 +82,13 @@ end
 function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
-
+    Event.AddListener("startTransport",self.startTransport,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
-
+    Event.RemoveListener("startTransport",self.startTransport,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -120,16 +120,8 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        --if #storeData == #self.warehouseDatas then
-        --    for key,value in pairs(storeData) do
-        --        for key1,value1 in pairs(self.warehouseDatas) do
-        --            value1:updateNumber(value)
-        --        end
-        --    end
-        --else
         self.transportBool = GoodsItemStateType.transport
         self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-        --end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
@@ -166,6 +158,14 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
         else
             self.number.transform.localScale = Vector3.one
             self.numberText.text = #self.transportTab
+        end
+    end
+end
+--开始运输
+function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_MaterialTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
     end
 end

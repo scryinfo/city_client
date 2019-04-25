@@ -24,6 +24,7 @@ function NewTransportBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.chooseWarehouseBtn.gameObject,self._clickChooseWarehouseBtn,self)
+    self.luaBehaviour:AddClick(self.startBtn.gameObject,self._clickStartBtn,self)
 end
 
 function NewTransportBoxCtrl:Active()
@@ -70,6 +71,7 @@ function NewTransportBoxCtrl:initializeUiInfoData()
             self.itemTable = {}
         end
         local unitPrice = ChooseWarehouseCtrl:GetPrice()
+        self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
         self:CreateGoodsItems(self.m_data.itemPrefabTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType,unitPrice)
     end
 
@@ -97,6 +99,10 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     data.buildingId = ins.m_data.buildingId
     data.nameText = ins.targetWarehouse
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
+end
+--点击运输
+function NewTransportBoxCtrl:_clickStartBtn(ins)
+    Event.Brocast("startTransport",ins.itemTable,ins.targetBuildingId)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --删除某个商品

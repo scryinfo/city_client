@@ -6,6 +6,8 @@
 WarehouseDetailBoxCtrl = class("WarehouseDetailBoxCtrl",UIPanel)
 UIPanel:ResgisterOpen(WarehouseDetailBoxCtrl)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function WarehouseDetailBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -48,7 +50,7 @@ end
 -------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseDetailBoxCtrl:initializeUiInfoData()
-    if next(self.m_data.store) == nil then
+    if next(self.m_data.info.store) == nil then
         self.noTip.transform.localScale = Vector3.one
         return
     else
@@ -57,7 +59,7 @@ function WarehouseDetailBoxCtrl:initializeUiInfoData()
         end
         self.noTip.transform.localScale = Vector3.zero
         self.addShelfBool = GoodsItemStateType.addShelf
-        self:CreateGoodsItems(self.m_data.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.buildingType,self.addShelfBool,self.m_data.info.id)
+        self:CreateGoodsItems(self.m_data.info.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.info.buildingType,self.addShelfBool,self.m_data.info.info.id)
     end
 end
 --设置多语言
@@ -71,13 +73,42 @@ function WarehouseDetailBoxCtrl:_clickCloseBtn()
     UIPanel.ClosePage()
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+--上架
+function WarehouseDetailBoxCtrl:addShelf(dataInfo)
+    if self.m_data.info.buildingType == BuildingType.MaterialFactory then
+        --如果是原料厂
+
+    elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
+        --如果是加工厂
+
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------
 --生成itemPrefab
 function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
     if not dataInfo then
         return
     end
     local arg = {...}
-    for key,value in pairs(dataInfo.inHand) do
+    --筛选出有用的数据
+    --如果是原料厂上架，筛选出原料；如果是加工厂上架，筛选出商品
+    local temporaryDataInfo = {}
+    local materialKey,goodsKey = 21,22
+    if self.m_data.info.buildingType == BuildingType.MaterialFactory then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+    end
+
+    for key,value in pairs(temporaryDataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
         local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)
         table.insert(self.goodsItemTable,itemGoodsIns)

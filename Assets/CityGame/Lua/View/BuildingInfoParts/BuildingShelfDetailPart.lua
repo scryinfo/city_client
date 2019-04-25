@@ -134,9 +134,7 @@ end
 --点击上架
 function BuildingShelfDetailPart:clickaddShelfBtn()
     local data = {}
-    data.info = self.m_data.info
-    data.store = self.m_data.store
-    data.buildingType = self.m_data.buildingType
+    data.info = self.m_data
     ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
 end
 --打开购买弹窗

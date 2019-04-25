@@ -158,12 +158,14 @@ function ShelfBoxCtrl:_clickTipBtn(ins)
 end
 --点击上架
 function ShelfBoxCtrl:_clickAddShelfBtn(ins)
-    local materialKey,goodsKey = 21,22
-    if Math_Floor(ins.m_data.itemId / 100000) == materialKey then
-        Event.Brocast("m_ReqMaterialShelfAdd",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,GetServerPriceNumber(ins.priceInput.text),ins.m_data.dataInfo.key.producerId,
-                ins.m_data.dataInfo.key.qty,ins.automaticSwitch.isOn)
-    elseif Math_Floor(ins.m_data.itemId / 100000) == goodsKey then
-
+    if ins:WhetherValidShelfOp(ins) == true then
+        local data = {}
+        data.itemId = ins.m_data.itemId
+        data.producerId = ins.m_data.dataInfo.key.producerId
+        data.qty = ins.m_data.dataInfo.key.qty
+        data.number = ins.numberSlider.value
+        data.price = GetServerPriceNumber(ins.priceInput.text)
+        data.switch = ins.automaticSwitch.isOn
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -191,4 +193,16 @@ end
 --滑动条更新文本
 function ShelfBoxCtrl:SlidingUpdateText()
     self.numberText.text = "×"..self.numberSlider.value
+end
+--上架时检查操作是否成功
+function ShelfBoxCtrl:WhetherValidShelfOp(ins)
+    if GetServerPriceNumber(ins.priceInput.text) == 0 then
+        ct.log("fisher_w31_time","价格不能为0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        return false
+    end
+    if ins.numberSlider.value == 0 then
+        ct.log("fisher_w31_time","数量不能为0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        return false
+    end
+    return true
 end

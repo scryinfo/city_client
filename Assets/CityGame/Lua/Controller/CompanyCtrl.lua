@@ -35,6 +35,7 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.buildingBtn.gameObject, self.OnBuilding, self)
     luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
     luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
+    luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
 
     -- 土地节点
     self.landSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -145,13 +146,15 @@ function CompanyCtrl:OnEva(go)
     go:_showMainRoot(4)
     -- Eva选项生成
     go.isClickEva = true
-    CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     go:ShowOptionTwo(0)
     go:ShowOptionThere(0)
+    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
     CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
     if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-        CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
+        CompanyPanel.optionOneScroll.localPosition = Vector3.zero --Vector2.New(0,0)
+    else
+        CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     end
 end
 
@@ -161,15 +164,22 @@ function CompanyCtrl:OnIntroduction(go)
     ct.OpenCtrl("CompanyIntroductionCtrl")
 end
 
+--关闭eva小提示
+function CompanyCtrl:OnCloseTips(go)
+    --PlayMusEff(1002)
+    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
+    CompanyCtrl.static.companyMgr:ClsoeTips()
+end
+
 -- 初始数据
 function CompanyCtrl:_initData()
     -- 整合各大分页的切换
     self.mainSwitchTab =
     {
-        {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot},
-        {btn = CompanyPanel.landBtn, root = CompanyPanel.landRoot},
-        {btn = CompanyPanel.buildingBtn, root = CompanyPanel.buildingRoot},
-        {btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot},
+        {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot, transform = CompanyPanel.infoBtn.transform},
+        {btn = CompanyPanel.landBtn, root = CompanyPanel.landRoot, transform = CompanyPanel.landBtn.transform},
+        {btn = CompanyPanel.buildingBtn, root = CompanyPanel.buildingRoot, transform = CompanyPanel.buildingBtn.transform},
+        {btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
     }
 end
 
@@ -179,9 +189,15 @@ function CompanyCtrl:_showMainRoot(index)
         if i == index then
             v.btn.interactable = false
             v.root.localScale = Vector3.one
+            v.transform:Find("OpenImage").localScale = Vector3.one
+            v.transform:Find("CloseImage").localScale = Vector3.zero
+            v.transform:Find("Text"):GetComponent("Text").color = getColorByVector3(Vector3.New(255, 255, 255))
         else
             v.btn.interactable = true
             v.root.localScale = Vector3.zero
+            v.transform:Find("OpenImage").localScale = Vector3.zero
+            v.transform:Find("CloseImage").localScale = Vector3.one
+            v.transform:Find("Text"):GetComponent("Text").color = getColorByVector3(Vector3.New(205, 219, 255))
         end
     end
 end
@@ -309,8 +325,6 @@ end
 
 function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     if groundInfos.myBuildingInfo then
-        CompanyPanel.buildingScroll:RefillCells()
-
         CompanyCtrl.buildingInfos = {}
         local buildingTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetBuildingTitleItem()
         if CompanyCtrl.static.companyMgr.buildingTypeNum == 0 then
@@ -349,7 +363,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
                 if i - 1 == CompanyCtrl.static.companyMgr.buildingTypeNum then
                     for _, k in ipairs(groundInfos.myBuildingInfo) do
                         if k.type - 10 == i - 1 then
-                            CompanyCtrl.buildingInfos = groundInfos.myBuildingInfo[CompanyCtrl.static.companyMgr.buildingTypeNum].info
+                            CompanyCtrl.buildingInfos = k.info
                             break
                         end
                     end
@@ -359,6 +373,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
             end
         end
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, #CompanyCtrl.buildingInfos, "View/Company/BuildingInfoItem")
+        CompanyPanel.buildingScroll:RefillCells()
     else
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
         local buildingTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetBuildingTitleItem()
@@ -397,10 +412,12 @@ end
 
 function CompanyCtrl:ShowOptionTwo(itemNumber)
     CompanyCtrl.optionTwoScript = {}
-    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EmptyBtnTitleItem")
+    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
+    CompanyPanel.optionTwoScroll:RefillCells()
 end
 
 function CompanyCtrl:ShowOptionThere(itemNumber)
     CompanyCtrl.optionThereScript = {}
-    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EmptyBtnTitleItem")
+    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
+    CompanyPanel.optionThereScroll:RefillCells()
 end

@@ -64,9 +64,6 @@ end
 
 -- 生成Eva选项item
 function CompanyMgr:CreateEvaTitleItem(ctrl)
-    if self.evaTitleItem then
-        return
-    end
     self.evaTitleItem = {}
     self.ctrl = ctrl
     for i, v in ipairs(EvaConfig) do
@@ -76,7 +73,7 @@ function CompanyMgr:CreateEvaTitleItem(ctrl)
                 DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
             end
         end
-        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/EmptyBtnTitleItem.prefab", CompanyPanel.optionOneScroll, nil, callback)
+        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/EvaTitleItem.prefab", CompanyPanel.optionOneScroll, nil, callback)
     end
 end
 
@@ -154,6 +151,7 @@ function CompanyMgr:SetBtnState(index)
     if index == 1 then
         for _, v in ipairs(self.evaTitleItem) do
             v:SetSelect(true)
+            v:SetNameTextColor(1)
         end
     elseif index == 2 then
         for _, v in ipairs(CompanyCtrl.optionTwoScript) do
@@ -163,6 +161,13 @@ function CompanyMgr:SetBtnState(index)
         for _, v in ipairs(CompanyCtrl.optionThereScript) do
             v:SetSelect(true)
         end
+    end
+end
+
+-- 重置Eva按钮的字的颜色
+function CompanyMgr:SetBtnNameTextColor()
+    for _, v in ipairs(self.evaTitleItem) do
+        v:SetNameTextColor(1)
     end
 end
 
@@ -189,6 +194,15 @@ function CompanyMgr:UpdateMyEvaProperty(eva)
             v.data = eva
             v:ShowData(v.data.lv, v.data.cexp)
             break
+        end
+    end
+end
+
+-- 重置Eva属性的小提示
+function CompanyMgr:ClsoeTips()
+    for _, v in ipairs(self.propertyItems) do
+        if v.IsShowTips then
+            v:IsShowTips(false)
         end
     end
 end

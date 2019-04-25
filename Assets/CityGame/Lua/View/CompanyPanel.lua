@@ -71,6 +71,7 @@ function CompanyPanel.InitPanel()
     this.optionTwoScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
     this.propertyScroll = transform:Find("BottomRoot/EvaRoot/PropertyRoot/PropertyScroll/Content")
+    this.closeTipsBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/CloseTipsBtn")
 
     -- Eva界面调整
     this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")

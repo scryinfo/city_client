@@ -5,6 +5,21 @@
 ---
 
 BuildingInfoItem = class("BuildingInfoItem")
+BuildingInfoItem.static.BuildingIcon = -- 建筑中间示意图配置
+{
+    [1100001] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_1x1.png",
+    [1100002] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_2x2.png",
+    [1100003] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_3x3.png",
+    [1200001] = "Assets/CityGame/Resources/Atlas/Company/Factory_1x1.png",
+    [1200002] = "Assets/CityGame/Resources/Atlas/Company/Factory_2x2.png",
+    [1200003] = "Assets/CityGame/Resources/Atlas/Company/Factory_3x3.png",
+    [1300001] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_1x1.png",
+    [1300002] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_2x2.png",
+    [1300003] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_3x3.png",
+    [1400001] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse1x1.png",
+    [1400002] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse2x2.png",
+    [1400003] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse3x3.png",
+}
 
 -- 初始化
 function BuildingInfoItem:initialize(prefab, data)
@@ -14,9 +29,11 @@ function BuildingInfoItem:initialize(prefab, data)
     local transform = prefab.transform
 
     self.nameText = transform:Find("NameText"):GetComponent("Text")
-    self.sizeText = transform:Find("SizeText"):GetComponent("Text")
-    self.gradeText = transform:Find("GradeImage/GradeText"):GetComponent("Text")
+    self.gradeImage = transform:Find("GradeImage")
+    self.popularityGradeText = transform:Find("GradeImage/PopularityGradeText"):GetComponent("Text")
+    self.qualityGradeText = transform:Find("GradeImage/QualityGradeText"):GetComponent("Text")
 
+    self.buildingImage = transform:Find("BuildingImage"):GetComponent("Image")
     self.goBtn = transform:Find("GoBtn"):GetComponent("Button")
 
     self.goBtn.onClick:RemoveAllListeners()
@@ -24,9 +41,20 @@ function BuildingInfoItem:initialize(prefab, data)
         self:_goPos()
     end)
 
-    self.nameText.text = data.name
-    self.sizeText.text = data.mId
-    self.gradeText.text = "零售店评分：" .. data.score
+    -- 名字
+    self.nameText.text = string.format("%s's  %s", data.name, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
+
+    -- 住宅、零售店才有品质、品牌评分
+    local type = string.sub(tostring(data.mId), 1, 2)
+    if type == "13" or type == "14" then
+        self.gradeImage.localScale = Vector3.one
+        self.popularityGradeText.text = data.brand
+        self.qualityGradeText.text = data.quality
+    else
+        self.gradeImage.localScale = Vector3.zero
+    end
+
+    LoadSprite(BuildingInfoItem.static.BuildingIcon[data.mId], self.buildingImage, true)
 end
 
 -- 跳转到场景

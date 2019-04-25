@@ -191,8 +191,7 @@ BuildingType =
 {
 	House = 0,  --住宅
 	MaterialFactory = 1,  --原料厂
-	Municipal = 2,--市镇设施
-	MunicipalManage = 3,--市政管理
+	Municipal = 2,--推广
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
 	RetailShop = 6,  --零售店

@@ -14,7 +14,8 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     self.closeBtn = tran:Find("closeBtn"):GetComponent("Button")
     self.goHereBtn = tran:Find("goHereBtn"):GetComponent("Button")
     self.buildingNameText = tran:Find("buildingNameText"):GetComponent("Text")
-    self.showRoot = tran:Find("showRoot")
+    self.showRoot = tran:Find("opened/showRoot")
+    self.openedTran = tran:Find("opened")
     self.notOpenTran = tran:Find("notOpenTran")
     self.notOpenText01 = tran:Find("notOpenTran/Text"):GetComponent("Text")
 
@@ -34,14 +35,17 @@ function MapRightSelfBuildingPage:refreshData(data)
 
     local buildingDetail = DataManager.GetSelfBuildingDetailByBlockId(data.buildingId)
     self.data = buildingDetail
-    self.buildingNameText.text = buildingDetail.info.name
-    if buildingDetail.info.state == "OPERATE" then
+    local info = buildingDetail.info
+    self.buildingNameText.text = string.format("%s %s%s", info.name, GetLanguage(PlayerBuildingBaseData[info.mId].sizeName), GetLanguage(PlayerBuildingBaseData[info.mId].typeName))
+    if info.state == "OPERATE" then
         self.notOpenTran.localScale = Vector3.zero
-        local buildingType = GetBuildingTypeById(buildingDetail.info.mId)
+        self.openedTran.localScale = Vector3.one
+        local buildingType = GetBuildingTypeById(info.mId)
         self:_createInfoByType(buildingType)
         self:_sortInfoItems()
     else
         self.notOpenTran.localScale = Vector3.one
+        self.openedTran.localScale = Vector3.zero
     end
     self:openShow()
 end
@@ -61,13 +65,21 @@ function MapRightSelfBuildingPage:_createInfoByType(buildingType)
     local revenueData = {infoTypeStr = "Revenue", value = ""}  --今日营收
     self.items[#self.items + 1] = self:_createShowItem(revenueData)
 
-    local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary}  --工资
+    local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
     self.items[#self.items + 1] = self:_createShowItem(salaryData)
 
     if buildingType == BuildingType.House then
         self:_createHouse()
-    elseif buildingType == BuildingType.MaterialFactory then
+    elseif buildingType == BuildingType.MaterialFactory or buildingType == BuildingType.ProcessingFactory then
         self:_createMaterial()
+    elseif buildingType == BuildingType.RetailShop then
+        self:_createRetailShop()
+    elseif buildingType == BuildingType.Warehouse then
+        self:_createWarehouse()
+    elseif buildingType == BuildingType.Laboratory then
+        self:_createLab()
+    elseif buildingType == BuildingType.Municipal then
+        self:_createPromotion()
     end
 end
 --住宅
@@ -79,6 +91,9 @@ function MapRightSelfBuildingPage:_createHouse()
     local rentStr = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
     local rentData = {infoTypeStr = "HouseRent", value = rentStr}  --租金
     self.items[#self.items + 1] = self:_createShowItem(rentData)
+
+    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --原料厂
 function MapRightSelfBuildingPage:_createMaterial()
@@ -86,6 +101,9 @@ function MapRightSelfBuildingPage:_createMaterial()
     local str1 = string.format("%d/%d", used, PlayerBuildingBaseData[self.data.info.mId].storeCapacity)
     local data1 = {infoTypeStr = "Warehouse", value = str1}  --仓库容量
     self.items[#self.items + 1] = self:_createShowItem(data1)
+
+    local data3 = {infoTypeStr = "OrderCenter", value = self:getShelfCount(self.data.shelf)}  --订单中心
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 
     if self.data.line == nil then  --生产线
         local str2 = GetLanguage(12345678)
@@ -96,6 +114,81 @@ function MapRightSelfBuildingPage:_createMaterial()
         local data2 = {infoTypeStr = "Production", value = GetLanguage(12345678), detailImgPath = detailImgPath}
         self.items[#self.items + 1] = self:_createShowItem(data2, true)
     end
+end
+--零售店
+function MapRightSelfBuildingPage:_createRetailShop()
+    local used = self:_getWarehouseCapacity(self.data.store)
+    local str1 = string.format("%d/%d", used, PlayerBuildingBaseData[self.data.info.mId].storeCapacity)
+    local data1 = {infoTypeStr = "Warehouse", value = str1}  --仓库容量
+    self.items[#self.items + 1] = self:_createShowItem(data1)
+
+    local data2 = {infoTypeStr = "OrderCenter", value = self:getShelfCount(self.data.shelf)}  --订单中心
+    self.items[#self.items + 1] = self:_createShowItem(data2)
+
+    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
+end
+--研究所
+function MapRightSelfBuildingPage:_createLab()
+    local data3 = {infoTypeStr = "Queued", value = self:getLabQueued(self.data.inProcess)}  --研究所队列
+    self.items[#self.items + 1] = self:_createShowItem(data3)
+end
+--仓库
+function MapRightSelfBuildingPage:_createWarehouse()
+    --local used = self:_getWarehouseCapacity(self.data.store)
+    --local str1 = string.format("%d/%d", used, PlayerBuildingBaseData[self.data.info.mId].storeCapacity)
+    --local data1 = {infoTypeStr = "Warehouse", value = str1}  --仓库容量
+    --self.items[#self.items + 1] = self:_createShowItem(data1)
+    --
+    --local data2 = {infoTypeStr = "OrderCenter", value = self:getShelfCount(self.data.shelf)}  --订单中心
+    --self.items[#self.items + 1] = self:_createShowItem(data2)
+
+    --local data3 = {infoTypeStr = "WarehouseRent", value = self:getSignState(self.data.contractInfo)}  --仓库租赁
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
+end
+--推广公司
+function MapRightSelfBuildingPage:_createPromotion()
+    --local data1 = {infoTypeStr = "Queued", value = self.data.inProcess}  --队列
+    --self.items[#self.items + 1] = self:_createShowItem(data1)
+    --
+    --local data3 = {infoTypeStr = "ADSign", value = self.data.queued.."%"}  --流量签约
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
+end
+--研究所队列
+function MapRightSelfBuildingPage:getLabQueued(line)
+    local reminderTime = 0
+    for i, lineData in ipairs(line) do
+        reminderTime = reminderTime + (lineData.times- (lineData.availableRoll + lineData.usedRoll))
+    end
+    return reminderTime
+end
+--判断签约状态
+function MapRightSelfBuildingPage:getSignState(contractInfo)
+    local str
+    if contractInfo.isOpen == false then
+        str = "尚未开启签约"
+        return str
+    end
+    if contractInfo.isOpen == true and contractInfo.contract == nil then
+        str = "尚未签约"
+        return str
+    end
+    if contractInfo.isOpen == true and contractInfo.contract ~= nil then
+        str = "已签约"
+        return str
+    end
+end
+--计算货架总数
+function MapRightSelfBuildingPage:getShelfCount(data)
+    local count = 0
+    if not data.good then
+        count = 0
+    else
+        for key,value in pairs(data.good) do
+            count = count + value.n
+        end
+    end
+    return count
 end
 --计算仓库容量
 function MapRightSelfBuildingPage:_getWarehouseCapacity(store)

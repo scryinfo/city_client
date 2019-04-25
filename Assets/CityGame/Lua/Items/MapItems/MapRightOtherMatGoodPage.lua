@@ -12,9 +12,14 @@ function MapRightOtherMatGoodPage:initialize(viewRect)
 
     self.leftBtn = self.viewTrans:Find("leftRightBtnRoot/leftBtn"):GetComponent("Button")
     self.rightBtn = self.viewTrans:Find("leftRightBtnRoot/rightBtn"):GetComponent("Button")
+    self.wareHouseRoot = self.viewTrans:Find("wareHouseRoot")
+    self.portrait = self.viewTrans:Find("wareHouseRoot/portrait")
+    self.nameText = self.viewTrans:Find("wareHouseRoot/nameText"):GetComponent("Text")
+
     self.leftRightBtnRoot = self.viewTrans:Find("leftRightBtnRoot")
     self.mapRightMatGoodPrefab = self.viewTrans:Find("MapRightMatGoodItem")
     self.mapRightMatGoodItem = MapRightMatGoodItem:new(self.mapRightMatGoodPrefab.transform)
+    --self.mapRightMatGoodItem = ShelfItem:new(self.mapRightMatGoodPrefab.transform)
 
     self.leftBtn.onClick:AddListener(function ()
         self:_leftChangeBtn()

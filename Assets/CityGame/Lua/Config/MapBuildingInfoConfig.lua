@@ -6,7 +6,7 @@ MapBuildingInfoConfig={
     },
     ["Salary"] = {
         ["imgPath"] = "",
-        ["languageId"] = "Salary",
+        ["languageId"] = "Fee standard",
     },
     ["Warehouse"] = {
         ["imgPath"] = "",
@@ -31,10 +31,6 @@ MapBuildingInfoConfig={
     ["HouseRent"] = {
         ["imgPath"] = "",
         ["languageId"] = "HouseRent",
-    },
-    ["WarehouseOrder"] = {
-        ["imgPath"] = "",
-        ["languageId"] = "WarehouseOrder",
     },
     ["WarehouseRent"] = {
         ["imgPath"] = "",

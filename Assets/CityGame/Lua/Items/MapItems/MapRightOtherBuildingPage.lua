@@ -75,18 +75,18 @@ function MapRightOtherBuildingPage:showByType(typeData)
     --直接搜索类型
     if typeData.detailId == nil then
         if typeData.typeId == EMapSearchType.Warehouse then
-            self.buildingNameText.text = self.data.name
+            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self:_createWarehouse()
             self:_sortInfoItems()
 
         elseif typeData.typeId == EMapSearchType.Signing then
-            self.buildingNameText.text = self.data.buildingName
+            self.buildingNameText.text = string.format("%s %s%s", self.data.buildingName, GetLanguage(PlayerBuildingBaseData[self.data.mId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.mId].typeName))
             self:_createSign()
             self:_sortInfoItems()
         end
     else
         if typeData.typeId == EMapSearchType.Material or typeData.typeId == EMapSearchType.Goods then
-            self.buildingNameText.text = self.data.name
+            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
@@ -94,7 +94,7 @@ function MapRightOtherBuildingPage:showByType(typeData)
             self.promotionItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Technology then
-            self.buildingNameText.text = self.data.name
+            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self.technologyItem:refreshData(self.data, typeData)
         end
     end

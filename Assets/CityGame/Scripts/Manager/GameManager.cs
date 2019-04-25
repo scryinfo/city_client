@@ -41,6 +41,7 @@ namespace LuaFramework {
 
             CheckExtractResource(); //释放资源
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            QualitySettings.vSyncCount = 0;//关闭垂直同步
             Application.targetFrameRate = AppConst.GameFrameRate;
         }
 

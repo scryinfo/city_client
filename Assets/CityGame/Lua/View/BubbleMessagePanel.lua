@@ -13,18 +13,18 @@ function BubbleMessagePanel.Awake(obj)
 end
 
 function BubbleMessagePanel.InitPanel()
-    this.closeBtn=transform:Find("root/closeBtn")
-    this.confirmBtn=transform:Find("root/confimBtn")
-    this.titleText=transform:Find("root/titleText"):GetComponent("Text")
+    this.closeBtn=transform:Find("PopCommpent/closeBtn")
+    this.confirmBtn=transform:Find("PopCommpent/confimBtn")
+    this.titleText=transform:Find("PopCommpent/titleText"):GetComponent("Text")
 
-    this.scrollParent=transform:Find("root/root/Scroll View/Viewport/Content")
-    this.inputFrame=transform:Find("root/root/enter/InputField"):GetComponent("InputField")
+    this.scrollParent=transform:Find("PopCommpent/root/Scroll View/Viewport/Content")
+    this.inputFrame=transform:Find("PopCommpent/root/enter/InputField"):GetComponent("InputField")
 
-    this.isShow=transform:Find("root/root/isShow")
-    this.noIcon=transform:Find("root/root/isShow/no")
-    this.yesIcon=transform:Find("root/root/isShow/yes")
-    this.topic=transform:Find("root/root/isShow/topic"):GetComponent("Text")
-    this.title=transform:Find("root/root/title"):GetComponent("Text")
+    this.isShow=transform:Find("PopCommpent/root/isShow")
+    this.noIcon=transform:Find("PopCommpent/root/isShow/no")
+    this.yesIcon=transform:Find("PopCommpent/root/isShow/yes")
+    this.topic=transform:Find("PopCommpent/root/isShow/topic"):GetComponent("Text")
+    this.title=transform:Find("PopCommpent/root/title"):GetComponent("Text")
 
 end
 

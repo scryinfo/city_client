@@ -20,7 +20,6 @@ function MapRightOtherMatGoodPage:initialize(viewRect)
     self.leftRightBtnRoot = self.viewTrans:Find("leftRightBtnRoot")
     self.mapRightMatGoodPrefab = self.viewTrans:Find("MapRightMatGoodItem")
     self.mapRightMatGoodItem = MapRightMatGoodItem:new(self.mapRightMatGoodPrefab.transform)
-    --self.mapRightMatGoodItem = ShelfItem:new(self.viewRect:Find("ShelfItem"))
 
     self.leftBtn.onClick:AddListener(function ()
         self:_leftChangeBtn()

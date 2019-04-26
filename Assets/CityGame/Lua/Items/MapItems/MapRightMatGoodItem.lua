@@ -7,36 +7,29 @@ MapRightMatGoodItem = class('MapRightMatGoodItem')
 
 --初始化方法
 function MapRightMatGoodItem:initialize(viewRect)
-    self.viewRect = viewRect
+    self.viewRect = viewRect.transform
+    self.iconImg = self.viewRect:Find("iconImg"):GetComponent("Image")
+    self.numberText = self.viewRect:Find("numberBg/numberText"):GetComponent("Text")
+    self.nameBg = self.viewRect:Find("nameBg")
+    self.nameText = self.viewRect:Find("nameBg/nameText"):GetComponent("Text")
 
-    self.good = self.viewRect.transform:Find("good")
-    self.goodIconImg = self.viewRect.transform:Find("good/iconImg"):GetComponent("Image")
-    self.goodNameText = self.viewRect.transform:Find("good/goodNameText"):GetComponent("Text")
-    self.goodDetailNameText = self.viewRect.transform:Find("good/bg/detailNameText"):GetComponent("Text")
-    self.mat = self.viewRect.transform:Find("mat")
-    self.matIconImg = self.viewRect.transform:Find("mat/iconImg"):GetComponent("Image")
-    self.matNameText = self.viewRect.transform:Find("mat/matNameText"):GetComponent("Text")
-
-    self.countText = self.viewRect.transform:Find("countText"):GetComponent("Text")
-    self.priceText = self.viewRect.transform:Find("priceText"):GetComponent("Text")
+    --需要隐藏的商品信息
+    self.goods = self.viewRect:Find("goods")
+    self.levelImg = self.viewRect:Find("goods/levelImg"):GetComponent("Image")
+    self.brandNameText = self.viewRect:Find("goods/detailsBg/brandNameText"):GetComponent("Text")
+    self.brandValue = self.viewRect:Find("goods/detailsBg/scoreBg/brandIcon/brandValue"):GetComponent("Text")
+    self.qualityValue = self.viewRect:Find("goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
+    self.priceText = self.viewRect:Find("priceBg/priceText"):GetComponent("Text")
 
     self:resetState()
 end
-
---
-
 --重置状态
 function MapRightMatGoodItem:resetState()
     self:_language()
 end
 --多语言
 function MapRightMatGoodItem:_language()
-    --正式代码
-    --self.goodNameText.text = GetLanguage(self.data.languageId)
-    --self.matNameText.text = GetLanguage(self.data.languageId)
-    --self.goodDetailNameText.text = GetLanguage()  --显示"商品"
 
-    self.goodDetailNameText.text = "商品"
 end
 --
 function MapRightMatGoodItem:refreshData(data)
@@ -45,22 +38,19 @@ function MapRightMatGoodItem:refreshData(data)
     end
     self.data = data
     local itemId = data.item.key.id
-    local num = data.item.n
-    self.countText.text = num
+    self.nameText.text = GetLanguage(itemId)
+    self.numberText.text = "×"..data.item.n
     self.priceText.text = GetClientPriceString(data.price)
 
-    local matData = Material[itemId]
-    if matData ~= nil then
-        self.mat.localScale = Vector3.one
-        self.good.localScale = Vector3.zero
-        self.matNameText.text = matData.name  --需要换成多语言
-        LoadSprite(matData.img, self.matIconImg, true)
-    else
-        local goodData = Good[itemId]
-        self.mat.localScale = Vector3.zero
-        self.good.localScale = Vector3.one
-        self.goodNameText.text = goodData.name
-        LoadSprite(goodData.img, self.goodIconImg, true)
+    local materialKey, goodsKey = 21,22
+    if tonumber(string.sub(itemId,1,2)) == materialKey then
+        self.goods.transform.localScale = Vector3.zero
+        self.nameBg.transform.localPosition = Vector3(-140, -100, 0)
+        LoadSprite(Material[itemId].img, self.iconImg,false)
+
+    elseif tonumber(string.sub(itemId,1,2)) == goodsKey then
+        self.goods.transform.localScale = Vector3.one
+        LoadSprite(Good[itemId].img, self.iconImg,false)
     end
 end
 

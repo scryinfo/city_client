@@ -5,6 +5,9 @@
 ---
 
 PropertyTrueItem = class("PropertyTrueItem")
+PropertyTrueItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
+PropertyTrueItem.static.PercentColor = "#10C4FE" -- 加成特殊颜色
+PropertyTrueItem.static.ExperienceColor = "#10C4FE" -- 经验特殊颜色
 
 -- 初始化
 function PropertyTrueItem:initialize(prefab, data, configData)
@@ -71,15 +74,16 @@ function PropertyTrueItem:ShowData(lv, cexp)
         end
 
         if lv == 1 then
-            self.nameNumberText.text = self.configData.name .. ":" .. speed
+            self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
         else
-            self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
+            self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed, PropertyTrueItem.static.PercentColor, EvaUp[lv].add / 1000)
+            --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
         end
     else
         self.nameNumberText.text = self.configData.name
     end
     self.levelText.text = lv
-    self.experienceText.text = "Current experience value:" .. cexp
+    self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
     self.levelSlider.value = cexp / EvaUp[lv].upexp
     self.totalLevelNumberText.text = EvaUp[lv].upexp
 end

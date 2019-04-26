@@ -14,6 +14,7 @@ function  TurnoverDetailPart:_InitEvent()
 end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.m_LuaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
 end
 --
@@ -27,7 +28,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.xBtn.onClick:RemoveAllListeners()
+    self.m_LuaBehaviour:RemoveClick(self.xBtn, self.OnXBtn, self)
 end
 --
 function TurnoverDetailPart:RefreshData(data)

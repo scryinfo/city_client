@@ -5,6 +5,7 @@
 ---
 
 PropertyFalseItem = class("PropertyFalseItem")
+PropertyFalseItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
 
 -- 初始化
 function PropertyFalseItem:initialize(prefab, data, name)
@@ -17,13 +18,24 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.tipsImage = transform:Find("TipsImage")
     self.tipsText = transform:Find("TipsText")
 
-    self.nameNumberText.text = name .. ":" .. data.b
-    self.tipsImage.transform.localScale = Vector3.zero
+    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)
+    self.tipsImage.localScale = Vector3.zero
     self.tipsText.transform.localScale = Vector3.zero
     self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
 
     self.tipsBtn.onClick:AddListener(function ()
-        self.tipsImage.transform.localScale = Vector3.one
-        self.tipsText.transform.localScale = Vector3.one
+        CompanyPanel.closeTipsBtn.localScale = Vector3.one
+        self:IsShowTips(true)
     end)
+end
+
+-- 按钮切换
+function PropertyFalseItem:IsShowTips(isShow)
+    if isShow then
+        self.tipsImage.localScale = Vector3.one
+        self.tipsText.localScale = Vector3.one
+    else
+        self.tipsImage.localScale = Vector3.zero
+        self.tipsText.localScale = Vector3.zero
+    end
 end

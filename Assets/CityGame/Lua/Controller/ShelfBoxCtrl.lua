@@ -190,6 +190,12 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.numberSlider.interactable = true
         self.numberSlider.value = 0
     end
+    local data = {}
+    data.itemId = self.m_data.itemId
+    data.producerId = self.m_data.dataInfo.k.producerId
+    data.qty = self.m_data.dataInfo.k.qty
+    data.switch = self.automaticSwitch.isOn
+    Event.Brocast("whetherSend",data)
 end
 --滑动条更新文本
 function ShelfBoxCtrl:SlidingUpdateText()

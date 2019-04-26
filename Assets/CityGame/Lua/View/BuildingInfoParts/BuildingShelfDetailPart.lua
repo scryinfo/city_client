@@ -80,12 +80,14 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("addBuyList",self.addBuyList,self)
     Event.AddListener("deleBuyList",self.deleBuyList,self)
     Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
+    Event.AddListener("whetherSend",self.whetherSend,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("addBuyList",self.addBuyList,self)
     Event.RemoveListener("deleBuyList",self.deleBuyList,self)
     Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
+    Event.RemoveListener("whetherSend",self.whetherSend,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -168,6 +170,19 @@ function BuildingShelfDetailPart:deleBuyList(id)
         else
             self.number.transform.localScale = Vector3.one
             self.numberText.text = #self.buyDatas
+        end
+    end
+end
+--在货架时，开关值改变时是否发送消息
+function BuildingShelfDetailPart:whetherSend(data)
+    if data ~= nil then
+        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+            return
+        end
+        for key,value in pairs(self.m_data.shelf.good) do
+            if value.k.id == data.itemId then
+                Event.Brocast("m_ReqMaterialSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
+            end
         end
     end
 end

@@ -164,6 +164,7 @@ end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
+    Event.Brocast("refreshShelfPartCount")
 end
 --修改货架价格
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)

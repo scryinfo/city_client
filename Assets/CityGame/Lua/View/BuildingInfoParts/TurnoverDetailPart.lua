@@ -15,6 +15,7 @@ function  TurnoverDetailPart:_InitEvent()
 end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.luaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.xBtn.gameObject, self.OnXBtn, self)
 end
 --
@@ -29,7 +30,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.xBtn.onClick:RemoveAllListeners()
+    self.luaBehaviour:RemoveClick(self.xBtn.gameObject, self.OnXBtn, self)
 end
 --
 function TurnoverDetailPart:RefreshData(data)
@@ -48,7 +49,7 @@ function TurnoverDetailPart:_InitTransform()
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
-    self.xBtn = transform:Find("down/xBtn"):GetComponent("Button") --返回
+    self.xBtn = transform:Find("down/xBtn").gameObject --返回
     self.yScale = transform:Find("down/bg/yScale"):GetComponent("RectTransform");  --Y轴
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动

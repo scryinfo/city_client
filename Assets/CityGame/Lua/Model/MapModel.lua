@@ -13,12 +13,11 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabSummary"), MapModel.n_OnReceiveLabSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractGridDetail"), MapModel.n_OnReceiveSignDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
 end
 
 

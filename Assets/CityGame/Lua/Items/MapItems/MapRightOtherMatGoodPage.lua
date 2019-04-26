@@ -14,12 +14,13 @@ function MapRightOtherMatGoodPage:initialize(viewRect)
     self.rightBtn = self.viewTrans:Find("leftRightBtnRoot/rightBtn"):GetComponent("Button")
     self.wareHouseRoot = self.viewTrans:Find("wareHouseRoot")
     self.portrait = self.viewTrans:Find("wareHouseRoot/portrait")
+    self.btn = self.viewTrans:Find("wareHouseRoot/btn"):GetComponent("Button")
     self.nameText = self.viewTrans:Find("wareHouseRoot/nameText"):GetComponent("Text")
 
     self.leftRightBtnRoot = self.viewTrans:Find("leftRightBtnRoot")
     self.mapRightMatGoodPrefab = self.viewTrans:Find("MapRightMatGoodItem")
     self.mapRightMatGoodItem = MapRightMatGoodItem:new(self.mapRightMatGoodPrefab.transform)
-    --self.mapRightMatGoodItem = ShelfItem:new(self.mapRightMatGoodPrefab.transform)
+    --self.mapRightMatGoodItem = ShelfItem:new(self.viewRect:Find("ShelfItem"))
 
     self.leftBtn.onClick:AddListener(function ()
         self:_leftChangeBtn()
@@ -27,11 +28,16 @@ function MapRightOtherMatGoodPage:initialize(viewRect)
     self.rightBtn.onClick:AddListener(function ()
         self:_rightChangeBtn()
     end)
+    self.btn.onClick:AddListener(function ()
+        self:_clickPortrait()
+    end)
 end
 --
 function MapRightOtherMatGoodPage:refreshData(data)
     self.viewTrans.localScale = Vector3.one
     self.data = data
+    --暂时不加入仓库
+    self.wareHouseRoot.localScale = Vector3.zero
 
     if #data.sale > 1 then
         self.leftRightBtnRoot.localScale = Vector3.one
@@ -72,6 +78,20 @@ function MapRightOtherMatGoodPage:_rightChangeBtn()
         end
     end
 end
+--点击仓库头像
+function MapRightOtherMatGoodPage:_clickPortrait()
+    if self.wareRenterInfo ~= nil then
+        ct.OpenCtrl("PersonalHomeDialogPageCtrl", self.wareRenterInfo)
+    end
+end
+--
+function MapRightOtherMatGoodPage:_initWareRenterInfo(data)
+    local info = data[1]
+    if info ~= nil then
+        self.nameText.text = info.name
+        self.avatar = AvatarManger.GetSmallAvatar(info.faceId, self.portrait,0.2)
+    end
+end
 --多语言
 function MapRightOtherMatGoodPage:_language()
 
@@ -79,4 +99,7 @@ end
 --关闭
 function MapRightOtherMatGoodPage:close()
     self.viewTrans.localScale = Vector3.zero
+    if self.avatar ~= nil then
+        AvatarManger.CollectAvatar(self.avatar)
+    end
 end

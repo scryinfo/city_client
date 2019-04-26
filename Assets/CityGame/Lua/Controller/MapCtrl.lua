@@ -23,12 +23,12 @@ EMapSearchType =
     Default = 0,
     Material = 1,
     Goods = 2,
-    Warehouse = 3,
+    --Warehouse = 3,
+    Technology = 3,
     Promotion = 4,
     Deal = 5,
     Auction = 6,
-    Technology = 7,
-    Signing = 8,
+    Signing = 7,
     SelfBuilding = 9,
 }
 --科研推广查询的不同类型
@@ -403,8 +403,10 @@ function MapCtrl:refreshDetailItem(item)
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             --判断是否是科研推广
             if typeId == EMapSearchType.Promotion or typeId == EMapSearchType.Technology then
-                self:checkPromotionTechReq(typeId, item:getItemId())
+                self:checkPromotionTechReq(typeId, item)
             elseif typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
+                self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+                self.selectDetailItem = item
                 self:matGoodsReq(item:getItemId())
             end
 
@@ -412,9 +414,6 @@ function MapCtrl:refreshDetailItem(item)
             self:toggleLoadingState(false)  --cd
             self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
             self.m_Timer:Start()
-
-            self.selectSearchType = EMapSearchType.Default  --选中的搜索type
-            self.selectDetailItem = item
         end
     end
 end
@@ -429,33 +428,35 @@ end
 --如果是推广和科研，则需要做特殊处理
 --不是选中detail之后就向服务器发消息
 --验证是否需要向服务器发送请求
-function MapCtrl:checkPromotionTechReq(typeId, detailId)
+function MapCtrl:checkPromotionTechReq(typeId, item)
     local typeData = self:_getSearchData()
     if typeId == typeData.typeId then
         if self.searchTime == nil then
             self.searchTime = {}
         end
         if self.searchTime[typeId] == nil then
-            self:promotionTechReq(typeId, detailId)
+            self:promotionTechReq(typeId, item)
             return
         end
 
         local time = self.searchTime[typeId]
         local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
         if remainTime >= 0 then
-            self:promotionTechReq(typeId, detailId)
+            self:promotionTechReq(typeId, item)
         end
     else
-        self:promotionTechReq(typeId, detailId)
+        self:promotionTechReq(typeId, item)
     end
 end
 --推广研究
-function MapCtrl:promotionTechReq(typeId, detailId)
+function MapCtrl:promotionTechReq(typeId, item)
     if self.searchTime == nil then
         self.searchTime = {}
     end
     self.searchTime[typeId] = TimeSynchronized.GetTheCurrentTime()
     --
+    self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+    self.selectDetailItem = item
     if self:_getIsDetailFunc() == true then
         self:_judgeDetail()
     else
@@ -634,9 +635,9 @@ function MapCtrl:_reqMoveDetail(blockId)
 
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
-        elseif self.selectSearchType == EMapSearchType.Promotion then
+        elseif typeId == EMapSearchType.Promotion then
             MapModel.m_ReqWarehouseDetail(blockCollectionId)
-        elseif self.selectSearchType == EMapSearchType.Technology then
+        elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
         end
         return
@@ -686,12 +687,13 @@ end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
-        MapBubbleManager.cleanAllBubbleItems()
-        if self.selectDetailItem == nil or self.selectDetailItem:getItemId() ~= data.itemId then
+        local mapCtrlIns = MapBubbleManager.getMapCtrlIns()
+        if mapCtrlIns.selectDetailItem == nil or mapCtrlIns.selectDetailItem:getItemId() ~= data.itemId then
+            MapBubbleManager.cleanAllBubbleItems()
             MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
             return
         end
-        if self.selectDetailItem ~= nil and self.selectDetailItem:getItemId() == data.itemId then
+        if mapCtrlIns.selectDetailItem ~= nil and mapCtrlIns.selectDetailItem:getItemId() == data.itemId then
             MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
         end
     end

@@ -1,47 +1,47 @@
 --小地图点击建筑之后右侧展示的信息配置
 MapBuildingInfoConfig={
     ["Revenue"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-turnover.png",
         ["languageId"] = "Revenue",
     },
     ["Salary"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Feestandard.png",
         ["languageId"] = "Fee standard",
     },
     ["Warehouse"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-warehouse-s.png",
         ["languageId"] = "Warehouse",
     },
     ["OrderCenter"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Ordercenter.png",
         ["languageId"] = "OrderCenter",
     },
     ["Production"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/iocn-productionline-s.png",
         ["languageId"] = "Production",
     },
     ["Sign"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-signing.png",
         ["languageId"] = "Sign",
     },
     ["HouseOccupancy"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
         ["languageId"] = "HouseOccupancy",
     },
     ["HouseRent"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Dailyrent.png",
         ["languageId"] = "HouseRent",
     },
     ["WarehouseRent"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-rent.png",
         ["languageId"] = "Warehouse",
     },
     ["ADSign"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-signing.png",
         ["languageId"] = "ADSign",
     },
     ["Queued"] = {
-        ["imgPath"] = "",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-queue.png",
         ["languageId"] = "Queued",
     },
     --点击其他人建筑显示的信息
@@ -64,6 +64,10 @@ MapBuildingInfoConfig={
     ["SignTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
         ["languageId"] = "SignTime:",
+    },
+    ["SignPromotion"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Currentpromotion.png",
+        ["languageId"] = "Current promotion:",
     },
 }
 ------------------------------------------------------

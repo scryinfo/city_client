@@ -86,7 +86,11 @@ function MapRightOtherBuildingPage:showByType(typeData)
         end
     else
         if typeData.typeId == EMapSearchType.Material or typeData.typeId == EMapSearchType.Goods then
-            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
+            if self.data.metaId ~= nil then
+                self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
+            else
+                self.buildingNameText.text = self.data.name
+            end
             self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
@@ -133,10 +137,8 @@ end
 function MapRightOtherBuildingPage:_createInfoByType(buildingType)
     if buildingType == BuildingType.House or buildingType == BuildingType.RetailShop then  --签约
         self:_createSign()
-    elseif buildingType == BuildingType.MaterialFactory then
-        --self:_createMaterial()
-    elseif buildingType == BuildingType.Laboratory then
-        self:_createTech()
+    elseif buildingType == BuildingType.Warehouse then
+        --self:_createWarehouse()
     end
 end
 --签约
@@ -148,6 +150,10 @@ function MapRightOtherBuildingPage:_createSign()
     local str1 = self.data.hours.."h"
     local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
+
+    local str3 = string.format("%0.2f", self.data.lift * 100).."%"
+    local data3 = {infoTypeStr = "SignPromotion", value = str3}  --签约加成
+    self.items[#self.items + 1] = self:_createShowItem(data3, self.simpleShowRoot)
 end
 --仓库
 function MapRightOtherBuildingPage:_createWarehouse()

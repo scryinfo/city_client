@@ -150,14 +150,14 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
-    local bagId = DataManager.GetBagId()
-    local n = data.item.n
-    local itemId = data.item.key.id
-    local qty = data.item.key.qty
-    local producerId = data.item.key.producerId
-    if data.dst == bagId then
-        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    end
+    --local bagId = DataManager.GetBagId()
+    --local n = data.item.n
+    --local itemId = data.item.key.id
+    --local qty = data.item.key.qty
+    --local producerId = data.item.key.producerId
+    --if data.dst == bagId then
+    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+    --end
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
 end
 --上架

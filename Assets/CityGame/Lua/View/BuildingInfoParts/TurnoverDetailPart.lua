@@ -15,8 +15,9 @@ function  TurnoverDetailPart:_InitEvent()
 end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
-    self.luaBehaviour = mainPanelLuaBehaviour
-    mainPanelLuaBehaviour:AddClick(self.xBtn.gameObject, self.OnXBtn, self)
+    self.m_LuaBehaviour = mainPanelLuaBehaviour
+    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
+
 end
 --
 function TurnoverDetailPart:_ResetTransform()
@@ -30,7 +31,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.luaBehaviour:RemoveClick(self.xBtn.gameObject, self.OnXBtn, self)
+    self.m_LuaBehaviour:RemoveClick(self.xBtn, self.OnXBtn, self)
 end
 --
 function TurnoverDetailPart:RefreshData(data)

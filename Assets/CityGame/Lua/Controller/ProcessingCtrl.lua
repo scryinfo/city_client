@@ -76,6 +76,7 @@ function ProcessingCtrl:refreshProcessingDataInfo(DataInfo)
                 self.processingToggleGroup:cleanItems()
             end
             UIPanel.ClosePage()
+            DataManager.CloseDetailModel(self.m_data.insId)
         end)
     end
     self.m_data.buildingType = BuildingType.ProcessingFactory

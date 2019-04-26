@@ -18,6 +18,65 @@ BubbleMessageCtrl.configPath={
   [4]={path=path.."bubb-rawdeal.png"},
   [5]={path=path.."bubb-commodity.png"},
 }
+
+local m_EmojiIconSpriteList = {}
+
+--添加EmojiIcon的sprite列表
+local function AddEmojiIcon(name,sprite)
+    if m_EmojiIconSpriteList == nil or type(m_EmojiIconSpriteList) ~= 'table' then
+        m_EmojiIconSpriteList = {}
+    end
+    if name ~= nil and sprite ~= nil then
+        m_EmojiIconSpriteList[name] = sprite
+    end
+end
+
+local function JudgeHasEmojiIcon(name)
+    if m_EmojiIconSpriteList == nil or m_EmojiIconSpriteList[name] == nil  then
+        return false
+    else
+        return true
+    end
+end
+
+local function GetEmojiIcon(name)
+    if m_EmojiIconSpriteList == nil or m_EmojiIconSpriteList[name] == nil  then
+        return nil
+    else
+        return m_EmojiIconSpriteList[name]
+    end
+end
+
+local SpriteType = nil
+local function LoadEmojiIcon(name,iIcon)
+    if SpriteType == nil then
+        SpriteType = ct.getType(UnityEngine.Sprite)
+    end
+    panelMgr:LoadPrefab_A(name, SpriteType, iIcon, function(Icon, obj )
+        if Icon == nil then
+            return
+        end
+        if obj ~= nil  then
+            local texture = ct.InstantiatePrefab(obj)
+            AddEmojiIcon(name,texture)
+            if Icon then
+                Icon.sprite = texture
+            end
+        end
+    end)
+end
+
+--设置ICon的Sprite
+function BubbleMessageCtrl.SetEmojiIconSpite(name , tempImage)
+    if JudgeHasEmojiIcon() == true then
+        tempImage.sprite = GetEmojiIcon(name)
+    else
+        LoadEmojiIcon(name , tempImage)
+    end
+end
+
+
+
 ---==========================================================================================私有函数============================================================================================
 --临时对象池是做法
 local  function InsAndObjectPool(config,class,prefabPath,parent,this)
@@ -65,6 +124,7 @@ function BubbleMessageCtrl:initialize()
 end
 
 function BubbleMessageCtrl:Refresh()
+    panel.inputFrame.text = ""
     DataManager.OpenDetailModel(BubbleMessageModel,OpenModelInsID.BubbleMessageCtrl)
     InsAndObjectPool(BubbleMessageCtrl.configPath,SmallBubbleItem,"View/BubbleItems/samllBubble",panel.scrollParent,self)
 end
@@ -96,10 +156,10 @@ end
 
 --确定
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
-    local des=panel.inputFrame.text
-    if panel.inputFrame.text=="" then
+    local des = panel.inputFrame.text
+    if panel.inputFrame.text == "" then
         des=" "
-end
+    end
     Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
     Event.Brocast("c_BuildingTopChangeData", {des = des, emoticon = ins.bubbleId})
     UIPanel.ClosePage()

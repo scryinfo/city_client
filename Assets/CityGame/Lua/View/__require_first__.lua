@@ -6,3 +6,4 @@
 require "View/BuildingInfoParts/BasePart"
 require "View/BuildingInfoParts/BasePartDetail"
 require "View/BuildingInfoParts/BuildingInfoMainGroupMgr"
+require "View/BuildingInfoParts/BuildingBaseDetailPart"

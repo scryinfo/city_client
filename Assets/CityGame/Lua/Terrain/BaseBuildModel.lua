@@ -45,8 +45,7 @@ function BaseBuildModel:OpenPanel()
     local typeID = self.Data.buildingID
     local instanceID = self.Data.id
     if typeID == 1100001 or typeID == 1100002 or typeID == 1100003 then         --原料厂
-        --Event.Brocast('m_ReqOpenMaterial',instanceID)
-        ct.OpenCtrl("MaterialCtrl", {insId = instanceID})
+        ct.OpenCtrl("MaterialFactoryCtrl", {insId = instanceID})
     elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --加工厂
         --Event.Brocast('m_ReqOpenProcessing',instanceID)
         ct.OpenCtrl('ProcessingCtrl',{insId = instanceID})

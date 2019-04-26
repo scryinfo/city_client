@@ -532,11 +532,13 @@ function split(input, delimiter)
 end
 
 local AssetObjs  = {}
-
+local SpriteType = nil
 --第三个参数为是否设置img为原图大小
 function LoadSprite(path, iIcon, bSetNativeSize)
-	local type = ct.getType(UnityEngine.Sprite)
-	panelMgr:LoadPrefab_A(path, type, iIcon, function(Icon, obj ,ab)
+	if SpriteType == nil then
+		SpriteType = ct.getType(UnityEngine.Sprite)
+	end
+	panelMgr:LoadPrefab_A(path, SpriteType, iIcon, function(Icon, obj ,ab)
 		if Icon == nil then
 			return
 		end
@@ -645,5 +647,25 @@ function GetBuildingTypeById(buildingTypeId)
 		end
 		return type
 	end
-	return nil
+return nil
+
+-- 动态加载预制
+function DynamicLoadPrefab(path, parent, scale, fuc)
+	panelMgr:LoadPrefab_A(path, nil, nil, function(ins, obj )
+		if obj ~= nil then
+			local go = ct.InstantiatePrefab(obj)
+			local rect = go.transform:GetComponent("RectTransform")
+			go.transform:SetParent(parent)
+
+			if scale then
+				rect.transform.localScale = scale
+			else
+				rect.transform.localScale = Vector3.one
+			end
+
+			if fuc then
+				fuc(go)
+			end
+		end
+	end)
 end

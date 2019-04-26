@@ -199,6 +199,7 @@ end
 --运输成功回调
 function BuildingWarehouseDetailPart:transportSucceed(data)
     if data ~= nil then
+        --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.item.key.id then
                 if value.dataInfo.n == data.item.n then
@@ -206,6 +207,16 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
                 else
                     value.dataInfo.n = value.dataInfo.n - data.item.n
                     value.numberText.text = "×"..value.dataInfo.n
+                end
+            end
+        end
+        --刷新建筑数据
+        for key,value in pairs(self.m_data.store.inHand) do
+            if value.key.id == data.item.key.id then
+                if value.n == data.item.n then
+                    table.remove(self.m_data.store.inHand,key)
+                else
+                    value.n = value.n - data.item.n
                 end
             end
         end

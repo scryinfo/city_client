@@ -126,8 +126,12 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        self.transportBool = GoodsItemStateType.transport
-        self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        if #storeData == #self.warehouseDatas then
+            return
+        else
+            self.transportBool = GoodsItemStateType.transport
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------

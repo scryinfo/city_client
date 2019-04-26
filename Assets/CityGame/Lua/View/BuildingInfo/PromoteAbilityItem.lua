@@ -17,7 +17,7 @@ PromoteAbilityItem = class('PromoteAbilityItem')
     end)
 end
 
-function PromoteAbilityItem:OnBG()
+function PromoteAbilityItem:OnBG(go)
     ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.m_data)
 end
 

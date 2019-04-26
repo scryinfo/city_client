@@ -4,22 +4,27 @@
 --- DateTime: 2019/4/17 16:14
 ---推广商品Item
 PromoteGoodsItem = class('PromoteGoodsItem')
-function PromoteGoodsItem:initialize(prefab,dataInfo)
+local lastSelete = nil
+function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
     self.prefab = prefab;
     self.dataInfo = dataInfo;
-    self.seleteBtn = self.prefab.transform:Find("seleteBtn").gameObject:GetComponent("Button");
+    self.seleteBtn = self.prefab.transform:Find("seleteBtn").gameObject;
+    self.selete = self.prefab.transform:Find("seleteBtn/selete");
     self.icon = self.prefab.transform:Find("iconImg").gameObject:GetComponent("Image");
-    self.name = self.prefab.transform:Find("goods/detailsBg/nameText").gameObject:GetComponent("Text");
+    self.name = self.prefab.transform:Find("goods/nameBG/nameText").gameObject:GetComponent("Text");
     self.brandValue = self.prefab.transform:Find("goods/detailsBg/scoreBg/brandIcon/brandValue").gameObject:GetComponent("Text");
 
     self.name.text = GetLanguage(dataInfo)
     --LoadSprite(path, self.icon, true)
 
-    self.seleteBtn.onClick:AddListener(function()
-        self:OnSeleteBtn(self);
-    end)
+    luaBehaviour:AddClick(self.seleteBtn, self.OnSeleteBtn,self)
 end
 
 function PromoteGoodsItem:OnSeleteBtn(go)
+    if lastSelete then
+        lastSelete.localScale = Vector3.zero
+    end
+    go.selete.localScale = Vector3.one
+    lastSelete = go.selete
     Event.Brocast("c_PromoteGoodsId",go.dataInfo)
 end

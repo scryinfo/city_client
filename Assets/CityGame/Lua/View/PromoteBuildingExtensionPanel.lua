@@ -27,6 +27,7 @@ function PromoteBuildingExtensionPanel.InitPanel()
     this.house = transform:Find("contentRoot/top/curveBg/houseIcon")    --住宅
     this.myTime = transform:Find("contentRoot/time")     --时间(自己)
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间(自己)
+    this.title = transform:Find("contentRoot/title/titleText"):GetComponent("Text")     --推广加成
     this.otherTimeBg= transform:Find("contentRoot/otherTime")     --时间背景(别人)
     this.otherTime = transform:Find("contentRoot/otherTime/time/InputField"):GetComponent("InputField")     --时间(别人)
     this.slider = transform:Find("contentRoot/otherTime/Slider"):GetComponent("Slider")

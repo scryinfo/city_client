@@ -95,7 +95,33 @@ end
 
 --删除推广回调
 function PromoteCompanyModel:n_OnRemovePromo(info)
-    PromoteCompanyModel:m_QueryPromote(info.buildingId,true)
+    --PromoteCompanyModel:m_QueryPromote(info.buildingId,true)
+    local newData = {}
+    ----newData = ct.deepCopy(self.data)
+    --newData = self.data
+    --if true then
+    --
+    --end
+    --if self.data and info.PromoTsChanged then
+    --    for i, v in pairs(self.data) do
+    --        for k, z in pairs(info.PromoTsChanged) do
+    --            if v.promotionId == z.promotionId then
+    --                newData[i].createTs = z.promStartTs
+    --                newData[i].queneTime = z.promStartTs
+    --                newData[i].promStartTs = z.promStartTs
+    --            end
+    --        end
+    --    end
+    --end
+    --for i, v in pairs(self.data) do
+    --    if v.promotionId == info.promotionId then
+    --        table.remove(newData,i)
+    --    end
+    --end
+    --if next(newData) == nil then
+    --    newData = nil
+    --end
+    --Event.Brocast("c_updateQuque",{name = "View/GoodsItem/QueueItem",data =newData,insClass = PromoteQueueItem})
 end
 
 --推广设置回调
@@ -109,14 +135,14 @@ function PromoteCompanyModel:n_OnQueryPromotion(info)
     if not info.Promotions then
        return
     end
-    local data = {}
+    self.data = {}
     for i, v in pairs(info.Promotions) do
-        data[i] = v
-        data[i].createTs = v.promStartTs
-        data[i].queneTime = v.promStartTs
-        data[i].proposerId = v.buyerId
+       self.data[i] = v
+        self.data[i].createTs = v.promStartTs
+        self.data[i].queneTime = v.promStartTs
+        self.data[i].proposerId = v.buyerId
     end
-    ct.OpenCtrl("QueneCtrl",{name = "View/GoodsItem/QueueItem",data = data,insClass = PromoteQueueItem})
+    ct.OpenCtrl("QueneCtrl",{name = "View/GoodsItem/QueueItem",data = self.data,insClass = PromoteQueueItem})
 end
 
 --推广能力回调

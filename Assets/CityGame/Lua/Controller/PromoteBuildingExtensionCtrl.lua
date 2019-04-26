@@ -18,6 +18,9 @@ function PromoteBuildingExtensionCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 function PromoteBuildingExtensionCtrl:Awake()
+    if self.m_data == nil then
+       return
+    end
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
@@ -29,6 +32,11 @@ function PromoteBuildingExtensionCtrl:Awake()
     PromoteBuildingExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
+    --建筑主人
+    PromoteBuildingExtensionPanel.time.onValueChanged:AddListener(function()
+        self:onMyInputField(self)
+    end)
+    --别人
     PromoteBuildingExtensionPanel.otherTime.onValueChanged:AddListener(function()
         self:onInputField(self)
     end)
@@ -118,13 +126,27 @@ function PromoteBuildingExtensionCtrl:onSlider(go)
     PromoteBuildingExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteBuildingExtensionPanel.otherTime.text) * go.m_data.curPromPricePerHour)
 end
 
---输入框
+--输入框(自己)
+function PromoteBuildingExtensionCtrl:onMyInputField(go)
+    if go.m_data.type == 1 then
+        PromoteBuildingExtensionPanel.title.text = go.m_data.supermarketSpeed * tonumber(PromoteBuildingExtensionPanel.time.text)
+    elseif go.m_data.type == 2 then
+        PromoteBuildingExtensionPanel.title.text = go.m_data.houseSpeed * tonumber(PromoteBuildingExtensionPanel.time.text)
+    end
+
+end
+--输入框(别人)
 function PromoteBuildingExtensionCtrl:onInputField(go)
     if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > go.m_data.promRemainTime/3600000 then
         PromoteBuildingExtensionPanel.otherTime.text = go.m_data.promRemainTime/3600000
     end
     PromoteBuildingExtensionPanel.slider.value = PromoteBuildingExtensionPanel.otherTime.text
     PromoteBuildingExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteBuildingExtensionPanel.otherTime.text) * go.m_data.curPromPricePerHour)
+    if go.m_data.type == 1 then
+        PromoteBuildingExtensionPanel.title.text = go.m_data.supermarketSpeed * tonumber(PromoteBuildingExtensionPanel.otherTime.text)
+    elseif go.m_data.type == 2 then
+        PromoteBuildingExtensionPanel.title.text = go.m_data.houseSpeed * tonumber(PromoteBuildingExtensionPanel.otherTime.text)
+    end
 end
 
 --关闭界面

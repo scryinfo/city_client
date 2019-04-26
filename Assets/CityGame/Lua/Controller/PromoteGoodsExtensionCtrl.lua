@@ -7,7 +7,7 @@ PromoteGoodsExtensionCtrl = class('PromoteGoodsExtensionCtrl',UIPanel)
 UIPanel:ResgisterOpen(PromoteGoodsExtensionCtrl)
 local myOwnerID = nil
 
-local buildingExtensionBehaviour
+local goodsExtensionBehaviour
 
 function PromoteGoodsExtensionCtrl:bundleName()
     return "Assets/CityGame/Resources/View/PromoteGoodsExtensionPanel.prefab"
@@ -18,16 +18,24 @@ function PromoteGoodsExtensionCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 function PromoteGoodsExtensionCtrl:Awake()
-    buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
-    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
-    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
-    buildingExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
+    if self.m_data == nil then
+        return
+    end
+    goodsExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
+    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
+    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
+    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
 
     PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     PromoteGoodsExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
+    --建筑主人
+    PromoteGoodsExtensionPanel.time.onValueChanged:AddListener(function()
+        self:onMyInputField(self)
+    end)
+    --别人
     PromoteGoodsExtensionPanel.otherTime.onValueChanged:AddListener(function()
         self:onInputField(self)
     end)
@@ -66,6 +74,7 @@ function PromoteGoodsExtensionCtrl:Hide()
         destroy(v.prefab.gameObject)
     end
     self.PromoteGoods = {}
+    self.goodId = nil
 end
 
 function PromoteGoodsExtensionCtrl:OnCreate(obj)
@@ -80,7 +89,7 @@ function PromoteGoodsExtensionCtrl:initData()
     self.PromoteGoods = {}
     for i, v in ipairs(self.m_data.Data.subclass) do
         local function callback(prefab)
-           self.PromoteGoods[i] = PromoteGoodsItem:new(prefab,v)
+           self.PromoteGoods[i] = PromoteGoodsItem:new(prefab,v,goodsExtensionBehaviour)
         end
         createPrefab("Assets/CityGame/Resources/View/GoodsItem/PromoteGoodsItem.prefab",PromoteGoodsExtensionPanel.content, callback)
     end
@@ -92,13 +101,18 @@ function PromoteGoodsExtensionCtrl:onSlider(go)
     PromoteGoodsExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteGoodsExtensionPanel.otherTime.text) * go.m_data.DataInfo.curPromPricePerHour)
 end
 
---输入框
+--输入框(自己)
+function PromoteGoodsExtensionCtrl:onMyInputField(go)
+    PromoteGoodsExtensionPanel.title.text = go.m_data.Data.capacity * tonumber(PromoteGoodsExtensionPanel.time.text)
+end
+--输入框(别人)
 function PromoteGoodsExtensionCtrl:onInputField(go)
     if tonumber(PromoteGoodsExtensionPanel.otherTime.text) > go.m_data.DataInfo.promRemainTime/3600000 then
         PromoteGoodsExtensionPanel.otherTime.text = go.m_data.DataInfo.promRemainTime/3600000
     end
     PromoteGoodsExtensionPanel.slider.value = PromoteGoodsExtensionPanel.otherTime.text
     PromoteGoodsExtensionPanel.money.text = GetClientPriceString(tonumber(PromoteGoodsExtensionPanel.otherTime.text) * go.m_data.DataInfo.curPromPricePerHour)
+    PromoteGoodsExtensionPanel.title.text = go.m_data.Data.capacity * tonumber(PromoteGoodsExtensionPanel.otherTime.text)
 end
 
 --返回

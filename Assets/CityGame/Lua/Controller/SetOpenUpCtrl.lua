@@ -19,9 +19,12 @@ end
 function SetOpenUpCtrl:Awake()
     setOpenUpBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.xBtn,self.OnxBtn,self);
-    setOpenUpBehaviour:AddClick(SetOpenUpPanel.open,self.OnOpen,self);
-    setOpenUpBehaviour:AddClick(SetOpenUpPanel.close,self.OnClose,self);
+    --setOpenUpBehaviour:AddClick(SetOpenUpPanel.open,self.OnOpen,self);
+    --setOpenUpBehaviour:AddClick(SetOpenUpPanel.close,self.OnClose,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.confirm,self.OnConfirm,self);
+    SetOpenUpPanel.open.onValueChanged:AddListener(function(isOn)
+        self:OnOpen(isOn)
+    end)
     self:initData()
 end
 
@@ -37,15 +40,13 @@ end
 function SetOpenUpCtrl:Refresh()
     self.openUp = self.m_data.takeOnNewOrder
     if self.openUp then
-        SetOpenUpPanel.open.transform.localScale = Vector3.one
-        SetOpenUpPanel.close.transform.localScale = Vector3.zero
-        SetOpenUpPanel.price.interactable = true
-        SetOpenUpPanel.time.interactable = true
+        SetOpenUpPanel.open.isOn = true
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)
+        SetOpenUpPanel.close.localScale = Vector3.zero
     else
-        SetOpenUpPanel.open.transform.localScale = Vector3.zero
-        SetOpenUpPanel.close.transform.localScale = Vector3.one
-        SetOpenUpPanel.price.interactable = false
-        SetOpenUpPanel.time.interactable = false
+        SetOpenUpPanel.open.isOn = false
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2, 0, 0)
+        SetOpenUpPanel.close.localScale = Vector3.one
     end
 end
 
@@ -66,12 +67,16 @@ function SetOpenUpCtrl:OnxBtn()
 end
 
 --开启对外开放
-function SetOpenUpCtrl:OnOpen(go)
-    go.openUp = false
-    SetOpenUpPanel.close.transform.localScale = Vector3.one
-    SetOpenUpPanel.open.transform.localScale = Vector3.zero
-    SetOpenUpPanel.price.interactable = false
-    SetOpenUpPanel.time.interactable = false
+function SetOpenUpCtrl:OnOpen(isOn)
+    if isOn then
+        --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
+        SetOpenUpPanel.close.localScale = Vector3.zero
+    else
+        --SetOpenUpPanel.openBtn:DOMove(Vector3.New(2,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2,0,0)
+        SetOpenUpPanel.close.localScale = Vector3.one
+    end
 end
 
 --关闭对外开放

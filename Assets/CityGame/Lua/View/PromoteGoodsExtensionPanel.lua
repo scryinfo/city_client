@@ -25,6 +25,7 @@ function PromoteGoodsExtensionPanel.InitPanel()
     this.queue = transform:Find("contentRoot/queue").gameObject     --确定(自己)
     this.myTime = transform:Find("contentRoot/time")     --时间(自己)
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间
+    this.title = transform:Find("contentRoot/title/tltleText"):GetComponent("Text")     --推广加成
     this.otherTimeBg = transform:Find("contentRoot/otherTime")    --别人打开的时间
     this.otherTime = transform:Find("contentRoot/otherTime/time/InputField"):GetComponent("InputField")     --别人打开的时间
     this.slider = transform:Find("contentRoot/otherTime/Slider"):GetComponent("Slider")

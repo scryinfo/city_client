@@ -81,6 +81,8 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("deleBuyList",self.deleBuyList,self)
     Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
     Event.AddListener("whetherSend",self.whetherSend,self)
+    Event.AddListener("downShelf",self.downShelf,self)
+    Event.AddListener("downShelfSucceed",self.downShelfSucceed,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -88,6 +90,8 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("deleBuyList",self.deleBuyList,self)
     Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
     Event.RemoveListener("whetherSend",self.whetherSend,self)
+    Event.RemoveListener("downShelf",self.downShelf,self)
+    Event.RemoveListener("downShelfSucceed",self.downShelfSucceed,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -186,6 +190,18 @@ function BuildingShelfDetailPart:whetherSend(data)
         end
     end
 end
+--下架
+function BuildingShelfDetailPart:downShelf(data)
+    if data ~= nil then
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
+            Event.Brocast("m_ReqMaterialShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            --加工厂
+
+        end
+    end
+end
 --刷新最新数据
 function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
     self.m_data = dataInfo.info
@@ -194,7 +210,39 @@ function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
     end
     self:initializeUiInfoData(self.m_data.shelf.good)
 end
-
+-----------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------
+--下架成功后
+function BuildingShelfDetailPart:downShelfSucceed(data)
+    if data ~= nil then
+        --刷新货架
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == data.item.key.id then
+                if value.dataInfo.n == data.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.dataInfo.n = value.dataInfo.n - data.item.n
+                    value.numberText = "×"..value.dataInfo.n
+                end
+            end
+        end
+        --刷新建筑信息
+        for key,value in pairs(self.m_data.shelf.good) do
+            if value.k.id == data.item.key.id then
+                if value.n == data.item.n then
+                    table.remove(self.m_data.shelf.good,key)
+                else
+                    value.n = value.n - data.item.n
+                end
+            end
+        end
+    end
+    --下架成功后，如果货架是空的
+    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+        self.noTip.transform.localScale = Vector3.one
+        self.ScrollView.transform.localScale = Vector3.zero
+    end
+    UIPanel.ClosePage()
+end
 
 
 

@@ -160,6 +160,7 @@ function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
     --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
     --end
     Event.Brocast("transportSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
@@ -172,7 +173,8 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("downShelfSucceed",data)
+    Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)

@@ -28,6 +28,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
+    self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -168,6 +169,15 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
         data.switch = ins.automaticSwitch.isOn
         Event.Brocast("addShelf",data)
     end
+end
+--点击下架
+function ShelfBoxCtrl:_clickDownShelfBtn(ins)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    data.number = ins.numberSlider.value
+    data.producerId = ins.m_data.dataInfo.k.producerId
+    data.qty = ins.m_data.dataInfo.k.qty
+    Event.Brocast("downShelf",data)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关

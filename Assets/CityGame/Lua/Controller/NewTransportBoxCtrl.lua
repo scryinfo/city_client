@@ -40,6 +40,7 @@ end
 function NewTransportBoxCtrl:Hide()
     UIPanel.Hide(self)
     self:CloseDestroy()
+    self.targetWarehouse.text = ""
     Event.RemoveListener("deleteItemPrefab",self.deleteItemPrefab,self)
 end
 

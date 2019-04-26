@@ -65,6 +65,10 @@ function WarehouseItem:updateNumber(data)
     self.dataInfo.n = data.n
     self.numberText.text = "×"..self.dataInfo.n
 end
+--删除后刷新ID
+function WarehouseItem:RefreshID(id)
+    self.keyId = id;
+end
 
 
 --WarehouseItem = class('WarehouseItem')

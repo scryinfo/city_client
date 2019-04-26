@@ -159,7 +159,7 @@ function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
     --if data.dst == bagId then
     --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
     --end
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
+    Event.Brocast("transportSucceed",data)
 end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)

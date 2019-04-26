@@ -130,20 +130,20 @@ function BuildingBaseDetailPart:CloseDestroy(dataTable)
         end
     end
 end
-----删除某个商品
---function BuildingBaseDetailPart:deleteGoodsItem(dataTable,id)
---    if next(dataTable) == nil then
---        return
---    else
---        destroy(dataTable[id].prefab.gameObject)
---        table.remove(dataTable,id)
---    end
---    local id = 1
---    for key,value in pairs(dataTable) do
---        dataTable[id]:RefreshID(id)
---        id = id + 1
---    end
---end
+--删除某个商品
+function BuildingBaseDetailPart:deleteGoodsItem(dataTable,id)
+    if next(dataTable) == nil then
+        return
+    else
+        destroy(dataTable[id].prefab.gameObject)
+        table.remove(dataTable,id)
+    end
+    local id = 1
+    for key,value in pairs(dataTable) do
+        dataTable[id]:RefreshID(id)
+        id = id + 1
+    end
+end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -73,6 +73,10 @@ function BuildingWarehouseDetailPart:_ResetTransform()
     if next(self.warehouseDatas) ~= nil then
         self:CloseDestroy(self.warehouseDatas)
     end
+    --退出建筑是清空运输表
+    if next(self.transportTab) ~= nil then
+        self.transportTab = {}
+    end
 end
 
 function BuildingWarehouseDetailPart:_RemoveClick()
@@ -83,12 +87,14 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
     Event.AddListener("startTransport",self.startTransport,self)
+    Event.AddListener("transportSucceed",self.transportSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
     Event.RemoveListener("startTransport",self.startTransport,self)
+    Event.RemoveListener("transportSucceed",self.transportSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -186,7 +192,27 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         end
     end
 end
-
+--运输成功回调
+function BuildingWarehouseDetailPart:transportSucceed(data)
+    if data ~= nil then
+        for key,value in pairs(self.warehouseDatas) do
+            if value.itemId == data.item.key.id then
+                if value.dataInfo.n == data.item.n then
+                    self:deleteGoodsItem(self.warehouseDatas,key)
+                else
+                    value.dataInfo.n = value.dataInfo.n - data.item.n
+                    value.numberText.text = "×"..value.dataInfo.n
+                end
+            end
+        end
+    end
+    self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+    self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
+    self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+    self.number.transform.localScale = Vector3.zero
+    self.transportTab = {}
+    UIPanel.ClosePage()
+end
 
 
 

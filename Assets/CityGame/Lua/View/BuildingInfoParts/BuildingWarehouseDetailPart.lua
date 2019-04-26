@@ -174,9 +174,14 @@ end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_MaterialTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        --加工厂
+    elseif self.m_data.buildingType == BuildingType.TalentCenter then
+        --集散中心
     end
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------

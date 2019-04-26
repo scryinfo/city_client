@@ -647,7 +647,8 @@ function GetBuildingTypeById(buildingTypeId)
 		end
 		return type
 	end
-return nil
+	return nil
+end
 
 -- 动态加载预制
 function DynamicLoadPrefab(path, parent, scale, fuc)

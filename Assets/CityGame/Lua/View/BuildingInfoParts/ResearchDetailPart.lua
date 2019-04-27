@@ -54,7 +54,7 @@ function ResearchDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.goodsBtn.gameObject, self.onClick_good, self)
     mainPanelLuaBehaviour:AddClick(self.evaBtn.gameObject,self.onClick_eva, self)
     mainPanelLuaBehaviour:AddClick(self.setBtn.gameObject,self.onClick_set, self)
-    mainPanelLuaBehaviour:AddClick(self.inventEva.gameObject,self.onClick_set, self)
+    mainPanelLuaBehaviour:AddClick(self.inventEva.gameObject,self.onClick_inventEva, self)
 
 end
 --
@@ -210,7 +210,7 @@ function ResearchDetailPart:onClick_set(ins)
 end
 
 --研究eva
-function ResearchDetailPart:onClick_set(ins)
+function ResearchDetailPart:onClick_inventEva(ins)
     ins.buildInfo = ins.m_data.info
     local data={ins = ins,func = function(Ins)
         local count = Ins.ctrl.count

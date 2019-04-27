@@ -10,6 +10,11 @@ UIPanel:ResgisterOpen(LaboratoryCtrl)
 function LaboratoryCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
+
+--启动事件--
+function LaboratoryCtrl:OnCreate(go)
+    UIPanel.OnCreate(self,go)
+end
 function LaboratoryCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
@@ -17,9 +22,9 @@ local this,panel
 function LaboratoryCtrl:Refresh()
     this:_initData()
 end
+panel=LaboratoryPanel
 function LaboratoryCtrl:Awake(go)
     this = self
-    panel=LaboratoryPanel
     self.luaBehaviour= self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(panel.backBtn.gameObject, self._backBtn, self)
     self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
@@ -81,6 +86,7 @@ function LaboratoryCtrl:_initData()
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
+    LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
     self.m_data=buildingInfo
     buildingInfo.insId=buildingInfo.info.id
     local info=buildingInfo.info

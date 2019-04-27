@@ -78,7 +78,6 @@ function LoginCtrl:OnCreate(go)
 
 	--ct.log("abel_w6_UIFrame","Start lua--->>"..self.gameObject.name);
 
-
 	--启用 c_AddClick_self 单元测试
 	--ct.log("abel_w7_AddClick","[UnitTest.Exec_now test_AddClick_self] ")
 	--UnitTest.Exec_now("abel_w7_AddClick", "c_AddClick_self",self)

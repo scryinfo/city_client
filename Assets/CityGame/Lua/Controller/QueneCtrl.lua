@@ -56,22 +56,23 @@ function QueneCtrl:OnClick_backBtn(ins)
 end
 
 
-
-
-
 ---====================================================================================业务代码==============================================================================================
 --对数据处理
 local function handleData( data )
-   local reminderTime=0
+   local reminderTime = TimeSynchronized.GetTheCurrentServerTime()
 
-   local mselfData,others={},{}
+    local mselfData,others={},{}
    table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
 
     --处理时间
-    if data[1].lineData.availableRoll then
+    if data[1].availableRoll then
         for i, lineData in ipairs(data) do
-            lineData.queneTime = reminderTime
-            reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))* 3600000)
+            if lineData.beginProcessTs == 0  then
+                lineData.queneTime = reminderTime
+            else
+                lineData.queneTime = lineData.beginProcessTs
+            end
+            reminderTime = reminderTime + (lineData.times* 3600000)
         end
     end
 

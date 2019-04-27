@@ -12,40 +12,47 @@ function InventSetPopCtrl:bundleName()
     return "Assets/CityGame/Resources/View/InventSetPopPanel.prefab";
 end
 
-function InventSetPopCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self,obj);
-end
-
-
 function InventSetPopCtrl:Refresh()
-    local data = self.m_data
+    local data = self.m_data.ins.m_data
     self:updateText(data)
-    self.popCompent:Refesh(data)
+    self:UpDateUI(data)
 end
 
 function InventSetPopCtrl:Awake(go)
     panel = InventSetPopPanel
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
 
-    LuaBehaviour:AddClick(panel.isOpenBtn.gameObject,self.OnClick_isOpen,self);
-    panel.priceInp.onValueChanged:AddListener(function (string)
-        self.price=tonumber(string)
+    LuaBehaviour:AddClick(panel.xBtn,self.OnxBtn,self);
+    LuaBehaviour:AddClick(panel.confirm,self.OnConfirm,self);
+    panel.open.onValueChanged:AddListener(function(isOn)
+        self:OnOpen(isOn)
     end)
 
-    panel.countInp.onValueChanged:AddListener(function (string)
-        self.count=tonumber(string)
-    end)
 end
 ---====================================================================================点击函数==============================================================================================
----
-function InventSetPopCtrl:OnClick_isOpen(ins)
-    if ins.isOpen then
-        ins.isOpen = not ins.isOpen
+
+--设置
+function InventSetPopCtrl:OnConfirm(ins)
+
+    local isopen =  panel.open.isOn
+    if isopen then
+        if panel.price.text == "" or panel.time.text == "" or panel.price.text == "0" or panel.time.text == "0" then
+            Event.Brocast("SmallPop","时间或价格不能为空",300)
+            return
+        end
+
+        local price = tonumber(panel.price.text)
+        local count = tonumber(panel.time.text)
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
     else
-        ins.isOpen = not ins.isOpen
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
     end
-    panel.isOpenBtnText.text=tostring(ins.isOpen)
+
+end
+
+function InventSetPopCtrl:OnxBtn()
+    UIPanel.ClosePage()
 end
 
 
@@ -54,6 +61,31 @@ end
 
 
 function InventSetPopCtrl:updateText(data)
-   -- panel.mainText.text = GetLanguage(40010009)
+    -- panel.mainText.text = GetLanguage(40010009)
+    panel.referencePrice.text = data.recommendPrice
+
 end
 
+function InventSetPopCtrl:UpDateUI(data)
+    self.openUp =  not data.exclusive
+    if self.openUp then
+        panel.open.isOn = true
+        panel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)
+        panel.close.localScale = Vector3.zero
+    else
+        panel.open.isOn = false
+        panel.openBtn.anchoredPosition = Vector3.New(2, 0, 0)
+        panel.close.localScale = Vector3.one
+    end
+end
+
+--开启对外开放
+function InventSetPopCtrl:OnOpen(isOn)
+    if isOn then
+        panel.openBtn.anchoredPosition = Vector3.New(88,0,0)
+        panel.close.localScale = Vector3.zero
+    else
+        panel.openBtn.anchoredPosition = Vector3.New(2,0,0)
+        panel.close.localScale = Vector3.one
+    end
+end

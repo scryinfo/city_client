@@ -1,36 +1,36 @@
 
-InventGoodItem = class('InventGoodItem')
+ToggleBtnItem = class('ToggleBtnItem')
 
 
 ---初始化方法   数据（读配置表）
-function InventGoodItem:initialize(data,prefab,luaBehaviour)
+function ToggleBtnItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
 
     --self.ima=prefab.transform:Find("Image"):GetComponent("Image");
-    self.deleteBtn=prefab.transform:Find("Button")
-
-    luaBehaviour:AddClick(self.deleteBtn.gameObject,self.c_OnClick_Delete,self);
-    self:Refresh(data)
+    --self.deleteBtn=prefab.transform:Find("Button")
+    --
+    luaBehaviour:AddClick(prefab,self.c_OnClick_Delete,self);
+     --self:Refresh(data)
 end
 ---==========================================================================================点击函数=============================================================================
 --删除
-function InventGoodItem:c_OnClick_Delete(ins)
-    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+function ToggleBtnItem:c_OnClick_Delete(ins)
+   prints("ToggleBtnItem")
 end
 
---删除
-function InventGoodItem:c_OnClick_Roll(ins)
+--删除2
+function ToggleBtnItem:c_OnClick_Roll(ins)
     ct.OpenCtrl("RollCtrl" , ins.data)
 end
 
 
 ---==========================================================================================业务逻辑=============================================================================
 
-function InventGoodItem:updateData( data )
+function ToggleBtnItem:updateData( data )
     self.data=data
 end
 
-function InventGoodItem:updateUI(data)
+function ToggleBtnItem:updateUI(data)
     --LoadSprite()
 
     if data.beginProcessTs > 0 then
@@ -44,7 +44,7 @@ function InventGoodItem:updateUI(data)
 
 end
 
-function InventGoodItem:Refresh(data)
+function ToggleBtnItem:Refresh(data)
     self:updateData(data)
     self:updateUI(data)
 end

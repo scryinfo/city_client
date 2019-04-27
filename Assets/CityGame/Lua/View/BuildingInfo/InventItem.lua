@@ -9,9 +9,9 @@ function InventItem:initialize(prefab,luaBehaviour,data,ctr)
     self.ima=findByName(transform,"icon"):GetComponent("Image");
     self.text=findByName(transform,"Text"):GetComponent("Text");
 
+    self.ctrl = ctr
     luaBehaviour:AddClick(prefab,self.c_OnClick_addLine,self);
     self:Refresh(data)
-    self.ctrl = ctr
 end
 ---==========================================================================================点击函数=============================================================================
 --添加发明

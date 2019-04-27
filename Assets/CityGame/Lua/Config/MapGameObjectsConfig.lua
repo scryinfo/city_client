@@ -28,7 +28,7 @@ MapGameObjectsConfig = {
         {   --加工厂3
             ["Name"] = "Factory_3",
             ["PlayerBuildingBaseDataID"] = 1200003,
-            ["InitCount"] = 64,
+            ["InitCount"] = 64,222
         },
         {   --零售店1
             ["Name"] = "SuperMarket_1",

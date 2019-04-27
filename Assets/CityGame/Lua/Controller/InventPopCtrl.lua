@@ -32,6 +32,9 @@ function InventPopCtrl:Refresh()
     self.popCompent:Refesh(data)
 
     panel.priceText.text = 0
+    if not self.m_data.info then
+        self.m_data.info = self.m_data.ins.buildInfo
+    end
     if DataManager.GetMyOwnerID() ~= self.m_data.ins.buildInfo.ownerId then
         self:other()
         panel.buyRoot.localScale = Vector3.one

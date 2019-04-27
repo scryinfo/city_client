@@ -54,7 +54,7 @@ end
 ---===================================================================================点击函数==============================================================================================
 
 function ResearchPart:onClick_set(ins)
-   ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodItem",data = ins.m_data.inProcess })
+   ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
 end
 
 --

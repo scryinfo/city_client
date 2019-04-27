@@ -5,11 +5,14 @@
 ---
 TransportItem = class('TransportItem')
 
-function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType)
+local ToNumber = tonumber
+local StringSun = string.sub
+function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,unitPrice)
     self.keyId = keyId
     self.prefab = prefab
     self.dataInfo = dataInfo
     self.goodsType = goodsType
+    self.unitPrice = unitPrice
     self.itemId = dataInfo.itemId
 
     self.iconImg = prefab.transform:Find("goodsInfo/iconImg"):GetComponent("Image")
@@ -35,11 +38,17 @@ end
 function TransportItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.number
-    if self.goodsType == BuildingType.MaterialFactory then
+    self.freightPriceText.text = GetClientPriceString(ToNumber(self.dataInfo.number) * ToNumber(self.unitPrice))
+    --运输还是购买（购买会有物品价格，运输只有运费）
+    if self.dataInfo.state == GoodsItemStateType.buy then
+        self.goodsPriceText.text = GetClientPriceString(self.dataInfo.number * self.dataInfo.price)
+    end
+    local materialKey,goodsKey = 21,22
+    if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         LoadSprite(Material[self.itemId].img,self.iconImg,false)
-    elseif self.goodsType == BuildingType.ProcessingFactory then
+    elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
         --self.levelImg

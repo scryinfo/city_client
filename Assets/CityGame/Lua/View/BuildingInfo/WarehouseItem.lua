@@ -4,13 +4,15 @@
 --- DateTime: 2019/4/15 17:24
 ---
 WarehouseItem = class('WarehouseItem')
-function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,stateType)
+local ToNumber = tonumber
+local StringSun = string.sub
+function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
     self.dataInfo = dataInfo
     self.stateType = stateType[1]
     self.buildingId = stateType[2]
-    self.goodsType = goodsType
+    self.buildingType = buildingType
     self.itemId = dataInfo.key.id
 
     self.iconImg = prefab.transform:Find("iconImg"):GetComponent("Image")
@@ -33,11 +35,12 @@ end
 function WarehouseItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.n
-    if self.goodsType == BuildingType.MaterialFactory then
+    local materialKey,goodsKey = 21,22
+    if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         LoadSprite(Material[self.itemId].img,self.iconImg,false)
-    elseif self.goodsType == BuildingType.ProcessingFactory then
+    elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
         --self.levelImg
@@ -57,6 +60,13 @@ function WarehouseItem:_clickDetailsBtn(ins)
         ct.OpenCtrl("WarehouseBoxCtrl",ins)
     end
 end
+--刷新数量
+function WarehouseItem:updateNumber(data)
+    self.dataInfo.n = data.n
+    self.numberText.text = "×"..self.dataInfo.n
+end
+
+
 --WarehouseItem = class('WarehouseItem')
 --
 --local Math_Floor = math.floor

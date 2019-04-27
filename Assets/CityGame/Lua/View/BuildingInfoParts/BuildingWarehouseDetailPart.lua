@@ -16,13 +16,24 @@ function BuildingWarehouseDetailPart:_InitTransform()
     --运输列表(运输成功后或退出建筑时清空)
     self.transportTab = {}
 end
-
+function BuildingWarehouseDetailPart:Show(data)
+    BasePartDetail.Show(self,data)
+    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
+end
+function BuildingWarehouseDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
+    if next(self.warehouseDatas) ~= nil then
+        self:CloseDestroy(self.warehouseDatas)
+    end
+end
 function BuildingWarehouseDetailPart:RefreshData(data)
     if data == nil then
         return
     end
     self.m_data = data
     self:_initFunc()
+    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -71,16 +82,17 @@ end
 function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
+    Event.AddListener("startTransport",self.startTransport,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
+    Event.RemoveListener("startTransport",self.startTransport,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -91,6 +103,7 @@ end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
     if not storeData then
+        self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -98,20 +111,17 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     else
         self.noTip.transform.localScale = Vector3.zero
+        self.Capacity = self:_getWarehouseCapacity(self.m_data.store)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-        self.warehouseCapacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
+        self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
         if next(self.transportTab) == nil then
             self.number.transform.localScale = Vector3.zero
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
-            return
-        else
-            self.transportBool = GoodsItemStateType.transport
-            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-        end
+        self.transportBool = GoodsItemStateType.transport
+        self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
@@ -125,7 +135,7 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.buildingId = self.m_data.insId
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
-    data.transportTab = self.transportTab
+    data.itemPrefabTab = self.transportTab
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
@@ -151,6 +161,32 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
         end
     end
 end
+--开始运输
+function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_MaterialTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+        end
+    end
+end
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--刷新生产线生产出来商品，当前的仓库容量
+function BuildingWarehouseDetailPart:updateCapacity(data)
+    if data ~= nil then
+        self.Capacity = self.Capacity + 1
+        self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.warehouseCapacitySlider.value = self.Capacity
+        self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+
+        for key,value in pairs(self.warehouseDatas) do
+            if value.itemId == data.iKey.id then
+                --value.dataInfo.n = value.dataInfo.n + 1
+                value.numberText.text = "×"..value.dataInfo.n
+            end
+        end
+    end
+end
+
 
 
 

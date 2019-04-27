@@ -3,7 +3,7 @@
 --- Created by mengpengfei.
 --- DateTime: 2019/4/12 11:37
 ---建筑主界面货架详情界面
-BuildingShelfDetailPart = class('BuildingShelfDetailPart',BasePartDetail)
+BuildingShelfDetailPart = class('BuildingShelfDetailPart',BuildingBaseDetailPart)
 
 function BuildingShelfDetailPart:PrefabName()
     return "BuildingShelfDetailPart"
@@ -11,6 +11,10 @@ end
 
 function BuildingShelfDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    --货架数据
+    self.shelfDatas = {}
+    --购买列表(暂时购买成功后或退出建筑时清空)
+    self.buyDatas = {}
 end
 
 function BuildingShelfDetailPart:RefreshData(data)
@@ -40,11 +44,13 @@ function BuildingShelfDetailPart:_getComponent(transform)
     self.addBtn = transform:Find("contentRoot/noTip/addbg/addBtn")
     self.ScrollView = transform:Find("contentRoot/ScrollView")
     self.Content = transform:Find("contentRoot/ScrollView/Viewport/Content")
+    self.contentAddBg = transform:Find("contentRoot/ScrollView/Viewport/Content/addbg")
     self.contentAddBtn = transform:Find("contentRoot/ScrollView/Viewport/Content/addbg/addBtn")
     self.ShelfItem = transform:Find("contentRoot/ScrollView/Viewport/Content/ShelfItem").gameObject
 end
 
 function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
+    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject,function()
         self:clickCloseBtn()
     end,self)
@@ -54,19 +60,37 @@ function BuildingShelfDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.contentAddBtn.gameObject,function()
         self:clickaddShelfBtn()
     end,self)
+    mainPanelLuaBehaviour:AddClick(self.buyBtn.gameObject,function()
+        self:clickBuyBtn()
+    end,self)
 end
 
 function BuildingShelfDetailPart:_ResetTransform()
-
+    --关闭时清空Item数据
+    if next(self.shelfDatas) ~= nil then
+        self:CloseDestroy(self.shelfDatas)
+    end
 end
 
 function BuildingShelfDetailPart:_RemoveClick()
 
 end
 
+function BuildingShelfDetailPart:_InitEvent()
+    Event.AddListener("addBuyList",self.addBuyList,self)
+    Event.AddListener("deleBuyList",self.deleBuyList,self)
+    Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
+end
+
+function BuildingShelfDetailPart:_RemoveEvent()
+    Event.RemoveListener("addBuyList",self.addBuyList,self)
+    Event.RemoveListener("deleBuyList",self.deleBuyList,self)
+    Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
+end
+
 function BuildingShelfDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.shelf)
+    self:initializeUiInfoData(self.m_data.shelf.good)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -75,6 +99,7 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
+
     if not shelfData then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -83,16 +108,16 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         self.noTip.transform.localScale = Vector3.zero
         self.ScrollView.transform.localScale = Vector3.one
 
-        --if next(self.transportTab) == nil then
-        --    self.number.transform.localScale = Vector3.zero
-        --else
-        --    self.number.transform.localScale = Vector3.one
-        --end
-        --if #shelfData == #self.warehouseDatas then
-        --    return
-        --else
-        --    self:CreateGoodsItems(shelfData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType)
-        --end
+        if next(self.buyDatas) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+        end
+        if #shelfData == #self.shelfDatas then
+            return
+        else
+            self:CreateGoodsItems(shelfData,self.ShelfItem,self.Content,ShelfItem,self.mainPanelLuaBehaviour,self.shelfDatas,self.m_data.buildingType,self.m_data.insId,self.m_data.isOther)
+        end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
@@ -103,16 +128,49 @@ end
 --点击上架
 function BuildingShelfDetailPart:clickaddShelfBtn()
     local data = {}
-    data.info = self.m_data.info
-    data.store = self.m_data.store
-    data.buildingType = self.m_data.buildingType
+    data.info = self.m_data
     ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
 end
-
-
-
-
-
+--打开购买弹窗
+function BuildingShelfDetailPart:clickBuyBtn()
+    local data = {}
+    data.buildingId = self.m_data.insId
+    data.buildingInfo = self.m_data.info
+    data.buildingType = self.m_data.buildingType
+    data.itemPrefabTab = self.buyDatas
+    ct.OpenCtrl("NewTransportBoxCtrl",data)
+end
+-----------------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------
+--添加到购买列表
+function BuildingShelfDetailPart:addBuyList(data)
+    --添加到购买列表
+    table.insert(self.buyDatas,data)
+    self.number.transform.localScale = Vector3.one
+    self.numberText.text = #self.buyDatas
+end
+--删除购买列表
+function BuildingShelfDetailPart:deleBuyList(id)
+    --删除指定的数据
+    if not id then
+        return
+    else
+        table.remove(self.buyDatas,id)
+        if next(self.buyDatas) == nil then
+            self.number.transform.localScale = Vector3.zero
+        else
+            self.number.transform.localScale = Vector3.one
+            self.numberText.text = #self.buyDatas
+        end
+    end
+end
+--刷新最新数据
+function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
+    self.m_data = dataInfo.info
+    if next(self.shelfDatas) ~= nil then
+        self:CloseDestroy(self.shelfDatas)
+    end
+    self:initializeUiInfoData(self.m_data.shelf.good)
+end
 
 
 

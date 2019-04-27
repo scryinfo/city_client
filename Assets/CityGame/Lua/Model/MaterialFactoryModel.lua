@@ -25,6 +25,7 @@ function MaterialFactoryModel:OnCreate()
     Event.AddListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
     Event.AddListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
+    Event.AddListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -37,6 +38,8 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    --TODO:购物车协议
+    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
@@ -58,6 +61,25 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_ReqMaterialDelItem",self.m_ReqDelItem,self)
     Event.RemoveListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
+    Event.RemoveListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
+
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
+    --仓库
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfAdd","gs.ShelfAdd",self.n_OnShelfAddInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
+    --货架
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
+    --生产线
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
+    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
 end
 ---客户端请求---
 --打开原料厂
@@ -112,7 +134,10 @@ end
 function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 end
-
+----添加购物车
+--function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+--    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+--end
 ---服务器回调---
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
@@ -137,7 +162,7 @@ function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
 end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,false)
+    DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
 end
 --修改货架价格
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
@@ -153,11 +178,15 @@ function MaterialFactoryModel:n_OnAddLineInfo(data)
 end
 --删除生产线
 function MaterialFactoryModel:n_OnDeleteLineInfo(data)
-    Event.Brocast("DeleteLineRefresh",data)
+    Event.Brocast("detailPartUpdateNowLine",data)
+    Event.Brocast("partUpdateNowLine",data)
 end
 --生产线变化推送
 function MaterialFactoryModel:n_OnLineChangeInform(data)
-    Event.Brocast("c_refreshNowConte",data)
+    Event.Brocast("partUpdateNowCount",data)
+    Event.Brocast("detailPartUpdateNowCount",data)
+    Event.Brocast("partUpdateCapacity",data)
+    Event.Brocast("detailPartUpdateCapacity",data)
 end
 --货架购买
 function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
@@ -169,11 +198,14 @@ function MaterialFactoryModel:n_OnDelItemInfo(data)
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)
-    local aaa = data
-    local bbb = ""
+    Event.Brocast("SettopSuccess",data)
 end
 --自动补货
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
     local aaa = data
     local bbb = ""
+end
+--添加购物车
+function MaterialFactoryModel:n_OnAddShoppingCart(data)
+
 end

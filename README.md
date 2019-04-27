@@ -28,7 +28,7 @@
 		
 3、编译和运行
 
-	1、 该项目通过Unity引擎编辑器中的宏设置来控制来实现其不同目的编译目的，涉及到如下宏：
+	1、 该项目通过控制Unity引擎编辑器中的宏设置来实现不同版本的编译，涉及到如下宏：
 	
 		HOTUP;LUA_BUNDEL;RES_BUNDEL;PUB_BUILD;LUA_LOG;ASYNC_MODE
 		
@@ -40,7 +40,7 @@
 		
 		PUB_BUILD	是否开启外网模式
 		
-		LUA_LOG	是否开启脚本的打印及分组测试
+		LUA_LOG	是否开启脚本的日志打印及测试分组
 		
 		ASYNC_MODE 是否开启美术资源加载的异步模式
 		

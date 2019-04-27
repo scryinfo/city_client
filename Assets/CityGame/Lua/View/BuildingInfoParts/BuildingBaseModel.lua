@@ -47,7 +47,7 @@ function BuildingBaseModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
     local lMsg = {id = buildingId, itemId = itemId, targetNum = number, workerNum = tonumber(steffNumber)}
     DataManager.ModelSendNetMes("gscode.OpCode","ftyAddLine","gs.AddLine",lMsg)
 end
-----修改生产线
+--修改生产线
 --function BuildingBaseModel:m_ResModifyKLine(buildingId,targetNum,steffNumber,lineId)
 --    local lMsg = {buildingId = buildingId,targetNum = targetNum,workerNum = tonumber(steffNumber),lineId = lineId}
 --    DataManager.ModelSendNetMes("gscode.OpCode","ftyChangeLine","gs.ChangeLine",lMsg)
@@ -66,4 +66,9 @@ end
 function BuildingBaseModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     local lMsg = {buildingId = buildingId,iKey = {id = itemId,producerId = producerId,qty = qty},autoRepOn = autoRepOn}
     DataManager.ModelSendNetMes("gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",lMsg)
+end
+--添加购物车
+function BuildingBaseModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
+    local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(number)},price = tonumber(price)}
+    DataManager.ModelSendNetMes("gscode.OpCode","addShopCart","gs.GoodInfo",lMsg)
 end

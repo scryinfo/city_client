@@ -35,20 +35,20 @@ end
 
 function HouseCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
+    --Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
 end
 
 function HouseCtrl:Hide()
-    Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
     UIPanel.Hide(self)
 end
 
 --更改基础建筑信息
-function HouseCtrl:_changeItemData(data)
-    if data ~= nil and HousePanel.topItem ~= nil then
-        HousePanel.topItem:changeItemData(data)
-    end
-end
+--function HouseCtrl:_changeItemData(data)
+--    if data ~= nil and HousePanel.topItem ~= nil then
+--        HousePanel.topItem:changeItemData(data)
+--    end
+--end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
@@ -79,11 +79,26 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         self.m_data.isOther = false
     end
     if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-        self.groupMgr:AddParts(BuildingSignPart, 0.5)
-        self.groupMgr:AddParts(BuildingSalaryPart, 0.5)
-        self.groupMgr:RefreshData(self.m_data)
-        self.groupMgr:TurnOffAllOptions()
+        if houseDetailData.info.state == "OPERATE" then -- 营业中
+            self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
+            if self.m_data.isOther then -- 别人
+                self.groupMgr:AddParts(BuildingSignPart, 1)
+                self.groupMgr:AddParts(BuildingRentPart, 0)
+                self.groupMgr:AddParts(TurnoverPart, 0)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0)
+            else
+                self.groupMgr:AddParts(BuildingRentPart, 0.25)
+                self.groupMgr:AddParts(TurnoverPart, 0.25)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
+                self.groupMgr:AddParts(BuildingSignPart, 0.25)
+
+            end
+            HousePanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:RefreshData(self.m_data)
+            self.groupMgr:TurnOffAllOptions()
+        else -- 未营业
+            HousePanel.groupTrans.localScale = Vector3.zero
+        end
     else
         self.groupMgr:RefreshData(self.m_data)
     end
@@ -114,12 +129,25 @@ function HouseCtrl:_refreshSalary(data)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
+
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
+            self.groupMgr:AddParts(BuildingRentPart, 0.25)
+            self.groupMgr:AddParts(TurnoverPart, 0.25)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
+            self.groupMgr:AddParts(BuildingSignPart, 0.25)
+            HousePanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:TurnOffAllOptions()
+        end
         self.groupMgr:RefreshData(self.m_data)
     end
 end
 --
 function HouseCtrl:_refreshRent(data)
     if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置日租金成功", 300)
+        end
         self.m_data.rent = data.rent
         self.groupMgr:RefreshData(self.m_data)
     end

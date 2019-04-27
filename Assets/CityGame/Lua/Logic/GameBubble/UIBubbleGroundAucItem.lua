@@ -9,6 +9,7 @@ local minAnchorX = nil
 local maxAnchorX = nil
 local minAnchorY = nil
 local maxAnchorY = nil
+local mainCamera = nil
 function UIBubbleGroundAucItem:initialize(data)
     self.data = data
     --self.data.aucInfo.isStartAuc = data.isStartAuc
@@ -92,6 +93,7 @@ function UIBubbleGroundAucItem:initialize(data)
         maxAnchorX = UnityEngine.Screen.width * Game.ScreenRatio + selfBoxwidth
         minAnchorY = - selfBoxwidth
         maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
+        mainCamera = UnityEngine.Camera.main
     end
     self.m_anchoredPos =  self.bubbleRect.anchoredPosition
     self:ShowOrHideSelf(self:JudgeSelfIsShow())
@@ -225,7 +227,7 @@ end
 
 function UIBubbleGroundAucItem:LateUpdate()
     if self.bubbleObj ~= nil and self.data.targetPos ~=nil then
-        self.m_anchoredPos  = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
+        self.m_anchoredPos  = ScreenPosTurnActualPos(mainCamera:WorldToScreenPoint(self.data.targetPos + Vector3.New(0.5, 0, 0.5)))
         self:IsMove()
     end
 end

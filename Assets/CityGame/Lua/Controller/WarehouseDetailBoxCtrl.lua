@@ -6,6 +6,8 @@
 WarehouseDetailBoxCtrl = class("WarehouseDetailBoxCtrl",UIPanel)
 UIPanel:ResgisterOpen(WarehouseDetailBoxCtrl)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function WarehouseDetailBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -25,7 +27,10 @@ function WarehouseDetailBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
 end
-
+function WarehouseDetailBoxCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("addShelf",self.addShelf,self)
+end
 function WarehouseDetailBoxCtrl:Refresh()
     self:initializeUiInfoData()
 end
@@ -33,6 +38,7 @@ end
 function WarehouseDetailBoxCtrl:Hide()
     UIPanel.Hide(self)
     self:CloseDestroy()
+    Event.RemoveListener("addShelf",self.addShelf,self)
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WarehouseDetailBoxCtrl:_getComponent(go)
@@ -48,7 +54,8 @@ end
 -------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseDetailBoxCtrl:initializeUiInfoData()
-    if next(self.m_data.store) == nil then
+    self.m_data.insId = self.m_data.info.insId
+    if next(self.m_data.info.store) == nil then
         self.noTip.transform.localScale = Vector3.one
         return
     else
@@ -57,7 +64,7 @@ function WarehouseDetailBoxCtrl:initializeUiInfoData()
         end
         self.noTip.transform.localScale = Vector3.zero
         self.addShelfBool = GoodsItemStateType.addShelf
-        self:CreateGoodsItems(self.m_data.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.buildingType,self.addShelfBool,self.m_data.info.id)
+        self:CreateGoodsItems(self.m_data.info.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.info.buildingType,self.addShelfBool,self.m_data.info.info.id)
     end
 end
 --设置多语言
@@ -70,14 +77,124 @@ function WarehouseDetailBoxCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
+-------------------------------------------------------------事件函数--------------------------------------------------------------------------------
+--上架
+function WarehouseDetailBoxCtrl:addShelf(dataInfo)
+    if self.m_data.info.buildingType == BuildingType.MaterialFactory then
+        --如果是原料厂
+        --检查货架是否是空的
+        if not self.m_data.info.shelf.good then
+            Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+        else
+            --如果货架不是空的，检查货架上是否有这个商品
+            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+                --发送修改价格
+                Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --发送上架
+                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            else
+                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
+        --如果是加工厂
+
+    end
+end
+-------------------------------------------------------------回调函数-------------------------------------------------------------------------------
+--上架成功后刷新
+function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
+    for key,value in pairs(self.m_data.info.store.inHand) do
+        if value.key.id == dataInfo.item.key.id then
+            if value.n == dataInfo.item.n then
+                table.remove(self.m_data.info.store.inHand,key)
+            else
+                value.n = value.n - dataInfo.item.n
+            end
+        end
+    end
+    self:addShelfGood(dataInfo)
+    self:CloseDestroy()
+    self:initializeUiInfoData()
+    self:_clickCloseBtn()
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+--上架前检查货架上是否有这个商品  返回true有   返回false没有
+function WarehouseDetailBoxCtrl:ShelfWhetherHave(table,itemId)
+    for key,value in pairs(table) do
+        if value.k.id == itemId then
+            return true
+        end
+    end
+    return false
+end
+--上架成功后更新数据
+function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
+    --如果shelf.good 是空的
+    if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+        local goods = {}
+        local k = {}
+        goods.k = k
+        goods.k.id = dataInfo.item.key.id
+        goods.k.producerId = dataInfo.item.key.producerId
+        goods.k.qty = dataInfo.item.key.qty
+        goods.autoReplenish = dataInfo.autoRepOn
+        goods.n = dataInfo.item.n
+        goods.price = dataInfo.price
+        if not self.m_data.info.shelf.good then
+            self.m_data.info.shelf.good = {}
+        end
+        self.m_data.info.shelf.good[#self.m_data.info.shelf.good + 1] = goods
+    else
+        --架子上有没有这个商品
+        for key,value in pairs(self.m_data.info.shelf.good) do
+            --如果架子上有,直接修改数量和价格
+            if value.k.id == dataInfo.item.key.id then
+                value.n = value.n + dataInfo.item.n
+                value.price = dataInfo.price
+                Event.Brocast("refreshShelfDetailPart",self.m_data)
+                return
+            end
+        end
+        --如果没有这个商品
+        local goods = {}
+        local k = {}
+        goods.k = k
+        goods.k.id = dataInfo.item.key.id
+        goods.k.producerId = dataInfo.item.key.producerId
+        goods.k.qty = dataInfo.item.key.qty
+        goods.autoReplenish = dataInfo.autoRepOn
+        goods.n = dataInfo.item.n
+        goods.price = dataInfo.price
+        self.m_data.info.shelf.good[#self.m_data.info.shelf.good + 1] = goods
+    end
+    Event.Brocast("refreshShelfDetailPart",self.m_data)
+end
 --生成itemPrefab
 function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
     if not dataInfo then
         return
     end
     local arg = {...}
-    for key,value in pairs(dataInfo.inHand) do
+    --筛选出有用的数据
+    --如果是原料厂上架，筛选出原料；如果是加工厂上架，筛选出商品
+    local temporaryDataInfo = {}
+    local materialKey,goodsKey = 21,22
+    if self.m_data.info.buildingType == BuildingType.MaterialFactory then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+    end
+
+    for key,value in pairs(temporaryDataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
         local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)
         table.insert(self.goodsItemTable,itemGoodsIns)

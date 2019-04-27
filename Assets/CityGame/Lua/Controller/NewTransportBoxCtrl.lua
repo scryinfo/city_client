@@ -24,6 +24,7 @@ function NewTransportBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.chooseWarehouseBtn.gameObject,self._clickChooseWarehouseBtn,self)
+    self.luaBehaviour:AddClick(self.startBtn.gameObject,self._clickStartBtn,self)
 end
 
 function NewTransportBoxCtrl:Active()
@@ -62,15 +63,18 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --初始化UI数据
 function NewTransportBoxCtrl:initializeUiInfoData()
-    if next(self.m_data.transportTab) == nil then
+    if next(self.m_data.itemPrefabTab) == nil then
         self.tipContentText.transform.localScale = Vector3.one
     else
         self.tipContentText.transform.localScale = Vector3.zero
         if not self.itemTable then
             self.itemTable = {}
         end
-        self:CreateGoodsItems(self.m_data.transportTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType)
+        local unitPrice = ChooseWarehouseCtrl:GetPrice()
+        self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
+        self:CreateGoodsItems(self.m_data.itemPrefabTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType,unitPrice)
     end
+
 end
 --设置多语言
 function NewTransportBoxCtrl:_language()
@@ -96,16 +100,24 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     data.nameText = ins.targetWarehouse
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
+--点击运输
+function NewTransportBoxCtrl:_clickStartBtn(ins)
+    Event.Brocast("startTransport",ins.itemTable,ins.targetBuildingId)
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --删除某个商品
 function NewTransportBoxCtrl:deleteItemPrefab(id)
-    --运输列表是否为空
+    --运输或购买列表是否为空
     if next(self.itemTable) == nil then
         return
     else
+        if self.itemTable[id].dataInfo.state == GoodsItemStateType.transport then
+            Event.Brocast("deleTransportList",id)
+        elseif self.itemTable[id].dataInfo.state == GoodsItemStateType.buy then
+            Event.Brocast("deleBuyList",id)
+        end
         destroy(self.itemTable[id].prefab.gameObject)
         table.remove(self.itemTable,id)
-        Event.Brocast("deleTransportList",id)
         --删除一个之后当前是否为空，不为空重新排序
         if next(self.itemTable) == nil then
             self.tipContentText.transform.localScale = Vector3.one
@@ -120,13 +132,13 @@ function NewTransportBoxCtrl:deleteItemPrefab(id)
     end
 end
 --生成itemPrefab
-function NewTransportBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType)
+function NewTransportBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,unitPrice)
     if not dataInfo then
         return
     end
     for key,value in pairs(dataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
-        local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType)
+        local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,unitPrice)
         table.insert(self.itemTable,itemGoodsIns)
     end
 end

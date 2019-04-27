@@ -112,7 +112,6 @@ function CameraMove:LateUpdate(gameObject)
             self.IsTouchUI = false
             --cycle需要的每帧调用接口
             Event.Brocast("c_UIBubbleLateUpdate")
-            Event.Brocast("BuilldingBubbleInsManger_Refresh")
             return
         end
     end
@@ -120,7 +119,6 @@ function CameraMove:LateUpdate(gameObject)
     if self.IsTouchUI then
         --cycle需要的每帧调用接口
         Event.Brocast("c_UIBubbleLateUpdate")
-        Event.Brocast("BuilldingBubbleInsManger_Refresh")
         return
     end
     --如果检测到按下
@@ -159,13 +157,10 @@ function CameraMove:LateUpdate(gameObject)
     elseif mCameraState == TouchStateType.UIState then
         --cycle需要的每帧调用接口
         Event.Brocast("c_UIBubbleLateUpdate")
-        Event.Brocast("BuilldingBubbleInsManger_Refresh")
         return
     end
     --cycle需要的每帧调用接口
     Event.Brocast("c_UIBubbleLateUpdate")
-    Event.Brocast("BuilldingBubbleInsManger_Refresh")
-
 end
 
 --将距离远近值转化为相机Scale的Pos位置【过时】

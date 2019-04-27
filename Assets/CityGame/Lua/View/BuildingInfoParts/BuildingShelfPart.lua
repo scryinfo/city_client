@@ -26,7 +26,7 @@ function BuildingShelfPart:RefreshData(data)
 end
 
 function BuildingShelfPart:_ResetTransform()
-    self:initializeComponent()
+    self:_language()
 end
 
 function BuildingShelfPart:_getComponent(transform)
@@ -44,18 +44,33 @@ function BuildingShelfPart:_InitChildClick(mainPanelLuaBehaviour)
 end
 
 function BuildingShelfPart:_initFunc()
-    self:initializeComponent()
-    self.salaryPercentText.text = 0
+    self:_language()
+    self:_initializeShelfCount()
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --重置组件
-function BuildingShelfPart:initializeComponent()
+function BuildingShelfPart:_language()
     --暂时  需要修改多语言
     self.topText.text = "数量"
     self.unselectTitleText.text = "货架"
     self.selectTitleText.text = "货架"
 end
-
+--初始化货架数量
+function BuildingShelfPart:_initializeShelfCount()
+    self.salaryPercentText.text = self:_getShelfCount(self.m_data.shelf)
+end
+--计算货架数量
+function BuildingShelfPart:_getShelfCount(dataTable)
+    local shelfNowCount = 0
+    if not dataTable.good then
+        shelfNowCount = 0
+    else
+        for key,value in pairs(dataTable.good) do
+            shelfNowCount = shelfNowCount + value.n
+        end
+    end
+    return shelfNowCount
+end
 
 
 

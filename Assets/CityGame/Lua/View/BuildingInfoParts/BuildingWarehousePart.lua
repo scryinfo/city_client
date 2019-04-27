@@ -27,6 +27,7 @@ end
 
 function BuildingWarehousePart:_ResetTransform()
     self:_language()
+    Event.RemoveListener("partUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehousePart:_getComponent(transform)
@@ -41,7 +42,7 @@ function BuildingWarehousePart:_getComponent(transform)
 end
 
 function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)
-
+    Event.AddListener("partUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehousePart:_initFunc()
@@ -58,8 +59,10 @@ function BuildingWarehousePart:_language()
 end
 --初始化仓库容量
 function BuildingWarehousePart:_initializeWarehouseCapacity()
+    --缓存仓库已用容量
+    self.Capacity = self:_getWarehouseCapacity(self.m_data.store)
     self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-    self.capacitySlider.value = self:_getWarehouseCapacity(self.m_data.store)
+    self.capacitySlider.value = self.Capacity
     self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
 end
 --计算仓库容量
@@ -82,7 +85,36 @@ function BuildingWarehousePart:_getWarehouseCapacity(dataTable)
     end
     return warehouseNowCount + lockedNowCount
 end
+------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--刷新生产线生产出来商品，当前的仓库容量
+function BuildingWarehousePart:updateCapacity(data)
+    if data ~= nil then
+        self.Capacity = self.Capacity + 1
+        self.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+        self.capacitySlider.value = self.Capacity
+        self.numberText.text = self.capacitySlider.value.."/"..self.capacitySlider.maxValue
 
+        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+            local goods = {}
+            local key = {}
+            goods.key = key
+            goods.key.id = data.iKey.id
+            goods.key.producerId = data.iKey.producerId
+            goods.key.qty = data.iKey.qty
+            goods.n = data.nowCount
+            if not self.m_data.store.inHand then
+                self.m_data.store.inHand = {}
+            end
+            self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+        else
+            for key,value in pairs(self.m_data.store.inHand) do
+                if value.key.id == data.iKey.id then
+                    value.n = value.n + 1
+                end
+            end
+        end
+    end
+end
 
 
 

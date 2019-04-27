@@ -6,7 +6,7 @@
 require "View/BuildingInfo/WareHouseGoodsItem"
 local class = require 'Framework/class'
 NoticeMgr = class('NoticeMgr')
-NoticeMgr.static.Notice_PATH = "View/GoodsItem/MessageItem";
+NoticeMgr.static.Notice_PATH = "Assets/CityGame/Resources/View/GoodsItem/MessageItem.prefab";
 
 function NoticeMgr:initialize()
 
@@ -38,14 +38,16 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         --预制的信息`
         local prefabData={}
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_createNoticePab(NoticeMgr.static.Notice_PATH,GameNoticePanel.leftContent)
         self.ModelDataList[i] = prefabData
+        local function callback(prefab)
+            self.NoticeLuaItem = NoticeItem:new(self.ModelDataList[i].uiData,prefab,self.behaviour, self,v.id,v.type)
+        end
+        createPrefab(NoticeMgr.static.Notice_PATH,GameNoticePanel.leftContent, callback)
 
-        local NoticeLuaItem = NoticeItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab,self.behaviour, self,v.id,v.type)
         if not self.notice then
             self.notice = {}
         end
-        self.notice[v.id] = NoticeLuaItem
+        self.notice[v.id] = self.NoticeLuaItem
         NoticeMgr.notice[v.id] = self.notice[v.id]
         --self.items  存的是Lua实例
     end

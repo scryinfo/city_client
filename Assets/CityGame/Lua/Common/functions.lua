@@ -481,7 +481,7 @@ function createPrefab(path, parent, callback)
 			local go = ct.InstantiatePrefab(obj)
 			local rect = go.transform:GetComponent("RectTransform")
 			if parent then
-				go.transform:SetParent(parent);--.transform
+				go.transform:SetParent(parent.transform);--.transform
 			end
 			rect.transform.localScale = Vector3.one
 			rect.transform.localPosition=Vector3.zero

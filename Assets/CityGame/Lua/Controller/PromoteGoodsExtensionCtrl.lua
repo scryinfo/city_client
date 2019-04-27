@@ -103,10 +103,16 @@ end
 
 --输入框(自己)
 function PromoteGoodsExtensionCtrl:onMyInputField(go)
+    if PromoteGoodsExtensionPanel.time.text == "" then
+    PromoteGoodsExtensionPanel.time.text = 0
+    end
     PromoteGoodsExtensionPanel.title.text = go.m_data.Data.capacity * tonumber(PromoteGoodsExtensionPanel.time.text)
 end
 --输入框(别人)
 function PromoteGoodsExtensionCtrl:onInputField(go)
+    if PromoteGoodsExtensionPanel.otherTime.text == "" then
+        PromoteGoodsExtensionPanel.otherTime.text = 0
+    end
     if tonumber(PromoteGoodsExtensionPanel.otherTime.text) > go.m_data.DataInfo.promRemainTime/3600000 then
         PromoteGoodsExtensionPanel.otherTime.text = go.m_data.DataInfo.promRemainTime/3600000
     end

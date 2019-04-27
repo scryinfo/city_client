@@ -33,13 +33,19 @@ end
 function TurnoverDetailPart:_RemoveClick()
     self.m_LuaBehaviour:RemoveClick(self.xBtn, self.OnXBtn, self)
 end
+
+function TurnoverDetailPart:Show(data)
+    BasePartDetail.Show(self)
+    self.m_data = data
+    self:_initFunc()
+end
+
 --
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
         return
     end
-    self.m_data = data
-    self:_initFunc()
+    self.today.text = "Today:" .. GetClientPriceString(data.turnover)
 end
 --
 function TurnoverDetailPart:_InitTransform()
@@ -55,6 +61,7 @@ function TurnoverDetailPart:_getComponent(transform)
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
+    self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
 end
 --
 function TurnoverDetailPart:_initFunc()

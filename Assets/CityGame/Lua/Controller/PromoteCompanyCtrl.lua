@@ -21,6 +21,7 @@ function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
     promoteBehaviour:AddClick(PromoteCompanyPanel.queue,self.OnQueue,self)
+    promoteBehaviour:AddClick(PromoteCompanyPanel.open,self.OnOpen,self)
     self:initData()
     myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
 end
@@ -36,6 +37,7 @@ function PromoteCompanyCtrl:Refresh()
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
     --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
 
 end
@@ -62,6 +64,11 @@ function PromoteCompanyCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
+--建筑个性签名
+function PromoteCompanyCtrl:OnOpen(go)
+    ct.OpenCtrl("BubbleMessageCtrl",go.m_data.insId)
+end
+
 --点击队列
 function PromoteCompanyCtrl:OnQueue(go)
     if tonumber(PromoteCompanyPanel.queneValue.text) == 0 then
@@ -85,8 +92,10 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     if self.m_data.info.ownerId == myOwnerID then
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.29)
+            self.groupMgr:AddParts(AdvertisementPart, 0.30)
             self.groupMgr:AddParts(TurnoverPart, 0.23)
+            --self.groupMgr:AddParts(BuildingShelfPart, 0.23)
+            --self.groupMgr:AddParts(BuildingSignPart, 0.23)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else

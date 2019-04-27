@@ -19,8 +19,6 @@ end
 function SetOpenUpCtrl:Awake()
     setOpenUpBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.xBtn,self.OnxBtn,self);
-    --setOpenUpBehaviour:AddClick(SetOpenUpPanel.open,self.OnOpen,self);
-    --setOpenUpBehaviour:AddClick(SetOpenUpPanel.close,self.OnClose,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.confirm,self.OnConfirm,self);
     SetOpenUpPanel.open.onValueChanged:AddListener(function(isOn)
         self:OnOpen(isOn)
@@ -66,8 +64,9 @@ function SetOpenUpCtrl:OnxBtn()
     UIPanel.ClosePage()
 end
 
---开启对外开放
+--对外开放
 function SetOpenUpCtrl:OnOpen(isOn)
+    self.openUp = isOn
     if isOn then
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
@@ -77,17 +76,6 @@ function SetOpenUpCtrl:OnOpen(isOn)
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2,0,0)
         SetOpenUpPanel.close.localScale = Vector3.one
     end
-end
-
---关闭对外开放
-function SetOpenUpCtrl:OnClose(go)
-    go.openUp = true
-    SetOpenUpPanel.close.transform.localScale = Vector3.zero
-    SetOpenUpPanel.open.transform.localScale = Vector3.one
-    SetOpenUpPanel.price.text = GetClientPriceString(go.m_data.curPromPricePerHour)
-    SetOpenUpPanel.time.text = math.floor(go.m_data.promRemainTime/3600000)
-    SetOpenUpPanel.price.interactable = true
-    SetOpenUpPanel.time.interactable = true
 end
 
 --点击确定

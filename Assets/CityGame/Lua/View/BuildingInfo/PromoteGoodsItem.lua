@@ -4,7 +4,6 @@
 --- DateTime: 2019/4/17 16:14
 ---推广商品Item
 PromoteGoodsItem = class('PromoteGoodsItem')
-local lastSelete = nil
 function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
     self.prefab = prefab;
     self.dataInfo = dataInfo;
@@ -15,16 +14,17 @@ function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
     self.brandValue = self.prefab.transform:Find("goods/detailsBg/scoreBg/brandIcon/brandValue").gameObject:GetComponent("Text");
 
     self.name.text = GetLanguage(dataInfo)
+    self.lastSelete = nil
     --LoadSprite(path, self.icon, true)
 
     luaBehaviour:AddClick(self.seleteBtn, self.OnSeleteBtn,self)
 end
 
 function PromoteGoodsItem:OnSeleteBtn(go)
-    if lastSelete then
-        lastSelete.localScale = Vector3.zero
+    if  go.lastSelete  then
+        go.lastSelete .localScale = Vector3.zero
     end
     go.selete.localScale = Vector3.one
-    lastSelete = go.selete
+    go.lastSelete  = go.selete
     Event.Brocast("c_PromoteGoodsId",go.dataInfo)
 end

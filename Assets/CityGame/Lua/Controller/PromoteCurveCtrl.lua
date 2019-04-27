@@ -48,3 +48,28 @@ function PromoteCurveCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
+function PromoteCurveCtrl:m_PromoteHistoryCurve(data)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    local oneDay = currentTime - 24*3600
+    local updataTime = oneDay
+    local time = {}
+    local boundaryLine = {}
+    for i = 1, 24 do
+        if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
+            time[1] = getFormatUnixTime(updataTime).minute .. "/" .. getFormatUnixTime(updataTime).day
+            table.insert(boundaryLine,(updataTime - oneDay + 3600) / 3600 * 120)
+        end
+    end
+
+
+end
+

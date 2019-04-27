@@ -22,6 +22,7 @@ function PromoteCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",self.n_OnAdQueryPromoCurAbilitys) -- 推广能力列表
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",self.n_OnPromotionSetting) -- 推广设置
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adRemovePromoOrder","gs.AdRemovePromoOrder",self.n_OnRemovePromo) -- 删除推广
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
 
 end
 
@@ -78,6 +79,22 @@ function PromoteCompanyModel:m_queryPromoCurAbilitys(buildingId,typeIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",{sellerBuildingId = buildingId,typeIds= typeIds})
 end
 
+--推广历史曲线图
+function PromoteCompanyModel:m_PromoAbilityHistory(buildingId)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(毫秒)
+    local ts = getFormatUnixTime(currentTime/1000)
+    --if tonumber(ts.minute) > 0 then
+    --    currentTime = currentTime - tonumber(ts.minute) * 60
+    --end
+    --if tonumber(ts.second) > 0 then
+    --    currentTime = currentTime - tonumber(ts.second)
+    --end
+    currentTime = currentTime - 24*3600            --提前24小时
+    local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {2251}, recordsCount = 24 }
+
+    DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",lMsg)
+end
+
 --服务器回调
 function PromoteCompanyModel:n_OnPublicFacility(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_receivePromoteCompanyDetailInfo',info)
@@ -95,33 +112,32 @@ end
 
 --删除推广回调
 function PromoteCompanyModel:n_OnRemovePromo(info)
-    --PromoteCompanyModel:m_QueryPromote(info.buildingId,true)
     local newData = {}
-    ----newData = ct.deepCopy(self.data)
-    --newData = self.data
-    --if true then
-    --
-    --end
-    --if self.data and info.PromoTsChanged then
-    --    for i, v in pairs(self.data) do
-    --        for k, z in pairs(info.PromoTsChanged) do
-    --            if v.promotionId == z.promotionId then
-    --                newData[i].createTs = z.promStartTs
-    --                newData[i].queneTime = z.promStartTs
-    --                newData[i].promStartTs = z.promStartTs
-    --            end
-    --        end
-    --    end
-    --end
-    --for i, v in pairs(self.data) do
-    --    if v.promotionId == info.promotionId then
-    --        table.remove(newData,i)
-    --    end
-    --end
-    --if next(newData) == nil then
-    --    newData = nil
-    --end
-    --Event.Brocast("c_updateQuque",{name = "View/GoodsItem/QueueItem",data =newData,insClass = PromoteQueueItem})
+    --newData = ct.deepCopy(self.data)
+    newData = self.data
+    if true then
+
+    end
+    if self.data and info.PromoTsChanged then
+        for i, v in pairs(self.data) do
+            for k, z in pairs(info.PromoTsChanged) do
+                if v.promotionId == z.promotionId then
+                    newData[i].createTs = z.promStartTs
+                    newData[i].queneTime = z.promStartTs
+                    newData[i].promStartTs = z.promStartTs
+                end
+            end
+        end
+    end
+    for i, v in pairs(self.data) do
+        if v.promotionId == info.promotionId then
+            table.remove(newData,i)
+        end
+    end
+    if next(newData) == nil then
+        newData = nil
+    end
+    Event.Brocast("c_updateQuque",{name = "View/GoodsItem/QueueItem",data =newData,insClass = PromoteQueueItem})
 end
 
 --推广设置回调
@@ -148,6 +164,11 @@ end
 --推广能力回调
 function PromoteCompanyModel:n_OnAdQueryPromoCurAbilitys(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurAbilitys', info)
+end
+
+--推广历史曲线回调
+function PromoteCompanyModel:n_OnPromoAbilityHistory(info)
+    local a = info
 end
 
 --员工工资改变

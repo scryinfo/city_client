@@ -47,6 +47,16 @@ EMapTechnologyType =
     TechNewItem = 1,
     TechEva = 2,
 }
+EBuildingIconPath =
+{
+    House = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    MaterialFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Material.png",
+    Municipal = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    ProcessingFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Fatory.png",
+    Laboratory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    RetailShop = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-SuperMarket.png",
+    TalentCenter = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+}
 --需要与配置表的Id一一对应
 
 function MapCtrl:initialize()

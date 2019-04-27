@@ -34,7 +34,8 @@ function MapSearchResultItem:_setPos()
             if data.ownerId == DataManager.GetMyOwnerID() then
                 local type = GetBuildingTypeById(mId)
                 local path = MapBubbleManager._getBuildingIconPath(type)
-                LoadSprite(path, self.protaitImg)
+                MapBubbleManager.SetBuildingIconSpite(path, self.protaitImg)
+                --LoadSprite(path, self.protaitImg, true)
                 self.protaitImg.enabled = true
             else
                 PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)

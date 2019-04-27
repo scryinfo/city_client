@@ -22,7 +22,8 @@ function MapBuildingItem:_childInit()
     end)
 
     if self.data.tempPath ~= "" then
-        LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
+        MapBubbleManager.SetBuildingIconSpite(self.data.tempPath, self.buildingIcon)
+        --LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
         self.selectTran.localScale = Vector3.zero
     end
 end

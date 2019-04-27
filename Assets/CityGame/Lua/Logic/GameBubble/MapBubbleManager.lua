@@ -19,12 +19,11 @@ MapBubbleManager.TempBuildingIconPath =
 {
     House = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
     MaterialFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Material.png",
-    Municipal = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
-    MunicipalManage = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    Municipal = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-ad-w.png",
     ProcessingFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Fatory.png",
-    Laboratory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    Laboratory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-research-w.png",
     RetailShop = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-SuperMarket.png",
-    TalentCenter = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
+    TalentCenter = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-warehouse-w.png",
 }
 
 function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
@@ -169,8 +168,6 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
         path = this.TempBuildingIconPath.MaterialFactory
     elseif buildingType == BuildingType.Municipal then
         path = this.TempBuildingIconPath.Municipal
-    elseif buildingType == BuildingType.MunicipalManage then
-        path = this.TempBuildingIconPath.MunicipalManage
     elseif buildingType == BuildingType.TalentCenter then
         path = this.TempBuildingIconPath.TalentCenter
     elseif buildingType == BuildingType.ProcessingFactory then
@@ -549,5 +546,63 @@ function MapBubbleManager.groundAucChange(groundId)
         local delta = this.itemDelta *  5  --一个地块的大小
         item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
         this.groundAucData[collectionId].detailItems[blockId] = item
+    end
+end
+--------------------------------------------------------------------------------------------------------------
+local m_BuildingIconSpriteList = {}
+
+--添加BuildingIcon的sprite列表
+local function AddBuildingIcon(name,sprite)
+    if m_BuildingIconSpriteList == nil or type(m_BuildingIconSpriteList) ~= 'table' then
+        m_BuildingIconSpriteList = {}
+    end
+    if name ~= nil and sprite ~= nil then
+        m_BuildingIconSpriteList[name] = sprite
+    end
+end
+
+local function JudgeHasBuildingIcon(name)
+    if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
+        return false
+    else
+        return true
+    end
+end
+
+local function GetBuildingIcon(name)
+    if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
+        return nil
+    else
+        return m_BuildingIconSpriteList[name]
+    end
+end
+
+local SpriteType = nil
+local function LoadBuildingIcon(name,iIcon)
+    if SpriteType == nil then
+        SpriteType = ct.getType(UnityEngine.Sprite)
+    end
+    panelMgr:LoadPrefab_A(name, SpriteType, iIcon, function(Icon, obj )
+        if Icon == nil then
+            return
+        end
+        if obj ~= nil  then
+            local texture = ct.InstantiatePrefab(obj)
+            AddBuildingIcon(name,texture)
+            if Icon then
+                Icon.sprite = texture
+                Icon:SetNativeSize()
+            end
+        end
+    end)
+end
+
+--设置ICon的Sprite
+function MapBubbleManager.SetBuildingIconSpite(name , tempImage)
+    if JudgeHasBuildingIcon() == true then
+        tempImage.sprite = GetBuildingIcon(name)
+        tempImage:SetNativeSize()
+    else
+        LoadBuildingIcon(name , tempImage)
     end
 end

@@ -102,7 +102,7 @@ function InventPopCtrl:other()
     end)
 
     panel.Slider.onValueChanged:AddListener(function (arg)
-        if arg <= 0 or self.m_data.ins.buildInfo.sellTimes ==0  then
+        if arg <= 0 or self.m_data.ins.buildInfo.sellTimes ==0 or not self.m_data.ins.buildInfo.sellTimes then
             panel.countInp.text = 0
             panel.Slider.value = 0
             return

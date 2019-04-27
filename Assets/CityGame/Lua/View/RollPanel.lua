@@ -17,6 +17,7 @@ function RollPanel.InitPanle()
     this.scrolParent = transform:Find("PopCommpent/Scroll/Viewport/Content")
     this.titleText = transform:Find("PopCommpent/titleText"):GetComponent("Text")
 
+    this.totalText = findByName(transform,"totalText"):GetComponent("Text")
 
     this.resultRoot = findByName(transform,"resultRoot")
     this.FailRoot = findByName(transform,"FailRoot")

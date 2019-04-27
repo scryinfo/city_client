@@ -120,8 +120,10 @@ function ResearchDetailPart:updateUI(data)
         self.setBtn.localScale = Vector3.zero
     end
 
-    self.goods.localScale = Vector3.one
-    self.evaIma.localScale = Vector3.zero
+    --self.goods.localScale = Vector3.one
+    --self.evaIma.localScale = Vector3.zero
+
+    self:onClick_good(self)
 
     self.timeCountText.text = data.sellTimes
     self.priceCountText.text = GetClientPriceString(data.pricePreTime)
@@ -184,6 +186,7 @@ end
 function ResearchDetailPart:onClick_good(ins)
     ins:switchRoot(ins.goodsRoot)
     ins.type="good"
+    ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
     ins.oodsCountText.text = ins.m_data.probGood

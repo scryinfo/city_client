@@ -133,6 +133,7 @@ end
 function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
+    data.ids =  idx
     this.m_data.insClass:new(data, transform,luabehaviour)
 end
 

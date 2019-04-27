@@ -48,7 +48,7 @@ function InventSetPopCtrl:OnConfirm(ins)
     else
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
     end
-
+    UIPanel.ClosePage()
 end
 
 function InventSetPopCtrl:OnxBtn()
@@ -67,7 +67,7 @@ function InventSetPopCtrl:updateText(data)
 end
 
 function InventSetPopCtrl:UpDateUI(data)
-    self.openUp =  not data.exclusive
+    self.openUp =   data.exclusive
     if self.openUp then
         panel.open.isOn = true
         panel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)

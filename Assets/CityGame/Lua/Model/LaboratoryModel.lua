@@ -36,7 +36,6 @@ function LaboratoryModel:_addListener()
     --Event.AddListener("m_labSetting", self.m_labSetting, self)
     --Event.AddListener("m_ReqLabAddLine", self.m_ReqLabAddLine, self)
     --Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
-    --Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll, self)
 
 end
 
@@ -90,7 +89,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 end
 --研究所设置
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
-
+    self.data.exclusive = LabExclusive.exclusive
     Event.Brocast("SmallPop","设置成功",300)
 
 end
@@ -109,6 +108,7 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
             table.remove(self.data.inProcess,i)
         end
     end
+    Event.Brocast("SmallPop","删除成功",300)
 
     Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
 end

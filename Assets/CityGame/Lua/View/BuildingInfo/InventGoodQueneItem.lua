@@ -57,7 +57,7 @@ function InventGoodQueneItem:updateUI(data)
         self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. " " .. ts.minute
     end
     --赋值Detail
-    if data.beginProcessTs > 0 then
+    if data.beginProcessTs > 0 or  data.ids==1 then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -69,6 +69,8 @@ function InventGoodQueneItem:updateUI(data)
         self.slider.transform.localScale = Vector3.one
         self.nowTime.text = tostring((data.availableRoll + data.usedRoll)) .. "/" .. tostring(data.times)
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
+
+
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
@@ -107,4 +109,11 @@ end
 function InventGoodQueneItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
+end
+
+local currTime
+function InventGoodQueneItem:updateSlider(data)
+    currTime = TimeSynchronized.GetTheCurrentServerTime()
+    local remmindTime = currTime - data.beginProcessTs
+
 end

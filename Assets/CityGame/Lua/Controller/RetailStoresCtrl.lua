@@ -139,6 +139,10 @@ function RetailStoresCtrl:_updateName(name)
 end
 
 function RetailStoresCtrl:Hide()
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
 end

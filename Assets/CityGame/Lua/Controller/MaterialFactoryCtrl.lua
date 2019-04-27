@@ -142,6 +142,10 @@ function MaterialFactoryCtrl:_updateName(name)
 end
 
 function MaterialFactoryCtrl:Hide()
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
 end

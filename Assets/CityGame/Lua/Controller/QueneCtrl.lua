@@ -65,14 +65,16 @@ local function handleData( data )
    table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
 
     --处理时间
-    if data[1].availableRoll then
-        for i, lineData in ipairs(data) do
-            if lineData.beginProcessTs == 0  then
-                lineData.queneTime = reminderTime
-            else
-                lineData.queneTime = lineData.beginProcessTs
+    if #data ~= 0 then
+        if data[1].availableRoll then
+            for i, lineData in ipairs(data) do
+                if lineData.beginProcessTs == 0  then
+                    lineData.queneTime = reminderTime
+                else
+                    lineData.queneTime = lineData.beginProcessTs
+                end
+                reminderTime = reminderTime + (lineData.times* 3600000)
             end
-            reminderTime = reminderTime + (lineData.times* 3600000)
         end
     end
 

@@ -610,7 +610,7 @@ function GetServerPriceNumber(clientValue)
 end
 
 function prints(str)
-	ct.log("system","=================================================="..str)
+	ct.log("system",str.."==================================================")
 end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)

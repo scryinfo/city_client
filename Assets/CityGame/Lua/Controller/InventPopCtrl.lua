@@ -27,6 +27,8 @@ function InventPopCtrl:Close()
 end
 
 function InventPopCtrl:Refresh()
+    panel.countInput1.text = ""
+
     local data = self.m_data
     self.ChangeLan()
     self.popCompent:Refesh(data)

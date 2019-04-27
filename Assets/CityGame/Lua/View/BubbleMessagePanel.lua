@@ -21,7 +21,9 @@ function BubbleMessagePanel.InitPanel()
     this.inputFrame=transform:Find("PopCommpent/root/enter/InputField"):GetComponent("InputField")
 
     this.isShow=transform:Find("PopCommpent/root/isShow")
+
     this.noIcon=transform:Find("PopCommpent/root/isShow/no")
+
     this.yesIcon=transform:Find("PopCommpent/root/isShow/yes")
     this.topic=transform:Find("PopCommpent/root/isShow/topic"):GetComponent("Text")
     this.title=transform:Find("PopCommpent/root/title"):GetComponent("Text")

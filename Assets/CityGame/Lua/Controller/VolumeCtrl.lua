@@ -13,7 +13,42 @@ local clothes
 local food
 local minute
 local second
-
+local defaultPos_Y= -74
+local pool={}
+local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
+    if not pool[class] then
+        pool[class]={}
+    end
+    --对象池创建物体
+    local tempList={}
+    for i, value in ipairs(config) do
+        local ins =pool[class][1]
+        if ins then  --有实例
+            ins:updateData(value)
+            value.id=i
+            ins.prefab:SetActive(true)
+            table.insert(tempList,ins)
+            table.remove(pool[class],1)
+        else--无实例
+            local prefab=creatGoods(prefabPath,parent)
+            value.id=i
+            local ins=class:new(prefab,LuaBehaviour,value,this)
+            table.insert(tempList,ins)
+        end
+    end
+    --多余实例隐藏
+    if #pool[class]>0 then
+        for key, ins in ipairs(pool[class]) do
+            ins.prefab:SetActive(false)
+            table.insert(tempList,ins)
+            pool[class][key]=nil
+        end
+    end
+    --所有实例归还对象池
+    for i, ins in ipairs(tempList) do
+        table.insert(pool[class],ins)
+    end
+end
 function  VolumeCtrl:bundleName()
     return "Assets/CityGame/Resources/View/VolumePanel.prefab"
 end
@@ -30,6 +65,11 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.cityBg,self.OnCityBg,self)
     volumeBehaviour:AddClick(VolumePanel.volume,self.OnVolume,self)
     volumeBehaviour:AddClick(VolumePanel.titleBg,self.OnTitleBg,self)
+
+    volumeBehaviour:AddClick(VolumePanel.citzenRect.gameObject,self.OncitzenRect,self)
+    volumeBehaviour:AddClick(VolumePanel.playerRect.gameObject,self.OnplayerRect,self)
+
+
     self.insId = OpenModelInsID.VolumeCtrl
 
     DataManager.OpenDetailModel(VolumeModel,self.insId )
@@ -83,10 +123,6 @@ function VolumeCtrl:Hide()
     Event.RemoveListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
     Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
     Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
-end
-
-function VolumeCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self,obj)
 end
 
 function VolumeCtrl:initInsData()
@@ -303,4 +339,49 @@ function VolumeCtrl:AssignmentDemandSupply(table , info )
         end
 
     end
+end
+
+--打开npc交易
+function VolumeCtrl:OncitzenRect(ins)
+    local pos_Y=defaultPos_Y
+    --VolumePanel.turnoverRect:DOSizeDelta(
+    --    Vector2.New(0, 460),
+    --       0.5):SetEase(DG.Tweening.Ease.OutCubic);
+    VolumePanel.turnoverRect.localScale= Vector3.one
+
+    pos_Y= pos_Y- (102 + 460)
+
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+           0.5):SetEase(DG.Tweening.Ease.OutCubic);
+
+    VolumePanel.infoBgrRect.localScale= Vector3.zero
+
+    --VolumePanel.infoBgrRect:DOSizeDelta(
+    --        Vector2.New(0, 0),
+    --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
+end
+
+--打开玩家交易
+function VolumeCtrl:OnplayerRect(ins)
+    local pos_Y=defaultPos_Y
+    --VolumePanel.turnoverRect:DOSizeDelta(
+    --        Vector2.New( 0,0 ),
+    --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
+    VolumePanel.turnoverRect.localScale= Vector3.zero
+
+    pos_Y= pos_Y - 102
+
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+            0.5):SetEase(DG.Tweening.Ease.OutCubic);
+
+    VolumePanel.infoBgrRect.localScale= Vector3.one
+
+    --VolumePanel.infoBgrRect:DOSizeDelta(
+    --        Vector2.New(0, 336),
+    --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
+    ins:initPayerVolume()
+end
+
+function VolumeCtrl:initPayerVolume()
+    InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
 end

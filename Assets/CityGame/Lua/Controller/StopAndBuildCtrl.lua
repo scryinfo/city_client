@@ -85,13 +85,22 @@ end
 ---====================================================================================点击函数==============================================================================================
 --改名
 function StopAndBuildCtrl:OnClick_changeName(ins)
-
+    PlayMusEff(1002)
+    local data = {}
+    data.titleInfo = GetLanguage(25040001)
+    data.btnCallBack = function(name)
+        if ins.m_data.id ~= nil then
+            DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = ins.m_data.id, name = name})
+            panel.buildingNameText.text = name
+        end
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 
 --返回
 function StopAndBuildCtrl:OnClick_backBtn(ins)
     ins.CloseBtn()
-    UIPanel.CloseAllPageExceptMain()
+    UIPanel.ClosePage()
     PlayMusEff(1002)
 end
 

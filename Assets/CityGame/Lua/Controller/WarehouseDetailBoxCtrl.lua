@@ -81,7 +81,7 @@ end
 --上架
 function WarehouseDetailBoxCtrl:addShelf(dataInfo)
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
-        --如果是原料厂
+        --原料厂
         --检查货架是否是空的
         if not self.m_data.info.shelf.good then
             Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
@@ -97,8 +97,39 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
             end
         end
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
-        --如果是加工厂
-
+        --加工厂
+        --检查货架是否是空的
+        if not self.m_data.info.shelf.good then
+            Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+        else
+            --如果货架不是空的，检查货架上是否有这个商品
+            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+                --发送修改价格
+                Event.Brocast("m_ReqprocessingModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --发送上架
+                Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            else
+                Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.RetailShop then
+        --零售店
+        --检查货架是否是空的
+        if not self.m_data.info.shelf.good then
+            Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+        else
+            --如果货架不是空的，检查货架上是否有这个商品
+            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+                --发送修改价格
+                Event.Brocast("m_ReqRetailStoresModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --发送上架
+                Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            else
+                Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.TalentCenter then
+        --集散中心
     end
 end
 -------------------------------------------------------------回调函数-------------------------------------------------------------------------------

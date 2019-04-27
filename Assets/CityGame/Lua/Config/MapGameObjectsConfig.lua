@@ -28,7 +28,7 @@ MapGameObjectsConfig = {
         {   --加工厂3
             ["Name"] = "Factory_3",
             ["PlayerBuildingBaseDataID"] = 1200003,
-            ["InitCount"] = 64,
+            ["InitCount"] = 64,222
         },
         {   --零售店1
             ["Name"] = "SuperMarket_1",
@@ -60,6 +60,7 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1400003,
             ["InitCount"] = 64,
         },
+
         {   --研究所1
             ["Name"] = "TechnologyBuilding_1",
             ["PlayerBuildingBaseDataID"] = 1500001,
@@ -105,6 +106,7 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1700003,
             ["InitCount"] = 64,
         },
+
         {   --地图地块
             ["Name"] = "TerrainGround",
             ["PlayerBuildingBaseDataID"] = 4000000,
@@ -514,12 +516,7 @@ MapGameObjectsConfig = {
             ["PathFindingConfigID"] = 3,
             ["InitCount"] = 0,
         },
-
-
-
-
         --TODO:湖泊
-
     },
     ["OnlyOne"] = {
         ["Centralbuilding"] = 2000000,      --中心建筑

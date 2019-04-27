@@ -5,21 +5,6 @@
 ---
 
 BuildingInfoItem = class("BuildingInfoItem")
-BuildingInfoItem.static.BuildingIcon = -- 建筑中间示意图配置
-{
-    [1100001] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_1x1.png",
-    [1100002] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_2x2.png",
-    [1100003] = "Assets/CityGame/Resources/Atlas/Company/MaterialBuilding_3x3.png",
-    [1200001] = "Assets/CityGame/Resources/Atlas/Company/Factory_1x1.png",
-    [1200002] = "Assets/CityGame/Resources/Atlas/Company/Factory_2x2.png",
-    [1200003] = "Assets/CityGame/Resources/Atlas/Company/Factory_3x3.png",
-    [1300001] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_1x1.png",
-    [1300002] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_2x2.png",
-    [1300003] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_3x3.png",
-    [1400001] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse1x1.png",
-    [1400002] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse2x2.png",
-    [1400003] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse3x3.png",
-}
 
 -- 初始化
 function BuildingInfoItem:initialize(prefab, data)
@@ -54,7 +39,7 @@ function BuildingInfoItem:initialize(prefab, data)
         self.gradeImage.localScale = Vector3.zero
     end
 
-    LoadSprite(BuildingInfoItem.static.BuildingIcon[data.mId], self.buildingImage, true)
+    LoadSprite(BuildingIconConfig[data.mId], self.buildingImage, true)
 end
 
 -- 跳转到场景

@@ -67,6 +67,7 @@ function CompanyPanel.InitPanel()
     -- Eva显示
     this.myEvaText = transform:Find("BottomRoot/EvaRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
     this.introductionBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/IntroductionBtn").gameObject
+    this.optionOneObj = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll").gameObject
     this.optionOneScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content")
     this.optionTwoScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")

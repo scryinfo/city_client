@@ -61,3 +61,7 @@ function ShelfItem:_clickDetailsBtn(ins)
         ct.OpenCtrl("BuyBoxCtrl",ins)
     end
 end
+--删除后刷新ID
+function ShelfItem:RefreshID(id)
+    self.keyId = id;
+end

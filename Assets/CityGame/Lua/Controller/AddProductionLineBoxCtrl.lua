@@ -97,9 +97,11 @@ function AddProductionLineBoxCtrl:clickConfirmBtn(go)
     local number = AddProductionLineBoxPanel.numberSlider.value
     if go:NumberWhetherZero(number) == true then
         if go.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
             Event.Brocast("m_ReqMaterialAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-
+            --加工厂
+            Event.Brocast("m_ReqprocessingAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         end
     else
         Event.Brocast("SmallPop",GetLanguage(26020003),300)

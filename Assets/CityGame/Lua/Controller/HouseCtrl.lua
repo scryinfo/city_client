@@ -27,6 +27,7 @@ function HouseCtrl:Awake(go)
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     --self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
     --self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+    self.houseBehaviour:AddClick(HousePanel.bubbleMessageBtn, self._openBubbleMessage, self)
 end
 
 function HouseCtrl:Refresh()
@@ -40,15 +41,13 @@ end
 
 function HouseCtrl:Hide()
     --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
     UIPanel.Hide(self)
 end
 
---更改基础建筑信息
---function HouseCtrl:_changeItemData(data)
---    if data ~= nil and HousePanel.topItem ~= nil then
---        HousePanel.topItem:changeItemData(data)
---    end
---end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()
@@ -121,6 +120,14 @@ function HouseCtrl:_clickCloseBtn()
     self.m_data = nil
     UIPanel.ClosePage()
 end
+
+function HouseCtrl:_openBubbleMessage(go)
+    PlayMusEff(1002)
+    if go.m_data.info.id then
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
+    end
+end
+
 --
 function HouseCtrl:_refreshSalary(data)
     if self.m_data ~= nil then

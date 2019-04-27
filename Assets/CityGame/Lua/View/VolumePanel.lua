@@ -29,8 +29,15 @@ function VolumePanel.InitPanel()
     this.volumetitle = transform:Find("Volume/title")  --交易量提示
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")
     this.content = transform:Find("Volume/title/content"):GetComponent("Text")
+    this.playercurrRoot = transform:Find("playercurr");
+    this.firstScroll =this. playercurrRoot:Find("topRoot/firstScroll/Viewport/Content");
+    this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/Content");
 
     --left
+    this.citzenRect = transform:Find("leftBg/citzen"):GetComponent("RectTransform");
+    this.turnoverRect = transform:Find("leftBg/moneyBg"):GetComponent("RectTransform");
+    this.playerRect = transform:Find("leftBg/player"):GetComponent("RectTransform");
+    this.infoBgrRect = transform:Find("leftBg/infoBg"):GetComponent("RectTransform");
 
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额

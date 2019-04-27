@@ -96,19 +96,21 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     buildingInfo.insId=buildingInfo.info.id
     local info=buildingInfo.info
     panel.openBusinessItem:initData(info,BuildingType.Laboratory)
-    --开业停业
+    --开业停业信息
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
         panel.stopRootTran.localScale = Vector3.zero
+        --判断是自己还是别人打开了界面
+        if info.ownerId ~= DataManager.GetMyOwnerID() then
+            self:other(buildingInfo)
+        else
+            self:owner(buildingInfo)
+        end
     else
+        panel.groupTrans.localScale = Vector3.zero
         panel.stopRootTran.localScale = Vector3.one
     end
-    --判断是自己还是别人打开了界面
-    if info.ownerId ~= DataManager.GetMyOwnerID() then
-        self:other(buildingInfo)
-    else
-        self:owner(buildingInfo)
-    end
+
 end
 
 function LaboratoryCtrl:_refreshSalary(data)
@@ -116,9 +118,8 @@ function LaboratoryCtrl:_refreshSalary(data)
         if self.m_data.info.state == "OPERATE" then
             Event.Brocast("SmallPop", "设置工资成功", 300)
         end
-        self.m_data.info.salary = data.Salary
-        self.m_data.info.setSalaryTs = data.ts
-        self.groupMgr:RefreshData(self.m_data)
+        panel.groupTrans.localScale = Vector3.one
+        self:owner(self.m_data)
     end
 end
 --自已

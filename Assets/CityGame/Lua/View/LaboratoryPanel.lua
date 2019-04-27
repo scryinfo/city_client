@@ -22,7 +22,7 @@ function LaboratoryPanel.InitPanel()
     this.stopIconBtn = transform:Find("stopRoot/stopIconBtn")
 
     this.mainGroup = transform:Find("MainGroup")
-
+    this.groupTrans = transform:Find("MainGroup")
     this.topItem = BuildingUpperItem:new(transform:Find("topRoot/BuildingUpperItem"))
     this.openBusinessItem=OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
 end

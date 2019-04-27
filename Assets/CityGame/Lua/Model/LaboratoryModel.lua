@@ -157,7 +157,9 @@ end
 
 --员工工资改变
 function LaboratoryModel:n_OnReceiveHouseSalaryChange(data)
-    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_refreshSalary', data)
+    self.data.info.salary = data.Salary
+    self.data.info.setSalaryTs = data.ts
+    DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_refreshSalary', self.data.info)
 end
 --开业成功，再次请求建筑详情
 function LaboratoryModel:n_OnReceiveOpenBusiness(data)

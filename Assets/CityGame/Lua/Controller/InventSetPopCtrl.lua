@@ -67,6 +67,8 @@ function InventSetPopCtrl:updateText(data)
 end
 
 function InventSetPopCtrl:UpDateUI(data)
+    panel.price.text = ""
+    panel.time.text = ""
     self.openUp =   data.exclusive
     if self.openUp then
         panel.open.isOn = true

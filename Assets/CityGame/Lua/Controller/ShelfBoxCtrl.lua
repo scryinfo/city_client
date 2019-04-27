@@ -202,8 +202,13 @@ function ShelfBoxCtrl:ToggleUndateText()
     end
     local data = {}
     data.itemId = self.m_data.itemId
-    data.producerId = self.m_data.dataInfo.k.producerId
-    data.qty = self.m_data.dataInfo.k.qty
+    if not self.m_data.dataInfo.k then
+        data.producerId = self.m_data.dataInfo.key.producerId
+        data.qty = self.m_data.dataInfo.key.qty
+    else
+        data.producerId = self.m_data.dataInfo.k.producerId
+        data.qty = self.m_data.dataInfo.k.qty
+    end
     data.switch = self.automaticSwitch.isOn
     Event.Brocast("whetherSend",data)
 end

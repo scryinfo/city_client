@@ -203,7 +203,10 @@ function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
 end
 --生成itemPrefab
 function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
-    if not dataInfo then
+    if not dataInfo or next(dataInfo) == nil then
+        return
+    end
+    if not dataInfo.inHand or next(dataInfo.inHand) == nil then
         return
     end
     local arg = {...}

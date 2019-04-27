@@ -26,8 +26,7 @@ panel=LaboratoryPanel
 function LaboratoryCtrl:Awake(go)
     this = self
     self.luaBehaviour= self.gameObject:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(panel.backBtn.gameObject, self._backBtn, self)
-    self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
+    --self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
 
     self.luaBehaviour:AddClick(panel.centerBtn.gameObject, self._centerBtnFunc, self)
     self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
@@ -86,6 +85,12 @@ function LaboratoryCtrl:_initData()
 end
 
 function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
+    if panel.topItem ~= nil then
+        panel.topItem:refreshData(buildingInfo.info, function ()
+            self:_clickCloseBtn(self)
+        end)
+    end
+
     LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
     self.m_data=buildingInfo
     buildingInfo.insId=buildingInfo.info.id
@@ -98,9 +103,6 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     else
         panel.stopRootTran.localScale = Vector3.one
     end
-    --建筑名字
-    panel.nameText.text = info.name or "SRCY CITY"
-    panel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
     --判断是自己还是别人打开了界面
     if info.ownerId ~= DataManager.GetMyOwnerID() then
         self:other(buildingInfo)
@@ -150,3 +152,12 @@ function LaboratoryCtrl:other(buildingInfo)
     end
 end
 
+function LaboratoryCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+    self.m_data = nil
+    UIPanel.ClosePage()
+end

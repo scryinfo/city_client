@@ -43,12 +43,6 @@ function HouseCtrl:Hide()
     UIPanel.Hide(self)
 end
 
---更改基础建筑信息
---function HouseCtrl:_changeItemData(data)
---    if data ~= nil and HousePanel.topItem ~= nil then
---        HousePanel.topItem:changeItemData(data)
---    end
---end
 
 --创建好建筑之后，每个建筑会存基本数据，比如id
 function HouseCtrl:_initData()

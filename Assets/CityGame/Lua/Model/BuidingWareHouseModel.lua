@@ -21,6 +21,7 @@ function BuidingWareHouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setWareHouseRent","gs.setWareHouseRent",self.n_OnReceiveSentWareHouseInfo)
+    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
 
 
     --本地的回调注册
@@ -42,13 +43,24 @@ end
 function BuidingWareHouseModel:m_ReqSentHouseDetailInfo(data)
     DataManager.ModelSendNetMes("gscode.OpCode", "setWareHouseRent","gs.setWareHouseRent",data)
 end
-
+--运输
+function BuidingWareHouseModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+end
 
 ----- 回调 ---
 --集散中心详情
-function BuidingWareHouseModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
-    DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_initData',houseDetailInfo)
+function BuidingWareHouseModel:n_OnReceiveHouseDetailInfo(stream)
+    DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_initData',stream)
+    if stream ~= nil then
+        if not self.funModel then
+            self.funModel = BuildingBaseModel:new(self.insId)
+        end
+    end
 end
+--function BuidingWareHouseModel:n_OnReceiveHouseDetailInfo(houseDetailInfo)
+--    DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_initData',houseDetailInfo)
+--end
 
 --员工工资改变
 function BuidingWareHouseModel:n_OnHouseDetailInfo(houseDetailInfo)
@@ -67,4 +79,17 @@ end
 function BuidingWareHouseModel:n_OnReceiveSentWareHouseInfo(SentWareHouseInfo)
     DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_refreshRentInfo',SentWareHouseInfo)
 end
+
+--运输
+--function BuidingWareHouseModel:n_OnBuildingTransportInfo(data)
+--    local bagId = DataManager.GetBagId()
+--    local n = data.item.n
+--    local itemId = data.item.key.id
+--    local qty = data.item.key.qty
+--    local producerId = data.item.key.producerId
+--    if data.dst == bagId then
+--        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+--    end
+--    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
+--end
 

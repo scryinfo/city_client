@@ -54,3 +54,7 @@ function MapRightShowInfoItem:getIsDetail()
     end
     return false
 end
+--
+function MapRightShowInfoItem:refreshData(str)
+    self.valueText.text = str
+end

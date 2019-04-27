@@ -27,6 +27,15 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     end)
     --
     self.goHereText01 = self.viewRect.transform:Find("goHereBtn/Text"):GetComponent("Text")
+    Event.AddListener("c_Revenue", self._updateRevenue, self)
+end
+--
+function MapRightSelfBuildingPage:_updateRevenue(income)
+    if self.revenueItem == nil then
+        return
+    end
+    local inconme = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(income))
+    self.revenueItem:refreshData(inconme)
 end
 --
 function MapRightSelfBuildingPage:refreshData(data)
@@ -41,6 +50,8 @@ function MapRightSelfBuildingPage:refreshData(data)
         self.notOpenTran.localScale = Vector3.zero
         self.openedTran.localScale = Vector3.one
         local buildingType = GetBuildingTypeById(info.mId)
+        --请求今日营收
+        DataManager.ModelSendNetMes("gscode.OpCode", "getPrivateBuildingCommonInfo","gs.Bytes",{ids = {buildingDetail.info.id}})
         self:_createInfoByType(buildingType)
         self:_sortInfoItems()
     else
@@ -62,8 +73,11 @@ function MapRightSelfBuildingPage:_sortInfoItems()
 end
 --
 function MapRightSelfBuildingPage:_createInfoByType(buildingType)
-    local revenueData = {infoTypeStr = "Revenue", value = ""}  --今日营收
-    self.items[#self.items + 1] = self:_createShowItem(revenueData)
+    local inconme = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0))
+    local revenueData = {infoTypeStr = "Revenue", value = inconme}  --今日营收
+    local revenueItem = self:_createShowItem(revenueData)
+    self.items[#self.items + 1] = revenueItem
+    self.revenueItem = revenueItem
 
     local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
     self.items[#self.items + 1] = self:_createShowItem(salaryData)
@@ -256,8 +270,12 @@ function MapRightSelfBuildingPage:_language()
 end
 --关闭
 function MapRightSelfBuildingPage:close()
+    --Event.RemoveListener("c_Revenue", self._updateRevenue, self)
     self.viewRect.anchoredPosition = Vector2.New(506, 0)
     self:_cleanItems()
+    self.revenueItem = nil
+    self.data = nil
+    self = nil
 end
 --去地图上的一个建筑
 function MapRightSelfBuildingPage:_goHereBtn()

@@ -79,21 +79,23 @@ end
 function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("addBuyList",self.addBuyList,self)
     Event.AddListener("deleBuyList",self.deleBuyList,self)
+    Event.AddListener("startBuy",self.startBuy,self)
     Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
     Event.AddListener("whetherSend",self.whetherSend,self)
     Event.AddListener("downShelf",self.downShelf,self)
     Event.AddListener("downShelfSucceed",self.downShelfSucceed,self)
-    Event.AddListener("startBuy",self.startBuy,self)
+    Event.AddListener("buySucceed",self.buySucceed,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("addBuyList",self.addBuyList,self)
     Event.RemoveListener("deleBuyList",self.deleBuyList,self)
+    Event.RemoveListener("startBuy",self.startBuy,self)
     Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
     Event.RemoveListener("whetherSend",self.whetherSend,self)
     Event.RemoveListener("downShelf",self.downShelf,self)
     Event.RemoveListener("downShelfSucceed",self.downShelfSucceed,self)
-    Event.RemoveListener("startBuy",self.startBuy,self)
+    Event.RemoveListener("buySucceed",self.buySucceed,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -107,6 +109,7 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
+    --是否是自己打开
     if self.m_data.isOther == true then
         self.contentAddBg.gameObject:SetActive(false)
         self.buyBtn.transform.localScale = Vector3.one
@@ -116,10 +119,16 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         self.buyBtn.transform.localScale = Vector3.zero
         self.number.transform.localScale = Vector3.zero
     end
+    --货架是否是空的
     if not shelfData or next(shelfData) == nil then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.ScrollView.transform.localScale = Vector3.zero
+        if self.m_data.isOther == true then
+            self.addbg.transform.localScale = Vector3.zero
+        else
+            self.addbg.transform.localScale = Vector3.one
+        end
     else
         self.noTip.transform.localScale = Vector3.zero
         self.ScrollView.transform.localScale = Vector3.one
@@ -211,7 +220,7 @@ function BuildingShelfDetailPart:startBuy(dataInfo,targetBuildingId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         for key,value in pairs(dataInfo) do
-            Event.Brocast("m_ReqMaterialBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,"价格",targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
+            Event.Brocast("m_ReqMaterialBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,value.dataInfo.price,targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
         end
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
@@ -238,7 +247,7 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
                     self:deleteGoodsItem(self.shelfDatas,key)
                 else
                     value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText = "×"..value.dataInfo.n
+                    value.numberText.text = "×"..value.dataInfo.n
                 end
             end
         end
@@ -288,6 +297,41 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
         self.noTip.transform.localScale = Vector3.one
         self.ScrollView.transform.localScale = Vector3.zero
     end
+    UIPanel.ClosePage()
+end
+--购买成功
+function BuildingShelfDetailPart:buySucceed(data)
+    if data ~= nil then
+        --刷新货架
+        for key,value in pairs(self.shelfDatas) do
+            if value.itemId == data.item.key.id then
+                if value.dataInfo.n == data.item.n then
+                    self:deleteGoodsItem(self.shelfDatas,key)
+                else
+                    value.dataInfo.n = value.dataInfo.n - data.item.n
+                    value.numberText.text = "×"..value.dataInfo.n
+                end
+            end
+        end
+        --刷新建筑货架信息
+        for key,value in pairs(self.m_data.shelf.good) do
+            if value.k.id == data.item.key.id then
+                if value.n == data.item.n then
+                    table.remove(self.m_data.shelf.good,key)
+                else
+                    value.n = value.n - data.item.n
+                end
+            end
+        end
+    end
+    --购买成功后，如果货架是空的
+    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+        self.noTip.transform.localScale = Vector3.one
+        self.addbg.transform.localScale = Vector3.zero
+        self.ScrollView.transform.localScale = Vector3.zero
+    end
+    self.number.transform.localScale = Vector3.zero
+    self.buyDatas = {}
     UIPanel.ClosePage()
 end
 --如果没有在仓库找到这个商品

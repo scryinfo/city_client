@@ -74,11 +74,10 @@ function BuildingShelfPart:_getShelfCount(dataTable)
     end
     return shelfNowCount
 end
---上架成功后刷新数量
+--上架成功或购买成功后刷新数量
 function BuildingShelfPart:refreshShelfPartCount()
     self:_initializeShelfCount()
 end
-
 
 
 

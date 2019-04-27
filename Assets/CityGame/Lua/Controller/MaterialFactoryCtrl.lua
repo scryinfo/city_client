@@ -83,10 +83,35 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
                 self.groupMgr:AddParts(BuildingProductionPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             end
+            MaterialFactoryPanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:RefreshData(self.m_data)
+            self.groupMgr:TurnOffAllOptions()
+        else
+            MaterialFactoryPanel.groupTrans.localScale = Vector3.zero
         end
-        self.groupMgr:RefreshData(self.m_data)
-        self.groupMgr:TurnOffAllOptions()
     else
+        self.groupMgr:RefreshData(self.m_data)
+    end
+end
+
+function MaterialFactoryCtrl:_refreshSalary(data)
+    if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置工资成功", 300)
+        end
+        self.m_data.info.salary = data.Salary
+        self.m_data.info.setSalaryTs = data.ts
+
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+            self.groupMgr:AddParts(BuildingShelfPart,0.2)
+            self.groupMgr:AddParts(TurnoverPart,0.2)
+            self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+            self.groupMgr:AddParts(BuildingProductionPart,0.2)
+            self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+            MaterialFactoryPanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:TurnOffAllOptions()
+        end
         self.groupMgr:RefreshData(self.m_data)
     end
 end

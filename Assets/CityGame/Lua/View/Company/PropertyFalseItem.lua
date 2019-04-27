@@ -6,6 +6,10 @@
 
 PropertyFalseItem = class("PropertyFalseItem")
 PropertyFalseItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
+PropertyFalseItem.static.BTypeIcon = -- b类型显示配置
+{
+    ["Brand"] = "Assets/CityGame/Resources/Atlas/Company/icon-popularity-w.png",
+}
 
 -- 初始化
 function PropertyFalseItem:initialize(prefab, data, name)
@@ -13,6 +17,7 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.data = data
 
     local transform = prefab.transform
+    self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
     self.tipsBtn = transform:Find("TipsBtn"):GetComponent("Button")
     self.tipsImage = transform:Find("TipsImage")
@@ -22,6 +27,7 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.tipsImage.localScale = Vector3.zero
     self.tipsText.transform.localScale = Vector3.zero
     self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
+    LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
     self.tipsBtn.onClick:AddListener(function ()
         CompanyPanel.closeTipsBtn.localScale = Vector3.one

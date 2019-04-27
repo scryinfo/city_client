@@ -60,6 +60,7 @@ end
 
 -- 点击记录获取数据
 function OptionItem:_setContent()
+    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
     CompanyCtrl.static.companyMgr:SetBtnState(self.optionIndex)
     self:SetSelect(false)
     CompanyCtrl.static.companyMgr:SetEvaRecord(self.optionIndex, self.index)

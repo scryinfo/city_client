@@ -505,7 +505,7 @@ EvaConfig = {
                             [1] = {
                                 name = "推广能力",
                                 Atype = 1613,
-                                Btype = "GeneralAbility",
+                                Btype = "PromotionAbility",
                                 b = 0,
                                 basevalue = 10,
                             },
@@ -517,7 +517,7 @@ EvaConfig = {
                             [1] = {
                                 name = "推广能力",
                                 Atype = 1614,
-                                Btype = "GeneralAbility",
+                                Btype = "PromotionAbility",
                                 b = 0,
                                 basevalue = 10,
                             },
@@ -536,7 +536,7 @@ EvaConfig = {
                             [1] = {
                                 name = "推广能力",
                                 Atype = 2251,
-                                Btype = "GeneralAbility",
+                                Btype = "PromotionAbility",
                                 b = 0,
                                 basevalue = 10,
                             },
@@ -548,7 +548,7 @@ EvaConfig = {
                             [1] = {
                                 name = "推广能力",
                                 Atype = 2252,
-                                Btype = "GeneralAbility",
+                                Btype = "PromotionAbility",
                                 b = 0,
                                 basevalue = 10,
                             },

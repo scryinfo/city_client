@@ -1,7 +1,7 @@
 PopCommpent = class('PopCommpent')
 
 
-function PopCommpent:initialize(panelPrefab,LuaBehaviour)
+function PopCommpent:initialize(panelPrefab,LuaBehaviour,basectrl)
     local transform = panelPrefab.transform
 
     self.closeBtn=transform:Find("PopCommpent/closeBtn")
@@ -10,6 +10,8 @@ function PopCommpent:initialize(panelPrefab,LuaBehaviour)
 
     LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self)
     LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self)
+
+    self.ctrl=basectrl
 end
 
 ---====================================================================================点击函数==============================================================================================
@@ -18,6 +20,7 @@ function PopCommpent:OnClick_confirm(ins)
     if ins.m_data then
         --实例
         local instance=ins.m_data.ins
+        instance.ctrl=ins.ctrl
         --回调
         local funcs=ins.m_data.func
         --调用

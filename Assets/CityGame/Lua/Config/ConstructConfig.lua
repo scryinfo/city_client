@@ -22,7 +22,9 @@ ConstructConfig ={
     [6] = {
         buildName = 41020004,
         prefabRoute = {1600001, 1600002,1600003},
-	},--[[
+	}
+
+--[[
 	[7] = {
         buildName = 41020007,
         prefabRoute = {1700001, 1700002,1700003},

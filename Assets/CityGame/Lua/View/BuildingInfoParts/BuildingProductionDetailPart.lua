@@ -213,9 +213,11 @@ end
 function BuildingProductionDetailPart:clickDeleBtn()
     PlayMusEff(1002)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
         Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,self.m_data.line[1].id)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-
+        --加工厂
+        Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,self.m_data.line[1].id)
     end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -287,9 +289,11 @@ end
 --置顶
 function BuildingProductionDetailPart:ProductionLineSettop(data)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
         Event.Brocast("m_ReqMaterialSetLineOrder",self.m_data.insId,data.lineId,2)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-
+        --加工厂
+        Event.Brocast("m_ReqprocessingSetLineOrder",self.m_data.insId,data.lineId,2)
     end
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------

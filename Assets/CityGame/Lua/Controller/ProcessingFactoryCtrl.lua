@@ -5,71 +5,71 @@
 ---
 -----
 
-MaterialFactoryCtrl = class('MaterialFactoryCtrl',UIPanel)
-UIPanel:ResgisterOpen(MaterialFactoryCtrl) --注册打开的方法
+ProcessingFactoryCtrl = class('ProcessingFactoryCtrl',UIPanel)
+UIPanel:ResgisterOpen(ProcessingFactoryCtrl) --注册打开的方法
 
 local this
 --构建函数
-function MaterialFactoryCtrl:initialize()
+function ProcessingFactoryCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
-function MaterialFactoryCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/MaterialFactoryPanel.prefab";
+function ProcessingFactoryCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/ProcessingFactoryPanel.prefab";
 end
 
-function MaterialFactoryCtrl:OnCreate(obj)
+function ProcessingFactoryCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
 
-function MaterialFactoryCtrl:Awake(go)
+function ProcessingFactoryCtrl:Awake(go)
     this = self
     self.gameObject = go;
-    self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    --self.materialBehaviour:AddClick(MaterialFactoryPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
-    --self.materialBehaviour:AddClick(MaterialFactoryPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+    self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    --self.processingBehaviour:AddClick(ProcessingFactoryPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
+    --self.processingBehaviour:AddClick(ProcessingFactoryPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
 
 end
-function MaterialFactoryCtrl:Active()
+function ProcessingFactoryCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
-function MaterialFactoryCtrl:Refresh()
+function ProcessingFactoryCtrl:Refresh()
     this:initializeData()
 end
 
-function MaterialFactoryCtrl:initializeData()
+function ProcessingFactoryCtrl:initializeData()
     if self.m_data then
         --向服务器请求建筑详情
-        DataManager.OpenDetailModel(MaterialFactoryModel,self.m_data.insId)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+        DataManager.OpenDetailModel(ProcessingFactoryModel,self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenprocessing',self.m_data.insId)
     end
 end
 
 --刷新原料厂信息
-function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
-    if MaterialFactoryPanel.topItem ~= nil then
-        MaterialFactoryPanel.topItem:refreshData(materialDataInfo.info,function()
+function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
+    if ProcessingFactoryPanel.topItem ~= nil then
+        ProcessingFactoryPanel.topItem:refreshData(processingDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
     --初始化
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+    ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
 
     local insId = self.m_data.insId
-    self.m_data = materialDataInfo
+    self.m_data = processingDataInfo
     self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.MaterialFactory
+    self.m_data.buildingType = BuildingType.ProcessingFactory
 
     --判断是自己还是别人打开了界面
-    if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
+    if processingDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
     else
         self.m_data.isOther = false
     end
     if self.groupMgr == nil then
-        if materialDataInfo.info.state == "OPERATE" then
-            self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+        if processingDataInfo.info.state == "OPERATE" then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(ProcessingFactoryPanel.groupTrans, self.processingBehaviour)
             if self.m_data.isOther then
                 self.groupMgr:AddParts(BuildingShelfPart,1)
                 self.groupMgr:AddParts(TurnoverPart,0)
@@ -83,18 +83,18 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
                 self.groupMgr:AddParts(BuildingProductionPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             end
-            MaterialFactoryPanel.groupTrans.localScale = Vector3.one
+            ProcessingFactoryPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else
-            MaterialFactoryPanel.groupTrans.localScale = Vector3.zero
+            ProcessingFactoryPanel.groupTrans.localScale = Vector3.zero
         end
     else
         self.groupMgr:RefreshData(self.m_data)
     end
 end
 
-function MaterialFactoryCtrl:_refreshSalary(data)
+function ProcessingFactoryCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
             Event.Brocast("SmallPop", "设置工资成功", 300)
@@ -103,45 +103,45 @@ function MaterialFactoryCtrl:_refreshSalary(data)
         self.m_data.info.setSalaryTs = data.ts
 
         if self.groupMgr == nil then
-            self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+            self.groupMgr = BuildingInfoMainGroupMgr:new(ProcessingFactoryPanel.groupTrans, self.processingBehaviour)
             self.groupMgr:AddParts(BuildingShelfPart,0.2)
             self.groupMgr:AddParts(TurnoverPart,0.2)
             self.groupMgr:AddParts(BuildingSalaryPart,0.2)
             self.groupMgr:AddParts(BuildingProductionPart,0.2)
             self.groupMgr:AddParts(BuildingWarehousePart,0.2)
-            MaterialFactoryPanel.groupTrans.localScale = Vector3.one
+            ProcessingFactoryPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
         self.groupMgr:RefreshData(self.m_data)
     end
 end
 
-function MaterialFactoryCtrl:OnClick_buildInfo(ins)
+function ProcessingFactoryCtrl:OnClick_buildInfo(ins)
     PlayMusEff(1002)
     Event.Brocast("c_openBuildingInfo",ins.m_data.info)
 end
-function MaterialFactoryCtrl:OnClick_prepareOpen(ins)
+function ProcessingFactoryCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
 --更改名字
-function MaterialFactoryCtrl:OnClick_changeName(ins)
+function ProcessingFactoryCtrl:OnClick_changeName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
     data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
+        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeprocessingName', ins.m_data.info.id, name)
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 --更改名字成功
-function MaterialFactoryCtrl:_updateName(name)
-    MaterialFactoryPanel.nameText.text = name
+function ProcessingFactoryCtrl:_updateName(name)
+    ProcessingFactoryPanel.nameText.text = name
 end
 
-function MaterialFactoryCtrl:Hide()
+function ProcessingFactoryCtrl:Hide()
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
@@ -150,20 +150,20 @@ function MaterialFactoryCtrl:Hide()
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 --更改基础建筑信息
---function MaterialFactoryCtrl:_changeItemData(data)
---    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
---        MaterialFactoryPanel.topItem:changeItemData(data)
+--function ProcessingFactoryCtrl:_changeItemData(data)
+--    if data ~= nil and ProcessingFactoryPanel.topItem ~= nil then
+--        ProcessingFactoryPanel.topItem:changeItemData(data)
 --    end
 --end
 --
-function MaterialFactoryCtrl:_clickCloseBtn()
+function ProcessingFactoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
     --关闭原料厂推送
-    Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
+    Event.Brocast("m_ReqCloseprocessing",self.m_data.insId)
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil

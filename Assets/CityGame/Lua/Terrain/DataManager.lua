@@ -977,13 +977,9 @@ end
 
 --移除 消息回调
 function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
-     if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
-        ModelNetMsgStack[protoNameStr][protoNumStr][insId] = nil
-        --[[
-        if #ModelNetMsgStack[protoNameStr][protoNumStr] == 0 then
-            ModelNetMsgStack[protoNameStr][protoNumStr] = nil
-        end
-        --]]
+    local newMsgId = pbl.enum(protoNameStr,protoNumStr)
+    if ModelNetMsgStack[newMsgId] ~= nil and ModelNetMsgStack[newMsgId][insId] ~= nil then
+        ModelNetMsgStack[newMsgId][insId] = nil
     end
 end
 --

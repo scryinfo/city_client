@@ -5,15 +5,15 @@
 ---
 -----
 local transform;
-RetailStoresPanel = {};
-local this = RetailStoresPanel;
+ProcessingFactoryPanel = {};
+local this = ProcessingFactoryPanel;
 
-function RetailStoresPanel.Awake(obj)
+function ProcessingFactoryPanel.Awake(obj)
     transform = obj.transform;
     this.InitPanel();
 end
 
-function RetailStoresPanel.InitPanel()
+function ProcessingFactoryPanel.InitPanel()
     this.groupTrans = transform:Find("bottomRoot")
     this.topRootTrans = transform:Find("topRoot")
     this.topItem = BuildingUpperItem:new(transform:Find("topRoot/BuildingUpperItem"))

@@ -66,7 +66,7 @@ function LandInfoItem:initialize(prefab, data)
             self.moneyLineImage.localScale = Vector3.one
             self.rentMoneyTitleText.text = "Rental/d"
             self.rentMoneyText.text = GetClientPriceString(data.rent.rentPreDay) -- "租金：" ..
-            local timeTable = getFormatUnixTime(data.rent.rentBeginTs + data.rent.rentDays * 24 * 60 * 60)
+            local timeTable = getFormatUnixTime(data.rent.rentBeginTs/1000 + data.rent.rentDays * 24 * 60 * 60)
             self.timeLineImage.localScale = Vector3.one
             self.rentTimeText.text = timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day -- "到期时间：" ..
         end

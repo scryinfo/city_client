@@ -146,11 +146,11 @@ function MaterialFactoryCtrl:Hide()
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
 end
 --更改基础建筑信息
-function MaterialFactoryCtrl:_changeItemData(data)
-    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
-        MaterialFactoryPanel.topItem:changeItemData(data)
-    end
-end
+--function MaterialFactoryCtrl:_changeItemData(data)
+--    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
+--        MaterialFactoryPanel.topItem:changeItemData(data)
+--    end
+--end
 --
 function MaterialFactoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)

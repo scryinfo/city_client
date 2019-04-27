@@ -52,9 +52,9 @@ end
 
 --点击中间按钮的方法
 function LaboratoryCtrl:_centerBtnFunc(ins)
-    --if ins.m_data then
-    --    Event.Brocast("c_openBuildingInfo", ins.m_data.info)
-    --end
+    if DataManager.GetMyOwnerID() ~= ins.m_data.info.ownerId then
+        return
+    end
     ct.OpenCtrl("BubbleMessageCtrl",ins.m_data.insId)
 end
 --点击开业按钮方法

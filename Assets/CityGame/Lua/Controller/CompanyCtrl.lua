@@ -148,11 +148,11 @@ function CompanyCtrl:OnEva(go)
     go.isClickEva = true
     go:ShowOptionTwo(0)
     go:ShowOptionThere(0)
-    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
+    --CompanyPanel.closeTipsBtn.localScale = Vector3.zero
     CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
     if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-        CompanyPanel.optionOneScroll.localPosition = Vector3.zero --Vector2.New(0,0)
+        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
     else
         CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     end
@@ -199,6 +199,11 @@ function CompanyCtrl:_showMainRoot(index)
             v.transform:Find("CloseImage").localScale = Vector3.one
             v.transform:Find("Text"):GetComponent("Text").color = getColorByVector3(Vector3.New(205, 219, 255))
         end
+    end
+    if index == 4 then
+        CompanyPanel.optionOneObj:SetActive(true)
+    else
+        CompanyPanel.optionOneObj:SetActive(false)
     end
 end
 

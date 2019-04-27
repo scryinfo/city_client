@@ -56,25 +56,27 @@ function QueneCtrl:OnClick_backBtn(ins)
 end
 
 
-
-
-
 ---====================================================================================业务代码==============================================================================================
 --对数据处理
 local function handleData( data )
-   local reminderTime=0
+   local reminderTime = TimeSynchronized.GetTheCurrentServerTime()
 
-   local mselfData,others={},{}
+    local mselfData,others={},{}
    table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
 
     --处理时间
-    if data[1].availableRoll then
-        for i, lineData in ipairs(data) do
-            lineData.queneTime = reminderTime
-            reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))* 3600000)
+    if #data ~= 0 then
+        if data[1].availableRoll then
+            for i, lineData in ipairs(data) do
+                if lineData.beginProcessTs == 0  then
+                    lineData.queneTime = reminderTime
+                else
+                    lineData.queneTime = lineData.beginProcessTs
+                end
+                reminderTime = reminderTime + (lineData.times* 3600000)
+            end
         end
     end
-
 
     --自已的置顶
     for i, lineData in ipairs(data) do
@@ -133,6 +135,7 @@ end
 function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
+    data.ids =  idx
     this.m_data.insClass:new(data, transform,luabehaviour)
 end
 

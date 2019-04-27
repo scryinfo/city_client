@@ -53,19 +53,12 @@ end
 function RollCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj);
 end
-
-function RollCtrl:Refresh()
-    Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
-
-    local data = self.m_data
-    self:updateText(data)
-    self.popCompent:Refesh(data)
-    self:c_creatRollItem(data)
-end
-
 function RollCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_creatRollItem",self.c_creatRollItem,self)
+    Event.RemoveListener("c_InventResult",self.handleGoodsResult,self)
+    Event.RemoveListener("c_InventResult",self.handleEvaResult,self)
+
 end
 
 function RollCtrl:Close()
@@ -73,18 +66,35 @@ function RollCtrl:Close()
     Event.RemoveListener("c_creatRollItem",self.c_creatRollItem,self)
 end
 
+function RollCtrl:Refresh()
+    Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
+    local data = self.m_data
+    if data.goodCategory ~=0 then
+        Event.AddListener("c_InventResult",self.handleGoodsResult,self)
+    else
+        Event.AddListener("c_InventResult",self.handleEvaResult,self)
+    end
+
+    self:updateText(data)
+    self.popCompent:Refesh(data)
+    self:c_creatRollItem(data)
+end
 function RollCtrl:Awake(go)
     panel = RollPanel
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
-
+    LuaBehaviour:AddClick(panel.FailRootBtn.gameObject, self._closeFail, self)
+    LuaBehaviour:AddClick(panel.EvaRootBTn.gameObject, self._closeFail, self)
+    LuaBehaviour:AddClick(panel.GoodRootBtn.gameObject, self._closeFail, self)
+    self:closeAllRoot()
 
 end
 ---====================================================================================点击函数==============================================================================================
-
-
-
+--关闭失败
+function RollCtrl:_closeFail(ins)
+    ins:closeAllRoot()
+end
 
 
 ---====================================================================================业务逻辑==============================================================================================
@@ -93,10 +103,80 @@ function RollCtrl:c_creatRollItem( data )
     for i = 1, data.availableRoll do
         table.insert( datas,{ lineId = data.id } )
     end
-   InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
+    panel.totalText.text = #datas
+    InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
 end
 
 function RollCtrl:updateText(data)
     -- panel.titleText.text = GetLanguage(40010009)
 end
 
+function RollCtrl:handleEvaResult(data)
+    if data then
+        panel.resultRoot.localScale = Vector3.one
+        panel.EvaRoots.localScale =  Vector3.one
+        --panel.nowEva.text =
+    else
+        self:fail()
+    end
+end
+
+function  RollCtrl:handleGoodsResult(data)
+    if data then
+        panel.resultRoot.localScale = Vector3.one
+        panel.GoodRoot.localScale =  Vector3.one
+
+        LoadSprite(Good[data[1]].img,panel.ima)
+        panel.nameText.text =  Good[data[1]].name
+
+        if #data == 2  then
+            this.child1.localScale = Vector3.one
+            LoadSprite(Good[data[2]].img,panel.ima)
+            panel.nameText.text = Good[data[2]].name
+        elseif   #data == 3 then
+            this.child1.localScale = Vector3.one
+            this.child2.localScale = Vector3.one
+
+
+            LoadSprite(Good[data[2]].img,panel.child1Ima)
+            panel.child1ImanNameText.text = Good[data[2]].name
+            LoadSprite(Good[data[3]].img,panel.child2Ima)
+            panel.child2ImanNameText.text = Good[data[3]].name
+
+        else
+            this.child1.localScale = Vector3.one
+            this.child2.localScale = Vector3.one
+            this.child3.localScale = Vector3.one
+
+            LoadSprite(Good[data[2]].img,panel.child1Ima)
+            panel.child1ImanNameText.text = Good[data[2]].name
+            LoadSprite(Good[data[3]].img,panel.child2Ima)
+            panel.child2ImanNameText.text = Good[data[3]].name
+            LoadSprite(Good[data[4]].img,panel.child3Ima)
+            panel.child3ImanNameText.text = Good[data[3]].name
+        end
+
+    else
+        self:fail()
+    end
+end
+
+function RollCtrl:fail()
+    panel.resultRoot.localScale = Vector3.one
+    panel.FailRoot.localScale = Vector3.one
+end
+
+function RollCtrl:closeAllRoot()
+    panel.EvaRoots.localScale = Vector3.zero
+    panel.FailRoot.localScale = Vector3.zero
+    panel.GoodRoot.localScale = Vector3.zero
+    panel.resultRoot.localScale = Vector3.zero
+
+    panel.child1.localScale = Vector3.zero
+    panel.child2.localScale = Vector3.zero
+    panel.child3.localScale = Vector3.zero
+end
+
+function RollCtrl:changeLan()
+
+end

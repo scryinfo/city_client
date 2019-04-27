@@ -31,7 +31,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.m_LuaBehaviour:RemoveClick(self.xBtn, self.OnXBtn, self)
+--    self.xBtn.onClick:RemoveAllListeners()
 end
 
 function TurnoverDetailPart:Show(data)

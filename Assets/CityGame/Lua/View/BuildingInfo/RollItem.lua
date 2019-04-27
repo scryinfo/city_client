@@ -11,21 +11,21 @@ function RollItem:initialize(prefab,luaBehaviour,data,ctrl)
     luaBehaviour:AddClick(prefab.gameObject,self.c_OnClick_roll,self);
     self:Refresh(data)
 
-    end
-    ---==========================================================================================点击函数=============================================================================
-    --开箱
-    function RollItem:c_OnClick_roll(ins)
-        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
-    end
-    ---==========================================================================================业务逻辑=============================================================================
+end
+---==========================================================================================点击函数=============================================================================
+--开箱
+function RollItem:c_OnClick_roll(ins)
+    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
+end
+---==========================================================================================业务逻辑=============================================================================
 
-    function RollItem:updateData(data)
-        self.data=data
-    end
+function RollItem:updateData(data)
+    self.data=data
+end
 
-    function RollItem:updateUI(data)
-        --LoadSprite()
-    end
+function RollItem:updateUI(data)
+    --LoadSprite()
+end
 
 function RollItem:Refresh(data)
         self:updateData(data)

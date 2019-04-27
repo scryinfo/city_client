@@ -16,9 +16,19 @@ end
 --
 function ResearchPart:_InitTransform()
     local transform = self.transform
-    self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+    --self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
 
-    self.queneBtn=transform:Find("Top/Button")
+    self.queneBtn = transform:Find("Top/Button")
+    self.hasImage = findByName(transform,"hasImage")
+    self.queneCount = findByName(transform,"countText"):GetComponent("Text")
+    self.queneText = findByName(transform,"queneText (1)"):GetComponent("Text")
+    self.priceText = findByName(transform,"priceText"):GetComponent("Text")
+    self.priceCount = findByName(transform,"turnover"):GetComponent("Text")
+    self.TimeText = findByName(transform,"TimeText"):GetComponent("Text")
+    self.TimeTextCount = findByName(transform,"TimeTextCount"):GetComponent("Text")
+    self.title = findByName(transform,"Text"):GetComponent("Text")
+    self.title1 = findByName(transform,"Text1"):GetComponent("Text")
+
 end
 
 --特殊按钮
@@ -28,7 +38,7 @@ end
 
 --
 function  ResearchPart:_ResetTransform()
-    self.turnover.text = "0.0000"
+   -- self.turnover.text = "0.0000"
 end
 --
 function ResearchPart:RefreshData(data)
@@ -36,15 +46,39 @@ function ResearchPart:RefreshData(data)
         return
     end
     self.m_data = data
-    self:_initFunc()
+    self:updateUI(data)
+    self:updateLanguage()
+
 end
---
-function ResearchPart:_initFunc()
-    self.turnover.text = GetClientPriceString(self.m_data.turnover)
-end
+
 ---===================================================================================点击函数==============================================================================================
 
 function ResearchPart:onClick_set(ins)
-   ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodItem",data = ins.m_data.inProcess })
+   ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
 end
 
+--
+function ResearchPart:updateUI(data)
+    --进行中
+    if data.inProcess then
+        self.queneCount.text = #(data.inProcess)
+    else
+        self.queneCount.text = 0
+    end
+    --已完成
+    if data.completed then
+        self.hasImage.localScale = Vector3.one
+    else
+        self.hasImage.localScale = Vector3.zero
+    end
+    self.priceCount.text =  data.pricePreTime
+    self.TimeTextCount.text =  data.sellTimes
+end
+
+function ResearchPart:updateLanguage()
+    --self.queneText
+    --self.priceText
+    --self.TimeText
+    --self.title
+    --self.title1
+end

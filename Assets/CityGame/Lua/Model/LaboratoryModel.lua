@@ -36,7 +36,6 @@ function LaboratoryModel:_addListener()
     --Event.AddListener("m_labSetting", self.m_labSetting, self)
     --Event.AddListener("m_ReqLabAddLine", self.m_ReqLabAddLine, self)
     --Event.AddListener("m_ReqLabDeleteLine", self.m_ReqLabDeleteLine, self)
-    --Event.AddListener("m_ReqLabRoll", self.m_ReqLabRoll, self)
 
 end
 
@@ -90,8 +89,8 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 end
 --研究所设置
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
-    prints("他人可用")
-    Event.Brocast("SmallPop",GetLanguage(40010015),300)
+    self.data.exclusive = LabExclusive.exclusive
+    Event.Brocast("SmallPop","设置成功",300)
 
 end
 --添加研究发明线
@@ -100,7 +99,7 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
         self.data.inProcess = {}
     end
     table.insert(self.data.inProcess,msg.line)
-    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodItem",data = self.data.inProcess ,insClass=InventGoodItem}  )
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem",data = self.data.inProcess ,insClass=InventGoodQueneItem}  )
 end
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
@@ -109,16 +108,17 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
             table.remove(self.data.inProcess,i)
         end
     end
+    Event.Brocast("SmallPop","删除成功",300)
 
-    Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
+    Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
 end
 --开箱
 function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
 
     prints("开箱回调")
-    if LabRollACK .itemId or  LabRollACK .evaPoint then
-        prints("成功")
-    end
+    local info = LabRollACK .itemId or  LabRollACK .evaPoint
+
+    Event.Brocast("c_InventResult",info)
 
     local line
     for i, v in ipairs(self.data.inProcess) do
@@ -130,8 +130,7 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
         end
     end
 
-
-    self:n_OnReceivelabLineChangeInform({line=line},true)
+    self:n_OnReceivelabLineChangeInform({line=line},false)
 end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
@@ -139,12 +138,13 @@ function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
     for i, v in ipairs(self.data.inProcess) do
         if v.id == lineData.line.id  then
             local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
-            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and  isFinished then
+            if --[[lineData.line.proposerId ~= DataManager.GetMyOwnerID() and --]]  isFinished then
                 table.remove(self.data.inProcess,i)
             else
                 self.data.inProcess[i]=lineData.line
             end
-            Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodItem"})
+
+            Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
             break
         end
     end

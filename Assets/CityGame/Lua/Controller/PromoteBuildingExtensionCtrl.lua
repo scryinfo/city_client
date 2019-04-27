@@ -94,8 +94,8 @@ function PromoteBuildingExtensionCtrl:OnXBtn()
 end
 
 --打开曲线图
-function PromoteBuildingExtensionCtrl:OnCurve()
-    ct.OpenCtrl("PromoteCurveCtrl")
+function PromoteBuildingExtensionCtrl:OnCurve(go)
+    ct.OpenCtrl("PromoteCurveCtrl",go.m_data.insId)
 end
 
 --点击确定(自己)

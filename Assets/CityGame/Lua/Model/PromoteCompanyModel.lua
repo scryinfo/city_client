@@ -89,8 +89,8 @@ function PromoteCompanyModel:m_PromoAbilityHistory(buildingId)
     --if tonumber(ts.second) > 0 then
     --    currentTime = currentTime - tonumber(ts.second)
     --end
-    currentTime = currentTime - 24*3600            --提前24小时
-    local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {2251}, recordsCount = 24 }
+    currentTime = currentTime - 240          --提前24小时
+    local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {1613 }, recordsCount = 24 }
 
     DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",lMsg)
 end
@@ -169,6 +169,7 @@ end
 --推广历史曲线回调
 function PromoteCompanyModel:n_OnPromoAbilityHistory(info)
     local a = info
+    DataManager.ControllerRpcNoRet(self.insId,"PromoteCurveCtrl", 'm_PromoteHistoryCurve', info.recordsList[1].list)
 end
 
 --员工工资改变

@@ -27,7 +27,7 @@ function PromoteCurveCtrl:Active()
 end
 
 function PromoteCurveCtrl:Refresh()
-
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
 end
 
 function PromoteCurveCtrl:Hide()
@@ -63,13 +63,46 @@ function PromoteCurveCtrl:m_PromoteHistoryCurve(data)
     local updataTime = oneDay
     local time = {}
     local boundaryLine = {}
+    local line = {}
     for i = 1, 24 do
         if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
             time[1] = getFormatUnixTime(updataTime).minute .. "/" .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - oneDay + 3600) / 3600 * 120)
         end
+        line[i] = {}
+        line[i].value = 0
+        line[i].ts = updataTime
+        if data then
+            for i, v in pairs(data) do
+                if line[i].ts == v.ts then
+                    line[i].value = v.value
+                end
+            end 
+        end
+        line[i].ts = (updataTime - oneDay + 3600) / 3600 * 120
     end
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+    table.insert(line,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in ipairs(line) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    local scale = SetYScale(max,5,PromoteCurvePanel.yScale)
+    local lineVet = {}
+    for i, v in ipairs(line) do
+        if scale == 0 then
+            lineVet[i] = v
+        else
+            lineVet[i] = Vector2.New(v.x,v.y / scale * 67)
+        end
+    end
+    self.slide:SetXScaleValue(time,120)
+    self.graph:BoundaryLine(boundaryLine)
 
-
+    self.graph:DrawLine(lineVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
+    self.slide:SetCoordinate(lineVet,line,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
 end
 

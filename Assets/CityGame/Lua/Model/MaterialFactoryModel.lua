@@ -198,7 +198,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'DestroyAfterRefresh',data)
+    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)

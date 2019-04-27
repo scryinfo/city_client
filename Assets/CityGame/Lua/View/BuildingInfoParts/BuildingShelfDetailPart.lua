@@ -114,7 +114,7 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
         self.buyBtn.transform.localScale = Vector3.zero
         self.number.transform.localScale = Vector3.zero
     end
-    if not shelfData then
+    if not shelfData or next(shelfData) == nil then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.ScrollView.transform.localScale = Vector3.zero
@@ -225,7 +225,7 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
                 end
             end
         end
-        --刷新建筑信息
+        --刷新建筑货架信息
         for key,value in pairs(self.m_data.shelf.good) do
             if value.k.id == data.item.key.id then
                 if value.n == data.item.n then
@@ -235,6 +235,36 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
                 end
             end
         end
+        --刷新建筑仓库信息
+        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+            local goods = {}
+            local key = {}
+            goods.key = key
+            goods.key.id = data.item.key.id
+            goods.key.producerId = data.item.key.producerId
+            goods.key.qty = data.item.key.qty
+            goods.n = data.item.n
+            if not self.m_data.store.inHand then
+                self.m_data.store.inHand = {}
+            end
+            self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+        else
+            for key,value in pairs(self.m_data.store.inHand) do
+                if value.key.id == data.item.key.id then
+                    value.n = value.n + data.item.n
+                    --下架成功后，如果货架是空的
+                    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+                        self.noTip.transform.localScale = Vector3.one
+                        self.ScrollView.transform.localScale = Vector3.zero
+                    end
+                    UIPanel.ClosePage()
+
+                    return
+                end
+            end
+            --如果没有在仓库找到这个商品
+            self:wareHouseNoGoods(data)
+        end
     end
     --下架成功后，如果货架是空的
     if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
@@ -243,7 +273,17 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
     end
     UIPanel.ClosePage()
 end
-
+--如果没有在仓库找到这个商品
+function BuildingShelfDetailPart:wareHouseNoGoods(data)
+    local goods = {}
+    local key = {}
+    goods.key = key
+    goods.key.id = data.item.key.id
+    goods.key.producerId = data.item.key.producerId
+    goods.key.qty = data.item.key.qty
+    goods.n = data.item.n
+    self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+end
 
 
 

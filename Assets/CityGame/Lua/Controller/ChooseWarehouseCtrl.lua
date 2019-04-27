@@ -221,6 +221,9 @@ function ChooseWarehouseCtrl:GetDistance(pos)
 end
 --获取建筑ID
 function ChooseWarehouseCtrl:GetBuildingId()
+    if buildingInfo == nil then
+        return nil
+    end
     return buildingInfo.buildingId
 end
 --获取建筑的名字
@@ -239,6 +242,9 @@ end
 
 --获取运输单价
 function ChooseWarehouseCtrl:GetPrice()
+    if buildingInfo == nil then
+        return 0
+    end
     return buildingInfo.price
 end
 

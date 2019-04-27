@@ -57,7 +57,7 @@ function AddDetailItem:initData(data)
     --elseif data.itemState == AddLineDetailItemState.Default then
     --    self.stateRoot.localScale = Vector3.zero
     --end
-    self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
+    --self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.countText.text = data.num
     self:setObjState(true)
     self:showSelectState(false)

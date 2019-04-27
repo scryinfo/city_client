@@ -41,6 +41,10 @@ end
 
 function HouseCtrl:Hide()
     --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
     UIPanel.Hide(self)
 end
 

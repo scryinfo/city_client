@@ -129,9 +129,9 @@ function LaboratoryCtrl:owner(buildingInfo)
 
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
 
-        self.groupMgr:AddParts(ResearchPart,0.33)
-        self.groupMgr:AddParts(TurnoverPart,0.33)
-        self.groupMgr:AddParts(BuildingSalaryPart, 0.33)
+        self.groupMgr:AddParts(ResearchPart,1/3)
+        self.groupMgr:AddParts(TurnoverPart,1/3)
+        self.groupMgr:AddParts(BuildingSalaryPart, 1/3)
 
         self.groupMgr:RefreshData(buildingInfo)
         self.groupMgr:TurnOffAllOptions()

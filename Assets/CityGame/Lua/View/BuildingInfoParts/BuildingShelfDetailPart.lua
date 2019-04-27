@@ -83,6 +83,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("whetherSend",self.whetherSend,self)
     Event.AddListener("downShelf",self.downShelf,self)
     Event.AddListener("downShelfSucceed",self.downShelfSucceed,self)
+    Event.AddListener("startBuy",self.startBuy,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -92,6 +93,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("whetherSend",self.whetherSend,self)
     Event.RemoveListener("downShelf",self.downShelf,self)
     Event.RemoveListener("downShelfSucceed",self.downShelfSucceed,self)
+    Event.RemoveListener("startBuy",self.startBuy,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -152,6 +154,7 @@ function BuildingShelfDetailPart:clickBuyBtn()
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
     data.itemPrefabTab = self.buyDatas
+    data.stateType = GoodsItemStateType.buy
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
 -----------------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------
@@ -198,8 +201,22 @@ function BuildingShelfDetailPart:downShelf(data)
             Event.Brocast("m_ReqMaterialShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             --加工厂
-
+        elseif self.m_data.buildingType == BuildingType.TalentCenter then
+            
         end
+    end
+end
+--购买
+function BuildingShelfDetailPart:startBuy(dataInfo,targetBuildingId)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_ReqMaterialBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,"价格",targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
+        end
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        --加工厂
+    elseif self.m_data.buildingType == BuildingType.TalentCenter then
+        --集散中心
     end
 end
 --刷新最新数据

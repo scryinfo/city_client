@@ -68,12 +68,22 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
         self.m_data.isOther = false
     end
     if self.groupMgr == nil then
-        self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
-        self.groupMgr:AddParts(BuildingShelfPart,0.2)
-        self.groupMgr:AddParts(TurnoverPart,0.2)
-        self.groupMgr:AddParts(BuildingSalaryPart,0.2)
-        self.groupMgr:AddParts(BuildingProductionPart,0.2)
-        self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+        if materialDataInfo.info.state == "OPERATE" then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
+            if self.m_data.isOther then
+                self.groupMgr:AddParts(BuildingShelfPart,1)
+                self.groupMgr:AddParts(TurnoverPart,0)
+                self.groupMgr:AddParts(BuildingSalaryPart,0)
+                self.groupMgr:AddParts(BuildingProductionPart,0)
+                self.groupMgr:AddParts(BuildingWarehousePart,0)
+            else
+                self.groupMgr:AddParts(BuildingShelfPart,0.2)
+                self.groupMgr:AddParts(TurnoverPart,0.2)
+                self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+                self.groupMgr:AddParts(BuildingProductionPart,0.2)
+                self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+            end
+        end
         self.groupMgr:RefreshData(self.m_data)
         self.groupMgr:TurnOffAllOptions()
     else

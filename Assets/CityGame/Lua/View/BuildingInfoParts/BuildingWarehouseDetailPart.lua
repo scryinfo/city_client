@@ -146,6 +146,7 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
     data.itemPrefabTab = self.transportTab
+    data.stateType = GoodsItemStateType.transport
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------

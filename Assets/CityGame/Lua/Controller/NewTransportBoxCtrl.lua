@@ -103,7 +103,11 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
 end
 --点击运输
 function NewTransportBoxCtrl:_clickStartBtn(ins)
-    Event.Brocast("startTransport",ins.itemTable,ins.targetBuildingId)
+    if ins.m_data.stateType == GoodsItemStateType.transport then
+        Event.Brocast("startTransport",ins.itemTable,ins.targetBuildingId)
+    elseif ins.m_data.stateType == GoodsItemStateType.buy then
+        Event.Brocast("startBuy",ins.itemTable,ins.targetBuildingId)
+    end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --删除某个商品

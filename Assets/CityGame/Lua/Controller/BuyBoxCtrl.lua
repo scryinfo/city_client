@@ -124,6 +124,7 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     end
     Event.Brocast("addBuyList",goods)
     UIPanel.ClosePage()
+    --添加购物车
     --if ins.m_data.buildingType == BuildingType.MaterialFactory then
     --    --原料厂
     --    --Event.Brocast("m_ReqMaterialAddShoppingCart",ins.m_data.buildingId,ins.m_data.itemId,ins.numberSlider.value,ins.m_data.dataInfo.price,ins.m_data.dataInfo.k.producerId,ins.m_data.dataInfo.k.qty)

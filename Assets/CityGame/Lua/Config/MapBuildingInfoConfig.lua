@@ -82,17 +82,20 @@ MapPromotionInfoConfig={
         ["languageId"] = "Clothes",
     },
     [3] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Accessory-w.png",
-        ["languageId"] = "Accessory",
-    },
-    [4] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
         ["languageId"] = "SuperMarket",
     },
-    [5] = {
+    [4] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
         ["languageId"] = "House",
     },
+}
+--在evaConfig中的推广对应ID
+MapPromotionConfig={
+    [1] = 1651,
+    [2] = 1652,
+    [3] = 1613,
+    [4] = 1614,
 }
 ------------------------------------------------------
 --小地图点开科研展示的信息

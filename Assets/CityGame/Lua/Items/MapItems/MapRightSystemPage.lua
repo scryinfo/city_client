@@ -45,5 +45,5 @@ end
 --去地图上的一个建筑
 function MapRightSystemPage:_goHereBtn()
     local temp = {x = BagPosInfo[1].bagX, y = BagPosInfo[1].bagY}
-    MapBubbleManager.GoHereFunc({pos = temp})
+    MapBubbleManager.GoHereFunc(temp)
 end

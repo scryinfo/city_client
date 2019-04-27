@@ -34,12 +34,10 @@ EMapSearchType =
 --科研推广查询的不同类型
 EMapPromotionType =
 {
-    Default = 0,
     Food = 1,
     Clothes = 2,
-    Accessory = 3,
-    SuperMarket = 4,
-    House = 5,
+    SuperMarket = 3,
+    House = 4,
 }
 EMapTechnologyType =
 {
@@ -397,8 +395,9 @@ function MapCtrl:refreshDetailItem(item)
     MapPanel.closeAllRightPage()
 
     if item == self.selectDetailItem then
-        --self.selectDetailItem:resetState()
-        --self.selectDetailItem = nil
+        self.selectDetailItem:resetState()
+        self.selectDetailItem = nil
+        MapBubbleManager.cleanAllBubbleItems()
         Event.Brocast("c_ChooseTypeDetail")
     else
         if self.selectDetailItem ~= nil then
@@ -722,6 +721,11 @@ end
 function MapCtrl:_receiveWarehouseDetail(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createDetailItems(data, EMapSearchType.Warehouse, true)
+end
+--推广
+function MapCtrl:_receivePromotionDetail(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createDetailItems(data, EMapSearchType.Promotion, true)
 end
 
 ---

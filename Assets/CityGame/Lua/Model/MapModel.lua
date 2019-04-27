@@ -13,10 +13,12 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabSummary"), MapModel.n_OnReceiveLabSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoSummary"), MapModel.n_OnReceivePromoteSummary)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractGridDetail"), MapModel.n_OnReceiveSignDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoDetail"), MapModel.n_OnReceivePromotionDetail)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
 end
 
@@ -118,8 +120,8 @@ function MapModel.n_OnReceivePromoteSummary(stream)
     if stream == nil or stream == "" then
         return
     end
-    --local data = assert(pbl.decode("gs.MarketDetail", stream), "MapModel.n_OnReceiveLabSummary: stream == nil")
-    --MapCtrl._receivePromotionSummary(MapCtrl, data)
+    local data = assert(pbl.decode("gs.PromoSummary", stream), "MapModel.n_OnReceivePromoteSummary: stream == nil")
+    MapCtrl._receivePromotionSummary(MapCtrl, data)
 end
 --仓库摘要
 function MapModel.n_OnReceiveWarehouseSummary(stream)
@@ -163,4 +165,12 @@ function MapModel.n_OnReceiveWarehouseDetail(stream)
     end
     local data = assert(pbl.decode("gs.WareHouseDetail", stream), "MapModel.n_OnReceiveWarehouseDetail: stream == nil")
     MapCtrl._receiveWarehouseDetail(MapCtrl, data)
+end
+--仓库
+function MapModel.n_OnReceivePromotionDetail(stream)
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.PromoDetail", stream), "MapModel.n_OnReceivePromotionDetail: stream == nil")
+    MapCtrl._receivePromotionDetail(MapCtrl, data)
 end

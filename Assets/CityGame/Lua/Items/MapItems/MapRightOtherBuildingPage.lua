@@ -224,8 +224,8 @@ function MapRightOtherBuildingPage:close()
 end
 --去地图上的一个建筑
 function MapRightOtherBuildingPage:_goHereBtn()
-    MapBubbleManager.GoHereFunc(self.data.info)
-    local blockId = TerrainManager.GridIndexTurnBlockID(self.data.info.pos)
+    MapBubbleManager.GoHereFunc(self.data.pos)
+    local blockId = TerrainManager.GridIndexTurnBlockID(self.data.pos)
     local tempValue = DataManager.GetBaseBuildDataByID(blockId)
     if tempValue ~= nil then
         tempValue:OpenPanel()

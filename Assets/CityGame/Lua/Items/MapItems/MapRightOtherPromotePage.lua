@@ -21,15 +21,19 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
     self.viewTrans.localScale = Vector3.one
     self.data = data
 
+    local promotType = {}
+    for i, key in pairs(self.data.typeIds) do
+        promotType[i] = self.data.CurAbilitys[i]
+    end
     if typeData.typeId == EMapSearchType.Promotion then
-        if typeData.detailId == EMapPromotionType.Food then
-            --LoadSprite(MapPromotionInfoConfig[1].imgPath, self.iconImg, true)
-            --self.infoText.text = "Inventing new goods"
-            --self.valueText.text = self.data.goodProb.."%"
-            --self.infoText.text = GetLanguage(12345678)
-        elseif typeData.detailId == EMapTechnologyType.TechEva then
+        local type1 = MapPromotionConfig[typeData.detailId]
+        local value = promotType[type1]
 
-        end
+        LoadSprite(MapPromotionInfoConfig[typeData.detailId].imgPath, self.iconImg, true)
+        --self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
+        self.infoText.text = MapPromotionInfoConfig[typeData.detailId].languageId
+        self.valueText.text = "+"..value.."/h"
+
         self:_language()
         self:_createPromotion()
         self:_sortInfoItems()
@@ -48,14 +52,17 @@ function MapRightOtherPromotePage:_sortInfoItems()
 end
 --推广
 function MapRightOtherPromotePage:_createPromotion()
-    --local signInfo = self.data.contractInfo
-    --local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherPromotePage.moneyColor, GetClientPriceString(signInfo.price))
-    --local data2 = {infoTypeStr = "Price", value = str2}  --价格
-    --self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
-    --
-    --local str1 = signInfo.hours.."h"
-    --local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
-    --self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
+    local str2 = string.format("<color=%s>E%s</color>/h", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.pricePerHour))
+    local data2 = {infoTypeStr = "Price", value = str2}  --价格
+    self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
+
+    local str1 = self.data.remainTime.."h"
+    local data1 = {infoTypeStr = "PromotionTime", value = str1}  --时间
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
+
+    local str3 = self.data.queuedTimes.."h"
+    local data3 = {infoTypeStr = "Queued", value = str3}  --
+    self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)
 end
 --
 function MapRightOtherPromotePage:_createShowItem(data, parentTrans, hasDetail)
@@ -89,7 +96,7 @@ function MapRightOtherPromotePage:_cleanItems()
 end
 --多语言
 function MapRightOtherPromotePage:_language()
-    self.text01.text = GetLanguage(12345678)
+    --self.text01.text = GetLanguage(12345678)
 end
 --关闭
 function MapRightOtherPromotePage:close()

@@ -206,7 +206,7 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
                 this._createSummaryItems(temp)
             end
         end
-    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing or summaryType == EMapSearchType.Warehouse then
+    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing or summaryType == EMapSearchType.Warehouse or summaryType == EMapSearchType.Promotion then
         for i, value in pairs(data.info) do
             if value.count > 0 then
                 local temp = {num = value.count, idx = value.idx}
@@ -240,23 +240,27 @@ end
 function MapBubbleManager._createDetailByType(typeId, data)
     if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
         for i, value in pairs(data.info) do
-            if value.b ~= nil and value.b.sale ~= nil then
+            if value.b ~= nil then
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
                 for i, building in pairs(value.b) do
-                    this._checkDetailTable(collectionId)
-                    local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
-                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                    if building.sale ~= nil then
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                    end
                 end
             end
         end
-    elseif typeId == EMapSearchType.Technology and data.info ~= nil then
-        for i, value in pairs(data.info) do
-            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
-            if value.b ~= nil then
-                for i, building in pairs(value.b) do
-                    this._checkDetailTable(collectionId)
-                    local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
-                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+    elseif typeId == EMapSearchType.Technology or typeId == EMapSearchType.Promotion then
+        if data.info ~= nil then
+            for i, value in pairs(data.info) do
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+                if value.b ~= nil then
+                    for i, building in pairs(value.b) do
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                    end
                 end
             end
         end
@@ -493,10 +497,10 @@ function MapBubbleManager.closePanelFunc()
     this.cleanBuildingItems()
 end
 ---传data.buildingBase
-function MapBubbleManager.GoHereFunc(data)
+function MapBubbleManager.GoHereFunc(pos)
     UIPanel.CloseAllPageExceptMain()
-    local pos = Vector3.New(data.pos.x,0,data.pos.y)
-    CameraMove.MoveCameraToPos(pos)
+    local pos1 = Vector3.New(pos.x,0,pos.y)
+    CameraMove.MoveCameraToPos(pos1)
 end
 --土地交易查询变化  --AOI
 function MapBubbleManager.groundTransChange(blockId, data)

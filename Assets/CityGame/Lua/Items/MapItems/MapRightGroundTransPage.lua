@@ -80,7 +80,7 @@ end
 function MapRightGroundTransPage:_goHereBtn()
     local tempServerPos = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
     local temp = {x = tempServerPos.x, y = tempServerPos.z}
-    MapBubbleManager.GoHereFunc({pos = temp})
+    MapBubbleManager.GoHereFunc(temp)
 end
 --
 function MapRightGroundTransPage:_initPersonalInfo(info)

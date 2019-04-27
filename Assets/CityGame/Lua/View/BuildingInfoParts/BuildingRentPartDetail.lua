@@ -76,5 +76,5 @@ end
 
 --改变房租
 function BuildingRentPartDetail:_reqHouseChangeRent(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = self.m_data.info.id, rent = price})
+    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = self.m_data.info.id, rent = GetServerPriceNumber(price)})
 end

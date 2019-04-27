@@ -47,11 +47,12 @@ function BuildingTitleItem:SetName()
     elseif self.data == 4 then
         self.nameText.text = "住宅"
     elseif self.data == 5 then
-        self.nameText.text = "学院"
+        self.nameText.text = "研究所"
     elseif self.data == 6 then
         self.nameText.text = "推广公司"
     elseif self.data == 7 then
         self.nameText.text = "仓库"
+        self.prefab:SetActive(false)
     end
 end
 

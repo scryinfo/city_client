@@ -5,6 +5,8 @@
 ---
 
 BuildingUpperItem = class('BuildingUpperItem')
+BuildingUpperItem.static.NameColor = "#FFD562" -- 建筑名字颜色
+BuildingUpperItem.static.BuildingTypeColor = "#EFEFEF" -- 建筑类型颜色
 
 --初始化方法
 function BuildingUpperItem:initialize(viewRect)
@@ -69,16 +71,17 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
     self.data = data
     self.closeCallBack = closeCallBack
     local name = data.name or "SRCY CITY"
-    self.nameText.text = name .. GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
-    self.peopleNumberText.text = "1000"
+    --self.nameText.text = name .. GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
+    self.nameText.text = string.format("<color=%s>%s</color> <color=%s><b>%s</b></color>", BuildingUpperItem.static.NameColor, name, BuildingUpperItem.static.BuildingTypeColor, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
+    self.peopleNumberText.text = tostring(data.todayVisitor)
     -- 建筑类型
     local type = string.sub(tostring(data.mId), 1, 2)
     if type == "13" or type == "14" then
         self.gradeBg.localScale = Vector3.one
+        self.gradeText.text = math.ceil((data.brand + data.quality + 2) * 25)   -- 公式，必改
     else
         self.gradeBg.localScale = Vector3.zero
     end
-    self.gradeText.text = "99"
     --self.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[data.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
     self.showBubble = data.showBubble
 

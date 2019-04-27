@@ -196,7 +196,7 @@ BuildingType =
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
 	RetailShop = 6,  --零售店
-	TalentCenter = 7,--人才中心
+	WareHouse = 7,--集散中心
 }
 --建筑所属
 Buildingowner=

@@ -14,5 +14,13 @@ end
 
 function BuidingWareHousePanel.InitPanel()
     this.groupTrans = transform:Find("MainGroup")
-    this.backBtn = transform:Find("topRoot/WarehouseTop/backBtn")
+    this.sentspaceBtn = transform:Find("sentspace")
+    this.closeBtn = transform:Find("topRoot/BuildingTopItem/backBtn")
+    this.openbuildingBtn = transform:Find("topRoot/OpenBusinessItem/openBtn")
+    this.spaceText = transform:Find("sentspace/main/space/count"):GetComponent("Text")
+    this.priceText = transform:Find("sentspace/main/price/count"):GetComponent("Text")
+    this.timeText = transform:Find("sentspace/main/time/count"):GetComponent("Text")
+    this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
+    this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
+
 end

@@ -27,7 +27,7 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
-    self.xBtn.onClick:RemoveAllListeners()
+    --self.xBtn.onClick:RemoveAllListeners()
 end
 --
 function TurnoverDetailPart:RefreshData(data)
@@ -58,7 +58,7 @@ function TurnoverDetailPart:_initFunc()
     local msgId = pbl.enum("sscode.OpCode","queryBuildingIncomeMap")
     local lMsg = { id = self.m_data.insId }
     local pMsg = assert(pbl.encode("ss.Id", lMsg))
-    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
 function TurnoverDetailPart:OnXBtn(go)

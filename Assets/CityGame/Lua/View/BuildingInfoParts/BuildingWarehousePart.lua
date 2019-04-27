@@ -38,7 +38,6 @@ function BuildingWarehousePart:_getComponent(transform)
     self.numberText = transform:Find("Top/capacitySlider/numberText"):GetComponent("Text")
     self.unselectTitleText = transform:Find("UnselectBtn/titleText"):GetComponent("Text")
     self.selectTitleText = transform:Find("SelectBtn/titleText"):GetComponent("Text")
-
 end
 
 function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)

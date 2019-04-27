@@ -59,9 +59,7 @@ MapGameObjectsConfig = {
             ["Name"] = "HomeHouse_3",
             ["PlayerBuildingBaseDataID"] = 1400003,
             ["InitCount"] = 64,
-        }
-
-
+        },
         {   --研究所1
             ["Name"] = "TechnologyBuilding_1",
             ["PlayerBuildingBaseDataID"] = 1500001,

@@ -64,6 +64,9 @@ function BaseBuildModel:OpenPanel()
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
         --Event.Brocast("m_detailPublicFacility",instanceID)
         ct.OpenCtrl("MunicipalCtrl",{insId=instanceID})
+    elseif typeID == 1700001 or typeID == 1700002 or typeID == 1700003 then    --集散中心
+        --Event.Brocast("m_detailPublicFacility",instanceID)
+        ct.OpenCtrl("BuidingWareHouseCtrl",{insId=instanceID})
     end
 end
 

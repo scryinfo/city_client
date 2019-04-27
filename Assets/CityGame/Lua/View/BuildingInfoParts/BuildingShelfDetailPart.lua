@@ -75,7 +75,7 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
-    if next(shelfData) == nil then
+    if not shelfData then
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.ScrollView.transform.localScale = Vector3.zero

@@ -61,6 +61,9 @@ function BuildingSignPart:_getComponent(transform)
 end
 --
 function BuildingSignPart:_initFunc()
+    if self.m_data.contractInfo == nil then
+        return
+    end
     local contractInfo = self.m_data.contractInfo
     if contractInfo.isOpen == false then
         self:toggleSignState(BuildingSignPart.ESignState.NotSet)

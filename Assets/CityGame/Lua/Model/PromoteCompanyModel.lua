@@ -89,7 +89,7 @@ function PromoteCompanyModel:m_PromoAbilityHistory(buildingId)
     --if tonumber(ts.second) > 0 then
     --    currentTime = currentTime - tonumber(ts.second)
     --end
-    currentTime = currentTime - 240          --提前24小时
+    currentTime = currentTime - 24*10          --提前24小时
     local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {1613 }, recordsCount = 24 }
 
     DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",lMsg)

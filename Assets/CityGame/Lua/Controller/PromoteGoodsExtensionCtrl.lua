@@ -128,7 +128,7 @@ end
 
 --打开曲线图
 function PromoteGoodsExtensionCtrl:OnCurve(go)
-    ct.OpenCtrl("PromoteCurveCtrl",go.m_data.insId)
+    --ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId})
 end
 
 --选择的商品

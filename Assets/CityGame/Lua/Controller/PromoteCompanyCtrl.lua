@@ -19,7 +19,7 @@ end
 
 function PromoteCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
+    --promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
     promoteBehaviour:AddClick(PromoteCompanyPanel.queue,self.OnQueue,self)
     promoteBehaviour:AddClick(PromoteCompanyPanel.open,self.OnOpen,self)
     self:initData()
@@ -85,6 +85,11 @@ end
 
 --建筑详情回调
 function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
+    if PromoteCompanyPanel.topItem ~= nil then
+        PromoteCompanyPanel.topItem:refreshData(detailData.info, function ()
+            self:OnBack(self)
+        end)
+    end
     local insId = self.m_data.insId
     self.m_data = detailData
     self.m_data.insId = insId  --temp
@@ -92,10 +97,9 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     if self.m_data.info.ownerId == myOwnerID then
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.30)
-            self.groupMgr:AddParts(TurnoverPart, 0.23)
-            --self.groupMgr:AddParts(BuildingShelfPart, 0.23)
-            --self.groupMgr:AddParts(BuildingSignPart, 0.23)
+            self.groupMgr:AddParts(AdvertisementPart, 0.38)
+            self.groupMgr:AddParts(TurnoverPart, 0.31)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.31)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else

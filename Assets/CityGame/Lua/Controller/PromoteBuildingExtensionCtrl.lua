@@ -95,7 +95,7 @@ end
 
 --打开曲线图
 function PromoteBuildingExtensionCtrl:OnCurve(go)
-    ct.OpenCtrl("PromoteCurveCtrl",go.m_data.insId)
+    --ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId})
 end
 
 --点击确定(自己)

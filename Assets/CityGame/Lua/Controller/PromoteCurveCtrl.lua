@@ -27,7 +27,7 @@ function PromoteCurveCtrl:Active()
 end
 
 function PromoteCurveCtrl:Refresh()
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
 end
 
 function PromoteCurveCtrl:Hide()

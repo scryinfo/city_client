@@ -74,7 +74,7 @@ function PropertyTrueItem:ShowData(lv, cexp)
             end
         elseif self.data.bt == "ProduceSpeed" then
             speed = tostring(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "个/s"
-        elseif self.data.bt == "GeneralAbility" then
+        elseif self.data.bt == "PromotionAbility" then
             speed = tostring((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
         elseif self.data.bt == "InventionUpgrade" then
             speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"

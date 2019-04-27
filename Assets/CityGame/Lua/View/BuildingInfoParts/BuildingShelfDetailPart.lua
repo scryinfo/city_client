@@ -197,7 +197,18 @@ function BuildingShelfDetailPart:whetherSend(data)
         end
         for key,value in pairs(self.m_data.shelf.good) do
             if value.k.id == data.itemId then
-                Event.Brocast("m_ReqMaterialSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
+                if self.m_data.buildingType == BuildingType.MaterialFactory then
+                    --原料场
+                    Event.Brocast("m_ReqMaterialSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
+                elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+                    --加工厂
+                    Event.Brocast("m_ReqprocessingSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
+                elseif self.m_data.buildingType == BuildingType.RetailShop then
+                    --零售店
+                    Event.Brocast("m_ReqRetailStoresSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
+                elseif self.m_data.buildingType == BuildingType.TalentCenter then
+                    --集散中心
+                end
             end
         end
     end
@@ -210,8 +221,12 @@ function BuildingShelfDetailPart:downShelf(data)
             Event.Brocast("m_ReqMaterialShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             --加工厂
+            Event.Brocast("m_ReqprocessingShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            --零售店
+            Event.Brocast("m_ReqRetailStoresShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
         elseif self.m_data.buildingType == BuildingType.TalentCenter then
-            
+            --集散中心
         end
     end
 end
@@ -224,6 +239,14 @@ function BuildingShelfDetailPart:startBuy(dataInfo,targetBuildingId)
         end
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_ReqprocessingBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,value.dataInfo.price,targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
+        end
+    elseif self.m_data.buildingType == BuildingType.RetailShop then
+        --零售店
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_ReqRetailStoresBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,value.dataInfo.price,targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
+        end
     elseif self.m_data.buildingType == BuildingType.TalentCenter then
         --集散中心
     end

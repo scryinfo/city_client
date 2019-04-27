@@ -19,11 +19,11 @@ function RetailStoresModel:OnCreate()
     Event.AddListener("m_ReqRetailStoresShelfAdd",self.m_ReqShelfAdd,self)
     Event.AddListener("m_ReqRetailStoresModifyShelf",self.m_ReqModifyShelf,self)
     Event.AddListener("m_ReqRetailStoresShelfDel",self.m_ReqShelfDel,self)
-    Event.AddListener("m_ReqRetailStoresAddLine",self.m_ReqAddLine,self)
-    Event.AddListener("m_ReqRetailStoresDeleteLine",self.m_ReqDeleteLine,self)
+    --Event.AddListener("m_ReqRetailStoresAddLine",self.m_ReqAddLine,self)
+    --Event.AddListener("m_ReqRetailStoresDeleteLine",self.m_ReqDeleteLine,self)
     Event.AddListener("m_ReqRetailStoresBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.AddListener("m_ReqRetailStoresDelItem",self.m_ReqDelItem,self)
-    Event.AddListener("m_ReqRetailStoresSetLineOrder",self.m_ReqSetLineOrder,self)
+    --Event.AddListener("m_ReqRetailStoresSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqRetailStoresSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.AddListener("m_ReqRetailStoresAddShoppingCart",self.m_ReqAddShoppingCart,self)
 
@@ -57,11 +57,11 @@ function RetailStoresModel:Close()
     Event.RemoveListener("m_ReqRetailStoresShelfAdd",self.m_ReqShelfAdd,self)
     Event.RemoveListener("m_ReqRetailStoresModifyShelf",self.m_ReqModifyShelf,self)
     Event.RemoveListener("m_ReqRetailStoresShelfDel",self.m_ReqShelfDel,self)
-    Event.RemoveListener("m_ReqRetailStoresAddLine",self.m_ReqAddLine,self)
-    Event.RemoveListener("m_ReqRetailStoresDeleteLine",self.m_ReqDeleteLine,self)
+    --Event.RemoveListener("m_ReqRetailStoresAddLine",self.m_ReqAddLine,self)
+    --Event.RemoveListener("m_ReqRetailStoresDeleteLine",self.m_ReqDeleteLine,self)
     Event.RemoveListener("m_ReqRetailStoresBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.RemoveListener("m_ReqRetailStoresDelItem",self.m_ReqDelItem,self)
-    Event.RemoveListener("m_ReqRetailStoresSetLineOrder",self.m_ReqSetLineOrder,self)
+    --Event.RemoveListener("m_ReqRetailStoresSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqRetailStoresSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.RemoveListener("m_ReqRetailStoresAddShoppingCart",self.m_ReqAddShoppingCart,self)
 
@@ -115,14 +115,14 @@ end
 function RetailStoresModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
     self.funModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
 end
---添加生产线
-function RetailStoresModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
-    self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
-end
---删除生产线
-function RetailStoresModel:m_ReqDeleteLine(buildingId,lineId)
-    self.funModel:m_ReqDeleteLine(buildingId,lineId)
-end
+----添加生产线
+--function RetailStoresModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
+--    self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
+--end
+----删除生产线
+--function RetailStoresModel:m_ReqDeleteLine(buildingId,lineId)
+--    self.funModel:m_ReqDeleteLine(buildingId,lineId)
+--end
 --货架购买
 function RetailStoresModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
@@ -131,10 +131,10 @@ end
 function RetailStoresModel:m_ReqDelItem(buildingId,id,producerId,qty)
     self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
 end
---生产线置顶
-function RetailStoresModel:m_ReqSetLineOrder(buildingId,lineId,pos)
-    self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
-end
+----生产线置顶
+--function RetailStoresModel:m_ReqSetLineOrder(buildingId,lineId,pos)
+--    self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
+--end
 ----自动补货
 function RetailStoresModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)

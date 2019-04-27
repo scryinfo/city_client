@@ -16,12 +16,16 @@ end
 
 --启动事件--gs
 function BuidingWareHouseModel:OnCreate()
+
+    Event.AddListener("m_WareHourseTransport",self.m_ReqBuildingTransport,self)
+
+
     --网络回调注册
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailWareHouse","gs.WareHouse",self.n_OnReceiveHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setWareHouseRent","gs.setWareHouseRent",self.n_OnReceiveSentWareHouseInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
 
 
     --本地的回调注册
@@ -29,7 +33,9 @@ function BuidingWareHouseModel:OnCreate()
     Event.AddListener("m_ReqHouseSetSalary", self.m_ReqHouseSetSalary, self)
 end
 
-
+function BuidingWareHouseModel:Close()
+    Event.RemoveListener("m_WareHourseTransport",self.m_ReqBuildingTransport,self)
+end
 --- 客户端请求 ---
 --获取建筑详情
 function BuidingWareHouseModel:m_ReqHouseDetailInfo(buildingId)
@@ -81,15 +87,15 @@ function BuidingWareHouseModel:n_OnReceiveSentWareHouseInfo(SentWareHouseInfo)
 end
 
 --运输
---function BuidingWareHouseModel:n_OnBuildingTransportInfo(data)
---    local bagId = DataManager.GetBagId()
---    local n = data.item.n
---    local itemId = data.item.key.id
---    local qty = data.item.key.qty
---    local producerId = data.item.key.producerId
---    if data.dst == bagId then
---        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
---    end
---    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
---end
+function BuidingWareHouseModel:n_OnBuildingTransportInfo(data)
+    local bagId = DataManager.GetBagId()
+    local n = data.item.n
+    local itemId = data.item.key.id
+    local qty = data.item.key.qty
+    local producerId = data.item.key.producerId
+    if data.dst == bagId then
+        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+    end
+    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
+end
 

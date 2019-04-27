@@ -1,66 +1,66 @@
 Material={
-[2101001]={
-["itemId"]=2101001,
-["name"]="小麦",
-["size"]=1,
-["des"]="小麦",
-["img"]="Assets/CityGame/Resources/View/iconImg/2101001.png",
-["numOneSec"]=0.02
-},
-[2101002]={
-["itemId"]=2101002,
-["name"]="猪肉",
-["size"]=1,
-["des"]="猪肉",
-["img"]="Assets/CityGame/Resources/View/iconImg/2101002.png",
-["numOneSec"]=0.01
-},
-[2101003]={
-["itemId"]=2101003,
-["name"]="鸡蛋",
-["size"]=1,
-["des"]="鸡蛋",
-["img"]="Assets/CityGame/Resources/View/iconImg/2101003.png",
-["numOneSec"]=0.013
-},
-[2101004]={
-["itemId"]=2101004,
-["name"]="奶酪",
-["size"]=1,
-["des"]="奶酪",
-["img"]="Assets/CityGame/Resources/View/iconImg/2101004.png",
-["numOneSec"]=0.004
-},
-[2102001]={
-["itemId"]=2102001,
-["name"]="棉",
-["size"]=1,
-["des"]="棉",
-["img"]="Assets/CityGame/Resources/View/iconImg/2102001.png",
-["numOneSec"]=0.008
-},
-[2102002]={
-["itemId"]=2102002,
-["name"]="珊瑚绒",
-["size"]=1,
-["des"]="珊瑚绒",
-["img"]="Assets/CityGame/Resources/View/iconImg/2102002.png",
-["numOneSec"]=0.005
-},
-[2102003]={
-["itemId"]=2102003,
-["name"]="树胶",
-["size"]=1,
-["des"]="树胶",
-["img"]="Assets/CityGame/Resources/View/iconImg/2102003.png",
-["numOneSec"]=0.0065
-},
-[2102004]={
-["itemId"]=2102004,
-["name"]="呢绒",
-["size"]=1,
-["des"]="呢绒",
-["img"]="Assets/CityGame/Resources/View/iconImg/2102004.png",
-["numOneSec"]=0.0015
-}
+    [2101001]={
+        ["itemId"]=2101001,
+        ["name"]="小麦",
+        ["size"]=1,
+        ["des"]="小麦",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2101001.png",
+        ["numOneSec"]=0.001
+    },
+    [2101002]={
+        ["itemId"]=2101002,
+        ["name"]="猪肉",
+        ["size"]=1,
+        ["des"]="猪肉",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2101002.png",
+        ["numOneSec"]=0.0005
+    },
+    [2101003]={
+        ["itemId"]=2101003,
+        ["name"]="鸡蛋",
+        ["size"]=1,
+        ["des"]="鸡蛋",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2101003.png",
+        ["numOneSec"]=0.00065
+    },
+    [2101004]={
+        ["itemId"]=2101004,
+        ["name"]="奶酪",
+        ["size"]=1,
+        ["des"]="奶酪",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2101004.png",
+        ["numOneSec"]=0.0002
+    },
+    [2102001]={
+        ["itemId"]=2102001,
+        ["name"]="棉",
+        ["size"]=1,
+        ["des"]="棉",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2102001.png",
+        ["numOneSec"]=0.0004
+    },
+    [2102002]={
+        ["itemId"]=2102002,
+        ["name"]="珊瑚绒",
+        ["size"]=1,
+        ["des"]="珊瑚绒",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2102002.png",
+        ["numOneSec"]=0.00025
+    },
+    [2102003]={
+        ["itemId"]=2102003,
+        ["name"]="树胶",
+        ["size"]=1,
+        ["des"]="树胶",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2102003.png",
+        ["numOneSec"]=0.000325
+    },
+    [2102004]={
+        ["itemId"]=2102004,
+        ["name"]="呢绒",
+        ["size"]=1,
+        ["des"]="呢绒",
+        ["img"]="Assets/CityGame/Resources/View/iconImg/2102004.png",
+        ["numOneSec"]=0.000075
+    }
 }

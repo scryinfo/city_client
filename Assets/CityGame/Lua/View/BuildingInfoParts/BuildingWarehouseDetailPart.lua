@@ -73,6 +73,10 @@ function BuildingWarehouseDetailPart:_ResetTransform()
     if next(self.warehouseDatas) ~= nil then
         self:CloseDestroy(self.warehouseDatas)
     end
+    --退出建筑是清空运输表
+    if next(self.transportTab) ~= nil then
+        self.transportTab = {}
+    end
 end
 
 function BuildingWarehouseDetailPart:_RemoveClick()
@@ -83,12 +87,14 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
     Event.AddListener("startTransport",self.startTransport,self)
+    Event.AddListener("transportSucceed",self.transportSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
     Event.RemoveListener("startTransport",self.startTransport,self)
+    Event.RemoveListener("transportSucceed",self.transportSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -120,8 +126,12 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        self.transportBool = GoodsItemStateType.transport
-        self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        if #storeData == #self.warehouseDatas then
+            return
+        else
+            self.transportBool = GoodsItemStateType.transport
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
@@ -136,6 +146,7 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
     data.itemPrefabTab = self.transportTab
+    data.stateType = GoodsItemStateType.transport
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
@@ -164,10 +175,18 @@ end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_MaterialTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
-    end
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        --加工厂
+    elseif self.m_data.buildingType == BuildingType.WareHouse then
+        --集散中心
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_WareHourseTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+        end
+     end
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --刷新生产线生产出来商品，当前的仓库容量
@@ -186,7 +205,42 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         end
     end
 end
-
+--运输成功回调
+function BuildingWarehouseDetailPart:transportSucceed(data)
+    if data ~= nil then
+        --刷新仓库界面
+        for key,value in pairs(self.warehouseDatas) do
+            if value.itemId == data.item.key.id then
+                if value.dataInfo.n == data.item.n then
+                    self:deleteGoodsItem(self.warehouseDatas,key)
+                else
+                    value.dataInfo.n = value.dataInfo.n - data.item.n
+                    value.numberText.text = "×"..value.dataInfo.n
+                end
+            end
+        end
+        --刷新建筑数据
+        for key,value in pairs(self.m_data.store.inHand) do
+            if value.key.id == data.item.key.id then
+                if value.n == data.item.n then
+                    table.remove(self.m_data.store.inHand,key)
+                else
+                    value.n = value.n - data.item.n
+                end
+            end
+        end
+    end
+    --运输成功后，如果仓库是空的
+    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        self.noTip.transform.localScale = Vector3.one
+    end
+    self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+    self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
+    self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+    self.number.transform.localScale = Vector3.zero
+    self.transportTab = {}
+    UIPanel.ClosePage()
+end
 
 
 

@@ -20,14 +20,14 @@ function SetRenTableWareHouseCtrl:OnCreate(obj)
 end
 
 function SetRenTableWareHouseCtrl:Awake(go)
-    self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(SetRenTableWareHousePanel.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(SetRenTableWareHousePanel.startBtn.gameObject,self._clickstartBtn,self)
     self.luaBehaviour:AddClick(SetRenTableWareHousePanel.shutBtn.gameObject,self._clickshutBtn,self)
 end
 
-function SetRenTableWareHouseCtrl:Active()
+function SetRenTableWareHouseCtrl:Active(go)
+    --SetRenTableWareHousePanel.numSlider.maxValue = go.m_data.availableCapacity
     UIPanel.Active(self)
     self:_language()
 end
@@ -56,15 +56,15 @@ end
 
 --设置后确认刷新数据
 function SetRenTableWareHouseCtrl:_clickstartBtn(go)
-    local data = {}
-    data.buildingId = go.m_data.insId
-    data.rentCapacity = SetRenTableWareHousePanel.spaceText.text
-    data.rent = SetRenTableWareHousePanel.priceText.text
-    data.minHourToRent = SetRenTableWareHousePanel.mintimeText.text
-    data.maxHourToRent = SetRenTableWareHousePanel.maxtimeText.text
-    DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
-    DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSentHouseDetailInfo',data)
-    UIPanel.ClosePage()
+        local data = {}
+        data.buildingId = go.m_data.insId
+        data.rentCapacity = SetRenTableWareHousePanel.spaceText.text
+        data.rent = SetRenTableWareHousePanel.priceText.text
+        data.minHourToRent = SetRenTableWareHousePanel.mintimeText.text
+        data.maxHourToRent = SetRenTableWareHousePanel.maxtimeText.text
+        DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
+        DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSentHouseDetailInfo',data)
+        UIPanel.ClosePage()
 end
 
 --取消页面

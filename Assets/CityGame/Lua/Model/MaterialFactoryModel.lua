@@ -73,7 +73,8 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
+    --购物车
+    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
@@ -150,19 +151,21 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
-    local bagId = DataManager.GetBagId()
-    local n = data.item.n
-    local itemId = data.item.key.id
-    local qty = data.item.key.qty
-    local producerId = data.item.key.producerId
-    if data.dst == bagId then
-        Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    end
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
+    --local bagId = DataManager.GetBagId()
+    --local n = data.item.n
+    --local itemId = data.item.key.id
+    --local qty = data.item.key.qty
+    --local producerId = data.item.key.producerId
+    --if data.dst == bagId then
+    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
+    --end
+    Event.Brocast("transportSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
+    Event.Brocast("refreshShelfPartCount")
 end
 --修改货架价格
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
@@ -170,7 +173,8 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("downShelfSucceed",data)
+    Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)
@@ -194,7 +198,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'DestroyAfterRefresh',data)
+    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)

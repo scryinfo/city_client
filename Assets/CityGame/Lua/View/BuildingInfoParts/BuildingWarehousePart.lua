@@ -28,6 +28,7 @@ end
 function BuildingWarehousePart:_ResetTransform()
     self:_language()
     Event.RemoveListener("partUpdateCapacity",self.updateCapacity,self)
+    Event.RemoveListener("refreshWarehousePartCount",self.refreshWarehousePartCount,self)
 end
 
 function BuildingWarehousePart:_getComponent(transform)
@@ -43,6 +44,7 @@ end
 
 function BuildingWarehousePart:_InitChildClick(mainPanelLuaBehaviour)
     Event.AddListener("partUpdateCapacity",self.updateCapacity,self)
+    Event.AddListener("refreshWarehousePartCount",self.refreshWarehousePartCount,self)
 end
 
 function BuildingWarehousePart:_initFunc()
@@ -114,6 +116,10 @@ function BuildingWarehousePart:updateCapacity(data)
             end
         end
     end
+end
+--运输成功后，更新当前显示的数量
+function BuildingWarehousePart:refreshWarehousePartCount()
+    self:_initializeWarehouseCapacity()
 end
 
 

@@ -57,9 +57,10 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
         end)
     end
 
-    insId = self.m_data.insId
+    local insId = self.m_data.insId
     self.m_data = houseDetailInfo
     self.m_data.insId = insId  --temp
+    self.m_data.buildingType = BuildingType.WareHouse
 
     BuidingWareHousePanel.openBusinessItem:initData(houseDetailInfo.info, BuildingType.WareHouse)  --初始化
     BuidingWareHousePanel.spaceText.text = houseDetailInfo.rentCapacity

@@ -98,7 +98,7 @@ end
 
 --签约
 function PromoteCompanyModel:m_GetAllMyFlowSign(buildingId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",{buildingId = buildingId})
+    DataManager.ModelSendNetMes("gscode.OpCode", "adGetAllMyFlowSign","gs.GetAllMyFlowSign",{buildingId = buildingId})
 end
 
 --服务器回调
@@ -181,6 +181,8 @@ end
 --签约回调
 function PromoteCompanyModel:n_OnGetAllMyFlowSign(info)
     local a = info
+    --DataManager.ControllerRpcNoRet(self.insId,"AdBuildingSignDetailPart", 'm_GetAllMyFlowSign', info.info)
+    Event.Brocast("m_GetAllMyFlowSign",info.info)
 end
 
 --员工工资改变

@@ -21,9 +21,7 @@ end
 function PromoteCompanyPanel.InitPanel()
 
     this.groupTrans = transform:Find("MainGroup")
-    --this.back = transform:Find("top/return").gameObject
     this.topItem = BuildingUpperItem:new(transform:Find("top/BuildingUpperItem"))
-    --this.open = transform:Find("open").gameObject
     this.queue = transform:Find("quene").gameObject
     this.queneValue = transform:Find("quene/queneImage/queneText/queneValue"):GetComponent("Text")
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("top/OpenBusinessItem"))

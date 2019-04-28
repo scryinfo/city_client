@@ -185,6 +185,10 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
 end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
+    if ins.automaticSwitch.isOn == true then
+        Event.Brocast("SmallPop","请先关闭自动补货", 300)
+        return
+    end
     local data = {}
     data.itemId = ins.m_data.itemId
     data.number = ins.numberSlider.value
@@ -216,17 +220,19 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.numberSlider.value = 0
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
-    local data = {}
-    data.itemId = self.m_data.itemId
-    if not self.m_data.dataInfo.k then
-        data.producerId = self.m_data.dataInfo.key.producerId
-        data.qty = self.m_data.dataInfo.key.qty
-    else
-        data.producerId = self.m_data.dataInfo.k.producerId
-        data.qty = self.m_data.dataInfo.k.qty
+    if self.automaticSwitch.isOn ~= self.m_data.dataInfo.autoReplenish then
+        local data = {}
+        data.itemId = self.m_data.itemId
+        if not self.m_data.dataInfo.k then
+            data.producerId = self.m_data.dataInfo.key.producerId
+            data.qty = self.m_data.dataInfo.key.qty
+        else
+            data.producerId = self.m_data.dataInfo.k.producerId
+            data.qty = self.m_data.dataInfo.k.qty
+        end
+        data.switch = self.automaticSwitch.isOn
+        Event.Brocast("whetherSend",data)
     end
-    data.switch = self.automaticSwitch.isOn
-    Event.Brocast("whetherSend",data)
 end
 --滑动条更新文本
 function ShelfBoxCtrl:SlidingUpdateText()

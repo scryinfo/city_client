@@ -9,7 +9,7 @@ local StringSun = string.sub
 function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
-    self.dataInfo = dataInfo
+    self.dataInfo = ct.deepCopy(dataInfo)
     self.buildingId = stateType[1]
     self.isOther = stateType[2]
     self.buildingType = buildingType

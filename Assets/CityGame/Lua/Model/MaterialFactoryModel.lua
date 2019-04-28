@@ -225,8 +225,7 @@ function MaterialFactoryModel:n_OnSetLineOrderInform(data)
 end
 --自动补货
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
-    local aaa = data
-    local bbb = ""
+    Event.Brocast("replenishmentSucceed",data)
 end
 --添加购物车
 function MaterialFactoryModel:n_OnAddShoppingCart(data)

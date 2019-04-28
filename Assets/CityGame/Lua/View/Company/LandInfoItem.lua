@@ -5,6 +5,7 @@
 --- DateTime: 2019/3/28 16:30
 ---
 
+-- 公司、我的土地、土地的详细信息显示
 LandInfoItem = class("LandInfoItem")
 
 function LandInfoItem:initialize(prefab, data)
@@ -26,6 +27,7 @@ function LandInfoItem:initialize(prefab, data)
         self:_goPos()
     end)
 
+    -- 显示时，先重置他们的状态
     self.ownerNamText.text = ""
     self.rentNameText.text = ""
     self.moneyLineImage.localScale = Vector3.zero
@@ -83,7 +85,7 @@ function LandInfoItem:_showRenterName(playerData)
     self.rentNameText.text = playerData[1].companyName
 end
 
--- 跳转到场景
+-- 跳转到场景上土地的位置
 function LandInfoItem:_goPos()
     UIPanel.ClosePage()
     local id = TerrainManager.GridIndexTurnBlockID(self.data)

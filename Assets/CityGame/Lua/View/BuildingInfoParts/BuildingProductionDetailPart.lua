@@ -25,6 +25,7 @@ end
 --end
 function BuildingProductionDetailPart:Hide()
     BasePartDetail.Hide(self)
+    self.ScrollView.gameObject:SetActive(false)
     if next(self.waitingQueueIns) ~= nil then
         self:CloseDestroy(self.waitingQueueIns)
     end
@@ -78,6 +79,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     --rightRoot
     self.numberTipText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText"):GetComponent("Text")
     self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
+    self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
     self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
@@ -140,6 +142,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.lineNumberText.text = 0 .."/"..0
 
     else
+        self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one
         self.addBtn.transform.localScale = Vector3.zero
         self.nameText.text = GetLanguage(lineData[1].itemId)

@@ -71,7 +71,9 @@ function ShelfBoxCtrl:_getComponent(go)
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
     --detailsInfo
-    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberTip"):GetComponent("Text")
+    self.totalNumber = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
+    self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/totalNumberText"):GetComponent("Text")
+    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/numberTip"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/detailsInfo/numberSlider"):GetComponent("Slider")
     self.numberText = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.tipBtn = go.transform:Find("contentRoot/content/detailsInfo/tipBtn")
@@ -120,8 +122,18 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = self.m_data.dataInfo.n
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
+        if self.automaticSwitch.isOn == true then
+            self.numberSlider.transform.localScale = Vector3.zero
+            self.totalNumber.transform.localScale = Vector3.one
+            self.totalNumberText.text = "×"..self.numberSlider.maxValue
+        else
+            self.numberSlider.transform.localScale = Vector3.one
+            self.totalNumber.transform.localScale = Vector3.zero
+        end
     else
         --上架的时候打开时
+        self.numberSlider.transform.localScale = Vector3.one
+        self.totalNumber.transform.localScale = Vector3.zero
         self.downShelfBtn.transform.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.zero
         self.addShelfBtn.transform.localScale = Vector3.one
@@ -141,6 +153,7 @@ function ShelfBoxCtrl:_language()
     self.qualityText.text = "品质:"
     self.levelText.text = "奢侈等级:"
     self.numberTip.text = "销售数量"
+    self.totalNumber.text = "销售数量"
     self.tipText.text = "自动补货"
     self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
     self.priceTip.text = "价格"
@@ -194,11 +207,14 @@ function ShelfBoxCtrl:ToggleUndateText()
     if self.automaticSwitch.isOn == true then
         self.btnImage.localPosition = Vector2.New(45,0)
         self.numberSlider.value = self.numberSlider.maxValue
-        self.numberSlider.interactable = false
+        self.numberSlider.transform.localScale = Vector3.zero
+        self.totalNumber.transform.localScale = Vector3.one
+        self.totalNumberText.text = "×"..self.numberSlider.maxValue
     else
-        self.btnImage.localPosition = Vector2.New(-45,0)
-        self.numberSlider.interactable = true
+        self.numberSlider.transform.localScale = Vector3.one
+        self.totalNumber.transform.localScale = Vector3.zero
         self.numberSlider.value = 0
+        self.btnImage.localPosition = Vector2.New(-45,0)
     end
     local data = {}
     data.itemId = self.m_data.itemId

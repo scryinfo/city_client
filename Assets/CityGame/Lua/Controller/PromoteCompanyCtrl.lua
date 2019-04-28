@@ -97,9 +97,10 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     if self.m_data.info.ownerId == myOwnerID then
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.38)
-            self.groupMgr:AddParts(TurnoverPart, 0.31)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.31)
+            self.groupMgr:AddParts(AdvertisementPart, 0.30)
+            self.groupMgr:AddParts(TurnoverPart, 0.23)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
+            self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else

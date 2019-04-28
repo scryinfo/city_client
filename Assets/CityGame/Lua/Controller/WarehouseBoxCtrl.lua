@@ -131,6 +131,11 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     UIPanel.ClosePage()
 end
 --销毁商品
-function WarehouseBoxCtrl:_clickDeleBtn()
-
+function WarehouseBoxCtrl:_clickDeleBtn(ins)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    data.producerId = ins.m_data.dataInfo.key.producerId
+    data.qty = ins.m_data.dataInfo.key.qty
+    data.n = ins.m_data.dataInfo.n
+    ct.OpenCtrl("DeleteItemBoxCtrl",data)
 end

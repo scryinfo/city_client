@@ -128,8 +128,8 @@ function MaterialFactoryModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
 end
 --销毁仓库原料或商品
-function MaterialFactoryModel:m_ReqDelItem(buildingId,id,producerId,qty)
-    self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
+function MaterialFactoryModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
+    self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --生产线置顶
 function MaterialFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
@@ -216,7 +216,8 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
+    Event.Brocast("deleteSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)

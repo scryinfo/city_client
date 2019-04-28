@@ -60,6 +60,9 @@ function BuildingSignDetailPart:_ResetTransform()
     self.tipRoot.localScale = Vector3.zero
     self:_language()
     self:_setTextSuitableWidth()
+
+    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
+    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
 end
 --
 function BuildingSignDetailPart:_RemoveClick()
@@ -105,6 +108,8 @@ end
 --
 function BuildingSignDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
+    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
 end
 --
 function BuildingSignDetailPart:_getComponent(transform)
@@ -197,26 +202,22 @@ function BuildingSignDetailPart:n_OnBuildingCurve(info)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
     local minute = tonumber(ts.minute)
-    local hour = tonumber(ts.hour)
     if second ~= 0 then
         currentTime = currentTime -second
     end
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    if hour ~= 0 then
-        currentTime = currentTime - hour * 3600
-    end
-    currentTime = math.floor(currentTime)       --当天0点的时间
-    local monthAgo = currentTime - 86400        --1天前的0点
+    currentTime = math.floor(currentTime)               --当前小时数-整数
+    local monthAgo = currentTime - 86400 + 3600         --1天前的0点
     local updataTime = monthAgo
     local time = {}
     local boundaryLine = {}
     local turnoverTab = {}
 
     for i = 1, 24 do
-        if tonumber(getFormatUnixTime(updataTime).hour) == 1 then
-            time[i] = getFormatUnixTime(updataTime).day .. "." .. getFormatUnixTime(updataTime).hour
+        if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
+            time[i] = getFormatUnixTime(updataTime).hour
             table.insert(boundaryLine,(updataTime - monthAgo + 3600) / 3600 * 118)
         else
             time[i] = tostring(getFormatUnixTime(updataTime).hour)
@@ -227,7 +228,7 @@ function BuildingSignDetailPart:n_OnBuildingCurve(info)
         if info.nodes ~= nil then
             for k, v in pairs(info.nodes) do
                 if updataTime == v.time / 1000 then
-                    turnoverTab[i].flow = tonumber(GetClientPriceString(v.flow))  --具体字段
+                    turnoverTab[i].flow = tonumber(GetClientPriceString(v.flow))
                 end
             end
         end
@@ -254,7 +255,11 @@ function BuildingSignDetailPart:n_OnBuildingCurve(info)
         if scale == 0 then
             turnoverVet[i] = v
         else
-            turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
+            if scale == 0 then
+                turnoverVet[i] = Vector2.New(v.x, v.y)
+            else
+                turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
+            end
         end
     end
     self.slide:SetXScaleValue(time,118)

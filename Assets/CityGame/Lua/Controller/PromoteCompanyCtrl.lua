@@ -117,6 +117,10 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
         end
     end
     PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
+    --历史记录测试
+    UnitTest.Exec_now("abel_0426_AbilityHistory", "e_AbilityHistory",self.m_data.insId)
+    --人流量签约列表测试
+    UnitTest.Exec_now("abel_0428_queryflowList", "e_queryflowList",self.m_data.insId)
 end
 
 --推广能力回调

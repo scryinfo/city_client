@@ -4,6 +4,7 @@
 --- DateTime: 2019/3/28 10:27
 ---
 
+-- 公司、我的土地、土地类型显示，可以点击，显示该类土地
 LandTitleItem = class("LandTitleItem")
 LandTitleItem.static.NomalNameColor = Vector3.New(51, 51, 51) -- 默认的名字颜色
 LandTitleItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
@@ -60,7 +61,7 @@ function LandTitleItem:SetNumber(number)
     end
 end
 
--- 设置是否选中
+-- 设置是否选中，并刷新它的显示
 function LandTitleItem:SetSelect(isSelect)
     self.landSelectBtn.interactable = isSelect
     local nameTextV3 = isSelect and LandTitleItem.static.NomalNameColor or LandTitleItem.static.SelectNameColor
@@ -71,7 +72,7 @@ function LandTitleItem:SetSelect(isSelect)
     self.bgImage.color = getColorByVector3(bgV3)
 end
 
--- 点击刷新
+-- 点击向服务器发送查询土地信息的消息，获得所需要的信息，并显示出来
 function LandTitleItem:_setContent()
     --self.isSelect = not self.isSelect
     CompanyCtrl.static.companyMgr.landTypeNum = self.data -- self.isSelect and self.data or 0

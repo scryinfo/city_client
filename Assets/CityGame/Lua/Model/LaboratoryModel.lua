@@ -77,6 +77,9 @@ end
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.data=data
+    self.data.probGood = self.data.probGood/1000
+    self.data.probEva = self.data.probEva/1000
+
     if data.completed  then
         if not data.inProcess then
             data.inProcess={}

@@ -19,31 +19,38 @@ end
 function SetOpenUpCtrl:Awake()
     setOpenUpBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.xBtn,self.OnxBtn,self);
-    setOpenUpBehaviour:AddClick(SetOpenUpPanel.open,self.OnOpen,self);
-    setOpenUpBehaviour:AddClick(SetOpenUpPanel.close,self.OnClose,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.confirm,self.OnConfirm,self);
+    SetOpenUpPanel.open.onValueChanged:AddListener(function(isOn)
+        self:OnOpen(isOn)
+    end)
     self:initData()
 end
 
 function SetOpenUpCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_Revenue",self.c_Revenue,self)
+    Event.AddListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
+    if self.m_data.takeOnNewOrder then
+        SetOpenUpPanel.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+        SetOpenUpPanel.time.text = math.floor(self.m_data.promRemainTime/3600000)
+    end
 end
 
 function SetOpenUpCtrl:Refresh()
-    self.openUp = self.m_data.openUp
+    self.openUp = self.m_data.takeOnNewOrder
     if self.openUp then
-        SetOpenUpPanel.open.transform.localScale = Vector3.one
-        SetOpenUpPanel.close.transform.localScale = Vector3.zero
+        SetOpenUpPanel.open.isOn = true
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)
+        SetOpenUpPanel.close.localScale = Vector3.zero
     else
-        SetOpenUpPanel.open.transform.localScale = Vector3.zero
-        SetOpenUpPanel.close.transform.localScale = Vector3.one
+        SetOpenUpPanel.open.isOn = false
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2, 0, 0)
+        SetOpenUpPanel.close.localScale = Vector3.one
     end
 end
 
 function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
-
+    Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
 end
 
 function SetOpenUpCtrl:OnCreate(obj)
@@ -57,19 +64,48 @@ function SetOpenUpCtrl:OnxBtn()
     UIPanel.ClosePage()
 end
 
---开启对外开放
-function SetOpenUpCtrl:OnOpen()
-    self.openUp = true
-end
-
---关闭对外开放
-function SetOpenUpCtrl:OnClose()
-    self.openUp = false
-   SetOpenUpPanel.price.text = "0"
-   SetOpenUpPanel.time.text = "0"
+--对外开放
+function SetOpenUpCtrl:OnOpen(isOn)
+    self.openUp = isOn
+    if isOn then
+        --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
+        SetOpenUpPanel.close.localScale = Vector3.zero
+    else
+        --SetOpenUpPanel.openBtn:DOMove(Vector3.New(2,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2,0,0)
+        SetOpenUpPanel.close.localScale = Vector3.one
+    end
 end
 
 --点击确定
-function SetOpenUpCtrl:OnConfirm()
+function SetOpenUpCtrl:OnConfirm(go)
+    if SetOpenUpPanel.price.text == "" or SetOpenUpPanel.time.text == "" then
+        Event.Brocast("SmallPop","时间或价格不能为空",300)
+        return
+    end
+    if go.openUp then
+        if tonumber(SetOpenUpPanel.time.text ) == 0 then
+            Event.Brocast("SmallPop","时间不能为0",300)
+        else
+            local price = tonumber(SetOpenUpPanel.price.text)
+            local time = tonumber(SetOpenUpPanel.time.text)
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,true,price,time)
+        end
+    else
+        if not go.m_data.takeOnNewOrder then
+            UIPanel.ClosePage()
+        else
+            if  tonumber(SetOpenUpPanel.time.text ) == 0 then
+                Event.Brocast("SmallPop","时间不能为0",300)
+            else
+                DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,false,tonumber(SetOpenUpPanel.price.text), tonumber(SetOpenUpPanel.time.text))
+            end
+        end
+    end
+end
 
+--关闭界面
+function SetOpenUpCtrl:c_CloseSetOpenUp()
+    UIPanel.ClosePage()
 end

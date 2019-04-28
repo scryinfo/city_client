@@ -4,10 +4,20 @@
 --- DateTime: 2019/4/10 17:31
 ---
 
+-- 公司、Eva、可加点属性item
 PropertyTrueItem = class("PropertyTrueItem")
 PropertyTrueItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
 PropertyTrueItem.static.PercentColor = "#10C4FE" -- 加成特殊颜色
 PropertyTrueItem.static.ExperienceColor = "#10C4FE" -- 经验特殊颜色
+PropertyTrueItem.static.BTypeIcon = -- b类型显示配置
+{
+    ["Quality"] = "Assets/CityGame/Resources/Atlas/Company/icon-quality-w.png",
+    ["ProduceSpeed"] = "Assets/CityGame/Resources/Atlas/Company/icon-produr-w.png",
+    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Company/icon-ad-w.png",
+    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-research-w.png",
+    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-eva-w-s.png",
+    ["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
+}
 
 -- 初始化
 function PropertyTrueItem:initialize(prefab, data, configData)
@@ -16,6 +26,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.configData = configData
 
     local transform = prefab.transform
+    self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.levelText = transform:Find("LevelText"):GetComponent("Text")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
     self.experienceText = transform:Find("ExperienceText"):GetComponent("Text")
@@ -28,17 +39,14 @@ function PropertyTrueItem:initialize(prefab, data, configData)
 
     self:_showBtnState(true)
     self:ShowData(self.data.lv, self.data.cexp)
+    LoadSprite(PropertyTrueItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
-    --self.addBtn.onClick:RemoveAllListeners()
     self.addBtn.onClick:AddListener(function ()
         self:_showBtnState(false)
-        --data.cexp = data.cexp + 100
-        --DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_UpdateMyEva', data)
     end)
 
     self.cancelBtn.onClick:AddListener(function ()
         self:_showBtnState(true)
-        --self:ShowData()
     end)
 
     self.sureBtn.onClick:AddListener(function ()
@@ -51,7 +59,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     end)
 end
 
--- 显示真实数据
+-- 显示真实数据（内有公式、要改）
 function PropertyTrueItem:ShowData(lv, cexp)
     if lv >= 1 then
         local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
@@ -63,7 +71,7 @@ function PropertyTrueItem:ShowData(lv, cexp)
             end
         elseif self.data.bt == "ProduceSpeed" then
             speed = tostring(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "个/s"
-        elseif self.data.bt == "GeneralAbility" then
+        elseif self.data.bt == "PromotionAbility" then
             speed = tostring((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
         elseif self.data.bt == "InventionUpgrade" then
             speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
@@ -82,7 +90,7 @@ function PropertyTrueItem:ShowData(lv, cexp)
     else
         self.nameNumberText.text = self.configData.name
     end
-    self.levelText.text = lv
+    self.levelText.text = string.format("Lv%s", lv)
     self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
     self.levelSlider.value = cexp / EvaUp[lv].upexp
     self.totalLevelNumberText.text = EvaUp[lv].upexp
@@ -128,7 +136,7 @@ function PropertyTrueItem:_addPoint()
         evaData.bt = 2
     elseif self.data.bt == "ProduceSpeed" then
         evaData.bt = 3
-    elseif self.data.bt == "GeneralAbility" then
+    elseif self.data.bt == "PromotionAbility" then
         evaData.bt = 4
     elseif self.data.bt == "InventionUpgrade" then
         evaData.bt = 5

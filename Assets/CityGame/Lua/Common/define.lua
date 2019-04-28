@@ -197,12 +197,6 @@ BuildingType =
 	RetailShop = 6,  --零售店
 	TalentCenter = 7,--人才中心
 }
---建筑所属
-Buildingowner=
-{
-   master=1,--主人的
-   other=2,--其他人的
-}
 
 LanguageType={
 	Chinese=0,

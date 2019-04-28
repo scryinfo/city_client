@@ -123,23 +123,10 @@ function BubbleMessageCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
-function BubbleMessageCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self,obj)
-end
-
-
 function BubbleMessageCtrl:Refresh()
     panel.inputFrame.text = ""
     DataManager.OpenDetailModel(BubbleMessageModel,OpenModelInsID.BubbleMessageCtrl)
     InsAndObjectPool(BubbleMessageCtrl.configPath,SmallBubbleItem,"View/BubbleItems/samllBubble",panel.scrollParent,self)
-end
-
-function  BubbleMessageCtrl:Hide()
-    UIPanel.Hide(self)
-end
-
-function BubbleMessageCtrl:Close()
-    UIPanel.Close(self)
 end
 
 function  BubbleMessageCtrl:Awake(go)
@@ -151,6 +138,7 @@ function  BubbleMessageCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.closeBtn.gameObject,self.c_OnClick_backBtn,self);
     LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.c_OnClick_confirm,self);
     LuaBehaviour:AddClick(panel.isShow.gameObject,self.c_OnClick_isShow,self);
+
 
 end
 

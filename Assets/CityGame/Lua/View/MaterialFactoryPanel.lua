@@ -16,7 +16,7 @@ end
 function MaterialFactoryPanel.InitPanel()
     this.groupTrans = transform:Find("bottomRoot")
     this.topRootTrans = transform:Find("topRoot")
-    this.topItem = BuildingTopItem:new(transform:Find("topRoot/BuildingTopItem"))
+    this.topItem = BuildingUpperItem:new(transform:Find("topRoot/BuildingUpperItem"))
 
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
 end

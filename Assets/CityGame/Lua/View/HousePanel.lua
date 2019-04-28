@@ -19,4 +19,7 @@ function HousePanel.InitPanel()
     this.topItem = BuildingUpperItem:new(transform:Find("topRoot/BuildingUpperItem"))
 
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
+
+
+    this.bubbleMessageBtn = transform:Find("BubbleMessageBtn").gameObject
 end

@@ -9,6 +9,17 @@ local pbl = pbl
 function GameMainInterfaceModel:initialize(insId)
     self.insId = insId
     self:OnCreate()
+    UpdateBeat:Add(self.Update, self)
+end
+
+function GameMainInterfaceModel:Update()
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
+        self:m_GetExchangeAmount()
+    end
+
+    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
+        self:m_GetPlayerGoodsCurve(1)
+    end
 end
 
 function GameMainInterfaceModel:OnCreate()
@@ -25,6 +36,9 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnAllExchangeAmount,self) --所有交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
+    --
+    DataManager.ModelRegisterNetMsg( nil ,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayExchangeAmount,self) --所有交易量
+    DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self) --查询城市广播
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
 end
@@ -50,8 +64,22 @@ function GameMainInterfaceModel:m_GetAllMails()
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
+----全城玩家交易量
+function GameMainInterfaceModel:m_GetExchangeAmount()
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerExchangeAmount")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+end
 
-function GameMainInterfaceModel:m_GetFriendInfo(friendsId)
+----全城玩家曲线图
+function GameMainInterfaceModel:m_GetPlayerGoodsCurve( id )
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerGoodsCurve")
+    local lMsg = { exchangeType = id }
+    local pMsg = assert(pbl.encode("ss.PlayerGoodsCurve", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+
+function GameMainInterfaceModel:m_GetFriendInfo( friendsId )
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = {friendsId}})
 end
 
@@ -84,8 +112,6 @@ end
 function GameMainInterfaceModel.m_ReqHouseSetSalary(self,id, price)
     DataManager.ModelSendNetMes("gscode.OpCode", "setSalary","gs.ByteNum",{ id = id, num = price})
 end
-
-
 
 --停止推送消息
 function GameMainInterfaceModel.m_stopListenBuildingDetailInform(ins,buildingId)
@@ -120,4 +146,13 @@ end
 --查询城市广播
 function GameMainInterfaceModel:n_OnCityBroadcasts(lMsg)
    Event.Brocast("c_CityBroadcasts",lMsg.cityBroadcast)
+end
+---全城玩家交易量
+function GameMainInterfaceModel:n_OnPlayExchangeAmount(lMsg)
+   prints("全城玩家交易量")
+end
+
+---全城玩家曲线图
+function GameMainInterfaceModel:n_OnCityPlayerGoodsCurve(lMsg)
+    prints("全城玩家曲线图")
 end

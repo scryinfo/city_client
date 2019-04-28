@@ -55,6 +55,7 @@ function ManageAdvertisementPosCtrl:Awake(go)
     self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.loopScrollDataSource.mProvideData =self.ReleaseData
     self.loopScrollDataSource.mClearData = self.CollectClearData
+
     local temp=DataManager.GetMyGoodLv()
 
     for i, v in pairs(temp) do

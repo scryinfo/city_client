@@ -6,108 +6,55 @@
 LaboratoryCtrl = class('LaboratoryCtrl',UIPanel)
 UIPanel:ResgisterOpen(LaboratoryCtrl)
 
+---====================================================================================框架函数==============================================================================================
 function LaboratoryCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+end
+
+--启动事件--
+function LaboratoryCtrl:OnCreate(go)
+    UIPanel.OnCreate(self,go)
 end
 function LaboratoryCtrl:bundleName()
     return "Assets/CityGame/Resources/View/LaboratoryPanel.prefab"
 end
-function LaboratoryCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self, obj)
-end
-local this
-function LaboratoryCtrl:Awake(go)
-    this = self
-    self.gameObject = go
-    self.laboratoryBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.backBtn.gameObject, self._backBtn, self)
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.changeNameBtn.gameObject, self._changeName, self)
-
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.centerBtn.gameObject, self._centerBtnFunc, self)
-    self.laboratoryBehaviour:AddClick(LaboratoryPanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
-end
+local this,panel
 function LaboratoryCtrl:Refresh()
-    --self:_initData()
     this:_initData()
 end
+panel=LaboratoryPanel
+function LaboratoryCtrl:Awake(go)
+    this = self
+    self.luaBehaviour= self.gameObject:GetComponent('LuaBehaviour')
+    --self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
 
---创建好建筑之后，每个建筑会存基本数据，比如id
-function LaboratoryCtrl:_initData()
-    if self.hasOpened then
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryCurrentInfo')
-    else
-        if self.m_data then
-            DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
-        end
-    end
+    self.luaBehaviour:AddClick(panel.centerBtn.gameObject, self._centerBtnFunc, self)
+    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 end
 
-function LaboratoryCtrl:_receiveLaboratoryDetailInfo(orderLineData, info, store)
-    Event.Brocast("c_GetBuildingInfo", info)
-    if info.state == "OPERATE" then
-        LaboratoryPanel.stopRootTran.localScale = Vector3.zero
-    else
-        LaboratoryPanel.stopRootTran.localScale = Vector3.one
-    end
-
-    self.hasOpened = true
-    LaboratoryPanel.nameText.text = info.name or "SRCY CITY"
-    LaboratoryPanel.buildingNameText.text = PlayerBuildingBaseData[info.mId].sizeName..PlayerBuildingBaseData[info.mId].typeName
-    LaboratoryCtrl.static.buildingBaseData = PlayerBuildingBaseData[info.mId]
-    self.m_data.ownerId = info.ownerId
-    self.m_data.mId = info.mId
-    self.m_data.orderLineData = orderLineData
-    self.m_data.info = info
-    self.m_data.store = store
-    if info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
-        self.m_data.isOther = true
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.zero
-        LaboratoryPanel.stopIconBtn.localScale = Vector3.zero
-    else
-        self.m_data.isOther = false
-        LaboratoryPanel.changeNameBtn.localScale = Vector3.one
-    end
-    self.m_data.buildingType = BuildingType.Laboratory
-    if self.laboratoryToggleGroup == nil then
-        self.laboratoryToggleGroup = BuildingInfoToggleGroupMgr:new(LaboratoryPanel.leftRootTran, LaboratoryPanel.rightRootTran, self.laboratoryBehaviour, self.m_data)
-    else
-        self.laboratoryToggleGroup:updateInfo(self.m_data)
+function LaboratoryCtrl:Hide()
+    UIPanel.Hide(self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
     end
 end
 
----更改名字
-function LaboratoryCtrl:_changeName(ins)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqChangeBuildingName', ins.m_data.insId, name)
-        ins:_updateName(name)
+function LaboratoryCtrl:Close()
+    UIPanel.Close(self)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
     end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
 end
----返回
-function LaboratoryCtrl:_backBtn(ins)
-    if ins.laboratoryToggleGroup ~= nil then
-        ins.laboratoryToggleGroup:cleanItems()
-    end
-    ins.hasOpened = false
-    --关闭界面时再发一遍详情
-    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', true)
-    UIPanel.ClosePage()
-end
----更改名字成功
-function LaboratoryCtrl:_updateName(name)
-    LaboratoryPanel.nameText.text = name
-end
+---===================================================================================点击函数==============================================================================================
 
 --点击中间按钮的方法
 function LaboratoryCtrl:_centerBtnFunc(ins)
-    if ins.m_data then
-        Event.Brocast("c_openBuildingInfo", ins.m_data.info)
+    if DataManager.GetMyOwnerID() ~= ins.m_data.info.ownerId then
+        return
     end
+    ct.OpenCtrl("BubbleMessageCtrl",ins.m_data.insId)
 end
 --点击开业按钮方法
 function LaboratoryCtrl:_openBuildingBtnFunc(ins)
@@ -116,4 +63,102 @@ function LaboratoryCtrl:_openBuildingBtnFunc(ins)
             DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'm_ReqLaboratoryDetailInfo', false)
         end)
     end
+end
+---返回
+function LaboratoryCtrl:_backBtn(ins)
+    if ins.laboratoryToggleGroup ~= nil then
+        ins.laboratoryToggleGroup:cleanItems()
+    end
+    ins.hasOpened = false
+    --关闭界面时再发一遍详情
+    DataManager.DetailModelRpcNoRet(ins.m_data.insId, 'mReqCloseRetailStores')
+    UIPanel.ClosePage()
+end
+---===================================================================================业务逻辑==============================================================================================
+
+--创建好建筑之后，每个建筑会存基本数据，比如id
+function LaboratoryCtrl:_initData()
+    --请求建筑详情
+    DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+    LaboratoryCtrl.static.insId= self.m_data.insId
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
+end
+
+function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
+    if panel.topItem ~= nil then
+        panel.topItem:refreshData(buildingInfo.info, function ()
+            self:_clickCloseBtn(self)
+        end)
+    end
+
+    LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
+    self.m_data=buildingInfo
+    buildingInfo.insId=buildingInfo.info.id
+    local info=buildingInfo.info
+    panel.openBusinessItem:initData(info,BuildingType.Laboratory)
+    --开业停业信息
+    Event.Brocast("c_GetBuildingInfo", info)
+    if info.state == "OPERATE" then
+        panel.stopRootTran.localScale = Vector3.zero
+        --判断是自己还是别人打开了界面
+        if info.ownerId ~= DataManager.GetMyOwnerID() then
+            self:other(buildingInfo)
+        else
+            self:owner(buildingInfo)
+        end
+    else
+        panel.groupTrans.localScale = Vector3.zero
+        panel.stopRootTran.localScale = Vector3.one
+    end
+
+end
+
+function LaboratoryCtrl:_refreshSalary(data)
+    if self.m_data ~= nil then
+        if self.m_data.info.state == "OPERATE" then
+            Event.Brocast("SmallPop", "设置工资成功", 300)
+        end
+        panel.groupTrans.localScale = Vector3.one
+        self:owner(self.m_data)
+    end
+end
+--自已
+function LaboratoryCtrl:owner(buildingInfo)
+    --刷新底部组件s
+    if self.groupMgr == nil then
+
+        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+
+        self.groupMgr:AddParts(ResearchPart,1/3)
+        self.groupMgr:AddParts(TurnoverPart,1/3)
+        self.groupMgr:AddParts(BuildingSalaryPart, 1/3)
+
+        self.groupMgr:RefreshData(buildingInfo)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(buildingInfo)
+    end
+end
+--他人
+function LaboratoryCtrl:other(buildingInfo)
+    --刷新底部组件
+    if self.groupMgr == nil then
+
+        self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
+        self.groupMgr:AddParts(ResearchPart,1)
+        self.groupMgr:RefreshData(buildingInfo)
+        self.groupMgr:TurnOffAllOptions()
+    else
+        self.groupMgr:RefreshData(buildingInfo)
+    end
+end
+
+function LaboratoryCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+    self.m_data = nil
+    UIPanel.ClosePage()
 end

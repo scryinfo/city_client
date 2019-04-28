@@ -66,6 +66,7 @@ function CompanyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 
+    -- 多语言适配
     --CompanyPanel.incomeTitle.text = GetLanguage(17010002)
     --CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
     --CompanyPanel.tips.text = GetLanguage(17010005)
@@ -111,11 +112,13 @@ function CompanyCtrl:OnBack(go)
     UIPanel.ClosePage()
 end
 
+-- 显示基本信息
 function CompanyCtrl:OnInfo(go)
     PlayMusEff(1002)
     go:_showMainRoot(1)
 end
 
+-- 显示土地信息
 function CompanyCtrl:OnLand(go)
     PlayMusEff(1002)
     go:_showMainRoot(2)
@@ -128,11 +131,12 @@ function CompanyCtrl:OnLand(go)
     end
 end
 
+-- 显示建筑信息
 function CompanyCtrl:OnBuilding(go)
     PlayMusEff(1002)
     go:_showMainRoot(3)
     -- 建筑选项生成
-    CompanyCtrl.static.companyMgr.buildingTypeNum = 0 -- 0 全部 1 原料厂 2 加工厂 3 零售店 4 推广公司 5 学院 6 住宅 7 仓库
+    CompanyCtrl.static.companyMgr.buildingTypeNum = 0 -- 0 全部 1 原料厂 2 加工厂 3 零售店 4 推广公司 5 研究所 6 住宅 7 仓库
     if CompanyCtrl.static.companyMgr:GetBuildingTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
         CompanyPanel.buildingTitleRt.anchoredPosition = Vector2.New(0,0)
@@ -141,18 +145,17 @@ function CompanyCtrl:OnBuilding(go)
     end
 end
 
+-- Eva加点
 function CompanyCtrl:OnEva(go)
     PlayMusEff(1002)
     go:_showMainRoot(4)
-    -- Eva选项生成
     go.isClickEva = true
     go:ShowOptionTwo(0)
     go:ShowOptionThere(0)
-    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
     CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
     if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-        CompanyPanel.optionOneScroll.localPosition = Vector3.zero --Vector2.New(0,0)
+        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
     else
         CompanyCtrl.static.companyMgr:CreateEvaTitleItem(go)
     end
@@ -173,7 +176,7 @@ end
 
 -- 初始数据
 function CompanyCtrl:_initData()
-    -- 整合各大分页的切换
+    -- 整合各大分页的切换(每添加一个，则需要把相应的节点传进来，即可实现不同节点的交替)
     self.mainSwitchTab =
     {
         {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot, transform = CompanyPanel.infoBtn.transform},
@@ -200,11 +203,14 @@ function CompanyCtrl:_showMainRoot(index)
             v.transform:Find("Text"):GetComponent("Text").color = getColorByVector3(Vector3.New(205, 219, 255))
         end
     end
-end
 
---function CompanyCtrl:_sendGroundInfo()
---    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
---end
+    -- 控制Eva标题的显示，解决设置content位置不成功的bug
+    if index == 4 then
+        CompanyPanel.optionOneObj:SetActive(true)
+    else
+        CompanyPanel.optionOneObj:SetActive(false)
+    end
+end
 
 -- 初始化基本数据
 function CompanyCtrl:_updateData()
@@ -227,7 +233,6 @@ function CompanyCtrl:_updateData()
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
     CompanyPanel.foundingTimeText.text = string.format(GetLanguage(17010004) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
-    --self:_showMainRoot(1)
     self:OnLand(self)
 end
 
@@ -269,6 +274,7 @@ CompanyCtrl.static.evaOptionThereClearData = function(transform)
 end
 
 -- 网络回调
+-- 服务器土地信息回调，创建新表，把各项信息分别放进去，用于显示各项土地个数，滑动则只显示选择的那一项
 function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     if groundInfos.info then
         CompanyCtrl.landTypeInfo = {{}, {}, {}, {}, {}}
@@ -312,6 +318,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, #CompanyCtrl.landInfos, "View/Company/LandInfoItem")
         CompanyPanel.landScroll:RefillCells()
     else
+        -- 当没有土地需要显示时，各项数据皆为零
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, 0, "View/Company/LandInfoItem")
         local landTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetLandTitleItem()
         for i, v in ipairs(landTitleItemMgrTab) do
@@ -323,6 +330,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     end
 end
 
+-- 服务器建筑信息显示回调，不需要自己分类，服务器已经分好了，根据他的type判断就好啦
 function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     if groundInfos.myBuildingInfo then
         CompanyCtrl.buildingInfos = {}
@@ -341,7 +349,6 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
                         break
                     end
                 end
-                --v:SetSelect(false)
             end
             buildingTitleItemMgrTab[1]:SetSelect(false)
             buildingTitleItemMgrTab[1]:SetNumber(#CompanyCtrl.buildingInfos)
@@ -375,6 +382,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, #CompanyCtrl.buildingInfos, "View/Company/BuildingInfoItem")
         CompanyPanel.buildingScroll:RefillCells()
     else
+        -- 当没有建筑需要显示时，各项数据皆为零
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
         local buildingTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetBuildingTitleItem()
         for i, v in ipairs(buildingTitleItemMgrTab) do
@@ -386,13 +394,13 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     end
 end
 
--- 查询Eva
+-- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
 function CompanyCtrl:c_OnQueryMyEva(evas)
     CompanyCtrl.static.companyMgr:SetEvaData(evas)
     CompanyCtrl.static.companyMgr:SetEvaDefaultState()
 end
 
--- 更新Eva
+-- 加点后，更新Eva信息
 function CompanyCtrl:c_OnUpdateMyEva(eva)
     local data = {}
     data.id = eva.id
@@ -410,12 +418,14 @@ function CompanyCtrl:c_OnUpdateMyEva(eva)
     CompanyCtrl.static.companyMgr:UpdateMyEvaProperty(data)
 end
 
+-- 刷新Eva滑动选项2的信息
 function CompanyCtrl:ShowOptionTwo(itemNumber)
     CompanyCtrl.optionTwoScript = {}
     CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
     CompanyPanel.optionTwoScroll:RefillCells()
 end
 
+-- 刷新Eva滑动选项3的信息
 function CompanyCtrl:ShowOptionThere(itemNumber)
     CompanyCtrl.optionThereScript = {}
     CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")

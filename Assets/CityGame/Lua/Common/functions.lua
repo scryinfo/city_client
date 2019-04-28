@@ -486,6 +486,22 @@ function creatGoods(path,parent)
 	return go
 end
 
+--生成预制(新版)
+function createPrefab(path, parent, callback)
+	panelMgr:LoadPrefab_A(path, nil, nil, function(ins, obj )
+		if obj ~= nil then
+			local go = ct.InstantiatePrefab(obj)
+			local rect = go.transform:GetComponent("RectTransform")
+			if parent then
+				go.transform:SetParent(parent.transform);--.transform
+			end
+			rect.transform.localScale = Vector3.one
+			rect.transform.localPosition=Vector3.zero
+			callback(go)
+		end
+	end)
+end
+
 function ct.file_saveString(filename, str)
 	local file
 	if filename == nil then
@@ -582,6 +598,19 @@ function UnLoadSprite(path)
 
 end
 
+function findByName(transform ,name)
+    local trim = transform:Find(name)
+	if trim  then
+		return trim
+	end
+	for i = 1, transform.childCount do
+		trim = findByName(transform:GetChild(i-1),name)
+		if trim then
+			return  trim
+		end
+	end
+   return nil
+end
 
 --屏幕坐标转化为真实坐标
 function ScreenPosTurnActualPos(targetScreenPos)
@@ -609,7 +638,7 @@ function GetServerPriceNumber(clientValue)
 end
 
 function prints(str)
-	ct.log("system","=================================================="..str)
+	ct.log("system",str.."==================================================")
 end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)

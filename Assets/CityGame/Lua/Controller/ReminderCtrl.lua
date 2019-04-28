@@ -28,6 +28,10 @@ end
 
 
 function ReminderCtrl:updateText(data)
-    self.panel.mainText.text = GetLanguage(40010009)
+    if data.content then
+        self.panel.mainText.text = data.content
+    else
+        self.panel.mainText.text = GetLanguage(40010009)
+    end
 end
 

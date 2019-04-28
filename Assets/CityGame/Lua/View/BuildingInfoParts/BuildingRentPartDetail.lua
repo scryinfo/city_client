@@ -5,6 +5,7 @@
 ---
 
 BuildingRentPartDetail = class('BuildingRentPartDetail', BasePartDetail)
+BuildingRentPartDetail.static.NumberColor = "#333333" -- 总容量的颜色
 
 function BuildingRentPartDetail:PrefabName()
     return "BuildingRentPartDetail"
@@ -14,11 +15,6 @@ function  BuildingRentPartDetail:_InitEvent()
 end
 
 function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
-    --self.wageSlider.onValueChanged:AddListener(function (value)
-    --    local tempValue = math.floor(value)
-    --    self:_showPercentValue(tempValue)
-    --end)
-    --
     mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
         self:clickCloseBtn()
     end , self)
@@ -43,7 +39,6 @@ function BuildingRentPartDetail:_RemoveEvent()
 end
 
 function BuildingRentPartDetail:_RemoveClick()
-    --self.wageSlider.onValueChanged:RemoveAllListeners()
     self.closeBtn.onClick:RemoveAllListeners()
     self.confirmBtn.onClick:RemoveAllListeners()
 end
@@ -54,7 +49,7 @@ function BuildingRentPartDetail:RefreshData(data)
         return
     end
     self.m_data = data
-    --self:_initFunc()
+    self:_initFunc()
 end
 
 function BuildingRentPartDetail:_InitTransform()
@@ -68,6 +63,7 @@ function BuildingRentPartDetail:_getComponent(transform)
     self.closeBtn = transform:Find("Root/CloseBtn"):GetComponent("Button")
     self.confirmBtn = transform:Find("Root/ConfirmBtn"):GetComponent("Button")
     self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
+    self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
 end
 
 function BuildingRentPartDetail:clickCloseBtn()
@@ -76,5 +72,12 @@ end
 
 --改变房租
 function BuildingRentPartDetail:_reqHouseChangeRent(price)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = self.m_data.info.id, rent = price})
+    DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = self.m_data.info.id, rent = GetServerPriceNumber(price)})
+end
+
+-- 显示入住人数和总人数
+function BuildingRentPartDetail:_initFunc()
+    if self.m_data and self.m_data.renter then
+        self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+    end
 end

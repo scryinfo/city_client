@@ -3,7 +3,7 @@
 
 ServerListCtrl = class('ServerListCtrl',UIPanel)
 UIPanel:ResgisterOpen(ServerListCtrl)
-ServerListCtrl.static.Server_PATH = "View/GoodsItem/ServerItem";
+ServerListCtrl.static.Server_PATH = "Assets/CityGame/Resources/View/GoodsItem/ServerItem.prefab";
 
 local serverListBehaviour;
 local tempBg = nil;
@@ -73,13 +73,14 @@ function ServerListCtrl:OnCreate(obj)
 
 function ServerListCtrl:_initData()
     for i, v in ipairs(self.m_data) do
-
-        local server_prefab = self:_createServerPab(ServerListCtrl.static.Server_PATH,ServerListPanel.content)
-        local serverLuaItem = ServerItem:new(serverListBehaviour,server_prefab,self,v,i)
+        local function callback(prefab)
+            self.serverLuaItem = ServerItem:new(serverListBehaviour,prefab,self,v,i)
+        end
+        createPrefab(ServerListCtrl.static.Server_PATH,ServerListPanel.content, callback)
         if not self.server then
             self.server = {}
         end
-        self.server[i] = serverLuaItem
+        self.server[i] = self.serverLuaItem
     end
 end
 

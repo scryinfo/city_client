@@ -870,9 +870,11 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     protoID = protoData.src
                 elseif protoData.id then
                     protoID = protoData.id
+                elseif protoData.sellerBuildingId then
+                    protoID = protoData.sellerBuildingId
                 end
             end
-            if protoID ~= nil then--服务器返回的数据有唯一ID
+            if protoID  ~= nil then--服务器返回的数据有唯一ID
                 for key, call in pairs(ModelNetMsgStack[newMsgId]) do
                     if key == protoID then
                         for i, func in pairs(ModelNetMsgStack[newMsgId][key]) do
@@ -1733,7 +1735,7 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","addFriendSucess","gs.RoleInfo",DataManager.n_OnReceiveAddFriendSucess)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getBlacklist","gs.RoleInfos",DataManager.n_OnReceiveGetBlacklist)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerInfo","gs.RoleInfos",DataManager.n_OnReceivePlayerInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","labRoll","gs.IntNum",DataManager.n_OnReceiveLabRoll)
+   -- DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","labRoll","gs.IntNum",DataManager.n_OnReceiveLabRoll)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newItem","gs.IntNum",DataManager.n_OnReceiveNewItem)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleCommunication","gs.CommunicationProces",DataManager.n_OnReceiveRoleCommunication)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleStatusChange","gs.ByteBool",DataManager.n_OnReceiveRoleStatusChange)

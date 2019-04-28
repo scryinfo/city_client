@@ -5,6 +5,7 @@
 --- DateTime: 2019/3/28 16:30
 ---
 
+-- 公司、我的土地、土地的详细信息显示
 LandInfoItem = class("LandInfoItem")
 
 function LandInfoItem:initialize(prefab, data)
@@ -26,6 +27,7 @@ function LandInfoItem:initialize(prefab, data)
         self:_goPos()
     end)
 
+    -- 显示时，先重置他们的状态
     self.ownerNamText.text = ""
     self.rentNameText.text = ""
     self.moneyLineImage.localScale = Vector3.zero
@@ -66,7 +68,7 @@ function LandInfoItem:initialize(prefab, data)
             self.moneyLineImage.localScale = Vector3.one
             self.rentMoneyTitleText.text = "Rental/d"
             self.rentMoneyText.text = GetClientPriceString(data.rent.rentPreDay) -- "租金：" ..
-            local timeTable = getFormatUnixTime(data.rent.rentBeginTs + data.rent.rentDays * 24 * 60 * 60)
+            local timeTable = getFormatUnixTime(data.rent.rentBeginTs/1000 + data.rent.rentDays * 24 * 60 * 60)
             self.timeLineImage.localScale = Vector3.one
             self.rentTimeText.text = timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day -- "到期时间：" ..
         end
@@ -83,7 +85,7 @@ function LandInfoItem:_showRenterName(playerData)
     self.rentNameText.text = playerData[1].companyName
 end
 
--- 跳转到场景
+-- 跳转到场景上土地的位置
 function LandInfoItem:_goPos()
     UIPanel.ClosePage()
     local id = TerrainManager.GridIndexTurnBlockID(self.data)

@@ -68,5 +68,20 @@ Notice = {
      header = 13010064,
 	 content = "您好,您出租的{0}土地已被{1}租赁.",
 	 redirect="" 
-}	 
+},
+    [17] = {
+        header = 13010067,
+        content = "您好，{0}公会已将您踢出商业联盟.",
+        redirect=""
+    },
+    [18] = {
+        header = 13010065,
+        content = "您好，{0}公会已同意您的加入申请",
+        redirect=""
+    },
+    [19] = {
+        header = 13010069,
+        content = "您好，{0}公会已拒绝您的加入申请",
+        redirect=""
+    }
 }

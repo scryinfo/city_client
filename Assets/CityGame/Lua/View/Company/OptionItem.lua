@@ -4,6 +4,7 @@
 --- DateTime: 2019/4/4 16:01
 ---
 
+-- 公司、Eva、各类型按照策划配的表，进行层次显示， OptionIndex 代表是可选的哪一层， index代表当前层的id
 OptionItem = class("OptionItem")
 OptionItem.static.NomalNameColor = Vector3.New(51, 51, 51) -- 默认的名字颜色
 OptionItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
@@ -60,8 +61,12 @@ end
 
 -- 点击记录获取数据
 function OptionItem:_setContent()
+    -- 重置小提示蒙板状态
+    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
+    -- 重置按钮状态
     CompanyCtrl.static.companyMgr:SetBtnState(self.optionIndex)
     self:SetSelect(false)
+    -- 刷新选择的按钮数据
     CompanyCtrl.static.companyMgr:SetEvaRecord(self.optionIndex, self.index)
     if self.optionIndex == 1 then
         CompanyCtrl.static.companyMgr:SetBtnNameTextColor()
@@ -70,7 +75,6 @@ function OptionItem:_setContent()
             CompanyCtrl.static.companyMgr.ctrl:ShowOptionTwo(#EvaConfig[self.index].option)
 
             -- 界面相应显示刷新
-            --CompanyPanel.optionRootRt.offsetMin = Vector2.New(0,-200)
             CompanyPanel.optionRootRt.sizeDelta = Vector2.New(1602, 230)
             CompanyPanel.bg2Rt.sizeDelta = Vector2.New(1586, 94)
             CompanyPanel.optionTwoT.localScale = Vector3.one
@@ -83,7 +87,6 @@ function OptionItem:_setContent()
             CompanyCtrl.static.companyMgr.ctrl.isClickEva = false
 
             -- 界面相应显示刷新
-            --CompanyPanel.optionRootRt.offsetMin = Vector2.New(0,-100)
             CompanyPanel.optionRootRt.sizeDelta = Vector2.New(1602, 142)
             CompanyPanel.bg2Rt.sizeDelta = Vector2.New(0, 0)
             CompanyPanel.optionTwoT.localScale = Vector3.zero
@@ -97,7 +100,6 @@ function OptionItem:_setContent()
             CompanyCtrl.static.companyMgr.ctrl:ShowOptionThere(#EvaConfig[optionOne].option[self.index].option)
 
             -- 界面相应显示刷新
-            --CompanyPanel.optionRootRt.offsetMin = Vector2.New(0,-300)
             CompanyPanel.optionRootRt.sizeDelta = Vector2.New(1602, 312)
             CompanyPanel.bg2Rt.sizeDelta = Vector2.New(1586, 175)
             CompanyPanel.optionTwoT.localScale = Vector3.one

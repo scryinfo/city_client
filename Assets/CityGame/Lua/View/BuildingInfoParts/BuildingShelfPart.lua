@@ -15,6 +15,7 @@ end
 
 function BuildingShelfPart:_InitTransform()
     self:_getComponent(self.transform)
+    Event.AddListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
 end
 
 function BuildingShelfPart:RefreshData(data)
@@ -27,6 +28,7 @@ end
 
 function BuildingShelfPart:_ResetTransform()
     self:_language()
+    Event.RemoveListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
 end
 
 function BuildingShelfPart:_getComponent(transform)
@@ -57,7 +59,8 @@ function BuildingShelfPart:_language()
 end
 --初始化货架数量
 function BuildingShelfPart:_initializeShelfCount()
-    self.salaryPercentText.text = self:_getShelfCount(self.m_data.shelf)
+    self.count = self:_getShelfCount(self.m_data.shelf)
+    self.salaryPercentText.text = self.count
 end
 --计算货架数量
 function BuildingShelfPart:_getShelfCount(dataTable)
@@ -71,8 +74,10 @@ function BuildingShelfPart:_getShelfCount(dataTable)
     end
     return shelfNowCount
 end
-
-
+--上架成功或购买成功后刷新数量
+function BuildingShelfPart:refreshShelfPartCount()
+    self:_initializeShelfCount()
+end
 
 
 

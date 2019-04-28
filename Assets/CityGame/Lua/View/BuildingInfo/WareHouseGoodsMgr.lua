@@ -13,10 +13,10 @@ local lastBox = nil
 local OnClick = false  --是否点击路线面板
 local AddressItems = {}
 
-WareHouseGoodsMgr.static.Goods_PATH = "View/GoodsItem/CenterWareHouseItem"
-WareHouseGoodsMgr.static.TspGoods_PATH = "View/GoodsItem/TransportGoodsItem"
-WareHouseGoodsMgr.static.AddressList_PATH = "View/GoodsItem/FriendsLineItem";
-WareHouseGoodsMgr.static.Line_PATH = "View/GoodsItem/ChooseLineItem";
+WareHouseGoodsMgr.static.Goods_PATH = "Assets/CityGame/Resources/View/GoodsItem/CenterWareHouseItem.prefab"
+WareHouseGoodsMgr.static.TspGoods_PATH = "Assets/CityGame/Resources/View/GoodsItem/TransportGoodsItem.prefab"
+WareHouseGoodsMgr.static.AddressList_PATH = "Assets/CityGame/Resources/View/GoodsItem/FriendsLineItem.prefab";
+WareHouseGoodsMgr.static.Line_PATH = "Assets/CityGame/Resources/View/GoodsItem/ChooseLineItem.prefab";
 
 function WareHouseGoodsMgr:initialize()
 
@@ -52,15 +52,18 @@ function WareHouseGoodsMgr:_creatItemGoods(insluabehaviour,isSelect)
         local prefabData={}
         prefabData.state = 'idel'
         prefabData.uiData = configTable[i]
-        prefabData._prefab = self:_creatGoods(WareHouseGoodsMgr.static.Goods_PATH,CenterWareHousePanel.content)
         self.ModelDataList[i] = prefabData
 
-        local WareHouseLuaItem = WareHouseGoodsItem:new(self.ModelDataList[i].uiData,self.ModelDataList[i]._prefab,self.behaviour, self, i)
+        local function callback(prefab)
+            self.WareHouseLuaItem = WareHouseGoodsItem:new(self.ModelDataList[i].uiData,prefab,self.behaviour, self, i)
+        end
+        createPrefab(WareHouseGoodsMgr.static.Goods_PATH,CenterWareHousePanel.content,callback)
+
         if not self.items then
             self.items = {}
         end
-        self.items[i] = WareHouseLuaItem
-        WareHouseGoodsMgr.items[i] = WareHouseLuaItem
+        self.items[i] = self.WareHouseLuaItem
+        WareHouseGoodsMgr.items[i] = self.WareHouseLuaItem
         --self.items  存的是Lua实例
         self.items[i]:setActiva(isSelect)
     end
@@ -68,13 +71,16 @@ end
 
 --创建运输商品
 function WareHouseGoodsMgr:_creatTransportGoods(goodsData)
-     ct.log("rodger_w8_GameMainInterface","[test_creatTransportGoods]  测试完毕")
-     local goods_prefab = self:_creatGoods(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent)
-     local TransportLuaItem = TransportGoodsItem:new(goodsData,goods_prefab,self.behaviour,self,goodsData.id,goodsData.itemId)
+
+    local function callback(prefab)
+        self.TransportLuaItem = TransportGoodsItem:new(goodsData,prefab,self.behaviour,self,goodsData.id,goodsData.itemId)
+    end
+    createPrefab(WareHouseGoodsMgr.static.TspGoods_PATH,CenterWareHousePanel.tspContent,callback)
+
     if not self.allTspItem then
         self.allTspItem = {}
     end
-    self.allTspItem[goodsData.id] = TransportLuaItem;
+    self.allTspItem[goodsData.id] = self.TransportLuaItem;
     if self.allTspItem == nil then
         return
     end
@@ -101,13 +107,17 @@ end
 function WareHouseGoodsMgr:_creatAddressList(data)
     self.lastBox =nil;
     for i, v in ipairs(data) do
-        local addressList_prefab = self:_creatGoods(WareHouseGoodsMgr.static.AddressList_PATH,ChooseWarehousePanel.leftcontent)
-        local AddressListLuaItem = AddressListItem:new(v,addressList_prefab,self)
+
+        local function callback(prefab)
+            self.AddressListLuaItem = AddressListItem:new(v,prefab,self)
+        end
+        createPrefab(WareHouseGoodsMgr.static.AddressList_PATH,ChooseWarehousePanel.leftcontent,callback)
+
         if not self.AddressItems then
             self.AddressItems = {}
         end
-        self.AddressItems[i] = AddressListLuaItem
-        AddressItems[i] = AddressListLuaItem
+        self.AddressItems[i] = self.AddressListLuaItem
+        AddressItems[i] = self.AddressListLuaItem
     end
 
 end
@@ -123,12 +133,17 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
         dataInfo.info.pos.x = BagPosInfo[1].bagX
         dataInfo.info.pos.y = BagPosInfo[1].bagY
         dataInfo.info.mId = nil
-        local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-        local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,dataInfo,data)
+
+        local function callback(prefab)
+            self.LinePaneltLuaItem = ChooseLineItem:new(prefab,self,dataInfo,data)
+        end
+        createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
+
+
         if not self.ipaItems then
             self.ipaItems = {}
         end
-        self.ipaItems[index] = LinePaneltLuaItem
+        self.ipaItems[index] = self.LinePaneltLuaItem
         index = index + 1
     end
 
@@ -139,12 +154,17 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
         for k, z in pairs(v) do
             if z.store ~= nil then
                 if z.info.id ~= buildingId then
-                    local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-                    local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,z,data)
+
+                    local function callback(prefab)
+                        self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data)
+                    end
+                    createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
+
+
                     if not self.ipaItems then
                         self.ipaItems = {}
                     end
-                    self.ipaItems[index] = LinePaneltLuaItem
+                    self.ipaItems[index] = self.LinePaneltLuaItems
                     index = index + 1
                 end
             end
@@ -160,12 +180,16 @@ function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data)
     end
     for i, v in pairs(buysBuildings) do
         if v.store ~= nil then
-            local LinePanel_prefab = self:_creatGoods(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent)
-            local LinePaneltLuaItem = ChooseLineItem:new(LinePanel_prefab,self,v,data)
+
+            local function callback(prefab)
+                self.LineFriendsLuaItem = ChooseLineItem:new(prefab,self,v,data)
+            end
+            createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
+
             if not self.ipaItems then
                 self.ipaItems = {}
             end
-            self.ipaItems[index] = LinePaneltLuaItem
+            self.ipaItems[index] = self.LineFriendsLuaItem
         end
     end
     index = index +1

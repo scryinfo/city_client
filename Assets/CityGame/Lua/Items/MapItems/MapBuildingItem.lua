@@ -9,6 +9,7 @@ MapBuildingItem = class('MapBuildingItem', MapBubbleBase)
 function MapBuildingItem:_childInit()
     self.btn = self.viewRect.transform:Find("selfRoot/btn"):GetComponent("Button")
     self.buildingIcon = self.viewRect.transform:Find("selfRoot/btn/buildingIcon"):GetComponent("Image")
+    self.selectTran = self.viewRect.transform:Find("selfRoot/btn/selectImg")
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
     self.detailShowBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.scaleRoot = self.viewRect.transform:Find("selfRoot")
@@ -21,7 +22,9 @@ function MapBuildingItem:_childInit()
     end)
 
     if self.data.tempPath ~= "" then
-        LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
+        MapBubbleManager.SetBuildingIconSpite(self.data.tempPath, self.buildingIcon)
+        --LoadSprite(self.data.tempPath, self.buildingIcon, true)  --建筑icon
+        self.selectTran.localScale = Vector3.zero
     end
 end
 
@@ -31,6 +34,17 @@ function MapBuildingItem:_clickFunc()
     if self.data == nil then
         return
     end
-
+    MapCtrl.selectCenterItem(self)
     Event.Brocast("c_MapSelectSelfBuildingPage", self)
+end
+--设置显示建筑大小
+function MapBuildingItem:toggleShowDetailImg(show)
+    if self.detailShowImg == nil then
+        return
+    end
+    if show == true then
+        self.detailShowImg.enabled = true
+    else
+        self.detailShowImg.enabled = false
+    end
 end

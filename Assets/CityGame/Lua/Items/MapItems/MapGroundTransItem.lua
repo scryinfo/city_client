@@ -9,13 +9,15 @@ MapGroundTransItem = class('MapGroundTransItem', MapBubbleBase)
 function MapGroundTransItem:_childInit()
     self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的部分
 
-    self.groundSell = self.viewRect.transform:Find("root/groundSell")
-    self.groundRent = self.viewRect.transform:Find("root/groundRent")
+    local trans = self.viewRect.transform
+    self.groundSell = trans:Find("root/groundSell")
+    self.groundRent = trans:Find("root/groundRent")
 
-    self.sellBtn = self.viewRect.transform:Find("root/groundSell/sellBtn"):GetComponent("Button")
-    self.sellText01 = self.viewRect.transform:Find("root/groundSell/sellBtn/Text"):GetComponent("Text")
-    self.rentBtn = self.viewRect.transform:Find("root/groundRent/rentBtn"):GetComponent("Button")
-    self.rentText02 = self.viewRect.transform:Find("root/groundRent/rentBtn/Text"):GetComponent("Text")
+    self.sellBtn = trans:Find("root/groundSell/sellBtn"):GetComponent("Button")
+    self.sellText01 = trans:Find("root/groundSell/sellBtn/Text"):GetComponent("Text")
+    self.rentBtn = trans:Find("root/groundRent/rentBtn"):GetComponent("Button")
+    self.rentText02 = trans:Find("root/groundRent/rentBtn/Text"):GetComponent("Text")
+    self.selectTran = trans:Find("root/selectImg")
 
     self.sellBtn.onClick:AddListener(function ()
         self:_openGroundTransPage()
@@ -50,6 +52,7 @@ function MapGroundTransItem:_openGroundTransPage()
     if self.data == nil then
         return
     end
+    MapCtrl.selectCenterItem(self)
     Event.Brocast("c_MapOpenRightGTransPage", self)
 end
 --

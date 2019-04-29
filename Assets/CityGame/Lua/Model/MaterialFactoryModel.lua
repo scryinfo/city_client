@@ -212,7 +212,6 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("buySucceed",data)
     Event.Brocast("refreshShelfPartCount")
 
-    --DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)

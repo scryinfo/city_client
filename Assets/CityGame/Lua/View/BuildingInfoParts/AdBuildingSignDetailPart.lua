@@ -61,8 +61,18 @@ end
 --
 
 function AdBuildingSignDetailPart:m_GetAllMyFlowSign(data)
+    if self.m_data == nil then
+        return
+    end
     datainfo = data
-    self.scroll:ActiveLoopScroll(self.sign, #datainfo)
+    if datainfo == nil then
+        self.scroll:ActiveLoopScroll(self.sign, 0)
+    else
+        for i, v in pairs(data) do
+            data[i].insId  = self.m_data.insId
+        end
+        self.scroll:ActiveLoopScroll(self.sign, #datainfo)
+    end
 end
 
 function AdBuildingSignDetailPart:OnXBtn(go)
@@ -85,7 +95,7 @@ end
 AdBuildingSignDetailPart.static.SignProvideData = function(transform, idx)
 
     idx = idx + 1
-    local item = PromoteSignItem:new( datainfo[idx],transform, luaBehavior)
+    local item = PromoteSignItem:new( datainfo[idx],transform,luaBehavior)
 end
 
 AdBuildingSignDetailPart.static.SignClearData = function(transform)

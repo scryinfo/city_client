@@ -5,7 +5,6 @@
 ---建筑主界面底部广告推广
 AdvertisementPart = class('AdvertisementPart', BasePart)
 --
-local myOwnerID
 
 function AdvertisementPart:PrefabName()
     return "AdvertisementPart"
@@ -17,13 +16,11 @@ end
 --
 function AdvertisementPart:_InitTransform()
     self:_getComponent(self.transform)
-    myOwnerID = DataManager.GetMyOwnerID()
 end
 --
 function AdvertisementPart:_ResetTransform()
     self.price.text = "E0.0000"
     self.waitingTime.text = "00"
-    myOwnerID = nil
 end
 --
 function AdvertisementPart:RefreshData(data)
@@ -35,7 +32,7 @@ function AdvertisementPart:RefreshData(data)
 end
 --
 function AdvertisementPart:ShowDetail(data)
-    if data.info.ownerId ~= myOwnerID then
+    if data.info.ownerId ~= DataManager.GetMyOwnerID() then
         if not data.takeOnNewOrder then
             Event.Brocast("SmallPop","广告商未开启推广",300)
             return

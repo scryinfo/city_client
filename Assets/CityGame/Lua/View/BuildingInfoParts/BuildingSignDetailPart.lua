@@ -285,7 +285,7 @@ function BuildingSignDetailPart:_createCurve(info, type)
     local turnoverVet = {}
     local showNumValue = {}  --用于点的显示
     if type == 1 then
-        scale = 0.25
+        scale = SetYScale(max,4, self.yScale, true)
         for i, v in ipairs(turnover) do
             if scale == 0 then
                 turnoverVet[i] = Vector2.New(v.x, v.y)
@@ -296,7 +296,7 @@ function BuildingSignDetailPart:_createCurve(info, type)
             v.y = math.ceil(v.y *100) /100 .. "%"
         end
     elseif type == 2 then
-        scale = SetYScale(max,4,self.yScale)
+        scale = SetYScale(max,4, self.yScale)
         for i, v in ipairs(turnover) do
             if scale == 0 then
                 turnoverVet[i] = v

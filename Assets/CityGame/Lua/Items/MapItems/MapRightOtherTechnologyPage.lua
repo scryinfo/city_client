@@ -5,6 +5,7 @@
 ---点击其他人研究所
 MapRightOtherTechnologyPage = class('MapRightOtherTechnologyPage')
 MapRightOtherTechnologyPage.moneyColor = "#F4AD07FF"
+MapRightOtherTechnologyPage.successNum = 10000
 
 --初始化方法
 function MapRightOtherTechnologyPage:initialize(viewRect)
@@ -24,11 +25,11 @@ function MapRightOtherTechnologyPage:refreshData(data, typeData)
         if typeData.detailId == EMapTechnologyType.TechNewItem then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Inventing new goods"
-            self.valueText.text = self.data.goodProb.."%"
+            self.valueText.text = (self.data.goodProb / MapRightOtherTechnologyPage.successNum).."%"
         elseif typeData.detailId == EMapTechnologyType.TechEva then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Eva"
-            self.valueText.text = self.data.evaProb.."%"
+            self.valueText.text = (self.data.evaProb/ MapRightOtherTechnologyPage.successNum).."%"
         end
         self:_language()
         self:_createTech()

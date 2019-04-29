@@ -256,7 +256,9 @@ function MapBubbleManager._createDetailByType(typeId, data)
             for i, value in pairs(data.info) do
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
                 if value.b ~= nil then
+                    local typeIds = value.typeIds
                     for i, building in pairs(value.b) do
+                        building.typeIds = typeIds
                         this._checkDetailTable(collectionId)
                         local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
                         this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)

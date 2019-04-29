@@ -10,7 +10,7 @@ local StringSun = string.sub
 function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,unitPrice)
     self.keyId = keyId
     self.prefab = prefab
-    self.dataInfo = dataInfo
+    self.dataInfo = ct.deepCopy(dataInfo)
     self.goodsType = goodsType
     self.unitPrice = unitPrice
     self.itemId = dataInfo.itemId

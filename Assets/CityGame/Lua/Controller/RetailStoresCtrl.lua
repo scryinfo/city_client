@@ -86,9 +86,18 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
             self.groupMgr:TurnOffAllOptions()
         else
             RetailStoresPanel.groupTrans.localScale = Vector3.zero
+            if self.groupMgr ~= nil then
+                self.groupMgr:TurnOffAllOptions()
+            end
         end
     else
-        self.groupMgr:RefreshData(self.m_data)
+        if retailShopDataInfo.info.state == "OPERATE" then
+            RetailStoresPanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:RefreshData(self.m_data)
+        else
+            RetailStoresPanel.groupTrans.localScale = Vector3.zero
+            self.groupMgr:TurnOffAllOptions()
+        end
     end
 end
 
@@ -139,10 +148,6 @@ function RetailStoresCtrl:_updateName(name)
 end
 
 function RetailStoresCtrl:Hide()
-    if self.groupMgr ~= nil then
-        self.groupMgr:Destroy()
-        self.groupMgr = nil
-    end
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
 end

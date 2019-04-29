@@ -123,6 +123,7 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     goods.quality = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
+        Event.Brocast("SmallPop",GetLanguage(21020003), 300)
         return
     else
         goods.number = ins.numberSlider.value
@@ -131,6 +132,11 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     UIPanel.ClosePage()
 end
 --销毁商品
-function WarehouseBoxCtrl:_clickDeleBtn()
-
+function WarehouseBoxCtrl:_clickDeleBtn(ins)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    data.producerId = ins.m_data.dataInfo.key.producerId
+    data.qty = ins.m_data.dataInfo.key.qty
+    data.n = ins.m_data.dataInfo.n
+    ct.OpenCtrl("DeleteItemBoxCtrl",data)
 end

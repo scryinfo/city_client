@@ -9,7 +9,7 @@ local StringSun = string.sub
 function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
-    self.dataInfo = dataInfo
+    self.dataInfo = ct.deepCopy(dataInfo)
     self.stateType = stateType[1]
     self.buildingId = stateType[2]
     self.buildingType = buildingType

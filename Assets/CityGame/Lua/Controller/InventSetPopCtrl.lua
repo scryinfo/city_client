@@ -69,7 +69,7 @@ end
 function InventSetPopCtrl:UpDateUI(data)
     panel.price.text = ""
     panel.time.text = ""
-    self.openUp =   data.exclusive
+    self.openUp =  not data.exclusive
     if self.openUp then
         panel.open.isOn = true
         panel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)

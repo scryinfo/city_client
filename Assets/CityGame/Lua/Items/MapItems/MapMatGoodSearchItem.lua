@@ -14,11 +14,11 @@ function MapMatGoodSearchItem:childInit(viewRect)
     local mat = Material[self.data.itemId]
     if mat ~= nil then
         self.nameText.text = mat.name
-        LoadSprite(mat.img, self.iconImg, true)
+        LoadSprite(mat.img, self.iconImg, false)
     else
         local good = Good[self.data.itemId]
         self.nameText.text = good.name
-        LoadSprite(good.img, self.iconImg, true)
+        LoadSprite(good.img, self.iconImg, false)
     end
 end
 --

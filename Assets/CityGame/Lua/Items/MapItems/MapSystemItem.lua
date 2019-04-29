@@ -33,3 +33,14 @@ function MapSystemItem:_clickFunc()
     end
     Event.Brocast("c_MapSelectSystemPage", self)
 end
+--设置显示建筑大小
+function MapSystemItem:toggleShowDetailImg(show)
+    if self.detailShowImg == nil then
+        return
+    end
+    if show == true then
+        self.detailShowImg.enabled = true
+    else
+        self.detailShowImg.enabled = false
+    end
+end

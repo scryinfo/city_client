@@ -109,7 +109,7 @@ end
 --去地图上的一个建筑
 function MapRightGroundAucPage:_goHereBtn()
     local temp = GroundAucConfig[self.data.id].area[1]
-    MapBubbleManager.GoHereFunc({pos = temp})
+    MapBubbleManager.GoHereFunc(temp)
 end
 
 ------------------

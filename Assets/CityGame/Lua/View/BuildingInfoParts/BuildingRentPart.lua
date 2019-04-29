@@ -34,6 +34,7 @@ function BuildingRentPart:_getComponent(transform)
     self.rentText = transform:Find("Top/RentText"):GetComponent("Text")
 end
 
+-- 显示日租金
 function BuildingRentPart:_initFunc()
     if self.m_data.rent ~= nil then
         self.rentText.text = GetClientPriceString(self.m_data.rent)

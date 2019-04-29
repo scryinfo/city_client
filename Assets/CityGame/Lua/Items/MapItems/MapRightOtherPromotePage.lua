@@ -23,7 +23,7 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
 
     local promotType = {}
     for i, key in pairs(self.data.typeIds) do
-        promotType[i] = self.data.CurAbilitys[i]
+        promotType[key] = self.data.CurAbilitys[i]
     end
     if typeData.typeId == EMapSearchType.Promotion then
         local type1 = MapPromotionConfig[typeData.detailId]
@@ -60,7 +60,12 @@ function MapRightOtherPromotePage:_createPromotion()
     local data1 = {infoTypeStr = "PromotionTime", value = str1}  --时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 
-    local str3 = self.data.queuedTimes.."h"
+    local str3
+    if self.data.queuedTimes ~= -1 then
+        str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
+    else
+        str3 = os.date("%H:%M %m/%d/%Y", os.time())
+    end
     local data3 = {infoTypeStr = "Queued", value = str3}  --
     self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)
 end

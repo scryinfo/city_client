@@ -115,7 +115,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             UIPanel.BackToPageInstance(MaterialFactoryCtrl,self.m_data)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-
+            UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
         end
         Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end

@@ -155,7 +155,7 @@ end
 function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", '_refreshSalary', data)
 end
---打开原料厂
+--打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
     if stream ~= nil then

@@ -205,10 +205,10 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
             Event.Brocast("m_ReqMaterialDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             --加工厂
-
+            Event.Brocast("m_ReqprocessingDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
-
+            Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         elseif self.m_data.buildingType == BuildingType.TalentCenter then
             --集散中心
         end

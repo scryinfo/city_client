@@ -136,6 +136,8 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
 
         local function callback(prefab)
             self.LinePaneltLuaItem = ChooseLineItem:new(prefab,self,dataInfo,data)
+            self.ipaItems[index] = self.LinePaneltLuaItem
+            index = index + 1
         end
         createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
 
@@ -143,8 +145,6 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
         if not self.ipaItems then
             self.ipaItems = {}
         end
-        self.ipaItems[index] = self.LinePaneltLuaItem
-        index = index + 1
     end
 
     if buysBuildings ==nil then
@@ -157,6 +157,8 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
 
                     local function callback(prefab)
                         self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data)
+                        self.ipaItems[index] = self.LinePaneltLuaItems
+                        index = index + 1
                     end
                     createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
 
@@ -164,8 +166,6 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
                     if not self.ipaItems then
                         self.ipaItems = {}
                     end
-                    self.ipaItems[index] = self.LinePaneltLuaItems
-                    index = index + 1
                 end
             end
         end
@@ -190,9 +190,9 @@ function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data)
                 self.ipaItems = {}
             end
             self.ipaItems[index] = self.LineFriendsLuaItem
+            index = index +1
         end
     end
-    index = index +1
 end
 
 --删除商品

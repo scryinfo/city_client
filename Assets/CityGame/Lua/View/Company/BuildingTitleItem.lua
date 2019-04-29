@@ -4,6 +4,7 @@
 --- DateTime: 2019/3/29 17:37
 ---
 
+-- 公司、我的建筑、建筑类型显示，可以点击，显示该类建筑
 BuildingTitleItem = class("BuildingTitleItem")
 BuildingTitleItem.static.NomalNameColor = Vector3.New(51, 51, 51) -- 默认的名字颜色
 BuildingTitleItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
@@ -16,7 +17,6 @@ BuildingTitleItem.static.SelectNumberBgColor = Vector3.New(255, 255, 255) -- 被
 function BuildingTitleItem:initialize(prefab, data)
     self.prefab = prefab
     self.data = data - 1
-    --self.isSelect = false
 
     local transform = prefab.transform
 
@@ -65,7 +65,7 @@ function BuildingTitleItem:SetNumber(number)
     end
 end
 
--- 设置是否选中
+-- 设置是否选中，并刷新它的显示
 function BuildingTitleItem:SetSelect(isSelect)
     self.buildingSelectBtn.interactable = isSelect
     local nameTextV3 = isSelect and BuildingTitleItem.static.NomalNameColor or BuildingTitleItem.static.SelectNameColor
@@ -76,10 +76,9 @@ function BuildingTitleItem:SetSelect(isSelect)
     self.bgImage.color = getColorByVector3(bgV3)
 end
 
--- 点击刷新
+-- 点击向服务器发送查询建筑信息的消息，获得所需要的信息，并显示出来
 function BuildingTitleItem:_setContent()
-    --self.isSelect = not self.isSelect
-    CompanyCtrl.static.companyMgr.buildingTypeNum = self.data -- self.isSelect and self.data or 0
+    CompanyCtrl.static.companyMgr.buildingTypeNum = self.data
     self:SetSelect(false)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
 end

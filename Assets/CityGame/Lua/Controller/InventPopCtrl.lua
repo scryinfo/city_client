@@ -17,26 +17,41 @@ function InventPopCtrl:OnCreate(obj)
 end
 
 function InventPopCtrl:Hide()
+    self.m_data.info = nil
+    panel.countInput1.text = ""
+    panel.priceText.text = 0
+
+
     UIPanel.Hide(self)
     self:RemoveLis()
 end
 
 function InventPopCtrl:Close()
+    self.m_data.info = nil
+    panel.countInput1.text = ""
+    panel.priceText.text = 0
+
     UIPanel.Close(self)
     self:RemoveLis()
 end
 
 function InventPopCtrl:Refresh()
-    panel.countInput1.text = ""
+    local modelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
 
     local data = self.m_data
     self.ChangeLan()
     self.popCompent:Refesh(data)
 
-    panel.priceText.text = 0
     if not self.m_data.info then
         self.m_data.info = self.m_data.ins.buildInfo
     end
+
+    if self.m_data.ins.type  then
+        panel.num.text = tostring(modelData.probGood).."%"
+    else
+        panel.num.text = tostring(modelData.probEva).."%"
+    end
+
     if DataManager.GetMyOwnerID() ~= self.m_data.ins.buildInfo.ownerId then
         self:other()
         panel.buyRoot.localScale = Vector3.one
@@ -96,7 +111,9 @@ function InventPopCtrl:other()
 
         local count = tonumber(string)
 
-        panel.Slider.value = count/ (self.m_data.ins.buildInfo.sellTimes)
+        if self.m_data.ins.buildInfo.sellTimes then
+            panel.Slider.value = count/ (self.m_data.ins.buildInfo.sellTimes)
+        end
         self.count = count
 
         panel.priceText.text = (self.m_data.ins.buildInfo.pricePreTime)*count

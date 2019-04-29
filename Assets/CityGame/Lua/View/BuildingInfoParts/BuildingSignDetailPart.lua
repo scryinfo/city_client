@@ -16,8 +16,20 @@ BuildingSignDetailPart.EOpenState =
     OtherSigningThirdOpen = 7,  --其他人签约，非签约者或建筑拥有者查看
 }
 --
+BuildingSignDetailPart.BtnDisSelectColor = Vector3.New(46, 58, 100)
+BuildingSignDetailPart.BtnSelectColor = Vector3.New(255, 255, 255)
+--
 function BuildingSignDetailPart:PrefabName()
     return "BuildingSignDetailPart"
+end
+--
+function BuildingSignDetailPart:Show(data)
+    BasePartDetail.Show(self)
+    self.m_data = data
+    self:_initFunc()
+    --只在打开界面的时候刷新数据
+    self:_toggleBtn(1)
+    self:_reqLiftCurve()
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
@@ -43,6 +55,14 @@ function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.infoBtn.gameObject, function ()
         self:clickOpenTipBtn()
     end , self)
+
+    --
+    mainPanelLuaBehaviour:AddClick(self.liftBtn.gameObject, function ()
+        self:clickLiftBtn()
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.npcBtn.gameObject, function ()
+        self:clickNpcBtn()
+    end , self)
 end
 --
 function BuildingSignDetailPart:_ResetTransform()
@@ -50,6 +70,13 @@ function BuildingSignDetailPart:_ResetTransform()
     self.tipRoot.localScale = Vector3.zero
     self:_language()
     self:_setTextSuitableWidth()
+
+    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
+    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
+
+    --
+    self.liftCurveData = nil
+    self.npcCurveData = nil
 end
 --
 function BuildingSignDetailPart:_RemoveClick()
@@ -58,6 +85,18 @@ function BuildingSignDetailPart:_RemoveClick()
     self.selfSignDelBtn.onClick:RemoveAllListeners()
     self.settingBtn.onClick:RemoveAllListeners()
     self.otherSignBtn.onClick:RemoveAllListeners()
+    self.liftBtn.onClick:RemoveAllListeners()
+    self.npcBtn.onClick:RemoveAllListeners()
+end
+--
+function BuildingSignDetailPart:_InitEvent()
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingFlow","ss.BuildingFlow", self.n_OnGetNpcCurve, self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingLift","ss.BuildingLift", self.n_OnGetLiftCurve, self)
+end
+--
+function BuildingSignDetailPart:_RemoveEvent()
+    DataManager.ModelNoneInsIdRemoveNetMsg("sscode.OpCode", "queryBuildingFlow", self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("sscode.OpCode", "queryBuildingLift", self)
 end
 --
 function BuildingSignDetailPart:RefreshData(data)
@@ -71,6 +110,8 @@ end
 --
 function BuildingSignDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
+    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
 end
 --
 function BuildingSignDetailPart:_getComponent(transform)
@@ -126,6 +167,33 @@ function BuildingSignDetailPart:_getComponent(transform)
     self.tipClose01Btn = transform:Find("root/tipRoot/close01Btn")
     self.tipText11 = transform:Find("root/tipRoot/close01Btn/Text"):GetComponent("Text")
     self.tipClose02Btn = transform:Find("root/tipRoot/close02Btn")
+
+    --曲线图
+    self.yScale = transform:Find("root/lineRoot/leftValue")
+    self.curve = transform:Find("root/lineRoot/curveBg/curve"):GetComponent("RectTransform")
+    self.slide = transform:Find("root/lineRoot/curveBg/curve"):GetComponent("Slide")
+    self.graph = transform:Find("root/lineRoot/curveBg/curve"):GetComponent("FunctionalGraph")
+
+    self.liftBtn = transform:Find("root/lineRoot/btnRoot/promotion/btn"):GetComponent("Button")
+    self.liftShowBg = transform:Find("root/lineRoot/btnRoot/promotion/showBg")
+    self.liftText = transform:Find("root/lineRoot/btnRoot/promotion/Text"):GetComponent("Text")
+    self.npcBtn = transform:Find("root/lineRoot/btnRoot/npc/btn"):GetComponent("Button")
+    self.npcShowBg = transform:Find("root/lineRoot/btnRoot/npc/showBg")
+    self.npcText = transform:Find("root/lineRoot/btnRoot/npc/Text"):GetComponent("Text")
+end
+--如果传入1，则选中liftBtn，2选中npcBtn
+function BuildingSignDetailPart:_toggleBtn(index)
+    if index == 1 then
+        self.liftShowBg.localScale = Vector3.one
+        self.npcShowBg.localScale = Vector3.zero
+        self.liftText.color = getColorByVector3(BuildingSignDetailPart.BtnSelectColor)
+        self.npcText.color = getColorByVector3(BuildingSignDetailPart.BtnDisSelectColor)
+    elseif index == 2 then
+        self.liftShowBg.localScale = Vector3.zero
+        self.npcShowBg.localScale = Vector3.one
+        self.liftText.color = getColorByVector3(BuildingSignDetailPart.BtnDisSelectColor)
+        self.npcText.color = getColorByVector3(BuildingSignDetailPart.BtnSelectColor)
+    end
 end
 --text调整宽度，放在多语言之后
 function BuildingSignDetailPart:_setTextSuitableWidth()
@@ -149,6 +217,110 @@ function BuildingSignDetailPart:_language()
     self.waitToSignSignTime09.text = "签约时间:"
     self.waitToSignTotalPriceText10.text = "总价:"
     self.tipText11.text = "Human traffic can improve the promotion ability of the promotion company!"
+end
+--
+function BuildingSignDetailPart:_createCurve(info, type)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    currentTime = math.floor(currentTime)               --当前小时数-整数
+    local monthAgo = currentTime - 86400 + 3600         --1天前的0点
+    local updataTime = monthAgo
+    local time = {}
+    local boundaryLine = {}
+    local turnoverTab = {}
+
+    for i = 1, 24 do
+        if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
+            time[i] = getFormatUnixTime(updataTime).hour
+            table.insert(boundaryLine,(updataTime - monthAgo + 3600) / 3600 * 118)
+        else
+            time[i] = tostring(getFormatUnixTime(updataTime).hour)
+        end
+        turnoverTab[i] = {}
+        turnoverTab[i].coordinate = (updataTime - monthAgo + 3600) / 3600 * 118
+        turnoverTab[i].data = 0  --看具体字段
+        if type == 1 then  --加成
+            if info.nodes ~= nil then
+                for k, v in pairs(info.nodes) do
+                    if updataTime == v.time / 1000 then
+                        turnoverTab[i].data = tonumber(v.lift)
+                    end
+                end
+            end
+        elseif type == 2 then  --人流量
+            if info.nodes ~= nil then
+                for k, v in pairs(info.nodes) do
+                    if updataTime == v.time / 1000 then
+                        turnoverTab[i].data = tonumber(v.flow)
+                    end
+                end
+            end
+        end
+        updataTime = updataTime + 3600
+    end
+
+    local turnover = {}
+    for i, v in ipairs(turnoverTab) do
+        turnover[i] = Vector2.New(v.coordinate,v.data)  --
+    end
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+    table.insert(turnover,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in ipairs(turnover) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+
+    local scale
+    local turnoverVet = {}
+    local showNumValue = {}  --用于点的显示
+    if type == 1 then
+        scale = SetYScale(max,4, self.yScale, true)
+        for i, v in ipairs(turnover) do
+            if scale == 0 then
+                turnoverVet[i] = Vector2.New(v.x, v.y)
+            else
+                turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
+            end
+            showNumValue[i] = Vector2.New(v.x, v.y * 100)
+            v.y = math.ceil(v.y *100) /100 .. "%"
+        end
+    elseif type == 2 then
+        scale = SetYScale(max,4, self.yScale)
+        for i, v in ipairs(turnover) do
+            if scale == 0 then
+                turnoverVet[i] = v
+            else
+                if scale == 0 then
+                    turnoverVet[i] = Vector2.New(v.x, v.y)
+                else
+                    turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
+                end
+            end
+        end
+        showNumValue = turnover
+    end
+
+    self.slide:SetXScaleValue(time,118)
+    self.graph:BoundaryLine(boundaryLine)
+
+    self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
+    local temp1 = {[1] = turnoverVet[#turnoverVet]}
+    local temp2 = {[1] = turnover[#turnover]}
+    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black)
+
+    self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
+    self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 --签约者信息
 function BuildingSignDetailPart:_getSignerInfo(info)
@@ -304,14 +476,8 @@ function BuildingSignDetailPart:clickSettingBtn()
 end
 --
 function BuildingSignDetailPart:clickOtherSignBtn()
-    --打开签约界面  --暂时没有
-    --直接发送签约请求
-    local needPrice = self.m_data.contractInfo.price * self.m_data.contractInfo.hours
-    if DataManager.GetMoney() >= needPrice then
-        self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
-    else
-        Event.Brocast("SmallPop", "您的钱不够", 300)
-    end
+    --打开签约界面
+    ct.OpenCtrl("SignContractCtrl", self.m_data)
 end
 --
 function BuildingSignDetailPart:clickSelfSignDelBtn()
@@ -327,9 +493,23 @@ end
 function BuildingSignDetailPart:clickOpenTipBtn()
     self.tipRoot.localScale = Vector3.one
 end
---点击提示框
-function BuildingSignDetailPart:clickTipBtn()
-    self.tipRoot.localScale = Vector3.zero
+--点击liftBtn
+function BuildingSignDetailPart:clickLiftBtn()
+    if self.liftCurveData == nil then
+        self:_reqLiftCurve()
+    else
+        self:_createCurve(self.liftCurveData, 1)
+    end
+    self:_toggleBtn(1)
+end
+--点击npcBtn
+function BuildingSignDetailPart:clickNpcBtn()
+    if self.npcCurveData == nil then
+        self:_reqNpcCurve()
+    else
+        self:_createCurve(self.npcCurveData, 2)
+    end
+    self:_toggleBtn(2)
 end
 ---------------------------------------------------------------------------------------
 --自己取消签约
@@ -343,4 +523,29 @@ function BuildingSignDetailPart:m_ReqContract(buildingId, price, hours)
     local msgId = pbl.enum("gscode.OpCode","signContract")
     local pMsg = assert(pbl.encode("gs.SignContract", {buildingId = buildingId, price = price, hours = hours}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+--请求人流量曲线
+function BuildingSignDetailPart:_reqNpcCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryBuildingFlow")
+    local lMsg = { id = self.m_data.info.id }
+    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+--请求签约加成曲线
+function BuildingSignDetailPart:_reqLiftCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryBuildingLift")
+    local lMsg = { id = self.m_data.info.id }
+    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+---------------------------------------------------------------------------------------
+--签约加成曲线
+function BuildingSignDetailPart:n_OnGetLiftCurve(info)
+    self.liftCurveData = info
+    self:_createCurve(info, 1)
+end
+--人流量曲线
+function BuildingSignDetailPart:n_OnGetNpcCurve(info)
+    self.npcCurveData = info
+    self:_createCurve(info, 2)
 end

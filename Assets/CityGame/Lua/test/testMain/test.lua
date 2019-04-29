@@ -689,5 +689,44 @@ UnitTest.Exec("cycle_0327_testSlider", "cycle_0327",  function ()
     ct.OpenCtrl("BuildingSetSalaryCtrl")
 end)
 
+UnitTest.Exec("abel_0426_AbilityHistory", "abel_0426_AbilityHistory",  function ()
+    Event.AddListener("e_AbilityHistory", function (bid)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",function(msg)
+            local test = 100
+        end)
+        --发包测试
+        local msgId = pbl.enum("gscode.OpCode","adGetPromoAbilityHistory")
+        ----2、 填充 protobuf 内部协议数据
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        --local ts = getFormatUnixTime(currentTime)
+        --local tsHour = math.floor(currentTime/3600000)
+        local tsHour = currentTime
+        --local lMsg = { sellerBuildingId = bid, startTs = tsHour, typeIds={0,1613,1614,1652,1653,}}
+        local lMsg = { sellerBuildingId = bid, startTs = tsHour, typeIds={1613,1614,1652,1653,}}
+        ----3、 序列化成二进制数据
+        local  pMsg = assert(pbl.encode("gs.AdGetPromoAbilityHistory", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end)
+end)
+
+UnitTest.Exec("abel_0428_queryflowList", "e_queryflowList",  function ()
+    Event.AddListener("e_queryflowList", function (bid)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","adGetAllMyFlowSign","gs.GetAllMyFlowSign",function(msg)
+            local test = 100
+        end)
+        --发包测试
+        local msgId = pbl.enum("gscode.OpCode","adGetAllMyFlowSign")
+        ----2、 填充 protobuf 内部协议数据
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        --local ts = getFormatUnixTime(currentTime)
+        --local tsHour = math.floor(currentTime/3600000)
+        local tsHour = currentTime
+        --local lMsg = { sellerBuildingId = bid, startTs = tsHour, typeIds={0,1613,1614,1652,1653,}}
+        local lMsg = { buildingId = bid}
+        ----3、 序列化成二进制数据
+        local  pMsg = assert(pbl.encode("gs.GetAllMyFlowSign", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end)
+end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

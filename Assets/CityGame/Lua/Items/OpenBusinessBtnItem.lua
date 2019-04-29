@@ -47,7 +47,8 @@ function OpenBusinessBtnItem:_clickOpenBtn()
         ct.OpenCtrl("OpenHouseCtrl", {info = self.data.info, callBackFunc = function (salary, rent)
             if salary ~= nil and rent ~= nil then
                 self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
-                self:_reqHouseChangeRent(self.data.info.id, rent)
+                local rentValue = GetServerPriceNumber(rent)
+                self:_reqHouseChangeRent(self.data.info.id, rentValue)
                 self:_reqOpenBusiness(self.data.info.id)
             end
         end})

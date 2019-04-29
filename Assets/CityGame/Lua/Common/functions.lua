@@ -147,6 +147,18 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--把时间 秒转换成xx时xx分xx秒格式
+function getFormatUnixTimeNumber(time)
+	local tb = {}
+	time = math.floor(time)
+	tb.year = tonumber(os.date("%Y", time)) or 0
+	tb.month = tonumber(os.date("%m", time)) or 0
+	tb.day = tonumber(os.date("%d", time)) or 0
+	tb.hour = tonumber(os.date("%H", time)) or 0
+	tb.min = tonumber(os.date("%M", time)) or 0
+	tb.sec = tonumber(os.date("%S", time)) or 0
+	return tb
+end
 
 function convertTimeForm(second)
 	local data={}
@@ -641,6 +653,30 @@ function SetYScale(max,count,transform)
 		end
 	end
 	return scale
+end
+--
+function GetBuildingTypeById(buildingTypeId)
+	if buildingTypeId ~= nil then
+		local type
+		local typeId = tonumber(string.sub(buildingTypeId,1, 2))
+		if typeId == 11 then
+			type = BuildingType.MaterialFactory
+		elseif typeId == 12 then
+			type = BuildingType.ProcessingFactory
+		elseif typeId == 13 then
+			type = BuildingType.RetailShop
+		elseif typeId == 14 then
+			type = BuildingType.House
+		elseif typeId == 15 then
+			type = BuildingType.Laboratory
+		elseif typeId == 16 then
+			type = BuildingType.Municipal
+		elseif typeId == 17 then
+			type = BuildingType.TalentCenter
+		end
+		return type
+	end
+	return nil
 end
 
 -- 动态加载预制

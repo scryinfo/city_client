@@ -65,6 +65,9 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
         maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
         mainCamera = UnityEngine.Camera.main
     end
+    if self.data ~= nil  then
+        self.rect.anchoredPosition = ScreenPosTurnActualPos(mainCamera:WorldToScreenPoint( Vector3.New(self.data.x + self.x, self.y, self.data.y + self.z))) --Vector3.New(-0.1, 0, 2)))
+    end
     self.m_anchoredPos =  self.rect.anchoredPosition
     self:ShowOrHideSelf(self:JudgeSelfIsShow())
 end

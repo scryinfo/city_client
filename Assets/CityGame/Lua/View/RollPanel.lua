@@ -18,6 +18,7 @@ function RollPanel.InitPanle()
     this.titleText = transform:Find("PopCommpent/titleText"):GetComponent("Text")
 
     this.totalText = findByName(transform,"totalText"):GetComponent("Text")
+    this.EvaRoot = findByName(transform,"EvaRoot")
 
     this.resultRoot = findByName(transform,"resultRoot")
     this.FailRoot = findByName(transform,"FailRoot")
@@ -42,7 +43,7 @@ function RollPanel.InitPanle()
     this.mainIcon = findByName(transform,"mainIcon")
     local tempTrans =  this.mainIcon
     this.ima = findByName(tempTrans,"mainIcon"):GetComponent("Image")
-    this.nameText = findByName(tempTrans,"Text")
+    this.nameText = findByName(tempTrans,"Text"):GetComponent("Text")
 
     this.child1 = findByName(transform,"child1")
     tempTrans = this.child1

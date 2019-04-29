@@ -12,6 +12,7 @@ function MapBubbleBase:initialize(data, viewRect)
 
     Event.AddListener("c_MapBubbleScale", self._changeScale, self)
     self:_childInit()
+    self:toggleShowSelect(false)
 end
 
 --初始设置设置缩放比以及位置
@@ -47,15 +48,15 @@ function MapBubbleBase:_changeScale(mapScale)
         self.detailShowImg.rectTransform.sizeDelta = mapScale * self.viewRect.sizeDelta
     end
 end
---设置显示建筑大小
-function MapBubbleBase:toggleShowDetailImg(show)
-    if self.detailShowImg == nil then
+--
+function MapBubbleBase:toggleShowSelect(show)
+    if self.selectTran == nil then
         return
     end
     if show == true then
-        self.detailShowImg.enabled = true
+        self.selectTran.localScale = Vector3.one
     else
-        self.detailShowImg.enabled = false
+        self.selectTran.localScale = Vector3.zero
     end
 end
 --

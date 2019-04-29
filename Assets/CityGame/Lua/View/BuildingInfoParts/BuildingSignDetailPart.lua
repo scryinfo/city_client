@@ -449,14 +449,8 @@ function BuildingSignDetailPart:clickSettingBtn()
 end
 --
 function BuildingSignDetailPart:clickOtherSignBtn()
-    --打开签约界面  --暂时没有
-    --直接发送签约请求
-    local needPrice = self.m_data.contractInfo.price * self.m_data.contractInfo.hours
-    if DataManager.GetMoney() >= needPrice then
-        self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
-    else
-        Event.Brocast("SmallPop", "您的钱不够", 300)
-    end
+    --打开签约界面
+    ct.OpenCtrl("SignContractCtrl", self.m_data)
 end
 --
 function BuildingSignDetailPart:clickSelfSignDelBtn()

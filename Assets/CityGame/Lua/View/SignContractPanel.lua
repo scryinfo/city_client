@@ -20,7 +20,7 @@ function SignContractPanel.InitPanel()
     this.BBuildingText = transform:Find("centerRoot/root/02/valueText"):GetComponent("Text")
     this.priceText = transform:Find("centerRoot/root/03/valueText"):GetComponent("Text")
     this.signHourText = transform:Find("centerRoot/root/04/valueText"):GetComponent("Text")
-    this.totalPriceText = transform:Find("centerRoot/root/totalPriceText"):GetComponent("Text")
+    this.totalPriceText = transform:Find("centerRoot/total/totalPriceText"):GetComponent("Text")
 
     --A
     this.APortraitImg = transform:Find("leftRoot/bg02/portraitImg")

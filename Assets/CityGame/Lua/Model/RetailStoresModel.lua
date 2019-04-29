@@ -155,7 +155,7 @@ end
 function RetailStoresModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_refreshSalary', data)
 end
---打开原料厂
+--打开零售店
 function RetailStoresModel:n_OnOpenRetailStores(stream)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshmRetailShopDataInfo',stream)
     if stream ~= nil then

@@ -4,7 +4,7 @@
 --- DateTime: 2019/4/2 17:19
 ---建筑主界面今日营收曲线图
 TurnoverDetailPart = class('TurnoverDetailPart', BasePartDetail)
-local insId = nil
+local buildingTs = nil
 --
 function TurnoverDetailPart:PrefabName()
     return "TurnoverPartDetail"
@@ -23,7 +23,7 @@ end
 function TurnoverDetailPart:_ResetTransform()
     self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
-    insId = nil
+    buildingTs = nil
 end
 --
 function TurnoverDetailPart:_RemoveEvent()
@@ -36,6 +36,11 @@ end
 
 function TurnoverDetailPart:Show(data)
     BasePartDetail.Show(self)
+    if buildingTs == nil then
+        if self.m_data.info then
+            buildingTs = self.m_data.info.constructCompleteTs
+        end
+    end
     self.m_data = data
     self:_initFunc()
 end
@@ -44,6 +49,11 @@ end
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
         return
+    end
+    if buildingTs == nil then
+        if data.info then
+            buildingTs = data.info.constructCompleteTs
+        end
     end
     self.today.text = "Today:" .. GetClientPriceString(data.turnover)
 end
@@ -66,14 +76,11 @@ end
 --
 function TurnoverDetailPart:_initFunc()
     --获取营收曲线图 发包
-    if insId == nil then
         local msgId = pbl.enum("sscode.OpCode","queryBuildingIncomeMap")
         local lMsg = { id = self.m_data.insId }
         local pMsg = assert(pbl.encode("ss.Id", lMsg))
         CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
     end
-    insId = self.m_data.insId
-end
 
 
 function TurnoverDetailPart:OnXBtn(go)
@@ -110,7 +117,6 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         end
         updataTime = updataTime + 86400
     end
-    local buildingTs = self.m_data.info.constructCompleteTs
     buildingTs = math.floor(buildingTs/1000)
     if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)

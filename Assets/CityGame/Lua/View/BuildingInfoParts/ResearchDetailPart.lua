@@ -134,11 +134,14 @@ function ResearchDetailPart:updateUI(data)
 
             reminderTime = reminderTime + (lineData.times-(lineData.availableRoll+lineData.usedRoll))
         end
-        self.dateText.text = TimeSynchronized.GetTheCurrentTime() + reminderTime
 
+        local ts = getFormatUnixTime((TimeSynchronized.GetTheCurrentServerTime()+ reminderTime)/1000)
+        self.dateText.text = ts.hour..":"..ts.minute.." ".. ts.month.."/"..ts.day.."/"..ts.year
     else
         self.queneCountText.text = 0
-        self.dateText.text = TimeSynchronized.GetTheCurrentTime()
+        local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentServerTime()/1000)
+        self.dateText.text = ts.hour..":"..ts.minute.." ".. ts.month.."/"..ts.day.."/"..ts.year
+
     end
 
 end
@@ -189,7 +192,7 @@ function ResearchDetailPart:onClick_good(ins)
     ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
-    ins.oodsCountText.text = ins.m_data.probGood
+    ins.oodsCountText.text = tostring(ins.m_data.probGood).."%"
 end
 --研究eva
 function ResearchDetailPart:onClick_eva(ins)
@@ -197,7 +200,7 @@ function ResearchDetailPart:onClick_eva(ins)
     ins.type="eva"
     ins.goods.localScale = Vector3.zero
     ins.evaIma.localScale = Vector3.one
-    ins.oodsCountText.text = ins.m_data.probEva
+    ins.oodsCountText.text = tostring(ins.m_data.probEva).."%"
 end
 --设置
 function ResearchDetailPart:onClick_set(ins)
@@ -217,9 +220,11 @@ function ResearchDetailPart:onClick_inventEva(ins)
     ins.buildInfo = ins.m_data.info
     local data={ins = ins,func = function(Ins)
         local count = Ins.ctrl.count
-        if count <= 0 then
-            return
-        end
+
+         if not count or count <= 0 then
+                return
+         end
+
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabAddLine',nil,count)
     end  }
 

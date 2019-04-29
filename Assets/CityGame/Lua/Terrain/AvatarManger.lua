@@ -266,15 +266,16 @@ function AvatarManger.CollectAvatar(AvatarData)
                     LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
                 end
             end
+           AvatarManger.setSize(AvatarData.go,AvatarData.size)
+           AvatarData.go.transform.localScale = Vector3.zero
 
-            AvatarManger.setSize(AvatarData.go,AvatarData.size)
-            --local  func=function(go)
+        --local  func=function(go)
             --    local cRect=AvatarData.go.transform:GetComponent("RectTransform")
             --    local oRect=go.transform:GetComponent("RectTransform")
             --    cRect.sizeDelta=oRect.sizeDelta
             --    cRect.anchoredPosition=oRect.anchoredPosition
             --end
-            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go,func)
+            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
     end
 
 end

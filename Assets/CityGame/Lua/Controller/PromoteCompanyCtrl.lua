@@ -39,7 +39,7 @@ function PromoteCompanyCtrl:Refresh()
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
     --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
-
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetAllMyFlowSign',self.m_data.insId)
 end
 
 function PromoteCompanyCtrl:Hide()
@@ -94,27 +94,29 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     self.m_data = detailData
     self.m_data.insId = insId  --temp
     PromoteCompanyPanel.queneValue.text = self.m_data.selledPromCount
-    if self.m_data.info.ownerId == myOwnerID then
-        if self.groupMgr == nil then
+    if self.groupMgr == nil then
+        if detailData.info.state == "OPERATE" then -- 营业中
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.38)
-            self.groupMgr:AddParts(TurnoverPart, 0.31)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.31)
+            if self.m_data.info.ownerId == myOwnerID then
+                self.groupMgr:AddParts(AdvertisementPart, 0.30)
+                self.groupMgr:AddParts(TurnoverPart, 0.23)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
+                self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
+            else
+                self.groupMgr:AddParts(AdvertisementPart, 1)
+                self.groupMgr:AddParts(TurnoverPart, 0)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0)
+                self.groupMgr:AddParts(AdBuildingSignPart, 0)
+
+            end
+            PromoteCompanyPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
-        else
-            self.groupMgr:RefreshData(self.m_data)
+        else -- 未营业
+            PromoteCompanyPanel.groupTrans.localScale = Vector3.zero
         end
     else
-        if self.groupMgr == nil then
-            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(TurnoverPart, 0)
-            self.groupMgr:AddParts(AdvertisementPart,1)
-            self.groupMgr:RefreshData(self.m_data)
-            self.groupMgr:TurnOffAllOptions()
-        else
-            self.groupMgr:RefreshData(self.m_data)
-        end
+        self.groupMgr:RefreshData(self.m_data)
     end
     PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
     --历史记录测试
@@ -147,6 +149,16 @@ function PromoteCompanyCtrl:_refreshSalary(data)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
+
+        if self.groupMgr == nil then
+            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+            self.groupMgr:AddParts(AdvertisementPart, 0.30)
+            self.groupMgr:AddParts(TurnoverPart, 0.23)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
+            self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
+            PromoteCompanyPanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:TurnOffAllOptions()
+        end
         self.groupMgr:RefreshData(self.m_data)
     end
 end

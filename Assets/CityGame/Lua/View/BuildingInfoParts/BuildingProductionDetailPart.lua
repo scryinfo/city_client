@@ -313,6 +313,7 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             table.insert(self.waitingQueueIns,1,temporaryValue)
         end
     end
+    Event.Brocast("SmallPop","置顶调整成功", 300)
 end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
@@ -333,4 +334,5 @@ function BuildingProductionDetailPart:updateNowLine(data)
         --重新初始化界面及数据
         self:initializeUiInfoData(self.m_data.line)
     end
+    Event.Brocast("SmallPop","生产线删除成功", 300)
 end

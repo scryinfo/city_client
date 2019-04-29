@@ -157,9 +157,23 @@ end
 --添加运输列表
 function BuildingWarehouseDetailPart:addTransportList(data)
     --添加到运输列表
-    table.insert(self.transportTab,data)
-    self.number.transform.localScale = Vector3.one
-    self.numberText.text = #self.transportTab
+    if next(self.transportTab) == nil then
+        table.insert(self.transportTab,data)
+        self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.transportTab
+        Event.Brocast("SmallPop","添加成功", 300)
+    else
+        for key,value in pairs(self.transportTab) do
+            if value.itemId == data.itemId then
+                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                return
+            end
+        end
+        table.insert(self.transportTab,data)
+        --self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.transportTab
+        Event.Brocast("SmallPop","添加成功", 300)
+    end
 end
 --删除运输列表
 function BuildingWarehouseDetailPart:deleTransportList(id)
@@ -175,6 +189,7 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
             self.numberText.text = #self.transportTab
         end
     end
+    Event.Brocast("SmallPop","删除成功", 300)
 end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
@@ -266,6 +281,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}
     UIPanel.ClosePage()
+    Event.Brocast("SmallPop", GetLanguage(21040003), 300)
 end
 --销毁成功后回调
 function BuildingWarehouseDetailPart:deleteSucceed(data)
@@ -300,4 +316,5 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     UIPanel.ClosePage()
+    Event.Brocast("SmallPop", GetLanguage(26030003), 300)
 end

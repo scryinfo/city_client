@@ -123,6 +123,7 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     goods.quality = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
+        Event.Brocast("SmallPop",GetLanguage(21020003), 300)
         return
     else
         goods.number = ins.numberSlider.value

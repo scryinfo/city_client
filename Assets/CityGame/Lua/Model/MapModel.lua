@@ -42,8 +42,8 @@ function MapModel.m_ReqLabSummary()
 end
 --请求推广搜索摘要
 function MapModel.m_ReqPromotionSummary()
-    --local msgId = pbl.enum("gscode.OpCode", "queryGroundSummary")
-    --CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    local msgId = pbl.enum("gscode.OpCode", "adQueryPromoSummary")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 --仓库摘要
 function MapModel.m_ReqWarehouseSummary()
@@ -73,8 +73,12 @@ function MapModel.m_ReqSigningDetail(gridIndexPos)
 end
 --请求推广详情
 function MapModel.m_ReqPromotionDetail(gridIndexPos)
-    --local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
-    --DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketDetail","gs.QueryMarketDetail", data)
+    local typeIds = {}
+    for i, value in ipairs(MapPromotionConfig) do
+        typeIds[i] = value
+    end
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, typeIds = typeIds}
+    DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromoDetail","gs.QueryPromoDetail", data)
 end
 --请求科研详情
 function MapModel.m_ReqTechnologyDetail(gridIndexPos)
@@ -166,7 +170,7 @@ function MapModel.n_OnReceiveWarehouseDetail(stream)
     local data = assert(pbl.decode("gs.WareHouseDetail", stream), "MapModel.n_OnReceiveWarehouseDetail: stream == nil")
     MapCtrl._receiveWarehouseDetail(MapCtrl, data)
 end
---仓库
+--推广
 function MapModel.n_OnReceivePromotionDetail(stream)
     if stream == nil or stream == "" then
         return

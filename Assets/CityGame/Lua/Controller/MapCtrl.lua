@@ -645,7 +645,7 @@ function MapCtrl:_reqMoveDetail(blockId)
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqWarehouseDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId)
         elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
         end
@@ -837,7 +837,7 @@ function MapCtrl:_judgeDetail()
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqWarehouseDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId)
         elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
         end

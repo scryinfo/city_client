@@ -209,7 +209,7 @@ function ResearchDetailPart:onClick_set(ins)
         local count = Ins.ctrl.count
         local isopen = Ins.ctrl.isOpen
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
-        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',GetServerPriceNumber(price),count)
     end  }
 
     ct.OpenCtrl("InventSetPopCtrl",data)

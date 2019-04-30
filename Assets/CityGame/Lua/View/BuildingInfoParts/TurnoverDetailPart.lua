@@ -5,7 +5,6 @@
 ---建筑主界面今日营收曲线图
 TurnoverDetailPart = class('TurnoverDetailPart', BasePartDetail)
 local buildingTs = nil
-local transform
 --
 function TurnoverDetailPart:PrefabName()
     return "TurnoverPartDetail"
@@ -25,7 +24,6 @@ function TurnoverDetailPart:_ResetTransform()
     self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
     buildingTs = nil
-    transform = nil
 end
 --
 function TurnoverDetailPart:_RemoveEvent()
@@ -61,9 +59,9 @@ end
 
 function TurnoverDetailPart:_setValue(turnover)
     self.turnover = turnover
-    if transform then
+    if self.transform then
         if self.today == nil then
-            self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+            self.today = self.transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
         end
         self.today.text = "Today:" .. GetClientPriceString(self.turnover)
     end

@@ -4,7 +4,6 @@
 --- DateTime: 2019/4/2 17:12
 ---建筑主界面今日营收
 TurnoverPart = class('TurnoverPart', BasePart)
-local transform
 --
 function TurnoverPart:PrefabName()
     return "TurnoverPart"
@@ -15,7 +14,6 @@ function TurnoverPart:GetDetailClass()
 end
 --
 function TurnoverPart:_InitTransform()
-    transform = self.transform
     self:_getComponent(self.transform)
 end
 --
@@ -47,9 +45,9 @@ end
 --
 function TurnoverPart:_initFunc(info)
    self.data = info
-    if transform then
+    if self.transform then
         if self.turnover == nil then
-            self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+            self.turnover = self.transform:Find("Top/turnover"):GetComponent("Text")
         end
         self.turnover.text = GetClientPriceString(self.data)
     end

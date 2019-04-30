@@ -30,6 +30,7 @@ function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,buildingType)
     self.goods = prefab.transform:Find("goodsInfo/goods")
 
     luaBehaviour:AddClick(self.placedTopBtn.gameObject,self.clickPlacedTopBtn,self)
+    luaBehaviour:AddClick(self.deleBtn.gameObject,self.deleLine,self)
     self:InitializeData()
 end
 function LineItem:InitializeData()
@@ -55,6 +56,11 @@ end
 function LineItem:clickPlacedTopBtn(ins)
     PlayMusEff(1002)
     Event.Brocast("ProductionLineSettop",ins)
+end
+--删除
+function LineItem:deleLine(ins)
+    PlayMusEff(1002)
+    Event.Brocast("deleListLine",ins)
 end
 
 --LineItem = class("LineItem")

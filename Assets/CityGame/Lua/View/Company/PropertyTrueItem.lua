@@ -65,9 +65,9 @@ function PropertyTrueItem:ShowData(lv, cexp)
         local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
         if self.data.bt == "Quality" then
             if self.data.at < 2100000 then -- 建筑品质加成
-                speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
+                speed = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
             else -- 商品品质值
-                speed = EvaUp[lv].add / 1000
+                speed = string.format( "%.2f",EvaUp[lv].add / 1000)
             end
         elseif self.data.bt == "ProduceSpeed" then
             speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"

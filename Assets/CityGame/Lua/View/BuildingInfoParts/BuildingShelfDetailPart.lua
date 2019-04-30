@@ -370,6 +370,9 @@ function BuildingShelfDetailPart:replenishmentSucceed(data)
             for key,value in pairs(self.shelfDatas) do
                 if value.itemId == data.iKey.id then
                     value.dataInfo.autoReplenish = data.autoRepOn
+                    value.numberBg.transform.localScale = Vector3.one
+                    value.automaticBg.transform.localScale = Vector3.zero
+                    value.noHaveBg.transform.localScale = Vector3.zero
                 end
             end
             --改变建筑信息里的属性
@@ -389,6 +392,9 @@ function BuildingShelfDetailPart:replenishmentSucceed(data)
                 for key,value in pairs(self.shelfDatas) do
                     value.dataInfo.autoReplenish = data.autoRepOn
                     value.dataInfo.n = value.dataInfo.n + warehouseNum
+                    value.numberBg.transform.localScale = Vector3.zero
+                    value.automaticBg.transform.localScale = Vector3.one
+                    value.noHaveBg.transform.localScale = Vector3.zero
                 end
                 for key,value in pairs(self.m_data.shelf.good) do
                     value.autoReplenish = data.autoRepOn
@@ -406,6 +412,9 @@ function BuildingShelfDetailPart:replenishmentSucceed(data)
                     value.dataInfo.autoReplenish = data.autoRepOn
                     value.dataInfo.n = value.dataInfo.n + warehouseNum
                     value.numberText.text = "×"..value.dataInfo.n
+                    value.numberBg.transform.localScale = Vector3.zero
+                    value.automaticBg.transform.localScale = Vector3.one
+                    value.noHaveBg.transform.localScale = Vector3.zero
                 end
                 for key,value in pairs(self.m_data.shelf.good) do
                     value.autoReplenish = data.autoRepOn

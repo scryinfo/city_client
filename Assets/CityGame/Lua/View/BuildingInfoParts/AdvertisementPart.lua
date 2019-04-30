@@ -49,5 +49,4 @@ end
 function AdvertisementPart:_initFunc()
     self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
     self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
-
 end

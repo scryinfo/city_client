@@ -44,6 +44,7 @@ function PromoteCompanyCtrl:Hide()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
+    RevenueDetailsMsg.close()
 end
 
 function PromoteCompanyCtrl:OnCreate(obj)
@@ -66,10 +67,6 @@ end
 
 --点击队列
 function PromoteCompanyCtrl:OnQueue(go)
-    if tonumber(PromoteCompanyPanel.queneValue.text) == 0 then
-        Event.Brocast("SmallPop","暂无队列",300)
-        return
-        end
         if go.m_data.info.ownerId == myOwnerID then
            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
         else
@@ -162,6 +159,6 @@ end
 
 --今日营业额
 function PromoteCompanyCtrl:c_Revenue(info)
-    self.m_data.turnover = info
-    --self.groupMgr:RefreshData(self.m_data)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
 end

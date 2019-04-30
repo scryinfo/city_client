@@ -78,8 +78,10 @@ function BuildingSignPart:_initFunc()
         if contractInfo.contract == nil then
             self:toggleSignState(BuildingSignPart.ESignState.WaitToSign)
             local price = GetClientPriceString(contractInfo.price)
-            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", GetLanguage(12345678), price)
-            self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", GetLanguage(12345678), contractInfo.hours)
+            --self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", GetLanguage(12345678), price)
+            --self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", GetLanguage(12345678), contractInfo.hours)
+            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", "价格", price)
+            self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", "可签约时间", contractInfo.hours)
         else
             self:toggleSignState(BuildingSignPart.ESignState.Signing)
             PlayerInfoManger.GetInfos({[1] = contractInfo.contract.signId}, self._getSignerInfo, self)

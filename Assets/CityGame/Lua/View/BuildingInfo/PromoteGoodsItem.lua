@@ -15,7 +15,7 @@ function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
 
     self.name.text = GetLanguage(dataInfo)
     self.lastSelete = nil
-    --LoadSprite(path, self.icon, true)
+    LoadSprite(Good[dataInfo].img, self.icon)
 
     luaBehaviour:AddClick(self.seleteBtn, self.OnSeleteBtn,self)
 end

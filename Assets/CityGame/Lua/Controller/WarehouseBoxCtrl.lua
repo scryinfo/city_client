@@ -123,8 +123,8 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     local goods = {}
     goods.state = GoodsItemStateType.transport
     goods.itemId = ins.m_data.dataInfo.key.id
-    goods.popularity = ins.m_data.dataInfo.key.producerId
-    goods.quality = ins.m_data.dataInfo.key.qty
+    goods.producerId = ins.m_data.dataInfo.key.producerId
+    goods.qty = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
         Event.Brocast("SmallPop",GetLanguage(21020003), 300)

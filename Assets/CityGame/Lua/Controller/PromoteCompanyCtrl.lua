@@ -33,7 +33,7 @@ end
 
 function PromoteCompanyCtrl:Refresh()
     DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
-
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
 end
 
@@ -44,6 +44,7 @@ function PromoteCompanyCtrl:Hide()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
+    RevenueDetailsMsg.close()
 end
 
 function PromoteCompanyCtrl:OnCreate(obj)
@@ -66,10 +67,6 @@ end
 
 --点击队列
 function PromoteCompanyCtrl:OnQueue(go)
-    if tonumber(PromoteCompanyPanel.queneValue.text) == 0 then
-        Event.Brocast("SmallPop","暂无队列",300)
-        return
-        end
         if go.m_data.info.ownerId == myOwnerID then
            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
         else
@@ -162,6 +159,15 @@ end
 
 --今日营业额
 function PromoteCompanyCtrl:c_Revenue(info)
-    self.m_data.turnover = info
-    --self.groupMgr:RefreshData(self.m_data)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
+    --if self.groupMgr == nil then
+    --    self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+    --    self.groupMgr:AddParts(AdvertisementPart, 0.30)
+    --    self.groupMgr:AddParts(TurnoverPart, 0.23)
+    --    self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
+    --    self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
+    --    self.groupMgr:TurnOffAllOptions()
+    --end
+    --self.groupMgr:RefreshData(info)
 end

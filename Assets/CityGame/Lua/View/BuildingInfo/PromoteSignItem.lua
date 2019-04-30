@@ -49,7 +49,7 @@ function PromoteSignItem:initialize(dataInfo, viewRect,luaBehavior)
     PlayerInfoManger.GetInfos({dataInfo.sellerPlayerId}, self.c_OnHead, self)
 
     self.price.text = GetClientPriceString(dataInfo.pricePerHour)
-    self.bonus.text = math.ceil(dataInfo.lift *100)/100 .. "%"
+    self.bonus.text = math.ceil(dataInfo.lift *100) .. "%"
 
     self.luaBehavior:AddClick(self.bg, self.OnBg, self)
 end

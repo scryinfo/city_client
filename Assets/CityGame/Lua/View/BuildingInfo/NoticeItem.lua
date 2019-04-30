@@ -115,6 +115,14 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 18 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
+    elseif go.typeId == 4 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    elseif go.typeId == 5 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    elseif go.typeId == 15 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    elseif go.typeId == 16 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 17 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])

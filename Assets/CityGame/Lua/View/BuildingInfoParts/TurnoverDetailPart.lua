@@ -55,10 +55,20 @@ function TurnoverDetailPart:RefreshData(data)
             buildingTs = data.info.constructCompleteTs
         end
     end
-    self.today.text = "Today:" .. GetClientPriceString(data.turnover)
+end
+
+function TurnoverDetailPart:_setValue(turnover)
+    self.turnover = turnover
+    if self.transform then
+        if self.today == nil then
+            self.today = self.transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+        end
+        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
+    end
 end
 --
 function TurnoverDetailPart:_InitTransform()
+    transform = self.transform
     self:_getComponent(self.transform)
 
     self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
@@ -71,7 +81,13 @@ function TurnoverDetailPart:_getComponent(transform)
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
-    self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+    if self.today == nil then
+        self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+    end
+
+    if self.turnover then
+        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
+    end
 end
 --
 function TurnoverDetailPart:_initFunc()
@@ -148,6 +164,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         end
     else
         for i = 1, 30 do
+            turnoverTab[i] = {}
             turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 148
             turnoverTab[i].money = 0
             if info.nodes ~= nil then

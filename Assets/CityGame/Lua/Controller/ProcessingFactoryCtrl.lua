@@ -160,7 +160,7 @@ end
 function ProcessingFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
-    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
+    --Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息
 --function ProcessingFactoryCtrl:_changeItemData(data)

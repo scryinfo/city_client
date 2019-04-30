@@ -43,7 +43,7 @@ function PromoteSignItem:initialize(dataInfo, viewRect,luaBehavior)
         if math.floor((currentTime - dataInfo.startTs)/3600000) < 1 then
             self.time.text = "<1h"
         else
-            self.time.text = math.ceil((currentTime - dataInfo.startTs)/3600000) .. "d"
+            self.time.text = math.ceil((currentTime - dataInfo.startTs)/3600000) .. "h"
         end
     end
 

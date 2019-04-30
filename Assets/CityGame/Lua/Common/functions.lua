@@ -663,3 +663,9 @@ function DynamicLoadPrefab(path, parent, scale, fuc)
 		end
 	end)
 end
+
+
+function ct.instance_rpc(ins, modelMethord, ...)
+	local arg = {...}
+	arg[#arg](ins[modelMethord](ins,...))
+end

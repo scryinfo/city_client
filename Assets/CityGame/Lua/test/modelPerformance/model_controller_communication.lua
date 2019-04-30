@@ -119,6 +119,23 @@ end
 function ct.model_rpc(insId, modelMethord, ...)
     ModelManager.modelRpc(insId, modelMethord, ...)
 end
+
+UnitTest.Exec("abel_0430_rpcRet", "abel_0430_rpcRet",  function ()
+    local tableA = {
+        name = "tableA"
+    }
+    tableA.fun1 = function(self,st)
+        return st..tableA.name
+    end
+    local tableB = {}
+    tableB.fun2 = function(ins)
+        ct.instance_rpc(ins, 'fun1', "haha",function (nameret)
+            ct.log('abel_0430_rpcRet', 'tableA 返回它的名字：  '..nameret)
+        end)
+    end
+    tableB.fun2(tableA)
+end)
+
 function ct.model_rpcNoRet(insId, modelMethord, ...)
     ModelManager.modelRpcNoRet(insId, modelMethord, ...)
 end

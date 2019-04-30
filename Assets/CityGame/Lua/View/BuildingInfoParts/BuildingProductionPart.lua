@@ -75,17 +75,17 @@ function BuildingProductionPart:_initFunc()
             self.timeText.text = self:GetTime(self.m_data.line[1])
             UpdateBeat:Add(self.Update,self)
         end
-    end
-    --是商品时
-    local goodsKey = 22
-    if math.floor(self.itemId / 100000) == goodsKey then
-        --原料不足时
-        if self:CheckMaterial(self.itemId) == false then
-            --self.timeText.text = "00:00:00"
-            UpdateBeat:Remove(self.Update,self)
-            --self.oneTimeText.text = "00:00"
-            --self.timeSlider.value = 0
-            return
+        --是商品时
+        local goodsKey = 22
+        if math.floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                --self.timeText.text = "00:00:00"
+                UpdateBeat:Remove(self.Update,self)
+                --self.oneTimeText.text = "00:00"
+                --self.timeSlider.value = 0
+                return
+            end
         end
     end
 end

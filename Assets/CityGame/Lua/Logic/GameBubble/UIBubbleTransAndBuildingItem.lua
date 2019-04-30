@@ -44,6 +44,9 @@ function UIBubbleTransAndBuildingItem:initialize(data, obj)
         minAnchorY = - selfBoxwidth
         maxAnchorY = UnityEngine.Screen.height * Game.ScreenRatio + selfBoxwidth
     end
+    if self.pos ~= nil and self.data ~= nil then
+        self.rect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.pos + self.data.uiCenterPos))
+    end
     self.m_anchoredPos =  self.rect.anchoredPosition
     self:ShowOrHideSelf(self:JudgeSelfIsShow())
 end

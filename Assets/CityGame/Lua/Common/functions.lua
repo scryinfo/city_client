@@ -425,21 +425,21 @@ function ReadConfigLanguage()
 
    local num=UnityEngine.PlayerPrefs.GetInt("Language")
 	if num==0 then
-		currentLanguage=english
-		currentSprite=sprite_eng
-	elseif num==1 then
 		currentLanguage=chinese
 		currentSprite=sprite_chi
+	elseif num==1 then
+		currentLanguage=english
+		currentSprite=sprite_eng
 	end
 end
 
 function SaveLanguageSettings(languageType)
 	if languageType==LanguageType.Chinese then
-		UnityEngine.PlayerPrefs.SetInt("Language",1)
+		UnityEngine.PlayerPrefs.SetInt("Language",0)
 		currentLanguage=chinese
 		currentSprite=sprite_chi
 	elseif languageType==LanguageType.English then
-		UnityEngine.PlayerPrefs.SetInt("Language",0)
+		UnityEngine.PlayerPrefs.SetInt("Language",1)
 		currentLanguage=english
 		currentSprite=sprite_eng
 	end

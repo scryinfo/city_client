@@ -64,6 +64,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.lineInfo = transform:Find("contentRoot/content/leftRoot/lineInfo")
     self.nameBg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/nameBg")
     self.goods = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/goods")
+    self.tipText = transform:Find("contentRoot/content/leftRoot/lineInfo/tipText"):GetComponent("Text")
 
     self.iconImg = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/iconImg"):GetComponent("Image")
     self.nameText = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/nameBg/nameText"):GetComponent("Text")
@@ -138,6 +139,7 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
+    self.tipText.transform.localScale = Vector3.zero
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
@@ -186,6 +188,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 UpdateBeat:Remove(self.Update,self)
                 self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
+                self.tipText.text = "原料不足无法生产!!!"
                 return
             end
         end
@@ -286,6 +289,7 @@ function BuildingProductionDetailPart:Update()
             UpdateBeat:Remove(self.Update,self)
             self.oneTimeText.text = "00:00"
             self.timeSlider.value = 0
+            self.tipText.text = "原料不足无法生产!!!"
             return
         end
     end

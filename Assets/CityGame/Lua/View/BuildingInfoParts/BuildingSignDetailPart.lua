@@ -219,7 +219,7 @@ function BuildingSignDetailPart:_language()
     self.tipText11.text = "Human traffic can improve the promotion ability of the promotion company!"
 end
 --
-function BuildingSignDetailPart:_createCurve(info)
+function BuildingSignDetailPart:_createCurve(info, type)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -246,21 +246,30 @@ function BuildingSignDetailPart:_createCurve(info)
         end
         turnoverTab[i] = {}
         turnoverTab[i].coordinate = (updataTime - monthAgo + 3600) / 3600 * 118
-        turnoverTab[i].flow = 0  --看具体字段
-        if info.nodes ~= nil then
-            for k, v in pairs(info.nodes) do
-                if updataTime == v.time / 1000 then
-                    turnoverTab[i].flow = tonumber(GetClientPriceString(v.flow))
+        turnoverTab[i].data = 0  --看具体字段
+        if type == 1 then  --加成
+            if info.nodes ~= nil then
+                for k, v in pairs(info.nodes) do
+                    if updataTime == v.time / 1000 then
+                        turnoverTab[i].data = tonumber(v.lift)
+                    end
+                end
+            end
+        elseif type == 2 then  --人流量
+            if info.nodes ~= nil then
+                for k, v in pairs(info.nodes) do
+                    if updataTime == v.time / 1000 then
+                        turnoverTab[i].data = tonumber(v.flow)
+                    end
                 end
             end
         end
-
         updataTime = updataTime + 3600
     end
 
     local turnover = {}
     for i, v in ipairs(turnoverTab) do
-        turnover[i] = Vector2.New(v.coordinate,v.flow)  --
+        turnover[i] = Vector2.New(v.coordinate,v.data)  --
     end
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
@@ -271,26 +280,44 @@ function BuildingSignDetailPart:_createCurve(info)
             max = v.y
         end
     end
-    local scale = SetYScale(max,5,self.yScale)
+
+    local scale
     local turnoverVet = {}
-    for i, v in ipairs(turnover) do
-        if scale == 0 then
-            turnoverVet[i] = v
-        else
+    local showNumValue = {}  --用于点的显示
+    if type == 1 then
+        scale = SetYScale(max,4, self.yScale, true)
+        for i, v in ipairs(turnover) do
             if scale == 0 then
                 turnoverVet[i] = Vector2.New(v.x, v.y)
             else
                 turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
             end
+            showNumValue[i] = Vector2.New(v.x, v.y * 100)
+            v.y = math.ceil(v.y *100) /100 .. "%"
         end
+    elseif type == 2 then
+        scale = SetYScale(max,4, self.yScale)
+        for i, v in ipairs(turnover) do
+            if scale == 0 then
+                turnoverVet[i] = v
+            else
+                if scale == 0 then
+                    turnoverVet[i] = Vector2.New(v.x, v.y)
+                else
+                    turnoverVet[i] = Vector2.New(v.x,v.y / scale * 63)
+                end
+            end
+        end
+        showNumValue = turnover
     end
+
     self.slide:SetXScaleValue(time,118)
     self.graph:BoundaryLine(boundaryLine)
 
     self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
     local temp1 = {[1] = turnoverVet[#turnoverVet]}
     local temp2 = {[1] = turnover[#turnover]}
-    self.slide:SetCoordinate(temp1, temp2, Color.white)
+    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)
@@ -449,14 +476,8 @@ function BuildingSignDetailPart:clickSettingBtn()
 end
 --
 function BuildingSignDetailPart:clickOtherSignBtn()
-    --打开签约界面  --暂时没有
-    --直接发送签约请求
-    local needPrice = self.m_data.contractInfo.price * self.m_data.contractInfo.hours
-    if DataManager.GetMoney() >= needPrice then
-        self:m_ReqContract(self.m_data.info.id, self.m_data.contractInfo.price, self.m_data.contractInfo.hours)
-    else
-        Event.Brocast("SmallPop", "您的钱不够", 300)
-    end
+    --打开签约界面
+    ct.OpenCtrl("SignContractCtrl", self.m_data)
 end
 --
 function BuildingSignDetailPart:clickSelfSignDelBtn()
@@ -477,7 +498,7 @@ function BuildingSignDetailPart:clickLiftBtn()
     if self.liftCurveData == nil then
         self:_reqLiftCurve()
     else
-        self:_createCurve(self.liftCurveData)
+        self:_createCurve(self.liftCurveData, 1)
     end
     self:_toggleBtn(1)
 end
@@ -486,7 +507,7 @@ function BuildingSignDetailPart:clickNpcBtn()
     if self.npcCurveData == nil then
         self:_reqNpcCurve()
     else
-        self:_createCurve(self.npcCurveData)
+        self:_createCurve(self.npcCurveData, 2)
     end
     self:_toggleBtn(2)
 end
@@ -518,13 +539,13 @@ function BuildingSignDetailPart:_reqLiftCurve()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 ---------------------------------------------------------------------------------------
---人流量曲线
-function BuildingSignDetailPart:n_OnGetNpcCurve(info)
-    self.npcCurveData = info
-    self:_createCurve(info)
-end
 --签约加成曲线
 function BuildingSignDetailPart:n_OnGetLiftCurve(info)
     self.liftCurveData = info
-    self:_createCurve(info)
+    self:_createCurve(info, 1)
+end
+--人流量曲线
+function BuildingSignDetailPart:n_OnGetNpcCurve(info)
+    self.npcCurveData = info
+    self:_createCurve(info, 2)
 end

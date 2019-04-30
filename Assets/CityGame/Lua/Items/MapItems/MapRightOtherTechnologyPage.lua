@@ -5,6 +5,7 @@
 ---点击其他人研究所
 MapRightOtherTechnologyPage = class('MapRightOtherTechnologyPage')
 MapRightOtherTechnologyPage.moneyColor = "#F4AD07FF"
+MapRightOtherTechnologyPage.successNum = 10000
 
 --初始化方法
 function MapRightOtherTechnologyPage:initialize(viewRect)
@@ -24,11 +25,11 @@ function MapRightOtherTechnologyPage:refreshData(data, typeData)
         if typeData.detailId == EMapTechnologyType.TechNewItem then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Inventing new goods"
-            self.valueText.text = self.data.goodProb.."%"
+            self.valueText.text = (self.data.goodProb / MapRightOtherTechnologyPage.successNum).."%"
         elseif typeData.detailId == EMapTechnologyType.TechEva then
             --self.infoText.text = GetLanguage(12345678)
             self.infoText.text = "Eva"
-            self.valueText.text = self.data.evaProb.."%"
+            self.valueText.text = (self.data.evaProb/ MapRightOtherTechnologyPage.successNum).."%"
         end
         self:_language()
         self:_createTech()
@@ -59,7 +60,12 @@ function MapRightOtherTechnologyPage:_createTech()
     local data1 = {infoTypeStr = "ResearchTime", value = str1}  --科研时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 
-    local str3 = self.data.queuedTimes.."h"
+    local str3
+    if self.data.queuedTimes ~= 0 then
+        str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
+    else
+        str3 = os.date("%H:%M %m/%d/%Y", os.time())
+    end
     local data3 = {infoTypeStr = "Queued", value = str3}  --队列
     self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)
 end

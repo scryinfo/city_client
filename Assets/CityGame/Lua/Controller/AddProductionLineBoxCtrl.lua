@@ -54,7 +54,7 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.numberText.text = "0/0"
     AddProductionLineBoxPanel.timeText.text = "00:00:00"
     AddProductionLineBoxPanel.numberSlider.value = 0
-    AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
+    AddProductionLineBoxPanel.numberSlider.maxValue = 10
     AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
@@ -115,7 +115,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             UIPanel.BackToPageInstance(MaterialFactoryCtrl,self.m_data)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-
+            UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
         end
         Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end

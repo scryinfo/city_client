@@ -25,6 +25,7 @@ end
 --end
 function BuildingProductionDetailPart:Hide()
     BasePartDetail.Hide(self)
+    self.ScrollView.gameObject:SetActive(false)
     if next(self.waitingQueueIns) ~= nil then
         self:CloseDestroy(self.waitingQueueIns)
     end
@@ -78,6 +79,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     --rightRoot
     self.numberTipText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText"):GetComponent("Text")
     self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
+    self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
     self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
@@ -140,6 +142,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.lineNumberText.text = 0 .."/"..0
 
     else
+        self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one
         self.addBtn.transform.localScale = Vector3.zero
         self.nameText.text = GetLanguage(lineData[1].itemId)
@@ -310,6 +313,7 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             table.insert(self.waitingQueueIns,1,temporaryValue)
         end
     end
+    Event.Brocast("SmallPop","置顶调整成功", 300)
 end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
@@ -330,4 +334,5 @@ function BuildingProductionDetailPart:updateNowLine(data)
         --重新初始化界面及数据
         self:initializeUiInfoData(self.m_data.line)
     end
+    Event.Brocast("SmallPop","生产线删除成功", 300)
 end

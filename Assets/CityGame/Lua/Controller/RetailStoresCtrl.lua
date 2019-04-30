@@ -33,8 +33,11 @@ end
 function RetailStoresCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
+
 end
 function RetailStoresCtrl:Refresh()
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     this:initializeData()
 end
 
@@ -146,7 +149,10 @@ end
 function RetailStoresCtrl:_updateName(name)
     RetailStoresPanel.nameText.text = name
 end
-
+function RetailStoresCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
+end
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
@@ -169,5 +175,6 @@ function RetailStoresCtrl:_clickCloseBtn()
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
+    RevenueDetailsMsg.close()
     UIPanel.ClosePage()
 end

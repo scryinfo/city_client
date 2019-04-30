@@ -35,13 +35,6 @@ function StopAndBuildCtrl:Refresh()
     self:updateBtn(data)
 end
 
-function  StopAndBuildCtrl:Hide()
-    UIPanel.Hide(self)
-end
-
-function StopAndBuildCtrl:Close()
-    UIPanel.Close(self)
-end
 
 function StopAndBuildCtrl:Awake(go)
     panel = StopAndBuildPanel
@@ -171,6 +164,12 @@ local root,btn
 local select
 --刷新按钮
 function StopAndBuildCtrl:updateBtn(buildinghInfo)
+    if buildinghInfo.ownerId == DataManager.GetMyOwnerID() then
+        panel.nameBtn.localScale = Vector3.one
+    else
+        panel.nameBtn.localScale = Vector3.zero
+    end
+
     if buildinghInfo.state == "OPERATE" then
         panel.stopBtn.localScale = Vector3.one
         panel.removeBtn.localScale = Vector3.zero

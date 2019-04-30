@@ -16,7 +16,12 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.itemId = dataInfo.k.id
 
     self.iconImg = prefab.transform:Find("iconImg"):GetComponent("Image")
+
+    self.numberBg = prefab.transform:Find("numberBg")
     self.numberText = prefab.transform:Find("numberBg/numberText"):GetComponent("Text")
+    self.noHaveBg = prefab.transform:Find("noHaveBg")
+    self.automaticBg = prefab.transform:Find("automaticBg")
+
     self.nameBg = prefab.transform:Find("nameBg")
     self.nameText = prefab.transform:Find("nameBg/nameText"):GetComponent("Text")
 
@@ -34,6 +39,20 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self:InitializeData()
 end
 function ShelfItem:InitializeData()
+    if self.dataInfo.autoReplenish == true then
+        self.numberBg.transform.localScale = Vector3.zero
+        if self.dataInfo.n == 0 then
+            self.automaticBg.transform.localScale = Vector3.zero
+            self.noHaveBg.transform.localScale = Vector3.one
+        else
+            self.automaticBg.transform.localScale = Vector3.one
+            self.noHaveBg.transform.localScale = Vector3.zero
+        end
+    else
+        self.numberBg.transform.localScale = Vector3.one
+        self.automaticBg.transform.localScale = Vector3.zero
+        self.noHaveBg.transform.localScale = Vector3.zero
+    end
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.n
     self.priceText.text = GetClientPriceString(self.dataInfo.price)

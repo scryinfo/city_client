@@ -95,6 +95,10 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     self.numberSlider.maxValue = self.m_data.dataInfo.n
     self.numberSlider.value = 0
     self.numberText.text = "×"..self.numberSlider.value
+    local function callback(a)
+        self.warehouseNumberText.text = a
+    end
+    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
 end
 --设置多语言
 function WarehouseBoxCtrl:_language()

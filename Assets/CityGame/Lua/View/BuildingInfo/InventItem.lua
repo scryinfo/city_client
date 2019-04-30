@@ -33,10 +33,12 @@ function InventItem:updateData(data)
     self.type=data.type
     self.name=data.name
     self.path=data.iconPath
+
+    self:updateUI(data)
 end
 
 function InventItem:updateUI(data)
-    --LoadSprite()
+    LoadSprite(data.iconPath,self.ima)
     self.text.text=data.name
 end
 

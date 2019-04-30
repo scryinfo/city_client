@@ -5,12 +5,12 @@ RollItem = class('RollItem')
 ---初始化方法   数据（读配置表）
 function RollItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
+    local transform = prefab.transform
 
-    --self.ima=prefab.transform:Find("Image"):GetComponent("Image");
+    self.oddsText=findByName(transform,"Text"):GetComponent("Text")
 
     luaBehaviour:AddClick(prefab.gameObject,self.c_OnClick_roll,self);
     self:Refresh(data)
-
 end
 ---==========================================================================================点击函数=============================================================================
 --开箱
@@ -25,6 +25,7 @@ end
 
 function RollItem:updateUI(data)
     --LoadSprite()
+    self.oddsText.text = tostring(data.odds) .. "%"
 end
 
 function RollItem:Refresh(data)

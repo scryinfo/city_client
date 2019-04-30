@@ -65,7 +65,7 @@ function InventGoodQueneItem:updateUI(data)
     --赋值开始时间
     if data.queneTime then
         local ts = getFormatUnixTime(data.queneTime/1000)
-        self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. " " .. ts.minute
+        self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
     end
     --赋值Detail
     if data.beginProcessTs > 0 or  data.ids==1 then

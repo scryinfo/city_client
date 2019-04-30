@@ -4,12 +4,12 @@ InventConfig={
     [1]={
         type="51",
         name="食物",
-        iconPath= absolutePath .."icon-clothes.png"
+        iconPath= absolutePath .."icon-food.png"
     },
     [2]={
         type="52",
         name="服饰",
-        iconPath= absolutePath .."icon-food.png"
+        iconPath= absolutePath .."icon-clothes.png"
     }
 
 

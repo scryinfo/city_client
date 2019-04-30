@@ -84,6 +84,7 @@ end
 function LaboratoryCtrl:_initData()
     --请求建筑详情
     DataManager.OpenDetailModel(LaboratoryModel, self.m_data.insId)
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     LaboratoryCtrl.static.insId= self.m_data.insId
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqLaboratoryDetailInfo')
 end
@@ -94,7 +95,6 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
             self:_clickCloseBtn(self)
         end)
     end
-    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(buildingInfo.ownerId)
     LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
     self.m_data=buildingInfo
     buildingInfo.insId=buildingInfo.info.id

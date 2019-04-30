@@ -189,7 +189,6 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
                 self.tipText.text = "原料不足无法生产!!!"
-                return
             end
         end
 

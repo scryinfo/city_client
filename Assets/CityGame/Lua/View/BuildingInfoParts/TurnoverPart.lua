@@ -20,19 +20,34 @@ end
 function  TurnoverPart:_ResetTransform()
     self.turnover.text = "0.0000"
 end
+
+function TurnoverPart:ShowDetail(data)
+    BasePart.ShowDetail(self,data)
+    --Event.AddListener("c_Revenue",self.c_Revenue,self)
+end
 --
 function TurnoverPart:RefreshData(data)
     if data == nil then
         return
     end
     self.m_data = data
-    self:_initFunc()
+    --self:_initFunc()
 end
 --
 function TurnoverPart:_getComponent(transform)
     self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+    if self.data then
+        self.turnover.text = GetClientPriceString(self.data)
+    end
 end
 --
-function TurnoverPart:_initFunc()
-    self.turnover.text = GetClientPriceString(self.m_data.turnover)
+function TurnoverPart:_initFunc(info)
+   self.data = info
+    if self.turnover then
+        self.turnover.text = GetClientPriceString(self.data)
+    end
+end
+--今日营业额
+function TurnoverPart:c_Revenue(info)
+
 end

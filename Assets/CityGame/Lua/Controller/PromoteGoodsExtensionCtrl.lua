@@ -51,6 +51,12 @@ function PromoteGoodsExtensionCtrl:Active()
 end
 
 function PromoteGoodsExtensionCtrl:Refresh()
+    if self.m_data.Data.typeId == 2251 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", PromoteGoodsExtensionPanel.icon)
+    elseif self.m_data.Data.typeId == 2252 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", PromoteGoodsExtensionPanel.icon)
+    end
+    PromoteGoodsExtensionPanel.iconText.text = self.m_data.Data.name
     self:initData()
     --判断是自己还是别人打开了界面
     if self.m_data.DataInfo.info.ownerId == myOwnerID then
@@ -172,5 +178,10 @@ end
 
 --关闭界面
 function PromoteGoodsExtensionCtrl:c_ClosePromoteGoodsExtension()
+    --if self.m_data.DataInfo.info.ownerId == myOwnerID then
+    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,true)
+    --else
+    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,false)
+    --end
     UIPanel.ClosePage()
 end

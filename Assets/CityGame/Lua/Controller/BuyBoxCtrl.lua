@@ -113,8 +113,8 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     local goods = {}
     goods.state = GoodsItemStateType.buy
     goods.itemId = ins.m_data.dataInfo.k.id
-    goods.popularity = ins.m_data.dataInfo.k.popularity
-    goods.quality = ins.m_data.dataInfo.k.qty
+    goods.producerId = ins.m_data.dataInfo.k.producerId
+    goods.qty = ins.m_data.dataInfo.k.qty
     goods.level = ins.m_data.dataInfo.k.level
     goods.price = ins.m_data.dataInfo.price
     if ins.numberSlider.value == 0 then

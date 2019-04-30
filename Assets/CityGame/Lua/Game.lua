@@ -50,6 +50,7 @@ end
 function Game.OnPostInitOK()
     --BuilldingBubbleInsManger.Init()
     --开业停业
+    --[[
     StopAndBuildModel:Awake()
     --PlayerInfoManager.Init()
     PlayerInfoManger.Awake()
@@ -62,5 +63,5 @@ function Game.OnPostInitOK()
 
     PathFindManager.Init()
     --营收详情
-    RevenueDetailsMsg.Awake()
+    RevenueDetailsMsg.Awake()--]]
 end

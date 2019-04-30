@@ -70,21 +70,22 @@ function PropertyTrueItem:ShowData(lv, cexp)
                 speed = EvaUp[lv].add / 1000
             end
         elseif self.data.bt == "ProduceSpeed" then
-            speed = tostring(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "个/s"
+            speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"
         elseif self.data.bt == "PromotionAbility" then
-            speed = tostring((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
+            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
         elseif self.data.bt == "InventionUpgrade" then
-            speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
         elseif self.data.bt == "EvaUpgrade" then
-            speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
         elseif self.data.bt == "WarehouseUpgrade" then
-            speed = (1 + EvaUp[lv].add / 100000) * self.configData.basevalue
+            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
         end
 
         if lv == 1 then
             self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
         else
-            self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed, PropertyTrueItem.static.PercentColor, EvaUp[lv].add / 1000)
+            --self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, tostring(speed), PropertyTrueItem.static.PercentColor, tostring(EvaUp[lv].add / 1000))
+            self.nameNumberText.text = self.configData.name .. ":<color=" .. PropertyTrueItem.static.NumberColor .. "><b>" .. speed .. "</b></color>  <color=" .. PropertyTrueItem.static.PercentColor .. "><b>(+ " .. tostring(EvaUp[lv].add / 1000) .. "%)</b></color>"
             --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
         end
     else

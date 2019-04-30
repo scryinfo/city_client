@@ -37,15 +37,18 @@ end
 function HouseCtrl:Active()
     UIPanel.Active(self)
     --Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function HouseCtrl:Hide()
     --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
     UIPanel.Hide(self)
+    RevenueDetailsMsg.close()
 end
 
 
@@ -54,6 +57,7 @@ function HouseCtrl:_initData()
     if self.m_data then
         --向服务器请求建筑详情
         DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
+        RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
     end
 end
@@ -183,4 +187,9 @@ end
 function HouseCtrl:_signSuccess(data)
     self.m_data.contractInfo.contract = data
     self.groupMgr:RefreshData(self.m_data)
+end
+
+function HouseCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
 end

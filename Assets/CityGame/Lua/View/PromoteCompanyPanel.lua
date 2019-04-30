@@ -19,9 +19,9 @@ end
 
 --初始化面板--
 function PromoteCompanyPanel.InitPanel()
-
     this.groupTrans = transform:Find("MainGroup")
     this.topItem = BuildingUpperItem:new(transform:Find("top/BuildingUpperItem"))
+    this.open = transform:Find("open").gameObject
     this.queue = transform:Find("quene").gameObject
     this.open = transform:Find("open").gameObject
     this.queneValue = transform:Find("quene/queneImage/queneText/queneValue"):GetComponent("Text")

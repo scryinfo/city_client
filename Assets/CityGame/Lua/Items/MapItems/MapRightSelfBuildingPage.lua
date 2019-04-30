@@ -120,11 +120,18 @@ function MapRightSelfBuildingPage:_createMaterial()
     self.items[#self.items + 1] = self:_createShowItem(data3)
 
     if self.data.line == nil then  --生产线
-        local str2 = GetLanguage(12345678)
+        --local str2 = GetLanguage(12345678)
+        local str2 = "No production"
         local data2 = {infoTypeStr = "Production", value = str2}
         self.items[#self.items + 1] = self:_createShowItem(data2)
     else
-        local detailImgPath = Material[self.data.line[1].itemId].img
+        local path
+        if Material[self.data.line[1].itemId] ~= nil then
+            path = Material[self.data.line[1].itemId].img
+        else
+            path = Good[self.data.line[1].itemId].img
+        end
+        local detailImgPath = path
         local data2 = {infoTypeStr = "Production", value = GetLanguage(12345678), detailImgPath = detailImgPath}
         self.items[#self.items + 1] = self:_createShowItem(data2, true)
     end

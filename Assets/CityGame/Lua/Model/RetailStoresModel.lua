@@ -95,7 +95,7 @@ end
 function RetailStoresModel:m_ReqChangeMaterialName(id, name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
 end
-----关闭原料厂详情推送消息
+----关闭零售店详情推送消息
 --function RetailStoresModel:m_ReqCloseMaterial(buildingId)
 --    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id = buildingId})
 --end

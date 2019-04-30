@@ -101,7 +101,7 @@ end
 
 function InventPopCtrl:other()
     panel.countInp.onValueChanged:AddListener( function (string)
-        if string == "" or self.m_data.ins.buildInfo.sellTimes == 0 then
+        if string == "" or self.m_data.ins.buildInfo.sellTimes == 0 or not self.m_data.ins.buildInfo.pricePreTime then
             self.count=0
             Event.Brocast("SmallPop","研究次数不够",300)
             panel.countInp.text = 0

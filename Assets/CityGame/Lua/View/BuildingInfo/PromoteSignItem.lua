@@ -34,12 +34,6 @@ function PromoteSignItem:initialize(dataInfo, viewRect,luaBehavior)
     if plyaeeId == dataInfo.sellerPlayerId then
         self.time.text = "- -"
     else
-        --if tonumber(getFormatUnixTime((currentTime - dataInfo.startTs)/1000).day ) < 1 and tonumber( getFormatUnixTime((currentTime - dataInfo.startTs)/1000).hour) < 1 then
-        --    self.time.text = "<1h"
-        --else
-        --    self.time.text = getFormatUnixTime((currentTime - dataInfo.startTs)/1000).day.."d "  .. getFormatUnixTime((currentTime - dataInfo.startTs)/1000).hour .. "h" .. " | " .. dataInfo.signingHours .. "d"
-        --
-        --end
         if math.floor((currentTime - dataInfo.startTs)/3600000) < 1 then
             self.time.text = "<1h"
         else

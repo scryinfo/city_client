@@ -21,6 +21,8 @@ end
 function PromoteGoodsExtensionPanel.InitPanel()
     this.xBtn = transform:Find("contentRoot/top/xBtn").gameObject
     this.curve = transform:Find("contentRoot/curveBg").gameObject     --曲线图
+    this.icon = transform:Find("contentRoot/curveBg/icon"):GetComponent("Image")     --图片
+    this.iconText = transform:Find("contentRoot/curveBg/icon/iconText"):GetComponent("Text")     --图片名字
     this.popularity = transform:Find("contentRoot/curveBg/popularity"):GetComponent("Text")     --加成
     this.queue = transform:Find("contentRoot/queue").gameObject     --确定(自己)
     this.myTime = transform:Find("contentRoot/time")     --时间(自己)

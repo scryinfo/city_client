@@ -41,15 +41,13 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         self.ModelDataList[i] = prefabData
         local function callback(prefab)
             self.NoticeLuaItem = NoticeItem:new(self.ModelDataList[i].uiData,prefab,self.behaviour, self,v.id,v.type)
+            if not self.notice then
+                self.notice = {}
+            end
+            self.notice[v.id] = self.NoticeLuaItem
+            NoticeMgr.notice[v.id] = self.notice[v.id]
         end
         createPrefab(NoticeMgr.static.Notice_PATH,GameNoticePanel.leftContent, callback)
-
-        if not self.notice then
-            self.notice = {}
-        end
-        self.notice[v.id] = self.NoticeLuaItem
-        NoticeMgr.notice[v.id] = self.notice[v.id]
-        --self.items  存的是Lua实例
     end
 end
 

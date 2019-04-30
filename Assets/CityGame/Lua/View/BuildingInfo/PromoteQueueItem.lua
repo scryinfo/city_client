@@ -50,6 +50,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     elseif dataInfo.buildingType == 1400 then
         self.goodsText.text = GetLanguage(18030007)
     else
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/goods/".. dataInfo.productionType .. ".png", self.goodsImage,true)
         self.goodsText.text = GetLanguage(dataInfo.productionType)
     end
 

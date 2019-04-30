@@ -101,7 +101,7 @@ end
 
 function InventPopCtrl:other()
     panel.countInp.onValueChanged:AddListener( function (string)
-        if string == "" or deatailBuildInfo.sellTimes == 0 or not deatailBuildInfo.pricePreTime then
+        if string == "" or deatailBuildInfo.sellTimes == 0 or not deatailBuildInfo.pricePreTime  then
             self.count=0
             Event.Brocast("SmallPop","研究次数不够",300)
             panel.countInp.text = 0
@@ -111,6 +111,10 @@ function InventPopCtrl:other()
 
         local count = tonumber(string)
 
+        if count >= deatailBuildInfo.sellTimes then
+            count =deatailBuildInfo.sellTimes
+        end
+        panel.countInp.text = count
         if deatailBuildInfo.sellTimes then
             panel.Slider.value = count/ (deatailBuildInfo.sellTimes)
         end

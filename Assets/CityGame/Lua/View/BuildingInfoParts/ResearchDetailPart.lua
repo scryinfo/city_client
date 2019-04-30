@@ -55,6 +55,7 @@ function ResearchDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.evaBtn.gameObject,self.onClick_eva, self)
     mainPanelLuaBehaviour:AddClick(self.setBtn.gameObject,self.onClick_set, self)
     mainPanelLuaBehaviour:AddClick(self.inventEva.gameObject,self.onClick_inventEva, self)
+    mainPanelLuaBehaviour:AddClick(self.bgtitleQUNNE.gameObject,self.onClick_bgtitleQUNNE, self)
 
 end
 --
@@ -112,6 +113,7 @@ function ResearchDetailPart:_InitTransform()
     self.timeText = findByName(transform,"timeText"):GetComponent("Text")
     self.dateText = findByName(transform,"dateText"):GetComponent("Text")
 
+    self.bgtitleQUNNE = findByName(transform,"bg-titleQUNNE")
 end
 
 ---===================================================================================研究所业务逻辑==============================================================================================
@@ -237,4 +239,8 @@ end
 function ResearchDetailPart:c_UpdateInventSet(times,price)
     self.timeCountText.text = times
     self.priceCountText.text = price
+end
+
+function ResearchDetailPart:onClick_bgtitleQUNNE(ins)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem}  )
 end

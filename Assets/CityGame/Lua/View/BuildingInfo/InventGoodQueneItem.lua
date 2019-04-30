@@ -68,7 +68,7 @@ function InventGoodQueneItem:updateUI(data)
         self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
     end
     --赋值Detail
-    if data.beginProcessTs > 0 or  data.ids==1 then
+    if data.beginProcessTs > 0  then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -107,9 +107,9 @@ function InventGoodQueneItem:updateUI(data)
         self.rollBtn.localScale = Vector3.zero
     end
 
-    if data.beginProcessTs>0 or  data.ids==1 then
-        self.delete.transform.localScale = Vector3.zero
-    end
+    --if data.beginProcessTs>0 and  data.ids==1 then
+    --    self.delete.transform.localScale = Vector3.zero
+    --end
 
 end
 

@@ -86,6 +86,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("downShelfSucceed",self.downShelfSucceed,self)
     Event.AddListener("buySucceed",self.buySucceed,self)
     Event.AddListener("replenishmentSucceed",self.replenishmentSucceed,self)
+    Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -98,6 +99,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("downShelfSucceed",self.downShelfSucceed,self)
     Event.RemoveListener("buySucceed",self.buySucceed,self)
     Event.RemoveListener("replenishmentSucceed",self.replenishmentSucceed,self)
+    Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -172,9 +174,23 @@ end
 --添加到购买列表
 function BuildingShelfDetailPart:addBuyList(data)
     --添加到购买列表
-    table.insert(self.buyDatas,data)
-    self.number.transform.localScale = Vector3.one
-    self.numberText.text = #self.buyDatas
+    if next(self.buyDatas) == nil then
+        table.insert(self.buyDatas,data)
+        self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.buyDatas
+        Event.Brocast("SmallPop","添加成功", 300)
+    else
+        for key,value in pairs(self.buyDatas) do
+            if value.itemId == data.itemId then
+                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                return
+            end
+        end
+        table.insert(self.buyDatas,data)
+        --self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.buyDatas
+        Event.Brocast("SmallPop","添加成功", 300)
+    end
 end
 --删除购买列表
 function BuildingShelfDetailPart:deleBuyList(id)
@@ -436,4 +452,22 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
     goods.key.qty = data.item.key.qty
     goods.n = data.item.n
     self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--获取仓库里某个商品的数量
+--(后边要修改)
+function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
+    if itemId ~= nil then
+        local nowCount = 0
+        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+            nowCount = 0
+        else
+            for key,value in pairs(self.m_data.shelf.good) do
+                if value.k.id == itemId then
+                    nowCount = value.n
+                end
+            end
+        end
+        callback(nowCount)
+    end
 end

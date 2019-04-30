@@ -81,7 +81,7 @@ function WarehouseBoxCtrl:initializeUiInfoData()
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
-    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
+    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
         self.popularity.transform.localScale = Vector3.one
         self.quality.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one
@@ -98,7 +98,11 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     local function callback(a)
         self.warehouseNumberText.text = a
     end
+    local function callback1(b)
+        self.shelfNumberText.text = b
+    end
     Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
 end
 --设置多语言
 function WarehouseBoxCtrl:_language()
@@ -123,8 +127,8 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     local goods = {}
     goods.state = GoodsItemStateType.transport
     goods.itemId = ins.m_data.dataInfo.key.id
-    goods.popularity = ins.m_data.dataInfo.key.producerId
-    goods.quality = ins.m_data.dataInfo.key.qty
+    goods.producerId = ins.m_data.dataInfo.key.producerId
+    goods.qty = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
         Event.Brocast("SmallPop",GetLanguage(21020003), 300)

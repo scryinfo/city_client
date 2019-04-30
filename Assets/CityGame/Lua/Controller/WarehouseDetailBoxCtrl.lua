@@ -235,6 +235,16 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
             self.noTip.transform.localScale = Vector3.one
             self.tipText.text = "没有符合上架的商品"
         end
+    elseif self.m_data.info.buildingType == BuildingType.RetailShop then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的商品"
+        end
     end
     for key,value in pairs(temporaryDataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)

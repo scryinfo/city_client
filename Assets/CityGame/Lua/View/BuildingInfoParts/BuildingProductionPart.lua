@@ -61,6 +61,7 @@ function BuildingProductionPart:_initFunc()
     else
         self.TopLineInfo.transform.localScale = Vector3.one
         self.tipText.transform.localScale = Vector3.zero
+        self.itemId = self.m_data.line[1].itemId
 
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             LoadSprite(Material[self.m_data.line[1].itemId].img,self.goodsIcon,false)
@@ -73,6 +74,18 @@ function BuildingProductionPart:_initFunc()
         if self.time == nil then
             self.timeText.text = self:GetTime(self.m_data.line[1])
             UpdateBeat:Add(self.Update,self)
+        end
+        --是商品时
+        local goodsKey = 22
+        if math.floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                --self.timeText.text = "00:00:00"
+                UpdateBeat:Remove(self.Update,self)
+                --self.oneTimeText.text = "00:00"
+                --self.timeSlider.value = 0
+                return
+            end
         end
     end
 end
@@ -104,6 +117,17 @@ function BuildingProductionPart:Update()
         self.tipText.transform.localScale = Vector3.one
         UpdateBeat:Remove(self.Update,self)
     end
+    --是商品时
+    local goodsKey = 22
+    if math.floor(self.itemId / 100000) == goodsKey then
+        --原料不足时
+        if self:CheckMaterial(self.itemId) == false then
+            --self.timeText.text = "00:00:00"
+            UpdateBeat:Remove(self.Update,self)
+            --self.timeText.text = ""
+            return
+        end
+    end
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -126,5 +150,38 @@ function BuildingProductionPart:updateNowLine(data)
         UpdateBeat:Remove(self.Update,self)
         --重新初始化界面
         self:_initFunc()
+    end
+end
+--如果生产中是商品，检查原料够不够
+function BuildingProductionPart:CheckMaterial(itemId)
+    --如果仓库是空的
+    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        return false
+    end
+    --如果仓库不是空的
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    local materialNum = {}
+    local isMeet = false
+    --生产中商品需要的原料
+    for key,value in pairs(material) do
+        --仓库中有的原料
+        for key1,value1 in pairs(self.m_data.store.inHand) do
+            if value1.key.id == value.itemId then
+                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
+                isMeet = true
+            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
+        end
+    end
+    table.sort(materialNum)
+    --最少能生产的数量
+    self.lineMinValue = materialNum[1]
+    local minValue = materialNum[1]
+    if minValue <= 0 then
+        return false
+    else
+        return true
     end
 end

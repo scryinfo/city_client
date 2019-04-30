@@ -163,9 +163,9 @@ end
 
 -- 更新Eva的数据
 function CompanyMgr:UpdateMyEva(eva)
-    for _, v in ipairs(self.evasData) do
+    for i, v in ipairs(self.evasData) do
         if eva.id == v.id then
-            v = eva
+            self.evasData[i] = eva
             break
         end
     end

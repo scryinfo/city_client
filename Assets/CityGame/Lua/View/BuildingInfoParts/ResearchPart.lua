@@ -53,6 +53,27 @@ end
 
 ---===================================================================================点击函数==============================================================================================
 
+--初始化独特点击事件
+--mainPanelLuaBehaviour:LuaBehaviour的引用
+function ResearchPart:_InitClick(mainPanelLuaBehaviour)
+    --点击打开界面
+    mainPanelLuaBehaviour:AddClick(self.go, function()
+        if self.m_data.exclusive then
+          Event.Brocast("SmallPop","建筑没开启业务",300)
+            return
+        end
+
+        self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
+    end)
+    --点击关闭界面
+    mainPanelLuaBehaviour:AddClick(self.selectTransform.gameObject, function()
+        --注：暂定方案为不做处理
+        --关闭所有界面
+        self.groupClass.TurnOffAllOptions(self.groupClass)
+    end)
+    self:_InitChildClick(mainPanelLuaBehaviour)
+end
+
 function ResearchPart:onClick_set(ins)
    ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
 end

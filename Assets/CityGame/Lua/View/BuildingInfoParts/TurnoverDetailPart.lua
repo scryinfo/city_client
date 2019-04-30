@@ -158,6 +158,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         end
     else
         for i = 1, 30 do
+            turnoverTab[i] = {}
             turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 148
             turnoverTab[i].money = 0
             if info.nodes ~= nil then

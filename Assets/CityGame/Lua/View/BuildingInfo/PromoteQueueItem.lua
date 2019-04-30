@@ -43,7 +43,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
             self.price.text = GetClientPriceString(dataInfo.transactionPrice * dataInfo.promDuration/3600000)
         end
         self.slider.transform.localScale = Vector3.zero
-        self.time.text = dataInfo.promDuration/3600000
+        self.time.text = dataInfo.promDuration/3600000 .. "h"
     end
     if dataInfo.buildingType == 1300 then
         self.goodsText.text = GetLanguage(18030001)

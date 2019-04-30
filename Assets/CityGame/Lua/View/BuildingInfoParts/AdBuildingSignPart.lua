@@ -40,6 +40,5 @@ function AdBuildingSignPart:_getComponent(transform)
 end
 --
 function AdBuildingSignPart:_initFunc()
-
-
+    self.addition.text = math.ceil(self.m_data.curflowPromoAbTotall *100)/100 .. "%"
 end

@@ -19,23 +19,37 @@ function PromoteSignItem:initialize(dataInfo, viewRect,luaBehavior)
     self.buildingType = viewTrans:Find("building/buildingNmae"):GetComponent("Text")  --建筑类型
     self.time = viewTrans:Find("signTime/time"):GetComponent("Text")  --签约时长
     self.slider = viewTrans:Find("Slider"):GetComponent("Slider")
-    self.timeText = viewTrans:Find("timeText"):GetComponent("Text")
 
     self.price = viewTrans:Find("unitPrice/price"):GetComponent("Text")  --签约价格
     self.bonus = viewTrans:Find("promoteBonus/bonus"):GetComponent("Text")  --签约加成
 
+    self.insId = dataInfo.insId
     if dataInfo.typeId == 13 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-supermarket.png", self.building, true)
     elseif dataInfo.typeId  == 14 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-house.png", self.building, true)
     end
-    self.time.text = dataInfo.signingHours .. "d"
+    local plyaeeId = DataManager.GetMyOwnerID()
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    if plyaeeId == dataInfo.sellerPlayerId then
+        self.time.text = "- -"
+    else
+        --if tonumber(getFormatUnixTime((currentTime - dataInfo.startTs)/1000).day ) < 1 and tonumber( getFormatUnixTime((currentTime - dataInfo.startTs)/1000).hour) < 1 then
+        --    self.time.text = "<1h"
+        --else
+        --    self.time.text = getFormatUnixTime((currentTime - dataInfo.startTs)/1000).day.."d "  .. getFormatUnixTime((currentTime - dataInfo.startTs)/1000).hour .. "h" .. " | " .. dataInfo.signingHours .. "d"
+        --
+        --end
+        if math.floor((currentTime - dataInfo.startTs)/3600000) < 1 then
+            self.time.text = "<1h"
+        else
+            self.time.text = math.ceil((currentTime - dataInfo.startTs)/3600000) .. "d"
+        end
+    end
+
     self.buildingName.text = dataInfo.buildingName
 
     self.buildingType.text = GetLanguage(PlayerBuildingBaseData[dataInfo.typeId].typeName)
-    local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-
-    self.timeText.text = getFormatUnixTime((currentTime - dataInfo.startTs)/1000).day.." "  .. getFormatUnixTime((currentTime - dataInfo.startTs)/1000).hour
 
     self.slider.value = (currentTime - dataInfo.startTs) / (dataInfo.signingHours*3600000)
     PlayerInfoManger.GetInfos({dataInfo.sellerPlayerId}, self.c_OnHead, self)
@@ -43,7 +57,7 @@ function PromoteSignItem:initialize(dataInfo, viewRect,luaBehavior)
     self.price.text = GetClientPriceString(dataInfo.pricePerHour)
     self.bonus.text = math.ceil(dataInfo.lift *100)/100 .. "%"
 
-    --luaBehavior:AddClick(self.bg, self.OnBg, self)
+    self.luaBehavior:AddClick(self.bg, self.OnBg, self)
 end
 
 function PromoteSignItem:c_OnHead(info)
@@ -52,5 +66,5 @@ function PromoteSignItem:c_OnHead(info)
 end
 
 function PromoteSignItem:OnBg(go)
-
+   ct.OpenCtrl("PromoteSignCurveCtrl",{insId = go.dataInfo.insId , buildingId = go.dataInfo.sellerBuildingId,dataInfo = go.dataInfo})
 end

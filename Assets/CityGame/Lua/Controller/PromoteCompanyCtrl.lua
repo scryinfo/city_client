@@ -35,11 +35,6 @@ function PromoteCompanyCtrl:Refresh()
     DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
 
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
-    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_AddPromote',self.m_data.insId)
-    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromotionSetting',self.m_data.insId)
-    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
-    --RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
-    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_GetAllMyFlowSign',self.m_data.insId)
 end
 
 function PromoteCompanyCtrl:Hide()
@@ -76,9 +71,9 @@ function PromoteCompanyCtrl:OnQueue(go)
         return
         end
         if go.m_data.info.ownerId == myOwnerID then
-    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
-    else
-    DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+           DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+        else
+           DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
         end
 
 end
@@ -110,10 +105,12 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
 
             end
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
+            PromoteCompanyPanel.queue.transform.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else -- 未营业
             PromoteCompanyPanel.groupTrans.localScale = Vector3.zero
+            PromoteCompanyPanel.queue.transform.localScale = Vector3.zero
         end
     else
         self.groupMgr:RefreshData(self.m_data)

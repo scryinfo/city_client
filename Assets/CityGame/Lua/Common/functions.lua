@@ -642,14 +642,21 @@ function prints(str)
 end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)
-function SetYScale(max,count,transform)
-	if max == 0 then
-		return 0
-	end
-    local scale = math.ceil(max / (count))
-	if transform ~= nil then
-		for i = 1, count do
-			transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+function SetYScale(max,count,transform,percentage)
+	local scale
+	if percentage then
+		scale = 1/count
+		if transform ~= nil then
+			for i = 1, count do
+				transform:GetChild(i - 1):GetComponent("Text").text =math.ceil((scale * i)*100) .. "%"
+			end
+		end
+	else
+		scale = math.ceil(max / (count))
+		if transform ~= nil then
+			for i = 1, count do
+				transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+			end
 		end
 	end
 	return scale
@@ -698,4 +705,10 @@ function DynamicLoadPrefab(path, parent, scale, fuc)
 			end
 		end
 	end)
+end
+
+
+function ct.instance_rpc(ins, modelMethord, ...)
+	local arg = {...}
+	arg[#arg](ins[modelMethord](ins,...))
 end

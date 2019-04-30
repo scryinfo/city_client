@@ -992,8 +992,8 @@ function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,ins)
     noParameters_ModelNoneInsIdRemoveNetMsg = ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"]
     if noParameters_ModelNoneInsIdRemoveNetMsg ~= nil then
         for i, value in pairs(noParameters_ModelNoneInsIdRemoveNetMsg) do
-            if noParameters_ModelNoneInsIdRemoveNetMsg.self ~= nil and noParameters_ModelNoneInsIdRemoveNetMsg.self == ins then
-                table.remove(ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"],value)
+            if value.self ~= nil and value.self == ins then
+                table.remove(ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"],i)
                 return
             end
         end

@@ -128,8 +128,8 @@ function ProcessingFactoryModel:m_ReqBuyShelfGoods(buildingId,itemId,number,pric
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
 end
 --销毁仓库原料或商品
-function ProcessingFactoryModel:m_ReqDelItem(buildingId,id,producerId,qty)
-    self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
+function ProcessingFactoryModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
+    self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --生产线置顶
 function ProcessingFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
@@ -155,7 +155,7 @@ end
 function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", '_refreshSalary', data)
 end
---打开原料厂
+--打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
     if stream ~= nil then

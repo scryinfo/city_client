@@ -42,6 +42,8 @@ function BuildingSalaryDetailPart:_ResetTransform()
 
     self.wageSlider.value = 0
     self:_showPercentValue(0)
+
+    self:_language()
 end
 --
 function BuildingSalaryDetailPart:_RemoveEvent()
@@ -52,6 +54,12 @@ function BuildingSalaryDetailPart:_RemoveClick()
     self.wageSlider.onValueChanged:RemoveAllListeners()
     self.closeBtn.onClick:RemoveAllListeners()
     self.confirmBtn.onClick:RemoveAllListeners()
+end
+--
+function BuildingSalaryDetailPart:_ChildHide()
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
 end
 --
 function BuildingSalaryDetailPart:RefreshData(data)
@@ -65,6 +73,7 @@ end
 --
 function BuildingSalaryDetailPart:_InitTransform()
     self:_getComponent(self.transform)
+    self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
 end
 --
 function BuildingSalaryDetailPart:_getComponent(transform)
@@ -89,9 +98,26 @@ function BuildingSalaryDetailPart:_getComponent(transform)
     self.effectText = transform:Find("root/bg/bg01/effectText"):GetComponent("Text")
     self.effectExpWordText = transform:Find("root/bg/bg01/Text01"):GetComponent("Text")
     self.totalText = transform:Find("root/bg/bg02/totalText"):GetComponent("Text")
+    --
+    self.wagesText01 = transform:Find("root/Text01"):GetComponent("Text")
+    self.totalText02 = transform:Find("root/bg/bg02/Text02"):GetComponent("Text")
+    self.staffNumText03 = transform:Find("root/staffNum/Text"):GetComponent("Text")
+    self.standardWageText04 = transform:Find("root/wage/Text"):GetComponent("Text")
+    self.effectTimeText05 = transform:Find("root/effectiveDateText/Text"):GetComponent("Text")
+end
+--
+function BuildingSalaryDetailPart:_language()
+    self.wagesText01.text = "Giving wage:"
+    self.totalText02.text = "Total:"
+    self.staffNumText03.text = "Number of staff:"
+    self.standardWageText04.text = "Standard wages:"
+    self.effectTimeText05.text = "Wage settlement time:"
 end
 --
 function BuildingSalaryDetailPart:_initFunc()
+    if self.m_data.info.state ~= "OPERATE" then
+        return
+    end
     if self.m_data.info.salary ~= nil then
         local value = (self.m_data.info.salary - 50) / 25
         if value < 0 then
@@ -117,9 +143,42 @@ function BuildingSalaryDetailPart:_initFunc()
         self.standardWage = standardWage
     end
 
+    self.m_Timer:Reset(slot(self._itemTimer, self), 1, -1, true)
+    self.m_Timer:Start()
+    self:_checkShowTime()
+
+    self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
     local trueTextW = self.effectiveDateText.preferredWidth
     self.effectiveDateText.rectTransform.sizeDelta = Vector2.New(trueTextW, self.effectiveDateText.rectTransform.sizeDelta.y)
-    self.effectTime = TimeSynchronized.GetTheCurrentTime()
+end
+--
+function BuildingSalaryDetailPart:_itemTimer()
+    self:_checkShowTime()
+end
+--
+function BuildingSalaryDetailPart:_checkShowTime()
+    local nowTs = TimeSynchronized.GetTheCurrentTime()
+    --local salaryTime = self.m_data.info.setSalaryTs
+    local salaryTime = 1554977340
+    local dateTable = getFormatUnixTimeNumber(salaryTime)
+    local nowDateTable = getFormatUnixTimeNumber(nowTs)
+    if dateTable.hour < nowDateTable.hour then
+        nowDateTable.day = nowDateTable.day + 1
+
+    elseif dateTable.hour == nowDateTable.hour then
+        if dateTable.min < nowDateTable.min then
+            nowDateTable.day = nowDateTable.day + 1
+
+        elseif dateTable.min == nowDateTable.min then
+            if dateTable.sec < nowDateTable.sec then
+                nowDateTable.day = nowDateTable.day + 1
+            end
+        end
+    end
+    nowDateTable.hour = dateTable.hour
+    nowDateTable.min = dateTable.min
+    nowDateTable.sec = dateTable.sec
+    self.effectTime = os.time(nowDateTable)
     self.effectiveDateText.text = os.date("%Y/%m/%d %H:%M:%S", self.effectTime)
 end
 

@@ -148,6 +148,7 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     self:CloseDestroy()
     self:initializeUiInfoData()
     self:_clickCloseBtn()
+    Event.Brocast("SmallPop",GetLanguage(26020001), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --上架前检查货架上是否有这个商品  返回true有   返回false没有
@@ -220,14 +221,21 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
                 table.insert(temporaryDataInfo,value)
             end
         end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的原料"
+        end
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
                 table.insert(temporaryDataInfo,value)
             end
         end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的商品"
+        end
     end
-
     for key,value in pairs(temporaryDataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
         local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)

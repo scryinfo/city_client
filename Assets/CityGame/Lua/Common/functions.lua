@@ -147,6 +147,18 @@ function getFormatUnixTime(time)
 
 	return tb
 end
+--把时间 秒转换成xx时xx分xx秒格式
+function getFormatUnixTimeNumber(time)
+	local tb = {}
+	time = math.floor(time)
+	tb.year = tonumber(os.date("%Y", time)) or 0
+	tb.month = tonumber(os.date("%m", time)) or 0
+	tb.day = tonumber(os.date("%d", time)) or 0
+	tb.hour = tonumber(os.date("%H", time)) or 0
+	tb.min = tonumber(os.date("%M", time)) or 0
+	tb.sec = tonumber(os.date("%S", time)) or 0
+	return tb
+end
 
 function convertTimeForm(second)
 	local data={}
@@ -630,17 +642,48 @@ function prints(str)
 end
 
 --给曲线图Y轴动态赋值(根据传入数据的最大值)
-function SetYScale(max,count,transform)
-	if max == 0 then
-		return 0
-	end
-    local scale = math.ceil(max / (count))
-	if transform ~= nil then
-		for i = 1, count do
-			transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+function SetYScale(max,count,transform,percentage)
+	local scale
+	if percentage then
+		scale = 1/count
+		if transform ~= nil then
+			for i = 1, count do
+				transform:GetChild(i - 1):GetComponent("Text").text =math.ceil((scale * i)*100) .. "%"
+			end
+		end
+	else
+		scale = math.ceil(max / (count))
+		if transform ~= nil then
+			for i = 1, count do
+				transform:GetChild(i - 1):GetComponent("Text").text = scale * i
+			end
 		end
 	end
 	return scale
+end
+--
+function GetBuildingTypeById(buildingTypeId)
+	if buildingTypeId ~= nil then
+		local type
+		local typeId = tonumber(string.sub(buildingTypeId,1, 2))
+		if typeId == 11 then
+			type = BuildingType.MaterialFactory
+		elseif typeId == 12 then
+			type = BuildingType.ProcessingFactory
+		elseif typeId == 13 then
+			type = BuildingType.RetailShop
+		elseif typeId == 14 then
+			type = BuildingType.House
+		elseif typeId == 15 then
+			type = BuildingType.Laboratory
+		elseif typeId == 16 then
+			type = BuildingType.Municipal
+		elseif typeId == 17 then
+			type = BuildingType.TalentCenter
+		end
+		return type
+	end
+	return nil
 end
 
 -- 动态加载预制

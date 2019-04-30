@@ -7,6 +7,9 @@ local transform
 MapPanel = {}
 local this = MapPanel
 
+MapPanel.MapShowInfoPoolName = "MapShowInfo"
+MapPanel.MapShowInfoHasImgPoolName = "MapShowInfoHasImg"
+
 --启动事件--
 function MapPanel.Awake(obj)
     transform = obj.transform
@@ -25,6 +28,8 @@ function MapPanel.InitPanel()
     this.mapMatGoodRootItem = transform:Find("prefabRoot/MapMatGoodRootItem").gameObject  --原料商品详情根节点
     this.mapMatGoodSearchItem = transform:Find("prefabRoot/MapMatGoodSearchItem").gameObject  --原料商品详情
     this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject  --搜索类型
+    this.mapPromotionDetailItem = transform:Find("prefabRoot/MapPromotionDetailItem").gameObject  --推广item
+    this.mapTechnologyDetailItem = transform:Find("prefabRoot/MapTechnologyDetailItem").gameObject  --科研
     --
     this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem")  --建筑气泡
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
@@ -52,59 +57,59 @@ function MapPanel.InitPanel()
     this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
     this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
+    this.promotionPageGroup = transform:Find("leftRoot/detailPages/promotionPage"):GetComponent("ToggleGroup")  --推广
+    this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup")  --科研
 
     --右侧详情界面
-    this.searchMatGoodRect = transform:Find("rightPageRoot/searchMatGood"):GetComponent("RectTransform")  --原料商品
-    this.rightMatGoodPageItem = MapRightMatGoodPage:new(this.searchMatGoodRect.transform)
-    this.searchGroundAucRect = transform:Find("rightPageRoot/searchGroundAuc"):GetComponent("RectTransform")  --拍卖
-    this.rightGroundAucPageItem = MapRightGroundAucPage:new(this.searchGroundAucRect.transform)
-    this.searchGroundTransRect = transform:Find("rightPageRoot/searchGroundTrans"):GetComponent("RectTransform")  --土地交易
-    this.rightGroundTransPageItem = MapRightGroundTransPage:new(this.searchGroundTransRect.transform)
-    this.selfBuildingRect = transform:Find("rightPageRoot/selectBuilding"):GetComponent("RectTransform")  --自己建筑temp
-    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(this.selfBuildingRect.transform)
-    this.systemBuildingRect = transform:Find("rightPageRoot/selectSystemBuilding"):GetComponent("RectTransform")  --系统建筑
-    this.systemBuildingPageItem = MapRightSystemPage:new(this.systemBuildingRect.transform)
+    --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))  --old
+    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))
+    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))
+    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))
+    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding"))
+
+    --
+    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")
+    this.mapShowInfoItemTran = transform:Find("rightPageRoot/itemsRoot/noIconShowItem")  --不带icon的数据显示
+    this.mapShowInfoIconItemTran = transform:Find("rightPageRoot/itemsRoot/hasIconShowItem")  --带有icon的数据显示
+    this.prefabPools = {}
+    this.prefabPools[this.MapShowInfoPoolName] = LuaGameObjectPool:new(this.MapShowInfoPoolName, this.mapShowInfoItemTran, 5, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
+    this.prefabPools[this.MapShowInfoHasImgPoolName] = LuaGameObjectPool:new(this.MapShowInfoHasImgPoolName, this.mapShowInfoIconItemTran, 1, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
 end
---
+--根据类型显示二级菜单
 function MapPanel.showDetailPageByType(typeId)
+    MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
+    MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
+    MapPanel.promotionPageGroup.transform.localScale = Vector3.zero
+    MapPanel.technologyPageGroup.transform.localScale = Vector3.zero
+
     if typeId == EMapSearchType.Material then
         MapPanel.matPageToggleGroup.transform.localScale = Vector3.one
-        MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
     elseif typeId == EMapSearchType.Goods then
-        MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
         MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Promotion then
+        MapPanel.promotionPageGroup.transform.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Technology then
+        MapPanel.technologyPageGroup.transform.localScale = Vector3.one
     end
 end
---
-function MapPanel.showRightPageByType(type, data)
-    if type == EMapSearchType.Auction then
-        this.rightMatGoodPageItem:close()
-        this.rightGroundAucPageItem:refreshData(data)
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.Deal then
-        this.rightMatGoodPageItem:close()
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:refreshData(data)
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.Material or type == EMapSearchType.Goods then
-        this.rightMatGoodPageItem:refreshData(data)
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:close()
-
-    elseif type == EMapSearchType.SelfBuilding then
-        this.rightMatGoodPageItem:close()
-        this.rightGroundAucPageItem:close()
-        this.rightGroundTransPageItem:close()
-        this.selfBuildingPageItem:refreshData(data)
+--返回二级菜单trans
+function MapPanel.getPageByType(typeId)
+    local go
+    if typeId == EMapSearchType.Material then
+        go = MapPanel.matPageToggleGroup.gameObject
+    elseif typeId == EMapSearchType.Goods then
+        go = MapPanel.goodsPageToggleGroup.gameObject
+    elseif typeId == EMapSearchType.Promotion then
+        go = MapPanel.promotionPageGroup.gameObject
+    elseif typeId == EMapSearchType.Technology then
+        go = MapPanel.technologyPageGroup.gameObject
     end
+    return go
 end
 --
 function MapPanel.closeAllRightPage()
-    this.rightMatGoodPageItem:close()
+    this.rightOtherBuildingPageItem:close()
     this.rightGroundAucPageItem:close()
     this.rightGroundTransPageItem:close()
     this.selfBuildingPageItem:close()

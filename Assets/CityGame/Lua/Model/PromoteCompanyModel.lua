@@ -23,6 +23,8 @@ function PromoteCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",self.n_OnPromotionSetting) -- 推广设置
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adRemovePromoOrder","gs.AdRemovePromoOrder",self.n_OnRemovePromo) -- 删除推广
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetAllMyFlowSign","gs.GetAllMyFlowSign",self.n_OnGetAllMyFlowSign) -- 获取自己的所有签约
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingLift","ss.BuildingLift",self.n_OnGetLiftCurve,self) -- 获取自己的所有签约曲线
 
 end
 
@@ -93,6 +95,19 @@ function PromoteCompanyModel:m_PromoAbilityHistory(buildingId)
     local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {1613 }, recordsCount = 24 }
 
     DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",lMsg)
+end
+
+--签约曲线
+function PromoteCompanyModel:_reqLiftCurve(buildingId)
+    local msgId = pbl.enum("sscode.OpCode","queryBuildingLift")
+    local lMsg = { id = buildingId }
+    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--签约
+function PromoteCompanyModel:m_GetAllMyFlowSign(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "adGetAllMyFlowSign","gs.GetAllMyFlowSign",{buildingId = buildingId})
 end
 
 --服务器回调
@@ -170,6 +185,19 @@ end
 function PromoteCompanyModel:n_OnPromoAbilityHistory(info)
     local a = info
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCurveCtrl", 'm_PromoteHistoryCurve', info.recordsList[1].list)
+end
+
+--签约回调
+function PromoteCompanyModel:n_OnGetAllMyFlowSign(info)
+    local a = info
+    --DataManager.ControllerRpcNoRet(self.insId,"AdBuildingSignDetailPart", 'm_GetAllMyFlowSign', info.info)
+    Event.Brocast("m_GetAllMyFlowSign",info.info)
+end
+
+--签约曲线回调
+function PromoteCompanyModel:n_OnGetLiftCurve(info)
+    --DataManager.ControllerRpcNoRet(self.insId,"PromoteSignCurveCtrl", 'c_PromoteSignCurve', info)
+    Event.Brocast("c_PromoteSignCurve",info)
 end
 
 --员工工资改变

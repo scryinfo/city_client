@@ -27,9 +27,16 @@ function MapSearchTypeNonePageItem:_clickFunc()
         Event.Brocast("c_MapSearchSelectType", self.data.typeId)  --播报事件，选中自己
         Event.Brocast("c_ChooseTypeDetail", self.data.typeId)
     end
+
+    self.isOpenState = not self.isOpenState
+    if self.isOpenState == true then
+        self.pageOpenImg.localScale = Vector3.one
+    else
+        self.pageOpenImg.localScale = Vector3.zero
+    end
 end
 --
-function MapSearchTypeNonePageItem:_chooseTypeDetail(typeId, showStr)
+function MapSearchTypeNonePageItem:chooseTypeDetail(typeId, showStr)
     if typeId == self.data.typeId and showStr == nil then
         self.choose.localScale = Vector3.one
         self.disChoose.localScale = Vector3.zero

@@ -19,12 +19,11 @@ MapBubbleManager.TempBuildingIconPath =
 {
     House = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-HomeHouse.png",
     MaterialFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Material.png",
-    Municipal = "",
-    MunicipalManage = "",
+    Municipal = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-ad-w.png",
     ProcessingFactory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-Fatory.png",
-    Laboratory = "",
+    Laboratory = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-research-w.png",
     RetailShop = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-SuperMarket.png",
-    TalentCenter = "",
+    TalentCenter = "Assets/CityGame/Resources/Atlas/Map/buildingIcons/icon-warehouse-w.png",
 }
 
 function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
@@ -39,6 +38,10 @@ function MapBubbleManager.initMapSetting(itemWidth, mapCtrl)
     prefabPools[MapAllSearchItemName] = LuaGameObjectPool:new(MapAllSearchItemName, MapPanel.mapAllSearchItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapGroundAucItemName] = LuaGameObjectPool:new(MapGroundAucItemName, MapPanel.mapGroundAucItem, 5, Vector3.New(-999,-999,-999))
     prefabPools[MapGroundTransItemName] = LuaGameObjectPool:new(MapGroundTransItemName, MapPanel.mapGroundTransItem, 5, Vector3.New(-999,-999,-999))
+end
+--
+function MapBubbleManager.getMapCtrlIns()
+    return this.mapCtrl
 end
 --设置地块移动改变时，旧的id
 function MapBubbleManager.setOldAOICenterID(id)
@@ -165,8 +168,6 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
         path = this.TempBuildingIconPath.MaterialFactory
     elseif buildingType == BuildingType.Municipal then
         path = this.TempBuildingIconPath.Municipal
-    elseif buildingType == BuildingType.MunicipalManage then
-        path = this.TempBuildingIconPath.MunicipalManage
     elseif buildingType == BuildingType.TalentCenter then
         path = this.TempBuildingIconPath.TalentCenter
     elseif buildingType == BuildingType.ProcessingFactory then
@@ -197,18 +198,33 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
     end
 
     this.cleanSummaryItems()
-    for i, value in pairs(data.info) do
-        if value.num == nil then
-            value.num = value.sellingN + value.rentingN
+    if summaryType == EMapSearchType.Deal then
+        for i, value in pairs(data.info) do
+            local num = value.sellingN + value.rentingN
+            if num > 0 then
+                local temp = {num = num, idx = value.idx}
+                this._createSummaryItems(temp)
+            end
         end
-
-        if value.num > 0 then
-            this._createSummaryItems(value)
+    elseif summaryType == EMapSearchType.Technology or summaryType == EMapSearchType.Signing or summaryType == EMapSearchType.Warehouse or summaryType == EMapSearchType.Promotion then
+        for i, value in pairs(data.info) do
+            if value.count > 0 then
+                local temp = {num = value.count, idx = value.idx}
+                this._createSummaryItems(temp)
+            end
+        end
+    elseif summaryType == EMapSearchType.Material or summaryType == EMapSearchType.Goods then
+        for i, value in pairs(data.info) do
+            if value.num > 0 then
+                local temp = {num = value.num, idx = value.idx, itemId = value.itemId}
+                this._createSummaryItems(temp)
+            end
         end
     end
+
 end
 --搜索详情  --是否是全新的搜索数据
-function MapBubbleManager.createDetailItems(data, isNew)
+function MapBubbleManager.createDetailItems(data, typeId, isNew)
     if isNew then
         this.cleanAllCollectionDetails()
     else
@@ -218,25 +234,69 @@ function MapBubbleManager.createDetailItems(data, isNew)
     if this.collectionDetails == nil then
         this.collectionDetails = {}
     end
-    if data ~= nil then
+    this._createDetailByType(typeId, data)
+end
+--因为数据结构不同，所以处理数据的方式也不同
+function MapBubbleManager._createDetailByType(typeId, data)
+    if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
         for i, value in pairs(data.info) do
-            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
             if value.b ~= nil then
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
                 for i, building in pairs(value.b) do
                     if building.sale ~= nil then
-                        local detailData = {buildingId = building.id, sale = building.sale, pos = building.pos}
-                        if this.collectionDetails[collectionId] == nil then
-                            this.collectionDetails[collectionId] = {}
-                        end
-                        if this.collectionDetails[collectionId].detailItems == nil then
-                            this.collectionDetails[collectionId].detailItems = {}
-                        end
-                        --this.collectionDetails[collectionId].detailItems[building.id] = {}
-                        this.collectionDetails[collectionId].detailItems[building.id] = this._createDetailItems(detailData)
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
                     end
                 end
             end
         end
+    elseif typeId == EMapSearchType.Technology or typeId == EMapSearchType.Promotion then
+        if data.info ~= nil then
+            for i, value in pairs(data.info) do
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+                if value.b ~= nil then
+                    local typeIds = value.typeIds
+                    for i, building in pairs(value.b) do
+                        building.typeIds = typeIds
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                    end
+                end
+            end
+        end
+    elseif typeId == EMapSearchType.Signing and data.gridInfo ~= nil then
+        for i, value in pairs(data.gridInfo) do
+            if value.info ~= nil then
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+                for i, temp in pairs(value.info) do
+                    this._checkDetailTable(collectionId)
+                    local blockId = TerrainManager.GridIndexTurnBlockID(temp.pos)
+                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(temp)
+                end
+            end
+        end
+    elseif typeId == EMapSearchType.Warehouse and data.info ~= nil then
+        for i, value in pairs(data.info) do
+            local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+            if value.b ~= nil then
+                for i, building in pairs(value.b) do
+                    this._checkDetailTable(collectionId)
+                    local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                    this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                end
+            end
+        end
+    end
+end
+--判断table是否为空
+function MapBubbleManager._checkDetailTable(collectionId)
+    if this.collectionDetails[collectionId] == nil then
+        this.collectionDetails[collectionId] = {}
+    end
+    if this.collectionDetails[collectionId].detailItems == nil then
+        this.collectionDetails[collectionId].detailItems = {}
     end
 end
 --清除所有搜索数据
@@ -439,10 +499,10 @@ function MapBubbleManager.closePanelFunc()
     this.cleanBuildingItems()
 end
 ---传data.buildingBase
-function MapBubbleManager.GoHereFunc(data)
+function MapBubbleManager.GoHereFunc(pos)
     UIPanel.CloseAllPageExceptMain()
-    local pos = Vector3.New(data.pos.x,0,data.pos.y)
-    CameraMove.MoveCameraToPos(pos)
+    local pos1 = Vector3.New(pos.x,0,pos.y)
+    CameraMove.MoveCameraToPos(pos1)
 end
 --土地交易查询变化  --AOI
 function MapBubbleManager.groundTransChange(blockId, data)
@@ -492,5 +552,63 @@ function MapBubbleManager.groundAucChange(groundId)
         local delta = this.itemDelta *  5  --一个地块的大小
         item:setScaleAndPos(MapCtrl.getCurrentScaleValue(), pos, delta)
         this.groundAucData[collectionId].detailItems[blockId] = item
+    end
+end
+--------------------------------------------------------------------------------------------------------------
+local m_BuildingIconSpriteList = {}
+
+--添加BuildingIcon的sprite列表
+local function AddBuildingIcon(name,sprite)
+    if m_BuildingIconSpriteList == nil or type(m_BuildingIconSpriteList) ~= 'table' then
+        m_BuildingIconSpriteList = {}
+    end
+    if name ~= nil and sprite ~= nil then
+        m_BuildingIconSpriteList[name] = sprite
+    end
+end
+
+local function JudgeHasBuildingIcon(name)
+    if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
+        return false
+    else
+        return true
+    end
+end
+
+local function GetBuildingIcon(name)
+    if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
+        return nil
+    else
+        return m_BuildingIconSpriteList[name]
+    end
+end
+
+local SpriteType = nil
+local function LoadBuildingIcon(name,iIcon)
+    if SpriteType == nil then
+        SpriteType = ct.getType(UnityEngine.Sprite)
+    end
+    panelMgr:LoadPrefab_A(name, SpriteType, iIcon, function(Icon, obj )
+        if Icon == nil then
+            return
+        end
+        if obj ~= nil  then
+            local texture = ct.InstantiatePrefab(obj)
+            AddBuildingIcon(name,texture)
+            if Icon then
+                Icon.sprite = texture
+                Icon:SetNativeSize()
+            end
+        end
+    end)
+end
+
+--设置ICon的Sprite
+function MapBubbleManager.SetBuildingIconSpite(name , tempImage)
+    if JudgeHasBuildingIcon() == true then
+        tempImage.sprite = GetBuildingIcon(name)
+        tempImage:SetNativeSize()
+    else
+        LoadBuildingIcon(name , tempImage)
     end
 end

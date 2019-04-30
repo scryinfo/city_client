@@ -71,7 +71,9 @@ function RollCtrl:Refresh()
     local data = self.m_data
     if data.goodCategory ~=0 then
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
+        panel.EvaRoot.localScale = Vector3.zero
     else
+        panel.EvaRoot.localScale = Vector3.one
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
     end
 
@@ -115,7 +117,8 @@ function RollCtrl:handleEvaResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
         panel.EvaRoots.localScale =  Vector3.one
-        --panel.nowEva.text =
+        panel.nowEva.text = DataManager.GetEvaPoint()
+        DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
     else
         self:fail()
     end
@@ -130,12 +133,13 @@ function  RollCtrl:handleGoodsResult(data)
         panel.nameText.text =  Good[data[1]].name
 
         if #data == 2  then
-            this.child1.localScale = Vector3.one
+            panel.child1.localScale = Vector3.one
+
             LoadSprite(Good[data[2]].img,panel.ima)
-            panel.nameText.text = Good[data[2]].name
+            panel.child1ImanNameText.text = Good[data[2]].name
         elseif   #data == 3 then
-            this.child1.localScale = Vector3.one
-            this.child2.localScale = Vector3.one
+            panel.child1.localScale = Vector3.one
+            panel.child2.localScale = Vector3.one
 
 
             LoadSprite(Good[data[2]].img,panel.child1Ima)
@@ -143,10 +147,10 @@ function  RollCtrl:handleGoodsResult(data)
             LoadSprite(Good[data[3]].img,panel.child2Ima)
             panel.child2ImanNameText.text = Good[data[3]].name
 
-        else
-            this.child1.localScale = Vector3.one
-            this.child2.localScale = Vector3.one
-            this.child3.localScale = Vector3.one
+        elseif  #data == 4 then
+            panel.child1.localScale = Vector3.one
+            panel.child2.localScale = Vector3.one
+            panel.child3.localScale = Vector3.one
 
             LoadSprite(Good[data[2]].img,panel.child1Ima)
             panel.child1ImanNameText.text = Good[data[2]].name

@@ -7,16 +7,11 @@ MapSearchResultItem = class('MapSearchResultItem', MapBubbleBase)
 
 --初始化方法
 function MapSearchResultItem:_childInit()
-    self.btn = self.viewRect.transform:Find("btn"):GetComponent("Button")
-    self.detailShowImgBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
-    self.protaitImg = self.viewRect.transform:Find("btn/bg/protaitImg"):GetComponent("Image")
-    self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")
-    self.scaleRoot = self.viewRect.transform:Find("btn")  --需要缩放的气泡
-    self:toggleShowDetailImg(false)  --开始的时候隐藏
+    self.btn = self.viewRect.transform:Find("root/btn"):GetComponent("Button")
+    self.protaitImg = self.viewRect.transform:Find("root/bg/protaitImg"):GetComponent("Image")
+    self.selectTran = self.viewRect.transform:Find("root/detailShowImg")
+    self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的气泡
 
-    self.detailShowImgBtn.onClick:AddListener(function ()
-        self:_clickFunc()
-    end)
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
@@ -31,26 +26,28 @@ function MapSearchResultItem:_setPos()
         local blockID = TerrainManager.GridIndexTurnBlockID(data.pos)
         local tempInfo = DataManager.GetBaseBuildDataByID(blockID)
         if tempInfo ~= nil and tempInfo.Data ~= nil then
-            local buildingBase = {}
-            buildingBase.pos = data.pos
-            buildingBase.buildingId = tempInfo.Data["id"]
-            buildingBase.ownerId = tempInfo.Data["ownerId"]
-            buildingBase.name = tempInfo.Data["name"]
+            local mId = tempInfo.Data["mId"]
+            local delta = self.data.itemWidth *  PlayerBuildingBaseData[mId].x
+            self.viewRect.sizeDelta = Vector2.New(delta, delta)
+            self.viewRect.transform.localScale = Vector3.one
 
-            PlayerInfoManger.GetInfos({[1] = buildingBase.ownerId}, self._initPersonalInfo, self)
-            if tempInfo.Data["mId"] ~= nil then
-                buildingBase.mId = tempInfo.Data["mId"]
-                local delta = self.data.itemWidth *  PlayerBuildingBaseData[buildingBase.mId].x
-                self.viewRect.sizeDelta = Vector2.New(delta, delta)
-                self.viewRect.transform.localScale = Vector3.one
+            if data.ownerId == DataManager.GetMyOwnerID() then
+                local type = GetBuildingTypeById(mId)
+                local path = MapBubbleManager._getBuildingIconPath(type)
+                MapBubbleManager.SetBuildingIconSpite(path, self.protaitImg)
+                --LoadSprite(path, self.protaitImg, true)
+                self.protaitImg.enabled = true
+            else
+                PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
+                self.protaitImg.enabled = false
             end
+
             self.viewRect.anchoredPosition = Vector2.New(data.pos.y, -data.pos.x) * self.data.itemWidth
             local scale = Vector3.one * (1 / MapCtrl.getCurrentScaleValue())
             self.scaleRoot.transform.localScale = scale
 
-            self.detailShowImg.transform.localScale = scale
-            self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
-            self.data.buildingBase = buildingBase
+            --self.detailShowImg.transform.localScale = scale
+            --self.detailShowImg.rectTransform.sizeDelta = MapCtrl.getCurrentScaleValue() * self.viewRect.sizeDelta
         end
     end
 end
@@ -60,12 +57,13 @@ function MapSearchResultItem:_clickFunc()
     if self.data == nil then
         return
     end
-    Event.Brocast("c_MapOpenRightMatPage", self)
+    MapCtrl.selectCenterItem(self)
+    Event.Brocast("c_MapOpenRightOthersPage", self)
 end
 --
 function MapSearchResultItem:_initPersonalInfo(info)
     local data = info[1]
-    if data ~= nil then
+    if data ~= nil and self ~= nil and self.data ~= nil then
         self.data.playerInfo = data
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
     end

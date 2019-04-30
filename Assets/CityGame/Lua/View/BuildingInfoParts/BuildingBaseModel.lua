@@ -26,8 +26,8 @@ function BuildingBaseModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,q
     DataManager.ModelSendNetMes("gscode.OpCode","shelfSet","gs.ShelfSet",lMsg)
 end
 --销毁原料或商品
-function BuildingBaseModel:m_ReqDelItem(buildingId,id,producerId,qty)
-    local lMsg = {buildingId = buildingId, item = {id = id,producerId = producerId,qty = qty}}
+function BuildingBaseModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
+    local lMsg = {buildingId = buildingId, item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(num)}}
     DataManager.ModelSendNetMes("gscode.OpCode","delItem","gs.DelItem",lMsg)
 end
 ---货架---

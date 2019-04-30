@@ -51,7 +51,7 @@ end
 --设置研究是否他人可用
 function LaboratoryModel:m_labSettings(exclusive)
     DataManager.ModelSendNetMes("gscode.OpCode", "labExclusive","gs.LabExclusive",
-            { buildingId = self.insId ,exclusive = exclusive})
+            { buildingId = self.insId ,exclusive = not exclusive})
 end
 --设置研究价格
 function LaboratoryModel:m_labSetting( pricePreTime , sellTimes )
@@ -77,6 +77,9 @@ end
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.data=data
+    self.data.probGood = self.data.probGood/1000
+    self.data.probEva = self.data.probEva/1000
+
     if data.completed  then
         if not data.inProcess then
             data.inProcess={}

@@ -6,6 +6,7 @@
 NewTransportBoxCtrl = class('NewTransportBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(NewTransportBoxCtrl)
 
+local ToNumber = tonumber
 function NewTransportBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -40,7 +41,6 @@ end
 function NewTransportBoxCtrl:Hide()
     UIPanel.Hide(self)
     self:CloseDestroy()
-    self.targetWarehouse.text = ""
     Event.RemoveListener("deleteItemPrefab",self.deleteItemPrefab,self)
 end
 
@@ -75,7 +75,7 @@ function NewTransportBoxCtrl:initializeUiInfoData()
         self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
         self:CreateGoodsItems(self.m_data.itemPrefabTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType,unitPrice)
     end
-
+    self.priceText.text = self:calculateTotalPrice()
 end
 --设置多语言
 function NewTransportBoxCtrl:_language()
@@ -93,6 +93,10 @@ end
 --跳转选择仓库
 function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     PlayMusEff(1002)
+    if not ins.itemTable or next(ins.itemTable) == nil then
+        Event.Brocast("SmallPop","没有要运输的商品", 300)
+        return
+    end
     local data = {}
     data.pos = {}
     data.pos.x = ins.m_data.buildingInfo.pos.x
@@ -103,6 +107,14 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
 end
 --点击运输
 function NewTransportBoxCtrl:_clickStartBtn(ins)
+    if not ins.itemTable or next(ins.itemTable) == nil then
+        Event.Brocast("SmallPop","没有要运输的商品", 300)
+        return
+    end
+    if ins.targetBuildingId == nil then
+        Event.Brocast("SmallPop",GetLanguage(21020002), 300)
+        return
+    end
     if ins.m_data.stateType == GoodsItemStateType.transport then
         Event.Brocast("startTransport",ins.itemTable,ins.targetBuildingId)
     elseif ins.m_data.stateType == GoodsItemStateType.buy then
@@ -136,6 +148,18 @@ function NewTransportBoxCtrl:deleteItemPrefab(id)
         end
     end
 end
+--计算总费用
+function NewTransportBoxCtrl:calculateTotalPrice()
+    local totalPrice = 0
+    if not self.itemTable or next(self.itemTable) == nil then
+        return GetClientPriceString(totalPrice)
+    end
+    for key,value in pairs(self.itemTable) do
+        totalPrice = totalPrice + ToNumber(GetServerPriceNumber(value.freightPriceText.text)) + ToNumber(GetServerPriceNumber(value.goodsPriceText.text))
+    end
+    return GetClientPriceString(totalPrice)
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------
 --生成itemPrefab
 function NewTransportBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,unitPrice)
     if not dataInfo then

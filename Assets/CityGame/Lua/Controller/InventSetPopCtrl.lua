@@ -43,6 +43,8 @@ function InventSetPopCtrl:OnConfirm(ins)
 
         local price = tonumber(panel.price.text)
         local count = tonumber(panel.time.text)
+
+        Event.Brocast("c_UpdateInventSet",count,price)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
     else

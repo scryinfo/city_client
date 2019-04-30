@@ -36,10 +36,11 @@ function RollPanel.InitPanle()
     this.evatopicText = findByName(transform,"topicText"):GetComponent("Text")
     this.nowEva = findByName(transform,"nowEva"):GetComponent("Text")
     this.failtitleText = findByName(transform,"failtitleText"):GetComponent("Text")
+    this.BigEVAtext = findByName(transform,"Text"):GetComponent("Text")
 
 
 
----------------------------------------------
+    ---------------------------------------------
     this.mainIcon = findByName(transform,"mainIcon")
     local tempTrans =  this.mainIcon
     this.ima = findByName(tempTrans,"mainIcon"):GetComponent("Image")

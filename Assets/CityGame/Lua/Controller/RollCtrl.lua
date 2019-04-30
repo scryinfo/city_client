@@ -101,15 +101,25 @@ end
 
 ---====================================================================================业务逻辑==============================================================================================
 function RollCtrl:c_creatRollItem( data )
+    local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
+
+    local odds
+    if data.goodCategory == 0 then
+        odds = moedelData.probEva
+    else
+        odds = moedelData.probGood
+    end
+
     local datas={}
     for i = 1, data.availableRoll do
-        table.insert( datas,{ lineId = data.id } )
+        table.insert( datas,{ lineId = data.id ,odds = odds } )
     end
     panel.totalText.text = #datas
     InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
 end
 
 function RollCtrl:updateText(data)
+    panel.BigEVAtext.text = DataManager.GetEvaPoint()
     -- panel.titleText.text = GetLanguage(40010009)
 end
 
@@ -119,6 +129,7 @@ function RollCtrl:handleEvaResult(data)
         panel.EvaRoots.localScale =  Vector3.one
         panel.nowEva.text = DataManager.GetEvaPoint()
         DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
+        panel.BigEVAtext.text = DataManager.GetEvaPoint()
     else
         self:fail()
     end
@@ -184,3 +195,4 @@ end
 function RollCtrl:changeLan()
 
 end
+

@@ -33,7 +33,7 @@ end
 
 function PromoteCompanyCtrl:Refresh()
     DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
-
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
 end
 
@@ -161,4 +161,13 @@ end
 function PromoteCompanyCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
+    --if self.groupMgr == nil then
+    --    self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+    --    self.groupMgr:AddParts(AdvertisementPart, 0.30)
+    --    self.groupMgr:AddParts(TurnoverPart, 0.23)
+    --    self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
+    --    self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
+    --    self.groupMgr:TurnOffAllOptions()
+    --end
+    --self.groupMgr:RefreshData(info)
 end

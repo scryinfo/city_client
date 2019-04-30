@@ -463,7 +463,7 @@ function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
             nowCount = 0
         else
             for key,value in pairs(self.m_data.shelf.good) do
-                if value.key.id == itemId then
+                if value.k.id == itemId then
                     nowCount = value.n
                 end
             end

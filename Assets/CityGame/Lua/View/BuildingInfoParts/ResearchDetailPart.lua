@@ -135,7 +135,7 @@ function ResearchDetailPart:updateUI(data)
         local reminderTime=0
         for i, lineData in ipairs(data.inProcess) do
 
-            reminderTime = reminderTime + (lineData.times-(lineData.availableRoll+lineData.usedRoll))
+            reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))*3600000)
         end
 
         local ts = getFormatUnixTime((TimeSynchronized.GetTheCurrentServerTime()+ reminderTime)/1000)

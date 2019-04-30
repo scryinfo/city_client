@@ -103,6 +103,8 @@ function InventGoodQueneItem:updateUI(data)
         end
     else
         self.myBg.localScale = Vector3.zero
+        self.delete.transform.localScale = Vector3.zero
+        self.rollBtn.localScale = Vector3.zero
     end
 
     if data.beginProcessTs>0 or  data.ids==1 then

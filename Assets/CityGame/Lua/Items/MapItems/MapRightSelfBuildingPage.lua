@@ -120,7 +120,8 @@ function MapRightSelfBuildingPage:_createMaterial()
     self.items[#self.items + 1] = self:_createShowItem(data3)
 
     if self.data.line == nil then  --生产线
-        local str2 = GetLanguage(12345678)
+        --local str2 = GetLanguage(12345678)
+        local str2 = "No production"
         local data2 = {infoTypeStr = "Production", value = str2}
         self.items[#self.items + 1] = self:_createShowItem(data2)
     else

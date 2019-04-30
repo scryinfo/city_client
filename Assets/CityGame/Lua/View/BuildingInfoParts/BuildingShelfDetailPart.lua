@@ -206,8 +206,9 @@ function BuildingShelfDetailPart:whetherSend(data)
                 elseif self.m_data.buildingType == BuildingType.RetailShop then
                     --零售店
                     Event.Brocast("m_ReqRetailStoresSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
-                elseif self.m_data.buildingType == BuildingType.TalentCenter then
+                elseif self.m_data.buildingType == BuildingType.WareHouse then
                     --集散中心
+                    Event.Brocast("m_ReqMaterialSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
                 end
             end
         end
@@ -225,8 +226,9 @@ function BuildingShelfDetailPart:downShelf(data)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             Event.Brocast("m_ReqRetailStoresShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
-        elseif self.m_data.buildingType == BuildingType.TalentCenter then
+        elseif self.m_data.buildingType == BuildingType.WareHouse then
             --集散中心
+            Event.Brocast("m_ReqMaterialShelfDel",self.m_data.insId,data.itemId,data.number,data.producerId,data.qty)
         end
     end
 end
@@ -247,8 +249,11 @@ function BuildingShelfDetailPart:startBuy(dataInfo,targetBuildingId)
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_ReqRetailStoresBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,value.dataInfo.price,targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
         end
-    elseif self.m_data.buildingType == BuildingType.TalentCenter then
+    elseif self.m_data.buildingType == BuildingType.WareHouse then
         --集散中心
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_ReqMaterialBuyShelfGoods",self.m_data.insId,value.itemId,value.dataInfo.number,value.dataInfo.price,targetBuildingId,value.dataInfo.producerId,value.dataInfo.qty)
+        end
     end
 end
 --刷新最新数据

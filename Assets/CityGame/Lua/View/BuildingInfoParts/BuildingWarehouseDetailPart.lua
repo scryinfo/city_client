@@ -189,8 +189,11 @@ function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_RetailStoresTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
-    elseif self.m_data.buildingType == BuildingType.TalentCenter then
+    elseif self.m_data.buildingType == BuildingType.WareHouse then
         --集散中心
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_WareHourseTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+        end
     end
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------

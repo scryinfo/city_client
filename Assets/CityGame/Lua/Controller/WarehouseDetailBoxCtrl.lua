@@ -128,8 +128,21 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
                 Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
             end
         end
-    elseif self.m_data.info.buildingType == BuildingType.TalentCenter then
+    elseif self.m_data.info.buildingType == BuildingType.WareHouse then
         --集散中心
+        if not self.m_data.info.shelf.good then
+            Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+        else
+            --如果货架不是空的，检查货架上是否有这个商品
+            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+                --发送修改价格
+                Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --发送上架
+                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            else
+                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
+            end
+        end
     end
 end
 -------------------------------------------------------------回调函数-------------------------------------------------------------------------------
@@ -210,7 +223,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     --筛选出有用的数据
     --如果是原料厂上架，筛选出原料；如果是加工厂上架，筛选出商品
     local temporaryDataInfo = {}
-    local materialKey,goodsKey = 21,22
+    local materialKey,goodsKey,warehouseKey = 21,22,23
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
@@ -220,6 +233,12 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+    elseif self.m_data.info.buildingType == BuildingType.WareHouse then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
                 table.insert(temporaryDataInfo,value)
             end
         end

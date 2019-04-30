@@ -23,6 +23,7 @@ end
 function RenTableWareHousePanel:Awake(go)
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    this.InitPanel();
 end
 
 function RenTableWareHousePanel:Active()
@@ -35,7 +36,6 @@ end
 
 function RenTableWareHousePanel:Hide()
     UIPanel.Hide(self)
-    this.InitPanel();
 end
 
 ------------------------------------------------------------获取组件------------------------------------------

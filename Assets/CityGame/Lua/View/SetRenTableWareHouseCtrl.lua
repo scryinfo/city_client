@@ -62,23 +62,17 @@ function SetRenTableWareHouseCtrl:_clickstartBtn(go)
         data.rent = SetRenTableWareHousePanel.priceText.text
         data.minHourToRent = SetRenTableWareHousePanel.mintimeText.text
         data.maxHourToRent = SetRenTableWareHousePanel.maxtimeText.text
+        data.enableRent = true
         DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
         DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSentHouseDetailInfo',data)
         UIPanel.ClosePage()
 end
 
 --取消页面
-function SetRenTableWareHouseCtrl:_clickshutBtn()
-    ct.OpenCtrl("MyShutDownCtrl")
+function SetRenTableWareHouseCtrl:_clickshutBtn(go)
+    ct.OpenCtrl("MyShutDownCtrl",go)
 end
 
-
---玩家设置出租信息
-function SetRenTableWareHouseCtrl:_senInfo(SentWareHouseInfo)
-    local insId = self.m_data.insId
-    self.m_data = SentWareHouseInfo
-    self.m_data.insId = insId
-end
 
 
 

@@ -81,8 +81,7 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
             self.groupMgr:RefreshData(self.m_data)
         end
     else
-        self.m_data.isOther = false
-        if self.groupMgr == nil then                                   --本人打开
+        self.m_data.isOther = false                                      --本人打开
             self.groupMgr = BuildingInfoMainGroupMgr:new(BuidingWareHousePanel.groupTrans, self.houseBehaviour)
             self.groupMgr:AddParts(BuildingShelfPart, 0.25)
             self.groupMgr:AddParts(TurnoverPart, 0.25)
@@ -90,9 +89,9 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
             self.groupMgr:AddParts(BuildingWarehousePart, 0.25)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
-        else
+
             self.groupMgr:RefreshData(self.m_data)
-        end
+
     end
 end
 
@@ -140,12 +139,15 @@ function BuidingWareHouseCtrl:_refreshlary(data)
 end
 
 function BuidingWareHouseCtrl: _openFunc(data)
-    if data.m_data.availableCapacity ~= nil then
+    if data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
+        ct.OpenCtrl("RenTableWareHouseCtrl",data)
+    elseif data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() and data.m_data.availableCapacity ~= nil then
         ct.OpenCtrl("MainRenTableWarehouseCtrl",data.m_data)
-    else
-        ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
+    elseif data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() and data.m_data.availableCapacity == nil then
+         ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
         BuidingWareHousePanel.spaceText.Text = "Not rentable"
-    end
+        end
+
 end
 
 --更新UI显示数据

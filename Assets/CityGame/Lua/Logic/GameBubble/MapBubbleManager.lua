@@ -98,6 +98,18 @@ function MapBubbleManager.initItemData()
     if MyBuild.retailShop ~= nil then
         this._createBuildingItems(MyBuild.retailShop, BuildingType.RetailShop)
     end
+    --生成研究所
+    if MyBuild.laboratory ~= nil then
+        this._createBuildingItems(MyBuild.laboratory, BuildingType.Laboratory)
+    end
+    --生成推广
+    if MyBuild.publicFacility ~= nil then
+        this._createBuildingItems(MyBuild.publicFacility, BuildingType.Municipal)
+    end
+    --生成零售店
+    --if MyBuild.retailShop ~= nil then
+    --    this._createBuildingItems(MyBuild.retailShop, BuildingType.RetailShop)
+    --end
 end
 --
 function MapBubbleManager._createBuildingItems(itemDatas, buildingType)

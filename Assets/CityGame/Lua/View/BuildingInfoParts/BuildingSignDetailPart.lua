@@ -18,6 +18,8 @@ BuildingSignDetailPart.EOpenState =
 --
 BuildingSignDetailPart.BtnDisSelectColor = Vector3.New(46, 58, 100)
 BuildingSignDetailPart.BtnSelectColor = Vector3.New(255, 255, 255)
+BuildingSignDetailPart.curveInitPos = Vector3.New(-1323, 62, 0)
+BuildingSignDetailPart.curveMaxWidth = Vector2.New(2814, 260)  --MaxWidth
 --
 function BuildingSignDetailPart:PrefabName()
     return "BuildingSignDetailPart"
@@ -71,8 +73,8 @@ function BuildingSignDetailPart:_ResetTransform()
     self:_language()
     self:_setTextSuitableWidth()
 
-    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
-    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
+    self.curve.anchoredPosition = BuildingSignDetailPart.curveInitPos
+    self.curve.sizeDelta = BuildingSignDetailPart.curveMaxWidth
 
     --
     self.liftCurveData = nil
@@ -110,8 +112,8 @@ end
 --
 function BuildingSignDetailPart:_InitTransform()
     self:_getComponent(self.transform)
-    self.curve.anchoredPosition = Vector3.New(-1302, 62,0)
-    self.curve.sizeDelta = Vector2.New(2814, 260)  --MaxWidth
+    self.curve.anchoredPosition = BuildingSignDetailPart.curveInitPos
+    self.curve.sizeDelta = BuildingSignDetailPart.curveMaxWidth
 end
 --
 function BuildingSignDetailPart:_getComponent(transform)

@@ -41,7 +41,6 @@ function PromoteSignCurveCtrl:Refresh()
     PromoteSignCurvePanel.buildingType.text = GetLanguage(PlayerBuildingBaseData[self.m_data.dataInfo.typeId].typeName)
     PlayerInfoManger.GetInfos({self.m_data.dataInfo.sellerPlayerId}, self.c_OnHead, self)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, '_reqLiftCurve',self.m_data.buildingId)
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, '_reqLiftCurve',self.m_data.insId)
 end
 
 function PromoteSignCurveCtrl:c_OnHead(info)
@@ -112,7 +111,7 @@ function PromoteSignCurveCtrl:c_PromoteSignCurve(info)
 
     local turnover = {}
     for i, v in ipairs(turnoverTab) do
-        turnover[i] = Vector2.New(v.coordinate,v.flow)  --
+        turnover[i] = Vector2.New(v.coordinate,v.lift)  --
     end
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
@@ -120,19 +119,20 @@ function PromoteSignCurveCtrl:c_PromoteSignCurve(info)
 
     local scale = 0.2
     local turnoverVet = {}
+    local showNumValue = {}  --用于点的显示
     for i, v in ipairs(turnover) do
             if scale == 0 then
                 turnoverVet[i] = Vector2.New(v.x, v.y)
             else
                 turnoverVet[i] = Vector2.New(v.x,v.y / scale * 80)
             end
-        v.y = math.ceil(v.y *100) /100 .. "%"
+        showNumValue[i] = Vector2.New(v.x,v.y * 100)
     end
     PromoteSignCurvePanel.slide:SetXScaleValue(time,118)
     PromoteSignCurvePanel.graph:BoundaryLine(boundaryLine)
 
     PromoteSignCurvePanel.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
-    PromoteSignCurvePanel.slide:SetCoordinate(turnoverVet, turnover, Color.blue)
+    PromoteSignCurvePanel.slide:SetCoordinate(turnoverVet, showNumValue, Color.blue)
 
     PromoteSignCurvePanel.curve.localPosition = PromoteSignCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
     PromoteSignCurvePanel.curve.sizeDelta = PromoteSignCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)

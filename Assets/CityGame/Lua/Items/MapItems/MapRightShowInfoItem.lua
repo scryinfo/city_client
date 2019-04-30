@@ -35,7 +35,7 @@ function MapRightShowInfoItem:initData(data)
     --LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
 
     if self.detailImg ~= nil and data.detailImgPath ~= nil then
-        LoadSprite(data.detailImgPath, self.detailImg, true)
+        LoadSprite(data.detailImgPath, self.detailImg, false)
         self.valueText.transform.localScale = Vector3.zero
         self.detailImg.transform.localScale = Vector3.one
     end

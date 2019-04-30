@@ -5,7 +5,7 @@
 ---点击其他人研究所
 MapRightOtherTechnologyPage = class('MapRightOtherTechnologyPage')
 MapRightOtherTechnologyPage.moneyColor = "#F4AD07FF"
-MapRightOtherTechnologyPage.successNum = 10000
+MapRightOtherTechnologyPage.successNum = 1000
 
 --初始化方法
 function MapRightOtherTechnologyPage:initialize(viewRect)

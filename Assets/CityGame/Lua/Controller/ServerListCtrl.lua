@@ -75,12 +75,12 @@ function ServerListCtrl:_initData()
     for i, v in ipairs(self.m_data) do
         local function callback(prefab)
             self.serverLuaItem = ServerItem:new(serverListBehaviour,prefab,self,v,i)
+            if not self.server then
+                self.server = {}
+            end
+            self.server[i] = self.serverLuaItem
         end
         createPrefab(ServerListCtrl.static.Server_PATH,ServerListPanel.content, callback)
-        if not self.server then
-            self.server = {}
-        end
-        self.server[i] = self.serverLuaItem
     end
 end
 

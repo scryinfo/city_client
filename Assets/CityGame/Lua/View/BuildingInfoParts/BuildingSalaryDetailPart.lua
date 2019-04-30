@@ -130,7 +130,8 @@ function BuildingSalaryDetailPart:_initFunc()
         self:_showPercentValue(2)
     end
 
-    self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
+    --self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)
+    self.effectExpWordText.text = "Value:"
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNumText.text = staffNum
     local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)

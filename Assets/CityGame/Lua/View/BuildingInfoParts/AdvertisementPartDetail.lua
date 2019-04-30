@@ -185,10 +185,6 @@ end
 
 --队列
 function AdvertisementPartDetail:OnQuene(go)
-    if tonumber( go.queneValue.text) == 0 then
-        Event.Brocast("SmallPop","暂无队列",300)
-        return
-    end
     if go.m_data.info.ownerId == myOwnerID then
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
     else

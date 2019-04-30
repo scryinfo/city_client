@@ -56,7 +56,7 @@ function MapRightOtherPromotePage:_createPromotion()
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
 
-    local str1 = self.data.remainTime.."h"
+    local str1 = self.data.remainTime / 3600000 .."h"
     local data1 = {infoTypeStr = "PromotionTime", value = str1}  --时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 

@@ -94,22 +94,26 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
                 self.groupMgr:AddParts(TurnoverPart, 0.23)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
                 self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
+                PromoteCompanyPanel.open.transform.localScale = Vector3.one
             else
                 self.groupMgr:AddParts(AdvertisementPart, 1)
                 self.groupMgr:AddParts(TurnoverPart, 0)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0)
                 self.groupMgr:AddParts(AdBuildingSignPart, 0)
-
+                PromoteCompanyPanel.open.transform.localScale = Vector3.zero
             end
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
             PromoteCompanyPanel.queue.transform.localScale = Vector3.one
+            PromoteCompanyPanel.open.transform.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else -- 未营业
             PromoteCompanyPanel.groupTrans.localScale = Vector3.zero
             PromoteCompanyPanel.queue.transform.localScale = Vector3.zero
+            PromoteCompanyPanel.open.transform.localScale = Vector3.zero
         end
     else
+
         self.groupMgr:RefreshData(self.m_data)
     end
     PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
@@ -151,6 +155,8 @@ function PromoteCompanyCtrl:_refreshSalary(data)
             self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
             self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
+            PromoteCompanyPanel.queue.transform.localScale = Vector3.one
+            PromoteCompanyPanel.open.transform.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
         self.groupMgr:RefreshData(self.m_data)

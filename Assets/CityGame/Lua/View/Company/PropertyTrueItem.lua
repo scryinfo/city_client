@@ -65,26 +65,27 @@ function PropertyTrueItem:ShowData(lv, cexp)
         local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
         if self.data.bt == "Quality" then
             if self.data.at < 2100000 then -- 建筑品质加成
-                speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
+                speed = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
             else -- 商品品质值
-                speed = EvaUp[lv].add / 1000
+                speed = string.format( "%.2f",EvaUp[lv].add / 1000)
             end
         elseif self.data.bt == "ProduceSpeed" then
-            speed = tostring(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "个/s"
+            speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"
         elseif self.data.bt == "PromotionAbility" then
-            speed = tostring((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
+            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
         elseif self.data.bt == "InventionUpgrade" then
-            speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
         elseif self.data.bt == "EvaUpgrade" then
-            speed = tostring(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
         elseif self.data.bt == "WarehouseUpgrade" then
-            speed = (1 + EvaUp[lv].add / 100000) * self.configData.basevalue
+            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
         end
 
         if lv == 1 then
             self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
         else
-            self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed, PropertyTrueItem.static.PercentColor, EvaUp[lv].add / 1000)
+            --self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, tostring(speed), PropertyTrueItem.static.PercentColor, tostring(EvaUp[lv].add / 1000))
+            self.nameNumberText.text = self.configData.name .. ":<color=" .. PropertyTrueItem.static.NumberColor .. "><b>" .. speed .. "</b></color>  <color=" .. PropertyTrueItem.static.PercentColor .. "><b>(+ " .. tostring(EvaUp[lv].add / 1000) .. "%)</b></color>"
             --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
         end
     else

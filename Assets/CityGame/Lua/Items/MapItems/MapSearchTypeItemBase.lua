@@ -29,7 +29,7 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
 
     --加载图片
     LoadSprite(data.selectIconPath, self.chooseIconImg, true)
-    LoadSprite(data.disSelectIconPath, self.disSelectIconImg, true)
+    LoadSprite(data.disSelectIconPath, self.disChooseIconImg, true)
 
     --Event.AddListener("c_SearchEndLoading", self._endLoading, self)  --结束loading
     Event.AddListener("c_ChooseTypeDetail", self.chooseTypeDetail, self)  --选中搜索某个东西

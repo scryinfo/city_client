@@ -71,16 +71,16 @@ function BuildingSetSalaryCtrl:_initData()
         return
     end
 
-    if self.m_data.info.salary ~= nil then
+    if self.m_data.info.salary == nil or self.m_data.info.salary == 0 then
+        self.wageSlider.value = 2
+        self:_showPercentValue(2)
+    else
         local value = (self.m_data.info.salary - 50) / 25
         if value < 0 then
             value = 0
         end
         self.wageSlider.value = value
         self:_showPercentValue(value)  --工资比率
-    else
-        self.wageSlider.value = 2
-        self:_showPercentValue(2)
     end
 
     self.effectExpWordText.text = GetLanguage(BuildingSalaryEffectConfig[self.m_data.info.mId].languageId)

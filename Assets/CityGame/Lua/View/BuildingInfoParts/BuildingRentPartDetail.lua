@@ -63,6 +63,7 @@ function BuildingRentPartDetail:_getComponent(transform)
     self.closeBtn = transform:Find("Root/CloseBtn"):GetComponent("Button")
     self.confirmBtn = transform:Find("Root/ConfirmBtn"):GetComponent("Button")
     self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
+    self.rentInputFieldPlaceholder = transform:Find("Root/RentInputField/Placeholder"):GetComponent("Text")
     self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
 end
 
@@ -79,5 +80,8 @@ end
 function BuildingRentPartDetail:_initFunc()
     if self.m_data and self.m_data.renter then
         self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+    end
+    if self.m_data.rent ~= nil then
+        self.rentInputFieldPlaceholder.text = GetClientPriceString(self.m_data.rent)
     end
 end

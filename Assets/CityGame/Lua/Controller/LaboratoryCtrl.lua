@@ -29,7 +29,9 @@ function LaboratoryCtrl:Awake(go)
     --self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
 
     self.luaBehaviour:AddClick(panel.centerBtn.gameObject, self._centerBtnFunc, self)
-    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+--    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function LaboratoryCtrl:Hide()
@@ -38,6 +40,7 @@ function LaboratoryCtrl:Hide()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
+    RevenueDetailsMsg.close()
 end
 
 function LaboratoryCtrl:Close()
@@ -46,6 +49,7 @@ function LaboratoryCtrl:Close()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
+    RevenueDetailsMsg.close()
 end
 ---===================================================================================点击函数==============================================================================================
 
@@ -90,7 +94,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
             self:_clickCloseBtn(self)
         end)
     end
-
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(buildingInfo.ownerId)
     LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
     self.m_data=buildingInfo
     buildingInfo.insId=buildingInfo.info.id
@@ -99,7 +103,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     --开业停业信息
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-        panel.stopRootTran.localScale = Vector3.zero
+       -- panel.stopRootTran.localScale = Vector3.zero
         --判断是自己还是别人打开了界面
         if info.ownerId ~= DataManager.GetMyOwnerID() then
             self:other(buildingInfo)
@@ -108,7 +112,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
         end
     else
         panel.groupTrans.localScale = Vector3.zero
-        panel.stopRootTran.localScale = Vector3.one
+        --panel.stopRootTran.localScale = Vector3.one
     end
 
 end
@@ -161,4 +165,9 @@ function LaboratoryCtrl:_clickCloseBtn()
     end
     self.m_data = nil
     UIPanel.ClosePage()
+end
+
+function LaboratoryCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
 end

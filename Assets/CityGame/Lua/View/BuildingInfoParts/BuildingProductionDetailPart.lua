@@ -115,6 +115,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
+    Event.AddListener("deleListLine",self.deleListLine,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -122,6 +123,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("detailPartUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
+    Event.RemoveListener("deleListLine",self.deleListLine,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -140,8 +142,8 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
         self.lineNumberText.text = 0 .."/"..0
-
     else
+        self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one
         self.addBtn.transform.localScale = Vector3.zero
@@ -174,6 +176,19 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.timeSlider.maxValue = Math_Ceil(self.oneTotalTime / 1000)
         self.timeSlider.value = Math_Ceil((self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000)
         self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value) * 1000)
+
+        --是商品时
+        local goodsKey = 22
+        if math.floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                --self.timeText.text = "00:00:00"
+                UpdateBeat:Remove(self.Update,self)
+                self.oneTimeText.text = "00:00"
+                self.timeSlider.value = 0
+                return
+            end
+        end
 
         self.lineNumberText.text = #lineData.."/"..#lineData
         --判断当前有没有代生产队列
@@ -263,6 +278,17 @@ function BuildingProductionDetailPart:Update()
         UpdateBeat:Remove(self.Update,self)
         return
     end
+    local goodsKey = 22
+    if math.floor(self.itemId / 100000) == goodsKey then
+        --原料不足时
+        if self:CheckMaterial(self.itemId) == false then
+            --self.timeText.text = "00:00:00"
+            UpdateBeat:Remove(self.Update,self)
+            self.oneTimeText.text = "00:00"
+            self.timeSlider.value = 0
+            return
+        end
+    end
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -299,6 +325,16 @@ function BuildingProductionDetailPart:ProductionLineSettop(data)
         Event.Brocast("m_ReqprocessingSetLineOrder",self.m_data.insId,data.lineId,2)
     end
 end
+--删除生产队列线
+function BuildingProductionDetailPart:deleListLine(data)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
+        Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,data.lineId)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        --加工厂
+        Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,data.lineId)
+    end
+end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --置顶成功后调整位置
 function BuildingProductionDetailPart:SettopSuccess(data)
@@ -324,15 +360,81 @@ end
 --删除正在生产中的线
 function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
-        table.remove(self.m_data.line,1)
-        self.time = nil
-        UpdateBeat:Remove(self.Update,self)
-        --清空生产队列Item数据
-        if next(self.waitingQueueIns) ~= nil then
-            self:CloseDestroy(self.waitingQueueIns)
+        if data.lineId == self.m_data.line[1].id then
+            table.remove(self.m_data.line,1)
+            self.time = nil
+            UpdateBeat:Remove(self.Update,self)
+            --清空生产队列Item数据
+            if next(self.waitingQueueIns) ~= nil then
+                self:CloseDestroy(self.waitingQueueIns)
+            end
+            --重新初始化界面及数据
+            self:initializeUiInfoData(self.m_data.line)
+            Event.Brocast("SmallPop","生产线删除成功", 300)
+        else
+            --清空生产队列Item数据
+            if next(self.waitingQueueIns) ~= nil then
+                for key,value in pairs(self.waitingQueueIns) do
+                    if value.lineId == data.lineId then
+                        self:updateListLine(key)
+                        table.remove(self.m_data.line,key +1)
+                    end
+                end
+            end
+            if next(self.waitingQueueIns) ~= nil then
+                for key,value in pairs(self.waitingQueueIns) do
+                    if key == 1 then
+                        value.placedTopBtn.transform.localScale = Vector3.zero
+                    else
+                        value.placedTopBtn.transform.localScale = Vector3.one
+                    end
+                end
+            end
         end
-        --重新初始化界面及数据
-        self:initializeUiInfoData(self.m_data.line)
     end
-    Event.Brocast("SmallPop","生产线删除成功", 300)
+end
+----------------------------------------------
+---临时删除一条代生产的线
+function BuildingProductionDetailPart:updateListLine(id)
+    if next(self.waitingQueueIns) == nil then
+        return
+    else
+        destroy(self.waitingQueueIns[id].prefab.gameObject)
+        table.remove(self.waitingQueueIns,id)
+    end
+end
+----------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--如果生产中是商品，检查原料够不够
+function BuildingProductionDetailPart:CheckMaterial(itemId)
+    --如果仓库是空的
+    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        return false
+    end
+    --如果仓库不是空的
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    local materialNum = {}
+    local isMeet = false
+    --生产中商品需要的原料
+    for key,value in pairs(material) do
+        --仓库中有的原料
+        for key1,value1 in pairs(self.m_data.store.inHand) do
+            if value1.key.id == value.itemId then
+                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
+                isMeet = true
+            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
+        end
+    end
+    table.sort(materialNum)
+    --最少能生产的数量
+    self.lineMinValue = materialNum[1]
+    local minValue = materialNum[1]
+    if minValue <= 0 then
+        return false
+    else
+        return true
+    end
 end

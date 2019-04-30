@@ -33,8 +33,10 @@ end
 function MaterialFactoryCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function MaterialFactoryCtrl:Refresh()
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     this:initializeData()
 end
 
@@ -150,9 +152,15 @@ function MaterialFactoryCtrl:_updateName(name)
     MaterialFactoryPanel.nameText.text = name
 end
 
+function MaterialFactoryCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
+end
+
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息
 --function MaterialFactoryCtrl:_changeItemData(data)
@@ -172,5 +180,6 @@ function MaterialFactoryCtrl:_clickCloseBtn()
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
+    RevenueDetailsMsg.close()
     UIPanel.ClosePage()
 end

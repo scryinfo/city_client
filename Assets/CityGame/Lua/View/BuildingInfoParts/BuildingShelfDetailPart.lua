@@ -172,9 +172,23 @@ end
 --添加到购买列表
 function BuildingShelfDetailPart:addBuyList(data)
     --添加到购买列表
-    table.insert(self.buyDatas,data)
-    self.number.transform.localScale = Vector3.one
-    self.numberText.text = #self.buyDatas
+    if next(self.buyDatas) == nil then
+        table.insert(self.buyDatas,data)
+        self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.buyDatas
+        Event.Brocast("SmallPop","添加成功", 300)
+    else
+        for key,value in pairs(self.buyDatas) do
+            if value.itemId == data.itemId then
+                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                return
+            end
+        end
+        table.insert(self.buyDatas,data)
+        --self.number.transform.localScale = Vector3.one
+        self.numberText.text = #self.buyDatas
+        Event.Brocast("SmallPop","添加成功", 300)
+    end
 end
 --删除购买列表
 function BuildingShelfDetailPart:deleBuyList(id)

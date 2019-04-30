@@ -120,11 +120,18 @@ function MapRightSelfBuildingPage:_createMaterial()
     self.items[#self.items + 1] = self:_createShowItem(data3)
 
     if self.data.line == nil then  --生产线
-        local str2 = GetLanguage(12345678)
+        --local str2 = GetLanguage(12345678)
+        local str2 = "No production"
         local data2 = {infoTypeStr = "Production", value = str2}
         self.items[#self.items + 1] = self:_createShowItem(data2)
     else
-        local detailImgPath = Material[self.data.line[1].itemId].img
+        local path
+        if Material[self.data.line[1].itemId] ~= nil then
+            path = Material[self.data.line[1].itemId].img
+        else
+            path = Good[self.data.line[1].itemId].img
+        end
+        local detailImgPath = path
         local data2 = {infoTypeStr = "Production", value = GetLanguage(12345678), detailImgPath = detailImgPath}
         self.items[#self.items + 1] = self:_createShowItem(data2, true)
     end
@@ -144,7 +151,7 @@ function MapRightSelfBuildingPage:_createRetailShop()
 end
 --研究所
 function MapRightSelfBuildingPage:_createLab()
-    local data3 = {infoTypeStr = "Queued", value = self:getLabQueued(self.data.inProcess)}  --研究所队列
+    local data3 = {infoTypeStr = "Queued", value = self:getLabQueued(self.data.inProcess).."h"}  --研究所队列
     self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --仓库
@@ -162,17 +169,27 @@ function MapRightSelfBuildingPage:_createWarehouse()
 end
 --推广公司
 function MapRightSelfBuildingPage:_createPromotion()
-    --local data1 = {infoTypeStr = "Queued", value = self.data.inProcess}  --队列
-    --self.items[#self.items + 1] = self:_createShowItem(data1)
-    --
-    --local data3 = {infoTypeStr = "ADSign", value = self.data.queued.."%"}  --流量签约
-    --self.items[#self.items + 1] = self:_createShowItem(data3)
+    local temp = 0
+    if self.data.newPromoStartTs ~= nil and self.data.newPromoStartTs ~= -1 then
+        local index = self.data.newPromoStartTs - TimeSynchronized.GetTheCurrentServerTime()  --剩余时间
+        if index > 0 then
+            local hour = index / 1000 / 3600
+            temp = hour
+        end
+    end
+    local data1 = {infoTypeStr = "Queued", value = temp.."h"}  --队列
+    self.items[#self.items + 1] = self:_createShowItem(data1)
+
+    local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --研究所队列
 function MapRightSelfBuildingPage:getLabQueued(line)
     local reminderTime = 0
-    for i, lineData in ipairs(line) do
-        reminderTime = reminderTime + (lineData.times- (lineData.availableRoll + lineData.usedRoll))
+    if line ~= nil then
+        for i, lineData in ipairs(line) do
+            reminderTime = reminderTime + (lineData.times- (lineData.availableRoll + lineData.usedRoll))
+        end
     end
     return reminderTime
 end

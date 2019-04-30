@@ -55,6 +55,7 @@ function ResearchDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.evaBtn.gameObject,self.onClick_eva, self)
     mainPanelLuaBehaviour:AddClick(self.setBtn.gameObject,self.onClick_set, self)
     mainPanelLuaBehaviour:AddClick(self.inventEva.gameObject,self.onClick_inventEva, self)
+    mainPanelLuaBehaviour:AddClick(self.bgtitleQUNNE.gameObject,self.onClick_bgtitleQUNNE, self)
 
 end
 --
@@ -72,6 +73,8 @@ function ResearchDetailPart:RefreshData(data)
 end
 --
 function ResearchDetailPart:_InitTransform()
+    Event.AddListener("c_UpdateInventSet",self.c_UpdateInventSet,self)
+
     local transform = self.transform
     self.xBtn = findByName(transform,"xBtn")
 
@@ -110,6 +113,7 @@ function ResearchDetailPart:_InitTransform()
     self.timeText = findByName(transform,"timeText"):GetComponent("Text")
     self.dateText = findByName(transform,"dateText"):GetComponent("Text")
 
+    self.bgtitleQUNNE = findByName(transform,"bg-titleQUNNE")
 end
 
 ---===================================================================================研究所业务逻辑==============================================================================================
@@ -126,13 +130,14 @@ function ResearchDetailPart:updateUI(data)
     self:onClick_good(self)
 
     self.timeCountText.text = data.sellTimes
-    self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    self.priceCountText.text = GetClientPriceString(data.pricePreTime*10000)
+
     if data.inProcess then
         self.queneCountText.text = #( data.inProcess )
         local reminderTime=0
         for i, lineData in ipairs(data.inProcess) do
 
-            reminderTime = reminderTime + (lineData.times-(lineData.availableRoll+lineData.usedRoll))
+            reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))*3600000)
         end
 
         local ts = getFormatUnixTime((TimeSynchronized.GetTheCurrentServerTime()+ reminderTime)/1000)
@@ -229,4 +234,13 @@ function ResearchDetailPart:onClick_inventEva(ins)
     end  }
 
     ct.OpenCtrl("InventPopCtrl",data)
+end
+--跟新设置
+function ResearchDetailPart:c_UpdateInventSet(times,price)
+    self.timeCountText.text = times
+    self.priceCountText.text = price
+end
+
+function ResearchDetailPart:onClick_bgtitleQUNNE(ins)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem}  )
 end

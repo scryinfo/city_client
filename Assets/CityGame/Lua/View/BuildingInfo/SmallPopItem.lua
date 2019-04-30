@@ -32,7 +32,7 @@ function SmallPopItem:initialize(string,spacing,prefab,mgr)
 
     prefabTrans:DOAnchorPos(SmallPopItem.endPOS, 0.5);
 
-    self.timenow=UnityEngine.Time.time+2
+    self.timenow=UnityEngine.Time.time+3
 
     UpdateBeat:Add(self._update, self);
 end

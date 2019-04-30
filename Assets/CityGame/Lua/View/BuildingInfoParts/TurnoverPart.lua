@@ -4,6 +4,7 @@
 --- DateTime: 2019/4/2 17:12
 ---建筑主界面今日营收
 TurnoverPart = class('TurnoverPart', BasePart)
+local transform
 --
 function TurnoverPart:PrefabName()
     return "TurnoverPart"
@@ -14,11 +15,17 @@ function TurnoverPart:GetDetailClass()
 end
 --
 function TurnoverPart:_InitTransform()
+    transform = self.transform
     self:_getComponent(self.transform)
 end
 --
 function  TurnoverPart:_ResetTransform()
-    self.turnover.text = "0.0000"
+
+end
+
+function TurnoverPart:ShowDetail(data)
+    BasePart.ShowDetail(self,data)
+    --Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 --
 function TurnoverPart:RefreshData(data)
@@ -26,13 +33,26 @@ function TurnoverPart:RefreshData(data)
         return
     end
     self.m_data = data
-    self:_initFunc()
+    --self:_initFunc()
 end
 --
 function TurnoverPart:_getComponent(transform)
-    self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+    if self.turnover == nil then
+        self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+    end
+    if self.data then
+        self.turnover.text = GetClientPriceString(self.data)
+    end
 end
 --
-function TurnoverPart:_initFunc()
-    self.turnover.text = GetClientPriceString(self.m_data.turnover)
+function TurnoverPart:_initFunc(info)
+   self.data = info
+    if transform then
+        if self.turnover == nil then
+            self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
+        end
+        self.turnover.text = GetClientPriceString(self.data)
+    end
+
 end
+

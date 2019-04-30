@@ -160,6 +160,7 @@ end
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息
 --function MaterialFactoryCtrl:_changeItemData(data)

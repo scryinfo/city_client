@@ -1,6 +1,6 @@
 LoadingCtrl = class('LoadingCtrl',UIPanel)
 UIPanel:ResgisterOpen(LoadingCtrl)
-
+local lu = luaunit
 function LoadingCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
     if TerrainConfig.LoadingConfig.MinDurationTime ~= nil then
@@ -29,6 +29,22 @@ end
 function LoadingCtrl:OnCreate(obj)
     UIPanel.OnCreate(self, obj)
     UpdateBeat:Add(self._Update, self)
+end
+
+function LoadingCtrl:Awake(...)
+    StopAndBuildModel:Awake()
+    --PlayerInfoManager.Init()
+    PlayerInfoManger.Awake()
+    --单元测试入口
+    lu.LuaUnit.run()
+    DataManager.Init()
+    TerrainManager.Init()
+    --Avatar管理器
+    AvatarManger.Awake()
+
+    PathFindManager.Init()
+    --营收详情
+    RevenueDetailsMsg.Awake()
 end
 
 function LoadingCtrl:_Update()

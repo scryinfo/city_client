@@ -90,6 +90,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("transportSucceed",self.transportSucceed,self)
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
+    Event.AddListener("getItemIdCount",self.getItemIdCount,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -99,6 +100,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("transportSucceed",self.transportSucceed,self)
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
+    Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -317,4 +319,22 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     UIPanel.ClosePage()
     Event.Brocast("SmallPop", GetLanguage(26030003), 300)
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--获取仓库里某个商品的数量
+--(后边要修改)
+function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
+    if itemId ~= nil then
+        local nowCount = 0
+        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+            nowCount = 0
+        else
+            for key,value in pairs(self.m_data.store.inHand) do
+                if value.key.id == itemId then
+                    nowCount = value.n
+                end
+            end
+        end
+        callback(nowCount)
+    end
 end

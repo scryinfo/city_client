@@ -72,6 +72,8 @@ function ResearchDetailPart:RefreshData(data)
 end
 --
 function ResearchDetailPart:_InitTransform()
+    Event.AddListener("c_UpdateInventSet",self.c_UpdateInventSet,self)
+
     local transform = self.transform
     self.xBtn = findByName(transform,"xBtn")
 
@@ -126,7 +128,8 @@ function ResearchDetailPart:updateUI(data)
     self:onClick_good(self)
 
     self.timeCountText.text = data.sellTimes
-    self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    self.priceCountText.text = GetClientPriceString(data.pricePreTime*10000)
+
     if data.inProcess then
         self.queneCountText.text = #( data.inProcess )
         local reminderTime=0
@@ -229,4 +232,9 @@ function ResearchDetailPart:onClick_inventEva(ins)
     end  }
 
     ct.OpenCtrl("InventPopCtrl",data)
+end
+--跟新设置
+function ResearchDetailPart:c_UpdateInventSet(times,price)
+    self.timeCountText.text = times
+    self.priceCountText.text = price
 end

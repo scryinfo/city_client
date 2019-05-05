@@ -7,7 +7,10 @@ AddProductionLineBoxCtrl = class('AddProductionLineBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(AddProductionLineBoxCtrl)
 
 local addLineBox
---local Math_Floor = math.floor
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function AddProductionLineBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.Normal)
 end
@@ -75,6 +78,14 @@ function AddProductionLineBoxCtrl:InitializeData()
         LoadSprite(Good[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
         local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed).."s"
+        --如果是商品，判断原料等级
+        if Good[self.m_data.itemId].luxury == 1 then
+            AddProductionLineBoxPanel.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.m_data.itemId].luxury == 2 then
+            AddProductionLineBoxPanel.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.m_data.itemId].luxury == 3 then
+            AddProductionLineBoxPanel.levelImg.color = getColorByVector3(threeLevel)
+        end
     end
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------

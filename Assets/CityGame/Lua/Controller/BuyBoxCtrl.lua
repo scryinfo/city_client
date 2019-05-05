@@ -8,6 +8,10 @@ UIPanel:ResgisterOpen(BuyBoxCtrl)
 
 local ToNumber = tonumber
 local StringSun = string.sub
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function BuyBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -84,14 +88,26 @@ function BuyBoxCtrl:initializeUiInfoData()
         self.levelBg.transform.localScale = Vector3.one
         self.number.transform.localPosition = Vector3.New(183,-135,0)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
+        --如果是商品，判断原料等级
+        if Good[self.m_data.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.m_data.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.m_data.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
         --self.popularityValue.text =
         --self.qualityValue.text =
         --self.levelValue.text =
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.numberSlider.maxValue = self.m_data.dataInfo.n
-    self.numberSlider.value = 0
+    self.numberSlider.value = 1
     self.numberText.text = "×"..self.numberSlider.value
+    local function callback1(b)
+        self.shelfNumberText.text = "×"..b
+    end
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
 end
 --设置多语言
 function BuyBoxCtrl:_language()

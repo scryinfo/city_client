@@ -495,6 +495,10 @@ end
 function BuildingSignDetailPart:clickOpenTipBtn()
     self.tipRoot.localScale = Vector3.one
 end
+--点击提示按钮
+function BuildingSignDetailPart:clickTipBtn()
+    self.tipRoot.localScale = Vector3.zero
+end
 --点击liftBtn
 function BuildingSignDetailPart:clickLiftBtn()
     if self.liftCurveData == nil then

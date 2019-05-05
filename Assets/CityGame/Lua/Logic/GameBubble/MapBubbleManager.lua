@@ -196,6 +196,10 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
     if summaryType == EMapSearchType.Auction then  --土地拍卖是客户端维护的，所以做特殊处理
         if data == nil then
             local tempDatas = UIBubbleManager.getCollectionAucData()
+            if tempDatas == nil then
+                this.cleanSummaryItems()
+                return
+            end
             data = {}
             for i, value in pairs(tempDatas) do
                 data[#data + 1] = {num = value, collectionId = i}

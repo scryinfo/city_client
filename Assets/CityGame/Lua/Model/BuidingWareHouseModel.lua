@@ -24,13 +24,15 @@ function BuidingWareHouseModel:OnCreate()
     Event.AddListener("m_ReqMaterialShelfAdd",self.m_ReqShelfAdd,self)                 --上架
     Event.AddListener("m_ReqMaterialShelfDel",self.m_ReqShelfDel,self)                 --下架
     Event.AddListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self) --自动补货
-    Event.AddListener("m_ShutRent",self.m_ShutRent,self)                                  --取消出租
+    Event.AddListener("m_ShutRent",self.m_ReqShutSentHouseDetailInfo,self)                                  --取消出租
 
     --网络回调注册
+    --仓库
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailWareHouse","gs.WareHouse",self.n_OnReceiveHouseDetailInfo)   --请求建筑详情
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnHouseDetailInfo)                --设置工资
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)               --开业
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setWareHouseRent","gs.setWareHouseRent",self.n_OnReceiveSentWareHouseInfo)  --租仓库
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setWareHouseRent","gs.closeWareHouseRent",self.n_OnReceiveSentWareHouseIno)  --取消仓库出租
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)         --运输
 
     --货架
@@ -54,12 +56,17 @@ function BuidingWareHouseModel:Close()
     Event.RemoveListener("m_ReqMaterialModifyShelf",self.m_ReqModifyShelf,self)
     Event.RemoveListener("m_ReqMaterialShelfDel",self.m_ReqShelfDel,self)
     Event.RemoveListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
-    Event.RemoveListener("m_ShutRent",self.m_ShutRent,self)
+    Event.RemoveListener("m_ShutRent",self.m_ReqShutSentHouseDetailInfo,self)
+
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setWareHouseRent","gs.setWareHouseRent",self.n_OnReceiveSentWareHouseInfo)  --租仓库
+
 end
+
+
 --- 客户端请求 ---
---获取建筑详情
+---
 function BuidingWareHouseModel:m_ReqHouseDetailInfo(buildingId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "detailWareHouse","gs.Id",{ id = buildingId})
+    DataManager.ModelSendNetMes("gscode.OpCode", "detailWareHouse","gs.Id",{id = buildingId})
 end
 --改变建筑名字
 function BuidingWareHouseModel:m_ReqChangeHouseName(id, name)
@@ -67,23 +74,23 @@ function BuidingWareHouseModel:m_ReqChangeHouseName(id, name)
 end
 --更改出租信息
 function BuidingWareHouseModel:m_ReqSentHouseDetailInfo(data)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setWareHouseRent","gs.setWareHouseRent",data)
+    DataManager.ModelSendNetMes("gscode.OpCode", "setWareHouseRent","gs.SetWareHouseRent",data)
 end
 --出租取消
 function BuidingWareHouseModel:m_ReqShutSentHouseDetailInfo(data)
-    DataManager.ModelSendNetMes("gscode.OpCode", "SetWareHouseRent","gs.closeWareHouseRent",data)
+    DataManager.ModelSendNetMes("gscode.OpCode", "closeWareHouseRent","gs.SetWareHouseRent",data)
 end
 --运输
 function BuidingWareHouseModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
+--下架
+function BuidingWareHouseModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
+    self.funModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
+end
 --上架
 function BuidingWareHouseModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
     self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
-end
---取消出租
-function BuidingWareHouseModel:m_ReqShutRent(data)
-    DataManager.ModelSendNetMes("gscode.OpCode", "setWareHouseRent","gs.setWareHouseRent",data)
 end
 
 ----- 回调 ---
@@ -104,10 +111,6 @@ end
 function BuidingWareHouseModel:n_OnHouseDetailInfo(houseDetailInfo)
     DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_refreshlary',houseDetailInfo)
 end
---下架
-function BuidingWareHouseModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
-    self.funModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
-end
 --开业成功，再次请求建筑详情
 function BuidingWareHouseModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
@@ -115,21 +118,14 @@ function BuidingWareHouseModel:n_OnReceiveOpenBusiness(data)
         Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end
+
 --更改出租信息回调
 function BuidingWareHouseModel:n_OnReceiveSentWareHouseInfo(SentWareHouseInfo)
     DataManager.ControllerRpcNoRet(self.insId,"BuidingWareHouseCtrl", '_refreshRentInfo',SentWareHouseInfo)
 end
+
 --运输
 function BuidingWareHouseModel:n_OnBuildingTransportInfo(data)
-    --local bagId = DataManager.GetBagId()
-    --local n = data.item.n
-    --local itemId = data.item.key.id
-    --local qty = data.item.key.qty
-    --local producerId = data.item.key.producerId
-    --if data.dst == bagId then
-    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    --end
-    --DataManager.ControllerRpcNoRet(self.insId,"WarehouseCtrl",'RefreshWarehouseData',data,true)
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end

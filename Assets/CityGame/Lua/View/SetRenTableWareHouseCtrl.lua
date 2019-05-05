@@ -59,9 +59,9 @@ function SetRenTableWareHouseCtrl:_clickstartBtn(go)
         local data = {}
         data.buildingId = go.m_data.insId
         data.rentCapacity = SetRenTableWareHousePanel.spaceText.text
-        data.rent = SetRenTableWareHousePanel.priceText.text
         data.minHourToRent = SetRenTableWareHousePanel.mintimeText.text
         data.maxHourToRent = SetRenTableWareHousePanel.maxtimeText.text
+        data.rent = SetRenTableWareHousePanel.priceText.text
         data.enableRent = true
         DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
         DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSentHouseDetailInfo',data)

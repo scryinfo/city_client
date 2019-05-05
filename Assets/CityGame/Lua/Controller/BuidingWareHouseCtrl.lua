@@ -139,14 +139,15 @@ function BuidingWareHouseCtrl:_refreshlary(data)
 end
 
 function BuidingWareHouseCtrl: _openFunc(data)
+    go =  BuidingWareHousePanel.spaceText.text
     if data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
         ct.OpenCtrl("RenTableWareHouseCtrl",data)
-    elseif data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() and data.m_data.availableCapacity ~= nil then
-        ct.OpenCtrl("MainRenTableWarehouseCtrl",data.m_data)
-    elseif data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() and data.m_data.availableCapacity == nil then
-         ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
-        BuidingWareHousePanel.spaceText.Text = "Not rentable"
-        end
+    elseif data.m_data.info.ownerId == DataManager.GetMyOwnerID() and go == 0 then
+        ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
+    elseif data.m_data.info.ownerId == DataManager.GetMyOwnerID() and go ~= 0 then
+         ct.OpenCtrl("MainRenTableWarehouseCtrl",data.m_data)
+        --BuidingWareHousePanel.spaceText.Text = "Not rentable"
+    end
 
 end
 

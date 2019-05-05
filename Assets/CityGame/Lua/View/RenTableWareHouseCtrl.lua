@@ -5,41 +5,43 @@
 ---
 
 
-RenTableWareHousePanel = class('RenTableWareHousePanel',UIPanel)
-UIPanel:ResgisterOpen(RenTableWareHousePanel)
+RenTableWareHouseCtrl = class('RenTableWareHouseCtrl',UIPanel)
+UIPanel:ResgisterOpen(RenTableWareHouseCtrl)
+local this = RenTableWareHouseCtrl
 
-function RenTableWareHousePanel:initialize()
+function RenTableWareHouseCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
 
-function RenTableWareHousePanel:bundleName()
+function RenTableWareHouseCtrl:bundleName()
     return "Assets/CityGame/Resources/View/RenTableWareHousePanel.prefab"
 end
 
-function RenTableWareHousePanel:OnCreate(obj)
+function RenTableWareHouseCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-function RenTableWareHousePanel:Awake(go)
-    self.gameObject = go
+function RenTableWareHouseCtrl:Awake(obj)
+    transform = obj.transform
+    self.gameObject = obj
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     this.InitPanel();
 end
 
-function RenTableWareHousePanel:Active()
+function RenTableWareHouseCtrl:Active()
     UIPanel.Active(self)
 end
 
-function RenTableWareHousePanel:Refresh()
+function RenTableWareHouseCtrl:Refresh()
 
 end
 
-function RenTableWareHousePanel:Hide()
+function RenTableWareHouseCtrl:Hide()
     UIPanel.Hide(self)
 end
 
 ------------------------------------------------------------获取组件------------------------------------------
-function RenTableWareHousePanel.InitPanel()
+function RenTableWareHouseCtrl.InitPanel()
     this.timeTextSlider = transform:Find("contentRoot/content/down/Slider"):GetComponent("Slider")
     this.perSlider = transform:Find("contentRoot/content/mid/Slider"):GetComponent("Slider")
 

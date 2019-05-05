@@ -50,14 +50,14 @@ function MyShutDownCtrl:_clickStartBtn(go)
     local data = {}
     data.buildingId = go.m_data.m_data.insId
     data.rentCapacity = 0
-    data.rent = 0
     data.minHourToRent = 0
     data.maxHourToRent = 0
+    data.rent = 0
     data.enableRent = false
     SetRenTableWareHousePanel.spaceText.text = data.rentCapacity
     SetRenTableWareHousePanel.priceText.text = data.rent
-    SetRenTableWareHousePanel.mintimeText.text= data.minHourToRent
-    SetRenTableWareHousePanel.maxtimeText.text= data.maxHourToRent
+    SetRenTableWareHousePanel.mintimeText.text = data.minHourToRent
+    SetRenTableWareHousePanel.maxtimeText.text = data.maxHourToRent
     DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
     DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqShutSentHouseDetailInfo',data)
    UIPanel.BackToPage(MainRenTableWarehouseCtrl)

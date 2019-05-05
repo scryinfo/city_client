@@ -138,6 +138,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
             self.totalNumberText.text = "×"..self.numberSlider.maxValue
+
         else
             self.numberSlider.transform.localScale = Vector3.one
             self.totalNumber.transform.localScale = Vector3.zero
@@ -150,7 +151,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.confirmBtn.transform.localScale = Vector3.zero
         self.addShelfBtn.transform.localScale = Vector3.one
         self.numberSlider.maxValue = self.m_data.dataInfo.n
-        self.numberSlider.value = 0
+        self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = "0"
     end

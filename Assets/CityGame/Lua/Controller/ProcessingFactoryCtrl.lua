@@ -28,11 +28,13 @@ function ProcessingFactoryCtrl:Awake(go)
     self.processingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     --self.processingBehaviour:AddClick(ProcessingFactoryPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     --self.processingBehaviour:AddClick(ProcessingFactoryPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+    self.processingBehaviour:AddClick(ProcessingFactoryPanel.bubbleMessageBtn, self._openBubbleMessage, self)
+
 
 end
 function ProcessingFactoryCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function ProcessingFactoryCtrl:Refresh()
@@ -71,6 +73,7 @@ function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
     end
     if self.groupMgr == nil then
         if processingDataInfo.info.state == "OPERATE" then
+            ProcessingFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr = BuildingInfoMainGroupMgr:new(ProcessingFactoryPanel.groupTrans, self.processingBehaviour)
             if self.m_data.isOther then
                 self.groupMgr:AddParts(BuildingShelfPart,1)
@@ -78,17 +81,20 @@ function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
                 self.groupMgr:AddParts(BuildingProductionPart,0)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
+                ProcessingFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
                 self.groupMgr:AddParts(BuildingShelfPart,0.2)
                 self.groupMgr:AddParts(TurnoverPart,0.2)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.2)
                 self.groupMgr:AddParts(BuildingProductionPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+                ProcessingFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             end
             ProcessingFactoryPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else
+            ProcessingFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             ProcessingFactoryPanel.groupTrans.localScale = Vector3.zero
             if self.groupMgr ~= nil then
                 self.groupMgr:TurnOffAllOptions()
@@ -104,7 +110,12 @@ function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
         end
     end
 end
-
+function ProcessingFactoryCtrl:_openBubbleMessage(go)
+    PlayMusEff(1002)
+    if go.m_data.info.id then
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
+    end
+end
 function ProcessingFactoryCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
@@ -121,6 +132,7 @@ function ProcessingFactoryCtrl:_refreshSalary(data)
             self.groupMgr:AddParts(BuildingProductionPart,0.2)
             self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             ProcessingFactoryPanel.groupTrans.localScale = Vector3.one
+            ProcessingFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
         self.groupMgr:RefreshData(self.m_data)
@@ -159,8 +171,8 @@ end
 
 function ProcessingFactoryCtrl:Hide()
     UIPanel.Hide(self)
-    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
-    --Event.RemoveListener("c_Revenue",self.c_Revenue,self)
+    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息
 --function ProcessingFactoryCtrl:_changeItemData(data)

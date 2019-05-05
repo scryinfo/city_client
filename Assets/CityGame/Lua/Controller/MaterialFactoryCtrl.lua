@@ -28,11 +28,12 @@ function MaterialFactoryCtrl:Awake(go)
     self.materialBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     --self.materialBehaviour:AddClick(MaterialFactoryPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     --self.materialBehaviour:AddClick(MaterialFactoryPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+    self.materialBehaviour:AddClick(MaterialFactoryPanel.bubbleMessageBtn, self._openBubbleMessage, self)
 
 end
 function MaterialFactoryCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function MaterialFactoryCtrl:Refresh()
@@ -71,6 +72,7 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     end
     if self.groupMgr == nil then
         if materialDataInfo.info.state == "OPERATE" then
+            MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
             if self.m_data.isOther then
                 self.groupMgr:AddParts(BuildingShelfPart,1)
@@ -78,17 +80,21 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
                 self.groupMgr:AddParts(BuildingProductionPart,0)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
+                MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
                 self.groupMgr:AddParts(BuildingShelfPart,0.2)
                 self.groupMgr:AddParts(TurnoverPart,0.2)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.2)
                 self.groupMgr:AddParts(BuildingProductionPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+                MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
+
             end
             MaterialFactoryPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else
+            MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             MaterialFactoryPanel.groupTrans.localScale = Vector3.zero
             if self.groupMgr ~= nil then
                 self.groupMgr:TurnOffAllOptions()
@@ -104,7 +110,12 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
         end
     end
 end
-
+function MaterialFactoryCtrl:_openBubbleMessage(go)
+    PlayMusEff(1002)
+    if go.m_data.info.id then
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
+    end
+end
 function MaterialFactoryCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
@@ -121,6 +132,7 @@ function MaterialFactoryCtrl:_refreshSalary(data)
             self.groupMgr:AddParts(BuildingProductionPart,0.2)
             self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             MaterialFactoryPanel.groupTrans.localScale = Vector3.one
+            MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
         self.groupMgr:RefreshData(self.m_data)
@@ -159,7 +171,7 @@ end
 
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
-    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息

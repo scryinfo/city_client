@@ -135,6 +135,9 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         if #storeData == #self.warehouseDatas then
             return
         else
+            if next(self.warehouseDatas) ~= nil then
+                self:CloseDestroy(self.warehouseDatas)
+            end
             self.transportBool = GoodsItemStateType.transport
             self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
         end
@@ -240,6 +243,7 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
 
+        --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.iKey.id then
                 --value.dataInfo.n = value.dataInfo.n + 1

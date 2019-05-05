@@ -21,5 +21,5 @@ function HousePanel.InitPanel()
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("topRoot/OpenBusinessItem"))
 
 
-    this.bubbleMessageBtn = transform:Find("BubbleMessageBtn").gameObject
+    this.bubbleMessageBtn = transform:Find("BubbleMessageBtn")
 end

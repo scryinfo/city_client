@@ -4,6 +4,7 @@
 --- DateTime: 2019/4/10 17:30
 ---
 
+-- 公司、Eva、不可加点属性item
 PropertyFalseItem = class("PropertyFalseItem")
 PropertyFalseItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
 PropertyFalseItem.static.BTypeIcon = -- b类型显示配置
@@ -29,6 +30,7 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
     LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
+    -- 点击按钮显示提示
     self.tipsBtn.onClick:AddListener(function ()
         CompanyPanel.closeTipsBtn.localScale = Vector3.one
         self:IsShowTips(true)

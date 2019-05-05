@@ -61,6 +61,7 @@ function BuildingProductionPart:_initFunc()
     else
         self.TopLineInfo.transform.localScale = Vector3.one
         self.tipText.transform.localScale = Vector3.zero
+        self.itemId = self.m_data.line[1].itemId
 
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             LoadSprite(Material[self.m_data.line[1].itemId].img,self.goodsIcon,false)
@@ -73,6 +74,18 @@ function BuildingProductionPart:_initFunc()
         if self.time == nil then
             self.timeText.text = self:GetTime(self.m_data.line[1])
             UpdateBeat:Add(self.Update,self)
+        end
+        --是商品时
+        local goodsKey = 22
+        if math.floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                --self.timeText.text = "00:00:00"
+                UpdateBeat:Remove(self.Update,self)
+                --self.oneTimeText.text = "00:00"
+                --self.timeSlider.value = 0
+                return
+            end
         end
     end
 end
@@ -104,6 +117,17 @@ function BuildingProductionPart:Update()
         self.tipText.transform.localScale = Vector3.one
         UpdateBeat:Remove(self.Update,self)
     end
+    --是商品时
+    local goodsKey = 22
+    if math.floor(self.itemId / 100000) == goodsKey then
+        --原料不足时
+        if self:CheckMaterial(self.itemId) == false then
+            --self.timeText.text = "00:00:00"
+            UpdateBeat:Remove(self.Update,self)
+            --self.timeText.text = ""
+            return
+        end
+    end
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -128,210 +152,36 @@ function BuildingProductionPart:updateNowLine(data)
         self:_initFunc()
     end
 end
-
-
-
---require('Controller/AdjustProductionLineCtrl')
---
---HomeProductionLineItem = class('HomeProductionLineItem')
---HomeProductionLineItem.static.TOTAL_H = 308  --整个Item的高度
---HomeProductionLineItem.static.CONTENT_H = 379  --显示内容的高度
---HomeProductionLineItem.static.TOP_H = 100  --top条的高度
---HomeProductionLineItem.static.Line_PATH = "View/GoodsItem/LineItem"
---HomeProductionLineItem.storeData = {}
---HomeProductionLineItem.lineItemTable = {}
-----初始化方法  数据需要接受服务器发送的数据
---function HomeProductionLineItem:initialize(productionData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
---    self.viewRect = viewRect;
---    self.productionData = productionData;
---    self.buildingId = productionData.insId
---    self.toggleData = toggleData;    --位于toggle的第4个   左边
---    self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
---    HomeProductionLineItem.storeData = productionData.store.inHand
---
---    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
---    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
---    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");    --关闭状态
---    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
---    self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");   --打开按钮
---    self.content = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content")
---    self.openName = self.viewRect.transform:Find("topRoot/open/nameText"):GetComponent("Text");
---    self.closeName = self.viewRect.transform:Find("topRoot/close/nameText"):GetComponent("Text");
---    self.addBtn = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/Add/bgBtn")
---    --预制
---    self.LineItem = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/LineItem").gameObject
---    self.add = self.viewRect.transform:Find("contentRoot/Scroll View/Viewport/Content/Add").gameObject
---
---    mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject, function()
---        PlayMusEff(1002)
---        clickOpenFunc(mgrTable, self.toggleData)
---    end);
---    mainPanelLuaBehaviour:AddClick(self.addBtn.gameObject,function()
---        PlayMusEff(1002)
---        if self.productionData.info.state == "OPERATE" then
---            ct.OpenCtrl("AddProductionLineCtrl",self.productionData)
---        else
---            Event.Brocast("SmallPop",GetLanguage(35040013),300)
---            return
---        end
---    end);
---    self:initializeInfo(self.productionData.line);
---
---    Event.AddListener("productionRefreshInfo",self.productionRefreshInfo,self)
---    Event.AddListener("delLineRefreshInfo",self.delLineRefreshInfo,self)
---    Event.AddListener("DeleteLineRefresh",self.DeleteLineRefresh,self)
---    Event.AddListener("DeleteLine",self.DeleteLine,self)
---    Event.AddListener("SetLineOrder",self.SetLineOrder,self)
---end
---
-----获取是第几次点击了
---function HomeProductionLineItem:getToggleIndex()
---    return self.toggleData.index;
---end
---
-----打开
---function HomeProductionLineItem:openToggleItem(targetMovePos)
---    self.buildingInfoToggleState = BuildingInfoToggleState.Open;
---
---    self.openStateTran.localScale = Vector3.one;
---    self.closeStateTran.localScale = Vector3.zero;
---
---    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
---    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, HomeProductionLineItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
---
---    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
---    --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
---    return Vector2.New(targetMovePos.x, targetMovePos.y - HomeProductionLineItem.static.TOTAL_H);
---end
---
-----关闭
---function HomeProductionLineItem:closeToggleItem(targetMovePos)
---    self.buildingInfoToggleState = BuildingInfoToggleState.Close;
---
---    self.openStateTran.localScale = Vector3.zero;
---    self.closeStateTran.localScale = Vector3.one;
---
---    self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x,0),BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
---    self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
---
---    return Vector2.New(targetMovePos.x,targetMovePos.y - HomeProductionLineItem.static.TOP_H);
---end
-----初始化数据
---function HomeProductionLineItem:initializeInfo(productionLineData)
---    self.openName.text = GetLanguage(25020005)
---    self.closeName.text = GetLanguage(25020005)
---    self.buildingCapacity = PlayerBuildingBaseData[self.productionData.info.mId].storeCapacity
---    self.Capacity = self:GetWarehouseCapacity(self.productionData.store)
---
---    if not productionLineData then
---        --self.add:SetActive(true)
---        return;
---    end
---    --self.add:SetActive(false)
---    for key,value in pairs(productionLineData) do
---        local prefab = self.loadingItemPrefab(self.LineItem,self.content)
---        local lineItem = LineItem:new(value,prefab,self.mainPanelLuaBehaviour,self.buildingId,self.productionData.store,self.Capacity)
---        table.insert(HomeProductionLineItem.lineItemTable,lineItem)
---    end
---end
-----刷新数据
---function HomeProductionLineItem:updateInfo(data)
---    self.productionData = data
---    self.buildingId = data.insId
---    self.productionData = data
---    --self.productionData.line = data.line
---    self:initializeInfo(self.productionData.line)
---    HomeProductionLineItem.storeData = data.store.inHand
---end
-----获取当前建筑某种商品的库存数量
---function HomeProductionLineItem.GetInventoryNum(itemId)
---    if not HomeProductionLineItem.storeData then
---        local number = 0
---        return number
---    end
---    for key,value in pairs(HomeProductionLineItem.storeData) do
---        if value.key.id == itemId then
---            return value.n
---        end
---    end
---    local number = 0
---    return number
---end
-----计算当前建筑剩余容量
---function HomeProductionLineItem:GetWarehouseCapacity(dataInfo)
---    local warehouseCapacity = 0
---    local lockedCapacity = 0
---    if not dataInfo.inHand or next(dataInfo.inHand) == nil then
---        warehouseCapacity = 0
---    else
---        for key,value in pairs(dataInfo.inHand) do
---            warehouseCapacity = warehouseCapacity + value.n
---        end
---    end
---    if not dataInfo.locked or next(dataInfo.locked) == nil then
---        lockedCapacity = 0
---    else
---        for key,value in pairs(dataInfo.locked) do
---            lockedCapacity = lockedCapacity + value.n
---        end
---    end
---    local remainingCapacity = self.buildingCapacity - (warehouseCapacity + lockedCapacity)
---    return remainingCapacity
---end
-----加载实例化Prefab
---function HomeProductionLineItem.loadingItemPrefab(itemPrefab,itemRoot)
---    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
---    local objRect = obj.transform:GetComponent("RectTransform");
---    obj.transform:SetParent(itemRoot.transform)
---    objRect.transform.localScale = Vector3.one;
---    --obj.transform:SetSiblingIndex(1)
---    obj:SetActive(true)
---    return obj
---end
-----删除主页面生产线
---function HomeProductionLineItem:DeleteLine(ins)
---    local data = {}
---    data.titleInfo = GetLanguage(28010004)
---    data.contentInfo = GetLanguage(28010005)
---    --data.tipInfo = GetLanguage(28010006)
---    --local materialKey,goodsKey = 21,22
---    if self.productionData.buildingType == BuildingType.MaterialFactory then
---        data.btnCallBack = function()
---            Event.Brocast("m_ReqMaterialDeleteLine",ins.buildingId,ins.lineId)
---        end
---    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
---        data.btnCallBack = function()
---            Event.Brocast("m_ReqProcessDeleteLine",ins.buildingId,ins.lineId)
---        end
---    end
---    --if math.floor(ins.itemId / 100000) == materialKey then
---    --    data.btnCallBack = function()
---    --        Event.Brocast("m_ReqMaterialDeleteLine",ins.buildingId,ins.lineId)
---    --    end
---    --elseif math.floor(ins.itemId / 100000) == goodsKey then
---    --    data.btnCallBack = function()
---    --        Event.Brocast("m_ReqProcessDeleteLine",ins.buildingId,ins.lineId)
---    --    end
---    --end
---    ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
---end
-----生产线置顶
---function HomeProductionLineItem:SetLineOrder(ins)
---    if self.productionData.buildingType == BuildingType.MaterialFactory then
---        Event.Brocast("m_ReqMaterialSetLineOrder",ins.buildingId,ins.lineId,2)
---    elseif self.productionData.buildingType == BuildingType.ProcessingFactory then
---        Event.Brocast("m_ReqMaterialSetLineOrder",ins.buildingId,ins.lineId,2)
---    end
---end
-----删除主页面生产线回调
---function HomeProductionLineItem:DeleteLineRefresh(dataInfo)
---    for key,value in pairs(HomeProductionLineItem.lineItemTable) do
---        if dataInfo.lineId == value.lineId then
---            value:closeEvent()
---            destroy(value.prefab.gameObject)
---            HomeProductionLineItem.lineItemTable[key] = nil
---        end
---    end
---    --self.add:SetActive(true)
---    Event.Brocast("SmallPop",GetLanguage(28010006),300)
---end
+--如果生产中是商品，检查原料够不够
+function BuildingProductionPart:CheckMaterial(itemId)
+    --如果仓库是空的
+    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        return false
+    end
+    --如果仓库不是空的
+    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    local materialNum = {}
+    local isMeet = false
+    --生产中商品需要的原料
+    for key,value in pairs(material) do
+        --仓库中有的原料
+        for key1,value1 in pairs(self.m_data.store.inHand) do
+            if value1.key.id == value.itemId then
+                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
+                isMeet = true
+            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
+        end
+    end
+    table.sort(materialNum)
+    --最少能生产的数量
+    self.lineMinValue = materialNum[1]
+    local minValue = materialNum[1]
+    if minValue <= 0 then
+        return false
+    else
+        return true
+    end
+end

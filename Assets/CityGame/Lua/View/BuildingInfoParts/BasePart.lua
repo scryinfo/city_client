@@ -21,6 +21,8 @@ function BasePart:initialize(trans,groupClass,posX,sizeWidth,partIndex,mainPanel
     self:_Init(posX,sizeWidth)
     --留给子类实现的方法
     self:_InitTransform()
+    --
+    self:_ResetTransform()
     --通用按钮的事件
     self:_InitClick(mainPanelLuaBehaviour)
 end

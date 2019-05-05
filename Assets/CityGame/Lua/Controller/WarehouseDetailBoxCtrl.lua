@@ -161,6 +161,7 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     self:CloseDestroy()
     self:initializeUiInfoData()
     self:_clickCloseBtn()
+    Event.Brocast("SmallPop",GetLanguage(26020001), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --上架前检查货架上是否有这个商品  返回true有   返回false没有
@@ -216,19 +217,26 @@ function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
 end
 --生成itemPrefab
 function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
-    if not dataInfo then
+    if not dataInfo or next(dataInfo) == nil then
+        return
+    end
+    if not dataInfo.inHand or next(dataInfo.inHand) == nil then
         return
     end
     local arg = {...}
     --筛选出有用的数据
     --如果是原料厂上架，筛选出原料；如果是加工厂上架，筛选出商品
     local temporaryDataInfo = {}
-    local materialKey,goodsKey,warehouseKey = 21,22,23
+    local materialKey,goodsKey = 21,22
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
                 table.insert(temporaryDataInfo,value)
             end
+        end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的原料"
         end
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
@@ -242,8 +250,21 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
                 table.insert(temporaryDataInfo,value)
             end
         end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的商品"
+        end
+    elseif self.m_data.info.buildingType == BuildingType.RetailShop then
+        for key,value in pairs(dataInfo.inHand) do
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
+                table.insert(temporaryDataInfo,value)
+            end
+        end
+        if next(temporaryDataInfo) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.tipText.text = "没有符合上架的商品"
+        end
     end
-
     for key,value in pairs(temporaryDataInfo) do
         local obj = self:loadingItemPrefab(itemPrefab,itemRoot)
         local itemGoodsIns = className:new(value,obj,behaviour,key,goodsType,arg)

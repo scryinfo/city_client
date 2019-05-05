@@ -4,6 +4,7 @@
 --- DateTime: 2019/4/2 17:19
 ---建筑主界面今日营收曲线图
 TurnoverDetailPart = class('TurnoverDetailPart', BasePartDetail)
+local buildingTs = nil
 --
 function TurnoverDetailPart:PrefabName()
     return "TurnoverPartDetail"
@@ -16,11 +17,13 @@ end
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
     mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
+
 end
 --
 function TurnoverDetailPart:_ResetTransform()
     self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
+    buildingTs = nil
 end
 --
 function TurnoverDetailPart:_RemoveEvent()
@@ -30,16 +33,42 @@ end
 function TurnoverDetailPart:_RemoveClick()
 --    self.xBtn.onClick:RemoveAllListeners()
 end
+
+function TurnoverDetailPart:Show(data)
+    BasePartDetail.Show(self)
+    if buildingTs == nil then
+        if self.m_data.info then
+            buildingTs = self.m_data.info.constructCompleteTs
+        end
+    end
+    self.m_data = data
+    self:_initFunc()
+end
+
 --
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
         return
     end
-    self.m_data = data
-    self:_initFunc()
+    if buildingTs == nil then
+        if data.info then
+            buildingTs = data.info.constructCompleteTs
+        end
+    end
+end
+
+function TurnoverDetailPart:_setValue(turnover)
+    self.turnover = turnover
+    if self.transform then
+        if self.today == nil then
+            self.today = self.transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+        end
+        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
+    end
 end
 --
 function TurnoverDetailPart:_InitTransform()
+    transform = self.transform
     self:_getComponent(self.transform)
 
     self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
@@ -52,15 +81,22 @@ function TurnoverDetailPart:_getComponent(transform)
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
+    if self.today == nil then
+        self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
+    end
+
+    if self.turnover then
+        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
+    end
 end
 --
 function TurnoverDetailPart:_initFunc()
     --获取营收曲线图 发包
-    local msgId = pbl.enum("sscode.OpCode","queryBuildingIncomeMap")
-    local lMsg = { id = self.m_data.insId  }
-    local pMsg = assert(pbl.encode("ss.Id", lMsg))
-    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
-end
+        local msgId = pbl.enum("sscode.OpCode","queryBuildingIncomeMap")
+        local lMsg = { id = self.m_data.insId }
+        local pMsg = assert(pbl.encode("ss.Id", lMsg))
+        CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+    end
 
 
 function TurnoverDetailPart:OnXBtn(go)
@@ -97,7 +133,6 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         end
         updataTime = updataTime + 86400
     end
-    local buildingTs = self.m_data.info.constructCompleteTs
     buildingTs = math.floor(buildingTs/1000)
     if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
@@ -129,6 +164,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         end
     else
         for i = 1, 30 do
+            turnoverTab[i] = {}
             turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 148
             turnoverTab[i].money = 0
             if info.nodes ~= nil then

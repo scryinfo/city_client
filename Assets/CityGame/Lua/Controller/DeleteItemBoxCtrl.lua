@@ -7,6 +7,8 @@
 DeleteItemBoxCtrl = class("DeleteItemBoxCtrl",UIPanel)
 UIPanel:ResgisterOpen(DeleteItemBoxCtrl)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function DeleteItemBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -25,6 +27,10 @@ function DeleteItemBoxCtrl:Awake(go)
     self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
+    self.numberSlider.onValueChanged:AddListener(function()
+        self:SlidingUpdateText()
+    end)
 end
 function DeleteItemBoxCtrl:Active()
     UIPanel.Active(self)
@@ -45,6 +51,7 @@ function DeleteItemBoxCtrl:_getComponent(go)
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content goodInfo
     self.iconImg = go.transform:Find("contentRoot/content/goodInfoBg/goodInfo/iconImg"):GetComponent("Image")
+    self.nameBg = go.transform:Find("contentRoot/content/goodInfoBg/goodInfo/nameBg")
     self.nameText = go.transform:Find("contentRoot/content/goodInfoBg/goodInfo/nameBg/nameText"):GetComponent("Text")
     --如果是原料就隐藏
     self.goods = go.transform:Find("contentRoot/content/goodInfoBg/goodInfo/goods")
@@ -54,22 +61,55 @@ function DeleteItemBoxCtrl:_getComponent(go)
     self.qualityValue = go.transform:Find("contentRoot/content/goodInfoBg/goodInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
 
     self.numberSlider = go.transform:Find("contentRoot/content/goodInfoBg/numberSlider"):GetComponent("Slider")
-    self.tipText = go.transform:Find("contentRoot/content/goodInfoBg/tipText"):GetComponent("Text")
+    self.numberText = go.transform:Find("contentRoot/content/goodInfoBg/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
+    self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
-
 end
 -------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI数据
 function DeleteItemBoxCtrl:initializeUiInfoData()
-
+    local materialKey,goodsKey = 21,22
+    self.nameText.text = GetLanguage(self.m_data.itemId)
+    self.numberSlider.maxValue = self.m_data.n
+    self.numberSlider.value = 0
+    self.numberText.text = "×"..self.numberSlider.value
+    if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
+        self.goods.transform.localScale = Vector3.zero
+        self.nameBg.transform.localPosition = Vector3.New(-140,-100,0)
+        LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
+    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
+        self.goods.transform.localScale = Vector3.zero
+        self.nameBg.transform.localPosition = Vector3.New(-140,-55,0)
+        LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
+        --self.popularityValue.text =
+        --self.qualityValue.text =
+        --self.levelValue.text =
+    end
 end
 --设置多语言
 function DeleteItemBoxCtrl:_language()
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.topName.text = "DESTROY"
+    self.tipText.text = "确认销毁，销毁后该商品将永久删除"
+end
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--滑动更新文本
+function DeleteItemBoxCtrl:SlidingUpdateText()
+    self.numberText.text = "×"..self.numberSlider.value
 end
 -------------------------------------------------------------点击函数---------------------------------------------------------------------------------
 --关闭
 function DeleteItemBoxCtrl:_clickCloseBtn()
     PlayMusEff(1002)
+    UIPanel.ClosePage()
+end
+--确认销毁
+function DeleteItemBoxCtrl:_clickConfirmBtn(ins)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    data.num = ins.numberSlider.value
+    data.producerId = ins.m_data.producerId
+    data.qty = ins.m_data.qty
+    Event.Brocast("deleteWarehouseItem",data)
     UIPanel.ClosePage()
 end

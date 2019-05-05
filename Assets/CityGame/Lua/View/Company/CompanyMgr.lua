@@ -4,6 +4,7 @@
 --- DateTime: 2019/3/26 17:19
 ---
 
+-- 公司管理器
 CompanyMgr = class("CompanyMgr")
 
 function CompanyMgr:initialize()
@@ -89,23 +90,6 @@ end
 
 -- 保存Eva数据
 function CompanyMgr:SetEvaData(evas)
-    --for i, v in ipairs(evas.eva) do
-    --    if v.bt == "Quality" then
-    --        v.bt = 1
-    --    elseif v.bt == "Brand" then
-    --        v.bt = 2
-    --    elseif v.bt == "ProduceSpeed" then
-    --        v.bt = 3
-    --    elseif v.bt == "GeneralAbility" then
-    --        v.bt = 4
-    --    elseif v.bt == "InventionUpgrade" then
-    --        v.bt = 5
-    --    elseif v.bt == "EvaUpgrade" then
-    --        v.bt = 6
-    --    elseif v.bt == "WarehouseUpgrade" then
-    --        v.bt = 7
-    --    end
-    --end
     self.evasData = evas.eva
 end
 
@@ -179,9 +163,9 @@ end
 
 -- 更新Eva的数据
 function CompanyMgr:UpdateMyEva(eva)
-    for _, v in ipairs(self.evasData) do
+    for i, v in ipairs(self.evasData) do
         if eva.id == v.id then
-            v = eva
+            self.evasData[i] = eva
             break
         end
     end

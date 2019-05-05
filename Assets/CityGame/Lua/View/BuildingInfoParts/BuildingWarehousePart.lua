@@ -112,8 +112,17 @@ function BuildingWarehousePart:updateCapacity(data)
             for key,value in pairs(self.m_data.store.inHand) do
                 if value.key.id == data.iKey.id then
                     value.n = value.n + 1
+                    return
                 end
             end
+            local goods = {}
+            local key = {}
+            goods.key = key
+            goods.key.id = data.iKey.id
+            goods.key.producerId = data.iKey.producerId
+            goods.key.qty = data.iKey.qty
+            goods.n = data.nowCount
+            self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
         end
     end
 end

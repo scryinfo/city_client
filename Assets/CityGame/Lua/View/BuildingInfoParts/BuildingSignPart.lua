@@ -56,11 +56,16 @@ function BuildingSignPart:_getComponent(transform)
     self.signingCompanyText = transform:Find("Top/signing/companyText"):GetComponent("Text")
     self.notSet = transform:Find("Top/notSet")
     self.notSetText02 = transform:Find("Top/notSet/Text"):GetComponent("Text")
-
     self.notSetBtn = transform:Find("notSetBtn"):GetComponent("Button")
+    --
+    self.unSelectText03 = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText04 = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 --
 function BuildingSignPart:_initFunc()
+    if self.m_data.contractInfo == nil then
+        return
+    end
     local contractInfo = self.m_data.contractInfo
     if contractInfo.isOpen == false then
         self:toggleSignState(BuildingSignPart.ESignState.NotSet)
@@ -73,8 +78,10 @@ function BuildingSignPart:_initFunc()
         if contractInfo.contract == nil then
             self:toggleSignState(BuildingSignPart.ESignState.WaitToSign)
             local price = GetClientPriceString(contractInfo.price)
-            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", GetLanguage(12345678), price)
-            self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", GetLanguage(12345678), contractInfo.hours)
+            --self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", GetLanguage(12345678), price)
+            --self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", GetLanguage(12345678), contractInfo.hours)
+            self.waitToSignPriceText.text = string.format("%s: <color=#ffc926><size=30>E%s</size></color>", "价格", price)
+            self.waitToSignTimeText.text = string.format("%s: <color=#91c5ff><size=30>%dh</size></color>", "可签约时间", contractInfo.hours)
         else
             self:toggleSignState(BuildingSignPart.ESignState.Signing)
             PlayerInfoManger.GetInfos({[1] = contractInfo.contract.signId}, self._getSignerInfo, self)
@@ -85,6 +92,13 @@ end
 function BuildingSignPart:_language()
     self.signingText01.text = "签约公司:"
     self.notSetText02.text = "暂未开启签约"
+    self.unSelectText03.text = "签约"
+    self.selectText04.text = "签约"
+
+    local trueTextW01 = self.unSelectText03.preferredWidth
+    self.unSelectText03.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText03.rectTransform.sizeDelta.y)
+    local trueTextW02 = self.selectText04.preferredWidth
+    self.selectText04.rectTransform.sizeDelta = Vector2.New(trueTextW02, self.selectText04.rectTransform.sizeDelta.y)
 end
 --签约者信息
 function BuildingSignPart:_getSignerInfo(info)

@@ -870,6 +870,8 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     protoID = protoData.src
                 elseif protoData.id then
                     protoID = protoData.id
+                elseif protoData.sellerBuildingId then
+                    protoID = protoData.sellerBuildingId
                 end
             end
             if protoID  ~= nil then--服务器返回的数据有唯一ID
@@ -975,13 +977,9 @@ end
 
 --移除 消息回调
 function DataManager.ModelRemoveNetMsg(insId,protoNameStr,protoNumStr,protoAnaStr)
-     if ModelNetMsgStack[protoNameStr] and ModelNetMsgStack[protoNameStr][protoNumStr] and ModelNetMsgStack[protoNameStr][protoNumStr][insId] then
-        ModelNetMsgStack[protoNameStr][protoNumStr][insId] = nil
-        --[[
-        if #ModelNetMsgStack[protoNameStr][protoNumStr] == 0 then
-            ModelNetMsgStack[protoNameStr][protoNumStr] = nil
-        end
-        --]]
+    local newMsgId = pbl.enum(protoNameStr,protoNumStr)
+    if ModelNetMsgStack[newMsgId] ~= nil and ModelNetMsgStack[newMsgId][insId] ~= nil then
+        ModelNetMsgStack[newMsgId][insId] = nil
     end
 end
 --
@@ -994,8 +992,8 @@ function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,ins)
     noParameters_ModelNoneInsIdRemoveNetMsg = ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"]
     if noParameters_ModelNoneInsIdRemoveNetMsg ~= nil then
         for i, value in pairs(noParameters_ModelNoneInsIdRemoveNetMsg) do
-            if noParameters_ModelNoneInsIdRemoveNetMsg.self ~= nil and noParameters_ModelNoneInsIdRemoveNetMsg.self == ins then
-                table.remove(ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"],value)
+            if value.self ~= nil and value.self == ins then
+                table.remove(ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"],i)
                 return
             end
         end

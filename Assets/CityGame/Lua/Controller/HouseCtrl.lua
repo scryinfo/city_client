@@ -27,25 +27,29 @@ function HouseCtrl:Awake(go)
     self.houseBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     --self.houseBehaviour:AddClick(HousePanel.centerBtn.gameObject, self._centerBtnFunc, self)
     --self.houseBehaviour:AddClick(HousePanel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
-    self.houseBehaviour:AddClick(HousePanel.bubbleMessageBtn, self._openBubbleMessage, self)
+    self.houseBehaviour:AddClick(HousePanel.bubbleMessageBtn.gameObject, self._openBubbleMessage, self)
 end
 
 function HouseCtrl:Refresh()
+    HousePanel.bubbleMessageBtn.localScale = Vector3.zero
     this:_initData()
 end
 
 function HouseCtrl:Active()
     UIPanel.Active(self)
     --Event.AddListener("c_BuildingTopChangeData", self._changeItemData, self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function HouseCtrl:Hide()
     --Event.RemoveListener("c_BuildingTopChangeData", self._changeItemData, self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
     UIPanel.Hide(self)
+    RevenueDetailsMsg.close()
 end
 
 
@@ -54,6 +58,7 @@ function HouseCtrl:_initData()
     if self.m_data then
         --向服务器请求建筑详情
         DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
+        RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
     end
 end
@@ -74,8 +79,14 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
 
     if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
+        HousePanel.bubbleMessageBtn.localScale = Vector3.zero
     else
         self.m_data.isOther = false
+        if houseDetailData.info.state == "OPERATE" then
+            HousePanel.bubbleMessageBtn.localScale = Vector3.one
+        else
+            HousePanel.bubbleMessageBtn.localScale = Vector3.zero
+        end
     end
     if self.groupMgr == nil then
         if houseDetailData.info.state == "OPERATE" then -- 营业中
@@ -185,4 +196,9 @@ end
 function HouseCtrl:_signSuccess(data)
     self.m_data.contractInfo.contract = data
     self.groupMgr:RefreshData(self.m_data)
+end
+
+function HouseCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
 end

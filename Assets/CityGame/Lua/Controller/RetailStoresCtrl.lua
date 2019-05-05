@@ -28,13 +28,17 @@ function RetailStoresCtrl:Awake(go)
     self.retailStoresBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     --self.retailStoresBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
     --self.retailStoresBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
+    self.retailStoresBehaviour:AddClick(RetailStoresPanel.bubbleMessageBtn, self._openBubbleMessage, self)
 
 end
 function RetailStoresCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
+
 end
 function RetailStoresCtrl:Refresh()
+    RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     this:initializeData()
 end
 
@@ -69,29 +73,47 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
     end
     if self.groupMgr == nil then
         if retailShopDataInfo.info.state == "OPERATE" then
+            RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr = BuildingInfoMainGroupMgr:new(RetailStoresPanel.groupTrans, self.retailStoresBehaviour)
             if self.m_data.isOther then
                 self.groupMgr:AddParts(BuildingShelfPart,1)
                 self.groupMgr:AddParts(TurnoverPart,0)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
+                RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
                 self.groupMgr:AddParts(BuildingShelfPart,0.25)
                 self.groupMgr:AddParts(TurnoverPart,0.25)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.25)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.25)
+                RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             end
             RetailStoresPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else
+            RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             RetailStoresPanel.groupTrans.localScale = Vector3.zero
+            if self.groupMgr ~= nil then
+                self.groupMgr:TurnOffAllOptions()
+            end
         end
     else
-        self.groupMgr:RefreshData(self.m_data)
+        if retailShopDataInfo.info.state == "OPERATE" then
+            RetailStoresPanel.groupTrans.localScale = Vector3.one
+            self.groupMgr:RefreshData(self.m_data)
+        else
+            RetailStoresPanel.groupTrans.localScale = Vector3.zero
+            self.groupMgr:TurnOffAllOptions()
+        end
     end
 end
-
+function RetailStoresCtrl:_openBubbleMessage(go)
+    PlayMusEff(1002)
+    if go.m_data.info.id then
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
+    end
+end
 function RetailStoresCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
@@ -106,6 +128,7 @@ function RetailStoresCtrl:_refreshSalary(data)
             self.groupMgr:AddParts(TurnoverPart,0.25)
             self.groupMgr:AddParts(BuildingSalaryPart,0.25)
             self.groupMgr:AddParts(BuildingWarehousePart,0.25)
+            RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             RetailStoresPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
@@ -137,14 +160,14 @@ end
 function RetailStoresCtrl:_updateName(name)
     RetailStoresPanel.nameText.text = name
 end
-
+function RetailStoresCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
+end
 function RetailStoresCtrl:Hide()
-    if self.groupMgr ~= nil then
-        self.groupMgr:Destroy()
-        self.groupMgr = nil
-    end
     UIPanel.Hide(self)
-    Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 --更改基础建筑信息
 --function RetailStoresCtrl:_changeItemData(data)
@@ -164,5 +187,6 @@ function RetailStoresCtrl:_clickCloseBtn()
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
+    RevenueDetailsMsg.close()
     UIPanel.ClosePage()
 end

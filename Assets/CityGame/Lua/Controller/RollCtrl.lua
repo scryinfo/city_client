@@ -71,7 +71,9 @@ function RollCtrl:Refresh()
     local data = self.m_data
     if data.goodCategory ~=0 then
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
+        panel.EvaRoot.localScale = Vector3.zero
     else
+        panel.EvaRoot.localScale = Vector3.one
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
     end
 
@@ -99,15 +101,25 @@ end
 
 ---====================================================================================业务逻辑==============================================================================================
 function RollCtrl:c_creatRollItem( data )
+    local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
+
+    local odds
+    if data.goodCategory == 0 then
+        odds = moedelData.probEva
+    else
+        odds = moedelData.probGood
+    end
+
     local datas={}
     for i = 1, data.availableRoll do
-        table.insert( datas,{ lineId = data.id } )
+        table.insert( datas,{ lineId = data.id ,odds = odds } )
     end
     panel.totalText.text = #datas
     InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
 end
 
 function RollCtrl:updateText(data)
+    panel.BigEVAtext.text = DataManager.GetEvaPoint()
     -- panel.titleText.text = GetLanguage(40010009)
 end
 
@@ -115,7 +127,9 @@ function RollCtrl:handleEvaResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
         panel.EvaRoots.localScale =  Vector3.one
-        --panel.nowEva.text =
+        panel.nowEva.text = DataManager.GetEvaPoint()
+        DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
+        panel.BigEVAtext.text = DataManager.GetEvaPoint()
     else
         self:fail()
     end
@@ -130,12 +144,13 @@ function  RollCtrl:handleGoodsResult(data)
         panel.nameText.text =  Good[data[1]].name
 
         if #data == 2  then
-            this.child1.localScale = Vector3.one
+            panel.child1.localScale = Vector3.one
+
             LoadSprite(Good[data[2]].img,panel.ima)
-            panel.nameText.text = Good[data[2]].name
+            panel.child1ImanNameText.text = Good[data[2]].name
         elseif   #data == 3 then
-            this.child1.localScale = Vector3.one
-            this.child2.localScale = Vector3.one
+            panel.child1.localScale = Vector3.one
+            panel.child2.localScale = Vector3.one
 
 
             LoadSprite(Good[data[2]].img,panel.child1Ima)
@@ -143,10 +158,10 @@ function  RollCtrl:handleGoodsResult(data)
             LoadSprite(Good[data[3]].img,panel.child2Ima)
             panel.child2ImanNameText.text = Good[data[3]].name
 
-        else
-            this.child1.localScale = Vector3.one
-            this.child2.localScale = Vector3.one
-            this.child3.localScale = Vector3.one
+        elseif  #data == 4 then
+            panel.child1.localScale = Vector3.one
+            panel.child2.localScale = Vector3.one
+            panel.child3.localScale = Vector3.one
 
             LoadSprite(Good[data[2]].img,panel.child1Ima)
             panel.child1ImanNameText.text = Good[data[2]].name
@@ -180,3 +195,4 @@ end
 function RollCtrl:changeLan()
 
 end
+

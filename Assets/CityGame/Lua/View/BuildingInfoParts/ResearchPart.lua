@@ -24,6 +24,7 @@ function ResearchPart:_InitTransform()
     self.queneText = findByName(transform,"queneText (1)"):GetComponent("Text")
     self.priceText = findByName(transform,"priceText"):GetComponent("Text")
     self.priceCount = findByName(transform,"turnover"):GetComponent("Text")
+    self.notOpen = findByName(transform,"notOpen")
     self.TimeText = findByName(transform,"TimeText"):GetComponent("Text")
     self.TimeTextCount = findByName(transform,"TimeTextCount"):GetComponent("Text")
     self.title = findByName(transform,"Text"):GetComponent("Text")
@@ -53,6 +54,30 @@ end
 
 ---===================================================================================点击函数==============================================================================================
 
+--初始化独特点击事件
+--mainPanelLuaBehaviour:LuaBehaviour的引用
+function ResearchPart:_InitClick(mainPanelLuaBehaviour)
+    --点击打开界面
+    mainPanelLuaBehaviour:AddClick(self.go, function()
+        if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
+            self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
+        else
+            if self.m_data.exclusive then
+                Event.Brocast("SmallPop","建筑没开启业务",300)
+                return
+            end
+            self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
+        end
+    end)
+    --点击关闭界面
+    mainPanelLuaBehaviour:AddClick(self.selectTransform.gameObject, function()
+        --注：暂定方案为不做处理
+        --关闭所有界面
+        self.groupClass.TurnOffAllOptions(self.groupClass)
+    end)
+    self:_InitChildClick(mainPanelLuaBehaviour)
+end
+
 function ResearchPart:onClick_set(ins)
    ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
 end
@@ -66,13 +91,27 @@ function ResearchPart:updateUI(data)
         self.queneCount.text = 0
     end
     --已完成
-    if data.completed then
-        self.hasImage.localScale = Vector3.one
+    if data.info.ownerId == DataManager.GetMyOwnerID() then
+        if data.completed then
+            self.hasImage.localScale = Vector3.one
+        else
+            self.hasImage.localScale = Vector3.zero
+        end
     else
         self.hasImage.localScale = Vector3.zero
     end
-    self.priceCount.text =  data.pricePreTime
-    self.TimeTextCount.text =  data.sellTimes
+
+    if data.exclusive == false then
+        self.priceText.transform.localScale = Vector3.one
+        self.TimeText.transform.localScale = Vector3.one
+        self.notOpen.localScale = Vector3.zero
+        self.priceCount.text =  data.pricePreTime
+        self.TimeTextCount.text =  data.sellTimes
+    elseif data.exclusive == true then
+        self.priceText.transform.localScale = Vector3.zero
+        self.TimeText.transform.localScale = Vector3.zero
+        self.notOpen.localScale = Vector3.one
+    end
 end
 
 function ResearchPart:updateLanguage()

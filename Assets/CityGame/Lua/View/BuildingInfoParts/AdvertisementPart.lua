@@ -5,6 +5,7 @@
 ---建筑主界面底部广告推广
 AdvertisementPart = class('AdvertisementPart', BasePart)
 --
+
 function AdvertisementPart:PrefabName()
     return "AdvertisementPart"
 end
@@ -19,7 +20,7 @@ end
 --
 function AdvertisementPart:_ResetTransform()
     self.price.text = "E0.0000"
-    self.waitingTime.text = "00:00:00"
+    self.waitingTime.text = "00"
 end
 --
 function AdvertisementPart:RefreshData(data)
@@ -30,11 +31,22 @@ function AdvertisementPart:RefreshData(data)
     self:_initFunc()
 end
 --
+function AdvertisementPart:ShowDetail(data)
+    if data.info.ownerId ~= DataManager.GetMyOwnerID() then
+        if not data.takeOnNewOrder then
+            Event.Brocast("SmallPop","广告商未开启推广",300)
+            return
+        end
+    end
+    BasePart.ShowDetail(self,data)
+end
+--
 function AdvertisementPart:_getComponent(transform)
-    self.price = transform:Find("top/priceText"):GetComponent("Text")
-    self.waitingTime = transform:Find("top/waitingTimeText"):GetComponent("Text")
+    self.price = transform:Find("top/price/priceText"):GetComponent("Text")
+    self.waitingTime = transform:Find("top/waitingTime/waitingTimeText"):GetComponent("Text")
 end
 --
 function AdvertisementPart:_initFunc()
-
+    self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+    self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
 end

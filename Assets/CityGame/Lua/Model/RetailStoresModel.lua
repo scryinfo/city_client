@@ -95,7 +95,7 @@ end
 function RetailStoresModel:m_ReqChangeMaterialName(id, name)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingName","gs.SetBuildingName",{ id = id, name = name})
 end
-----关闭原料厂详情推送消息
+----关闭零售店详情推送消息
 --function RetailStoresModel:m_ReqCloseMaterial(buildingId)
 --    DataManager.ModelSendNetMes("gscode.OpCode","stopListenBuildingDetailInform","gs.Id",{id = buildingId})
 --end
@@ -128,8 +128,8 @@ function RetailStoresModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,war
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
 end
 --销毁仓库原料或商品
-function RetailStoresModel:m_ReqDelItem(buildingId,id,producerId,qty)
-    self.funModel:m_ReqDelItem(buildingId,id,producerId,qty)
+function RetailStoresModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
+    self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 ----生产线置顶
 --function RetailStoresModel:m_ReqSetLineOrder(buildingId,lineId,pos)
@@ -155,7 +155,7 @@ end
 function RetailStoresModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_refreshSalary', data)
 end
---打开原料厂
+--打开零售店
 function RetailStoresModel:n_OnOpenRetailStores(stream)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshmRetailShopDataInfo',stream)
     if stream ~= nil then

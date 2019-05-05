@@ -43,9 +43,12 @@ function InventSetPopCtrl:OnConfirm(ins)
 
         local price = tonumber(panel.price.text)
         local count = tonumber(panel.time.text)
+
+        Event.Brocast("c_UpdateInventSet",count,price)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
     else
+        Event.Brocast("c_UpdateInventSet",0,0)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
     end
     UIPanel.ClosePage()
@@ -69,7 +72,7 @@ end
 function InventSetPopCtrl:UpDateUI(data)
     panel.price.text = ""
     panel.time.text = ""
-    self.openUp =   data.exclusive
+    self.openUp =  not data.exclusive
     if self.openUp then
         panel.open.isOn = true
         panel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)

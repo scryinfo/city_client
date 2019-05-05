@@ -4,6 +4,7 @@
 --- DateTime: 2019/3/30 11:07
 ---
 
+-- 公司、我的建筑、建筑的详细信息显示
 BuildingInfoItem = class("BuildingInfoItem")
 
 -- 初始化
@@ -39,10 +40,11 @@ function BuildingInfoItem:initialize(prefab, data)
         self.gradeImage.localScale = Vector3.zero
     end
 
+    -- 显示不同建筑的图片
     LoadSprite(BuildingIconConfig[data.mId], self.buildingImage, true)
 end
 
--- 跳转到场景
+-- 跳转到场景上建筑的位置
 function BuildingInfoItem:_goPos()
     UIPanel.ClosePage()
     local id = TerrainManager.GridIndexTurnBlockID(self.data.pos)

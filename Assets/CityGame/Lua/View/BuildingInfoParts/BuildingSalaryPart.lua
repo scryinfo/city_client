@@ -15,6 +15,7 @@ end
 --
 function  BuildingSalaryPart:_ResetTransform()
     self.salaryPercentText.text = "0%"
+    self:_language()
 end
 --
 function BuildingSalaryPart:_InitTransform()
@@ -31,10 +32,24 @@ end
 --
 function BuildingSalaryPart:_getComponent(transform)
     self.salaryPercentText = transform:Find("Top/salaryPercentText"):GetComponent("Text")
+    self.salaryText01 = transform:Find("Top/Text"):GetComponent("Text")
+    self.unSelectText02 = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText03 = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 --
 function BuildingSalaryPart:_initFunc()
     if self.m_data.info.salary ~= nil then
         self.salaryPercentText.text = self.m_data.info.salary.."%"
     end
+end
+--
+function BuildingSalaryPart:_language()
+    self.salaryText01.text = "Satisfaction:"
+    self.unSelectText02.text = "Staff"
+    self.selectText03.text = "Staff"
+
+    local trueTextW01 = self.unSelectText02.preferredWidth
+    self.unSelectText02.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText02.rectTransform.sizeDelta.y)
+    local trueTextW02 = self.selectText03.preferredWidth
+    self.selectText03.rectTransform.sizeDelta = Vector2.New(trueTextW02, self.selectText03.rectTransform.sizeDelta.y)
 end

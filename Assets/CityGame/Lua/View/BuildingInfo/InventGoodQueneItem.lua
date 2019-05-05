@@ -43,10 +43,21 @@ end
 
 function InventGoodQueneItem:updateData( data )
     self.data=data
+    self:updateUI(data)
 end
 
 function InventGoodQueneItem:updateUI(data)
-
+    if data.goodCategory ~= 0 then
+        for i, configData in ipairs(InventConfig) do
+            if configData.type == tostring(data.goodCategory) then
+                LoadSprite(configData.iconPath , self.goodsImage,true)
+                self.goodsText.text = configData.name
+            end
+        end
+    else
+        LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/queue/icon-EVA-s.png" , self.goodsImage,true)
+        self.goodsText.text = "EVA"
+    end
     --类型名字和图片
     --goodCategory
     --self.goodsText.text = GetLanguage(dataInfo.productionType)
@@ -54,10 +65,10 @@ function InventGoodQueneItem:updateUI(data)
     --赋值开始时间
     if data.queneTime then
         local ts = getFormatUnixTime(data.queneTime/1000)
-        self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. " " .. ts.minute
+        self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
     end
     --赋值Detail
-    if data.beginProcessTs > 0 or  data.ids==1 then
+    if data.beginProcessTs > 0  then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -69,7 +80,6 @@ function InventGoodQueneItem:updateUI(data)
         self.slider.transform.localScale = Vector3.one
         self.nowTime.text = tostring((data.availableRoll + data.usedRoll)) .. "/" .. tostring(data.times)
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
-
 
     else
         self.rollBtn.localScale = Vector3.zero
@@ -93,11 +103,13 @@ function InventGoodQueneItem:updateUI(data)
         end
     else
         self.myBg.localScale = Vector3.zero
+        self.delete.transform.localScale = Vector3.zero
+        self.rollBtn.localScale = Vector3.zero
     end
 
-    if data.beginProcessTs>0 then
-        self.delete.transform.localScale = Vector3.zero
-    end
+    --if data.beginProcessTs>0 and  data.ids==1 then
+    --    self.delete.transform.localScale = Vector3.zero
+    --end
 
 end
 
@@ -109,11 +121,12 @@ end
 function InventGoodQueneItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
+
+
 end
 
 local currTime
 function InventGoodQueneItem:updateSlider(data)
     currTime = TimeSynchronized.GetTheCurrentServerTime()
     local remmindTime = currTime - data.beginProcessTs
-
 end

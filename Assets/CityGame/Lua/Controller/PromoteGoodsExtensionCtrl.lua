@@ -77,6 +77,7 @@ function PromoteGoodsExtensionCtrl:Hide()
     Event.RemoveListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
     Event.RemoveListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
     for i, v in pairs(self.PromoteGoods) do
+        v:Close()
         destroy(v.prefab.gameObject)
     end
     self.PromoteGoods = {}

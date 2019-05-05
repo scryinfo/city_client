@@ -80,11 +80,12 @@ end
 
 --点击确定
 function SetOpenUpCtrl:OnConfirm(go)
-    if SetOpenUpPanel.price.text == "" or SetOpenUpPanel.time.text == "" then
-        Event.Brocast("SmallPop","时间或价格不能为空",300)
-        return
-    end
+
     if go.openUp then
+        if SetOpenUpPanel.price.text == "" or SetOpenUpPanel.time.text == "" then
+            Event.Brocast("SmallPop","时间或价格不能为空",300)
+            return
+        end
         if tonumber(SetOpenUpPanel.time.text ) == 0 then
             Event.Brocast("SmallPop","时间不能为0",300)
         else
@@ -96,8 +97,8 @@ function SetOpenUpCtrl:OnConfirm(go)
         if not go.m_data.takeOnNewOrder then
             UIPanel.ClosePage()
         else
-            if  tonumber(SetOpenUpPanel.time.text ) == 0 then
-                Event.Brocast("SmallPop","时间不能为0",300)
+            if  SetOpenUpPanel.time.text == "" then
+                SetOpenUpPanel.time.text = 0
             else
                 DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,false,tonumber(SetOpenUpPanel.price.text), tonumber(SetOpenUpPanel.time.text))
             end

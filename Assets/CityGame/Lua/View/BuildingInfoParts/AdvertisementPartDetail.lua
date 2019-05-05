@@ -51,6 +51,9 @@ end
 --
 function AdvertisementPartDetail:RefreshData(data)
     if data then
+        if self.m_data then
+        self.m_data.promRemainTime = data.promRemainTime
+        end
         self.timeText.text = math.floor(data.promRemainTime/3600000)
         self.priceText.text = GetClientPriceString(data.curPromPricePerHour)
         self.queneValue.text = data.selledPromCount

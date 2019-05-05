@@ -8,6 +8,10 @@ UIPanel:ResgisterOpen(ShelfBoxCtrl)
 
 local isShow = false
 local Math_Floor = math.floor
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function ShelfBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -108,11 +112,19 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.levelBg.transform.localScale = Vector3.one
         self.number.transform.localPosition = Vector3.New(183,-135,0)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
+        --如果是商品，判断原料等级
+        if Good[self.m_data.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.m_data.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.m_data.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
         --self.popularityValue.text =
         --self.qualityValue.text =
         --self.levelValue.text =
     end
-    --自己在货架打开时
+    --货架打开时
     if not self.m_data.stateType then
         self.downShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.one
@@ -145,6 +157,14 @@ function ShelfBoxCtrl:initializeUiInfoData()
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
     self.advicePriceText.text = "0000.0000"
+    local function callback(a)
+        self.warehouseNumberText.text = "×"..a
+    end
+    local function callback1(b)
+        self.shelfNumberText.text = "×"..b
+    end
+    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
 end
 --设置多语言
 function ShelfBoxCtrl:_language()

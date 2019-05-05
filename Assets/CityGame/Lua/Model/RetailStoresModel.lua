@@ -216,7 +216,8 @@ function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
 end
 --销毁仓库原料或商品
 function RetailStoresModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
+    Event.Brocast("deleteSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --生产线置顶
 function RetailStoresModel:n_OnSetLineOrderInform(data)

@@ -216,7 +216,8 @@ function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data)
 end
 --销毁仓库原料或商品
 function ProcessingFactoryModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
+    Event.Brocast("deleteSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --生产线置顶
 function ProcessingFactoryModel:n_OnSetLineOrderInform(data)

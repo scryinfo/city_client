@@ -28,8 +28,10 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
     if typeData.typeId == EMapSearchType.Promotion then
         local type1 = MapPromotionConfig[typeData.detailId]
         local value = promotType[type1]
+        local infoData = MapPromotionInfoConfig[typeData.detailId]
 
-        LoadSprite(MapPromotionInfoConfig[typeData.detailId].imgPath, self.iconImg, true)
+        LoadSprite(infoData.imgPath, self.iconImg, true)
+        self.iconImg.color = getColorByVector3(infoData.colorV3)
         --self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
         self.infoText.text = MapPromotionInfoConfig[typeData.detailId].languageId
         self.valueText.text = "+"..value.."/h"

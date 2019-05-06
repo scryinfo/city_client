@@ -48,7 +48,7 @@ function HistoryCurveCtrl:Hide()
     maxValue = 0
     value = nil
     scaleValue = nil
-
+    HistoryCurvePanel.graph:Close()
 end
 
 function HistoryCurveCtrl:OnCreate(obj)
@@ -140,7 +140,6 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
     HistoryCurvePanel.curve.localPosition = HistoryCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
     HistoryCurvePanel.curve.sizeDelta = HistoryCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
-
 --每种商品购买的npc数量曲线图  (供应)
 function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     if info == nil then
@@ -226,11 +225,11 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
 
 
     --需求线
-    HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(demandNumVet,value,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255))
+    HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
+    HistoryCurvePanel.slide:SetCoordinate(demandNumVet,value,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
 
     --供应线
-    HistoryCurvePanel.graph:DrawLine(supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255))
-    HistoryCurvePanel.slide:SetCoordinate(supplyNumVet,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255))
+    HistoryCurvePanel.graph:DrawLine(supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255),2)
+    HistoryCurvePanel.slide:SetCoordinate(supplyNumVet,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255),2)
 end
 

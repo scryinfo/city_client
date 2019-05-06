@@ -73,7 +73,7 @@ public class FunctionalGraphBase:MonoBehaviour
     {
         None,          //没有网格
         FullLine,      //实线网格
-        ImaglinaryLine //虚线网格
+        //ImaglinaryLine //虚线网格
     } 
     /// 
     /// 网格类型

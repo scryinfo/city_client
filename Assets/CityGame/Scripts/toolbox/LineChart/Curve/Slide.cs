@@ -15,8 +15,9 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private FunctionalGraphBase GraphBase;
     public string path;
     private List<GameObject> XScaleValue = new List<GameObject>();
-    private List<GameObject> Coordinate = new List<GameObject>();
+    public  List<GameObject> Coordinate = new List<GameObject>();
     private int count = 0;        //生成线的次数
+    private Dictionary<int, List<GameObject>> dicGo = new Dictionary<int, List<GameObject>>();
 
     private void Start()
     {
@@ -95,65 +96,97 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     /// <summary>
     /// 将点的坐标显示出来
     /// </summary>
-    public void SetCoordinate(Vector2[] str,Vector2[] value, Color color)
+    public void SetCoordinate(Vector2[] str,Vector2[] value, Color color,int id)
     {
+        List<GameObject> temp = new List<GameObject>();
         count++;
         if (Coordinate.Count >= (str.Length -1) * GraphBase.MaxNum)
         {
-            //if ((Coordinate.Count / str.Length) % GraphBase.MaxNum == 1)
-            //{
-            //    for (int i = 1; i < str.Length; i++)
-            //    {
-            //        Coordinate[i-1].transform.localPosition = str[i];
-            //        Coordinate[i-1].GetComponent<Text>().color = color;
-            //        Coordinate[i-1].GetComponent<Text>().text = str[i].y.ToString();
-            //    }              
-            //}
-            //else
-            //{
-            //    for (int i = 1; i < str.Length; i++)
-            //    {
-            //        Coordinate[i+167].transform.localPosition = str[i];
-            //        Coordinate[i+167].GetComponent<Text>().color = color;
-            //        Coordinate[i+167].GetComponent<Text>().text = str[i].y.ToString();
-            //    }
-            //}
+          
             if (count % GraphBase.MaxNum == 0)
-            {
-                for (int i = 1; i < str.Length; i++)
+            { 
+                if (!dicGo.ContainsKey(id))
                 {
-                    Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum -1) -1].transform.localPosition = str[i];
-                    Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum -1) -1].GetComponent<Text>().color = color;
-                    Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum -1) -1].GetComponent<Text>().text = value[i].y.ToString();
+                    for (int i = 1; i < str.Length; i++)
+                    {
+                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i];
+                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].transform.localScale = Vector3.one;
+                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].GetComponent<Text>().color = color;
+                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].GetComponent<Text>().text = value[i].y.ToString();
+                        temp.Add(Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1]);
+                    }
+                    dicGo.Add(id, temp);
+                }
+                else
+                {
+                    foreach (var item in dicGo[id])
+                    {
+                        item.transform.localScale = Vector3.zero;
+                    }
+                    dicGo.Remove(id);
                 }
             }
             else
             {
-                for (int i = 1; i < str.Length; i++)
+            
+                if (!dicGo.ContainsKey(id))
                 {
-                    Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum -1) -1].transform.localPosition = str[i];
-                    Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum -1) -1].GetComponent<Text>().color = color;
-                    Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum -1) -1].GetComponent<Text>().text = value[i].y.ToString();
+                    for (int i = 1; i < str.Length; i++)
+                    {
+                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i];
+                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].transform.localScale = Vector3.one;
+                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].GetComponent<Text>().color = color;
+                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].GetComponent<Text>().text = value[i].y.ToString();
+                        temp.Add(Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1]);
+                    }
+                    dicGo.Add(id, temp);
+                }
+                else
+                {
+                    foreach (var item in dicGo[id])
+                    {
+                        item.transform.localScale = Vector3.zero;
+                    }
+                    dicGo.Remove(id);
                 }
             }           
         }
         else
         {
-            for (int i = 1; i < str.Length; i++)
+           
+            if (!dicGo.ContainsKey(id))
             {
-                GameObject obj = Resources.Load<GameObject>(path);
-                GameObject gameObject = Instantiate(obj);
-                RectTransform go = gameObject.GetComponent<RectTransform>();
-                go.transform.parent = transform;
-                go.localScale = Vector3.one;
-                go.GetComponent<Text>().alignment = TextAnchor.LowerLeft;
-                go.localPosition = str[i];
-                go.GetComponent<Text>().color = color;
-                go.GetComponent<Text>().text = value[i].y.ToString();
-                Coordinate.Add(go.gameObject);
+                for (int i = 1; i < str.Length; i++)
+                {
+                    GameObject obj = Resources.Load<GameObject>(path);
+                    GameObject gameObject = Instantiate(obj);
+                    RectTransform go = gameObject.GetComponent<RectTransform>();
+                    go.transform.parent = transform;
+                    go.localScale = Vector3.one;
+                    go.GetComponent<Text>().alignment = TextAnchor.LowerLeft;
+                    go.localPosition = str[i];
+                    go.GetComponent<Text>().color = color;
+                    go.GetComponent<Text>().text = value[i].y.ToString();
+                    Coordinate.Add(go.gameObject);
+                    temp.Add(go.gameObject);
+
+                }
+                dicGo.Add(id, temp);
+            }
+            else
+            {
+                foreach (var item in dicGo[id])
+                {
+                    item.transform.localScale = Vector3.zero;
+                }
+                dicGo.Remove(id);
             }
         }
         
+    }
+    public void Close()
+    {
+        dicGo.Clear();
     }
 
 }

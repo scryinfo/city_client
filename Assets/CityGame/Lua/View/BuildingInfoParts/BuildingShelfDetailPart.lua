@@ -87,6 +87,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("buySucceed",self.buySucceed,self)
     Event.AddListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
+    Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -100,6 +101,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("buySucceed",self.buySucceed,self)
     Event.RemoveListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
+    Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -207,7 +209,7 @@ function BuildingShelfDetailPart:deleBuyList(id)
         end
     end
 end
---在货架时，开关值改变时是否发送消息
+--在货架时，开关值改变时是否发送消息,自动补货
 function BuildingShelfDetailPart:whetherSend(data)
     if data ~= nil then
         if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
@@ -230,6 +232,10 @@ function BuildingShelfDetailPart:whetherSend(data)
             end
         end
     end
+end
+--修改数量或价格
+function BuildingShelfDetailPart:modifyShelfInfo(data)
+
 end
 --下架
 function BuildingShelfDetailPart:downShelf(data)

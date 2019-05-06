@@ -33,6 +33,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
+    self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -217,6 +218,14 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     data.qty = ins.m_data.dataInfo.k.qty
     Event.Brocast("downShelf",data)
 end
+--点击确认
+function ShelfBoxCtrl:_clickConfirmBtn(ins)
+    ----如果
+    --if true then
+    --
+    --end
+    --Event.Brocast("RemoveListener",)
+end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关
 function ShelfBoxCtrl:openTipText(isBool)
@@ -241,6 +250,7 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.numberSlider.value = 0
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
+    --如果当前和缓存值不一样
     if self.automaticSwitch.isOn ~= self.m_data.dataInfo.autoReplenish then
         local data = {}
         data.itemId = self.m_data.itemId

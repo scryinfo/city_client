@@ -35,9 +35,6 @@ function BuildingSignDetailPart:Show(data)
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
-    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
-        self:clickCloseBtn()
-    end , self)
     mainPanelLuaBehaviour:AddClick(self.settingBtn.gameObject, function ()
         self:clickSettingBtn()
     end , self)
@@ -83,7 +80,6 @@ end
 --
 function BuildingSignDetailPart:_RemoveClick()
     self.timeSlider.onValueChanged:RemoveAllListeners()
-    self.closeBtn.onClick:RemoveAllListeners()
     self.selfSignDelBtn.onClick:RemoveAllListeners()
     self.settingBtn.onClick:RemoveAllListeners()
     self.otherSignBtn.onClick:RemoveAllListeners()
@@ -120,8 +116,7 @@ function BuildingSignDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("root/closeBtn"):GetComponent("Button")
-    self.settingBtn = transform:Find("root/settingBtn"):GetComponent("Button")
+    self.settingBtn = transform:Find("root/stateRoot/selfNotSet/settingBtn"):GetComponent("Button")
     self.otherSignBtn = transform:Find("root/otherSignBtn"):GetComponent("Button")
 
     self.selfNotSet = transform:Find("root/stateRoot/selfNotSet")  --还未设置签约，自己查看
@@ -487,13 +482,13 @@ function BuildingSignDetailPart:clickSelfSignDelBtn()
     --请求删除签约
     self:m_ReqSelfCancelContract(self.m_data.info.id)
 end
---
-function BuildingSignDetailPart:clickCloseBtn()
-    self.groupClass.TurnOffAllOptions(self.groupClass)
-end
 --点击提示按钮
 function BuildingSignDetailPart:clickOpenTipBtn()
     self.tipRoot.localScale = Vector3.one
+end
+--点击提示按钮
+function BuildingSignDetailPart:clickTipBtn()
+    self.tipRoot.localScale = Vector3.zero
 end
 --点击liftBtn
 function BuildingSignDetailPart:clickLiftBtn()

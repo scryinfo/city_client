@@ -159,7 +159,7 @@ namespace City
         {
             Canvas can_subRoot;
             CanvasScaler cs_subRoot;
-            subRoot.AddComponent<RectTransform>();
+            //subRoot.AddComponent<RectTransform>();
             subRoot.layer = LayerMask.NameToLayer("UI");
             can_subRoot = subRoot.AddComponent<Canvas>();
             can_subRoot.renderMode = RenderMode.ScreenSpaceCamera;

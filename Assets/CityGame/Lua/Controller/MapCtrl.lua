@@ -696,15 +696,18 @@ end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
-        local mapCtrlIns = MapBubbleManager.getMapCtrlIns()
-        if mapCtrlIns.selectDetailItem == nil or mapCtrlIns.selectDetailItem:getItemId() ~= data.itemId then
-            MapBubbleManager.cleanAllBubbleItems()
-            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
-            return
-        end
-        if mapCtrlIns.selectDetailItem ~= nil and mapCtrlIns.selectDetailItem:getItemId() == data.itemId then
-            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
-        end
+        MapBubbleManager.cleanAllBubbleItems()
+        MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
+
+        --local mapCtrlIns = MapBubbleManager.getMapCtrlIns()
+        --if mapCtrlIns.selectDetailItem == nil or mapCtrlIns.selectDetailItem:getItemId() ~= data.itemId then
+        --    MapBubbleManager.cleanAllBubbleItems()
+        --    MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
+        --    return
+        --end
+        --if mapCtrlIns.selectDetailItem ~= nil and mapCtrlIns.selectDetailItem:getItemId() == data.itemId then
+        --    MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
+        --end
     end
 end
 --签约详情

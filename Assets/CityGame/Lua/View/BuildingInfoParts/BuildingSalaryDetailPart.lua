@@ -23,9 +23,6 @@ function BuildingSalaryDetailPart:_InitClick(mainPanelLuaBehaviour)
         self:_showPercentValue(tempValue)
     end)
 
-    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
-        self:clickCloseBtn()
-    end , self)
     mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
         self:clickConfirmBtn()
     end , self)
@@ -52,7 +49,6 @@ end
 --
 function BuildingSalaryDetailPart:_RemoveClick()
     self.wageSlider.onValueChanged:RemoveAllListeners()
-    self.closeBtn.onClick:RemoveAllListeners()
     self.confirmBtn.onClick:RemoveAllListeners()
 end
 --
@@ -80,7 +76,6 @@ function BuildingSalaryDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("root/closeBtn"):GetComponent("Button")
     self.confirmBtn = transform:Find("root/confirmBtn"):GetComponent("Button")
 
     self.staffNumText = transform:Find("root/staffNum/staffNumText"):GetComponent("Text")
@@ -254,10 +249,6 @@ function BuildingSalaryDetailPart:clickConfirmBtn()
         return
     end
     self:_ReqSetSalary(self.m_data.info.id, TimeSynchronized.GetTheCurrentServerTime(), value)
-end
---
-function BuildingSalaryDetailPart:clickCloseBtn()
-    self.groupClass.TurnOffAllOptions(self.groupClass)
 end
 --
 function BuildingSalaryDetailPart:_ReqSetSalary(insId, ts, salary)

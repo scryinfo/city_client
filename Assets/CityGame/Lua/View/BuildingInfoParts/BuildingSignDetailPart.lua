@@ -118,13 +118,14 @@ function BuildingSignDetailPart:_getComponent(transform)
     end
     self.settingBtn = transform:Find("root/stateRoot/selfNotSet/settingBtn"):GetComponent("Button")
     self.otherSignBtn = transform:Find("root/otherSignBtn"):GetComponent("Button")
+    self.otherSignText12 = transform:Find("root/otherSignBtn/Text"):GetComponent("Text")
 
     self.selfNotSet = transform:Find("root/stateRoot/selfNotSet")  --还未设置签约，自己查看
     self.selfNotSetText01 = transform:Find("root/stateRoot/selfNotSet/Text"):GetComponent("Text")
     self.signingState = transform:Find("root/stateRoot/signing")  --正在签约
     self.signerPortrait = transform:Find("root/stateRoot/signing/protaitRoot/bg/Image")  --签约者头像
-    self.signerNameText = transform:Find("root/stateRoot/signing/infoBg/nameText"):GetComponent("Text")  --签约者名字
-    self.signerCompanyText = transform:Find("root/stateRoot/signing/infoBg/companyText"):GetComponent("Text")  --签约者公司名
+    self.signerNameText = transform:Find("root/stateRoot/signing/infoRoot/Image03/nameText"):GetComponent("Text")  --签约者名字
+    self.signerCompanyText = transform:Find("root/stateRoot/signing/infoRoot/Image04/companyText"):GetComponent("Text")  --签约者公司名
     --非建筑拥有者签约，查看
     self.otherSign = transform:Find("root/stateRoot/signing/otherSign")  --
     self.otherSignTimeText = transform:Find("root/stateRoot/signing/otherSign/signTime/signTimeText"):GetComponent("Text")
@@ -214,6 +215,7 @@ function BuildingSignDetailPart:_language()
     self.waitToSignSignTime09.text = "签约时间:"
     self.waitToSignTotalPriceText10.text = "总价:"
     self.tipText11.text = "Human traffic can improve the promotion ability of the promotion company!"
+    self.otherSignText12.text = "Signing"
 end
 --
 function BuildingSignDetailPart:_createCurve(info, type)

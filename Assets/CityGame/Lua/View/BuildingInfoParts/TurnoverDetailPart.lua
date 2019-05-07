@@ -21,7 +21,7 @@ function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
 end
 --
 function TurnoverDetailPart:_ResetTransform()
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
     buildingTs = nil
 end
@@ -37,14 +37,19 @@ end
 function TurnoverDetailPart:Show(data)
     BasePartDetail.Show(self)
     if buildingTs == nil then
-        if self.m_data.info then
-            buildingTs = self.m_data.info.constructCompleteTs
+        if data.info then
+            buildingTs = data.info.constructCompleteTs
         end
     end
     self.m_data = data
     self:_initFunc()
 end
-
+function TurnoverDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    self.graph:Close()
+    self.slide:Close()
+    buildingTs = nil
+end
 --
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
@@ -71,7 +76,7 @@ function TurnoverDetailPart:_InitTransform()
     transform = self.transform
     self:_getComponent(self.transform)
 
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
 end
 --
@@ -202,8 +207,8 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.slide:SetXScaleValue(time,148)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
-    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
+    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
+    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)

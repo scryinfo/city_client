@@ -49,6 +49,7 @@ function HistoryCurveCtrl:Hide()
     value = nil
     scaleValue = nil
     HistoryCurvePanel.graph:Close()
+    HistoryCurvePanel.slide:Close()
 end
 
 function HistoryCurveCtrl:OnCreate(obj)
@@ -56,12 +57,12 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
     HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 function HistoryCurveCtrl:OnBack()
-    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
     HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
     UIPanel.ClosePage()
 end

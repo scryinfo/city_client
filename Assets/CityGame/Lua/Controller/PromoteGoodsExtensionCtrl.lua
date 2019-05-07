@@ -27,7 +27,6 @@ function PromoteGoodsExtensionCtrl:Awake()
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
 
-    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     PromoteGoodsExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
@@ -51,6 +50,7 @@ function PromoteGoodsExtensionCtrl:Active()
 end
 
 function PromoteGoodsExtensionCtrl:Refresh()
+    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     if self.m_data.Data.typeId == 2251 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", PromoteGoodsExtensionPanel.icon)
     elseif self.m_data.Data.typeId == 2252 then
@@ -77,6 +77,7 @@ function PromoteGoodsExtensionCtrl:Hide()
     Event.RemoveListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
     Event.RemoveListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
     for i, v in pairs(self.PromoteGoods) do
+        v:Close()
         destroy(v.prefab.gameObject)
     end
     self.PromoteGoods = {}

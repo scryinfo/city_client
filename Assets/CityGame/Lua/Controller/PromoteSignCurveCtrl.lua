@@ -53,6 +53,8 @@ function PromoteSignCurveCtrl:Hide()
     PromoteSignCurvePanel.curve.anchoredPosition = Vector3.New(-1180, 40,0)
     PromoteSignCurvePanel.curve.sizeDelta = Vector2.New(2860, 402)  --MaxWidth
     Event.RemoveListener("c_PromoteSignCurve",self.c_PromoteSignCurve,self)
+    PromoteSignCurvePanel.graph:Close()
+    PromoteSignCurvePanel.slide:Close()
 end
 
 function PromoteSignCurveCtrl:OnCreate(obj)
@@ -60,13 +62,9 @@ function PromoteSignCurveCtrl:OnCreate(obj)
 end
 
 function PromoteSignCurveCtrl:initData()
-    --HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
-    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 function PromoteSignCurveCtrl:OnBack()
-    --HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
-    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
     UIPanel.ClosePage()
 end
 
@@ -131,8 +129,8 @@ function PromoteSignCurveCtrl:c_PromoteSignCurve(info)
     PromoteSignCurvePanel.slide:SetXScaleValue(time,118)
     PromoteSignCurvePanel.graph:BoundaryLine(boundaryLine)
 
-    PromoteSignCurvePanel.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
-    PromoteSignCurvePanel.slide:SetCoordinate(turnoverVet, showNumValue, Color.blue)
+    PromoteSignCurvePanel.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117),1)
+    PromoteSignCurvePanel.slide:SetCoordinate(turnoverVet, showNumValue, Color.blue,1)
 
     PromoteSignCurvePanel.curve.localPosition = PromoteSignCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
     PromoteSignCurvePanel.curve.sizeDelta = PromoteSignCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)

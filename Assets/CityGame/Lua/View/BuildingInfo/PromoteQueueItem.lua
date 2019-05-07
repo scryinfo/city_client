@@ -26,14 +26,14 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
     self.delete.transform.localScale = Vector3.zero
     local ts = getFormatUnixTime(dataInfo.promStartTs/1000)
-    self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. " " .. ts.minute
+    self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
 
     local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
     if currentTime >= dataInfo.promStartTs and currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
         self.slider.value = (currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
-        self.nowTime.text = math.floor(dataInfo.promProgress/3600000) .. "/" .. math.ceil(dataInfo.promDuration/3600000 ).. "h"
+        self.nowTime.text = math.floor(dataInfo.promProgress/3600000) .. "/" .. math.floor(dataInfo.promDuration/3600000 ).. "h"
     else
         self.timePrice.localScale = Vector3.one
         if playerId == dataInfo.sellerId then
@@ -46,8 +46,10 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
         self.time.text = dataInfo.promDuration/3600000 .. "h"
     end
     if dataInfo.buildingType == 1300 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-supermarket.png", self.goodsImage,true)
         self.goodsText.text = GetLanguage(18030001)
     elseif dataInfo.buildingType == 1400 then
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-house.png", self.goodsImage,true)
         self.goodsText.text = GetLanguage(18030007)
     else
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/goods/".. dataInfo.productionType .. ".png", self.goodsImage,true)

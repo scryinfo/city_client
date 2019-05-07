@@ -28,7 +28,6 @@ function PromoteBuildingExtensionCtrl:Awake()
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.otherQueue,self.OnOtherQueue,self);
     self:initData()
 
-    PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
     PromoteBuildingExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
@@ -52,6 +51,7 @@ function PromoteBuildingExtensionCtrl:Active()
 end
 
 function PromoteBuildingExtensionCtrl:Refresh()
+    PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
     --判断是自己还是别人打开了界面
     if self.m_data.info.ownerId == myOwnerID then
         PromoteBuildingExtensionPanel.myTime.localScale = Vector3.one

@@ -95,7 +95,14 @@ end
 
 --打开曲线图
 function PromoteBuildingExtensionCtrl:OnCurve(go)
-    --ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId})
+    local Data = {}
+    Data.typeId = go.m_data.buildingId
+    if go.m_data.buildingId == 1300 then
+        Data.name = "零售店"
+    elseif go.m_data.buildingId == 1400 then
+        Data.name = "住宅"
+    end
+    ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId,Data = Data})
 end
 
 --点击确定(自己)

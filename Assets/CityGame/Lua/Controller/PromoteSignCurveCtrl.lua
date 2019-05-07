@@ -88,7 +88,7 @@ function PromoteSignCurveCtrl:c_PromoteSignCurve(info)
 
     for i = 1, 24 do
         if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
-            time[i] = getFormatUnixTime(updataTime).hour
+            time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - monthAgo + 3600) / 3600 * 118)
         else
             time[i] = tostring(getFormatUnixTime(updataTime).hour)
@@ -115,7 +115,7 @@ function PromoteSignCurveCtrl:c_PromoteSignCurve(info)
     table.insert(boundaryLine,1,0)
     table.insert(turnover,1,Vector2.New(0,0))
 
-    local scale = 0.2
+    local scale = 0.25
     local turnoverVet = {}
     local showNumValue = {}  --用于点的显示
     for i, v in ipairs(turnover) do

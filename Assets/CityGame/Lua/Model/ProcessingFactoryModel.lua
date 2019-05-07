@@ -107,9 +107,9 @@ end
 function ProcessingFactoryModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
     self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
---修改货架价格
-function ProcessingFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
-    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
+--修改货架属性
+function ProcessingFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
 function ProcessingFactoryModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
@@ -166,14 +166,6 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data)
-    --local bagId = DataManager.GetBagId()
-    --local n = data.item.n
-    --local itemId = data.item.key.id
-    --local qty = data.item.key.qty
-    --local producerId = data.item.key.producerId
-    --if data.dst == bagId then
-    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    --end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -182,7 +174,7 @@ function ProcessingFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
     Event.Brocast("refreshShelfPartCount")
 end
---修改货架价格
+--修改货架属性
 function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
@@ -211,8 +203,6 @@ end
 function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("buySucceed",data)
     Event.Brocast("refreshShelfPartCount")
-
-    --DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品
 function ProcessingFactoryModel:n_OnDelItemInfo(data)
@@ -225,10 +215,9 @@ function ProcessingFactoryModel:n_OnSetLineOrderInform(data)
 end
 --自动补货
 function ProcessingFactoryModel:n_OnSetAutoReplenish(data)
-    local aaa = data
-    local bbb = ""
+    Event.Brocast("replenishmentSucceed",data)
 end
---添加购物车
-function ProcessingFactoryModel:n_OnAddShoppingCart(data)
-
-end
+----添加购物车
+--function ProcessingFactoryModel:n_OnAddShoppingCart(data)
+--
+--end

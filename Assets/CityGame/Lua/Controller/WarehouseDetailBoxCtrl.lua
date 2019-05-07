@@ -148,6 +148,7 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     self:CloseDestroy()
     self:initializeUiInfoData()
     self:_clickCloseBtn()
+    UIPanel.ClosePage()
     Event.Brocast("SmallPop",GetLanguage(26020001), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------

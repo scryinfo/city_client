@@ -144,7 +144,7 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
-    self.tipText.transform.localScale = Vector3.zero
+    self.tipText.text = ""
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero

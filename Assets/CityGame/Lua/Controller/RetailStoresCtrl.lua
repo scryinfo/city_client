@@ -26,14 +26,11 @@ function RetailStoresCtrl:Awake(go)
     this = self
     self.gameObject = go;
     self.retailStoresBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    --self.retailStoresBehaviour:AddClick(RetailStoresPanel.buildInfo.gameObject,self.OnClick_buildInfo,self);
-    --self.retailStoresBehaviour:AddClick(RetailStoresPanel.stopIconRoot.gameObject,self.OnClick_prepareOpen,self);
     self.retailStoresBehaviour:AddClick(RetailStoresPanel.bubbleMessageBtn, self._openBubbleMessage, self)
 
 end
 function RetailStoresCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 
 end
@@ -76,16 +73,18 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
             RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr = BuildingInfoMainGroupMgr:new(RetailStoresPanel.groupTrans, self.retailStoresBehaviour)
             if self.m_data.isOther then
-                self.groupMgr:AddParts(BuildingShelfPart,1)
+                self.groupMgr:AddParts(BuildingShelfPart,0.5)
                 self.groupMgr:AddParts(TurnoverPart,0)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
+                self.groupMgr:AddParts(BuildingSignPart,0.5)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
-                self.groupMgr:AddParts(BuildingShelfPart,0.25)
-                self.groupMgr:AddParts(TurnoverPart,0.25)
-                self.groupMgr:AddParts(BuildingSalaryPart,0.25)
-                self.groupMgr:AddParts(BuildingWarehousePart,0.25)
+                self.groupMgr:AddParts(BuildingShelfPart,0.2)
+                self.groupMgr:AddParts(TurnoverPart,0.2)
+                self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+                self.groupMgr:AddParts(BuildingSignPart,0.2)
+                self.groupMgr:AddParts(BuildingWarehousePart,0.2)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             end
             RetailStoresPanel.groupTrans.localScale = Vector3.one
@@ -124,10 +123,11 @@ function RetailStoresCtrl:_refreshSalary(data)
 
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(RetailStoresPanel.groupTrans, self.retailStoresBehaviour)
-            self.groupMgr:AddParts(BuildingShelfPart,0.25)
-            self.groupMgr:AddParts(TurnoverPart,0.25)
-            self.groupMgr:AddParts(BuildingSalaryPart,0.25)
-            self.groupMgr:AddParts(BuildingWarehousePart,0.25)
+            self.groupMgr:AddParts(BuildingShelfPart,0.2)
+            self.groupMgr:AddParts(TurnoverPart,0.2)
+            self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+            self.groupMgr:AddParts(BuildingSignPart,0.2)
+            self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             RetailStoresPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
@@ -144,38 +144,60 @@ function RetailStoresCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
---更改名字
-function RetailStoresCtrl:OnClick_changeName(ins)
-    PlayMusEff(1002)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
+--关闭显示
+function RetailStoresCtrl:_selfCloseSign()
+    self.m_data.contractInfo.isOpen = false
+    self.m_data.contractInfo.price = nil
+    self.m_data.contractInfo.hours = nil
+    self.groupMgr:RefreshData(self.m_data)
 end
---更改名字成功
-function RetailStoresCtrl:_updateName(name)
-    RetailStoresPanel.nameText.text = name
+--开启/调整签约
+function RetailStoresCtrl:_changeSignInfo(data)
+    self.m_data.contractInfo.isOpen = true
+    self.m_data.contractInfo.price = data.price
+    self.m_data.contractInfo.hours = data.hours
+    self.groupMgr:RefreshData(self.m_data)
 end
+--自己取消自己的签约
+function RetailStoresCtrl:_selfCancelSign()
+    self.m_data.contractInfo.isOpen = false
+    self.m_data.contractInfo.price = nil
+    self.m_data.contractInfo.hours = nil
+    self.m_data.contractInfo.contract = nil
+    self.groupMgr:RefreshData(self.m_data)
+end
+--签约成功
+function RetailStoresCtrl:_signSuccess(data)
+    self.m_data.contractInfo.contract = data
+    self.groupMgr:RefreshData(self.m_data)
+end
+--营收曲线
 function RetailStoresCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
 end
+----更改名字
+--function RetailStoresCtrl:OnClick_changeName(ins)
+--    PlayMusEff(1002)
+--    local data = {}
+--    data.titleInfo = "RENAME"
+--    data.tipInfo = "Modified every seven days"
+--    data.btnCallBack = function(name)
+--        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
+--        ins:_updateName(name)
+--    end
+--    ct.OpenCtrl("InputDialogPageCtrl", data)
+--end
+----更改名字成功
+--function RetailStoresCtrl:_updateName(name)
+--    RetailStoresPanel.nameText.text = name
+--end
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
     --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
---更改基础建筑信息
---function RetailStoresCtrl:_changeItemData(data)
---    if data ~= nil and RetailStoresPanel.topItem ~= nil then
---        RetailStoresPanel.topItem:changeItemData(data)
---    end
---end
---
+
 function RetailStoresCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then

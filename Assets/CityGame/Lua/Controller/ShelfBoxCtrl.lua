@@ -8,6 +8,7 @@ UIPanel:ResgisterOpen(ShelfBoxCtrl)
 
 local isShow = false
 local Math_Floor = math.floor
+local ToNumber = tonumber
 --奢侈等级
 local oneLevel = Vector3.New(105,174,238)
 local twoLevel = Vector3.New(156,136,228)
@@ -125,13 +126,24 @@ function ShelfBoxCtrl:initializeUiInfoData()
         --self.qualityValue.text =
         --self.levelValue.text =
     end
-    --货架打开时
+    local function callback(a)
+        --缓存一个值，修改数量时使用
+        self.warehouseNumber = a
+        self.warehouseNumberText.text = "×"..a
+    end
+    local function callback1(b)
+        self.shelfNumberText.text = "×"..b
+    end
+    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
     if not self.m_data.stateType then
+        --货架打开时
         self.downShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.one
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = self.m_data.dataInfo.autoReplenish
-        self.numberSlider.maxValue = self.m_data.dataInfo.n
+        self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
+        self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
@@ -158,15 +170,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
-    self.advicePriceText.text = "0000.0000"
-    local function callback(a)
-        self.warehouseNumberText.text = "×"..a
-    end
-    local function callback1(b)
-        self.shelfNumberText.text = "×"..b
-    end
-    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
-    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
+    self.advicePriceText.text = "0.0000"
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
@@ -200,7 +204,7 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
         data.producerId = ins.m_data.dataInfo.key.producerId
         data.qty = ins.m_data.dataInfo.key.qty
         data.number = ins.numberSlider.value
-        data.price = GetServerPriceNumber(ins.priceInput.text)
+        data.price = GetServerPriceNumber(ToNumber(ins.priceInput.text))
         data.switch = ins.automaticSwitch.isOn
         Event.Brocast("addShelf",data)
     end
@@ -218,13 +222,29 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     data.qty = ins.m_data.dataInfo.k.qty
     Event.Brocast("downShelf",data)
 end
---点击确认
+--点击确认(修改数量，修改价格，修改自动补货)
 function ShelfBoxCtrl:_clickConfirmBtn(ins)
-    ----如果
-    --if true then
-    --
-    --end
-    --Event.Brocast("RemoveListener",)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    if not ins.m_data.dataInfo.k then
+        data.producerId = ins.m_data.dataInfo.key.producerId
+        data.qty = ins.m_data.dataInfo.key.qty
+    else
+        data.producerId = ins.m_data.dataInfo.k.producerId
+        data.qty = ins.m_data.dataInfo.k.qty
+    end
+    data.number = ins.numberSlider.value
+    data.price = GetServerPriceNumber(ToNumber(ins.priceInput.text))
+    data.switch = ins.automaticSwitch.isOn
+    if data.number == ins.m_data.dataInfo.n and data.price == ins.m_data.dataInfo.price and data.switch == ins.m_data.dataInfo.autoReplenish then
+        UIPanel.ClosePage()
+        return
+    end
+    --当前自动补货是否为true
+    if data.switch == true then
+        data.number = ins.numberSlider.maxValue
+    end
+    Event.Brocast("modifyShelfInfo",data)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关
@@ -249,20 +269,6 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.totalNumber.transform.localScale = Vector3.zero
         self.numberSlider.value = 0
         self.btnImage.localPosition = Vector2.New(-45,0)
-    end
-    --如果当前和缓存值不一样
-    if self.automaticSwitch.isOn ~= self.m_data.dataInfo.autoReplenish then
-        local data = {}
-        data.itemId = self.m_data.itemId
-        if not self.m_data.dataInfo.k then
-            data.producerId = self.m_data.dataInfo.key.producerId
-            data.qty = self.m_data.dataInfo.key.qty
-        else
-            data.producerId = self.m_data.dataInfo.k.producerId
-            data.qty = self.m_data.dataInfo.k.qty
-        end
-        data.switch = self.automaticSwitch.isOn
-        Event.Brocast("whetherSend",data)
     end
 end
 --滑动条更新文本

@@ -81,7 +81,6 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("deleBuyList",self.deleBuyList,self)
     Event.AddListener("startBuy",self.startBuy,self)
     Event.AddListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
-    Event.AddListener("whetherSend",self.whetherSend,self)
     Event.AddListener("downShelf",self.downShelf,self)
     Event.AddListener("downShelfSucceed",self.downShelfSucceed,self)
     Event.AddListener("buySucceed",self.buySucceed,self)
@@ -95,7 +94,6 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("deleBuyList",self.deleBuyList,self)
     Event.RemoveListener("startBuy",self.startBuy,self)
     Event.RemoveListener("refreshShelfDetailPart",self.refreshShelfDetailPart,self)
-    Event.RemoveListener("whetherSend",self.whetherSend,self)
     Event.RemoveListener("downShelf",self.downShelf,self)
     Event.RemoveListener("downShelfSucceed",self.downShelfSucceed,self)
     Event.RemoveListener("buySucceed",self.buySucceed,self)
@@ -209,33 +207,22 @@ function BuildingShelfDetailPart:deleBuyList(id)
         end
     end
 end
---在货架时，开关值改变时是否发送消息,自动补货
-function BuildingShelfDetailPart:whetherSend(data)
+--修改货架属性
+function BuildingShelfDetailPart:modifyShelfInfo(data)
     if data ~= nil then
-        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
-            return
-        end
-        for key,value in pairs(self.m_data.shelf.good) do
-            if value.k.id == data.itemId then
-                if self.m_data.buildingType == BuildingType.MaterialFactory then
-                    --原料场
-                    Event.Brocast("m_ReqMaterialSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
-                elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-                    --加工厂
-                    Event.Brocast("m_ReqprocessingSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
-                elseif self.m_data.buildingType == BuildingType.RetailShop then
-                    --零售店
-                    Event.Brocast("m_ReqRetailStoresSetAutoReplenish",self.m_data.insId,data.itemId,data.producerId,data.qty,data.switch)
-                elseif self.m_data.buildingType == BuildingType.TalentCenter then
-                    --集散中心
-                end
-            end
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
+            Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,data.itemId,data.number,data.price,data.producerId,data.qty,data.switch)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            --加工厂
+            Event.Brocast("m_ReqprocessingModifyShelf",self.m_data.insId,data.itemId,data.number,data.price,data.producerId,data.qty,data.switch)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            --零售店
+            Event.Brocast("m_ReqRetailStoresModifyShelf",self.m_data.insId,data.itemId,data.number,data.price,data.producerId,data.qty,data.switch)
+        elseif self.m_data.buildingType == BuildingType.TalentCenter then
+            --集散中心
         end
     end
-end
---修改数量或价格
-function BuildingShelfDetailPart:modifyShelfInfo(data)
-
 end
 --下架
 function BuildingShelfDetailPart:downShelf(data)

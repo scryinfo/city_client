@@ -186,6 +186,10 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public void Close()
     {
+        foreach (var item in Coordinate)
+        {
+            item.transform.localScale = Vector3.zero;
+        }
         dicGo.Clear();
     }
 

@@ -351,6 +351,5 @@ public class FunctionalGraph : MaskableGraphic
     public void Close()
     {
         dicLine.Clear();
-        slide.Close();
     }
 }

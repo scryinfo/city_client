@@ -161,7 +161,11 @@ function RetailStoresModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function RetailStoresModel:n_OnModifyShelfInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("replenishmentSucceed",data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenprocessing(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
+    end
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)

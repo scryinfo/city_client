@@ -176,7 +176,11 @@ function ProcessingFactoryModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("replenishmentSucceed",data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenprocessing(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
+    end
 end
 --下架
 function ProcessingFactoryModel:n_OnShelfDelInfo(data)
@@ -213,10 +217,10 @@ end
 function ProcessingFactoryModel:n_OnSetLineOrderInform(data)
     Event.Brocast("SettopSuccess",data)
 end
---自动补货
-function ProcessingFactoryModel:n_OnSetAutoReplenish(data)
-    Event.Brocast("replenishmentSucceed",data)
-end
+----自动补货
+--function ProcessingFactoryModel:n_OnSetAutoReplenish(data)
+--    Event.Brocast("replenishmentSucceed",data)
+--end
 ----添加购物车
 --function ProcessingFactoryModel:n_OnAddShoppingCart(data)
 --

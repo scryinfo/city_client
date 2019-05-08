@@ -372,68 +372,14 @@ function BuildingShelfDetailPart:buySucceed(data)
 end
 --自动补货
 function BuildingShelfDetailPart:replenishmentSucceed(data)
+    --更新界面
     if data ~= nil then
-        --如果等于false，是关闭自动补货
-        if data.autoRepOn == false then
-            --改变实例表属性
-            for key,value in pairs(self.shelfDatas) do
-                if value.itemId == data.iKey.id then
-                    value.dataInfo.autoReplenish = data.autoRepOn
-                    value.numberBg.transform.localScale = Vector3.one
-                    value.automaticBg.transform.localScale = Vector3.zero
-                    value.noHaveBg.transform.localScale = Vector3.zero
-                end
-            end
-            --改变建筑信息里的属性
-            for key,value in pairs(self.m_data.shelf.good) do
-                if value.k.id == data.iKey.id then
-                    value.autoReplenish = data.autoRepOn
-                end
-            end
-            Event.Brocast("SmallPop","自动补货关闭成功", 300)
-            UIPanel.ClosePage()
-        else
-            --如果是打开自动补货
-            --刷新仓库数据
-            local warehouseNum = 0        --仓库里剩余的数量
-            if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
-                --打开自动补货，仓库是空的时候
-                for key,value in pairs(self.shelfDatas) do
-                    value.dataInfo.autoReplenish = data.autoRepOn
-                    value.dataInfo.n = value.dataInfo.n + warehouseNum
-                    value.numberBg.transform.localScale = Vector3.zero
-                    value.automaticBg.transform.localScale = Vector3.one
-                    value.noHaveBg.transform.localScale = Vector3.zero
-                end
-                for key,value in pairs(self.m_data.shelf.good) do
-                    value.autoReplenish = data.autoRepOn
-                    value.n = value.n + warehouseNum
-                end
-            else
-                --打开自动补货，获取到仓库的数量
-                for key,value in pairs(self.m_data.store.inHand) do
-                    if value.key.id == data.iKey.id then
-                        warehouseNum = value.n
-                        table.remove(self.m_data.store.inHand,key)
-                    end
-                end
-                for key,value in pairs(self.shelfDatas) do
-                    value.dataInfo.autoReplenish = data.autoRepOn
-                    value.dataInfo.n = value.dataInfo.n + warehouseNum
-                    value.numberText.text = "×"..value.dataInfo.n
-                    value.numberBg.transform.localScale = Vector3.zero
-                    value.automaticBg.transform.localScale = Vector3.one
-                    value.noHaveBg.transform.localScale = Vector3.zero
-                end
-                for key,value in pairs(self.m_data.shelf.good) do
-                    value.autoReplenish = data.autoRepOn
-                    value.n = value.n + warehouseNum
-                end
-            end
-            Event.Brocast("SmallPop","自动补货打开成功", 300)
-            UIPanel.ClosePage()
+        --关闭时清空Item数据
+        if next(self.shelfDatas) ~= nil then
+            self:CloseDestroy(self.shelfDatas)
         end
     end
+    UIPanel.ClosePage()
 end
 --如果没有在仓库找到这个商品
 function BuildingShelfDetailPart:wareHouseNoGoods(data)

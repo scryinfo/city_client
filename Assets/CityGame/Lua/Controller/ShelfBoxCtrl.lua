@@ -211,7 +211,7 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
 end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
-    if ins.automaticSwitch.isOn == true then
+    if ins.m_data.dataInfo.autoReplenish == true then
         Event.Brocast("SmallPop","请先关闭自动补货", 300)
         return
     end

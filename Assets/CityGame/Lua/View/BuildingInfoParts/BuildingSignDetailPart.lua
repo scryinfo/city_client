@@ -219,6 +219,9 @@ function BuildingSignDetailPart:_language()
 end
 --
 function BuildingSignDetailPart:_createCurve(info, type)
+    self.graph:Close()
+    self.slide:Close()
+
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -313,10 +316,10 @@ function BuildingSignDetailPart:_createCurve(info, type)
     self.slide:SetXScaleValue(time,118)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
+    self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117), 1)
     local temp1 = {[1] = turnoverVet[#turnoverVet]}
     local temp2 = {[1] = turnover[#turnover]}
-    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black)
+    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black, 1)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)

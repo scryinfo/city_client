@@ -69,6 +69,15 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Currentpromotion.png",
         ["languageId"] = "Current promotion:",
     },
+    --土地交易
+    ["GroundRentTime"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "Tenancy:",
+    },
+    ["GroundRental"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
+        ["languageId"] = "Rental:",
+    },
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息

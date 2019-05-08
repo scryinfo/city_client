@@ -6,8 +6,9 @@ InventItem = class('InventItem')
 function InventItem:initialize(prefab,luaBehaviour,data,ctr)
     self.prefab = prefab
     local transform = prefab.transform
-    self.ima=findByName(transform,"icon"):GetComponent("Image");
-    self.text=findByName(transform,"Text"):GetComponent("Text");
+    self.icon = transform:Find("icon"):GetComponent("Image")
+    self.goodName = transform:Find("icon/Text"):GetComponent("Text")
+    self.bgIcon = transform:Find("bgIcon"):GetComponent("Image")
 
     self.ctrl = ctr
     luaBehaviour:AddClick(prefab,self.c_OnClick_addLine,self);
@@ -19,6 +20,9 @@ function InventItem:c_OnClick_addLine(ins)
         ins.buildInfo = ins.ctrl.m_data.info
         local data={ins = ins,func = function(Ins)
             local count = Ins.ctrl.count
+            if count == nil then
+                return
+            end
             if count <= 0 then
                 return
             end
@@ -38,8 +42,9 @@ function InventItem:updateData(data)
 end
 
 function InventItem:updateUI(data)
-    LoadSprite(data.iconPath,self.ima)
-    self.text.text=data.name
+    LoadSprite(data.iconPath, self.icon,true)
+    LoadSprite(data.bgIconPath, self.bgIcon,true)
+    self.goodName.text=data.name
 end
 
 function InventItem:Refresh(data)

@@ -35,28 +35,41 @@ function InventPopCtrl:Close()
     self:RemoveLis()
 end
 
+-- 注册监听事件
+function InventPopCtrl:Active()
+    UIPanel.Active(self)
+    --self:_addListener()
+
+    -- 多语言适配
+    self:ChangeLan()
+end
+
 function InventPopCtrl:Refresh()
     local modelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
     buildInfo = modelData.info
     deatailBuildInfo = modelData
     local data = self.m_data
-    self.ChangeLan()
-    self.popCompent:Refesh(data)
+    self.popCompent:RefeshData(data)
 
-
-
-    if self.m_data.ins.type  then
+    if self.m_data.ins.type ~= "eva" then
         panel.num.text = tostring(modelData.probGood).."%"
+        InventPopPanel.iconNameText.text = self.m_data.ins.name
+        InventPopPanel.evaTips.text = string.format("You will get new %s when succeed", self.m_data.ins.name)
+        LoadSprite(self.m_data.ins.path, InventPopPanel.icon, true)
     else
         panel.num.text = tostring(modelData.probEva).."%"
+        InventPopPanel.iconNameText.text = "EVA"
+        InventPopPanel.evaTips.text = "You will get 1point EVA when succeed"
+        LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/chooseInventPop/EVA-100%.png", InventPopPanel.icon, true)
     end
 
-    if DataManager.GetMyOwnerID() ~= buildInfo.ownerId then
+    if DataManager.GetMyOwnerID() ~= buildInfo.ownerId then -- 不是建筑主人
         self:other()
         panel.buyRoot.localScale = Vector3.one
         panel.sellRoot.localScale = Vector3.zero
-
-    else
+        panel.price.localScale = Vector3.one
+        self.popCompent:SetConfirmPos(Vector3.New(352, -285, 0))
+    else -- 是建筑主人
         panel.countInput1.onValueChanged:AddListener( function( string )
             if string == ""  then
                 self.count=0
@@ -68,9 +81,9 @@ function InventPopCtrl:Refresh()
         end)
         panel.buyRoot.localScale = Vector3.zero
         panel.sellRoot.localScale = Vector3.one
-
+        panel.price.localScale = Vector3.zero
+        self.popCompent:SetConfirmPos(Vector3.New(0,-285,0))
     end
-
 end
 
 function InventPopCtrl:Awake(go)
@@ -85,10 +98,12 @@ end
 ---====================================================================================点击函数==============================================================================================
 
 ---====================================================================================业务逻辑==============================================================================================
-
-
-function InventPopCtrl.ChangeLan()
-    --panel.titleText
+function InventPopCtrl:ChangeLan()
+    if self.m_data.ins.type and self.m_data.ins.type == "eva" then  --判断研究类型
+        InventPopPanel.titleText.text = "RESEARCH POINT EVA"
+    else
+        InventPopPanel.titleText.text = "INVENT NEW GOODS"
+    end
     --panel.iconNameText
     --panel.oddsText
     --panel.evaTips
@@ -134,6 +149,7 @@ function InventPopCtrl:other()
         local count = math.floor(arg*deatailBuildInfo.sellTimes )
         panel.countInp.text = count
     end)
+    panel.Slider.value = 0
 end
 
 function InventPopCtrl:RemoveLis()

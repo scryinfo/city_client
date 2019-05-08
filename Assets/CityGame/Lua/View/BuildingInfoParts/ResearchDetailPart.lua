@@ -130,7 +130,7 @@ function ResearchDetailPart:updateUI(data)
     self:onClick_good(self)
 
     self.timeCountText.text = data.sellTimes
-    self.priceCountText.text = GetClientPriceString(data.pricePreTime*10000)
+    self.priceCountText.text = GetClientPriceString(data.pricePreTime)
 
     if data.inProcess then
         self.queneCountText.text = #( data.inProcess )
@@ -225,11 +225,12 @@ function ResearchDetailPart:onClick_inventEva(ins)
     ins.buildInfo = ins.m_data.info
     local data={ins = ins,func = function(Ins)
         local count = Ins.ctrl.count
-
-         if not count or count <= 0 then
+        if count == nil then
+            return
+        end
+        if not count or count <= 0 then
                 return
          end
-
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabAddLine',nil,count)
     end  }
 
@@ -238,7 +239,7 @@ end
 --跟新设置
 function ResearchDetailPart:c_UpdateInventSet(times,price)
     self.timeCountText.text = times
-    self.priceCountText.text = price
+    self.priceCountText.text = GetClientPriceString(price)
 end
 
 function ResearchDetailPart:onClick_bgtitleQUNNE(ins)

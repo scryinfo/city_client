@@ -105,8 +105,8 @@ function ResearchPart:updateUI(data)
         self.priceText.transform.localScale = Vector3.one
         self.TimeText.transform.localScale = Vector3.one
         self.notOpen.localScale = Vector3.zero
-        self.priceCount.text =  data.pricePreTime
-        self.TimeTextCount.text =  data.sellTimes
+        self.priceCount.text = GetClientPriceString(data.pricePreTime)
+        self.TimeTextCount.text = string.format("%sh", data.sellTimes)
     elseif data.exclusive == true then
         self.priceText.transform.localScale = Vector3.zero
         self.TimeText.transform.localScale = Vector3.zero

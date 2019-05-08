@@ -33,7 +33,8 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
-    self:initializeUiInfoData(self.m_data.store.inHand)
+    self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
+    self:initializeUiInfoData(self.warehouseDataInfo)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -132,7 +133,7 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
+        if next(self.warehouseDatas) ~= nil then
             return
         else
             if next(self.warehouseDatas) ~= nil then
@@ -337,4 +338,26 @@ function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
         end
         callback(nowCount)
     end
+end
+--合并两张表
+function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
+    local targetTab = {}
+    if inHandTab == nil and lockedTab == nil then
+        targetTab = {}
+    end
+    if inHandTab ~= nil then
+        for key,value in pairs(inHandTab) do
+            targetTab[value.key.id] = ct.deepCopy(value)
+        end
+    end
+    if lockedTab ~= nil then
+        for key,value in pairs(lockedTab) do
+            if targetTab[value.key.id] then
+                targetTab[value.key.id].n = targetTab[value.key.id].n + value.n
+            else
+                targetTab[value.key.id] = ct.deepCopy(value)
+            end
+        end
+    end
+    return targetTab
 end

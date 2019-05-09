@@ -29,5 +29,5 @@ function MainRenTableWarehousePanel.InitPanel()
     this.priceText = transform:Find("contentRoot/mid/right/count"):GetComponent("Text")
     this.pricenameText = transform:Find("contentRoot/mid/right/price"):GetComponent("Text")
 
-
+    this.earningScroll = transform:Find("contentRoot/down/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
 end

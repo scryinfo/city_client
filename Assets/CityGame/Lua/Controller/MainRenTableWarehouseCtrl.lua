@@ -6,7 +6,7 @@
 
 MainRenTableWarehouseCtrl = class('MainRenTableWarehouseCtrl',UIPanel)
 UIPanel:ResgisterOpen(MainRenTableWarehouseCtrl)
-
+local data
 function MainRenTableWarehouseCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -20,11 +20,14 @@ function MainRenTableWarehouseCtrl:OnCreate(obj)
 end
 
 function MainRenTableWarehouseCtrl:Awake(go)
+    data = self.m_data.renter
     self:_refechData()
     self.gameObject = go
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(MainRenTableWarehousePanel.setBtn.gameObject, self._setFunc, self)
     self.luaBehaviour:AddClick(MainRenTableWarehousePanel.backBtn.gameObject, self._backFunc, self)
+    MainRenTableWarehouseCtrl._earningScrollFunc()
+
 end
 
 function MainRenTableWarehouseCtrl:Active()
@@ -41,7 +44,7 @@ end
 
 function MainRenTableWarehouseCtrl:_refechData(data)
     local m_data = self.m_data
-    MainRenTableWarehousePanel.spaceText.text = m_data.rentCapacity
+    MainRenTableWarehousePanel.spaceText.text = m_data.rentCapacity - m_data.rentUsedCapacity
     MainRenTableWarehousePanel.priceText.text = m_data.rent
     MainRenTableWarehousePanel.timeText.text  = m_data.maxHourToRent
 end
@@ -54,3 +57,44 @@ end
 function MainRenTableWarehouseCtrl:_setFunc(go)
     ct.OpenCtrl("SetRenTableWareHouseCtrl",go.m_data)
 end
+
+function MainRenTableWarehouseCtrl:_setsFunc(go)
+
+end
+
+--滑动互用
+MainRenTableWarehouseCtrl.static.researchProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = RenterItem:new(data[idx],transform,idx)
+end
+
+MainRenTableWarehouseCtrl.static.researchClearData = function(transform)
+
+end
+
+--租户
+MainRenTableWarehouseCtrl.static.inventionProvideData = function(transform, idx)
+    if idx == 0 then
+        MainRenTableWarehouseCtrl.inventionEmptyBtn = MainRenTableWarehouseCtrl:new(transform, function ()
+            --ct.OpenCtrl("LabInventionCtrl", {buildingId = LabScientificLineCtrl.static.buildingId, itemId = 2151003})
+            ct.OpenCtrl("AddLineChooseItemCtrl", {type = 1})
+        end)
+        return
+    end
+    idx = idx + 1
+    local item = MainRenTableWarehouseCtrl:new(MainRenTableWarehouseCtrl.inventionInfoData[idx], transform)
+    MainRenTableWarehouseCtrl.static.inventionItems[idx] = item
+end
+
+--租用滑条
+function MainRenTableWarehouseCtrl:_earningScrollFunc(go)
+    if data == nil then
+        return
+    else
+        renter = UnityEngine.UI.LoopScrollDataSource.New()  --租户
+        renter.mProvideData = MainRenTableWarehouseCtrl.static.researchProvideData
+        renter.mClearData = MainRenTableWarehouseCtrl.static.researchClearData
+        MainRenTableWarehousePanel.earningScroll:ActiveLoopScroll(renter, #data)
+    end
+end
+

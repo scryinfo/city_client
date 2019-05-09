@@ -15,6 +15,7 @@ function ChooseWarehouseModel:OnCreate()
 
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllBuildingDetail","gs.BuildingSet",self.n_OnReceiveAllBuildingDetailInfo,self)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPlayerBuildingDetail","gs.BuildingSet",self.n_OnReceiveAllRentBuildingDetailInfo,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerBuildings","gs.BuildingInfos",self.n_OnQueryPlayerBuildings,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnDetailMaterialFactory,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnDetailProduceDepartment,self)
@@ -31,6 +32,12 @@ end
 --获取自己的建筑详情
 function ChooseWarehouseModel:m_ReqAllBuildingDetail()
     local msgId = pbl.enum("gscode.OpCode", "getAllBuildingDetail")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+
+--获取自己租建筑详情
+function ChooseWarehouseModel:m_ReqRentBuildingDetail()
+    local msgId = pbl.enum("gscode.OpCode", "getPlayerBuildingDetail")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
@@ -100,6 +107,13 @@ end
 
 --收到自己所有建筑详情
 function ChooseWarehouseModel:n_OnReceiveAllBuildingDetailInfo(data)
+    if data then
+        DataManager.SetMyAllBuildingDetail(data)
+    end
+    Event.Brocast("CreateLinePanel")
+end
+--收到自己所有租用建筑详情
+function ChooseWarehouseModel:n_OnReceiveAllRentBuildingDetailInfo(data)
     if data then
         DataManager.SetMyAllBuildingDetail(data)
     end

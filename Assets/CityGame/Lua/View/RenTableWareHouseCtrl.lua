@@ -8,7 +8,9 @@
 RenTableWareHouseCtrl = class('RenTableWareHouseCtrl',UIPanel)
 UIPanel:ResgisterOpen(RenTableWareHouseCtrl)
 local this = RenTableWareHouseCtrl
-
+local spacenumber = 0
+local timenum = 0
+local price = 0
 function RenTableWareHouseCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -22,10 +24,23 @@ function RenTableWareHouseCtrl:OnCreate(obj)
 end
 
 function RenTableWareHouseCtrl:Awake(obj)
-    transform = obj.transform
+    local m_data = self.m_data
+    RenTableWareHousePanel.totalText.text = m_data.rent
+    price = m_data.rent
+    self:_scrollbartimeInfo(m_data)
+    self:_scrollbarspaceInfo(m_data)
+    self:_init(m_data)
     self.gameObject = obj
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    this.InitPanel();
+    self.luaBehaviour:AddClick(RenTableWareHousePanel.closeBtn.gameObject, self._closeFunc, self)
+    self.luaBehaviour:AddClick(RenTableWareHousePanel.startBtn.gameObject, self._startFunc, self)
+    RenTableWareHousePanel.timeTextSlider.onValueChanged:AddListener(function ()
+       self:_scrollbartimeInfo(m_data)
+   end)
+    RenTableWareHousePanel.perSlider.onValueChanged:AddListener(function ()
+       self:_scrollbarspaceInfo(m_data)
+   end)
+
 end
 
 function RenTableWareHouseCtrl:Active()
@@ -40,16 +55,63 @@ function RenTableWareHouseCtrl:Hide()
     UIPanel.Hide(self)
 end
 
-------------------------------------------------------------获取组件------------------------------------------
-function RenTableWareHouseCtrl.InitPanel()
-    this.timeTextSlider = transform:Find("contentRoot/content/down/Slider"):GetComponent("Slider")
-    this.perSlider = transform:Find("contentRoot/content/mid/Slider"):GetComponent("Slider")
-
-    this.timeText = transform:Find("contentRoot/content/down/time"):GetComponent("Text"):GetComponent("Text")
-    this.perText = transform:Find("contentRoot/content/mid/time"):GetComponent("Text"):GetComponent("Text")
-    this.countText = transform:Find("contentRoot/content/top/count"):GetComponent("Text"):GetComponent("Text")
-    this.totalText = transform:Find("contentRoot/content/top/count"):GetComponent("Text"):GetComponent("Text")
-
-    this.closeBtn = transform:Find("contentRoot/top/closeBtn")
-    this.satrtBtnBtn = transform:Find("contentRoot/down/Text"):GetComponent("Text")
+--关闭界面
+function RenTableWareHouseCtrl:_closeFunc()
+    UIPanel.ClosePage()
 end
+
+function RenTableWareHouseCtrl:_startFunc(data)
+    local rentdata = {}
+    rentdata.bid = data.m_data.insId
+    rentdata.renterId = DataManager.GetMyOwnerID()
+    rentdata.startTime = ""
+    rentdata.hourToRent = timenum
+    rentdata.rent =  RenTableWareHousePanel.totalprice.text
+    rentdata.rentCapacity = spacenumber
+    rentdata.orderNumber = ""
+        DataManager.DetailModelRpcNoRet(data.m_data.insId, 'm_ReqrentSpace',rentdata)
+    UIPanel.ClosePage()
+end
+
+function RenTableWareHouseCtrl:_init(data)
+    RenTableWareHousePanel.timeTextSlider.maxValue = data.maxHourToRent
+    RenTableWareHousePanel.timeTextSlider.minValue = data.minHourToRent
+    RenTableWareHousePanel.perSlider.maxValue = data.rentCapacity - data.rentUsedCapacity
+end
+
+--更新租用时间
+function RenTableWareHouseCtrl:_scrollbartimeInfo(data)
+    timenum = RenTableWareHousePanel.timeTextSlider.value;
+    RenTableWareHousePanel.timeInput.text = timenum
+    RenTableWareHousePanel.totalprice.text = timenum * spacenumber * price
+end
+
+--更新租用空间
+function RenTableWareHouseCtrl:_scrollbarspaceInfo(data)
+    spacenumber = RenTableWareHousePanel.perSlider.value;
+    RenTableWareHousePanel.perText.text = spacenumber
+    RenTableWareHousePanel.totalprice.text = timenum * spacenumber * price
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

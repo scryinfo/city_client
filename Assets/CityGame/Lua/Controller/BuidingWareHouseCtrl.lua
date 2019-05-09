@@ -63,9 +63,15 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
     self.m_data.buildingType = BuildingType.WareHouse
 
     BuidingWareHousePanel.openBusinessItem:initData(houseDetailInfo.info, BuildingType.WareHouse)  --初始化
-    BuidingWareHousePanel.spaceText.text = houseDetailInfo.rentCapacity
-    BuidingWareHousePanel.priceText.text = houseDetailInfo.rent
-    BuidingWareHousePanel.timeText.text  = houseDetailInfo.maxHourToRent
+    if houseDetailInfo.rentCapacity ~= 0 then
+        BuidingWareHousePanel.spaceText.text = houseDetailInfo.rentCapacity - houseDetailInfo.rentUsedCapacity
+        BuidingWareHousePanel.timeText.text  = houseDetailInfo.maxHourToRent
+        BuidingWareHousePanel.priceText.text = houseDetailInfo.rent
+    else
+        BuidingWareHousePanel.spaceText.text = houseDetailInfo.rentCapacity
+        BuidingWareHousePanel.priceText.text = houseDetailInfo.rent
+        BuidingWareHousePanel.timeText.text  = houseDetailInfo.maxHourToRent
+    end
 
     if houseDetailInfo.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
         self.m_data.isOther = true
@@ -74,7 +80,8 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
             self.groupMgr:AddParts(BuildingSalaryPart,0)
             self.groupMgr:AddParts(BuildingShelfPart, 0.33)
             self.groupMgr:AddParts(TurnoverPart, 0.33)
-            self.groupMgr:AddParts(BuildingWarehousePart, 0.34)
+            self.groupMgr:AddParts(BuildingRentWarehousePart, 0.34)
+            --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqrentInfo',houseDetailInfo)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else
@@ -86,7 +93,7 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
             self.groupMgr:AddParts(BuildingShelfPart, 0.25)
             self.groupMgr:AddParts(TurnoverPart, 0.25)
             self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
-            self.groupMgr:AddParts(BuildingWarehousePart, 0.25)
+            self.groupMgr:AddParts(BuildingRentWarehousePart, 0.25)
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
 
@@ -138,28 +145,27 @@ function BuidingWareHouseCtrl:_refreshlary(data)
     end
 end
 
-function BuidingWareHouseCtrl: _openFunc(data)
-    go =  BuidingWareHousePanel.spaceText.text
+function BuidingWareHouseCtrl:_openFunc(data)
+    local go =  BuidingWareHousePanel.spaceText.text
     if data.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
-        ct.OpenCtrl("RenTableWareHouseCtrl",data)
-    elseif data.m_data.info.ownerId == DataManager.GetMyOwnerID() and go == 0 then
-        ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
+        ct.OpenCtrl("RenTableWareHouseCtrl",data.m_data)
     elseif data.m_data.info.ownerId == DataManager.GetMyOwnerID() and go ~= 0 then
-         ct.OpenCtrl("MainRenTableWarehouseCtrl",data.m_data)
-        --BuidingWareHousePanel.spaceText.Text = "Not rentable"
+        ct.OpenCtrl("MainRenTableWarehouseCtrl",data.m_data)
+    elseif data.m_data.info.ownerId == DataManager.GetMyOwnerID() and go == 0 then
+         ct.OpenCtrl("SetRenTableWareHouseCtrl",data.m_data)
     end
 
 end
 
 --更新UI显示数据
 function BuidingWareHouseCtrl:_refreshRentInfo (rentWareHouseInfo)
-    BuidingWareHousePanel.spaceText.text = rentWareHouseInfo.rentCapacity
-    BuidingWareHousePanel.priceText.text = rentWareHouseInfo.rent
-    BuidingWareHousePanel.timeText.text  = rentWareHouseInfo.maxHourToRent
+    BuidingWareHousePanel.spaceText.text = self.m_data.rentCapacity - self.m_data.rentUsedCapacity
+    BuidingWareHousePanel.priceText.text = self.m_data.rent
+    BuidingWareHousePanel.timeText.text  = self.m_data.maxHourToRent
 
-    MainRenTableWarehousePanel.spaceText.text = rentWareHouseInfo.rentCapacity
-    MainRenTableWarehousePanel.priceText.text = rentWareHouseInfo.rent
-    MainRenTableWarehousePanel.timeText.text  = rentWareHouseInfo.maxHourToRent
+    --MainRenTableWarehousePanel.spaceText.text = self.m_data.rentCapacity - self.m_data.rentUsedCapacity
+    --MainRenTableWarehousePanel.priceText.text = self.m_data.rent
+    --MainRenTableWarehousePanel.timeText.text  = self.m_data.maxHourToRent
 end
 
 

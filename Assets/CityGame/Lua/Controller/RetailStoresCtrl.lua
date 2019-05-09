@@ -76,14 +76,14 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
                 self.groupMgr:AddParts(BuildingShelfPart,0.5)
                 self.groupMgr:AddParts(TurnoverPart,0)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
-                self.groupMgr:AddParts(BuildingSignPart,0.5)
+                --self.groupMgr:AddParts(BuildingSignPart,0.5)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
                 self.groupMgr:AddParts(BuildingShelfPart,0.2)
                 self.groupMgr:AddParts(TurnoverPart,0.2)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.2)
-                self.groupMgr:AddParts(BuildingSignPart,0.2)
+                --self.groupMgr:AddParts(BuildingSignPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             end
@@ -126,7 +126,7 @@ function RetailStoresCtrl:_refreshSalary(data)
             self.groupMgr:AddParts(BuildingShelfPart,0.2)
             self.groupMgr:AddParts(TurnoverPart,0.2)
             self.groupMgr:AddParts(BuildingSalaryPart,0.2)
-            self.groupMgr:AddParts(BuildingSignPart,0.2)
+            --self.groupMgr:AddParts(BuildingSignPart,0.2)
             self.groupMgr:AddParts(BuildingWarehousePart,0.2)
             RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             RetailStoresPanel.groupTrans.localScale = Vector3.one

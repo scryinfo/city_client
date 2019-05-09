@@ -80,6 +80,11 @@ function ShelfItem:InitializeData()
         --self.brandValue
         --self.qualityValue
     end
+    if self.buildingType == BuildingType.RetailShop then
+        if self.isOther == true then
+            self.detailsBtn.transform.localScale = Vector3.zero
+        end
+    end
 end
 --点击详情购买
 function ShelfItem:_clickDetailsBtn(ins)

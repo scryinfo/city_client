@@ -274,62 +274,15 @@ end
 --下架成功后
 function BuildingShelfDetailPart:downShelfSucceed(data)
     if data ~= nil then
-        --刷新货架
-        for key,value in pairs(self.shelfDatas) do
-            if value.itemId == data.item.key.id then
-                if value.dataInfo.n == data.item.n then
-                    self:deleteGoodsItem(self.shelfDatas,key)
-                else
-                    value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText.text = "×"..value.dataInfo.n
-                end
-            end
+        --下架成功后，如果货架是空的
+        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+            self.noTip.transform.localScale = Vector3.one
+            self.ScrollView.transform.localScale = Vector3.zero
         end
-        --刷新建筑货架信息
-        for key,value in pairs(self.m_data.shelf.good) do
-            if value.k.id == data.item.key.id then
-                if value.n == data.item.n then
-                    table.remove(self.m_data.shelf.good,key)
-                else
-                    value.n = value.n - data.item.n
-                end
-            end
+        --更新界面
+        if next(self.shelfDatas) ~= nil then
+            self:CloseDestroy(self.shelfDatas)
         end
-        --刷新建筑仓库信息
-        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
-            local goods = {}
-            local key = {}
-            goods.key = key
-            goods.key.id = data.item.key.id
-            goods.key.producerId = data.item.key.producerId
-            goods.key.qty = data.item.key.qty
-            goods.n = data.item.n
-            if not self.m_data.store.inHand then
-                self.m_data.store.inHand = {}
-            end
-            self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
-        else
-            for key,value in pairs(self.m_data.store.inHand) do
-                if value.key.id == data.item.key.id then
-                    value.n = value.n + data.item.n
-                    --下架成功后，如果货架是空的
-                    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
-                        self.noTip.transform.localScale = Vector3.one
-                        self.ScrollView.transform.localScale = Vector3.zero
-                    end
-                    UIPanel.ClosePage()
-
-                    return
-                end
-            end
-            --如果没有在仓库找到这个商品
-            self:wareHouseNoGoods(data)
-        end
-    end
-    --下架成功后，如果货架是空的
-    if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
-        self.noTip.transform.localScale = Vector3.one
-        self.ScrollView.transform.localScale = Vector3.zero
     end
     UIPanel.ClosePage()
     Event.Brocast("SmallPop",GetLanguage(27010003), 300)

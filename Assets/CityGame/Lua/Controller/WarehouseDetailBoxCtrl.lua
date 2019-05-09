@@ -144,6 +144,14 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
             end
         end
     end
+    if not self.m_data.info.store.locked or next(self.m_data.info.store.locked) == nil then
+        if not self.m_data.info.store.locked then
+            self.m_data.info.store.locked = {}
+        end
+        self.m_data.info.store.locked[#self.m_data.info.store.locked + 1] = ct.deepCopy(dataInfo.item)
+    else
+        self.m_data.info.store.locked[#self.m_data.info.store.locked + 1] = ct.deepCopy(dataInfo.item)
+    end
     self:addShelfGood(dataInfo)
     self:CloseDestroy()
     self:initializeUiInfoData()
@@ -219,7 +227,19 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
-                table.insert(temporaryDataInfo,value)
+                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                    table.insert(temporaryDataInfo,value)
+                else
+                    local bools = true
+                    for k,v in pairs(self.m_data.info.shelf.good) do
+                        if value.key.id == v.k.id then
+                            bools = false
+                        end
+                    end
+                    if bools then
+                        table.insert(temporaryDataInfo,value)
+                    end
+                end
             end
         end
         if next(temporaryDataInfo) == nil then
@@ -229,7 +249,19 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
-                table.insert(temporaryDataInfo,value)
+                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                    table.insert(temporaryDataInfo,value)
+                else
+                    local bools = true
+                    for k,v in pairs(self.m_data.info.shelf.good) do
+                        if value.key.id == v.k.id then
+                            bools = false
+                        end
+                    end
+                    if bools then
+                        table.insert(temporaryDataInfo,value)
+                    end
+                end
             end
         end
         if next(temporaryDataInfo) == nil then
@@ -239,7 +271,19 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     elseif self.m_data.info.buildingType == BuildingType.RetailShop then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
-                table.insert(temporaryDataInfo,value)
+                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                    table.insert(temporaryDataInfo,value)
+                else
+                    local bools = true
+                    for k,v in pairs(self.m_data.info.shelf.good) do
+                        if value.key.id == v.k.id then
+                            bools = false
+                        end
+                    end
+                    if bools then
+                        table.insert(temporaryDataInfo,value)
+                    end
+                end
             end
         end
         if next(temporaryDataInfo) == nil then

@@ -184,8 +184,12 @@ function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function ProcessingFactoryModel:n_OnShelfDelInfo(data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenprocessing(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
+    end
     Event.Brocast("downShelfSucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    --Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function ProcessingFactoryModel:n_OnAddLineInfo(data)

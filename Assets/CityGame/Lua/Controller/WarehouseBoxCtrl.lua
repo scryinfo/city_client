@@ -103,11 +103,9 @@ function WarehouseBoxCtrl:initializeUiInfoData()
         --self.qualityValue.text =
         --self.levelValue.text =
     end
-    self.nameText.text = GetLanguage(self.m_data.itemId)
-    self.numberSlider.maxValue = self.m_data.dataInfo.n
-    self.numberSlider.value = 1
-    self.numberText.text = "×"..self.numberSlider.value
     local function callback(a)
+        --暂时缓存仓库有的个数（后边要下架然后运输）
+        self.warehouseCount = a
         self.warehouseNumberText.text = "×"..a
     end
     local function callback1(b)
@@ -115,6 +113,10 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     end
     Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
     Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
+    self.nameText.text = GetLanguage(self.m_data.itemId)
+    self.numberSlider.maxValue = self.warehouseCount
+    self.numberSlider.value = 1
+    self.numberText.text = "×"..self.numberSlider.value
 end
 --设置多语言
 function WarehouseBoxCtrl:_language()

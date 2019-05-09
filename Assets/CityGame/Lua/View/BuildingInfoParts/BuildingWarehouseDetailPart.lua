@@ -115,7 +115,7 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    if not storeData then
+    if not storeData or next(storeData) == nil then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one

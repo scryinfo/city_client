@@ -178,14 +178,18 @@ end
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
-        self:m_ReqOpenprocessing(self.insId)
+        self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(27010005), 300)
     end
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenMaterial(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
+    end
     Event.Brocast("downShelfSucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    --Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)

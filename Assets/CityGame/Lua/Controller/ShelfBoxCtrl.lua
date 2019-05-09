@@ -267,7 +267,13 @@ function ShelfBoxCtrl:ToggleUndateText()
     else
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
-        self.numberSlider.value = 0
+        if self.m_data.dataInfo.n == 0 then
+            self.numberSlider.minValue = 0
+            self.numberSlider.value = 0
+        else
+            self.numberSlider.minValue = 1
+            self.numberSlider.value = 1
+        end
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
 end

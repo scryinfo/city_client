@@ -24,7 +24,6 @@ function  AdvertisementPartDetail:_InitEvent()
 end
 --
 function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
-    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
     mainPanelLuaBehaviour:AddClick(self.goods, self.OnGoods, self)
     mainPanelLuaBehaviour:AddClick(self.building, self.OnBuilding, self)
     mainPanelLuaBehaviour:AddClick(self.open, self.OnOpen, self)
@@ -51,6 +50,9 @@ end
 --
 function AdvertisementPartDetail:RefreshData(data)
     if data then
+        if self.m_data then
+        self.m_data.promRemainTime = data.promRemainTime
+        end
         self.timeText.text = math.floor(data.promRemainTime/3600000)
         self.priceText.text = GetClientPriceString(data.curPromPricePerHour)
         self.queneValue.text = data.selledPromCount
@@ -67,9 +69,6 @@ function AdvertisementPartDetail:RefreshData(data)
 end
 --
 function AdvertisementPartDetail:_getComponent(transform)
-    --top
-    self.xBtn = transform:Find("bg/top/xBtn").gameObject --返回
-
     --down
     self.goods = transform:Find("bg/down/GoodsBg/goods/goodsBg").gameObject      --商品
     self.goodsText = transform:Find("bg/down/GoodsBg/goods/goodsText"):GetComponent("Text")
@@ -114,10 +113,6 @@ function AdvertisementPartDetail:_initFunc()
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType)
 end
 --
-
-function AdvertisementPartDetail:OnXBtn(go)
-    go.groupClass.TurnOffAllOptions(go.groupClass)
-end
 
 function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)

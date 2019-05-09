@@ -285,6 +285,7 @@ namespace LuaFramework {
 
             Debug.Log("GameManager:OnInitialize CallMethod Game OnPostInitOK !!!");
             Util.CallMethod("Game", "OnPostInitOK");     //初始化完成
+            Destroy(GameObject.Find("LoadCanvas"));
             initialize = true;
         }
 

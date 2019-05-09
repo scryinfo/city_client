@@ -13,8 +13,8 @@ public class FunctionalGraph : MaskableGraphic
     private Vector2 _xPoint;
     private Vector2 _yPoint;
     private float[] boundary ;  //分界线
-    private List<Vector2[]> line = new List<Vector2[]>();
-    private List<Color> lineColor = new List<Color>();
+    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicLine = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();
+    private Slide slide;
     private void OnGUI()
     {
         if (GraphBase.ShowXAxisUnit)
@@ -48,6 +48,7 @@ public class FunctionalGraph : MaskableGraphic
     {
         GraphBase = transform.GetComponent<FunctionalGraphBase>();
         _myRect = this.rectTransform;
+        slide = transform.GetComponent<Slide>();
     }
     /// 
     /// 重写这个类以绘制UI
@@ -90,13 +91,19 @@ public class FunctionalGraph : MaskableGraphic
         }
 
         #region 绘制折线
-        if (line.Count >= 1)
+        if (dicLine.Count >= 1)
         {
-            for (int i = 0; i < line.Count; i++)
+            foreach (var item in dicLine.Values)
             {
-                for (int v = 1; v < line[i].Length - 1; v++)
+                foreach (var line in item)
                 {
-                    vh.AddUIVertexQuad(GetQuad(line[i][v], line[i][v + 1], lineColor[i], GraphBase.LineWidth));
+                    for (int i = 0; i < line.Key.Count; i++)
+                    {
+                        for (int v = 1; v < line.Key[i].Length - 1; v++)
+                        {
+                            vh.AddUIVertexQuad(GetQuad(line.Key[i][v], line.Key[i][v + 1], line.Value[i], GraphBase.LineWidth));
+                        }
+                    }
                 }
             }
         }
@@ -318,20 +325,31 @@ public class FunctionalGraph : MaskableGraphic
         return result;
     }
     //画折线
-    public void DrawLine(Vector2[] lines,Color color)
+    public void DrawLine(Vector2[] lines,Color color,int id)
     {
-        if (line.Count >= GraphBase.MaxNum)
-        {
-            line.RemoveAt(0);
-            lineColor.RemoveAt(0);
-        }
+        List<Vector2[]> line = new List<Vector2[]>();
+        List<Color> lineColor = new List<Color>();
         line.Add(lines);
         lineColor.Add(color);
+        Dictionary<List<Vector2[]>, List<Color>> dic = new Dictionary<List<Vector2[]>, List<Color>>();
+        dic.Add(line, lineColor);
+        if (!dicLine.ContainsKey(id))
+        {
+            dicLine.Add(id, dic);
+        }
+        else
+        {
+            dicLine.Remove(id);
+        }
     }
     //分界线
     public void BoundaryLine(float[] f)
     {
         boundary = f;
     }
-
+    //清空数据
+    public void Close()
+    {
+        dicLine.Clear();
+    }
 }

@@ -22,8 +22,9 @@ function PromoteCurvePanel.InitPanel()
     this.back = transform:Find("bg").gameObject
     this.slide = transform:Find("contentBg/curveBg/curve"):GetComponent("Slide")
     this.graph = transform:Find("contentBg/curveBg/curve"):GetComponent("FunctionalGraph")
-    this.yScale = transform:Find("contentBg/YScale"):GetComponent("RectTransform")
-    this.goods = transform:Find("contentBg/signBg/goods"):GetComponent("Image")   --物品图片
-    this.goodsText = transform:Find("contentBg/signBg/goods/goodsText"):GetComponent("Text")   --物品名字
+    this.curve = transform:Find("contentBg/curveBg/curve"):GetComponent("RectTransform")
+    this.yScale = transform:Find("contentBg/yScale"):GetComponent("RectTransform")
+    this.icon = transform:Find("contentBg/info/building"):GetComponent("Image")   --物品图片
+    this.name = transform:Find("contentBg/info/building/name"):GetComponent("Text")   --物品名字
 
 end

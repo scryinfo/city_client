@@ -24,15 +24,33 @@ end
 
 function PromoteCurveCtrl:Active()
     UIPanel.Active(self)
+    PromoteCurvePanel.curve.anchoredPosition = Vector3.New(-1252, 59,0)
+    PromoteCurvePanel.curve.sizeDelta = Vector2.New(2878, 402)  --MaxWidth
 end
 
 function PromoteCurveCtrl:Refresh()
-    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId)
+    local typeId
+    if self.m_data.Data.typeId == 2251 then
+        typeId = 1651
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", PromoteCurvePanel.icon)
+    elseif self.m_data.Data.typeId == 2252 then
+        typeId = 1652
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", PromoteCurvePanel.icon)
+    elseif self.m_data.Data.typeId == 1300 then
+        typeId = 1653
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-supermarket.png", PromoteCurvePanel.icon)
+    elseif self.m_data.Data.typeId == 1400 then
+        typeId = 1654
+        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-house.png", PromoteCurvePanel.icon)
+    end
+    PromoteCurvePanel.name.text = self.m_data.Data.name
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_PromoAbilityHistory',self.m_data.insId,typeId)
 end
 
 function PromoteCurveCtrl:Hide()
     UIPanel.Hide(self)
-
+    PromoteCurvePanel.curve.anchoredPosition = Vector3.New(-1252, 59,0)
+    PromoteCurvePanel.curve.sizeDelta = Vector2.New(2878, 402)  --MaxWidth
 end
 
 function PromoteCurveCtrl:OnCreate(obj)
@@ -59,15 +77,17 @@ function PromoteCurveCtrl:m_PromoteHistoryCurve(data)
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    local oneDay = currentTime - 24*3600
+    local oneDay = currentTime - 23*3600
     local updataTime = oneDay
     local time = {}
     local boundaryLine = {}
     local line = {}
     for i = 1, 24 do
         if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
-            time[1] = getFormatUnixTime(updataTime).minute .. "/" .. getFormatUnixTime(updataTime).day
-            table.insert(boundaryLine,(updataTime - oneDay + 3600) / 3600 * 120)
+            time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+            table.insert(boundaryLine,(updataTime - oneDay +3600) / 3600 * 120)
+        else
+            time[i] = tostring(getFormatUnixTime(updataTime  ).hour)
         end
         line[i] = {}
         line[i].value = 0
@@ -80,29 +100,34 @@ function PromoteCurveCtrl:m_PromoteHistoryCurve(data)
             end 
         end
         line[i].ts = (updataTime - oneDay + 3600) / 3600 * 120
+        updataTime = updataTime +3600
+    end
+    local lineValeu = {}
+    for i, v in ipairs(line) do
+        lineValeu[i] = Vector2.New(v.ts,v.value)  --
     end
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
-    table.insert(line,1,Vector2.New(0,0))
+    table.insert(lineValeu,1,Vector2.New(0,0))
     local max = 0
-    for i, v in ipairs(line) do
+    for i, v in ipairs(lineValeu) do
         if v.y > max then
             max = v.y
         end
     end
-    local scale = SetYScale(max,5,PromoteCurvePanel.yScale)
+    local scale = SetYScale(max,4,PromoteCurvePanel.yScale,true)
     local lineVet = {}
-    for i, v in ipairs(line) do
+    for i, v in ipairs(lineValeu) do
         if scale == 0 then
             lineVet[i] = v
         else
             lineVet[i] = Vector2.New(v.x,v.y / scale * 67)
         end
     end
-    self.slide:SetXScaleValue(time,120)
-    self.graph:BoundaryLine(boundaryLine)
+    PromoteCurvePanel.slide:SetXScaleValue(time,120)
+    PromoteCurvePanel.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(lineVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
-    self.slide:SetCoordinate(lineVet,line,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
+    PromoteCurvePanel.graph:DrawLine(lineVet,Color.New(213 / 255, 137 / 255, 0 / 255, 255 / 255),1)
+    PromoteCurvePanel.slide:SetCoordinate(lineVet,lineValeu,Color.New(213 / 255, 137 / 255, 0 / 255, 255 / 255),1)
 end
 

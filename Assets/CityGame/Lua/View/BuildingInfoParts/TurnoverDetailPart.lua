@@ -16,12 +16,10 @@ end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
-    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
-
 end
 --
 function TurnoverDetailPart:_ResetTransform()
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
     buildingTs = nil
 end
@@ -31,20 +29,24 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
---    self.xBtn.onClick:RemoveAllListeners()
 end
 
 function TurnoverDetailPart:Show(data)
     BasePartDetail.Show(self)
     if buildingTs == nil then
-        if self.m_data.info then
-            buildingTs = self.m_data.info.constructCompleteTs
+        if data.info then
+            buildingTs = data.info.constructCompleteTs
         end
     end
     self.m_data = data
     self:_initFunc()
 end
-
+function TurnoverDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    self.graph:Close()
+    self.slide:Close()
+    buildingTs = nil
+end
 --
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
@@ -71,12 +73,11 @@ function TurnoverDetailPart:_InitTransform()
     transform = self.transform
     self:_getComponent(self.transform)
 
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
-    self.xBtn = transform:Find("down/xBtn").gameObject --返回
     self.yScale = transform:Find("down/bg/yScale"):GetComponent("RectTransform");  --Y轴
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
@@ -97,11 +98,6 @@ function TurnoverDetailPart:_initFunc()
         local pMsg = assert(pbl.encode("ss.Id", lMsg))
         CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
     end
-
-
-function TurnoverDetailPart:OnXBtn(go)
-    go.groupClass.TurnOffAllOptions(go.groupClass)
-end
 
 --建筑收益曲线图回调
 function TurnoverDetailPart:n_OnBuildingIncome(info)
@@ -202,8 +198,8 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.slide:SetXScaleValue(time,148)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
-    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
+    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
+    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)

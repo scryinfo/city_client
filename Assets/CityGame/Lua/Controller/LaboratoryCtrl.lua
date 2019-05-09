@@ -112,6 +112,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
         end
     else
         panel.groupTrans.localScale = Vector3.zero
+        LaboratoryPanel.centerBtn.localScale = Vector3.zero
         --panel.stopRootTran.localScale = Vector3.one
     end
 
@@ -128,7 +129,8 @@ function LaboratoryCtrl:_refreshSalary(data)
 end
 --自已
 function LaboratoryCtrl:owner(buildingInfo)
-    --刷新底部组件s
+    --刷新底部组件
+    LaboratoryPanel.centerBtn.localScale = Vector3.one
     if self.groupMgr == nil then
 
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
@@ -146,6 +148,7 @@ end
 --他人
 function LaboratoryCtrl:other(buildingInfo)
     --刷新底部组件
+    LaboratoryPanel.centerBtn.localScale = Vector3.zero
     if self.groupMgr == nil then
 
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)

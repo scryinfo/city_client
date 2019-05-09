@@ -6,8 +6,13 @@
 BuildingProductionDetailPart = class('BuildingProductionDetailPart',BuildingBaseDetailPart)
 
 local Math_Ceil = math.ceil
+local Math_Floor = math.floor
 local nowTime = 0
 local LastTime = 0
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function BuildingProductionDetailPart:PrefabName()
     return "BuildingProductionDetailPart"
 end
@@ -139,7 +144,7 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
-    self.tipText.transform.localScale = Vector3.zero
+    self.tipText.text = ""
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
@@ -167,6 +172,14 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
             self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --如果是商品，判断原料等级
+            if Good[lineData[1].itemId].luxury == 1 then
+                self.levelImg.color = getColorByVector3(oneLevel)
+            elseif Good[lineData[1].itemId].luxury == 2 then
+                self.levelImg.color = getColorByVector3(twoLevel)
+            elseif Good[lineData[1].itemId].luxury == 3 then
+                self.levelImg.color = getColorByVector3(threeLevel)
+            end
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -181,7 +194,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
 
         --是商品时
         local goodsKey = 22
-        if math.floor(self.itemId / 100000) == goodsKey then
+        if Math_Floor(self.itemId / 100000) == goodsKey then
             --原料不足时
             if self:CheckMaterial(self.itemId) == false then
                 --self.timeText.text = "00:00:00"
@@ -281,7 +294,7 @@ function BuildingProductionDetailPart:Update()
         return
     end
     local goodsKey = 22
-    if math.floor(self.itemId / 100000) == goodsKey then
+    if Math_Floor(self.itemId / 100000) == goodsKey then
         --原料不足时
         if self:CheckMaterial(self.itemId) == false then
             --self.timeText.text = "00:00:00"
@@ -423,7 +436,7 @@ function BuildingProductionDetailPart:CheckMaterial(itemId)
         --仓库中有的原料
         for key1,value1 in pairs(self.m_data.store.inHand) do
             if value1.key.id == value.itemId then
-                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
+                materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
                 isMeet = true
             end
         end

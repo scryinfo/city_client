@@ -20,9 +20,9 @@ function BuildingBaseModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,
     local lMsg = {src = src,dst = dst,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(n)}}
     DataManager.ModelSendNetMes("gscode.OpCode","transferItem","gs.TransferItem",lMsg)
 end
---修改价格
-function BuildingBaseModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
-    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = price}
+--修改货架设置
+function BuildingBaseModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    local lMsg = {buildingId = buildingId, item = {key = {id = Id,producerId = producerId,qty = qty},n = tonumber(num)}, price = tonumber(price),autoRepOn = autoRepOn}
     DataManager.ModelSendNetMes("gscode.OpCode","shelfSet","gs.ShelfSet",lMsg)
 end
 --销毁原料或商品

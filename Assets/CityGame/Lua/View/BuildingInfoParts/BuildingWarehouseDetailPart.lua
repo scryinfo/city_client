@@ -33,7 +33,8 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
-    self:initializeUiInfoData(self.m_data.store.inHand)
+    self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
+    self:initializeUiInfoData(self.warehouseDataInfo)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -114,7 +115,7 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    if not storeData then
+    if not storeData or next(storeData) == nil then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -132,7 +133,7 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
+        if next(self.warehouseDatas) ~= nil then
             return
         else
             if next(self.warehouseDatas) ~= nil then
@@ -213,8 +214,6 @@ function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_RetailStoresTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
-    elseif self.m_data.buildingType == BuildingType.TalentCenter then
-        --集散中心
     end
 end
 --销毁商品
@@ -229,8 +228,6 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
-        elseif self.m_data.buildingType == BuildingType.TalentCenter then
-            --集散中心
         end
     end
 end
@@ -341,4 +338,26 @@ function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
         end
         callback(nowCount)
     end
+end
+--合并两张表
+function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
+    local targetTab = {}
+    if inHandTab == nil and lockedTab == nil then
+        targetTab = {}
+    end
+    if inHandTab ~= nil then
+        for key,value in pairs(inHandTab) do
+            targetTab[value.key.id] = ct.deepCopy(value)
+        end
+    end
+    if lockedTab ~= nil then
+        for key,value in pairs(lockedTab) do
+            if targetTab[value.key.id] then
+                targetTab[value.key.id].n = targetTab[value.key.id].n + value.n
+            else
+                targetTab[value.key.id] = ct.deepCopy(value)
+            end
+        end
+    end
+    return targetTab
 end

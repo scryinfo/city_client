@@ -90,16 +90,16 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
         if detailData.info.state == "OPERATE" then -- 营业中
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
             if self.m_data.info.ownerId == myOwnerID then
-                self.groupMgr:AddParts(AdvertisementPart, 0.30)
-                self.groupMgr:AddParts(TurnoverPart, 0.23)
-                self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
-                self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
+                self.groupMgr:AddParts(AdvertisementPart, 0.374)
+                self.groupMgr:AddParts(TurnoverPart, 0.313)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.313)
+                --self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
                 PromoteCompanyPanel.open.transform.localScale = Vector3.one
             else
                 self.groupMgr:AddParts(AdvertisementPart, 1)
                 self.groupMgr:AddParts(TurnoverPart, 0)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0)
-                self.groupMgr:AddParts(AdBuildingSignPart, 0)
+                --self.groupMgr:AddParts(AdBuildingSignPart, 0)
                 PromoteCompanyPanel.open.transform.localScale = Vector3.zero
             end
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
@@ -150,10 +150,10 @@ function PromoteCompanyCtrl:_refreshSalary(data)
 
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.30)
-            self.groupMgr:AddParts(TurnoverPart, 0.23)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
-            self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
+            self.groupMgr:AddParts(AdvertisementPart, 0.374)
+            self.groupMgr:AddParts(TurnoverPart, 0.313)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.313)
+            --self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
             PromoteCompanyPanel.queue.transform.localScale = Vector3.one
             PromoteCompanyPanel.open.transform.localScale = Vector3.one
@@ -167,13 +167,4 @@ end
 function PromoteCompanyCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
-    --if self.groupMgr == nil then
-    --    self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-    --    self.groupMgr:AddParts(AdvertisementPart, 0.30)
-    --    self.groupMgr:AddParts(TurnoverPart, 0.23)
-    --    self.groupMgr:AddParts(BuildingSalaryPart, 0.23)
-    --    self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
-    --    self.groupMgr:TurnOffAllOptions()
-    --end
-    --self.groupMgr:RefreshData(info)
 end

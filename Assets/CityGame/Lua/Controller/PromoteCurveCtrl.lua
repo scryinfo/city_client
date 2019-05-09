@@ -49,6 +49,8 @@ end
 
 function PromoteCurveCtrl:Hide()
     UIPanel.Hide(self)
+    PromoteCurvePanel.graph:Close()
+    PromoteCurvePanel.slide:Close()
     PromoteCurvePanel.curve.anchoredPosition = Vector3.New(-1252, 59,0)
     PromoteCurvePanel.curve.sizeDelta = Vector2.New(2878, 402)  --MaxWidth
 end
@@ -129,5 +131,8 @@ function PromoteCurveCtrl:m_PromoteHistoryCurve(data)
 
     PromoteCurvePanel.graph:DrawLine(lineVet,Color.New(213 / 255, 137 / 255, 0 / 255, 255 / 255),1)
     PromoteCurvePanel.slide:SetCoordinate(lineVet,lineValeu,Color.New(213 / 255, 137 / 255, 0 / 255, 255 / 255),1)
+
+    PromoteCurvePanel.curve.localPosition = PromoteCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    PromoteCurvePanel.curve.sizeDelta = PromoteCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 

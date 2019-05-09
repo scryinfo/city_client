@@ -158,6 +158,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         end
     else
         --上架的时候打开时
+        self.automaticSwitch.isOn = false
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
         self.downShelfBtn.transform.localScale = Vector3.zero

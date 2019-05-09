@@ -35,7 +35,7 @@ function MapPanel.InitPanel()
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
     this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")  --搜索结果
     this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem")  --搜索总览
-    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItem")  --土地拍卖
+    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItemNew")  --土地拍卖
     this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem")  --土地交易
 
     --

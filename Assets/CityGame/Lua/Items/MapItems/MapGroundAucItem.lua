@@ -4,33 +4,40 @@
 --- DateTime: 2019/2/27 18:13
 ---
 MapGroundAucItem = class('MapGroundAucItem', MapBubbleBase)
+MapGroundAucItem.nowColor = Vector3.New(255, 206, 101)
+MapGroundAucItem.soonColor = Vector3.New(161, 174, 219)
+MapGroundAucItem.selectColor = Vector3.New(251, 89, 87)
+
+EGAucState =
+{
+    NowBid = 1,  --正在拍卖
+    WaitToBid = 2,  --等待出价
+    Soon = 3  --即将拍卖
+}
 --
 function MapGroundAucItem:_childInit()
     self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的部分
 
-    self.now = self.viewRect.transform:Find("root/now")
-    self.nowBinding = self.viewRect.transform:Find("root/now/bgBtn/binding")  --正在出价中
-    self.nowTimeText = self.viewRect.transform:Find("root/now/bgBtn/binding/timeDownRoot/nowTimeText"):GetComponent("Text")
-    self.nowText01 = self.viewRect.transform:Find("root/now/bgBtn/binding/Text"):GetComponent("Text")
-    self.noneBidText02 = self.viewRect.transform:Find("root/now/bgBtn/noneBidText"):GetComponent("Text")
-    self.nowBgBtn = self.viewRect.transform:Find("root/now/bgBtn"):GetComponent("Button")
+    local tran = self.viewRect.transform
+    self.nowBgTran = tran:Find("root/bgRoot/nowBg")
+    self.soonBgTran = tran:Find("root/bgRoot/soonBg")
+    self.selectBgTran = tran:Find("root/bgRoot/selectBg")
 
-    self.soon = self.viewRect.transform:Find("root/soon")
-    self.soonTimeText = self.viewRect.transform:Find("root/soon/bgBtn/timeDownRoot/soonTimeText"):GetComponent("Text")
-    self.soonText02 = self.viewRect.transform:Find("root/soon/bgBtn/Text"):GetComponent("Text")
-    self.soonBgBtn = self.viewRect.transform:Find("root/soon/bgBtn"):GetComponent("Button")
+    self.normalState = tran:Find("root/state/normal")
+    self.typeText = tran:Find("root/state/normal/typeText"):GetComponent("Text")
+    self.bottomBgImg = tran:Find("root/state/normal/bottomBg"):GetComponent("Image")
+    self.timeText = tran:Find("root/state/normal/timeText"):GetComponent("Text")
+    self.nowWaitState = tran:Find("root/state/nowWait")
+    self.nowWaitStateText01 = tran:Find("root/state/nowWait/Text"):GetComponent("Text")
 
-    self.nowText01.text = GetLanguage(22010001)
-    self.soonText02.text = GetLanguage(22020003)
-    self.noneBidText02.text = GetLanguage(22010001)
-
-    self.nowBgBtn.onClick:AddListener(function ()
-        self:_openGroundAucFunc()
-    end)
-    self.soonBgBtn.onClick:AddListener(function ()
+    self.clickBtn = tran:Find("root/btn"):GetComponent("Button")
+    self.clickBtn.onClick:AddListener(function ()
         self:_openGroundAucFunc()
     end)
 
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
+
+    self.nowWaitStateText01.text = GetLanguage(22010001)
     self:initData(self.data)
 end
 --
@@ -38,30 +45,70 @@ function MapGroundAucItem:initData(data)
     self.data = data
 
     self.timeDown = true
+    self.selectBgTran.localScale = Vector3.zero
     if self.data.detailData.isStartAuc == true then
         --判断是否有出价
         if data.detailData.bidHistory == nil or #data.detailData.bidHistory == 0 then
             self.isStartBid = false
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+            self.state = EGAucState.WaitToBid
         else
             self.isStartBid = true
-            self.noneBidText02.transform.localScale = Vector3.zero
-            self.nowBinding.localScale = Vector3.one
+            self.state = EGAucState.NowBid
+
             table.sort(self.data.detailData.bidHistory, function (m, n) return m.ts > n.ts end)
             self.data.detailData.endTs = self.data.detailData.bidHistory[1].ts + GAucModel.BidTime
         end
-    end
-
-    if data.detailData.isStartAuc == true then
-        self.now.transform.localScale = Vector3.one
-        self.soon.transform.localScale = Vector3.zero
     else
-        self.now.transform.localScale = Vector3.zero
-        self.soon.transform.localScale = Vector3.one
+        self.state = EGAucState.Soon
     end
+    self:_toggleState(self.state)
+
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
     self.m_Timer:Start()
+end
+--
+function MapGroundAucItem:_toggleState(state)
+    self.selectBgTran.localScale = Vector3.zero
+
+    if state == EGAucState.NowBid then
+        self.typeText.text = "NOW"
+        self.typeText.color = getColorByVector3(MapGroundAucItem.nowColor)
+        self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.nowColor)
+        self.nowBgTran.localScale = Vector3.one
+        self.soonBgTran.localScale = Vector3.zero  --背景切换
+        self.normalState.localScale = Vector3.one
+        self.nowWaitState.localScale = Vector3.zero  --状态切换，是待出价或者now/soon
+
+    elseif state == EGAucState.Soon then
+        self.typeText.text = "Soon"
+        self.typeText.color = getColorByVector3(MapGroundAucItem.soonColor)
+        self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.soonColor)
+        self.nowBgTran.localScale = Vector3.zero
+        self.soonBgTran.localScale = Vector3.one
+        self.normalState.localScale = Vector3.one
+        self.nowWaitState.localScale = Vector3.zero
+
+    elseif state == EGAucState.WaitToBid then
+        self.nowBgTran.localScale = Vector3.one
+        self.soonBgTran.localScale = Vector3.zero
+        self.normalState.localScale = Vector3.zero
+        self.nowWaitState.localScale = Vector3.one
+        self.nowWaitStateText01.color = getColorByVector3(MapGroundAucItem.nowColor)
+    end
+end
+--
+function MapGroundAucItem:toggleShowSelect(show)
+    if show == true then
+        self.selectBgTran.localScale = Vector3.one
+        self.nowBgTran.localScale = Vector3.zero
+        self.soonBgTran.localScale = Vector3.zero
+
+        self.typeText.color = getColorByVector3(MapGroundAucItem.selectColor)
+        self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.selectColor)
+        self.nowWaitStateText01.color = getColorByVector3(MapGroundAucItem.selectColor)
+    else
+        self:_toggleState(self.state)
+    end
 end
 --
 function MapGroundAucItem:_itemTimer()
@@ -89,13 +136,15 @@ function MapGroundAucItem:_bidInfoUpdate(data)
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
         table.insert(self.data.detailData.bidHistory, 1, temp)
         self.isStartBid = true
-        self.noneBidText02.transform.localScale = Vector3.zero
-        self.nowBinding.localScale = Vector3.one
+        self.state = EGAucState.NowBid
+        self:_toggleState(self.state)
     end
 end
 --
 function MapGroundAucItem:_childClose()
     self.timeDown = false
+    Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
+
     if self.m_Timer ~= nil then
         self.m_Timer:Stop()
     end
@@ -117,7 +166,7 @@ function MapGroundAucItem:NowTimeDownFunc()
 
         local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
-        self.nowTimeText.text = timeStr
+        self.timeText.text = timeStr
     end
 end
 --即将拍卖的倒计时
@@ -131,16 +180,14 @@ function MapGroundAucItem:SoonTimeDownFunc()
         if remainTime <= 0 then
             self.data.detailData.isStartAuc = true
             --开始拍卖
-            self.now.transform.localScale = Vector3.one
-            self.soon.transform.localScale = Vector3.zero
-            self.noneBidText02.transform.localScale = Vector3.one
-            self.nowBinding.localScale = Vector3.zero
+            self.state = EGAucState.WaitToBid
+            self:_toggleState(self.state)
             Event.Brocast("c_BidStart", self.data.detailData)  --切换界面
             return
         end
 
         local timeTable = getFormatUnixTime(remainTime / 1000)
         local timeStr = timeTable.minute..":"..timeTable.second
-        self.soonTimeText.text = timeStr
+        self.timeText.text = timeStr
     end
 end

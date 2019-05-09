@@ -82,17 +82,12 @@ function PromoteCompanyModel:m_queryPromoCurAbilitys(buildingId,typeIds)
 end
 
 --推广历史曲线图
-function PromoteCompanyModel:m_PromoAbilityHistory(buildingId)
+function PromoteCompanyModel:m_PromoAbilityHistory(buildingId,typeIds)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(毫秒)
     local ts = getFormatUnixTime(currentTime/1000)
-    --if tonumber(ts.minute) > 0 then
-    --    currentTime = currentTime - tonumber(ts.minute) * 60
-    --end
-    --if tonumber(ts.second) > 0 then
-    --    currentTime = currentTime - tonumber(ts.second)
-    --end
-    currentTime = currentTime - 24*10          --提前24小时
-    local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {1613 }, recordsCount = 24 }
+
+    currentTime = currentTime - 24*3600000          --提前24小时
+    local lMsg = {sellerBuildingId = buildingId,startTs = currentTime, typeIds = {typeIds}, recordsCount = 24 }
 
     DataManager.ModelSendNetMes("gscode.OpCode", "adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",lMsg)
 end

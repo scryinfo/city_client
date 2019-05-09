@@ -16,8 +16,6 @@ end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
-    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
-
 end
 --
 function TurnoverDetailPart:_ResetTransform()
@@ -31,7 +29,6 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
---    self.xBtn.onClick:RemoveAllListeners()
 end
 
 function TurnoverDetailPart:Show(data)
@@ -81,7 +78,6 @@ function TurnoverDetailPart:_InitTransform()
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
-    self.xBtn = transform:Find("down/xBtn").gameObject --返回
     self.yScale = transform:Find("down/bg/yScale"):GetComponent("RectTransform");  --Y轴
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
@@ -102,11 +98,6 @@ function TurnoverDetailPart:_initFunc()
         local pMsg = assert(pbl.encode("ss.Id", lMsg))
         CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
     end
-
-
-function TurnoverDetailPart:OnXBtn(go)
-    go.groupClass.TurnOffAllOptions(go.groupClass)
-end
 
 --建筑收益曲线图回调
 function TurnoverDetailPart:n_OnBuildingIncome(info)

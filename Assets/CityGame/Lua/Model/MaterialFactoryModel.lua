@@ -107,9 +107,9 @@ end
 function MaterialFactoryModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
     self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
---修改货架价格
-function MaterialFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
-    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
+--修改货架属性
+function MaterialFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
 function MaterialFactoryModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
@@ -166,14 +166,6 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
-    --local bagId = DataManager.GetBagId()
-    --local n = data.item.n
-    --local itemId = data.item.key.id
-    --local qty = data.item.key.qty
-    --local producerId = data.item.key.producerId
-    --if data.dst == bagId then
-    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    --end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -182,14 +174,22 @@ function MaterialFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
     Event.Brocast("refreshShelfPartCount")
 end
---修改货架价格
+--修改货架属性
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("replenishmentSucceed",data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenMaterial(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
+    end
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenMaterial(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
+    end
     Event.Brocast("downShelfSucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    --Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)
@@ -226,7 +226,7 @@ end
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
     Event.Brocast("replenishmentSucceed",data)
 end
---添加购物车
-function MaterialFactoryModel:n_OnAddShoppingCart(data)
-
-end
+----添加购物车
+--function MaterialFactoryModel:n_OnAddShoppingCart(data)
+--
+--end

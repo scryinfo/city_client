@@ -7,6 +7,10 @@ TransportItem = class('TransportItem')
 
 local ToNumber = tonumber
 local StringSun = string.sub
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,unitPrice)
     self.keyId = keyId
     self.prefab = prefab
@@ -26,7 +30,9 @@ function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,u
     self.brandValue = prefab.transform:Find("goodsInfo/goods/detailsBg/scoreBg/brandIcon/brandValue"):GetComponent("Text")
     self.qualityValue = prefab.transform:Find("goodsInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.numberText = prefab.transform:Find("number/numberText"):GetComponent("Text")
+    self.goodsCost = prefab.transform:Find("total/goodsCost")
     self.goodsPriceText = prefab.transform:Find("total/goodsCost/goodsPriceText"):GetComponent("Text")
+    self.freight = prefab.transform:Find("total/freight")
     self.freightPriceText = prefab.transform:Find("total/freight/freightPriceText"):GetComponent("Text")
     self.deleBtn = prefab.transform:Find("deleBtn")
 
@@ -38,10 +44,15 @@ end
 function TransportItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.number
-    self.freightPriceText.text = GetClientPriceString(ToNumber(self.dataInfo.number) * ToNumber(self.unitPrice))
     --运输还是购买（购买会有物品价格，运输只有运费）
     if self.dataInfo.state == GoodsItemStateType.buy then
+        self.goodsCost.transform.localScale = Vector3.one
         self.goodsPriceText.text = GetClientPriceString(self.dataInfo.number * self.dataInfo.price)
+        self.freightPriceText.text = GetClientPriceString(ToNumber(self.dataInfo.number) * ToNumber(self.unitPrice))
+    elseif self.dataInfo.state == GoodsItemStateType.transport then
+        self.goodsCost.transform.localScale = Vector3.zero
+        self.freight.transform.localPosition = Vector3(-310,0,0)
+        self.freightPriceText.text = GetClientPriceString(ToNumber(self.dataInfo.number) * ToNumber(self.unitPrice))
     end
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
@@ -51,7 +62,15 @@ function TransportItem:InitializeData()
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
-        --self.levelImg
+        --如果是商品，判断原料等级
+        if Good[self.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
+
         --self.brandNameText
         --self.brandValue
         --self.qualityValue

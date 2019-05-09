@@ -46,4 +46,14 @@ function PopCommpent:Refesh(m_data)
    self.m_data=m_data
 end
 
+--刷新数据
+function PopCommpent:RefeshData(m_data)
+    --刷新回调
+    self.m_data=m_data
+end
 
+-- 设置确认按钮的位置
+function PopCommpent:SetConfirmPos(v3)
+    --刷新回调
+    self.confirmBtn.localPosition = v3
+end

@@ -13,7 +13,7 @@ function BuildingUpperItem:initialize(viewRect)
     self.viewRect = viewRect
 
     self.backBtn = self.viewRect.transform:Find("BackBtn"):GetComponent("Button")
-    --self.buildingNameText = self.viewRect.transform:Find("titleBg/buildingTypeNameText"):GetComponent("Text")
+    self.buildingNameText = self.viewRect.transform:Find("TitleBg/BuildingTypeNameText"):GetComponent("Text")
     self.titleBgBtn = self.viewRect.transform:Find("TitleBg"):GetComponent("Button")
     self.nameText = self.viewRect.transform:Find("TitleBg/NameText"):GetComponent("Text")
     self.peopleNumberText = self.viewRect.transform:Find("RightBg/PeopleNumberText"):GetComponent("Text")
@@ -71,8 +71,8 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
     self.data = data
     self.closeCallBack = closeCallBack
     local name = data.name or "SRCY CITY"
-    --self.nameText.text = name .. GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
-    self.nameText.text = string.format("<color=%s>%s</color> <color=%s><b>%s</b></color>", BuildingUpperItem.static.NameColor, name, BuildingUpperItem.static.BuildingTypeColor, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
+    self.nameText.text = name -- .. GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
+    --self.nameText.text = string.format("<color=%s>%s</color> <color=%s><b>%s</b></color>", BuildingUpperItem.static.NameColor, name, BuildingUpperItem.static.BuildingTypeColor, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
     self.peopleNumberText.text = tostring(data.todayVisitor)
     -- 建筑类型
     local type = string.sub(tostring(data.mId), 1, 2)
@@ -83,6 +83,7 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
         self.gradeBg.localScale = Vector3.zero
     end
     --self.buildingNameText.text = GetLanguage(PlayerBuildingBaseData[data.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
+    self.buildingNameText.text = string.format("%s %s", GetLanguage(PlayerBuildingBaseData[data.mId].sizeName), GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
     self.showBubble = data.showBubble
 
     --if data.emoticon ~= nil then

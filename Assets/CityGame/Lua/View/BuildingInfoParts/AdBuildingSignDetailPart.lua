@@ -22,7 +22,6 @@ end
 --
 function AdBuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
     luaBehavior = mainPanelLuaBehaviour
-    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
 end
 --
 function AdBuildingSignDetailPart:_ResetTransform()
@@ -43,7 +42,6 @@ end
 --
 function AdBuildingSignDetailPart:_getComponent(transform)
     --top
-    self.xBtn = transform:Find("root/closeBtn").gameObject --返回
     self.scroll = transform:Find("root/down/Scroll"):GetComponent('ActiveLoopScrollRect')
 
 end
@@ -73,10 +71,6 @@ function AdBuildingSignDetailPart:m_GetAllMyFlowSign(data)
         end
         self.scroll:ActiveLoopScroll(self.sign, #datainfo)
     end
-end
-
-function AdBuildingSignDetailPart:OnXBtn(go)
-    go.groupClass.TurnOffAllOptions(go.groupClass)
 end
 
 function AdBuildingSignDetailPart:Show(data)

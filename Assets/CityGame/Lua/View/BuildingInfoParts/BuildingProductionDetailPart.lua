@@ -291,20 +291,21 @@ function BuildingProductionDetailPart:Update()
         self.oneTimeText.text = "00:00"
         self.timeSlider.value = 0
         UpdateBeat:Remove(self.Update,self)
-        return
-    end
-    local goodsKey = 22
-    if Math_Floor(self.itemId / 100000) == goodsKey then
-        --原料不足时
-        if self:CheckMaterial(self.itemId) == false then
-            --self.timeText.text = "00:00:00"
-            UpdateBeat:Remove(self.Update,self)
-            self.oneTimeText.text = "00:00"
-            self.timeSlider.value = 0
-            self.tipText.text = "原料不足无法生产!!!"
-            return
+
+        local goodsKey = 22
+        if Math_Floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                --self.timeText.text = "00:00:00"
+                UpdateBeat:Remove(self.Update,self)
+                self.oneTimeText.text = "00:00"
+                self.timeSlider.value = 0
+                self.tipText.text = "原料不足无法生产!!!"
+                return
+            end
         end
     end
+
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second

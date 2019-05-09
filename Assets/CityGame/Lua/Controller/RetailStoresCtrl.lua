@@ -73,18 +73,18 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
             RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             self.groupMgr = BuildingInfoMainGroupMgr:new(RetailStoresPanel.groupTrans, self.retailStoresBehaviour)
             if self.m_data.isOther then
-                self.groupMgr:AddParts(BuildingShelfPart,0.5)
+                self.groupMgr:AddParts(BuildingShelfPart,1)
                 self.groupMgr:AddParts(TurnoverPart,0)
                 self.groupMgr:AddParts(BuildingSalaryPart,0)
                 --self.groupMgr:AddParts(BuildingSignPart,0.5)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
-                self.groupMgr:AddParts(BuildingShelfPart,0.2)
-                self.groupMgr:AddParts(TurnoverPart,0.2)
-                self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+                self.groupMgr:AddParts(BuildingShelfPart,0.25)
+                self.groupMgr:AddParts(TurnoverPart,0.25)
+                self.groupMgr:AddParts(BuildingSalaryPart,0.25)
                 --self.groupMgr:AddParts(BuildingSignPart,0.2)
-                self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+                self.groupMgr:AddParts(BuildingWarehousePart,0.25)
                 RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             end
             RetailStoresPanel.groupTrans.localScale = Vector3.one
@@ -123,11 +123,11 @@ function RetailStoresCtrl:_refreshSalary(data)
 
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(RetailStoresPanel.groupTrans, self.retailStoresBehaviour)
-            self.groupMgr:AddParts(BuildingShelfPart,0.2)
-            self.groupMgr:AddParts(TurnoverPart,0.2)
-            self.groupMgr:AddParts(BuildingSalaryPart,0.2)
+            self.groupMgr:AddParts(BuildingShelfPart,0.25)
+            self.groupMgr:AddParts(TurnoverPart,0.25)
+            self.groupMgr:AddParts(BuildingSalaryPart,0.25)
             --self.groupMgr:AddParts(BuildingSignPart,0.2)
-            self.groupMgr:AddParts(BuildingWarehousePart,0.2)
+            self.groupMgr:AddParts(BuildingWarehousePart,0.25)
             RetailStoresPanel.bubbleMessageBtn.transform.localScale = Vector3.one
             RetailStoresPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()

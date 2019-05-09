@@ -8,6 +8,7 @@
 
 QueneCtrl = class('QueneCtrl',UIPanel)
 UIPanel:ResgisterOpen(QueneCtrl) --注册打开的方法
+local insTable = {}
 --构建函数
 function QueneCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -25,7 +26,6 @@ local panel,luabehaviour,this
 
 --todo：刷新
 function QueneCtrl:Refresh()
-
     Event.AddListener("c_updateQuque",self.c_updateQuque,self)
     self:ChangeLanguage()
 
@@ -51,6 +51,11 @@ end
 
 --返回
 function QueneCtrl:OnClick_backBtn(ins)
+    --ins.loopScrollDataSource = nil
+    for i, v in pairs(insTable) do
+        destroy(v.transform.gameObject)
+    end
+    insTable = {}
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
@@ -122,11 +127,15 @@ function QueneCtrl:c_updateQuque(data)
         else
             self.m_data.data = handleData(data.data)
         end
+       local dataName = {}
+        for i, v in ipairs(self.m_data.data) do
+            dataName[i] = self.m_data.name
+        end
+        panel.loopScrol:ActiveDiffItemLoop(self.loopScrollDataSource, dataName)
 
-        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, #self.m_data.data,data.name)
 
     else
-        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, 0,data.name)
+        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource,0)
     end
 end
 
@@ -136,7 +145,7 @@ function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
     data.ids =  idx
-    this.m_data.insClass:new(data, transform,luabehaviour)
+    insTable[idx] = this.m_data.insClass:new(data, transform,luabehaviour)
 end
 
 function QueneCtrl.CollectClearData(transform)

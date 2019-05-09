@@ -41,7 +41,7 @@ function InventSetPopCtrl:OnConfirm(ins)
             return
         end
 
-        local price = tonumber(panel.price.text)
+        local price = GetServerPriceNumber(panel.price.text)
         local count = tonumber(panel.time.text)
 
         Event.Brocast("c_UpdateInventSet",count,price)

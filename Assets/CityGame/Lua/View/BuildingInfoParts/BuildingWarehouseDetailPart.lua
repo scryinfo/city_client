@@ -5,10 +5,11 @@
 ---建筑主界面仓库详情界面
 BuildingWarehouseDetailPart = class('BuildingWarehouseDetailPart',BuildingBaseDetailPart)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function BuildingWarehouseDetailPart:PrefabName()
     return "BuildingWarehouseDetailPart"
 end
-
 function BuildingWarehouseDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --仓库数据
@@ -33,6 +34,7 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
+    --合并两张表
     self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
     self:initializeUiInfoData(self.warehouseDataInfo)
 end
@@ -66,6 +68,9 @@ function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
     end,self)
     mainPanelLuaBehaviour:AddClick(self.transportBtn.gameObject,function()
         self:clickTransportBtn()
+    end,self)
+    mainPanelLuaBehaviour:AddClick(self.sortingBtn.gameObject,function()
+        self:clickSortingBtn()
     end,self)
 end
 
@@ -115,6 +120,8 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
+    self.nowState = ItemScreening.all
+    self.nowStateText.text = "All"
     if not storeData or next(storeData) == nil then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
@@ -158,6 +165,40 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.itemPrefabTab = self.transportTab
     data.stateType = GoodsItemStateType.transport
     ct.OpenCtrl("NewTransportBoxCtrl",data)
+end
+--切换分类
+function BuildingWarehouseDetailPart:clickSortingBtn()
+    --if next(self.warehouseDataInfo) == nil then
+    --    Event.Brocast("SmallPop","仓库是空的", 300)
+    --    return
+    --end
+    if self.nowState == ItemScreening.all then
+        --原料
+        self.nowState = ItemScreening.material
+        self.nowStateText.text = "Material"
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self.materialDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
+        self:CreateGoodsItems(self.materialDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    elseif self.nowState == ItemScreening.material then
+        --商品
+        self.nowState = ItemScreening.goods
+        self.nowStateText.text = "Goods"
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self.goodsDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
+        self:CreateGoodsItems(self.goodsDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    elseif self.nowState == ItemScreening.goods then
+        --全部
+        self.nowState = ItemScreening.all
+        self.nowStateText.text = "All"
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self:CreateGoodsItems(self.warehouseDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    end
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
 --添加运输列表
@@ -360,4 +401,21 @@ function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
         end
     end
     return targetTab
+end
+--分类
+function BuildingWarehouseDetailPart:screeningTabInfo(data,type)
+    local materialKey,goodsKey = 21,22
+    local targetTable = {}
+    for key,value in pairs(data) do
+        if type == ItemScreening.material then
+            if ToNumber(StringSun(key,1,2)) == materialKey then
+                targetTable[#targetTable + 1] = ct.deepCopy(value)
+            end
+        elseif type == ItemScreening.goods then
+            if ToNumber(StringSun(key,1,2)) == goodsKey then
+                targetTable[#targetTable + 1] = ct.deepCopy(value)
+            end
+        end
+    end
+    return targetTable
 end

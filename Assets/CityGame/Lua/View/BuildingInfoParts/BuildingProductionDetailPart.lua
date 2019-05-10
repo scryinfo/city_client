@@ -284,15 +284,6 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --刷新时间
 function BuildingProductionDetailPart:Update()
-    ---刷新总时间
-    --检查正在生产中的总时间
-    if self.time == nil or self.time <= 0 then
-        self.timeText.text = "00:00:00"
-        self.oneTimeText.text = "00:00"
-        self.timeSlider.value = 0
-        UpdateBeat:Remove(self.Update,self)
-        return
-    end
     local goodsKey = 22
     if Math_Floor(self.itemId / 100000) == goodsKey then
         --原料不足时
@@ -305,6 +296,16 @@ function BuildingProductionDetailPart:Update()
             return
         end
     end
+    ---刷新总时间
+    --检查正在生产中的总时间
+    if self.time == nil or self.time <= 0 then
+        self.timeText.text = "00:00:00"
+        self.oneTimeText.text = "00:00"
+        self.timeSlider.value = 0
+        UpdateBeat:Remove(self.Update,self)
+        return
+    end
+
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second

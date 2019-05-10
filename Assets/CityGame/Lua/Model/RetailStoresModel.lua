@@ -174,7 +174,6 @@ function RetailStoresModel:n_OnShelfDelInfo(data)
         Event.Brocast("SmallPop", GetLanguage(27010003), 300)
     end
     Event.Brocast("downShelfSucceed",data)
-    --Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function RetailStoresModel:n_OnAddLineInfo(data)

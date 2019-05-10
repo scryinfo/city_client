@@ -34,15 +34,16 @@ function BuildingBaseDetailPart:CreatedWaitingQueue(dataInfo,itemPrefab,itemRoot
     local lineItemIns = className:new(dataInfo,objPrefab,behaviour,goodsType)
     table.insert(instanceTable,lineItemIns)
 end
-----生成itemPrefab(生成一个)
---function BuildingBaseDetailPart:CreateGoodsItem(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable)
---    if not dataInfo then
---        return
---    end
---    local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
---    local itemGoodsIns = className:new(dataInfo,obj,behaviour,#instanceTable + 1)
---    table.insert(instanceTable,itemGoodsIns)
---end
+--生成itemPrefab(生成一个)
+function BuildingBaseDetailPart:CreateGoodsItem(dataInfo,itemPrefab,itemRoot,className,behaviour,instanceTable,goodsType,...)
+    if not dataInfo then
+        return
+    end
+    local arg = {}
+    local obj = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
+    local itemGoodsIns = className:new(dataInfo,obj,behaviour,#instanceTable + 1,goodsType,arg)
+    table.insert(instanceTable,itemGoodsIns)
+end
 ----生成itemPrefab(点击一次生成一次)
 --function BuildingBaseDetailPart:CreateGoodsDetails(dataInfo,itemPrefab,itemRoot,className,behaviour,id,instanceTable)
 --    if not dataInfo then

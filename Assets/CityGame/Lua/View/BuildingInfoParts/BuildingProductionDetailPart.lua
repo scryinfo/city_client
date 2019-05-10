@@ -410,7 +410,7 @@ function BuildingProductionDetailPart:updateNowLine(data)
         end
     end
 end
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---临时删除一条代生产的线
 function BuildingProductionDetailPart:updateListLine(id)
     if next(self.waitingQueueIns) == nil then
@@ -420,7 +420,6 @@ function BuildingProductionDetailPart:updateListLine(id)
         table.remove(self.waitingQueueIns,id)
     end
 end
-----------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --如果生产中是商品，检查原料够不够
 function BuildingProductionDetailPart:CheckMaterial(itemId)

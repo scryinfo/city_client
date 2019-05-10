@@ -4,9 +4,9 @@
 --- DateTime: 2019/2/27 18:13
 ---
 MapGroundAucItem = class('MapGroundAucItem', MapBubbleBase)
-MapGroundAucItem.nowColor = Vector3.New(255, 206, 101)
-MapGroundAucItem.soonColor = Vector3.New(161, 174, 219)
-MapGroundAucItem.selectColor = Vector3.New(251, 89, 87)
+MapGroundAucItem.nowColor = Vector3.New(255, 179, 1)
+MapGroundAucItem.soonColor = Vector3.New(121, 137, 197)
+MapGroundAucItem.selectColor = Vector3.New(251, 88, 88)
 
 EGAucState =
 {

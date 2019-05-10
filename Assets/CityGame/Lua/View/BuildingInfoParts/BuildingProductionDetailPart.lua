@@ -88,6 +88,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
+    self.addBg = transform:Find("contentRoot/content/rightRoot/content/addBg")
     self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
 
     self.lineItemPrefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/LineItem").gameObject
@@ -148,7 +149,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
-        self.lineNumberText.text = 0 .."/"..0
+        self.lineNumberText.text = 0 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
     else
         self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
@@ -204,8 +205,12 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 self.tipText.text = "原料不足无法生产!!!"
             end
         end
-
-        self.lineNumberText.text = #lineData.."/"..#lineData
+        self.lineNumberText.text = #lineData.."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
+        if #lineData == PlayerBuildingBaseData[self.m_data.info.mId].lineNum then
+            self.addBg.transform.localScale = Vector3.zero
+        else
+            self.addBg.transform.localScale = Vector3.one
+        end
         --判断当前有没有代生产队列
         if #lineData == 1 then
             self.noLineTip.text = "you can add some production lines."
@@ -411,13 +416,22 @@ function BuildingProductionDetailPart:updateNowLine(data)
     end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----临时删除一条代生产的线
+---临时删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)
     if next(self.waitingQueueIns) == nil then
         return
     else
         destroy(self.waitingQueueIns[id].prefab.gameObject)
         table.remove(self.waitingQueueIns,id)
+    end
+    if #self.waitingQueueIns + 1 == PlayerBuildingBaseData[self.m_data.info.mId].lineNum then
+        self.addBg.transform.localScale = Vector3.zero
+    else
+        self.addBg.transform.localScale = Vector3.one
+    end
+    self.lineNumberText.text = #self.waitingQueueIns + 1 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
+    if next(self.waitingQueueIns) == nil then
+        self.noLineTip.transform.localScale = Vector3.one
     end
 end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -24,14 +24,26 @@ end
 
 local panel,luabehaviour,this
 
+function QueneCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
+end
 --todo：刷新
 function QueneCtrl:Refresh()
-    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
     self:ChangeLanguage()
-
     self:c_updateQuque(self.m_data)
 end
 
+function QueneCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("c_updateQuque",self.c_updateQuque,self)
+    if insTable then
+        for i, v in pairs(insTable) do
+            destroy(v.transform.gameObject)
+        end
+        insTable = {}
+    end
+end
 
 function QueneCtrl:Awake(go)
     panel = QuenePanel
@@ -43,7 +55,6 @@ function QueneCtrl:Awake(go)
     self.loopScrollDataSource.mProvideData =self.ReleaseData
     self.loopScrollDataSource.mClearData = self.CollectClearData
 
-
 end
 
 ---====================================================================================点击函数==============================================================================================
@@ -51,11 +62,6 @@ end
 
 --返回
 function QueneCtrl:OnClick_backBtn(ins)
-    --ins.loopScrollDataSource = nil
-    for i, v in pairs(insTable) do
-        destroy(v.transform.gameObject)
-    end
-    insTable = {}
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
@@ -132,8 +138,6 @@ function QueneCtrl:c_updateQuque(data)
             dataName[i] = self.m_data.name
         end
         panel.loopScrol:ActiveDiffItemLoop(self.loopScrollDataSource, dataName)
-
-
     else
         panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource,0)
     end

@@ -168,10 +168,6 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
 end
 --切换分类
 function BuildingWarehouseDetailPart:clickSortingBtn()
-    --if next(self.warehouseDataInfo) == nil then
-    --    Event.Brocast("SmallPop","仓库是空的", 300)
-    --    return
-    --end
     if self.nowState == ItemScreening.all then
         --原料
         self.nowState = ItemScreening.material

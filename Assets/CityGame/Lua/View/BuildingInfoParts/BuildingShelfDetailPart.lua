@@ -113,10 +113,17 @@ function BuildingShelfDetailPart:_language()
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
+    --TODO  暂时隐藏货架分类
+    self.sortingBtn.transform.localScale = Vector3.zero
     --是否是自己打开
     if self.m_data.isOther == true then
         self.contentAddBg.gameObject:SetActive(false)
-        self.buyBtn.transform.localScale = Vector3.one
+        --如果是零售店，也要隐藏购买列表
+        if self.m_data.buildingType == BuildingType.RetailShop then
+            self.buyBtn.transform.localScale = Vector3.zero
+        else
+            self.buyBtn.transform.localScale = Vector3.one
+        end
         self.number.transform.localScale = Vector3.zero
     else
         self.contentAddBg.gameObject:SetActive(true)

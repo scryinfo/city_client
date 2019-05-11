@@ -285,14 +285,14 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
                 return
             end
         end
-        local dataInfo = {}
-        local key = {}
-        dataInfo.key = key
-        dataInfo.key.id = data.iKey.id
-        dataInfo.key.producerId = data.iKey.producerId
-        dataInfo.key.qty = data.iKey.qty
-        dataInfo.n = data.nowCount
-        self:CreateGoodsItem(dataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+        --local dataInfo = {}
+        --local key = {}
+        --dataInfo.key = key
+        --dataInfo.key.id = data.iKey.id
+        --dataInfo.key.producerId = data.iKey.producerId
+        --dataInfo.key.qty = data.iKey.qty
+        --dataInfo.n = data.nowCount
+        --self:CreateGoodsItem(dataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end
 --运输成功回调

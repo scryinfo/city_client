@@ -169,11 +169,11 @@ function RetailStoresModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)
+    Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
         Event.Brocast("SmallPop", GetLanguage(27010003), 300)
     end
-    Event.Brocast("downShelfSucceed",data)
 end
 --添加生产线
 function RetailStoresModel:n_OnAddLineInfo(data)

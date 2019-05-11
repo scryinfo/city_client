@@ -30,7 +30,7 @@ function VolumePanel.InitPanel()
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")
     this.content = transform:Find("Volume/title/content"):GetComponent("Text")
     this.playercurrRoot = transform:Find("playercurr");
-    this.firstScroll =this. playercurrRoot:Find("topRoot/firstScroll/Viewport/Content");
+    this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content");
     this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/Content");
 
     --left
@@ -38,6 +38,10 @@ function VolumePanel.InitPanel()
     this.turnoverRect = transform:Find("leftBg/moneyBg"):GetComponent("RectTransform");
     this.playerRect = transform:Find("leftBg/player"):GetComponent("RectTransform");
     this.infoBgrRect = transform:Find("leftBg/infoBg"):GetComponent("RectTransform");
+    this.TradingImg = transform:Find("leftBg/infoBg/Tradingvolume/count"):GetComponent("Text");     --玩家交易量
+    this.Tradingvolume = transform:Find("leftBg/infoBg/Tradingvolume/name");
+    this.Tradingnum = transform:Find("leftBg/infoBg/Tradingnum/count"):GetComponent("Text");        --玩家人数
+    this.TradingImg = transform:Find("leftBg/infoBg/Tradingnum/name"):GetComponent("Text");
 
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额

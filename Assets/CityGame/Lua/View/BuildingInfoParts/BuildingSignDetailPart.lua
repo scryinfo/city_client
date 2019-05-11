@@ -35,9 +35,9 @@ function BuildingSignDetailPart:Show(data)
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
-    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
-        self:clickCloseBtn()
-    end , self)
+    --mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
+    --    self:clickCloseBtn()
+    --end , self)
     mainPanelLuaBehaviour:AddClick(self.settingBtn.gameObject, function ()
         self:clickSettingBtn()
     end , self)
@@ -83,7 +83,7 @@ end
 --
 function BuildingSignDetailPart:_RemoveClick()
     self.timeSlider.onValueChanged:RemoveAllListeners()
-    self.closeBtn.onClick:RemoveAllListeners()
+    --self.closeBtn.onClick:RemoveAllListeners()
     self.selfSignDelBtn.onClick:RemoveAllListeners()
     self.settingBtn.onClick:RemoveAllListeners()
     self.otherSignBtn.onClick:RemoveAllListeners()
@@ -120,7 +120,7 @@ function BuildingSignDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("root/closeBtn"):GetComponent("Button")
+    --self.closeBtn = transform:Find("root/closeBtn"):GetComponent("Button")
     self.settingBtn = transform:Find("root/settingBtn"):GetComponent("Button")
     self.otherSignBtn = transform:Find("root/otherSignBtn"):GetComponent("Button")
 

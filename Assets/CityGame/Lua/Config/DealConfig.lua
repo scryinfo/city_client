@@ -107,8 +107,8 @@ DealConfig={
                 name = "大衣",
                 typeId= "2252203"
             }
-
-        },
+        }
+    },
         [4] = {
             name = "推广",--名字
 
@@ -149,9 +149,12 @@ DealConfig={
             }
         },
         [6] = {
-            name = "仓库租用",--名字
-            typeId = 17
-
+            name = "仓库租用", --名字
+            childs = {
+                [1] = {
+                    name = "无",
+                    typeId = 17
+                },
+            }
         },
-    }
 }

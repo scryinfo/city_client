@@ -85,6 +85,7 @@ function VolumeCtrl:Awake()
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
+
     self.initData()
     --滑动互用
     self.supplyDemand = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -92,6 +93,15 @@ function VolumeCtrl:Awake()
     self.supplyDemand.mClearData = VolumeCtrl.static.SupplyDemandClearData
 
 
+    -- 第一层信息展示
+    self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.evaOptionTwoSource.mProvideData = VolumeCtrl.static.evaOptionTwoData
+    self.evaOptionTwoSource.mClearData = VolumeCtrl.static.evaOptionTwoClearData
+
+    -- 第二层信息展示
+    self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.evaOptionThereSource.mProvideData = VolumeCtrl.static.evaOptionThereData
+    self.evaOptionThereSource.mClearData = VolumeCtrl.static.evaOptionThereClearData
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.Update, self), 1, -1, true)
@@ -355,7 +365,7 @@ function VolumeCtrl:OncitzenRect(ins)
            0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
-
+    VolumePanel.playercurrRoot.gameObject:SetActive(false)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 0),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
@@ -375,13 +385,36 @@ function VolumeCtrl:OnplayerRect(ins)
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.one
+    VolumePanel.playercurrRoot.gameObject:SetActive(true)
+    --VolumePanel.Tradingnum.text =
 
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
     ins:initPayerVolume()
+
 end
 
 function VolumeCtrl:initPayerVolume()
-    InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
+    local temps ={}
+    --InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
+
+end
+
+-- 第一层信息显示
+VolumeCtrl.static.evaOptionTwoData = function(transform, idx)
+    idx = idx + 1
+    VolumeCtrl.optionTwoScript[idx] = ToggleBtnItem:new(transform, 2, idx)
+end
+
+VolumeCtrl.static.evaOptionTwoClearData = function(transform)
+end
+
+-- 第二层信息显示
+VolumeCtrl.static.evaOptionThereData = function(transform, idx)
+    idx = idx + 1
+    VolumeCtrl.optionThereScript[idx] = ToggleBtnItem:new(transform, 3, idx)
+end
+
+VolumeCtrl.static.evaOptionThereClearData = function(transform)
 end

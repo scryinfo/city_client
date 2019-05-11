@@ -86,7 +86,7 @@ function BuildingRentWarehouseDetailPart:_getComponent(transform)
     self.time = transform:Find("contentRoot/contentTop/infoBg/time"):GetComponent("Text")
     self.timeText = transform:Find("contentRoot/contentTop/infoBg/time/timeText"):GetComponent("Text")
     self.addBtnBg = transform:Find("contentRoot/contentTop/addBtn/addBtnBg")
-    self.earningScroll = transform:Find("contentRoot/contentTop/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
+    self.earningScroll = transform:Find("contentRoot/contentTop/ScrollView/Viewport"):GetComponent("ActiveLoopScrollRect")
 end
 
 function BuildingRentWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)

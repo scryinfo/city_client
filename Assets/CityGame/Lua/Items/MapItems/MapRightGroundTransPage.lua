@@ -44,7 +44,7 @@ function MapRightGroundTransPage:refreshData(data)
     if data.detailData.groundState == GroundTransState.Sell then
         self.sellRoot.localScale = Vector3.one
         self.rentRoot.localScale = Vector3.zero
-        self.typeText.text = "Land rent"
+        self.typeText.text = "Land sell"
         --self.typeText.text = GetLanguage(12345678)
 
         if self.sellPriceItem == nil then
@@ -56,7 +56,7 @@ function MapRightGroundTransPage:refreshData(data)
     elseif data.detailData.groundState == GroundTransState.Rent then
         self.rentRoot.localScale = Vector3.one
         self.sellRoot.localScale = Vector3.zero
-        self.typeText.text = "Land sell"
+        self.typeText.text = "Land rent"
 
         if self.rentTimeItem == nil then
             self.rentTimeItem = MapRightShowInfoItem:new(self.rentTime)
@@ -92,9 +92,12 @@ function MapRightGroundTransPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundTransPage:_goHereBtn()
-    local tempServerPos = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
+    local blockId = self.data.detailData.blockId
+    local tempServerPos = TerrainManager.BlockIDTurnPosition(blockId)
     local temp = {x = tempServerPos.x, y = tempServerPos.z}
     MapBubbleManager.GoHereFunc(temp)
+
+    ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockId})
 end
 --
 function MapRightGroundTransPage:_initPersonalInfo(info)

@@ -50,7 +50,7 @@ function MapPanel.InitPanel()
     this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform")  --打开左侧搜索框的按钮
     this.closeSearchBtn = transform:Find("leftRoot/typeOpen/closeSearchBtn"):GetComponent("RectTransform")  --关闭搜索主界面按钮
     this.typeOpenRect = transform:Find("leftRoot/typeOpen"):GetComponent("RectTransform")  --搜索主界面
-    this.loadingImg = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
+    this.loadingImgTran = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
     this.typeItemParent = transform:Find("leftRoot/typeOpen/typeItemParent")  --搜索类型父物体
 
     --详情页面

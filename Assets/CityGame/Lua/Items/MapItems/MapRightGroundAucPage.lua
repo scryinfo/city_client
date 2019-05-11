@@ -133,8 +133,11 @@ function MapRightGroundAucPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundAucPage:_goHereBtn()
+    local tempData = self.data
     local temp = GroundAucConfig[self.data.id].area[1]
     MapBubbleManager.GoHereFunc(temp)
+
+    ct.OpenCtrl("GroundAuctionCtrl", tempData)
 end
 
 ------------------

@@ -729,6 +729,19 @@ UnitTest.Exec("abel_0428_queryflowList", "e_queryflowList",  function ()
     end)
 end)
 
-
+UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
+    Event.AddListener("e_ModyfyMyBrandName", function (pid, typeId)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",function(msg)
+            local test = 100
+        end)
+        --发包测试
+        local msgId = pbl.enum("gscode.OpCode","modyfyMyBrandName")
+        ----2、 填充 protobuf 内部协议数据
+        local lMsg = { pid = pid,typeId=typeId}
+        ----3、 序列化成二进制数据
+        local  pMsg = assert(pbl.encode("gs.ModyfyMyBrandName", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end)
+end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

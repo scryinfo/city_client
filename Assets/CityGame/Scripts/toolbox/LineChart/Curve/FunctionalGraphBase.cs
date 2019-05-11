@@ -49,11 +49,11 @@ public class FunctionalGraphBase:MonoBehaviour
     /// 
     /// X轴刻度
     /// 
-    [Range(20f, 120)] public float XScaleValue = 100f;
+    [Range(20f, 150)] public float XScaleValue = 100f;
     /// 
     /// Y轴刻度
     /// s
-    [Range(20f, 120)] public float YScaleValue = 100f;
+    [Range(20f, 150)] public float YScaleValue = 100f;
     /// 
     /// 刻度的长度
     /// 

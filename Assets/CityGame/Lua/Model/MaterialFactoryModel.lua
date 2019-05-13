@@ -163,6 +163,8 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
+    --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
+    UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data)

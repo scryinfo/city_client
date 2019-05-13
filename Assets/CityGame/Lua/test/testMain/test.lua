@@ -730,14 +730,29 @@ UnitTest.Exec("abel_0428_queryflowList", "e_queryflowList",  function ()
 end)
 
 UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
-    Event.AddListener("e_ModyfyMyBrandName", function (pid, typeId)
+    Event.AddListener("e_ModyfyMyBrandName", function (stream)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",function(msg)
-            local test = 100
+            --查询我的品牌数据
+            DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",function(msg)
+                local t = 0
+            end)
+
+            --发包测试
+            local msgId = pbl.enum("gscode.OpCode","queryMyBrands")
+            ----2、 填充 protobuf 内部协议数据
+            local lMsg = { type = stream.info.mId/100000,bId = stream.info.id,pId=stream.info.ownerId }
+            ----3、 序列化成二进制数据
+            local  pMsg = assert(pbl.encode("gs.QueryMyBrands", lMsg))
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+
         end)
+        if #stream.line == 0 then
+            return
+        end
         --发包测试
         local msgId = pbl.enum("gscode.OpCode","modyfyMyBrandName")
         ----2、 填充 protobuf 内部协议数据
-        local lMsg = { pid = pid,typeId=typeId}
+        local lMsg = { pId = stream.info.ownerId,typeId=stream.line[1].itemId, newBrandName = "haha"..tolua.gettime()}
         ----3、 序列化成二进制数据
         local  pMsg = assert(pbl.encode("gs.ModyfyMyBrandName", lMsg))
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)

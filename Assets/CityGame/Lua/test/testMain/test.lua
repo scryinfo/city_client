@@ -59,7 +59,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 end
                 ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
             end
-        end, 18, 1)
+        end, 90, 1)
         timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()

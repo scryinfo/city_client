@@ -59,7 +59,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 end
                 ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
             end
-        end, 6, 1)
+        end, 18, 1)
         timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()
@@ -72,7 +72,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
                 CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
             end
-        end, 30, 1)
+        end, 6, 1)
         timerSendHartBeat:Start()
     end)
 end)
@@ -746,6 +746,9 @@ UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
             CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 
         end)
+        if stream.line == nil then
+            return
+        end
         if #stream.line == 0 then
             return
         end

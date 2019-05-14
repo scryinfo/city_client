@@ -764,4 +764,13 @@ UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
     end)
 end)
 
+UnitTest.Exec("abel_0512_materialConsumedInform", "e_materialConsumedInform",  function ()
+    Event.AddListener("e_materialConsumedInform", function (bid)
+        ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","materialConsumedInform","gs.materialConsumedInform",function(msg)
+            local test = 100
+            DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","queryMyBrands",ct.cb)
+        end)
+    end)
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

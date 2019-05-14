@@ -23,6 +23,7 @@ function BuildingWarehousePart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
+    UnitTest.Exec_now("abel_0512_materialConsumedInform", "e_materialConsumedInform")
 end
 
 function BuildingWarehousePart:_ResetTransform()

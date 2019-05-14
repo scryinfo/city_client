@@ -731,9 +731,11 @@ end)
 
 UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
     Event.AddListener("e_ModyfyMyBrandName", function (stream)
-        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",function(msg)
+        local cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",function(msg)
+            DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","modyfyMyBrandName",cb)
             --查询我的品牌数据
-            DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",function(msg)
+            cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",function(msg)
+                DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","queryMyBrands",cb)
                 local t = 0
             end)
 

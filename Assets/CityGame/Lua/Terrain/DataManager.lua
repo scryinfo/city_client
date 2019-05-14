@@ -892,7 +892,7 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
             end
             --该消息监听的无参回调如果有
             for k, fun in pairs(ModelNetMsgStackNoIns[newMsgId]) do
-                if fun ~= nil then
+                if fun ~= nil and fun.fun ~= nil then
                     if fun.ins == nil then
                         fun.fun(protoData,newMsgId)
                     else
@@ -913,7 +913,15 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         if ModelNetMsgStackNoIns[newMsgId] == nil then
             ModelNetMsgStackNoIns[newMsgId] = {}
         end
-        ModelNetMsgStackNoIns[newMsgId][callBackMethord] = {ins = InstantiateSelf,fun = callBackMethord}
+        local exist = false
+        for i = 1, #ModelNetMsgStackNoIns[newMsgId] do
+            if ModelNetMsgStackNoIns[newMsgId][i].fun == callBackMethord then
+                exist = true
+            end
+        end
+        if exist == false then
+            table.insert(ModelNetMsgStackNoIns[newMsgId],{ins = InstantiateSelf,fun = callBackMethord})
+        end
     end
     return callBackMethord
 end
@@ -986,11 +994,9 @@ local noParameters_ModelNoneInsIdRemoveNetMsg
 --移除 无实例Id的消息回调
 function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,fun)
     newMsgId_ModelNoneInsIdRemoveNetMsg = pbl.enum(protoNameStr,protoNumStr)
-
-    noParameters_ModelNoneInsIdRemoveNetMsg = ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"]
-    if noParameters_ModelNoneInsIdRemoveNetMsg ~= nil then
-        for i, value in pairs(noParameters_ModelNoneInsIdRemoveNetMsg) do
-            ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg][fun] = nil
+    for i=#ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg],1,-1 do
+        if ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg][i].fun == fun then
+            table.remove(ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg],i)
         end
     end
 end

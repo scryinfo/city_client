@@ -69,6 +69,24 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Currentpromotion.png",
         ["languageId"] = "Current promotion:",
     },
+    --土地交易
+    ["GroundRentTime"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "Tenancy:",
+    },
+    ["GroundRental"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
+        ["languageId"] = "Rental:",
+    },
+    --土地拍卖
+    ["GAucPrice"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
+        ["languageId"] = "Floor price:",
+    },
+    ["GAucTime"] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
+        ["languageId"] = "Auction time:",
+    },
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息

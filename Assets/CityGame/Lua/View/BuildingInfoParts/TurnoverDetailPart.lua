@@ -61,12 +61,6 @@ end
 
 function TurnoverDetailPart:_setValue(turnover)
     self.turnover = turnover
-    if self.transform then
-        if self.today == nil then
-            self.today = self.transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
-        end
-        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
-    end
 end
 --
 function TurnoverDetailPart:_InitTransform()
@@ -82,13 +76,6 @@ function TurnoverDetailPart:_getComponent(transform)
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
-    if self.today == nil then
-        self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
-    end
-
-    if self.turnover then
-        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
-    end
 end
 --
 function TurnoverDetailPart:_initFunc()
@@ -116,17 +103,15 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         currentTime = currentTime - hour * 3600      
     end
     currentTime = math.floor(currentTime)        --当天0点的时间
-    local monthAgo = currentTime - 2592000       --30天前的0点
+    local monthAgo = currentTime - 2592000 + 86400     --30天前的0点
     local updataTime = monthAgo
     local time = {}
     local boundaryLine = {}
     for i = 1, 30 do
         if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 148)
-        else
-            time[i] = tostring(getFormatUnixTime(updataTime).day)
         end
+        time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
         updataTime = updataTime + 86400
     end
     buildingTs = math.floor(buildingTs/1000)
@@ -173,6 +158,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             updataTime = updataTime + 86400
         end
     end
+    turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
     local turnover = {}
     for i, v in ipairs(turnoverTab) do
         turnover[i] = Vector2.New(v.coordinate,v.money)

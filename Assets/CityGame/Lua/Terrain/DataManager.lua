@@ -1628,8 +1628,10 @@ function DataManager.IsOwnerGround(tempPos)
     if PersonDataStack.m_groundInfos ~= nil then
         for key, value in pairs(PersonDataStack.m_groundInfos) do
             --一定要判断自己的地没有租出去
-            if value.x == tempGridIndex_IsOwnerGround.x and value.y == tempGridIndex_IsOwnerGround.y and value.rent == nil  then
-                return true
+            if value.x == tempGridIndex_IsOwnerGround.x and value.y == tempGridIndex_IsOwnerGround.y then
+                if value.rent == nil or (value.rent ~= nil and value.rent.renterId == nil) then
+                    return true
+                end
             end
         end
     end

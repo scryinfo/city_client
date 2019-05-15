@@ -60,7 +60,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         } 
     }
-    public void SetXScaleValue(string[] str ,int value)
+    public void SetXScaleValue(string[] str ,int value )
     {
         if (str.Length > XScaleValue.Count)
         {
@@ -68,7 +68,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 for (int i = 1; i < XScaleValue.Count; i++)
                 {
-                    XScaleValue[i-1].transform.localPosition = new Vector3(value * i - 60, -60, 0);
+                    XScaleValue[i-1].transform.localPosition = new Vector3(value * i, -60, 0);
                     XScaleValue[i-1].GetComponent<Text>().text = str[i];
                 }
             }
@@ -79,7 +79,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 RectTransform go = gameObject.GetComponent<RectTransform>();
                 go.transform.parent = transform;
                 go.localScale = Vector3.one;
-                go.localPosition = new Vector3(value * i - 60, -60, 0);
+                go.localPosition = new Vector3(value * i, -60, 0);
                 go.GetComponent<Text>().text = str[i];
                 XScaleValue.Add(go.gameObject);
             }
@@ -109,7 +109,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 {
                     for (int i = 1; i < str.Length; i++)
                     {
-                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i];
+                        Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i] + new Vector2(0, 10f);
                         Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].transform.localScale = Vector3.one;
                         Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].GetComponent<Text>().color = color;
                         Coordinate[i + (str.Length - 1) * (GraphBase.MaxNum - 1) - 1].GetComponent<Text>().text = value[i].y.ToString();
@@ -133,7 +133,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 {
                     for (int i = 1; i < str.Length; i++)
                     {
-                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i];
+                        Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].transform.localPosition = str[i] + new Vector2(0, 10f);
                         Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].transform.localScale = Vector3.one;
                         Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].GetComponent<Text>().color = color;
                         Coordinate[i + (str.Length - 1) * (count % GraphBase.MaxNum - 1) - 1].GetComponent<Text>().text = value[i].y.ToString();
@@ -163,8 +163,8 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     RectTransform go = gameObject.GetComponent<RectTransform>();
                     go.transform.parent = transform;
                     go.localScale = Vector3.one;
-                    go.GetComponent<Text>().alignment = TextAnchor.LowerLeft;
-                    go.localPosition = str[i];
+                    go.GetComponent<Text>().alignment = TextAnchor.LowerCenter;
+                    go.localPosition = str[i] + new Vector2(0,10f);
                     go.GetComponent<Text>().color = color;
                     go.GetComponent<Text>().text = value[i].y.ToString();
                     Coordinate.Add(go.gameObject);

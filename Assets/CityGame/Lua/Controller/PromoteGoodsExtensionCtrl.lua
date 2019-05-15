@@ -23,7 +23,7 @@ function PromoteGoodsExtensionCtrl:Awake()
     end
     goodsExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
-    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
+    --goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
 
@@ -179,10 +179,10 @@ end
 
 --关闭界面
 function PromoteGoodsExtensionCtrl:c_ClosePromoteGoodsExtension()
-    --if self.m_data.DataInfo.info.ownerId == myOwnerID then
-    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,true)
-    --else
-    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,false)
-    --end
     UIPanel.ClosePage()
+    if self.m_data.DataInfo.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,true)
+    else
+        DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,false)
+    end
 end

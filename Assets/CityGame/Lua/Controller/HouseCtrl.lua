@@ -90,15 +90,15 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         if houseDetailData.info.state == "OPERATE" then -- 营业中
             self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
             if self.m_data.isOther then -- 别人
-                self.groupMgr:AddParts(BuildingSignPart, 1)
-                self.groupMgr:AddParts(BuildingRentPart, 0)
+                self.groupMgr:AddParts(BuildingRentPart, 1)
+                --self.groupMgr:AddParts(BuildingSignPart, 0)
                 self.groupMgr:AddParts(TurnoverPart, 0)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0)
             else
-                self.groupMgr:AddParts(BuildingRentPart, 0.25)
-                self.groupMgr:AddParts(TurnoverPart, 0.25)
-                self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
-                self.groupMgr:AddParts(BuildingSignPart, 0.25)
+                self.groupMgr:AddParts(BuildingRentPart, 0.3)
+                self.groupMgr:AddParts(TurnoverPart, 0.3)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.4)
+                --self.groupMgr:AddParts(BuildingSignPart, 0.25)
 
             end
             HousePanel.groupTrans.localScale = Vector3.one
@@ -148,10 +148,10 @@ function HouseCtrl:_refreshSalary(data)
 
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-            self.groupMgr:AddParts(BuildingRentPart, 0.25)
-            self.groupMgr:AddParts(TurnoverPart, 0.25)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.25)
-            self.groupMgr:AddParts(BuildingSignPart, 0.25)
+            self.groupMgr:AddParts(BuildingRentPart, 0.3)
+            self.groupMgr:AddParts(TurnoverPart, 0.3)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.4)
+            --self.groupMgr:AddParts(BuildingSignPart, 0.25)
             HousePanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end

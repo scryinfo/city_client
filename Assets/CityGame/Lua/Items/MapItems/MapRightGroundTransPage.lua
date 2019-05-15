@@ -4,34 +4,30 @@
 --- DateTime: 2019/2/27 18:13
 ---土地交易
 MapRightGroundTransPage = class('MapRightGroundTransPage', MapRightPageBase)
+MapRightGroundTransPage.moneyColor = "#F4AD07FF"
 
 --初始化方法
 function MapRightGroundTransPage:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
 
-    self.nameText = viewRect:Find("root/nameBg/nameText"):GetComponent("Text")
-    self.closeBtn = viewRect:Find("root/closeBtn"):GetComponent("Button")
-    self.ownerBtn = viewRect:Find("root/ownerBtn"):GetComponent("Button")
-    self.portraitImg = viewRect:Find("root/ownerBtn/portraitImg")
+    local trans = viewRect.transform
+    self.closeBtn = trans:Find("topRoot/closeBtn"):GetComponent("Button")
+    self.goHereBtn = trans:Find("bottomRoot/goHereBtn"):GetComponent("Button")
+    self.portraitImg = trans:Find("topRoot/protaitRoot/bg")
+    self.nameText = trans:Find("topRoot/nameText"):GetComponent("Text")
+    self.companyText = trans:Find("topRoot/companyText"):GetComponent("Text")
+    self.typeText = trans:Find("topRoot/bg/Text"):GetComponent("Text")  --显示是出租还是出售
 
-    self.sellRoot = viewRect:Find("root/sellRoot")
-    self.sellPriceText = viewRect:Find("root/sellRoot/sellPriceText"):GetComponent("Text")
+    self.rentRoot = trans:Find("bottomRoot/rent")
+    self.rentTime = trans:Find("bottomRoot/rent/showInfoRoot/time")
+    self.rental = trans:Find("bottomRoot/rent/showInfoRoot/rental")
+    self.sellRoot = trans:Find("bottomRoot/sell")
+    self.sellPrice = trans:Find("bottomRoot/sell/showInfoRoot/price")
 
-    self.rentRoot = viewRect:Find("root/rentRoot")
-    self.dayRentalText = viewRect:Find("root/rentRoot/rentalText"):GetComponent("Text")
-    self.rentDayText = viewRect:Find("root/rentRoot/rentDayText"):GetComponent("Text")
-    self.goHereBtn = viewRect:Find("root/goHereBtn"):GetComponent("Button")
-
-    self.titleText01 = viewRect:Find("root/titleText"):GetComponent("Text")
-    self.sellPriceText02 = viewRect:Find("root/sellRoot/Text"):GetComponent("Text")
-    self.tenancyText03 = viewRect:Find("root/rentRoot/Text01"):GetComponent("Text")
-    self.rentalText04 = viewRect:Find("root/rentRoot/Text02"):GetComponent("Text")
+    self.goHereText01 = trans:Find("bottomRoot/goHereBtn/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
-    end)
-    self.ownerBtn.onClick:AddListener(function ()
-        self:_clickPlayerInfoBtn()
     end)
     self.goHereBtn.onClick:AddListener(function ()
         self:_goHereBtn()
@@ -48,12 +44,32 @@ function MapRightGroundTransPage:refreshData(data)
     if data.detailData.groundState == GroundTransState.Sell then
         self.sellRoot.localScale = Vector3.one
         self.rentRoot.localScale = Vector3.zero
-        self.sellPriceText.text = "E"..getPriceString(GetClientPriceString(groundInfo.sell.price), 24, 20)
+        self.typeText.text = "Land sell"
+        --self.typeText.text = GetLanguage(12345678)
+
+        if self.sellPriceItem == nil then
+            self.sellPriceItem = MapRightShowInfoItem:new(self.sellPrice)
+        end
+        local str = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(groundInfo.sell.price))
+        local data1 = {infoTypeStr = "Price", value = str}  --出售价格
+        self.sellPriceItem:initData(data1)
     elseif data.detailData.groundState == GroundTransState.Rent then
         self.rentRoot.localScale = Vector3.one
         self.sellRoot.localScale = Vector3.zero
-        self.rentDayText.text = groundInfo.rent.rentDaysMin.."-"..groundInfo.rent.rentDaysMax
-        self.dayRentalText.text = "E"..getPriceString(GetClientPriceString(groundInfo.rent.rentPreDay), 24, 20)
+        self.typeText.text = "Land rent"
+
+        if self.rentTimeItem == nil then
+            self.rentTimeItem = MapRightShowInfoItem:new(self.rentTime)
+        end
+        if self.rentalItem == nil then
+            self.rentalItem = MapRightShowInfoItem:new(self.rental)
+        end
+        local str1 = string.format("%d-%d(d)", groundInfo.rent.rentDaysMin, groundInfo.rent.rentDaysMax)
+        local data1 = {infoTypeStr = "GroundRentTime", value = str1}  --出租时间
+        local str2 = string.format("<color=%s>E%s</color>/d", MapRightGroundTransPage.moneyColor, GetClientPriceString(groundInfo.rent.rentPreDay))
+        local data2 = {infoTypeStr = "GroundRental", value = str2}  --租金
+        self.rentTimeItem:initData(data1)
+        self.rentalItem:initData(data2)
     end
     self:openShow()
 end
@@ -64,10 +80,8 @@ function MapRightGroundTransPage:openShow()
 end
 --多语言
 function MapRightGroundTransPage:_language()
-    self.titleText01.text = GetLanguage(24040002)
-    self.sellPriceText02.text = GetLanguage(24040004)
-    self.tenancyText03.text = GetLanguage(24050005)
-    self.rentalText04.text = GetLanguage(24050006)
+    --self.goHereText01.text = GetLanguage(24040002)
+    self.goHereText01.text = "Go here"
 end
 --关闭
 function MapRightGroundTransPage:close()
@@ -78,15 +92,19 @@ function MapRightGroundTransPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundTransPage:_goHereBtn()
-    local tempServerPos = TerrainManager.BlockIDTurnPosition(self.data.detailData.blockId)
+    local blockId = self.data.detailData.blockId
+    local tempServerPos = TerrainManager.BlockIDTurnPosition(blockId)
     local temp = {x = tempServerPos.x, y = tempServerPos.z}
     MapBubbleManager.GoHereFunc(temp)
+
+    ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockId})
 end
 --
 function MapRightGroundTransPage:_initPersonalInfo(info)
     local data = info[1]
     if data ~= nil then
         self.nameText.text = data.name
+        self.companyText.text = data.companyName
         self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.portraitImg.transform,0.2)
         self.data.playerInfo = data
     end

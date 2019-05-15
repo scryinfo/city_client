@@ -53,12 +53,11 @@ MapTypeConfig ={
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
     },
-    [7] = {
-        typeId = 7,  --签约
-        languageId = 4301011,
-        name = "签约",
-        selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-signing-red.png",
-        disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-signing-grey.png",
-    },
-
+    --[7] = {
+    --    typeId = 7,  --签约
+    --    languageId = 4301011,
+    --    name = "签约",
+    --    selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-signing-red.png",
+    --    disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-signing-grey.png",
+    --},
 }

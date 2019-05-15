@@ -18,6 +18,7 @@ function MapGroundTransItem:_childInit()
     self.rentBtn = trans:Find("root/groundRent/rentBtn"):GetComponent("Button")
     self.rentText02 = trans:Find("root/groundRent/rentBtn/Text"):GetComponent("Text")
     self.selectTran = trans:Find("root/selectImg")
+    self.selectTranText = trans:Find("root/selectImg/Text"):GetComponent("Text")
 
     self.sellBtn.onClick:AddListener(function ()
         self:_openGroundTransPage()
@@ -40,11 +41,13 @@ function MapGroundTransItem:_setBubbleState(state)
         self.groundRent.localScale = Vector3.zero
         --self.sellText01.text = GetLanguage()
         self.sellText01.text = "SELL"
+        self.selectTranText.text = "SELL"
     elseif state == GroundTransState.Rent then
         self.groundRent.localScale = Vector3.one
         self.groundSell.localScale = Vector3.zero
         --self.rentText02.text = GetLanguage()
         self.rentText02.text = "RENT"
+        self.selectTranText.text = "RENT"
     end
 end
 --
@@ -55,4 +58,3 @@ function MapGroundTransItem:_openGroundTransPage()
     MapCtrl.selectCenterItem(self)
     Event.Brocast("c_MapOpenRightGTransPage", self)
 end
---

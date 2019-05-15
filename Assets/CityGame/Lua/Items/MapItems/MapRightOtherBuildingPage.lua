@@ -94,7 +94,7 @@ function MapRightOtherBuildingPage:showByType(typeData)
             self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
-            --self.buildingNameText.text = self.data.name
+            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self.promotionItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Technology then

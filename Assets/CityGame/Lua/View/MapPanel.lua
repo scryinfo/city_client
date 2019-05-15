@@ -35,7 +35,7 @@ function MapPanel.InitPanel()
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
     this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")  --搜索结果
     this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem")  --搜索总览
-    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItem")  --土地拍卖
+    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItemNew")  --土地拍卖
     this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem")  --土地交易
 
     --
@@ -50,7 +50,7 @@ function MapPanel.InitPanel()
     this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform")  --打开左侧搜索框的按钮
     this.closeSearchBtn = transform:Find("leftRoot/typeOpen/closeSearchBtn"):GetComponent("RectTransform")  --关闭搜索主界面按钮
     this.typeOpenRect = transform:Find("leftRoot/typeOpen"):GetComponent("RectTransform")  --搜索主界面
-    this.loadingImg = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
+    this.loadingImgTran = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
     this.typeItemParent = transform:Find("leftRoot/typeOpen/typeItemParent")  --搜索类型父物体
 
     --详情页面

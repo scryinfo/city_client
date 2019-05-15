@@ -22,7 +22,7 @@ TerrainConfig = {
         ["DetailScale"] = 2.6,  --显示详情的档位
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
-        ["MapLeftPageDuringTime"] = 1,
+        ["MapLeftPageDuringTime"] = 0.1,
         ["MapSize"] = 101,
     },
     ["LoadingConfig"] = {

@@ -16,6 +16,7 @@ function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBuildings","gs.MyBuildingInfos",self.n_OnQueryMyBuildings,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEva","gs.Eva",self.n_OnUpdateMyEva,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerIncomePayCurve","ss.PlayerIncomePayCurve",self.n_OnQueryPlayerIncomePayCurve,self)
 end
 
 -- 查询玩家的土地消息
@@ -57,4 +58,17 @@ end
 -- 服务器返回的Eva加点
 function CompanyModel:n_OnUpdateMyEva(eva)
     Event.Brocast("c_OnUpdateMyEva", eva)
+end
+
+-- 查询玩家的收支信息
+function CompanyModel.m_QueryPlayerIncomePayCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePayCurve")
+    local lMsg = { id = DataManager.GetMyOwnerID() }
+    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+-- 服务器返回的曲线图信息
+function CompanyModel:n_OnQueryPlayerIncomePayCurve(curveInfo)
+    Event.Brocast("c_OnQueryPlayerIncomePayCurve", curveInfo.playerIncome)
 end

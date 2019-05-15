@@ -34,6 +34,7 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.landBtn.gameObject, self.OnLand, self)
     luaBehaviour:AddClick(CompanyPanel.buildingBtn.gameObject, self.OnBuilding, self)
     luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
+    luaBehaviour:AddClick(CompanyPanel.brandBtn.gameObject, self.OnBrand, self)
     luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
     luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
 
@@ -57,6 +58,11 @@ function CompanyCtrl:Awake()
     self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
     self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
 
+    -- 品牌节点
+    self.brandSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.brandSource.mProvideData = CompanyCtrl.static.brandData
+    self.brandSource.mClearData = CompanyCtrl.static.brandClearData
+
     -- 初始化数据
     self:_initData()
 end
@@ -74,8 +80,8 @@ function CompanyCtrl:Active()
 end
 
 function CompanyCtrl:Refresh()
-    self:_updateData()
     self:initInsData()
+    self:_updateData()
     --CityEngineLua.login_tradeapp(true)
 end
 
@@ -91,6 +97,7 @@ function CompanyCtrl:_addListener()
     Event.AddListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
     Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.AddListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
+    Event.AddListener("c_OnQueryPlayerIncomePayCurve", self.c_PromoteSignCurve, self)
 end
 
 -- 注销model层网络回调
@@ -99,6 +106,7 @@ function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
     Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.RemoveListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
+    Event.RemoveListener("c_OnQueryPlayerIncomePayCurve", self.c_PromoteSignCurve, self)
 end
 
 -- 打开model
@@ -112,10 +120,87 @@ function CompanyCtrl:OnBack(go)
     UIPanel.ClosePage()
 end
 
+-- 收支曲线图
+function CompanyCtrl:c_PromoteSignCurve(info)
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    currentTime = math.floor(currentTime)               --当前小时数-整数
+    local monthAgo = currentTime - 2592000     --30天前
+    local updataTime = monthAgo
+    local time = {}
+    local boundaryLine = {}
+    local turnoverTab = {}
+
+    for i = 1, 30 do
+        if tonumber(getFormatUnixTime(updataTime).day) == 1 then
+            time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+            table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 140)
+        else
+            time[i] = tostring(getFormatUnixTime(updataTime).hour)
+        end
+        turnoverTab[i] = {}
+        turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        turnoverTab[i].flow = 0  --看具体字段
+        if info ~= nil then
+            for k, v in pairs(info) do
+                if updataTime == v.time / 1000 then
+                    turnoverTab[i].lift = v.lift
+                end
+            end
+        end
+
+        updataTime = updataTime + 86400
+    end
+
+    local turnover = {}
+    for i, v in ipairs(turnoverTab) do
+        turnover[i] = Vector2.New(v.coordinate,v.lift)  --
+    end
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+    table.insert(turnover,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in ipairs(turnover) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    local scale = SetYScale(max,5,CompanyPanel.yScaleRT)
+    local turnoverVet = {}
+    local showNumValue = {}  --用于点的显示
+    for i, v in ipairs(turnover) do
+        if scale == 0 then
+            turnoverVet[i] = Vector2.New(v.x, v.y)
+        else
+            turnoverVet[i] = Vector2.New(v.x,v.y / scale * 105)
+        end
+    end
+    CompanyPanel.curveSlide:SetXScaleValue(time,140)
+    CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
+
+    CompanyPanel.curveFunctionalGraph:DrawLine(turnoverVet, getColorByInt(53, 72, 117),1)
+    CompanyPanel.curveSlide:SetCoordinate(turnoverVet, turnover, Color.blue,1)
+
+    CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
+end
+
+
 -- 显示基本信息
 function CompanyCtrl:OnInfo(go)
     PlayMusEff(1002)
+
     go:_showMainRoot(1)
+    --go:c_PromoteSignCurve({})
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryPlayerIncomePayCurve')
 end
 
 -- 显示土地信息
@@ -174,6 +259,21 @@ function CompanyCtrl:OnCloseTips(go)
     CompanyCtrl.static.companyMgr:ClsoeTips()
 end
 
+-- 打开品牌
+function CompanyCtrl:OnBrand(go)
+    PlayMusEff(1002)
+    go:_showMainRoot(5)
+    -- 品牌选项生成
+    CompanyCtrl.static.companyMgr.brandTypeNum = 0 -- 0 全部 1 租用中 2 已出租 3 出租中 4 出售中 5 可使用
+    if CompanyCtrl.static.companyMgr:GetBrandTitleItem() then
+        --DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
+    else
+        CompanyCtrl.static.companyMgr:CreateBrandTitleItem()
+    end
+    CompanyPanel.brandScroll:ActiveLoopScroll(go.brandSource, 5, "View/Company/BrandItem")
+    CompanyPanel.brandScroll:RefillCells()
+end
+
 -- 初始数据
 function CompanyCtrl:_initData()
     -- 整合各大分页的切换(每添加一个，则需要把相应的节点传进来，即可实现不同节点的交替)
@@ -183,7 +283,13 @@ function CompanyCtrl:_initData()
         {btn = CompanyPanel.landBtn, root = CompanyPanel.landRoot, transform = CompanyPanel.landBtn.transform},
         {btn = CompanyPanel.buildingBtn, root = CompanyPanel.buildingRoot, transform = CompanyPanel.buildingBtn.transform},
         {btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
+        {btn = CompanyPanel.brandBtn, root = CompanyPanel.brandRoot, transform = CompanyPanel.brandBtn.transform},
     }
+
+    CompanyCtrl.Material = {}
+    for i, v in pairs(Material) do
+        table.insert(CompanyCtrl.Material, v)
+    end
 end
 
 -- 切换各节点
@@ -217,12 +323,12 @@ function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
         CompanyPanel.evaBtn.transform.localScale = Vector3.one
         CompanyPanel.titleText.text = GetLanguage(17010001)
-        CompanyPanel.coinBg:SetActive(true)
-        CompanyPanel.coinText.text = DataManager.GetMoneyByString()
+        --CompanyPanel.coinBg:SetActive(true)
+        --CompanyPanel.coinText.text = DataManager.GetMoneyByString()
     else
         CompanyPanel.evaBtn.transform.localScale = Vector3.zero
         CompanyPanel.titleText.text = GetLanguage(17010007)
-        CompanyPanel.coinBg:SetActive(false)
+        --CompanyPanel.coinBg:SetActive(false)
     end
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)
@@ -233,7 +339,7 @@ function CompanyCtrl:_updateData()
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
     CompanyPanel.foundingTimeText.text = string.format(GetLanguage(17010004) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
-    self:OnLand(self)
+    self:OnInfo(self)
 end
 
 -- 滑动复用
@@ -271,6 +377,15 @@ CompanyCtrl.static.evaOptionThereData = function(transform, idx)
 end
 
 CompanyCtrl.static.evaOptionThereClearData = function(transform)
+end
+
+-- 品牌信息显示
+CompanyCtrl.static.brandData = function(transform, idx)
+    idx = idx + 1
+    BrandItem:new(transform, CompanyCtrl.Material[idx])
+end
+
+CompanyCtrl.static.brandClearData = function(transform)
 end
 
 -- 网络回调

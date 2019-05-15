@@ -18,6 +18,12 @@ function CompanyMgr:initialize()
     self.buildingTitleItemNumber = 8
     -- Eva选择记录的个数
     self.evaRecordData = {}
+    -- 当前品牌显示的项数记录
+    self.brandTypeNum = 0
+    -- 品牌item的个数
+    self.brandTitleItemNumber = 5
+    -- 当前品牌显示的大小
+    self.brandSizeNum = 0
 end
 
 -- 获取土地选项item
@@ -188,5 +194,24 @@ function CompanyMgr:ClsoeTips()
         if v.IsShowTips then
             v:IsShowTips(false)
         end
+    end
+end
+
+-- 获取品牌选项item
+function CompanyMgr:GetBrandTitleItem()
+    return self.brandTitleItem
+end
+
+-- 生成土地选项item
+function CompanyMgr:CreateBrandTitleItem()
+    self.brandTitleItem = {}
+    for i = 1, self.brandTitleItemNumber do
+        local function callback(obj)
+            self.brandTitleItem[i] = BrandTitleItem:new(obj, i)
+            --if i == self.brandTitleItemNumber then
+            --    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
+            --end
+        end
+        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/BrandTitleItem.prefab", CompanyPanel.brandTitleContent, nil, callback)
     end
 end

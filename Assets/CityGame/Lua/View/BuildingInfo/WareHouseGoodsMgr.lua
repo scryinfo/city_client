@@ -124,29 +124,28 @@ end
 
 --创建路线面板
 function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
-    local bagId = DataManager.GetBagId()
-    if bagId ~= buildingId then
-        local dataInfo = {}
-        dataInfo.info = {}
-        dataInfo.info.id = bagId
-        dataInfo.info.pos = {}
-        dataInfo.info.pos.x = BagPosInfo[1].bagX
-        dataInfo.info.pos.y = BagPosInfo[1].bagY
-        dataInfo.info.mId = nil
-
-        local function callback(prefab)
-            self.LinePaneltLuaItem = ChooseLineItem:new(prefab,self,dataInfo,data)
-            self.ipaItems[index] = self.LinePaneltLuaItem
-            index = index + 1
-        end
-        createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
-
-
-        if not self.ipaItems then
-            self.ipaItems = {}
-        end
-    end
-
+    --local bagId = DataManager.GetBagId()
+    --if bagId ~= buildingId then
+    --    local dataInfo = {}
+    --    dataInfo.info = {}
+    --    dataInfo.info.id = bagId
+    --    dataInfo.info.pos = {}
+    --    dataInfo.info.pos.x = BagPosInfo[1].bagX
+    --    dataInfo.info.pos.y = BagPosInfo[1].bagY
+    --    dataInfo.info.mId = nil
+    --
+    --    local function callback(prefab)
+    --        self.LinePaneltLuaItem = ChooseLineItem:new(prefab,self,dataInfo,data)
+    --        self.ipaItems[index] = self.LinePaneltLuaItem
+    --        index = index + 1
+    --    end
+    --    createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
+    --
+    --
+    --    if not self.ipaItems then
+    --        self.ipaItems = {}
+    --    end
+    --end
     if buysBuildings ==nil then
         return
     end
@@ -154,15 +153,12 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
         for k, z in pairs(v) do
             if z.store ~= nil then
                 if z.info.id ~= buildingId then
-
                     local function callback(prefab)
                         self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data)
                         self.ipaItems[index] = self.LinePaneltLuaItems
                         index = index + 1
                     end
                     createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
-
-
                     if not self.ipaItems then
                         self.ipaItems = {}
                     end
@@ -170,7 +166,6 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
             end
         end
     end
-
 end
 
 --创建好友路线面板

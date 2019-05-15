@@ -59,7 +59,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 end
                 ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
             end
-        end, 30, 1)
+        end, 270, 1)
         timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()
@@ -729,6 +729,48 @@ UnitTest.Exec("abel_0428_queryflowList", "e_queryflowList",  function ()
     end)
 end)
 
+UnitTest.Exec("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",  function ()
+    Event.AddListener("e_ModyfyMyBrandName", function (stream)
+        ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",function(msg)
+            DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","modyfyMyBrandName",ct.cb)
+            --查询我的品牌数据
+            ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",function(msg)
+                DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","queryMyBrands",ct.cb)
+                local t = 0
+            end)
 
+            --发包测试
+            local msgId = pbl.enum("gscode.OpCode","queryMyBrands")
+            ----2、 填充 protobuf 内部协议数据
+            local lMsg = { type = stream.info.mId/100000,bId = stream.info.id,pId=stream.info.ownerId }
+            ----3、 序列化成二进制数据
+            local  pMsg = assert(pbl.encode("gs.QueryMyBrands", lMsg))
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+
+        end)
+        if stream.line == nil then
+            return
+        end
+        if #stream.line == 0 then
+            return
+        end
+        --发包测试
+        local msgId = pbl.enum("gscode.OpCode","modyfyMyBrandName")
+        ----2、 填充 protobuf 内部协议数据
+        local lMsg = { pId = stream.info.ownerId,typeId=stream.line[1].itemId, newBrandName = "haha"..tolua.gettime()}
+        ----3、 序列化成二进制数据
+        local  pMsg = assert(pbl.encode("gs.ModyfyMyBrandName", lMsg))
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end)
+end)
+
+UnitTest.Exec("abel_0512_materialConsumedInform", "e_materialConsumedInform",  function ()
+    Event.AddListener("e_materialConsumedInform", function (bid)
+        ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","materialConsumedInform","gs.materialConsumedInform",function(msg)
+            local test = 100
+            DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","queryMyBrands",ct.cb)
+        end)
+    end)
+end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

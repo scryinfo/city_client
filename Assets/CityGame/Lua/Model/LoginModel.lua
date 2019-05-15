@@ -91,7 +91,7 @@ function LoginModel.n_AsLogin(stream )
     --msglogion:ParseFromString(stream)
     --successfully = msglogion.successed
     --end
-    Event.Brocast("c_LoginSuccessfully", successfully );
+    --Event.Brocast("c_LoginSuccessfully", successfully );
     LoginModel:onUIGetServerList()
 
 end

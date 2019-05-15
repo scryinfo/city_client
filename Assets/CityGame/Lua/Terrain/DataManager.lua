@@ -37,6 +37,7 @@ local BuildDataStack = {}      --建筑信息堆栈
 local PersonDataStack = {}      --个人信息堆栈
 local SystemDatas = {}          --系统信息集合
 local ModelNetMsgStack = {}
+local ModelNetMsgStackNoIns = {}
 
 local TerrainRangeSize = 1000
 local CollectionRangeSize = 20
@@ -839,6 +840,7 @@ end
 
 function DataManager.UnAllModelRegisterNetMsg()
     ModelNetMsgStack = {}
+    ModelNetMsgStackNoIns = {}
     CityEngineLua.Message.clear()
 end
 
@@ -889,12 +891,12 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                 end
             end
             --该消息监听的无参回调如果有
-            if  ModelNetMsgStack[newMsgId]["NoParameters"] ~= nil then  --ModelNetMsgStack[newMsgId]~=nil and
-            for i, funcTable in pairs(ModelNetMsgStack[newMsgId]["NoParameters"]) do
-                    if funcTable.self ~= nil then
-                        funcTable.func(funcTable.self,protoData,newMsgId)
+            for k, fun in pairs(ModelNetMsgStackNoIns[newMsgId]) do
+                if fun ~= nil and fun.fun ~= nil then
+                    if fun.ins == nil then
+                        fun.fun(protoData,newMsgId)
                     else
-                        funcTable.func(protoData,newMsgId)
+                        fun.fun(fun.ins, protoData,newMsgId)
                     end
                 end
             end
@@ -908,16 +910,20 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         end
         table.insert(ModelNetMsgStack[newMsgId][insId],callBackMethord)
     else--若无唯一ID，则将方法写到"NoParameters"对应的table中
-        if  ModelNetMsgStack[newMsgId]["NoParameters"] == nil then
-            ModelNetMsgStack[newMsgId]["NoParameters"] = {}
+        if ModelNetMsgStackNoIns[newMsgId] == nil then
+            ModelNetMsgStackNoIns[newMsgId] = {}
         end
-        local funcTable = {}
-        funcTable.func = callBackMethord
-        if InstantiateSelf ~= nil then
-            funcTable.self = InstantiateSelf
+        local exist = false
+        for i = 1, #ModelNetMsgStackNoIns[newMsgId] do
+            if ModelNetMsgStackNoIns[newMsgId][i].fun == callBackMethord then
+                exist = true
+            end
         end
-        table.insert(ModelNetMsgStack[newMsgId]["NoParameters"],funcTable)
+        if exist == false then
+            table.insert(ModelNetMsgStackNoIns[newMsgId],{ins = InstantiateSelf,fun = callBackMethord})
+        end
     end
+    return callBackMethord
 end
 
 
@@ -986,16 +992,11 @@ end
 local newMsgId_ModelNoneInsIdRemoveNetMsg
 local noParameters_ModelNoneInsIdRemoveNetMsg
 --移除 无实例Id的消息回调
-function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,ins)
+function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,fun)
     newMsgId_ModelNoneInsIdRemoveNetMsg = pbl.enum(protoNameStr,protoNumStr)
-
-    noParameters_ModelNoneInsIdRemoveNetMsg = ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"]
-    if noParameters_ModelNoneInsIdRemoveNetMsg ~= nil then
-        for i, value in pairs(noParameters_ModelNoneInsIdRemoveNetMsg) do
-            if value.self ~= nil and value.self == ins then
-                table.remove(ModelNetMsgStack[newMsgId_ModelNoneInsIdRemoveNetMsg]["NoParameters"],i)
-                return
-            end
+    for i=#ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg],1,-1 do
+        if ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg][i].fun == fun then
+            table.remove(ModelNetMsgStackNoIns[newMsgId_ModelNoneInsIdRemoveNetMsg],i)
         end
     end
 end
@@ -1933,6 +1934,9 @@ end
 
 -- 接收黑名单
 function DataManager.n_OnReceiveGetBlacklist(stream)
+    if stream == nil then
+        return
+    end
     local roleInfos = stream
     if not roleInfos.info then
         return

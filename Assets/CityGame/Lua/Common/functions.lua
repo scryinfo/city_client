@@ -80,15 +80,15 @@ function getColorString(numTab)
 end
 
 --秒数转换时间格式字符串
-function getTimeString(time)
-	local hours = math.floor(time / 3600)
-	local minutes = math.floor((time % 3600) / 60)
-	local seconds = math.floor(time % 60)
-	if hours < 10 then hours = "0"..hours end
-	if minutes < 10 then  minutes = "0"..minutes end
-	if seconds < 10 then seconds = "0"..seconds end
-	local time = hours..":"..minutes..":"..seconds
-	return time
+function getTimeTable(time)
+    local hours = math.floor(time / 3600)
+    local minutes = math.floor((time % 3600) / 60)
+    local seconds = math.floor(time % 60)
+    if hours < 10 then hours = "0"..hours end
+    if minutes < 10 then  minutes = "0"..minutes end
+    if seconds < 10 then seconds = "0"..seconds end
+    local data = {hour = hours, minute = minutes, second = seconds}
+    return data
 end
 --通过整数255之类的得到对应的颜色
 function getColorByInt(r, b, g, a)
@@ -126,24 +126,12 @@ function getFormatUnixTime(time)
 	tb.minute = tonumber(os.date("%M", time)) or 0
 	tb.second = tonumber(os.date("%S", time)) or 0
 
-	if tb.year < 10 then
-		tb.year = "0"..tb.year
-	end
-	if tb.month < 10 then
-		tb.month = "0"..tb.month
-	end
-	if tb.day < 10 then
-		tb.day = "0"..tb.day
-	end
-	if tb.hour < 10 then
-		tb.hour = "0"..tb.hour
-	end
-	if tb.minute < 10 then
-		tb.minute = "0"..tb.minute
-	end
-	if tb.second < 10 then
-		tb.second = "0"..tb.second
-	end
+	if tb.year < 10 then tb.year = "0"..tb.year end
+	if tb.month < 10 then tb.month = "0"..tb.month end
+	if tb.day < 10 then tb.day = "0"..tb.day end
+	if tb.hour < 10 then tb.hour = "0"..tb.hour end
+	if tb.minute < 10 then tb.minute = "0"..tb.minute end
+	if tb.second < 10 then tb.second = "0"..tb.second end
 
 	return tb
 end

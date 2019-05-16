@@ -915,7 +915,7 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
         end
         local exist = false
         for i = 1, #ModelNetMsgStackNoIns[newMsgId] do
-            if ModelNetMsgStackNoIns[newMsgId][i].fun == callBackMethord then
+            if ModelNetMsgStackNoIns[newMsgId][i].fun == callBackMethord and ModelNetMsgStackNoIns[newMsgId][i].ins == InstantiateSelf then
                 exist = true
             end
         end
@@ -952,6 +952,15 @@ function DataManager.RegisterErrorNetMsg()
             info_RegisterErrorNetMsg.contentInfo = "网络错误Opcode：" ..  tostring(protoData.opcode)
             info_RegisterErrorNetMsg.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info_RegisterErrorNetMsg)
+        end
+
+        for i=#ModelNetMsgStackNoIns[protoData.opcode],1,-1 do
+            local fun = ModelNetMsgStackNoIns[protoData.opcode][i]
+            if fun.ins == nil then
+                fun.fun(protoData,msgErrId_RegisterErrorNetMsg)
+            else
+                fun.fun(fun.ins, protoData,msgErrId_RegisterErrorNetMsg)
+            end
         end
     end ,nil)
 

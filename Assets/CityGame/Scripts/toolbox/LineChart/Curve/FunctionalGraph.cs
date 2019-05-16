@@ -117,33 +117,33 @@ public class FunctionalGraph : MaskableGraphic
         if (GraphBase.ShowScale)
         {
             // X 轴的正方向
-            for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x / 2.0f; i++)
+            for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x; i++)
             {
                 Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
                 Vector2 secongPoint = firstPoint + new Vector2(0, GraphBase.ScaleLenght);
                 vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
             }
-            // X 轴的负方向
-            for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x / 2.0f ; i++ )
-            {
-                Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, 0);
-                Vector2 secongPoint = firstPoint + new Vector2(0, GraphBase.ScaleLenght);
-                vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
-            }
-            // Y 轴正方向
-            for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y / 2.0f ; y++ )
-            {
-                Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
-                Vector2 secongPoint = firstPoint + new Vector2(GraphBase.ScaleLenght, 0);
-                vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
-            }
-            // Y 轴负方向
-            for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y / 2.0f ; y++ )
-            {
-                Vector2 firstPoint = Vector2.zero + new Vector2(0, y * -GraphBase.YScaleValue);
-                Vector2 secongPoint = firstPoint + new Vector2(GraphBase.ScaleLenght, 0);
-                vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
-            }
+            //// X 轴的负方向
+            //for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x; i++ )
+            //{
+            //    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, 0);
+            //    Vector2 secongPoint = firstPoint + new Vector2(0, GraphBase.ScaleLenght);
+            //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
+            //}
+            //// Y 轴正方向
+            //for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y; y++ )
+            //{
+            //    Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
+            //    Vector2 secongPoint = firstPoint + new Vector2(GraphBase.ScaleLenght, 0);
+            //    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
+            //}
+            //// Y 轴负方向
+            //for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y; y++ )
+            //{
+            //    Vector2 firstPoint = Vector2.zero + new Vector2(0, y * -GraphBase.YScaleValue);
+            //    Vector2 secongPoint = firstPoint + new Vector2(GraphBase.ScaleLenght, 0);
+            //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
+            //}
         }
         #endregion
         #region 根据网格类型绘制网格

@@ -76,7 +76,7 @@ function PathFindManager.CreateAOIListPalyer(tempCollectionIDList)
     for i, tempCollectionID in pairs(tempCollectionIDList) do
         --TODO:随机个数范围应该从配置表中读取
         if my_CreatedCollectionID[tempCollectionID] == nil then
-            count =  Math_Random(10,20)
+            count =  Math_Random(70,80)
             CreateRangePalyer(tempCollectionID,count)
         end
     end

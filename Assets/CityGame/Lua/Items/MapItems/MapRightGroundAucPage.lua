@@ -9,29 +9,27 @@ MapRightGroundAucPage = class('MapRightGroundAucPage', MapRightPageBase)
 function MapRightGroundAucPage:initialize(viewRect)
     self.viewRect = viewRect:GetComponent("RectTransform")
 
-    self.closeBtn = viewRect:Find("root/closeBtn"):GetComponent("Button")
-    self.soonRoot = viewRect:Find("root/soonRoot")
-    self.soonTimeDownText = viewRect:Find("root/soonRoot/soonTimeDownText"):GetComponent("Text")
-    self.startTimeText = viewRect:Find("root/soonRoot/startTimeText"):GetComponent("Text")
-    self.floorPriceText = viewRect:Find("root/soonRoot/floorRoot/floorPriceText"):GetComponent("Text")
+    local tran = self.viewRect.transform
+    self.closeBtn = tran:Find("closeBtn"):GetComponent("Button")
+    self.goHereBtn = tran:Find("goHereBtn"):GetComponent("Button")
+    self.titleText = tran:Find("titleText"):GetComponent("Text")
+    self.timeDownText = tran:Find("timeDownRoot/timeDownText"):GetComponent("Text")  --倒计时
+    self.soonRoot = tran:Find("soon")
+    self.soonStartTime = tran:Find("soon/startTime")
+    self.soonPrice = tran:Find("soon/price")
 
-    self.nowRoot = viewRect:Find("root/nowRoot")
-    self.nowTimeDownText = viewRect:Find("root/nowRoot/nowTimeDownText"):GetComponent("Text")
-    self.nowTimeDownImage = viewRect:Find("root/nowRoot/Image")
+    self.nowRoot = tran:Find("now")
+    self.nowPrice = tran:Find("now/price")
+    self.noneHistoryRoot = tran:Find("now/noneBid")
 
-    self.historyContent = viewRect:Find("root/nowRoot/historyRoot/scrollRect/content")
-    self.historyItemPrefab = viewRect:Find("root/nowRoot/historyRoot/GAucHistoryItem")
+    self.historyRoot = tran:Find("now/historyRoot")
+    self.historyContent = tran:Find("now/historyRoot/scrollRect/content")
+    self.historyItemPrefab = tran:Find("now/historyRoot/GAucHistoryItem")
 
-    self.historyRoot = viewRect:Find("root/nowRoot/historyRoot")
-    self.noneHistoryRoot = viewRect:Find("root/nowRoot/noneHistoryRoot")
-    self.nowFloorPriceText = viewRect:Find("root/nowRoot/noneHistoryRoot/floorRoot/floorPriceText"):GetComponent("Text")
-
-    self.averageRangeText = viewRect:Find("root/rangeNpcRoot/averageRangeText"):GetComponent("Text")
-    self.goHereBtn = viewRect:Find("root/nowRoot/goHereBtn"):GetComponent("Button")
-
-    self.personFlowText01 = viewRect:Find("root/rangeNpcRoot/Text"):GetComponent("Text")
-    self.soonFloorText02 = viewRect:Find("root/soonRoot/floorRoot/Text01"):GetComponent("Text")
-    self.nowFloorPriceText05 = viewRect:Find("root/nowRoot/noneHistoryRoot/floorRoot/Text"):GetComponent("Text")
+    self.hourText01 = tran:Find("timeDownRoot/Text01"):GetComponent("Text")
+    self.minuteText02 = tran:Find("timeDownRoot/Text02"):GetComponent("Text")
+    self.secondText03 = tran:Find("timeDownRoot/Text03"):GetComponent("Text")
+    self.noneHistoryText04 = tran:Find("now/noneBid/noneBidText"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         self:close()
@@ -52,31 +50,57 @@ function MapRightGroundAucPage:refreshData(data)
     self:_addListener()
     self.m_Timer:Reset(slot(self._itemTimer, self), 1, -1, true)
     self.m_Timer:Start()
-    self.averageRangeText.text = 0
+
     local groundInfo = GroundAucConfig[self.data.id]
     --如果开始拍卖，还需判断是否有人出价
     if self.data.isStartAuc then
         self:setSoonAndNow(true)
+        self:refreshNow(groundInfo.basePrice)
+
         --判断是否有人出价
         if self.data.endTs == nil or self.data.endTs == 0 then
             self:setBidState(false)
-            self.nowFloorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
+            self:setTimeValue(0)
         else
             self:setBidState(true)
             self.bidHistory = ct.deepCopy(self.data.bidHistory)
             self:_createHistory()
             self.historyContent.localPosition = Vector2.zero
             self.startTimeDownForFinish = true  --拍卖结束倒计时
+            self:NowTimeDownFunc()
         end
     else
         self:setSoonAndNow(false)
-
-        self.floorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
-        local timeData = getFormatUnixTime(groundInfo.beginTime)
-        self.startTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
+        self:refreshSoon(groundInfo.beginTime, groundInfo.basePrice)
         self.startTimeDownForStart = true  --即将拍卖倒计时
+        self:SoonTimeDownFunc()
     end
     self:openShow()
+end
+--刷新开始拍卖的显示数据
+function MapRightGroundAucPage:refreshNow(basePrice)
+    if self.nowPriceItem == nil then
+        self.nowPriceItem = MapRightShowInfoItem:new(self.nowPrice)
+    end
+    local str = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
+    local tempData = {infoTypeStr = "GAucPrice", value = str}
+    self.nowPriceItem:initData(tempData)
+end
+--刷新即将拍卖的显示数据
+function MapRightGroundAucPage:refreshSoon(beginTime, basePrice)
+    if self.soonStartTimeItem == nil then
+        self.soonStartTimeItem = MapRightShowInfoItem:new(self.soonStartTime)
+    end
+    if self.soonPriceItem == nil then
+        self.soonPriceItem = MapRightShowInfoItem:new(self.soonPrice)
+    end
+    local timeData = getFormatUnixTime(beginTime)
+    local str1 = timeData.hour..":"..timeData.minute..":"..timeData.second
+    local tempData1 = {infoTypeStr = "GAucTime", value = str1}
+    self.soonStartTimeItem:initData(tempData1)
+    local str2 = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
+    local tempData2 = {infoTypeStr = "GAucPrice", value = str2}
+    self.soonPriceItem:initData(tempData2)
 end
 --重置状态
 function MapRightGroundAucPage:openShow()
@@ -85,9 +109,10 @@ function MapRightGroundAucPage:openShow()
 end
 --多语言
 function MapRightGroundAucPage:_language()
-    self.personFlowText01.text = GetLanguage(22010004)
-    self.soonFloorText02.text = GetLanguage(22010002)
-    self.nowFloorPriceText05.text = GetLanguage(22010002)
+    self.hourText01.text = "hour"
+    self.minuteText02.text = "minute"
+    self.secondText03.text = "second"
+    self.noneHistoryText04.text = "Nobody bid"
 end
 --关闭
 function MapRightGroundAucPage:close()
@@ -108,8 +133,11 @@ function MapRightGroundAucPage:close()
 end
 --去地图上的一个建筑
 function MapRightGroundAucPage:_goHereBtn()
+    local tempData = self.data
     local temp = GroundAucConfig[self.data.id].area[1]
     MapBubbleManager.GoHereFunc(temp)
+
+    ct.OpenCtrl("GroundAuctionCtrl", tempData)
 end
 
 ------------------
@@ -144,7 +172,7 @@ function MapRightGroundAucPage:_createHistory()
         local go = self:_getValuableHistoryObj()
         go.transform:SetParent(self.historyContent.transform)
         go.transform.localScale = Vector3.one
-        self.historyLuaItems[i] = GAucHistoryItem:new(value, go.transform)
+        self.historyLuaItems[i] = MapGAucHistoryItem:new(value, go.transform)
     end
 end
 --获取一个有效的item
@@ -191,9 +219,7 @@ function MapRightGroundAucPage:SoonTimeDownFunc()
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime / 1000)
-        local timeStr = timeTable.minute..":"..timeTable.second
-        self.soonTimeDownText.text = timeStr
+        self:setTimeValue(remainTime / 1000)
     end
 end
 --拍卖结束倒计时
@@ -210,10 +236,25 @@ function MapRightGroundAucPage:NowTimeDownFunc()
             return
         end
 
-        local timeTable = getFormatUnixTime(remainTime / 1000)
-        local timeStr = timeTable.minute..":"..timeTable.second
-        self.nowTimeDownText.text = timeStr
+        self:setTimeValue(remainTime / 1000)
     end
+end
+--
+function MapRightGroundAucPage:setTimeValue(remainTime)
+    local timeTable = getTimeTable(remainTime)
+    local hour = self:getValuableStr(timeTable.hour)
+    local minute = self:getValuableStr(timeTable.minute)
+    local second = self:getValuableStr(timeTable.second)
+    self.timeDownText.text = string.format("%s     %s     %s", hour, minute, second)
+end
+--
+function MapRightGroundAucPage:getValuableStr(str)
+    if string.len(str) ~= 2 then
+        return
+    end
+    local firstChar = string.sub(str, 1, 1)
+    local secondChar = string.sub(str, 2, 2)
+    return firstChar.."   "..secondChar
 end
 
 --拍卖信息更新
@@ -232,6 +273,7 @@ function MapRightGroundAucPage:_mapBidInfoUpdate(data)
     table.insert(self.bidHistory, 1, temp)
     self:_createHistory()
     self.startTimeDownForFinish = true
+    self:NowTimeDownFunc()
 end
 --清除历史item
 function MapRightGroundAucPage:_cleanHistory()
@@ -258,7 +300,7 @@ function MapRightGroundAucPage:_mapBidStart(groundData)
 
     self:setSoonAndNow(true)
     self:setBidState(false)
-    self.nowFloorPriceText.text = getPriceString(GetClientPriceString(GroundAucConfig[self.data.id].basePrice), 30, 24)
+    self:refreshNow(GroundAucConfig[self.data.id].basePrice)
 end
 
 --拍卖中有没有人出价
@@ -266,13 +308,9 @@ function MapRightGroundAucPage:setBidState(hasBid)
     if hasBid == true then
         self.historyRoot.localScale = Vector3.one
         self.noneHistoryRoot.localScale = Vector3.zero
-        self.nowTimeDownText.transform.localScale = Vector3.one
-        self.nowTimeDownImage.transform.localScale = Vector3.one
     else
         self.historyRoot.localScale = Vector3.zero
         self.noneHistoryRoot.localScale = Vector3.one
-        self.nowTimeDownText.transform.localScale = Vector3.zero
-        self.nowTimeDownImage.transform.localScale = Vector3.zero
     end
 end
 --拍卖中或者即将拍卖

@@ -8,6 +8,7 @@
 
 QueneCtrl = class('QueneCtrl',UIPanel)
 UIPanel:ResgisterOpen(QueneCtrl) --注册打开的方法
+local insTable = {}
 --构建函数
 function QueneCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -23,15 +24,26 @@ end
 
 local panel,luabehaviour,this
 
+function QueneCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
+end
 --todo：刷新
 function QueneCtrl:Refresh()
-
-    Event.AddListener("c_updateQuque",self.c_updateQuque,self)
     self:ChangeLanguage()
-
     self:c_updateQuque(self.m_data)
 end
 
+function QueneCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("c_updateQuque",self.c_updateQuque,self)
+    if insTable then
+        for i, v in pairs(insTable) do
+            destroy(v.transform.gameObject)
+        end
+        insTable = {}
+    end
+end
 
 function QueneCtrl:Awake(go)
     panel = QuenePanel
@@ -42,7 +54,6 @@ function QueneCtrl:Awake(go)
     self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.loopScrollDataSource.mProvideData =self.ReleaseData
     self.loopScrollDataSource.mClearData = self.CollectClearData
-
 
 end
 
@@ -122,11 +133,13 @@ function QueneCtrl:c_updateQuque(data)
         else
             self.m_data.data = handleData(data.data)
         end
-
-        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, #self.m_data.data,data.name)
-
+       local dataName = {}
+        for i, v in ipairs(self.m_data.data) do
+            dataName[i] = self.m_data.name
+        end
+        panel.loopScrol:ActiveDiffItemLoop(self.loopScrollDataSource, dataName)
     else
-        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource, 0,data.name)
+        panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource,0)
     end
 end
 
@@ -136,7 +149,7 @@ function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
     data.ids =  idx
-    this.m_data.insClass:new(data, transform,luabehaviour)
+    insTable[idx] = this.m_data.insClass:new(data, transform,luabehaviour)
 end
 
 function QueneCtrl.CollectClearData(transform)

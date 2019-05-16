@@ -50,6 +50,11 @@ namespace LuaFramework {
             GameObject go = null;
 			if(availableObjStack.Count > 0) {
 				go = availableObjStack.Pop();
+                if (go == null)
+                {
+                    AddObjectToPool(NewObjectInstance());
+                    go = availableObjStack.Pop();
+                }
 			} else {
                 AddObjectToPool(NewObjectInstance());
                 go = availableObjStack.Pop();

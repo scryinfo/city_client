@@ -23,7 +23,7 @@ function PromoteBuildingExtensionCtrl:Awake()
     end
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
-    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
+    --buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.queue,self.OnQueue,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.otherQueue,self.OnOtherQueue,self);
     self:initData()
@@ -165,4 +165,9 @@ end
 --关闭界面
 function PromoteBuildingExtensionCtrl:c_ClosePromoteBuildingExtension()
     UIPanel.ClosePage()
+    if self.m_data.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId,true)
+    else
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId,false)
+    end
 end

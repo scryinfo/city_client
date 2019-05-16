@@ -5,6 +5,7 @@
 ---主界面model
 GameMainInterfaceModel = class("GameMainInterfaceModel",ModelBase)
 local pbl = pbl
+local incomeNotify = {}
 
 function GameMainInterfaceModel:initialize(insId)
     self.insId = insId
@@ -49,6 +50,7 @@ function GameMainInterfaceModel:Close()
     Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
     Event.RemoveListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
+    incomeNotify = {}
 end
 --客户端请求--
 --获取所有邮件
@@ -123,10 +125,15 @@ function GameMainInterfaceModel:n_GsExtendBag(lMsg)
     DataManager.SetMoney(lMsg.money)
     Event.Brocast("c_ChangeMoney",lMsg.money)
 end
-
+local a = 0
 --自己的收益情况回调
 function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
-    Event.Brocast("c_IncomeNotify",lMsg)
+    if lMsg then
+        table.insert(incomeNotify,lMsg)
+    end
+    Event.Brocast("c_IncomeNotify",incomeNotify)
+    a = a + 1
+    ct.log("system","**********人数: " .. a)
 end
 
 --城市广播回调

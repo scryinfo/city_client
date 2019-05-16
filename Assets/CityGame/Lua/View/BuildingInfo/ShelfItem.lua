@@ -76,18 +76,20 @@ function ShelfItem:InitializeData()
         elseif Good[self.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
         end
-        --self.brandNameText
+        self.brandNameText.text = DataManager.GetCompanyName()
         --self.brandValue
         --self.qualityValue
-    end
-    if self.buildingType == BuildingType.RetailShop then
-        if self.isOther == true then
-            self.detailsBtn.transform.localScale = Vector3.zero
-        end
     end
 end
 --点击详情购买
 function ShelfItem:_clickDetailsBtn(ins)
+    --如果是零售店
+    if ins.buildingType == BuildingType.RetailShop then
+        if ins.isOther == true then
+            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", 300)
+            return
+        end
+    end
     --货架上如果是自己点击
     if ins.isOther == false then
         ct.OpenCtrl("ShelfBoxCtrl",ins)

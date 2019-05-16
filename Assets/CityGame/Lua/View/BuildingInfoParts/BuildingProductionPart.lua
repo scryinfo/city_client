@@ -55,6 +55,7 @@ end
 
 function BuildingProductionPart:_initFunc()
     self:_language()
+    self.Capacity = self:getWarehouseCapacity()
     if not self.m_data.line or next(self.m_data.line) == nil then
         self.TopLineInfo.transform.localScale = Vector3.zero
         self.tipText.transform.localScale = Vector3.one
@@ -75,16 +76,18 @@ function BuildingProductionPart:_initFunc()
             self.timeText.text = self:GetTime(self.m_data.line[1])
             UpdateBeat:Add(self.Update,self)
         end
-        --是商品时
-        local goodsKey = 22
-        if math.floor(self.itemId / 100000) == goodsKey then
-            --原料不足时
-            if self:CheckMaterial(self.itemId) == false then
-                --self.timeText.text = "00:00:00"
-                UpdateBeat:Remove(self.Update,self)
-                --self.oneTimeText.text = "00:00"
-                --self.timeSlider.value = 0
-                return
+        if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
+            UpdateBeat:Remove(self.Update,self)
+            return
+        else
+            --是商品时
+            local goodsKey = 22
+            if math.floor(self.itemId / 100000) == goodsKey then
+                --原料不足时
+                if self:CheckMaterial(self.itemId) == false then
+                    UpdateBeat:Remove(self.Update,self)
+                    return
+                end
             end
         end
     end
@@ -117,15 +120,18 @@ function BuildingProductionPart:Update()
         self.tipText.transform.localScale = Vector3.one
         UpdateBeat:Remove(self.Update,self)
     end
-    --是商品时
-    local goodsKey = 22
-    if math.floor(self.itemId / 100000) == goodsKey then
-        --原料不足时
-        if self:CheckMaterial(self.itemId) == false then
-            --self.timeText.text = "00:00:00"
-            UpdateBeat:Remove(self.Update,self)
-            --self.timeText.text = ""
-            return
+    if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
+        UpdateBeat:Remove(self.Update,self)
+        return
+    else
+        --是商品时
+        local goodsKey = 22
+        if math.floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:CheckMaterial(self.itemId) == false then
+                UpdateBeat:Remove(self.Update,self)
+                return
+            end
         end
     end
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
@@ -184,4 +190,24 @@ function BuildingProductionPart:CheckMaterial(itemId)
     else
         return true
     end
+end
+--获取仓库容量，如果仓库容量已满，停止时间刷新
+function BuildingProductionPart:getWarehouseCapacity()
+    local warehouseNowCount = 0
+    local lockedNowCount = 0
+    if not self.m_data.store.inHand then
+        warehouseNowCount = 0
+    else
+        for key,value in pairs(self.m_data.store.inHand) do
+            warehouseNowCount = warehouseNowCount + value.n
+        end
+    end
+    if not self.m_data.store.locked then
+        lockedNowCount = 0
+    else
+        for key,value in pairs(self.m_data.store.locked) do
+            lockedNowCount = lockedNowCount + value.n
+        end
+    end
+    return warehouseNowCount + lockedNowCount
 end

@@ -158,6 +158,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         end
     else
         --上架的时候打开时
+        self.automaticSwitch.isOn = false
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
         self.downShelfBtn.transform.localScale = Vector3.zero
@@ -217,7 +218,7 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     end
     local data = {}
     data.itemId = ins.m_data.itemId
-    data.number = ins.numberSlider.value
+    data.number = ins.m_data.dataInfo.n
     data.producerId = ins.m_data.dataInfo.k.producerId
     data.qty = ins.m_data.dataInfo.k.qty
     Event.Brocast("downShelf",data)

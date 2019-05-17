@@ -330,7 +330,7 @@ function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = "改名"
-    data.tipInfo = "请输入新品牌名字"
+    data.tipInfo = "Modified every seven days!"
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", "输入为空",80)

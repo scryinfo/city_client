@@ -49,8 +49,6 @@ function AvtarCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-
-
 function AvtarCtrl:Refresh()
     DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
     self:begin()

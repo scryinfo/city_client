@@ -16,20 +16,35 @@ end
 local music
 local musicEffect
 local sounds={}
+
+function MusicManger.GetMusicAudioSource()
+     if music ~= nil then
+          return music.transform:GetComponent("AudioSource")
+     end
+end
+
+function MusicManger.GetMusicEffectAudioSource()
+     if musicEffect ~= nil then
+          return musicEffect.transform:GetComponent("AudioSource")
+     end
+end
+
 function MusicManger:Awake()
 
      for key, name in pairs(MusicConfig) do
           sounds[key]=UnityEngine.Resources.Load("Sounds/"..name)
      end
 
-     music=self:CreatedMusic(true)
+     music = self:CreatedMusic(true)
+     music.name = "Music"
      PlayMus(1001)
      musicEffect=self:CreatedMusic(false)
+     musicEffect.name = "MusicEffect"
 
 end
 
 function MusicManger:CreatedMusic(isLoop)
-     local  music=creatGood("View/GameObject").transform:GetComponent("AudioSource")
+     local  music = creatGood("View/GameObject").transform:GetComponent("AudioSource")
      music.loop=isLoop
      return music
 end

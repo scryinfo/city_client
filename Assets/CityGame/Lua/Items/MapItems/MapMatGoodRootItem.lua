@@ -13,6 +13,7 @@ function MapMatGoodRootItem:initialize(data, viewRect)
 
     self.detailRoot = self.viewRect.transform:Find("detailRoot")
     self.typeNameText = self.viewRect.transform:Find("bg/typeNameText"):GetComponent("Text")
+    self.bgImg = self.viewRect.transform:Find("bg"):GetComponent("Image")
     self.element = self.viewRect.transform:GetComponent("LayoutElement")
 
     self:_createItems()
@@ -28,7 +29,10 @@ end
 --多语言
 function MapMatGoodRootItem:_language()
     --self.typeNameText.text = GetLanguage(self.data[1].name)
+
     self.typeNameText.text = self.data.detailData[1].name
+    local width = self.typeNameText.preferredWidth + 35
+    self.bgImg.rectTransform.sizeDelta = Vector2.New(width, 50)
 end
 --
 function MapMatGoodRootItem:_createItems()

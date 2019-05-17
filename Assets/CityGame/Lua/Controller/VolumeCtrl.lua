@@ -325,9 +325,9 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
     if table == nil then
         return
     end
-    local temp = 0
     local tempTable = {}
     for i, v in pairs(table) do
+        local temp = 0
         tempTable[i] = {}
         for k, z in pairs(npcConsumption[time]) do
             if next(countNpc )== nil or countNpc[k % 9] == nil then

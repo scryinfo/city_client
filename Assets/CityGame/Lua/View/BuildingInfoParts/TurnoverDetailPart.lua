@@ -16,12 +16,10 @@ end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
-    mainPanelLuaBehaviour:AddClick(self.xBtn, self.OnXBtn, self)
-
 end
 --
 function TurnoverDetailPart:_ResetTransform()
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
     buildingTs = nil
 end
@@ -31,20 +29,24 @@ function TurnoverDetailPart:_RemoveEvent()
 end
 --
 function TurnoverDetailPart:_RemoveClick()
---    self.xBtn.onClick:RemoveAllListeners()
 end
 
 function TurnoverDetailPart:Show(data)
     BasePartDetail.Show(self)
     if buildingTs == nil then
-        if self.m_data.info then
-            buildingTs = self.m_data.info.constructCompleteTs
+        if data.info then
+            buildingTs = data.info.constructCompleteTs
         end
     end
     self.m_data = data
     self:_initFunc()
 end
-
+function TurnoverDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    self.graph:Close()
+    self.slide:Close()
+    buildingTs = nil
+end
 --
 function TurnoverDetailPart:RefreshData(data)
     if data == nil then
@@ -59,35 +61,21 @@ end
 
 function TurnoverDetailPart:_setValue(turnover)
     self.turnover = turnover
-    if self.transform then
-        if self.today == nil then
-            self.today = self.transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
-        end
-        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
-    end
 end
 --
 function TurnoverDetailPart:_InitTransform()
     transform = self.transform
     self:_getComponent(self.transform)
 
-    self.curve.anchoredPosition = Vector3.New(-2957, 40,0)
+    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
     self.curve.sizeDelta = Vector2.New(4477, 402)
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
-    self.xBtn = transform:Find("down/xBtn").gameObject --返回
     self.yScale = transform:Find("down/bg/yScale"):GetComponent("RectTransform");  --Y轴
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
-    if self.today == nil then
-        self.today = transform:Find("down/bg/tadayBg/saleroom"):GetComponent("Text");  --绘制曲线
-    end
-
-    if self.turnover then
-        self.today.text = "Today:" .. GetClientPriceString(self.turnover)
-    end
 end
 --
 function TurnoverDetailPart:_initFunc()
@@ -97,11 +85,6 @@ function TurnoverDetailPart:_initFunc()
         local pMsg = assert(pbl.encode("ss.Id", lMsg))
         CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
     end
-
-
-function TurnoverDetailPart:OnXBtn(go)
-    go.groupClass.TurnOffAllOptions(go.groupClass)
-end
 
 --建筑收益曲线图回调
 function TurnoverDetailPart:n_OnBuildingIncome(info)
@@ -120,17 +103,15 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         currentTime = currentTime - hour * 3600      
     end
     currentTime = math.floor(currentTime)        --当天0点的时间
-    local monthAgo = currentTime - 2592000       --30天前的0点
+    local monthAgo = currentTime - 2592000 + 86400     --30天前的0点
     local updataTime = monthAgo
     local time = {}
     local boundaryLine = {}
     for i = 1, 30 do
         if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 148)
-        else
-            time[i] = tostring(getFormatUnixTime(updataTime).day)
         end
+        time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
         updataTime = updataTime + 86400
     end
     buildingTs = math.floor(buildingTs/1000)
@@ -177,6 +158,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             updataTime = updataTime + 86400
         end
     end
+    turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
     local turnover = {}
     for i, v in ipairs(turnoverTab) do
         turnover[i] = Vector2.New(v.coordinate,v.money)
@@ -202,8 +184,8 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.slide:SetXScaleValue(time,148)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
-    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255))
+    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
+    self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)

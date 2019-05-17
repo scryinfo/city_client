@@ -32,6 +32,7 @@ function LoadingCtrl:OnCreate(obj)
 end
 
 function LoadingCtrl:Awake(...)
+    destroy(UnityEngine.GameObject.Find("LoadCanvas"))
     StopAndBuildModel:Awake()
     --PlayerInfoManager.Init()
     PlayerInfoManger.Awake()

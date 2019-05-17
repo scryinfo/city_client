@@ -42,11 +42,21 @@ function AdvertisementPart:ShowDetail(data)
 end
 --
 function AdvertisementPart:_getComponent(transform)
-    self.price = transform:Find("top/price/priceText"):GetComponent("Text")
-    self.waitingTime = transform:Find("top/waitingTime/waitingTimeText"):GetComponent("Text")
+    self.price = transform:Find("top/open/price/priceText"):GetComponent("Text")
+    self.waitingTime = transform:Find("top/open/waitingTime/waitingTimeText"):GetComponent("Text")
+    self.open = transform:Find("top/open")
+    self.notOpen = transform:Find("top/notOpen"):GetComponent("Text")
 end
 --
 function AdvertisementPart:_initFunc()
-    self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
-    self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
+    if self.m_data.takeOnNewOrder then
+        self.notOpen.transform.localScale = Vector3.zero
+        self.open.localScale = Vector3.one
+        self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
+        self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
+    else
+        self.notOpen.transform.localScale = Vector3.one
+        self.open.localScale = Vector3.zero
+        self.notOpen.text = "未对外"
+    end
 end

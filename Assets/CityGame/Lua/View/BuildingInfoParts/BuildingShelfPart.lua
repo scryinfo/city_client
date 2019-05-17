@@ -12,10 +12,12 @@ end
 function BuildingShelfPart:GetDetailClass()
     return BuildingShelfDetailPart
 end
-
+function BuildingShelfPart:ShowDetail(data)
+    BasePart.ShowDetail(self,data)
+    Event.AddListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
+end
 function BuildingShelfPart:_InitTransform()
     self:_getComponent(self.transform)
-    Event.AddListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
 end
 
 function BuildingShelfPart:RefreshData(data)
@@ -25,10 +27,12 @@ function BuildingShelfPart:RefreshData(data)
     self.m_data = data
     self:_initFunc()
 end
-
+function BuildingShelfPart:HideDetail()
+    BasePart.HideDetail(self)
+    Event.RemoveListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
+end
 function BuildingShelfPart:_ResetTransform()
     self:_language()
-    Event.RemoveListener("refreshShelfPartCount",self.refreshShelfPartCount,self)
 end
 
 function BuildingShelfPart:_getComponent(transform)

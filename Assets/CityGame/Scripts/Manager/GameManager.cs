@@ -11,11 +11,13 @@ namespace LuaFramework {
     public class GameManager : Manager {
         protected static bool initialize = false;
         private List<string> downloadFiles = new List<string>();
-
+        private GameObject Loadcanvas;
         /// <summary>
         /// 初始化游戏管理器
         /// </summary>
         void Awake() {
+            Loadcanvas = GameObject.Find("LoadCanvas");
+            Loadcanvas.SetActive(true);
             Init();
             if (AppConst.UpdateMode)
             {
@@ -29,6 +31,7 @@ namespace LuaFramework {
        void LoadHotFixPanel()
        {
          panel= Instantiate(Resources.Load<GameObject>("View/HotfixPanel"));
+            Loadcanvas.SetActive(false);
             content = FindObjectOfType<Text>();
             slider = FindObjectOfType<Slider>();
         }
@@ -214,6 +217,7 @@ namespace LuaFramework {
             OnResourceInited();
             yield return new WaitForSeconds(1.2f);
             Destroy(panel);
+            Loadcanvas.SetActive(true);
         }
 
         void OnUpdateFailed(string file) {
@@ -285,6 +289,7 @@ namespace LuaFramework {
 
             Debug.Log("GameManager:OnInitialize CallMethod Game OnPostInitOK !!!");
             Util.CallMethod("Game", "OnPostInitOK");     //初始化完成
+            //Destroy(GameObject.Find("LoadCanvas"));
             initialize = true;
         }
 

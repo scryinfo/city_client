@@ -6,6 +6,10 @@
 WarehouseItem = class('WarehouseItem')
 local ToNumber = tonumber
 local StringSun = string.sub
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function WarehouseItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
@@ -43,8 +47,15 @@ function WarehouseItem:InitializeData()
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
-        --self.levelImg
-        --self.brandNameText
+        --如果是商品，判断原料等级
+        if Good[self.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
+        self.brandNameText.text = DataManager.GetCompanyName()
         --self.brandValue
         --self.qualityValue
     end

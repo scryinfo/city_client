@@ -4,7 +4,7 @@ UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 local gameMainInterfaceBehaviour;
 local Mails
 local incomeNotify    --收益详情表
-local lastTime   --上一次时间
+local lastTime = 0  --上一次时间
 --todo 城市广播
 local radioTime      --时间
 local radioIndex     --索引
@@ -43,7 +43,6 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
     Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
-    Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
     Event.AddListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
     Event.AddListener("c_MajorTransaction", self.c_OnMajorTransaction, self) --重大交易
@@ -60,7 +59,6 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
     Event.RemoveListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
-    Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
     Event.RemoveListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
     Event.RemoveListener("c_majorTransaction", self.c_OnMajorTransaction, self) --重大交易
@@ -73,6 +71,7 @@ end
 function GameMainInterfaceCtrl:Close()
     self:RemoveUpdata()
     UIPanel.Close(self)
+    Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     self = nil
 end
 
@@ -90,21 +89,28 @@ end
 
 --todo 收益详情
 function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
-    if incomeNotify == nil then
-        incomeNotify = {}
-        incomeNotify[1] = dataInfo
-        lastTime = TimeSynchronized.GetTheCurrentTime()
-        local ts = getFormatUnixTime(lastTime)
+    incomeNotify = dataInfo
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    if currentTime - lastTime > 60 then
+        local ts = getFormatUnixTime(currentTime)
         GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-    else
-        table.insert(incomeNotify,dataInfo)
-        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-        if currentTime - lastTime > 60 then
-            local ts = getFormatUnixTime(currentTime)
-            GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-        end
-        lastTime = currentTime
     end
+    lastTime = currentTime
+    --if incomeNotify == nil then
+    --    incomeNotify = {}
+    --    incomeNotify[1] = dataInfo
+    --    lastTime = TimeSynchronized.GetTheCurrentTime()
+    --    local ts = getFormatUnixTime(lastTime)
+    --    GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
+    --else
+    --    table.insert(incomeNotify,dataInfo)
+    --    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    --    if currentTime - lastTime > 60 then
+    --        local ts = getFormatUnixTime(currentTime)
+    --        GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
+    --    end
+    --    lastTime = currentTime
+    --end
     self.isTimmer = true
     self.timmer = 2
     GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
@@ -129,7 +135,9 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
     end
-    GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
+        if incomeNotify then
+            GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
+        end
 end
 
 --好友信息
@@ -330,6 +338,7 @@ end
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
     Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
+    Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -454,6 +463,7 @@ end
 local date
 local hour
 function GameMainInterfaceCtrl:RefreshWeather()
+
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 

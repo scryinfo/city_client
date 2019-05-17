@@ -8,6 +8,11 @@ UIPanel:ResgisterOpen(ShelfBoxCtrl)
 
 local isShow = false
 local Math_Floor = math.floor
+local ToNumber = tonumber
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function ShelfBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -29,6 +34,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
+    self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -108,17 +114,36 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.levelBg.transform.localScale = Vector3.one
         self.number.transform.localPosition = Vector3.New(183,-135,0)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
+        --如果是商品，判断原料等级
+        if Good[self.m_data.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.m_data.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.m_data.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
         --self.popularityValue.text =
         --self.qualityValue.text =
         --self.levelValue.text =
     end
-    --自己在货架打开时
+    local function callback(a)
+        --缓存一个值，修改数量时使用
+        self.warehouseNumber = a
+        self.warehouseNumberText.text = "×"..a
+    end
+    local function callback1(b)
+        self.shelfNumberText.text = "×"..b
+    end
+    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
     if not self.m_data.stateType then
+        --货架打开时
         self.downShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.one
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = self.m_data.dataInfo.autoReplenish
-        self.numberSlider.maxValue = self.m_data.dataInfo.n
+        self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
+        self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
@@ -126,25 +151,27 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
             self.totalNumberText.text = "×"..self.numberSlider.maxValue
+
         else
             self.numberSlider.transform.localScale = Vector3.one
             self.totalNumber.transform.localScale = Vector3.zero
         end
     else
         --上架的时候打开时
+        self.automaticSwitch.isOn = false
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
         self.downShelfBtn.transform.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.zero
         self.addShelfBtn.transform.localScale = Vector3.one
         self.numberSlider.maxValue = self.m_data.dataInfo.n
-        self.numberSlider.value = 0
+        self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = "0"
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
-    self.advicePriceText.text = "0000.0000"
+    self.advicePriceText.text = "0.0000"
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
@@ -178,23 +205,47 @@ function ShelfBoxCtrl:_clickAddShelfBtn(ins)
         data.producerId = ins.m_data.dataInfo.key.producerId
         data.qty = ins.m_data.dataInfo.key.qty
         data.number = ins.numberSlider.value
-        data.price = GetServerPriceNumber(ins.priceInput.text)
+        data.price = GetServerPriceNumber(ToNumber(ins.priceInput.text))
         data.switch = ins.automaticSwitch.isOn
         Event.Brocast("addShelf",data)
     end
 end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
-    if ins.automaticSwitch.isOn == true then
+    if ins.m_data.dataInfo.autoReplenish == true then
         Event.Brocast("SmallPop","请先关闭自动补货", 300)
         return
     end
     local data = {}
     data.itemId = ins.m_data.itemId
-    data.number = ins.numberSlider.value
+    data.number = ins.m_data.dataInfo.n
     data.producerId = ins.m_data.dataInfo.k.producerId
     data.qty = ins.m_data.dataInfo.k.qty
     Event.Brocast("downShelf",data)
+end
+--点击确认(修改数量，修改价格，修改自动补货)
+function ShelfBoxCtrl:_clickConfirmBtn(ins)
+    local data = {}
+    data.itemId = ins.m_data.itemId
+    if not ins.m_data.dataInfo.k then
+        data.producerId = ins.m_data.dataInfo.key.producerId
+        data.qty = ins.m_data.dataInfo.key.qty
+    else
+        data.producerId = ins.m_data.dataInfo.k.producerId
+        data.qty = ins.m_data.dataInfo.k.qty
+    end
+    data.number = ins.numberSlider.value
+    data.price = GetServerPriceNumber(ToNumber(ins.priceInput.text))
+    data.switch = ins.automaticSwitch.isOn
+    if data.number == ins.m_data.dataInfo.n and data.price == ins.m_data.dataInfo.price and data.switch == ins.m_data.dataInfo.autoReplenish then
+        UIPanel.ClosePage()
+        return
+    end
+    --当前自动补货是否为true
+    if data.switch == true then
+        data.number = ins.numberSlider.maxValue
+    end
+    Event.Brocast("modifyShelfInfo",data)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关
@@ -217,21 +268,14 @@ function ShelfBoxCtrl:ToggleUndateText()
     else
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
-        self.numberSlider.value = 0
-        self.btnImage.localPosition = Vector2.New(-45,0)
-    end
-    if self.automaticSwitch.isOn ~= self.m_data.dataInfo.autoReplenish then
-        local data = {}
-        data.itemId = self.m_data.itemId
-        if not self.m_data.dataInfo.k then
-            data.producerId = self.m_data.dataInfo.key.producerId
-            data.qty = self.m_data.dataInfo.key.qty
+        if self.m_data.dataInfo.n == 0 then
+            self.numberSlider.minValue = 0
+            self.numberSlider.value = 0
         else
-            data.producerId = self.m_data.dataInfo.k.producerId
-            data.qty = self.m_data.dataInfo.k.qty
+            self.numberSlider.minValue = 1
+            self.numberSlider.value = 1
         end
-        data.switch = self.automaticSwitch.isOn
-        Event.Brocast("whetherSend",data)
+        self.btnImage.localPosition = Vector2.New(-45,0)
     end
 end
 --滑动条更新文本

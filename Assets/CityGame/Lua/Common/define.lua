@@ -221,6 +221,13 @@ GoodsItemStateType =
 	transport = 2,  --运输
 	buy = 3,		--购买
 }
+--仓库分类
+ItemScreening =
+{
+	all = 1,   		--全部
+	material = 2,   --原料
+	goods = 3,		--商品
+}
 
 --相机移动状态类型
 TouchStateType =

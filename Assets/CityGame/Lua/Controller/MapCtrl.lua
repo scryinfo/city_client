@@ -60,16 +60,18 @@ EBuildingIconPath =
 function MapCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
 end
-
+--
 function MapCtrl:bundleName()
     return "Assets/CityGame/Resources/View/MapPanel.prefab"
 end
-
+--
 function MapCtrl:OnCreate(obj)
     UIPanel.OnCreate(self, obj)
 end
-
+--
 function MapCtrl:Awake(go)
+    --UpdateBeat:Add(self._update, self)
+
     self.gameObject = go
     local behaviour = self.gameObject:GetComponent('LuaBehaviour')
     behaviour:AddClick(MapPanel.backBtn.gameObject, function ()
@@ -110,13 +112,14 @@ function MapCtrl:Awake(go)
     self:_initUIData()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllBuildingDetail","gs.BuildingSet",self.n_OnReceiveAllBuildingDetailInfo,self)
 end
-
+--
 function MapCtrl:Active()
     UIPanel.Active(self)
+    UpdateBeat:Add(self._update, self)
 
     MapBubbleManager.setBackCollectionID()
 end
-
+--
 function MapCtrl:Refresh()
     Event.AddListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)  --无二级菜单的类型，取消选中自己
     Event.AddListener("c_MapSearchSelectType", self.refreshTypeItems, self)  --选中左侧类型
@@ -133,7 +136,7 @@ function MapCtrl:Refresh()
 
     self:_reqAllBuildings()
 end
-
+--
 function MapCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_MapSearchCancelSelect", self.nonePageCancelSelect, self)
@@ -149,6 +152,7 @@ function MapCtrl:Hide()
 
     Event.RemoveListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)
 
+    UpdateBeat:Remove(self._update, self)
     self:_cleanDatas()
 end
 --
@@ -188,6 +192,12 @@ function MapCtrl:_cleanDatas()
     --end
 end
 --
+function MapCtrl:_update()
+    if MapPanel.loadingImgTran.localScale == Vector3.one then
+        MapPanel.loadingImgTran:Rotate(Vector3.back * 200 * UnityEngine.Time.deltaTime)
+    end
+end
+--
 function MapCtrl:n_OnReceiveAllBuildingDetailInfo(data)
     if data then
         DataManager.SetMyAllBuildingDetail(data)
@@ -209,14 +219,18 @@ function MapCtrl:_initUIData()
 
     self:_cleanDatas()
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, 3, true)
+    MapPanel.loadingImgTran.transform.localScale = Vector3.zero
+    MapPanel.loadingImgTran.transform.localEulerAngles = Vector3.zero
 end
-
+--
 function MapCtrl:_itemTimer()
-    --Event.Brocast("c_SearchEndLoading")
+    Event.Brocast("c_SearchEndLoading")
+    MapPanel.loadingImgTran.transform.localScale = Vector3.zero
+    MapPanel.loadingImgTran.transform.localEulerAngles = Vector3.zero  --初始化角度
     self:toggleLoadingState(true)
     self.m_Timer:Stop()
 end
-
+--
 function MapCtrl:_createType(data)
     local go = UnityEngine.GameObject.Instantiate(MapPanel.mapSearchTypeItem)
     go.transform:SetParent(MapPanel.typeItemParent.transform)
@@ -291,6 +305,7 @@ function MapCtrl:_noPageTypeSelect()
     self:toggleLoadingState(false)
     self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
     self.m_Timer:Start()
+    MapPanel.loadingImgTran.transform.localScale = Vector3.one  --开始转圈
 
     if self.selectDetailItem ~= nil then
         self.selectDetailItem:resetState()
@@ -423,6 +438,7 @@ function MapCtrl:refreshDetailItem(item)
             self:toggleLoadingState(false)  --cd
             self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
             self.m_Timer:Start()
+            MapPanel.loadingImgTran.transform.localScale = Vector3.one  --开始转圈
         end
     end
 end
@@ -696,15 +712,18 @@ end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
-        local mapCtrlIns = MapBubbleManager.getMapCtrlIns()
-        if mapCtrlIns.selectDetailItem == nil or mapCtrlIns.selectDetailItem:getItemId() ~= data.itemId then
-            MapBubbleManager.cleanAllBubbleItems()
-            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
-            return
-        end
-        if mapCtrlIns.selectDetailItem ~= nil and mapCtrlIns.selectDetailItem:getItemId() == data.itemId then
-            MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
-        end
+        MapBubbleManager.cleanAllBubbleItems()
+        MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
+
+        --local mapCtrlIns = MapBubbleManager.getMapCtrlIns()
+        --if mapCtrlIns.selectDetailItem == nil or mapCtrlIns.selectDetailItem:getItemId() ~= data.itemId then
+        --    MapBubbleManager.cleanAllBubbleItems()
+        --    MapBubbleManager.createDetailItems(data, EMapSearchType.Material,true)
+        --    return
+        --end
+        --if mapCtrlIns.selectDetailItem ~= nil and mapCtrlIns.selectDetailItem:getItemId() == data.itemId then
+        --    MapBubbleManager.createDetailItems(data, EMapSearchType.Material,false)
+        --end
     end
 end
 --签约详情

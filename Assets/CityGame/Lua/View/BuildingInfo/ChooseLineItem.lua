@@ -16,6 +16,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.posY =  DataInfo.info.pos.y
     self.manager = mgr;
     self.state = DataInfo.info.state
+    self.mId = DataInfo.info.mId
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
@@ -26,6 +27,10 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.number = self.prefab.transform:Find("icon/number").gameObject:GetComponent("Text");
     self.distance = self.prefab.transform:Find("transportDetails/distance/distanceText").gameObject:GetComponent("Text");
     self.money = self.prefab.transform:Find("transportDetails/money/moneyText").gameObject:GetComponent("Text");
+    --TODO  fisher新加多语言提示
+    self.capacityText = self.prefab.transform:Find("icon/capacityText").gameObject:GetComponent("Text");
+    self.distanceTip = self.prefab.transform:Find("transportDetails/distance/tipText").gameObject:GetComponent("Text");
+    self.moneyTip = self.prefab.transform:Find("transportDetails/money/tipText").gameObject:GetComponent("Text");
 
     self.factory.text = DataInfo.info.name
 
@@ -33,6 +38,9 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     if DataInfo.info.mId == nil then
         self.size.text =GetLanguage(21030007)
         self.name.text = GetLanguage(21030008)
+        self.capacityText.text = "Warehouse Capacity"
+        self.distanceTip.text = "Distance/Unit"
+        self.moneyTip.text = "Freight/E"
         local bagCapacity = DataManager.GetBagCapacity()  --仓库总容量
         self.warehouse_Slider.maxValue = bagCapacity
         n = DataManager.GetBagNum()      --仓库内物品数量
@@ -62,20 +70,12 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
 
     local distances
     distances = math.sqrt(math.pow((pos.x-self.posX),2) + math.pow((pos.y-self.posY),2))
-    self.distance.text = math.floor(distances).."km"
+    self.distance.text = math.floor(distances)
     local moneys = distances * BagPosInfo[1].postageCost
-    self.money.text = "E"..GetClientPriceString(moneys)
+    self.money.text = GetClientPriceString(moneys)
     self.price = moneys
-
     --图片
-    --local type = ct.getType(UnityEngine.Sprite)
-    --panelMgr:LoadPrefab_A(PlayerBuildingBaseData[DataInfo.info.mId]["imgPath"],type,nil,function(goodData,obj)
-    --    if obj ~= nil then
-    --        local texture = ct.InstantiatePrefab(obj)
-    --        self.houseIcon.sprite = texture
-    --    end
-    --end)
-
+    LoadSprite(PlayerBuildingBaseData[self.mId].imgPath,self.houseIcon,false)
     self.num = n
     self.warehouse_Slider.value = n
     self.bg.onClick:AddListener(function()

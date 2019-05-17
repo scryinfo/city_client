@@ -23,11 +23,10 @@ function PromoteGoodsExtensionCtrl:Awake()
     end
     goodsExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.xBtn,self.OnXBtn,self);
-    goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
+    --goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.curve,self.OnCurve,self);
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.queue,self.OnQueue,self);      --确定(自己)
     goodsExtensionBehaviour:AddClick(PromoteGoodsExtensionPanel.otherQueue,self.OnOtherQueue,self);      --确定(别人)
 
-    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     PromoteGoodsExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
@@ -51,6 +50,7 @@ function PromoteGoodsExtensionCtrl:Active()
 end
 
 function PromoteGoodsExtensionCtrl:Refresh()
+    PromoteGoodsExtensionPanel.slider.maxValue = self.m_data.DataInfo.promRemainTime/3600000
     if self.m_data.Data.typeId == 2251 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", PromoteGoodsExtensionPanel.icon)
     elseif self.m_data.Data.typeId == 2252 then
@@ -77,6 +77,7 @@ function PromoteGoodsExtensionCtrl:Hide()
     Event.RemoveListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
     Event.RemoveListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
     for i, v in pairs(self.PromoteGoods) do
+        v:Close()
         destroy(v.prefab.gameObject)
     end
     self.PromoteGoods = {}
@@ -134,7 +135,7 @@ end
 
 --打开曲线图
 function PromoteGoodsExtensionCtrl:OnCurve(go)
-    --ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId})
+    ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.DataInfo.insId,Data = go.m_data.Data})
 end
 
 --选择的商品
@@ -178,10 +179,10 @@ end
 
 --关闭界面
 function PromoteGoodsExtensionCtrl:c_ClosePromoteGoodsExtension()
-    --if self.m_data.DataInfo.info.ownerId == myOwnerID then
-    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,true)
-    --else
-    --    DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,false)
-    --end
     UIPanel.ClosePage()
+    if self.m_data.DataInfo.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,true)
+    else
+        DataManager.DetailModelRpcNoRet(self.m_data.DataInfo.insId, 'm_QueryPromote',self.m_data.DataInfo.insId,false)
+    end
 end

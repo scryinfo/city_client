@@ -12,7 +12,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
     self.head = self.transform:Find("player/head/headBg")
     self.name = self.transform:Find("player/head/headBg/name"):GetComponent("Text")
     self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
-    self.goodsText = self.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
+    self.goodsText = self.transform:Find("goods/goodsText"):GetComponent("Text")
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
     self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.timePrice = self.transform:Find("details/timePrice")
@@ -20,8 +20,8 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
     self.price = self.transform:Find("details/timePrice/price/Text"):GetComponent("Text")
     self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
-    self.rollBtn = findByName(self.transform,"rollBtn")
-    self.rollBtnText = findByName(self.transform,"rollBtnText"):GetComponent("Text")
+    self.rollBtn = self.transform:Find("startTime/rollBtn")
+    self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
 
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
@@ -80,7 +80,6 @@ function InventGoodQueneItem:updateUI(data)
         self.slider.transform.localScale = Vector3.one
         self.nowTime.text = tostring((data.availableRoll + data.usedRoll)) .. "/" .. tostring(data.times)
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
-
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
@@ -94,14 +93,18 @@ function InventGoodQueneItem:updateUI(data)
 
     --自已与他人区分
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
-    if playerId == data.proposerId then
+    if playerId == data.proposerId then -- 自己的线
         self.myBg.localScale = Vector3.one
-        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then
-            self.delete.transform.localScale = Vector3.one
-        else
+        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
+            if data.beginProcessTs > 0  then -- 第一条线
+                self.delete.transform.localScale = Vector3.zero
+            else
+                self.delete.transform.localScale = Vector3.one
+            end
+        else -- 不是自己的建筑
             self.delete.transform.localScale = Vector3.zero
         end
-    else
+    else -- 不是自己的线
         self.myBg.localScale = Vector3.zero
         self.delete.transform.localScale = Vector3.zero
         self.rollBtn.localScale = Vector3.zero
@@ -121,8 +124,6 @@ end
 function InventGoodQueneItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
-
-
 end
 
 local currTime

@@ -23,12 +23,11 @@ function PromoteBuildingExtensionCtrl:Awake()
     end
     buildingExtensionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.xBtn,self.OnXBtn,self);
-    buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
+    --buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.curve,self.OnCurve,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.queue,self.OnQueue,self);
     buildingExtensionBehaviour:AddClick(PromoteBuildingExtensionPanel.otherQueue,self.OnOtherQueue,self);
     self:initData()
 
-    PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
     PromoteBuildingExtensionPanel.slider.onValueChanged:AddListener(function()
         self:onSlider(self)
     end)
@@ -52,6 +51,7 @@ function PromoteBuildingExtensionCtrl:Active()
 end
 
 function PromoteBuildingExtensionCtrl:Refresh()
+    PromoteBuildingExtensionPanel.slider.maxValue = self.m_data.promRemainTime/3600000
     --判断是自己还是别人打开了界面
     if self.m_data.info.ownerId == myOwnerID then
         PromoteBuildingExtensionPanel.myTime.localScale = Vector3.one
@@ -95,7 +95,14 @@ end
 
 --打开曲线图
 function PromoteBuildingExtensionCtrl:OnCurve(go)
-    --ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId})
+    local Data = {}
+    Data.typeId = go.m_data.buildingId
+    if go.m_data.buildingId == 1300 then
+        Data.name = "零售店"
+    elseif go.m_data.buildingId == 1400 then
+        Data.name = "住宅"
+    end
+    ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId,Data = Data})
 end
 
 --点击确定(自己)
@@ -158,4 +165,9 @@ end
 --关闭界面
 function PromoteBuildingExtensionCtrl:c_ClosePromoteBuildingExtension()
     UIPanel.ClosePage()
+    if self.m_data.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId,true)
+    else
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_QueryPromote',self.m_data.insId,false)
+    end
 end

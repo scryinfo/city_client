@@ -14,6 +14,7 @@ function MapPromotionDetailItem:childInit(viewRect)
     if self.data.promotionIndex ~= nil then
         local temp = MapPromotionInfoConfig[self.data.promotionIndex]
         LoadSprite(temp.imgPath, self.iconImg, true)
+        self.iconImg.color = getColorByVector3(temp.leftColorV3)
     end
 end
 --

@@ -42,12 +42,11 @@ function RetailStoresModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
-    --生产线
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    --签约
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","closeContract","gs.Id",self.n_OnReceiveCloseContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","settingContract","gs.ContractSetting",self.n_OnReceiveChangeContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","cancelContract","gs.Id",self.n_OnReceiveCancelContract)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","signContract","gs.Contract",self.n_OnReceiveSignContract)
 end
 
 function RetailStoresModel:Close()
@@ -57,11 +56,8 @@ function RetailStoresModel:Close()
     Event.RemoveListener("m_ReqRetailStoresShelfAdd",self.m_ReqShelfAdd,self)
     Event.RemoveListener("m_ReqRetailStoresModifyShelf",self.m_ReqModifyShelf,self)
     Event.RemoveListener("m_ReqRetailStoresShelfDel",self.m_ReqShelfDel,self)
-    --Event.RemoveListener("m_ReqRetailStoresAddLine",self.m_ReqAddLine,self)
-    --Event.RemoveListener("m_ReqRetailStoresDeleteLine",self.m_ReqDeleteLine,self)
     Event.RemoveListener("m_ReqRetailStoresBuyShelfGoods",self.m_ReqBuyShelfGoods,self)
     Event.RemoveListener("m_ReqRetailStoresDelItem",self.m_ReqDelItem,self)
-    --Event.RemoveListener("m_ReqRetailStoresSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqRetailStoresSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.RemoveListener("m_ReqRetailStoresAddShoppingCart",self.m_ReqAddShoppingCart,self)
 
@@ -79,12 +75,11 @@ function RetailStoresModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
-    --生产线
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddLineInfo)
-    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyChangeLine","gs.ChangeLine",self.n_OnModifyKLineInfo)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    --签约
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","closeContract","gs.Id",self.n_OnReceiveCloseContract)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","settingContract","gs.ContractSetting",self.n_OnReceiveChangeContract)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","cancelContract","gs.Id",self.n_OnReceiveCancelContract)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","signContract","gs.Contract",self.n_OnReceiveSignContract)
 end
 ---客户端请求---
 --打开原料厂
@@ -107,22 +102,15 @@ end
 function RetailStoresModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
     self.funModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
---修改货架价格
-function RetailStoresModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
-    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty)
+--修改货架属性
+function RetailStoresModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
 function RetailStoresModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
     self.funModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty)
 end
-----添加生产线
---function RetailStoresModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
---    self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
---end
-----删除生产线
---function RetailStoresModel:m_ReqDeleteLine(buildingId,lineId)
---    self.funModel:m_ReqDeleteLine(buildingId,lineId)
---end
+
 --货架购买
 function RetailStoresModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
     self.funModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,wareHouseId,producerId,qty)
@@ -131,10 +119,7 @@ end
 function RetailStoresModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
     self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
-----生产线置顶
---function RetailStoresModel:m_ReqSetLineOrder(buildingId,lineId,pos)
---    self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
---end
+
 ----自动补货
 function RetailStoresModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -166,14 +151,6 @@ function RetailStoresModel:n_OnOpenRetailStores(stream)
 end
 --运输
 function RetailStoresModel:n_OnBuildingTransportInfo(data)
-    --local bagId = DataManager.GetBagId()
-    --local n = data.item.n
-    --local itemId = data.item.key.id
-    --local qty = data.item.key.qty
-    --local producerId = data.item.key.producerId
-    --if data.dst == bagId then
-    --    Event.Brocast("c_AddBagInfo",itemId,producerId,qty,n)
-    --end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -182,52 +159,65 @@ function RetailStoresModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
     Event.Brocast("refreshShelfPartCount")
 end
---修改货架价格
+--修改货架属性
 function RetailStoresModel:n_OnModifyShelfInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
+    Event.Brocast("replenishmentSucceed",data)
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenRetailShop(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
+    end
 end
 --下架
 function RetailStoresModel:n_OnShelfDelInfo(data)
     Event.Brocast("downShelfSucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    if data ~= nil and data.buildingId == self.insId then
+        self:m_ReqOpenRetailShop(self.insId)
+        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
+    end
 end
 --添加生产线
 function RetailStoresModel:n_OnAddLineInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
---删除生产线
-function RetailStoresModel:n_OnDeleteLineInfo(data)
-    Event.Brocast("detailPartUpdateNowLine",data)
-    Event.Brocast("partUpdateNowLine",data)
-end
---生产线变化推送
-function RetailStoresModel:n_OnLineChangeInform(data)
-    Event.Brocast("partUpdateNowCount",data)
-    Event.Brocast("detailPartUpdateNowCount",data)
-    Event.Brocast("partUpdateCapacity",data)
-    Event.Brocast("detailPartUpdateCapacity",data)
-end
 --货架购买
 function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("buySucceed",data)
     Event.Brocast("refreshShelfPartCount")
-
-    --DataManager.ControllerRpcNoRet(self.insId,"ShelfCtrl",'RefreshShelfData',data)
 end
 --销毁仓库原料或商品
 function RetailStoresModel:n_OnDelItemInfo(data)
-    DataManager.ControllerRpcNoRet(self.insId,"DeleteItemBoxCtrl",'DestroyAfterRefresh',data)
-end
---生产线置顶
-function RetailStoresModel:n_OnSetLineOrderInform(data)
-    Event.Brocast("SettopSuccess",data)
+    Event.Brocast("deleteSucceed",data)
+    Event.Brocast("refreshWarehousePartCount")
 end
 --自动补货
 function RetailStoresModel:n_OnSetAutoReplenish(data)
     local aaa = data
-    local bbb = ""
 end
---添加购物车
-function RetailStoresModel:n_OnAddShoppingCart(data)
-
+--关闭签约
+function RetailStoresModel:n_OnReceiveCloseContract(data)
+    if data ~= nil and data.id == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_selfCloseSign', data)
+    end
 end
+--开启/调整签约
+function RetailStoresModel:n_OnReceiveChangeContract(data)
+    if data ~= nil and data.buildingId == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_changeSignInfo', data)
+    end
+end
+--自己取消自己的签约
+function RetailStoresModel:n_OnReceiveCancelContract(data)
+    if data ~= nil and data.id == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_selfCancelSign', data)
+    end
+end
+--签约成功
+function RetailStoresModel:n_OnReceiveSignContract(data)
+    if data ~= nil and data.buildingId == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", '_signSuccess', data)
+    end
+end
+----添加购物车
+--function RetailStoresModel:n_OnAddShoppingCart(data)
+--
+--end

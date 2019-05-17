@@ -6,6 +6,10 @@
 ShelfItem = class('ShelfItem')
 local ToNumber = tonumber
 local StringSun = string.sub
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,stateType)
     self.keyId = keyId
     self.prefab = prefab
@@ -64,14 +68,28 @@ function ShelfItem:InitializeData()
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
-        --self.levelImg
-        --self.brandNameText
+        --如果是商品，判断原料等级
+        if Good[self.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
+        self.brandNameText.text = DataManager.GetCompanyName()
         --self.brandValue
         --self.qualityValue
     end
 end
 --点击详情购买
 function ShelfItem:_clickDetailsBtn(ins)
+    --如果是零售店
+    if ins.buildingType == BuildingType.RetailShop then
+        if ins.isOther == true then
+            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", 300)
+            return
+        end
+    end
     --货架上如果是自己点击
     if ins.isOther == false then
         ct.OpenCtrl("ShelfBoxCtrl",ins)

@@ -6,8 +6,13 @@
 BuildingProductionDetailPart = class('BuildingProductionDetailPart',BuildingBaseDetailPart)
 
 local Math_Ceil = math.ceil
+local Math_Floor = math.floor
 local nowTime = 0
 local LastTime = 0
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function BuildingProductionDetailPart:PrefabName()
     return "BuildingProductionDetailPart"
 end
@@ -83,6 +88,7 @@ function BuildingProductionDetailPart:_getComponent(transform)
     self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content")
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
+    self.addBg = transform:Find("contentRoot/content/rightRoot/content/addBg")
     self.rightAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn"):GetComponent("Button")
 
     self.lineItemPrefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/LineItem").gameObject
@@ -139,11 +145,12 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
-    self.tipText.transform.localScale = Vector3.zero
+    self.tipText.text = ""
+    self.Capacity = self:getWarehouseCapacity()
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
-        self.lineNumberText.text = 0 .."/"..0
+        self.lineNumberText.text = 0 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
     else
         self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
@@ -167,6 +174,14 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
             self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --如果是商品，判断原料等级
+            if Good[lineData[1].itemId].luxury == 1 then
+                self.levelImg.color = getColorByVector3(oneLevel)
+            elseif Good[lineData[1].itemId].luxury == 2 then
+                self.levelImg.color = getColorByVector3(twoLevel)
+            elseif Good[lineData[1].itemId].luxury == 3 then
+                self.levelImg.color = getColorByVector3(threeLevel)
+            end
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -179,20 +194,32 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.timeSlider.value = Math_Ceil((self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000)
         self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value) * 1000)
 
-        --是商品时
-        local goodsKey = 22
-        if math.floor(self.itemId / 100000) == goodsKey then
-            --原料不足时
-            if self:CheckMaterial(self.itemId) == false then
-                --self.timeText.text = "00:00:00"
-                UpdateBeat:Remove(self.Update,self)
-                self.oneTimeText.text = "00:00"
-                self.timeSlider.value = 0
-                self.tipText.text = "原料不足无法生产!!!"
+        if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
+            UpdateBeat:Remove(self.Update,self)
+            self.timeSlider.value = 0
+            self.oneTimeText.text = "00:00"
+            self.tipText.text = "仓库容量已满!!!"
+            return
+        else
+            --是商品时
+            local goodsKey = 22
+            if Math_Floor(self.itemId / 100000) == goodsKey then
+                --原料不足时
+                if self:checkMaterial(self.itemId) == false then
+                    UpdateBeat:Remove(self.Update,self)
+                    self.oneTimeText.text = "00:00"
+                    self.timeSlider.value = 0
+                    self.tipText.text = "原料不足无法生产!!!"
+                end
             end
         end
 
-        self.lineNumberText.text = #lineData.."/"..#lineData
+        self.lineNumberText.text = #lineData.."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
+        if #lineData == PlayerBuildingBaseData[self.m_data.info.mId].lineNum then
+            self.addBg.transform.localScale = Vector3.zero
+        else
+            self.addBg.transform.localScale = Vector3.one
+        end
         --判断当前有没有代生产队列
         if #lineData == 1 then
             self.noLineTip.text = "you can add some production lines."
@@ -271,27 +298,34 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --刷新时间
 function BuildingProductionDetailPart:Update()
-    ---刷新总时间
-    --检查正在生产中的总时间
-    if self.time == nil or self.time <= 0 then
-        self.timeText.text = "00:00:00"
-        self.oneTimeText.text = "00:00"
-        self.timeSlider.value = 0
+    if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
         UpdateBeat:Remove(self.Update,self)
+        self.timeSlider.value = 0
+        self.tipText.text = "仓库容量已满!!!"
         return
-    end
-    local goodsKey = 22
-    if math.floor(self.itemId / 100000) == goodsKey then
-        --原料不足时
-        if self:CheckMaterial(self.itemId) == false then
-            --self.timeText.text = "00:00:00"
-            UpdateBeat:Remove(self.Update,self)
-            self.oneTimeText.text = "00:00"
-            self.timeSlider.value = 0
-            self.tipText.text = "原料不足无法生产!!!"
-            return
+    else
+        local goodsKey = 22
+        if Math_Floor(self.itemId / 100000) == goodsKey then
+            --原料不足时
+            if self:checkMaterial(self.itemId) == false then
+                UpdateBeat:Remove(self.Update,self)
+                self.oneTimeText.text = "00:00"
+                self.timeSlider.value = 0
+                self.tipText.text = "原料不足无法生产!!!"
+                return
+            end
         end
     end
+    ----刷新总时间
+    ----检查正在生产中的总时间
+    --if self.time == nil or self.time <= 0 then
+    --    self.timeText.text = "00:00:00"
+    --    self.oneTimeText.text = "00:00"
+    --    self.timeSlider.value = 0
+    --    UpdateBeat:Remove(self.Update,self)
+    --    return
+    --end
+
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -396,8 +430,8 @@ function BuildingProductionDetailPart:updateNowLine(data)
         end
     end
 end
-----------------------------------------------
----临时删除一条代生产的线
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)
     if next(self.waitingQueueIns) == nil then
         return
@@ -405,11 +439,19 @@ function BuildingProductionDetailPart:updateListLine(id)
         destroy(self.waitingQueueIns[id].prefab.gameObject)
         table.remove(self.waitingQueueIns,id)
     end
+    if #self.waitingQueueIns + 1 == PlayerBuildingBaseData[self.m_data.info.mId].lineNum then
+        self.addBg.transform.localScale = Vector3.zero
+    else
+        self.addBg.transform.localScale = Vector3.one
+    end
+    self.lineNumberText.text = #self.waitingQueueIns + 1 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
+    if next(self.waitingQueueIns) == nil then
+        self.noLineTip.transform.localScale = Vector3.one
+    end
 end
-----------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --如果生产中是商品，检查原料够不够
-function BuildingProductionDetailPart:CheckMaterial(itemId)
+function BuildingProductionDetailPart:checkMaterial(itemId)
     --如果仓库是空的
     if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
         return false
@@ -423,7 +465,7 @@ function BuildingProductionDetailPart:CheckMaterial(itemId)
         --仓库中有的原料
         for key1,value1 in pairs(self.m_data.store.inHand) do
             if value1.key.id == value.itemId then
-                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
+                materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
                 isMeet = true
             end
         end
@@ -440,4 +482,24 @@ function BuildingProductionDetailPart:CheckMaterial(itemId)
     else
         return true
     end
+end
+--获取仓库容量，如果仓库容量已满，停止时间刷新
+function BuildingProductionDetailPart:getWarehouseCapacity()
+    local warehouseNowCount = 0
+    local lockedNowCount = 0
+    if not self.m_data.store.inHand then
+        warehouseNowCount = 0
+    else
+        for key,value in pairs(self.m_data.store.inHand) do
+            warehouseNowCount = warehouseNowCount + value.n
+        end
+    end
+    if not self.m_data.store.locked then
+        lockedNowCount = 0
+    else
+        for key,value in pairs(self.m_data.store.locked) do
+            lockedNowCount = lockedNowCount + value.n
+        end
+    end
+    return warehouseNowCount + lockedNowCount
 end

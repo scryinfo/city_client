@@ -953,6 +953,15 @@ function DataManager.RegisterErrorNetMsg()
             info_RegisterErrorNetMsg.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info_RegisterErrorNetMsg)
         end
+
+        for i=#ModelNetMsgStackNoIns[protoData.opcode],1,-1 do
+            local fun = ModelNetMsgStackNoIns[protoData.opcode][i]
+            if fun.ins == nil then
+                fun.fun(protoData,msgErrId_RegisterErrorNetMsg)
+            else
+                fun.fun(fun.ins, protoData,msgErrId_RegisterErrorNetMsg)
+            end
+        end
     end ,nil)
 
     --CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),function (stream)

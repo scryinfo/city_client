@@ -42,7 +42,7 @@ function LoginCtrl:Active()
 	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
-	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
 
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
@@ -57,16 +57,18 @@ function LoginCtrl:Active()
 end
 
 function LoginCtrl:Refresh()
-	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	--ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
-	--if self.m_data ~= nil then
-	--	self:setPosition(self.m_data.x,self.m_data.y)
-	--end
 end
 
 function LoginCtrl:Hide()
 	UIPanel.Hide(self)
-	self:close()
+	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
+	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
+	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
+	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
+	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
+	Event.RemoveListener("SmallPop",self.c_SmallPop,self)
 end
 
 function LoginCtrl:_initData()
@@ -87,15 +89,9 @@ function LoginCtrl:OnCreate(go)
 end
 
 --关闭事件--
-function LoginCtrl:close()
-	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
-	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
-	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
-	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-	--Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+function LoginCtrl:Close()
+	UIPanel.Close(self)
 	Event.Brocast("c_RemoveListener")
-	destroy(self.gameObject);
 end
 
 function LoginCtrl:onClickChooseGameServer(serverId)
@@ -106,24 +102,36 @@ function LoginCtrl:OnLogin(go)
 	PlayMusEff(1002)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
-	if username == "" then
-		--ct.log("system"," 账号不能为空")
+	if username == "" or pw == "" then
 		Event.Brocast("SmallPop",GetLanguage(10020004),300)
 	else
-		--CityEngineLua.login(username, pw, "lxq");
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
-		LoginPanel.btnLogin:GetComponent("Button").enabled = false
+		--LoginPanel.btnLogin:GetComponent("Button").enabled = false
+	end
+end
+
+--登录回调
+function LoginCtrl:c_Aslogin(info,msgId)
+	LoginPanel.textStatus.transform.localScale = Vector3.zero
+	if msgId == 0 then
+		if info.reason == "accountInFreeze" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号冻结"
+		end
+	else
+		if info.status == "FAIL_ACCOUNT_UNREGISTER" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号未注册"
+		elseif info.status == "FAIL_ERROR" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号或密码错误"
+		end
 	end
 end
 --注册--
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
-	if go.logined == false then
-		ct.log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
-	else
-		--目前还没有手动注册
-		Event.Brocast("m_Gslogin");
-	end
+	ct.OpenCtrl("InviteCodeCtrl")
 end
 ------------------回调--------------
 function LoginCtrl:onReqAvatarList( avatarList )
@@ -143,12 +151,6 @@ function LoginCtrl:c_Disconnect( errorCode )
 	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 
---[[function LoginCtrl:c_GsLoginSuccess()
-	--UIPanel:ClearAllPages()
-	--UIPanel:ShowPage(RoleManagerCtrl)
-	--UIPanel:ShowPage(TopBarCtrl)
-	--UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")
-end--]]
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
 	if errorCode ~= 0 then

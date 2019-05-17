@@ -15,6 +15,10 @@ local minute
 local second
 local defaultPos_Y= -74
 local pool={}
+local playerOneInfo
+local playerTwoInfo
+local optionTwoScript ={}
+local optionOneScript ={}
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -94,14 +98,10 @@ function VolumeCtrl:Awake()
 
 
     -- 第一层信息展示
-    self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
-    self.evaOptionTwoSource.mProvideData = VolumeCtrl.static.evaOptionTwoData
-    self.evaOptionTwoSource.mClearData = VolumeCtrl.static.evaOptionTwoClearData
+    self.playerOneInfo = UnityEngine.UI.LoopScrollDataSource.New()  --交易信息
+    self.playerOneInfo.mProvideData = VolumeCtrl.static.OptionOneData
+    self.playerOneInfo.mClearData = VolumeCtrl.static.OptionOneClearData
 
-    -- 第二层信息展示
-    self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
-    self.evaOptionThereSource.mProvideData = VolumeCtrl.static.evaOptionThereData
-    self.evaOptionThereSource.mClearData = VolumeCtrl.static.evaOptionThereClearData
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.Update, self), 1, -1, true)
@@ -116,6 +116,8 @@ function VolumeCtrl:Active()
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
     Event.AddListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
     Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.AddListener("c_allbuyAmount",self.c_allbuyAmount,self) --玩家所有交易量
+    Event.AddListener("c_currebPlayerNum",self.c_allPlayerAmount,self) --玩家数量
 
 end
 function VolumeCtrl:Refresh()
@@ -131,8 +133,10 @@ function VolumeCtrl:Hide()
     end
     Event.RemoveListener("c_NpcNum",self.c_NpcNum,self)
     Event.RemoveListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
-    Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
-    Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self)  --所有npc交易量
+    Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self)        --所有交易量
+    Event.RemoveListener("c_allbuyAmount",self.c_allbuyAmount,self)          --玩家所有交易量
+    Event.RemoveListener("c_currebPlayerNum",self.c_allPlayerAmount,self)          --玩家数量
 end
 
 function VolumeCtrl:initInsData()
@@ -207,6 +211,15 @@ function VolumeCtrl:c_ExchangeAmount(info)
     VolumePanel.volumeText.text = "E"..getMoneyString(GetClientPriceString(info))
 end
 
+--玩家所有交易量
+function VolumeCtrl:c_allbuyAmount(info)
+    VolumePanel.TradingCount.text = "E"..getMoneyString(GetClientPriceString(info))
+end
+--玩家数量
+function VolumeCtrl:c_allPlayerAmount(info)
+    VolumePanel.Tradingnum.text = info
+end
+
 --初始化
 function VolumeCtrl:initData()
     clothes = {}
@@ -224,6 +237,8 @@ function VolumeCtrl:initData()
             clothesIndex = clothesIndex +1
         end
     end
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 --返回
@@ -366,6 +381,10 @@ function VolumeCtrl:OncitzenRect(ins)
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
     VolumePanel.playercurrRoot.gameObject:SetActive(false)
+    VolumePanel.trade.localScale = Vector3.zero
+    VolumePanel.strade.localScale = Vector3.zero
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 0),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
@@ -384,37 +403,50 @@ function VolumeCtrl:OnplayerRect(ins)
     VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNum')
     VolumePanel.infoBgrRect.localScale= Vector3.one
     VolumePanel.playercurrRoot.gameObject:SetActive(true)
-    --VolumePanel.Tradingnum.text =
 
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
-    ins:initPayerVolume()
+    VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
+    --self:initPayerVolume()
 
 end
 
-function VolumeCtrl:initPayerVolume()
+function VolumeCtrl:initPayerVolume(go)
     local temps ={}
     --InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
-
 end
 
 -- 第一层信息显示
-VolumeCtrl.static.evaOptionTwoData = function(transform, idx)
+VolumeCtrl.static.OptionOneData = function(transform, idx)
     idx = idx + 1
-    VolumeCtrl.optionTwoScript[idx] = ToggleBtnItem:new(transform, 2, idx)
+    optionOneScript[idx] = ToggleBtnItem:new(transform, volumeBehaviour, DealConfig[idx], idx)
+    volumeBehaviour:AddClick(transform.transform:Find("bgBtn").gameObject,VolumeCtrl.c_OnClick_Delete,optionOneScript[idx])
 end
 
-VolumeCtrl.static.evaOptionTwoClearData = function(transform)
+function VolumeCtrl:c_OnClick_Delete(ins)
+    local item = {}
+    local type = ins.data.childs
+    optionOneScript[ins.ctrl]:Aaa(DealConfig[ins.ctrl])
+    VolumePanel.strade.localScale = Vector3.zero
+    VolumePanel.trade.localScale = Vector3.zero
+    if optionOneScript[ins.ctrl].city then
+        VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
+    end
+    if ins.data.childs.childs ~= nil then
+        VolumePanel.threeScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnThreeItem")
+    else
+        VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnTwoItem")
+    end
+
+    prints("ToggleBtnItem")
+end
+VolumeCtrl.static.OptionOneClearData = function(transform)
 end
 
--- 第二层信息显示
-VolumeCtrl.static.evaOptionThereData = function(transform, idx)
-    idx = idx + 1
-    VolumeCtrl.optionThereScript[idx] = ToggleBtnItem:new(transform, 3, idx)
-end
 
-VolumeCtrl.static.evaOptionThereClearData = function(transform)
-end
+

@@ -30,18 +30,20 @@ function VolumePanel.InitPanel()
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")
     this.content = transform:Find("Volume/title/content"):GetComponent("Text")
     this.playercurrRoot = transform:Find("playercurr");
-    this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content");
-    this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/Content");
+    --this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content"):GetComponent("ActiveLoopScrollRect");
+    this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
+    this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
+    this.threeScroll = this.playercurrRoot:Find("topRoot/threeScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
 
     --left
     this.citzenRect = transform:Find("leftBg/citzen"):GetComponent("RectTransform");
     this.turnoverRect = transform:Find("leftBg/moneyBg"):GetComponent("RectTransform");
     this.playerRect = transform:Find("leftBg/player"):GetComponent("RectTransform");
     this.infoBgrRect = transform:Find("leftBg/infoBg"):GetComponent("RectTransform");
-    this.TradingImg = transform:Find("leftBg/infoBg/Tradingvolume/count"):GetComponent("Text");     --玩家交易量
-    this.Tradingvolume = transform:Find("leftBg/infoBg/Tradingvolume/name");
+    this.TradingCount = transform:Find("leftBg/infoBg/Tradingvolume/count"):GetComponent("Text");     --玩家交易量
+    this.Tradingname = transform:Find("leftBg/infoBg/Tradingvolume/name");
     this.Tradingnum = transform:Find("leftBg/infoBg/Tradingnum/count"):GetComponent("Text");        --玩家人数
-    this.TradingImg = transform:Find("leftBg/infoBg/Tradingnum/name"):GetComponent("Text");
+    this.Tradingnumname = transform:Find("leftBg/infoBg/Tradingnum/name"):GetComponent("Text");
 
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额
@@ -75,6 +77,21 @@ function VolumePanel.InitPanel()
     this.undateTime = transform:Find("rightBg/updateImage/undateTime"):GetComponent("Text"); --更新时间倒计时
     this.content = transform:Find("rightBg/Scroll View/Viewport/Content");
     this.scroll = transform:Find("rightBg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect");
+
+    --PlayerTrading
+    this.trade =  transform:Find("PlayerTrading")
+    this.yScale = transform:Find("PlayerTrading/trade/yScale"):GetComponent("RectTransform");  --Y轴
+    this.curve = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("RectTransform");
+    this.slide = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
+    this.graph = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");     --绘制曲线
+
+    --PlayerSTrading
+    this.strade =  transform:Find("PlayerSTrading")
+    this.yScale = transform:Find("PlayerSTrading/trade/yScale"):GetComponent("RectTransform");  --Y轴
+    this.curve = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("RectTransform");
+    this.slide = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
+    this.graph = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
+
 
     this.titleBg = transform:Find("titleBg").gameObject; --提示框Bg
 end

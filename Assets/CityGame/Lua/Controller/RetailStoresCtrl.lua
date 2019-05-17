@@ -49,18 +49,19 @@ end
 
 --刷新原料厂信息
 function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
+    --初始化
+    RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
+
+    self.m_data = retailShopDataInfo
+    self.m_data.insId = self.m_data.insId
+    self.m_data.buildingType = BuildingType.RetailShop
+    retailShopDataInfo.info.buildingType = BuildingType.RetailShop
+
     if RetailStoresPanel.topItem ~= nil then
         RetailStoresPanel.topItem:refreshData(retailShopDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
-
-    local insId = self.m_data.insId
-    self.m_data = retailShopDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.RetailShop
 
     --判断是自己还是别人打开了界面
     if retailShopDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then

@@ -52,18 +52,19 @@ end
 
 --刷新原料厂信息
 function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
+    --初始化
+    ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
+
+    self.m_data = processingDataInfo
+    self.m_data.insId = self.m_data.insId
+    self.m_data.buildingType = BuildingType.ProcessingFactory
+    processingDataInfo.info.buildingType = BuildingType.ProcessingFactory
+
     if ProcessingFactoryPanel.topItem ~= nil then
         ProcessingFactoryPanel.topItem:refreshData(processingDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
-
-    local insId = self.m_data.insId
-    self.m_data = processingDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.ProcessingFactory
 
     --判断是自己还是别人打开了界面
     if processingDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then

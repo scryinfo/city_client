@@ -5,4 +5,169 @@
 ---建筑信息详情
 
 BuildingInformationCtrl = class('BuildingInformationCtrl',UIPanel)
+UIPanel:ResgisterOpen(BuildingInformationCtrl)
 
+function BuildingInformationCtrl:initialize()
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+end
+
+function BuildingInformationCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/BuildingInformationPanel.prefab"
+end
+
+function BuildingInformationCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+end
+
+function BuildingInformationCtrl:Awake(go)
+    self.gameObject = go
+    self:_getComponent(go)
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.buildingNomal.gameObject,self._clickBuildingNomal,self)
+    self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
+
+end
+
+function BuildingInformationCtrl:Refresh()
+    self:language()
+    self:getBuildingInfo()
+    self:initializeUiInfoData()
+end
+
+function BuildingInformationCtrl:Hide()
+    UIPanel.Hide(self)
+
+end
+-------------------------------------------------------------获取组件---------------------------------------------------------------------------------
+function BuildingInformationCtrl:_getComponent(go)
+    ---TopRoot
+    self.closeBtn = go.transform:Find("topRoot/top/closeBtn")
+    self.topName = go.transform:Find("topRoot/top/topName"):GetComponent("Text")
+    --buildingInfoBtn
+    self.buildingNomal = go.transform:Find("topRoot/button/buildingInfoBtn/nomal")      --建筑信息按钮未选择
+    self.buildingNomalText = go.transform:Find("topRoot/button/buildingInfoBtn/nomal/nomalText"):GetComponent("Text")
+    self.buildingChoose = go.transform:Find("topRoot/button/buildingInfoBtn/choose")    --建筑信息按钮已选择
+    self.buildingChooseText = go.transform:Find("topRoot/button/buildingInfoBtn/choose/chooseText"):GetComponent("Text")
+    --landInfomationBtn
+    self.landNomal = go.transform:Find("topRoot/button/landInfomationBtn/nomal")        --土地信息按钮未选择
+    self.landNomalText = go.transform:Find("topRoot/button/landInfomationBtn/nomal/nomalText"):GetComponent("Text")
+    self.landChoose = go.transform:Find("topRoot/button/landInfomationBtn/choose")      --土地信息按钮已选择
+    self.landChooseText = go.transform:Find("topRoot/button/landInfomationBtn/choose/chooseText"):GetComponent("Text")
+    ---content
+    --buildingInfoRoot
+    self.buildingInfoRoot = go.transform:Find("content/buildingInfoRoot")               --建筑信息
+    self.buildingName = go.transform:Find("content/buildingInfoRoot/content/buildingName"):GetComponent("Text")
+    self.buildingTypeText = go.transform:Find("content/buildingInfoRoot/content/buildingTypeText"):GetComponent("Text")
+    self.tipText = go.transform:Find("content/buildingInfoRoot/content/tipBg/tipText"):GetComponent("Text")
+    self.buildingIcon = go.transform:Find("content/buildingInfoRoot/content/buildingIcon"):GetComponent("Image")
+    self.buildTimeText = go.transform:Find("content/buildingInfoRoot/content/infoBg/buildTimeText"):GetComponent("Text")
+    self.timeText = go.transform:Find("content/buildingInfoRoot/content/infoBg/timeText"):GetComponent("Text")
+    self.switchBtn = go.transform:Find("content/buildingInfoRoot/content/infoBg/switchBtn"):GetComponent("Text")
+    self.tipBox = go.transform:Find("content/buildingInfoRoot/content/tipBox")
+    self.tipBoxText = go.transform:Find("content/buildingInfoRoot/content/tipBox/tipBoxText"):GetComponent("Text")
+    --landInfoRoot
+    self.landInfoRoot = go.transform:Find("content/landInfoRoot")                       --土地信息
+
+    --buildingTypeContent                                                               --根据不同建筑生成不同的Item
+    self.buildingTypeContent = go.transform:Find("content/buildingInfoRoot/content/buildingTypeContent")
+end
+---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
+--请求建筑信息
+function BuildingInformationCtrl:getBuildingInfo()
+    if self.m_data then
+        self.m_data.insId = OpenModelInsID.BuildingInfoId
+        DataManager.OpenDetailModel(BuildingInformationModel,self.m_data.insId)
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqMaterialFactoryInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            --加工厂
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqProcessingFactoryInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            --零售店
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
+        end
+    end
+end
+--缓存建筑信息回调
+function BuildingInformationCtrl:builidngInfo(dataInfo)
+    self.buildingInfo = dataInfo
+end
+--初始化UI信息
+function BuildingInformationCtrl:initializeUiInfoData()
+    self.buildingName.text = self.m_data.name
+    self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
+    --开业停业重新开业。
+    --self.switchBtn.
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        --原料厂
+        if self.m_data.mId == 1100001 then
+            self.buildingTypeText.text = "小型原料厂"
+        elseif self.m_data.mId == 1100002 then
+            self.buildingTypeText.text = "中型原料厂"
+        elseif self.m_data.mId == 1100003 then
+            self.buildingTypeText.text = "大型原料厂"
+        end
+        self.tipText.text = "原料厂可生产各种基本原料，这些原料是生产产品所必需的。"
+    elseif self.m_data.buildingTypeContent == BuildingType.ProcessingFactory then
+        --加工厂
+    elseif self.m_data.buildingTypeContent == BuildingType.RetailShop then
+        --零售店
+    elseif self.m_data.buildingTypeContent == BuildingType.House then
+        --住宅
+    elseif self.m_data.buildingTypeContent == BuildingType.Municipal then
+        --推广公司
+    elseif self.m_data.buildingTypeContent == BuildingType.Laboratory then
+        --研究所
+    end
+    self:defaultBuildingInfoTrue()
+end
+
+--默认打开建筑信息
+function BuildingInformationCtrl:defaultBuildingInfoTrue()
+    self.tipBox.transform.localScale = Vector3.zero
+    self.buildingChoose.transform.localScale = Vector3.one
+    self.buildingInfoRoot.transform.localScale = Vector3.one
+    self.landChoose.transform.localScale = Vector3.zero
+    self.landInfoRoot.transform.localScale = Vector3.zero
+end
+--多语言
+function BuildingInformationCtrl:language()
+    self.topName.text = "建筑综合评分"
+    self.buildingNomalText.text = "建筑信息"
+    self.buildingChooseText.text = "建筑信息"
+    self.landNomalText.text = "土地信息"
+    self.landChooseText.text = "土地信息"
+    self.buildTimeText.text = "施工时间:"
+    self.tipBoxText.text = "基本生产速度是由就业人数和工资标准决定的。"
+end
+---------------------------------------------------------------点击函数--------------------------------------------------------------------------------
+--打开建筑信息
+function BuildingInformationCtrl:_clickBuildingNomal(ins)
+    PlayMusEff(1002)
+    ins.buildingChoose.transform.localScale = Vector3.one
+    ins.buildingInfoRoot.transform.localScale = Vector3.one
+    ins.landChoose.transform.localScale = Vector3.zero
+    ins.landInfoRoot.transform.localScale = Vector3.zero
+end
+--打开土地信息
+function BuildingInformationCtrl:_clickLandNomal(ins)
+    PlayMusEff(1002)
+    ins.landChoose.transform.localScale = Vector3.one
+    ins.landInfoRoot.transform.localScale = Vector3.one
+    ins.buildingChoose.transform.localScale = Vector3.zero
+    ins.buildingInfoRoot.transform.localScale = Vector3.zero
+end
+--关闭界面
+function BuildingInformationCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    UIPanel.ClosePage()
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------
+--时间格式转换
+function BuildingInformationCtrl:getStringTime(ms)
+    local timeTable = getFormatUnixTimeNumber(ms / 1000)
+    local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.min
+    return timeStr
+end

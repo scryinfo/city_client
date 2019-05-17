@@ -51,18 +51,19 @@ end
 
 --刷新原料厂信息
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
+    --初始化
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+
+    self.m_data = materialDataInfo
+    self.m_data.insId = self.m_data.insId
+    self.m_data.buildingType = BuildingType.MaterialFactory
+    materialDataInfo.info.buildingType = BuildingType.MaterialFactory
+
     if MaterialFactoryPanel.topItem ~= nil then
         MaterialFactoryPanel.topItem:refreshData(materialDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
-
-    local insId = self.m_data.insId
-    self.m_data = materialDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.MaterialFactory
 
     --判断是自己还是别人打开了界面
     if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then

@@ -32,16 +32,18 @@ function CompanyPanel.InitPanel()
     -- 基础信息显示
     this.headImage = transform:Find("BottomRoot/InfoRoot/NameRoot/HeadBg")
     this.companyNameText = transform:Find("BottomRoot/InfoRoot/NameRoot/CompanyNameText"):GetComponent("Text")
+    this.sexImage = transform:Find("BottomRoot/InfoRoot/NameRoot/SexImage"):GetComponent("Image")
     this.nameText = transform:Find("BottomRoot/InfoRoot/NameRoot/NameText"):GetComponent("Text")
-    --this.incomeText = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/IncomeText"):GetComponent("Text")
-    --this.expenditureText = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/ExpenditureText"):GetComponent("Text")
     --this.coinBg = transform:Find("BottomRoot/InfoRoot/CoinBg").gameObject
     --this.coinText = transform:Find("BottomRoot/InfoRoot/CoinBg/CoinText"):GetComponent("Text")
     this.foundingTimeText = transform:Find("BottomRoot/InfoRoot/NameRoot/FoundingTimeText"):GetComponent("Text")
+    this.companyRenameBtn = transform:Find("BottomRoot/InfoRoot/NameRoot/CompanyRenameBtn")
     this.yScaleRT = transform:Find("BottomRoot/InfoRoot/IEPic/yScale"):GetComponent("RectTransform")
     this.curve = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve")
     this.curveSlide = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve"):GetComponent("Slide")
     this.curveFunctionalGraph = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve"):GetComponent("FunctionalGraph")
+    this.incomeText = transform:Find("BottomRoot/InfoRoot/IERoot/IncomeText"):GetComponent("Text")
+    this.expenditureText = transform:Find("BottomRoot/InfoRoot/IERoot/ExpenditureText"):GetComponent("Text")
 
     -- 交易记录
     --this.businessRecordsScroll = transform:Find("BottomRoot/BusinessRecordsRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
@@ -90,5 +92,18 @@ function CompanyPanel.InitPanel()
 
     -- 品牌显示
     this.brandTitleContent = transform:Find("BottomRoot/BrandRoot/TitleScroll/Viewport/Content")
+    this.sizeBtn = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBtn")
+    this.sizeBtnImage = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBtn/Image")
+    this.sizeBtnText = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBtn/Text"):GetComponent("Text")
+    this.sizeBg = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBg")
+    this.choiceOBtn = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBg/ChoiceOBtn")
+    this.choiceOBtnText = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBg/ChoiceOBtn/Text"):GetComponent("Text")
+    this.choiceTBtn = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBg/ChoiceTBtn")
+    this.choiceTBtnText = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBg/ChoiceTBtn/Text"):GetComponent("Text")
     this.brandScroll = transform:Find("BottomRoot/BrandRoot/ContentRoot/ContentScroll"):GetComponent("ActiveLoopScrollRect")
+    this.brandScrollContent = transform:Find("BottomRoot/BrandRoot/ContentRoot/ContentScroll/Content"):GetComponent("GridLayoutGroup")
+
+    -- 没内容提示
+    this.noContentRoot = transform:Find("BottomRoot/NoContentRoot")
+    this.tipsText = transform:Find("BottomRoot/NoContentRoot/TipsText"):GetComponent("Text")
 end

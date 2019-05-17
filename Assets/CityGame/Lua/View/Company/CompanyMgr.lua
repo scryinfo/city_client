@@ -7,7 +7,8 @@
 -- 公司管理器
 CompanyMgr = class("CompanyMgr")
 
-function CompanyMgr:initialize()
+function CompanyMgr:initialize(ctrl)
+    self.ctrl = ctrl
     -- 当前土地显示的项数记录
     self.landTypeNum = 0
     -- 土地item的个数
@@ -23,7 +24,7 @@ function CompanyMgr:initialize()
     -- 品牌item的个数
     self.brandTitleItemNumber = 5
     -- 当前品牌显示的大小
-    self.brandSizeNum = 0
+    self.brandSizeNum = 1
 end
 
 -- 获取土地选项item
@@ -70,9 +71,8 @@ function CompanyMgr:GetEvaTitleItem()
 end
 
 -- 生成Eva选项item
-function CompanyMgr:CreateEvaTitleItem(ctrl)
+function CompanyMgr:CreateEvaTitleItem()
     self.evaTitleItem = {}
-    self.ctrl = ctrl
     for i, v in ipairs(EvaConfig) do
         local function callback(obj)
             self.evaTitleItem[i] = OptionItem:new(obj, 1, i)
@@ -202,16 +202,123 @@ function CompanyMgr:GetBrandTitleItem()
     return self.brandTitleItem
 end
 
--- 生成土地选项item
+-- 生成品牌选项item
 function CompanyMgr:CreateBrandTitleItem()
     self.brandTitleItem = {}
     for i = 1, self.brandTitleItemNumber do
         local function callback(obj)
             self.brandTitleItem[i] = BrandTitleItem:new(obj, i)
-            --if i == self.brandTitleItemNumber then
-            --    DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
-            --end
+            if i == self.brandTitleItemNumber then
+                DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBrands')
+            end
         end
         DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/BrandTitleItem.prefab", CompanyPanel.brandTitleContent, nil, callback)
+    end
+end
+
+-- 保存品牌数据
+function CompanyMgr:SetBrandData(MyAllBrands)
+    self.brandData = MyAllBrands
+end
+
+-- 品牌默认选择
+function CompanyMgr:SetBrandDefaultState()
+    --CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
+    self.brandTitleItem[1]:_setContent()
+end
+
+-- 获得品牌大小
+function CompanyMgr:GetBrandSizeNum()
+    return self.brandSizeNum
+end
+
+-- 设置品牌大小
+function CompanyMgr:SetBrandSizeNum(brandSizeNum)
+    if brandSizeNum == 1 then
+        CompanyPanel.sizeBtnText.text = "Small"
+        CompanyPanel.choiceOBtnText.text = "Medium"
+        CompanyPanel.choiceTBtnText.text = "Large"
+    elseif brandSizeNum == 2 then
+        CompanyPanel.sizeBtnText.text = "Medium"
+        CompanyPanel.choiceOBtnText.text = "Small"
+        CompanyPanel.choiceTBtnText.text = "Large"
+    elseif brandSizeNum == 3 then
+        CompanyPanel.sizeBtnText.text = "Large"
+        CompanyPanel.choiceOBtnText.text = "Small"
+        CompanyPanel.choiceTBtnText.text = "Medium"
+    end
+    CompanyPanel.sizeBg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+    CompanyPanel.sizeBtnImage:DORotate(Vector3.New(0,0,180),0.1):SetEase(DG.Tweening.Ease.OutCubic)
+    self.brandSizeNum = brandSizeNum
+end
+
+-- 显示品牌
+function CompanyMgr:ShowBrandItem(index)
+    self.brandTypeNum = index
+    if index == 1 then
+        CompanyPanel.brandScrollContent.cellSize = Vector2.New(746, 260)
+        self.partBrandData = self.brandData["materialBrand"]
+    elseif index == 2 then
+        CompanyPanel.brandScrollContent.cellSize = Vector2.New(746, 412)
+        self.partBrandData = self.brandData["goodBrand"]
+    elseif index == 3 then
+        CompanyPanel.brandScrollContent.cellSize = Vector2.New(746, 412)
+        self.partBrandData = {}
+        for _, v in ipairs(self.brandData["apartmentBrand"]) do
+            table.insert(self.partBrandData, v)
+        end
+        for _, j in ipairs(self.brandData["retailShopBrand"]) do
+            table.insert(self.partBrandData, j)
+        end
+    elseif index == 4 then
+        CompanyPanel.brandScrollContent.cellSize = Vector2.New(746, 260)
+        self.partBrandData = self.brandData["promotionBrand"]
+    elseif index == 5 then
+        CompanyPanel.brandScrollContent.cellSize = Vector2.New(746, 260)
+        self.partBrandData = self.brandData["labBrand"]
+    end
+    CompanyCtrl.static.companyMgr.ctrl:ShowBrand(#self.partBrandData)
+end
+
+-- 重置品牌标题字的颜色
+function CompanyMgr:SetBrandTitleNameTextColor()
+    for _, v in ipairs(self.brandTitleItem) do
+        v:SetSelect(true)
+    end
+end
+
+-- 获得当前品牌显示的项数记录
+function CompanyMgr:GetBrandTypeNum()
+    return self.brandTypeNum
+end
+
+-- 获得当前人的公司名字
+function CompanyMgr:GetCompanyName()
+    return self.companyname
+end
+
+-- 设置当前人的公司名字
+function CompanyMgr:SetCompanyName(name)
+    self.companyname = name
+end
+
+-- 获得是否是自己
+function CompanyMgr:GetIsOwn()
+    return self.isOwn
+end
+
+-- 设置是否是自己
+function CompanyMgr:SetIsOwn(isOwn)
+    self.isOwn = isOwn
+end
+
+-- 设置改品牌名字
+function CompanyMgr:SetBrandName(modyfyMyBrandName)
+    for i, v in pairs(self.brandData) do
+        for k, j in ipairs(v) do
+            if modyfyMyBrandName.typeId == j.itemId then
+                self.brandData[i][k].brandName = modyfyMyBrandName.newBrandName
+            end
+        end
     end
 end

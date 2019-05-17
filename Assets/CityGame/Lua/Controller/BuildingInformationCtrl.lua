@@ -7,6 +7,10 @@
 BuildingInformationCtrl = class('BuildingInformationCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingInformationCtrl)
 
+--建筑信息Item路径
+BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
+BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
+BuildingInformationCtrl.RetailStoreItem_Path = "Assets/CityGame/Resources/View/NewItems/retailStoreItem.prefab"                 --零售店
 function BuildingInformationCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -28,7 +32,9 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
 
 end
-
+function BuildingInformationCtrl:Active()
+    Event.AddListener("openTipBox",self.openTipBox,self)
+end
 function BuildingInformationCtrl:Refresh()
     self:language()
     self:getBuildingInfo()
@@ -37,7 +43,8 @@ end
 
 function BuildingInformationCtrl:Hide()
     UIPanel.Hide(self)
-
+    destroy(self.buildingInfoItem.prefab.gameObject)
+    self.buildingInfoItem = nil
 end
 -------------------------------------------------------------获取组件---------------------------------------------------------------------------------
 function BuildingInformationCtrl:_getComponent(go)
@@ -90,10 +97,7 @@ function BuildingInformationCtrl:getBuildingInfo()
         end
     end
 end
---缓存建筑信息回调
-function BuildingInformationCtrl:builidngInfo(dataInfo)
-    self.buildingInfo = dataInfo
-end
+
 --初始化UI信息
 function BuildingInformationCtrl:initializeUiInfoData()
     self.buildingName.text = self.m_data.name
@@ -110,15 +114,43 @@ function BuildingInformationCtrl:initializeUiInfoData()
             self.buildingTypeText.text = "大型原料厂"
         end
         self.tipText.text = "原料厂可生产各种基本原料，这些原料是生产产品所必需的。"
-    elseif self.m_data.buildingTypeContent == BuildingType.ProcessingFactory then
+        local function callback(obj)
+            self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour)
+        end
+        createPrefab(BuildingInformationCtrl.MaterialFactoryItem_Path,self.buildingTypeContent,callback)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
-    elseif self.m_data.buildingTypeContent == BuildingType.RetailShop then
+        if self.m_data.mId == 1200001 then
+            self.buildingTypeText.text = "小型加工厂"
+        elseif self.m_data.mId == 1200002 then
+            self.buildingTypeText.text = "中型加工厂"
+        elseif self.m_data.mId == 1200003 then
+            self.buildingTypeText.text = "大型加工厂"
+        end
+        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        local function callback(obj)
+            self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour)
+        end
+        createPrefab(BuildingInformationCtrl.ProcessingFactoryItem_Path,self.buildingTypeContent,callback)
+    elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
-    elseif self.m_data.buildingTypeContent == BuildingType.House then
+        if self.m_data.mId == 1300001 then
+            self.buildingTypeText.text = "小型零售店"
+        elseif self.m_data.mId == 1300002 then
+            self.buildingTypeText.text = "中型零售店"
+        elseif self.m_data.mId == 1300003 then
+            self.buildingTypeText.text = "大型零售店"
+        end
+        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        local function callback(obj)
+            self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour)
+        end
+        createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
+    elseif self.m_data.buildingType == BuildingType.House then
         --住宅
-    elseif self.m_data.buildingTypeContent == BuildingType.Municipal then
+    elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
-    elseif self.m_data.buildingTypeContent == BuildingType.Laboratory then
+    elseif self.m_data.buildingType == BuildingType.Laboratory then
         --研究所
     end
     self:defaultBuildingInfoTrue()
@@ -163,6 +195,20 @@ end
 function BuildingInformationCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
+end
+---------------------------------------------------------------回调函数---------------------------------------------------------------------------
+--缓存建筑信息回调
+function BuildingInformationCtrl:builidngInfo(dataInfo)
+    self.buildingInfo = dataInfo
+end
+----------------------------------------------------------------事件函数---------------------------------------------------------------------------
+--打开提示框
+function BuildingInformationCtrl:openTipBox(stringData,position,parent)
+    if stringData ~= nil and position ~= nil then
+        self.tipBox.transform:SetParent(parent)
+        self.tipBox.transform.anchoredPosition = Vector3.New(-250,0,0)
+        self.tipBox.transform.localScale = Vector3.one
+    end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 --时间格式转换

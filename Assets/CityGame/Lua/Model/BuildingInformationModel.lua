@@ -21,7 +21,12 @@ function BuildingInformationModel:OnCreate()
 end
 
 function BuildingInformationModel:Close()
-
+    --原料厂
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
+    --加工厂
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
+    --零售店
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
 end
 
 ---客户端请求----

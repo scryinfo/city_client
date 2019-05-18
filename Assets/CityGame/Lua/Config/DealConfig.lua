@@ -107,8 +107,8 @@ DealConfig={
                 name = "副食",
                 childs = {
                     [1] = {
-                        name = "xxx",
-                        typeId = "xxx",
+                        name = "无",
+                        typeId = "000000",
                          EX=2
                     }
                 }
@@ -152,8 +152,8 @@ DealConfig={
                 name = "配饰",
                 childs = {
                     [1] = {
-                        name = "xxx",
-                        typeId = "xxx",
+                        name = "无",
+                        typeId = "0000000",
                          EX=2
                     }
                 }
@@ -162,8 +162,8 @@ DealConfig={
                 name = "运动",
                 childs = {
                     [1] = {
-                        name = "xxx",
-                        typeId = "xxx",
+                        name = "无",
+                        typeId = "0000000",
                          EX=2
                     }
                 }
@@ -172,8 +172,8 @@ DealConfig={
                 name = "数码",
                 childs = {
                     [1] = {
-                        name = "xxx",
-                        typeId = "xxx",
+                        name = "无",
+                        typeId = "0000000",
                          EX=2
                     }
                 }
@@ -255,8 +255,7 @@ DealConfig={
             childs = {
                 [1] = {
                     name = "无",
-                    typeId = 17,
-                    EX=6
+                    typeId = 17
                 },
             }
         },

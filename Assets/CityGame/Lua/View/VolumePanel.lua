@@ -87,10 +87,10 @@ function VolumePanel.InitPanel()
 
     --PlayerSTrading
     this.strade =  transform:Find("PlayerSTrading")
-    this.yScale = transform:Find("PlayerSTrading/trade/yScale"):GetComponent("RectTransform");  --Y轴
-    this.curve = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("RectTransform");
-    this.slide = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
-    this.graph = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
+    this.syScale = transform:Find("PlayerSTrading/trade/yScale"):GetComponent("RectTransform");  --Y轴
+    this.scurve = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("RectTransform");
+    this.sslide = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
+    this.sgraph = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
 
 
     this.titleBg = transform:Find("titleBg").gameObject; --提示框Bg

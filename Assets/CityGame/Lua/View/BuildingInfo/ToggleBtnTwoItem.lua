@@ -12,8 +12,6 @@ local insId
 local playerdata = {}
 local optionOneScript = {}
 local maxValue = 0
-local scaleValue
-local value
 
 ---初始化方法   数据（读配置表）
 function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
@@ -35,7 +33,7 @@ function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
     insId = OpenModelInsID.VolumeCtrl
     self:Refresh(data)
-
+    Event.AddListener("c_ToggleBtnTwoItem",self.c_GoodsplayerTypeNum,self)
     luaBehaviour:AddClick(self.bgBtn.gameObject,self._tradingOpenFunc,self)
 end
 
@@ -54,7 +52,7 @@ function ToggleBtnTwoItem:_tradingOpenFunc(ins)
         local info = {}
         info.id = ins.data.typeId
         info.exchangeType = ins.data.EX
-        --DataManager.DetailModelRpcNoRet(insId , 'm_PlayerNumCurve',info)
+        DataManager.DetailModelRpcNoRet(insId , 'm_PlayerNumCurve',info)
         VolumePanel.trade.localScale = Vector3.one
     end
 end
@@ -62,6 +60,7 @@ end
 --删除2
 function ToggleBtnTwoItem:c_OnClick_Roll(ins)
     ct.OpenCtrl("RollCtrl" , ins.data)
+    Event.RemoveListener("c_ToggleBtnTwoItem",self.c_GoodsplayerTypeNum,self)
 end
 
 ---==========================================================================================业务逻辑=============================================================================
@@ -103,6 +102,8 @@ end
 
 
 function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
+    VolumePanel.slide:Close()
+    VolumePanel.graph:Close()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -161,16 +162,20 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
             max = v.y
         end
     end
-    local scale = 0
-    if max > maxValue then
-        maxValue = max
-        scale = SetYScale(maxValue,6,HistoryCurvePanel.yScale)
+    local demandNumVet = {}
+    local scale = SetYScale(maxValue,6,VolumePanel.yScale)
+    for i, v in ipairs(demandNumValue) do
+        if scale == 0 then
+            demandNumVet[i] = v
+        else
+            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+        end
     end
-    scaleValue = scale
-    value = demandNumValue
 
     VolumePanel.slide:SetXScaleValue(time,116)
     VolumePanel.graph:BoundaryLine(boundaryLine)
+    VolumePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
+    VolumePanel.slide:SetCoordinate(demandNumVet,demandNumValue,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
 
     VolumePanel.curve.localPosition = VolumePanel.curve.localPosition + Vector3.New(0.01, 0,0)
     VolumePanel.curve.sizeDelta = VolumePanel.curve.sizeDelta + Vector2.New(0.01, 0)

@@ -5,7 +5,7 @@
 ---零售店建筑信息
 retailStoreItem = class('retailStoreItem')
 
-function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour)
+function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.dataInfo = dataInfo
     self.prefab = prefab
 
@@ -19,9 +19,19 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour)
 
     self.scoreText.text = 100
     self:language()
+
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
     luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
     luaBehaviour:AddClick(self.popolarityTextBtn.gameObject,self._clickPopolarityTextBtn,self)
+
+    --是否是建筑主人，如果不是则所有按钮不能点击
+    if isOther ~= DataManager.GetMyOwnerID() then
+        self.scoreBtn:GetComponent("Button").interactable = false
+        self.retailStoreIntroduceBtn:GetComponent("Button").interactable = false
+        self.basicQualityTextBtn:GetComponent("Button").interactable = false
+        self.qualityAdditionTextBtn:GetComponent("Button").interactable = false
+        self.popolarityTextBtn:GetComponent("Button").interactable = false
+    end
 end
 function retailStoreItem:language()
     self.retailStoreText.text = "综合分数"

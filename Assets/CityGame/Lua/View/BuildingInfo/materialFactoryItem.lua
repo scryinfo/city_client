@@ -5,7 +5,7 @@
 ---原料厂建筑信息
 materialFactoryItem = class('materialFactoryItem')
 
-function materialFactoryItem:initialize(dataInfo,prefab,luaBehaviour)
+function materialFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.dataInfo = dataInfo
     self.prefab = prefab
 
@@ -15,8 +15,16 @@ function materialFactoryItem:initialize(dataInfo,prefab,luaBehaviour)
     self.produceBounusTextBtn = prefab.transform:Find("basisProduceRateText/symbol/produceBounusText"):GetComponent("Text")
 
     self:language()
+
     luaBehaviour:AddClick(self.basisProduceRateTextBtn.gameObject,self._clickBasisProduceRateTextBtn,self)
     luaBehaviour:AddClick(self.produceBounusTextBtn.gameObject,self._clickproduceBounusTextBtn,self)
+
+    --是否是建筑主人，如果不是则所有按钮不能点击
+    if isOther ~= DataManager.GetMyOwnerID() then
+        self.materialIntroduceBtn:GetComponent("Button").interactable = false
+        self.basisProduceRateTextBtn:GetComponent("Button").interactable = false
+        self.produceBounusTextBtn:GetComponent("Button").interactable = false
+    end
 end
 --多语言
 function materialFactoryItem:language()

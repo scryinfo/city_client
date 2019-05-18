@@ -5,7 +5,7 @@
 ---加工厂建筑信息
 processingFactoryItem = class('processingFactoryItem')
 
-function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour)
+function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.dataInfo = dataInfo
     self.prefab = prefab
 
@@ -23,6 +23,16 @@ function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour)
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
     luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
     luaBehaviour:AddClick(self.popolarityTextBtn.gameObject,self._clickPopolarityTextBtn,self)
+
+    --是否是建筑主人，如果不是则所有按钮不能点击
+    if isOther ~= DataManager.GetMyOwnerID() then
+        self.processingIntroduceBtn:GetComponent("Button").interactable = false
+        self.basicProduceRateTextBtn:GetComponent("Button").interactable = false
+        self.produceBounusTextBtn:GetComponent("Button").interactable = false
+        self.basicQualityTextBtn:GetComponent("Button").interactable = false
+        self.qualityAdditionTextBtn:GetComponent("Button").interactable = false
+        self.popolarityTextBtn:GetComponent("Button").interactable = false
+    end
 end
 function processingFactoryItem:language()
     self.processingText.text = "产品"

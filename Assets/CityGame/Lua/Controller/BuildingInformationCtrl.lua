@@ -108,7 +108,7 @@ end
 --初始化UI信息
 function BuildingInformationCtrl:initializeUiInfoData()
     self.buildingName.text = self.m_data.name
-    LoadSprite(BuildingInformationIcon[self.m_data.mId].imgPath,self.buildingIcon,false)
+    LoadSprite(BuildingInformationIcon[self.m_data.mId].imgPath,self.buildingIcon,true)
     self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
     --开业停业
     self:initializeButtonInfo()

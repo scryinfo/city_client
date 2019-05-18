@@ -51,9 +51,9 @@ end
 function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
     --初始化
     RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
-
+    local insId = self.m_data.insId
     self.m_data = retailShopDataInfo
-    self.m_data.insId = self.m_data.insId
+    self.m_data.insId = insId
     self.m_data.buildingType = BuildingType.RetailShop
     retailShopDataInfo.info.buildingType = BuildingType.RetailShop
 

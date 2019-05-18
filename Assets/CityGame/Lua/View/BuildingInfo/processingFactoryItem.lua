@@ -18,6 +18,11 @@ function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour)
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
     self:language()
+    luaBehaviour:AddClick(self.basicProduceRateTextBtn.gameObject,self._clickBasicProduceRateTextBtn,self)
+    luaBehaviour:AddClick(self.produceBounusTextBtn.gameObject,self._clickProduceBounusTextBtn,self)
+    luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
+    luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
+    luaBehaviour:AddClick(self.popolarityTextBtn.gameObject,self._clickPopolarityTextBtn,self)
 end
 function processingFactoryItem:language()
     self.processingText.text = "产品"
@@ -26,4 +31,24 @@ function processingFactoryItem:language()
     self.basicQualityTextBtn.text = "基本质量"
     self.qualityAdditionTextBtn.text = "质量加成"
     self.popolarityTextBtn.text = "知名度"
+end
+function processingFactoryItem:_clickBasicProduceRateTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.basicProduceRateTextBtn.transform.localPosition,ins.basicProduceRateTextBtn.transform)
+end
+function processingFactoryItem:_clickProduceBounusTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
+end
+function processingFactoryItem:_clickBasicQualityTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
+end
+function processingFactoryItem:_clickQualityAdditionTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
+end
+function processingFactoryItem:_clickPopolarityTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

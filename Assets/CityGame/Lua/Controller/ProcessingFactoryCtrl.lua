@@ -54,9 +54,9 @@ end
 function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
     --初始化
     ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
-
+    local insId = self.m_data.insId
     self.m_data = processingDataInfo
-    self.m_data.insId = self.m_data.insId
+    self.m_data.insId = insId
     self.m_data.buildingType = BuildingType.ProcessingFactory
     processingDataInfo.info.buildingType = BuildingType.ProcessingFactory
 
@@ -188,7 +188,7 @@ function ProcessingFactoryCtrl:_clickCloseBtn()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    --关闭原料厂推送
+    --关闭加工厂推送
     Event.Brocast("m_ReqCloseprocessing",self.m_data.insId)
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)

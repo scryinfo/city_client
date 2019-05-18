@@ -25,8 +25,10 @@ function materialFactoryItem:language()
     self.produceBounusTextBtn.text = "生产加成"
 end
 function materialFactoryItem:_clickBasisProduceRateTextBtn(ins)
-    Event.Brocast("openTipBox","aaa",ins.basisProduceRateTextBtn.transform.localPosition,ins.basisProduceRateTextBtn.transform)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.basisProduceRateTextBtn.transform.localPosition,ins.basisProduceRateTextBtn.transform)
 end
 function materialFactoryItem:_clickproduceBounusTextBtn(ins)
-    Event.Brocast("openTipBox","aaa",ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
 end

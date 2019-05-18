@@ -19,10 +19,25 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour)
 
     self.scoreText.text = 100
     self:language()
+    luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
+    luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
+    luaBehaviour:AddClick(self.popolarityTextBtn.gameObject,self._clickPopolarityTextBtn,self)
 end
 function retailStoreItem:language()
     self.retailStoreText.text = "综合分数"
     self.basicQualityTextBtn.text = "基本质量"
     self.qualityAdditionTextBtn.text = "质量加成"
     self.popolarityTextBtn.text = "知名度"
+end
+function retailStoreItem:_clickBasicQualityTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
+end
+function retailStoreItem:_clickQualityAdditionTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
+end
+function retailStoreItem:_clickPopolarityTextBtn(ins)
+    local stringData = "测试测试测试"
+    Event.Brocast("openTipBox",stringData,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

@@ -7,6 +7,7 @@
 BuildingInformationCtrl = class('BuildingInformationCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingInformationCtrl)
 
+local isShow = false
 --建筑信息Item路径
 BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
@@ -33,6 +34,7 @@ function BuildingInformationCtrl:Awake(go)
 
 end
 function BuildingInformationCtrl:Active()
+    UIPanel.Active(self)
     Event.AddListener("openTipBox",self.openTipBox,self)
 end
 function BuildingInformationCtrl:Refresh()
@@ -43,6 +45,7 @@ end
 
 function BuildingInformationCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("openTipBox",self.openTipBox,self)
     destroy(self.buildingInfoItem.prefab.gameObject)
     self.buildingInfoItem = nil
 end
@@ -64,6 +67,7 @@ function BuildingInformationCtrl:_getComponent(go)
     ---content
     --buildingInfoRoot
     self.buildingInfoRoot = go.transform:Find("content/buildingInfoRoot")               --建筑信息
+    self.content = go.transform:Find("content/buildingInfoRoot/content")
     self.buildingName = go.transform:Find("content/buildingInfoRoot/content/buildingName"):GetComponent("Text")
     self.buildingTypeText = go.transform:Find("content/buildingInfoRoot/content/buildingTypeText"):GetComponent("Text")
     self.tipText = go.transform:Find("content/buildingInfoRoot/content/tipBg/tipText"):GetComponent("Text")
@@ -172,7 +176,6 @@ function BuildingInformationCtrl:language()
     self.landNomalText.text = "土地信息"
     self.landChooseText.text = "土地信息"
     self.buildTimeText.text = "施工时间:"
-    self.tipBoxText.text = "基本生产速度是由就业人数和工资标准决定的。"
 end
 ---------------------------------------------------------------点击函数--------------------------------------------------------------------------------
 --打开建筑信息
@@ -204,10 +207,19 @@ end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------
 --打开提示框
 function BuildingInformationCtrl:openTipBox(stringData,position,parent)
-    if stringData ~= nil and position ~= nil then
-        self.tipBox.transform:SetParent(parent)
-        self.tipBox.transform.anchoredPosition = Vector3.New(-250,0,0)
-        self.tipBox.transform.localScale = Vector3.one
+    if isShow == false then
+        if stringData ~= nil and position ~= nil then
+            self.tipBox.transform:SetParent(parent)
+            self.tipBoxText.text = stringData
+            self.tipBox.transform.anchoredPosition = Vector3.New(-250,0,0)
+            self.tipBox.transform.localScale = Vector3.one
+        end
+        isShow = true
+    else
+        self.tipBox.transform:SetParent(self.content)
+        self.tipBoxText.text = ""
+        self.tipBox.transform.localScale = Vector3.zero
+        isShow = false
     end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------

@@ -53,9 +53,9 @@ end
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     --初始化
     MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
-
+    local insId = self.m_data.insId
     self.m_data = materialDataInfo
-    self.m_data.insId = self.m_data.insId
+    self.m_data.insId = insId
     self.m_data.buildingType = BuildingType.MaterialFactory
     materialDataInfo.info.buildingType = BuildingType.MaterialFactory
 

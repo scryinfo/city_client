@@ -136,18 +136,10 @@ function RegisterCtrl:c_OnResult(info)
     if info.status == "FAIL_ACCOUNT_EXIST" then
         RegisterPanel.phoneHint.transform.localScale = Vector3.one
         RegisterPanel.phoneHint.text = "账号已注册"
-        local data={ins = self,content = "注册成功!",func = function ()
-            ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
-        end}
-        ct.OpenCtrl('ReminderCtrl',data)
     elseif info.status == "FAIL_AUTHCODE_ERROR" then
         RegisterPanel.authCodeHint.transform.localScale = Vector3.one
         RegisterPanel.authCodeHint.text = "验证码错误"
 
-        local data={ins = self,content = "注册成功!",func = function()
-            ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
-        end  }
-        ct.OpenCtrl('ReminderCtrl',data)
     elseif info.status == "FAIL_INVCODE_USED" then
         local data={ins = self,content = "邀请码已过期,请重新注册",func = function()
             UIPanel.ClosePage()

@@ -8,12 +8,14 @@ BuildingInformationCtrl = class('BuildingInformationCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingInformationCtrl)
 
 local isShow = false
+local businessState = false
 --建筑信息Item路径
 BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
 BuildingInformationCtrl.RetailStoreItem_Path = "Assets/CityGame/Resources/View/NewItems/retailStoreItem.prefab"                 --零售店
 function BuildingInformationCtrl:initialize()
-    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+    --UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 
 function BuildingInformationCtrl:bundleName()
@@ -31,7 +33,7 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.buildingNomal.gameObject,self._clickBuildingNomal,self)
     self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
-
+    self.luaBehaviour:AddClick(self.switchBtn.gameObject,self._clickSwitchBtn,self)
 end
 function BuildingInformationCtrl:Active()
     UIPanel.Active(self)
@@ -69,6 +71,7 @@ function BuildingInformationCtrl:_getComponent(go)
     self.buildingInfoRoot = go.transform:Find("content/buildingInfoRoot")               --建筑信息
     self.content = go.transform:Find("content/buildingInfoRoot/content")
     self.buildingName = go.transform:Find("content/buildingInfoRoot/content/buildingName"):GetComponent("Text")
+    self.modifyImg = go.transform:Find("content/buildingInfoRoot/content/modifyImg")
     self.buildingTypeText = go.transform:Find("content/buildingInfoRoot/content/buildingTypeText"):GetComponent("Text")
     self.tipText = go.transform:Find("content/buildingInfoRoot/content/tipBg/tipText"):GetComponent("Text")
     self.buildingIcon = go.transform:Find("content/buildingInfoRoot/content/buildingIcon"):GetComponent("Image")
@@ -105,9 +108,10 @@ end
 --初始化UI信息
 function BuildingInformationCtrl:initializeUiInfoData()
     self.buildingName.text = self.m_data.name
+    LoadSprite(BuildingInformationIcon[self.m_data.mId].imgPath,self.buildingIcon,false)
     self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
-    --开业停业重新开业。
-    --self.switchBtn.
+    --开业停业
+    self:initializeButtonInfo()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         if self.m_data.mId == 1100001 then
@@ -119,7 +123,7 @@ function BuildingInformationCtrl:initializeUiInfoData()
         end
         self.tipText.text = "原料厂可生产各种基本原料，这些原料是生产产品所必需的。"
         local function callback(obj)
-            self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour)
+            self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
         createPrefab(BuildingInformationCtrl.MaterialFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
@@ -133,7 +137,7 @@ function BuildingInformationCtrl:initializeUiInfoData()
         end
         self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
         local function callback(obj)
-            self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour)
+            self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
         createPrefab(BuildingInformationCtrl.ProcessingFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
@@ -147,7 +151,7 @@ function BuildingInformationCtrl:initializeUiInfoData()
         end
         self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
         local function callback(obj)
-            self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour)
+            self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
         createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.House then
@@ -159,7 +163,24 @@ function BuildingInformationCtrl:initializeUiInfoData()
     end
     self:defaultBuildingInfoTrue()
 end
-
+--初始化按钮信息
+function BuildingInformationCtrl:initializeButtonInfo()
+    --是否是建筑主人
+    if self.m_data.ownerId == DataManager.GetMyOwnerID() then
+        --是否开业
+        if self.m_data.state == "OPERATE" then
+            self.switchBtn.text = "停业"
+            businessState = true
+        else
+            self.switchBtn.text = "拆除"
+            businessState = false
+        end
+    else
+        self.switchBtn.transform.localScale = Vector3.zero
+        self.modifyImg.transform.localScale = Vector3.zero
+        self.buildingName:GetComponent("Button").interactable = false
+    end
+end
 --默认打开建筑信息
 function BuildingInformationCtrl:defaultBuildingInfoTrue()
     self.tipBox.transform.localScale = Vector3.zero
@@ -194,6 +215,26 @@ function BuildingInformationCtrl:_clickLandNomal(ins)
     ins.buildingChoose.transform.localScale = Vector3.zero
     ins.buildingInfoRoot.transform.localScale = Vector3.zero
 end
+--停业或拆除
+function BuildingInformationCtrl:_clickSwitchBtn(ins)
+    PlayMusEff(1002)
+    if businessState == true then
+        --停业
+        local data = {isbool = true,fun = function()
+            Event.Brocast("m_ReqClosedBuilding",ins.m_data.id)
+        end}
+        ct.OpenCtrl('ReminderTipsCtrl',data)
+    else
+        --拆除
+        local data = {isbool = false,fun = function()
+            Event.Brocast("m_ReqDemolitionBuilding",ins.m_data.id)
+            DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
+            UIPanel.CloseAllPageExceptMain()
+            Event.Brocast("SmallPop","拆除成功", 300)
+        end}
+        ct.OpenCtrl('ReminderTipsCtrl',data)
+    end
+end
 --关闭界面
 function BuildingInformationCtrl:_clickCloseBtn()
     PlayMusEff(1002)
@@ -203,6 +244,15 @@ end
 --缓存建筑信息回调
 function BuildingInformationCtrl:builidngInfo(dataInfo)
     self.buildingInfo = dataInfo
+end
+--停业成功回调
+function BuildingInformationCtrl:closedBuildingSucceed(data)
+    if data then
+        UIPanel.ClosePage()
+        self.switchBtn.text = "拆除"
+        businessState = false
+        Event.Brocast("SmallPop","停业成功", 300)
+    end
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------
 --打开提示框

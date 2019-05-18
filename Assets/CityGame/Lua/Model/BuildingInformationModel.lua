@@ -12,6 +12,11 @@ function BuildingInformationModel:initialize(insId)
 end
 
 function BuildingInformationModel:OnCreate()
+    --本地事件
+    Event.AddListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
+    Event.AddListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
+    --建筑停业
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
     --原料厂
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -21,6 +26,11 @@ function BuildingInformationModel:OnCreate()
 end
 
 function BuildingInformationModel:Close()
+    --本地事件
+    Event.RemoveListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
+    Event.RemoveListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
+    --建筑停业
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
     --原料厂
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -30,6 +40,15 @@ function BuildingInformationModel:Close()
 end
 
 ---客户端请求----
+--建筑停业
+function BuildingInformationModel:m_ReqClosedBuilding(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "shutdownBusiness","gs.Id",{id = buildingId})
+end
+--建筑拆除
+function BuildingInformationModel:m_ReqDemolitionBuilding(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "delBuilding","gs.Id",{id = buildingId})
+end
+
 --请求建筑信息
 --原料厂建筑信息
 function BuildingInformationModel:m_ReqMaterialFactoryInfo(buildingId,playerId)
@@ -46,7 +65,13 @@ function BuildingInformationModel:m_ReqRetailShopInfo(buildingId,playerId)
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryRetailShopOrApartmentInfo","gs.QueryBuildingInfo",lMsg)
 end
+
 ---服务器回调---
+--建筑停业
+function BuildingInformationModel:n_ClosedBuilding(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'closedBuildingSucceed',data)
+end
+
 --请求建筑信息
 --原料厂建筑信息
 function BuildingInformationModel:n_MaterialFactoryInfo(data)

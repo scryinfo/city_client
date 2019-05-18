@@ -37,6 +37,7 @@ function BuildingUpperItem:initialize(viewRect)
     end)
 
     self.titleBgBtn.onClick:AddListener(function ()
+        --Event.Brocast("c_openBuildingInfo",self.data)
         ct.OpenCtrl("BuildingInformationCtrl",self.data)
     end)
     --self.changeSignBtn.onClick:AddListener(function ()

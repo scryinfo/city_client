@@ -89,28 +89,28 @@ end
 
 --todo 收益详情
 function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
-    incomeNotify = dataInfo
-    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-    if currentTime - lastTime > 60 then
-        local ts = getFormatUnixTime(currentTime)
-        GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-    end
-    lastTime = currentTime
-    --if incomeNotify == nil then
-    --    incomeNotify = {}
-    --    incomeNotify[1] = dataInfo
-    --    lastTime = TimeSynchronized.GetTheCurrentTime()
-    --    local ts = getFormatUnixTime(lastTime)
+    --incomeNotify = dataInfo
+    --local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    --if currentTime - lastTime > 60 then
+    --    local ts = getFormatUnixTime(currentTime)
     --    GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-    --else
-    --    table.insert(incomeNotify,dataInfo)
-    --    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-    --    if currentTime - lastTime > 60 then
-    --        local ts = getFormatUnixTime(currentTime)
-    --        GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-    --    end
-    --    lastTime = currentTime
     --end
+    --lastTime = currentTime
+    if incomeNotify == nil then
+        incomeNotify = {}
+        incomeNotify[1] = dataInfo
+        lastTime = TimeSynchronized.GetTheCurrentTime()
+        local ts = getFormatUnixTime(lastTime)
+        GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
+    else
+        table.insert(incomeNotify,dataInfo)
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        if currentTime - lastTime > 60 then
+            local ts = getFormatUnixTime(currentTime)
+            GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
+        end
+        lastTime = currentTime
+    end
     self.isTimmer = true
     self.timmer = 2
     GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
@@ -120,7 +120,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
 
     if dataInfo.buyer == "PLAYER" then
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture.png", GameMainInterfacePanel.simplePicture, true)
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
         elseif dataInfo.type == "INSHELF" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)

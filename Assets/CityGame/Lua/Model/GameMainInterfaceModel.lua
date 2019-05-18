@@ -128,12 +128,9 @@ end
 local a = 0
 --自己的收益情况回调
 function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
-    if lMsg then
-        table.insert(incomeNotify,lMsg)
-    end
-    Event.Brocast("c_IncomeNotify",incomeNotify)
-    a = a + 1
-    ct.log("system","**********人数: " .. a)
+    Event.Brocast("c_IncomeNotify",lMsg)
+    --a = a + 1
+    --ct.log("system","**********人数: " .. a)
 end
 
 --城市广播回调

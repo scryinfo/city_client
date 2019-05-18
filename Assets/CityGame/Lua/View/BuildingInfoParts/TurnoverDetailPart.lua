@@ -19,9 +19,8 @@ function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
 end
 --
 function TurnoverDetailPart:_ResetTransform()
-    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
-    self.curve.sizeDelta = Vector2.New(4477, 402)
-    buildingTs = nil
+    self.curve.anchoredPosition = Vector3.New(-2646, 42,0)
+    self.curve.sizeDelta = Vector2.New(4326, 402)
 end
 --
 function TurnoverDetailPart:_RemoveEvent()
@@ -33,19 +32,16 @@ end
 
 function TurnoverDetailPart:Show(data)
     BasePartDetail.Show(self)
-    if buildingTs == nil then
-        if data.info then
-            buildingTs = data.info.constructCompleteTs
-        end
-    end
+    --if buildingTs == nil then
+    --    if data.info then
+    --        buildingTs = data.info.constructCompleteTs
+    --    end
+    --end
     self.m_data = data
     self:_initFunc()
 end
 function TurnoverDetailPart:Hide()
     BasePartDetail.Hide(self)
-    self.graph:Close()
-    self.slide:Close()
-    buildingTs = nil
 end
 --
 function TurnoverDetailPart:RefreshData(data)
@@ -67,8 +63,8 @@ function TurnoverDetailPart:_InitTransform()
     transform = self.transform
     self:_getComponent(self.transform)
 
-    self.curve.anchoredPosition = Vector3.New(-2957, 42,0)
-    self.curve.sizeDelta = Vector2.New(4477, 402)
+    self.curve.anchoredPosition = Vector3.New(-2646, 42,0)
+    self.curve.sizeDelta = Vector2.New(4326, 402)
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
@@ -88,6 +84,8 @@ function TurnoverDetailPart:_initFunc()
 
 --建筑收益曲线图回调
 function TurnoverDetailPart:n_OnBuildingIncome(info)
+    self.graph:Close()
+    self.slide:Close()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -107,9 +105,10 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     local updataTime = monthAgo
     local time = {}
     local boundaryLine = {}
+    local buildingTs = buildingTs
     for i = 1, 30 do
         if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-            table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 148)
+            table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 142)
         end
         time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
         updataTime = updataTime + 86400
@@ -119,7 +118,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
     end
     if tonumber(getFormatUnixTime(buildingTs).minute) ~= 0 then
-        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 60
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 100
     end
     if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
@@ -131,7 +130,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         while(buildingTs <= currentTime)
         do
             turnoverTab[index] = {}
-            turnoverTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 148
+            turnoverTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 142
             turnoverTab[index].money = 0
             if info.nodes ~= nil then
                 for i, v in pairs(info.nodes) do
@@ -146,7 +145,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     else
         for i = 1, 30 do
             turnoverTab[i] = {}
-            turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 148
+            turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 142
             turnoverTab[i].money = 0
             if info.nodes ~= nil then
                 for k, v in pairs(info.nodes) do
@@ -158,7 +157,13 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             updataTime = updataTime + 86400
         end
     end
-    turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
+    if #turnoverTab == 0 then
+        turnoverTab[1] = {}
+        turnoverTab[1].coordinate = 30 * 142
+        turnoverTab[1].money = tonumber(GetClientPriceString(self.turnover))
+    else
+        turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
+    end
     local turnover = {}
     for i, v in ipairs(turnoverTab) do
         turnover[i] = Vector2.New(v.coordinate,v.money)
@@ -172,19 +177,19 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             max = v.y
         end
     end
-    local scale = SetYScale(max,5,self.yScale)
+    local scale = SetYScale(max,4,self.yScale)
     local turnoverVet = {}
     for i, v in ipairs(turnover) do
         if scale == 0 then
             turnoverVet[i] = v
         else
-            turnoverVet[i] = Vector2.New(v.x,v.y / scale * 70)
+            turnoverVet[i] = Vector2.New(v.x,v.y / scale * 100)
         end
     end
-    self.slide:SetXScaleValue(time,148)
+    self.slide:SetXScaleValue(time,142)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
+    self.graph:DrawLine(turnoverVet,Color.New(53 / 255, 72 / 255, 117 / 255, 255 / 255),1)
     self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)

@@ -30,14 +30,14 @@ function retailStoreItem:language()
     self.popolarityTextBtn.text = "知名度"
 end
 function retailStoreItem:_clickBasicQualityTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function retailStoreItem:_clickQualityAdditionTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function retailStoreItem:_clickPopolarityTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

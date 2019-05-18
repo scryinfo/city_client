@@ -33,22 +33,22 @@ function processingFactoryItem:language()
     self.popolarityTextBtn.text = "知名度"
 end
 function processingFactoryItem:_clickBasicProduceRateTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.basicProduceRateTextBtn.transform.localPosition,ins.basicProduceRateTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.basicProduceRateTextBtn.transform.localPosition,ins.basicProduceRateTextBtn.transform)
 end
 function processingFactoryItem:_clickProduceBounusTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
 end
 function processingFactoryItem:_clickBasicQualityTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function processingFactoryItem:_clickQualityAdditionTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function processingFactoryItem:_clickPopolarityTextBtn(ins)
-    local stringData = "测试测试测试"
-    Event.Brocast("openTipBox",stringData,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
+    local stringKey = 27010005
+    Event.Brocast("openTipBox",stringKey,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

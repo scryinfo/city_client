@@ -206,11 +206,11 @@ function BuildingInformationCtrl:builidngInfo(dataInfo)
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------
 --打开提示框
-function BuildingInformationCtrl:openTipBox(stringData,position,parent)
+function BuildingInformationCtrl:openTipBox(stringKey,position,parent)
     if isShow == false then
-        if stringData ~= nil and position ~= nil then
+        if stringKey ~= nil and position ~= nil then
             self.tipBox.transform:SetParent(parent)
-            self.tipBoxText.text = stringData
+            self.tipBoxText.text = GetLanguage(stringKey)
             self.tipBox.transform.anchoredPosition = Vector3.New(-250,0,0)
             self.tipBox.transform.localScale = Vector3.one
         end

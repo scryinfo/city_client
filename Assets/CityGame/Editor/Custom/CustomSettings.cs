@@ -182,6 +182,7 @@ public static class CustomSettings
         _GT(typeof(Slider.SliderEvent)),
         _GT(typeof(VerticalWrapMode)),
         _GT(typeof(LayoutElement)),
+        _GT(typeof(GridLayoutGroup)),
 
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),

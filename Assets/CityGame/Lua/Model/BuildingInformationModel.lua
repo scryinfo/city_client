@@ -83,10 +83,11 @@ function BuildingInformationModel:n_ClosedBuilding(data)
 end
 --建筑改名
 function BuildingInformationModel:n_SetBuildingInfo(data,msgId)
-    if msgId then
-
+    if msgId == 0 then
+        Event.Brocast("setBuildingNameFailure",msgId)
+    else
+        DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'setBuildingNameSucceed',data)
     end
-    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'closedBuildingSucceed',data)
 end
 
 --请求建筑信息

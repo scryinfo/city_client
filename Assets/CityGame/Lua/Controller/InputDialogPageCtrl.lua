@@ -29,13 +29,17 @@ function InputDialogPageCtrl:Awake(go)
         ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
     end)
 end
-
+function InputDialogPageCtrl:Active()
+    UIPanel.Active(self)
+    Event.AddListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
+end
 function InputDialogPageCtrl:Refresh()
     self:_initData()
 end
 
-function InputDialogPageCtrl:Close()
-    UIPanel.Close(self)
+function InputDialogPageCtrl:Hide()
+    UIPanel.Hide(self)
+    Event.RemoveListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)
@@ -74,10 +78,18 @@ function InputDialogPageCtrl:_onClickConfim(ins)
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack(inputValue)
     end
-    ins:_onClickClose(ins)
+    --ins:_onClickClose()
 end
 ---点击关闭按钮
-function InputDialogPageCtrl:_onClickClose(ins)
+function InputDialogPageCtrl:_onClickClose()
     PlayMusEff(1002)
     UIPanel.ClosePage()
+end
+-----------------------------------------------------------------------回调函数---------------------------------------------------------------------------
+--改名字失败
+function InputDialogPageCtrl:setBuildingNameFailure(data)
+    if data then
+        self.errorTipRoot.localScale = Vector3.one
+        self.errorTipText.text = "Modified every seven days!"
+    end
 end

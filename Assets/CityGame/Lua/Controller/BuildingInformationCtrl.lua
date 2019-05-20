@@ -244,7 +244,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
+    ct.OpenCtrl("InputDialogPageCtrl",data)
 end
 --关闭界面
 function BuildingInformationCtrl:_clickCloseBtn()
@@ -268,8 +268,9 @@ end
 --修改建筑名字成功
 function BuildingInformationCtrl:setBuildingNameSucceed(dataInfo)
     if dataInfo then
-        --self.buildingName.text =
-        Event.Brocast("SmallPop","停业成功", 300)
+        UIPanel.ClosePage()
+        self.buildingName.text = dataInfo.name
+        Event.Brocast("SmallPop","建筑名字修改成功", 300)
     end
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------

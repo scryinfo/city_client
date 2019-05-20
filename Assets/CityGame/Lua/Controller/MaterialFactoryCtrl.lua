@@ -33,7 +33,6 @@ function MaterialFactoryCtrl:Awake(go)
 end
 function MaterialFactoryCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function MaterialFactoryCtrl:Refresh()
@@ -51,18 +50,19 @@ end
 
 --刷新原料厂信息
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
+    --初始化
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+    local insId = self.m_data.insId
+    self.m_data = materialDataInfo
+    self.m_data.insId = insId
+    self.m_data.buildingType = BuildingType.MaterialFactory
+    materialDataInfo.info.buildingType = BuildingType.MaterialFactory
+
     if MaterialFactoryPanel.topItem ~= nil then
         MaterialFactoryPanel.topItem:refreshData(materialDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
-
-    local insId = self.m_data.insId
-    self.m_data = materialDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.MaterialFactory
 
     --判断是自己还是别人打开了界面
     if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -147,22 +147,6 @@ function MaterialFactoryCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
---更改名字
-function MaterialFactoryCtrl:OnClick_changeName(ins)
-    PlayMusEff(1002)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
-end
---更改名字成功
-function MaterialFactoryCtrl:_updateName(name)
-    MaterialFactoryPanel.nameText.text = name
-end
 
 function MaterialFactoryCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
@@ -171,16 +155,9 @@ end
 
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
---更改基础建筑信息
---function MaterialFactoryCtrl:_changeItemData(data)
---    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
---        MaterialFactoryPanel.topItem:changeItemData(data)
---    end
---end
---
+
 function MaterialFactoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then

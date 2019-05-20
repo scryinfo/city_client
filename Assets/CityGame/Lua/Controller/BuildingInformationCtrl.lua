@@ -14,7 +14,6 @@ BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/Vi
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
 BuildingInformationCtrl.RetailStoreItem_Path = "Assets/CityGame/Resources/View/NewItems/retailStoreItem.prefab"                 --零售店
 function BuildingInformationCtrl:initialize()
-    --UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
 

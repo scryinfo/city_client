@@ -177,22 +177,7 @@ function RetailStoresCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
 end
-----更改名字
---function RetailStoresCtrl:OnClick_changeName(ins)
---    PlayMusEff(1002)
---    local data = {}
---    data.titleInfo = "RENAME"
---    data.tipInfo = "Modified every seven days"
---    data.btnCallBack = function(name)
---        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
---        ins:_updateName(name)
---    end
---    ct.OpenCtrl("InputDialogPageCtrl", data)
---end
-----更改名字成功
---function RetailStoresCtrl:_updateName(name)
---    RetailStoresPanel.nameText.text = name
---end
+
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
     --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)

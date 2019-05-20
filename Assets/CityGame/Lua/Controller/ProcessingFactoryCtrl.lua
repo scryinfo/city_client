@@ -148,22 +148,6 @@ function ProcessingFactoryCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
---更改名字
-function ProcessingFactoryCtrl:OnClick_changeName(ins)
-    PlayMusEff(1002)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeprocessingName', ins.m_data.info.id, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
-end
---更改名字成功
-function ProcessingFactoryCtrl:_updateName(name)
-    ProcessingFactoryPanel.nameText.text = name
-end
 
 function ProcessingFactoryCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)

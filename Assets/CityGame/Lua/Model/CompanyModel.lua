@@ -16,6 +16,10 @@ function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBuildings","gs.MyBuildingInfos",self.n_OnQueryMyBuildings,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEva","gs.Eva",self.n_OnUpdateMyEva,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerIncomePayCurve","ss.PlayerIncomePayCurve",self.n_OnQueryPlayerIncomePayCurve,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyCompanyName","gs.RoleInfo",self.n_OnModifyCompanyName,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",self.n_OnQueryMyBrands,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",self.n_OnModyfyMyBrandName,self)
 end
 
 -- 查询玩家的土地消息
@@ -57,4 +61,74 @@ end
 -- 服务器返回的Eva加点
 function CompanyModel:n_OnUpdateMyEva(eva)
     Event.Brocast("c_OnUpdateMyEva", eva)
+end
+
+-- 查询玩家的收支信息
+function CompanyModel.m_QueryPlayerIncomePayCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePayCurve")
+    local lMsg = { id = DataManager.GetMyOwnerID() }
+    local pMsg = assert(pbl.encode("ss.Id", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+-- 服务器返回的曲线图信息
+function CompanyModel:n_OnQueryPlayerIncomePayCurve(curveInfo)
+    Event.Brocast("c_OnQueryPlayerIncomePayCurve", curveInfo)
+end
+
+-- 给公司改名
+function CompanyModel:m_ModifyCompanyName(companyName)
+    DataManager.ModelSendNetMes("gscode.OpCode", "modifyCompanyName","gs.ModifyCompanyName",companyName)
+end
+
+-- 公司改名返回
+function CompanyModel:n_OnModifyCompanyName(roleInfo, msgId)
+    --异常处理
+    if msgId == 0 then
+        if roleInfo.reason == "roleNameDuplicated"then
+            Event.Brocast("SmallPop","公司名字重复！",80)
+        elseif roleInfo.reason == "accountInFreeze"then
+            Event.Brocast("SmallPop","七天只能修改一次！",80)
+        end
+        return
+    end
+    Event.Brocast("c_OnModifyCompanyName", roleInfo)
+end
+
+-- 查询品牌
+function CompanyModel:m_QueryMyBrands()
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBrands","gs.QueryMyBrands", {pId = DataManager.GetMyOwnerID()})
+end
+
+-- 查询品牌返回
+function CompanyModel:n_OnQueryMyBrands(MyAllBrands)
+    Event.Brocast("c_OnMQueryMyBrands", MyAllBrands)
+end
+
+-- 给品牌改名
+function CompanyModel:m_ModyfyMyBrandName(brandLeague)
+    DataManager.ModelSendNetMes("gscode.OpCode", "modyfyMyBrandName","gs.ModyfyMyBrandName", brandLeague)
+end
+
+-- 品牌改名返回
+function CompanyModel:n_OnModyfyMyBrandName(modyfyMyBrandName, msgId)
+    --异常处理
+    if msgId == 0 then
+        if modyfyMyBrandName.reason == "roleNameDuplicated"then
+            Event.Brocast("SmallPop","品牌名字重复！",80)
+        end
+        return
+    end
+    if modyfyMyBrandName.lastChangeTime then
+        local timeTable = getFormatUnixTime(modyfyMyBrandName.lastChangeTime/1000)
+        local time = timeTable.year .. "-" .. timeTable.month .. "-" ..timeTable.day
+        -- 打开提示
+        local info = {}
+        info.titleInfo = "PROMPT"
+        info.contentInfo = string.format("Last modified:<color=%s>%s</color>", "#3CF7FE",time)
+        info.tipInfo = string.format("Cannot be modified within <color=%s>%s</color>!", "#FFE50B","7 days")
+        ct.OpenCtrl("CompanyTipsCtrl", info)
+        return
+    end
+    Event.Brocast("c_OnModyfyMyBrandName", modyfyMyBrandName)
 end

@@ -81,8 +81,8 @@ function GuildListCtrl:initInsData()
 end
 
 function GuildListCtrl:Hide()
-    GuildListPanel.guildListScroll:RefillCells()
     GuildListCtrl.societyList = nil
+    GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, 0, "View/Guild/GuildItem")
     GuildListCtrl.rankId = nil
     self:_removeListener()
     UIPanel.Hide(self)

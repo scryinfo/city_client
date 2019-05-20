@@ -101,6 +101,9 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.House then
+            --住宅
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         end
     end
 end
@@ -156,6 +159,18 @@ function BuildingInformationCtrl:initializeUiInfoData()
         createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.House then
         --住宅
+        if self.m_data.mId == 1300001 then
+            self.buildingTypeText.text = "小型住宅"
+        elseif self.m_data.mId == 1300002 then
+            self.buildingTypeText.text = "中型住宅"
+        elseif self.m_data.mId == 1300003 then
+            self.buildingTypeText.text = "大型住宅"
+        end
+        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        local function callback(obj)
+            self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
+        end
+        createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
     elseif self.m_data.buildingType == BuildingType.Laboratory then

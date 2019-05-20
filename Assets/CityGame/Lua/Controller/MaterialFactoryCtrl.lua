@@ -33,7 +33,6 @@ function MaterialFactoryCtrl:Awake(go)
 end
 function MaterialFactoryCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function MaterialFactoryCtrl:Refresh()
@@ -156,16 +155,9 @@ end
 
 function MaterialFactoryCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
---更改基础建筑信息
---function MaterialFactoryCtrl:_changeItemData(data)
---    if data ~= nil and MaterialFactoryPanel.topItem ~= nil then
---        MaterialFactoryPanel.topItem:changeItemData(data)
---    end
---end
---
+
 function MaterialFactoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then

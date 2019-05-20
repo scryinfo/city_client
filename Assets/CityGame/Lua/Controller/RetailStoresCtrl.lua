@@ -180,7 +180,6 @@ end
 
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 

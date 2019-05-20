@@ -118,7 +118,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
     end
     if tonumber(getFormatUnixTime(buildingTs).minute) ~= 0 then
-        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 100
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 60
     end
     if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600

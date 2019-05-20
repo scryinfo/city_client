@@ -15,8 +15,11 @@ function BuildingInformationModel:OnCreate()
     --本地事件
     Event.AddListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
     Event.AddListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
+    Event.AddListener("m_ReqSetBuildingName",self.m_ReqSetBuildingName,self)
     --建筑停业
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
+    --建筑改名
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateBuildingName","gs.BuildingInfo",self.n_SetBuildingInfo,self)
     --原料厂
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -29,8 +32,11 @@ function BuildingInformationModel:Close()
     --本地事件
     Event.RemoveListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
     Event.RemoveListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
+    Event.RemoveListener("m_ReqSetBuildingName",self.m_ReqSetBuildingName,self)
     --建筑停业
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
+    --建筑改名
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","updateBuildingName","gs.BuildingInfo",self.n_SetBuildingInfo,self)
     --原料厂
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -47,6 +53,10 @@ end
 --建筑拆除
 function BuildingInformationModel:m_ReqDemolitionBuilding(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "delBuilding","gs.Id",{id = buildingId})
+end
+--建筑改名
+function BuildingInformationModel:m_ReqSetBuildingName(buildingId,name)
+    DataManager.ModelSendNetMes("gscode.OpCode", "updateBuildingName","gs.UpdateBuildingName",{buildingId = buildingId,name = name})
 end
 
 --请求建筑信息
@@ -69,6 +79,13 @@ end
 ---服务器回调---
 --建筑停业
 function BuildingInformationModel:n_ClosedBuilding(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'closedBuildingSucceed',data)
+end
+--建筑改名
+function BuildingInformationModel:n_SetBuildingInfo(data,msgId)
+    if msgId then
+
+    end
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'closedBuildingSucceed',data)
 end
 

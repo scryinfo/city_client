@@ -34,6 +34,7 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.buildingNomal.gameObject,self._clickBuildingNomal,self)
     self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
     self.luaBehaviour:AddClick(self.switchBtn.gameObject,self._clickSwitchBtn,self)
+    self.luaBehaviour:AddClick(self.buildingName.gameObject,self._clickBuildingName,self)
 end
 function BuildingInformationCtrl:Active()
     UIPanel.Active(self)
@@ -135,7 +136,7 @@ function BuildingInformationCtrl:initializeUiInfoData()
         elseif self.m_data.mId == 1200003 then
             self.buildingTypeText.text = "大型加工厂"
         end
-        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        self.tipText.text = "加工厂采用原料生产同步产品，提高了产品的质量和知名度。"
         local function callback(obj)
             self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -235,6 +236,16 @@ function BuildingInformationCtrl:_clickSwitchBtn(ins)
         ct.OpenCtrl('ReminderTipsCtrl',data)
     end
 end
+--修改建筑名字
+function BuildingInformationCtrl:_clickBuildingName(ins)
+    PlayMusEff(1002)
+    local data = {}
+    data.titleInfo = GetLanguage(25040001)
+    data.btnCallBack = function(name)
+        Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
+    end
+    ct.OpenCtrl("InputDialogPageCtrl", data)
+end
 --关闭界面
 function BuildingInformationCtrl:_clickCloseBtn()
     PlayMusEff(1002)
@@ -246,11 +257,18 @@ function BuildingInformationCtrl:builidngInfo(dataInfo)
     self.buildingInfo = dataInfo
 end
 --停业成功回调
-function BuildingInformationCtrl:closedBuildingSucceed(data)
-    if data then
+function BuildingInformationCtrl:closedBuildingSucceed(dataInfo)
+    if dataInfo then
         UIPanel.ClosePage()
         self.switchBtn.text = "拆除"
         businessState = false
+        Event.Brocast("SmallPop","停业成功", 300)
+    end
+end
+--修改建筑名字成功
+function BuildingInformationCtrl:setBuildingNameSucceed(dataInfo)
+    if dataInfo then
+        --self.buildingName.text =
         Event.Brocast("SmallPop","停业成功", 300)
     end
 end

@@ -24,6 +24,7 @@ end
 
 function RegisterCtrl:Awake()
     registerBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    registerBehaviour:AddClick(RegisterPanel.back,self.OnBack,self)  --获取
     registerBehaviour:AddClick(RegisterPanel.gain,self.OnGain,self)  --获取
     registerBehaviour:AddClick(RegisterPanel.register,self.OnRegister,self)  --注册
     self.time = 60
@@ -31,6 +32,10 @@ function RegisterCtrl:Awake()
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self._Updata, self), 1, -1, true)
+
+    RegisterPanel.phone.onValueChanged:AddListener(function ()
+        self:OnPhone(self)
+    end )
 
 end
 
@@ -44,18 +49,44 @@ function RegisterCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_GetCode",self.c_GetCode,self)
     Event.RemoveListener("c_OnResult",self.c_OnResult,self)
+    RegisterPanel.phone.text = ""
+    RegisterPanel.password.text = ""
+    RegisterPanel.confirm.text = ""
+    RegisterPanel.authCode.text = ""
+    RegisterPanel.phoneHint.transform.localScale = Vector3.zero
+    RegisterPanel.passwordHint.transform.localScale = Vector3.zero
+    RegisterPanel.confirmHint.transform.localScale = Vector3.zero
+    RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
+    self.time = 60
+    RegisterPanel.countDown.localScale = Vector3.zero
+    RegisterPanel.gainText.transform.localScale = Vector3.one
+    RegisterPanel.gain:GetComponent("Button").interactable = true
+end
+
+--返回
+function RegisterCtrl:OnBack(go)
+    local data={ins = go,content = "Give up registering?",func = function()
+       UIPanel.ClosePage()
+    end  }
+    ct.OpenCtrl('ReminderCtrl',data)
+end
+
+--输入手机号
+function RegisterCtrl:OnPhone()
+
 end
 
 --点击获取验证码
 function RegisterCtrl:OnGain(go)
     if RegisterPanel.phone.text == "" then
-        Event.Brocast("SmallPop","请输入手机号", 300)
+        RegisterPanel.phoneHint.transform.localScale = Vector3.one
+        RegisterPanel.phoneHint.text = "请输入手机号"
     else
+        RegisterPanel.phoneHint.transform.localScale = Vector3.zero
         Event.Brocast("m_GetCode",RegisterPanel.phone.text)
-        RegisterPanel.gain:GetComponent("Button").interactable = false
-        go.m_Timer:Start()
-        RegisterPanel.countDown.localScale = Vector3.one
-        RegisterPanel.gainText.transform.localScale = Vector3.zero
     end
 end
 
@@ -74,6 +105,10 @@ function RegisterCtrl:c_GetCode(info,msgId)
     else
         RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
         RegisterPanel.phoneHint.transform.localScale = Vector3.zero
+        RegisterPanel.gain:GetComponent("Button").interactable = false
+        self.m_Timer:Start()
+        RegisterPanel.countDown.localScale = Vector3.one
+        RegisterPanel.gainText.transform.localScale = Vector3.zero
     end
 end
 
@@ -94,6 +129,10 @@ end
 
 --注册
 function RegisterCtrl:OnRegister(go)
+    RegisterPanel.phoneHint.transform.localScale = Vector3.zero
+    RegisterPanel.passwordHint.transform.localScale = Vector3.zero
+    RegisterPanel.confirmHint.transform.localScale = Vector3.zero
+    RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
     if string.find(RegisterPanel.password.text,"%s") ~= nil then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
         RegisterPanel.passwordHint.text = "密码不能出现空格"
@@ -102,22 +141,23 @@ function RegisterCtrl:OnRegister(go)
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
         RegisterPanel.passwordHint.text = "密码格式错误"
         return
-    else
-        RegisterPanel.passwordHint.transform.localScale = Vector3.zero
     end
     if RegisterPanel.password.text ~=RegisterPanel.confirm.text  then
         RegisterPanel.confirmHint.transform.localScale = Vector3.one
         RegisterPanel.confirmHint.text = "两次输入密码不同"
     else
-        RegisterPanel.confirmHint.transform.localScale = Vector3.zero
         if RegisterPanel.phone.text == "" then
-            Event.Brocast("SmallPop","请输入手机号", 300)
+            RegisterPanel.phoneHint.transform.localScale = Vector3.one
+            RegisterPanel.phoneHint.text = "请输入手机号"
         elseif RegisterPanel.password.text == "" then
-            Event.Brocast("SmallPop","请输入密码", 300)
+            RegisterPanel.passwordHint.transform.localScale = Vector3.one
+            RegisterPanel.passwordHint.text = "请输入密码"
         elseif RegisterPanel.confirm.text == "" then
-            Event.Brocast("SmallPop","请确认密码", 300)
+            RegisterPanel.confirmHint.transform.localScale = Vector3.one
+            RegisterPanel.confirmHint.text = "请确认密码"
         elseif RegisterPanel.authCode.text == "" then
-            Event.Brocast("SmallPop","请输入验证码", 300)
+            RegisterPanel.authCodeHint.transform.localScale = Vector3.one
+            RegisterPanel.authCodeHint.text = "请输入验证码"
         else
             local data = {}
             data.InviteCode = go.m_data

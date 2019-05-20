@@ -26,9 +26,6 @@ function InviteCodeCtrl:Awake()
     inviteCodeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     inviteCodeBehaviour:AddClick(InviteCodePanel.back,self.OnBack,self)
     inviteCodeBehaviour:AddClick(InviteCodePanel.btn,self.OnBtn,self)
-    InviteCodePanel.inviteCode.onValueChanged:AddListener(function ()
-        self:OnInviteCode(self)
-    end )
 end
 
 function InviteCodeCtrl:Active()
@@ -39,6 +36,8 @@ end
 function InviteCodeCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_InviteCodeStatus",self.c_InviteCodeStatus,self)
+    InviteCodePanel.inviteCode.text = ""
+    InviteCodePanel.error.transform.localScale = Vector3.zero
 end
 
 --返回
@@ -46,15 +45,12 @@ function InviteCodeCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
---改变输入框
-function InviteCodeCtrl:OnInviteCode()
-    InviteCodePanel.btn:GetComponent("Button").interactable = true
-end
-
 function InviteCodeCtrl:OnBtn()
-    if InviteCodePanel.inviteCode == "" then
-        Event.Brocast("SmallPop","邀请码不能为空", 300)
+    if InviteCodePanel.inviteCode.text == "" then
+        InviteCodePanel.error.transform.localScale = Vector3.one
+        InviteCodePanel.error.text = "请输入邀请码"
     else
+        InviteCodePanel.error.transform.localScale = Vector3.zero
         Event.Brocast("m_InviteCode",InviteCodePanel.inviteCode.text)
     end
 end
@@ -65,10 +61,8 @@ function InviteCodeCtrl:c_InviteCodeStatus(info)
     elseif info.status == "USED"  then
         InviteCodePanel.error.transform.localScale = Vector3.one
         InviteCodePanel.error.text = "邀请码也过期"
-        InviteCodePanel.btn:GetComponent("Button").interactable = false
     elseif info.status == "ERROR"  then
         InviteCodePanel.error.transform.localScale = Vector3.one
         InviteCodePanel.error.text = "邀请码错误"
-        InviteCodePanel.btn:GetComponent("Button").interactable = false
     end
 end

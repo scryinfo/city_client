@@ -43,7 +43,6 @@ end
 
 function WarehouseBoxCtrl:Hide()
     UIPanel.Hide(self)
-
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WarehouseBoxCtrl:_getComponent(go)

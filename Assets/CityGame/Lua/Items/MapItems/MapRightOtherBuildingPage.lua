@@ -217,6 +217,7 @@ function MapRightOtherBuildingPage:close()
     self:_cleanItems()
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
+        self.avatar = nil
     end
     self.technologyItem:close()
     self.promotionItem:close()

@@ -26,6 +26,7 @@ local  appearance,unitPool,headPool,record,recordPath={},{},{},{},{}
 
 local num,sex,currHead,headTypeId
 local NilImage = nil
+local SizeParent
 function  AvatarManger.Awake()
     headPool={}
     headPool[1],headPool[2]={},{}
@@ -47,43 +48,27 @@ function  AvatarManger.Awake()
             NilImage = ct.InstantiatePrefab(obj)
         end
     end)
+    SizeParent = UnityEngine.GameObject.New("AvatarSizeParent").transform
 end
 
-local UnityEngine_Vertical
-local UnityEngine_Horizontal
  function AvatarManger.setSize(go,size)
-     if UnityEngine_Vertical == nil then
-         UnityEngine_Vertical = UnityEngine.RectTransform.Axis.Vertical
-     end
-     if UnityEngine_Horizontal == nil then
-         UnityEngine_Horizontal = UnityEngine.RectTransform.Axis.Horizontal
-     end
-     local rect,imaRect,pImaRect= go.transform:GetComponent("RectTransform")
-
-     rect:SetSizeWithCurrentAnchors(UnityEngine_Vertical,(rect.sizeDelta.x) * size)
-     rect:SetSizeWithCurrentAnchors(UnityEngine_Horizontal,(rect.sizeDelta.y) * size)
-
-     ----归位
-     for i, sizeData in ipairs(HeadSizeType) do
-         local trans=go.transform:Find(sizeData.type)
-         if trans then
-             imaRect=trans:GetComponent("Image").rectTransform
-             imaRect:SetSizeWithCurrentAnchors(UnityEngine_Horizontal,(imaRect.sizeDelta.x)*size)
-             imaRect:SetSizeWithCurrentAnchors(UnityEngine_Vertical,(imaRect.sizeDelta.y)*size)
-
-             imaRect.anchoredPosition=Vector2.New(((imaRect.anchoredPosition.x)*size),((imaRect.anchoredPosition.y)*size))
-
-             pImaRect=imaRect.parent:GetComponent("RectTransform")
-             pImaRect:SetSizeWithCurrentAnchors(UnityEngine_Horizontal,(pImaRect.sizeDelta.x)*size)
-             pImaRect:SetSizeWithCurrentAnchors(UnityEngine_Vertical,(pImaRect.sizeDelta.y)*size)
-
-             pImaRect.anchoredPosition=Vector2.New(((pImaRect.anchoredPosition.x)*size),((pImaRect.anchoredPosition.y)*size))
-         end
-
-     end
      --归位
      go.transform.localScale = Vector3.one
      go.transform.localPosition=Vector3.zero
+
+     local imaRect,pImaRect,trans
+     local rect = go.transform:GetComponent("RectTransform")
+     rect.sizeDelta =  rect.sizeDelta * size
+     ----归位
+     for i, sizeData in ipairs(HeadSizeType) do
+         trans=go.transform:Find(sizeData.type)
+         if trans then
+             imaRect=trans:GetComponent("Image").rectTransform
+             imaRect.sizeDelta = imaRect.sizeDelta * size
+             pImaRect=imaRect.parent:GetComponent("RectTransform")
+             pImaRect.anchoredPosition= pImaRect.anchoredPosition * size
+         end
+     end
      return go
  end
 
@@ -266,7 +251,9 @@ end
 --回收指定avatar
 local trans_CollectAvatar
 function AvatarManger.CollectAvatar(AvatarData)
-    if  AvatarData then
+    if AvatarData then
+        if AvatarData.go ~= nil and AvatarData.size ~= nil then
+            --用空白图片资源替换
             for i, config in ipairs(HeadSizeType) do
                 trans_CollectAvatar = AvatarData.go.transform:Find(config.type)
                 if trans_CollectAvatar then
@@ -275,29 +262,40 @@ function AvatarManger.CollectAvatar(AvatarData)
                     end
                 end
             end
+            if SizeParent ~= nil then
+                AvatarData.go.transform:SetParent(SizeParent)
+            end
             AvatarManger.setSize(AvatarData.go,AvatarData.size)
+            AvatarData.size = 1
             AvatarData.go.transform.localScale = Vector3.zero
-
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
+        end
     end
-
 end
 
 
 local trans_CollectAllAvatar
 function AvatarManger.CollectAllAvatar()
-    if #record>0 then
+    if #record > 0 then
         for i, AvatarData in ipairs(record) do
-            for i, config in ipairs(HeadSizeType) do
-                trans_CollectAllAvatar = AvatarData.go.transform:Find(config.type)
-                if trans_CollectAllAvatar then
-                    if NilImage ~= nil  then
-                        trans_CollectAllAvatar:GetComponent("Image").sprite = NilImage
+            if AvatarData.go ~= nil and AvatarData.size ~= nil then
+                for i, config in ipairs(HeadSizeType) do
+                    trans_CollectAllAvatar = AvatarData.go.transform:Find(config.type)
+                    if trans_CollectAllAvatar then
+                        if NilImage ~= nil  then
+                            trans_CollectAllAvatar:GetComponent("Image").sprite = NilImage
+                        end
                     end
                 end
+                if SizeParent ~= nil then
+                    AvatarData.go.transform:SetParent(SizeParent)
+                end
+                AvatarData.size = 1
+                AvatarManger.setSize(AvatarData.go,AvatarData.size)
+                headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
             end
-            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
         end
+        record = {}
     end
     if #recordPath>0 then
         for i, path in pairs(recordPath) do

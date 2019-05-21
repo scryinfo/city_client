@@ -6,22 +6,23 @@
 
 FiveFaceItem = class('FiveFaceItem')
 
-local ctrl
+local ctrl = nil
 local path="Assets/CityGame/Resources/Atlas/Avtar/panelSource/icon-"
 ---初始化方法   数据（读配置表）
 function FiveFaceItem:initialize(prefab,luaBehaviour,data,ctr)
-    self.prefab=prefab
-    self.text=prefab.transform:Find("name"):GetComponent("Text");
-    self.ima=prefab.transform:Find("icon"):GetComponent("Image");
-    self.select=prefab.transform:Find("select")
-    self.select.localScale=Vector3.zero
-    if data.id==1 then
-        ctr.select=self.select
+    self.prefab = prefab
+    self.text = prefab.transform:Find("name"):GetComponent("Text")
+    self.ima = prefab.transform:Find("icon"):GetComponent("Image")
+    self.select = prefab.transform:Find("select")
+    self.select.localScale = Vector3.zero
+    if data.id == 1 then
+        ctr.select = self.select
+        ctr.select.localScale = Vector3.one
     end
-    ctr.select.localScale=Vector3.one
-
-    luaBehaviour:AddClick(prefab,self.c_OnClick_switchKind,self);
-    ctrl=ctr
+    if ctrl == nil then
+        ctrl = ctr
+    end
+    luaBehaviour:AddClick(prefab,self.c_OnClick_switchKind,self)
     self:saveData(data)
 end
 ---添加
@@ -29,18 +30,21 @@ function FiveFaceItem:updateData(data)
     self:saveData(data)
 end
 
+--选中左侧效果【不做修改】
 function FiveFaceItem:c_OnClick_switchKind(ins)
-   ctrl:switchKinds(ins.kinds)
-   ctrl.select.localScale=Vector3.zero
-   ctrl.select=ins.select
-   ctrl.select.localScale=Vector3.one
-
+    if ctrl ~= nil then
+        ctrl:switchKinds(ins.kinds)
+        ctrl.select.localScale = Vector3.zero
+        ctrl.select = ins.select
+        ctrl.select.localScale = Vector3.one
+    end
 end
 
+--刷新数据【不做修改】
 function FiveFaceItem:saveData(data)
-    self.id=data.id
-    self.text.text=data.name--   GetLanguage()
-    self.kinds=data.kinds
-    local pat=split(data.kinds[1].path,",")
+    self.id = data.id
+    self.text.text = data.name--   TODO:GetLanguage()
+    self.kinds = data.kinds
+    local pat = split(data.kinds[1].path,",")
     LoadSprite(path..pat[2]..".png",self.ima,true)
 end

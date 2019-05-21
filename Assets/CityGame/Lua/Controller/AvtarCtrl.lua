@@ -96,42 +96,37 @@ function AvtarCtrl:ClearCasch()
 end
 
 
---临时对象池是做法
+--临时对象池
+--class  kindsItem
 local  function InsAndObjectPool(config,class,prefabPath,parent,this)
     if not pool[class] then
-        pool[class]={}
+        pool[class] = {}
     end
-    --对象池创建物体
-    local tempList={}
+    local tempList = pool[class]
+    local prefab
+    --开始遍历
     for i, value in ipairs(config) do
-        local ins =pool[class][1]
-        if ins then  --有实例
-            value.id=i
-            ins:updateData(value)
-            ins.prefab:SetActive(true)
-            table.insert(tempList,ins)
-            table.remove(pool[class],1)
-        else--无实例
-            local prefab=creatGoods(prefabPath,parent)
-            value.id=i
-            local ins=class:new(prefab,LuaBehaviour,value,this)
-            table.insert(tempList,ins)
+        --对象池中当前个数还有
+        if tempList[i] ~= nil then
+            tempList[i]:updateData(value)
+            tempList[i].prefab:SetActive(true)
+        else
+            --需要新生成pool
+            prefab = creatGoods(prefabPath,parent)
+            value.id = i
+            tempList[i] = class:new(prefab,LuaBehaviour,value,this)
         end
     end
-    --多余实例隐藏
-    if #pool[class]>0 then
-        for key, ins in ipairs(pool[class]) do
-            ins.prefab:SetActive(false)
-            table.insert(tempList,ins)
-            pool[class][key]=nil
+    --多于的隐藏
+    if #config < #tempList then
+        for i = #config + 1 , #tempList do
+            tempList[i].prefab:SetActive(false)
         end
-    end
-    --所有实例归还对象池
-    for i, ins in ipairs(tempList) do
-        table.insert(pool[class],ins)
     end
 end
 
+
+--遍历目标avatar的Icon
 local function FindOrgan(transform)
     if not appearance["body"] then
         appearance["body"]={}
@@ -164,15 +159,15 @@ local function FindOrgan(transform)
         appearance["decal"].ima=transform:Find("decal/decal"):GetComponent("Image")
         appearance["goatee"].ima=transform:Find("goatee/goatee"):GetComponent("Image")
     end
-
 end
 
+--初始化
 function AvtarCtrl:begin()
-    local faceId=DataManager.GetFaceId()
+    local faceId = DataManager.GetFaceId()
 
     if faceId then--有ID隐藏男女
-        local arr=split(faceId,"-")
-        if arr[1]=="1" then
+        local arr = split(faceId,"-")
+        if arr[1] == "1" then
             self:switchKinds(AvtarConfig.man[1].kinds)
         else
             self:switchKinds(AvtarConfig.woMan[1].kinds)
@@ -212,7 +207,7 @@ function AvtarCtrl:randomChange()
 
 end
 
-
+--改变人物某个部件选择
 function AvtarCtrl:changAparance(data)
     local arr,path,type,nums
     arr=split(data.path,",")
@@ -231,6 +226,7 @@ function AvtarCtrl:changAparance(data)
 
         --已有的隐藏
         if currHead then
+            --[[
             for i, config in ipairs(HeadSizeType) do
                 local trans=currHead.transform:Find(config.type)
                 if trans then
@@ -238,27 +234,22 @@ function AvtarCtrl:changAparance(data)
                     LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
                 end
             end
-
-            --for key, pastApperance in pairs(pastApperanceID) do
-            --    UnLoadSprite(pastApperance.path)
-            --end
-
+            --]]
             currHead:SetActive(false)
         end
         --避免重复生成
         if headPrefab[sex][nums] then
             headPrefab[sex][nums]:SetActive(true)
         else--
-            headPrefab[sex][nums]=creatGoods(config[nums].path,panel.showContent)
+            headPrefab[sex][nums] = creatGoods( config[nums].path,panel.showContent )
         end
 
-        currHead=headPrefab[sex][nums]
+        currHead = headPrefab[sex][nums]
         FindOrgan(headPrefab[sex][nums].transform)
 
         --加载原来服饰
         for key, value in pairs(appearance) do
-            if key ~= "head" and    pastApperanceID[key] then
-                
+            if key ~= "head" and pastApperanceID[key] then
                 if pastApperanceID[key].path=="" then--部件不要的处理
                     if appearance[key].ima and appearance[key].ima.transform then
                         appearance[key].ima.transform.gameObject:SetActive(false)
@@ -280,6 +271,8 @@ function AvtarCtrl:changAparance(data)
                 end
             end
         end
+        currHead = headPrefab[sex][nums]
+
 
     elseif type=="frontHat" then
         if arr[3]=="" then

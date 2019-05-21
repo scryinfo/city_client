@@ -51,22 +51,26 @@ function  AvatarManger.Awake()
     SizeParent = UnityEngine.GameObject.New("AvatarSizeParent").transform
 end
 
- function AvatarManger.setSize(go,size)
+
+local imaRect_setSize , pImaRect_setSize , trans_setSize , rect_setSize
+ function AvatarManger.setSize(go,size,isHide)
      --归位
      go.transform.localScale = Vector3.one
      go.transform.localPosition=Vector3.zero
 
-     local imaRect,pImaRect,trans
-     local rect = go.transform:GetComponent("RectTransform")
-     rect.sizeDelta =  rect.sizeDelta * size
+     rect_setSize = go.transform:GetComponent("RectTransform")
+     rect_setSize.sizeDelta =  rect_setSize.sizeDelta * size
      ----归位
      for i, sizeData in ipairs(HeadSizeType) do
-         trans=go.transform:Find(sizeData.type)
-         if trans then
-             imaRect=trans:GetComponent("Image").rectTransform
-             imaRect.sizeDelta = imaRect.sizeDelta * size
-             pImaRect=imaRect.parent:GetComponent("RectTransform")
-             pImaRect.anchoredPosition= pImaRect.anchoredPosition * size
+         trans_setSize = go.transform:Find(sizeData.type)
+         if trans_setSize then
+             imaRect_setSize = trans_setSize:GetComponent("Image").rectTransform
+             imaRect_setSize.sizeDelta = imaRect_setSize.sizeDelta * size
+             pImaRect_setSize = imaRect_setSize.parent:GetComponent("RectTransform")
+             pImaRect_setSize.anchoredPosition = pImaRect_setSize.anchoredPosition * size
+             if isHide ~= nil and isHide == true then
+                 imaRect_setSize.transform.localScale = Vector3.zero
+             end
          end
      end
      return go
@@ -133,7 +137,6 @@ local function changAparance(kind)
         --加载原来服饰
         for key, value in pairs(appearance) do
             if key ~= "head"  then
-
                 if appearance[key].path == "" then--部件不要的处理
                     if appearance[key].ima and appearance[key].ima.transform then
                         appearance[key].ima.transform.gameObject:SetActive(false)
@@ -204,7 +207,6 @@ local function GetAvatar(faceId,isSmall)
             config = AvtarConfig.woMan
         end
     end
-
     --换装
     local temp = split(arr[2],",")
     for i = 1, #temp ,2 do
@@ -265,7 +267,7 @@ function AvatarManger.CollectAvatar(AvatarData)
             if SizeParent ~= nil then
                 AvatarData.go.transform:SetParent(SizeParent)
             end
-            AvatarManger.setSize(AvatarData.go,AvatarData.size)
+            AvatarManger.setSize(AvatarData.go,AvatarData.size,true)
             AvatarData.size = 1
             AvatarData.go.transform.localScale = Vector3.zero
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
@@ -291,7 +293,7 @@ function AvatarManger.CollectAllAvatar()
                     AvatarData.go.transform:SetParent(SizeParent)
                 end
                 AvatarData.size = 1
-                AvatarManger.setSize(AvatarData.go,AvatarData.size)
+                AvatarManger.setSize(AvatarData.go,AvatarData.size,true)
                 headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
             end
         end

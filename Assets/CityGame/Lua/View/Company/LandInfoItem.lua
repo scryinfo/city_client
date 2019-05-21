@@ -20,6 +20,7 @@ function LandInfoItem:initialize(prefab, data)
     self.rentMoneyText = transform:Find("MoneyLineImage/RentMoneyText"):GetComponent("Text")
     self.timeLineImage = transform:Find("TimeLineImage")
     self.rentTimeText = transform:Find("TimeLineImage/RentTimeText"):GetComponent("Text")
+    self.posText = transform:Find("PosText"):GetComponent("Text")
     self.goBtn = transform:Find("GoBtn"):GetComponent("Button")
 
     self.goBtn.onClick:RemoveAllListeners()
@@ -34,6 +35,9 @@ function LandInfoItem:initialize(prefab, data)
     self.rentMoneyText.text = ""
     self.timeLineImage.localScale = Vector3.zero
     self.rentTimeText.text = ""
+
+    -- 位置
+    self.posText.text = string.format("coordinate(%d,%d)", self.data.x, self.data.y)
 
     if data.ownerId == DataManager.GetMyOwnerID() then
         if data.rent and data.rent.renterId then -- 已出租

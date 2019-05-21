@@ -34,7 +34,6 @@ function ProcessingFactoryCtrl:Awake(go)
 end
 function ProcessingFactoryCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 function ProcessingFactoryCtrl:Refresh()
@@ -52,18 +51,19 @@ end
 
 --刷新原料厂信息
 function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
+    --初始化
+    ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
+    local insId = self.m_data.insId
+    self.m_data = processingDataInfo
+    self.m_data.insId = insId
+    self.m_data.buildingType = BuildingType.ProcessingFactory
+    processingDataInfo.info.buildingType = BuildingType.ProcessingFactory
+
     if ProcessingFactoryPanel.topItem ~= nil then
         ProcessingFactoryPanel.topItem:refreshData(processingDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
-
-    local insId = self.m_data.insId
-    self.m_data = processingDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.ProcessingFactory
 
     --判断是自己还是别人打开了界面
     if processingDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -147,22 +147,6 @@ function ProcessingFactoryCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
---更改名字
-function ProcessingFactoryCtrl:OnClick_changeName(ins)
-    PlayMusEff(1002)
-    local data = {}
-    data.titleInfo = "RENAME"
-    data.tipInfo = "Modified every seven days"
-    data.btnCallBack = function(name)
-        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeprocessingName', ins.m_data.info.id, name)
-        ins:_updateName(name)
-    end
-    ct.OpenCtrl("InputDialogPageCtrl", data)
-end
---更改名字成功
-function ProcessingFactoryCtrl:_updateName(name)
-    ProcessingFactoryPanel.nameText.text = name
-end
 
 function ProcessingFactoryCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
@@ -171,23 +155,16 @@ end
 
 function ProcessingFactoryCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
---更改基础建筑信息
---function ProcessingFactoryCtrl:_changeItemData(data)
---    if data ~= nil and ProcessingFactoryPanel.topItem ~= nil then
---        ProcessingFactoryPanel.topItem:changeItemData(data)
---    end
---end
---
+
 function ProcessingFactoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    --关闭原料厂推送
+    --关闭加工厂推送
     Event.Brocast("m_ReqCloseprocessing",self.m_data.insId)
     --关闭当前建筑Model
     DataManager.CloseDetailModel(self.m_data.insId)

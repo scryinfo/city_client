@@ -53,7 +53,7 @@ function AdvertisementPart:_initFunc()
         self.notOpen.transform.localScale = Vector3.zero
         self.open.localScale = Vector3.one
         self.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
-        self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000)
+        self.waitingTime.text = math.floor(self.m_data.promRemainTime/3600000) .. "h"
     else
         self.notOpen.transform.localScale = Vector3.one
         self.open.localScale = Vector3.zero

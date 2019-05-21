@@ -18,6 +18,7 @@ function BuildingInfoItem:initialize(prefab, data)
     self.gradeImage = transform:Find("GradeImage")
     self.popularityGradeText = transform:Find("GradeImage/PopularityGradeText"):GetComponent("Text")
     self.qualityGradeText = transform:Find("GradeImage/QualityGradeText"):GetComponent("Text")
+    self.posText = transform:Find("PosText"):GetComponent("Text")
 
     self.buildingImage = transform:Find("BuildingImage"):GetComponent("Image")
     self.goBtn = transform:Find("GoBtn"):GetComponent("Button")
@@ -40,6 +41,9 @@ function BuildingInfoItem:initialize(prefab, data)
         self.gradeImage.localScale = Vector3.zero
     end
 
+    -- 位置
+    self.posText.text = string.format("coordinate(%d,%d)", self.data.pos.x, self.data.pos.y)
+
     -- 显示不同建筑的图片
     LoadSprite(BuildingIconConfig[data.mId], self.buildingImage, true)
 end
@@ -50,4 +54,9 @@ function BuildingInfoItem:_goPos()
     local id = TerrainManager.GridIndexTurnBlockID(self.data.pos)
     local targetPos = TerrainManager.BlockIDTurnPosition(id)
     CameraMove.MoveCameraToPos(targetPos)
+    local tempValue = DataManager.GetBaseBuildDataByID(id)
+    if tempValue ~= nil then
+        tempValue:OpenPanel()
+        CameraMove.MoveIntoUILayer(id)
+    end
 end

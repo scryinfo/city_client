@@ -27,7 +27,6 @@ end
 function WarehouseBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
@@ -38,6 +37,7 @@ function WarehouseBoxCtrl:Awake(go)
 end
 
 function WarehouseBoxCtrl:Refresh()
+    self:_language()
     self:initializeUiInfoData()
 end
 

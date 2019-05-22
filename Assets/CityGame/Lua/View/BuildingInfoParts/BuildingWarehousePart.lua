@@ -27,7 +27,6 @@ function BuildingWarehousePart:RefreshData(data)
 end
 
 function BuildingWarehousePart:_ResetTransform()
-    self:_language()
     Event.RemoveListener("partUpdateCapacity",self.updateCapacity,self)
     Event.RemoveListener("refreshWarehousePartCount",self.refreshWarehousePartCount,self)
 end

@@ -27,7 +27,6 @@ end
 function BuyBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.buyBtn.gameObject,self._clickBuyBtn,self)
@@ -37,6 +36,7 @@ function BuyBoxCtrl:Awake(go)
 end
 
 function BuyBoxCtrl:Refresh()
+    self:_language()
     self:initializeUiInfoData()
 end
 

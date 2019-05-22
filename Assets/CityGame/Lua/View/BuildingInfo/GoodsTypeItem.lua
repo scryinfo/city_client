@@ -21,23 +21,16 @@ function GoodsTypeItem:initialize(dataInfo,prefab,luaBehaviour)
     self.detailsBtn = prefab.transform:Find("detailsBtn")
 
     self:initializeUiInfoData()
-end
-
-function convert()
-    local myString = [[ 1.000000000000000E+00,2.000000000000000E+02,  -1.000000000000000E+05 ]]
-    local function convert(csv)
-        local list = {}
-        for value in (csv .. ","):gmatch("(%S+)%W*,") do table.insert(list,tonumber(value)) end
-        return unpack(list)
-    end
-    print(convert(myString))
+    luaBehaviour:AddClick(self.detailsBtn.gameObject,self._clickDetailsBtn,self)
 end
 --初始化
 function GoodsTypeItem:initializeUiInfoData()
     self.nameText.text = GetLanguage(self.dataInfo.itemId)
-    convert()
 end
+--点击打开详情
+function GoodsTypeItem:_clickDetailsBtn(ins)
 
+end
 
 
 ---建筑信息button分类Item

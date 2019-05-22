@@ -23,12 +23,12 @@ end
 function WarehouseDetailBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
 end
 function WarehouseDetailBoxCtrl:Active()
     UIPanel.Active(self)
+    self:_language()
     Event.AddListener("addShelf",self.addShelf,self)
 end
 function WarehouseDetailBoxCtrl:Refresh()

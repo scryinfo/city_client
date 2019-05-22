@@ -28,7 +28,6 @@ end
 function DeleteItemBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
@@ -38,7 +37,7 @@ function DeleteItemBoxCtrl:Awake(go)
 end
 function DeleteItemBoxCtrl:Active()
     UIPanel.Active(self)
-
+    self:_language()
 end
 function DeleteItemBoxCtrl:Refresh()
     self:initializeUiInfoData()

@@ -28,7 +28,6 @@ end
 function ShelfBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
@@ -45,6 +44,7 @@ function ShelfBoxCtrl:Awake(go)
 end
 
 function ShelfBoxCtrl:Refresh()
+    self:_language()
     self:initializeUiInfoData()
 end
 

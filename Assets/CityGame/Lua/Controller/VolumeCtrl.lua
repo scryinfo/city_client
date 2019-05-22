@@ -11,14 +11,12 @@ local volumeBehaviour;
 local isClother = true
 local clothes
 local food
-local minute
 local second
 local defaultPos_Y= -74
 local pool={}
-local playerOneInfo
-local playerTwoInfo
-local optionTwoScript ={}
 local optionOneScript ={}
+local state
+
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -376,7 +374,7 @@ function VolumeCtrl:OncitzenRect(ins)
 
     pos_Y= pos_Y- (102 + 460)
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, pos_Y),
            0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
@@ -400,7 +398,7 @@ function VolumeCtrl:OnplayerRect(ins)
 
     pos_Y= pos_Y - 102
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, -115),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')
@@ -434,6 +432,12 @@ function VolumeCtrl:c_OnClick_Delete(ins)
     optionOneScript[ins.ctrl]:Aaa(DealConfig[ins.ctrl])
     VolumePanel.strade.localScale = Vector3.zero
     VolumePanel.trade.localScale = Vector3.zero
+    if state ~= nil then
+        --state = Vector3.zero
+        state.localScale = Vector3.zero
+    end
+    state = ins.highlight
+    ins.highlight.localScale = Vector3.one
     if optionOneScript[ins.ctrl].city then
         VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
     end

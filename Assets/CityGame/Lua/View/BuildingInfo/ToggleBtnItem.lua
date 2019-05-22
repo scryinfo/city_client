@@ -4,6 +4,7 @@ ToggleBtnItem = class('ToggleBtnItem')
 local optionTwoScript = {}
 local volumeBehaviour
 local playerdata = {}
+local state = true
 ---初始化方法   数据（读配置表）
 function ToggleBtnItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab = prefab
@@ -15,12 +16,13 @@ function ToggleBtnItem:initialize(prefab,luaBehaviour,data,ctrl)
     --self.deleteBtn=prefab.transform:Find("Button")
     self.foodtext = prefab.transform:Find("food/foodText"):GetComponent("Text")
     self.bgBtn = prefab.transform:Find("bgBtn")
+    self.highlight = prefab.transform:Find("highlight")
 
     self.playerTwoInfo = UnityEngine.UI.LoopScrollDataSource.New()
     self.playerTwoInfo.mProvideData = ToggleBtnItem.static.OptionTwoData
     self.playerTwoInfo.mClearData = ToggleBtnItem.static.OptionTwoClearData
 
-    luaBehaviour:AddClick(self.bgBtn.gameObject,self.c_OnClick_Delete,self)
+    --luaBehaviour:AddClick(self.bgBtn.gameObject,self.c_OnClick_Delete,self)
     self:Refresh(data)
 end
 
@@ -31,7 +33,7 @@ function ToggleBtnItem:c_OnClick_Delete(ins)
     local type = ins.data.childs
     VolumePanel.strade.localScale = Vector3.zero
     VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnTwoItem")
-    prints("ToggleBtnItem")
+    prints("ToggleBtnItem====================")
 end
 
 --删除2
@@ -40,7 +42,6 @@ function ToggleBtnItem:c_OnClick_Roll(ins)
 end
 
 ---==========================================================================================业务逻辑=============================================================================
--- 第二层信息展示
 
 function ToggleBtnItem:updateData( data )
     self.data = data

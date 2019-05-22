@@ -10,8 +10,7 @@ local optionThreeScript = {}
 local volumeBehaviour
 local insId
 local playerdata = {}
-local maxValue = 0
-
+local state
 ---初始化方法   数据（读配置表）
 function ToggleBtnThreeItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab = prefab
@@ -23,6 +22,7 @@ function ToggleBtnThreeItem:initialize(prefab,luaBehaviour,data,ctrl)
     --self.deleteBtn=prefab.transform:Find("Button")
     self.foodtext = prefab.transform:Find("food/foodText"):GetComponent("Text")
     self.bgBtn = prefab.transform:Find("bgBtn")
+    self.highlight = prefab.transform:Find("highlight")
 
     self.ToggleBtnThreeItem = UnityEngine.UI.LoopScrollDataSource.New()
     self.ToggleBtnThreeItem.mProvideData = ToggleBtnThreeItem.static.OptionTwoData
@@ -42,7 +42,11 @@ function ToggleBtnThreeItem:_tradingOpenFunc(ins)
     VolumePanel.strade.localScale = Vector3.one
     VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
-
+    if state ~= nil then
+        state.localScale = Vector3.zero
+    end
+    state = ins.highlight
+    ins.highlight.localScale = Vector3.one
     local info = {}
     info.id = ins.data.typeId
     info.exchangeType = ins.data.EX

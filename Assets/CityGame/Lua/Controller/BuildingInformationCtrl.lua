@@ -50,6 +50,11 @@ function BuildingInformationCtrl:Hide()
     Event.RemoveListener("openTipBox",self.openTipBox,self)
     destroy(self.buildingInfoItem.prefab.gameObject)
     self.buildingInfoItem = nil
+    if isShow == true then
+        self.tipBox.transform:SetParent(self.content)
+        self.tipBoxText.text = ""
+        self.tipBox.transform.localScale = Vector3.zero
+    end
 end
 -------------------------------------------------------------获取组件---------------------------------------------------------------------------------
 function BuildingInformationCtrl:_getComponent(go)

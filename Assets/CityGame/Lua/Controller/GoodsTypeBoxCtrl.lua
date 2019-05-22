@@ -70,6 +70,7 @@ end
 ------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
 --初始化UI
 function GoodsTypeBoxCtrl:initializeUiInfoData()
+    self.topName.text = GetLanguage(self.m_data.itemId).."生产技术"
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == 21 then
         --原料
         self.basicQuality.gameObject:SetActive(false)

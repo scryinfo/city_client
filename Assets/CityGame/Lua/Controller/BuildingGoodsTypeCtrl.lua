@@ -24,6 +24,8 @@ function BuildingGoodsTypeCtrl:Active()
     self:_language()
     --存放商品分好类的实例
     self.GoodsTypeDatas = {}
+    --存放分类button的实例
+    self.ButtonTypeData = {}
     Event.AddListener("goodsType",self.goodsType,self)
 end
 function BuildingGoodsTypeCtrl:Awake(go)

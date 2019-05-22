@@ -5,11 +5,18 @@
 ---建筑信息商品分类Item
 GoodsTypeItem = class('GoodsTypeItem')
 
+local ToNumber = tonumber
+local StringSun = string.sub
+--奢侈等级
+local oneLevel = Vector3.New(105,174,238)
+local twoLevel = Vector3.New(156,136,228)
+local threeLevel = Vector3.New(243,185,45)
 function GoodsTypeItem:initialize(dataInfo,prefab,luaBehaviour)
     self.prefab = prefab
     self.dataInfo = dataInfo
 
     self.iconImg = prefab.transform:Find("iconImg"):GetComponent("Image")
+    self.nameBg = prefab.transform:Find("nameBg")
     self.nameText = prefab.transform:Find("nameBg/nameText"):GetComponent("Text")
     self.goods = prefab.transform:Find("goods")
     self.levelImg = prefab.transform:Find("goods/levelImg"):GetComponent("Image")
@@ -26,6 +33,25 @@ end
 --初始化
 function GoodsTypeItem:initializeUiInfoData()
     self.nameText.text = GetLanguage(self.dataInfo.itemId)
+    if ToNumber(StringSun(self.dataInfo.itemId,1,2)) == 21 then
+        --原料
+        self.goods.transform.localScale = Vector3.zero
+        self.nameBg.transform.localPosition = Vector3(-140,-100,0)
+        LoadSprite(Material[self.dataInfo.itemId].img,self.iconImg,false)
+    elseif ToNumber(StringSun(self.dataInfo.itemId,1,2)) == 22 then
+        --商品
+        self.goods.transform.localScale = Vector3.one
+        LoadSprite(Good[self.dataInfo.itemId].img,self.iconImg,false)
+        --判断原料等级
+        if Good[self.dataInfo.itemId].luxury == 1 then
+            self.levelImg.color = getColorByVector3(oneLevel)
+        elseif Good[self.dataInfo.itemId].luxury == 2 then
+            self.levelImg.color = getColorByVector3(twoLevel)
+        elseif Good[self.dataInfo.itemId].luxury == 3 then
+            self.levelImg.color = getColorByVector3(threeLevel)
+        end
+    end
+
 end
 --点击打开详情
 function GoodsTypeItem:_clickDetailsBtn(ins)

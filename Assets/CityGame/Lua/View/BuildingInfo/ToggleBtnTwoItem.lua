@@ -13,6 +13,7 @@ local playerdata = {}
 local optionOneScript = {}
 local maxValue = 0
 local state
+local type = true
 ---初始化方法   数据（读配置表）
 function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab = prefab
@@ -58,6 +59,7 @@ function ToggleBtnTwoItem:_tradingOpenFunc(ins)
         local info = {}
         info.id = ins.data.typeId
         info.exchangeType = ins.data.EX
+        info.type = type
         DataManager.DetailModelRpcNoRet(insId , 'm_PlayerNumCurve',info)
         VolumePanel.trade.localScale = Vector3.one
     end
@@ -145,9 +147,8 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
             demandNumTab[i].num = 0
         else
             for k, v in ipairs(info) do
-                if math.floor(v.t/1000) == sevenDaysAgo then
-                    demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
-                            .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
+                if math.floor(v.time/1000) == sevenDaysAgo then
+                    demandNumTab[i].num = tonumber(GetClientPriceString(v.money))
                 end
             end
         end
@@ -169,7 +170,7 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
         end
     end
     local demandNumVet = {}
-    local scale = SetYScale(maxValue,6,VolumePanel.yScale)
+    local scale = SetYScale(max,6,VolumePanel.yScale)
     for i, v in ipairs(demandNumValue) do
         if scale == 0 then
             demandNumVet[i] = v

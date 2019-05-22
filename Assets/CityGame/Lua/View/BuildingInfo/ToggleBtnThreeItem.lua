@@ -11,6 +11,7 @@ local volumeBehaviour
 local insId
 local playerdata = {}
 local state
+local type = true
 ---初始化方法   数据（读配置表）
 function ToggleBtnThreeItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab = prefab
@@ -50,6 +51,7 @@ function ToggleBtnThreeItem:_tradingOpenFunc(ins)
     local info = {}
     info.id = ins.data.typeId
     info.exchangeType = ins.data.EX
+    info.type = type
     DataManager.DetailModelRpcNoRet(insId , 'm_PlayerNumCurve',info)
     --DataManager.OpenDetailModel(VolumeModel,ins.insId )
     --DataManager.DetailModelRpcNoRet(insId , 'm_PlayerTypeNum')

@@ -94,7 +94,7 @@ end
 --玩家购买数量折线图
 function VolumeModel:m_PlayerNumCurve(info)
     local msgId = pbl.enum("sscode.OpCode","queryPlayerGoodsCurve")
-    local lMsg = { id = info.id ,exchangeType = info.exchangeType}
+    local lMsg = { id = info.id ,exchangeType = info.exchangeType,type = info.type}
     local pMsg = assert(pbl.encode("ss.PlayerGoodsCurve", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId,pMsg,CityEngineLua._tradeNetworkInterface1)
 end
@@ -129,8 +129,8 @@ end
 ----玩家购买数量折线图
 function VolumeModel:n_OngetPlayerAmount(lMsg)
     if lMsg.exchangeType == 4 or lMsg.exchangeType == 2 then
-        Event.Brocast("c_ToggleBtnThreeItem",lMsg.PlayerGoodsCurveMap)
+        Event.Brocast("c_ToggleBtnThreeItem",lMsg.playerGoodsCurveMap)
     else
-        Event.Brocast("c_ToggleBtnTwoItem",lMsg.PlayerGoodsCurveMap)
+        Event.Brocast("c_ToggleBtnTwoItem",lMsg.playerGoodsCurveMap)
     end
 end

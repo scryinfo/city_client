@@ -3,5 +3,141 @@
 --- Created by Fisher.
 --- DateTime: 2019/5/21 10:34
 ---建筑信息商品分类
-WarehouseBoxCtrl = class('WarehouseBoxCtrl',UIPanel)
-UIPanel:ResgisterOpen(WarehouseBoxCtrl)
+BuildingGoodsTypeCtrl = class('BuildingGoodsTypeCtrl',UIPanel)
+UIPanel:ResgisterOpen(BuildingGoodsTypeCtrl)
+
+local ToNumber = tonumber
+local StringSun = string.sub
+function BuildingGoodsTypeCtrl:initialize()
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+end
+
+function BuildingGoodsTypeCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/BuildingGoodsTypePanel.prefab"
+end
+
+function BuildingGoodsTypeCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+end
+function BuildingGoodsTypeCtrl:Active()
+    UIPanel.Active(self)
+    self:_language()
+    --存放商品分好类的实例
+    self.GoodsTypeDatas = {}
+    Event.AddListener("goodsType",self.goodsType,self)
+end
+function BuildingGoodsTypeCtrl:Awake(go)
+    self.gameObject = go
+    self:_getComponent(go)
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+end
+
+function BuildingGoodsTypeCtrl:Refresh()
+    self:initializeUiInfoData()
+end
+
+function BuildingGoodsTypeCtrl:Hide()
+    UIPanel.Hide(self)
+    self:closeDestroy()
+    if next(self.ButtonTypeData) ~= nil then
+        for key,value in pairs(self.ButtonTypeData) do
+            destroy(value.prefab.gameObject)
+            self.ButtonTypeData[key] = nil
+        end
+    end
+    Event.RemoveListener("goodsType",self.goodsType,self)
+end
+-------------------------------------------------------------获取组件-------------------------------------------------------------------------------
+function BuildingGoodsTypeCtrl:_getComponent(go)
+    --topRoot
+    self.closeBtn = go.transform:Find("topRoot/top/closeBtn")
+    self.topName = go.transform:Find("topRoot/top/topName"):GetComponent("Text")
+    self.buttonScrollView = go.transform:Find("topRoot/button/ScrollView")
+    self.buttonContent = go.transform:Find("topRoot/button/ScrollView/Viewport/Content")
+    --content
+    self.contentContent = go.transform:Find("content/ScrollView/Viewport/Content")
+
+    --预制
+    self.ButtonTypeItem = go.transform:Find("topRoot/button/ScrollView/Viewport/Content/ButtonType").gameObject
+    self.GoodsTypeItem = go.transform:Find("content/ScrollView/Viewport/Content/GoodsTypeItem").gameObject
+end
+------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
+--初始化UI数据
+function BuildingGoodsTypeCtrl:initializeUiInfoData()
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        self.buttonScrollView.transform.localScale = Vector3.zero
+        self:createMaterialInstance()
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        self.buttonScrollView.transform.localScale = Vector3.one
+        self:createButtonInstance()
+    end
+end
+--生成分类button
+function BuildingGoodsTypeCtrl:createButtonInstance()
+    for key,value in pairs(GoodsTypeConfig) do
+        local obj = self:loadingItemPrefab(self.ButtonTypeItem,self.buttonContent)
+        local ButtonTypeItems = ButtonTypeItem:new(value,obj,self.luaBehaviour)
+        if not self.ButtonTypeData then
+            self.ButtonTypeData = {}
+        end
+        table.insert(self.ButtonTypeData,ButtonTypeItems)
+    end
+    self.ButtonTypeData[1].nomal.isOn = true
+end
+--设置多语言
+function BuildingGoodsTypeCtrl:_language()
+    self.topName.text = "PRODUCTION RATE OF RAW MATERIALS"
+end
+------------------------------------------------------------点击函数--------------------------------------------------------------------------------
+--关闭
+function BuildingGoodsTypeCtrl:_clickCloseBtn()
+    UIPanel.ClosePage()
+end
+------------------------------------------------------------事件函数--------------------------------------------------------------------------------
+--商品分类
+function BuildingGoodsTypeCtrl:goodsType(typeId)
+    self:closeDestroy()
+    for key,value in pairs(self.m_data.dataInfo) do
+        if ToNumber(StringSun(value.itemId,1,4)) == typeId then
+            table.insert(self.GoodsTypeInfoData,value)
+        end
+    end
+    self:createGoodsInstance()
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------
+--生成原料(原料不用分类)
+function BuildingGoodsTypeCtrl:createMaterialInstance()
+    for key,value in pairs(self.m_data.dataInfo) do
+        local obj = self:loadingItemPrefab(self.GoodsTypeItem,self.contentContent)
+        local GoodsTypeItems = GoodsTypeItem:new(value,obj,self.luaBehaviour)
+        table.insert(self.GoodsTypeDatas,GoodsTypeItems)
+    end
+end
+--生成分类商品
+function BuildingGoodsTypeCtrl:createGoodsInstance()
+    for key,value in pairs(self.GoodsTypeInfoData) do
+        local obj = self:loadingItemPrefab(self.GoodsTypeItem,self.contentContent)
+        local GoodsTypeItems = GoodsTypeItem:new(value,obj,self.luaBehaviour)
+        table.insert(self.GoodsTypeDatas,GoodsTypeItems)
+    end
+end
+--加载实例化Prefab
+function BuildingGoodsTypeCtrl:loadingItemPrefab(itemPrefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
+    local objRect = obj.transform:GetComponent("RectTransform");
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one;
+    obj:SetActive(true)
+    return obj
+end
+--清空商品分类数据和商品实例
+function BuildingGoodsTypeCtrl:closeDestroy()
+    self.GoodsTypeInfoData = {}
+    if next(self.GoodsTypeDatas) ~= nil then
+        for key,value in pairs(self.GoodsTypeDatas) do
+            destroy(value.prefab.gameObject)
+            self.GoodsTypeDatas[key] = nil
+        end
+    end
+end

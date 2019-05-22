@@ -74,7 +74,7 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.deleBtn = go.transform:Find("contentRoot/bottom/deleBtn")
     self.addTransportBtn = go.transform:Find("contentRoot/bottom/addTransportBtn")
 end
-----------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22

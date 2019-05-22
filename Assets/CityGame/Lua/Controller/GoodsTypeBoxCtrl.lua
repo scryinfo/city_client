@@ -6,6 +6,8 @@
 GoodsTypeBoxCtrl = class('GoodsTypeBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(GoodsTypeBoxCtrl)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function GoodsTypeBoxCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
@@ -21,7 +23,7 @@ function GoodsTypeBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-
+    self.luaBehaviour:AddClick(self.bgBtn.gameObject,self._clickBgBtn,self)
 end
 
 function GoodsTypeBoxCtrl:Refresh()
@@ -43,7 +45,7 @@ function GoodsTypeBoxCtrl:_getComponent(go)
     self.basicProduceRateValue = go.transform:Find("content/basicProduceRate/basicProduceRateImg/basicProduceRateValue"):GetComponent("Text")
     self.basicProduceRateUnit = go.transform:Find("content/basicProduceRate/basicProduceRateImg/basicProduceRateValue/unit"):GetComponent("Text")
 
-    --生产加成
+    --生产速度加成
     self.produceBounus = go.transform:Find("content/produceBounus")
     self.produceBounusText = go.transform:Find("content/produceBounus/Text"):GetComponent("Text")
     self.produceBounusValue = go.transform:Find("content/produceBounus/produceBounusImg/produceBounusValue"):GetComponent("Text")
@@ -60,13 +62,50 @@ function GoodsTypeBoxCtrl:_getComponent(go)
     self.qualityAdditionValue = go.transform:Find("content/qualityAddition/qualityAdditionImg/qualityAdditionValue"):GetComponent("Text")
     self.qualityAdditionUnit = go.transform:Find("content/qualityAddition/qualityAdditionImg/qualityAdditionValue/unit"):GetComponent("Text")
 
-    --品牌值
+    --知名度
     self.popularity = go.transform:Find("content/popularity")
     self.popularityText = go.transform:Find("content/popularity/Text"):GetComponent("Text")
     self.popularityValue = go.transform:Find("content/popularity/popularityImg/popularityValue"):GetComponent("Text")
 end
 ------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
+--初始化UI
+function GoodsTypeBoxCtrl:initializeUiInfoData()
+    if ToNumber(StringSun(self.m_data.itemId,1,2)) == 21 then
+        --原料
+        self.basicQuality.gameObject:SetActive(false)
+        self.qualityAddition.gameObject:SetActive(false)
+        self.popularity.gameObject:SetActive(false)
+
+        self.basicProduceRateValue.text = self.m_data.numOneSec
+        self.produceBounusValue.text = (self.m_data.eva.lv - 1) / 100
+        --self.produceBounusValue.text = 1 / (self.m_data.numOneSec * (1 + (self.m_data.eva.lv - 1) / 100))
+    elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == 22 then
+        --商品
+        self.basicQuality.gameObject:SetActive(true)
+        self.qualityAddition.gameObject:SetActive(true)
+        self.popularity.gameObject:SetActive(true)
+
+        self.basicProduceRateValue.text = self.m_data.numOneSec
+        self.produceBounusValue.text = self.m_data.addNumOneSec
+        self.basicQualityValue.text = self.m_data.quality
+        self.qualityAdditionValue.text = self.m_data.addQuality
+        self.popularityValue.text = self.m_data.brand
+    end
+end
 --设置多语言
 function GoodsTypeBoxCtrl:_language()
-
+    self.basicProduceRateText.text = "基础生产速度"
+    self.produceBounusText.text = "生产速度加成"
+    self.basicQualityText.text = "基础品质"
+    self.qualityAdditionText.text = "品质加成"
+    self.popularityText.text = "知名度"
+    self.basicProduceRateUnit.text = "per/s"
+    self.produceBounusUnit.text = "%"
+    self.qualityAdditionUnit.text = "%"
+end
+------------------------------------------------------------点击函数--------------------------------------------------------------------------------
+--关闭
+function GoodsTypeBoxCtrl:_clickBgBtn()
+    PlayMusEff(1002)
+    UIPanel.ClosePage()
 end

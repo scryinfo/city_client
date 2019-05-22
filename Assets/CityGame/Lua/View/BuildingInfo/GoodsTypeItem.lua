@@ -29,7 +29,7 @@ function GoodsTypeItem:initializeUiInfoData()
 end
 --点击打开详情
 function GoodsTypeItem:_clickDetailsBtn(ins)
-
+    ct.OpenCtrl("GoodsTypeBoxCtrl",ins.dataInfo)
 end
 
 

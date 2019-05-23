@@ -36,8 +36,7 @@ function ServerListCtrl:Active()
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
-
-    ServerListPanel.serverText.text = GetLanguage(10030001)
+    
 
 end
 

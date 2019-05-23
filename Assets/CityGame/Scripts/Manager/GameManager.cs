@@ -55,6 +55,8 @@ namespace LuaFramework
             }
         }
         private Text content;
+        private Text progress;
+        private Text speed;
         private RectTransform contentBg;
         private Slider slider;
         private GameObject panel;
@@ -64,6 +66,8 @@ namespace LuaFramework
             panel = Instantiate(Resources.Load<GameObject>("View/HotfixPanel"));
             contentBg = panel.transform.Find("HotfixPanel/contentBg").GetComponent<RectTransform>();
             content = panel.transform.Find("HotfixPanel/contentBg/textBG/Text").GetComponent<Text>();
+            progress = panel.transform.Find("HotfixPanel/contentBg/Slider/progress").GetComponent<Text>();
+            speed = panel.transform.Find("HotfixPanel/contentBg/Slider/progress/speed").GetComponent<Text>();
             slider = FindObjectOfType<Slider>();
         }
 
@@ -249,42 +253,25 @@ namespace LuaFramework
             {
                 StartLoadReminderPanel();
             }
-
-            //float num = 0;
-            //for (int i = m_ojects.Count - 1; i >= 0; --i)
-            //{
-
-            //    BeginDownload(m_ojects[i].fileUrl, m_ojects[i].localfile);
-            //    print("下载中" + ">>>" + m_ojects[i].localfile);
-
-            //    while (!(IsDownOK(m_ojects[i].localfile)))
-            //    {
-            //        yield return new WaitForEndOfFrame();
-            //    }
-
-            //    num = m_ojects.Count - i;
-            //    content.text = m_ojects[i].localfile.Replace(dataPath, "");
-            //    slider.value = num / m_ojects.Count;
-            //}
-            //yield return new WaitForEndOfFrame();
-
-
-            //facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, "更新完成!!");
-            //slider.value = 1;
-
-            //OnResourceInited();
-            //yield return new WaitForSeconds(1.2f);
-            //Destroy(panel);
+            else
+            {
+                OnResourceInited();
+                yield return new WaitForSeconds(1.2f);
+            }
         }
         //游戏加载提示界面
         private GameObject reminder;
         private Button cancel;
         private Button confirm;
+        private Text contentText;
+        private bool isDown = true;
         void StartLoadReminderPanel()
         {
             reminder = Instantiate(Resources.Load<GameObject>("View/LoadReminderPanel"));
             cancel = reminder.transform.Find("reninder/cancel").GetComponent<Button>();
             confirm = reminder.transform.Find("reninder/confirm").GetComponent<Button>();
+            contentText = reminder.transform.Find("reninder/content").GetComponent<Text>();
+            contentText.text = "The "+ "<color=#546BCB>100M</color>" + " resources need to be updated" ;
             cancel.onClick.AddListener(OnCancel);
             confirm.onClick.AddListener(OnConfirm);
         }
@@ -303,21 +290,34 @@ namespace LuaFramework
         //点击确定
         void OnConfirm()
         {
-            if (Application.internetReachability == NetworkReachability.NotReachable)
+            confirm.enabled = false;
+            if (isDown)
             {
-                //Debug.Log("没有联网！！！");
+                if (Application.internetReachability == NetworkReachability.NotReachable)
+                {
+                    //Debug.Log("没有联网！！！");
+                }
+                if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+                {
+                    Destroy(reminder);
+                    contentBg.localScale = Vector3.one;
+                    //Debug.Log("使用Wi-Fi！！！");
+                    StartCoroutine(StartDownLoad(m_ojects));
+                }
+                if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
+                {
+                    //Debug.Log("使用移动网络！！！");
+                    contentText.text = "Detected that you are not connected to wifi.Do you want to continue downloading?";
+                    confirm.enabled = true;
+                }
             }
-            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            else
             {
                 Destroy(reminder);
                 contentBg.localScale = Vector3.one;
-                //Debug.Log("使用Wi-Fi！！！");
                 StartCoroutine(StartDownLoad(m_ojects));
             }
-            if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
-            {
-                //Debug.Log("使用移动网络！！！");
-            }
+            isDown = false;
         }
         //开始下载
         IEnumerator StartDownLoad(List<m_boject> m_ojects)
@@ -337,6 +337,7 @@ namespace LuaFramework
                 num = m_ojects.Count - i;
                 content.text = m_ojects[i].localfile.Replace(Util.DataPath, "");
                 slider.value = num / m_ojects.Count;
+                progress.text = Mathf.Floor((num / m_ojects.Count) * 100) + "%";
             }
             yield return new WaitForEndOfFrame();
 
@@ -346,7 +347,6 @@ namespace LuaFramework
 
             OnResourceInited();
             yield return new WaitForSeconds(1.2f);
-            Destroy(panel);
         }
         /// <summary>
         /// 是否下载完成

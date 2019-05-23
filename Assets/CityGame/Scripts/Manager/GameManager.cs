@@ -67,6 +67,7 @@ namespace LuaFramework
             content = panel.transform.Find("HotfixPanel/contentBg/textBG/Text").GetComponent<Text>();
             progress = panel.transform.Find("HotfixPanel/contentBg/Slider/progress").GetComponent<Text>();
             speed = panel.transform.Find("HotfixPanel/contentBg/Slider/progress/speed").GetComponent<Text>();
+            slider = panel.transform.Find("HotfixPanel/contentBg/Slider").GetComponent<Slider>();
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ function ServerListCtrl:Awake()
     self.data = self.m_data
 
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    serverListBehaviour:AddClick(ServerListPanel.back,self.c_OnBack,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
     self:_initData();
@@ -43,15 +44,19 @@ end
 function ServerListCtrl:Refresh()
     self:_initInsData()
 end
---[[
+
 function ServerListCtrl:Hide()
-UIPanel.Hide(self)
---注销事件
-EveeListener("c_GsCreateRole",self.c_GsCreateRole,self);
-Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+    UIPanel.Hide(self)
+    --注销事件
+    Eveet.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
---]]
+
+function ServerListCtrl:c_OnBack()
+    UIPanel.ClosePage()
+end
+
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
 end

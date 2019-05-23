@@ -62,7 +62,7 @@ end
 
 --返回
 function NewReminderCtrl:OnClose()
-    --UIPanel.ClosePage()
+    UIPanel.ClosePage()
 end
 
 --点击具有选择性的确定（有取消按钮）

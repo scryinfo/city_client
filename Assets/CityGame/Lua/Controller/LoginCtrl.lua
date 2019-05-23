@@ -217,6 +217,7 @@ end
 --登录回调
 function LoginCtrl:c_Aslogin(info,msgId)
 	LoginPanel.textStatus.transform.localScale = Vector3.zero
+	LoginPanel.textStatus:GetComponent('Text').text = ""
 	if msgId == 0 then
 		if info.reason == "accountInFreeze" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one

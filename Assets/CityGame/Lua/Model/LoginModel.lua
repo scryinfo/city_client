@@ -15,7 +15,7 @@ end
 --启动事件--
 function LoginModel:OnCreate()
     --注册本地UI事件
-    CityEngineLua.login_loginapp(true);
+    --CityEngineLua.login_loginapp(true);
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.AddListener("m_OnRegister", self.m_OnRegister,self);
     Event.AddListener("m_onConnectionState", self.m_onConnectionState);
@@ -58,18 +58,19 @@ end
 
 --点击登录
 function LoginModel.m_OnAsLogin( username, password, data )
+    CityEngineLua.login_loginapp(true);
     CityEngineLua.username = username;
     CityEngineLua.password = password;
     CityEngineLua._clientdatas = data;
-    local msgId = pbl.enum("ascode.OpCode","login")
-    ----2、 填充 protobuf 内部协议数据
-    local msglogion = {
-        account = username,pwd = password
-    }
-    -- 序列化成二进制数据
-    local pb_login = assert(pbl.encode("as.Account", msglogion))
-    --发包
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+    --local msgId = pbl.enum("ascode.OpCode","login")
+    ------2、 填充 protobuf 内部协议数据
+    --local msglogion = {
+    --    account = username,pwd = password
+    --}
+    ---- 序列化成二进制数据
+    --local pb_login = assert(pbl.encode("as.Account", msglogion))
+    ----发包
+    --CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 end
 
 --点击注册

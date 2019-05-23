@@ -45,13 +45,17 @@ end
 function ServerListCtrl:Hide()
     UIPanel.Hide(self)
     --注销事件
-    Eveet.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
 
 function ServerListCtrl:c_OnBack()
-    UIPanel.ClosePage()
+    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = "确定注销账号吗？",func = function()
+            UIPanel.ClosePage()
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
 end
 
 function ServerListCtrl:_initInsData()

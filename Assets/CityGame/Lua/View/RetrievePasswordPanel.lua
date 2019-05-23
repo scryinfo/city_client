@@ -18,7 +18,7 @@ end
 
 --初始化面板--
 function RetrievePasswordPanel.InitPanel()
-    this.name = transform:Find("name"):GetComponent('Text');
+    this.name = transform:Find("nameBg/name"):GetComponent('Text');
     this.phone = transform:Find("phone"):GetComponent('InputField');
     this.authCode = transform:Find("authCode"):GetComponent('InputField');
 

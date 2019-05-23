@@ -18,7 +18,7 @@ end
 
 --初始化面板--
 function SetPasswordPanel.InitPanel()
-    this.name = transform:Find("name"):GetComponent('Text');
+    this.name = transform:Find("nameBg/name"):GetComponent('Text');
 
     this.password = transform:Find("password"):GetComponent('InputField');
     this.confirm = transform:Find("confirm"):GetComponent('InputField');

@@ -25,8 +25,7 @@ function CreateRoleCtrl:Awake()
 
     createRoleBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     createRoleBehaviour:AddClick(CreateRolePanel.createRoleBtn,self.OnCreateRole,self)
-    --createRoleBehaviour:AddClick(CreateRolePanel.male,self.OnMale,self)
-   -- createRoleBehaviour:AddClick(CreateRolePanel.female,self.OnFemale,self)
+    createRoleBehaviour:AddClick(CreateRolePanel.back,self.OnBack,self)
 
 end
 
@@ -56,6 +55,10 @@ function CreateRoleCtrl:OnCreate(obj)
 
 end
 
+function CreateRoleCtrl:OnBack()
+    UIPanel.ClosePage()
+end
+
 --创建角色
 function CreateRoleCtrl:OnCreateRole(go)
     PlayMusEff(1002)
@@ -63,8 +66,6 @@ function CreateRoleCtrl:OnCreateRole(go)
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
         Event.Brocast("SmallPop",GetLanguage(10040006),300)
-    --elseif gender == nil  then
-    --    Event.Brocast("SmallPop",GetLanguage(10040007),300)
     else
         local data = {}
         data.nickname = nickname
@@ -75,28 +76,7 @@ function CreateRoleCtrl:OnCreateRole(go)
     end
 end
 
---选择性别 男
-function CreateRoleCtrl:OnMale()
-    PlayMusEff(1002)
-    gender = true
-    CreateRolePanel.male:GetComponent("Image").color =getColorByInt(255,218,72,255)
-    CreateRolePanel.female:GetComponent("Image").color =getColorByInt(215,215,215,255)
-    CreateRolePanel.maleScl.localScale = Vector3.one
-    CreateRolePanel.femaleScl.localScale = Vector3.zero
-end
-
---选择性别 女
-function CreateRoleCtrl:OnFemale()
-    PlayMusEff(1002)
-    gender = false
-    CreateRolePanel.female:GetComponent("Image").color =getColorByInt(255,218,72,255)
-    CreateRolePanel.male:GetComponent("Image").color =getColorByInt(215,215,215,255)
-    CreateRolePanel.maleScl.localScale = Vector3.zero
-    CreateRolePanel.femaleScl.localScale = Vector3.one
-end
-
 --重名
 function CreateRoleCtrl:c_SameName()
-    CreateRolePanel.duplicate.localScale = Vector3.one
-    --Event.Brocast("SmallPop"," 该名字也被注册,请重新输入",300)
+    CreateRolePanel.duplicateText.transform.localScale = Vector3.one
 end

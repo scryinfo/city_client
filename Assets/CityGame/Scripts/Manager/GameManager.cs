@@ -16,11 +16,14 @@ namespace LuaFramework
         private List<string> downloadFiles = new List<string>();
         private GameObject startPanel;  //加载界面
         private CanvasGroup startGroup; //加载界面BG显影
+        private GameObject Loadcanvas;
         /// <summary>
         /// 初始化游戏管理器
         /// </summary>
         void Awake()
         {
+            Loadcanvas = GameObject.Find("LoadCanvas");
+            Loadcanvas.SetActive(true);
             if (AppConst.UpdateMode)
             {
                 StartLoadPanel();
@@ -29,11 +32,6 @@ namespace LuaFramework
             {
                 Init();
             }
-          
-            //if (AppConst.UpdateMode)
-            //{
-            //    LoadHotFixPanel();
-            //}
         }
         //游戏加载界面
         void StartLoadPanel()
@@ -48,12 +46,13 @@ namespace LuaFramework
             startGroup.DOFade(1, 5);
             yield return new WaitForSeconds(5);
             Destroy(startPanel);
+            LoadHotFixPanel();
             Init();
-            if (AppConst.UpdateMode)
-            {
-                LoadHotFixPanel();
-            }
         }
+       
+        /// <summary>
+        /// 初始化游戏管理器
+        /// </summary>
         private Text content;
         private Text progress;
         private Text speed;
@@ -68,7 +67,6 @@ namespace LuaFramework
             content = panel.transform.Find("HotfixPanel/contentBg/textBG/Text").GetComponent<Text>();
             progress = panel.transform.Find("HotfixPanel/contentBg/Slider/progress").GetComponent<Text>();
             speed = panel.transform.Find("HotfixPanel/contentBg/Slider/progress/speed").GetComponent<Text>();
-            slider = FindObjectOfType<Slider>();
         }
 
         /// <summary>
@@ -257,6 +255,8 @@ namespace LuaFramework
             {
                 OnResourceInited();
                 yield return new WaitForSeconds(1.2f);
+                Destroy(panel);
+                Loadcanvas.SetActive(true);
             }
         }
         //游戏加载提示界面
@@ -347,6 +347,8 @@ namespace LuaFramework
 
             OnResourceInited();
             yield return new WaitForSeconds(1.2f);
+            Destroy(panel);
+            Loadcanvas.SetActive(true);
         }
         /// <summary>
         /// 是否下载完成
@@ -418,7 +420,7 @@ namespace LuaFramework
 
             Debug.Log("GameManager:OnInitialize CallMethod Game OnPostInitOK !!!");
             Util.CallMethod("Game", "OnPostInitOK");     //初始化完成
-            Destroy(GameObject.Find("LoadCanvas"));
+            //Destroy(GameObject.Find("LoadCanvas"));
             initialize = true;
         }
 

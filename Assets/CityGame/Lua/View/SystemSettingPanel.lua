@@ -16,8 +16,8 @@ function SystemSettingPanel.Awake(obj)
 end
 
 function SystemSettingPanel.InitPanel()
-    this.Music=UnityEngine.GameObject.FindGameObjectWithTag("Music").transform:GetComponent("AudioSource")
-    this.MusicEffect=UnityEngine.GameObject.FindGameObjectWithTag("Musiceffect").transform:GetComponent("AudioSource")
+    this.Music = MusicManger.GetMusicAudioSource()
+    this.MusicEffect= MusicManger.GetMusicEffectAudioSource()
 
     this.titleText=transform:Find("Panel/topRoot/bg/Text"):GetComponent("Text")
     this.backBtn = transform:Find("Panel/topRoot/bg/closeBtn");

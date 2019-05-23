@@ -22,5 +22,6 @@ OpenModelInsID = {
     ["BubbleMessageCtrl"] = 16,
     ["VolumeCtrl"] = 17,
     ["HistoryCurveCtrl"] = 18,
+    ["BuildingInfoId"] = 19,
 
 }

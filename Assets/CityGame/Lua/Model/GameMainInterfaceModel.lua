@@ -125,12 +125,10 @@ function GameMainInterfaceModel:n_GsExtendBag(lMsg)
     DataManager.SetMoney(lMsg.money)
     Event.Brocast("c_ChangeMoney",lMsg.money)
 end
+
 --自己的收益情况回调
 function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
-    if lMsg then
-        table.insert(incomeNotify,lMsg)
-    end
-    Event.Brocast("c_IncomeNotify",incomeNotify)
+    Event.Brocast("c_IncomeNotify",lMsg)
 end
 
 --城市广播回调

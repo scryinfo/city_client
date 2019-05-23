@@ -49,18 +49,19 @@ end
 
 --刷新原料厂信息
 function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
+    --初始化
+    RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
+    local insId = self.m_data.insId
+    self.m_data = retailShopDataInfo
+    self.m_data.insId = insId
+    self.m_data.buildingType = BuildingType.RetailShop
+    retailShopDataInfo.info.buildingType = BuildingType.RetailShop
+
     if RetailStoresPanel.topItem ~= nil then
         RetailStoresPanel.topItem:refreshData(retailShopDataInfo.info,function()
             self:_clickCloseBtn(self)
         end)
     end
-    --初始化
-    RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
-
-    local insId = self.m_data.insId
-    self.m_data = retailShopDataInfo
-    self.m_data.insId = insId
-    self.m_data.buildingType = BuildingType.RetailShop
 
     --判断是自己还是别人打开了界面
     if retailShopDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
@@ -176,25 +177,9 @@ function RetailStoresCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
 end
-----更改名字
---function RetailStoresCtrl:OnClick_changeName(ins)
---    PlayMusEff(1002)
---    local data = {}
---    data.titleInfo = "RENAME"
---    data.tipInfo = "Modified every seven days"
---    data.btnCallBack = function(name)
---        DataManager.DetailModelRpcNoRet(ins.m_data.info.id, 'm_ReqChangeMaterialName', ins.m_data.info.id, name)
---        ins:_updateName(name)
---    end
---    ct.OpenCtrl("InputDialogPageCtrl", data)
---end
-----更改名字成功
---function RetailStoresCtrl:_updateName(name)
---    RetailStoresPanel.nameText.text = name
---end
+
 function RetailStoresCtrl:Hide()
     UIPanel.Hide(self)
-    --Event.RemoveListener("c_BuildingTopChangeData",self._changeItemData,self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
 end
 

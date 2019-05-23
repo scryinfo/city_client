@@ -186,12 +186,11 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
+    Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(27010003), 300)
     end
-    Event.Brocast("downShelfSucceed",data)
-    --Event.Brocast("refreshShelfPartCount")
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)

@@ -36,7 +36,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         AvatarManger.GetSmallAvatar(self.faceId,self.head.transform,0.125)
         self.name.localScale = Vector3.zero
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-apartment.png", self.picture, true)
+            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", self.picture, true)
             self.pictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
             if dataInfo.type == "BUY_GROUND" then
                 self.sell.localScale = Vector3.one
@@ -53,6 +53,9 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         self.playerId = 0
         self.sell.localScale = Vector3.zero
         self.rent.localScale = Vector3.zero
+        for i = 0, self.head.transform.childCount-1 do
+            destroy(self.head.transform:GetChild(i).gameObject)
+        end
         self.head.color = Color.New(255,255,255,255)
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
         self.headName.text = GetLanguage(11020006)

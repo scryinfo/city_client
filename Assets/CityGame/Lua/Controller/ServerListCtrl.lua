@@ -53,6 +53,7 @@ end
 function ServerListCtrl:c_OnBack()
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = "确定注销账号吗？",func = function()
+            CityEngineLua.login_loginapp(true);
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)

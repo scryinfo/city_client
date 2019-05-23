@@ -28,14 +28,10 @@ function RegisterCtrl:Awake()
     registerBehaviour:AddClick(RegisterPanel.gain,self.OnGain,self)  --获取
     registerBehaviour:AddClick(RegisterPanel.register,self.OnRegister,self)  --注册
     self.time = 60
-    RegisterPanel.time.text = self.time
+    RegisterPanel.time.text = self.time .. "s..."
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self._Updata, self), 1, -1, true)
-
-    RegisterPanel.phone.onValueChanged:AddListener(function ()
-        self:OnPhone(self)
-    end )
 
 end
 
@@ -68,15 +64,11 @@ end
 
 --返回
 function RegisterCtrl:OnBack(go)
-    local data={ins = go,content = "Give up registering?",func = function()
-       UIPanel.ClosePage()
-    end  }
-    ct.OpenCtrl('ReminderCtrl',data)
-end
-
---输入手机号
-function RegisterCtrl:OnPhone()
-
+    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = "修改密码成功!",func = function()
+            UIPanel.ClosePage()
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
 end
 
 --点击获取验证码
@@ -112,10 +104,9 @@ function RegisterCtrl:c_GetCode(info,msgId)
     end
 end
 
---跟新
+--更新
 function RegisterCtrl:_Updata()
         self.time = self.time - 1
-        RegisterPanel.time.text = self.time
     if self.time <= 0 then
         if self.m_Timer ~= nil then
             self.m_Timer:Stop()
@@ -125,6 +116,7 @@ function RegisterCtrl:_Updata()
         RegisterPanel.gainText.transform.localScale = Vector3.one
         RegisterPanel.gain:GetComponent("Button").interactable = true
     end
+    RegisterPanel.time.text = self.time .. "s..."
 end
 
 --注册
@@ -133,39 +125,35 @@ function RegisterCtrl:OnRegister(go)
     RegisterPanel.passwordHint.transform.localScale = Vector3.zero
     RegisterPanel.confirmHint.transform.localScale = Vector3.zero
     RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
-    if string.find(RegisterPanel.password.text,"%s") ~= nil then
+
+    if RegisterPanel.phone.text == "" then
+        RegisterPanel.phoneHint.transform.localScale = Vector3.one
+        RegisterPanel.phoneHint.text = "请输入手机号"
+    elseif RegisterPanel.password.text == "" then
+        RegisterPanel.passwordHint.transform.localScale = Vector3.one
+        RegisterPanel.passwordHint.text = "请输入密码"
+    elseif RegisterPanel.confirm.text == "" then
+        RegisterPanel.confirmHint.transform.localScale = Vector3.one
+        RegisterPanel.confirmHint.text = "请确认密码"
+    elseif RegisterPanel.authCode.text == "" then
+        RegisterPanel.authCodeHint.transform.localScale = Vector3.one
+        RegisterPanel.authCodeHint.text = "请输入验证码"
+    elseif string.find(RegisterPanel.password.text,"%s") ~= nil then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
         RegisterPanel.passwordHint.text = "密码不能出现空格"
-        return
     elseif #RegisterPanel.password.text < 8 or #RegisterPanel.password.text > 12 then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
-        RegisterPanel.passwordHint.text = "密码格式错误"
-        return
-    end
-    if RegisterPanel.password.text ~=RegisterPanel.confirm.text  then
+        RegisterPanel.passwordHint.text = "密码格式错误(8到12个字符)"
+    elseif RegisterPanel.password.text ~= RegisterPanel.confirm.text  then
         RegisterPanel.confirmHint.transform.localScale = Vector3.one
         RegisterPanel.confirmHint.text = "两次输入密码不同"
     else
-        if RegisterPanel.phone.text == "" then
-            RegisterPanel.phoneHint.transform.localScale = Vector3.one
-            RegisterPanel.phoneHint.text = "请输入手机号"
-        elseif RegisterPanel.password.text == "" then
-            RegisterPanel.passwordHint.transform.localScale = Vector3.one
-            RegisterPanel.passwordHint.text = "请输入密码"
-        elseif RegisterPanel.confirm.text == "" then
-            RegisterPanel.confirmHint.transform.localScale = Vector3.one
-            RegisterPanel.confirmHint.text = "请确认密码"
-        elseif RegisterPanel.authCode.text == "" then
-            RegisterPanel.authCodeHint.transform.localScale = Vector3.one
-            RegisterPanel.authCodeHint.text = "请输入验证码"
-        else
-            local data = {}
-            data.InviteCode = go.m_data
-            data.phone = RegisterPanel.phone.text
-            data.password = RegisterPanel.password.text
-            data.authCode = RegisterPanel.authCode.text
-            Event.Brocast("m_OnRegister",data)
-        end
+        local data = {}
+        data.InviteCode = go.m_data
+        data.phone = RegisterPanel.phone.text
+        data.password = RegisterPanel.password.text
+        data.authCode = RegisterPanel.authCode.text
+        Event.Brocast("m_OnRegister",data)
     end
 end
 
@@ -176,15 +164,21 @@ function RegisterCtrl:c_OnResult(info)
     if info.status == "FAIL_ACCOUNT_EXIST" then
         RegisterPanel.phoneHint.transform.localScale = Vector3.one
         RegisterPanel.phoneHint.text = "账号已注册"
+
+        local data={ins = self,content = "注册成功!",func = function()
+            ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
+        end  }
+        ct.OpenCtrl('ReminderCtrl',data)
     elseif info.status == "FAIL_AUTHCODE_ERROR" then
         RegisterPanel.authCodeHint.transform.localScale = Vector3.one
         RegisterPanel.authCodeHint.text = "验证码错误"
 
     elseif info.status == "FAIL_INVCODE_USED" then
-        local data={ins = self,content = "邀请码已过期,请重新注册",func = function()
-            UIPanel.ClosePage()
-        end  }
-        ct.OpenCtrl('ReminderCtrl',data)
+        local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
+                    content = "邀请码也过期，请重新注册!",func = function()
+                UIPanel.ClosePage()
+            end  }
+        ct.OpenCtrl('NewReminderCtrl',data)
     elseif info.status == "FAIL" then
         local info_RegisterErrorNetMsg = {}
         info_RegisterErrorNetMsg.titleInfo = "未注册处理方法的网络错误"
@@ -193,9 +187,10 @@ function RegisterCtrl:c_OnResult(info)
         info_RegisterErrorNetMsg.tipInfo = ""
         ct.OpenCtrl("ErrorBtnDialogPageCtrl", info_RegisterErrorNetMsg)
     elseif info.status == "SUCCESS" then
-        local data={ins = self,content = "注册成功!",func = function()
-            ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
-        end  }
-        ct.OpenCtrl('ReminderCtrl',data)
+        local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                    content = "注册成功!",func = function()
+                ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
+            end  }
+        ct.OpenCtrl('NewReminderCtrl',data)
     end
 end

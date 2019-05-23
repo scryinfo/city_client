@@ -18,20 +18,20 @@ end
 
 --初始化面板--
 function RegisterPanel.InitPanel()
-    this.phone = transform:Find("phoneBg/phone"):GetComponent('InputField');
-    this.password = transform:Find("passwordBg/password"):GetComponent('InputField');
-    this.confirm = transform:Find("confirmBg/confirm"):GetComponent('InputField');
-    this.authCode = transform:Find("authCodeBg/authCode"):GetComponent('InputField');
+    this.phone = transform:Find("phone"):GetComponent('InputField');
+    this.password = transform:Find("password"):GetComponent('InputField');
+    this.confirm = transform:Find("confirm"):GetComponent('InputField');
+    this.authCode = transform:Find("authCode"):GetComponent('InputField');
 
-    this.gain = transform:Find("authCodeBg/gain").gameObject;    --获取验证码
-    this.gainText = transform:Find("authCodeBg/gain/Text"):GetComponent("Text");
-    this.countDown = transform:Find("authCodeBg/gain/countDown");  --倒计时
-    this.time = transform:Find("authCodeBg/gain/countDown/time"):GetComponent("Text");  --倒计时
+    this.gain = transform:Find("authCode/gain").gameObject;    --获取验证码
+    this.gainText = transform:Find("authCode/gain/Text"):GetComponent("Text");
+    this.countDown = transform:Find("authCode/gain/countDown");  --倒计时
+    this.time = transform:Find("authCode/gain/countDown/time"):GetComponent("Text");  --倒计时
 
-    this.passwordHint = transform:Find("passwordBg/password/hint"):GetComponent("Text");  --确认密码提示
-    this.confirmHint = transform:Find("confirmBg/confirm/hint"):GetComponent("Text");  --确认密码提示
-    this.phoneHint = transform:Find("phoneBg/phone/hint"):GetComponent("Text");   --手机号格式提示
-    this.authCodeHint = transform:Find("authCodeBg/authCode/hint"):GetComponent("Text"); --验证码提示
+    this.passwordHint = transform:Find("password/hint"):GetComponent("Text");  --确认密码提示
+    this.confirmHint = transform:Find("confirm/hint"):GetComponent("Text");  --确认密码提示
+    this.phoneHint = transform:Find("phone/hint"):GetComponent("Text");   --手机号格式提示
+    this.authCodeHint = transform:Find("authCode/hint"):GetComponent("Text"); --验证码提示
 
     this.back = transform:Find("back").gameObject; --返回
     this.register = transform:Find("register").gameObject;  --注册

@@ -19,9 +19,9 @@ end
 --初始化面板--
 function InviteCodePanel.InitPanel()
     this.name = transform:Find("name"):GetComponent('Text');
-    this.code = transform:Find("codeBg/code"):GetComponent('Text');
-    this.inviteCode = transform:Find("codeBg/inviteCodeBg"):GetComponent('InputField');
-    this.error = transform:Find("codeBg/inviteCodeBg/error"):GetComponent('Text');
+    this.code = transform:Find("inviteCodeBg/codeBg/code"):GetComponent('Text');
+    this.inviteCode = transform:Find("inviteCodeBg"):GetComponent('InputField');
+    this.error = transform:Find("inviteCodeBg/error"):GetComponent('Text');
     this.back = transform:Find("back").gameObject;
     this.btn = transform:Find("btn").gameObject;
 end

@@ -19,15 +19,17 @@ end
 --初始化面板--
 function RetrievePasswordPanel.InitPanel()
     this.name = transform:Find("name"):GetComponent('Text');
-    this.code = transform:Find("codeBg/code"):GetComponent('Text');
-    this.phone = transform:Find("phoneBg/phone"):GetComponent('InputField');
-    this.authCode = transform:Find("authCodeBg/authCode"):GetComponent('InputField');
+    this.phone = transform:Find("phone"):GetComponent('InputField');
+    this.authCode = transform:Find("authCode"):GetComponent('InputField');
 
-    this.gain = transform:Find("authCodeBg/gain").gameObject;    --获取验证码
-    this.gainText = transform:Find("authCodeBg/gain/Text"):GetComponent("Text");
-    this.countDown = transform:Find("authCodeBg/gain/countDown");  --倒计时
-    this.time = transform:Find("authCodeBg/gain/countDown/time"):GetComponent("Text");  --倒计时
+    this.gain = transform:Find("authCode/gain").gameObject;    --获取验证码
+    this.gainText = transform:Find("authCode/gain/Text"):GetComponent("Text");
+    this.countDown = transform:Find("authCode/gain/countDown");  --倒计时
+    this.time = transform:Find("authCode/gain/countDown/time"):GetComponent("Text");  --倒计时
 
-    this.phoneHint = transform:Find("phoneBg/phone/hint"):GetComponent("Text");   --手机号格式提示
-    this.authCodeHint = transform:Find("authCodeBg/authCode/hint"):GetComponent("Text"); --验证码提示
+    this.phoneHint = transform:Find("phone/hint"):GetComponent("Text");   --手机号格式提示
+    this.authCodeHint = transform:Find("authCode/hint"):GetComponent("Text"); --验证码提示
+
+    this.next = transform:Find("next").gameObject;    --获取验证码
+    this.back = transform:Find("back").gameObject;    --返回
 end

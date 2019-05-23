@@ -29,9 +29,37 @@ function LoginCtrl:Awake(go)
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
+	LuaBehaviour:AddClick(LoginPanel.forget, self.OnForget,self);
+	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --是否显示密码
+	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --打开多语言
+	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --关闭多语言
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
+	self.showPassword = false
+
 	self.root=self.gameObject.transform.root:Find("FixedRoot");
+
+	--多语言
+	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
+	self.languageItem = {}
+	for i, v in pairs(LanguageTypeConfig) do
+		local function callback(prefab)
+			self.languageItem[i] = LanguageItem:new(prefab,v,i,LuaBehaviour)
+			if self.languageItem[i].data.id == languageId  then
+				self.languageItem[i]:Set(self.languageItem[i])
+			end
+		end
+		createPrefab("Assets/CityGame/Resources/View/GoodsItem/LanguageItem.prefab",LoginPanel.content, callback)
+	end
+	for i, v in pairs(self.languageItem) do
+		if v.data.id == languageId  then
+           v:Set(v)
+		end
+	end
+	--是否记住密码
+	LoginPanel.remember.onValueChanged:AddListener(function(isOn)
+		self:_OnToggle(isOn)
+	end)
 end
 
 function LoginCtrl:Active()
@@ -43,17 +71,21 @@ function LoginCtrl:Active()
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
 	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
+	Event.AddListener("c_ChangeLanguage", self.c_ChangeLanguage, self);
 
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
-
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
 	LoginPanel.btnLoginText.text = GetLanguage(10020003)
-	--local path = GetLanguage(10020003)
-	--LoadSprite(path, LoginPanel.btnLogin:GetComponent("Image"), true)
+end
 
+function LoginCtrl:c_ChangeLanguage()
+	--多语言
+	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
+	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
+	LoginPanel.btnLoginText.text = GetLanguage(10020003)
 end
 
 function LoginCtrl:Refresh()
@@ -69,10 +101,26 @@ function LoginCtrl:Hide()
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
 	Event.RemoveListener("SmallPop",self.c_SmallPop,self)
+	Event.RemoveListener("c_ChangeLanguage",self.c_ChangeLanguage,self)
+
+	LoginPanel.inputUsername:GetComponent('InputField').text = ""
+	LoginPanel.inputPassword:GetComponent('InputField').text = ""
+
 end
 
 function LoginCtrl:_initData()
 	DataManager.OpenDetailModel(LoginModel,self.insId)
+	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
+		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
+	end
+	local remember = UnityEngine.PlayerPrefs.GetInt("remember")
+	if remember == 0 then
+		LoginPanel.remember.isOn = false
+		LoginPanel.inputPassword:GetComponent('InputField').text = ""
+	elseif remember == 1 then
+		LoginPanel.remember.isOn = true
+		LoginPanel.inputPassword:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("password")
+	end
 end
 --启动事件--
 function LoginCtrl:OnCreate(go)
@@ -97,11 +145,67 @@ end
 function LoginCtrl:onClickChooseGameServer(serverId)
 	Event.Brocast("m_chooseGameServer", serverId);
 end
+
+--是否记住密码
+function LoginCtrl:_OnToggle(isOn)
+	PlayMusEff(1002)
+	if isOn then
+		UnityEngine.PlayerPrefs.SetInt("remember",1)
+	else
+		UnityEngine.PlayerPrefs.SetInt("remember",0)
+		UnityEngine.PlayerPrefs.SetString("password","")
+	end
+end
+
+--是否显示密码
+function LoginCtrl:OnEye(go)
+	PlayMusEff(1002)
+	go:ShowPassword( not go.showPassword)
+end
+
+--显影密码
+function LoginCtrl:ShowPassword(isOn)
+	if isOn then  --打开
+		LoginPanel.openEye.localScale = Vector3.one
+		LoginPanel.closeEye.localScale = Vector3.zero
+		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_show.contentType
+		LoginPanel.inputPassword:GetComponent('InputField'):Select();
+	else  --关闭
+		LoginPanel.openEye.localScale = Vector3.zero
+		LoginPanel.closeEye.localScale = Vector3.one
+		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_hide.contentType
+		LoginPanel.inputPassword:GetComponent('InputField'):Select();
+	end
+	self.showPassword = isOn
+end
+
+--打开多语言
+function LoginCtrl:OnChoose(go)
+    go:SwitchLanguage(true)
+end
+
+--关闭多语言
+function LoginCtrl:OnCloseBg(go)
+	go:SwitchLanguage(false)
+end
+
+--打开关闭多语言
+function LoginCtrl:SwitchLanguage(isOn)
+	if isOn then
+		LoginPanel.languageBg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+		LoginPanel.closeBg.transform.localScale = Vector3.one
+	else
+		LoginPanel.languageBg:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+		LoginPanel.closeBg.transform.localScale = Vector3.zero
+	end
+end
+
 --登录--
 function LoginCtrl:OnLogin(go)
 	PlayMusEff(1002)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
+
 	if username == "" or pw == "" then
 		Event.Brocast("SmallPop",GetLanguage(10020004),300)
 	else
@@ -132,6 +236,12 @@ end
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
 	ct.OpenCtrl("InviteCodeCtrl")
+end
+
+--找回密码
+function LoginCtrl:OnForget()
+	PlayMusEff(1002)
+	ct.OpenCtrl("RetrievePasswordCtrl")
 end
 ------------------回调--------------
 function LoginCtrl:onReqAvatarList( avatarList )

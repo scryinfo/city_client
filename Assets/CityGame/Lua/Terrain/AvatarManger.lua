@@ -134,6 +134,7 @@ local function changAparance(kind)
 
         FindOrgan(currHead.transform)
 
+        --[[
         --加载原来服饰
         for key, value in pairs(appearance) do
             if key ~= "head"  then
@@ -157,7 +158,7 @@ local function changAparance(kind)
                 end
             end
         end
-
+        --]]
     elseif type=="frontHat" then
         if arr[3]=="" then
             appearance[arr[4]].ima.transform.gameObject:SetActive(false)

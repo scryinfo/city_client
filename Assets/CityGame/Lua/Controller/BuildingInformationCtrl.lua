@@ -188,6 +188,8 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
     --开业停业
     self:initializeButtonInfo()
+    --调整地块UI布局
+    self:initializeLandUiLayout()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         if self.m_data.mId == 1100001 then
@@ -263,7 +265,7 @@ function BuildingInformationCtrl:defaultBuildingInfoTrue()
     self.buildingChoose.transform.localScale = Vector3.one
     self.buildingInfoRoot.transform.localScale = Vector3.one
     self.landChoose.transform.localScale = Vector3.zero
-    self.landInfoRoot.transform.localScale = Vector3.zero
+    self.landInfoRoot.gameObject:SetActive(false)
 end
 ---------------------------------------------------------------土地信息--------------------------------------------------------------------------------
 --请求土地信息,土地主人信息,建筑信息
@@ -292,24 +294,40 @@ end
 function BuildingInformationCtrl:initializeUiLandInfo()
     local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
     if buildingSize == 1 then
-        --如果是1*1的建筑,地块UI布局
-        self.gridGroup.padding.left = -55
-        self.gridGroup.padding.top = -60
         for key,value in pairs(self.mineLandBtnTable) do
             if key == 5 then
+                value.transform.localScale = Vector3.one
                 self.chooseBoxImg.transform.localPosition = value.transform.parent.localPosition
             else
                 value.transform.localScale = Vector3.zero
             end
         end
     elseif buildingSize == 2 then
+        for key,value in pairs(self.mineLandBtnTable) do
+            if key == 1 or key == 2 or key == 4 or key == 5 then
+                value.transform.localScale = Vector3.one
+                self.chooseBoxImg.transform:SetParent(self.mineLandBtnTable[1])
+                self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+            else
+                value.transform.localScale = Vector3.zero
+            end
+        end
+    elseif buildingSize == 3 then
+
+    end
+end
+--初始化地块UI布局
+function BuildingInformationCtrl:initializeLandUiLayout()
+    local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
+    if buildingSize == 1 or buildingSize == 3 then
+        --如果是1*1的建筑,地块UI布局
+        --或是3*3的建筑,地块UI布局
+        self.gridGroup.padding.left = -55
+        self.gridGroup.padding.top = -60
+    elseif buildingSize == 2 then
         --如果是2*2的建筑,地块UI布局
         self.gridGroup.padding.left = -5
         self.gridGroup.padding.top = -15
-    elseif buildingSize == 3 then
-        --如果是3*3的建筑,地块UI布局
-        self.gridGroup.padding.left = -55
-        self.gridGroup.padding.top = -60
     end
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -329,16 +347,16 @@ function BuildingInformationCtrl:_clickBuildingNomal(ins)
     ins.buildingChoose.transform.localScale = Vector3.one
     ins.buildingInfoRoot.transform.localScale = Vector3.one
     ins.landChoose.transform.localScale = Vector3.zero
-    ins.landInfoRoot.transform.localScale = Vector3.zero
+    ins.landInfoRoot.gameObject:SetActive(false)
 end
 --打开土地信息
 function BuildingInformationCtrl:_clickLandNomal(ins)
     PlayMusEff(1002)
-    ins:initializeUiLandInfo()
     ins.landChoose.transform.localScale = Vector3.one
-    ins.landInfoRoot.transform.localScale = Vector3.one
+    ins.landInfoRoot.gameObject:SetActive(true)
     ins.buildingChoose.transform.localScale = Vector3.zero
     ins.buildingInfoRoot.transform.localScale = Vector3.zero
+    ins:initializeUiLandInfo()
 end
 --停业或拆除
 function BuildingInformationCtrl:_clickSwitchBtn(ins)

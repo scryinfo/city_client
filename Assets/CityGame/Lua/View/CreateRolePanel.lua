@@ -16,14 +16,12 @@ end
 --初始化面板--
 function CreateRolePanel.InitPanel()
     this.createRoleBtn = transform:Find("CreateRoleButton").gameObject;
+    this.back = transform:Find("back").gameObject;
     this.nickname = transform:Find("InputField_Nickname").gameObject;
-    this.name = transform:Find("InputField_Nickname/Nickname").gameObject:GetComponent("Text");
+    this.name = transform:Find("InputField_Nickname/nickNameBg/Nickname").gameObject:GetComponent("Text");
     this.nicknameText = transform:Find("InputField_Nickname/Placeholder").gameObject:GetComponent("Text");
     this.companyname = transform:Find("InputField_Companyname").gameObject;
-    this.Companyname = transform:Find("InputField_Companyname/Conmpanyname").gameObject:GetComponent("Text");
+    this.Companyname = transform:Find("InputField_Companyname/conmpanyNameBg/conmpanyName").gameObject:GetComponent("Text");
     this.companynameText = transform:Find("InputField_Companyname/Placeholder").gameObject:GetComponent("Text");
-    this.maleScl = transform:Find("male/select");
-    this.femaleScl = transform:Find("female/select");
-    this.duplicate = transform:Find("InputField_Nickname/Duplicate");
-    this.duplicateText = transform:Find("InputField_Nickname/Duplicate/Text"):GetComponent("Text");
+    this.duplicateText = transform:Find("InputField_Nickname/hint"):GetComponent("Text");
 end

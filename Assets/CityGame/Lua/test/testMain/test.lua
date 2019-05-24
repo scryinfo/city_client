@@ -777,12 +777,22 @@ UnitTest.Exec("abel_0521_scientificNotation2number", "abel_0521_scientificNotati
     --local myString =  [[ 1.000000000000000E+00,2.000000000000000E+02,  -1.000000000000000E+05 ]]
     --local myString = [[ 2.000000000000000E-02 ]]
     --local myString = [[2.000000000000000E-02]]
+    local str = "2.000000000000000E-04"
+    --local str = "2.085000000000000E-04"
+    local nb1 = tonumber(str)
+
     ct.log("abel_0512_materialConsumedInform","start")
-    local myString = "2.000000000000000E-02"
+    local myString = "1.000000000000000E+00, 2.000000000000000E-02,  -1.000000000000000E+05 "
     local function convert(csv)
         local list = {}
-        for value in (csv .. ","):gmatch("(%S+)%W*,") do table.insert(list,tonumber(value)) end
+        local listtemp = (csv .. ","):gmatch("(%S+)%W*,")
+        for value in listtemp do
+            table.insert(list,tonumber(value))
+        end
         return unpack(list)
+    end
+    local function convert_inner(csv)
+        local numb = tonumber(csv:gmatch("(%S+)%W*,"))
     end
     ct.log("abel_0521_scientificNotation2number","convert resault = ",convert(myString))
 end)

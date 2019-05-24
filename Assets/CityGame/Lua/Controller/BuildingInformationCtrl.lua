@@ -42,7 +42,7 @@ end
 function BuildingInformationCtrl:Refresh()
     self:language()
     self:getBuildingInfo()
-    self:initializeUiInfoData()
+    self:initializeUiBuildingInfo()
 end
 
 function BuildingInformationCtrl:Hide()
@@ -87,11 +87,59 @@ function BuildingInformationCtrl:_getComponent(go)
     self.tipBoxText = go.transform:Find("content/buildingInfoRoot/content/tipBox/tipBoxText"):GetComponent("Text")
     --landInfoRoot
     self.landInfoRoot = go.transform:Find("content/landInfoRoot")                       --土地信息
-
+    self.gridGroup = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content"):GetComponent("GridLayoutGroup")
+----------------------------------------------------------landInfoConten 地块----------------------------------------------------------------------------------
+    --地块1
+    self.mineLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/mineLandBtn7")
+    self.otherLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/otherLandBtn1")
+    --地块2
+    self.mineLandBtn2 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg8/mineLandBtn8")
+    self.otherLandBtn2 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg8/otherLandBtn8")
+    --地块3
+    self.mineLandBtn3 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg9/mineLandBtn9")
+    self.otherLandBtn3 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg9/otherLandBtn9")
+    --地块4
+    self.mineLandBtn4 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg12/mineLandBtn12")
+    self.otherLandBtn4 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg12/otherLandBtn12")
+    --地块5
+    self.mineLandBtn5 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg13/mineLandBtn13")
+    self.otherLandBtn5 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg13/otherLandBtn13")
+    --地块6
+    self.mineLandBtn6 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg14/mineLandBtn14")
+    self.otherLandBtn6 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg14/otherLandBtn14")
+    --地块7
+    self.mineLandBtn7 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg17/mineLandBtn17")
+    self.otherLandBtn7 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg17/otherLandBtn17")
+    --地块8
+    self.mineLandBtn8 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg18/mineLandBtn18")
+    self.otherLandBtn8 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg18/otherLandBtn18")
+    --地块9
+    self.mineLandBtn9 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg19/mineLandBtn19")
+    self.otherLandBtn9 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg19/otherLandBtn19")
+    --地块选择框
+    self.chooseBoxImg = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/chooseBoxImg")
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+    --mineLandInfo
+    self.mineLandInfo = go.transform:Find("content/landInfoRoot/content/mineLandInfo")
+    self.buyingTime = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/time"):GetComponent("Text")
+    self.buyingTimeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/time/timeText"):GetComponent("Text")
+    self.buyingPrice = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price"):GetComponent("Text")
+    self.buyingPriceText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price/priceText"):GetComponent("Text")
+    --otherLandInfo
+    self.otherLandInfo = go.transform:Find("content/landInfoRoot/content/otherLandInfo")
+    self.headImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/headBg/headImg"):GetComponent("Image")
+    self.nameText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/name/nameText"):GetComponent("Text")
+    self.genderImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/name/nameText/genderImg"):GetComponent("Image")
+    self.companyText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/company/companyText"):GetComponent("Text")
+    self.leaseTime = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText"):GetComponent("Text")
+    self.leaseTimeText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText/timeText"):GetComponent("Text")
+    self.rentText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/rentText"):GetComponent("Text")
+    self.priceText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/priceText"):GetComponent("Text")
     --buildingTypeContent                                                               --根据不同建筑生成不同的Item
     self.buildingTypeContent = go.transform:Find("content/buildingInfoRoot/content/buildingTypeContent")
 end
 ---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
+---------------------------------------------------------------建筑信息--------------------------------------------------------------------------------
 --请求建筑信息
 function BuildingInformationCtrl:getBuildingInfo()
     if self.m_data then
@@ -109,9 +157,10 @@ function BuildingInformationCtrl:getBuildingInfo()
         end
     end
 end
-
---初始化UI信息
-function BuildingInformationCtrl:initializeUiInfoData()
+--初始化UI建筑信息
+function BuildingInformationCtrl:initializeUiBuildingInfo()
+    self.gridGroup.padding.left = 0
+    self.gridGroup.padding.top = 0
     self.buildingName.text = self.m_data.name
     LoadSprite(BuildingInformationIcon[self.m_data.mId].imgPath,self.buildingIcon,true)
     self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
@@ -194,6 +243,16 @@ function BuildingInformationCtrl:defaultBuildingInfoTrue()
     self.landChoose.transform.localScale = Vector3.zero
     self.landInfoRoot.transform.localScale = Vector3.zero
 end
+---------------------------------------------------------------土地信息--------------------------------------------------------------------------------
+--请求土地信息,土地主人信息,建筑信息
+function BuildingInformationCtrl:getLandInfo()
+    --local startLandId = TerrainManager.GridIndexTurnBlockID(buildingInfo.pos)
+end
+--初始化UI土地信息
+function BuildingInformationCtrl:initializeUiLandInfo()
+
+end
+------------------------------------------------------------------------------------------------------------------------------------------------------
 --多语言
 function BuildingInformationCtrl:language()
     self.topName.text = "建筑综合评分"

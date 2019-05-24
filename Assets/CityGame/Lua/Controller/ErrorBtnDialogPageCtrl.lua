@@ -50,7 +50,7 @@ function ErrorBtnDialogPageCtrl:_onClickConfim(ins)
         ins.m_data.btnCallBack()
         ins.m_data.btnCallBack = nil
     end
-    ins:_onClickClose(ins)
+    ins:Hide()
 end
 function ErrorBtnDialogPageCtrl:_onClickClose(ins)
     PlayMusEff(1002)

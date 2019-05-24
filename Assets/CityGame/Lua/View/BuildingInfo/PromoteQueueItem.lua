@@ -23,18 +23,27 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
 
+    --初始化循环参数
+    self.intTime = 1
+    self.m_Timer = Timer.New(slot(self.UpData, self), 1, -1, true)
+
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
     self.delete.transform.localScale = Vector3.zero
     local ts = getFormatUnixTime(dataInfo.promStartTs/1000)
     self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
 
-    local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-    if currentTime >= dataInfo.promStartTs and currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    if self.currentTime >= dataInfo.promStartTs and self.currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
+        self.slider.value = (self.currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
+        local ts = getTimeBySec((self.currentTime - dataInfo.promStartTs)/1000)
+        self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
+        self.m_Timer:Start()
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
-        self.slider.value = (currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
-        self.nowTime.text = math.floor(dataInfo.promProgress/3600000) .. "/" .. math.floor(dataInfo.promDuration/3600000 ).. "h"
     else
+        if self.m_Timer ~= nil then
+            self.m_Timer:Stop()
+        end
         self.timePrice.localScale = Vector3.one
         if playerId == dataInfo.sellerId then
             self.priceBg.localScale = Vector3.zero
@@ -81,4 +90,12 @@ end
 function PromoteQueueItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
+end
+
+--更新
+function PromoteQueueItem:UpData()
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    self.slider.value = (self.currentTime - self.dataInfo.promStartTs) /  self.dataInfo.promDuration
+    local ts = getTimeBySec((self.currentTime - self.dataInfo.promStartTs)/1000)
+    self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
 end

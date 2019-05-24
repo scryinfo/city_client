@@ -34,6 +34,13 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
     self.luaBehaviour:AddClick(self.switchBtn.gameObject,self._clickSwitchBtn,self)
     self.luaBehaviour:AddClick(self.buildingName.gameObject,self._clickBuildingName,self)
+    --给每块地的button绑定点击事件
+    for key,value in pairs(self.mineLandBtnTable) do
+        self.luaBehaviour:AddClick(value.gameObject,self._clickGroundBtn,self)
+    end
+    for key,value in pairs(self.otherLandBtnTable) do
+        self.luaBehaviour:AddClick(value.gameObject,self._clickGroundBtn,self)
+    end
 end
 function BuildingInformationCtrl:Active()
     UIPanel.Active(self)
@@ -41,8 +48,11 @@ function BuildingInformationCtrl:Active()
 end
 function BuildingInformationCtrl:Refresh()
     self:language()
+    --获取,初始化UI建筑信息
     self:getBuildingInfo()
     self:initializeUiBuildingInfo()
+    --获取,初始化土地信息
+    self:getLandInfo()
 end
 
 function BuildingInformationCtrl:Hide()
@@ -91,7 +101,7 @@ function BuildingInformationCtrl:_getComponent(go)
 ----------------------------------------------------------landInfoConten 地块----------------------------------------------------------------------------------
     --地块1
     self.mineLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/mineLandBtn7")
-    self.otherLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/otherLandBtn1")
+    self.otherLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/otherLandBtn7")
     --地块2
     self.mineLandBtn2 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg8/mineLandBtn8")
     self.otherLandBtn2 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg8/otherLandBtn8")
@@ -118,6 +128,20 @@ function BuildingInformationCtrl:_getComponent(go)
     self.otherLandBtn9 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg19/otherLandBtn19")
     --地块选择框
     self.chooseBoxImg = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/chooseBoxImg")
+    --mineLandBtnTable
+    if not self.mineLandBtnTable then
+        self.mineLandBtnTable = {}
+        for i = 1,9 do
+            table.insert(self.mineLandBtnTable,self["mineLandBtn"..tostring(i)])
+        end
+    end
+    --otherLandBtnTable
+    if not self.otherLandBtnTable then
+        self.otherLandBtnTable = {}
+        for i = 1,9 do
+            table.insert(self.otherLandBtnTable,self["otherLandBtn"..tostring(i)])
+        end
+    end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
     --mineLandInfo
     self.mineLandInfo = go.transform:Find("content/landInfoRoot/content/mineLandInfo")
@@ -132,7 +156,7 @@ function BuildingInformationCtrl:_getComponent(go)
     self.genderImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/name/nameText/genderImg"):GetComponent("Image")
     self.companyText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/company/companyText"):GetComponent("Text")
     self.leaseTime = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText"):GetComponent("Text")
-    self.leaseTimeText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText/timeText"):GetComponent("Text")
+    self.leaseTimeText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/timeText"):GetComponent("Text")
     self.rentText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/rentText"):GetComponent("Text")
     self.priceText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/priceText"):GetComponent("Text")
     --buildingTypeContent                                                               --根据不同建筑生成不同的Item
@@ -159,8 +183,6 @@ function BuildingInformationCtrl:getBuildingInfo()
 end
 --初始化UI建筑信息
 function BuildingInformationCtrl:initializeUiBuildingInfo()
-    self.gridGroup.padding.left = 0
-    self.gridGroup.padding.top = 0
     self.buildingName.text = self.m_data.name
     LoadSprite(BuildingInformationIcon[self.m_data.mId].imgPath,self.buildingIcon,true)
     self.timeText.text = self:getStringTime(self.m_data.constructCompleteTs)
@@ -246,11 +268,49 @@ end
 ---------------------------------------------------------------土地信息--------------------------------------------------------------------------------
 --请求土地信息,土地主人信息,建筑信息
 function BuildingInformationCtrl:getLandInfo()
-    --local startLandId = TerrainManager.GridIndexTurnBlockID(buildingInfo.pos)
+    --请求土地信息
+    local startLandId = TerrainManager.GridIndexTurnBlockID(self.m_data.pos)
+    local landIds = DataManager.CaculationTerrainRangeBlock(startLandId,PlayerBuildingBaseData[self.m_data.mId].x)
+    self.groundData = {}
+    for k,landId in pairs(landIds) do
+        local data = DataManager.GetGroundDataByID(landId)
+        table.insert(self.groundData,data)
+    end
+    --请求土地主人信息
+    self.groundOwnerData = {}
+    for k,ground in pairs(self.groundData) do
+        local ids = {}
+        table.insert(ids,ground.Data.ownerId)
+        PlayerInfoManger.GetInfos(ids,self.SaveData,self)
+    end
+    --请求建筑主人的信息
+    local ids = {}
+    table.insert(ids,self.m_data.ownerId)
+    PlayerInfoManger.GetInfos(ids,self.SaveData,self)
 end
 --初始化UI土地信息
 function BuildingInformationCtrl:initializeUiLandInfo()
-
+    local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
+    if buildingSize == 1 then
+        --如果是1*1的建筑,地块UI布局
+        self.gridGroup.padding.left = -55
+        self.gridGroup.padding.top = -60
+        for key,value in pairs(self.mineLandBtnTable) do
+            if key == 5 then
+                self.chooseBoxImg.transform.localPosition = value.transform.parent.localPosition
+            else
+                value.transform.localScale = Vector3.zero
+            end
+        end
+    elseif buildingSize == 2 then
+        --如果是2*2的建筑,地块UI布局
+        self.gridGroup.padding.left = -5
+        self.gridGroup.padding.top = -15
+    elseif buildingSize == 3 then
+        --如果是3*3的建筑,地块UI布局
+        self.gridGroup.padding.left = -55
+        self.gridGroup.padding.top = -60
+    end
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 --多语言
@@ -274,6 +334,7 @@ end
 --打开土地信息
 function BuildingInformationCtrl:_clickLandNomal(ins)
     PlayMusEff(1002)
+    ins:initializeUiLandInfo()
     ins.landChoose.transform.localScale = Vector3.one
     ins.landInfoRoot.transform.localScale = Vector3.one
     ins.buildingChoose.transform.localScale = Vector3.zero
@@ -308,6 +369,11 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end
     ct.OpenCtrl("InputDialogPageCtrl",data)
+end
+--地块信息
+function BuildingInformationCtrl:_clickGroundBtn(ins)
+    PlayMusEff(1002)
+    ins.chooseBoxImg.transform.localPosition = self.transform.parent.localPosition
 end
 --关闭界面
 function BuildingInformationCtrl:_clickCloseBtn()
@@ -360,4 +426,10 @@ function BuildingInformationCtrl:getStringTime(ms)
     local timeTable = getFormatUnixTimeNumber(ms / 1000)
     local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.min
     return timeStr
+end
+--缓存建筑主人信息
+function BuildingInformationCtrl:SaveData(ownerData)
+    if self.groundOwnerData then
+        table.insert(self.groundOwnerData,ownerData[1])
+    end
 end

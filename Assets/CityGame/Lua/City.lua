@@ -1704,6 +1704,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 	end
 end
 
+
 --登录到服务端(loginapp), 登录成功后还必须登录到网关(baseapp)登录流程才算完毕
 CityEngineLua.login_loginapp = function( noconnect )
 	if noconnect then
@@ -1712,30 +1713,6 @@ CityEngineLua.login_loginapp = function( noconnect )
 			this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 		end, 10, 0)
 		timer:Start()
-	else
-		--清除所有注册的网络消息
-		----ct.log("City::login_loginapp(): send login! username=" .. this.username);
-		------1、 获取协议id
-		--local msgId = pb.asCode.login
-		------2、 填充 protobuf 内部协议数据
-		----local msglogion = pb.as.Login()
-		----msglogion.account = this.username
-		----local pb_login = msglogion:SerializeToString()  -- Parse Example
-		------3、 创建包，填入数据并发包
-		----CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
-
-		----1、 获取协议id
-		local msgId = pbl.enum("ascode.OpCode","login")
-		----2、 填充 protobuf 内部协议数据
-		local msglogion = {
-			account = this.username
-		}
-		-- 序列化成二进制数据
-		local pb_login = assert(pbl.encode("as.Login", msglogion))
-		--发包
-		CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
-		--多连接测试
-		--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 	end
 end
 
@@ -1748,8 +1725,6 @@ CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, netSt
 	this.currstate = "login";
 			
 	ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." success!");
-
-	this.login_loginapp(false);
 
 end
 

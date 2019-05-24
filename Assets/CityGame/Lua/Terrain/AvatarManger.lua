@@ -17,16 +17,16 @@ HeadSizeType={
         [9]={ type="frontHat/frontHat",width=70,heigth=70},
         [10]={ type="mouth/mouth",width=70,heigth=70},
         [11]={ type="goatee/goatee",width=70,heigth=70},
-
 }
 
-AvatarManger={}
+AvatarManger ={}
 
 
 local  appearance,unitPool,headPool,record,recordPath={},{},{},{},{}
 
 local num,sex,currHead,headTypeId
-
+local NilImage = nil
+local SizeParent
 function  AvatarManger.Awake()
     headPool={}
     headPool[1],headPool[2]={},{}
@@ -38,44 +38,43 @@ function  AvatarManger.Awake()
         headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),0,Vector3.New(0,0,0) )
     end
 
-
+    --初始化空白图片
+    local SpriteType = ct.getType(UnityEngine.Sprite)
+    panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png", SpriteType, nil, function(Icon, obj ,ab)
+        if Icon == nil then
+            return
+        end
+        if obj ~= nil  then
+            NilImage = ct.InstantiatePrefab(obj)
+        end
+    end)
+    SizeParent = UnityEngine.GameObject.New("AvatarSizeParent").transform
 end
 
- function AvatarManger.setSize(go,size)
-     local V,H=UnityEngine.RectTransform.Axis.Vertical,UnityEngine.RectTransform.Axis.Horizontal
 
-     local rect,imaRect,pImaRect= go.transform:GetComponent("RectTransform")
-
-     rect:SetSizeWithCurrentAnchors(V,(rect.sizeDelta.x)*size)
-     rect:SetSizeWithCurrentAnchors(H,(rect.sizeDelta.y)*size)
-
-     ----归位
-     --go.transform.localScale = Vector3.one
-     --go.transform.localPosition=Vector3.zero
-
-     for i, sizeData in ipairs(HeadSizeType) do
-
-        local trans=go.transform:Find(sizeData.type)
-        if trans then
-            imaRect=trans:GetComponent("Image").rectTransform
-            imaRect:SetSizeWithCurrentAnchors(H,(imaRect.sizeDelta.x)*size)
-            imaRect:SetSizeWithCurrentAnchors(V,(imaRect.sizeDelta.y)*size)
-
-            imaRect.anchoredPosition=Vector2.New(((imaRect.anchoredPosition.x)*size),((imaRect.anchoredPosition.y)*size))
-
-            pImaRect=imaRect.parent:GetComponent("RectTransform")
-            pImaRect:SetSizeWithCurrentAnchors(H,(pImaRect.sizeDelta.x)*size)
-            pImaRect:SetSizeWithCurrentAnchors(V,(pImaRect.sizeDelta.y)*size)
-
-            pImaRect.anchoredPosition=Vector2.New(((pImaRect.anchoredPosition.x)*size),((pImaRect.anchoredPosition.y)*size))
-        end
-
-    end
+local imaRect_setSize , pImaRect_setSize , trans_setSize , rect_setSize
+ function AvatarManger.setSize(go,size,isHide)
      --归位
      go.transform.localScale = Vector3.one
      go.transform.localPosition=Vector3.zero
-    return go
-end
+
+     rect_setSize = go.transform:GetComponent("RectTransform")
+     rect_setSize.sizeDelta =  rect_setSize.sizeDelta * size
+     ----归位
+     for i, sizeData in ipairs(HeadSizeType) do
+         trans_setSize = go.transform:Find(sizeData.type)
+         if trans_setSize then
+             imaRect_setSize = trans_setSize:GetComponent("Image").rectTransform
+             imaRect_setSize.sizeDelta = imaRect_setSize.sizeDelta * size
+             pImaRect_setSize = imaRect_setSize.parent:GetComponent("RectTransform")
+             pImaRect_setSize.anchoredPosition = pImaRect_setSize.anchoredPosition * size
+             if isHide ~= nil and isHide == true then
+                 imaRect_setSize.transform.localScale = Vector3.zero
+             end
+         end
+     end
+     return go
+ end
 
 
 local function FindOrgan(transform)
@@ -114,33 +113,32 @@ end
 
 local function changAparance(kind)
     local arr,path,type,nums
-    arr=split(kind.path,",")
-    path=arr[1]
-    type=arr[2]
+    arr = split(kind.path,",")
+    path = arr[1]
+    type = arr[2]
 
     nums=num
     --特殊处理头和帽子
-    if type=="head" then
+    if type == "head" then
         local config
         if sex==1 then
-            config=HeadConfig.man
+            config = HeadConfig.man
         else
-            config=HeadConfig.woMan
+            config = HeadConfig.woMan
         end
-
         if currHead then
             headPool[sex][headTypeId]:RecyclingGameObjectToPool(currHead)
         end
-        headTypeId=nums
-        currHead=headPool[sex][headTypeId]:GetAvailableGameObject()
+        headTypeId = nums
+        currHead = headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
 
+        --[[
         --加载原来服饰
         for key, value in pairs(appearance) do
             if key ~= "head"  then
-
-                if appearance[key].path=="" then--部件不要的处理
+                if appearance[key].path == "" then--部件不要的处理
                     if appearance[key].ima and appearance[key].ima.transform then
                         appearance[key].ima.transform.gameObject:SetActive(false)
                     end
@@ -150,7 +148,6 @@ local function changAparance(kind)
                         LoadSprite(appearance[key].path,appearance[key].ima)
                     end
                 end
-
                 if key=="frontHat" then
                     if appearance["backHat"].path=="" then--部件不要的处理
                         appearance["backHat"].ima.transform.gameObject:SetActive(false)
@@ -159,10 +156,9 @@ local function changAparance(kind)
                         LoadSprite(appearance["backHat"].path,appearance["backHat"].ima)
                     end
                 end
-
             end
         end
-
+        --]]
     elseif type=="frontHat" then
         if arr[3]=="" then
             appearance[arr[4]].ima.transform.gameObject:SetActive(false)
@@ -174,12 +170,11 @@ local function changAparance(kind)
         appearance["backHat"].path=arr[3]
     end
 
-    appearance[type].typeId=nums
-    appearance[type].type=type
-    appearance[type].path=path
+    appearance[type].typeId = nums
+    appearance[type].type = type
+    appearance[type].path = path
 
-     table.insert(recordPath,path)
-
+    table.insert(recordPath,path)
 
     if path=="" then
         appearance[type].ima.transform.gameObject:SetActive(false)
@@ -190,108 +185,120 @@ local function changAparance(kind)
 
 end
 
+--获取Avatar的gameObject
 local function GetAvatar(faceId,isSmall)
-    local arr,config=split(faceId,"-")
+    local arr,config = split(faceId,"-")
 
-    sex=tonumber(arr[1])
-    --加载小人头像
-    currHead =headPool[sex][1]:GetAvailableGameObject()
-    headTypeId=1
+    sex = tonumber(arr[1])
+    --加载小人头像*
+    currHead = headPool[sex][1]:GetAvailableGameObject()
+    headTypeId = 1
     FindOrgan(currHead.transform)
     --配置表
     if isSmall then
-        if sex==1 then
-            config=SmallAvtarConfig.man
+        if sex == 1 then
+            config = SmallAvtarConfig.man
         else
-            config=SmallAvtarConfig.woMan
+            config = SmallAvtarConfig.woMan
         end
     else
-        if sex==1 then
-            config=AvtarConfig.man
+        if sex == 1 then
+            config = AvtarConfig.man
         else
-            config=AvtarConfig.woMan
+            config = AvtarConfig.woMan
         end
     end
-
     --换装
-    local temp=split(arr[2],",")
+    local temp = split(arr[2],",")
     for i = 1, #temp ,2 do
         if temp[i]~="" then
-            local type=tonumber(temp[i])
-            local typeId=tonumber(temp[i+1])
+            local type = tonumber(temp[i])
+            local typeId = tonumber(temp[i+1])
             if config[type] then
-                local kind=config[type].kinds[typeId]
-                num=type
+                local kind = config[type].kinds[typeId]
+                num = type
                 changAparance(kind)
             end
         end
     end
 
     --便于回收对象池
-    local temp ={}
-    temp.sex=sex
-    temp.headTypeId=headTypeId
-    temp.go=currHead
+    local temp = {}
+    temp.sex = sex
+    temp.headTypeId = headTypeId
+    temp.go = currHead
     --便于回收内存
     table.insert(record,temp)
 
     return temp
 end
 
-function AvatarManger.GetSmallAvatar(faceId,parent,size)
-
-   local AvatarData=GetAvatar(faceId,true)
-    AvatarData.size=1/size
+--获取小资源的avatar
+function AvatarManger.GetSmallAvatar(faceId , parent , size)
+    local AvatarData = GetAvatar(faceId,true)
+    AvatarData.size = 1 / size
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
     return AvatarData
 end
 
+--获取大资源的avatar
 function AvatarManger.GetBigAvatar(faceId,parent,size)
-
-    local AvatarData=GetAvatar(faceId,false)
-    AvatarData.size=1/size
+    local AvatarData = GetAvatar(faceId,false)
+    AvatarData.size = 1 / size
     AvatarData.go.transform:SetParent(parent);
     AvatarManger.setSize(AvatarData.go,size)
     return AvatarData
 end
 
-
+--回收指定avatar
+local trans_CollectAvatar
 function AvatarManger.CollectAvatar(AvatarData)
-    if  AvatarData then
+    if AvatarData then
+        if AvatarData.go ~= nil and AvatarData.size ~= nil then
+            --用空白图片资源替换
             for i, config in ipairs(HeadSizeType) do
-                local trans=AvatarData.go.transform:Find(config.type)
-                if trans then
-                    local ima= trans:GetComponent("Image")
-                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
+                trans_CollectAvatar = AvatarData.go.transform:Find(config.type)
+                if trans_CollectAvatar then
+                    if NilImage ~= nil  then
+                        trans_CollectAvatar:GetComponent("Image").sprite = NilImage
+                    end
                 end
             end
-           AvatarManger.setSize(AvatarData.go,AvatarData.size)
-           AvatarData.go.transform.localScale = Vector3.zero
-
-        --local  func=function(go)
-            --    local cRect=AvatarData.go.transform:GetComponent("RectTransform")
-            --    local oRect=go.transform:GetComponent("RectTransform")
-            --    cRect.sizeDelta=oRect.sizeDelta
-            --    cRect.anchoredPosition=oRect.anchoredPosition
-            --end
-            headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
-    end
-
-end
-
-function AvatarManger.CollectAllAvatar()
-    if #record>0 then
-        for i, AvatarData in ipairs(record) do
-            for i, config in ipairs(HeadSizeType) do
-                local trans=AvatarData.go.transform:Find(config.type)
-                if trans then
-                    local ima= trans:GetComponent("Image")
-                    LoadSprite("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png",ima)
-                end
+            if SizeParent ~= nil then
+                AvatarData.go.transform:SetParent(SizeParent)
             end
+            AvatarManger.setSize(AvatarData.go,AvatarData.size,true)
+            AvatarData.size = 1
+            AvatarData.go.transform.localScale = Vector3.zero
             headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
         end
+    end
+end
+
+
+local trans_CollectAllAvatar
+function AvatarManger.CollectAllAvatar()
+    if #record > 0 then
+        for i, AvatarData in ipairs(record) do
+            if AvatarData.go ~= nil and AvatarData.size ~= nil then
+                for i, config in ipairs(HeadSizeType) do
+                    trans_CollectAllAvatar = AvatarData.go.transform:Find(config.type)
+                    if trans_CollectAllAvatar then
+                        if NilImage ~= nil  then
+                            trans_CollectAllAvatar:GetComponent("Image").sprite = NilImage
+                        end
+                    end
+                end
+                if SizeParent ~= nil then
+                    AvatarData.go.transform:SetParent(SizeParent)
+                end
+                AvatarData.size = 1
+                AvatarManger.setSize(AvatarData.go,AvatarData.size,true)
+                headPool[AvatarData.sex][AvatarData.headTypeId]:RecyclingGameObjectToPool(AvatarData.go)
+            end
+        end
+        record = {}
     end
     if #recordPath>0 then
         for i, path in pairs(recordPath) do

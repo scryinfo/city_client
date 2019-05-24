@@ -15,14 +15,27 @@ end
 --启动事件--
 function LoginModel:OnCreate()
     --注册本地UI事件
+    CityEngineLua.login_loginapp(true);
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
+    Event.AddListener("m_OnRegister", self.m_OnRegister,self);
     Event.AddListener("m_onConnectionState", self.m_onConnectionState);
     Event.AddListener("m_onDisconnect", self.m_onDisconnect);
     Event.AddListener("c_RemoveListener", self.c_RemoveListener,self);
+    Event.AddListener("m_InviteCode", self.m_InviteCode,self);    --邀请码
+    Event.AddListener("m_GetCode", self.m_GetCode,self);    --获取验证码
+    Event.AddListener("m_ModifyPwdVerify", self.m_ModifyPwdVerify,self);    --修改密码验证
+    Event.AddListener("m_ChangePassword", self.m_ChangePassword,self);    --确认修改密码
+    Event.AddListener("m_CanCleModeFyPwd", self.m_CanCleModeFyPwd,self);    --取消修改密码
     --注册 AccountServer 消息
     local a = DataManager
-    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",self.n_AsLogin,self)--新版model网络注册
+    DataManager.RegisterErrorNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.LoginStatus",self.n_AsLogin,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","getServerList","as.AllGameServerInfo",self.n_AllGameServerInfo,self)
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","verificationInvitationCode","as.InvitationCodeStatus",self.n_InvitationCodeStatus,self)  --邀请码
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","getAuthCode","as.String",self.n_GetCode,self)  --获取验证码
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","createAccount","as.CreateResult",self.n_CreateResult,self)  --注册
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","modifyPwdVerify","as.VerifyStatus",self.n_ModifyPwdVerify,self)  --修改密码验证
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","modifyPwd","as.String",self.n_ChangePassword,self)  --确认修改密码
 end
 --关闭事件--
 function LoginModel:Close()
@@ -30,6 +43,13 @@ function LoginModel:Close()
     Event.RemoveListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.RemoveListener("m_onConnectionState", self.m_onConnectionState);
     Event.RemoveListener("m_onDisconnect", self.m_onDisconnect);
+    Event.RemoveListener("m_OnRegister", self.m_OnRegister);
+    Event.RemoveListener("c_RemoveListener", self.c_RemoveListener,self);
+    Event.RemoveListener("m_InviteCode", self.m_InviteCode,self);    --邀请码
+    Event.RemoveListener("m_GetCode", self.m_GetCode,self);    --获取验证码
+    Event.RemoveListener("m_ModifyPwdVerify", self.m_ModifyPwdVerify,self);    --修改密码验证
+    Event.RemoveListener("m_ChangePassword", self.m_ChangePassword,self);    --确认修改密码
+    Event.RemoveListener("m_CanCleModeFyPwd", self.m_CanCleModeFyPwd,self);  --取消修改密码
 end
 
 function LoginModel:c_RemoveListener()
@@ -41,7 +61,75 @@ function LoginModel.m_OnAsLogin( username, password, data )
     CityEngineLua.username = username;
     CityEngineLua.password = password;
     CityEngineLua._clientdatas = data;
-    CityEngineLua.login_loginapp(true);
+    local msgId = pbl.enum("ascode.OpCode","login")
+    ----2、 填充 protobuf 内部协议数据
+    local msglogion = {
+        account = username,pwd = password
+    }
+    -- 序列化成二进制数据
+    local pb_login = assert(pbl.encode("as.Account", msglogion))
+    --发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+end
+
+--点击注册
+function LoginModel:m_OnRegister(data)
+    local lMsg ={invitationCode = data.InviteCode,phoneNumber = data.phone,password = data.password,authCode = data.authCode}
+    DataManager.ModelSendNetMes("ascode.OpCode", "createAccount","as.RegistAccount",lMsg)
+end
+
+--邀请码
+function LoginModel:m_InviteCode(code)
+    DataManager.ModelSendNetMes("ascode.OpCode", "verificationInvitationCode","as.String",{ code = code})
+
+end
+
+--获取验证码
+function LoginModel:m_GetCode(code)
+    DataManager.ModelSendNetMes("ascode.OpCode", "getAuthCode","as.String",{ code = code})
+end
+
+--修改密码验证
+function LoginModel:m_ModifyPwdVerify(data)
+    DataManager.ModelSendNetMes("ascode.OpCode", "modifyPwdVerify","as.VerifyInfo",{ phoneNumber = data.phone, authCode = data.authCode})
+end
+
+--确认修改密码
+function LoginModel:m_ChangePassword(code)
+    DataManager.ModelSendNetMes("ascode.OpCode", "modifyPwd","as.String",{ code = code})
+end
+
+--取消修改密码
+function LoginModel:m_CanCleModeFyPwd()
+    local msgId = pbl.enum("ascode.OpCode","cancleModefyPwd")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
+end
+
+-----------------------------------------------------------------网络回调--------------------------------------------------------------------------
+
+--验证邀请码回调
+function LoginModel:n_InvitationCodeStatus(info)
+   Event.Brocast("c_InviteCodeStatus",info)
+end
+
+--获取验证码回调
+function LoginModel:n_GetCode(info,msgId)
+    Event.Brocast("c_GetCode",info,msgId)
+end
+
+--注册回调
+function LoginModel:n_CreateResult(info)
+    Event.Brocast("c_OnResult",info)
+end
+
+--修改密码验证回调
+function LoginModel:n_ModifyPwdVerify(info)
+    Event.Brocast("c_ModifyPwdVerify",info)
+end
+
+--确认修改密码回调
+function LoginModel:n_ChangePassword(info)
+    Event.Brocast("c_ChangePassword")
 end
 
 --返回服务器列表回调
@@ -82,17 +170,21 @@ function LoginModel.m_onDisconnect( isSuccess )
 end
 
 --登录AS回调
-function LoginModel.n_AsLogin(stream )
+function LoginModel:n_AsLogin(info,msgId)
 
-
-    local successfully = true
+    if info.status == "SUCCESS" then
+        UnityEngine.PlayerPrefs.SetString("username",CityEngineLua.username)
+        UnityEngine.PlayerPrefs.SetString("password",CityEngineLua.password)
+        LoginModel:onUIGetServerList()
+    else
+        Event.Brocast("c_Aslogin",info,msgId)
+    end
     --这里本来应该是反序列化pb字节流，但暂时因为服务器那边的login协议是特殊处理的，返回的包没有pb数据，所以暂时没有反序列化这一步
     --local msglogion = pb.as.Login()
     --msglogion:ParseFromString(stream)
     --successfully = msglogion.successed
     --end
     --Event.Brocast("c_LoginSuccessfully", successfully );
-    LoginModel:onUIGetServerList()
 
 end
 function LoginModel.onUIGetServerList( stream )

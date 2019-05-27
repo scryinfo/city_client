@@ -114,7 +114,7 @@ TestGroup.active_TestGroup("tina_w30_guild")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")abel_w7_AddClick
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w9_autoRequire")
---TestGroup.active_TestGroup("fisher_w31_time")
+TestGroup.active_TestGroup("fisher_w31_time")
 --TestGroup.active_TestGroup("abel_w10_OpenCtrl")
 --TestGroup.active_TestGroup("abel_w9_tableOrder")
 --TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组

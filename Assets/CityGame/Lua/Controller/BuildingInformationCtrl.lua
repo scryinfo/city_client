@@ -36,10 +36,10 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.buildingName.gameObject,self._clickBuildingName,self)
     --给每块地的button绑定点击事件
     for key,value in pairs(self.mineLandBtnTable) do
-        self.luaBehaviour:AddClick(value.gameObject,self._clickGroundBtn,self)
+        self.luaBehaviour:AddClick(value.gameObject,self._clickMineGroundBtn,self)
     end
     for key,value in pairs(self.otherLandBtnTable) do
-        self.luaBehaviour:AddClick(value.gameObject,self._clickGroundBtn,self)
+        self.luaBehaviour:AddClick(value.gameObject,self._clickOtherGroundBtn,self)
     end
 end
 function BuildingInformationCtrl:Active()
@@ -55,6 +55,7 @@ function BuildingInformationCtrl:Refresh()
     self:getLandInfo()
     --button 索引
     self.indexTable = {}
+    self:closeGroundButton()
 end
 
 function BuildingInformationCtrl:Hide()
@@ -160,7 +161,7 @@ function BuildingInformationCtrl:_getComponent(go)
     self.genderImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/name/nameText/genderImg"):GetComponent("Image")
     self.companyText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/company/companyText"):GetComponent("Text")
     self.leaseTime = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText"):GetComponent("Text")
-    self.leaseTimeText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/timeText"):GetComponent("Text")
+    self.leaseTimeText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/leaseTime/leaseTimeText/timeText"):GetComponent("Text")
     self.rentText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/rentText"):GetComponent("Text")
     self.priceText = go.transform:Find("content/landInfoRoot/content/otherLandInfo/rent/priceText"):GetComponent("Text")
     --buildingTypeContent                                                               --根据不同建筑生成不同的Item
@@ -294,46 +295,77 @@ function BuildingInformationCtrl:getLandInfo()
     table.insert(ids,self.m_data.ownerId)
     PlayerInfoManger.GetInfos(ids,self.SaveData,self)
 end
---初始化UI土地信息
+--初始化UI土地地块信息
 function BuildingInformationCtrl:initializeUiLandInfo()
     local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
+    --1*1 小型建筑
     if buildingSize == 1 then
-        for key,value in pairs(self.mineLandBtnTable) do
-            if key == 5 then
-                value.transform.localScale = Vector3.one
-                self.chooseBoxImg.transform:SetParent(self.mineLandBtnTable[5])
-                self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-                self.chooseBoxImg.transform.localScale = Vector3.one
+        for key,value in pairs(self.groundData) do
+            --是租的地
+            if value.Data.rent then
+                self.otherLandBtnTable[5].transform.localScale = Vector3.one
+                table.insert(self.indexTable,self.otherLandBtnTable[5])
+                --默认打开第一块地的信息
+                self:_updateGroundInfo(1,false)
             else
-                value.transform.localScale = Vector3.zero
+                --是买的地
+                self.mineLandBtnTable[5].transform.localScale = Vector3.one
+                table.insert(self.indexTable,self.mineLandBtnTable[5])
+                --默认打开第一块地的信息
+                self:_updateGroundInfo(1,true)
             end
         end
-        --默认打开第一块地的信息
-        self:_updateGroundInfo(1,true)
+        --2*2 中型建筑
     elseif buildingSize == 2 then
-        for key,value in pairs(self.mineLandBtnTable) do
-            if key == 1 or key == 2 or key == 4 or key == 5 then
-                value.transform.localScale = Vector3.one
-                self.chooseBoxImg.transform:SetParent(self.mineLandBtnTable[1])
-                self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-                self.chooseBoxImg.transform.localScale = Vector3.one
-                table.insert(self.indexTable,value)
+        for key,value in pairs(self.groundData) do
+            --该地块是买的还是租的
+            if value.Data.rent then
+                if key == 3 or key == 4 then
+                    self.otherLandBtnTable[key + 1].transform.localScale = Vector3.one
+                    table.insert(self.indexTable,self.otherLandBtnTable[key + 1])
+                else
+                    self.otherLandBtnTable[key].transform.localScale = Vector3.one
+                    table.insert(self.indexTable,self.otherLandBtnTable[key])
+                end
             else
-                value.transform.localScale = Vector3.zero
+                if key == 3 or key == 4 then
+                    self.mineLandBtnTable[key + 1].transform.localScale = Vector3.one
+                    table.insert(self.indexTable,self.mineLandBtnTable[key + 1])
+                else
+                    self.mineLandBtnTable[key].transform.localScale = Vector3.one
+                    table.insert(self.indexTable,self.mineLandBtnTable[key])
+                end
             end
         end
         --默认打开第一块地的信息
-        self:_updateGroundInfo(1,true)
+        if self.groundData[1].Data.rent then
+            self:_updateGroundInfo(1,false)
+        else
+            self:_updateGroundInfo(1,true)
+        end
+        --3*3 大型建筑
     elseif buildingSize == 3 then
-        for key,value in pairs(self.mineLandBtnTable) do
-            value.transform.localScale = Vector3.one
-            self.chooseBoxImg.transform:SetParent(self.mineLandBtnTable[1])
-            self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-            self.chooseBoxImg.transform.localScale = Vector3.one
+        for key,value in pairs(self.groundData) do
+            --该地块是买的还是租的
+            if value.Data.rent then
+                self.otherLandBtnTable[key].transform.localScale = Vector3.one
+                table.insert(self.indexTable,self.self.otherLandBtnTable[key])
+            else
+                self.mineLandBtnTable[key].transform.localScale = Vector3.one
+                table.insert(self.indexTable,self.mineLandBtnTable[key])
+            end
         end
         --默认打开第一块地的信息
-        self:_updateGroundInfo(1,true)
+        if self.groundData[1].Data.rent then
+            self:_updateGroundInfo(1,false)
+        else
+            self:_updateGroundInfo(1,true)
+        end
     end
+    --默认框选地块1
+    self.chooseBoxImg.transform:SetParent(self.indexTable[1])
+    self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+    self.chooseBoxImg.transform.localScale = Vector3.one
 end
 --初始化地块UI布局
 function BuildingInformationCtrl:initializeLandUiLayout()
@@ -408,13 +440,21 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     end
     ct.OpenCtrl("InputDialogPageCtrl",data)
 end
---地块信息
-function BuildingInformationCtrl:_clickGroundBtn(ins)
+--自己的地块信息
+function BuildingInformationCtrl:_clickMineGroundBtn(ins)
     PlayMusEff(1002)
     --改变选中框的位置
     ins.chooseBoxImg.transform:SetParent(self.transform)
     ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
     ins:_updateGroundInfo(ins:getIndexKey(self),true)
+end
+--别人的地块信息
+function BuildingInformationCtrl:_clickOtherGroundBtn(ins)
+    PlayMusEff(1002)
+    --改变选中框的位置
+    ins.chooseBoxImg.transform:SetParent(self.transform)
+    ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+    ins:_updateGroundInfo(ins:getIndexKey(self),false)
 end
 --刷新地块信息
 function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
@@ -428,7 +468,10 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one
         --self.headImg
-
+        self.nameText.text = self.groundOwnerData[index].name
+        self.companyText.text = self.groundOwnerData[index].companyName
+        self.priceText.text = "E"..GetClientPriceString(self.groundData[index].Data.rent.rentPreDay)
+        self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
     end
 end
 --关闭界面
@@ -477,6 +520,15 @@ function BuildingInformationCtrl:openTipBox(stringKey,position,parent)
     end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------
+--每次打开把所有的地块button全部隐藏，用到那块打开那块
+function BuildingInformationCtrl:closeGroundButton()
+    for key,value in pairs(self.mineLandBtnTable) do
+        value.transform.localScale = Vector3.zero
+    end
+    for key,value in pairs(self.otherLandBtnTable) do
+        value.transform.localScale = Vector3.zero
+    end
+end
 --获得key
 function BuildingInformationCtrl:getIndexKey(instance)
     for key,value in pairs(self.indexTable) do

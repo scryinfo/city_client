@@ -183,7 +183,7 @@ function MapCtrl:_cleanDatas()
     --右侧的面板信息
     MapPanel.closeAllRightPage()
     if MapCtrl.selectItem ~= nil then
-        MapCtrl.selectItem:close()
+        --MapCtrl.selectItem:close()
         MapCtrl.selectItem = nil
     end
     --if self.rightSearchItem ~= nil then

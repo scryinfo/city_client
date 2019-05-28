@@ -64,6 +64,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
         end
     else
         self.myBg.localScale = Vector3.zero
+        self.priceBg.localScale = Vector3.zero
     end
 
     luaBehaviour:AddClick(self.delete,self.OnDelete,self)

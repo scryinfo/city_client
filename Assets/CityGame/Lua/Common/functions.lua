@@ -553,6 +553,8 @@ function LoadSprite(path, iIcon, bSetNativeSize)
 				if bSetNativeSize == true then
 					Icon:SetNativeSize()
 				end
+				--此处是为了显示效果
+				Icon.transform.localScale = Vector3.one
 			end
 			if AssetObjs == nil then
 				AssetObjs = {}

@@ -66,6 +66,7 @@ function MapBubbleBase:close()
     end
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
+        self.avatar = nil
     end
     self:_childClose()
     self.data = nil

@@ -29,9 +29,37 @@ function LoginCtrl:Awake(go)
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
+	LuaBehaviour:AddClick(LoginPanel.forget, self.OnForget,self);
+	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --是否显示密码
+	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --打开多语言
+	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --关闭多语言
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
+	self.showPassword = false
+
 	self.root=self.gameObject.transform.root:Find("FixedRoot");
+
+	--多语言
+	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
+	self.languageItem = {}
+	for i, v in pairs(LanguageTypeConfig) do
+		local function callback(prefab)
+			self.languageItem[i] = LanguageItem:new(prefab,v,i,LuaBehaviour)
+			if self.languageItem[i].data.id == languageId  then
+				self.languageItem[i]:Set(self.languageItem[i])
+			end
+		end
+		createPrefab("Assets/CityGame/Resources/View/GoodsItem/LanguageItem.prefab",LoginPanel.content, callback)
+	end
+	for i, v in pairs(self.languageItem) do
+		if v.data.id == languageId  then
+           v:Set(v)
+		end
+	end
+	--是否记住密码
+	LoginPanel.remember.onValueChanged:AddListener(function(isOn)
+		self:_OnToggle(isOn)
+	end)
 end
 
 function LoginCtrl:Active()
@@ -42,35 +70,57 @@ function LoginCtrl:Active()
 	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
 	Event.AddListener("c_ConnectionStateChange", self.c_ConnectionStateChange, self);
 	Event.AddListener("c_Disconnect", self.c_Disconnect, self);
-	--Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
+	Event.AddListener("c_ChangeLanguage", self.c_ChangeLanguage, self);
 
 	-----小弹窗
 	Event.AddListener("SmallPop",self.c_SmallPop,self)
-
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
 	LoginPanel.btnLoginText.text = GetLanguage(10020003)
-	--local path = GetLanguage(10020003)
-	--LoadSprite(path, LoginPanel.btnLogin:GetComponent("Image"), true)
+end
 
+function LoginCtrl:c_ChangeLanguage()
+	--多语言
+	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
+	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
+	LoginPanel.btnLoginText.text = GetLanguage(10020003)
 end
 
 function LoginCtrl:Refresh()
-	ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
+	--ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
-	--if self.m_data ~= nil then
-	--	self:setPosition(self.m_data.x,self.m_data.y)
-	--end
 end
 
 function LoginCtrl:Hide()
 	UIPanel.Hide(self)
-	self:close()
+	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
+	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
+	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
+	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
+	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
+	Event.RemoveListener("SmallPop",self.c_SmallPop,self)
+	Event.RemoveListener("c_ChangeLanguage",self.c_ChangeLanguage,self)
+
+	LoginPanel.inputUsername:GetComponent('InputField').text = ""
+	LoginPanel.inputPassword:GetComponent('InputField').text = ""
+
 end
 
 function LoginCtrl:_initData()
 	DataManager.OpenDetailModel(LoginModel,self.insId)
+	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
+		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
+	end
+	local remember = UnityEngine.PlayerPrefs.GetInt("remember")
+	if remember == 0 then
+		LoginPanel.remember.isOn = false
+		LoginPanel.inputPassword:GetComponent('InputField').text = ""
+	elseif remember == 1 then
+		LoginPanel.remember.isOn = true
+		LoginPanel.inputPassword:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("password")
+	end
 end
 --启动事件--
 function LoginCtrl:OnCreate(go)
@@ -87,43 +137,112 @@ function LoginCtrl:OnCreate(go)
 end
 
 --关闭事件--
-function LoginCtrl:close()
-	Event.RemoveListener("c_onLoginFailed", self.c_onLoginFailed);
-	Event.RemoveListener("c_LoginSuccessfully", self.c_LoginSuccessfully);
-	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
-	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
-	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-	--Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess);
+function LoginCtrl:Close()
+	UIPanel.Close(self)
 	Event.Brocast("c_RemoveListener")
-	destroy(self.gameObject);
 end
 
 function LoginCtrl:onClickChooseGameServer(serverId)
 	Event.Brocast("m_chooseGameServer", serverId);
 end
+
+--是否记住密码
+function LoginCtrl:_OnToggle(isOn)
+	PlayMusEff(1002)
+	if isOn then
+		UnityEngine.PlayerPrefs.SetInt("remember",1)
+	else
+		UnityEngine.PlayerPrefs.SetInt("remember",0)
+		UnityEngine.PlayerPrefs.SetString("password","")
+	end
+end
+
+--是否显示密码
+function LoginCtrl:OnEye(go)
+	PlayMusEff(1002)
+	go:ShowPassword( not go.showPassword)
+end
+
+--显影密码
+function LoginCtrl:ShowPassword(isOn)
+	if isOn then  --打开
+		LoginPanel.openEye.localScale = Vector3.one
+		LoginPanel.closeEye.localScale = Vector3.zero
+		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_show.contentType
+		LoginPanel.inputPassword:GetComponent('InputField'):Select();
+	else  --关闭
+		LoginPanel.openEye.localScale = Vector3.zero
+		LoginPanel.closeEye.localScale = Vector3.one
+		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_hide.contentType
+		LoginPanel.inputPassword:GetComponent('InputField'):Select();
+	end
+	self.showPassword = isOn
+end
+
+--打开多语言
+function LoginCtrl:OnChoose(go)
+    go:SwitchLanguage(true)
+end
+
+--关闭多语言
+function LoginCtrl:OnCloseBg(go)
+	go:SwitchLanguage(false)
+end
+
+--打开关闭多语言
+function LoginCtrl:SwitchLanguage(isOn)
+	if isOn then
+		LoginPanel.languageBg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+		LoginPanel.closeBg.transform.localScale = Vector3.one
+	else
+		LoginPanel.languageBg:DOScale(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+		LoginPanel.closeBg.transform.localScale = Vector3.zero
+	end
+end
+
 --登录--
 function LoginCtrl:OnLogin(go)
 	PlayMusEff(1002)
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
-	if username == "" then
-		--ct.log("system"," 账号不能为空")
+
+	if username == "" or pw == "" then
 		Event.Brocast("SmallPop",GetLanguage(10020004),300)
 	else
-		--CityEngineLua.login(username, pw, "lxq");
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
-		LoginPanel.btnLogin:GetComponent("Button").enabled = false
+		--LoginPanel.btnLogin:GetComponent("Button").enabled = false
+	end
+end
+
+--登录回调
+function LoginCtrl:c_Aslogin(info,msgId)
+	LoginPanel.textStatus.transform.localScale = Vector3.zero
+	LoginPanel.textStatus:GetComponent('Text').text = ""
+	if msgId == 0 then
+		if info.reason == "accountInFreeze" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号冻结"
+		end
+	else
+		if info.status == "FAIL_ACCOUNT_UNREGISTER" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号未注册"
+		elseif info.status == "FAIL_ERROR" then
+			LoginPanel.textStatus.transform.localScale = Vector3.one
+			LoginPanel.textStatus:GetComponent('Text').text = "账号或密码错误"
+		end
 	end
 end
 --注册--
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
-	if go.logined == false then
-		ct.log("system","点击 登录按钮 连接账号服务器，然后才能登录游戏服务器")
-	else
-		--目前还没有手动注册
-		Event.Brocast("m_Gslogin");
-	end
+	ct.OpenCtrl("InviteCodeCtrl")
+end
+
+--找回密码
+function LoginCtrl:OnForget()
+	PlayMusEff(1002)
+	ct.OpenCtrl("RetrievePasswordCtrl")
 end
 ------------------回调--------------
 function LoginCtrl:onReqAvatarList( avatarList )
@@ -143,12 +262,6 @@ function LoginCtrl:c_Disconnect( errorCode )
 	--logDebug("cz login 登录失败,error code: ", errorCode)
 end
 
---[[function LoginCtrl:c_GsLoginSuccess()
-	--UIPanel:ClearAllPages()
-	--UIPanel:ShowPage(RoleManagerCtrl)
-	--UIPanel:ShowPage(TopBarCtrl)
-	--UIPanel:ShowPage(MainPageCtrl,"UI数据传输测试")
-end--]]
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
 	if errorCode ~= 0 then

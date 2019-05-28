@@ -18,10 +18,10 @@ function VolumeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayerTypeNum,self) --总量曲线
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerExchangeCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPlayerAmount","gs.PlayerAmount",self.n_OnPlayerCountCurve,self) --玩家数量
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OngetPlayerAmount,self) --玩家交易商品数量
-    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.m_PlayerNumCurvethree,self) --玩家交易商品数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerExchangeCurve","ss.PlayerGoodsCurve",self.n_OngetPlayerAmount,self) --玩家交易商品数量
+
 
 end
 
@@ -82,10 +82,10 @@ function VolumeModel:m_PlayerTypeNum(itemId)
     CityEngineLua.Bundle:newAndSendMsgExt(msgId,nil,CityEngineLua._tradeNetworkInterface1)
 end
 --当前玩家交易总量曲线图
---function VolumeModel:m_GoodsplayerTypeNum(itemId)
---    local msgId = pbl.enum("sscode.OpCode","queryPlayerExchangeAmount")
---    CityEngineLua.Bundle:newAndSendMsgExt(msgId,nil,CityEngineLua._tradeNetworkInterface1)
---end
+function VolumeModel:m_GoodsplayerTypeNum(itemId)
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerExchangeAmount")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId,nil,CityEngineLua._tradeNetworkInterface1)
+end
 --玩家人数
 function VolumeModel:m_PlayerNum(itemId)
     local msgId = pbl.enum("gscode.OpCode","getPlayerAmount")
@@ -93,7 +93,7 @@ function VolumeModel:m_PlayerNum(itemId)
 end
 --玩家购买数量折线图
 function VolumeModel:m_PlayerNumCurve(info)
-    local msgId = pbl.enum("sscode.OpCode","queryPlayerGoodsCurve")
+    local msgId = pbl.enum("sscode.OpCode","queryPlayerExchangeCurve")
     local lMsg = { id = info.id ,exchangeType = info.exchangeType,type = info.type}
     local pMsg = assert(pbl.encode("ss.PlayerGoodsCurve", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId,pMsg,CityEngineLua._tradeNetworkInterface1)
@@ -119,9 +119,9 @@ function VolumeModel:n_OnPlayerTypeNum(tradeinfo)
     Event.Brocast("c_allbuyAmount",tradeinfo.playExchangeAmount)
 end
 --玩家商品购买数量
-function VolumeModel:n_OnPlayerNumCurve(lMsg)
-    Event.Brocast("c_currebuyAmount",lMsg.exchangeAmount)
-end
+--function VolumeModel:n_OnPlayerNumCurve(lMsg)
+--    Event.Brocast("c_currebuyAmount",lMsg.exchangeAmount)
+--end
 --玩家数量
 function VolumeModel:n_OnPlayerCountCurve(lMsg)
     Event.Brocast("c_currebPlayerNum",lMsg.playerAmount)

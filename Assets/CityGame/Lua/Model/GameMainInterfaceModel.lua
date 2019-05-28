@@ -39,7 +39,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
     --
     DataManager.ModelRegisterNetMsg( nil ,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayExchangeAmount,self) --所有交易量
-    DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self) --查询城市广播
+    DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerExchangeCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self) --查询城市广播
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
 end
@@ -125,15 +125,10 @@ function GameMainInterfaceModel:n_GsExtendBag(lMsg)
     DataManager.SetMoney(lMsg.money)
     Event.Brocast("c_ChangeMoney",lMsg.money)
 end
-local a = 0
+
 --自己的收益情况回调
 function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
-    if lMsg then
-        table.insert(incomeNotify,lMsg)
-    end
-    Event.Brocast("c_IncomeNotify",incomeNotify)
-    a = a + 1
-    ct.log("system","**********人数: " .. a)
+    Event.Brocast("c_IncomeNotify",lMsg)
 end
 
 --城市广播回调

@@ -357,6 +357,27 @@ namespace UnityEngine.UI
             }
         }
 
+        public void RefreshDiffCells()
+        {
+            if (Application.isPlaying && this.isActiveAndEnabled)
+            {
+                for (int i = content.childCount - 1; i >= 0; i--)
+                {
+                    ReturnObjectAndSendMessage(content.GetChild(i));
+                }
+                itemTypeEnd = itemTypeStart = 0;
+                for (int i = 0; i < content.childCount; i++)
+                {
+                    if (itemTypeEnd < totalCount)
+                    {
+                        GameObject go = prefabSource.GetObject(itemTypeEnd).gameObject;
+                        dataSource.mProvideData(go.transform, itemTypeEnd);
+                        itemTypeEnd++;
+                    }
+                }
+            }
+        }
+
         public void RefillCellsFromEnd(int offset = 0)
         {
             //TODO: unsupported for Infinity or Grid yet

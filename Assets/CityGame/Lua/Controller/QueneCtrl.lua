@@ -40,6 +40,9 @@ function QueneCtrl:Hide()
     if insTable then
         for i, v in pairs(insTable) do
             destroy(v.transform.gameObject)
+            if v.handle then
+                UpdateBeat:RemoveListener(v.handle)
+            end
         end
         insTable = {}
     end

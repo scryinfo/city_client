@@ -15,6 +15,8 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
     self.goodsText = self.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
+    self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
+    self.moves = self.transform:Find("details/Slider/Fill Area/Fill/moves"):GetComponent("RectTransform")
     self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.timePrice = self.transform:Find("details/timePrice")
     self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
@@ -23,9 +25,14 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
 
-    --初始化循环参数
-    self.intTime = 1
-    self.m_Timer = Timer.New(slot(self.UpData, self), 1, -1, true)
+    self.waiting = 0
+    self.speed = 0.4
+    self.position = self.move.localPosition
+    self.positions = self.moves.localPosition
+
+    if not self.handle then
+        self.handle = UpdateBeat:CreateListener(self.UpData, self)
+    end
 
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
     self.delete.transform.localScale = Vector3.zero
@@ -37,12 +44,12 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
         self.slider.value = (self.currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
         local ts = getTimeBySec((self.currentTime - dataInfo.promStartTs)/1000)
         self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
-        self.m_Timer:Start()
+        UpdateBeat:AddListener(self.handle)
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
     else
-        if self.m_Timer ~= nil then
-            self.m_Timer:Stop()
+        if self.handle then
+            UpdateBeat:RemoveListener(self.handle)
         end
         self.timePrice.localScale = Vector3.one
         if playerId == dataInfo.sellerId then
@@ -77,6 +84,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     end
 
     luaBehaviour:AddClick(self.delete,self.OnDelete,self)
+
 end
 
 function PromoteQueueItem:OnDelete(go)
@@ -94,8 +102,20 @@ end
 
 --更新
 function PromoteQueueItem:UpData()
-    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-    self.slider.value = (self.currentTime - self.dataInfo.promStartTs) /  self.dataInfo.promDuration
-    local ts = getTimeBySec((self.currentTime - self.dataInfo.promStartTs)/1000)
-    self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
+    self.waiting = self.waiting -1
+    if self.waiting <= 0 then
+        self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+        self.slider.value = (self.currentTime - self.dataInfo.promStartTs) /  self.dataInfo.promDuration
+        local ts = getTimeBySec((self.currentTime - self.dataInfo.promStartTs)/1000)
+        self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
+        self.waiting = 1
+    end
+    self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+    self.moves:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+    if self.move.localPosition.x >= self.position.x + 100 then
+        self.move.localPosition = self.position
+    end
+    if self.moves.localPosition.x >= self.positions.x + 100 then
+        self.moves.localPosition = self.positions
+    end
 end

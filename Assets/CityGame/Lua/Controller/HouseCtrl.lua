@@ -63,6 +63,8 @@ function HouseCtrl:_initData()
     end
 end
 
+--
+
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()

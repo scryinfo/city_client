@@ -295,6 +295,22 @@ function BuildingInformationCtrl:getLandInfo()
     table.insert(ids,self.m_data.ownerId)
     PlayerInfoManger.GetInfos(ids,self.SaveData,self)
 end
+
+--初始化地块UI布局
+function BuildingInformationCtrl:initializeLandUiLayout()
+    local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
+    if buildingSize == 1 or buildingSize == 3 then
+        --如果是1*1的建筑,地块UI布局
+        --或是3*3的建筑,地块UI布局
+        self.gridGroup.padding.left = -55
+        self.gridGroup.padding.top = -60
+    elseif buildingSize == 2 then
+        --如果是2*2的建筑,地块UI布局
+        self.gridGroup.padding.left = -5
+        self.gridGroup.padding.top = -15
+    end
+end
+
 --初始化UI土地地块信息
 function BuildingInformationCtrl:initializeUiLandInfo()
     local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
@@ -366,20 +382,6 @@ function BuildingInformationCtrl:initializeUiLandInfo()
     self.chooseBoxImg.transform:SetParent(self.indexTable[1])
     self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
     self.chooseBoxImg.transform.localScale = Vector3.one
-end
---初始化地块UI布局
-function BuildingInformationCtrl:initializeLandUiLayout()
-    local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
-    if buildingSize == 1 or buildingSize == 3 then
-        --如果是1*1的建筑,地块UI布局
-        --或是3*3的建筑,地块UI布局
-        self.gridGroup.padding.left = -55
-        self.gridGroup.padding.top = -60
-    elseif buildingSize == 2 then
-        --如果是2*2的建筑,地块UI布局
-        self.gridGroup.padding.left = -5
-        self.gridGroup.padding.top = -15
-    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -467,10 +469,15 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
     else
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one
-        --self.headImg
+        AvatarManger.GetSmallAvatar(self.groundOwnerData[index].faceId,self.headImg.transform,0.2)
         self.nameText.text = self.groundOwnerData[index].name
         self.companyText.text = self.groundOwnerData[index].companyName
         self.priceText.text = "E"..GetClientPriceString(self.groundData[index].Data.rent.rentPreDay)
+        if self.groundOwnerData[index].male then
+            LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/male.png",self.genderImg,false)
+        else
+            LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/famale.png",self.genderImg,false)
+        end
         self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
     end
 end

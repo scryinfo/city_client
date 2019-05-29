@@ -803,7 +803,7 @@ UnitTest.Exec("abel_0529_ddd_createUser", "abel_0529_ddd_createUser",  function 
     local msgIdt1 = pbl.enum("gscode.OpCode","cc_rechargeRequest")
     local msgIdt2 = pbl.enum("gscode.OpCode","cc_disCharge")
 
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cc_createUser","ccapi.CreateUserReq",function(msg)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cc_createUser","gs.Cc_createUser",function(msg)
         local test = 100
     end)
     --发包测试
@@ -816,17 +816,21 @@ UnitTest.Exec("abel_0529_ddd_createUser", "abel_0529_ddd_createUser",  function 
     --local lMsg = { sellerBuildingId = bid, startTs = tsHour, typeIds={0,1613,1614,1652,1653,}}
 
     local lMsg = {
-        ReqHeader={
-            Version = 1,
+        PlayerId = '8a20a7b8c1644a59b79e030c81603ed9',
+        CreateUserReq ={
+            ReqHeader={
+            Version = 1231,
             ReqId = tostring(msgId),
-        },
-        CityUserId = 'qqqqqqqqqqqqqqqqqqqqqqqqqqq',
-        CityUserName = 'haha',
-        PubKey='',
-        PayPassword=''
+            },
+             CityUserId = 'qqqqqqqqqqqqqqqqqqqqqqqqqqq',
+             CityUserName = 'haha',
+             PubKey='qqqqqqwwwwwwweeeee',
+             PayPassword=''
+        }
     }
     ----3、 序列化成二进制数据
-    local  pMsg = assert(pbl.encode("ccapi.CreateUserReq", lMsg))
+    local  pMsg = assert(pbl.encode("gs.Cc_createUser", lMsg))
+    local msgRet = assert(pbl.decode("gs.Cc_createUser",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end)
 

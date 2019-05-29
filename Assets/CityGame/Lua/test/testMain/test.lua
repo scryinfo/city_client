@@ -111,6 +111,7 @@ end)
 UnitTest.Exec("abel_w3", "test_pb",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
+    local msgId1 = pbl.enum("gscode.OpCode","cc_createUser")
     ----2、 填充 protobuf 内部协议数据
     local lMsg = { account = "11"}
     ----3、 序列化成二进制数据

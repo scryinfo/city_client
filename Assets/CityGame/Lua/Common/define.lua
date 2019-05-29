@@ -195,7 +195,7 @@ BuildingType =
 	ProcessingFactory = 4,  --加工厂
 	Laboratory = 5,  --研究所
 	RetailShop = 6,  --零售店
-	TalentCenter = 7,--人才中心
+	WareHouse = 7,--集散中心
 }
 
 LanguageType={
@@ -235,6 +235,21 @@ TouchStateType =
 	NormalState = 0, 	--正常状态（可点击，可拖拽）
 	ConstructState = 1, --修建建筑状态（不可点击，可拖拽）
 	UIState = 2, 		--UI查看状态(不可点击，不可拖拽）
+}
+
+--提示框类型
+ReminderType =
+{
+	Common = 0,    --普通提示框（蓝色）
+	Warning = 1,    --警告提示框（红色）
+	Succeed = 2,    --成功提示框（黄色）
+}
+
+--提示是否具有选择性 （是否有取消按钮）
+ReminderSelectType =
+{
+	Select = 0,
+	NotChoose = 1,
 }
 
 Util = LuaFramework.Util;

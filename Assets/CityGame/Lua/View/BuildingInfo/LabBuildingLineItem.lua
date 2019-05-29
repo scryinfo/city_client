@@ -92,8 +92,8 @@ end
 
 --关闭
 function LabBuildingLineItem:closeToggleItem(targetMovePos)
-    self.buildingInfoToggleState = BuildingInfoToggleState.Close
 
+    self.buildingInfoToggleState = BuildingInfoToggleState.Close
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 

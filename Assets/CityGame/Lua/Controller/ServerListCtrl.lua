@@ -24,6 +24,7 @@ function ServerListCtrl:Awake()
     self.data = self.m_data
 
     serverListBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    serverListBehaviour:AddClick(ServerListPanel.back,self.c_OnBack,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
     self:_initData();
@@ -35,23 +36,29 @@ function ServerListCtrl:Active()
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
-
-    ServerListPanel.serverText.text = GetLanguage(10030001)
-
 end
 
 function ServerListCtrl:Refresh()
     self:_initInsData()
 end
---[[
+
 function ServerListCtrl:Hide()
-UIPanel.Hide(self)
---注销事件
-EveeListener("c_GsCreateRole",self.c_GsCreateRole,self);
-Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+    UIPanel.Hide(self)
+    --注销事件
+    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
---]]
+
+function ServerListCtrl:c_OnBack()
+    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = "确定注销账号吗？",func = function()
+            CityEngineLua.login_loginapp(true);
+            UIPanel.ClosePage()
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
+end
+
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
 end

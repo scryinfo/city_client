@@ -75,6 +75,11 @@ function BuildingInformationModel:m_ReqRetailShopInfo(buildingId,playerId)
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryRetailShopOrApartmentInfo","gs.QueryBuildingInfo",lMsg)
 end
+--研究中心建筑信息
+function BuildingInformationModel:m_ReqRetailLaboratoryInfo(buildingId,playerId)
+    local lMsg = {buildingId = buildingId,playerId = playerId}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryLaboratoryInfo","gs.QueryBuildingInfo",lMsg)
+end
 
 ---服务器回调---
 --建筑停业
@@ -101,5 +106,9 @@ function BuildingInformationModel:n_ProcessingFactoryInfo(data)
 end
 --零售店建筑信息
 function BuildingInformationModel:n_RetailShopInfo(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
+end
+--研究所建筑信息
+function BuildingInformationModel:n_LaboratoryInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end

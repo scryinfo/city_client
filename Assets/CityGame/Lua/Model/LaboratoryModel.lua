@@ -85,7 +85,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
             data.inProcess={}
         end
         for i, v in ipairs(data.completed) do
-             table.insert( data.inProcess ,v )
+            table.insert( data.inProcess ,v )
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
@@ -120,20 +120,20 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
 
     prints("开箱回调")
     local info = LabRollACK .itemId or  LabRollACK .evaPoint
-
-    Event.Brocast("c_InventResult",info)
+    --DataManager.ControllerRpcNoRet(self.insId,"RollCtrl", '_evaResult', LabRollACK.labRollACK)
+    Event.Brocast("c_InventResult",LabRollACK.labResult)
 
     local line
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll-1
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 5
             self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
             line = self.data.inProcess[i]
             break
         end
     end
-
     self:n_OnReceivelabLineChangeInform({line=line},false)
+
 end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)

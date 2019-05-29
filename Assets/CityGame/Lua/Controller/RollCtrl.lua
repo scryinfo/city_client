@@ -1,5 +1,6 @@
-
 local pool={}
+local LuaBehaviour
+local odds
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -47,7 +48,7 @@ function RollCtrl:initialize()
 end
 
 function RollCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/RollPanel.prefab";
+    return "Assets/CityGame/Resources/View/RollPanel.prefab"
 end
 
 function RollCtrl:OnCreate(obj)
@@ -55,6 +56,7 @@ function RollCtrl:OnCreate(obj)
 end
 function RollCtrl:Hide()
     UIPanel.Hide(self)
+    --InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
     Event.RemoveListener("c_creatRollItem",self.c_creatRollItem,self)
     Event.RemoveListener("c_InventResult",self.handleGoodsResult,self)
     Event.RemoveListener("c_InventResult",self.handleEvaResult,self)
@@ -83,12 +85,15 @@ function RollCtrl:Refresh()
 end
 function RollCtrl:Awake(go)
     panel = RollPanel
-    local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
     LuaBehaviour:AddClick(panel.FailRootBtn.gameObject, self._closeFail, self)
     LuaBehaviour:AddClick(panel.EvaRootBTn.gameObject, self._closeFail, self)
     LuaBehaviour:AddClick(panel.GoodRootBtn.gameObject, self._closeFail, self)
+    LuaBehaviour:AddClick(panel.EvaresultBtn.gameObject, self._closeAll, self)
+    LuaBehaviour:AddClick(panel.notenoughBtn.gameObject, self._closenotenough, self)
+    --LuaBehaviour:AddClick(panel.sureBtn.gameObject, self._closeEva, self)
     self:closeAllRoot()
 
 end
@@ -97,25 +102,44 @@ end
 function RollCtrl:_closeFail(ins)
     ins:closeAllRoot()
 end
+--一次点击开五个
+function RollCtrl:_closeEva(ins)
+    panel.Evaresult.localScale = Vector3.zero
+    panel.EvaRoots.localScale = Vector3.one
+end
+
+function RollCtrl:_closeAll(ins)
+    for i = 0, 4 do
+        destroy(panel.Evaresult:GetChild(i).gameObject)
+        panel.resultRoot.localScale =  Vector3.zero
+    end
+end
+function RollCtrl:_closenotenough(ins)
+    panel.notenough.localScale = Vector3.zero
+    panel.resultRoot.localScale = Vector3.zero
+
+end
 
 
 ---====================================================================================业务逻辑==============================================================================================
 function RollCtrl:c_creatRollItem( data )
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
 
-    local odds
     if data.goodCategory == 0 then
         odds = moedelData.probEva
     else
         odds = moedelData.probGood
     end
-
-    local datas={}
+    self.datas = {}
     for i = 1, data.availableRoll do
-        table.insert( datas,{ lineId = data.id ,odds = odds } )
+        table.insert( self.datas,{ lineId = data.id ,odds = odds ,availableRoll = data.availableRoll} )
     end
-    panel.totalText.text = #datas
-    InsAndObjectPool(datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
+
+        --panel.notenough.localScale = Vector3.one
+        --InsAndObjectPool(self.datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
+
+        InsAndObjectPool(self.datas,RollItem,prefabPath,panel.scrolParent, self.LuaBehaviour,self)
+    panel.totalText.text = data.availableRoll
 end
 
 function RollCtrl:updateText(data)
@@ -123,16 +147,42 @@ function RollCtrl:updateText(data)
     -- panel.titleText.text = GetLanguage(40010009)
 end
 
+--function RollCtrl:handleEvaResult(data)
+--    if data then
+--        panel.resultRoot.localScale = Vector3.one
+--        panel.Evaresult.localScale = Vector3.one
+--        --panel.EvaRoots.localScale =  Vector3.one
+--        panel.nowEva.text = DataManager.GetEvaPoint()
+--        DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
+--        panel.BigEVAtext.text = DataManager.GetEvaPoint()
+--    else
+--        --self:fail()
+--    end
+--end
+
 function RollCtrl:handleEvaResult(data)
-    if data then
-        panel.resultRoot.localScale = Vector3.one
-        panel.EvaRoots.localScale =  Vector3.one
-        panel.nowEva.text = DataManager.GetEvaPoint()
-        DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
-        panel.BigEVAtext.text = DataManager.GetEvaPoint()
-    else
-        self:fail()
-    end
+    self.Rollpoint = {}
+    panel.Evaresult.localScale = Vector3.one
+    panel.resultRoot.localScale = Vector3.one
+        for i, v in ipairs(data) do
+            if v == 0 then
+                local function callback(prefab)
+                    self.Rollpoint[i] = Failitem:new(prefab,LuaBehaviour)
+                end
+                createPrefab("Assets/CityGame/Resources/View/Laboratory/failitem.prefab",panel.Evaresult,callback)
+                panel.nowEva.text = DataManager.GetEvaPoint()
+                DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
+                panel.BigEVAtext.text = DataManager.GetEvaPoint()
+            elseif v == 1 then
+                local function callback(prefab)
+                    self.Rollpoint[i] = Successitem:new(prefab,LuaBehaviour)
+                end
+                createPrefab("Assets/CityGame/Resources/View/Laboratory/successitem.prefab",panel.Evaresult,callback)
+                panel.nowEva.text = DataManager.GetEvaPoint()
+                DataManager.SetEvaPoint(DataManager.GetEvaPoint()+10)
+                panel.BigEVAtext.text = DataManager.GetEvaPoint()
+            end
+        end
 end
 
 function  RollCtrl:handleGoodsResult(data)

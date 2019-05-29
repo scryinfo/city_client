@@ -10,17 +10,6 @@ local incomeNotify = {}
 function GameMainInterfaceModel:initialize(insId)
     self.insId = insId
     self:OnCreate()
-    UpdateBeat:Add(self.Update, self)
-end
-
-function GameMainInterfaceModel:Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
-        self:m_GetExchangeAmount()
-    end
-
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
-        self:m_GetPlayerGoodsCurve(1)
-    end
 end
 
 function GameMainInterfaceModel:OnCreate()

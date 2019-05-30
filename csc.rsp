@@ -1,0 +1,3 @@
+-r:BouncyCastle.Crypto.dll
+-r:System.Security.dll
+-r:System.Numerics.dll

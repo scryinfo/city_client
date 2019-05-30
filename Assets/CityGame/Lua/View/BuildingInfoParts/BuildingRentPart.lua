@@ -37,6 +37,7 @@ end
 -- 显示日租金
 function BuildingRentPart:_initFunc()
     if self.m_data.rent ~= nil then
-        self.rentText.text = GetClientPriceString(self.m_data.rent)
+        --self.rentText.text = GetClientPriceString(self.m_data.rent)
+        self.rentText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
     end
 end

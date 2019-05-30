@@ -73,14 +73,14 @@ function CompanyPanel.InitPanel()
     this.buildingScroll = transform:Find("BottomRoot/BuildingRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
     -- Eva显示
-    this.myEvaText = transform:Find("BottomRoot/EvaRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
-    this.introductionBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/IntroductionBtn").gameObject
-    this.optionOneObj = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll").gameObject
-    this.optionOneScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content")
-    this.optionTwoScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
-    this.optionThereScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
-    this.propertyScroll = transform:Find("BottomRoot/EvaRoot/PropertyRoot/PropertyScroll/Content")
-    this.closeTipsBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/CloseTipsBtn")
+    --this.myEvaText = transform:Find("BottomRoot/EvaRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
+    --this.introductionBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/IntroductionBtn").gameObject
+    --this.optionOneObj = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll").gameObject
+    --this.optionOneScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content")
+    --this.optionTwoScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
+    --this.optionThereScroll = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
+    --this.propertyScroll = transform:Find("BottomRoot/EvaRoot/PropertyRoot/PropertyScroll/Content")
+    --this.closeTipsBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/CloseTipsBtn")
 
     -- Eva界面调整
     this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")

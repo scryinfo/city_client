@@ -747,11 +747,18 @@ end
 --联盟
 function GameMainInterfaceCtrl:OnLeague()
     PlayMusEff(1002)
-    local societyId = DataManager.GetGuildID()
-    if societyId then
-        ct.OpenCtrl("GuildOwnCtrl", societyId)
-    else
-        ct.OpenCtrl("GuildListCtrl")
+    --local societyId = DataManager.GetGuildID()
+    --if societyId then
+    --    ct.OpenCtrl("GuildOwnCtrl", societyId)
+    --else
+    --    ct.OpenCtrl("GuildListCtrl")
+    --end
+    local evaSaveKey = string.format("%sEvaOpen", DataManager.GetMyOwnerID())
+    local isOpenEva = UnityEngine.PlayerPrefs.HasKey(evaSaveKey)
+    if isOpenEva then -- 打开过Eva
+        ct.OpenCtrl("EvaCtrl")
+    else -- 没有打开过Eva
+        UnityEngine.PlayerPrefs.SetInt(evaSaveKey, 1)
     end
 end
 

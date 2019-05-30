@@ -23,5 +23,5 @@ OpenModelInsID = {
     ["VolumeCtrl"] = 17,
     ["HistoryCurveCtrl"] = 18,
     ["BuildingInfoId"] = 19,
-
+    ["EvaCtrl"] = 20,
 }

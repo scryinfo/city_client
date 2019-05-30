@@ -472,22 +472,33 @@ EvaConfig = {
     },
     [5] = {
         name = "研究所",
-        property = {
+        option = {
+
             [1] = {
-                name = "发明提升",
-                Atype = 155,
-                Btype = "InventionUpgrade",
-                b = 0,
-                basevalue = 10,
+                name = "发明商品",
+                property = {
+                    [1] = {
+                        name = "发明提升",
+                        Atype = 155,
+                        Btype = "InventionUpgrade",
+                        b = 0,
+                        basevalue = 10,
+                    },
+                },
             },
             [2] = {
-                name = "EVA提升",
-                Atype = 156,
-                Btype = "EvaUpgrade",
-                b = 0,
-                basevalue = 50,
+                name = "Eva点数研究",
+                property = {
+                    [1] = {
+                        name = "EVA提升",
+                        Atype = 156,
+                        Btype = "EvaUpgrade",
+                        b = 0,
+                        basevalue = 50,
+                    },
+                },
             },
-        },
+        }
     },
     [6] =
     {
@@ -558,16 +569,16 @@ EvaConfig = {
             },
         },
     },
-    [7] = {
-        name = "集散中心",
-        property = {
-            [1] = {
-                name = "仓库提升",
-                Atype = 17,
-                Btype = "WarehouseUpgrade",
-                b = 0,
-                basevalue = 100,
-            },
-        },
-    },
+    --[7] = {
+    --    name = "集散中心",
+    --    property = {
+    --        [1] = {
+    --            name = "仓库提升",
+    --            Atype = 17,
+    --            Btype = "WarehouseUpgrade",
+    --            b = 0,
+    --            basevalue = 100,
+    --        },
+    --    },
+    --},
 }

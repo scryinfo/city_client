@@ -26,9 +26,10 @@ function OnInitProto()
 	assert(protoc:loadfile ("client.proto"))
 	assert(protoc:loadfile ("ss.proto"))
 	assert(protoc:loadfile ("sscode.proto"))
+	assert(protoc:loadfile ("global_def.proto"))
 	assert(protoc:loadfile ("cc.proto"))
 	assert(protoc:loadfile ("city.proto"))
-	assert(protoc:loadfile ("global_def.proto"))
+	assert(protoc:loadfile ("dddbind.proto"))
 end
 
 --主入口函数。从这里开始lua逻辑

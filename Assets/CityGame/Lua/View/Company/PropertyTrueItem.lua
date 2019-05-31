@@ -29,12 +29,11 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.levelText = transform:Find("LevelText"):GetComponent("Text")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
-    self.experienceText = transform:Find("ExperienceText"):GetComponent("Text")
+    self.experienceText = transform:Find("ExperienceTitleText/ExperienceText"):GetComponent("Text")
     self.levelSlider = transform:Find("LevelSlider"):GetComponent("Slider")
     self.totalLevelNumberText = transform:Find("LevelSlider/TotalLevelNumberText"):GetComponent("Text")
     self.addBtn = transform:Find("AddBtn"):GetComponent("Button")
-    self.cancelBtn = transform:Find("CancelBtn"):GetComponent("Button")
-    self.sureBtn = transform:Find("SureBtn"):GetComponent("Button")
+    self.subtractBtn = transform:Find("SubtractBtn"):GetComponent("Button")
     self.addExNumInputField = transform:Find("AddExNumInputField"):GetComponent("InputField")
 
     self:_showBtnState(true)
@@ -45,12 +44,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
         self:_showBtnState(false)
     end)
 
-    self.cancelBtn.onClick:AddListener(function ()
-        self:_showBtnState(true)
-    end)
-
-    self.sureBtn.onClick:AddListener(function ()
-        self:_addPoint(true)
+    self.subtractBtn.onClick:AddListener(function ()
         self:_showBtnState(true)
     end)
 
@@ -92,7 +86,8 @@ function PropertyTrueItem:ShowData(lv, cexp)
         self.nameNumberText.text = self.configData.name
     end
     self.levelText.text = string.format("Lv%s", lv)
-    self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
+    --self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
+    self.experienceText.text = tostring(cexp)
     self.levelSlider.value = cexp / EvaUp[lv].upexp
     self.totalLevelNumberText.text = EvaUp[lv].upexp
 end
@@ -100,16 +95,14 @@ end
 -- 按钮切换
 function PropertyTrueItem:_showBtnState(isShow)
     if isShow then
-        self.cancelBtn.transform.localScale = Vector3.zero
-        self.sureBtn.transform.localScale = Vector3.zero
+        self.subtractBtn.transform.localScale = Vector3.zero
         self.addExNumInputField.transform.localScale = Vector3.zero
         self.addExNumInputField.text = ""
-        self.addBtn.transform.localScale = Vector3.one
-    else
-        self.cancelBtn.transform.localScale = Vector3.one
-        self.sureBtn.transform.localScale = Vector3.one
-        self.addExNumInputField.transform.localScale = Vector3.one
         self.addBtn.transform.localScale = Vector3.zero
+    else
+        self.subtractBtn.transform.localScale = Vector3.one
+        self.addExNumInputField.transform.localScale = Vector3.one
+        self.addBtn.transform.localScale = Vector3.one
     end
 end
 

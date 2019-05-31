@@ -17,10 +17,6 @@ function SystemSettingCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-
-
-
-
 function SystemSettingCtrl:Refresh()
     local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum==1 then
@@ -55,8 +51,7 @@ function  SystemSettingCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
     --气泡
     LuaBehaviour:AddClick(panel.bubbleBtn.gameObject,self.c_OnClick_Bubble,self);
-    LuaBehaviour:AddClick(panel.allBigBtn.gameObject,self.c_OnClick_BubbleBig,self);
-    LuaBehaviour:AddClick(panel.allSmallBtn.gameObject,self.c_OnClick_BubbleSmall,self);
+    LuaBehaviour:AddClick(panel.allSmallBtn.gameObject,self.c_OnClick_BubbleShow,self);
     LuaBehaviour:AddClick(panel.allCloseBtn.gameObject,self.c_OnClick_BubbleClose,self);
 
 end
@@ -66,14 +61,8 @@ function SystemSettingCtrl:c_OnClick_Bubble(ins)
     panel.bubblePanel.localScale=Vector3.one
     panel.closeLan.localScale=Vector3.one
 end
---气泡全小
-function SystemSettingCtrl:c_OnClick_BubbleBig(ins)
-    panel.bubblePanel.localScale=Vector3.zero
-    Event.Brocast("c_BuildingBubbleALlSmall")
-    SaveBuildingBubbleSettings(BuildingBubbleType.small)
-end
 --气泡全大
-function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
+function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
     panel.bubblePanel.localScale=Vector3.zero
     Event.Brocast("c_BuildingBubbleALlLarge")
     SaveBuildingBubbleSettings(BuildingBubbleType.big)

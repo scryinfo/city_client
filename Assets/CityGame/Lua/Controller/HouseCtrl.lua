@@ -63,6 +63,8 @@ function HouseCtrl:_initData()
     end
 end
 
+--
+
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     houseDetailData.info.buildingType = BuildingType.House
     if HousePanel.topItem ~= nil then

@@ -42,6 +42,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self) --查询城市广播
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
+    UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())
 end
 
 function GameMainInterfaceModel:Close()

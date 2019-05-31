@@ -141,7 +141,9 @@ end
 
 function ChooseWarehouseCtrl:initInsData()
     DataManager.OpenDetailModel(ChooseWarehouseModel,self.insId )
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')--获取自己的建筑详情
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')      --获取自己的建筑详情
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqRentBuildingDetail')     --获取自己租建筑详情
+
 end
 
 

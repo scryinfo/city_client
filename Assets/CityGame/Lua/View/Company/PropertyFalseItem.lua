@@ -20,30 +20,30 @@ function PropertyFalseItem:initialize(prefab, data, name)
     local transform = prefab.transform
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
-    self.tipsBtn = transform:Find("TipsBtn"):GetComponent("Button")
-    self.tipsImage = transform:Find("TipsImage")
+    --self.tipsBtn = transform:Find("TipsBtn"):GetComponent("Button")
+    --self.tipsImage = transform:Find("TipsImage")
     self.tipsText = transform:Find("TipsText")
 
     self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)
-    self.tipsImage.localScale = Vector3.zero
-    self.tipsText.transform.localScale = Vector3.zero
+    --self.tipsImage.localScale = Vector3.zero
+    --self.tipsText.transform.localScale = Vector3.zero
     self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
     LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
     -- 点击按钮显示提示
-    self.tipsBtn.onClick:AddListener(function ()
-        CompanyPanel.closeTipsBtn.localScale = Vector3.one
-        self:IsShowTips(true)
-    end)
+    --self.tipsBtn.onClick:AddListener(function ()
+    --    CompanyPanel.closeTipsBtn.localScale = Vector3.one
+    --    self:IsShowTips(true)
+    --end)
 end
 
 -- 按钮切换
-function PropertyFalseItem:IsShowTips(isShow)
-    if isShow then
-        self.tipsImage.localScale = Vector3.one
-        self.tipsText.localScale = Vector3.one
-    else
-        self.tipsImage.localScale = Vector3.zero
-        self.tipsText.localScale = Vector3.zero
-    end
-end
+--function PropertyFalseItem:IsShowTips(isShow)
+--    if isShow then
+--        self.tipsImage.localScale = Vector3.one
+--        self.tipsText.localScale = Vector3.one
+--    else
+--        self.tipsImage.localScale = Vector3.zero
+--        self.tipsText.localScale = Vector3.zero
+--    end
+--end

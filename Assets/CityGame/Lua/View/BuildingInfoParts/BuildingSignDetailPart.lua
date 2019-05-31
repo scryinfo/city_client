@@ -35,6 +35,9 @@ function BuildingSignDetailPart:Show(data)
 end
 --
 function BuildingSignDetailPart:_InitClick(mainPanelLuaBehaviour)
+    --mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
+    --    self:clickCloseBtn()
+    --end , self)
     mainPanelLuaBehaviour:AddClick(self.settingBtn.gameObject, function ()
         self:clickSettingBtn()
     end , self)
@@ -80,6 +83,7 @@ end
 --
 function BuildingSignDetailPart:_RemoveClick()
     self.timeSlider.onValueChanged:RemoveAllListeners()
+    --self.closeBtn.onClick:RemoveAllListeners()
     self.selfSignDelBtn.onClick:RemoveAllListeners()
     self.settingBtn.onClick:RemoveAllListeners()
     self.otherSignBtn.onClick:RemoveAllListeners()
@@ -116,16 +120,16 @@ function BuildingSignDetailPart:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.settingBtn = transform:Find("root/stateRoot/selfNotSet/settingBtn"):GetComponent("Button")
+    --self.closeBtn = transform:Find("root/closeBtn"):GetComponent("Button")
+    self.settingBtn = transform:Find("root/settingBtn"):GetComponent("Button")
     self.otherSignBtn = transform:Find("root/otherSignBtn"):GetComponent("Button")
-    self.otherSignText12 = transform:Find("root/otherSignBtn/Text"):GetComponent("Text")
 
     self.selfNotSet = transform:Find("root/stateRoot/selfNotSet")  --还未设置签约，自己查看
     self.selfNotSetText01 = transform:Find("root/stateRoot/selfNotSet/Text"):GetComponent("Text")
     self.signingState = transform:Find("root/stateRoot/signing")  --正在签约
     self.signerPortrait = transform:Find("root/stateRoot/signing/protaitRoot/bg/Image")  --签约者头像
-    self.signerNameText = transform:Find("root/stateRoot/signing/infoRoot/Image03/nameText"):GetComponent("Text")  --签约者名字
-    self.signerCompanyText = transform:Find("root/stateRoot/signing/infoRoot/Image04/companyText"):GetComponent("Text")  --签约者公司名
+    self.signerNameText = transform:Find("root/stateRoot/signing/infoBg/nameText"):GetComponent("Text")  --签约者名字
+    self.signerCompanyText = transform:Find("root/stateRoot/signing/infoBg/companyText"):GetComponent("Text")  --签约者公司名
     --非建筑拥有者签约，查看
     self.otherSign = transform:Find("root/stateRoot/signing/otherSign")  --
     self.otherSignTimeText = transform:Find("root/stateRoot/signing/otherSign/signTime/signTimeText"):GetComponent("Text")
@@ -215,13 +219,9 @@ function BuildingSignDetailPart:_language()
     self.waitToSignSignTime09.text = "签约时间:"
     self.waitToSignTotalPriceText10.text = "总价:"
     self.tipText11.text = "Human traffic can improve the promotion ability of the promotion company!"
-    self.otherSignText12.text = "Signing"
 end
 --
 function BuildingSignDetailPart:_createCurve(info, type)
-    self.graph:Close()
-    self.slide:Close()
-
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -316,10 +316,10 @@ function BuildingSignDetailPart:_createCurve(info, type)
     self.slide:SetXScaleValue(time,118)
     self.graph:BoundaryLine(boundaryLine)
 
-    self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117), 1)
+    self.graph:DrawLine(turnoverVet, getColorByInt(53, 72, 117))
     local temp1 = {[1] = turnoverVet[#turnoverVet]}
     local temp2 = {[1] = turnover[#turnover]}
-    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black, 1)
+    self.slide:SetCoordinate(turnoverVet, showNumValue, Color.black)
 
     self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
     self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)
@@ -487,13 +487,13 @@ function BuildingSignDetailPart:clickSelfSignDelBtn()
     --请求删除签约
     self:m_ReqSelfCancelContract(self.m_data.info.id)
 end
+--
+function BuildingSignDetailPart:clickCloseBtn()
+    self.groupClass.TurnOffAllOptions(self.groupClass)
+end
 --点击提示按钮
 function BuildingSignDetailPart:clickOpenTipBtn()
     self.tipRoot.localScale = Vector3.one
-end
---点击提示按钮
-function BuildingSignDetailPart:clickTipBtn()
-    self.tipRoot.localScale = Vector3.zero
 end
 --点击liftBtn
 function BuildingSignDetailPart:clickLiftBtn()

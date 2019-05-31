@@ -95,6 +95,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
             self:_clickCloseBtn(self)
         end)
     end
+    buildingInfo.info.buildingType = BuildingType.Laboratory
     LaboratoryCtrl.static.buildingOwnerId = buildingInfo.info.ownerId
     self.m_data=buildingInfo
     buildingInfo.insId=buildingInfo.info.id

@@ -9,6 +9,8 @@ TestGroup.active_TestGroup("abel_w11_showFps")
 
 TestGroup.active_TestGroup("abel_wk27_hartbeat")
 TestGroup.active_TestGroup("abel_TimefunPrecision")
+TestGroup.active_TestGroup("abel_w3")
+TestGroup.active_TestGroup("abel_0529_ddd_createUser")
 --TestGroup.active_TestGroup("abel_0512_materialConsumedInform")
 --TestGroup.active_TestGroup("abel_0511_ModyfyMyBrandName")
 --TestGroup.active_TestGroup("abel_0428_queryflowList")

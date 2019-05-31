@@ -11,10 +11,12 @@ local volumeBehaviour;
 local isClother = true
 local clothes
 local food
-local minute
 local second
 local defaultPos_Y= -74
 local pool={}
+local optionOneScript ={}
+local state
+
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -81,6 +83,7 @@ function VolumeCtrl:Awake()
     else
         currentTime = math.floor(currentTime - (second % 10 + 10 ))
     end
+
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
@@ -91,6 +94,11 @@ function VolumeCtrl:Awake()
     self.supplyDemand.mProvideData = VolumeCtrl.static.SupplyDemandProvideData
     self.supplyDemand.mClearData = VolumeCtrl.static.SupplyDemandClearData
 
+
+    -- 第一层信息展示
+    self.playerOneInfo = UnityEngine.UI.LoopScrollDataSource.New()  --交易信息
+    self.playerOneInfo.mProvideData = VolumeCtrl.static.OptionOneData
+    self.playerOneInfo.mClearData = VolumeCtrl.static.OptionOneClearData
 
     --初始化循环参数
     self.intTime = 1
@@ -106,6 +114,8 @@ function VolumeCtrl:Active()
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
     Event.AddListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
     Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.AddListener("c_allbuyAmount",self.c_allbuyAmount,self) --玩家所有交易量
+    Event.AddListener("c_currebPlayerNum",self.c_allPlayerAmount,self) --玩家数量
 
 end
 function VolumeCtrl:Refresh()
@@ -121,8 +131,10 @@ function VolumeCtrl:Hide()
     end
     Event.RemoveListener("c_NpcNum",self.c_NpcNum,self)
     Event.RemoveListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
-    Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
-    Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
+    Event.RemoveListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self)  --所有npc交易量
+    Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self)        --所有交易量
+    Event.RemoveListener("c_allbuyAmount",self.c_allbuyAmount,self)          --玩家所有交易量
+    Event.RemoveListener("c_currebPlayerNum",self.c_allPlayerAmount,self)          --玩家数量
 end
 
 function VolumeCtrl:initInsData()
@@ -197,6 +209,15 @@ function VolumeCtrl:c_ExchangeAmount(info)
     VolumePanel.volumeText.text = "E"..getMoneyString(GetClientPriceString(info))
 end
 
+--玩家所有交易量
+function VolumeCtrl:c_allbuyAmount(info)
+    VolumePanel.TradingCount.text = "E"..getMoneyString(GetClientPriceString(info))
+end
+--玩家数量
+function VolumeCtrl:c_allPlayerAmount(info)
+    VolumePanel.Tradingnum.text = info
+end
+
 --初始化
 function VolumeCtrl:initData()
     clothes = {}
@@ -214,6 +235,8 @@ function VolumeCtrl:initData()
             clothesIndex = clothesIndex +1
         end
     end
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 --返回
@@ -351,11 +374,15 @@ function VolumeCtrl:OncitzenRect(ins)
 
     pos_Y= pos_Y- (102 + 460)
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, pos_Y),
            0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
-
+    VolumePanel.playercurrRoot.gameObject:SetActive(false)
+    VolumePanel.trade.localScale = Vector3.zero
+    VolumePanel.strade.localScale = Vector3.zero
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 0),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
@@ -371,17 +398,59 @@ function VolumeCtrl:OnplayerRect(ins)
 
     pos_Y= pos_Y - 102
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(9.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, -115),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNum')
     VolumePanel.infoBgrRect.localScale= Vector3.one
+    VolumePanel.playercurrRoot.gameObject:SetActive(true)
 
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
-    ins:initPayerVolume()
+    VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
+    --self:initPayerVolume()
+
 end
 
-function VolumeCtrl:initPayerVolume()
-    InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
+function VolumeCtrl:initPayerVolume(go)
+    local temps ={}
+    --InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
 end
+
+-- 第一层信息显示
+VolumeCtrl.static.OptionOneData = function(transform, idx)
+    idx = idx + 1
+    optionOneScript[idx] = ToggleBtnItem:new(transform, volumeBehaviour, DealConfig[idx], idx)
+    volumeBehaviour:AddClick(transform.transform:Find("bgBtn").gameObject,VolumeCtrl.c_OnClick_Delete,optionOneScript[idx])
+end
+
+function VolumeCtrl:c_OnClick_Delete(ins)
+    local item = {}
+    local type = ins.data.childs
+    optionOneScript[ins.ctrl]:Aaa(DealConfig[ins.ctrl])
+    VolumePanel.strade.localScale = Vector3.zero
+    VolumePanel.trade.localScale = Vector3.zero
+    if state ~= nil then
+        --state = Vector3.zero
+        state.localScale = Vector3.zero
+    end
+    state = ins.highlight
+    ins.highlight.localScale = Vector3.one
+    if optionOneScript[ins.ctrl].city then
+        VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
+    end
+    if ins.data.childs.childs ~= nil then
+        VolumePanel.threeScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnThreeItem")
+    else
+        VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnTwoItem")
+    end
+
+    prints("ToggleBtnItem")
+end
+VolumeCtrl.static.OptionOneClearData = function(transform)
+end
+
+
+

@@ -91,17 +91,17 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 1600003,
             ["InitCount"] = 64,
         },
-        {   --人才中心1
+        {   --仓库1
             ["Name"] = "ExpertTradingCenter_1",
             ["PlayerBuildingBaseDataID"] = 1700001,
             ["InitCount"] = 64,
         },
-        {   --人才中心2
+        {   --仓库2
             ["Name"] = "ExpertTradingCenter_2",
             ["PlayerBuildingBaseDataID"] = 1700002,
             ["InitCount"] = 64,
         },
-        {   --人才中心3
+        {   --仓库3
             ["Name"] = "ExpertTradingCenter_3",
             ["PlayerBuildingBaseDataID"] = 1700003,
             ["InitCount"] = 64,

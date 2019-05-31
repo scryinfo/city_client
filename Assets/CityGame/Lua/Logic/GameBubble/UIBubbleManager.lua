@@ -10,7 +10,7 @@ local pbl = pbl
 
 UIBubbleManager.BubbleParentObjPath = "View/Items/BuildingBubbleItems/UIBubblePanel"  --父物体
 UIBubbleManager.SellRentObjPath = "View/Items/BuildingBubbleItems/UIBubbleTransAndBuildingItem"  --土地交易气泡
-UIBubbleManager.GroundAucObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucItem"  --拍卖气泡
+UIBubbleManager.GroundAucObjPath = "View/Items/BuildingBubbleItems/UIBubbleGroundAucItemNew"  --拍卖气泡
 
 --构建函数--
 function UIBubbleManager.New()

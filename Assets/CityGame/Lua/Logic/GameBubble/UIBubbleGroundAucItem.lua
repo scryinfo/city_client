@@ -19,14 +19,14 @@ function UIBubbleGroundAucItem:initialize(data)
     local viewTrans = self.bubbleObj.transform
     self.now = viewTrans:Find("now")
     self.nowBinding = viewTrans:Find("now/bgBtn/binding")  --正在出价中
-    self.nowTimeText = viewTrans:Find("now/bgBtn/binding/timeDownRoot/nowTimeText"):GetComponent("Text")
-    self.nowText01 = viewTrans:Find("now/bgBtn/binding/Text"):GetComponent("Text")
+    self.nowTimeText = viewTrans:Find("now/bgBtn/binding/timeText"):GetComponent("Text")
+    self.nowText01 = viewTrans:Find("now/bgBtn/binding/typeText"):GetComponent("Text")
     self.noneBidText02 = viewTrans:Find("now/bgBtn/noneBidText"):GetComponent("Text")
     self.nowBgBtn = viewTrans:Find("now/bgBtn"):GetComponent("Button")
 
     self.soon = viewTrans:Find("soon")
-    self.soonTimeText = viewTrans:Find("soon/bgBtn/timeDownRoot/soonTimeText"):GetComponent("Text")
-    self.soonText02 = viewTrans:Find("soon/bgBtn/Text"):GetComponent("Text")
+    self.soonTimeText = viewTrans:Find("soon/bgBtn/root/timeText"):GetComponent("Text")
+    self.soonText02 = viewTrans:Find("soon/bgBtn/root/typeText"):GetComponent("Text")
     self.soonBgBtn = viewTrans:Find("soon/bgBtn"):GetComponent("Button")
 
     self.nowText01.text = GetLanguage(22010001)

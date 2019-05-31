@@ -31,11 +31,12 @@ end
 
 function GroundAuctionCtrl:Active()
     UIPanel.Active(self)
-    GroundAuctionPanel.personFlowText01.text = GetLanguage(22010004)
-    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
-    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
-    GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
-    GroundAuctionPanel.nowFloorPriceText05.text = GetLanguage(22010002)
+    --GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
+    GroundAuctionPanel.hourText01.text = "hour"
+    GroundAuctionPanel.minuteText02.text = "minute"
+    GroundAuctionPanel.secondText03.text = "second"
+    GroundAuctionPanel.noneHistoryText04.text = "Nobody bid"
+    GroundAuctionPanel.tipText05.text = "The price will be locked"
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -86,34 +87,78 @@ function GroundAuctionCtrl:_initPanelData()
     self.m_Timer:Start()
     self.id = self.m_data.id
     GroundAuctionPanel.bidInput.text = ""
-    GroundAuctionPanel.averageRangeText.text = 0
     local groundInfo = GroundAucConfig[self.m_data.id]
     --如果开始拍卖，还需判断是否有人出价
     if self.m_data.isStartAuc then
         GroundAuctionPanel.setSoonAndNow(true)
+        self:refreshNow(groundInfo.basePrice)
+
         --判断是否有人出价
         if self.m_data.endTs == nil or self.m_data.endTs == 0 then
             GroundAuctionPanel.setBidState(false)
-            GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
+            self:setTimeValue(0)
         else
             GroundAuctionPanel.setBidState(true)
             self.bidHistory = ct.deepCopy(self.m_data.bidHistory)
             self:_createHistory()
+
             self.highestPrice = GetClientPriceString(self.bidHistory[1].price)
             GroundAuctionPanel.historyContent.localPosition = Vector2.zero
             self.startTimeDownForFinish = true  --拍卖结束倒计时
+            self:NowTimeDownFunc()
         end
         Event.Brocast("m_RegistGroundBidInfor")
     else
         GroundAuctionPanel.setSoonAndNow(false)
-
-        GroundAuctionPanel.floorPriceText.text = getPriceString(GetClientPriceString(groundInfo.basePrice), 30, 24)
-        local timeData = getFormatUnixTime(groundInfo.beginTime)
-        GroundAuctionPanel.startTimeText.text = timeData.hour..":"..timeData.minute..":"..timeData.second
+        self:refreshSoon(groundInfo.beginTime, groundInfo.basePrice)
         self.startTimeDownForStart = true  --即将拍卖倒计时
+        self:SoonTimeDownFunc()
     end
 end
-
+--------------------------------------------------------------------
+--刷新开始拍卖的显示数据
+function GroundAuctionCtrl:refreshNow(basePrice)
+    if self.nowPriceItem == nil then
+        self.nowPriceItem = MapRightShowInfoItem:new(GroundAuctionPanel.nowPrice)
+    end
+    local str = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
+    local tempData = {infoTypeStr = "GAucPrice", value = str}
+    self.nowPriceItem:initData(tempData)
+end
+--刷新即将拍卖的显示数据
+function GroundAuctionCtrl:refreshSoon(beginTime, basePrice)
+    if self.soonStartTimeItem == nil then
+        self.soonStartTimeItem = MapRightShowInfoItem:new(GroundAuctionPanel.soonStartTime)
+    end
+    if self.soonPriceItem == nil then
+        self.soonPriceItem = MapRightShowInfoItem:new(GroundAuctionPanel.soonPrice)
+    end
+    local timeData = getFormatUnixTime(beginTime)
+    local str1 = timeData.hour..":"..timeData.minute..":"..timeData.second
+    local tempData1 = {infoTypeStr = "GAucTime", value = str1}
+    self.soonStartTimeItem:initData(tempData1)
+    local str2 = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
+    local tempData2 = {infoTypeStr = "GAucPrice", value = str2}
+    self.soonPriceItem:initData(tempData2)
+end
+--
+function GroundAuctionCtrl:setTimeValue(remainTime)
+    local timeTable = getTimeTable(remainTime)
+    local hour = self:getValuableStr(timeTable.hour)
+    local minute = self:getValuableStr(timeTable.minute)
+    local second = self:getValuableStr(timeTable.second)
+    GroundAuctionPanel.timeDownText.text = string.format("%s     %s     %s", hour, minute, second)
+end
+--
+function GroundAuctionCtrl:getValuableStr(str)
+    if string.len(str) ~= 2 then
+        return
+    end
+    local firstChar = string.sub(str, 1, 1)
+    local secondChar = string.sub(str, 2, 2)
+    return firstChar.."   "..secondChar
+end
+--------------------------------------------------------------------
 --历史记录简易池
 function GroundAuctionCtrl:_createHistory()
     self:_cleanHistory()  --清除history item
@@ -128,7 +173,7 @@ function GroundAuctionCtrl:_createHistory()
         local go = self:_getValuableHistoryObj()
         go.transform:SetParent(GroundAuctionPanel.historyContent.transform)
         go.transform.localScale = Vector3.one
-        self.historyLuaItems[i] = GAucHistoryItem:new(value, go.transform)
+        self.historyLuaItems[i] = MapGAucHistoryItem:new(value, go.transform)
     end
 end
 --获取一个有效的item
@@ -174,10 +219,7 @@ function GroundAuctionCtrl:SoonTimeDownFunc()
             self.startTimeDownForStart = false
             return
         end
-
-        local timeTable = getFormatUnixTime(remainTime / 1000)
-        local timeStr = timeTable.minute..":"..timeTable.second
-        GroundAuctionPanel.soonTimeDownText.text = timeStr
+        self:setTimeValue(remainTime / 1000)
     end
 end
 --拍卖结束倒计时
@@ -192,10 +234,7 @@ function GroundAuctionCtrl:NowTimeDownFunc()
             self.startTimeDownForFinish = false
             return
         end
-
-        local timeTable = getFormatUnixTime(remainTime / 1000)
-        local timeStr = timeTable.minute..":"..timeTable.second
-        GroundAuctionPanel.nowTimeDownText.text = timeStr
+        self:setTimeValue(remainTime / 1000)
     end
 end
 
@@ -288,6 +327,5 @@ function GroundAuctionCtrl:_bidStart(groundData)
     GroundAuctionPanel.bidInput.text = ""
     GroundAuctionPanel.setSoonAndNow(true)
     GroundAuctionPanel.setBidState(false)
-    GroundAuctionPanel.nowFloorPriceText.text = getPriceString(GetClientPriceString(GroundAucConfig[self.m_data.id].basePrice), 30, 24)
-    --self.m_data = groundData
+    self:refreshNow(GroundAucConfig[self.m_data.id].basePrice)
 end

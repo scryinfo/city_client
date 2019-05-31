@@ -799,17 +799,17 @@ UnitTest.Exec("abel_0521_scientificNotation2number", "abel_0521_scientificNotati
 end)
 
 UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  function ()
-    local msgIdt = pbl.enum("gscode.OpCode","cc_createUser")
-    local msgIdt1 = pbl.enum("gscode.OpCode","cc_rechargeRequest")
-    local msgIdt2 = pbl.enum("gscode.OpCode","cc_disCharge")
+    local msgIdt = pbl.enum("gscode.OpCode","ct_createUser")
+    local msgIdt1 = pbl.enum("gscode.OpCode","ct_rechargeRequest")
+    local msgIdt2 = pbl.enum("gscode.OpCode","ct_disCharge")
 
     Event.AddListener("e_abel_0529_ddd_createUser", function (pid)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cc_createUser","ccapi.CreateUserReq",function(msg)
             local test = 100
         end)
-        --发包测试
+        --发包测试ct_createUser
         ----2、 填充 protobuf 内部协议数据
-        local msgId = pbl.enum("gscode.OpCode","cc_createUser")
+        local msgId = pbl.enum("gscode.OpCode","ct_createUser")
         local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
         --local ts = getFormatUnixTime(currentTime)
         --local tsHour = math.floor(currentTime/3600000)
@@ -831,8 +831,8 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
         }
 
         ----3、 序列化成二进制数据
-        local  pMsg = assert(pbl.encode("ccapi.Cc_createUser", lMsg))
-        local msgRet = assert(pbl.decode("ccapi.Cc_createUser",pMsg), "pbl.decode decode failed")
+        local  pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
+        local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
     end)
 end)

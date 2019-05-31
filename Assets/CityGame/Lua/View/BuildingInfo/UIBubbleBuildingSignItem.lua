@@ -32,7 +32,7 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     self.smallBgBtn=prefab.transform:Find("small/bgBtn"):GetComponent("Button")
     self.smallIma=prefab.transform:Find("small/bgBtn/Image"):GetComponent("Image")
     self.ExIma=prefab.transform:Find("Expection")
-  
+
 
     self.largeRec=prefab.transform:Find("large")
     self.largeBgBtn=prefab.transform:Find("large/bgBtn"):GetComponent("Button")
@@ -53,8 +53,7 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     self.z=PlayerBuildingBaseData[data.mId].deviationPos[3]
     ---
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.AddListener("c_BuildingBubbleALlSmall", self.changeSmall, self)
-    Event.AddListener("c_BuildingBubbleALlLarge", self.changeLarge, self)
+    Event.AddListener("c_BuildingBubbleShow", self.ShowBubble, self)
     Event.AddListener("c_BuildingBubbleHide", self.CloesBubble, self)
 
     self:updateData(data)
@@ -115,9 +114,9 @@ function UIBubbleBuildingSignItem:updateData(data)
             self.ExIma.gameObject:SetActive(false)
         end
     end
-   --赋值留言
+    --赋值留言
     if data.des then
-       self.desText.text=data.des
+        self.desText.text=data.des
     end
     --赋值 姓名和 头像
     if self.avatarData then
@@ -163,6 +162,12 @@ end
 function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.gameObject:SetActive(false)
 end
+
+--显示
+function UIBubbleBuildingSignItem:ShowBubble()
+    self.prefab.gameObject:SetActive(true)
+end
+
 --开始
 function UIBubbleBuildingSignItem:Start()
     self.prefab.gameObject:SetActive(true)
@@ -204,8 +209,8 @@ function UIBubbleBuildingSignItem:changeLarge()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
-   self.nameText.text=info[1].name
-   self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
+    self.nameText.text=info[1].name
+    self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
 end
 
 function UIBubbleBuildingSignItem:LateUpdate()
@@ -221,10 +226,7 @@ function UIBubbleBuildingSignItem:Close()
     DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.prefab)
     --取消注册
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.RemoveListener("c_BuildingBubbleALlSmall", self.changeSmall, self)
-    Event.RemoveListener("c_BuildingBubbleALlLarge", self.changeLarge, self)
+    Event.RemoveListener("c_BuildingBubbleShow", self.ShowBubble, self)
     Event.RemoveListener("c_BuildingBubbleHide", self.CloesBubble, self)
     self = nil
 end
-
-

@@ -58,13 +58,13 @@ end
 ---========================================================点击==============================================================================================
 --打开面板
 function SystemSettingCtrl:c_OnClick_Bubble(ins)
-    panel.bubblePanel.localScale=Vector3.one
-    panel.closeLan.localScale=Vector3.one
+    panel.bubblePanel.localScale = Vector3.one
+    panel.closeLan.localScale = Vector3.one
 end
---气泡全大
+--气泡全开
 function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
     panel.bubblePanel.localScale=Vector3.zero
-    Event.Brocast("c_BuildingBubbleALlLarge")
+    Event.Brocast("c_BuildingBubbleShow")
     SaveBuildingBubbleSettings(BuildingBubbleType.big)
 end
 --气泡全关

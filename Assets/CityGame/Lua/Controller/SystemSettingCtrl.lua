@@ -65,7 +65,7 @@ end
 function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
     panel.bubblePanel.localScale=Vector3.zero
     Event.Brocast("c_BuildingBubbleShow")
-    SaveBuildingBubbleSettings(BuildingBubbleType.big)
+    SaveBuildingBubbleSettings(BuildingBubbleType.show)
 end
 --气泡全关
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)

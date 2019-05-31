@@ -25,9 +25,7 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     self.rect:SetParent(UIBubbleManager.BubbleParent.transform)
     self.prefab.transform.localScale = Vector3.one
     self.rect.transform.localPosition=Vector3.one
-
     self.data=data
-
     self.smallRec=prefab.transform:Find("small")
     self.smallBgBtn=prefab.transform:Find("small/bgBtn"):GetComponent("Button")
     self.smallIma=prefab.transform:Find("small/bgBtn/Image"):GetComponent("Image")
@@ -69,6 +67,9 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     end
     self.m_anchoredPos =  self.rect.anchoredPosition
     self:ShowOrHideSelf(self:JudgeSelfIsShow())
+    if BuilldingBubbleInsManger.type == BuildingBubbleType.close then
+        self:CloesBubble()
+    end
 end
 
 
@@ -170,7 +171,7 @@ end
 
 --开始
 function UIBubbleBuildingSignItem:Start()
-    self.prefab.gameObject:SetActive(true)
+    self:ShowBubble()
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
@@ -214,7 +215,7 @@ function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
 end
 
 function UIBubbleBuildingSignItem:LateUpdate()
-    if self.prefab ~= nil then
+    if self.prefab ~= nil and BuilldingBubbleInsManger.type == BuildingBubbleType.show  then
         self.m_anchoredPos = ScreenPosTurnActualPos(mainCamera:WorldToScreenPoint( Vector3.New(self.data.x + self.x, self.y, self.data.y + self.z))) --Vector3.New(-0.1, 0, 2)))
         self:IsMove()
     end

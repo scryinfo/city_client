@@ -14,7 +14,8 @@ function VolumeModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --npc类型数量
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","ss.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
+    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNum","ss.GoodsNpcNum",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcNum","ss.NpcNums",self.n_OnGoodsNpcNum,self) --每种商品购买的npc数量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
 end
@@ -40,9 +41,10 @@ end
 
 --每种商品购买的npc数量
 function VolumeModel:m_GoodsNpcNum(time)
-    local msgId = pbl.enum("sscode.OpCode","queryGoodsNpcNum")
-    local lMsg = { time = time }
-    local pMsg = assert(pbl.encode("ss.GoodNpcNumInfo", lMsg))
+    local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
+    local lMsg = { time = time ,type = 2 }
+    local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
+    local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 

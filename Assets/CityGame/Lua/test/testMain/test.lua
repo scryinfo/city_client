@@ -799,12 +799,13 @@ UnitTest.Exec("abel_0521_scientificNotation2number", "abel_0521_scientificNotati
 end)
 
 UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  function ()
+    local msgId0 = pbl.enum("gscode.OpCode","login")
     local msgIdt = pbl.enum("gscode.OpCode","ct_createUser")
     local msgIdt1 = pbl.enum("gscode.OpCode","ct_rechargeRequest")
     local msgIdt2 = pbl.enum("gscode.OpCode","ct_disCharge")
 
     Event.AddListener("e_abel_0529_ddd_createUser", function (pid)
-        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cc_createUser","ccapi.CreateUserReq",function(msg)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",function(msg)
             local test = 100
         end)
         --发包测试ct_createUser

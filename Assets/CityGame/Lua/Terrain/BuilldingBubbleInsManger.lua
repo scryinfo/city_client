@@ -10,7 +10,7 @@ BuilldingBubbleInsManger={}
 function BuilldingBubbleInsManger.Init()
     if BuilldingBubbleInsManger.type == nil then
         --默认是开始的
-        if UnityEngine.PlayerPrefs.GetInt("BuildingBubble") == nil then
+        if UnityEngine.PlayerPrefs.GetInt("BuildingBubble") == 0 then
             UnityEngine.PlayerPrefs.SetInt("BuildingBubble",BuildingBubbleType.show)
         end
         BuilldingBubbleInsManger.type = UnityEngine.PlayerPrefs.GetInt("BuildingBubble")

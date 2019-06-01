@@ -11,12 +11,12 @@ PropertyTrueItem.static.PercentColor = "#10C4FE" -- 加成特殊颜色
 PropertyTrueItem.static.ExperienceColor = "#10C4FE" -- 经验特殊颜色
 PropertyTrueItem.static.BTypeIcon = -- b类型显示配置
 {
-    ["Quality"] = "Assets/CityGame/Resources/Atlas/Company/icon-quality-w.png",
-    ["ProduceSpeed"] = "Assets/CityGame/Resources/Atlas/Company/icon-produr-w.png",
-    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Company/icon-ad-w.png",
-    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-research-w.png",
-    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-eva-w-s.png",
-    ["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
+    ["Quality"] = "Assets/CityGame/Resources/Atlas/Eva/icon-quality.png",
+    ["ProduceSpeed"] = "Assets/CityGame/Resources/Atlas/Eva/icon-Productionspeed.png",
+    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-ad-w.png",
+    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-research.png",
+    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-eva-w-s.png",
+    --["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
 }
 
 -- 初始化
@@ -40,14 +40,17 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self:ShowData(self.data.lv, self.data.cexp)
     LoadSprite(PropertyTrueItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
+    self.addBtn.onClick:RemoveAllListeners()
     self.addBtn.onClick:AddListener(function ()
         self:_showBtnState(false)
     end)
 
+    self.subtractBtn.onClick:RemoveAllListeners()
     self.subtractBtn.onClick:AddListener(function ()
         self:_showBtnState(true)
     end)
 
+    self.addExNumInputField.onEndEdit:RemoveAllListeners()
     self.addExNumInputField.onEndEdit:AddListener(function (inputValue)
         self:_preAddPoint(inputValue)
     end)
@@ -55,36 +58,36 @@ end
 
 -- 显示真实数据（内有公式、要改）
 function PropertyTrueItem:ShowData(lv, cexp)
-    if lv >= 1 then
-        local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
-        if self.data.bt == "Quality" then
-            if self.data.at < 2100000 then -- 建筑品质加成
-                speed = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
-            else -- 商品品质值
-                speed = string.format( "%.2f",EvaUp[lv].add / 1000)
-            end
-        elseif self.data.bt == "ProduceSpeed" then
-            speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"
-        elseif self.data.bt == "PromotionAbility" then
-            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
-        elseif self.data.bt == "InventionUpgrade" then
-            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
-        elseif self.data.bt == "EvaUpgrade" then
-            speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
-        elseif self.data.bt == "WarehouseUpgrade" then
-            speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
-        end
+    --if lv >= 1 then
+        --local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
+        --if self.data.bt == "Quality" then
+        --    if self.data.at < 2100000 then -- 建筑品质加成
+        --        speed = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
+        --    else -- 商品品质值
+        --        speed = string.format( "%.2f",EvaUp[lv].add / 1000)
+        --    end
+        --elseif self.data.bt == "ProduceSpeed" then
+        --    speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"
+        --elseif self.data.bt == "PromotionAbility" then
+        --    speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
+        --elseif self.data.bt == "InventionUpgrade" then
+        --    speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+        --elseif self.data.bt == "EvaUpgrade" then
+        --    speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
+        --elseif self.data.bt == "WarehouseUpgrade" then
+        --    speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
+        --end
 
-        if lv == 1 then
-            self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
-        else
+        --if lv == 1 then
+        --    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
+        --else
             --self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, tostring(speed), PropertyTrueItem.static.PercentColor, tostring(EvaUp[lv].add / 1000))
-            self.nameNumberText.text = self.configData.name .. ":<color=" .. PropertyTrueItem.static.NumberColor .. "><b>" .. speed .. "</b></color>  <color=" .. PropertyTrueItem.static.PercentColor .. "><b>(+ " .. tostring(EvaUp[lv].add / 1000) .. "%)</b></color>"
+            --self.nameNumberText.text = self.configData.name .. ":<color=" .. PropertyTrueItem.static.NumberColor .. "><b>" .. speed .. "</b></color>  <color=" .. PropertyTrueItem.static.PercentColor .. "><b>(+ " .. tostring(EvaUp[lv].add / 1000) .. "%)</b></color>"
             --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
-        end
-    else
+    --    end
+    --else
         self.nameNumberText.text = self.configData.name
-    end
+    --end
     self.levelText.text = string.format("Lv%s", lv)
     --self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
     self.experienceText.text = tostring(cexp)
@@ -145,8 +148,15 @@ end
 
 -- 预看加点消息
 function PropertyTrueItem:_preAddPoint(inputValue)
-    if inputValue == nil or inputValue == "" or tonumber(inputValue) <= 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
+    if inputValue == nil or inputValue == "" then
         return
+    end
+    local addNumber = tonumber(inputValue)
+    if addNumber < 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
+        return
+    end
+    if addNumber == 0 then
+
     end
     --local myName = self.name
     local function AddPointCalculate(myLv, myCexp)
@@ -154,13 +164,116 @@ function PropertyTrueItem:_preAddPoint(inputValue)
             myLv = #EvaUp
             myCexp = EvaUp[#EvaUp].upexp
             self:ShowData(myLv, myCexp)
+            self:ShowResultData(myLv, addNumber)
             return
         end
         if myCexp >= EvaUp[myLv].upexp then
             AddPointCalculate(myLv + 1, myCexp - EvaUp[myLv].upexp)
         else
             self:ShowData(myLv, myCexp)
+            self:ShowResultData(myLv, addNumber)
         end
     end
-    AddPointCalculate(self.data.lv, self.data.cexp + tonumber(inputValue))
+    AddPointCalculate(self.data.lv, self.data.cexp + addNumber)
+end
+
+-- 显示结果数据数据
+function PropertyTrueItem:ShowResultData(myLv, addNumber)
+    -- 刷新界面
+    local strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
+    EvaPanel.ResultRootO:_showData(myLv)
+    EvaCtrl.static.evaCtrl.addEvaLvData[strId] = myLv
+
+    -- 获取到现在的层级
+    local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+    if #recordData == 1 then
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
+        end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
+        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(recordData[1], addNumber)
+    elseif #recordData == 2 then
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
+        end
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue= {}
+        end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] = addNumber
+        for _, k in ipairs(EvaCtrl.optionTwoScript) do
+            k:_setAddNumber(recordData[2], addNumber)
+        end
+        local totalNum = 0
+        for _, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
+            totalNum = totalNum + v
+        end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum
+        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(recordData[1], totalNum)
+    elseif #recordData == 3 then
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
+        end
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue= {}
+        end
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]]= {}
+        end
+        if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue= {}
+        end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]] = addNumber
+        for _, k in ipairs(EvaCtrl.optionThereScript) do
+            k:_setAddNumber(recordData[3], addNumber)
+        end
+        local totalNum1 = 0
+        for _, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue) do
+            totalNum1 = totalNum1 + v
+        end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = totalNum1
+        for _, j in ipairs(EvaCtrl.optionTwoScript) do
+            j:_setAddNumber(recordData[2], totalNum1)
+        end
+        local totalNum2 = 0
+        for _, y in ipairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
+            totalNum2 = totalNum2 + y.value
+        end
+        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(recordData[1], totalNum2)
+    end
+    --{
+    --    [1] = {value = 1, optionValue ={ } }, -- 原料厂
+    --    [2] = {value = 1, optionValue ={ { optionValue = {}} } -- 加工厂
+    --}
+    -- 保存界面数据，bing
+    --EvaCtrl.static.evaCtrl.addData[strId] = addNumber
+    --if EvaCtrl.static.evaCtrl.addData[strId] then
+    --
+    --end
+    --local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+
+    -- 保存需要发送的eva数据
+    local evaData = {}
+    evaData.id = self.data.id
+    evaData.at = self.data.at
+    evaData.b = self.data.b
+    evaData.cexp = self.data.cexp + addNumber
+    evaData.lv = self.data.lv
+    evaData.pid = self.data.pid
+    if self.data.bt == "Quality" then
+        evaData.bt = 1
+    elseif self.data.bt == "Brand" then
+        evaData.bt = 2
+    elseif self.data.bt == "ProduceSpeed" then
+        evaData.bt = 3
+    elseif self.data.bt == "PromotionAbility" then
+        evaData.bt = 4
+    elseif self.data.bt == "InventionUpgrade" then
+        evaData.bt = 5
+    elseif self.data.bt == "EvaUpgrade" then
+        evaData.bt = 6
+    elseif self.data.bt == "WarehouseUpgrade" then
+        evaData.bt = 7
+    end
+    evaData.decEva = addNumber
+    EvaCtrl.static.evaCtrl.addEvaData[strId] = evaData
 end

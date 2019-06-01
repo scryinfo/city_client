@@ -9,7 +9,7 @@ PropertyFalseItem = class("PropertyFalseItem")
 PropertyFalseItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
 PropertyFalseItem.static.BTypeIcon = -- b类型显示配置
 {
-    ["Brand"] = "Assets/CityGame/Resources/Atlas/Company/icon-popularity-w.png",
+    ["Brand"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularity.png",
 }
 
 -- 初始化
@@ -27,7 +27,7 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)
     --self.tipsImage.localScale = Vector3.zero
     --self.tipsText.transform.localScale = Vector3.zero
-    self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
+    self.tipsText:GetComponent("Text").text = "The popularity needs to be promoted through promotion company."
     LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
     -- 点击按钮显示提示

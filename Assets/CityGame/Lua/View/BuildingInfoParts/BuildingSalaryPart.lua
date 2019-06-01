@@ -40,6 +40,18 @@ end
 function BuildingSalaryPart:_initFunc()
     if self.m_data.info.salary ~= nil then
         self.salaryPercentText.text = self.m_data.info.salary.."%"
+
+        --local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+        --self.staffNumText.text = staffNum
+        --local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
+        --if standardWage == nil then
+        --    DataManager.m_ReqStandardWage(self.m_data.info.mId)
+        --else
+        --    self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
+        --    local value = self.m_data.info.salary * staffNum * standardWage / 100  --因为工资百分比是整数
+        --    self.totalText.text = "E"..GetClientPriceString(value)
+        --    self.standardWage = standardWage
+        --end
     end
 end
 --

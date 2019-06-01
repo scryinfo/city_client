@@ -126,11 +126,10 @@ function UIBubbleBuildingSignItem:updateData(data)
     if not data.bubble then
         self:CloesBubble()
     else
-        if BuilldingBubbleInsManger.type == 3 then
+        if BuilldingBubbleInsManger.type == BuildingBubbleType.close then
+            self:changeSmall()
             self:CloesBubble()
-        elseif BuilldingBubbleInsManger.type == 2 then
-            self:changeLarge()
-        else
+        elseif BuilldingBubbleInsManger.type == BuildingBubbleType.show then
             self:changeSmall()
         end
     end
@@ -151,9 +150,9 @@ function UIBubbleBuildingSignItem:c_OnClick_small()
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large()
-    if BuilldingBubbleInsManger.type == 2 then
-        return
-    end
+    --if BuilldingBubbleInsManger.type == bui then
+    --    return
+    --end
     --变小
     self:changeSmall()
 end

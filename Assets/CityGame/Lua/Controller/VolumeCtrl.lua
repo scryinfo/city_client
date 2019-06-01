@@ -213,6 +213,7 @@ end
 function VolumeCtrl:c_allbuyAmount(info)
     VolumePanel.TradingCount.text = "E"..getMoneyString(GetClientPriceString(info))
 end
+
 --玩家数量
 function VolumeCtrl:c_allPlayerAmount(info)
     VolumePanel.Tradingnum.text = info

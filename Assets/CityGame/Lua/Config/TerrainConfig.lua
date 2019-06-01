@@ -8,7 +8,7 @@ TerrainConfig = {
         ["CameraRootZMax"] = 101,              --相机位置Z轴的最大值
         ["CameraIntoDurationtime"] = 0.4,       --打开建筑时镜头拉近耗时
         ["CameraOutDurationtime"] = 0.6,        --打开建筑时镜头拉远耗时
-        ["CameraScaleValueMin"] = 5,            --相机缩放y轴高度最近距离
+        ["CameraScaleValueMin"] = 15,            --相机缩放y轴高度最近距离
         ["CameraScaleValueMax"] = 15,           --相机缩放y轴高度最远距离
     },
     ["CentralBuilding"] ={

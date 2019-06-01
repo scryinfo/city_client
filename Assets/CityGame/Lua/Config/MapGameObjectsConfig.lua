@@ -423,13 +423,13 @@ MapGameObjectsConfig = {
             ["PlayerBuildingBaseDataID"] = 2000502,
             ["InitCount"] = 0,
         },
-        {   --学校
-            ["Name"] = "University",
+        {   --天文台
+            ["Name"] = "Observatory",
             ["PlayerBuildingBaseDataID"] = 2000503,
             ["InitCount"] = 0,
         },
-        {   --钟楼
-            ["Name"] = "BellTower",
+        {   --体育场
+            ["Name"] = "Stadium",
             ["PlayerBuildingBaseDataID"] = 2000504,
             ["InitCount"] = 0,
         },

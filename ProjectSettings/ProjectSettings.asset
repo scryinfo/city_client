@@ -13,10 +13,10 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: com.scryinfo.citygame
   productName: citygame
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: 83340c036229c4b448a5172f7553a9b9, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
-  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -245,13 +245,13 @@ PlayerSettings:
   clonedFromGUID: 00000000000000000000000000000000
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
+  androidSplashScreen: {fileID: 2800000, guid: 8092815907b0ac149bbac483ec6ee73c, type: 3}
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
-  androidEnableBanner: 1
+  androidEnableBanner: 0
   androidUseLowAccuracyLocation: 0
   m_AndroidBanners:
   - width: 320
@@ -557,12 +557,12 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: HOTUP1;LUA_BUNDEL1;RES_BUNDEL1;PUB_BUILD1;LUA_LOG;ASYNC_MODE
-    7: HOTUP1;LUA_BUNDEL1;RES_BUNDEL1;PUB_BUILD1;LUA_LOG;ASYNC_MODE
+    7: HOTUP1;LUA_BUNDEL;RES_BUNDEL;PUB_BUILD1;LUA_LOG;ASYNC_MODE
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 0
+  scriptingRuntimeVersion: 1
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
@@ -640,7 +640,7 @@ PlayerSettings:
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled: {}
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 
   projectName: 
   organizationId: 

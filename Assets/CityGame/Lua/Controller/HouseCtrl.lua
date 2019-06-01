@@ -63,6 +63,8 @@ function HouseCtrl:_initData()
     end
 end
 
+--
+
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()
@@ -70,6 +72,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         end)
     end
     HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)  --初始化
+    houseDetailData.info.buildingType = BuildingType.House
 
     local insId = self.m_data.insId
     self.m_data = houseDetailData

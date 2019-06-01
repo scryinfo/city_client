@@ -295,8 +295,8 @@ function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
     local data = {}
     data.sellName = info[1].name
     data.sellFaceId = info[1].faceId
-    data.buyName = info[2].name
-    data.buyFaceId = info[2].faceId
+    --data.buyName = info[2].name
+    --data.buyFaceId = info[2].faceId
     data.cost = cost[indexs]
     data.ts = time[indexs]
     data.type = 1

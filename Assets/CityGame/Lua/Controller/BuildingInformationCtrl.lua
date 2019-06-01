@@ -13,6 +13,8 @@ local businessState = false
 BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
 BuildingInformationCtrl.RetailStoreItem_Path = "Assets/CityGame/Resources/View/NewItems/retailStoreItem.prefab"                 --零售店
+BuildingInformationCtrl.LaboratoryItem_Path = "Assets/CityGame/Resources/View/NewItems/laboratoryItem.prefab"                 --零售店
+BuildingInformationCtrl.HouseItem_Path = "Assets/CityGame/Resources/View/NewItems/houseBuildingInfoItem.prefab"                 --住宅
 function BuildingInformationCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -183,6 +185,12 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.Laboratory then
+            --研究所
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailLaboratoryInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.House then
+            --住宅
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseInfo',self.m_data.id,self.m_data.ownerId)
         end
     end
 end
@@ -239,10 +247,29 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.House then
         --住宅
+        local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
+        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        local function callback(obj)
+            self.buildingInfoItem = houseBuildingInfoItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
+        end
+        createPrefab(BuildingInformationCtrl.HouseItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
     elseif self.m_data.buildingType == BuildingType.Laboratory then
         --研究所
+        if self.m_data.mId == 1500001 then
+            self.buildingTypeText.text = "小型研究所"
+        elseif self.m_data.mId == 1500002 then
+            self.buildingTypeText.text = "中型研究所"
+        elseif self.m_data.mId == 1500003 then
+            self.buildingTypeText.text = "大型研究所"
+        end
+        self.tipText.text = "研究所为Eva提供研究点数以及发明新商品。"
+        local function callback(obj)
+            self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
+        end
+        createPrefab(BuildingInformationCtrl.LaboratoryItem_Path,self.buildingTypeContent,callback)
     end
     self:defaultBuildingInfoTrue()
 end

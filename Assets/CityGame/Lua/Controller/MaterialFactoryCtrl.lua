@@ -51,7 +51,8 @@ end
 --刷新原料厂信息
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     --初始化
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+    --MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)  --初始化
     local insId = self.m_data.insId
     self.m_data = materialDataInfo
     self.m_data.insId = insId
@@ -82,6 +83,7 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
                 MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
+
                 self.groupMgr:AddParts(BuildingShelfPart,0.2)
                 self.groupMgr:AddParts(TurnoverPart,0.2)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.2)

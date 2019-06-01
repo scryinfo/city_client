@@ -27,6 +27,7 @@ function EvaTitleItemOne:_showContent()
     self.IconImage = self.transform:Find("IconImage"):GetComponent("Image")
 
     LoadSprite(EvaTitleItemOne.static.ImagePath[self.index], self.IconImage, true)
+    self:_setAddNumber()
 end
 
 -- 按钮点击事件、子类继承实现自己的方法

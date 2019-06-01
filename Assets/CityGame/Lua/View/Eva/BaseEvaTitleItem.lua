@@ -19,7 +19,6 @@ function BaseEvaTitleItem:initialize(prefab, optionIndex, index)
     self.iconAddTextTF = self.transform:Find("IconAddText")
     self.iconAddText = self.transform:Find("IconAddText"):GetComponent("Text")
     self:_showContent()
-    self:_setAddNumber(index)
 
     local nowOptionIndex = EvaCtrl.static.evaCtrl:GetEvaRecordData()[self.optionIndex]
     if nowOptionIndex and nowOptionIndex == index then
@@ -41,8 +40,8 @@ function BaseEvaTitleItem:SetSelect(isSelect)
 end
 
 -- 设置已加点的数量
-function BaseEvaTitleItem:_setAddNumber(index, number)
-    if index and index == self.index and number and number > 0 then
+function BaseEvaTitleItem:_setAddNumber(number)
+    if number and number > 0 then
         self.iconAddImage.localScale = Vector3.one
         self.iconAddTextTF.localScale = Vector3.one
         self.iconAddText.text = string.format("E%s", number)

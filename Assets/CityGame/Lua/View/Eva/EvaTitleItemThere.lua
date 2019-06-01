@@ -16,6 +16,11 @@ function EvaTitleItemThere:_showContent()
         EvaCtrl.static.evaCtrl.isClickEvaT = false
         self:_onClickBtn()
     end
+    if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[self.index] then
+        self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[self.index].value )
+    else
+        self:_setAddNumber()
+    end
 end
 
 -- 按钮点击事件、子类继承实现自己的方法

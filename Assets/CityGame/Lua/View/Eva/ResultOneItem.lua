@@ -34,53 +34,20 @@ function ResultOneItem:_initData(data, configData)
     elseif configData.Btype == "EvaUpgrade" then
         self.addText.text = "Upgrade bonus"
     end
-    self:_showData(data.lv)
 end
 
 -- 显示数据
 function ResultOneItem:_showData(lv)
     for i = 1, 3 do
-        local brandSizeNum,tempText
         if i == 1 then
-            brandSizeNum = 900
-            tempText = self.largeText
+            self.largeText.text = GetEvaData(4 - i, self.configData, lv)
         elseif i == 2 then
-            brandSizeNum = 400
-            tempText = self.mediumText
+            self.mediumText.text = GetEvaData(4 - i, self.configData, lv)
         elseif i == 3 then
-            brandSizeNum = 100
-            tempText = self.smallText
-        end
-        if self.data.bt == "Quality" then
-            if self.data.at < 2100000 then -- 建筑品质加成
-                tempText.text = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue * brandSizeNum)
-            else -- 商品品质值
-                tempText.text = string.format( "%.2f",EvaUp[lv].add / 1000 * self.configData.basevalue)
-            end
-            --elseif data.bt == "Brand" then
-            --    self.reputationText.text = tostring(data.b)
-        elseif self.data.bt == "ProduceSpeed" then
-            --self.titleText.text = "ProduceSpeed"
-            tempText.text = math.floor((1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) / brandSizeNum) .. "s/个"
-        elseif self.data.bt == "PromotionAbility" then
-            --self.titleText.text = "PromotionAbility"
-            tempText.text = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue * brandSizeNum) .. "s/个"
-        elseif self.data.bt == "InventionUpgrade" then
-            --self.titleText.text = "InventionUpgrade"
-            tempText.text = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
-        elseif self.data.bt == "EvaUpgrade" then
-            --self.titleText.text = "EvaUpgrade"
-            tempText.text = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
-            --elseif data.bt == "WarehouseUpgrade" then
-            --    self.titleText.text = "WarehouseUpgrade"
-            --    self.contentText.text = math.floor((1 + EvaUp[data.lv].add / 100000) * self.evaBaseValueData[data.bt] * brandSizeNum)
+            self.smallText.text = GetEvaData(4 - i, self.configData, lv)
         end
     end
-    if lv == 1 then
-        self.addContentText.text = "0"
-    else
-        self.addContentText.text = tostring(EvaUp[lv].add / 1000) .. "%"
-    end
+    self.addContentText.text = GetEvaPercent(lv)
 end
 
 -- 设置是否显示

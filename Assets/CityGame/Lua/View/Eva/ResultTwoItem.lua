@@ -20,6 +20,7 @@ end
 -- 初始化数据
 function ResultTwoItem:_initData(data, configData)
     self.configData = configData
+    self.data = data
     self.titleText.text = configData.name
     self.contentTitleText.text = configData.name
     if configData.Btype == "Quality" then
@@ -28,24 +29,16 @@ function ResultTwoItem:_initData(data, configData)
     else
         self.addTextTF.localScale = Vector3.zero
     end
-    self:_showData(data)
+    --self:_showData(data.lv)
 end
 
 -- 显示数据
-function ResultTwoItem:_showData(data)
+function ResultTwoItem:_showData(lv)
     if self.configData.Btype == "Quality" then
-        if data.at < 2100000 then -- 建筑品质加成
-            self.contentText.text = string.format( "%.2f", (1 + EvaUp[data.lv].add / 100000) * self.configData.basevalue)
-        else -- 商品品质值
-            self.contentText.text = string.format( "%.2f",EvaUp[data.lv].add / 1000)
-        end
-        if data.lv == 1 then
-            self.addContentText.text = "0"
-        else
-            self.addContentText.text = tostring(EvaUp[data.lv].add / 1000) .. "%"
-        end
+        self.contentText.text = GetEvaData(1, self.configData, lv)
+        self.addContentText.text = GetEvaPercent(lv)
     elseif self.configData.Btype == "Brand" then
-        self.contentText.text = data.b
+        self.contentText.text = self.data.b
     end
 end
 

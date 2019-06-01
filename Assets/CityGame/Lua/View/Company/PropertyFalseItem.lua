@@ -24,7 +24,8 @@ function PropertyFalseItem:initialize(prefab, data, name)
     --self.tipsImage = transform:Find("TipsImage")
     self.tipsText = transform:Find("TipsText")
 
-    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)
+--[[    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)]]
+    self.nameNumberText.text = name
     --self.tipsImage.localScale = Vector3.zero
     --self.tipsText.transform.localScale = Vector3.zero
     self.tipsText:GetComponent("Text").text = "The popularity needs to be promoted through promotion company."

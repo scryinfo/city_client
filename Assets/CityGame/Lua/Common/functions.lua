@@ -702,3 +702,47 @@ function ct.instance_rpc(ins, modelMethord, ...)
 	local arg = {...}
 	arg[#arg](ins[modelMethord](ins,...))
 end
+
+-- 得到eva显示数据
+-- index 小中大型
+function GetEvaData(index, configData, lv)
+	if not index or not configData or not lv then
+		return
+	end
+	local brandSizeNum
+	if index == 1 then -- 小
+		brandSizeNum = 100
+	elseif index == 2 then -- 中
+		brandSizeNum = 400
+	elseif index == 3 then -- 大
+		brandSizeNum = 900
+	end
+	if configData.Btype == "Quality" then
+		if configData.Atype < 2100000 then -- 建筑品质加成
+			return string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
+		else -- 商品品质值
+			return string.format( "%.2f",EvaUp[lv].add / 1000 * configData.basevalue)
+		end
+	elseif configData.Btype == "ProduceSpeed" then
+		return math.floor((1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue)) / brandSizeNum) .. "s/个"
+	elseif configData.Btype == "PromotionAbility" then
+		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "s/个"
+	elseif configData.Btype == "InventionUpgrade" then
+		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+	elseif configData.Btype == "EvaUpgrade" then
+		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+	end
+end
+
+-- 得到eva百分比加成
+function GetEvaPercent(lv)
+	if not lv or lv <= 0 then
+		return ""
+	end
+
+	if lv == 1 then
+		return "0"
+	else
+		return tostring(EvaUp[lv].add / 1000) .. "%"
+	end
+end

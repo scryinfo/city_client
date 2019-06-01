@@ -11,11 +11,16 @@ EvaTitleItemTwo.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中
 
 -- 子类继承实现自己的方法用以显示具体的内容
 function EvaTitleItemTwo:_showContent()
-    local optionOne = EvaCtrl.static.evaCtrl:GetEvaRecordData()[1]
-    self.nameText.text = EvaConfig[optionOne].option[self.index].name
+    local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+    self.nameText.text = EvaConfig[recordData[1]].option[self.index].name
     if EvaCtrl.static.evaCtrl.isClickEva then
         EvaCtrl.static.evaCtrl.isClickEva = false
         self:_onClickBtn()
+    end
+    if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
+        self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+    else
+        self:_setAddNumber()
     end
 end
 

@@ -111,6 +111,7 @@ end)
 UnitTest.Exec("abel_w3", "test_pb",  function ()
     ----1、 获取协议id
     local msgId = pbl.enum("ascode.OpCode","login")
+    local msgId1 = pbl.enum("gscode.OpCode","cc_createUser")
     ----2、 填充 protobuf 内部协议数据
     local lMsg = { account = "11"}
     ----3、 序列化成二进制数据
@@ -770,6 +771,70 @@ UnitTest.Exec("abel_0512_materialConsumedInform", "e_materialConsumedInform",  f
             local test = 100
             DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","queryMyBrands",ct.cb)
         end)
+    end)
+end)
+
+UnitTest.Exec("abel_0521_scientificNotation2number", "abel_0521_scientificNotation2number",  function ()
+    --local myString =  [[ 1.000000000000000E+00,2.000000000000000E+02,  -1.000000000000000E+05 ]]
+    --local myString = [[ 2.000000000000000E-02 ]]
+    --local myString = [[2.000000000000000E-02]]
+    local str = "2.000000000000000E-04"
+    --local str = "2.085000000000000E-04"
+    local nb1 = tonumber(str)
+
+    ct.log("abel_0512_materialConsumedInform","start")
+    local myString = "1.000000000000000E+00, 2.000000000000000E-02,  -1.000000000000000E+05 "
+    local function convert(csv)
+        local list = {}
+        local listtemp = (csv .. ","):gmatch("(%S+)%W*,")
+        for value in listtemp do
+            table.insert(list,tonumber(value))
+        end
+        return unpack(list)
+    end
+    local function convert_inner(csv)
+        local numb = tonumber(csv:gmatch("(%S+)%W*,"))
+    end
+    ct.log("abel_0521_scientificNotation2number","convert resault = ",convert(myString))
+end)
+
+UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  function ()
+    local msgId0 = pbl.enum("gscode.OpCode","login")
+    local msgIdt = pbl.enum("gscode.OpCode","ct_createUser")
+    local msgIdt1 = pbl.enum("gscode.OpCode","ct_rechargeRequest")
+    local msgIdt2 = pbl.enum("gscode.OpCode","ct_disCharge")
+
+    Event.AddListener("e_abel_0529_ddd_createUser", function (pid)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",function(msg)
+            local test = 100
+        end)
+        --发包测试ct_createUser
+        ----2、 填充 protobuf 内部协议数据
+        local msgId = pbl.enum("gscode.OpCode","ct_createUser")
+        local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+        --local ts = getFormatUnixTime(currentTime)
+        --local tsHour = math.floor(currentTime/3600000)
+        local tsHour = currentTime
+        --local lMsg = { sellerBuildingId = bid, startTs = tsHour, typeIds={0,1613,1614,1652,1653,}}
+
+        local lMsg ={
+            PlayerId = pid,
+            CreateUserReq={
+                ReqHeader={
+                    Version = 1,
+                    ReqId = tostring(msgId),
+                },
+                CityUserId = pid,
+                CityUserName = 'haha',
+                PubKey='',
+                PayPassword=''
+            }
+        }
+
+        ----3、 序列化成二进制数据
+        local  pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
+        local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
+        CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
     end)
 end)
 

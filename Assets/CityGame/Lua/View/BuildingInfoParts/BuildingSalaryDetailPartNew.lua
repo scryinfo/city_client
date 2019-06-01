@@ -82,7 +82,7 @@ function BuildingSalaryDetailPartNew:_initFunc()
         self.standardWage = standardWage
     end
 
-    self.effectTime = self.m_data.info.setSalaryTs
+    self.effectTime = self.m_data.info.setSalaryTs / 1000
     if self.effectTime ~= nil then
         self.timeText.text = os.date("%H:%M", self.effectTime)
     end

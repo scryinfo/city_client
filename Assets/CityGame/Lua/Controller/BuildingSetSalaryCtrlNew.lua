@@ -75,7 +75,8 @@ function BuildingSetSalaryCtrlNew:_initData()
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s", GetClientPriceString(standardWage))
-        local value = self.m_data.info.salary * staffNum * standardWage / 100
+        --local value = self.m_data.info.salary * staffNum * standardWage / 100
+        local value = staffNum * standardWage / 100  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
     end
 end
@@ -84,7 +85,8 @@ function BuildingSetSalaryCtrlNew:_getStandardWage(data)
     if data.industryWages ~= nil then
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
         self.standardWageText.text = string.format("E%s", GetClientPriceString(data.industryWages))
-        local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
+        --local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
+        local value = self.staffNum * data.industryWages / 100  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
     end
 end

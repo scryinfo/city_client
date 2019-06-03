@@ -120,7 +120,7 @@ EvaConfig = {
                                 Atype = 2251101,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -146,7 +146,7 @@ EvaConfig = {
                                 Atype = 2251102,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -172,7 +172,7 @@ EvaConfig = {
                                 Atype = 2251103,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -198,7 +198,7 @@ EvaConfig = {
                                 Atype = 2251201,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -224,7 +224,7 @@ EvaConfig = {
                                 Atype = 2251202,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -250,7 +250,7 @@ EvaConfig = {
                                 Atype = 2251203,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -282,7 +282,7 @@ EvaConfig = {
                                 Atype = 2252101,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -308,7 +308,7 @@ EvaConfig = {
                                 Atype = 2252102,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -334,7 +334,7 @@ EvaConfig = {
                                 Atype = 2252103,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -360,7 +360,7 @@ EvaConfig = {
                                 Atype = 2252201,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -386,7 +386,7 @@ EvaConfig = {
                                 Atype = 2252202,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",
@@ -412,7 +412,7 @@ EvaConfig = {
                                 Atype = 2252203,
                                 Btype = "Quality",
                                 b = 0,
-                                basevalue = 1,
+                                basevalue = 100,
                             },
                             [2] = {
                                 name = "品牌",

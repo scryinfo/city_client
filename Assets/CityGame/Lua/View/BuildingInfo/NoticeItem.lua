@@ -103,7 +103,8 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 5 then
         money = GetClientPriceString(go.goodsDataInfo.tparas[1])
         time =go.goodsDataInfo.tparas[2]/3600000 .. "h"
-        local ts = getFormatUnixTime(go.goodsDataInfo.tparas[2]/1000)
+        local timmer = tonumber(go.goodsDataInfo.tparas[3])
+        local ts = getFormatUnixTime(timmer/1000)
         startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
         go:GetPromote(go.uuidParas[1])
     elseif go.typeId == 6 then

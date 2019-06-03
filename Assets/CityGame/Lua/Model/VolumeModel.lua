@@ -48,7 +48,7 @@ end
 --每种商品购买的npc数量
 function VolumeModel:m_GoodsNpcNum(time)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
-    local lMsg = { time = time ,type = 2 }
+    local lMsg = { time = time ,type = 1 }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
     local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)

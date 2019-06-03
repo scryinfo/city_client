@@ -23,12 +23,13 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnAllExchangeAmount,self) --所有交易量
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
+    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --npc类型数量
     --
-    DataManager.ModelRegisterNetMsg( nil ,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayExchangeAmount,self) --所有交易量
-    DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self) --查询城市广播
+    DataManager.ModelRegisterNetMsg( nil ,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayExchangeAmount,self)
+    DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self)
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
     UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())
@@ -43,6 +44,20 @@ function GameMainInterfaceModel:Close()
     incomeNotify = {}
 end
 --客户端请求--
+
+--获取每种类型npc数量
+function GameMainInterfaceModel:m_GetNpcNum()
+    local msgId = pbl.enum("gscode.OpCode","eachTypeNpcNum")
+    ----2、 填充 protobuf 内部协议数据
+    --local msglogion = pb.as.Login()
+    --msglogion.account = this.username
+    --local pb_login = msglogion:SerializeToString()  -- Parse Example
+    ----3、 获取 protobuf 数据大小
+    --local pb_size = #pb_login
+    ----4、 创建包，填入数据并发包
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
 --获取所有邮件
 function GameMainInterfaceModel:m_GetAllMails()
     --DataManager.ModelSendNetMes("gscode.OpCode", "getAllMails")
@@ -122,13 +137,13 @@ function GameMainInterfaceModel:n_GsIncomeNotify(lMsg)
 end
 
 --城市广播回调
-function GameMainInterfaceModel:n_GsCityBroadcast(lMsg)
-    if lMsg.type == 1 then
-        Event.Brocast("c_MajorTransaction",lMsg) --重大交易
-    else
-        Event.Brocast("c_RadioInfo",lMsg)
-    end
-end
+--function GameMainInterfaceModel:n_GsCityBroadcast(lMsg)
+--    if lMsg.type == 1 then
+--        Event.Brocast("c_MajorTransaction",lMsg) --重大交易
+--    else
+--        Event.Brocast("c_RadioInfo",lMsg)
+--    end
+--end
 
 --所有交易量回调
 function GameMainInterfaceModel:n_OnAllExchangeAmount(lMsg)
@@ -137,7 +152,7 @@ end
 
 --查询城市广播
 function GameMainInterfaceModel:n_OnCityBroadcasts(lMsg)
-   Event.Brocast("c_CityBroadcasts",lMsg.cityBroadcast)
+   --Event.Brocast("c_CityBroadcasts",lMsg.cityBroadcast)
 end
 ---全城玩家交易量
 function GameMainInterfaceModel:n_OnPlayExchangeAmount(lMsg)
@@ -147,4 +162,9 @@ end
 ---全城玩家曲线图
 function GameMainInterfaceModel:n_OnCityPlayerGoodsCurve(lMsg)
     prints("全城玩家曲线图")
+end
+
+--全城npc数量
+function GameMainInterfaceModel:n_OnGetNpcNum(info)
+    Event.Brocast("c_AllNpcNum",info.countNpcMap)
 end

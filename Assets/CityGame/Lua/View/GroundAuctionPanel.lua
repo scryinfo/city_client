@@ -18,47 +18,37 @@ end
 
 --初始化面板--
 function GroundAuctionPanel.InitPanel()
-    this.backBtn = transform:Find("bgBtn").gameObject
+    this.backBtn = transform:Find("bgBtn")
+    this.titleText = transform:Find("root/titleText"):GetComponent("Text")
+    this.timeDownText = transform:Find("root/timeDownRoot/timeDownText"):GetComponent("Text")  --倒计时
+    this.soonRoot = transform:Find("root/soon")
+    this.soonStartTime = transform:Find("root/soon/startTime")
+    this.soonPrice = transform:Find("root/soon/price")
 
-    this.soonRoot = transform:Find("root/soonRoot")
-    this.soonTimeDownText = transform:Find("root/soonRoot/soonTimeDownText"):GetComponent("Text")
-    this.startTimeText = transform:Find("root/soonRoot/startTimeText"):GetComponent("Text")
-    this.floorPriceText = transform:Find("root/soonRoot/floorRoot/floorPriceText"):GetComponent("Text")
+    this.nowRoot = transform:Find("root/now")
+    this.nowPrice = transform:Find("root/now/price")
+    this.noneHistoryRoot = transform:Find("root/now/noneBid")
+    this.bidInput = transform:Find("root/now/input"):GetComponent("InputField")
+    this.bidBtn = transform:Find("root/now/bidBtn")
 
-    this.nowRoot = transform:Find("root/nowRoot")
-    this.nowTimeDownText = transform:Find("root/nowRoot/nowTimeDownText"):GetComponent("Text")
-    this.nowTimeDownImage = transform:Find("root/nowRoot/Image")
-    this.bidInput = transform:Find("root/nowRoot/input"):GetComponent("InputField")
-    this.bidBtn = transform:Find("root/nowRoot/bidBtn")
-    --历史记录
-    --this.historyScroll = transform:Find("root/nowRoot/historyRoot/scrollRect"):GetComponent("ActiveLoopScrollRect")
-    this.historyContent = transform:Find("root/nowRoot/historyRoot/scrollRect/content")
-    this.historyItemPrefab = transform:Find("root/nowRoot/historyRoot/GAucHistoryItem")
+    this.historyRoot = transform:Find("root/now/historyRoot")
+    this.historyContent = transform:Find("root/now/historyRoot/scrollRect/content")
+    this.historyItemPrefab = transform:Find("root/now/historyRoot/GAucHistoryItem")
 
-    this.historyRoot = transform:Find("root/nowRoot/historyRoot")
-    this.noneHistoryRoot = transform:Find("root/nowRoot/noneHistoryRoot")
-    this.nowFloorPriceText = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/floorPriceText"):GetComponent("Text")
-
-    this.averageRangeText = transform:Find("root/rangeNpcRoot/averageRangeText"):GetComponent("Text")
-    --
-    this.personFlowText01 = transform:Find("root/rangeNpcRoot/Text"):GetComponent("Text")
-    this.soonFloorText02 = transform:Find("root/soonRoot/floorRoot/Text01"):GetComponent("Text")
-    this.nowBidText03 = transform:Find("root/nowRoot/Text01"):GetComponent("Text")
-    this.tipText04 = transform:Find("root/nowRoot/tipText02"):GetComponent("Text")
-    this.nowFloorPriceText05 = transform:Find("root/nowRoot/noneHistoryRoot/floorRoot/Text"):GetComponent("Text")
+    this.hourText01 = transform:Find("root/timeDownRoot/Text01"):GetComponent("Text")
+    this.minuteText02 = transform:Find("root/timeDownRoot/Text02"):GetComponent("Text")
+    this.secondText03 = transform:Find("root/timeDownRoot/Text03"):GetComponent("Text")
+    this.noneHistoryText04 = transform:Find("root/now/noneBid/noneBidText"):GetComponent("Text")
+    this.tipText05 = transform:Find("root/now/tipText"):GetComponent("Text")
 end
 --拍卖中有没有人出价
 function GroundAuctionPanel.setBidState(hasBid)
     if hasBid == true then
         this.historyRoot.localScale = Vector3.one
         this.noneHistoryRoot.localScale = Vector3.zero
-        this.nowTimeDownText.transform.localScale = Vector3.one
-        this.nowTimeDownImage.transform.localScale = Vector3.one
     else
         this.historyRoot.localScale = Vector3.zero
         this.noneHistoryRoot.localScale = Vector3.one
-        this.nowTimeDownText.transform.localScale = Vector3.zero
-        this.nowTimeDownImage.transform.localScale = Vector3.zero
     end
 end
 --拍卖中或者即将拍卖

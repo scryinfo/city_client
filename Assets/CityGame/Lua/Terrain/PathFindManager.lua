@@ -15,6 +15,10 @@ end
 
 --创建角色
 local function CreateRangePalyer(tempCollectionID,PlayerCount)
+    --Date 19_05_31 屏蔽角色
+    if true then
+        return
+    end
     if tempCollectionID == nil or PlayerCount == nil or  PlayerCount <= 0  then
         return
     end

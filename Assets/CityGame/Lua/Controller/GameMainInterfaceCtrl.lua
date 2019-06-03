@@ -43,11 +43,12 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllMails",self.c_AllMails,self)
     Event.AddListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)   --获取拍卖状态
     Event.AddListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
+    Event.AddListener("c_AllNpcNum",self.c_AllNpcNum,self)   --全城Npc数量
     --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
-    Event.AddListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
-    Event.AddListener("c_MajorTransaction", self.c_OnMajorTransaction, self) --重大交易
+    --Event.AddListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
+    --Event.AddListener("c_MajorTransaction", self.c_OnMajorTransaction, self) --重大交易
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
-    Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
+    --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
 
     GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
 end
@@ -59,11 +60,12 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("c_AllMails",self.c_AllMails,self)
     Event.RemoveListener("m_MainCtrlShowGroundAuc",self.m_MainCtrlShowGroundAuc,self)  --获取拍卖状态
     Event.RemoveListener("c_RefreshMails",self.c_RefreshMails,self)   --跟新邮件
+    Event.RemoveListener("c_AllNpcNum",self.c_AllNpcNum,self)   --全城Npc数量
     --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
-    Event.RemoveListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
-    Event.RemoveListener("c_majorTransaction", self.c_OnMajorTransaction, self) --重大交易
+    --Event.RemoveListener("c_RadioInfo", self.c_OnRadioInfo, self) --城市广播
+    --Event.RemoveListener("c_majorTransaction", self.c_OnMajorTransaction, self) --重大交易
     Event.RemoveListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
-    Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
+    --Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
     GameMainInterfaceCtrl:OnClick_EarningBtn(false)
     self:RemoveUpdata()
 end
@@ -85,6 +87,17 @@ function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData[1])
     end
+end
+
+--全城Npc数量
+function GameMainInterfaceCtrl:c_AllNpcNum(info)
+    local num = 0
+    if info then
+        for i, v in pairs(info) do
+            num = num + v.value
+        end
+    end
+    GameMainInterfacePanel.allNpcNum.text = getMoneyString(num)
 end
 
 --todo 收益详情
@@ -125,6 +138,20 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
         elseif dataInfo.type == "INSHELF" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
+        elseif dataInfo.type == "PROMO" then
+            if dataInfo.itemId == 1300 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
+            elseif dataInfo.itemId == 1400 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
+            else
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+            end
+            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
+        elseif dataInfo.type == "LAB" then
+            --if dataInfo.itemId then
+            --    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+            --end
+            --GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         end
         elseif dataInfo.buyer == "NPC" then
         if dataInfo.type == "RENT_ROOM" then
@@ -218,121 +245,121 @@ function GameMainInterfaceCtrl:c_GetBuildingInfo(buildingInfo)
 end
 
 --todo 城市广播
-function GameMainInterfaceCtrl:c_OnRadioInfo(info)
-    local index
-    if radio == nil then
-        radio = {}
-        radio[1] = info
-    else
-        if info.type ~= 1 then 
-            for i, v in pairs(radio) do
-                if info.type == v.type then
-                   index = i
-                end
-            end
-            if index ~= nil then
-                table.remove(radio,index)
-            end
-        end
-        table.insert(radio,info)
-    end
-    if #radio >1 then
-        if radio[#radio].ts - radio[#radio-1].ts < 10 then
-            if newRadio == nil then
-                newRadio = {}
-                newRadio[1] = info
-            else
-                table.insert(newRadio,info)
-            end
-        else
-            GameMainInterfaceCtrl:BroadcastRadio(radio,#radio)
-            radioTime = 10
-            radioIndex = 1
-        end
-    end
-
-end
+--function GameMainInterfaceCtrl:c_OnRadioInfo(info)
+--    local index
+--    if radio == nil then
+--        radio = {}
+--        radio[1] = info
+--    else
+--        if info.type ~= 1 then
+--            for i, v in pairs(radio) do
+--                if info.type == v.type then
+--                   index = i
+--                end
+--            end
+--            if index ~= nil then
+--                table.remove(radio,index)
+--            end
+--        end
+--        table.insert(radio,info)
+--    end
+--    if #radio >1 then
+--        if radio[#radio].ts - radio[#radio-1].ts < 10 then
+--            if newRadio == nil then
+--                newRadio = {}
+--                newRadio[1] = info
+--            else
+--                table.insert(newRadio,info)
+--            end
+--        else
+--            GameMainInterfaceCtrl:BroadcastRadio(radio,#radio)
+--            radioTime = 10
+--            radioIndex = 1
+--        end
+--    end
+--
+--end
 
 --todo 重大交易
-function GameMainInterfaceCtrl:c_OnMajorTransaction(info)
-    cost = nil
-    time = nil
-    cost = info.cost
-    time = info.ts
-    local idTemp = {}
-    table.insert(idTemp,info.sellerId)
-    table.insert(idTemp,info.buyerId)
-
-    PlayerInfoManger.GetInfos(idTemp, self.c_OnMajorTransactionInfo, self)
-end
-
-function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
-    index = index +1
-    cost[index] = info.cost
-    time[index] = info.ts
-    local idTemp = {}
-    table.insert(idTemp,info.sellerId)
-    table.insert(idTemp,info.buyerId)
-
-    PlayerInfoManger.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
-end
-
---重大交易人物信息
-function GameMainInterfaceCtrl:c_OnMajorTransactionInfo(info)
-    local data = {}
-    data.sellName = info[1].name
-    data.sellFaceId = info[1].faceId
-    data.buyName = info[2].name
-    data.buyFaceId = info[2].faceId
-    data.cost = cost
-    data.ts = time
-    data.type = 1
-    GameMainInterfaceCtrl:c_OnRadioInfo(data)
-end
-
-function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
-    indexs = indexs + 1
-    local data = {}
-    data.sellName = info[1].name
-    data.sellFaceId = info[1].faceId
-    --data.buyName = info[2].name
-    --data.buyFaceId = info[2].faceId
-    data.cost = cost[indexs]
-    data.ts = time[indexs]
-    data.type = 1
-    if radio == nil then
-        radio = {}
-        table.insert(radio,data)
-    else
-        table.insert(radio,data)
-    end
-    table.sort(radio, function (m, n) return m.ts < n.ts end)
-end
+--function GameMainInterfaceCtrl:c_OnMajorTransaction(info)
+--    cost = nil
+--    time = nil
+--    cost = info.cost
+--    time = info.ts
+--    local idTemp = {}
+--    table.insert(idTemp,info.sellerId)
+--    table.insert(idTemp,info.buyerId)
+--
+--    PlayerInfoManger.GetInfos(idTemp, self.c_OnMajorTransactionInfo, self)
+--end
+--
+--function GameMainInterfaceCtrl:c_OnOldMajorTransaction(info)
+--    index = index +1
+--    cost[index] = info.cost
+--    time[index] = info.ts
+--    local idTemp = {}
+--    table.insert(idTemp,info.sellerId)
+--    table.insert(idTemp,info.buyerId)
+--
+--    PlayerInfoManger.GetInfos(idTemp, self.c_OnOldMajorTransactionInfo, self)
+--end
+--
+----重大交易人物信息
+--function GameMainInterfaceCtrl:c_OnMajorTransactionInfo(info)
+--    local data = {}
+--    data.sellName = info[1].name
+--    data.sellFaceId = info[1].faceId
+--    data.buyName = info[2].name
+--    data.buyFaceId = info[2].faceId
+--    data.cost = cost
+--    data.ts = time
+--    data.type = 1
+--    GameMainInterfaceCtrl:c_OnRadioInfo(data)
+--end
+--
+--function GameMainInterfaceCtrl:c_OnOldMajorTransactionInfo(info)
+--    indexs = indexs + 1
+--    local data = {}
+--    data.sellName = info[1].name
+--    data.sellFaceId = info[1].faceId
+--    --data.buyName = info[2].name
+--    --data.buyFaceId = info[2].faceId
+--    data.cost = cost[indexs]
+--    data.ts = time[indexs]
+--    data.type = 1
+--    if radio == nil then
+--        radio = {}
+--        table.insert(radio,data)
+--    else
+--        table.insert(radio,data)
+--    end
+--    table.sort(radio, function (m, n) return m.ts < n.ts end)
+--end
 
 --所有交易量
 function GameMainInterfaceCtrl:c_AllExchangeAmount(info)
     GameMainInterfacePanel.volumeText.text ="E"..getMoneyString(GetClientPriceString(info))
 end
 
---获取所有城市广播
-function GameMainInterfaceCtrl:c_CityBroadcasts(info)
-
-    if info == nil then
-        return
-    end
-
-        for i, v in ipairs(info) do
-            if v.type == 1 then
-                GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
-            else
-                if radio == nil then
-                    radio = {}
-                    table.insert(radio,v)
-                end
-            end
-        end
-
-end
+----获取所有城市广播
+--function GameMainInterfaceCtrl:c_CityBroadcasts(info)
+--
+--    if info == nil then
+--        return
+--    end
+--
+--        for i, v in ipairs(info) do
+--            if v.type == 1 then
+--                GameMainInterfaceCtrl:c_OnOldMajorTransaction(v)
+--            else
+--                if radio == nil then
+--                    radio = {}
+--                    table.insert(radio,v)
+--                end
+--            end
+--        end
+--
+--end
 
 
 function GameMainInterfaceCtrl:Awake()
@@ -344,18 +371,17 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.head.gameObject,self.OnHead,self); --点击头像
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.companyBtn,self.OnCompanyBtn,self); --点击公司名
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.addGold,self.OnAddGold,self); --充值
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.friendsButton.gameObject, self.OnFriends, self)
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.setButton.gameObject,self.Onset,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.buildButton.gameObject,self.OnBuild,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guideBool.gameObject,self.OnGuideBool,self);
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.guide.gameObject,self.OnGuideBool,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.smallMap.gameObject,self.OnSmallMap,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.chat,self.OnChat,self);
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.auctionButton,self.OnAuction,self); --拍卖
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.centerBuilding,self.OnCenterBuilding,self); --中心建筑
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.cityInfo,self.OnCityInfo,self); --城市信息
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.league,self.OnLeague,self); --联盟
-
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.openBtn,self.OnOpenBtn,self); --打来隐藏图标
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.closeBtn,self.OnCloseBtn,self); --关闭隐藏图标
+    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.eva,self.OnEva,self); --Eva
 
     --todo 收益
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.open,self.OnOpen,self); --打开收益详情
@@ -367,8 +393,8 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
 
     --todo 城市广播
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rightRadio,self.OnRightRadio,self);
+    --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
+    --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rightRadio,self.OnRightRadio,self);
 
     --交易记录
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.volume,self.OnVolume,self);
@@ -381,12 +407,12 @@ function GameMainInterfaceCtrl:Awake()
     --头像
     local faceId = DataManager.GetFaceId()
 
-    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.2)
+    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.company = info.companyName
-    self.gender = info.male
+    --self.gender = info.male
 
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
@@ -401,7 +427,7 @@ function GameMainInterfaceCtrl:Awake()
     --收益倒计时条件
     self.isTimmer = false
 
-    radioTime = 0
+    --radioTime = 0
     radioIndex = 1
    -- radio = {{type = 1,ts = 1,sellName = "12",buyName = "34",cost = 100000},{type = 2,ts = 11,num = 100},{type = 3 ,ts = 22,num = 200},{type = 4 ,ts = 33,cost = 200000},{type = 5 ,ts = 44,num = 300}}
 
@@ -432,7 +458,8 @@ end
 function GameMainInterfaceCtrl:c_OnSSSuccess()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
+    --DataManager.DetailModelRpcNoRet(self.insId , 'm_queryCityBroadcast')
 end
 
 function GameMainInterfaceCtrl:Refresh()
@@ -449,14 +476,14 @@ function GameMainInterfaceCtrl:initInsData()
     self.m_Timer:Start()
     --初始化姓名,性别,公司名字
     GameMainInterfacePanel.name.text = self.name
-    GameMainInterfacePanel.company.text = self.company
-    if self.gender then
-        GameMainInterfacePanel.male.localScale = Vector3.one
-        GameMainInterfacePanel.woman.localScale = Vector3.zero
-    else
-        GameMainInterfacePanel.male.localScale = Vector3.zero
-        GameMainInterfacePanel.woman.localScale = Vector3.one
-    end
+    --GameMainInterfacePanel.company.text = self.company
+    --if self.gender then
+    --    GameMainInterfacePanel.male.localScale = Vector3.one
+    --    GameMainInterfacePanel.woman.localScale = Vector3.zero
+    --else
+    --    GameMainInterfacePanel.male.localScale = Vector3.zero
+    --    GameMainInterfacePanel.woman.localScale = Vector3.one
+    --end
     GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
@@ -469,6 +496,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
 
     if tonumber(ts.second) % 10 == 0 then
         DataManager.DetailModelRpcNoRet(self.insId , 'm_AllExchangeAmount')
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
     end
 
     GameMainInterfacePanel.time.text = ts.hour..":"..ts.minute
@@ -500,29 +528,29 @@ function GameMainInterfaceCtrl:RefreshWeather()
     end
 
     -- todo  城市广播
-    radioTime = radioTime -1
-    if radioTime <= 0 then
-        if newRadio == nil and radio == nil then
-            return
-        end
-        radioTime = 10
-        if newRadio ~= nil then
-            GameMainInterfaceCtrl:BroadcastRadio(newRadio,1)
-            table.remove(newRadio,1)
-            if #newRadio == 0 then
-                newRadio = nil
-            end
-        else
-            if radio == nil then
-                return
-            end
-                GameMainInterfaceCtrl:BroadcastRadio(radio,radioIndex)
-            radioIndex = radioIndex + 1
-            if radioIndex > #radio then
-                radioIndex = radioIndex - #radio
-            end
-        end
-    end
+    --radioTime = radioTime -1
+    --if radioTime <= 0 then
+    --    if newRadio == nil and radio == nil then
+    --        return
+    --    end
+    --    radioTime = 10
+    --    if newRadio ~= nil then
+    --        GameMainInterfaceCtrl:BroadcastRadio(newRadio,1)
+    --        table.remove(newRadio,1)
+    --        if #newRadio == 0 then
+    --            newRadio = nil
+    --        end
+    --    else
+    --        if radio == nil then
+    --            return
+    --        end
+    --            GameMainInterfaceCtrl:BroadcastRadio(radio,radioIndex)
+    --        radioIndex = radioIndex + 1
+    --        if radioIndex > #radio then
+    --            radioIndex = radioIndex - #radio
+    --        end
+    --    end
+    --end
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
         PlayerTempModel.tempTestCreateAll()
     end
@@ -683,17 +711,6 @@ function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
     end
 end
 
---打开隐藏图标
-function GameMainInterfaceCtrl:OnOpenBtn()
-    GameMainInterfacePanel.openBg.localScale = Vector3.zero
-    GameMainInterfacePanel.closeBg.localScale = Vector3.one
-end
-
---关闭隐藏图标
-function GameMainInterfaceCtrl:OnCloseBtn()
-    GameMainInterfacePanel.openBg.localScale = Vector3.one
-    GameMainInterfacePanel.closeBg.localScale = Vector3.zero
-end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()
@@ -737,11 +754,19 @@ function GameMainInterfaceCtrl:OnSmallMap()
     ct.OpenCtrl("MapCtrl")
 end
 
---中心建筑
-function GameMainInterfaceCtrl:OnCenterBuilding()
+--城市信息
+function GameMainInterfaceCtrl:OnCityInfo()
     PlayMusEff(1002)
-    --TerrainManager.MoveToCentralBuidingPosition()
-    ct.OpenCtrl("CenterBuildingCtrl")
+end
+
+--Eva
+function GameMainInterfaceCtrl:OnEva()
+    PlayMusEff(1002)
+end
+
+--充值
+function GameMainInterfaceCtrl:OnAddGold()
+    PlayMusEff(1002)
 end
 
 --联盟
@@ -868,93 +893,93 @@ end
 
 --todo 城市广播
 
-function GameMainInterfaceCtrl:OnLeftRadioBtn()
-    GameMainInterfaceCtrl:OnClick_RadioCity(true)
-end
-
-function GameMainInterfaceCtrl:OnRightRadio()
-    GameMainInterfaceCtrl:OnClick_RadioCity(false)
-end
-
---打开关闭城市广播
-function GameMainInterfaceCtrl:OnClick_RadioCity(isShow)
-    if isShow then
-        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(-570,0,0)
-        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.zero
-        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.zero
-    else
-        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(0,0,0)
-        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.one
-        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.one
-    end
-end
-
---播放表中图片
-function GameMainInterfaceCtrl:BroadcastRadio(table,index)
-    if table == nil then
-        return
-    end
-    local ts = getFormatUnixTime(table[index].ts/1000)
-    local time = ts.hour.. ":" .. ts.minute
-        local type = table[index].type
-        if type == 1 then
-            GameMainInterfacePanel.majorTransaction.localScale =Vector3.one
-            GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
-            GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
-            GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
-            GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
-
-            GameMainInterfacePanel.mTNum.text = GetClientPriceString(table[index].cost)
-            GameMainInterfacePanel.mTTime.text = time
-            GameMainInterfacePanel.mTSell.text = table[index].sellName
-            GameMainInterfacePanel.mTBuy.text = table[index].buyName
-
-        if GameMainInterfacePanel.sellHead.transform.childCount == 0 then
-           AvatarManger.GetSmallAvatar(table[index].sellFaceId,GameMainInterfacePanel.sellHead.transform,0.15)
-           AvatarManger.GetSmallAvatar(table[index].buyFaceId,GameMainInterfacePanel.buyHead.transform,0.15)
-        end
-
-    elseif type == 2 then
-        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
-        GameMainInterfacePanel.Npcbreak.localScale =Vector3.one
-        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
-
-        GameMainInterfacePanel.npcNum.text = table[index].num
-        GameMainInterfacePanel.npcTime.text = time
-    elseif type == 3 then
-        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
-        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.one
-        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
-
-        GameMainInterfacePanel.budiligNum.text = table[index].num
-        GameMainInterfacePanel.budilingTime.text = time
-    elseif type == 4 then
-        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
-        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.one
-        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
-
-        GameMainInterfacePanel.bonuspoolNum.text = GetClientPriceString(table[index].cost)
-        GameMainInterfacePanel.bonuspoolTime.text = time
-    elseif type == 5 then
-        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
-        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
-        GameMainInterfacePanel.Playersbreak.localScale =Vector3.one
-
-        GameMainInterfacePanel.PlayersbreakNum.text = table[index].num
-        GameMainInterfacePanel.PlayersbreakTime.text = time
-    end
-       LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
-    end
+--function GameMainInterfaceCtrl:OnLeftRadioBtn()
+--    GameMainInterfaceCtrl:OnClick_RadioCity(true)
+--end
+--
+--function GameMainInterfaceCtrl:OnRightRadio()
+--    GameMainInterfaceCtrl:OnClick_RadioCity(false)
+--end
+--
+----打开关闭城市广播
+--function GameMainInterfaceCtrl:OnClick_RadioCity(isShow)
+--    if isShow then
+--        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(-570,0,0)
+--        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.zero
+--        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.zero
+--    else
+--        GameMainInterfacePanel.bgRadio:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+--        GameMainInterfacePanel.leftRadio.anchoredPosition = Vector3.New(0,0,0)
+--        GameMainInterfacePanel.leftRadioBtn.transform.localScale = Vector3.one
+--        GameMainInterfacePanel.leftRadioBtns.localScale = Vector3.one
+--    end
+--end
+--
+----播放表中图片
+--function GameMainInterfaceCtrl:BroadcastRadio(table,index)
+--    if table == nil then
+--        return
+--    end
+--    local ts = getFormatUnixTime(table[index].ts/1000)
+--    local time = ts.hour.. ":" .. ts.minute
+--        local type = table[index].type
+--        if type == 1 then
+--            GameMainInterfacePanel.majorTransaction.localScale =Vector3.one
+--            GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
+--            GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
+--            GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
+--            GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
+--
+--            GameMainInterfacePanel.mTNum.text = GetClientPriceString(table[index].cost)
+--            GameMainInterfacePanel.mTTime.text = time
+--            GameMainInterfacePanel.mTSell.text = table[index].sellName
+--            GameMainInterfacePanel.mTBuy.text = table[index].buyName
+--
+--        if GameMainInterfacePanel.sellHead.transform.childCount == 0 then
+--           AvatarManger.GetSmallAvatar(table[index].sellFaceId,GameMainInterfacePanel.sellHead.transform,0.15)
+--           AvatarManger.GetSmallAvatar(table[index].buyFaceId,GameMainInterfacePanel.buyHead.transform,0.15)
+--        end
+--
+--    elseif type == 2 then
+--        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
+--        GameMainInterfacePanel.Npcbreak.localScale =Vector3.one
+--        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
+--
+--        GameMainInterfacePanel.npcNum.text = table[index].num
+--        GameMainInterfacePanel.npcTime.text = time
+--    elseif type == 3 then
+--        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
+--        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.one
+--        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
+--
+--        GameMainInterfacePanel.budiligNum.text = table[index].num
+--        GameMainInterfacePanel.budilingTime.text = time
+--    elseif type == 4 then
+--        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
+--        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.one
+--        GameMainInterfacePanel.Playersbreak.localScale =Vector3.zero
+--
+--        GameMainInterfacePanel.bonuspoolNum.text = GetClientPriceString(table[index].cost)
+--        GameMainInterfacePanel.bonuspoolTime.text = time
+--    elseif type == 5 then
+--        GameMainInterfacePanel.majorTransaction.localScale =Vector3.zero
+--        GameMainInterfacePanel.Npcbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Budilingsbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Bonuspoolbreak.localScale =Vector3.zero
+--        GameMainInterfacePanel.Playersbreak.localScale =Vector3.one
+--
+--        GameMainInterfacePanel.PlayersbreakNum.text = table[index].num
+--        GameMainInterfacePanel.PlayersbreakTime.text = time
+--    end
+--       LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
+--    end
 
     --todo 交易量
     function GameMainInterfaceCtrl:OnVolume()

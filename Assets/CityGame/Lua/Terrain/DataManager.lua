@@ -731,7 +731,9 @@ end
 function DataManager.ClearAllDetailModels()
     if nil ~= BuildDataStack.DetailModelStack then
         for key, value in pairs(BuildDataStack.DetailModelStack) do
-            value:Close()
+            if value.Close then
+                value:Close()
+            end
         end
     end
 end

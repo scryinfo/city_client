@@ -14,7 +14,7 @@ function OpenHouseCtrl:initialize()
 end
 
 function OpenHouseCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/OpenHousePanel.prefab"
+    return "Assets/CityGame/Resources/View/OpenHousePanelOld.prefab"
 end
 
 function OpenHouseCtrl:OnCreate(obj )

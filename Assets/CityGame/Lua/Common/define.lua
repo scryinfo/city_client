@@ -204,9 +204,9 @@ LanguageType={
 }
 
 BuildingBubbleType={
-	small=1,
-	big=2,
-    close=3,
+	small =1 ,
+	show = 2,
+    close = 3,
 }
 
 --单输入框会响应的服务器协议类型

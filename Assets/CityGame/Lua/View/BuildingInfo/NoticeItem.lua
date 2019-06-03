@@ -11,6 +11,9 @@ local type
 local nameSize
 local goodsName
 local num
+local time
+local money
+local startTime
 --初始化方法   数据（读配置表）
 function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,typeId)
     self.prefab = prefab;
@@ -75,25 +78,16 @@ end
 
 function NoticeItem:OnBg(go)
     PlayMusEff(1002)
-    if go.typeId == 12 then
+    if go.typeId == 1 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    elseif go.typeId == 2 then
         type = go.typeId
-        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
-    elseif go.typeId == 13 then
-        type = go.typeId
-        pos.x = go.goodsDataInfo.intParasArr[1]
-        pos.y = go.goodsDataInfo.intParasArr[2]
-        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
-    elseif go.typeId == 14 then
-        type = go.typeId
-        pos.x = go.goodsDataInfo.intParasArr[1]
-        pos.y = go.goodsDataInfo.intParasArr[2]
-        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
-    elseif go.typeId == 9 then
-        go.content = GetLanguage(13010043,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
-        GameNoticePanel.rightContent.text = go.content
-    elseif go.typeId == 11 then
-        go.content = GetLanguage(13010047,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
-        GameNoticePanel.rightContent.text = go.content
+        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
+            go:GetMateralDetailInfo(go.uuidParas[1])
+        elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
+            go:GetProduceDepartment(go.uuidParas[1])
+        end
     elseif go.typeId == 3 then
         type = go.typeId
         nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
@@ -104,34 +98,51 @@ function NoticeItem:OnBg(go)
         else
             go:GetProduceDepartment(go.uuidParas[1])
         end
-    elseif go.typeId == 2 then
-        type = go.typeId
-        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
-        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
-            go:GetMateralDetailInfo(go.uuidParas[1])
-        elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
-            go:GetProduceDepartment(go.uuidParas[1])
-        end
-    elseif go.typeId == 18 then
-        type = go.typeId
-        go:GetSocietyInfo(go.uuidParas[1])
     elseif go.typeId == 4 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 5 then
+        money = GetClientPriceString(go.goodsDataInfo.tparas[1])
+        time =go.goodsDataInfo.tparas[2]/3600000 .. "h"
+        local timmer = tonumber(go.goodsDataInfo.tparas[3])
+        local ts = getFormatUnixTime(timmer/1000)
+        startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+        go:GetPromote(go.uuidParas[1])
+    elseif go.typeId == 6 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
-    elseif go.typeId == 15 then
+    elseif go.typeId == 7 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
-    elseif go.typeId == 16 then
+    elseif go.typeId == 8 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
-    elseif go.typeId == 17 then
+    elseif go.typeId == 9 then
+        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+    elseif go.typeId == 10 then
+        go.content = GetLanguage(13010043,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
+        GameNoticePanel.rightContent.text = go.content
+    elseif go.typeId == 11 then
+        type = go.typeId
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
+    elseif go.typeId == 12 then
+        type = go.typeId
+        pos.x = go.goodsDataInfo.intParasArr[1]
+        pos.y = go.goodsDataInfo.intParasArr[2]
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
+    elseif go.typeId == 13 then
+        type = go.typeId
+        pos.x = go.goodsDataInfo.intParasArr[1]
+        pos.y = go.goodsDataInfo.intParasArr[2]
+        PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
+    elseif go.typeId == 14 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
-    elseif go.typeId == 19 then
+    elseif go.typeId == 15 then
+        type = go.typeId
+        go:GetSocietyInfo(go.uuidParas[1])
+    elseif go.typeId == 16 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
     end
-    Event.Brocast("c_onBg",go)
-end
+        Event.Brocast("c_onBg",go)
+    end
 
 function NoticeItem:RefreshID(id)
     self.id = id
@@ -157,6 +168,11 @@ function NoticeItem:GetRetailShop(buildingId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetRetailShop',buildingId)
 end
 
+--获取推广公司建筑详情
+function NoticeItem:GetPromote(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetPromote',buildingId)
+end
+
 --获取公会信息
 function NoticeItem:GetSocietyInfo(id)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
@@ -168,6 +184,7 @@ function NoticeItem:_addListener()
     Event.AddListener("c_MaterialInfo", self.c_MaterialInfo, self) --原料厂建筑详情回调
     Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
     Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
+    Event.AddListener("c_PromoteInfo", self.c_PromoteInfo, self) --推广公司建筑详情回调
     Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
 end
 
@@ -177,18 +194,19 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_MaterialInfo", self.c_MaterialInfo, self)--原料厂建筑详情回调
     Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
     Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
+    Event.RemoveListener("c_PromoteInfo", self.c_PromoteInfo, self)--推广公司建筑详情回调
     Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
     self.name = playerData[1].name
-    if type == 12 then
+    if type == 11 then
         self.content = GetLanguage(13010051,self.name)
         GameNoticePanel.rightContent.text = self.content
-    elseif type == 13 then
+    elseif type == 12 then
         self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
-    elseif type == 14 then
+    elseif type == 13 then
         self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     end
@@ -220,12 +238,17 @@ function NoticeItem:c_RetailShopInfo(name)
     GameNoticePanel.rightContent.text = self.content
 end
 
+function NoticeItem:c_PromoteInfo(name)
+    self.content = GetLanguage(13010080,name,time,money,startTime)
+    GameNoticePanel.rightContent.text = self.content
+end
+
 function NoticeItem:c_SocietyInfo(name)
-    if type == 17 then
+    if type == 14 then
         self.content = GetLanguage(13010068,name)
-    elseif type == 18 then
+    elseif type == 15 then
         self.content = GetLanguage(13010066,name)
-    elseif type == 19 then
+    elseif type == 16 then
         self.content = GetLanguage(13010070,name)
     end
     GameNoticePanel.rightContent.text = self.content

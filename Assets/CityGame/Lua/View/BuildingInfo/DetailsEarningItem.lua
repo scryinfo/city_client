@@ -28,6 +28,8 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     self.playerId = 0
 
     self.incomeText.text = "E"..GetClientPriceString(dataInfo.cost)
+    self.sell.localScale = Vector3.zero
+    self.rent.localScale = Vector3.zero
     if dataInfo.buyer == "PLAYER" then
         self.faceId = dataInfo.faceId
         self.playerId = dataInfo.buyerId
@@ -46,13 +48,27 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             end
         elseif dataInfo.type == "INSHELF" then
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
-            self.pictureText.text = "X"..dataInfo.count
+            self.pictureText.text = "X"..dataInfo.counte
+        elseif dataInfo.type == "PROMO" then
+            if dataInfo.itemId == 1300 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", self.picture, true)
+            elseif dataInfo.itemId == 1400 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", self.picture, true)
+            else
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png",self.picture)
+            end
+            self.pictureText.text = "X"..dataInfo.duration .. "h"
+        elseif dataInfo.type == "LAB" then
+            self.sell.localScale = Vector3.zero
+            self.rent.localScale = Vector3.zero
+            if dataInfo.itemId then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+            end
+            self.pictureText.text = "X"..dataInfo.duration .. "h"
         end
     elseif dataInfo.buyer == "NPC" then
         self.faceId = 0
         self.playerId = 0
-        self.sell.localScale = Vector3.zero
-        self.rent.localScale = Vector3.zero
         for i = 0, self.head.transform.childCount-1 do
             destroy(self.head.transform:GetChild(i).gameObject)
         end

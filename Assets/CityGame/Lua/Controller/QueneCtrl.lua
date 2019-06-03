@@ -37,9 +37,16 @@ end
 function QueneCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_updateQuque",self.c_updateQuque,self)
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
     if insTable then
         for i, v in pairs(insTable) do
             destroy(v.transform.gameObject)
+            if v.m_Timer then
+               v:CloseUpdata()
+                --v.m_Timer:Stop()
+            end
         end
         insTable = {}
     end
@@ -54,6 +61,10 @@ function QueneCtrl:Awake(go)
     self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.loopScrollDataSource.mProvideData =self.ReleaseData
     self.loopScrollDataSource.mClearData = self.CollectClearData
+
+    if not self.m_Timer then
+        self.m_Timer = Timer.New(slot(self.UpData, self), UnityEngine.Time.unscaledDeltaTime, -1, true)
+    end
 
 end
 
@@ -141,6 +152,7 @@ function QueneCtrl:c_updateQuque(data)
     else
         panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource,0)
     end
+    self.m_Timer:Start()
 end
 
 
@@ -149,9 +161,19 @@ function QueneCtrl.ReleaseData(transform, idx)
     idx = idx + 1
     local data=  this.m_data.data[idx]
     data.ids =  idx
-    insTable[idx] = this.m_data.insClass:new(data, transform,luabehaviour)
+    insTable[idx] = this.m_data.insClass:new(data, transform,luabehaviour,QueneCtrl)
 end
 
 function QueneCtrl.CollectClearData(transform)
 
+end
+
+function QueneCtrl:SetFunc(func)
+    self.func = func
+end
+
+function QueneCtrl:UpData()
+    if self.func then
+        self:func()
+    end
 end

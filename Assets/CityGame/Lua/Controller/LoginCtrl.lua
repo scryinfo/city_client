@@ -33,6 +33,7 @@ function LoginCtrl:Awake(go)
 	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --是否显示密码
 	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --打开多语言
 	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --关闭多语言
+	LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --用户准则
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
 	self.showPassword = false
@@ -60,6 +61,9 @@ function LoginCtrl:Awake(go)
 	LoginPanel.remember.onValueChanged:AddListener(function(isOn)
 		self:_OnToggle(isOn)
 	end)
+
+	--同意用户准则
+	LoginPanel.norm.isOn = true
 end
 
 function LoginCtrl:Active()
@@ -189,6 +193,11 @@ function LoginCtrl:OnCloseBg(go)
 	go:SwitchLanguage(false)
 end
 
+--打开用户准则
+function LoginCtrl:OnNormText()
+	ct.OpenCtrl("UserNanualCtrl")
+end
+
 --打开关闭多语言
 function LoginCtrl:SwitchLanguage(isOn)
 	if isOn then
@@ -203,14 +212,19 @@ end
 --登录--
 function LoginCtrl:OnLogin(go)
 	PlayMusEff(1002)
+	LoginPanel.textStatus.transform.localScale = Vector3.zero
+	LoginPanel.textStatus:GetComponent('Text').text = ""
 	local username = LoginPanel.inputUsername:GetComponent('InputField').text;
 	local pw = LoginPanel.inputPassword:GetComponent('InputField').text;
 
 	if username == "" or pw == "" then
-		Event.Brocast("SmallPop",GetLanguage(10020004),300)
+		LoginPanel.textStatus.transform.localScale = Vector3.one
+		LoginPanel.textStatus:GetComponent('Text').text =GetLanguage(10020004)
+	elseif LoginPanel.norm.isOn == false then
+		LoginPanel.textStatus.transform.localScale = Vector3.one
+		LoginPanel.textStatus:GetComponent('Text').text = "请同意用户手册"
 	else
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
-		--LoginPanel.btnLogin:GetComponent("Button").enabled = false
 	end
 end
 

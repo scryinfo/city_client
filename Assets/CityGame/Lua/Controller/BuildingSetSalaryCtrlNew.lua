@@ -93,9 +93,13 @@ end
 --
 function BuildingSetSalaryCtrlNew:_onClickConfirm(ins)
     if ins.m_data.callBackFunc ~= nil then
-        ins.m_data.callBackFunc(100)
+        local temp = os.date("%H:%M", os.time())
+        local data = {salary = ins.totalText.text, time = temp, fun = function ()
+            ins.m_data.callBackFunc(100)
+            UIPanel.ClosePage()
+        end}
+        ct.OpenCtrl("OpenBuildingCheckCtrl", data)
     end
-    UIPanel.ClosePage()
 end
 --
 function BuildingSetSalaryCtrlNew:_onClickCloseBtn()

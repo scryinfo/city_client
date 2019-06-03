@@ -3,8 +3,9 @@
 --- Created by password.
 --- DateTime: 2019/4/22 15:57
 ---推广队列item
+local isUpdata
 PromoteQueueItem = class('PromoteQueueItem')
-function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
+function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     self.transform = transform;
     self.dataInfo = dataInfo;
     self.id = dataInfo.promotionId
@@ -15,6 +16,8 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
     self.goodsText = self.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
+    self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
+    self.moves = self.transform:Find("details/Slider/Fill Area/Fill/moves"):GetComponent("RectTransform")
     self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.timePrice = self.transform:Find("details/timePrice")
     self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
@@ -23,17 +26,57 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
 
+    isUpdata = true
+
+    self.waiting = 0
+    self.speed = 0.4
+    self.position = Vector3.New(-141,0,0)
+    self.positions = Vector3.New(224,0,0)
+
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
     self.delete.transform.localScale = Vector3.zero
     local ts = getFormatUnixTime(dataInfo.promStartTs/1000)
     self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
 
-    local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-    if currentTime >= dataInfo.promStartTs and currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    if self.currentTime >= dataInfo.promStartTs and self.currentTime <= dataInfo.promStartTs + dataInfo.promDuration then
+        self.slider.value = (self.currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
+        local ts = getTimeBySec((self.currentTime - dataInfo.promStartTs)/1000)
+        self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
+        --更新队列数据
+        local function UpData()
+            if not isUpdata then
+                if self.m_Timer ~= nil then
+                    self.m_Timer:Stop()
+                end
+                return
+            end
+            if self.bg:Equals(nil) then
+                if self.m_Timer ~= nil then
+                    self.m_Timer:Stop()
+                end
+                return
+            end
+            self.waiting = self.waiting -1
+            if self.waiting <= 0 then
+                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+                self.slider.value = (self.currentTime - self.dataInfo.promStartTs) /  self.dataInfo.promDuration
+                local ts = getTimeBySec((self.currentTime - self.dataInfo.promStartTs)/1000)
+                self.nowTime.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.dataInfo.promDuration/3600000 ).. "h"
+                self.waiting = 1
+            end
+            self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+            self.moves:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+            if self.move.localPosition.x >= self.position.x + 100 then
+                self.move.localPosition = self.position
+            end
+            if self.moves.localPosition.x >= self.positions.x + 100 then
+                self.moves.localPosition = self.positions
+            end
+        end
+        ctrl:SetFunc(UpData)
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
-        self.slider.value = (currentTime - dataInfo.promStartTs) /  dataInfo.promDuration
-        self.nowTime.text = math.floor(dataInfo.promProgress/3600000) .. "/" .. math.floor(dataInfo.promDuration/3600000 ).. "h"
     else
         self.timePrice.localScale = Vector3.one
         if playerId == dataInfo.sellerId then
@@ -68,6 +111,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour)
     end
 
     luaBehaviour:AddClick(self.delete,self.OnDelete,self)
+
 end
 
 function PromoteQueueItem:OnDelete(go)
@@ -81,4 +125,9 @@ end
 function PromoteQueueItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
+end
+
+--关闭界面后关闭更新
+function PromoteQueueItem:CloseUpdata()
+    isUpdata = false
 end

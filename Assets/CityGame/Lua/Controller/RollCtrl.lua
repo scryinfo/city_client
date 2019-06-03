@@ -1,6 +1,7 @@
 local pool={}
 local LuaBehaviour
 local odds
+local sums = 0
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -92,8 +93,9 @@ function RollCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.EvaRootBTn.gameObject, self._closeFail, self)
     LuaBehaviour:AddClick(panel.GoodRootBtn.gameObject, self._closeFail, self)
     LuaBehaviour:AddClick(panel.EvaresultBtn.gameObject, self._closeAll, self)
-    LuaBehaviour:AddClick(panel.notenoughBtn.gameObject, self._closenotenough, self)
-    --LuaBehaviour:AddClick(panel.sureBtn.gameObject, self._closeEva, self)
+    LuaBehaviour:AddClick(panel.resultBtn.gameObject, self._closenotenough, self)
+    LuaBehaviour:AddClick(panel.closeEvaBTn.gameObject, self._closeEvaBTn, self)
+    --LuaBehaviour:AddClick(panel.closeBTn.gameObject, self._closeEva, self)
     self:closeAllRoot()
 
 end
@@ -102,20 +104,41 @@ end
 function RollCtrl:_closeFail(ins)
     ins:closeAllRoot()
 end
---一次点击开五个
+
 function RollCtrl:_closeEva(ins)
     panel.Evaresult.localScale = Vector3.zero
     panel.EvaRoots.localScale = Vector3.one
 end
 
 function RollCtrl:_closeAll(ins)
+    --及时销毁产生的item
     for i = 0, 4 do
         destroy(panel.Evaresult:GetChild(i).gameObject)
-        panel.resultRoot.localScale =  Vector3.zero
+        panel.resultRoot.localScale =  Vector3.one
+        panel.result.localScale =  Vector3.one
     end
+    --congratulation界面文本更新（0goodCategory 0为失败+1 1为成功+10）
+    for i, v in ipairs(self.data) do
+        if ins.m_data.goodCategory == 0 then
+            sums = sums + 1
+            panel.sum.text = sums
+        else
+            sums = sums + 10
+            panel.sum.text = sums
+        end
+    end
+    panel.count.text = DataManager.GetEvaPoint()
+    sums = 0
 end
+
 function RollCtrl:_closenotenough(ins)
-    panel.notenough.localScale = Vector3.zero
+    panel.result.localScale = Vector3.zero
+    panel.resultRoot.localScale = Vector3.zero
+end
+
+function RollCtrl:_closeEvaBTn(ins)
+    panel.evanotenough.localScale = Vector3.zero
+    panel.result.localScale = Vector3.zero
     panel.resultRoot.localScale = Vector3.zero
 
 end
@@ -147,21 +170,12 @@ function RollCtrl:updateText(data)
     -- panel.titleText.text = GetLanguage(40010009)
 end
 
---function RollCtrl:handleEvaResult(data)
---    if data then
---        panel.resultRoot.localScale = Vector3.one
---        panel.Evaresult.localScale = Vector3.one
---        --panel.EvaRoots.localScale =  Vector3.one
---        panel.nowEva.text = DataManager.GetEvaPoint()
---        DataManager.SetEvaPoint(DataManager.GetEvaPoint()+1)
---        panel.BigEVAtext.text = DataManager.GetEvaPoint()
---    else
---        --self:fail()
---    end
---end
-
+--点击一次开启五个
 function RollCtrl:handleEvaResult(data)
     self.Rollpoint = {}
+    self.data = data
+    panel.evacount.text = DataManager.GetEvaPoint()
+    panel.Evaresultbg.localScale = Vector3.one
     panel.Evaresult.localScale = Vector3.one
     panel.resultRoot.localScale = Vector3.one
         for i, v in ipairs(data) do

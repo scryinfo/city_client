@@ -16,10 +16,10 @@ end
 --开箱
 function RollItem:c_OnClick_roll(ins)
     if ins.data.availableRoll < 5 then
-        RollPanel.notenough.localScale = Vector3.one
         RollPanel.resultRoot.localScale = Vector3.one
+        RollPanel.evanotenough.localScale = Vector3.one
     else
-        RollPanel.notenough.localScale = Vector3.zero
+        RollPanel.result.localScale = Vector3.zero
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
     end
 end

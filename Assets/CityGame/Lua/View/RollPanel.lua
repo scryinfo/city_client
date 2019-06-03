@@ -38,10 +38,19 @@ function RollPanel.InitPanle()
     this.failtitleText = findByName(transform,"failtitleText"):GetComponent("Text")
     this.BigEVAtext = findByName(transform,"Text"):GetComponent("Text")
 
-    this.Evaresult = transform:Find("resultRoot/Evaresult")
-    this.EvaresultBtn = transform:Find("resultRoot/Evaresult"):GetComponent("Button")
-    this.notenough = transform:Find("resultRoot/notenough")
-    this.notenoughBtn = transform:Find("resultRoot/notenough/bottom/EvaRootBTn")
+    this.Evaresultbg = transform:Find("resultRoot/Evaresultbg")
+    this.Evaresult = transform:Find("resultRoot/Evaresultbg/Evaresult")
+    this.evacount = transform:Find("resultRoot/Evaresultbg/Image/count/Text"):GetComponent("Text")
+    this.EvaresultBtn = transform:Find("resultRoot/Evaresultbg/Evaresult"):GetComponent("Button")
+
+    this.result = transform:Find("resultRoot/result")
+    this.resultBtn = transform:Find("resultRoot/result/EvaRootBTn")
+    this.sum = transform:Find("resultRoot/result/sum"):GetComponent("Text")
+    this.count = transform:Find("resultRoot/result/Image/count/Text"):GetComponent("Text")
+
+    this.evanotenough = transform:Find("resultRoot/evanotenough")
+    this.closeEvaBTn = transform:Find("resultRoot/evanotenough/closeBTn"):GetComponent("Button")
+
 
     ---------------------------------------------
     this.mainIcon = findByName(transform,"mainIcon")
